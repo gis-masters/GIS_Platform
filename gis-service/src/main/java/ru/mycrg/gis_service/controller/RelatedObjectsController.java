@@ -12,7 +12,6 @@ import ru.mycrg.gis_service.service.LayerService;
 
 import java.util.List;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RestController
@@ -29,8 +28,7 @@ public class RelatedObjectsController {
     }
 
     @GetMapping("/find-related-layers")
-    // Не даём пользователям у которых нет полного доступа к проектам и слоям, т.к. они не могут увидеть полную картину.
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public List<RelatedLayersModel> findRelatedLayers(@RequestParam("field") String field,
                                                       @RequestParam("value") String value,
                                                       Authentication authentication) {

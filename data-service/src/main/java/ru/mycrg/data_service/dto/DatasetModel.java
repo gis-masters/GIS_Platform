@@ -6,13 +6,13 @@ import ru.mycrg.data_service.entity.Resource;
 
 @Relation(collectionRelation = "datasets")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class DatasetModel extends ResourceModel {
+public class DatasetModel extends ResourceModel implements IResourceModel {
 
-    public DatasetModel() {
-        super();
+    public DatasetModel(IResourceModel resourceModel) {
+        super(resourceModel);
     }
 
-    public DatasetModel(Resource resource, Roles roles) {
-        super(resource, roles);
+    public DatasetModel(Resource resource, Roles role) {
+        super(resource, role);
     }
 }

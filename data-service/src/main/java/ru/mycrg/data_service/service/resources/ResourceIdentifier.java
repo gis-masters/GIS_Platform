@@ -63,7 +63,7 @@ public class ResourceIdentifier {
         try {
             return resourceIdentifier.split(SEPARATOR)[1];
         } catch (IndexOutOfBoundsException e) {
-            return "";
+            return resourceIdentifier;
         }
     }
 
@@ -71,7 +71,7 @@ public class ResourceIdentifier {
         try {
             return resourceIdentifier.split(SEPARATOR)[0];
         } catch (IndexOutOfBoundsException e) {
-            return "";
+            return resourceIdentifier;
         }
     }
 }

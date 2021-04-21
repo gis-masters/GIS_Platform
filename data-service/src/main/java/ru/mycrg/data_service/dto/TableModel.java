@@ -6,10 +6,10 @@ import ru.mycrg.data_service.entity.Resource;
 
 @Relation(collectionRelation = "tables")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class TableModel extends ResourceModel {
+public class TableModel extends ResourceModel implements IResourceModel {
 
-    public TableModel() {
-        super();
+    public TableModel(IResourceModel resourceModel) {
+        super(resourceModel);
     }
 
     public TableModel(Resource resource, Roles roles) {

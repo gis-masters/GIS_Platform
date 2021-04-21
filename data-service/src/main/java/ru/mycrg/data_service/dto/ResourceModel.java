@@ -18,6 +18,19 @@ public class ResourceModel implements IResourceModel {
     private LocalDateTime createdAt;
 
     public ResourceModel() {
+        // Required
+    }
+
+    public ResourceModel(IResourceModel resource) {
+        this.title = resource.getTitle();
+        this.details = resource.getDetails();
+        this.type = resource.getType();
+        this.identifier = resource.getIdentifier();
+        this.itemsCount = resource.getItemsCount();
+        this.crs = resource.getCrs();
+        this.schemaId = resource.getSchemaId();
+        this.role = resource.getRole();
+        this.createdAt = resource.getCreatedAt();
     }
 
     public ResourceModel(Resource resource, Roles role) {

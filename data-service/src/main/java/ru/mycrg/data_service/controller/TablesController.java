@@ -7,12 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
-import ru.mycrg.data_service.service.tables.ITableService;
 import ru.mycrg.data_service.service.tables.TableService;
 
 import javax.validation.Valid;
@@ -28,7 +26,7 @@ public class TablesController {
 
     public static final Logger log = LoggerFactory.getLogger(TablesController.class);
 
-    private final ITableService tableService;
+    private final TableService tableService;
 
     public TablesController(TableService tableService) {
         this.tableService = tableService;

@@ -1,7 +1,7 @@
 package ru.mycrg.common_utils.security;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * This default implementation a role hierarchy.
@@ -15,7 +15,7 @@ public class DefaultRoleHierarchy implements RoleHierarchy {
     }
 
     @Override
-    public Optional<String> defineBest(List<String> roles) {
+    public Optional<String> defineBest(Set<String> roles) {
         for (String role: hierarchy) {
             if (roles.contains(role)) {
                 return Optional.ofNullable(role);

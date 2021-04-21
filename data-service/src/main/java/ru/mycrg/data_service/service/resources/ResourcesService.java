@@ -6,24 +6,25 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.data_service.dto.ResourceProjection;
-import ru.mycrg.data_service.dto.ResourceType;
-import ru.mycrg.data_service.entity.Permission;
+import ru.mycrg.data_service.dto.*;
 import ru.mycrg.data_service.entity.Resource;
+import ru.mycrg.data_service.exceptions.ForbiddenException;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.ResourceRepository;
 import ru.mycrg.data_service.service.PermissionsService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
+import static ru.mycrg.data_service.dto.Roles.OWNER;
 
 /**
  * Сервис ресурсов {@link Resource}.
  * <p>
- * Содержит методы выборки обьектов и/или их проекций {@link ResourceProjection} из базы данных.
+ * Содержит методы выборки объектов и/или их проекций {@link ResourceProjection} из базы данных.
  * <p><br />
  * Гарантирует выборку только доступных пользователю ресурсов.
  */
@@ -66,39 +67,41 @@ public class ResourcesService {
         return repository.findByTypeAndIdentifier(rIdentifier.getType().name(), rIdentifier.toString());
     }
 
+    public IResourceModel getModel(@NotNull ResourceIdentifier rIdentifier) {
+        return repository.findByTypeAndIdentifier(rIdentifier.getType().name(), rIdentifier.toString())
+                         .map(this::mapToResourceModel)
+                         .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
+    }
+
     /**
      * Возвращает ресурсы удовлетворяющие фильтру, а также к которым пользователь имеет доступ.
      *
-     * @param title          Заглавие
-     * @param type           Тип ресурса
+     * @param title Заглавие
+     * @param type  Тип ресурса
      */
-    public List<Resource> getByTitle(String title, ResourceType type) {
-        return repository
-                .findByTypeAndTitleContainingIgnoreCase(type.name(), title).stream()
-                .filter(resource -> {
-                    Set<Permission> allPermissions = permissionsService.getAllRelatedPermissions(resource);
+    public List<IResourceModel> getByTitle(String title, ResourceType type) {
+        List<IResourceModel> allowedResources = new ArrayList<>();
 
-                    return resourceProtector.isReadAllowed(resource, allPermissions);
-                })
-                .collect(Collectors.toList());
+        repository.findByTypeAndTitleContainingIgnoreCase(type.name(), title)
+                  .forEach(resource -> fillAllowedResources(allowedResources, resource));
+
+        return allowedResources;
     }
 
     /**
      * Возвращает таблицы из набора данных удовлетворяющие фильтру, а также к которым пользователь имеет доступ.
      *
-     * @param datasetId      Идентификатор набора данных.
-     * @param title          Заглавие.
+     * @param datasetId Идентификатор набора данных.
+     * @param title     Заглавие.
      */
-    public List<Resource> getDatasetTablesFilteredByTitle(String datasetId, String title) {
-        return repository
-                .findByTypeAndIdentifierStartingWithAndTitleContainingIgnoreCase(TABLE.name(), datasetId + ".", title)
-                .stream()
-                .filter(resource -> {
-                    Set<Permission> allPermissions = permissionsService.getAllRelatedPermissions(resource);
+    public List<IResourceModel> getDatasetTablesFilteredByTitle(String datasetId, String title) {
+        List<IResourceModel> allowedResources = new ArrayList<>();
 
-                    return resourceProtector.isReadAllowed(resource, allPermissions);
-                })
-                .collect(Collectors.toList());
+        repository
+                .findByTypeAndIdentifierStartingWithAndTitleContainingIgnoreCase(TABLE.name(), datasetId + ".", title)
+                .forEach(resource -> fillAllowedResources(allowedResources, resource));
+
+        return allowedResources;
     }
 
     public void deleteByIdentifier(String identifier) {
@@ -115,5 +118,30 @@ public class ResourcesService {
 
     public void increaseItemsCounter(String parentResourceId) {
         repository.increaseItemsCounter(parentResourceId);
+    }
+
+    private void fillAllowedResources(List<IResourceModel> allowedResources, Resource resource) {
+        if (resourceProtector.isAbsoluteOwner(resource)) {
+            allowedResources.add(new ResourceModel(resource, OWNER));
+        } else {
+            Set<String> allRoles = permissionsService.getAllRelatedRoles(resource);
+
+            resourceProtector.defineRole(allRoles)
+                             .ifPresent(role -> allowedResources.add(new ResourceModel(resource, role)));
+        }
+    }
+
+    @NotNull
+    private ResourceModel mapToResourceModel(Resource resource) {
+        if (resourceProtector.isAbsoluteOwner(resource)) {
+            return new ResourceModel(resource, OWNER);
+        } else {
+            Set<String> allRoles = permissionsService.getAllRelatedRoles(resource);
+
+            Roles role = resourceProtector.defineRole(allRoles)
+                                          .orElseThrow(() -> new ForbiddenException(resource));
+
+            return new ResourceModel(resource, role);
+        }
     }
 }

@@ -23,7 +23,10 @@ import ru.mycrg.data_service.security.UserDetails;
 import ru.mycrg.data_service.service.resources.PrincipalService;
 import ru.mycrg.data_service.service.resources.ResourceProtector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.Paginator.getPage;
@@ -68,11 +71,7 @@ public class PermissionsService {
         if (resourceProtector.isAbsoluteOwner(resource)) {
             return permissionsRepository.getAllByResource(resource, pageable);
         } else {
-            final Set<Permission> allRelatedPermissions = getAllRelatedPermissions(resource);
-            final List<String> relatedRoles = allRelatedPermissions.stream()
-                                                                   .map(Permission::getRole)
-                                                                   .collect(Collectors.toList());
-
+            final Set<String> relatedRoles = getAllRelatedRoles(resource);
             final Optional<String> oRole = roleHierarchy.defineBest(relatedRoles);
             if (oRole.isEmpty()) {
                 return new PageImpl<>(new ArrayList<>());
@@ -81,46 +80,47 @@ public class PermissionsService {
             if (oRole.get().equals(Roles.OWNER.name())) {
                 return permissionsRepository.getAllByResource(resource, pageable);
             } else {
-                final List<PermissionProjection> relatedPermissions = allRelatedPermissions
-                        .stream()
-                        .map(permission -> projectionFactory.createProjection(PermissionProjection.class, permission))
-                        .collect(Collectors.toList());
+                final Set<PermissionProjection> relatedPermissions = getAllRelatedPermissions(resource);
 
-                return getPage(relatedPermissions, pageable);
+                return getPage(new ArrayList<>(relatedPermissions), pageable);
             }
         }
     }
 
     /**
-     * Возвращает все разрешения выданные на данный ресурс, имеющие отношение к пользователю, т.е. заданные либо
-     * непосредственно для пользователя либо заданные на группу в которой пользователь состоит.
+     * Находим все роли исходя из разрешений выданных на данный ресурс, имеющие отношение к пользователю(т.е. заданные
+     * либо непосредственно для пользователя либо заданные на группу в которой пользователь состоит)
      *
      * @param resource Ресурс
      */
-    public Set<Permission> getAllRelatedPermissions(Resource resource) {
-        final Set<Permission> allPermissions = new HashSet<>();
+    public Set<String> getAllRelatedRoles(Resource resource) {
         final UserDetails userDetails = authenticationFacade.getUserDetails();
 
-        // User
-        final Set<Permission> permissions = getPermissions(userDetails.getUserId(), "user");
-        allPermissions.addAll(permissions);
+        return permissionsRepository
+                .findByRelatedPermissions(resource.getId(), userDetails.getUserId(), userDetails.getGroups())
+                .stream()
+                .map(PermissionProjection::getRole)
+                .collect(Collectors.toSet());
+    }
 
-        // User groups
-        userDetails.getGroups()
-                   .forEach(groupId -> {
-                       final Set<Permission> groupPermissions = getPermissions(groupId, "group");
-                       allPermissions.addAll(groupPermissions);
-                   });
+    /**
+     * Возвращает все разрешения выданные на данный ресурс, имеющие отношение к пользователю(т.е. заданные либо
+     * непосредственно для пользователя либо заданные на группу в которой пользователь состоит)
+     *
+     * @param resource Ресурс
+     */
+    public Set<PermissionProjection> getAllRelatedPermissions(Resource resource) {
+        final UserDetails userDetails = authenticationFacade.getUserDetails();
 
-        return allPermissions.stream()
-                             .filter(permission -> permission.getResource().getId() == resource.getId())
-                             .collect(Collectors.toSet());
+        return permissionsRepository.findByRelatedPermissions(resource.getId(),
+                                                              userDetails.getUserId(),
+                                                              userDetails.getGroups());
     }
 
     public PermissionProjection create(@NotNull Resource resource,
                                        @NotNull PermissionCreateDto dto) {
-        Set<Permission> relatedPermissions = getAllRelatedPermissions(resource);
-        if (!resourceProtector.isCreatePermissionAllowed(resource, relatedPermissions)) {
+        Set<String> relatedRoles = getAllRelatedRoles(resource);
+        if (!resourceProtector.isCreatePermissionAllowed(resource, relatedRoles)) {
             throw new ForbiddenException("Not allowed create permission for this resource");
         }
 

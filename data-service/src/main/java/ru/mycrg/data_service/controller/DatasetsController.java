@@ -9,10 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.mycrg.data_service.dto.DatasetModel;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.service.datasets.DatasetService;
-import ru.mycrg.data_service.service.datasets.IDatasetService;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 
 import javax.validation.Valid;
@@ -27,7 +27,7 @@ public class DatasetsController {
 
     public static final Logger log = LoggerFactory.getLogger(DatasetsController.class);
 
-    private final IDatasetService datasetService;
+    private final DatasetService datasetService;
 
     public DatasetsController(DatasetService datasetService) {
         this.datasetService = datasetService;

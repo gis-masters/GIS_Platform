@@ -1,7 +1,7 @@
 package ru.mycrg.common_utils.security;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * The simple interface of a role hierarchy.
@@ -21,5 +21,5 @@ public interface RoleHierarchy {
      *
      * @return best role
      */
-    Optional<String> defineBest(List<String> roles);
+    Optional<String> defineBest(Set<String> roles);
 }

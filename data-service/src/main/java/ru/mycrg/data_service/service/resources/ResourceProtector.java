@@ -4,16 +4,13 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_utils.security.RoleHierarchy;
 import ru.mycrg.data_service.dto.Roles;
-import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 
@@ -57,41 +54,24 @@ public class ResourceProtector {
      * Пример 2. Напрямую пользователю прав не задано, но он состоит в двух группах, одной из них выставлены права на
      * чтение: VIEWER, другая - группа владельцев: OWNER. Будет выбрана роль: OWNER.
      *
-     * @param resource    Ресурс
-     * @param permissions все разрешения на ресурс для текущего пользователя
+     * @param resource Ресурс
+     * @param roles    все разрешения на ресурс для текущего пользователя
      *
      * @return Определяет роль пользователя для заданного ресурса если таковая может быть определена или пустой {@link
      * Optional} объект.
      */
-    public Optional<Roles> defineRole(Resource resource, Set<Permission> permissions) {
+    public Optional<Roles> defineRole(Resource resource, Set<String> roles) {
         if (isAbsoluteOwner(resource)) {
             return Optional.of(OWNER);
         }
 
-        final List<String> allRoles = permissions.stream()
-                                                 .map(Permission::getRole)
-                                                 .collect(Collectors.toList());
-
-        return roleHierarchy.defineBest(allRoles)
+        return roleHierarchy.defineBest(roles)
                             .map(Roles::valueOf);
     }
 
-    /**
-     * Возвращает {@code true} если ресурс доступен пользователю на чтение.
-     * <p>
-     * Ресурс доступен если:
-     * <li> пользователь является его владельцем.
-     * <li> пользователь является GLOBAL_ADMIN или ORG_ADMIN.
-     * <li> для пользователя заданы разрешения {@link Roles} любого уровня доступа.
-     *
-     * @param resource    Ресурс
-     * @param permissions все разрешения на ресурс для текущего пользователя
-     *
-     * @return Возвращает {@code true} если ресурс доступен пользователю на чтение.
-     */
-    public boolean isReadAllowed(Resource resource, Set<Permission> permissions) {
-        return isAbsoluteOwner(resource)
-                || !permissions.isEmpty();
+    public Optional<Roles> defineRole(Set<String> roles) {
+        return roleHierarchy.defineBest(roles)
+                            .map(Roles::valueOf);
     }
 
     /**
@@ -102,21 +82,17 @@ public class ResourceProtector {
      * <li> Пользователей являющихся GLOBAL_ADMIN или ORG_ADMIN.
      * <li> Пользователей с ролью {@code OWNER}.
      *
-     * @param resource    Ресурс.
-     * @param permissions все разрешения на ресурс для текущего пользователя
+     * @param resource Ресурс.
+     * @param roles    все разрешения на ресурс для текущего пользователя
      *
      * @return Возвращает {@code true} если создание разрешений доступно пользователю.
      */
-    public boolean isCreatePermissionAllowed(Resource resource, Set<Permission> permissions) {
+    public boolean isCreatePermissionAllowed(Resource resource, Set<String> roles) {
         if (isAbsoluteOwner(resource)) {
             return true;
         }
 
-        final List<String> allRoles = permissions.stream()
-                                                 .map(Permission::getRole)
-                                                 .collect(Collectors.toList());
-
-        return roleHierarchy.defineBest(allRoles)
+        return roleHierarchy.defineBest(roles)
                             .map(bestRole -> bestRole.equals(OWNER.name()))
                             .orElse(false);
     }

@@ -12,7 +12,9 @@ import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Principal;
 import ru.mycrg.data_service.entity.Resource;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RepositoryRestResource(excerptProjection = PermissionProjection.class,
                         exported = false)
@@ -24,9 +26,17 @@ public interface PermissionsRepository extends PagingAndSortingRepository<Permis
 
     Optional<Permission> findByResourceAndPrincipal(Resource resource, Principal principal);
 
+    @Query("SELECT per FROM Permission AS per " +
+                   "JOIN Principal AS pri ON pri.id = per.principal.id " +
+                   "WHERE per.resource.id = :resourceId " +
+                   "AND ((pri.type = 'user' AND pri.identifier = :userId) " +
+                   "OR (pri.type = 'group' AND pri.identifier IN (:groupIds)))")
+    Set<PermissionProjection> findByRelatedPermissions(@Param("resourceId") Long resourceId,
+                                                       @Param("userId") Long userId,
+                                                       @Param("groupIds") List<Long> groupIds);
+
     @Modifying
     @Query("DELETE FROM Permission where id = :id")
     void deleteById(@Param("id") Long id);
-
 }
 

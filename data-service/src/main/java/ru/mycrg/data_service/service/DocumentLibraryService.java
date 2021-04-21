@@ -9,7 +9,6 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.Roles;
 import ru.mycrg.data_service.entity.DocumentLibrary;
-import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
@@ -94,8 +93,9 @@ public class DocumentLibraryService implements ResourceManager {
 
             final Optional<Resource> oResource = resourcesService.get(rIdentifier);
             if (oResource.isPresent()) {
-                Set<Permission> allPermissions = permissionsService.getAllRelatedPermissions(oResource.get());
-                return resourceProtector.defineRole(oResource.get(), allPermissions);
+                Set<String> allRoles = permissionsService.getAllRelatedRoles(oResource.get());
+
+                return resourceProtector.defineRole(oResource.get(), allRoles);
             }
 
             return Optional.empty();

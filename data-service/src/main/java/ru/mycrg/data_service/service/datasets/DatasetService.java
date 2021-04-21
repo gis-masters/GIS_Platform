@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.datasets;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -10,21 +9,16 @@ import ru.mycrg.data_service.dao.SchemasManager;
 import ru.mycrg.data_service.dto.DatasetModel;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
-import ru.mycrg.data_service.dto.Roles;
-import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
-import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.resources.ResourceProtector;
 import ru.mycrg.data_service.service.resources.ResourcesService;
 import ru.mycrg.http_client.ResponseModel;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -33,7 +27,7 @@ import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 
 @Service
-public class DatasetService implements IDatasetService {
+public class DatasetService {
 
     public static final Logger log = LoggerFactory.getLogger(DatasetService.class);
 
@@ -43,42 +37,32 @@ public class DatasetService implements IDatasetService {
     private final ResourceProtector resourceProtector;
     private final ResourcesService resourcesService;
     private final DataStoreClient dataStoreClient;
-    private final PermissionsService permissionsService;
     private final IAuthenticationFacade authenticationFacade;
 
     public DatasetService(ResourcesService resourcesService,
                           ResourceProtector resourceProtector,
                           SchemasManager schemasManager,
-                          PermissionsService permissionsService,
                           IAuthenticationFacade authenticationFacade,
                           DataStoreClient dataStoreClient) {
         this.schemasManager = schemasManager;
         this.dataStoreClient = dataStoreClient;
         this.resourcesService = resourcesService;
         this.resourceProtector = resourceProtector;
-        this.permissionsService = permissionsService;
         this.authenticationFacade = authenticationFacade;
     }
 
-    @Override
-    public Page<IResourceModel> getPaged(String title,
-                                         Pageable pageable) {
-        List<IResourceModel> datasets = resourcesService
-                .getByTitle(title, SCHEMA).stream()
-                .map(this::mapToModelWithDefineRole)
-                .collect(Collectors.toList());
+    public Page<IResourceModel> getPaged(String title, Pageable pageable) {
+        List<IResourceModel> datasets = resourcesService.getByTitle(title, SCHEMA).stream()
+                                                        .map(DatasetModel::new)
+                                                        .collect(Collectors.toList());
 
         return getPage(datasets, pageable);
     }
 
-    @Override
     public IResourceModel getInfo(ResourceIdentifier rIdentifier) {
-        return resourcesService.get(rIdentifier)
-                               .map(this::mapToModelWithDefineRole)
-                               .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
+        return resourcesService.getModel(rIdentifier);
     }
 
-    @Override
     public DatasetModel create(ResourceCreateDto dto) {
         String datasetId = String.format("%s_%s", SCHEMA_PREFIX, UUID.randomUUID().toString().substring(0, 6));
 
@@ -103,7 +87,6 @@ public class DatasetService implements IDatasetService {
         return new DatasetModel(newEntity, OWNER);
     }
 
-    @Override
     public void delete(ResourceIdentifier rIdentifier) {
         schemasManager.delete(rIdentifier);
 
@@ -116,14 +99,5 @@ public class DatasetService implements IDatasetService {
         if (!responseModel.isSuccessful()) {
             log.warn("Не удалось удалить хранилище на gis-service: {}", responseModel);
         }
-    }
-
-    @NotNull
-    private IResourceModel mapToModelWithDefineRole(Resource resource) {
-        Set<Permission> allPermissions = permissionsService.getAllRelatedPermissions(resource);
-        Roles role = resourceProtector.defineRole(resource, allPermissions)
-                                      .orElseThrow(() -> new ForbiddenException("Can't define role"));
-
-        return new DatasetModel(resource, role);
     }
 }
