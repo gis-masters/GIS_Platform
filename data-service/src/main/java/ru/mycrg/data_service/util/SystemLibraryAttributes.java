@@ -3,6 +3,7 @@ package ru.mycrg.data_service.util;
 public enum SystemLibraryAttributes {
 
     ID("id"),
+    TITLE("title"),
     CREATED_AT("created_at"),
     LAST_MODIFIED("last_modified"),
     CREATED_BY("created_by"),

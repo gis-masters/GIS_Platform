@@ -84,7 +84,8 @@ export interface Adapter {
 }
 
 enum ActionType {
-  DELETE = 'delete'
+  DELETE = 'delete',
+  DOWNLOAD = 'download'
 }
 
 export type AllowedActions = { [key in ActionType]?: ActionDetails };
@@ -95,4 +96,6 @@ export interface ActionDetails {
   needConfirmation?: boolean;
   confirmationText?: string;
   confirmationMood?: 'normal' | 'warning';
+  url?: string;
+  fileName?: string;
 }

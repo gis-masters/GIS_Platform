@@ -75,6 +75,28 @@ public class SystemAttributeHandler {
         return this;
     }
 
+    @NotNull
+    public String getFileName(@NotNull Map<String, Object> body) {
+        if (attributeDefined(TITLE)) {
+            if (attributeDefined(FILE_TYPE)) {
+                return body.get(TITLE.getName()) + "." + body.get(FILE_TYPE.getName());
+            }
+
+            return body.get(TITLE.getName()) + ".file";
+        }
+
+        return "default.file";
+    }
+
+    @NotNull
+    public String getFileSize(@NotNull Map<String, Object> body) {
+        if (attributeDefined(SIZE)) {
+            return body.get(SIZE.getName()).toString();
+        }
+
+        return "0";
+    }
+
     private boolean attributeDefined(SystemLibraryAttributes attribute) {
         if (this.schema == null) {
             return false;

@@ -6,12 +6,12 @@ body .Link {
   }
 
   &_theme_none {
-    text-decoration: inherit;
+    text-decoration: none;
 
     color: inherit;
 
     &:hover {
-      text-decoration: inherit;
+      text-decoration: none;
 
       color: inherit;
     }

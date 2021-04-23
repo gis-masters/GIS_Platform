@@ -8,7 +8,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +19,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.FileStorageService;
 import ru.mycrg.data_service.service.RecordsService;
+import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
+import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
@@ -50,13 +52,16 @@ public class DocumentLibraryRecordsController {
     private final RecordsService recordsService;
     private final FileStorageService fileStorageService;
     private final DocumentLibraryService libraryService;
+    private final SystemAttributeHandler systemAttributeHandler;
 
     public DocumentLibraryRecordsController(RecordsService recordsService,
                                             FileStorageService fileStorageService,
+                                            SystemAttributeHandler systemAttributeHandler,
                                             DocumentLibraryService libraryService) {
         this.libraryService = libraryService;
         this.recordsService = recordsService;
         this.fileStorageService = fileStorageService;
+        this.systemAttributeHandler = systemAttributeHandler;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -133,10 +138,17 @@ public class DocumentLibraryRecordsController {
 
         Resource resource = fileStorageService.loadFileAsResource(innerFileName);
 
+        final SystemAttributeHandler systemAttributeHandler =
+                this.systemAttributeHandler.fetchSchema(rIdentifier.getId());
+
+        final String contentDisposition = String.format("attachment; filename=\"%s\"",
+                                                        systemAttributeHandler.getFileName(record));
+        final String contentLength = systemAttributeHandler.getFileSize(record);
+
         return ResponseEntity.ok()
                              .contentType(MediaType.parseMediaType(defineFileContentType(request, resource)))
-                             .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s\"",
-                                                                                    resource.getFilename()))
+                             .header(CONTENT_DISPOSITION, contentDisposition)
+                             .header(CONTENT_LENGTH, contentLength)
                              .body(resource);
     }
 

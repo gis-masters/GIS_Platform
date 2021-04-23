@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { CardActions } from '@material-ui/core';
 import { cn } from '@bem-react/classname';
-
-import { communicationService } from '../../../services/communication.service';
+import { action, observable } from 'mobx';
+import { CardActions } from '@material-ui/core';
 
 import { ExplorerStore } from '../Explorer.store';
 import { AllowedActions } from '../Explorer.models';
 import { getAllowedActions, getId } from '../Adapter/Explorer-Adapter';
 import { ExplorerActionDelete } from '../ActionDelete/Explorer-ActionDelete';
+import { ExplorerActionDownload } from '../ActionDownload/Explorer-ActionDownload';
+
+import { communicationService } from '../../../services/communication.service';
 
 import '!style-loader!css-loader!sass-loader!./Explorer-Actions.scss';
 
@@ -22,6 +23,7 @@ interface ExplorerActionsProps {
 @observer
 export class ExplorerActions extends Component<ExplorerActionsProps> {
   private itemId: string;
+
   @observable private allowedActions: AllowedActions = {};
 
   async componentDidMount() {
@@ -44,12 +46,15 @@ export class ExplorerActions extends Component<ExplorerActionsProps> {
     const { store } = this.props;
     const { selectedItem } = store;
     const hasActions = Object.values(this.allowedActions).some(({ visible }) => visible);
+    const isDeleteAction = !!this.allowedActions.delete;
+    const isDownloadAction = !!this.allowedActions.download;
 
     return (
       selectedItem &&
       hasActions && (
         <CardActions className={cnExplorer('Actions')}>
-          <ExplorerActionDelete store={store} actionDetails={this.allowedActions.delete || {}} />
+          {isDeleteAction && <ExplorerActionDelete store={store} actionDetails={this.allowedActions.delete} />}
+          {isDownloadAction && <ExplorerActionDownload store={store} actionDetails={this.allowedActions.download} />}
         </CardActions>
       )
     );

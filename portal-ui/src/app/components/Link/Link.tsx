@@ -1,14 +1,10 @@
 import React, { Component, ReactNode } from 'react';
-import { AxiosError } from 'axios';
 import { OpenInNew } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { getBaseUrl } from '../../services/server-urls.service';
 import { sleep } from '../../services/util/sleep';
-import { http } from '../../services/http.service';
 import { services } from '../../services/services';
-import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./Link.scss';
 
@@ -20,28 +16,29 @@ interface LinkProps {
   className?: string;
   children?: ReactNode;
   target?: string;
-  download?: boolean | string;
+  download?: string;
   disabled?: boolean;
   delay?: number;
 }
 
 export class Link extends Component<LinkProps> {
   render() {
-    const { children, className, url, target, theme } = this.props;
+    const { children, className, url, target, theme, download } = this.props;
 
     return (
       <a
         href={url}
-        target={target}
+        target={download ? '_blank' : target}
         onClick={this.navigate}
         className={cnLink({ theme: theme || 'normal' }, [className])}
+        download={download}
       >
-        {target === '_blank' ? (
+        {target === '_blank' && (
           <>
             <OpenInNew className={cnLink('Icon')} />
             &nbsp;
           </>
-        ) : null}
+        )}
         {children}
       </a>
     );
@@ -52,42 +49,21 @@ export class Link extends Component<LinkProps> {
     const { url, target, download, disabled, delay } = this.props;
 
     if (!target || disabled || delay) {
-      e.preventDefault();
-
       if (disabled) {
+        e.preventDefault();
         return;
       }
 
-      if (delay) {
-        await sleep(delay);
-      }
-
       if (!download) {
+        e.preventDefault();
+
+        if (delay) {
+          await sleep(delay);
+        }
+
         services.ngZone.run(() => {
           services.router.navigateByUrl(url);
         });
-      } else if (download) {
-        const baseUrl = await getBaseUrl();
-
-        http
-          .get(url, { responseType: 'blob' })
-          .then(response => {
-            const objectURL = window.URL.createObjectURL(response);
-            const a = document.createElement('a');
-            a.href = objectURL;
-            a.download = download === true ? new URL(url, baseUrl).pathname.split('/').pop() : download;
-            a.click();
-          })
-          .catch((err: AxiosError) => {
-            if (err.response?.status === 404) {
-              Toast.error('Файл отсутствует, обратитесь к администратору.');
-            } else if (err.response?.status === 403) {
-              Toast.error('Нет доступа к файлу, обратитесь к администратору.');
-            } else {
-              Toast.error('Возникла ошибка при получении файла');
-              services.logger.error('Возникла ошибка при получении файла: ', err.message);
-            }
-          });
       }
     }
   }
