@@ -55,6 +55,7 @@ export interface ExplorerProps extends IClassNameProps {
 export class Explorer extends Component<ExplorerProps> {
   @observable private busy = false;
 
+  private gettingChildrenToken: Symbol;
   private onSelectReactionDispose: IReactionDisposer;
   private store: ExplorerStore;
   private subscribedRefreshEmitterTypes: ExplorerItemType[] = [];
@@ -146,20 +147,26 @@ export class Explorer extends Component<ExplorerProps> {
       store.selectItem(item);
       this.setBusy(true);
       const { pageSize, sort, sortDir, filter } = store;
+
+      const gettingChildrenToken = Symbol();
+      this.gettingChildrenToken = gettingChildrenToken;
+
       const [children, pagesCount] = await getChildren(item, page, pageSize, sort, sortDir, filter);
 
-      children.forEach(child => {
-        if (!this.subscribedRefreshEmitterTypes.includes(child.type)) {
-          this.subscribedRefreshEmitterTypes.push(child.type);
+      if (gettingChildrenToken === this.gettingChildrenToken) {
+        children.forEach(child => {
+          if (!this.subscribedRefreshEmitterTypes.includes(child.type)) {
+            this.subscribedRefreshEmitterTypes.push(child.type);
 
-          getRefreshEmitters(child).forEach(emitter => {
-            emitter.on(this.refresh);
-          });
-        }
-      });
+            getRefreshEmitters(child).forEach(emitter => {
+              emitter.on(this.refresh);
+            });
+          }
+        });
 
-      store.setPage(page);
-      this.setChildren(item, children, pagesCount, depth);
+        store.setPage(page);
+        this.setChildren(item, children, pagesCount, depth);
+      }
     } catch (e) {
       throw Error('Ошибка при получении элементов' + e);
     } finally {
