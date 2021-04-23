@@ -140,7 +140,19 @@
       {
         "id": "dataManagement",
         "title": "Управление данными",
-        "contentUrl": "/assets/help/map/dataManagement/00dataManagement.html"
+        "contentUrl": "/assets/help/map/dataManagement/00dataManagement.html",
+        "children": [
+          {
+            "id": "dataSets",
+            "title": "Наборы данных",
+            "contentUrl": "/assets/help/map/dataManagement/01dataSets.html"
+          },
+          {
+            "id": "libraryDocs",
+            "title": "Библиотека документов",
+            "contentUrl": "/assets/help/map/dataManagement/02libraryDocs.html"
+          }
+        ]
       },
       {
         "id": "controlLayers",
