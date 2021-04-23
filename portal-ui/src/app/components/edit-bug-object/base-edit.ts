@@ -46,14 +46,14 @@ export class BaseEdit implements OnDestroy {
     return result;
   }
 
-  validateCustomRules(featureProperties: {}) {
+  validateCustomRules(featureProperties: { [key: string]: any }) {
     if (!this.featureDescription) {
       return;
     }
-
     FeaturePropertyValidators.validateCustomRules(
       featureProperties,
-      this.featureDescription.customRuleFunction
+      this.featureDescription.customRuleFunction,
+      this.featureDescription.tableName
     ).forEach((validationError: ValidationError) => {
       const control = this.editFeatureForm.controls[validationError.attribute];
       if (control) {

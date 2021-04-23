@@ -126,7 +126,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
               this.editFeatureForm.addControl(key, formControl);
             } else {
-              // TODO: надобы запрашивать DescribeFeatureType по WFS и брать тип лишних атрибутов там.
+              // TODO: надо бы запрашивать DescribeFeatureType по WFS и брать тип лишних атрибутов там.
               this.editFeatureData.push({
                 name: key,
                 property: {

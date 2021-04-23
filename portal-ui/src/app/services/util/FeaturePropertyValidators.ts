@@ -1,7 +1,9 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { isEmpty } from 'validate.js';
+import { Toast } from '../../components/Toast/Toast';
 
 import { PropertySchema, PropertyEnumerations } from '../crg/schema.models';
+import { services } from '../services';
 
 // Править в соответствии с ru/mycrg/common/enums/ValueType.java
 export enum ValueType {
@@ -36,7 +38,11 @@ export interface ErrorMessages {
 }
 
 export class FeaturePropertyValidators {
-  static validateCustomRules(featureObject: {}, customRuleFunction: string): ValidationError[] {
+  static validateCustomRules(
+    featureProperties: { [key: string]: any },
+    customRuleFunction: string,
+    tableName: string
+  ): ValidationError[] {
     let errors: ValidationError[] = [];
 
     if (!customRuleFunction) {
@@ -45,10 +51,10 @@ export class FeaturePropertyValidators {
 
     try {
       const evaluateObjectRules = new Function('obj', customRuleFunction);
-
-      errors = evaluateObjectRules(featureObject);
+      errors = evaluateObjectRules(featureProperties);
     } catch (e) {
-      throw Error('Ошибка при анализе доп. правил. ' + e);
+      Toast.error({ message: 'Ошибка при анализе доп. правил', details: `Таблица: ${tableName}\n${e}` });
+      services.logger.error('Ошибка при анализе доп. правил', tableName, e);
     }
 
     return errors;
@@ -141,7 +147,7 @@ export class FeaturePropertyValidators {
     }
 
     if (value.toString().length < propertySchema.minLength) {
-      errors.minLength = 'Строка слишком короткая минимальныя длинна сроки: ' + propertySchema.minLength + ' символов';
+      errors.minLength = 'Строка слишком короткая минимальная длинна сроки: ' + propertySchema.minLength + ' символов';
     }
   }
 
