@@ -190,7 +190,6 @@ class MapService {
       if (this.pickHandler) {
         this.pickHandler(e);
         delete this.pickHandler;
-
         return;
       }
 
