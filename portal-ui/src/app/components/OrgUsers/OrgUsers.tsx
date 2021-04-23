@@ -5,17 +5,17 @@ import { Done, Block } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { FilterParams } from '../../services/util/filterObjects';
+import { allUsers } from '../../stores/AllUsers.store';
+import { allGroups } from '../../stores/AllGroups.store';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { CrgUser, usersService } from '../../services/crg/users.service';
 import { PrincipalType } from '../../services/crg/permissions.models';
-import { allPermissions } from '../../stores/AllPermissions.store';
-import { allGroups } from '../../stores/AllGroups.store';
-import { allUsers } from '../../stores/AllUsers.store';
+import { FilterParams } from '../../services/util/filterObjects';
 import { OrgActions } from '../OrgActions/OrgActions';
 import { Highlight } from '../Highlight/Highlight';
 import { TextBadge } from '../TextBadge/TextBadge';
 import { XTable, XTableColumn } from '../XTable/XTable';
+import { PermissionsCount } from '../PermissionsCount/PermissionsCount';
 
 import { OrgUsersCreate } from './Create/OrgUsers-Create';
 
@@ -26,7 +26,6 @@ const cnOrgUsers = cn('OrgUsers');
 interface CrgUserExtended extends CrgUser {
   groups: CrgGroup[];
   groupsString: string;
-  permissionsCount: number;
 }
 
 @observer
@@ -67,9 +66,7 @@ export class OrgUsers extends Component {
     },
     {
       title: 'Разрешений',
-      field: 'permissionsCount',
-      filtering: true,
-      sorting: true,
+      renderCellContent: this.renderPermissionsCount,
       align: 'right'
     },
     {
@@ -106,12 +103,7 @@ export class OrgUsers extends Component {
       return {
         ...user,
         groups,
-        groupsString: groups.map(({ name }) => name).join(', '),
-        permissionsCount: allPermissions.list.filter(item =>
-          item.permissions.find(
-            ({ principalId, principalType }) => Number(principalId) === user.id && principalType === PrincipalType.USER
-          )
-        ).length
+        groupsString: groups.map(({ name }) => name).join(', ')
       };
     });
   }
@@ -133,9 +125,14 @@ export class OrgUsers extends Component {
       </>
     );
   }
-
+  
   @boundMethod
-  private renderUserActions(user: CrgUserExtended): ReactNode {
-    return <OrgActions user={user} userGroups={user.groups} />;
+  private renderPermissionsCount(rowData: CrgUserExtended): ReactNode {
+    return <PermissionsCount principalId={rowData.id} principalType={PrincipalType.USER} />;
   }
+  
+    @boundMethod
+    private renderUserActions(user: CrgUserExtended): ReactNode {
+      return <OrgActions user={user} userGroups={user.groups} />;
+    }
 }

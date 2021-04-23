@@ -5,11 +5,11 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { allGroups } from '../../stores/AllGroups.store';
-import { allPermissions } from '../../stores/AllPermissions.store';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { PrincipalType } from '../../services/crg/permissions.models';
 import { OrgActions } from '../OrgActions/OrgActions';
 import { XTable, XTableColumn } from '../XTable/XTable';
+import { PermissionsCount } from '../PermissionsCount/PermissionsCount';
 
 import { OrgGroupsCreate } from './Create/OrgGroups-Create';
 
@@ -19,7 +19,6 @@ const cnOrgGroups = cn('OrgGroups');
 
 interface CrgGroupExtended extends CrgGroup {
   usersCount: number;
-  permissionsCount: number;
 }
 
 @observer
@@ -48,9 +47,7 @@ export class OrgGroups extends Component {
     },
     {
       title: 'Разрешений',
-      field: 'permissionsCount',
-      filtering: true,
-      sorting: true,
+      renderCellContent: this.renderPermissionsCount,
       align: 'right'
     },
     {
@@ -83,13 +80,13 @@ export class OrgGroups extends Component {
   private get groups(): CrgGroupExtended[] {
     return allGroups.list.map(group => ({
       ...group,
-      usersCount: group.users.length,
-      permissionsCount: allPermissions.list.filter(item =>
-        item.permissions.find(
-          ({ principalId, principalType }) => Number(principalId) === group.id && principalType === PrincipalType.GROUP
-        )
-      ).length
+      usersCount: group.users.length
     }));
+  }
+
+  @boundMethod
+  private renderPermissionsCount(rowData: CrgGroupExtended): ReactNode {
+    return <PermissionsCount principalId={rowData.id} principalType={PrincipalType.GROUP} />;
   }
 
   @boundMethod

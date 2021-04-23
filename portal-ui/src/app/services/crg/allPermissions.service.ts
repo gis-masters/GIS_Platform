@@ -1,18 +1,13 @@
 import { debounce } from 'lodash';
 
-import { allProjects } from '../../stores/AllProjects.store';
 import { allPermissions } from '../../stores/AllPermissions.store';
-import { getAllProjectsPermissions, getAllTablesPermissions } from './permissions.client';
-import { CrgProject, CrgLayer, CrgLayerType } from './projects.models';
+import { getAllProjectsPermissions, getAllTablesAndDatasetsPermissions } from './permissions.client';
 import { communicationService } from '../communication.service';
 import { RoleAssignmentBody } from './permissions.models';
 import { projectsService } from './projects.service';
-import { services } from '../services';
-import { Toast } from '../../components/Toast/Toast';
 
-export interface PermissionsListItem {
-  project: CrgProject;
-  layer?: CrgLayer;
+export interface PermissionsListItem<T = unknown> {
+  entity: T;
   permissions: RoleAssignmentBody[];
   broken?: boolean;
 }
@@ -66,67 +61,17 @@ class AllPermissionsService {
 
     allPermissions.setFetching(true);
 
-    const resourcesPermissions = await getAllTablesPermissions();
-    const projectPermissionsOodles = await getAllProjectsPermissions();
-
     await projectsService.initAllProjectsStore();
+    const tablesPermissionsHeap = await getAllTablesAndDatasetsPermissions();
+    const projectPermissionsHeap = await getAllProjectsPermissions();
 
-    const list: PermissionsListItem[] = [];
-    let itemCounter = 0;
-    const items: [CrgProject, CrgLayer?][] = [];
-
-    for (const project of allProjects.list) {
-      const layers = await projectsService.getProjectLayers(project.id);
-      items.splice(
-        items.length,
-        0,
-        [project],
-        ...layers
-          .filter(layer => layer.type === CrgLayerType.VECTOR)
-          .map(layer => [project, layer] as [CrgProject, CrgLayer])
-      );
+    if (this.fetchingOperationId !== operationId) {
+      return;
     }
 
-    for (const [project, layer] of items) {
-      let broken = false;
-      let permissions: RoleAssignmentBody[] = [];
-
-      try {
-        if (layer) {
-          const layerComplexId = `${layer.dataset}.${layer.tableName}`;
-          permissions = resourcesPermissions.find(({ identifier }) => identifier === layerComplexId)?.permissions || [];
-        } else {
-          permissions = projectPermissionsOodles[String(project.id)] || [];
-        }
-      } catch (e) {
-        broken = true;
-        let errText =
-          'Ошибка получения данных ' +
-          (layer
-            ? `для слоя "${layer.title}" в проекте "${project.name}" (${layer.complexName})`
-            : `для проекта "${project.name}"`);
-        Toast.warn(errText);
-        services.logger.error(errText, e);
-      }
-
-      if (this.fetchingOperationId !== operationId) {
-        return;
-      }
-
-      itemCounter++;
-      allPermissions.setFetchingProgress((itemCounter / items.length) * 100);
-
-      list.push({
-        project,
-        layer,
-        permissions,
-        broken
-      });
-    }
-
-    allPermissions.setList(list);
+    allPermissions.setProjectsPermissionsHeap(projectPermissionsHeap);
+    allPermissions.setTablesAndDatasetsPermissionsHeap(tablesPermissionsHeap);
     allPermissions.setFetching(false);
-    allPermissions.setFetchingProgress(null);
   }
 }
 

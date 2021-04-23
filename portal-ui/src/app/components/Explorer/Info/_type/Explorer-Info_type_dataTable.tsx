@@ -1,7 +1,7 @@
 import React from 'react';
 import { withBemMod } from '@bem-react/core';
 
-import { DataSet, DataTable } from '../../../../services/data.service';
+import { Dataset, DataTable } from '../../../../services/data.service';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 
@@ -18,13 +18,13 @@ function renderContent({ Explorer, store }: ExplorerInfoProps) {
   const dataTable = selectedItem.payload as DataTable;
   // Тут мы наивно предполагаем, что родителями списков таблиц всегда являются наборы данных.
   // Если это окажется не так, нужно будет переделывать.
-  const dataSet = openedItem.payload as DataSet;
+  const dataset = openedItem.payload as Dataset;
 
   return (
     <>
       {getDescription(selectedItem)}
-      <ConnectionsTableToProjectsWidget dataTable={dataTable} dataSet={dataSet} Explorer={Explorer} />
-      <PermissionsWidget dataTable={dataTable} dataSet={dataSet} />
+      <ConnectionsTableToProjectsWidget dataTable={dataTable} dataset={dataset} Explorer={Explorer} />
+      <PermissionsWidget dataTable={dataTable} dataset={dataset} />
     </>
   );
 }

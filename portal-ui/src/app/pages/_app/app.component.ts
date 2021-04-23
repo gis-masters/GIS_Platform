@@ -46,16 +46,13 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
     ) {
       if (oldOnError) oldOnError.apply(this, arguments);
 
-      Toast.error(
-        {
-          source,
-          fileno,
-          columnNumber,
-          error
-        },
-        null,
-        true
-      );
+      Toast.error({
+        source,
+        fileno,
+        columnNumber,
+        error,
+        canBeSuppressed: true
+      });
     };
   }
 

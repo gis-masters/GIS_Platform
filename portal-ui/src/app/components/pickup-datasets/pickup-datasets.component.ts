@@ -3,7 +3,7 @@ import { boundMethod } from 'autobind-decorator';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { Component, ElementRef, EventEmitter, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 
-import { DataSet } from '../../services/data.service';
+import { Dataset } from '../../services/data.service';
 import { PickupDatasets } from '../PickupDatasets/PickupDatasets';
 
 @Component({
@@ -11,7 +11,7 @@ import { PickupDatasets } from '../PickupDatasets/PickupDatasets';
   template: '<div class="pickup-datasets" #react></div>'
 })
 export class PickupDatasetsComponent implements OnInit, OnChanges, OnDestroy {
-  @Output() datasetSelect = new EventEmitter<DataSet>();
+  @Output() datasetSelect = new EventEmitter<Dataset>();
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
   ngOnInit() {
@@ -27,13 +27,13 @@ export class PickupDatasetsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(PickupDatasets, {onDatasetSelected: this.onDatasetSelected});
+    const reactElement = createElement(PickupDatasets, {  onDatasetSelected: this.onDatasetSelected  });
 
     render(reactElement, this.ref.nativeElement);
   }
 
   @boundMethod
-  private onDatasetSelected(dataset: DataSet) {
+  private onDatasetSelected(dataset: Dataset) {
     this.datasetSelect.emit(dataset);
   }
 }

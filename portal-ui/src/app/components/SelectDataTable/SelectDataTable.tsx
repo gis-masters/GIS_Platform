@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import { IClassNameProps } from '@bem-react/core';
 
-import { DataSet, DataTable } from '../../services/data.service';
+import { Dataset, DataTable } from '../../services/data.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { BreadcrumbItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
@@ -18,16 +18,16 @@ const cnSelectDataTable = cn('SelectDataTable');
 
 interface SelectDataTableProps extends IClassNameProps {
   id: string;
-  dataSet?: DataSet;
+  dataset?: Dataset;
   dataTable?: DataTable;
   disabledTables?: DataTable[];
-  onChange: (dataSet?: DataSet, dataTable?: DataTable) => void;
+  onChange: (dataset?: Dataset, dataTable?: DataTable) => void;
 }
 
 @observer
 export class SelectDataTable extends Component<SelectDataTableProps> {
   @observable private dialogOpen = false;
-  @observable private selectedDataSet?: DataSet;
+  @observable private selectedDataset?: Dataset;
   @observable private selectedDataTable?: DataTable;
 
   render() {
@@ -49,7 +49,7 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
             <Explorer
               appRole='SelectDataTable'
               className={cnSelectDataTable('Explorer')}
-              preset={ExplorerItemType.DATA_SET_ROOT}
+              preset={ExplorerItemType.DATASET_ROOT}
               onSelect={this.handleSelect}
               onOpen={this.handleOpen}
               disabledItems={
@@ -70,10 +70,10 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
 
   @computed
   private get breadcrumbsItems(): BreadcrumbItemData[] {
-    const { dataSet, dataTable } = this.props;
+    const { dataset, dataTable } = this.props;
 
     return [
-      { title: dataSet.title, subtitle: dataSet.identifier },
+      { title: dataset.title, subtitle: dataset.identifier },
       { title: dataTable.title, subtitle: dataTable.identifier }
     ];
   }
@@ -81,10 +81,10 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
   @action.bound
   private handleSelect(item: ExplorerItemData, path: ExplorerItemData[]) {
     if (item.type === ExplorerItemType.TABLE && this.isDisabled(item.payload as DataTable)) {
-      this.selectedDataSet = path[1].payload as DataSet;
+      this.selectedDataset = path[1].payload as Dataset;
       this.selectedDataTable = item.payload as DataTable;
     } else {
-      this.selectedDataSet = null;
+      this.selectedDataset = null;
       this.selectedDataTable = null;
     }
   }
@@ -110,8 +110,8 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
   @action.bound
   private submitDialog() {
     this.closeDialog();
-    this.props.onChange(this.selectedDataSet, this.selectedDataTable);
-    this.selectedDataSet = null;
+    this.props.onChange(this.selectedDataset, this.selectedDataTable);
+    this.selectedDataset = null;
     this.selectedDataTable = null;
   }
 

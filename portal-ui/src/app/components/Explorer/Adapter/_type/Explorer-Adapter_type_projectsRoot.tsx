@@ -17,7 +17,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeProjectsRoot {
   static getId(item: ExplorerItemData<CrgProject>) {
-    return 'dataSetRoot';
+    return 'datasetRoot';
   }
 
   static getTitle(item: ExplorerItemData<CrgProject>) {

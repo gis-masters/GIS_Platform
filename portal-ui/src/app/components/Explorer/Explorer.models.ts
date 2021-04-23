@@ -6,7 +6,7 @@ import { Emitter } from '../../services/util/Emitter';
 export enum ExplorerItemType {
   EMPTY = 'empty',
 
-  DATA_SET = 'dataSet',
+  DATASET = 'dataset',
   TABLE = 'table',
   PROJECT = 'project',
 
@@ -16,7 +16,7 @@ export enum ExplorerItemType {
 
   BASEMAP = 'basemap',
 
-  DATA_SET_ROOT = 'dataSetRoot',
+  DATASET_ROOT = 'datasetRoot',
   LIBRARY_ROOT = 'libraryRoot',
   PROJECTS_ROOT = 'projectsRoot',
   BASEMAPS_ROOT = 'basemapsRoot',

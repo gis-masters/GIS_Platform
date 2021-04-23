@@ -8,6 +8,8 @@ import { Role, PrincipalType, roles, projectRoles, rolesTitles } from '../../../
 import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
 import { filterOutPrincipal } from '../../../services/crg/permissions.service';
 
+import { PermissionsListItemType } from '../PermissionsListDialog.models';
+
 import '!style-loader!css-loader!sass-loader!./PermissionsListDialog-RoleSelect.scss';
 
 const cnPermissionsListRoleSelect = cn('PermissionsListDialog', 'RoleSelect');
@@ -17,6 +19,7 @@ interface PermissionsListRoleSelectProps {
   onChange: (newItem: PermissionsListItem) => void;
   principalId: number;
   principalType: PrincipalType;
+  listItemType: PermissionsListItemType;
 }
 
 @observer
@@ -37,7 +40,7 @@ export class PermissionsListRoleSelect extends Component<PermissionsListRoleSele
 
   @computed
   private get roles(): Role[] {
-    return this.props.listItem.layer ? roles : projectRoles;
+    return this.props.listItemType === PermissionsListItemType.PROJECT ? projectRoles : roles;
   }
 
   @computed

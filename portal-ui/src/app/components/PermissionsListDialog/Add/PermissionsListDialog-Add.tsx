@@ -5,31 +5,44 @@ import { cn } from '@bem-react/classname';
 import { Tooltip, IconButton } from '@material-ui/core';
 import { AddCircleOutline } from '@material-ui/icons';
 
-import { PrincipalType } from '../../../services/crg/permissions.models';
 import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
+import { PrincipalType } from '../../../services/crg/permissions.models';
+import { Dataset, DataTable } from '../../../services/data.service';
+import { CrgProject } from '../../../services/crg/projects.models';
 import { PermissionsAddDialog } from '../../PermissionsAddDialog/PermissionsAddDialog';
+
+import { PermissionsListItemType } from '../PermissionsListDialog.models';
 
 import '!style-loader!css-loader!sass-loader!./PermissionsListDialog-Add.scss';
 
 const cnPermissionsListDialogAdd = cn('PermissionsListDialog', 'Add');
 
 interface PermissionsListDialogAddProps {
-  currentList: PermissionsListItem[];
+  usedProjects: CrgProject[];
+  usedTables: DataTable[];
+  usedDatasets: Dataset[];
   principalId: number;
   principalType: PrincipalType;
   onAdd: (item: PermissionsListItem[]) => void;
+  type: PermissionsListItemType;
 }
+
+const entityTypeLabels = {
+  [PermissionsListItemType.PROJECT]: 'проект',
+  [PermissionsListItemType.TABLE]: 'векторный слой',
+  [PermissionsListItemType.DATASET]: 'набор данных'
+};
 
 @observer
 export class PermissionsListDialogAdd extends Component<PermissionsListDialogAddProps> {
   @observable private open = false;
 
   render() {
-    const { currentList, principalId, principalType, onAdd } = this.props;
+    const { usedProjects, usedDatasets, usedTables, principalId, principalType, onAdd, type } = this.props;
 
     return (
       <>
-        <Tooltip title='Добавить'>
+        <Tooltip title={`Добавить ${entityTypeLabels[type]}`}>
           <IconButton className={cnPermissionsListDialogAdd()} onClick={this.openDialog}>
             <AddCircleOutline />
           </IconButton>
@@ -38,9 +51,12 @@ export class PermissionsListDialogAdd extends Component<PermissionsListDialogAdd
           open={this.open}
           onClose={this.closeDialog}
           onAdd={onAdd}
-          currentList={currentList}
+          usedProjects={usedProjects}
+          usedTables={usedTables}
+          usedDatasets={usedDatasets}
           principalId={principalId}
           principalType={principalType}
+          type={type}
         />
       </>
     );

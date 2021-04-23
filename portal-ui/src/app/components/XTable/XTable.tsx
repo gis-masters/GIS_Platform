@@ -36,7 +36,7 @@ export interface XTableColumn<T> {
   align?: TableCellProps['align'];
 }
 
-interface XTableProps<T> extends IClassNameProps {
+export interface XTableProps<T> extends IClassNameProps {
   title?: ReactNode;
   headerActions?: ReactNode;
   headless?: boolean;

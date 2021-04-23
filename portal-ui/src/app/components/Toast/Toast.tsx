@@ -25,6 +25,7 @@ interface ToastErrorOpts extends ToastOpts {
   fileno?: number;
   columnNumber?: number;
   error?: Error;
+  canBeSuppressed?: boolean;
 }
 
 interface ToastProps extends ToastOpts {
@@ -114,7 +115,7 @@ export class Toast extends Component<ToastProps> {
     };
   }
 
-  static error(messageOrOpts: JSX.Element | string | ToastErrorOpts, opts?: ToastErrorOpts, canBeSupresed?: boolean) {
+  static error(messageOrOpts: JSX.Element | string | ToastErrorOpts, opts?: ToastErrorOpts) {
     let message = messageOrOpts;
     if (!opts) {
       if (
@@ -157,7 +158,7 @@ ${error.message ? error.message : error.toString()}`;
 
     sendTelegramError(tgMsg);
 
-    if (env.supressToastErrors[protocol] && canBeSupresed) {
+    if (env.supressToastErrors[protocol] && opts.canBeSuppressed) {
       return;
     }
 

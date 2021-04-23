@@ -6,15 +6,15 @@ import { observer } from 'mobx-react';
 import { pluralize } from 'numeralize-ru';
 
 import { Button } from '../../Button/Button';
-import { DataSet } from '../../../services/data.service';
+import { Dataset } from '../../../services/data.service';
 
 import '!style-loader!css-loader!sass-loader!./PickupDatasets-Item.scss';
 
 const cnPickupDatasetsItem = cn('PickupDatasets', 'Item');
 
 export interface PickupDatasetsItemProps {
-  item: DataSet;
-  onClick: (dataset: DataSet) => void;
+  item: Dataset;
+  onClick: (dataset: Dataset) => void;
 }
 
 @observer

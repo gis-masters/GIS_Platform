@@ -7,7 +7,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/
 import { boundMethod } from 'autobind-decorator';
 
 import { Button } from '../Button/Button';
-import { DataSet } from '../../services/data.service';
+import { Dataset } from '../../services/data.service';
 import { communicationService } from '../../services/communication.service';
 import { CreateDatasetDialog } from '../CreateDatasetDialog/CreateDatasetDialog';
 
@@ -19,7 +19,7 @@ import '!style-loader!css-loader!sass-loader!./PickupDatasets.scss';
 const cnPickupDatasets = cn('PickupDatasets');
 
 interface PickupDatasetsProps {
-  onDatasetSelected: (dataset: DataSet) => void;
+  onDatasetSelected: (dataset: Dataset) => void;
 }
 
 @observer
@@ -74,7 +74,7 @@ export class PickupDatasets extends Component<PickupDatasetsProps> {
   }
 
   @boundMethod
-  private handleSelection(dataset: DataSet) {
+  private handleSelection(dataset: Dataset) {
     if (dataset) {
       this.setOpen(false);
       this.setDataset(dataset.title);

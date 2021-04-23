@@ -11,7 +11,7 @@ import { boundMethod } from 'autobind-decorator';
 import { Loading } from '../../Loading/Loading';
 import { SortDir } from '../../../services/models';
 import { PickupDatasetsItem } from '../Item/PickupDatasets-Item';
-import { DataSet, getDataSets } from '../../../services/data.service';
+import { Dataset, getDatasets } from '../../../services/data.service';
 import { communicationService } from '../../../services/communication.service';
 
 import '!style-loader!css-loader!sass-loader!./../Filter/PickupDatasets-Filter.scss';
@@ -23,7 +23,7 @@ import '!style-loader!css-loader!sass-loader!./../Content/PickupDatasets-Content
 const cnPickupDatasets = cn('PickupDatasets');
 
 export interface PickupDatasetsListProps {
-  onDatasetSelected: (dataset: DataSet) => void;
+  onDatasetSelected: (dataset: Dataset) => void;
 }
 
 @observer
@@ -32,7 +32,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
   @observable private busy = false;
   @observable private totalPages: number;
   @observable private currentPage = 1;
-  @observable private datasets: DataSet[] = [];
+  @observable private datasets: Dataset[] = [];
 
   private isInitial = true;
 
@@ -82,7 +82,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
               />
             </FormControl>
             <List className={cnPickupDatasets('Content', ['scroll'])} dense={true}>
-              {this.datasets.map((dataset: DataSet) => (
+              {this.datasets.map((dataset: Dataset) => (
                 <PickupDatasetsItem key={dataset.identifier} item={dataset} onClick={this.handleSelection} />
               ))}
             </List>
@@ -108,7 +108,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
 
   private async _fetchDatasets() {
     this.setBusy(true);
-    const [datasets, totalPages] = await getDataSets(
+    const [datasets, totalPages] = await getDatasets(
       this.currentPage - 1,
       this.pageSize,
       this.sortField,
@@ -124,7 +124,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
   }
 
   @boundMethod
-  private handleSelection(dataset: DataSet) {
+  private handleSelection(dataset: Dataset) {
     this.props.onDatasetSelected(dataset);
   }
 
@@ -145,7 +145,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
   }
 
   @action
-  private setDatasets(datasets: DataSet[]) {
+  private setDatasets(datasets: Dataset[]) {
     this.datasets = datasets;
   }
 

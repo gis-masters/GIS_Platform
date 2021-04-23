@@ -6,7 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Toast } from '../../components/Toast/Toast';
-import { DataSet } from '../../services/data.service';
+import { Dataset } from '../../services/data.service';
 import {
   ComparableLayersPair,
   ImportDataHolderService
@@ -30,7 +30,7 @@ import { FeatureDescription } from '../../services/crg/schema.models';
 export class MappingPageComponent implements OnInit, OnDestroy {
   selectedLayer: ImportLayerItem;
   isWorkImportInited = false;
-  selectedDataset: DataSet;
+  selectedDataset: Dataset;
   comparableLayers: ComparableLayersPair[];
   prevLink: string;
   nextLink: string;
@@ -135,7 +135,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
     return this.selectedLayer ? this.selectedLayer.name === comparablePair.originalLayer.name : false;
   }
 
-  onDatasetSelected(dataset: DataSet) {
+  onDatasetSelected(dataset: Dataset) {
     this.selectedDataset = dataset;
   }
 }

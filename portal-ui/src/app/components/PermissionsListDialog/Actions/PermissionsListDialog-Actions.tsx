@@ -1,21 +1,17 @@
 import React, { Component } from 'react';
-import {} from 'mobx';
-import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { DeleteOutline } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
-import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
-
 const cnPermissionsListDialogActions = cn('PermissionsListDialog', 'Actions');
 
 interface PermissionsListActionsProps {
-  item: PermissionsListItem;
-  onDelete: (item: PermissionsListItem) => void;
+  id: string | number;
+  additionalId?: string;
+  onDelete: (id: string | number, additionalId?: string) => void;
 }
 
-@observer
 export class PermissionsListActions extends Component<PermissionsListActionsProps> {
   render() {
     return (
@@ -31,7 +27,7 @@ export class PermissionsListActions extends Component<PermissionsListActionsProp
 
   @boundMethod
   private async handleDelete() {
-    const { item, onDelete } = this.props;
-    onDelete(item);
+    const { id, onDelete, additionalId } = this.props;
+    onDelete(id, additionalId);
   }
 }

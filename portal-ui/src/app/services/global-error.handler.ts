@@ -8,7 +8,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   constructor(private logger: NGXLogger) {}
 
   handleError(error: Error) {
-    Toast.error({ error }, null, true);
+    Toast.error({ error, canBeSuppressed: true });
     this.logger.error(error);
   }
 }

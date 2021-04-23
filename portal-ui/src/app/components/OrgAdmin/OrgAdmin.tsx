@@ -7,6 +7,7 @@ import { cn } from '@bem-react/classname';
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allPermissions } from '../../stores/AllPermissions.store';
+import { allDataEntitiesService } from '../../services/allDataEntities.service';
 import { allPermissionsService } from '../../services/crg/allPermissions.service';
 import { OrgGroups } from '../OrgGroups/OrgGroups';
 import { OrgUsers } from '../OrgUsers/OrgUsers';
@@ -26,10 +27,12 @@ export class OrgAdmin extends Component {
   @observable private activeTab = 0;
 
   async componentDidMount() {
+    await allDataEntitiesService.initAllDataEntitiesStore();
     await allPermissionsService.initAllPermissionsStore();
   }
 
   componentWillUnmount() {
+    allDataEntitiesService.dropAllDataEntitiesStore();
     allPermissionsService.dropPermissionsListStore();
   }
 
@@ -39,18 +42,18 @@ export class OrgAdmin extends Component {
     return (
       <div className={cnOrgAdmin()}>
         <Tabs
+          className={cnOrgAdmin('Tabs')}
           value={this.activeTab}
           indicatorColor='primary'
           textColor='primary'
           onChange={this.changeHandler}
-          className={cnOrgAdmin('Tabs')}
         >
           {tabs.map(([, label], i) => (
             <Tab label={label} value={i} key={i} />
           ))}
         </Tabs>
         <ChildComponent />
-        <Loading global visible={this.loading} value={allPermissions.fetchingProgress} />
+        <Loading global visible={this.loading} />
       </div>
     );
   }

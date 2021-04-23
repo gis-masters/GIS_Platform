@@ -9,7 +9,7 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayerType, NewCrgLayer } from '../../services/crg/projects.models';
 import { generateNextLayerId } from '../../services/geoserver/layers.service';
-import { DataSet, DataTable, getDataTable } from '../../services/data.service';
+import { Dataset, DataTable, getDataTable } from '../../services/data.service';
 import { Form, FormControl, FormField, FormLabel } from '../Form/Form';
 import { SelectDataTable } from '../SelectDataTable/SelectDataTable';
 import { Button } from '../Button/Button';
@@ -27,7 +27,7 @@ interface AddLayerDialogProps {
 @observer
 export class AddLayerDialog extends Component<AddLayerDialogProps> {
   @observable private title = '';
-  @observable private dataSet?: DataSet;
+  @observable private dataset?: Dataset;
   @observable private dataTable?: DataTable;
   @observable private usedDataTables: DataTable[] = [];
   @observable private usedDataTablesRequests?: Promise<DataTable[]>;
@@ -53,7 +53,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
               <FormControl>
                 <SelectDataTable
                   id='addLayerDataTable'
-                  dataSet={this.dataSet}
+                  dataset={this.dataset}
                   dataTable={this.dataTable}
                   onChange={this.handleDataTableChange}
                   disabledTables={this.usedDataTables}
@@ -85,15 +85,15 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
 
   @action.bound
   private close() {
-    this.dataSet = null;
+    this.dataset = null;
     this.dataTable = null;
     this.title = '';
     this.props.onClose();
   }
 
   @action.bound
-  private handleDataTableChange(dataSet: DataSet, dataTable: DataTable) {
-    this.dataSet = dataSet;
+  private handleDataTableChange(dataset: Dataset, dataTable: DataTable) {
+    this.dataset = dataset;
     this.dataTable = dataTable;
     if (this.dataTable) {
       this.title = dataTable.title;
@@ -120,7 +120,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
       this.props.onAdd({
         id: generateNextLayerId(),
         dataStoreName,
-        dataset: this.dataSet.identifier,
+        dataset: this.dataset.identifier,
         tableName: this.dataTable.identifier,
         complexName: `${dataStoreName}:${this.dataTable.identifier}`,
         title: this.title,

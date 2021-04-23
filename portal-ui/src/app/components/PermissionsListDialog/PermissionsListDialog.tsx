@@ -1,39 +1,38 @@
 import React, { Component, ReactNode } from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { isEqual } from 'lodash';
-import { cn } from '@bem-react/classname';
-import { Dialog, DialogContent, DialogActions } from '@material-ui/core';
+import { Dialog, DialogContent, DialogActions, Tabs, Tab } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
+import { cn } from '@bem-react/classname';
 
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { RoleAssignmentBody, PrincipalType, projectRoles } from '../../services/crg/permissions.models';
 import { PermissionsListItem } from '../../services/crg/allPermissions.service';
 import { communicationService } from '../../services/communication.service';
-import { CrgProject, CrgLayer } from '../../services/crg/projects.models';
-import { FilterParams } from '../../services/util/filterObjects';
+import { CrgProject } from '../../services/crg/projects.models';
+import { Dataset, DataTable, tablesEqual } from '../../services/data.service';
 import {
+  addDatasetPermission,
   addProjectPermission,
   addTablePermission,
+  removeDatasetPermission,
   removeProjectPermission,
   removeTablePermission
 } from '../../services/crg/permissions.client';
-import { Highlight } from '../Highlight/Highlight';
 import { TextBadge } from '../TextBadge/TextBadge';
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';
 import { XTable } from '../XTable/XTable';
 
-import { PermissionsListDialogAdd } from './Add/PermissionsListDialog-Add';
-import { PermissionsListActions } from './Actions/PermissionsListDialog-Actions';
+import { PermissionsXTablePropsSet, PermissionsListItemType, baseXTablePropsSet } from './PermissionsListDialog.models';
 import { PermissionsListRoleSelect } from './RoleSelect/PermissionsListDialog-RoleSelect';
+import { PermissionsListActions } from './Actions/PermissionsListDialog-Actions';
+import { PermissionsListDialogAdd } from './Add/PermissionsListDialog-Add';
 
 import '!style-loader!css-loader!sass-loader!./Table/PermissionsListDialog-Table.scss';
 import '!style-loader!css-loader!sass-loader!./Paper/PermissionsListDialog-Paper.scss';
 
 const cnPermissionsListDialog = cn('PermissionsListDialog');
-
-type ApiArgs = [RoleAssignmentBody, CrgProject, CrgLayer];
 
 interface PermissionsListProps {
   principalId: number;
@@ -43,18 +42,13 @@ interface PermissionsListProps {
   onClose: () => void;
 }
 
-export interface PermissionsListItemWrapped {
-  synteticId: string;
-  projectTitle: string;
-  layerTitle: string;
-  schemaId: string;
-  origin: PermissionsListItem;
-}
-
 @observer
 export class PermissionsListDialog extends Component<PermissionsListProps> {
   @observable private loading = false;
-  @observable private changedList?: PermissionsListItem[];
+  @observable private changedProjectsList?: PermissionsListItem<CrgProject>[];
+  @observable private changedTablesList?: PermissionsListItem<DataTable>[];
+  @observable private changedDatasetsList?: PermissionsListItem<Dataset>[];
+  @observable private activeTab: PermissionsListItemType = PermissionsListItemType.PROJECT;
 
   render() {
     const { principalId, principalType, principalName, open } = this.props;
@@ -68,7 +62,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         PaperProps={{ className: cnPermissionsListDialog('Paper') }}
       >
         <DialogContent>
-          <XTable
+          <XTable<any>
             className={cnPermissionsListDialog('Table')}
             title={
               <>
@@ -77,56 +71,32 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
                 {principalType === PrincipalType.GROUP && ' группы '}
                 {principalName}
                 <TextBadge id={principalId} />
+                <Tabs
+                  value={this.activeTab}
+                  indicatorColor='primary'
+                  textColor='primary'
+                  onChange={this.tabChangeHandler}
+                >
+                  <Tab label='Проекты' value={PermissionsListItemType.PROJECT} />
+                  <Tab label='Векторные слои' value={PermissionsListItemType.TABLE} />
+                  <Tab label='Наборы данных' value={PermissionsListItemType.DATASET} />
+                </Tabs>
               </>
             }
             headerActions={
               <PermissionsListDialogAdd
                 onAdd={this.handleAdd}
-                currentList={this.currentList}
+                usedProjects={this.viewedProjects}
+                usedTables={this.viewedTables}
+                usedDatasets={this.viewedDatasets}
                 principalId={principalId}
                 principalType={principalType}
+                type={this.activeTab}
               />
             }
-            data={this.viewedList}
-            cols={[
-              {
-                title: 'Проект',
-                field: 'projectTitle',
-                filtering: true,
-                sorting: true,
-                getIdBadge: ({ origin }) => origin.project.id
-              },
-              {
-                title: 'Слой',
-                field: 'layerTitle',
-                filtering: true,
-                sorting: true,
-                renderCellContent: this.renderLayerTitle
-              },
-              {
-                title: 'Схема',
-                field: 'schemaId',
-                filtering: true,
-                sorting: true
-              },
-              {
-                title: 'Разрешения',
-                cellProps: { padding: 'checkbox' },
-                align: 'right',
-                renderCellContent: this.renderRoleSelect
-              },
-              {
-                title: 'Действия',
-                cellProps: { padding: 'checkbox' },
-                align: 'right',
-                renderCellContent: this.renderActions
-              }
-            ]}
-            defaultSort={{ field: 'synteticId', asc: true }}
-            secondarySortField='synteticId'
+            {...this.tableProps[this.activeTab]}
             filterable
           />
-
           <Loading noBackdrop visible={this.loading} />
         </DialogContent>
         <DialogActions>
@@ -148,15 +118,120 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @computed
-  private get currentList(): PermissionsListItem[] {
-    return this.changedList || this.existingList;
+  private get tableProps(): PermissionsXTablePropsSet {
+    return {
+      [PermissionsListItemType.PROJECT]: {
+        ...baseXTablePropsSet[PermissionsListItemType.PROJECT],
+        data: this.viewedProjects,
+        cols: [
+          ...baseXTablePropsSet[PermissionsListItemType.PROJECT].cols,
+          {
+            title: 'Разрешения',
+            cellProps: { padding: 'checkbox' },
+            align: 'right',
+            renderCellContent: this.renderProjectRoleSelect
+          },
+          {
+            title: 'Действия',
+            cellProps: { padding: 'checkbox' },
+            align: 'right',
+            renderCellContent: this.renderProjectActions
+          }
+        ]
+      },
+      [PermissionsListItemType.TABLE]: {
+        ...baseXTablePropsSet[PermissionsListItemType.TABLE],
+        data: this.viewedTables,
+        cols: [
+          ...baseXTablePropsSet[PermissionsListItemType.TABLE].cols,
+          {
+            title: 'Разрешения',
+            cellProps: { padding: 'checkbox' },
+            align: 'right',
+            renderCellContent: this.renderTableRoleSelect
+          },
+          {
+            title: 'Действия',
+            cellProps: { padding: 'checkbox' },
+            align: 'right',
+            renderCellContent: this.renderTableActions
+          }
+        ],
+        defaultSort: { field: 'createdAt', asc: false },
+        secondarySortField: 'identifier'
+      },
+      [PermissionsListItemType.DATASET]: {
+        ...baseXTablePropsSet[PermissionsListItemType.DATASET],
+        data: this.viewedDatasets,
+        cols: [
+          ...baseXTablePropsSet[PermissionsListItemType.DATASET].cols,
+          {
+            title: 'Разрешения',
+            cellProps: { padding: 'checkbox' },
+            align: 'right',
+            renderCellContent: this.renderDatasetRoleSelect
+          },
+          {
+            title: 'Действия',
+            cellProps: { padding: 'checkbox' },
+            align: 'right',
+            renderCellContent: this.renderDatasetActions
+          }
+        ],
+        defaultSort: { field: 'createdAt', asc: false },
+        secondarySortField: 'identifier'
+      }
+    };
   }
 
   @computed
-  private get existingList(): PermissionsListItem[] {
+  private get currentProjectsPermissions(): PermissionsListItem<CrgProject>[] {
+    return this.changedProjectsList || this.existingProjectsList;
+  }
+
+  @computed
+  private get currentTablesPermissions(): PermissionsListItem<DataTable>[] {
+    return this.changedTablesList || this.existingTablesList;
+  }
+
+  @computed
+  private get currentDatasetsPermissions(): PermissionsListItem<Dataset>[] {
+    return this.changedDatasetsList || this.existingDatasetsList;
+  }
+
+  @computed
+  private get existingProjectsList(): PermissionsListItem<CrgProject>[] {
     const { principalId, principalType } = this.props;
 
-    return allPermissions.list
+    return allPermissions.forProjects
+      .map(item => ({
+        ...item,
+        permissions: item.permissions.filter(
+          permission => permission.principalId === principalId && permission.principalType === principalType
+        )
+      }))
+      .filter(({ permissions }) => permissions.length);
+  }
+
+  @computed
+  private get existingTablesList(): PermissionsListItem<DataTable>[] {
+    const { principalId, principalType } = this.props;
+
+    return allPermissions.forTables
+      .map(item => ({
+        ...item,
+        permissions: item.permissions.filter(
+          permission => permission.principalId === principalId && permission.principalType === principalType
+        )
+      }))
+      .filter(({ permissions }) => permissions.length);
+  }
+
+  @computed
+  private get existingDatasetsList(): PermissionsListItem<Dataset>[] {
+    const { principalId, principalType } = this.props;
+
+    return allPermissions.forDatasets
       .map(item => ({
         ...item,
         permissions: item.permissions.filter(
@@ -168,18 +243,22 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
   @computed
   private get changed(): boolean {
-    return !this.changedList;
+    return !this.changedProjectsList;
   }
 
   @computed
-  private get viewedList(): PermissionsListItemWrapped[] {
-    return this.currentList.map(item => ({
-      synteticId: `${item.project.name}|${item.project.id}|${item.layer ? `${item.layer.title}|${item.layer.id}` : ''}`,
-      projectTitle: item.project.name,
-      layerTitle: item.layer ? item.layer.title : '\u2014',
-      schemaId: item.layer ? item.layer.schemaId : '\u2014',
-      origin: item
-    }));
+  private get viewedProjects(): CrgProject[] {
+    return this.currentProjectsPermissions.map(({ entity }) => entity);
+  }
+
+  @computed
+  private get viewedTables(): DataTable[] {
+    return this.currentTablesPermissions.map(({ entity }) => entity);
+  }
+
+  @computed
+  private get viewedDatasets(): Dataset[] {
+    return this.currentDatasetsPermissions.map(({ entity }) => entity);
   }
 
   @action
@@ -188,44 +267,111 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @action
-  private initChangedList() {
-    if (!this.changedList) {
-      this.changedList = this.existingList;
+  private initChangedLists() {
+    if (!this.changedProjectsList) {
+      this.changedProjectsList = this.existingProjectsList;
+    }
+    if (!this.changedTablesList) {
+      this.changedTablesList = this.existingTablesList;
+    }
+    if (!this.changedDatasetsList) {
+      this.changedDatasetsList = this.existingDatasetsList;
     }
   }
 
   @action.bound
-  private handleDelete(item: PermissionsListItem) {
-    this.initChangedList();
+  private handleProjectDelete(projectId: number) {
+    this.initChangedLists();
 
-    this.changedList.splice(
-      this.changedList.findIndex(listItem => isEqual(listItem, item)),
+    this.changedProjectsList.splice(
+      this.changedProjectsList.findIndex(({ entity }) => entity.id === projectId),
       1
     );
   }
 
   @action.bound
-  private handleRolesChange(newItem: PermissionsListItem) {
-    this.initChangedList();
+  private handleTableDelete(tableId: string, datasetId: string) {
+    this.initChangedLists();
 
-    const changedIndex = this.changedList.findIndex(
-      ({ project, layer }) => project.id === newItem.project.id && layer?.id === newItem.layer?.id
+    this.changedTablesList.splice(
+      this.changedTablesList.findIndex(({ entity }) => entity.identifier === tableId && entity.dataset === datasetId),
+      1
     );
-
-    this.changedList.splice(changedIndex, 1, newItem);
   }
 
   @action.bound
+  private handleDatasetDelete(datasetId: string) {
+    this.initChangedLists();
+
+    this.changedDatasetsList.splice(
+      this.changedDatasetsList.findIndex(({ entity }) => entity.identifier === datasetId),
+      1
+    );
+  }
+
+  @action.bound
+  private handleProjectRolesChange(newItem: PermissionsListItem<CrgProject>) {
+    this.initChangedLists();
+
+    const changedIndex = this.changedProjectsList.findIndex(({ entity }) => entity.id === newItem.entity.id);
+
+    this.changedProjectsList.splice(changedIndex, 1, newItem);
+  }
+
+  @action.bound
+  private handleTableRolesChange(newItem: PermissionsListItem<DataTable>) {
+    this.initChangedLists();
+
+    const changedIndex = this.changedTablesList.findIndex(
+      ({ entity }) => entity.identifier === newItem.entity.identifier && entity.dataset === newItem.entity.dataset
+    );
+
+    this.changedTablesList.splice(changedIndex, 1, newItem);
+  }
+
+  @action.bound
+  private handleDatasetRolesChange(newItem: PermissionsListItem<Dataset>) {
+    this.initChangedLists();
+
+    const changedIndex = this.changedDatasetsList.findIndex(
+      ({ entity }) => entity.identifier === newItem.entity.identifier
+    );
+
+    this.changedDatasetsList.splice(changedIndex, 1, newItem);
+  }
+
+  @boundMethod
   private handleAdd(items: PermissionsListItem[]) {
-    this.initChangedList();
+    this.initChangedLists();
+    if (this.activeTab === PermissionsListItemType.PROJECT) {
+      this.handleProjectAdd(items as PermissionsListItem<CrgProject>[]);
+    } else if (this.activeTab === PermissionsListItemType.TABLE) {
+      this.handleTableAdd(items as PermissionsListItem<DataTable>[]);
+    } else if (this.activeTab === PermissionsListItemType.DATASET) {
+      this.handleDatasetAdd(items as PermissionsListItem<Dataset>[]);
+    }
+  }
+
+  @action
+  private handleProjectAdd(items: PermissionsListItem<CrgProject>[]) {
     items.forEach(item => {
       item.permissions.forEach(permission => {
-        if (item.project && !item.layer && !projectRoles.includes(permission.role)) {
+        if (!projectRoles.includes(permission.role)) {
           permission.role = projectRoles[0];
         }
       });
     });
-    this.changedList = this.changedList.concat(items);
+    this.changedProjectsList = this.changedProjectsList.concat(items);
+  }
+
+  @action
+  private handleTableAdd(items: PermissionsListItem<DataTable>[]) {
+    this.changedTablesList = this.changedTablesList.concat(items);
+  }
+
+  @action
+  private handleDatasetAdd(items: PermissionsListItem<Dataset>[]) {
+    this.changedDatasetsList = this.changedDatasetsList.concat(items);
   }
 
   @boundMethod
@@ -236,49 +382,85 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
   @action.bound
   private dropChangedList() {
-    this.changedList = undefined;
+    this.changedProjectsList = undefined;
   }
 
   @boundMethod
   private async save() {
     this.setLoading(true);
 
-    const existing = this.prepareApiArgsList(this.existingList);
-    const changed = this.prepareApiArgsList(this.changedList);
-    const toCreate: ApiArgs[] = [];
-    const toDelete: ApiArgs[] = [];
+    // projects
 
-    changed.forEach(([changedPermission, changedProject, changedLayer]) => {
-      const index = existing.findIndex(
-        ([existingPermission, existingProject, existingLayer]) =>
-          changedPermission.role === existingPermission.role &&
-          changedProject.id === existingProject.id &&
-          changedLayer?.id === existingLayer?.id
+    const toCreateProjects: [CrgProject, RoleAssignmentBody][] = [];
+    const leftProjects = this.prepareFlatList(this.existingProjectsList);
+    const changedProjects = this.prepareFlatList(this.changedProjectsList);
+
+    changedProjects.forEach(([changedProject, changedPermission]) => {
+      const index = leftProjects.findIndex(
+        ([existingProject, existingPermission]) =>
+          changedPermission.role === existingPermission.role && changedProject.id === existingProject.id
       );
-
       if (index === -1) {
-        toCreate.push([changedPermission, changedProject, changedLayer]);
+        toCreateProjects.push([changedProject, changedPermission]);
       } else {
-        existing.splice(index, 1);
+        leftProjects.splice(index, 1);
       }
     });
 
-    toDelete.splice(toDelete.length, 0, ...existing);
-
-    for (let [permission, project, layer] of toDelete) {
-      if (layer) {
-        await removeTablePermission(permission, layer.dataset, layer.tableName);
-      } else {
-        await removeProjectPermission(permission, project);
-      }
+    for (let [project, permission] of leftProjects) {
+      await removeProjectPermission(permission, project);
+    }
+    for (let [project, permission] of toCreateProjects) {
+      await addProjectPermission(permission, project);
     }
 
-    for (let [permission, project, layer] of toCreate) {
-      if (layer) {
-        await addTablePermission(permission, layer.dataset, layer.tableName);
+    // tables
+
+    const toCreateTables: [DataTable, RoleAssignmentBody][] = [];
+    const leftTables = this.prepareFlatList(this.existingTablesList);
+    const changedTables = this.prepareFlatList(this.changedTablesList);
+
+    changedTables.forEach(([changedTable, changedPermission]) => {
+      const index = leftTables.findIndex(
+        ([existingTable, existingPermission]) =>
+          changedPermission.role === existingPermission.role && tablesEqual(changedTable, existingTable)
+      );
+      if (index === -1) {
+        toCreateTables.push([changedTable, changedPermission]);
       } else {
-        await addProjectPermission(permission, project);
+        leftTables.splice(index, 1);
       }
+    });
+    for (let [table, permission] of leftTables) {
+      await removeTablePermission(permission, table.dataset, table.identifier);
+    }
+    for (let [table, permission] of toCreateTables) {
+      await addTablePermission(permission, table.dataset, table.identifier);
+    }
+
+    // datasets
+
+    const toCreateDatasets: [Dataset, RoleAssignmentBody][] = [];
+    const leftDatasets = this.prepareFlatList(this.existingDatasetsList);
+    const changedDatasets = this.prepareFlatList(this.changedDatasetsList);
+
+    changedDatasets.forEach(([changedDataset, changedPermission]) => {
+      const index = leftDatasets.findIndex(
+        ([existingDataset, existingPermission]) =>
+          changedPermission.role === existingPermission.role && changedDataset.identifier === existingDataset.identifier
+      );
+      if (index === -1) {
+        toCreateDatasets.push([changedDataset, changedPermission]);
+      } else {
+        leftDatasets.splice(index, 1);
+      }
+    });
+
+    for (let [dataset, permission] of leftDatasets) {
+      await removeDatasetPermission(permission, dataset.identifier);
+    }
+    for (let [dataset, permission] of toCreateDatasets) {
+      await addDatasetPermission(permission, dataset.identifier);
     }
 
     communicationService.permissionsUpdated.emit();
@@ -286,46 +468,81 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
     this.close();
   }
 
-  private prepareApiArgsList(list: PermissionsListItem[]): ApiArgs[] {
+  private prepareFlatList<T>(list: PermissionsListItem<T>[]): [T, RoleAssignmentBody][] {
     return list
-      .map(({ project, layer, permissions }) =>
-        permissions.map(roleAssignment => [roleAssignment, project, layer] as ApiArgs)
+      .map(({ entity, permissions }) =>
+        permissions.map(roleAssignment => [entity, roleAssignment] as [T, RoleAssignmentBody])
       )
       .flat();
   }
 
   @boundMethod
-  private renderLayerTitle(
-    item: PermissionsListItemWrapped,
-    filterActive: boolean,
-    filterParams: FilterParams<PermissionsListItemWrapped>
-  ) {
-    return (
-      <>
-        <Highlight word={filterParams.layerTitle} enabled={filterActive}>
-          {item.layerTitle}
-        </Highlight>
-        {item.origin.layer && <TextBadge id={item.origin.layer.id} />}
-      </>
-    );
-  }
-
-  @boundMethod
-  private renderRoleSelect(item: PermissionsListItemWrapped): ReactNode {
+  private renderProjectRoleSelect({ id }: CrgProject): ReactNode {
     const { principalId, principalType } = this.props;
+    const item = this.currentProjectsPermissions.find(({ entity }) => entity.id === id);
 
     return (
       <PermissionsListRoleSelect
-        listItem={item.origin}
-        onChange={this.handleRolesChange}
+        listItem={item}
+        onChange={this.handleProjectRolesChange}
         principalId={principalId}
         principalType={principalType}
+        listItemType={PermissionsListItemType.PROJECT}
       />
     );
   }
 
   @boundMethod
-  private renderActions(item: PermissionsListItemWrapped): ReactNode {
-    return <PermissionsListActions item={item.origin} onDelete={this.handleDelete} />;
+  private renderTableRoleSelect({ identifier, dataset }: DataTable): ReactNode {
+    const { principalId, principalType } = this.props;
+    const item = this.currentTablesPermissions.find(
+      ({ entity }) => entity.identifier === identifier && entity.dataset === dataset
+    );
+
+    return (
+      <PermissionsListRoleSelect
+        listItem={item}
+        onChange={this.handleTableRolesChange}
+        principalId={principalId}
+        principalType={principalType}
+        listItemType={PermissionsListItemType.TABLE}
+      />
+    );
+  }
+
+  @boundMethod
+  private renderDatasetRoleSelect({ identifier }: Dataset): ReactNode {
+    const { principalId, principalType } = this.props;
+    const item = this.currentDatasetsPermissions.find(({ entity }) => entity.identifier === identifier);
+
+    return (
+      <PermissionsListRoleSelect
+        listItem={item}
+        onChange={this.handleDatasetRolesChange}
+        principalId={principalId}
+        principalType={principalType}
+        listItemType={PermissionsListItemType.DATASET}
+      />
+    );
+  }
+
+  @boundMethod
+  private renderProjectActions({ id }: CrgProject): ReactNode {
+    return <PermissionsListActions id={id} onDelete={this.handleProjectDelete} />;
+  }
+
+  @boundMethod
+  private renderTableActions({ identifier, dataset }: DataTable): ReactNode {
+    return <PermissionsListActions id={identifier} additionalId={dataset} onDelete={this.handleTableDelete} />;
+  }
+
+  @boundMethod
+  private renderDatasetActions({ identifier }: Dataset): ReactNode {
+    return <PermissionsListActions id={identifier} onDelete={this.handleDatasetDelete} />;
+  }
+
+  @action.bound
+  private tabChangeHandler(e: React.ChangeEvent, value: PermissionsListItemType) {
+    this.activeTab = value;
   }
 }

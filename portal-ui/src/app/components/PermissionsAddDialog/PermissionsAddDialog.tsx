@@ -5,15 +5,19 @@ import { cn } from '@bem-react/classname';
 import { Dialog, DialogContent, DialogActions, Checkbox, Select, MenuItem } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { Role, roles, rolesTitles, PrincipalType } from '../../services/crg/permissions.models';
+import { allProjects } from '../../stores/AllProjects.store';
+import { allDataEntitiesStore } from '../../stores/AllDataEntitiesStore';
+import { Role, roles, rolesTitles, PrincipalType, projectRoles } from '../../services/crg/permissions.models';
 import { PermissionsListItem } from '../../services/crg/allPermissions.service';
-import { allPermissions } from '../../stores/AllPermissions.store';
-import { FilterParams } from '../../services/util/filterObjects';
-import { Highlight } from '../Highlight/Highlight';
-import { TextBadge } from '../TextBadge/TextBadge';
-import { Button } from '../Button/Button';
-import { PermissionsListItemWrapped } from '../PermissionsListDialog/PermissionsListDialog';
+import { Dataset, DataTable, tablesEqual } from '../../services/data.service';
+import { CrgProject } from '../../services/crg/projects.models';
+import {
+  baseXTablePropsSet,
+  PermissionsListItemType,
+  PermissionsXTablePropsSet
+} from '../PermissionsListDialog/PermissionsListDialog.models';
 import { XTable, XTableColumn } from '../XTable/XTable';
+import { Button } from '../Button/Button';
 
 import { PermissionsAddDialogItemCheck } from './ItemCheck/PermissionsAddDialog-ItemCheck';
 
@@ -22,55 +26,24 @@ import '!style-loader!css-loader!sass-loader!./Paper/PermissionsAddDialog-Paper.
 const cnPermissionsAddDialog = cn('PermissionsAddDialog');
 
 interface PermissionsAddDialogProps {
-  currentList: PermissionsListItem[];
+  usedProjects: CrgProject[];
+  usedTables: DataTable[];
+  usedDatasets: Dataset[];
   principalId: number;
   principalType: PrincipalType;
   open: boolean;
   onClose: () => void;
   onAdd: (item: PermissionsListItem[]) => void;
+  type: PermissionsListItemType;
 }
 
 @observer
 export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
-  @observable selectedList: PermissionsListItem[] = [];
+  @observable selectedItems: CrgProject[] | DataTable[] | Dataset[] = [];
   @observable role: Role = Role.VIEWER;
 
-  private cols: XTableColumn<PermissionsListItemWrapped>[] = [
-    {
-      title: (
-        <Checkbox
-          indeterminate={this.selectedList.length > 0 && !this.allSelected}
-          checked={this.allSelected}
-          onChange={this.handleSelectAll}
-        />
-      ),
-      cellProps: { padding: 'checkbox' },
-      renderCellContent: this.renderCheckbox
-    },
-    {
-      title: 'Проект',
-      field: 'projectTitle',
-      filtering: true,
-      sorting: true,
-      getIdBadge: ({ origin }) => origin.project.id
-    },
-    {
-      title: 'Слой',
-      field: 'layerTitle',
-      filtering: true,
-      sorting: true,
-      renderCellContent: this.renderLayerTitle
-    },
-    {
-      title: 'Схема',
-      field: 'schemaId',
-      filtering: true,
-      sorting: true
-    }
-  ];
-
   render() {
-    const { open } = this.props;
+    const { open, type } = this.props;
 
     return (
       <Dialog
@@ -81,24 +54,17 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
         PaperProps={{ className: cnPermissionsAddDialog('Paper') }}
       >
         <DialogContent>
-          <XTable
-            title='Добавление разрешений'
-            data={this.list}
-            cols={this.cols}
-            defaultSort={{ field: 'synteticId', asc: true }}
-            secondarySortField='synteticId'
-            filterable
-          />
+          <XTable<any> title='Добавление разрешений' {...this.tableProps[type]} data={this.availableItems} filterable />
         </DialogContent>
         <DialogActions>
           <Select value={this.role} onChange={this.handleRoleChange}>
-            {roles.map(roleName => (
+            {(type === PermissionsListItemType.PROJECT ? projectRoles : roles).map(roleName => (
               <MenuItem value={roleName} key={roleName}>
                 {rolesTitles[roleName]}
               </MenuItem>
             ))}
           </Select>
-          <Button onClick={this.add} color='primary' disabled={!this.selectedList.length}>
+          <Button onClick={this.add} color='primary' disabled={!this.selectedItems.length}>
             Добавить
           </Button>
           <Button onClick={this.close}>Отмена</Button>
@@ -108,33 +74,67 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   }
 
   @computed
-  private get avaiableList(): PermissionsListItem[] {
-    const { currentList } = this.props;
-
-    return allPermissions.list.filter(
-      item =>
-        !item.broken &&
-        !currentList.some(
-          exItem =>
-            exItem.project.id === item.project.id && (exItem.layer && exItem.layer.id) === (item.layer && item.layer.id)
-        )
-    );
+  private get checkboxCol(): XTableColumn<unknown> {
+    return {
+      title: (
+        <Checkbox
+          indeterminate={this.selectedItems.length > 0 && !this.allSelected}
+          checked={this.allSelected}
+          onChange={this.handleSelectAll}
+        />
+      ),
+      cellProps: { padding: 'checkbox' },
+      renderCellContent: this.renderCheckbox
+    };
   }
 
   @computed
-  private get list(): PermissionsListItemWrapped[] {
-    return allPermissions.list.map(item => ({
-      synteticId: `${item.project.name}|${item.project.id}|${item.layer ? `${item.layer.title}|${item.layer.id}` : ''}`,
-      projectTitle: item.project.name,
-      layerTitle: item.layer ? item.layer.title : '\u2014',
-      schemaId: item.layer ? item.layer.schemaId : '\u2014',
-      origin: item
-    }));
+  private get tableProps(): PermissionsXTablePropsSet {
+    return {
+      [PermissionsListItemType.PROJECT]: {
+        ...baseXTablePropsSet[PermissionsListItemType.PROJECT],
+        cols: [this.checkboxCol, ...baseXTablePropsSet[PermissionsListItemType.PROJECT].cols]
+      },
+      [PermissionsListItemType.TABLE]: {
+        ...baseXTablePropsSet[PermissionsListItemType.TABLE],
+        cols: [this.checkboxCol, ...baseXTablePropsSet[PermissionsListItemType.TABLE].cols],
+        defaultSort: { field: 'createdAt', asc: false },
+        secondarySortField: 'identifier'
+      },
+      [PermissionsListItemType.DATASET]: {
+        ...baseXTablePropsSet[PermissionsListItemType.DATASET],
+        cols: [this.checkboxCol, ...baseXTablePropsSet[PermissionsListItemType.DATASET].cols],
+        defaultSort: { field: 'createdAt', asc: false },
+        secondarySortField: 'identifier'
+      }
+    };
+  }
+
+  @computed
+  private get availableItems(): CrgProject[] | DataTable[] | Dataset[] {
+    return {
+      [PermissionsListItemType.PROJECT]: allProjects.list,
+      [PermissionsListItemType.TABLE]: allDataEntitiesStore.dataTables,
+      [PermissionsListItemType.DATASET]: allDataEntitiesStore.datasets
+    }[this.props.type];
+  }
+
+  @computed
+  private get usedItems(): CrgProject[] | DataTable[] | Dataset[] {
+    const { type, usedProjects, usedTables, usedDatasets } = this.props;
+
+    return {
+      [PermissionsListItemType.PROJECT]: usedProjects,
+      [PermissionsListItemType.TABLE]: usedTables,
+      [PermissionsListItemType.DATASET]: usedDatasets
+    }[type];
   }
 
   @computed
   private get allSelected(): boolean {
-    return this.avaiableList.length > 0 && this.selectedList.length === this.avaiableList.length;
+    return (
+      this.availableItems.length > 0 && this.selectedItems.length === this.availableItems.length - this.usedItems.length
+    );
   }
 
   @boundMethod
@@ -142,17 +142,18 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
     const { principalId, principalType, onAdd } = this.props;
 
     onAdd(
-      this.selectedList.map(item => ({
-        ...item,
+      [...this.selectedItems].map(item => ({
+        entity: item,
         permissions: [{ principalId, principalType, role: this.role }]
       }))
     );
+
     this.close();
   }
 
   @action.bound
   private close() {
-    this.selectedList = [];
+    this.selectedItems = [];
     this.role = Role.VIEWER;
 
     this.props.onClose();
@@ -160,7 +161,9 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
 
   @action.bound
   private handleSelectAll() {
-    this.selectedList = this.allSelected ? [] : [...this.avaiableList];
+    this.selectedItems = this.allSelected
+      ? []
+      : ([...this.availableItems].filter(item => !this.isAlreadyUsed(item)) as CrgProject[] | DataTable[] | Dataset[]);
   }
 
   @action.bound
@@ -169,29 +172,55 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   }
 
   @boundMethod
-  private renderCheckbox(item: PermissionsListItemWrapped): ReactNode {
+  private renderCheckbox(item: CrgProject | DataTable | Dataset): ReactNode {
+    const { type } = this.props;
+    let selected: boolean;
+    const alreadyUsed = this.isAlreadyUsed(item);
+
+    if (type === PermissionsListItemType.PROJECT) {
+      const { id } = item as CrgProject;
+      selected = alreadyUsed || (this.selectedItems as CrgProject[]).some(project => project.id === id);
+    }
+    if (type === PermissionsListItemType.TABLE) {
+      selected =
+        alreadyUsed || (this.selectedItems as DataTable[]).some(table => tablesEqual(table, item as DataTable));
+    }
+    if (type === PermissionsListItemType.DATASET) {
+      const { identifier } = item as Dataset;
+      selected = alreadyUsed || (this.selectedItems as Dataset[]).some(dataset => dataset.identifier === identifier);
+    }
+
     return (
       <PermissionsAddDialogItemCheck
-        item={item.origin}
-        selectedList={this.selectedList}
-        currentList={this.props.currentList}
+        item={item}
+        checked={selected}
+        disabled={alreadyUsed}
+        onChange={this.handleCheck}
       />
     );
   }
 
-  @boundMethod
-  private renderLayerTitle(
-    item: PermissionsListItemWrapped,
-    filterActive: boolean,
-    filterParams: FilterParams<PermissionsListItemWrapped>
-  ) {
-    return (
-      <>
-        <Highlight word={filterParams.layerTitle} enabled={filterActive}>
-          {item.layerTitle}
-        </Highlight>
-        {item.origin.layer && <TextBadge id={item.origin.layer.id} />}
-      </>
-    );
+  private isAlreadyUsed(item: CrgProject | DataTable | Dataset): boolean {
+    const { type, usedProjects, usedTables, usedDatasets } = this.props;
+    if (type === PermissionsListItemType.PROJECT) {
+      const { id } = item as CrgProject;
+      return usedProjects.some(usedProject => usedProject.id === id);
+    }
+    if (type === PermissionsListItemType.TABLE) {
+      return usedTables.some(usedTable => tablesEqual(item as DataTable, usedTable));
+    }
+    if (type === PermissionsListItemType.DATASET) {
+      const { identifier } = item as Dataset;
+      return usedDatasets.some(usedDataset => usedDataset.identifier === identifier);
+    }
+  }
+
+  @action.bound
+  private handleCheck(item: CrgProject | DataTable | Dataset, checked: boolean) {
+    if (checked) {
+      (this.selectedItems as typeof item[]).push(item);
+    } else {
+      this.selectedItems.splice((this.selectedItems as typeof item[]).indexOf(item), 1);
+    }
   }
 }

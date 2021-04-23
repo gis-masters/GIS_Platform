@@ -1,7 +1,7 @@
 import React from 'react';
 import { HomeOutlined } from '@material-ui/icons';
 
-import { DataSet } from '../../../../services/data.service';
+import { Dataset } from '../../../../services/data.service';
 import { SortDir } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 
@@ -15,15 +15,15 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeRoot {
-  static getId(item: ExplorerItemData<DataSet>) {
+  static getId(item: ExplorerItemData<Dataset>) {
     return 'root';
   }
 
-  static getTitle(item: ExplorerItemData<DataSet>) {
+  static getTitle(item: ExplorerItemData<Dataset>) {
     return <HomeOutlined />;
   }
 
-  static getMeta(item: ExplorerItemData<DataSet>) {
+  static getMeta(item: ExplorerItemData<Dataset>) {
     return '';
   }
 
@@ -38,11 +38,11 @@ export class ExplorerAdapterTypeRoot {
     sort?: string,
     sortDir?: SortDir,
     filter?: { [key: string]: string }
-  ): Promise<[ExplorerItemData<DataSet>[], number]> {
+  ): Promise<[ExplorerItemData<Dataset>[], number]> {
     return [
       [
         {
-          type: ExplorerItemType.DATA_SET_ROOT
+          type: ExplorerItemType.DATASET_ROOT
         },
         {
           type: ExplorerItemType.LIBRARY_ROOT

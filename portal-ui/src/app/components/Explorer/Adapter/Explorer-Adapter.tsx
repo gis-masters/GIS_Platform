@@ -7,8 +7,8 @@ import { Emitter } from '../../../services/util/Emitter';
 import { Toast } from '../../Toast/Toast';
 
 import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemType, SortItem } from '../Explorer.models';
-import { ExplorerAdapterTypeDataSetRoot } from './_type/Explorer-Adapter_type_dataSetRoot';
-import { ExplorerAdapterTypeDataSet } from './_type/Explorer-Adapter_type_dataSet';
+import { ExplorerAdapterTypeDatasetRoot } from './_type/Explorer-Adapter_type_datasetRoot';
+import { ExplorerAdapterTypeDataset } from './_type/Explorer-Adapter_type_dataset';
 import { ExplorerAdapterTypeDocument } from './_type/Explorer-Adapter_type_document';
 import { ExplorerAdapterTypeFolder } from './_type/Explorer-Adapter_type_folder';
 import { ExplorerAdapterTypeLibrary } from './_type/Explorer-Adapter_type_library';
@@ -23,12 +23,12 @@ import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_b
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.EMPTY]: ExplorerAdapterTypeEmpty,
-  [ExplorerItemType.DATA_SET]: ExplorerAdapterTypeDataSet,
+  [ExplorerItemType.DATASET]: ExplorerAdapterTypeDataset,
   [ExplorerItemType.TABLE]: ExplorerAdapterTypeTable,
   [ExplorerItemType.LIBRARY]: ExplorerAdapterTypeLibrary,
   [ExplorerItemType.FOLDER]: ExplorerAdapterTypeFolder,
   [ExplorerItemType.DOCUMENT]: ExplorerAdapterTypeDocument,
-  [ExplorerItemType.DATA_SET_ROOT]: ExplorerAdapterTypeDataSetRoot,
+  [ExplorerItemType.DATASET_ROOT]: ExplorerAdapterTypeDatasetRoot,
   [ExplorerItemType.LIBRARY_ROOT]: ExplorerAdapterTypeLibraryRoot,
   [ExplorerItemType.ROOT]: ExplorerAdapterTypeRoot,
   [ExplorerItemType.PROJECT]: ExplorerAdapterTypeProject,

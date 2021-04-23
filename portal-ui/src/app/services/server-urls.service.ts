@@ -192,6 +192,10 @@ export async function getDatasetUrl(datasetId: string): Promise<string> {
   return `${await getDatasetsUrl()}/${datasetId}`;
 }
 
+export async function getDatasetRoleAssignmentUrl(datasetId: string): Promise<string> {
+  return `${await getDatasetUrl(datasetId)}/roleAssignment`;
+}
+
 export async function getDatasetTablesUrl(datasetId: string): Promise<string> {
   return `${await getDatasetUrl(datasetId)}/tables`;
 }

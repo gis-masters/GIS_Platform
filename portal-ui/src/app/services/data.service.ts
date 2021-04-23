@@ -6,7 +6,7 @@ import { http } from './http.service';
 import { communicationService } from './communication.service';
 
 export enum DataEntityType {
-  SCHEMA = 'SCHEMA',
+  DATASET = 'SCHEMA',
   TABLE = 'TABLE',
   LIBRARY = 'LIBRARY'
 }
@@ -22,8 +22,8 @@ export interface DataEntity {
   schemaId?: string;
 }
 
-export interface DataSet extends DataEntity {
-  type: DataEntityType.SCHEMA;
+export interface Dataset extends DataEntity {
+  type: DataEntityType.DATASET;
 }
 
 export interface DataTable extends DataEntity {
@@ -38,21 +38,25 @@ export interface DataTableConnection {
   project: CrgProject;
 }
 
-export async function getDataSets(
+export async function getDatasets(
   page: number,
   pageSize: number,
   sort?: string,
   sortDir?: SortDir,
   filter?: { [key: string]: string }
-): Promise<[DataSet[], number]> {
+): Promise<[Dataset[], number]> {
   const params = { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) };
-  const response = await http.get<PageableResponse<{ datasets: DataSet[] }>>(await getDatasetsUrl(), { params });
+  const response = await http.get<PageableResponse<{ datasets: Dataset[] }>>(await getDatasetsUrl(), { params });
 
   return [(response._embedded && response._embedded.datasets) || [], response.page.totalPages];
 }
 
-export async function getDataSetTables(
-  dataSet: DataSet,
+export async function getAllDatasets(): Promise<Dataset[]> {
+  return await http.getPaged<Dataset>(await getDatasetsUrl());
+}
+
+export async function getDatasetTables(
+  dataset: Dataset,
   page: number,
   pageSize: number,
   sort?: string,
@@ -60,16 +64,25 @@ export async function getDataSetTables(
   filter?: { [key: string]: string }
 ): Promise<[DataTable[], number]> {
   const response = await http.get<PageableResponse<{ tables: Omit<DataTable, 'dataset'>[] }>>(
-    await getDatasetTablesUrl(dataSet.identifier),
+    await getDatasetTablesUrl(dataset.identifier),
     { params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) } }
   );
 
   const dataTables: DataTable[] = (response._embedded?.tables || []).map(table => ({
     ...table,
-    dataset: dataSet.identifier
+    dataset: dataset.identifier
   }));
 
   return [dataTables, response.page.totalPages];
+}
+
+export async function getAllDatasetTables(dataset: Dataset): Promise<DataTable[]> {
+  const dataTables = await http.getPaged<Omit<DataTable, 'dataset'>>(await getDatasetTablesUrl(dataset.identifier));
+
+  return dataTables.map(table => ({
+    ...table,
+    dataset: dataset.identifier
+  }));
 }
 
 export async function getDataTable(datasetId: string, dataTableId: string): Promise<DataTable> {
@@ -94,4 +107,10 @@ export async function getDataTableConnections(dataTableId: string): Promise<Data
 
 export async function createDataset(title: string, details: string) {
   await http.post(await getDatasetsUrl(), { title, details });
+}
+
+export function tablesEqual(firstTable: DataTable, ...otherTables: DataTable[]): boolean {
+  const { identifier, dataset } = firstTable;
+
+  return otherTables.every(table => table.identifier === identifier && table.dataset === dataset);
 }

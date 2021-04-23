@@ -13,7 +13,7 @@ export async function sendTelegramError(error: string) {
 `;
 
   const data = new FormData();
-  data.append('text', text);
+  data.append('text', text.substr(0, 4096));
   data.append('chat_id', '-1001382334246');
   data.append('parse_mode', 'html');
 

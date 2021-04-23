@@ -13,7 +13,7 @@ import { filterByPrincipal, filterOutPrincipal } from '../../services/crg/permis
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { communicationService } from '../../services/communication.service';
 import { CrgUser, usersService } from '../../services/crg/users.service';
-import { DataSet, DataTable } from '../../services/data.service';
+import { Dataset, DataTable } from '../../services/data.service';
 import { XTable, XTableColumn } from '../XTable/XTable';
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';
@@ -28,7 +28,7 @@ import '!style-loader!css-loader!sass-loader!./Table/PermissionsEditDialog-Table
 const cnPermissionsEditDialog = cn('PermissionsEditDialog');
 
 interface PermissionsEditDialogProps {
-  dataSet: DataSet;
+  dataset: Dataset;
   dataTable: DataTable;
   permissions: RoleAssignmentBody[];
   open: boolean;
@@ -213,7 +213,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
 
   @boundMethod
   private async save() {
-    const { dataSet, dataTable } = this.props;
+    const { dataset, dataTable } = this.props;
     let existing = this.props.permissions.slice();
     const changed = this.changedPermissions.slice();
     const toCreate: RoleAssignmentBody[] = [];
@@ -243,11 +243,11 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
     toDelete.splice(toDelete.length, 0, ...existing);
 
     for (const item of toDelete) {
-      await removeTablePermission(item, dataSet.identifier, dataTable.identifier);
+      await removeTablePermission(item, dataset.identifier, dataTable.identifier);
     }
 
     for (const item of toCreate) {
-      await addTablePermission(item, dataSet.identifier, dataTable.identifier);
+      await addTablePermission(item, dataset.identifier, dataTable.identifier);
     }
 
     communicationService.permissionsUpdated.emit();

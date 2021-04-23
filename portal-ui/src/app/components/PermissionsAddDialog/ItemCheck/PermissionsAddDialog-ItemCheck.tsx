@@ -1,62 +1,39 @@
 import React, { Component } from 'react';
-import { computed, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Checkbox } from '@material-ui/core';
+import { boundMethod } from 'autobind-decorator';
 
-import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
+import { Dataset, DataTable } from '../../../services/data.service';
+import { CrgProject } from '../../../services/crg/projects.models';
 
 const cnPermissionsAddDialogItemCheck = cn('PermissionsAddDialog', 'ItemCheck');
 
 interface PermissionsAddDialogItemCheckProps {
-  item: PermissionsListItem;
-  selectedList: PermissionsListItem[];
-  currentList: PermissionsListItem[];
+  item: CrgProject | DataTable | Dataset;
+  checked: boolean;
+  disabled: boolean;
+  onChange: (item: CrgProject | DataTable | Dataset, checked: boolean) => void;
 }
 
 @observer
 export class PermissionsAddDialogItemCheck extends Component<PermissionsAddDialogItemCheckProps> {
-  constructor(props: PermissionsAddDialogItemCheckProps) {
-    super(props);
-  }
-
   render() {
-    const { item } = this.props;
+    const { checked, disabled } = this.props;
 
     return (
       <Checkbox
         className={cnPermissionsAddDialogItemCheck()}
-        checked={this.selected}
+        checked={checked}
+        disabled={disabled}
         onChange={this.changeHandler}
-        disabled={this.existing || item.broken}
       />
     );
   }
 
-  @computed
-  private get selected(): boolean {
-    const { item, selectedList } = this.props;
-
-    return selectedList.includes(item) || this.existing;
-  }
-
-  @computed
-  private get existing(): boolean {
-    const { item, currentList: existingList } = this.props;
-
-    return existingList.some(
-      ({ project, layer }) => item.project.id === project.id && (item.layer && item.layer.id) === (layer && layer.id)
-    );
-  }
-
-  @action.bound
+  @boundMethod
   private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
-    const { item, selectedList } = this.props;
-
-    if (checked) {
-      selectedList.push(item);
-    } else {
-      selectedList.splice(selectedList.indexOf(item), 1);
-    }
+    const { item, onChange } = this.props;
+    onChange(item, checked);
   }
 }

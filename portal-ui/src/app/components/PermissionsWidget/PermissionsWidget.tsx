@@ -14,7 +14,7 @@ import { communicationService } from '../../services/communication.service';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { getTablePermissions } from '../../services/crg/permissions.client';
 import { CrgUser, usersService } from '../../services/crg/users.service';
-import { DataSet, DataTable } from '../../services/data.service';
+import { Dataset, DataTable } from '../../services/data.service';
 import { PermissionsEditDialog } from '../PermissionsEditDialog/PermissionsEditDialog';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Button } from '../Button/Button';
@@ -25,7 +25,7 @@ const cnPermissionsWidget = cn('PermissionsWidget');
 
 interface PermissionsWidgetProps {
   dataTable: DataTable;
-  dataSet: DataSet;
+  dataset: Dataset;
 }
 
 const MAX_PRINCIPALS_TO_SHOW = 20;
@@ -46,10 +46,10 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   }
 
   componentDidUpdate(prevProps: PermissionsWidgetProps) {
-    const { dataTable, dataSet } = this.props;
-    const { dataTable: prevDataTable, dataSet: prevDataSet } = prevProps;
+    const { dataTable, dataset } = this.props;
+    const { dataTable: prevDataTable, dataset: prevDataset } = prevProps;
 
-    if (dataTable.identifier !== prevDataTable.identifier || dataSet.identifier !== prevDataSet.identifier) {
+    if (dataTable.identifier !== prevDataTable.identifier || dataset.identifier !== prevDataset.identifier) {
       this.fetchPermissions();
     }
   }
@@ -59,7 +59,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   }
 
   render() {
-    const { dataSet, dataTable } = this.props;
+    const { dataset, dataTable } = this.props;
     const EditIcon = this.dialogOpen ? Edit : EditOutlined;
 
     return (
@@ -136,7 +136,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
           onClose={this.closeModal}
           open={this.dialogOpen}
           onChange={this.fetchPermissions}
-          dataSet={dataSet}
+          dataset={dataset}
           dataTable={dataTable}
           permissions={this.permissions}
         />
@@ -185,19 +185,19 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
 
   @boundMethod
   private async fetchPermissions() {
-    const [dataSetId, dataTableId] = this.getIds();
+    const [datasetId, dataTableId] = this.getIds();
     this.setPermissions([], true);
-    const permissions = await getTablePermissions(dataSetId, dataTableId);
+    const permissions = await getTablePermissions(datasetId, dataTableId);
     // не изменилось ли чего за время запроса
-    if (isEqual([dataSetId, dataTableId], this.getIds())) {
+    if (isEqual([datasetId, dataTableId], this.getIds())) {
       this.setPermissions(permissions, false);
     }
   }
 
   private getIds(): [string, string] {
-    const { dataSet, dataTable } = this.props;
+    const { dataset, dataTable } = this.props;
 
-    return [dataSet.identifier, dataTable.identifier];
+    return [dataset.identifier, dataTable.identifier];
   }
 
   @action.bound

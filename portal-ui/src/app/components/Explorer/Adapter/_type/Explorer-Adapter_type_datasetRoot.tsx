@@ -2,32 +2,32 @@ import React from 'react';
 
 import { Database } from '../../../Icons/Database';
 import { SortDir } from '../../../../services/models';
-import { DataSet, getDataSets } from '../../../../services/data.service';
+import { Dataset, getDatasets } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
-    [ExplorerItemType.DATA_SET_ROOT]: null;
+    [ExplorerItemType.DATASET_ROOT]: null;
   }
 }
 
 @staticImplements<Adapter>()
-export class ExplorerAdapterTypeDataSetRoot {
+export class ExplorerAdapterTypeDatasetRoot {
   static getId(item: ExplorerItemData<null>) {
     return 'dataSetRoot';
   }
 
-  static getTitle(item: ExplorerItemData<DataSet>) {
+  static getTitle(item: ExplorerItemData<Dataset>) {
     return 'Наборы данных';
   }
 
-  static getDescription(item: ExplorerItemData<DataSet>) {
+  static getDescription(item: ExplorerItemData<Dataset>) {
     return 'Данные для векторных слоёв';
   }
 
-  static getMeta(item: ExplorerItemData<DataSet>) {
+  static getMeta(item: ExplorerItemData<Dataset>) {
     return '';
   }
 
@@ -46,10 +46,10 @@ export class ExplorerAdapterTypeDataSetRoot {
     sort?: string,
     sortDir?: SortDir,
     filter?: { [key: string]: string }
-  ): Promise<[ExplorerItemData<DataSet>[], number]> {
-    const [dataSets, pagesCount] = await getDataSets(page, pageSize, sort, sortDir, filter);
+  ): Promise<[ExplorerItemData<Dataset>[], number]> {
+    const [dataSets, pagesCount] = await getDatasets(page, pageSize, sort, sortDir, filter);
 
-    return [dataSets.map(payload => ({ type: ExplorerItemType.DATA_SET, payload })), pagesCount];
+    return [dataSets.map(payload => ({ type: ExplorerItemType.DATASET, payload })), pagesCount];
   }
 
   static getChildrenSortItems(): SortItem[] {

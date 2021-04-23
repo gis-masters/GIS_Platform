@@ -1,6 +1,7 @@
 import {
   getAllPermissionsUrl,
   getAllProjectsPermissionsUrl,
+  getDatasetRoleAssignmentUrl,
   getProjectPermissionsUrl,
   getProjectPermissionUrl,
   getTableRoleAssignmentUrl
@@ -10,7 +11,6 @@ import { CrgProject } from './projects.models';
 import { services } from '../services';
 import { http } from '../http.service';
 import { Toast } from '../../components/Toast/Toast';
-import { DataEntityType } from '../data.service';
 
 export async function getTablePermissions(datasetId: string, tableId: string): Promise<RoleAssignmentBody[]> {
   try {
@@ -21,11 +21,11 @@ export async function getTablePermissions(datasetId: string, tableId: string): P
   }
 }
 
-export async function getAllTablesPermissions(): Promise<ResourcePermissions[]> {
+export async function getAllTablesAndDatasetsPermissions(): Promise<ResourcePermissions[]> {
   try {
     const response = await http.getPaged<ResourcePermissions>(await getAllPermissionsUrl());
 
-    return response.filter(({ type, permissions }) => type === DataEntityType.TABLE && permissions?.length);
+    return response.filter(({ permissions }) => permissions?.length);
   } catch (e) {
     Toast.error(`Ошибка получения прав для списка таблиц`);
 
@@ -50,6 +50,26 @@ export async function removeTablePermission(payload: RoleAssignmentBody, dataset
     await http.delete(`${url}/${payload.id}`);
   } catch (e) {
     handleSavingError(e, payload, 'удалить', 'таблицы', `${datasetId}:${tableId}`);
+  }
+}
+
+export async function addDatasetPermission(payload: RoleAssignmentBody, datasetId: string) {
+  const url = await getDatasetRoleAssignmentUrl(datasetId);
+
+  try {
+    await http.post(url, payload);
+  } catch (e) {
+    handleSavingError(e, payload, 'добавить', 'набора данных', datasetId);
+  }
+}
+
+export async function removeDatasetPermission(payload: RoleAssignmentBody, datasetId: string) {
+  const url = await getDatasetRoleAssignmentUrl(datasetId);
+
+  try {
+    await http.delete(`${url}/${payload.id}`);
+  } catch (e) {
+    handleSavingError(e, payload, 'удалить', 'набора данных', datasetId);
   }
 }
 
