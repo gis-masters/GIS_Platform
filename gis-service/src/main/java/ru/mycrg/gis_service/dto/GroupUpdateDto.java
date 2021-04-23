@@ -15,7 +15,6 @@ public class GroupUpdateDto {
     @CrgParentGroup
     private Long parentId;
 
-    @Min(message = "Минимальное допустимое значение -1", value = -1)
     @Max(Integer.MAX_VALUE)
     private int position = -1;
 

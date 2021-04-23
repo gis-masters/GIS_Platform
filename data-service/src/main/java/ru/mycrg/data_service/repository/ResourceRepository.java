@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -15,13 +16,14 @@ public interface ResourceRepository extends PagingAndSortingRepository<Resource,
 
     Optional<Resource> findByTypeAndIdentifier(String type, String identifier);
 
-    List<Resource> findByTypeAndTitleContainingIgnoreCase(String type, String title);
+    List<Resource> findByTypeAndTitleContainingIgnoreCase(String type, String title, Pageable pageable);
 
     void deleteByIdentifierStartsWith(String identifier);
 
     List<Resource> findByTypeAndIdentifierStartingWithAndTitleContainingIgnoreCase(String type,
                                                                                    String identifier,
-                                                                                   String title);
+                                                                                   String title,
+                                                                                   Pageable pageable);
 
     @Modifying
     @Query("UPDATE Resource rd SET rd.itemsCount = rd.itemsCount + 1 WHERE rd.identifier = :identifier")

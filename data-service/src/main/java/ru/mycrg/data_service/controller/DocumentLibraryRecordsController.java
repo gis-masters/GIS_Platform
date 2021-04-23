@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
@@ -40,6 +39,7 @@ import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.PagingAndSortingUtil.fetchFoldersFirst;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.INNER_PATH;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PARENT;
 import static ru.mycrg.data_service.util.filter.FilterCondition.*;
@@ -91,7 +91,7 @@ public class DocumentLibraryRecordsController {
 
         final CrgFilter filter = prepareFilter(parent, title);
         final SchemaDto schema = libraryService.getSchema(docLibId);
-        Page<Map<String, Object>> result = recordsService.getPaged(rIdentifier, schema, pageable, filter);
+        var result = recordsService.getPaged(rIdentifier, schema, fetchFoldersFirst(pageable), filter);
 
         var pagedResources = pageAssembler.toResource(
                 result,
