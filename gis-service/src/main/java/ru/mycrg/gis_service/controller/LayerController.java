@@ -6,7 +6,6 @@ import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -52,9 +51,8 @@ public class LayerController {
 
     @GetMapping("/layers")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<List<LayerProjection>> getLayers(@PathVariable(name = "project_id") long projectId,
-                                                           Authentication authentication) {
-        List<LayerProjection> layers = layerService.findAll(projectId, authentication);
+    public ResponseEntity<List<LayerProjection>> getLayers(@PathVariable(name = "project_id") long projectId) {
+        List<LayerProjection> layers = layerService.findAll(projectId);
 
         return ResponseEntity.ok(layers);
     }
@@ -63,8 +61,7 @@ public class LayerController {
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<LayerProjection> createLayer(@PathVariable(name = "project_id") long projectId,
                                                        @Valid @RequestBody LayerCreateDto dto,
-                                                       BindingResult bindingResult,
-                                                       Authentication authentication) {
+                                                       BindingResult bindingResult) {
 
         log.debug("Request create layer: {}", dto.getTableName());
 
@@ -72,7 +69,7 @@ public class LayerController {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        LayerProjection layerProjection = layerService.create(projectId, dto, authentication);
+        LayerProjection layerProjection = layerService.create(projectId, dto);
 
         return new ResponseEntity<>(layerProjection, HttpStatus.CREATED);
     }
@@ -80,9 +77,8 @@ public class LayerController {
     @GetMapping("/layers/{layer_id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public Resource<LayerProjection> getLayerById(@PathVariable(name = "project_id") long projectId,
-                                                  @PathVariable(name = "layer_id") long layerId,
-                                                  Authentication authentication) {
-        LayerProjection layerProjection = layerService.findById(projectId, layerId, authentication);
+                                                  @PathVariable(name = "layer_id") long layerId) {
+        LayerProjection layerProjection = layerService.findById(projectId, layerId);
 
         return new Resource<>(layerProjection);
     }
@@ -91,11 +87,10 @@ public class LayerController {
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> updateLayer(@PathVariable(name = "project_id") long projectId,
                                               @PathVariable(name = "layer_id") long layerId,
-                                              @RequestBody JsonMergePatch patchDto,
-                                              Authentication authentication) {
+                                              @RequestBody JsonMergePatch patchDto) {
         log.debug("update layer: {} To: {}", layerId, patchDto.toJsonValue());
 
-        layerService.update(projectId, layerId, patchDto, authentication);
+        layerService.update(projectId, layerId, patchDto);
 
         return ResponseEntity.noContent().build();
     }
@@ -103,12 +98,11 @@ public class LayerController {
     @DeleteMapping("/layers/{layer_id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteLayer(@PathVariable(name = "project_id") long projectId,
-                                              @PathVariable(name = "layer_id") long layerId,
-                                              Authentication authentication) {
+                                              @PathVariable(name = "layer_id") long layerId) {
         log.debug("Request for deletion layer: {}", layerId);
 
         Layer layer = projectService
-                .getById(projectId, authentication)
+                .getById(projectId)
                 .getLayers().stream()
                 .filter(l -> layerId == l.getId())
                 .findFirst()

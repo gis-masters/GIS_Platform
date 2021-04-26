@@ -185,6 +185,12 @@
             <artifactId>data-service-contract</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>ru.mycrg</groupId>
+            <artifactId>resource-analyzer-contract</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <distributionManagement>

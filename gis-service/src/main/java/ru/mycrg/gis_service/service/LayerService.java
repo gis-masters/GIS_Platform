@@ -3,7 +3,6 @@ package ru.mycrg.gis_service.service;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.gis_service.dto.*;
@@ -16,6 +15,7 @@ import ru.mycrg.gis_service.exceptions.ErrorInfo;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.LayerRepository;
+import ru.mycrg.gis_service.security.IAuthenticationFacade;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;
-import static ru.mycrg.gis_service.security.CrgClaimsParser.getOrganizationId;
 
 @Service
 @Transactional
@@ -38,26 +37,29 @@ public class LayerService {
     private final JsonPatcher jsonPatcher;
     private final ProjectService projectService;
     private final LayerRepository layerRepository;
+    private final IAuthenticationFacade authenticationFacade;
 
     public LayerService(JsonPatcher jsonPatcher,
                         LayerRepository layerRepository,
-                        ProjectService projectService) {
+                        ProjectService projectService,
+                        IAuthenticationFacade authenticationFacade) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.layerRepository = layerRepository;
+        this.authenticationFacade = authenticationFacade;
     }
 
-    public List<LayerProjection> findAll(long projectId, Authentication authentication) {
+    public List<LayerProjection> findAll(long projectId) {
         return projectService
-                .getById(projectId, authentication)
+                .getById(projectId)
                 .getLayers().stream()
-                .map(layer -> new LayerProjection(layer, getOrgWorkspaceName(authentication)))
+                .map(layer -> new LayerProjection(layer, getOrgWorkspaceName()))
                 .collect(Collectors.toList());
     }
 
-    public LayerProjection findByTableName(String tableName, Authentication authentication) {
+    public LayerProjection findByTableName(String tableName) {
         List<Layer> layers = new ArrayList<>();
-        projectService.getAll(authentication).stream()
+        projectService.getAll().stream()
                       .map(Project::getLayers)
                       .forEach(layers::addAll);
 
@@ -66,27 +68,27 @@ public class LayerService {
                                  .findFirst()
                                  .orElseThrow(() -> new NotFoundException(tableName));
 
-        return new LayerProjection(foundLayer, getOrgWorkspaceName(authentication));
+        return new LayerProjection(foundLayer, getOrgWorkspaceName());
     }
 
-    public LayerProjection findById(long projectId, long layerId, Authentication authentication) {
-        List<Layer> layers = projectService.getById(projectId, authentication).getLayers();
+    public LayerProjection findById(long projectId, long layerId) {
+        List<Layer> layers = projectService.getById(projectId).getLayers();
 
         Layer layer = findLayerById(layers, layerId);
 
-        return new LayerProjection(layer, getOrgWorkspaceName(authentication));
+        return new LayerProjection(layer, getOrgWorkspaceName());
     }
 
-    public LayerProjection create(long projectId, LayerCreateDto dto, Authentication authentication) {
-        Project project = projectService.getById(projectId, authentication);
+    public LayerProjection create(long projectId, LayerCreateDto dto) {
+        Project project = projectService.getById(projectId);
 
         Layer layer = createLayer(dto, project);
 
-        return new LayerProjection(layer, getOrgWorkspaceName(authentication));
+        return new LayerProjection(layer, getOrgWorkspaceName());
     }
 
-    public void update(long projectId, long layerId, JsonMergePatch patchDto, Authentication authentication) {
-        Project project = projectService.getById(projectId, authentication);
+    public void update(long projectId, long layerId, JsonMergePatch patchDto) {
+        Project project = projectService.getById(projectId);
         Layer layerForUpdate = findLayerById(project.getLayers(), layerId);
 
         LayerUpdateDto layerDto = layerMapper.toDto(layerForUpdate);
@@ -109,9 +111,8 @@ public class LayerService {
         layerRepository.deleteByTableName(tableName);
     }
 
-    public List<RelatedLayersModel> findRelatedLayers(String field, String value,
-                                                      Authentication authentication) {
-        Set<Long> projectIds = projectService.getAll(authentication).stream()
+    public List<RelatedLayersModel> findRelatedLayers(String field, String value) {
+        Set<Long> projectIds = projectService.getAll().stream()
                                              .map(Project::getId)
                                              .collect(Collectors.toSet());
         List<Layer> relatedLayers;
@@ -127,9 +128,9 @@ public class LayerService {
         return relatedLayers.stream()
                             .map(layer -> {
                                 LayerProjection lProjection = new LayerProjection(layer,
-                                                                                  getOrgWorkspaceName(authentication));
+                                                                                  getOrgWorkspaceName());
                                 ProjectProjection pProjection = projectService
-                                        .getProjectionById(layer.getProject().getId(), authentication);
+                                        .getProjectionById(layer.getProject().getId());
 
                                 return new RelatedLayersModel(lProjection, pProjection);
                             })
@@ -179,7 +180,7 @@ public class LayerService {
     }
 
     @NotNull
-    private String getOrgWorkspaceName(Authentication authentication) {
-        return "scratch_database_" + getOrganizationId(authentication);
+    private String getOrgWorkspaceName() {
+        return "scratch_database_" + authenticationFacade.getOrganizationId();
     }
 }

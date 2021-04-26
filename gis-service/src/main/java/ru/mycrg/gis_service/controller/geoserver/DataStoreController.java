@@ -22,16 +22,16 @@ public class DataStoreController {
 
     @PostMapping("/{dataStoreId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> createDataStore(@PathVariable String dataStoreId, Authentication authentication) {
-        dataStoreService.create(dataStoreId, authentication);
+    public ResponseEntity<Object> createDataStore(@PathVariable String dataStoreId) {
+        dataStoreService.create(dataStoreId);
 
         return ResponseEntity.status(CREATED).build();
     }
 
     @DeleteMapping("/{dataStoreId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> deleteDataStore(@PathVariable String dataStoreId, Authentication authentication) {
-        dataStoreService.delete(dataStoreId, authentication);
+    public ResponseEntity<Object> deleteDataStore(@PathVariable String dataStoreId) {
+        dataStoreService.delete(dataStoreId);
 
         return ResponseEntity.status(NO_CONTENT).build();
     }

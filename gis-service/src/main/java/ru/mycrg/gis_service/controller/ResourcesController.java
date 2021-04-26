@@ -33,7 +33,7 @@ public class ResourcesController {
 
         this.assembler = assembler;
         this.queryServices = queryServices.stream()
-                                          .collect(toMap((qs) -> qs.getResourceDefinition().getType(),
+                                          .collect(toMap(qs -> qs.getResourceDefinition().getType(),
                                                          Function.identity()));
     }
 

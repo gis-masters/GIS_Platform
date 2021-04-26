@@ -4,42 +4,43 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.mycrg.geoserver_client.services.storage.vector.ConnectionParameters;
 import ru.mycrg.geoserver_client.services.storage.vector.DataStore;
 import ru.mycrg.geoserver_client.services.storage.vector.VectorStorage;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.exceptions.ThirdPartyServiceException;
+import ru.mycrg.gis_service.security.IAuthenticationFacade;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
-import static ru.mycrg.gis_service.security.CrgAuthHelper.getToken;
-import static ru.mycrg.gis_service.security.CrgClaimsParser.getOrganizationId;
 
 @Service
 public class DataStoreService {
 
     public static final Logger log = LoggerFactory.getLogger(DataStoreService.class);
+    private final IAuthenticationFacade authenticationFacade;
 
     private final Environment environment;
 
-    public DataStoreService(Environment environment) {
+    public DataStoreService(IAuthenticationFacade authenticationFacade,
+                            Environment environment) {
+        this.authenticationFacade = authenticationFacade;
         this.environment = environment;
     }
 
-    public void create(String dataStoreId, Authentication authentication) {
-        String accessToken = getToken(authentication);
-        Long orgId = getOrganizationId(authentication);
+    public void create(String dataStoreId) {
+        Long orgId = authenticationFacade.getOrganizationId();
 
         try {
             log.debug("Try create storage {} on geoserver", dataStoreId);
 
             final String orgWorkspace = "scratch_database_" + orgId;
-            ResponseModel<Object> responseModel = new VectorStorage(accessToken)
+            ResponseModel<Object> responseModel = new VectorStorage(authenticationFacade.getAccessToken())
                     .create(orgWorkspace, new DataStore(dataStoreId, prepareConnectionParameters(orgId, dataStoreId)));
+
             if (!responseModel.isSuccessful()) {
                 throw new ThirdPartyServiceException("Не удалось создать хранилище на геосервере", responseModel);
             }
@@ -48,15 +49,16 @@ public class DataStoreService {
         }
     }
 
-    public void delete(String dataStoreId, Authentication authentication) {
+    public void delete(String dataStoreId) {
         try {
             log.debug("Try delete storage {} on geoserver", dataStoreId);
 
-            String accessToken = getToken(authentication);
-            Long orgId = getOrganizationId(authentication);
-
+            Long orgId = authenticationFacade.getOrganizationId();
             final String orgWorkspace = "scratch_database_" + orgId;
-            ResponseModel<Object> responseModel = new VectorStorage(accessToken).delete(orgWorkspace, dataStoreId);
+
+            String token = authenticationFacade.getAccessToken();
+
+            ResponseModel<Object> responseModel = new VectorStorage(token).delete(orgWorkspace, dataStoreId);
             if (!responseModel.isSuccessful()) {
                 if (responseModel.getCode() == NOT_FOUND.value()) {
                     throw new NotFoundException(dataStoreId);
@@ -82,6 +84,7 @@ public class DataStoreService {
         String dbOwner = environment.getRequiredProperty("spring.datasource.username");
         String dbPass = environment.getRequiredProperty("spring.datasource.password");
 
-        return new ConnectionParameters(dbHost, String.valueOf(dbPort), dbName, dataStoreId, dbOwner, dbPass, "postgis");
+        return new ConnectionParameters(dbHost, String.valueOf(dbPort), dbName, dataStoreId, dbOwner, dbPass,
+                                        "postgis");
     }
 }

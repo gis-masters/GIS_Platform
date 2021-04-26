@@ -30,15 +30,14 @@ public class RelatedObjectsController {
     @GetMapping("/find-related-layers")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public List<RelatedLayersModel> findRelatedLayers(@RequestParam("field") String field,
-                                                      @RequestParam("value") String value,
-                                                      Authentication authentication) {
+                                                      @RequestParam("value") String value) {
         if (value.isEmpty()) {
             throw new BadRequestException("Required String parameter 'value' is not present",
                                           new ErrorInfo("value", "value parameter is empty"));
         }
 
 
-        return layerService.findRelatedLayers(field, value, authentication);
+        return layerService.findRelatedLayers(field, value);
     }
 
     @GetMapping("/find-related-by-basemap/{sourceBasemapId}")

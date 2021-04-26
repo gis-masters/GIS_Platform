@@ -10,7 +10,6 @@ import ru.mycrg.gis_service.security.CrgAuthHelper;
 import ru.mycrg.gis_service.security.IAuthenticationFacade;
 import ru.mycrg.resource_analyzer_contract.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,12 +28,9 @@ public class LayerStyleExistenceOnGeoserverAnalyzer implements IResourceAnalyzer
     public List<IResourceAnalyzerResult> analyze(List<? extends IResource> resources) {
         checkResourcesForAppropriateType(resources);
 
-        List<ResourceAnalyzerResultImpl> resourcesCheckResults = resources
+        return resources
                 .stream()
-                .map(this::analyzeLayerForStyleExistenceOnGeoserver)
-                .collect(Collectors.toList());
-
-        return Collections.unmodifiableList(resourcesCheckResults);
+                .map(this::analyzeLayerForStyleExistenceOnGeoserver).collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -77,8 +73,7 @@ public class LayerStyleExistenceOnGeoserverAnalyzer implements IResourceAnalyzer
     }
 
     private ResourceAnalyzerResultImpl analyzeLayerForStyleExistenceOnGeoserver(IResource layer) {
-        StyleService geoserverStyleService = new StyleService(
-                CrgAuthHelper.getToken(authenticationFacade.getAuthentication()));
+        StyleService geoserverStyleService = new StyleService(authenticationFacade.getAccessToken());
         boolean isStyleExistOnGeoserver = true;
 
         try {

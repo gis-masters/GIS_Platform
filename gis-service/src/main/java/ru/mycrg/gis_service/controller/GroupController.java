@@ -6,7 +6,6 @@ import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.GroupCreateDto;
 import ru.mycrg.gis_service.dto.GroupProjection;
@@ -16,7 +15,8 @@ import javax.json.JsonMergePatch;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.mycrg.auth_service_contract.Authorities.*;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
 @RestController
@@ -33,9 +33,8 @@ public class GroupController {
 
     @GetMapping("/groups")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<List<GroupProjection>> getGroups(@PathVariable(name = "project_id") long projectId,
-                                                           Authentication authentication) {
-        List<GroupProjection> groups = groupService.getAll(projectId, authentication);
+    public ResponseEntity<List<GroupProjection>> getGroups(@PathVariable(name = "project_id") long projectId) {
+        List<GroupProjection> groups = groupService.getAll(projectId);
 
         return ResponseEntity.ok(groups);
     }
@@ -43,9 +42,8 @@ public class GroupController {
     @PostMapping("/groups")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<GroupProjection> createGroup(@PathVariable(name = "project_id") long projectId,
-                                                       @Valid @RequestBody GroupCreateDto dto,
-                                                       Authentication authentication) {
-        GroupProjection groupProjection = groupService.create(projectId, dto, authentication);
+                                                       @Valid @RequestBody GroupCreateDto dto) {
+        GroupProjection groupProjection = groupService.create(projectId, dto);
 
         return new ResponseEntity<>(groupProjection, HttpStatus.CREATED);
     }
@@ -53,9 +51,8 @@ public class GroupController {
     @GetMapping("/groups/{group_id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public Resource<GroupProjection> getGroupById(@PathVariable(name = "project_id") long projectId,
-                                                  @PathVariable(name = "group_id") long groupId,
-                                                  Authentication authentication) {
-        GroupProjection group = groupService.findById(projectId, groupId, authentication);
+                                                  @PathVariable(name = "group_id") long groupId) {
+        GroupProjection group = groupService.findById(projectId, groupId);
 
         return new Resource<>(group);
     }
@@ -64,11 +61,10 @@ public class GroupController {
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> updateGroup(@PathVariable(name = "project_id") long projectId,
                                               @PathVariable(name = "group_id") long groupId,
-                                              @RequestBody JsonMergePatch patchDto,
-                                              Authentication authentication) {
+                                              @RequestBody JsonMergePatch patchDto) {
         log.info("patch update group: {}", patchDto.toJsonValue());
 
-        groupService.update(projectId, groupId, patchDto, authentication);
+        groupService.update(projectId, groupId, patchDto);
 
         return ResponseEntity.noContent().build();
     }

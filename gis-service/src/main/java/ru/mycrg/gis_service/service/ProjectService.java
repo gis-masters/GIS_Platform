@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.projection.ProjectionFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.gis_service.dto.ProjectProjection;
@@ -18,6 +17,7 @@ import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.repository.ProjectRepository;
+import ru.mycrg.gis_service.security.IAuthenticationFacade;
 import ru.mycrg.gis_service.security.UserDetails;
 
 import java.time.LocalDateTime;
@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultProjectName;
-import static ru.mycrg.gis_service.security.CrgClaimsParser.*;
 
 @Service
 @Transactional
@@ -38,21 +37,24 @@ public class ProjectService {
 
     private final ProjectionFactory projectionFactory;
     private final ProjectRepository projectRepository;
+    private final IAuthenticationFacade authenticationFacade;
 
     public ProjectService(ProjectionFactory projectionFactory,
-                          ProjectRepository projectRepository) {
+                          ProjectRepository projectRepository,
+                          IAuthenticationFacade authenticationFacade) {
         this.projectionFactory = projectionFactory;
         this.projectRepository = projectRepository;
+        this.authenticationFacade = authenticationFacade;
     }
 
-    public Page<ProjectProjection> getPaged(String name, Pageable pageable, Authentication authentication) {
+    public Page<ProjectProjection> getPaged(String name, Pageable pageable) {
         Page<Project> projects;
-        if (isRoot(authentication)) {
+        if (authenticationFacade.isRoot()) {
             projects = projectRepository.findAllByNameContainingIgnoreCase(name, pageable);
         } else {
-            final UserDetails userDetails = getUserDetails(authentication);
-            Long orgId = getFirstOrganizationId(userDetails);
-            if (isOrganizationAdmin(authentication)) {
+            final UserDetails userDetails = authenticationFacade.getUserDetails();
+            Long orgId = authenticationFacade.getOrganizationId();
+            if (authenticationFacade.isOrganizationAdmin()) {
                 projects = projectRepository.findAllByOrganizationIdAndNameContainingIgnoreCase(orgId, name, pageable);
             } else {
                 final List<Project> organizationProjects = projectRepository
@@ -67,8 +69,8 @@ public class ProjectService {
         return projects.map(project -> projectionFactory.createProjection(ProjectProjection.class, project));
     }
 
-    public List<Project> getAll(Authentication authentication) {
-        Long orgId = getOrganizationId(authentication);
+    public List<Project> getAll() {
+        Long orgId = authenticationFacade.getOrganizationId();
 
         return projectRepository.findAllByOrganizationId(orgId);
     }
@@ -77,28 +79,27 @@ public class ProjectService {
      * Retrieves an entity by their id.
      *
      * @param id             must not be null
-     * @param authentication Authenticated principal info, must not be null
      *
      * @return the entity with the given id.
      *
      * @throws NotFoundException if entity not exist or user not have permissions.
      */
     @NotNull
-    public Project getById(@NotNull Long id, @NotNull Authentication authentication) {
-        final UserDetails userDetails = getUserDetails(authentication);
+    public Project getById(@NotNull Long id) {
+        final UserDetails userDetails = authenticationFacade.getUserDetails();
 
-        if (isRoot(authentication)) {
+        if (authenticationFacade.isRoot()) {
             return projectRepository
                     .findById(id)
                     .orElseThrow(() -> new NotFoundException(Project.class, id));
         }
 
-        Long orgId = getFirstOrganizationId(userDetails);
+        Long orgId = authenticationFacade.getOrganizationId();
         Project project = projectRepository
                 .findByIdAndOrganizationId(id, orgId)
                 .orElseThrow(() -> new NotFoundException(Project.class, id));
 
-        if (isOrganizationAdmin(authentication)) {
+        if (authenticationFacade.isOrganizationAdmin()) {
             return project;
         }
 
@@ -110,8 +111,8 @@ public class ProjectService {
         }
     }
 
-    public ProjectProjection getProjectionById(Long id, Authentication authentication) {
-        return projectionFactory.createProjection(ProjectProjection.class, getById(id, authentication));
+    public ProjectProjection getProjectionById(Long id) {
+        return projectionFactory.createProjection(ProjectProjection.class, getById(id));
     }
 
     /**
@@ -121,14 +122,14 @@ public class ProjectService {
      * @param id          Идентификатор проекта.
      * @param projectName Новое название проекта.
      */
-    public void update(long id, String projectName, Authentication authentication) {
+    public void update(long id, String projectName) {
         Project project;
-        if (isRoot(authentication)) {
+        if (authenticationFacade.isRoot()) {
             project = projectRepository
                     .findById(id)
                     .orElseThrow(() -> new NotFoundException(id));
         } else {
-            Long orgId = getOrganizationId(authentication);
+            Long orgId = authenticationFacade.getOrganizationId();
 
             project = projectRepository
                     .findByIdAndOrganizationId(id, orgId)
@@ -141,8 +142,8 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public ProjectProjection create(ProjectRequestDto dto, Authentication authentication) {
-        Long orgId = getOrganizationId(authentication);
+    public ProjectProjection create(ProjectRequestDto dto) {
+        Long orgId = authenticationFacade.getOrganizationId();
 
         log.info("Init create project: {} for organization: {}", dto.getProjectName(), orgId);
 
@@ -162,8 +163,8 @@ public class ProjectService {
         return projectionFactory.createProjection(ProjectProjection.class, savedProject);
     }
 
-    public void delete(Long projectId, Authentication authentication) {
-        Long orgId = getOrganizationId(authentication);
+    public void delete(Long projectId) {
+        Long orgId = authenticationFacade.getOrganizationId();
         Project project = projectRepository
                 .findByIdAndOrganizationId(projectId, orgId)
                 .orElseThrow(() -> new NotFoundException(projectId));

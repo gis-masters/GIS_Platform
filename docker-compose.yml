@@ -6,7 +6,7 @@ services:
     image: $DOCKER_CRG_HOST/rabbitmq:$RABBIT_TAG
     restart: always
     labels:
-       co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"node\",\"queue\",\"exchange\"],\"module\":\"rabbitmq\",\"hosts\":[\"localhost:15672\"],\"username\":\"$CRG_USER\",\"password\":\"$RABBIT_PASS\"}]"
+      co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"node\",\"queue\",\"exchange\"],\"module\":\"rabbitmq\",\"hosts\":[\"localhost:15672\"],\"username\":\"$CRG_USER\",\"password\":\"$RABBIT_PASS\"}]"
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -140,6 +140,7 @@ services:
       - /opt/logs:/opt/logs
       - /opt/file_storage:/opt/file_storage
       - /opt/export:/opt/export
+      - /opt/spatial_data:/opt/spatial_data
     ports:
       - 8084:8084
 
@@ -184,7 +185,7 @@ services:
     image: $DOCKER_CRG_HOST/crg-gateway:$CRG_GATEWAY_TAG
     restart: always
     extra_hosts:
-     - "logstash:${LOGSTASH_HOST}"
+      - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
       CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
@@ -204,7 +205,7 @@ services:
     image: $DOCKER_CRG_HOST/geo-wrapper:$CRG_WRAPPER_TAG
     restart: always
     extra_hosts:
-     - "logstash:${LOGSTASH_HOST}"
+      - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
 
@@ -256,5 +257,5 @@ services:
       - /opt/reglaments:/usr/share/nginx/html/reglaments
       - /opt/ssl:/opt/ssl
     ports:
-    - 80:80
-    - 443:443
+      - 80:80
+      - 443:443

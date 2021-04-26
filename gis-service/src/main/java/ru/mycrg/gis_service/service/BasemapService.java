@@ -1,7 +1,6 @@
 package ru.mycrg.gis_service.service;
 
 import org.springframework.data.projection.ProjectionFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.gis_service.dto.BaseMapCreateDto;
@@ -42,15 +41,15 @@ public class BasemapService {
         this.projectionFactory = projectionFactory;
     }
 
-    public List<BaseMapProjection> getAll(long projectId, Authentication authentication) {
-        return getBaseMaps(projectId, authentication)
+    public List<BaseMapProjection> getAll(long projectId) {
+        return getBaseMaps(projectId)
                 .stream()
                 .map(baseMap -> projectionFactory.createProjection(BaseMapProjection.class, baseMap))
                 .collect(Collectors.toList());
     }
 
-    public BaseMapProjection create(long projectId, BaseMapCreateDto dto, Authentication authentication) {
-        Project project = projectService.getById(projectId, authentication);
+    public BaseMapProjection create(long projectId, BaseMapCreateDto dto) {
+        Project project = projectService.getById(projectId);
         project.getBaseMaps().stream()
                .filter(baseMap -> baseMap.getBaseMapId().equals(dto.getBaseMapId()))
                .findFirst()
@@ -67,8 +66,8 @@ public class BasemapService {
         return projectionFactory.createProjection(BaseMapProjection.class, newBaseMap);
     }
 
-    public void delete(long projectId, Long id, Authentication authentication) {
-        Project project = projectService.getById(projectId, authentication);
+    public void delete(long projectId, Long id) {
+        Project project = projectService.getById(projectId);
 
         BaseMap baseMap = baseMapRepository.findById(id)
                                            .orElseThrow(() -> new NotFoundException(BaseMap.class, id));
@@ -87,8 +86,8 @@ public class BasemapService {
                          });
     }
 
-    public void update(long projectId, long baseMapId, JsonMergePatch patchDto, Authentication authentication) {
-        Set<BaseMap> baseMaps = getBaseMaps(projectId, authentication);
+    public void update(long projectId, long baseMapId, JsonMergePatch patchDto) {
+        Set<BaseMap> baseMaps = getBaseMaps(projectId);
         BaseMap baseMapForUpdate = getBaseMapById(baseMaps, baseMapId);
 
         BaseMapCreateDto baseMapDto = baseMapMapper.toDto(baseMapForUpdate);
@@ -101,8 +100,8 @@ public class BasemapService {
         baseMapRepository.save(baseMapForUpdate);
     }
 
-    public BaseMapProjection findById(long projectId, long baseMapId, Authentication authentication) {
-        Set<BaseMap> baseMaps = getBaseMaps(projectId, authentication);
+    public BaseMapProjection findById(long projectId, long baseMapId) {
+        Set<BaseMap> baseMaps = getBaseMaps(projectId);
         BaseMap baseMapById = getBaseMapById(baseMaps, baseMapId);
 
         return projectionFactory.createProjection(BaseMapProjection.class, baseMapById);
@@ -127,9 +126,9 @@ public class BasemapService {
                        .collect(Collectors.toList());
     }
 
-    private Set<BaseMap> getBaseMaps(long projectId, Authentication authentication) {
+    private Set<BaseMap> getBaseMaps(long projectId) {
         return projectService
-                .getById(projectId, authentication)
+                .getById(projectId)
                 .getBaseMaps();
     }
 

@@ -3,7 +3,6 @@ package ru.mycrg.gis_service.service.analyzers;
 import org.springframework.stereotype.Service;
 import ru.mycrg.gis_service.dto.LayerProjection;
 import ru.mycrg.gis_service.entity.Project;
-import ru.mycrg.gis_service.security.IAuthenticationFacade;
 import ru.mycrg.gis_service.service.LayerService;
 import ru.mycrg.gis_service.service.ProjectService;
 import ru.mycrg.resource_analyzer_contract.*;
@@ -17,23 +16,20 @@ public class LayerQueryService implements IResourceQueryService {
     private final ProjectService projectService;
     private final LayerService layerService;
     private final IResourceDefinition resourceDefinition = new ResourceDefinitionImpl("Layer", "Слой");
-    private final IAuthenticationFacade authenticationFacade;
 
-    public LayerQueryService(ProjectService projectService, LayerService layerService,
-                             IAuthenticationFacade authenticationFacade) {
+    public LayerQueryService(ProjectService projectService, LayerService layerService) {
         this.projectService = projectService;
         this.layerService = layerService;
-        this.authenticationFacade = authenticationFacade;
     }
 
     public List<IResource> getResources() {
         List<ResourceImpl> layerResources = new ArrayList<>();
-        Set<Long> projectIds = projectService.getAll(authenticationFacade.getAuthentication()).stream()
+        Set<Long> projectIds = projectService.getAll().stream()
                                              .map(Project::getId)
                                              .collect(Collectors.toSet());
 
         projectIds.forEach(projectId -> layerResources.addAll(
-                layerService.findAll(projectId, authenticationFacade.getAuthentication()).stream()
+                layerService.findAll(projectId).stream()
                             .map(this::mapLayerToResource)
                             .collect(Collectors.toList())));
 

@@ -8,12 +8,12 @@ import ru.mycrg.geoserver_client.services.layers.models.Layer;
 import ru.mycrg.gis_service.dto.LayerProjection;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ErrorInfo;
+import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.security.CrgAuthHelper;
 import ru.mycrg.gis_service.security.IAuthenticationFacade;
 import ru.mycrg.gis_service.service.LayerService;
 import ru.mycrg.resource_analyzer_contract.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,12 +44,9 @@ public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
     public List<IResourceAnalyzerResult> analyze(List<? extends IResource> resources) {
         checkResourcesForAppropriateType(resources);
 
-        List<ResourceAnalyzerResultImpl> resourcesCheckResults = resources
-                .stream()
-                .map(this::analyzeVectorLayerForDefaultStyle)
-                .collect(Collectors.toList());
-
-        return Collections.unmodifiableList(resourcesCheckResults);
+        return resources.stream()
+                        .map(this::analyzeVectorLayerForDefaultStyle)
+                        .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -106,9 +103,10 @@ public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
             boolean isLayerExistOnGeoserver = geoserverLayerService.getByName(vectorLayer.getId()).isPresent();
 
             if (isLayerExistOnGeoserver) {
-                Layer layerFromGeoserver = geoserverLayerService.getByName(vectorLayer.getId()).get();
-                LayerProjection layerFromGisService = layerService.findByTableName(vectorLayer.getId(),
-                                                                                   authenticationFacade.getAuthentication());
+                Layer layerFromGeoserver =
+                        geoserverLayerService.getByName(vectorLayer.getId())
+                                             .orElseThrow(() -> new NotFoundException(vectorLayer.getId()));
+                LayerProjection layerFromGisService = layerService.findByTableName(vectorLayer.getId());
                 if (isLayersHaveSameStyle(layerFromGeoserver, layerFromGisService)) {
                     isSameStyle = true;
                 } else {

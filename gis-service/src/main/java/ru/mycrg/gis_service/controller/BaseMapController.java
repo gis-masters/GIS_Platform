@@ -33,9 +33,8 @@ public class BaseMapController {
 
     @GetMapping("/basemaps")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<List<BaseMapProjection>> getBaseMaps(@PathVariable(name = "project_id") long projectId,
-                                                               Authentication authentication) {
-        List<BaseMapProjection> baseMaps = baseMapService.getAll(projectId, authentication);
+    public ResponseEntity<List<BaseMapProjection>> getBaseMaps(@PathVariable(name = "project_id") long projectId) {
+        List<BaseMapProjection> baseMaps = baseMapService.getAll(projectId);
 
         return ResponseEntity.ok(baseMaps);
     }
@@ -43,9 +42,8 @@ public class BaseMapController {
     @GetMapping("/basemaps/{base_map_id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<BaseMapProjection> getBaseMaps(@PathVariable(name = "project_id") long projectId,
-                                                         @PathVariable(name = "base_map_id") long baseMapId,
-                                                         Authentication authentication) {
-        BaseMapProjection baseMap = baseMapService.findById(projectId, baseMapId, authentication);
+                                                         @PathVariable(name = "base_map_id") long baseMapId) {
+        BaseMapProjection baseMap = baseMapService.findById(projectId, baseMapId);
 
         return ResponseEntity.ok(baseMap);
     }
@@ -53,9 +51,8 @@ public class BaseMapController {
     @PostMapping("/basemaps")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<BaseMapProjection> addBaseMap(@PathVariable(name = "project_id") long projectId,
-                                                        @Valid @RequestBody BaseMapCreateDto dto,
-                                                        Authentication authentication) {
-        BaseMapProjection baseMap = baseMapService.create(projectId, dto, authentication);
+                                                        @Valid @RequestBody BaseMapCreateDto dto) {
+        BaseMapProjection baseMap = baseMapService.create(projectId, dto);
 
         return new ResponseEntity<>(baseMap, HttpStatus.CREATED);
     }
@@ -64,11 +61,10 @@ public class BaseMapController {
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> updateBaseMap(@PathVariable(name = "project_id") long projectId,
                                                 @PathVariable(name = "base_map_id") long baseMapId,
-                                                @RequestBody JsonMergePatch patchDto,
-                                                Authentication authentication) {
+                                                @RequestBody JsonMergePatch patchDto) {
         log.info("patch update baseMap: {}", patchDto.toJsonValue());
 
-        baseMapService.update(projectId, baseMapId, patchDto, authentication);
+        baseMapService.update(projectId, baseMapId, patchDto);
 
         return ResponseEntity.noContent().build();
     }
@@ -76,9 +72,8 @@ public class BaseMapController {
     @DeleteMapping("/basemaps/{id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteBaseMap(@PathVariable(name = "project_id") long projectId,
-                                                @PathVariable(name = "id") long id,
-                                                Authentication authentication) {
-        baseMapService.delete(projectId, id, authentication);
+                                                @PathVariable(name = "id") long id) {
+        baseMapService.delete(projectId, id);
 
         return ResponseEntity.noContent().build();
     }

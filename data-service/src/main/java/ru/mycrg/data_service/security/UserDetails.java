@@ -20,12 +20,12 @@ public class UserDetails {
         return this.userId;
     }
 
-    public List<Long> getGroups() {
-        return this.groups;
-    }
-
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public List<Long> getGroups() {
+        return this.groups;
     }
 
     public void setGroups(List<Long> groups) {

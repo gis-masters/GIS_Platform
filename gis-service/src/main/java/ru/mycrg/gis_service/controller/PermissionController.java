@@ -34,17 +34,16 @@ public class PermissionController {
 
     @GetMapping("/all-permissions")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Map<Long, List<PermissionProjection>>> getAllPermissions(Authentication authentication) {
-        Map<Long, List<PermissionProjection>> allPermissions = permissionsService.getAll(authentication);
+    public ResponseEntity<Map<Long, List<PermissionProjection>>> getAllPermissions() {
+        Map<Long, List<PermissionProjection>> allPermissions = permissionsService.getAll();
 
         return ResponseEntity.ok(allPermissions);
     }
 
     @GetMapping("/{project_id}/permissions")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<List<PermissionProjection>> getPermissions(@PathVariable(name = "project_id") long projectId,
-                                                                     Authentication authentication) {
-        List<PermissionProjection> permissions = permissionsService.getAll(projectId, authentication);
+    public ResponseEntity<List<PermissionProjection>> getPermissions(@PathVariable(name = "project_id") long projectId) {
+        List<PermissionProjection> permissions = permissionsService.getAll(projectId);
 
         return ResponseEntity.ok(permissions);
     }
@@ -52,11 +51,10 @@ public class PermissionController {
     @PostMapping("/{project_id}/permissions")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<PermissionProjection> createPermission(@PathVariable(name = "project_id") long projectId,
-                                                                 @Valid @RequestBody PermissionCreateDto dto,
-                                                                 Authentication authentication) {
+                                                                 @Valid @RequestBody PermissionCreateDto dto) {
         log.debug("Try to create permission for project {}", dto.getPrincipalId());
 
-        PermissionProjection permission = permissionsService.create(projectId, dto, authentication);
+        PermissionProjection permission = permissionsService.create(projectId, dto);
 
         return new ResponseEntity<>(permission, HttpStatus.CREATED);
     }
@@ -64,9 +62,8 @@ public class PermissionController {
     @GetMapping("/{project_id}/permissions/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public Resource<PermissionProjection> getPermissionById(@PathVariable(name = "project_id") long projectId,
-                                                            @PathVariable(name = "id") long permissionId,
-                                                            Authentication authentication) {
-        PermissionProjection permission = permissionsService.getById(projectId, permissionId, authentication);
+                                                            @PathVariable(name = "id") long permissionId) {
+        PermissionProjection permission = permissionsService.getById(projectId, permissionId);
 
         return new Resource<>(permission);
     }
@@ -75,11 +72,10 @@ public class PermissionController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> updatePermission(@PathVariable(name = "project_id") long projectId,
                                                    @PathVariable(name = "id") long permissionId,
-                                                   @RequestBody JsonMergePatch patchDto,
-                                                   Authentication authentication) {
+                                                   @RequestBody JsonMergePatch patchDto) {
         log.debug("update permission for project: {} to: {}", projectId, patchDto.toJsonValue());
 
-        permissionsService.update(projectId, permissionId, patchDto, authentication);
+        permissionsService.update(projectId, permissionId, patchDto);
 
         return ResponseEntity.noContent().build();
     }
@@ -87,11 +83,10 @@ public class PermissionController {
     @DeleteMapping("/{project_id}/permissions/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> deletePermission(@PathVariable(name = "project_id") long projectId,
-                                                   @PathVariable(name = "id") long permissionId,
-                                                   Authentication authentication) {
+                                                   @PathVariable(name = "id") long permissionId) {
         log.debug("Request for deletion permission {} for project {}", permissionId, projectId);
 
-        permissionsService.delete(projectId, permissionId, authentication);
+        permissionsService.delete(projectId, permissionId);
 
         return ResponseEntity.noContent().build();
     }

@@ -1,7 +1,6 @@
 package ru.mycrg.gis_service.service;
 
 import org.springframework.data.projection.ProjectionFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.gis_service.dto.GroupCreateDto;
@@ -13,7 +12,6 @@ import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.GroupRepository;
-import ru.mycrg.gis_service.security.IAuthenticationFacade;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
@@ -31,28 +29,26 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final JsonPatcher jsonPatcher;
     private final ProjectionFactory projectionFactory;
-    private final IAuthenticationFacade authenticationFacade;
 
     public GroupService(GroupRepository groupRepository,
                         ProjectService projectService,
                         JsonPatcher jsonPatcher,
-                        IAuthenticationFacade authenticationFacade,
                         ProjectionFactory projectionFactory) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.groupRepository = groupRepository;
         this.projectionFactory = projectionFactory;
-        this.authenticationFacade = authenticationFacade;
     }
 
-    public List<GroupProjection> getAll(long projectId, Authentication authentication) {
-        return getProjectGroups(projectId, authentication).stream()
-                .map(group -> projectionFactory.createProjection(GroupProjection.class, group))
-                .collect(Collectors.toList());
+    public List<GroupProjection> getAll(long projectId) {
+        return getProjectGroups(projectId).stream()
+                                          .map(group -> projectionFactory.createProjection(GroupProjection.class,
+                                                                                           group))
+                                          .collect(Collectors.toList());
     }
 
-    public GroupProjection create(long projectId, GroupCreateDto dto, Authentication authentication) {
-        Project project = projectService.getById(projectId, authentication);
+    public GroupProjection create(long projectId, GroupCreateDto dto) {
+        Project project = projectService.getById(projectId);
 
         Group group = new Group(dto);
         if (isInvalidGroupRelation(group, project.getGroups())) {
@@ -66,15 +62,15 @@ public class GroupService {
         return projectionFactory.createProjection(GroupProjection.class, savedGroup);
     }
 
-    public GroupProjection findById(long projectId, long groupId, Authentication authentication) {
-        List<Group> groups = getProjectGroups(projectId, authentication);
+    public GroupProjection findById(long projectId, long groupId) {
+        List<Group> groups = getProjectGroups(projectId);
         Group group = getGroupById(groups, groupId);
 
         return projectionFactory.createProjection(GroupProjection.class, group);
     }
 
-    public void update(long projectId, long groupId, JsonMergePatch patchDto, Authentication authentication) {
-        List<Group> groups = getProjectGroups(projectId, authentication);
+    public void update(long projectId, long groupId, JsonMergePatch patchDto) {
+        List<Group> groups = getProjectGroups(projectId);
         Group groupForUpdate = getGroupById(groups, groupId);
 
         GroupUpdateDto groupDto = groupMapper.toDto(groupForUpdate);
@@ -92,24 +88,22 @@ public class GroupService {
     }
 
     public void delete(long projectId, long groupId) {
-        final Authentication authentication = authenticationFacade.getAuthentication();
-
-        List<Group> groups = getProjectGroups(projectId, authentication);
+        List<Group> groups = getProjectGroups(projectId);
         Group group = getGroupById(groups, groupId);
 
         groupRepository.deleteGroupById(group.getId());
     }
 
-    private List<Group> getProjectGroups(long projectId, Authentication authentication) {
+    private List<Group> getProjectGroups(long projectId) {
         return projectService
-                .getById(projectId, authentication)
+                .getById(projectId)
                 .getGroups();
     }
 
     private Group getGroupById(List<Group> groups, Long groupId) {
         return groups.stream()
-                .filter(g -> g.getId().equals(groupId))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException(groupId));
+                     .filter(g -> g.getId().equals(groupId))
+                     .findFirst()
+                     .orElseThrow(() -> new NotFoundException(groupId));
     }
 }
