@@ -27,7 +27,7 @@ public class SystemAttributeHandler {
         this.authenticationFacade = authenticationFacade;
     }
 
-    public SystemAttributeHandler fetchSchema(@NotNull String schemaName) {
+    public SystemAttributeHandler initSchema(@NotNull String schemaName) {
         schemaService.getSchemaByName(schemaName).ifPresent(schemaDto -> this.schema = schemaDto);
 
         return this;

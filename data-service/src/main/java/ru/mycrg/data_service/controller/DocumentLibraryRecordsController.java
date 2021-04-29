@@ -7,19 +7,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.ITableObject;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
-import ru.mycrg.data_service.service.FileStorageService;
 import ru.mycrg.data_service.service.RecordsService;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
+import ru.mycrg.data_service.service.storage.FileStorageService;
+import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
+import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageException;
+import ru.mycrg.data_service.service.storage.exceptions.StorageException;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -30,6 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
@@ -120,8 +128,14 @@ public class DocumentLibraryRecordsController {
         final Map<String, Object> record = recordsService.getById(rIdentifier, recId);
         final String innerFileName = (String) record.get(INNER_PATH.getName());
 
-        fileStorageService.removeFile(innerFileName);
-        recordsService.deleteRecord(rIdentifier, recId);
+        try {
+            fileStorageService.deleteIfExists(innerFileName);
+            recordsService.deleteRecord(rIdentifier, recId);
+        } catch (StorageException e) {
+            throw new DataServiceException("Не удалось удалить файл: " + innerFileName, e.getCause());
+        } catch (CrgDaoException e) {
+            throw new DataServiceException("Не удалось удалить упоминание о файле", e.getCause());
+        }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -136,20 +150,30 @@ public class DocumentLibraryRecordsController {
         final Map<String, Object> record = recordsService.getById(rIdentifier, recId);
         final String innerFileName = (String) record.get(field);
 
-        Resource resource = fileStorageService.loadFileAsResource(innerFileName);
+        try {
+            Resource resource = fileStorageService.loadAsResource(innerFileName);
 
-        final SystemAttributeHandler systemAttributeHandler =
-                this.systemAttributeHandler.fetchSchema(rIdentifier.getId());
+            final SystemAttributeHandler attributeHandler = this.systemAttributeHandler.initSchema(rIdentifier.getId());
+            final String contentLength = attributeHandler.getFileSize(record);
 
-        final String contentDisposition = String.format("attachment; filename=\"%s\"",
-                                                        systemAttributeHandler.getFileName(record));
-        final String contentLength = systemAttributeHandler.getFileSize(record);
+            ContentDisposition contentDisposition = ContentDisposition
+                    .builder("attachment")
+                    .filename(attributeHandler.getFileName(record), UTF_8)
+                    .build();
 
-        return ResponseEntity.ok()
-                             .contentType(MediaType.parseMediaType(defineFileContentType(request, resource)))
-                             .header(CONTENT_DISPOSITION, contentDisposition)
-                             .header(CONTENT_LENGTH, contentLength)
-                             .body(resource);
+            return ResponseEntity.ok()
+                                 .contentType(MediaType.parseMediaType(defineFileContentType(request, resource)))
+                                 .header(CONTENT_DISPOSITION, contentDisposition.toString())
+                                 .header(CONTENT_LENGTH, contentLength)
+                                 .body(resource);
+        } catch (NoSuchFileStorageException e) {
+            final String msg = String.format("Ресурс не найден. Для записи: '%s', по атрибуту: '%s'",
+                                             recId, field);
+
+            throw new NotFoundException(msg, e.getCause());
+        } catch (MalformedURLStorageException e) {
+            throw new DataServiceException(e.getMessage(), e.getCause());
+        }
     }
 
     @NotNull

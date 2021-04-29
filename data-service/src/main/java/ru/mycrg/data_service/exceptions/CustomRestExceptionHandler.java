@@ -25,7 +25,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -256,13 +255,10 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> maxSizeExceptionHandler(final MaxUploadSizeExceededException ex) {
         String maxUploadSize = environment.getRequiredProperty("spring.servlet.multipart.max-file-size");
 
-        CrgExceptionModel exceptionModel = CrgExceptionModel.builder()
-                .timestamp(LocalDateTime.now().toString())
-                .status(BAD_REQUEST.value())
-                .message("Maximum upload size exceeded, configured maximum: " + maxUploadSize)
-                .build();
+        final String message = "Maximum upload size exceeded, configured maximum: " + maxUploadSize;
+        final ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, message);
 
-        return new ResponseEntity<>(exceptionModel, BAD_REQUEST);
+        return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
 
     @ExceptionHandler(MultipartException.class)

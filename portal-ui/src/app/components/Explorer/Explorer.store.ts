@@ -83,4 +83,9 @@ export class ExplorerStore {
   setPageSize(size: number) {
     this.pageSize = size;
   }
+
+  @action
+  setDisabledItems(disabledItems: ExplorerItemData[]) {
+    this.disabledItems = disabledItems;
+  }
 }

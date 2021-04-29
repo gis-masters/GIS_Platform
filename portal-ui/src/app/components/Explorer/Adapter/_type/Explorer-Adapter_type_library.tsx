@@ -43,12 +43,12 @@ export class ExplorerAdapterTypeLibrary {
       <>
         {details && <p>{details}</p>}
 
-        {createdAt ? (
+        {createdAt && (
           <p>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
             {moment(createdAt).format('LL')}
           </p>
-        ) : null}
+        )}
       </>
     );
   }

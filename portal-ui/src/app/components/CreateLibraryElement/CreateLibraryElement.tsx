@@ -4,12 +4,14 @@ import { action, computed, observable } from 'mobx';
 import { NoteAddOutlined } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
+import { Toast } from '../Toast/Toast';
 import { services } from '../../services/services';
+import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
 import { schemaService } from '../../services/crg/schema.service';
+import { communicationService } from '../../services/communication.service';
 import { getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
 import { ContentType, FeatureDescription } from '../../services/crg/schema.models';
 import { docLibraryService, DocumentLibrary, LibraryItem } from '../../services/crg/doc-library.service';
-import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
 
 import { CreateLibraryElementDialog } from './Dialog/CreateLibraryElement-Dialog';
 import { CreateLibraryElementMenuItem } from './MenuItem/CreateLibraryElement-MenuItem';
@@ -132,16 +134,14 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     }
 
     try {
-      const crgDocuments = await docLibraryService.createRecord(this.schema.tableName, value);
-      if (crgDocuments) {
-        // эксплорер из консоли не прочитает, на кой тут это?
-        services.logger.info('Send event to refresh explorer');
-      }
+      await docLibraryService.createRecord(this.schema.tableName, value);
+
+      communicationService.libraryItemsUpdated.emit();
     } catch (e) {
-      // Сёрнули в консоль и всё? А пользователю сообщить, чем его действие закончилось?
-      services.logger.error('Error saving library item: ', e);
-    } finally {
-      this.closeDialog();
+      Toast.error('Ошибка сохранения записи');
+      services.logger.error('Ошибка сохранения записи: ', e.message);
     }
+
+    this.closeDialog();
   }
 }

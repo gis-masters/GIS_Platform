@@ -100,6 +100,7 @@ export class DocumentsList extends Component<DocumentsListProps> {
         editedField.name,
         JSON.stringify(newDocumentList)
       );
+
       this.props.modifyCallback(newDocumentList);
     }
   }
@@ -118,19 +119,17 @@ export class DocumentsList extends Component<DocumentsListProps> {
       }
 
       this.setLoading(true);
-      const { editedField } = this.props;
-      const fileName = selectedFile.name;
 
-      const crgDocument = await docLibraryService.createRecordWithBinary(
-        selectedFile,
-        fileName,
-        editedField.property.resourcePath
-      );
+      const { editedField, featureInfo } = this.props;
+      const crgDocument = await docLibraryService.createRecord(editedField.name, {
+        content_type_id: 'doc_v2',
+        binary: selectedFile,
+        title: selectedFile.name,
+        category: 'loaded by old way'
+      });
 
-      // Update current feature
-      const { featureInfo } = this.props;
       if (crgDocument) {
-        const payload = this.preparePayload(crgDocument, fileName);
+        const payload = this.preparePayload(crgDocument, selectedFile.name);
 
         await transformFeature.updateProperty(featureInfo.layerName, featureInfo.feature.id, editedField.name, payload);
 
@@ -143,12 +142,7 @@ export class DocumentsList extends Component<DocumentsListProps> {
     }
   }
 
-  private preparePayload(loadedDocuments: CrgDocument[], title: string): string {
-    const documents: DocumentListItemData[] = [
-      ...(this.props.documents || []),
-      ...loadedDocuments.map(({ id }) => ({ id, title }))
-    ];
-
-    return JSON.stringify(documents);
+  private preparePayload(loadedDocument: CrgDocument, title: string): string {
+    return JSON.stringify([...(this.props.documents || []), { id: loadedDocument.id, title }]);
   }
 }

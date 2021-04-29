@@ -14,6 +14,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
+import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -60,7 +61,7 @@ public class RecordsService {
         try {
             String innerFileName = UUID.randomUUID().toString();
 
-            systemAttributeHandler.fetchSchema(rIdentifier.getId())
+            systemAttributeHandler.initSchema(rIdentifier.getId())
                                   .fillCreator(body)
                                   .fillTimes(body)
                                   .fillFileInfo(body, file)
@@ -82,7 +83,7 @@ public class RecordsService {
         }
     }
 
-    public void deleteRecord(ResourceIdentifier resourceIdentifier, UUID id) {
+    public void deleteRecord(ResourceIdentifier resourceIdentifier, UUID id) throws CrgDaoException {
         tablesDao.removeRecord(resourceIdentifier, id);
     }
 }

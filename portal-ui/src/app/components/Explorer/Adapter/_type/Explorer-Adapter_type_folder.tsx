@@ -1,15 +1,15 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { FolderOutlined } from '@material-ui/icons';
-import { communicationService } from '../../../../services/communication.service';
-import { schemaService } from '../../../../services/crg/schema.service';
 
 import { SortDir } from '../../../../services/models';
-import { ContentTypeTypes, docLibraryService, LibraryItem } from '../../../../services/crg/doc-library.service';
 import { Emitter } from '../../../../services/util/Emitter';
-import { staticImplements } from '../../../../services/util/staticImplements';
-import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
+import { schemaService } from '../../../../services/crg/schema.service';
+import { staticImplements } from '../../../../services/util/staticImplements';
+import { communicationService } from '../../../../services/communication.service';
+import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
+import { ContentTypeTypes, docLibraryService, LibraryItem } from '../../../../services/crg/doc-library.service';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -38,12 +38,12 @@ export class ExplorerAdapterTypeFolder {
       <>
         {details && <p>{details}</p>}
 
-        {created_at ? (
+        {created_at && (
           <p>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
             {moment(created_at).format('LL')}
           </p>
-        ) : null}
+        )}
       </>
     );
   }

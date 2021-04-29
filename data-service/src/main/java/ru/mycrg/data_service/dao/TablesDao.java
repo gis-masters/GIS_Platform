@@ -140,15 +140,21 @@ public class TablesDao {
 
             return Objects.requireNonNull(result);
         } catch (DataAccessException e) {
-            log.error(e.getMessage());
             throw new CrgDaoException("Failed count total records for: " + rIdentifier.toString(), e.getCause());
         }
     }
 
-    public void removeRecord(ResourceIdentifier rIdentifier, UUID id) {
-        pJdbcTemplate.update(
-                String.format("DELETE FROM %s WHERE id = :id", rIdentifier.toString()),
-                new MapSqlParameterSource("id", id));
+    public void removeRecord(ResourceIdentifier rIdentifier, UUID id) throws CrgDaoException {
+        try {
+            pJdbcTemplate.update(
+                    String.format("DELETE FROM %s WHERE id = :id", rIdentifier.toString()),
+                    new MapSqlParameterSource("id", id));
+        } catch (Exception e) {
+            final String msg = String.format("Не удалось выполнить удаление объекта: '%s' в: '%s'",
+                                             id, rIdentifier.toString());
+
+            throw new CrgDaoException(msg, e.getCause());
+        }
     }
 
     @NotNull

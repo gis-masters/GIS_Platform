@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service;
+package ru.mycrg.data_service.service.storage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -7,16 +7,21 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
+import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageException;
+import ru.mycrg.data_service.service.storage.exceptions.StorageException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class FileStorageService {
 
-    private final Path documentStorageLocation;
+    private final Path fileStoragePath;
 
     private static final String FILE_EXTENSION = ".blob";
 
@@ -24,10 +29,10 @@ public class FileStorageService {
     public FileStorageService(Environment environment) {
         String path = environment.getRequiredProperty("crg-options.fileStoragePath");
 
-        documentStorageLocation = Paths.get(path).toAbsolutePath().normalize();
+        fileStoragePath = Paths.get(path).toAbsolutePath().normalize();
 
         try {
-            Files.createDirectories(documentStorageLocation);
+            Files.createDirectories(fileStoragePath);
         } catch (Exception e) {
             throw new DataServiceException("Could not create the directory for the uploaded documents.", e);
         }
@@ -37,7 +42,7 @@ public class FileStorageService {
         Path targetLocation = null;
         try {
             // Copy file to the target location (Replacing existing file with the same name)
-            targetLocation = documentStorageLocation.resolve(fileName + FILE_EXTENSION);
+            targetLocation = fileStoragePath.resolve(fileName + FILE_EXTENSION);
 
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
@@ -47,28 +52,27 @@ public class FileStorageService {
         }
     }
 
-    public Resource loadFileAsResource(String fileName) {
+    public Resource loadAsResource(String fileName) throws MalformedURLStorageException, NoSuchFileStorageException {
         try {
-            Path filePath = documentStorageLocation.resolve(fileName + FILE_EXTENSION).normalize();
+            Path filePath = fileStoragePath.resolve(fileName + FILE_EXTENSION).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {
                 return resource;
             } else {
-                throw new NotFoundException(fileName);
+                throw new NoSuchFileStorageException(fileName);
             }
-        } catch (MalformedURLException ex) {
-            throw new NotFoundException(fileName, ex);
+        } catch (MalformedURLException e) {
+            throw new MalformedURLStorageException(fileName, e);
         }
     }
 
-    public void removeFile(String fileName) {
+    public boolean deleteIfExists(String fileName) throws StorageException {
         try {
-            Path path = documentStorageLocation.resolve(fileName + FILE_EXTENSION).normalize();
-            Files.delete(path);
-        } catch (NoSuchFileException e) {
-            throw new NotFoundException("File not found: " + fileName, e);
+            Path filePath = fileStoragePath.resolve(fileName + FILE_EXTENSION).normalize();
+
+            return Files.deleteIfExists(filePath);
         } catch (IOException e) {
-            throw new DataServiceException("Cant delete file: " + fileName, e);
+            throw new StorageException("Cant delete file: " + fileName, e);
         }
     }
 }

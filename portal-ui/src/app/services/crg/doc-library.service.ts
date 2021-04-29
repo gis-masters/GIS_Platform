@@ -1,12 +1,7 @@
-import { AxiosError } from 'axios';
-
-import { services } from '../services';
 import { http } from '../http.service';
-import { Toast } from '../../components/Toast/Toast';
 import { PageableResponse, SortDir } from '../models';
 import { DataEntity, DataEntityType } from '../data.service';
-import { communicationService } from '../communication.service';
-import { getBaseUrl, getDocLibrariesRecordsUrl, getDocLibrariesUrl } from '../server-urls.service';
+import { getDocLibrariesRecordsUrl, getDocLibrariesRecordUrl, getDocLibrariesUrl } from '../server-urls.service';
 
 export interface LibraryItem {
   id: string;
@@ -23,14 +18,11 @@ export interface DocumentLibrary extends DataEntity {
   type: DataEntityType.LIBRARY;
 }
 
-export interface TemporaryDocumentBody {
-  title: string;
-  size: number;
-}
-
 export interface CrgDocument {
   id: string;
 }
+
+type FormData = { [key: string]: unknown };
 
 class DocLibraryService {
   private static _instance: DocLibraryService;
@@ -75,59 +67,22 @@ class DocLibraryService {
     return [libItems, response.page.totalPages];
   }
 
-  async createRecordWithBinary(file: File, fileName: string, uri: string): Promise<CrgDocument[]> {
-    const body: TemporaryDocumentBody = {
-      title: fileName,
-      size: file.size
-    };
+  async createRecord(libraryName: string, data: FormData): Promise<CrgDocument> {
+    return await http.post<CrgDocument>(await getDocLibrariesRecordsUrl(libraryName), this.prepareFormData(data));
+  }
 
+  async deleteRecord(libraryName: string, id: string) {
+    await http.delete(await getDocLibrariesRecordUrl(libraryName, id));
+  }
+
+  private prepareFormData(data: FormData) {
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('body', JSON.stringify(body));
-
-    const baseUrl = await getBaseUrl();
-
-    return await http.post<CrgDocument[]>(baseUrl + uri + '/records', formData).catch((error: AxiosError) => {
-      Toast.error('Возникла ошибка при загрузке файла');
-      services.logger.error('Возникла ошибка при загрузке файла: ', error.message);
-
-      return null;
-    });
-  }
-
-  async createRecord(libraryName: string, formValue: { [key: string]: unknown }): Promise<CrgDocument[]> {
-    const formData = this.prepareFormData(formValue);
-
-    const url = await getDocLibrariesRecordsUrl(libraryName);
-
-    const result = await http.post<CrgDocument[]>(url, formData).catch((error: AxiosError) => {
-      Toast.error('Возникла ошибка сохранения записи');
-      services.logger.error('Возникла ошибка сохранения записи: ', error.message);
-
-      return null;
-    });
-
-    communicationService.libraryItemsUpdated.emit();
-
-    return result;
-  }
-
-  async delete(uri: string) {
-    const baseUrl = await getBaseUrl();
-    await http.delete(baseUrl + uri).catch((error: AxiosError) => {
-      Toast.error('Не удалось удалить файл');
-      services.logger.error('Не удалось удалить файл: ', error.message);
-    });
-  }
-
-  private prepareFormData(formValue: { [key: string]: unknown }) {
-    const formData = new FormData();
-    if (!!formValue.binary) {
-      formData.append('file', formValue.binary as File);
-      delete formValue.binary;
+    if (!!data.binary) {
+      formData.append('file', data.binary as File);
+      delete data.binary;
     }
 
-    formData.append('body', JSON.stringify(formValue));
+    formData.append('body', JSON.stringify(data));
 
     return formData;
   }

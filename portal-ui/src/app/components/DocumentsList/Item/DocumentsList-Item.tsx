@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { action, observable } from 'mobx';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { AssignmentOutlined, Delete, DeleteOutline } from '@material-ui/icons';
 import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@material-ui/core';
-import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
+import { communicationService } from '../../../services/communication.service';
+import { services } from '../../../services/services';
 
+import { Link } from '../../Link/Link';
+import { Button } from '../../Button/Button';
 import { EditedField } from '../../../services/crg/schema.models';
 import { getBaseUrl } from '../../../services/server-urls.service';
-import { docLibraryService } from '../../../services/crg/doc-library.service';
 import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
-import { Button } from '../../Button/Button';
-import { Link } from '../../Link/Link';
+import { docLibraryService } from '../../../services/crg/doc-library.service';
+import { Toast } from '../../Toast/Toast';
 
 import { DocumentListItemData } from '../DocumentsList';
 
@@ -55,7 +58,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
             {document.title}
           </Link>
 
-          {featureInfo.isReadOnly ? (
+          {featureInfo.isReadOnly && (
             <IconButton className={cnDocumentsList('DeleteButton')} onClick={this.openDeleteDialog} size='small'>
               {this.isDeleteDocumentDialogOpen ? (
                 <Delete color='action' fontSize='small' />
@@ -63,7 +66,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
                 <DeleteOutline color='action' fontSize='small' />
               )}
             </IconButton>
-          ) : null}
+          )}
         </div>
 
         <Dialog open={this.isDeleteDocumentDialogOpen}>
@@ -104,11 +107,18 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
 
   @boundMethod
   private async deleteDocument() {
-    const { id } = this.props.document;
-    const { resourcePath } = this.props.editedField.property;
+    const { document, editedField } = this.props;
 
-    await docLibraryService.delete(`${resourcePath}/records/${id}`);
-    this.props.deleteCallback(id);
+    try {
+      await docLibraryService.deleteRecord(editedField.name, document.id);
+
+      communicationService.libraryItemsUpdated.emit();
+    } catch (e) {
+      Toast.error('Не удалось удалить файл');
+      services.logger.error('Не удалось удалить файл: ', e.message);
+    }
+
+    this.props.deleteCallback(document.id);
     this.closeDeleteDialog();
   }
 }

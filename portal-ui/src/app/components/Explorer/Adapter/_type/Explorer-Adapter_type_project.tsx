@@ -1,6 +1,5 @@
 import React from 'react';
 import moment from 'moment';
-import { pluralize } from 'numeralize-ru';
 import { MapOutlined } from '@material-ui/icons';
 
 import { staticImplements } from '../../../../services/util/staticImplements';

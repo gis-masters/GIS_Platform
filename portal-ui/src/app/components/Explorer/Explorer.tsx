@@ -121,7 +121,7 @@ export class Explorer extends Component<ExplorerProps> {
       ]);
     }
 
-    this.store.disabledItems = disabledItems || [];
+    this.store.setDisabledItems(disabledItems || []);
   }
 
   @boundMethod

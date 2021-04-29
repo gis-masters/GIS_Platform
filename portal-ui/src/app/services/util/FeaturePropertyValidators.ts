@@ -106,6 +106,8 @@ export class FeaturePropertyValidators {
             this.isPositive(currentValue, errors);
 
             break;
+          case ValueType.LOOKUP:
+            break;
           default:
             console.log('Unsupported ValueType: ', propertySchema.valueType);
             return errors;
