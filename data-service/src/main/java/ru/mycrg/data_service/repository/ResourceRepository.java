@@ -16,14 +16,13 @@ public interface ResourceRepository extends PagingAndSortingRepository<Resource,
 
     Optional<Resource> findByTypeAndIdentifier(String type, String identifier);
 
-    List<Resource> findByTypeAndTitleContainingIgnoreCase(String type, String title, Pageable pageable);
+    List<Resource> findByTypeAndTitleContainingIgnoreCase(String type, String title);
 
     void deleteByIdentifierStartsWith(String identifier);
 
     List<Resource> findByTypeAndIdentifierStartingWithAndTitleContainingIgnoreCase(String type,
                                                                                    String identifier,
-                                                                                   String title,
-                                                                                   Pageable pageable);
+                                                                                   String title);
 
     @Modifying
     @Query("UPDATE Resource rd SET rd.itemsCount = rd.itemsCount + 1 WHERE rd.identifier = :identifier")

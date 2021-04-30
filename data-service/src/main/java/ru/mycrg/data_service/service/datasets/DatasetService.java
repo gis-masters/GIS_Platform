@@ -52,7 +52,7 @@ public class DatasetService {
     }
 
     public Page<IResourceModel> getPaged(String title, Pageable pageable) {
-        List<IResourceModel> datasets = resourcesService.getByTitle(title, SCHEMA, pageable).stream()
+        List<IResourceModel> datasets = resourcesService.getByTitle(title, SCHEMA).stream()
                                                         .map(DatasetModel::new)
                                                         .collect(Collectors.toList());
 

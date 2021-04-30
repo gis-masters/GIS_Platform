@@ -79,10 +79,10 @@ public class ResourcesService {
      * @param title Заглавие
      * @param type  Тип ресурса
      */
-    public List<IResourceModel> getByTitle(String title, ResourceType type, Pageable pageable) {
+    public List<IResourceModel> getByTitle(String title, ResourceType type) {
         List<IResourceModel> allowedResources = new ArrayList<>();
 
-        repository.findByTypeAndTitleContainingIgnoreCase(type.name(), title, pageable)
+        repository.findByTypeAndTitleContainingIgnoreCase(type.name(), title)
                   .forEach(resource -> fillAllowedResources(allowedResources, resource));
 
         return allowedResources;
@@ -94,13 +94,12 @@ public class ResourcesService {
      * @param datasetId Идентификатор набора данных.
      * @param title     Заглавие.
      */
-    public List<IResourceModel> getDatasetTablesFilteredByTitle(String datasetId, String title, Pageable pageable) {
+    public List<IResourceModel> getDatasetTablesFilteredByTitle(String datasetId, String title) {
         List<IResourceModel> allowedResources = new ArrayList<>();
 
         repository.findByTypeAndIdentifierStartingWithAndTitleContainingIgnoreCase(TABLE.name(),
                                                                                    datasetId + ".",
-                                                                                   title,
-                                                                                   pageable)
+                                                                                   title)
                   .forEach(resource -> fillAllowedResources(allowedResources, resource));
 
         return allowedResources;

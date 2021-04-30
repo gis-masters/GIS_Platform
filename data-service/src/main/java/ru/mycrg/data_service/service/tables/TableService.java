@@ -70,7 +70,7 @@ public class TableService {
     }
 
     public Page<IResourceModel> getPaged(String datasetId, String title, Pageable pageable) {
-        List<IResourceModel> datasets = resourcesService.getDatasetTablesFilteredByTitle(datasetId, title, pageable).stream()
+        List<IResourceModel> datasets = resourcesService.getDatasetTablesFilteredByTitle(datasetId, title).stream()
                                                         .map(this::mapToTableModel)
                                                         .collect(Collectors.toList());
 

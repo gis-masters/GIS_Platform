@@ -83,6 +83,13 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(Integer.parseInt(permissionsSize), realCount);
     }
 
+    @And("Общее кол-во страниц соответствует ожидаемому: {string}")
+    public void checkTotalPages(String expectedTotalPages) {
+        totalPages = jsonPath.get("page.totalPages");
+
+        assertEquals(Integer.parseInt(expectedTotalPages), totalPages);
+    }
+
     private void createPermissionForCurrentDataset(PermissionCreateDto dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -93,13 +100,8 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private PermissionCreateDto generateRandomPermission() {
-        final PermissionCreateDto permissionCreateDto = new PermissionCreateDto(
-                random.nextBoolean() ? "group" : "user",
-                random.nextInt(77777),
-                random.nextBoolean() ? "CONTRIBUTOR" : "VIEWER");
-
-        System.out.println(" ---------- " + permissionCreateDto);
-
-        return permissionCreateDto;
+        return new PermissionCreateDto(random.nextBoolean() ? "group" : "user",
+                                       random.nextInt(77777),
+                                       random.nextBoolean() ? "CONTRIBUTOR" : "VIEWER");
     }
 }
