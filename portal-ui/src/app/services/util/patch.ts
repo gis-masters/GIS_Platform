@@ -14,6 +14,9 @@ export function getPatch<T>(
   fields.forEach(key => {
     if (objNew[key] !== objPrimal[key]) {
       patch[key] = objNew[key];
+      if (patch[key] === undefined) {
+        patch[key] = null;
+      }
     }
   });
 
