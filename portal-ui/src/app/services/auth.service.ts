@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
 import { getAuthUrl, getLogoutUrl, getOrganizationsUrl, getUserUrl } from './server-urls.service';
 import { communicationService } from './communication.service';
@@ -28,7 +28,7 @@ interface AuthenticationResult {
   wrongPassword?: boolean;
 }
 
-axios.interceptors.request.use(config => {
+http.axios.interceptors.request.use(config => {
   if (authService.token) {
     config.headers.Authorization = 'Bearer ' + authService.token;
   }
@@ -36,7 +36,7 @@ axios.interceptors.request.use(config => {
   return config;
 });
 
-axios.interceptors.response.use(
+http.axios.interceptors.response.use(
   value => value,
   async (e: AxiosError) => {
     const err = e.toJSON ? { ...e.toJSON(), response: e.response } : e;

@@ -91,7 +91,6 @@
     "css-loader": "^3.2.0",
     "csscomb": "github:csscomb/csscomb.js#ce7ad831bd9b7fddb660c59afbbaf183c98d6ca7",
     "hermione": "^3.11.0",
-    "html-reporter": "^5.16.4",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~5.2.3",

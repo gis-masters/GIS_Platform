@@ -53,7 +53,7 @@ export async function getFeatures(
   if (!!cqlFilter) {
     params.CQL_FILTER = cqlFilter;
   }
-  const fCollection = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params: params });
+  const fCollection = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params });
 
   return clearFeatureId(fCollection);
 }
