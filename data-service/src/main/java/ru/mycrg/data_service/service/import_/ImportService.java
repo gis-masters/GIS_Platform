@@ -13,7 +13,8 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.ProcessService;
 import ru.mycrg.data_service.service.SchemaService;
-import ru.mycrg.data_service.service.XmlFileParser;
+import ru.mycrg.data_service.service.parsers.XmlParser;
+import ru.mycrg.data_service.service.parsers.exceptions.XmlParserException;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -39,18 +40,22 @@ public class ImportService {
     private final ProcessService processService;
     private final IAuthenticationFacade authenticationFacade;
     private final TablesDao tablesDao;
+    private final XmlParser xmlParser;
 
     public ImportService(IMessageBusProducer messageBus,
                          Environment environment,
                          SchemaService schemaService,
-                         ProcessService processService, IAuthenticationFacade authenticationFacade,
-                         TablesDao tablesDao) {
+                         ProcessService processService,
+                         IAuthenticationFacade authenticationFacade,
+                         TablesDao tablesDao,
+                         XmlParser xmlParser) {
         this.messageBus = messageBus;
         this.environment = environment;
         this.schemaService = schemaService;
         this.processService = processService;
         this.authenticationFacade = authenticationFacade;
         this.tablesDao = tablesDao;
+        this.xmlParser = xmlParser;
     }
 
     public Process initProcess(long projectId, String datasetName, WorkImport workImport) {
@@ -103,6 +108,19 @@ public class ImportService {
         return process;
     }
 
+    public void importXmlToDB(MultipartFile file, SchemaDto schemaDto, ResourceIdentifier rIdentifier, Integer srid) {
+
+        try {
+            Map<String, Object> dataForSavingToDB = xmlParser.parseByScheme(file, schemaDto, srid);
+            tablesDao.addRecord(rIdentifier, dataForSavingToDB);
+        } catch (CrgDaoException e) {
+            log.error(e.getMessage());
+            throw new DataServiceException("Failed to add new record to " + rIdentifier);
+        } catch (XmlParserException e) {
+            throw new DataServiceException(e.getMessage());
+        }
+    }
+
     private String getRootAccessToken() {
         try {
             String authServiceUrl = environment.getRequiredProperty("crg-options.auth-service-url");
@@ -120,15 +138,6 @@ public class ImportService {
                               .getAccess_token();
         } catch (Exception e) {
             throw new DataServiceException("Error get root token");
-        }
-    }
-
-    public void importXmlToDB(MultipartFile file, SchemaDto schemaDto, ResourceIdentifier resourceIdentifier) {
-        Map<String, Object> dataForSavingToDB = XmlFileParser.parseXmlFileWithScheme(file, schemaDto);
-        try {
-            tablesDao.addRecord(resourceIdentifier, dataForSavingToDB);
-        } catch (CrgDaoException e) {
-            e.printStackTrace();
         }
     }
 }

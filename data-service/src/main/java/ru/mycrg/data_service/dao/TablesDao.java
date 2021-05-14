@@ -29,8 +29,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
 
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
-
 @Service
 @Transactional
 public class TablesDao {
@@ -43,16 +41,11 @@ public class TablesDao {
         this.pJdbcTemplate = parameterJdbcTemplate;
     }
 
-    public UUID addRecord(@NotNull ResourceIdentifier rIdentifier,
+    public void addRecord(@NotNull ResourceIdentifier rIdentifier,
                           @NotNull Map<String, Object> body) throws CrgDaoException {
         try {
-            UUID id = UUID.randomUUID();
-
             final DbTable table = getSimpleDbTable(rIdentifier);
-            final DbColumn idColumn = table.addColumn(ID.getName());
-
             final InsertQuery insertQuery = new InsertQuery(table);
-            insertQuery.addColumn(idColumn, id);
 
             body.forEach((key, value) -> {
                 final DbColumn dbColumn = table.addColumn(key);
@@ -63,8 +56,6 @@ public class TablesDao {
 
             log.debug("INSERT_QUERY: {}", query);
             pJdbcTemplate.getJdbcTemplate().update(query);
-
-            return id;
         } catch (DataAccessException e) {
             String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'. %s",
                                        rIdentifier.toString(), e.getCause().getMessage());

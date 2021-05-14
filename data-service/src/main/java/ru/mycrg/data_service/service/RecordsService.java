@@ -21,6 +21,8 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.util.Map;
 import java.util.UUID;
 
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
+
 @Service
 public class RecordsService {
 
@@ -75,7 +77,10 @@ public class RecordsService {
                 fileStorageService.storeFile(file, innerFileName);
             }
 
-            final UUID uuid = tablesDao.addRecord(rIdentifier, body);
+            UUID uuid = UUID.randomUUID();
+            body.put(ID.getName(), uuid);
+
+            tablesDao.addRecord(rIdentifier, body);
 
             return new TableObjectImpl(uuid);
         } catch (CrgDaoException e) {

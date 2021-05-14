@@ -152,6 +152,12 @@
             <version>${swagger.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.postgis</groupId>
+            <artifactId>postgis-jdbc</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+
         <!-- CRG -->
         <dependency>
             <groupId>ru.mycrg</groupId>
@@ -192,26 +198,6 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>GisPlatformFeed</id>
-            <name>Gis portal azure repository</name>
-            <url>https://pkgs.dev.azure.com/programgeoplan/a6547131-6a32-454f-a123-0f76fe536a3c/_packaging/GisPlatformFeed/maven/v1</url>
-        </repository>
-    </distributionManagement>
-    <repositories>
-        <repository>
-            <id>GisPlatformFeed</id>
-            <url>https://pkgs.dev.azure.com/programgeoplan/a6547131-6a32-454f-a123-0f76fe536a3c/_packaging/GisPlatformFeed/maven/v1</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <build>
         <plugins>

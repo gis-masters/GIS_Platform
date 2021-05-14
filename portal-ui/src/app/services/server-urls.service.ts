@@ -176,6 +176,10 @@ export async function getApiImportUrl(projectId: number): Promise<string> {
   return `${await getDataUrl()}/import/${projectId}`;
 }
 
+export async function getApiImportXmlUrl(): Promise<string> {
+  return `${await getDataUrl()}/import/file`;
+}
+
 export async function getDatasetsUrl(): Promise<string> {
   return `${await getDataUrl()}/datasets`;
 }

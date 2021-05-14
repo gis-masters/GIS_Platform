@@ -17,4 +17,8 @@ public class NotFoundException extends RuntimeException {
     public NotFoundException(Class<?> clazz, Long id) {
         super("Сущность '" + clazz.getSimpleName() + "' не найдена по идентификатору: " + id);
     }
+
+    public NotFoundException(Class<?> clazz, String identifier) {
+        super("Сущность '" + clazz.getSimpleName() + "' не найдена по идентификатору: " + identifier);
+    }
 }

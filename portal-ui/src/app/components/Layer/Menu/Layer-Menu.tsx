@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
+import GeometryType from 'ol/geom/GeometryType';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, Menu, MenuItem } from '@material-ui/core';
-import { AddCircle, CropFree, Delete, DeleteOutline, Edit, ListAlt, Unarchive } from '@material-ui/icons';
+import {
+  AddCircleOutline,
+  CropFree,
+  Delete,
+  DeleteOutline,
+  Edit,
+  ListAlt,
+  UnarchiveOutlined
+} from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 import { BBOX } from '@fiz/geoserver-types/BBOX';
 
@@ -20,6 +29,8 @@ import {
   isTableExportAllowed,
   isLayersManagementAllowed
 } from '../../../services/crg/permissions.service';
+import { ImportOutlined } from '../../Icons/ImportOutlined';
+import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { EditFeatureMode } from '../../edit-feature/edit-feature.component';
 
@@ -42,8 +53,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @observable private featuresCreateAllowed = false;
   @observable private layerExportAllowed = false;
   @observable private layersDeleteAllowed = false;
+  @observable private geometryType?: GeometryType;
+  @observable private importXmlDialogOpen = false;
 
   async componentDidMount() {
+    await this.fetchGeometryType();
     await this.fetchPermissions();
   }
 
@@ -75,7 +89,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
           {!editMode && this.isVectorLayer && this.featuresCreateAllowed && (
             <MenuItem onClick={this.addFeature}>
               <ListItemIcon>
-                <AddCircle />
+                <AddCircleOutline />
               </ListItemIcon>
               Добавить объект
             </MenuItem>
@@ -90,10 +104,22 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
+          {!editMode &&
+            this.isVectorLayer &&
+            this.featuresCreateAllowed &&
+            this.geometryType === GeometryType.MULTI_POLYGON && (
+              <MenuItem onClick={this.openImportXmlDialog}>
+                <ListItemIcon>
+                  <ImportOutlined />
+                </ListItemIcon>
+                Импорт объектов из XML
+              </MenuItem>
+            )}
+
           {!editMode && this.isVectorLayer && this.layerExportAllowed && (
             <MenuItem onClick={this.export}>
               <ListItemIcon>
-                <Unarchive />
+                <UnarchiveOutlined />
               </ListItemIcon>
               Экспорт ESRI Shape-файл
             </MenuItem>
@@ -133,6 +159,17 @@ export class LayerMenu extends Component<LayerMenuProps> {
           title={entity.title}
           onEdit={this.editGroup}
         />
+        {!editMode &&
+          this.isVectorLayer &&
+          this.featuresCreateAllowed &&
+          this.geometryType === GeometryType.MULTI_POLYGON && (
+            <ImportXmlDialog
+              open={this.importXmlDialogOpen}
+              onClose={this.closeImportXmlDialog}
+              datasetId={(entity as CrgLayer).dataset}
+              tableId={(entity as CrgLayer).tableName}
+            />
+          )}
       </>
     );
   }
@@ -249,6 +286,15 @@ export class LayerMenu extends Component<LayerMenuProps> {
     onClose();
   }
 
+  private async fetchGeometryType() {
+    const { entity } = this.props;
+    if (this.isVectorLayer) {
+      const { schemaId } = entity as CrgLayer;
+      const schema = await schemaService.getSchema(schemaId);
+      this.setGeometryType(schema.geometryType);
+    }
+  }
+
   @action.bound
   private openEditGroupDialog() {
     this.editGroupDialogOpen = true;
@@ -258,6 +304,22 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @action.bound
   private closeEditGroupDialog() {
     this.editGroupDialogOpen = false;
+  }
+
+  @action.bound
+  private openImportXmlDialog() {
+    this.importXmlDialogOpen = true;
+    this.props.onClose();
+  }
+
+  @action.bound
+  private closeImportXmlDialog() {
+    this.importXmlDialogOpen = false;
+  }
+
+  @action
+  private setGeometryType(geometryType: GeometryType) {
+    this.geometryType = geometryType;
   }
 
   @action.bound
