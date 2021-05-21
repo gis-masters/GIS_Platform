@@ -1,9 +1,8 @@
 package ru.mycrg.data_service.service.parsers;
 
-import org.postgis.LinearRing;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.postgis.MultiPolygon;
-import org.postgis.Point;
-import org.postgis.Polygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,8 +11,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import ru.mycrg.data_service.exceptions.TransformationException;
 import ru.mycrg.data_service.service.parsers.exceptions.XmlParserException;
 import ru.mycrg.data_service.util.SchemaHandler;
+import ru.mycrg.data_service.util.TransformationGeometryUtils;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
@@ -35,15 +36,18 @@ public class XmlParser {
 
     private final DocumentBuilder documentBuilder;
     private final SchemaHandler schemaHandler;
+    private final TransformationGeometryUtils transformationGeometryUtils;
 
-    public XmlParser(SchemaHandler schemaHandler) throws ParserConfigurationException {
+    public XmlParser(SchemaHandler schemaHandler,
+                     TransformationGeometryUtils transformationGeometryUtils) throws ParserConfigurationException {
+        this.transformationGeometryUtils = transformationGeometryUtils;
         documentBuilder = DocumentBuilderFactory.newDefaultInstance().newDocumentBuilder();
         this.schemaHandler = schemaHandler;
     }
 
     public Map<String, Object> parseByScheme(MultipartFile xmlFile,
                                              SchemaDto schemaDto,
-                                             Integer srid) throws XmlParserException {
+                                             Integer srid) throws XmlParserException, TransformationException {
         Map<String, Object> result = new HashMap<>();
 
         List<String> schemaProperties = schemaDto.getProperties()
@@ -91,36 +95,41 @@ public class XmlParser {
     }
 
     private Map<String, Object> parseGeometry(NodeList nodeList, Integer srid,
-                                              String geometryFieldName) {
+                                              String geometryFieldName) throws TransformationException {
         Map<String, Object> result = new HashMap<>();
+        GeometryFactory geometryFactory = new GeometryFactory();
 
-        List<Polygon> polygons = new ArrayList<>();
+        List<org.locationtech.jts.geom.Polygon> polygons = new ArrayList<>();
 
         IntStream.range(0, nodeList.getLength())
                  .mapToObj(i -> (Element) nodeList.item(i))
                  .map(rootEntitySpatialElement -> getElementsByTag(rootEntitySpatialElement, "SpatialElement"))
                  .forEach(spatialElements -> {
-                     List<Point> pointsList = new ArrayList<>();
+                     List<Coordinate> coordinateList = new ArrayList<>();
+
                      Element rootSpatialElement = spatialElements.get(0);
                      getElementsByTag(rootSpatialElement, "SpelementUnit")
                              .stream()
                              .map(rootSpelementUnit -> getElementsByTag(rootSpelementUnit, "Ordinate"))
                              .forEach(ordinates -> ordinates
                                      .forEach(rootOrdinate -> {
-                                         Point coordinate = new Point(
+                                         Coordinate coordinate = new Coordinate(
                                                  Double.parseDouble(rootOrdinate.getAttribute("Y")),
-                                                 Double.parseDouble(rootOrdinate.getAttribute("X")));
-                                         pointsList.add(coordinate);
+                                                 Double.parseDouble(rootOrdinate.getAttribute("X"))
+                                         );
+                                         coordinateList.add(coordinate);
                                      }));
 
-                     LinearRing linearRing = new LinearRing(pointsList.toArray(Point[]::new));
-                     Polygon polygon = new Polygon(new LinearRing[]{linearRing});
+                     org.locationtech.jts.geom.Polygon polygon =
+                             geometryFactory.createPolygon(coordinateList.toArray(Coordinate[]::new));
                      polygons.add(polygon);
                  });
 
-        MultiPolygon multiPolygon = new MultiPolygon(polygons.toArray(Polygon[]::new));
-        multiPolygon.setSrid(srid);
-        result.put(geometryFieldName.toLowerCase(), multiPolygon);
+        if (!polygons.isEmpty()) {
+            MultiPolygon multiPolygon = transformationGeometryUtils.multipolygonPreparing(srid, polygons,
+                                                                                          geometryFactory);
+            result.put(geometryFieldName.toLowerCase(), multiPolygon);
+        }
 
         return result;
     }

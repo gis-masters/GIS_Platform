@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.util.EpsgCodes;
+import ru.mycrg.data_service.util.GeometryProjection;
 
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.INITIAL_SCHEMA_NAME;
 
@@ -21,18 +23,20 @@ public class DatabaseDDL {
     private final JdbcTemplate jdbcTemplate;
     private final CrgDataSourcesPool crgDataSourcesPool;
     private final NamedParameterJdbcTemplate parameterJdbcTemplate;
+    private final EpsgCodes epsgCodes;
 
     public DatabaseDDL(JdbcTemplate jdbcTemplate,
                        CrgDataSourcesPool crgDataSourcesPool,
-                       NamedParameterJdbcTemplate parameterJdbcTemplate) {
+                       NamedParameterJdbcTemplate parameterJdbcTemplate,
+                       EpsgCodes epsgCodes) {
         this.jdbcTemplate = jdbcTemplate;
         this.crgDataSourcesPool = crgDataSourcesPool;
         this.parameterJdbcTemplate = parameterJdbcTemplate;
+        this.epsgCodes = epsgCodes;
     }
 
     /**
-     * Создаем БД с расширением PostGis <br>
-     * (CREATE DATABASE cannot run inside a transaction block)
+     * Создаем БД с расширением PostGis <br> (CREATE DATABASE cannot run inside a transaction block)
      *
      * @param dbName Название БД
      */
@@ -59,6 +63,16 @@ public class DatabaseDDL {
             JdbcTemplate newDbJdbcTemplate = new JdbcTemplate(newDataSource);
 
             newDbJdbcTemplate.execute("CREATE EXTENSION postgis");
+
+            GeometryProjection geometryProjection314314 = epsgCodes.getProjBySrid(314314);
+            GeometryProjection geometryProjection314315 = epsgCodes.getProjBySrid(314315);
+
+            // added new projections to spatial_ref_sys table for new organizations
+            final String sqlGeometryProjection = "INSERT INTO public.spatial_ref_sys (srid, auth_name, auth_srid, srtext, proj4text)" +
+                    "VALUES (314314, 'EPSG', 314314,'" + geometryProjection314314.getWkt() + "','" + geometryProjection314314.getProj4text() + "')," +
+                    "(314315, 'EPSG', 314315,'" + geometryProjection314315.getWkt() + "','" + geometryProjection314315.getProj4text() + "')";
+
+            newDbJdbcTemplate.execute(sqlGeometryProjection);
         } catch (Exception e) {
             throw new DataServiceException("Не удалось создать бд: " + dbName, e.getCause());
         } finally {

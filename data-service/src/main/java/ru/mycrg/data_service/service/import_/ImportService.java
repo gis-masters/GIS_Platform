@@ -9,7 +9,9 @@ import ru.mycrg.data_service.dao.TablesDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.WorkImport;
 import ru.mycrg.data_service.entity.Process;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.TransformationException;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.ProcessService;
 import ru.mycrg.data_service.service.SchemaService;
@@ -118,6 +120,8 @@ public class ImportService {
             throw new DataServiceException("Failed to add new record to " + rIdentifier);
         } catch (XmlParserException e) {
             throw new DataServiceException(e.getMessage());
+        } catch (TransformationException e) {
+            throw new BadRequestException(e.getMessage());
         }
     }
 
