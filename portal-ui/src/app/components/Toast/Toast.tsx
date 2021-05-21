@@ -26,6 +26,7 @@ interface ToastErrorOpts extends ToastOpts {
   columnNumber?: number;
   error?: Error;
   canBeSuppressed?: boolean;
+  suppress?: boolean;
 }
 
 interface ToastProps extends ToastOpts {
@@ -158,7 +159,7 @@ ${error.message ? error.message : error.toString()}`;
 
     sendTelegramError(tgMsg);
 
-    if (env.supressToastErrors[protocol] && opts.canBeSuppressed) {
+    if ((env.supressToastErrors[protocol] && opts.canBeSuppressed) || opts.suppress) {
       return;
     }
 

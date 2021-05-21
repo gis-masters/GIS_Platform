@@ -14,6 +14,7 @@ import {
 } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 import { BBOX } from '@fiz/geoserver-types/BBOX';
+import { isEqual } from 'lodash';
 
 import { sidebars } from '../../../stores/Sidebars.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
@@ -33,6 +34,7 @@ import { ImportOutlined } from '../../Icons/ImportOutlined';
 import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { EditFeatureMode } from '../../edit-feature/edit-feature.component';
+import { Toast } from '../../Toast/Toast';
 
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
 
@@ -254,25 +256,48 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   private async goToVectorLayer() {
     const { entity } = this.props;
-    const { nativeBoundingBox } = await getFeatureType(entity as CrgLayer);
-
-    this.goToBoundingBox(nativeBoundingBox);
+    try {
+      const { nativeBoundingBox } = await getFeatureType(entity as CrgLayer);
+      this.goToBoundingBox(nativeBoundingBox);
+    } catch (e) {
+      this.showGoToBoundingBoxError();
+    }
   }
 
   private async goToRasterLayer() {
     const { entity } = this.props;
-    const { nativeBoundingBox } = await getLayerCoverage(entity as CrgLayer);
-    this.goToBoundingBox(nativeBoundingBox);
+    try {
+      const { nativeBoundingBox } = await getLayerCoverage(entity as CrgLayer);
+      this.goToBoundingBox(nativeBoundingBox);
+    } catch (e) {
+      this.showGoToBoundingBoxError();
+    }
   }
 
   private goToBoundingBox({ maxx, maxy, minx, miny, crs }: BBOX) {
-    // https://github.com/FanaticFiz/geoserver-types/pull/1
-    // @ts-ignore
-    const crsStr = typeof crs === 'string' ? crs : (crs.$ as string);
+    const crsStr = typeof crs === 'string' ? crs : crs.$;
     const projection = getProjection(crsStr);
+
+    if (isEqual([maxx, maxy, minx, miny], [-1, -1, 0, 0])) {
+      this.showGoToBoundingBoxError();
+      return;
+    }
+
     const [x1, y1] = transform(projection, olProjection, [minx, miny]);
     const [x2, y2] = transform(projection, olProjection, [maxx, maxy]);
+
+    if (isNaN(x1) || isNaN(x2) || isNaN(y1) || isNaN(y2)) {
+      this.showGoToBoundingBoxError();
+      return;
+    }
+
     mapService.fitToBbox([x1, y1, x2, y2], [50, 50, 50, 50]);
+  }
+
+  private showGoToBoundingBoxError() {
+    const message = 'Не удалось перейти к слою';
+    Toast.warn(message);
+    Toast.error({ message, suppress: true });
   }
 
   @boundMethod

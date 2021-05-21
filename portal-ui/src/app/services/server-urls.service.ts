@@ -8,7 +8,7 @@ async function getPort(): Promise<string> {
   return (await getEnvironment()).server.port || location.port;
 }
 
-async function getPath(): Promise<string> {
+export async function getPath(): Promise<string> {
   return (await getEnvironment()).server.path || '';
 }
 
@@ -240,13 +240,17 @@ export async function getAllPermissionsUrl(): Promise<string> {
   return (await getDataUrl()) + '/all-permissions';
 }
 
-export async function replaceUrl(url: string) {
+export async function replaceUrl(url: string, addPath?: boolean) {
   if (!url) {
     return '';
   }
   const newUrl = new URL(url);
   newUrl.hostname = await getHost();
   newUrl.port = await getPort();
+
+  if (addPath) {
+    newUrl.pathname = (await getPath()) + newUrl.pathname;
+  }
 
   return newUrl.href;
 }

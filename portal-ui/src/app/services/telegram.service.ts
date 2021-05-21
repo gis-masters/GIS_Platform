@@ -1,5 +1,6 @@
 import { env } from '../stores/Env.store';
 import { currentUser } from '../stores/CurrentUser.store';
+import { escapeHtml } from './util/escapeHtml';
 
 export async function sendTelegramError(error: string) {
   const protocol = window.location.protocol.slice(0, -1);
@@ -9,7 +10,7 @@ export async function sendTelegramError(error: string) {
   const text = `<b>user:</b> ${currentUser.email}
 <b>orgId:</b> ${currentUser.orgId}
 <b>url:</b> ${window.location.href}
-<b>error:</b> ${error}
+<b>error:</b> ${escapeHtml(error)}
 `;
 
   const data = new FormData();

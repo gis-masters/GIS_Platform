@@ -20,7 +20,8 @@ import {
   getProjectGroupUrl,
   getProjectLayersUrl,
   getProjectLayerUrl,
-  getWmsUrl
+  getWmsUrl,
+  replaceUrl
 } from '../server-urls.service';
 
 interface GeoserverLayerInfo {
@@ -239,7 +240,8 @@ async function getGeoserverLayerInfo({ complexName, tableName }: CrgLayer): Prom
 
 export async function getLayerCoverage(layer: CrgLayer): Promise<GeoserverCoverage> {
   const geoserverLayerInfo = await getGeoserverLayerInfo(layer);
-  const result = await http.get<{ coverage: GeoserverCoverage }>(geoserverLayerInfo.resource.href);
+  const url = await replaceUrl(geoserverLayerInfo.resource.href, true);
+  const result = await http.get<{ coverage: GeoserverCoverage }>(url);
 
   return result.coverage;
 }
