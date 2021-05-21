@@ -2,7 +2,7 @@ import jsPDF from 'jspdf';
 import { chunk, debounce } from 'lodash';
 import { reaction } from 'mobx';
 import { Map, MapBrowserEvent, View } from 'ol';
-import { defaults as defaultControls, ScaleLine } from 'ol/control';
+import { defaults as defaultControls } from 'ol/control';
 import { Coordinate } from 'ol/coordinate';
 import { Extent, getTopLeft, getWidth } from 'ol/extent';
 import Feature from 'ol/Feature';
@@ -14,7 +14,7 @@ import { DrawEvent } from 'ol/interaction/Draw';
 import { ModifyEvent } from 'ol/interaction/Modify';
 import { Layer, Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import BaseLayer from 'ol/layer/Base';
-import { get as getProjection } from 'ol/proj';
+import { get as getProjection, getPointResolution } from 'ol/proj';
 import { ImageWMS, OSM, TileArcGISRest, TileImage, TileWMS, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
 import { Options as XYZOptions } from 'ol/source/XYZ';
 import { Circle, Fill, Stroke, Style } from 'ol/style.js';
@@ -22,6 +22,7 @@ import Tile from 'ol/Tile';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import ImageLayer from 'ol/layer/Image';
 import { boundMethod } from 'autobind-decorator';
+import domtoimage from 'dom-to-image';
 
 import { mapStore } from '../../stores/Map.store';
 import { currentMap } from '../../stores/CurrentMap.store';
@@ -33,6 +34,7 @@ import { Basemap, SourceType } from '../crg/basemaps.models';
 import { CrgLayer } from '../crg/projects.models';
 import { WfsFeature } from '../geoserver/wfs.models';
 import { getWmsUrl } from '../server-urls.service';
+import { ScaleLine } from '../ol/ScaleLine';
 import { Emitter } from '../util/Emitter';
 import { services } from '../services';
 import { http } from '../http.service';
@@ -83,6 +85,7 @@ class MapService {
 
   map: Map;
   private view: View;
+  private scaleLine: ScaleLine;
   private markersSource: VectorSource;
 
   private draftStyle: Style;
@@ -148,7 +151,7 @@ class MapService {
       center: this.defaultViewPoint,
       zoom: this.defaultZoomValue,
       minZoom: 3,
-      maxZoom: 21
+      maxZoom: 25
     });
 
     const { imageColor, strokeColor } = this.getDraftColors();
@@ -168,10 +171,12 @@ class MapService {
       })
     });
 
+    this.scaleLine = new ScaleLine({ bar: true, text: true, minWidth: 100 });
+
     this.map = new Map({
       target: 'fiz-openLayer-map',
       view: this.view,
-      controls: defaultControls().extend([new ScaleLine()]),
+      controls: defaultControls().extend([this.scaleLine]),
       layers: [
         this.basemapLayer,
         new VectorLayer({
@@ -548,17 +553,24 @@ class MapService {
   print() {
     const size = this.map.getSize();
     const viewResolution = this.map.getView().getResolution();
-    const { pageWidth, pageHeight, resolution, pageFormat } = printSettings;
+    const { pageWidth, pageHeight, resolution, pageFormat, scale } = printSettings;
     const width = Math.round((pageWidth * resolution) / 25.4);
     const height = Math.round((pageHeight * resolution) / 25.4);
+    const scaleResolution =
+      scale /
+      1000 /
+      getPointResolution(this.map.getView().getProjection(), resolution / 25.4, this.map.getView().getCenter());
 
     printSettings.setPrintingStatus(true);
 
-    this.map.once('rendercomplete', () => {
+    this.map.once('rendercomplete', async () => {
       const mapCanvas = document.createElement('canvas');
       mapCanvas.width = width;
       mapCanvas.height = height;
       const mapContext = mapCanvas.getContext('2d');
+      mapContext.fillStyle = '#ffffff';
+      mapContext.fillRect(0, 0, width, height); 
+
       document.querySelectorAll('.ol-layer canvas').forEach((canvas: HTMLCanvasElement) => {
         if (canvas.width > 0) {
           const opacity = canvas.parentElement.style.opacity;
@@ -577,9 +589,19 @@ class MapService {
       });
 
       const pdf = new jsPDF(printSettings.orientation, undefined, pageFormat.id);
+
+      const scaleDataUrl = await domtoimage.toPng(document.querySelector('.ol-scale-bar-inner'), {
+        width: 400,
+        height: 50,
+        style: { transform: 'translate(10px,20px)' }
+      });
+
       pdf.addImage(mapCanvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, pageWidth, pageHeight);
+      pdf.addImage(scaleDataUrl, 'PNG', 10, pageHeight - 20, 80, 10);
       pdf.save('map.pdf');
+
       // Reset original map size
+      this.scaleLine.setDpi(undefined);
       this.map.setSize(size);
       this.map.getView().setResolution(viewResolution);
 
@@ -587,9 +609,11 @@ class MapService {
     });
 
     // Set print size
+    this.scaleLine.setDpi(resolution);
     this.map.setSize([width, height]);
     const scaling = Math.min(width / size[0], height / size[1]);
-    this.map.getView().setResolution(viewResolution / scaling);
+
+    this.map.getView().setResolution(scaleResolution);
   }
 
   drawMarkers(features: Feature[]) {

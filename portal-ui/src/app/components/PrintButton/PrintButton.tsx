@@ -2,13 +2,10 @@ import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Dialog, DialogContent, DialogActions, IconButton, Tooltip } from '@material-ui/core';
+import { IconButton, Tooltip } from '@material-ui/core';
 import { Print, PrintOutlined } from '@material-ui/icons';
-import { boundMethod } from 'autobind-decorator';
 
-import { mapService } from '../../services/map/map.service';
 import { printSettings } from '../../stores/PrintSettings.store';
-import { Button } from '../Button/Button';
 import { PrintDialog } from '../PrintDialog/PrintDialog';
 import { Loading } from '../Loading/Loading';
 
@@ -28,26 +25,12 @@ export class PrintButton extends Component {
             {this.dialogOpen ? <Print /> : <PrintOutlined />}
           </IconButton>
         </Tooltip>
-        <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
-          <DialogContent>
-            <PrintDialog onSubmit={this.print} />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.print} color='primary'>
-              Печать
-            </Button>
-            <Button onClick={this.closeDialog}>Отмена</Button>
-          </DialogActions>
-        </Dialog>
+
+        <PrintDialog onClose={this.closeDialog} open={this.dialogOpen} />
+
         <Loading className={cnPrintButton('Loading')} visible={printSettings.printingInProcess} />
       </>
     );
-  }
-
-  @boundMethod
-  private print() {
-    mapService.print();
-    this.closeDialog();
   }
 
   @action.bound
