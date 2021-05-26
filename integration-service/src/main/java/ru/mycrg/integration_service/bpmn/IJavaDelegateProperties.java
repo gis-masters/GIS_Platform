@@ -2,9 +2,6 @@ package ru.mycrg.integration_service.bpmn;
 
 public interface IJavaDelegateProperties {
 
-    String CREATE_ORGANIZATION_PROCESS_ID = "integration_createOrganizationProcess";
-    String REMOVE_ORGANIZATION_PROCESS_ID = "integration_deleteOrganizationProcess";
-
     String EVENT_VAR_NAME = "event";
 
     String ORG_ID_VAR_NAME = "orgId";

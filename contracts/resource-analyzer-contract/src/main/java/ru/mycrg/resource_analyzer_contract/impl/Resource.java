@@ -1,20 +1,22 @@
-package ru.mycrg.resource_analyzer_contract;
+package ru.mycrg.resource_analyzer_contract.impl;
+
+import ru.mycrg.resource_analyzer_contract.IResource;
 
 import java.util.Map;
 
-public class ResourceImpl implements IResource {
+public class Resource implements IResource {
 
-    private final String title;
     private final String id;
-    private final ResourceDefinitionImpl resourceDefinition;
+    private final String title;
+    private final ResourceDefinition resourceDefinition;
     private final Map<String, Object> resourceProperties;
 
-    public ResourceImpl(String title,
-                        String id,
-                        ResourceDefinitionImpl resourceDefinition,
-                        Map<String, Object> resourceProperties) {
-        this.title = title;
+    public Resource(String id,
+                    String title,
+                    ResourceDefinition resourceDefinition,
+                    Map<String, Object> resourceProperties) {
         this.id = id;
+        this.title = title;
         this.resourceDefinition = resourceDefinition;
         this.resourceProperties = resourceProperties;
     }
@@ -30,7 +32,7 @@ public class ResourceImpl implements IResource {
     }
 
     @Override
-    public IResourceDefinition getResourceDefinition() {
+    public ResourceDefinition getResourceDefinition() {
         return resourceDefinition;
     }
 

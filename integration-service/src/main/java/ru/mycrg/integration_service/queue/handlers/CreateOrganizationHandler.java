@@ -6,15 +6,15 @@ import org.camunda.bpm.engine.variable.Variables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 import ru.mycrg.auth_service_contract.events.response.OrganizationDependencyProvisionFailedEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
+import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.CREATE_ORGANIZATION_PROCESS_ID;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.enums.BpmnProcessKey.CREATE_ORGANIZATION_PROCESS_ID;
 
 /**
  * Сервис обрабатывающий событие создания организации.
@@ -49,7 +49,7 @@ public class CreateOrganizationHandler implements IEventHandler {
                     .putValue(EVENT_VAR_NAME, objectMapper.writeValueAsString(mqEvent));
 
             bpmnRuntimeService.startProcessInstanceByKey(
-                    CREATE_ORGANIZATION_PROCESS_ID,
+                    CREATE_ORGANIZATION_PROCESS_ID.getValue(),
                     mqEvent.getOrgId().toString(),
                     variables);
         } catch (Exception e) {

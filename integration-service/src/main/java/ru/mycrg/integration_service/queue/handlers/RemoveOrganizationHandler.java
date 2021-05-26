@@ -14,6 +14,7 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
+import static ru.mycrg.integration_service.bpmn.enums.BpmnProcessKey.REMOVE_ORGANIZATION_PROCESS_ID;
 
 /**
  * Сервис обрабатывающий событие создания организации.
@@ -51,7 +52,7 @@ public class RemoveOrganizationHandler implements IEventHandler {
                     .putValue(TOKEN_VAR_NAME, mqEvent.getToken());
 
             bpmnRuntimeService.startProcessInstanceByKey(
-                    REMOVE_ORGANIZATION_PROCESS_ID,
+                    REMOVE_ORGANIZATION_PROCESS_ID.getValue(),
                     mqEvent.getOrgId().toString(),
                     variables);
         } catch (Exception e) {

@@ -3,6 +3,8 @@ package ru.mycrg.gis_service.service;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.gis_service.dto.*;
@@ -135,6 +137,10 @@ public class LayerService {
                                 return new RelatedLayersModel(lProjection, pProjection);
                             })
                             .collect(Collectors.toList());
+    }
+
+    public Page<Layer> findLayers(String raster, List<Project> projects, Pageable pageable) {
+        return layerRepository.findByTypeAndProjectIn(raster, projects, pageable);
     }
 
     private void updateGroup(Layer layer, Long parentId, List<Group> groups) {

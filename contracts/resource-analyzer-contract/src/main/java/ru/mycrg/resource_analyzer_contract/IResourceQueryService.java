@@ -1,10 +1,11 @@
 package ru.mycrg.resource_analyzer_contract;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface IResourceQueryService {
 
-    List<IResource> getResources();
+    Page<IResource> getResources(Pageable pageable);
 
     IResourceDefinition getResourceDefinition();
 }

@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.analyzers;
+package ru.mycrg.data_service.service.resource_analyze.analyzers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,8 +6,11 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.resource_analyzer_contract.*;
+import ru.mycrg.resource_analyzer_contract.impl.ResourceAnalyzerResult;
+import ru.mycrg.resource_analyzer_contract.impl.ResourceDefinition;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,10 +18,6 @@ import java.util.stream.Collectors;
 public class FilePhysicalExistenceAnalyzer implements IResourceAnalyzer {
 
     private static final Logger log = LoggerFactory.getLogger(FilePhysicalExistenceAnalyzer.class);
-
-    public FilePhysicalExistenceAnalyzer() {
-        //Required by framework
-    }
 
     @Override
     public List<IResourceAnalyzerResult> analyze(List<? extends IResource> resources) {
@@ -30,8 +29,8 @@ public class FilePhysicalExistenceAnalyzer implements IResourceAnalyzer {
     }
 
     @Override
-    public IResourceDefinition getResourceDefinition() {
-        return new ResourceDefinitionImpl("FilePath", "Путь к файлу");
+    public List<IResourceDefinition> getResourceDefinitions() {
+        return Collections.singletonList(new ResourceDefinition("RasterLayer", "Путь к растру"));
     }
 
     @Override
@@ -41,7 +40,7 @@ public class FilePhysicalExistenceAnalyzer implements IResourceAnalyzer {
 
     @Override
     public String getTitle() {
-        return "Проверка наличия физического файла для расстрового слоя";
+        return "Проверка наличия физического файла для растрового слоя";
     }
 
     @Override
@@ -56,31 +55,27 @@ public class FilePhysicalExistenceAnalyzer implements IResourceAnalyzer {
 
     private void checkResourcesForAppropriateType(List<? extends IResource> resources) {
         resources.forEach(resource -> {
-            if (!isResourceTypeSame(resource)) {
+            if (!getResourceDefinitions().contains(resource.getResourceDefinition())) {
                 throw new BadRequestException("Не подходит тип ресурса",
                                               new ErrorInfo("type", "Требуется property path"));
             }
         });
     }
 
-    private boolean isResourceTypeSame(IResource resource) {
-        return resource.getResourceProperties().containsKey("path");
-    }
-
-    private ResourceAnalyzerResultImpl analyzeRasterLayerForPhysicalExistence(IResource resource) {
+    private ResourceAnalyzerResult analyzeRasterLayerForPhysicalExistence(IResource resource) {
         boolean isExistOnMachine = true;
 
         try {
             File file = new File(resource.getResourceProperties().get("path").toString());
             isExistOnMachine = file.exists();
             if (!file.exists()) {
-                log.warn("file doesn't exist on machine: {}", resource.getId());
+                log.warn("File doesn't exist on machine: {}", resource.getId());
             }
         } catch (Exception e) {
-            log.warn("something went wrong when checking file existence on machine: {}", resource.getId());
+            log.warn("Something went wrong when checking file existence on machine: {}", resource.getId());
             isExistOnMachine = false;
         }
 
-        return new ResourceAnalyzerResultImpl(resource.getId(), isExistOnMachine);
+        return new ResourceAnalyzerResult(resource.getId(), isExistOnMachine);
     }
 }

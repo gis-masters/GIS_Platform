@@ -9,20 +9,25 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.integration_service.bpmn.BaseHttpService;
 
 import java.net.URL;
 import java.util.List;
 
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
-
-import static ru.mycrg.integration_service.bpmn.BaseHttpDelegate.gisServiceUrl;
-import static ru.mycrg.integration_service.bpmn.BaseHttpDelegate.httpClient;
+import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
 @Service
 public class GeoserverDeleteOrgOperationsDelegate implements JavaDelegate {
 
     private static final Logger log = LoggerFactory.getLogger(GeoserverDeleteOrgOperationsDelegate.class);
+
+    private final BaseHttpService baseHttpService;
+
+    public GeoserverDeleteOrgOperationsDelegate(BaseHttpService baseHttpService) {
+        this.baseHttpService = baseHttpService;
+    }
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
@@ -37,7 +42,7 @@ public class GeoserverDeleteOrgOperationsDelegate implements JavaDelegate {
                 usersJson);
 
         Request request = new Request.Builder()
-                .url(new URL(gisServiceUrl, "/geoserver/organizations/" + orgId))
+                .url(new URL(baseHttpService.getGisServiceUrl(), "/geoserver/organizations/" + orgId))
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .delete(body)
                 .build();

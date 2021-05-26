@@ -1,4 +1,4 @@
-package ru.mycrg.gis_service.service.analyzers;
+package ru.mycrg.gis_service.service.resource_analyze.analyzers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +12,14 @@ import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.security.CrgAuthHelper;
 import ru.mycrg.gis_service.security.IAuthenticationFacade;
 import ru.mycrg.gis_service.service.LayerService;
-import ru.mycrg.resource_analyzer_contract.*;
+import ru.mycrg.resource_analyzer_contract.IResource;
+import ru.mycrg.resource_analyzer_contract.IResourceAnalyzer;
+import ru.mycrg.resource_analyzer_contract.IResourceAnalyzerResult;
+import ru.mycrg.resource_analyzer_contract.IResourceDefinition;
+import ru.mycrg.resource_analyzer_contract.impl.ResourceAnalyzerResult;
+import ru.mycrg.resource_analyzer_contract.impl.ResourceDefinition;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,8 +56,8 @@ public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
     }
 
     @Override
-    public ResourceDefinitionImpl getResourceDefinition() {
-        return new ResourceDefinitionImpl("vector", "Векторный слой");
+    public List<IResourceDefinition> getResourceDefinitions() {
+        return Collections.singletonList(new ResourceDefinition("VectorLayer", "Векторные слои"));
     }
 
     @Override
@@ -61,31 +67,26 @@ public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
 
     @Override
     public String getTitle() {
-        return "Проверка векторных слоёв на стиль по умолчанию";
+        return "Проверка векторных слоёв на соответствие стиля по умолчанию";
     }
 
     @Override
     public String getErrorMessageTemplate() {
-        return "{title} имеет неправильный стиль по-умолчанию";
+        return "У слоя {id} стиль по-умолчанию на Геосервере отличается от указанного у нас";
     }
 
     @Override
     public int getBatchSize() {
-        return 5;
+        return 10;
     }
 
     private void checkResourcesForAppropriateType(List<? extends IResource> resources) {
         resources.forEach(resource -> {
-            if (!isResourceTypeSame(resource)) {
+            if (!getResourceDefinitions().contains(resource.getResourceDefinition())) {
                 throw new BadRequestException("Не подходит тип ресурса",
                                               new ErrorInfo("type", "Требуется vector layer"));
             }
         });
-    }
-
-    private boolean isResourceTypeSame(IResource resource) {
-        return resource.getResourceProperties().get("type")
-                       .equals(this.getResourceDefinition().getType());
     }
 
     private boolean isLayersHaveSameStyle(Layer layerFromGeoserver, LayerProjection layerFromGisService) {
@@ -94,7 +95,7 @@ public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
                                  .equals(layerFromGisService.getStyleName());
     }
 
-    private ResourceAnalyzerResultImpl analyzeVectorLayerForDefaultStyle(IResource vectorLayer) {
+    private ResourceAnalyzerResult analyzeVectorLayerForDefaultStyle(IResource vectorLayer) {
         boolean isSameStyle = false;
         LayersService geoserverLayerService = new LayersService(
                 CrgAuthHelper.getToken(authenticationFacade.getAuthentication()));
@@ -103,10 +104,11 @@ public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
             boolean isLayerExistOnGeoserver = geoserverLayerService.getByName(vectorLayer.getId()).isPresent();
 
             if (isLayerExistOnGeoserver) {
-                Layer layerFromGeoserver =
-                        geoserverLayerService.getByName(vectorLayer.getId())
-                                             .orElseThrow(() -> new NotFoundException(vectorLayer.getId()));
+                Layer layerFromGeoserver = geoserverLayerService
+                        .getByName(vectorLayer.getId())
+                        .orElseThrow(() -> new NotFoundException(vectorLayer.getId()));
                 LayerProjection layerFromGisService = layerService.findByTableName(vectorLayer.getId());
+
                 if (isLayersHaveSameStyle(layerFromGeoserver, layerFromGisService)) {
                     isSameStyle = true;
                 } else {
@@ -119,6 +121,6 @@ public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
             log.warn("layer has some problems: {}", vectorLayer.getId());
         }
 
-        return new ResourceAnalyzerResultImpl(vectorLayer.getId(), isSameStyle);
+        return new ResourceAnalyzerResult(vectorLayer.getId(), isSameStyle);
     }
 }

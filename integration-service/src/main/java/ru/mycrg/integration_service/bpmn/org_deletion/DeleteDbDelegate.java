@@ -7,18 +7,24 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.integration_service.bpmn.BaseHttpService;
 
 import java.net.URL;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
-import static ru.mycrg.integration_service.bpmn.BaseHttpDelegate.dataServiceUrl;
-import static ru.mycrg.integration_service.bpmn.BaseHttpDelegate.httpClient;
+import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
 @Service
 public class DeleteDbDelegate implements JavaDelegate {
 
     private static final Logger log = LoggerFactory.getLogger(DeleteDbDelegate.class);
+
+    private final BaseHttpService baseHttpService;
+
+    public DeleteDbDelegate(BaseHttpService baseHttpService) {
+        this.baseHttpService = baseHttpService;
+    }
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
@@ -27,7 +33,7 @@ public class DeleteDbDelegate implements JavaDelegate {
 
         final String dbName = getDefaultDatabaseName(orgId.toString());
         Request request = new Request.Builder()
-                .url(new URL(dataServiceUrl, "/databases/" + dbName))
+                .url(new URL(baseHttpService.getDataServiceUrl(), "/databases/" + dbName))
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .delete()
                 .build();

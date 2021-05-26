@@ -75,7 +75,7 @@
       <bpmn:outgoing>Flow_09osg67</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_1ujib7t" name="repeat" sourceRef="Gateway_03vmbui" targetRef="Activity_CheckResults_12aigkf">
-      <bpmn:documentation>${checkStatus == 'REPEAT'}</bpmn:documentation>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${checkStatus == 'REPEAT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_00d0ccl" sourceRef="Activity_CreateDbFailed_1cajhmq" targetRef="Event_1iedtzr" />
     <bpmn:sequenceFlow id="Flow_1pr0ww7" sourceRef="ServiceTask_RollbackDb_0sfz9g8" targetRef="Event_1iedtzr" />
@@ -83,40 +83,46 @@
   <bpmn:error id="Error_0xcv6z8" name="balanceError" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="integration_createOrganizationProcess">
-      <bpmndi:BPMNEdge id="Flow_1ujib7t_di" bpmnElement="Flow_1ujib7t">
-        <di:waypoint x="900" y="165" />
-        <di:waypoint x="900" y="120" />
-        <di:waypoint x="800" y="120" />
-        <di:waypoint x="800" y="150" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="834" y="102" width="32" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_09osg67_di" bpmnElement="Flow_09osg67">
-        <di:waypoint x="850" y="190" />
-        <di:waypoint x="875" y="190" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0cd8vr9_di" bpmnElement="Flow_0cd8vr9">
-        <di:waypoint x="660" y="190" />
-        <di:waypoint x="750" y="190" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0qqhzzj_di" bpmnElement="Flow_0qqhzzj">
-        <di:waypoint x="900" y="350" />
-        <di:waypoint x="900" y="400" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1pr0ww7_di" bpmnElement="Flow_1pr0ww7">
         <di:waypoint x="1150" y="440" />
         <di:waypoint x="1232" y="440" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00d0ccl_di" bpmnElement="Flow_00d0ccl">
+        <di:waypoint x="450" y="350" />
+        <di:waypoint x="450" y="520" />
+        <di:waypoint x="1250" y="520" />
+        <di:waypoint x="1250" y="458" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ujib7t_di" bpmnElement="Flow_1ujib7t">
+        <di:waypoint x="910" y="165" />
+        <di:waypoint x="910" y="120" />
+        <di:waypoint x="770" y="120" />
+        <di:waypoint x="770" y="150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="824" y="102" width="32" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09osg67_di" bpmnElement="Flow_09osg67">
+        <di:waypoint x="820" y="190" />
+        <di:waypoint x="885" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cd8vr9_di" bpmnElement="Flow_0cd8vr9">
+        <di:waypoint x="650" y="190" />
+        <di:waypoint x="720" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qqhzzj_di" bpmnElement="Flow_0qqhzzj">
+        <di:waypoint x="910" y="350" />
+        <di:waypoint x="910" y="400" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0moqihe_di" bpmnElement="Flow_0moqihe">
-        <di:waypoint x="950" y="440" />
+        <di:waypoint x="960" y="440" />
         <di:waypoint x="1050" y="440" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0o5xb3g_di" bpmnElement="Flow_0o5xb3g">
-        <di:waypoint x="900" y="215" />
-        <di:waypoint x="900" y="270" />
+        <di:waypoint x="910" y="215" />
+        <di:waypoint x="910" y="270" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="909" y="214" width="13" height="14" />
+          <dc:Bounds x="919" y="211" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1lskmrb_di" bpmnElement="Flow_1lskmrb">
@@ -128,9 +134,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_192ysge_di" bpmnElement="Flow_192ysge">
         <di:waypoint x="475" y="190" />
-        <di:waypoint x="560" y="190" />
+        <di:waypoint x="550" y="190" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="510" y="172" width="18" height="14" />
+          <dc:Bounds x="505" y="172" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1tqkgh1_di" bpmnElement="Flow_1tqkgh1">
@@ -146,26 +152,23 @@
         <di:waypoint x="1232" y="190" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1rsqahp_di" bpmnElement="Flow_1rsqahp">
-        <di:waypoint x="925" y="190" />
+        <di:waypoint x="935" y="190" />
         <di:waypoint x="1050" y="190" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="979" y="172" width="18" height="14" />
+          <dc:Bounds x="984" y="172" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_00d0ccl_di" bpmnElement="Flow_00d0ccl">
-        <di:waypoint x="450" y="350" />
-        <di:waypoint x="450" y="520" />
-        <di:waypoint x="1250" y="520" />
-        <di:waypoint x="1250" y="458" />
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0sfz9g8_di" bpmnElement="ServiceTask_RollbackDb_0sfz9g8">
+        <dc:Bounds x="1050" y="400" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1tr89i8_di" bpmnElement="Activity_Success_1tr89i8">
+        <dc:Bounds x="1050" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_01une73_di" bpmnElement="Event_01une73">
         <dc:Bounds x="1232" y="172" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1230" y="215" width="43" height="40" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1uthaaa_di" bpmnElement="Activity_CreateAllOnGeoserver_1uthaaa">
-        <dc:Bounds x="560" y="150" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0iv7ilu_di" bpmnElement="Activity_CreateDb_frtytha">
         <dc:Bounds x="250" y="150" width="100" height="80" />
@@ -182,32 +185,29 @@
           <dc:Bounds x="625" y="255" width="31" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1cajhmq_di" bpmnElement="Activity_CreateDbFailed_1cajhmq">
-        <dc:Bounds x="400" y="270" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_036s9ub_di" bpmnElement="Activity_CheckResults_12aigkf">
-        <dc:Bounds x="750" y="150" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0wplv2a_di" bpmnElement="Event_1iedtzr">
         <dc:Bounds x="1232" y="422" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1235" y="398" width="30" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1cajhmq_di" bpmnElement="Activity_CreateDbFailed_1cajhmq">
+        <dc:Bounds x="400" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_036s9ub_di" bpmnElement="Activity_CheckResults_12aigkf">
+        <dc:Bounds x="720" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1uthaaa_di" bpmnElement="Activity_CreateAllOnGeoserver_1uthaaa">
+        <dc:Bounds x="550" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_03vmbui_di" bpmnElement="Gateway_03vmbui" isMarkerVisible="true">
-        <dc:Bounds x="875" y="165" width="50" height="50" />
+        <dc:Bounds x="885" y="165" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1nlcylg_di" bpmnElement="Activity_FailOnGeoserver_1nlcylg">
-        <dc:Bounds x="850" y="270" width="100" height="80" />
+        <dc:Bounds x="860" y="270" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1q2tzzq_di" bpmnElement="ServiceTask_RollBackGeoserver_1q2tzzq">
-        <dc:Bounds x="850" y="400" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1tr89i8_di" bpmnElement="Activity_Success_1tr89i8">
-        <dc:Bounds x="1050" y="150" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_0sfz9g8_di" bpmnElement="ServiceTask_RollbackDb_0sfz9g8">
-        <dc:Bounds x="1050" y="400" width="100" height="80" />
+        <dc:Bounds x="860" y="400" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

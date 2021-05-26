@@ -8,16 +8,22 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
+import ru.mycrg.integration_service.bpmn.BaseHttpService;
 
 import java.net.URL;
 
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
-import static ru.mycrg.integration_service.bpmn.BaseHttpDelegate.gisServiceUrl;
-import static ru.mycrg.integration_service.bpmn.BaseHttpDelegate.httpClient;
+import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
 @Service
 public class GeoserverCreateOrgOperationsDelegate implements JavaDelegate {
+
+    private final BaseHttpService baseHttpService;
+
+    public GeoserverCreateOrgOperationsDelegate(BaseHttpService baseHttpService) {
+        this.baseHttpService = baseHttpService;
+    }
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
@@ -29,19 +35,17 @@ public class GeoserverCreateOrgOperationsDelegate implements JavaDelegate {
                 (String) jsonString);
 
         Request request = new Request.Builder()
-                .url(new URL(gisServiceUrl, "/geoserver/organizations"))
+                .url(new URL(baseHttpService.getGisServiceUrl(), "/geoserver/organizations"))
                 .addHeader("Authorization", "Bearer " + event.getToken())
                 .post(body)
                 .build();
 
         final Response response = httpClient.newCall(request).execute();
-        if (response.isSuccessful()) {
-            if (response.body() != null) {
-                final String processId = response.body().string();
+        if (response.isSuccessful() && response.body() != null) {
+            final String processId = response.body().string();
 
-                execution.setVariable(PROCESS_ID_VAR_NAME, processId);
-                execution.setVariable(COUNTER_VAR_NAME, 1);
-            }
+            execution.setVariable(PROCESS_ID_VAR_NAME, processId);
+            execution.setVariable(COUNTER_VAR_NAME, 1);
         }
 
         response.close();

@@ -48,3 +48,5 @@ management:
 crg-options:
   gis_service_url: http://127.0.0.1:8082
   data_service_url: http://127.0.0.1:8084
+  resources_query_base_path: "resources"
+  resource_analyzers_base_path: "resource-analyzers"

@@ -6,7 +6,7 @@ public interface IResourceAnalyzer {
 
     List<IResourceAnalyzerResult> analyze(List<? extends IResource> resources);
 
-    IResourceDefinition getResourceDefinition();
+    List<IResourceDefinition> getResourceDefinitions();
 
     String getId();
 

@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>resource-analyzer-contract</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <description>Contract for other service to test their entities</description>
 
     <properties>
@@ -21,17 +21,28 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+        </dependency>
+    </dependencies>
+
     <distributionManagement>
         <repository>
             <id>GisPlatformFeed</id>
             <name>Gis portal azure repository</name>
-            <url>https://pkgs.dev.azure.com/programgeoplan/a6547131-6a32-454f-a123-0f76fe536a3c/_packaging/GisPlatformFeed/maven/v1</url>
+            <url>
+                https://pkgs.dev.azure.com/programgeoplan/a6547131-6a32-454f-a123-0f76fe536a3c/_packaging/GisPlatformFeed/maven/v1
+            </url>
         </repository>
     </distributionManagement>
     <repositories>
         <repository>
             <id>GisPlatformFeed</id>
-            <url>https://pkgs.dev.azure.com/programgeoplan/a6547131-6a32-454f-a123-0f76fe536a3c/_packaging/GisPlatformFeed/maven/v1</url>
+            <url>
+                https://pkgs.dev.azure.com/programgeoplan/a6547131-6a32-454f-a123-0f76fe536a3c/_packaging/GisPlatformFeed/maven/v1
+            </url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -40,5 +51,4 @@
             </snapshots>
         </repository>
     </repositories>
-
 </project>

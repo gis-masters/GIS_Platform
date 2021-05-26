@@ -4,5 +4,5 @@ public interface IResourceAnalyzerResult {
 
     boolean isPassed();
 
-    String getResourceId();
+    String getId();
 }

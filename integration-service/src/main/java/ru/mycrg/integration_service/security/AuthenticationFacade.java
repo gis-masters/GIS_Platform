@@ -26,8 +26,15 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     private static final String CLAIM_ORGANIZATIONS = "organizations";
     private static final String CLAIM_GROUPS = "groups";
 
+    @NotNull
     public Authentication getAuthentication() {
-        return SecurityContextHolder.getContext().getAuthentication();
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalStateException("Lost authentication context: you can't use it here! " +
+                                                    "Usually, you are not on the web session scope.");
+        }
+
+        return authentication;
     }
 
     @Override
