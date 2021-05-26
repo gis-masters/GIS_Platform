@@ -3,13 +3,6 @@ import { PageableResponse, SortDir } from '../models';
 import { DataEntity, DataEntityType } from '../data.service';
 import { getDocLibrariesRecordsUrl, getDocLibrariesRecordUrl, getDocLibrariesUrl } from '../server-urls.service';
 
-export interface LibraryItem {
-  id: string;
-  library: string;
-  schemaId: string;
-  [key: string]: unknown;
-}
-
 export enum ContentTypeTypes {
   FOLDER = 'FOLDER'
 }
@@ -22,7 +15,22 @@ export interface CrgDocument {
   id: string;
 }
 
-type FormData = { [key: string]: unknown };
+export interface LibraryRecord {
+  [key: string]: unknown;
+
+  id?: string;
+  title?: string;
+  inner_path?: string;
+  parent?: string;
+  content_type_id?: string;
+  oktmo?: string;
+  human_path?: string;
+
+  libraryId: string;
+  schemaId: string;
+}
+
+export type LibraryRecordRaw = Omit<LibraryRecord, 'library' | 'schemaId'>;
 
 class DocLibraryService {
   private static _instance: DocLibraryService;
@@ -48,34 +56,39 @@ class DocLibraryService {
   }
 
   async getAllRecords(
-    libraryName: string,
+    libraryId: string,
+    schemaId: string,
     page: number,
     pageSize: number,
     sort?: string,
     sortDir?: SortDir,
     filter?: { [key: string]: string }
-  ): Promise<[LibraryItem[], number]> {
-    const url = await getDocLibrariesRecordsUrl(libraryName);
+  ): Promise<[LibraryRecord[], number]> {
+    const url = await getDocLibrariesRecordsUrl(libraryId);
     const params = {
       params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) }
     };
 
-    const response = await http.get<PageableResponse<{ linkedHashMaps: { content: LibraryItem }[] }>>(url, params);
+    const response = await http.get<PageableResponse<{ linkedHashMaps: { content: LibraryRecordRaw }[] }>>(url, params);
 
-    const libItems = response._embedded?.linkedHashMaps.map(({ content }) => content) || [];
+    const libraryRecords = (response._embedded?.linkedHashMaps || []).map(linkedHashMap => ({
+      ...(linkedHashMap.content || []),
+      libraryId: libraryId,
+      schemaId: schemaId
+    }));
 
-    return [libItems, response.page.totalPages];
+    return [libraryRecords, response.page.totalPages];
   }
 
-  async createRecord(libraryName: string, data: FormData): Promise<CrgDocument> {
-    return await http.post<CrgDocument>(await getDocLibrariesRecordsUrl(libraryName), this.prepareFormData(data));
+  async createRecord(libraryId: string, data: LibraryRecordRaw): Promise<CrgDocument> {
+    return await http.post<CrgDocument>(await getDocLibrariesRecordsUrl(libraryId), this.prepareFormData(data));
   }
 
-  async deleteRecord(libraryName: string, id: string) {
-    await http.delete(await getDocLibrariesRecordUrl(libraryName, id));
+  async deleteRecord(libraryId: string, id: string) {
+    await http.delete(await getDocLibrariesRecordUrl(libraryId, id));
   }
 
-  private prepareFormData(data: FormData) {
+  private prepareFormData(data: LibraryRecordRaw) {
     const formData = new FormData();
     if (!!data.binary) {
       formData.append('file', data.binary as File);

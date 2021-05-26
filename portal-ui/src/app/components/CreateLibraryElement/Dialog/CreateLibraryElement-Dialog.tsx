@@ -6,7 +6,7 @@ import { action, computed, observable } from 'mobx';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
 import { FeatureDescription, FieldType } from '../../../services/crg/schema.models';
-import { LibraryItem } from '../../../services/crg/doc-library.service';
+import { LibraryRecordRaw } from '../../../services/crg/doc-library.service';
 import { services } from '../../../services/services';
 import { sleep } from '../../../services/util/sleep';
 import { Loading } from '../../Loading/Loading';
@@ -20,12 +20,12 @@ export interface ExplorerCreateElementDialogProps {
   open: boolean;
   loading: boolean;
   onClose: () => void;
-  onCreate: (formValue: LibraryItem) => void;
+  onCreate: (formValue: LibraryRecordRaw) => void;
 }
 
 @observer
 export class CreateLibraryElementDialog extends React.Component<ExplorerCreateElementDialogProps> {
-  @observable private formValue: Partial<LibraryItem> = {};
+  @observable private formValue: LibraryRecordRaw = {};
 
   componentDidMount() {
     this.setFormValue(this.initialFormValue);
@@ -65,7 +65,7 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
 
   // TODO: убрать эту наркоманию
   @computed
-  private get initialFormValue(): Partial<LibraryItem> {
+  private get initialFormValue(): LibraryRecordRaw {
     const initialFormValue = {};
     (this.props.schema?.properties || []).forEach(property => {
       if (property.valueType === FieldType.STRING) {
@@ -84,14 +84,14 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
   }
 
   @boundMethod
-  private async formSubmitHandler(formValue: LibraryItem) {
+  private async formSubmitHandler(formValue: LibraryRecordRaw) {
     this.props.onCreate(formValue);
     await sleep(0);
     this.setFormValue(this.initialFormValue);
   }
 
   @boundMethod
-  private formChanged(formValue: LibraryItem) {
+  private formChanged(formValue: LibraryRecordRaw) {
     this.setFormValue(formValue);
   }
 
@@ -102,7 +102,7 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
   }
 
   @action
-  private setFormValue(formValue: Partial<LibraryItem>) {
+  private setFormValue(formValue: LibraryRecordRaw) {
     this.formValue = formValue;
   }
 }

@@ -25,6 +25,12 @@ ALTER TABLE data.documents
 ALTER TABLE data.documents
     ADD COLUMN IF NOT EXISTS last_modified timestamp without time zone;
 
+ALTER TABLE data.documents
+    ADD COLUMN IF NOT EXISTS human_path text;
+
+ALTER TABLE data.documents
+    ADD COLUMN IF NOT EXISTS oktmo character varying(11);
+
 UPDATE data.documents
 SET inner_path=id,
     content_type_id='doc_v1',

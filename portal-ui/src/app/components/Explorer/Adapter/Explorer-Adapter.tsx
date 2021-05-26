@@ -6,6 +6,7 @@ import { SortDir } from '../../../services/models';
 import { Emitter } from '../../../services/util/Emitter';
 import { Toast } from '../../Toast/Toast';
 
+import { ExplorerStore } from '../Explorer.store';
 import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemType, SortItem } from '../Explorer.models';
 import { ExplorerAdapterTypeDatasetRoot } from './_type/Explorer-Adapter_type_datasetRoot';
 import { ExplorerAdapterTypeDataset } from './_type/Explorer-Adapter_type_dataset';
@@ -104,8 +105,8 @@ export function getChildrenFilterLabel(item: ExplorerItemData): string | undefin
   return adapters[item.type].getChildrenFilterLabel && adapters[item.type].getChildrenFilterLabel(item);
 }
 
-export function getToolbarActions(item: ExplorerItemData): ReactNode | undefined {
-  return adapters[item.type].getToolbarActions && adapters[item.type].getToolbarActions(item);
+export function getToolbarActions(item: ExplorerItemData, store: ExplorerStore): ReactNode | undefined {
+  return adapters[item.type].getToolbarActions && adapters[item.type].getToolbarActions(item, store);
 }
 
 export function getEmptyListView(item: ExplorerItemData): ReactNode | undefined {

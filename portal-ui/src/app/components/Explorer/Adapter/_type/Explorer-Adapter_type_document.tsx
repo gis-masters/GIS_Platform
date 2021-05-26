@@ -1,13 +1,13 @@
 import React from 'react';
 import moment from 'moment';
 import { InsertDriveFile } from '@material-ui/icons';
-import { services } from '../../../../services/services';
 
+import { Toast } from '../../../Toast/Toast';
+import { services } from '../../../../services/services';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { docLibraryService, LibraryRecord } from '../../../../services/crg/doc-library.service';
 import { communicationService } from '../../../../services/communication.service';
-import { docLibraryService, LibraryItem } from '../../../../services/crg/doc-library.service';
-import { Toast } from '../../../Toast/Toast';
 
 import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -21,15 +21,15 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeDocument {
-  static getId(item: ExplorerItemData<LibraryItem>) {
+  static getId(item: ExplorerItemData<LibraryRecord>) {
     return `${item.type}:${item.payload.id}`;
   }
 
-  static getTitle(item: ExplorerItemData<LibraryItem>) {
+  static getTitle(item: ExplorerItemData<LibraryRecord>) {
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<LibraryItem>) {
+  static getDescription(item: ExplorerItemData<LibraryRecord>) {
     const { details, created_at } = item.payload;
     moment.locale('ru');
 
@@ -47,7 +47,7 @@ export class ExplorerAdapterTypeDocument {
     );
   }
 
-  static getMeta(item: ExplorerItemData<LibraryItem>) {
+  static getMeta(item: ExplorerItemData<LibraryRecord>) {
     return String(item.payload.id);
   }
 
@@ -59,7 +59,7 @@ export class ExplorerAdapterTypeDocument {
     return false;
   }
 
-  static async getAllowedActions(item: ExplorerItemData<LibraryItem>): Promise<AllowedActions> {
+  static async getAllowedActions(item: ExplorerItemData<LibraryRecord>): Promise<AllowedActions> {
     const deletionAllowed = currentUser.isAdmin;
     const field = 'inner_path'; // temporary binary fieldName of default document library schema
     const recordsUrl = await getDocLibrariesRecordsUrl('documents');
@@ -80,11 +80,11 @@ export class ExplorerAdapterTypeDocument {
     };
   }
 
-  static async deleteItem(item: ExplorerItemData<LibraryItem>) {
-    const { id, library } = item.payload;
+  static async deleteItem(item: ExplorerItemData<LibraryRecord>) {
+    const { id, libraryId } = item.payload;
 
     try {
-      await docLibraryService.deleteRecord(library, id);
+      await docLibraryService.deleteRecord(libraryId, id);
 
       communicationService.libraryItemsUpdated.emit();
     } catch (e) {

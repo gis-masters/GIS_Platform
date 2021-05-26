@@ -11,7 +11,9 @@ public enum SystemLibraryAttributes {
     FILE_TYPE("type"),
     SIZE("size"),
     PARENT("parent"),
-    CONTENT_TYPE_ID("content_type_id");
+    CONTENT_TYPE_ID("content_type_id"),
+    OKTMO("oktmo"),
+    HUMAN_PATH("human_path");
 
     private final String name;
 

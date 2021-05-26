@@ -3,6 +3,8 @@ import { ReactNode } from 'react';
 import { SortDir } from '../../services/models';
 import { Emitter } from '../../services/util/Emitter';
 
+import { ExplorerStore } from './Explorer.store';
+
 export enum ExplorerItemType {
   EMPTY = 'empty',
 
@@ -76,7 +78,7 @@ export interface Adapter {
   getChildrenSortDefaultDirection?: (item: ExplorerItemData) => SortDir;
   getChildrenFilterField?: (item: ExplorerItemData) => string;
   getChildrenFilterLabel?: (item: ExplorerItemData) => string;
-  getToolbarActions?: (item: ExplorerItemData) => ReactNode;
+  getToolbarActions?: (item: ExplorerItemData, store: ExplorerStore) => ReactNode;
   getEmptyListView?: (item: ExplorerItemData) => ReactNode;
   getRefreshEmitters?: (item: ExplorerItemData) => Emitter[];
   getAllowedActions?: (item: ExplorerItemData) => Promise<AllowedActions>;

@@ -83647,6 +83647,23 @@ SELECT 'documents',
       "required": true,
       "valueType": "BINARY",
       "sequenceNumber": 2
+    },
+    {
+      "name": "oktmo",
+      "title": "ОКТМО",
+      "required": true,
+      "hidden": true,
+      "valueType": "STRING",
+      "sequenceNumber": 0,
+      "maxLength": 11
+    },
+   {
+      "name": "human_path",
+      "title": "Для идентификации файла техническими специалистами",
+      "required": true,
+      "hidden": true,
+      "valueType": "STRING",
+      "sequenceNumber": 0
     }
   ],
   "contentTypes": [
@@ -83734,6 +83751,15 @@ SELECT 'documents',
           "valueType": "STRING",
           "sequenceNumber": 0,
           "maxLength": 500
+        },
+        {
+          "name": "oktmo",
+          "title": "ОКТМО",
+          "required": true,
+          "hidden": true,
+          "valueType": "STRING",
+          "sequenceNumber": 1,
+          "maxLength": 11
         }
       ]
     }

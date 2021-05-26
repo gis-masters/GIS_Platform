@@ -13,29 +13,30 @@ import {
   ContentTypeTypes,
   docLibraryService,
   DocumentLibrary,
-  LibraryItem
+  LibraryRecord
 } from '../../../../services/crg/doc-library.service';
 
+import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
-    [ExplorerItemType.LIBRARY]: LibraryItem;
+    [ExplorerItemType.LIBRARY]: LibraryRecord;
   }
 }
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeLibrary {
-  static getId(item: ExplorerItemData<LibraryItem>) {
+  static getId(item: ExplorerItemData<LibraryRecord>) {
     return `${item.type}:${item.payload.identifier}`;
   }
 
-  static getTitle(item: ExplorerItemData<LibraryItem>) {
+  static getTitle(item: ExplorerItemData<LibraryRecord>) {
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<LibraryItem>) {
+  static getDescription(item: ExplorerItemData<LibraryRecord>) {
     const { details, createdAt } = item.payload;
     moment.locale('ru');
 
@@ -53,7 +54,7 @@ export class ExplorerAdapterTypeLibrary {
     );
   }
 
-  static getMeta(item: ExplorerItemData<LibraryItem>) {
+  static getMeta(item: ExplorerItemData<LibraryRecord>) {
     return String(item.payload.identifier);
   }
 
@@ -72,9 +73,12 @@ export class ExplorerAdapterTypeLibrary {
     sort?: string,
     sortDir?: SortDir,
     filter?: { [key: string]: string }
-  ): Promise<[ExplorerItemData<LibraryItem>[], number]> {
-    const [libraryItems, pagesCount] = await docLibraryService.getAllRecords(
+  ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
+    const result: ExplorerItemData<LibraryRecord>[] = [];
+
+    const [libraryRecords, pagesCount] = await docLibraryService.getAllRecords(
       explorerItem.payload.identifier,
+      explorerItem.payload.schemaId,
       page,
       pageSize,
       sort,
@@ -84,23 +88,19 @@ export class ExplorerAdapterTypeLibrary {
 
     const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schemaId);
 
-    return [
-      libraryItems.map(item => {
-        item.library = explorerItem.payload.identifier;
-        item.schemaId = explorerItem.payload.schemaId;
+    libraryRecords.forEach(record => {
+      const contentType = contentTypes.find(cType => cType.id === record.content_type_id);
 
-        const contentType = contentTypes.find(cType => cType.id === item.content_type_id);
+      result.push({
+        type:
+          contentType && contentType.type === ContentTypeTypes.FOLDER
+            ? ExplorerItemType.FOLDER
+            : ExplorerItemType.DOCUMENT,
+        payload: record
+      });
+    });
 
-        return {
-          type:
-            contentType && contentType.type === ContentTypeTypes.FOLDER
-              ? ExplorerItemType.FOLDER
-              : ExplorerItemType.DOCUMENT,
-          payload: item
-        };
-      }),
-      pagesCount
-    ];
+    return [result, pagesCount];
   }
 
   static getChildrenSortItems(): SortItem[] {
@@ -133,8 +133,8 @@ export class ExplorerAdapterTypeLibrary {
     return 'Поиск по названию';
   }
 
-  static getToolbarActions(item: ExplorerItemData<DocumentLibrary>): ReactNode {
-    return <CreateLibraryElement payload={item.payload} />;
+  static getToolbarActions(item: ExplorerItemData<DocumentLibrary>, store: ExplorerStore): ReactNode {
+    return <CreateLibraryElement schemaId={item.payload.schemaId} store={store} />;
   }
 
   static getEmptyListView(item: ExplorerItemData): ReactNode | undefined {

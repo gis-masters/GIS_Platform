@@ -15,7 +15,7 @@ interface ExplorerToolbarActionsProps {
 
 export const ExplorerToolbarActions: FC<ExplorerToolbarActionsProps> = observer(({ store }) => {
   const { path } = store;
-  const toolbarActions = path.length > 1 ? getToolbarActions(path[path.length - 2]) : null;
+  const toolbarActions = path.length > 1 ? getToolbarActions(path[path.length - 2], store) : null;
 
   return toolbarActions ? <div className={cnExplorerToolbarActions()}>{toolbarActions}</div> : null;
 });

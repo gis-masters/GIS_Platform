@@ -11,14 +11,17 @@ import { schemaService } from '../../services/crg/schema.service';
 import { communicationService } from '../../services/communication.service';
 import { getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
 import { ContentType, FeatureDescription } from '../../services/crg/schema.models';
-import { docLibraryService, DocumentLibrary, LibraryItem } from '../../services/crg/doc-library.service';
+import { docLibraryService, LibraryRecord } from '../../services/crg/doc-library.service';
+import { ExplorerItemType } from '../Explorer/Explorer.models';
+import { ExplorerStore } from '../Explorer/Explorer.store';
 
 import { CreateLibraryElementDialog } from './Dialog/CreateLibraryElement-Dialog';
 import { CreateLibraryElementMenuItem } from './MenuItem/CreateLibraryElement-MenuItem';
 import { CreateLibraryElementFolderButton } from './FolderButton/CreateLibraryElement-FolderButton';
 
 export interface CreateLibraryElementsProps {
-  payload: DocumentLibrary | LibraryItem;
+  schemaId: string;
+  store: ExplorerStore;
   parent?: string;
 }
 
@@ -30,7 +33,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   @observable private dialogLoading = false;
 
   async componentDidMount() {
-    const schema = await schemaService.getSchema(this.props.payload.schemaId);
+    const schema = await schemaService.getSchema(this.props.schemaId);
     this.setSchema(schema);
   }
 
@@ -118,23 +121,19 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   }
 
   @boundMethod
-  private async create(formValue: LibraryItem) {
+  private async create(formValue: LibraryRecord) {
     this.setDialogLoading(true);
-    const value = {
-      ...formValue,
-      content_type_id: this.contentTypeId,
-      parent: this.props.parent
-    };
 
-    for (const propName in value) {
+    const formData = this.fillSystemAttributes(formValue);
+    for (const propName in formData) {
       // Удаляем пустые строки и нули? Наркомания...
-      if (!value[propName]) {
-        delete value[propName];
+      if (!formData[propName]) {
+        delete formData[propName];
       }
     }
 
     try {
-      await docLibraryService.createRecord(this.schema.tableName, value);
+      await docLibraryService.createRecord(this.schema.tableName, formData);
 
       communicationService.libraryItemsUpdated.emit();
     } catch (e) {
@@ -143,5 +142,36 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     }
 
     this.closeDialog();
+  }
+
+  private fillSystemAttributes(formData: LibraryRecord) {
+    return {
+      ...formData,
+      content_type_id: this.contentTypeId,
+      parent: this.props.parent,
+      human_path: this.collectHumanPath(),
+      oktmo: formData.oktmo ? formData.oktmo : this.inheritOktmo()
+    };
+  }
+
+  private collectHumanPath() {
+    const { path } = this.props.store;
+    return path.slice(1, -1).reduce((acc, item) => {
+      if (item.payload) {
+        return acc + ' -> ' + item.payload['title'];
+      } else {
+        return acc;
+      }
+    }, '');
+  }
+
+  private inheritOktmo() {
+    const { path } = this.props.store;
+    const pathElement = path[path.length - 2];
+    if (!!pathElement && pathElement.type === ExplorerItemType.FOLDER) {
+      return pathElement.payload['oktmo'];
+    } else {
+      return '';
+    }
   }
 }

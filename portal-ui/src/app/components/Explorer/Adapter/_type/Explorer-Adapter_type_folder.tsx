@@ -9,8 +9,9 @@ import { schemaService } from '../../../../services/crg/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
-import { ContentTypeTypes, docLibraryService, LibraryItem } from '../../../../services/crg/doc-library.service';
+import { ContentTypeTypes, docLibraryService, LibraryRecord } from '../../../../services/crg/doc-library.service';
 
+import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 
@@ -22,15 +23,15 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeFolder {
-  static getId(item: ExplorerItemData<LibraryItem>) {
+  static getId(item: ExplorerItemData<LibraryRecord>) {
     return `${item.type}:${item.payload.id}`;
   }
 
-  static getTitle(item: ExplorerItemData<LibraryItem>) {
+  static getTitle(item: ExplorerItemData<LibraryRecord>) {
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<LibraryItem>) {
+  static getDescription(item: ExplorerItemData<LibraryRecord>) {
     const { details, created_at } = item.payload;
     moment.locale('ru');
 
@@ -48,7 +49,7 @@ export class ExplorerAdapterTypeFolder {
     );
   }
 
-  static getMeta(item: ExplorerItemData<LibraryItem>) {
+  static getMeta(item: ExplorerItemData<LibraryRecord>) {
     return String(item.payload.id);
   }
 
@@ -61,15 +62,18 @@ export class ExplorerAdapterTypeFolder {
   }
 
   static async getChildren(
-    explorerItem: ExplorerItemData<LibraryItem>,
+    explorerItem: ExplorerItemData<LibraryRecord>,
     page: number,
     pageSize: number,
     sort?: string,
     sortDir?: SortDir,
     filter?: { [key: string]: string }
-  ): Promise<[ExplorerItemData<LibraryItem>[], number]> {
-    const [libraryItems, pagesCount] = await docLibraryService.getAllRecords(
-      explorerItem.payload.library,
+  ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
+    const result: ExplorerItemData<LibraryRecord>[] = [];
+
+    const [libraryRecords, pagesCount] = await docLibraryService.getAllRecords(
+      explorerItem.payload.libraryId,
+      explorerItem.payload.schemaId,
       page,
       pageSize,
       sort,
@@ -79,23 +83,19 @@ export class ExplorerAdapterTypeFolder {
 
     const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schemaId);
 
-    return [
-      libraryItems.map(item => {
-        item.library = explorerItem.payload.library;
-        item.schemaId = explorerItem.payload.schemaId;
+    libraryRecords.forEach(record => {
+      const contentType = contentTypes.find(cType => cType.id === record.content_type_id);
 
-        const contentType = contentTypes.find(cType => cType.id === item.content_type_id);
+      result.push({
+        type:
+          contentType && contentType.type === ContentTypeTypes.FOLDER
+            ? ExplorerItemType.FOLDER
+            : ExplorerItemType.DOCUMENT,
+        payload: record
+      });
+    });
 
-        return {
-          type:
-            contentType && contentType.type === ContentTypeTypes.FOLDER
-              ? ExplorerItemType.FOLDER
-              : ExplorerItemType.DOCUMENT,
-          payload: item
-        };
-      }),
-      pagesCount
-    ];
+    return [result, pagesCount];
   }
 
   static getChildrenSortItems(): SortItem[] {
@@ -127,8 +127,8 @@ export class ExplorerAdapterTypeFolder {
     return 'Поиск по названию';
   }
 
-  static getToolbarActions(item: ExplorerItemData<LibraryItem>): ReactNode {
-    return <CreateLibraryElement payload={item.payload} parent={item.payload.id} />;
+  static getToolbarActions(item: ExplorerItemData<LibraryRecord>, store: ExplorerStore): ReactNode {
+    return <CreateLibraryElement schemaId={item.payload.schemaId} parent={item.payload.id} store={store} />;
   }
 
   static getEmptyListView(item: ExplorerItemData): ReactNode | undefined {
