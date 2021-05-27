@@ -8115,7 +8115,7 @@ SELECT 'heritage_point',
        if (obj.status) {
           errors.push({attribute: ''status'', error: ''Значение заполняется только для объектов "Достопримечательное место", "Историко-культурный заповедник"''});
       }
-
+      }
       return errors;',
        'var results = {};
 
@@ -32915,7 +32915,7 @@ SELECT 'forest',
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
-
+      }
       return errors;',
        'var results = {};
 
@@ -44033,7 +44033,7 @@ SELECT 'pipeline_line',
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
-
+      }
       return errors;',
        'var results = {};
 
@@ -77630,7 +77630,7 @@ SELECT 'hydro',
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
-
+      }
       return errors;',
        'var results = {};
 
@@ -78356,7 +78356,7 @@ SELECT 'areabasedevelopment',
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
-
+      }
       return errors;',
        'var results = {};
 
@@ -79721,6 +79721,7 @@ SELECT 'hydro_line',
       if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
       }
 
       return errors;',
