@@ -31,10 +31,16 @@
     ::ng-deep .ol-scale-text {
       white-space: nowrap;
 
-      text-shadow: 1px 0 1px rgba(255,255,255,0.8),
-      0 1px 1px rgba(255,255,255,0.8),
-      -1px 0 1px rgba(255,255,255,0.8),
-      0 -1px 1px rgba(255,255,255,0.8);
+      text-shadow: 2px 0 2px var(--map-scale-line-halo-color),
+      1px 1px 2px var(--map-scale-line-halo-color),
+      -1px 1px 2px var(--map-scale-line-halo-color),
+      1px -1px 2px var(--map-scale-line-halo-color),
+      -1px -1px 2px var(--map-scale-line-halo-color),
+      0 2px 2px var(--map-scale-line-halo-color),
+      -2px 0 2px var(--map-scale-line-halo-color),
+      0 -2px 2px var(--map-scale-line-halo-color);
+
+      --map-scale-line-halo-color: #fff;
     }
 
     ::ng-deep .ol-scale-text {
