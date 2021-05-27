@@ -247,6 +247,7 @@ export async function replaceUrl(url: string, addPath?: boolean) {
   const newUrl = new URL(url);
   newUrl.hostname = await getHost();
   newUrl.port = await getPort();
+  newUrl.protocol = location.protocol;
 
   if (addPath) {
     newUrl.pathname = (await getPath()) + newUrl.pathname;
