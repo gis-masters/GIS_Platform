@@ -6,12 +6,6 @@ public class GeometryProjection {
     private String wkt;
     private String proj4text;
 
-    public GeometryProjection(Integer srid, String wkt, String proj4text) {
-        this.srid = srid;
-        this.wkt = wkt;
-        this.proj4text = proj4text;
-    }
-
     public GeometryProjection() {
     }
 

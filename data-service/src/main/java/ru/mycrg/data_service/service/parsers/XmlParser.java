@@ -1,8 +1,10 @@
 package ru.mycrg.data_service.service.parsers;
 
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.postgis.MultiPolygon;
+import org.postgis.Polygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import ru.mycrg.data_service.exceptions.TransformationException;
 import ru.mycrg.data_service.service.parsers.exceptions.XmlParserException;
+import ru.mycrg.data_service.util.CrsHandler;
 import ru.mycrg.data_service.util.SchemaHandler;
 import ru.mycrg.data_service.util.TransformationGeometryUtils;
-import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -37,28 +40,36 @@ public class XmlParser {
     private final DocumentBuilder documentBuilder;
     private final SchemaHandler schemaHandler;
     private final TransformationGeometryUtils transformationGeometryUtils;
+    private final CrsHandler crsHandler;
 
     public XmlParser(SchemaHandler schemaHandler,
-                     TransformationGeometryUtils transformationGeometryUtils) throws ParserConfigurationException {
+                     TransformationGeometryUtils transformationGeometryUtils,
+                     CrsHandler crsHandler) throws ParserConfigurationException {
         this.transformationGeometryUtils = transformationGeometryUtils;
-        documentBuilder = DocumentBuilderFactory.newDefaultInstance().newDocumentBuilder();
+        this.documentBuilder = DocumentBuilderFactory.newDefaultInstance().newDocumentBuilder();
         this.schemaHandler = schemaHandler;
+        this.crsHandler = crsHandler;
     }
 
     public Map<String, Object> parseByScheme(MultipartFile xmlFile,
-                                             SchemaDto schemaDto,
+                                             List<SimplePropertyDto> simpleProperties,
                                              Integer srid) throws XmlParserException, TransformationException {
         Map<String, Object> result = new HashMap<>();
 
-        List<String> schemaProperties = schemaDto.getProperties()
-                                                 .stream()
-                                                 .map(simplePropertyDto -> simplePropertyDto.getName().toLowerCase())
-                                                 .collect(Collectors.toList());
+        List<String> schemaProperties = simpleProperties.stream()
+                                                        .map(simplePropertyDto -> simplePropertyDto.getName().toLowerCase())
+                                                        .collect(Collectors.toList());
 
         try (InputStream inputStream = xmlFile.getInputStream()) {
             // read from a project's resources folder
             Document doc = documentBuilder.parse(inputStream);
             doc.getDocumentElement().normalize();
+
+            if (doc.getElementsByTagName("EntitySpatial").getLength() == 0) {
+                String msg = "Xml файл не содержит пространственные данные";
+                log.warn(msg);
+                throw new XmlParserException(msg);
+            }
 
             NodeList nodeList = doc.getElementsByTagName("*");
             for (int i = 0; i < nodeList.getLength(); i++) {
@@ -75,7 +86,7 @@ public class XmlParser {
                 }
                 // adding geometry parsing
                 Optional<String> geometryFieldName = schemaHandler.getPropertyNameByType(ValueType.GEOMETRY,
-                                                                                         schemaDto.getProperties());
+                                                                                         simpleProperties);
 
                 if (tagElementName.equalsIgnoreCase("EntitySpatial")
                         && geometryFieldName.isPresent()
@@ -94,7 +105,8 @@ public class XmlParser {
         return result;
     }
 
-    private Map<String, Object> parseGeometry(NodeList nodeList, Integer srid,
+    private Map<String, Object> parseGeometry(NodeList nodeList,
+                                              Integer srid,
                                               String geometryFieldName) throws TransformationException {
         Map<String, Object> result = new HashMap<>();
         GeometryFactory geometryFactory = new GeometryFactory();
@@ -126,8 +138,19 @@ public class XmlParser {
                  });
 
         if (!polygons.isEmpty()) {
-            MultiPolygon multiPolygon = transformationGeometryUtils.multipolygonPreparing(srid, polygons,
-                                                                                          geometryFactory);
+            Geometry geometry = geometryFactory
+                    .createMultiPolygon(polygons.toArray(org.locationtech.jts.geom.Polygon[]::new));
+
+            final List<Coordinate> transformedCoordinates =
+                    transformationGeometryUtils.transform(geometry,
+                                                          crsHandler.defineCrsByX(polygons.get(0).getCoordinate().x),
+                                                          crsHandler.defineCrsBySrid(srid));
+
+            List<Polygon> convertGeometryOfPolygons = transformationGeometryUtils
+                    .convertPolygonListToCorrectGeometryType(polygons, transformedCoordinates);
+            MultiPolygon multiPolygon = new MultiPolygon(convertGeometryOfPolygons.toArray(Polygon[]::new));
+            multiPolygon.setSrid(srid);
+
             result.put(geometryFieldName.toLowerCase(), multiPolygon);
         }
 
@@ -144,7 +167,7 @@ public class XmlParser {
             if (tagElementName.equalsIgnoreCase("area")) {
                 Element rootAreaElement = (Element) nodeList.item(0);
                 nodeList = rootAreaElement.getElementsByTagName(tagElementName);
-                dbValue = nodeList.getLength() > 0 ? nodeList.item(0).getTextContent(): "";
+                dbValue = nodeList.getLength() > 0 ? nodeList.item(0).getTextContent() : "";
             }
 
             if (tagElementName.equalsIgnoreCase("address")) {
@@ -179,26 +202,24 @@ public class XmlParser {
     private String addressProcessing(Element addressElement) {
         StringBuilder addressBuilder = new StringBuilder();
 
-        getElementByTagTextContent(addressElement, "Region")
-                .ifPresent(region -> addressBuilder.append("Код региона: ").append(region).append(". "));
-
         getAttributeByTag(addressElement, "District", "Name")
-                .ifPresent(district -> addressBuilder.append("Наименование района: ").append(district).append(". "));
+                .ifPresent(district -> addressBuilder.append(district).append(". "));
 
         getAttributeByTag(addressElement, "City", "Name")
-                .ifPresent(city -> addressBuilder.append("Муниципальное образование: ").append(city).append(". "));
+                .ifPresent(city -> addressBuilder.append(city).append(". "));
 
         getAttributeByTag(addressElement, "Locality", "Name")
-                .ifPresent(locality -> addressBuilder.append("Населенный пункт: ").append(locality).append(". "));
+                .ifPresent(locality -> addressBuilder.append(locality).append(". "));
 
         getAttributeByTag(addressElement, "Street", "Name")
-                .ifPresent(street -> addressBuilder.append("Улица: ").append(street).append(". "));
+                .ifPresent(street -> addressBuilder.append(street).append(". "));
 
-        getElementByTagTextContent(addressElement, "Other")
-                .ifPresent(other -> addressBuilder.append("Дополнительные сведения о местоположении: ")
-                                                  .append(other)
-                                                  .append(". "));
+        String otherAddress = getElementByTagTextContent(addressElement, "Other").orElse("");
 
-        return addressBuilder.toString();
+        if (addressBuilder.toString().length() > otherAddress.length()) {
+            return addressBuilder.toString();
+        } else {
+            return otherAddress;
+        }
     }
 }

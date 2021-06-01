@@ -27,7 +27,7 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
 
     return (
       <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Импорт объектов из XML файла</DialogTitle>
+        <DialogTitle>Импорт межевого плана из XML</DialogTitle>
         <DialogContent>
           <DialogContentText>Выберете межевой план в формате XML</DialogContentText>
           <Form id='importXmlFileForm' onSubmit={this.submitHandler}>
@@ -59,8 +59,8 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
       await importXml(this.file, datasetId, tableId);
       Toast.success('Объекты из файла импортированы успешно');
     } catch (ex) {
-      Toast.error('Возникла ошибка при загрузке файла. ' + ex.message);
-      services.logger.error('Возникла ошибка при загрузке файла: ', ex.message);
+      Toast.warn('Возникла ошибка при загрузке файла. ' + ex.message);
+      services.logger.warn('Возникла ошибка при загрузке файла: ', ex.message);
     }
     this.reset();
 

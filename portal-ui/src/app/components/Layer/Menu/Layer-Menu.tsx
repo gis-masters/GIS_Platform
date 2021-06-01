@@ -110,13 +110,13 @@ export class LayerMenu extends Component<LayerMenuProps> {
             this.isVectorLayer &&
             this.featuresCreateAllowed &&
             this.geometryType === GeometryType.MULTI_POLYGON && (
-              <MenuItem onClick={this.openImportXmlDialog}>
-                <ListItemIcon>
-                  <ImportOutlined />
-                </ListItemIcon>
-                Импорт объектов из XML
-              </MenuItem>
-            )}
+            <MenuItem onClick={this.openImportXmlDialog}>
+              <ListItemIcon>
+                <ImportOutlined/>
+              </ListItemIcon>
+              Импорт межевого плана из XML
+            </MenuItem>
+          )}
 
           {!editMode && this.isVectorLayer && this.layerExportAllowed && (
             <MenuItem onClick={this.export}>

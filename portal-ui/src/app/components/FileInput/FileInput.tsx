@@ -38,6 +38,7 @@ export class FileInput extends Component<FileInputProps> {
         <span className={cnFileInput('Filename')}>{this.caption}</span>
         <input
           type='file'
+          accept={'text/xml'}
           className={cnFileInput('Input')}
           ref={this.inputRef}
           {...otherProps}

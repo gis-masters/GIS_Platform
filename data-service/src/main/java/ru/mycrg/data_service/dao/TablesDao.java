@@ -58,11 +58,11 @@ public class TablesDao {
             pJdbcTemplate.getJdbcTemplate().update(query);
         } catch (DataAccessException e) {
             String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'. %s",
-                                       rIdentifier.toString(), e.getCause().getMessage());
+                                       rIdentifier, e.getCause().getMessage());
             throw new CrgDaoException(msg);
         } catch (Exception e) {
             String msg = String.format("Что то пошло не так при вставке в таблицу: '%s'. %s",
-                                       rIdentifier.toString(), e.getCause().getMessage());
+                                       rIdentifier, e.getCause().getMessage());
             throw new CrgDaoException(msg);
         }
     }

@@ -4,20 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.data_service.dao.TablesDao;
-import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.WorkImport;
 import ru.mycrg.data_service.entity.Process;
-import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.exceptions.TransformationException;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.ProcessService;
 import ru.mycrg.data_service.service.SchemaService;
-import ru.mycrg.data_service.service.parsers.XmlParser;
-import ru.mycrg.data_service.service.parsers.exceptions.XmlParserException;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
@@ -26,7 +18,10 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.oauth_client.OAuthClient;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
@@ -41,23 +36,17 @@ public class ImportService {
     private final IMessageBusProducer messageBus;
     private final ProcessService processService;
     private final IAuthenticationFacade authenticationFacade;
-    private final TablesDao tablesDao;
-    private final XmlParser xmlParser;
 
     public ImportService(IMessageBusProducer messageBus,
                          Environment environment,
                          SchemaService schemaService,
                          ProcessService processService,
-                         IAuthenticationFacade authenticationFacade,
-                         TablesDao tablesDao,
-                         XmlParser xmlParser) {
+                         IAuthenticationFacade authenticationFacade) {
         this.messageBus = messageBus;
         this.environment = environment;
         this.schemaService = schemaService;
         this.processService = processService;
         this.authenticationFacade = authenticationFacade;
-        this.tablesDao = tablesDao;
-        this.xmlParser = xmlParser;
     }
 
     public Process initProcess(long projectId, String datasetName, WorkImport workImport) {
@@ -108,21 +97,6 @@ public class ImportService {
         messageBus.produce(new ImportRequestEvent(process.getId(), dbName, importMqRequest));
 
         return process;
-    }
-
-    public void importXmlToDB(MultipartFile file, SchemaDto schemaDto, ResourceIdentifier rIdentifier, Integer srid) {
-
-        try {
-            Map<String, Object> dataForSavingToDB = xmlParser.parseByScheme(file, schemaDto, srid);
-            tablesDao.addRecord(rIdentifier, dataForSavingToDB);
-        } catch (CrgDaoException e) {
-            log.error(e.getMessage());
-            throw new DataServiceException("Failed to add new record to " + rIdentifier);
-        } catch (XmlParserException e) {
-            throw new DataServiceException(e.getMessage());
-        } catch (TransformationException e) {
-            throw new BadRequestException(e.getMessage());
-        }
     }
 
     private String getRootAccessToken() {
