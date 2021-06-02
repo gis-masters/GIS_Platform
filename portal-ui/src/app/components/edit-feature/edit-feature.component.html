@@ -134,7 +134,7 @@
           </div>
           <div class="col-6 px-0">
             <div class="input-group" *ngIf="updatingAllowed">
-              <input class="form-control" type="date" formControlName="{{editFeatureItem.name}}"/>
+              <input class="form-control" type="date" formControlName="{{ editFeatureItem.name }}" />
               <span class="input-group-text error-badge" *ngIf="editFeatureForm.controls[editFeatureItem.name].errors">
                 <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
               </span>

@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
 import { Coordinate } from 'ol/coordinate';
 import { boundMethod } from 'autobind-decorator';
+import { isNumber } from 'lodash';
 
 import { EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
 import { fromMobx } from '../../services/util/fromMobx';
@@ -24,7 +25,6 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-di
 import { CrgLayer } from '../../services/crg/projects.models';
 import { BaseEdit } from '../edit-bug-object/base-edit';
 import { Toast } from '../Toast/Toast';
-
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { getEmptyGeometry } from '../../services/geoserver/wfs.util';
 import { sleep } from '../../services/util/sleep';
@@ -95,11 +95,20 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         Object.keys(this.features[0].properties)
           .filter(key => key !== 'bbox')
           .forEach(key => {
-            const currentValue = this.features[0].properties[key];
+            let currentValue = this.features[0].properties[key];
 
             let property: PropertySchema;
             if (this.featureDescription) {
               property = schemaService.getPropertySchemaByName(key, this.featureDescription.properties);
+            }
+
+            if (
+              property?.valueType === ValueType.DOUBLE &&
+              currentValue &&
+              !this.updatingAllowed &&
+              isNumber(property.fractionDigits)
+            ) {
+              currentValue = currentValue.toFixed(property.fractionDigits);
             }
 
             if (property) {
