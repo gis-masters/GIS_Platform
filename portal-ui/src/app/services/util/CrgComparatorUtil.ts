@@ -1,4 +1,4 @@
-import { PropertySchema } from '../crg/schema.models';
+import { PropertySchema, ValueType } from '../crg/schema.models';
 import { CrgComparison } from '../properties-comparator.service';
 import { LayerAttribute } from '../geoserver/import/models';
 import { AS_IS, NOT_IMPORT } from '../models';
@@ -98,14 +98,15 @@ export class ObjectIdComparison implements CrgComparison {
 
 /**
  * Последний компаратор в цепочке.
- * Посути определяет дефолтное значение если подобрать сопоставление не получилось.
+ * По сути определяет дефолтное значение если подобрать сопоставление не получилось.
  * Для него не задается "следующего" по цепочке.
  */
 export class LastComparison implements CrgComparison {
   compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
     return {
       name: AS_IS.name,
-      title: AS_IS.title
+      title: AS_IS.title,
+      valueType: ValueType.STRING
     };
   }
 

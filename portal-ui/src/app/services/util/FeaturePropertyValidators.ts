@@ -2,21 +2,8 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { isEmpty } from 'validate.js';
 import { Toast } from '../../components/Toast/Toast';
 
-import { PropertySchema, PropertyEnumerations } from '../crg/schema.models';
+import { PropertySchema, PropertyEnumerations, ValueType } from '../crg/schema.models';
 import { services } from '../services';
-
-// Править в соответствии с ru/mycrg/common/enums/ValueType.java
-export enum ValueType {
-  INT = 'INT',
-  STRING = 'STRING',
-  DOUBLE = 'DOUBLE',
-  CHOICE = 'CHOICE',
-  GEOMETRY = 'GEOMETRY',
-  URL = 'URL',
-  DATETIME = 'DATETIME',
-  LOOKUP = 'LOOKUP',
-  UUID = 'UUID'
-}
 
 export interface ValidationError {
   attribute: string;

@@ -9,7 +9,7 @@ import { catchError, concatMap, debounceTime, filter, takeUntil } from 'rxjs/ope
 
 import { Toast } from '../Toast/Toast';
 import { schemaService } from '../../services/crg/schema.service';
-import { FeatureDescription, PropertyEnumerations, PropertySchema } from '../../services/crg/schema.models';
+import { FeatureDescription, ValueType, PropertyEnumerations, PropertySchema } from '../../services/crg/schema.models';
 import { BatchModel } from '../../services/crg/batch-model';
 import { CrgLayer } from '../../services/crg/projects.models';
 import { sidebars } from '../../stores/Sidebars.store';
@@ -25,7 +25,6 @@ import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs.m
 import { isFeaturesUpdateAllowed, isFeaturesDeleteAllowed } from '../../services/crg/permissions.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { ValueType } from '../../services/util/FeaturePropertyValidators';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { getProjection } from '../../services/geoserver/projections.service';
 import { fromMobx } from '../../services/util/fromMobx';
@@ -114,7 +113,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     });
 
     communicationService.featuresUpdated.on(() => {
-      // TODO: Самы простой вариант с лишним запросом. Заменить на обновление данных без запроса.
+      // TODO: Самый простой вариант с лишним запросом. Заменить на обновление данных без запроса.
       const lastRequest = this.requestModel$.getValue();
       this.updateTable(lastRequest);
     }, this);
@@ -296,7 +295,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       return;
     }
 
-    // В таблице выводился нормальный id без перфикса фичи. Теперь верну эту инфу назад.
+    // В таблице выводился нормальный id без префикса фичи. Теперь верну эту инфу назад.
     const clonedFeatures: WfsFeature[] = cloneDeep(selected);
     clonedFeatures.forEach((feature: WfsFeature) => {
       feature.id = this.layer.tableName + '.' + feature.id;
@@ -556,7 +555,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
       Object.keys(wfsFeature.properties).forEach(propertyName => {
         const pSchema = schema.properties.find(propertySchema => propertySchema.name === propertyName);
-        if (pSchema && pSchema.valueType === 'LOOKUP') {
+        if (pSchema && pSchema.valueType === ValueType.LOOKUP) {
           return;
         }
 

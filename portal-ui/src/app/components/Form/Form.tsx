@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { generateRandomId } from '../../services/util/randomId';
-import { FeatureDescription } from '../../services/crg/schema.models';
+import { PropertySchema } from '../../services/crg/schema.models';
 
 import { FormField } from './Field/Form-Field';
 import { FormLabel } from './Label/Form-Label';
@@ -20,7 +20,7 @@ export { FormControl } from './Control/Form-Control';
 export const cnForm = cn('Form');
 
 interface FormProps<T> extends React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement> {
-  schema?: FeatureDescription;
+  fields?: PropertySchema[];
   formValue?: T;
   onFormChange?: (changedValue: T) => void;
   onFormSubmit?: (changedValue: T) => void;
@@ -29,13 +29,13 @@ interface FormProps<T> extends React.DetailedHTMLProps<React.FormHTMLAttributes<
 @observer
 export class Form<T extends { [key: string]: unknown }> extends Component<FormProps<T>> {
   render() {
-    const { schema, formValue = {}, children, className, onFormChange, onFormSubmit, ...otherProps } = this.props;
+    const { fields, formValue = {}, children, className, onFormChange, onFormSubmit, ...otherProps } = this.props;
 
     return (
       <form action='#' onSubmit={this.submitHandler} {...otherProps} className={cnForm(null, [className])}>
         {children}
-        {!!schema &&
-          schema.properties.map((propertySchema, i) => {
+        {!!fields &&
+          fields.map((propertySchema, i) => {
             const htmlId = 'formField_' + generateRandomId();
 
             return (

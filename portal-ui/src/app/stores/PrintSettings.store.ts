@@ -52,14 +52,48 @@ export const pageFormats: PageFormat[] = [
   }
 ];
 
-class PrintSettings {
-  @observable pageFormat: PageFormat = pageFormats[1];
-  @observable resolution: number = resolutions[1];
-  @observable scale: number = scales[7];
-  @observable orientation: Orientation = 'l';
-  @observable printingInProcess = false;
+export interface PrintSettings {
+  pageFormat: PageFormat;
+  resolution: number;
+  scale: number;
+  orientation: Orientation;
+  printingInProcess: boolean;
+  margin: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+}
 
-  private static _instance: PrintSettings;
+const defaultPrintSettings: PrintSettings = {
+  pageFormat: pageFormats[1],
+  resolution: resolutions[1],
+  scale: scales[7],
+  orientation: 'l',
+  printingInProcess: false,
+  margin: {
+    top: 10,
+    right: 10,
+    bottom: 10,
+    left: 10
+  }
+};
+
+class PrintSettingsStore implements PrintSettings {
+  @observable pageFormat: PageFormat;
+  @observable resolution: number;
+  @observable scale: number;
+  @observable orientation: Orientation = 'l';
+  @observable printingInProcess: boolean;
+  @observable margin: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+
+  private static _instance: PrintSettingsStore;
 
   static get instance() {
     return this._instance || (this._instance = new this());
@@ -76,7 +110,9 @@ class PrintSettings {
     }
   }
 
-  private constructor() {}
+  private constructor() {
+    Object.assign(this, defaultPrintSettings);
+  }
 
   @computed
   get pageHeight(): number {
@@ -100,4 +136,4 @@ class PrintSettings {
   }
 }
 
-export const printSettings = PrintSettings.instance;
+export const printSettings = PrintSettingsStore.instance;

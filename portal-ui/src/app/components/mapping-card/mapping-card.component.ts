@@ -1,6 +1,6 @@
 import { NGXLogger } from 'ngx-logger';
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { FeatureDescription, PropertySchema } from '../../services/crg/schema.models';
+import { FeatureDescription, PropertySchema, ValueType } from '../../services/crg/schema.models';
 import { Subject } from 'rxjs';
 import { ImportLayerItem } from '../../services/geoserver/import/models';
 import { AS_IS, IMPORT_LAYER_AS_IS, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../services/models';
@@ -31,8 +31,8 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   async ngOnInit() {
-    this.propertySchemas.push({ name: NOT_IMPORT.name, title: NOT_IMPORT.title });
-    this.propertySchemas.push({ name: AS_IS.name, title: AS_IS.title });
+    this.propertySchemas.push({ name: NOT_IMPORT.name, title: NOT_IMPORT.title, valueType: ValueType.STRING });
+    this.propertySchemas.push({ name: AS_IS.name, title: AS_IS.title, valueType: ValueType.STRING });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

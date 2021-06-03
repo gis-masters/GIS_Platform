@@ -1,4 +1,3 @@
-import jsPDF from 'jspdf';
 import { chunk, debounce } from 'lodash';
 import { reaction } from 'mobx';
 import { Map, MapBrowserEvent, View } from 'ol';
@@ -22,12 +21,10 @@ import Tile from 'ol/Tile';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import ImageLayer from 'ol/layer/Image';
 import { boundMethod } from 'autobind-decorator';
-import domtoimage from 'dom-to-image';
 
 import { mapStore } from '../../stores/Map.store';
 import { currentMap } from '../../stores/CurrentMap.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
-import { printSettings } from '../../stores/PrintSettings.store';
 import { communicationService } from '../communication.service';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
 import { Basemap, SourceType } from '../crg/basemaps.models';
@@ -84,8 +81,8 @@ class MapService {
   private basemapLayer = new TileLayer();
 
   map: Map;
-  private view: View;
-  private scaleLine: ScaleLine;
+  view: View;
+  scaleLine: ScaleLine;
   private markersSource: VectorSource;
 
   private draftStyle: Style;
@@ -548,72 +545,6 @@ class MapService {
       default:
         services.logger.error('Unsupported geometry type: ', geometry.getType());
     }
-  }
-
-  print() {
-    const size = this.map.getSize();
-    const viewResolution = this.map.getView().getResolution();
-    const { pageWidth, pageHeight, resolution, pageFormat, scale } = printSettings;
-    const width = Math.round((pageWidth * resolution) / 25.4);
-    const height = Math.round((pageHeight * resolution) / 25.4);
-    const scaleResolution =
-      scale /
-      1000 /
-      getPointResolution(this.map.getView().getProjection(), resolution / 25.4, this.map.getView().getCenter());
-
-    printSettings.setPrintingStatus(true);
-
-    this.map.once('rendercomplete', async () => {
-      const mapCanvas = document.createElement('canvas');
-      mapCanvas.width = width;
-      mapCanvas.height = height;
-      const mapContext = mapCanvas.getContext('2d');
-      mapContext.fillStyle = '#ffffff';
-      mapContext.fillRect(0, 0, width, height); 
-
-      document.querySelectorAll('.ol-layer canvas').forEach((canvas: HTMLCanvasElement) => {
-        if (canvas.width > 0) {
-          const opacity = canvas.parentElement.style.opacity;
-          mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
-
-          // Get the transform parameters from the style's transform matrix
-          const matrix = canvas.style.transform
-            .match(/^matrix\(([^\(]*)\)$/)[1]
-            .split(',')
-            .map(Number);
-
-          // Apply the transform to the export map context
-          CanvasRenderingContext2D.prototype.setTransform.apply(mapContext, matrix);
-          mapContext.drawImage(canvas, 0, 0);
-        }
-      });
-
-      const pdf = new jsPDF(printSettings.orientation, undefined, pageFormat.id);
-
-      const scaleDataUrl = await domtoimage.toPng(document.querySelector('.ol-scale-bar-inner'), {
-        width: 400,
-        height: 50,
-        style: { transform: 'translate(10px,20px)' }
-      });
-
-      pdf.addImage(mapCanvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, pageWidth, pageHeight);
-      pdf.addImage(scaleDataUrl, 'PNG', 10, pageHeight - 20, 80, 10);
-      pdf.save('map.pdf');
-
-      // Reset original map size
-      this.scaleLine.setDpi(undefined);
-      this.map.setSize(size);
-      this.map.getView().setResolution(viewResolution);
-
-      printSettings.setPrintingStatus(false);
-    });
-
-    // Set print size
-    this.scaleLine.setDpi(resolution);
-    this.map.setSize([width, height]);
-    const scaling = Math.min(width / size[0], height / size[1]);
-
-    this.map.getView().setResolution(scaleResolution);
   }
 
   drawMarkers(features: Feature[]) {

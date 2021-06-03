@@ -3,7 +3,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { ImportLayerItem, LayerAttribute } from './models';
 import { MatchingPair, TaskImport } from './taskImport';
 import { schemaService } from '../../crg/schema.service';
-import { FeatureDescription, PropertySchema } from '../../crg/schema.models';
+import { FeatureDescription, PropertySchema, ValueType } from '../../crg/schema.models';
 import { AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../models';
 import { PropertiesComparatorService } from '../../properties-comparator.service';
 import { FeatureUtil } from '../../util/FeatureUtil';
@@ -103,7 +103,7 @@ export class ImportDataHolderService {
           } else if (propertySchema.name === AS_IS.name) {
             mapItem.target = {
               name: source.name,
-              type: AS_IS.name
+              type: AS_IS.name as ImportTargetType
             };
           } else {
             mapItem.target = {
@@ -145,7 +145,11 @@ export class ImportDataHolderService {
     // Attributes mapping
     if (IMPORT_LAYER_AS_IS.name === schema.name) {
       layerPair.originalLayer.attributes.forEach((attr: LayerAttribute) => {
-        this.addAttributeMapping(layerNativeName, attr, AS_IS);
+        this.addAttributeMapping(layerNativeName, attr, {
+          name: AS_IS.name,
+          title: AS_IS.title,
+          valueType: ValueType.STRING
+        });
       });
     } else {
       const propertySchemas = FeatureUtil.preparePropertySchema(schema);
@@ -190,7 +194,7 @@ export class ImportDataHolderService {
         source: source,
         target: {
           name: source.name,
-          type: targetProperty.name
+          type: targetProperty.name as ImportTargetType
         }
       };
     }

@@ -1,9 +1,8 @@
 import { sortBy, cloneDeep } from 'lodash';
 
-import { ValueType } from './FeaturePropertyValidators';
-import { FeatureDescription, PropertySchema } from '../crg/schema.models';
-import { CrgRootGeometry, GeometryItem } from './crg-root-geometry';
+import { FeatureDescription, PropertySchema, ValueType } from '../crg/schema.models';
 import { ImportLayerItem, LayerAttribute } from '../geoserver/import/models';
+import { CrgRootGeometry, GeometryItem } from './crg-root-geometry';
 import { AS_IS, NOT_IMPORT } from '../models';
 
 export class FeatureUtil {
@@ -14,8 +13,8 @@ export class FeatureUtil {
   // layer = Point, MultiLineString, MultiPolygon
   // feature = Point, LineString, Polygon, Curve
   static isFeatureGeometryCompatible(layerGeometryTypeName: string, featureDescription: FeatureDescription): boolean {
-    const splited = layerGeometryTypeName.split('.');
-    const layerGeometryName = splited[splited.length - 1];
+    const split = layerGeometryTypeName.split('.');
+    const layerGeometryName = split[split.length - 1];
 
     const allowedGeometry: string[] = this.fillAllowedGeometry(new CrgRootGeometry(), layerGeometryName);
     const featureGeometry = this.getFeatureGeometry(featureDescription);
@@ -57,8 +56,8 @@ export class FeatureUtil {
 
   static preparePropertySchema(targetFeatureType: FeatureDescription): PropertySchema[] {
     const propertySchemas: PropertySchema[] = [
-      { name: NOT_IMPORT.name, title: NOT_IMPORT.title },
-      { name: AS_IS.name, title: AS_IS.title }
+      { name: NOT_IMPORT.name, title: NOT_IMPORT.title, valueType: ValueType.STRING },
+      { name: AS_IS.name, title: AS_IS.title, valueType: ValueType.STRING }
     ];
 
     targetFeatureType.properties.forEach((property: PropertySchema) => {

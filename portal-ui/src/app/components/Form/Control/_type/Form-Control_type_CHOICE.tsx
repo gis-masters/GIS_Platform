@@ -4,7 +4,7 @@ import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { MenuItem, Select } from '@material-ui/core';
 
-import { FieldType } from '../../../../services/crg/schema.models';
+import { ValueType } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
@@ -43,6 +43,6 @@ class FormControlTypeChoice extends Component<FormControlProps> {
 
 export const withTypeChoice = withBemMod<{}, FormControlProps>(
   cnFormControl(),
-  { type: FieldType.CHOICE },
+  { type: ValueType.CHOICE },
   () => FormControlTypeChoice
 );

@@ -1,5 +1,15 @@
-import {LayerAttribute} from './models';
-import {ImportTargetType} from '../../models';
+import { LayerAttribute } from './models';
+import { ImportTargetType } from '../../models';
+
+export interface MatchingPair {
+  source: LayerAttribute;
+  target: ColumnProjection;
+}
+
+export interface ColumnProjection {
+  name: string;
+  type: ImportTargetType;
+}
 
 // Править в соответствии с моделью ru/mycrg/gis/service/import_/ImportTask.java
 export class TaskImport {
@@ -9,7 +19,7 @@ export class TaskImport {
   // Название проекта
   workTableName: string;
 
-  // Список сопоставлемых атрибутов
+  // Список сопоставляемых атрибутов
   pairs: MatchingPair[] = [];
 
   // Система координат определенная импорт плагином
@@ -23,20 +33,6 @@ export class TaskImport {
   }
 
   isPrepared(): boolean {
-    if (!this.layerName || !this.workTableName || this.pairs.length < 1) {
-      return false;
-    }
-
-    return true;
+    return !(!this.layerName || !this.workTableName || this.pairs.length < 1);
   }
-}
-
-export interface MatchingPair {
-  source: LayerAttribute;
-  target: ColumnProjection;
-}
-
-export interface ColumnProjection {
-  name: string;
-  type: ImportTargetType;
 }

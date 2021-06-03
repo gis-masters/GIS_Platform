@@ -1,5 +1,21 @@
 import { SupportedGeometryType } from '../geoserver/wfs.models';
 
+// Править в соответствии с
+// contracts/data-service-contract/src/main/java/ru/mycrg/data_service_contract/enums/ValueType.java
+export enum ValueType {
+  INT = 'INT',
+  STRING = 'STRING',
+  TEXT = 'TEXT',
+  DOUBLE = 'DOUBLE',
+  CHOICE = 'CHOICE',
+  GEOMETRY = 'GEOMETRY',
+  URL = 'URL',
+  DATETIME = 'DATETIME',
+  LOOKUP = 'LOOKUP',
+  UUID = 'UUID',
+  BINARY = 'BINARY'
+}
+
 export interface FeatureDescription {
   name: string;
   title: string;
@@ -28,6 +44,7 @@ export interface PropertySchema {
   name: string;
   title: string;
   description?: string;
+  valueType: ValueType;
 
   required?: boolean;
   mustBeEmpty?: boolean;
@@ -37,8 +54,7 @@ export interface PropertySchema {
   objectIdentityOnUi?: boolean;
 
   updateability?: Updateability;
-  choice?: any;
-  valueType?: any;
+  choice?: unknown;
   foreignKeyType?: string;
 
   length?: number;
@@ -61,16 +77,6 @@ export enum Updateability {
   CREATE_ONLY = 'CREATE_ONLY',
   CREATE_WRITE = 'CREATE_WRITE',
   READ_ONLY = 'READ_ONLY'
-}
-
-export enum FieldType {
-  INT = 'INT',
-  URL = 'url',
-  LOOKUP = 'lookup',
-  STRING = 'STRING',
-  TEXT = 'TEXT',
-  BINARY = 'BINARY',
-  CHOICE = 'CHOICE'
 }
 
 export interface EditedField {

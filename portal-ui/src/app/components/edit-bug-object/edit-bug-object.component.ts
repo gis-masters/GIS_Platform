@@ -12,6 +12,7 @@ import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyVa
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { validationService } from '../../services/crg/validation.service';
 import { schemaService } from '../../services/crg/schema.service';
+import { ValueType } from '../../services/crg/schema.models';
 import { Toast } from '../Toast/Toast';
 
 @Component({
@@ -142,7 +143,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
           property: {
             name: key,
             title: key,
-            valueType: 'STRING'
+            valueType: ValueType.STRING
           },
           value: currentValue,
           isFgistpProperty: false

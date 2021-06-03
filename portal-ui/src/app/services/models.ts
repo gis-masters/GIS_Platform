@@ -1,6 +1,6 @@
 import GeometryType from 'ol/geom/GeometryType';
 
-import { FeatureDescription, PropertySchema } from './crg/schema.models';
+import { FeatureDescription, PropertySchema, ValueType } from './crg/schema.models';
 
 interface PageableLink {
   href: string;
@@ -76,7 +76,7 @@ export enum ProcessType {
 export enum ProcessStatus {
   PENDING = 'PENDING',
 
-  TASK_DONE = 'TASK_DONE', // Завершена часть процесса (например: обработан один ресур из нескольких)
+  TASK_DONE = 'TASK_DONE', // Завершена часть процесса (например: обработан один ресурс из нескольких)
   TASK_ERROR = 'TASK_ERROR', // Часть процесса завершилась неудачно
 
   DONE = 'DONE',

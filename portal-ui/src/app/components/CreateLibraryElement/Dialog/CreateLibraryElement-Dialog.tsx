@@ -5,7 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 import { action, computed, observable } from 'mobx';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
-import { FeatureDescription, FieldType } from '../../../services/crg/schema.models';
+import { FeatureDescription, ValueType } from '../../../services/crg/schema.models';
 import { LibraryRecordRaw } from '../../../services/crg/doc-library.service';
 import { services } from '../../../services/services';
 import { sleep } from '../../../services/util/sleep';
@@ -43,7 +43,7 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
             <DialogContent className={cnCreateLibraryElementDialog()}>
               <Form
                 id='createLibraryElementForm'
-                schema={schema}
+                fields={schema.properties}
                 formValue={this.formValue}
                 onFormChange={this.formChanged}
                 onFormSubmit={this.formSubmitHandler}
@@ -68,11 +68,11 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
   private get initialFormValue(): LibraryRecordRaw {
     const initialFormValue = {};
     (this.props.schema?.properties || []).forEach(property => {
-      if (property.valueType === FieldType.STRING) {
+      if (property.valueType === ValueType.STRING) {
         initialFormValue[property.name] = '';
-      } else if (property.valueType === FieldType.INT) {
+      } else if (property.valueType === ValueType.INT) {
         initialFormValue[property.name] = '';
-      } else if (property.valueType === FieldType.CHOICE) {
+      } else if (property.valueType === ValueType.CHOICE) {
         initialFormValue[property.name] = property.enumerations[0].value;
       } else {
         initialFormValue[property.name] = '';

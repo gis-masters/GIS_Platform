@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, OnChanges, Input, ViewChild, ElementRef }
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 
-import { EditedField, FieldType } from '../../services/crg/schema.models';
+import { EditedField, ValueType } from '../../services/crg/schema.models';
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { CrgLayer } from '../../services/crg/projects.models';
@@ -13,7 +13,7 @@ import { CrgLayer } from '../../services/crg/projects.models';
   styleUrls: ['./edit-feature-field.component.scss']
 })
 export class EditFeatureFieldComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() type: FieldType;
+  @Input() type: ValueType;
   @Input() field: EditedField;
   @Input() feature: WfsFeature;
   @Input() isNew: boolean;
