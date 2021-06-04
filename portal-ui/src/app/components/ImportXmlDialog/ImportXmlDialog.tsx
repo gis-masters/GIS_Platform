@@ -4,8 +4,10 @@ import { boundMethod } from 'autobind-decorator';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { importXml } from '../../services/import-xml.service';
 import { services } from '../../services/services';
+import { importXml } from '../../services/import-xml.service';
+import { mapService } from '../../services/map/map.service';
+import { getFeaturesById } from '../../services/geoserver/wfs.service';
 import { Button } from '../Button/Button';
 import { FileInput } from '../FileInput/FileInput';
 import { Form, FormControl, FormField, FormLabel } from '../Form/Form';
@@ -16,11 +18,13 @@ interface ImportXmlDialogProps {
   onClose: () => void;
   datasetId: string;
   tableId: string;
+  complexName: string;
 }
 
 @observer
 export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
-  @observable file?: File;
+  @observable private file?: File;
+  @observable private loading = false;
 
   render() {
     const { open, onClose } = this.props;
@@ -40,7 +44,7 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
           </Form>
         </DialogContent>
         <DialogActions>
-          <Button form='importXmlFileForm' type='submit' color='primary' disabled={!this.file}>
+          <Button form='importXmlFileForm' type='submit' color='primary' disabled={!this.file || this.loading}>
             Импортировать
           </Button>
           <Button onClick={onClose}>Отмена</Button>
@@ -49,14 +53,25 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
     );
   }
 
+  @action
+  private setLoading(loading: boolean) {
+    this.loading = loading;
+  }
+
   @boundMethod
   private async submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const { datasetId, tableId, onClose } = this.props;
+    const { datasetId, tableId, onClose, complexName } = this.props;
 
     try {
-      await importXml(this.file, datasetId, tableId);
+      this.setLoading(true);
+      let objectId = await importXml(this.file, datasetId, tableId);
+      let wfsFeature = await getFeaturesById([objectId.toString()], complexName);
+      if (wfsFeature.length > 0) {
+        mapService.highlightFeatures(wfsFeature);
+        mapService.positionToFeature(wfsFeature[0]);
+      }
       Toast.success('Объекты из файла импортированы успешно');
     } catch (ex) {
       Toast.warn('Возникла ошибка при загрузке файла. ' + ex.message);
@@ -77,5 +92,6 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
   @action
   private reset() {
     this.file = null;
+    this.loading = false;
   }
 }

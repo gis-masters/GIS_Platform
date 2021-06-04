@@ -92,9 +92,12 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
     public void checkLayersAvailabilityInProject() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().ifValidationFails().
+                        log().all().
                         get(String.format("/projects/%d/layers/", projectId));
+
         List<LinkedHashMap<Integer, Object>> layers = response.jsonPath().get();
+
+        response.prettyPrint();
 
         assertThat(layers.isEmpty(), is(not(true)));
     }

@@ -41,8 +41,8 @@ public class TablesDao {
         this.pJdbcTemplate = parameterJdbcTemplate;
     }
 
-    public void addRecord(@NotNull ResourceIdentifier rIdentifier,
-                          @NotNull Map<String, Object> body) throws CrgDaoException {
+    public Integer addRecord(@NotNull ResourceIdentifier rIdentifier,
+                             @NotNull Map<String, Object> body) throws CrgDaoException {
         try {
             final DbTable table = getSimpleDbTable(rIdentifier);
             final InsertQuery insertQuery = new InsertQuery(table);
@@ -53,16 +53,20 @@ public class TablesDao {
                 insertQuery.addColumn(dbColumn, value);
             });
             String query = insertQuery.validate().toString();
+            query = query + " returning lastval();";
 
             log.debug("INSERT_QUERY: {}", query);
-            pJdbcTemplate.getJdbcTemplate().update(query);
+
+            return pJdbcTemplate.getJdbcTemplate().queryForObject(query, Integer.class);
         } catch (DataAccessException e) {
             String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'. %s",
                                        rIdentifier, e.getCause().getMessage());
+
             throw new CrgDaoException(msg);
         } catch (Exception e) {
             String msg = String.format("Что то пошло не так при вставке в таблицу: '%s'. %s",
                                        rIdentifier, e.getCause().getMessage());
+
             throw new CrgDaoException(msg);
         }
     }

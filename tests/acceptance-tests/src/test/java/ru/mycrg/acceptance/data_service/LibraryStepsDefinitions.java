@@ -11,7 +11,7 @@ import java.io.File;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class DocumentsStepsDefinitions extends BaseStepsDefinitions {
+public class LibraryStepsDefinitions extends BaseStepsDefinitions {
 
     public static String documentId;
     public static String fileName;
@@ -35,6 +35,7 @@ public class DocumentsStepsDefinitions extends BaseStepsDefinitions {
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
+                        log().all().
                         contentType("multipart/form-data").
                         multiPart("file", file).
                         multiPart("body",
@@ -96,8 +97,7 @@ public class DocumentsStepsDefinitions extends BaseStepsDefinitions {
                  .ifPresent(entry -> {
                      documentId = entry.getKey();
                      fileName = entry.getValue();
-                     file = new File(
-                             String.format("src/test/resources/ru/mycrg/acceptance/data_service/files/%s", fileName));
+                     file = new File("src/test/resources/ru/mycrg/acceptance/data_service/files/" + fileName);
                  });
     }
 

@@ -48,16 +48,18 @@ public class ImportMp implements Importer {
     }
 
     /**
-     * Импорт xml файла межевого плана в БД. При импорте межевого плана происходит парсинг файла по схеме MP_v06.xsd,
-     * проверка типов полей, согласно схеме БД, добавление записи в БД
+     * Импорт xml файла межевого плана в БД. При импорте межевого плана происходит парсинг файла, проверка типов полей,
+     * согласно схеме БД, добавление записи в БД
      *
      * @param file  xml файл межевого плана
      * @param table Название таблицы в БД куда осуществляется импорт данных
      *
+     * @return objectId Возвращает id добавленной в БД записи
+     *
      * @throws DataServiceException Если парсинг xml  файла не выполнился успешно и если новая запись не добавлена в БД
      * @throws BadRequestException  Если преобразование геометрии не удалось
      */
-    public void doImport(MultipartFile file, ResourceIdentifier table) {
+    public Integer doImport(MultipartFile file, ResourceIdentifier table) {
         IResourceModel tableModel = tableService.getByIdentifier(table);
         SchemaDto schemaOfCurrentLayer =
                 schemaService.getSchemaByName(tableModel.getSchemaId())
@@ -75,9 +77,11 @@ public class ImportMp implements Importer {
                     .parseByScheme(file, crossedProperties, crsHandler.extractCrsNumber(tableModel.getCrs()));
             Map<String, Object> dataForSavingToDBValid = ImportValidationHandler
                     .removeNonMatchingBySchemaProperties(dataForSavingToDB, crossedProperties);
-            tablesDao.addRecord(table, dataForSavingToDBValid);
+
+            return tablesDao.addRecord(table, dataForSavingToDBValid);
         } catch (CrgDaoException e) {
             log.error(e.getMessage());
+
             throw new DataServiceException("Ошибка при добавлении записи в таблицу " + table);
         } catch (XmlParserException e) {
             throw new DataServiceException(e.getMessage());

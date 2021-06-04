@@ -5,5 +5,5 @@ import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 
 public interface Importer {
 
-    void doImport(MultipartFile file, ResourceIdentifier rIdentifier);
+    Integer doImport(MultipartFile file, ResourceIdentifier rIdentifier);
 }

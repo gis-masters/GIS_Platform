@@ -18,6 +18,8 @@ import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 
 import javax.validation.Valid;
 
+import static org.springframework.http.HttpStatus.OK;
+
 @RestController
 public class ImportController extends BaseController {
 
@@ -40,24 +42,26 @@ public class ImportController extends BaseController {
     }
 
     @PostMapping("/import/file")
-    public ResponseEntity<Process> importXmlFileToDb(@RequestParam String datasetId,
+    public ResponseEntity<Integer> importXmlFileToDb(@RequestParam String datasetId,
                                                      @RequestParam String tableId,
                                                      @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             String msg = "Загружаемый файл пустой";
             log.warn(msg);
+
             throw new BadRequestException(msg);
         } else if (!MediaType.APPLICATION_XML_VALUE.equals(file.getContentType())
                 && !MediaType.TEXT_XML_VALUE.equals(file.getContentType())) {
             String msg = "Тип файла не XML";
             log.warn(msg);
+
             throw new BadRequestException(msg);
         }
 
         ResourceIdentifier table = new ResourceIdentifier(tableId, ResourceType.TABLE, datasetId, ResourceType.SCHEMA);
 
-        importer.doImport(file, table);
+        Integer objectId = importer.doImport(file, table);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.status(OK).body(objectId);
     }
 }
