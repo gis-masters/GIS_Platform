@@ -1,9 +1,10 @@
 import jsPDF from 'jspdf';
-import domtoimage from 'dom-to-image';
 import { getPointResolution } from 'ol/proj';
 
 import { printSettings } from '../../stores/PrintSettings.store';
 import { mapService } from './map.service';
+
+const BASE_SCALE_LINE_DPI = 150;
 
 export async function printMap() {
   const { pageWidth, pageHeight, pageFormat, margin } = printSettings;
@@ -18,12 +19,16 @@ export async function printMap() {
     pageWidth - margin.left - margin.right,
     pageHeight - margin.top - margin.bottom
   );
-  pdf.addImage(await getScaleImage(), 'PNG', 5 + margin.left, pageHeight - 13 - margin.bottom, 80, 10);
   pdf.save('map.pdf');
+}
+
+export async function exportMap() {
+  saveAs(await getMapImage(), 'map.jpg');
 }
 
 export async function getMapImage(
   imageResolution?: number,
+  withDesignations: boolean = true,
   translateX: number = 0,
   translateY: number = 0
 ): Promise<string> {
@@ -40,7 +45,7 @@ export async function getMapImage(
 
   printSettings.setPrintingStatus(true);
 
-  const imagePromise = new Promise<string>(async (resolve, reject) => {
+  const imagePromise = new Promise<string>(resolve => {
     map.once('rendercomplete', async () => {
       const mapCanvas = document.createElement('canvas');
       mapCanvas.width = width;
@@ -66,7 +71,27 @@ export async function getMapImage(
         }
       });
 
-      resolve(mapCanvas.toDataURL('image/jpeg'));
+      if (withDesignations) {
+        const scaleLineImg = new Image();
+        scaleLineImg.src = getScaleLineImageSrc();
+        const scaleResize = resolution / BASE_SCALE_LINE_DPI;
+        scaleLineImg.onload = () => {
+          mapContext.drawImage(
+            scaleLineImg,
+            0,
+            0,
+            400 * scaleResize,
+            50 * scaleResize,
+            19 * scaleResize,
+            height - 68 * scaleResize,
+            400 * scaleResize,
+            50 * scaleResize
+          );
+          resolve(mapCanvas.toDataURL('image/jpeg'));
+        };
+      } else {
+        resolve(mapCanvas.toDataURL('image/jpeg'));
+      }
 
       // Reset original map size
       scaleLine.setDpi(undefined);
@@ -93,10 +118,6 @@ export async function getMapImage(
   return await imagePromise;
 }
 
-export async function getScaleImage(): Promise<string> {
-  return await domtoimage.toPng(document.querySelector('.ol-scale-bar-inner'), {
-    width: 400,
-    height: 50,
-    style: { transform: 'translate(10px,20px)' }
-  });
+export function getScaleLineImageSrc(resolution?: number): string {
+  return `/assets/images/scale${printSettings.scale}x${resolution || printSettings.resolution}.png`;
 }

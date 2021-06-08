@@ -1,4 +1,4 @@
-.PrintDialog {
+body .PrintDialog {
   &-Preview {
     margin-bottom: 14px;
     padding-top: calc(var(--PrintDialogPreviewSizeFactor) * calc(var(--PrintDialogPreviewMarginTop) * var(--PrintDialogPreviewMarginFactor)));
@@ -6,7 +6,7 @@
     padding-bottom: calc(var(--PrintDialogPreviewSizeFactor) * calc(var(--PrintDialogPreviewMarginBottom) * var(--PrintDialogPreviewMarginFactor)));
     padding-left: calc(var(--PrintDialogPreviewSizeFactor) * calc(var(--PrintDialogPreviewMarginLeft) * var(--PrintDialogPreviewMarginFactor)));
 
-    --PrintDialogPreviewSizeFactor: 1.6;
+    --PrintDialogPreviewSizeFactor: 1.8;
 
     &_orientation {
       &_l {
@@ -50,5 +50,23 @@
     height: 100%;
 
     transform: translate(calc(var(--PrintDialogPreviewShiftX) * 1px), calc(var(--PrintDialogPreviewShiftY) * 1px));
+  }
+
+  &-PreviewScale {
+    position: absolute;
+    bottom: calc(var(--PrintDialogPreviewSizeFactor) * calc(2.77 * var(--PrintDialogPreviewScaleFactor)));
+    left: calc(var(--PrintDialogPreviewSizeFactor) * calc(2.77 * var(--PrintDialogPreviewScaleFactor)));
+
+    width: var(--PrintDialogPreviewScaleWidth);
+    height: calc(var(--PrintDialogPreviewScaleWidth) / 8);
+
+    --PrintDialogPreviewScaleWidth: calc(var(--PrintDialogPreviewSizeFactor) * calc(69 * var(--PrintDialogPreviewScaleFactor)));
+    --PrintDialogPreviewScaleFactor: calc(calc(var(--PrintDialogPreviewMarginFactor) + 2px) / 3);
+  }
+
+  &-JpegButton {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
   }
 }

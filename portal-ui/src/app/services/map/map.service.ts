@@ -670,8 +670,8 @@ class MapService {
     // @ts-ignore
     this.draftStyle.getImage().getFill().setColor(imageColor);
     this.draftStyle.getStroke().setColor(strokeColor);
-    // repaint
-    this.draftSource.addFeatures([]);
+
+    this.draftSource.addFeatures([]); // repaint
   }
 
   private getDraftColors(): { strokeColor: string; imageColor: string } {

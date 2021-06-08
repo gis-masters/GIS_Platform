@@ -6,7 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { printSettings, resolutions, pageFormats, Orientation, scales } from '../../stores/PrintSettings.store';
-import { getMapImage, printMap } from '../../services/map/map-print.service';
+import { exportMap, getMapImage, getScaleLineImageSrc, printMap } from '../../services/map/map-print.service';
 import { Form, FormField, FormLabel, FormControl } from '../Form/Form';
 import { Loading } from '../Loading/Loading';
 import { Select } from '../Select/Select';
@@ -27,11 +27,11 @@ export class PrintDialog extends Component<PrintDialogProps> {
   private needUpdatePreviewImageAfterUpdate = false;
   private updatingPreviewImage = false;
   private previewRef = createRef<HTMLImageElement>();
-  @observable private previewImageDataUri: string;
   @observable private previewDragStartX = 0;
   @observable private previewDragStartY = 0;
   @observable private previewDragX = 0;
   @observable private previewDragY = 0;
+  @observable private previewImageDataUri: string;
 
   componentDidMount() {
     this.reactionDisposer = reaction(
@@ -71,7 +71,7 @@ export class PrintDialog extends Component<PrintDialogProps> {
             }
             square
             elevation={3}
-            >
+          >
             <div
               className={cnPrintDialog('PreviewImageContainer')}
               onDragStart={this.dragStartHandler}
@@ -88,6 +88,9 @@ export class PrintDialog extends Component<PrintDialogProps> {
                   alt=''
                 />
               )}
+
+              <img className={cnPrintDialog('PreviewScale')} src={getScaleLineImageSrc(72)} draggable={false} alt='' />
+
               <Loading visible={printSettings.printingInProcess} />
             </div>
           </Paper>
@@ -151,8 +154,11 @@ export class PrintDialog extends Component<PrintDialogProps> {
           </Form>
         </DialogContent>
         <DialogActions>
+          <Button className={cnPrintDialog('JpegButton')} onClick={this.exportHandler}>
+            Экспорт в JPG
+          </Button>
           <Button type='submit' form='printDialogForm' color='primary'>
-            Печать
+            Печать (PDF)
           </Button>
           <Button onClick={onClose}>Отмена</Button>
         </DialogActions>
@@ -164,6 +170,12 @@ export class PrintDialog extends Component<PrintDialogProps> {
   private submitHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     printMap();
+    this.props.onClose();
+  }
+
+  @boundMethod
+  private async exportHandler() {
+    await exportMap();
     this.props.onClose();
   }
 
@@ -207,7 +219,7 @@ export class PrintDialog extends Component<PrintDialogProps> {
     }
 
     this.updatingPreviewImage = true;
-    this.setPreviewImageDataUri(await getMapImage(60, translateX, translateY));
+    this.setPreviewImageDataUri(await getMapImage(72, false, translateX, translateY));
     this.resetDrag();
     this.updatingPreviewImage = false;
 
