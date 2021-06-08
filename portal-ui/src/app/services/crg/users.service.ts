@@ -22,12 +22,11 @@ export interface CrgUser {
   enabled: boolean;
   authorities: BuildInRole[];
   createdAt: string;
+  password?: string;
   _links?: { [key: string]: ApiLink }[];
 }
 
-export interface NewUserData extends Pick<CrgUser, 'email' | 'name' | 'surname'> {
-  password: string;
-}
+export type NewUserData = Pick<CrgUser, 'email' | 'name' | 'surname' | 'login' | 'password' | 'enabled'>;
 
 export interface OrgInfo extends CrgUser {
   orgName: string;
@@ -78,6 +77,11 @@ class UsersService {
 
   async create(userData: NewUserData) {
     await http.post(await getUsersUrl(), userData);
+    this.debouncedFetchUsersListStore();
+  }
+
+  async edit(patch: Partial<CrgUser>, id: number) {
+    await http.patch(await getUserUrl(id), patch);
     this.debouncedFetchUsersListStore();
   }
 

@@ -45,6 +45,7 @@ export interface XTableProps<T> extends IClassNameProps {
   defaultSort: SortParams<T>;
   secondarySortField: keyof T;
   filterable?: boolean;
+  getRowId?: (rowData: T) => string | number;
 }
 
 @observer
@@ -63,7 +64,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
   }
 
   render() {
-    const { cols, filterable, title, headerActions, headless, className } = this.props;
+    const { cols, filterable, title, headerActions, headless, className, getRowId } = this.props;
 
     return (
       <div className={cnXTable(null, [className, 'scroll'])}>
@@ -104,7 +105,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
                   <XTableEmpty colsCount={cols.length} />
                 ) : (
                   this.dataPaged.map((rowData, i) => (
-                    <TableRow key={i} hover>
+                    <TableRow key={getRowId ? getRowId(rowData) : i} hover>
                       {cols.map(({ field, renderCellContent, getIdBadge, cellProps, align }, i) => (
                         <TableCell key={i} align={align} {...(cellProps || {})}>
                           {renderCellContent ? (

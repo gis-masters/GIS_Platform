@@ -8,6 +8,7 @@ import { CrgUser } from '../../services/crg/users.service';
 import { OrgActionsListPermissions } from './ListPermissions/OrgActions-ListPermissions';
 import { OrgActionsGroups } from './Groups/OrgActions-Groups';
 import { OrgActionsDel } from './Del/OrgActions-Del';
+import { OrgActionsEdit } from './Edit/OrgActions-Edit';
 
 import '!style-loader!css-loader!sass-loader!./OrgActions.scss';
 
@@ -20,13 +21,12 @@ type OrgActionsProps =
 export const OrgActions: FC<OrgActionsProps> = ({ user, userGroups, group }) => (
   <div className={cnOrgActions()}>
     {user && <OrgActionsGroups user={user} userGroups={userGroups} />}
-
     <OrgActionsListPermissions
       principalId={user ? user.id : group.id}
       principalType={user ? PrincipalType.USER : PrincipalType.GROUP}
       principalName={user ? user.name : group.name}
     />
-
+    {user && <OrgActionsEdit user={user} />}
     <OrgActionsDel group={group} user={user} />
   </div>
 );

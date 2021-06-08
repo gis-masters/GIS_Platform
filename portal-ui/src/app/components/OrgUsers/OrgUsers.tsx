@@ -90,6 +90,7 @@ export class OrgUsers extends Component {
         cols={this.xTableCols}
         defaultSort={{ field: 'surname', asc: true }}
         secondarySortField='id'
+        getRowId={this.getUserId}
         filterable
       />
     );
@@ -125,14 +126,20 @@ export class OrgUsers extends Component {
       </>
     );
   }
-  
+
   @boundMethod
   private renderPermissionsCount(rowData: CrgUserExtended): ReactNode {
     return <PermissionsCount principalId={rowData.id} principalType={PrincipalType.USER} />;
   }
-  
-    @boundMethod
-    private renderUserActions(user: CrgUserExtended): ReactNode {
-      return <OrgActions user={user} userGroups={user.groups} />;
-    }
+
+  @boundMethod
+  private renderUserActions(user: CrgUserExtended): ReactNode {
+    return <OrgActions user={user} userGroups={user.groups} />;
+  }
+
+  private getUserId(user: CrgUserExtended): number {
+    return user.id;
+  }
+
+
 }
