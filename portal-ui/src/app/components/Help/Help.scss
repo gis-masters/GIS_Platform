@@ -1,10 +1,12 @@
 .Help {
   display: flex;
+  overflow: hidden;
 
-  height: calc(100vh - 200px);
+  height: calc(100vh - 240px);
   margin-bottom: 20px;
 
   &-Toc {
+    overflow: auto;
     flex-basis: 33%;
     flex-grow: 1;
 

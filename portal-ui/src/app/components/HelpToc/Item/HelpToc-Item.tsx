@@ -1,43 +1,43 @@
 import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
-
-import { PseudoLink } from '../../PseudoLink/PseudoLink';
+import { IClassNameProps } from '@bem-react/core';
+import { observer } from 'mobx-react';
+import TreeItem from '@material-ui/lab/TreeItem';
+import { action } from 'mobx';
 
 import { TocItem } from '../../../stores/Help.store';
 
-const cnHelpToc = cn('HelpToc');
+const cnHelpTocItem = cn('HelpToc', 'Item');
 
-interface HelpTocItemProps {
+import '!style-loader!css-loader!sass-loader!./HelpToc-Item.scss';
+
+interface HelpTocProps extends IClassNameProps {
   item: TocItem;
-  onSelect: (item: TocItem) => void;
-  selectedItem: TocItem;
+  onSelect?: (item: TocItem) => void;
 }
 
-export class HelpTocItem extends Component<HelpTocItemProps> {
+@observer
+export class HelpTocItem extends Component<HelpTocProps> {
   render() {
-    const { item, selectedItem, onSelect } = this.props;
-    const selected = selectedItem && selectedItem.id === item.id;
+    const { item, onSelect } = this.props;
 
     return (
-      <div className={cnHelpToc('Item')}>
-        <PseudoLink className={cnHelpToc('ItemTitle', { selected })} onClick={this.clickHandler}>
-          {item.title}
-        </PseudoLink>
-
-        {item.children && item.children.length ? (
-          <div className={cnHelpToc('Subitems')}>
-            {item.children.map((subItem, i) => (
-              <HelpTocItem item={subItem} selectedItem={selectedItem} onSelect={onSelect} key={i} />
-            ))}
-          </div>
-        ) : null}
-      </div>
+      <TreeItem
+        classes={{ label: cnHelpTocItem({ type: item.children ? 'wrapper' : 'link' }) }}
+        key={item.id}
+        nodeId={item.id}
+        label={item.title}
+        onClick={() => this.clickHandler(item)}
+      >
+        {Array.isArray(item.children)
+          ? item.children.map((node, index) => <HelpTocItem key={index} item={node} onSelect={onSelect} />)
+          : null}
+      </TreeItem>
     );
   }
 
-  @boundMethod
-  private clickHandler() {
-    this.props.onSelect(this.props.item);
+  @action
+  private clickHandler(item: TocItem) {
+    item.children ? null : this.props.onSelect(item);
   }
 }

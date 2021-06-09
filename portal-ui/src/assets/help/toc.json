@@ -2,8 +2,12 @@
   {
     "id": "about",
     "title": "О программе",
-    "contentUrl": "/assets/help/about/00about.html",
     "children": [
+      {
+        "id": "about-description",
+        "title": "Описание программы",
+        "contentUrl": "/assets/help/about/00about.html"
+      },
       {
         "id": "evolution",
         "title": "Эволюция документов территориального планирования",
@@ -26,26 +30,34 @@
   },
   {
     "id": "login",
-    "title": "Запуск и авторизация в системе",
-    "contentUrl": "/assets/help/login/00login.html",
+    "title": "Вход с систему",
     "children": [
+      {
+        "id": "login-description",
+        "title": "Запуск и авторизация в системе",
+        "contentUrl": "/assets/help/login/00login.html"
+      },
       {
         "id": "registration",
         "title": "Регистрация пользователя",
-        "contentUrl": "/assets/help/projects/01registration.html"
+        "contentUrl": "/assets/help/login/01registration.html"
       },
       {
         "id": "signOut",
         "title": "Выход из системы",
-        "contentUrl": "/assets/help/projects/02signOut.html"
+        "contentUrl": "/assets/help/login/02signOut.html"
       }
     ]
   },
   {
     "id": "projects",
     "title": "Управление проектами",
-    "contentUrl": "/assets/help/projects/00projects.html",
     "children": [
+      {
+        "id": "projects-page",
+        "title": "Страница с проектами",
+        "contentUrl": "/assets/help/projects/00projects.html"
+      },
       {
         "id": "create",
         "title": "Создание проекта",
@@ -65,9 +77,13 @@
   },
   {
     "id": "import",
-    "title": "Загрузка векторных данных в формате shp",
-    "contentUrl": "/assets/help/import/00import.html",
+    "title": "Загрузка данных",
     "children": [
+      {
+        "id": "import-data",
+        "title": "Загрузка векторных данных в формате shp",
+        "contentUrl": "/assets/help/import/00import.html"
+      },
       {
         "id": "upload",
         "title": "Этап I: Загрузка zip архива со слоями.",
@@ -83,13 +99,21 @@
   {
     "id": "map",
     "title": "Карта",
-    "contentUrl": "/assets/help/map/00map.html",
     "children": [
       {
-        "id": "projectManagement",
+        "id": "map-desription",
+        "title": "Функции карты",
+        "contentUrl": "/assets/help/map/00map.html"
+      },
+      {
+        "id": "projectManagementTitle",
         "title": "Управление проектом",
-        "contentUrl": "/assets/help/map/projectManagement/00projectManagement.html",
         "children": [
+          {
+            "id": "projectManagement",
+            "title": "Управление проектом",
+            "contentUrl": "/assets/help/map/projectManagement/00projectManagement.html"
+          },
           {
             "id": "changeOrderLayers",
             "title": "Изменение порядка слоев/групп",
@@ -129,19 +153,49 @@
             "id": "saveAbortChanges",
             "title": "Сохранение и отмена изменений",
             "contentUrl": "/assets/help/map/projectManagement/08saveAbortChanges.html"
+          },
+          {
+            "id": "controlLayers",
+            "title": "Управление слоями",
+            "contentUrl": "/assets/help/map/01controlLayers.html"
+          },
+          {
+            "id": "substrates",
+            "title": "Подложки",
+            "contentUrl": "/assets/help/map/06substrates.html"
+          },
+          {
+            "id": "listProjects",
+            "title": "Переход к списку проектов",
+            "contentUrl": "/assets/help/map/07listProjects.html"
+          },
+          {
+            "id": "addressSearch",
+            "title": "Адресный поиск",
+            "contentUrl": "/assets/help/map/02addressSearch.html"
           }
         ]
       },
       {
         "id": "org-admin",
         "title": "Управление организацией",
-        "contentUrl": "/assets/help/map/orgManagement/00orgManagement.html"
+        "children": [
+          {
+            "id": "org-admin-control",
+            "title": "Управление организацией",
+            "contentUrl": "/assets/help/map/orgManagement/00orgManagement.html"
+          }        
+        ]
       },
       {
-        "id": "dataManagement",
+        "id": "data-admin",
         "title": "Управление данными",
-        "contentUrl": "/assets/help/map/dataManagement/00dataManagement.html",
         "children": [
+          {
+            "id": "dataManagement",
+            "title": "Управление данными",
+            "contentUrl": "/assets/help/map/dataManagement/00dataManagement.html"
+          },
           {
             "id": "dataSets",
             "title": "Наборы данных",
@@ -155,45 +209,30 @@
         ]
       },
       {
-        "id": "controlLayers",
-        "title": "Управление слоями",
-        "contentUrl": "/assets/help/map/01controlLayers.html"
-      },
-      {
-        "id": "addressSearch",
-        "title": "Адресный поиск",
-        "contentUrl": "/assets/help/map/02addressSearch.html"
-      },
-      {
-        "id": "accountChange",
-        "title": "Смена учётной записи",
-        "contentUrl": "/assets/help/map/03accountChange.html"
-      },
-      {
-        "id": "punctureObject",
-        "title": "Получение дополнительной информации об объекте (прокол)",
-        "contentUrl": "/assets/help/map/04punctureObject.html"
-      },
-      {
-        "id": "attributeTable",
-        "title": "Получение атрибутивной информации об объекте (атрибутивная таблица)",
-        "contentUrl": "/assets/help/map/05attributeTable.html"
-      },
-      {
-        "id": "substrates",
-        "title": "Подложки",
-        "contentUrl": "/assets/help/map/06substrates.html"
-      },
-      {
-        "id": "listProjects",
-        "title": "Переход к списку проектов",
-        "contentUrl": "/assets/help/map/07listProjects.html"
-      },
+        "id": "user-options",
+        "title": "Возможности пользователя",
+        "children": [
+          {
+            "id": "accountChange",
+            "title": "Смена учётной записи",
+            "contentUrl": "/assets/help/map/03accountChange.html"
+          }
+        ]
+      },      
       {
         "id": "fullEditObject",
-        "title": "Добавление/редактирование/удаление объектов",
-        "contentUrl": "/assets/help/map/fullEditObject/01createObjectMap.html",
+        "title": "Управление объектами",
         "children": [
+          {
+            "id": "punctureObject",
+            "title": "Получение дополнительной информации об объекте (прокол)",
+            "contentUrl": "/assets/help/map/04punctureObject.html"
+          },
+          {
+            "id": "attributeTable",
+            "title": "Получение атрибутивной информации об объекте (атрибутивная таблица)",
+            "contentUrl": "/assets/help/map/05attributeTable.html"
+          },
           {
             "id": "createObjectMap",
             "title": "Создание объекта путем рисования на карте",
@@ -250,7 +289,6 @@
       {
         "id": "ruler",
         "title": "Измерение длины и площади на карте",
-        "contentUrl": "/assets/help/map/ruler/01areaMeasurement.html",
         "children": [
           {
             "id": "areaMeasurement",
@@ -261,22 +299,27 @@
             "id": "lengthMeasurement",
             "title": "Измерение длины",
             "contentUrl": "/assets/help/map/ruler/02lengthMeasurement.html"
+          },
+          {
+            "id": "print",
+            "title": "Печать фрагмента карты",
+            "contentUrl": "/assets/help/map/print/00print.html"
           }
         ]
-      },
-      {
-        "id": "print",
-        "title": "Печать фрагмента карты",
-        "contentUrl": "/assets/help/map/print/00print.html"
       }
     ]
   },
   {
     "id": "validate",
-    "title": "Проверка данных",
+    "title": "Работа с данными",
     "platforms": ["conv"],
-    "contentUrl": "/assets/help/validate/00validate.html",
     "children": [
+      {
+        "id": "validate-data",
+        "title": "Проверка данных",
+        "platforms": ["conv"],
+        "contentUrl": "/assets/help/validate/00validate.html"
+      },
       {
         "id": "validateLayers",
         "title": "Выполнение проверки данных на соответствие приказу.",
@@ -306,8 +349,13 @@
     "id": "export",
     "title": "Выгрузка данных",
     "platforms": ["conv"],
-    "contentUrl": "/assets/help/export/00export.html",
     "children": [
+      {
+        "id": "data-export",
+        "title": "Выгрузка данных",
+        "platforms": ["conv"],
+        "contentUrl": "/assets/help/export/00export.html"
+      },
       {
         "id": "exportShp",
         "title": "Выгрузка векторных данных в формате shp с атрибутами согласно требованиям приказа.",

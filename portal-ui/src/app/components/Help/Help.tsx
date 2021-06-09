@@ -45,13 +45,12 @@ export class Help extends Component<HelpProps> {
       <div className={cnHelp()}>
         {items.length > 1 ? (
           <HelpToc
-            className={cnHelp('Toc')}
+            className={cnHelp('Toc', ['scroll'])}
             items={items}
             onSelect={this.selectHandler}
             selectedItem={this.currentItem}
           />
         ) : null}
-
         <div className={cnHelp('Content', ['scroll'])} dangerouslySetInnerHTML={{ __html: this.currentItem.content }} />
       </div>
     );

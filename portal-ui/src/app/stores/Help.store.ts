@@ -20,17 +20,15 @@ class Help {
   @observable tocLoaded = false;
 
   @action
-  setToc (toc: Toc) {
+  setToc(toc: Toc) {
     this.toc = toc;
     this.tocLoaded = true;
   }
 
   @action
-  setItemContent (content: string, item: TocItem) {
+  setItemContent(content: string, item: TocItem) {
     item.content = content;
   }
-
-  private constructor() { }
 
   public static get instance() {
     return this._instance || (this._instance = new this());

@@ -1,24 +1,13 @@
 import React, { Component, createRef } from 'react';
 import { observable, computed, action } from 'mobx';
 import { observer } from 'mobx-react';
-import {
-  IconButton,
-  Fade,
-  Paper,
-  Popper,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Tooltip
-} from '@material-ui/core';
+import { IconButton, Dialog, DialogContent, DialogContentText, DialogActions, Tooltip } from '@material-ui/core';
 import { LiveHelp, LiveHelpOutlined } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 
 import { HelpPart } from '../../services/HelpPart';
 import { TocItem } from '../../stores/Help.store';
 import { route } from '../../stores/Route.store';
-import { HelpPopup } from '../HelpPopup/HelpPopup';
 import { Button } from '../Button/Button';
 import { Help } from '../Help/Help';
 
@@ -28,7 +17,6 @@ const cnHelpToggler = cn('HelpToggler');
 
 @observer
 export class HelpToggler extends Component<{}> {
-  @observable private popupOpen = false;
   @observable private dialogOpen = false;
   @observable private selectedItem?: TocItem;
   private ref = createRef<HTMLButtonElement>();
@@ -41,27 +29,22 @@ export class HelpToggler extends Component<{}> {
     return (
       <>
         <Tooltip title={'Справка'}>
-          <IconButton className={cnHelpToggler()} onClick={this.togglePopup} ref={this.ref} color='inherit'>
-            {this.popupOpen ? <LiveHelp /> : <LiveHelpOutlined />}
+          <IconButton className={cnHelpToggler()} onClick={this.openDialog} ref={this.ref} color='inherit'>
+            {this.dialogOpen ? <LiveHelp /> : <LiveHelpOutlined />}
           </IconButton>
         </Tooltip>
-
-        <Popper className={cnHelpToggler('Popup')} open={this.popupOpen} anchorEl={this.ref.current} transition>
-          {({ TransitionProps }) => (
-            <Fade {...TransitionProps} timeout={350}>
-              <Paper>
-                <HelpPopup items={this.helpPart.items} onSelect={this.handleSelect} onClose={this.closePopup} />
-              </Paper>
-            </Fade>
-          )}
-        </Popper>
 
         <Dialog open={this.dialogOpen} onClose={this.closeDialog} PaperProps={{ className: cnHelpToggler('Dialog') }}>
           <DialogContent>
             <DialogContentText>Справка</DialogContentText>
-            <Help className={cnHelpToggler('Help')} selectedItem={this.selectedItem} helpPart={this.helpPart} />
+            <Help
+              className={cnHelpToggler('Help')}
+              selectedItem={this.selectedItem}
+              helpPart={this.helpPart}
+            />
           </DialogContent>
           <DialogActions>
+            <Button color='primary' routerLink='/about'> Все статьи</Button>
             <Button onClick={this.closeDialog}>Закрыть</Button>
           </DialogActions>
         </Dialog>
@@ -80,16 +63,6 @@ export class HelpToggler extends Component<{}> {
   }
 
   @action.bound
-  private closePopup() {
-    this.popupOpen = false;
-  }
-
-  @action.bound
-  private togglePopup() {
-    this.popupOpen = !this.popupOpen;
-  }
-
-  @action.bound
   private openDialog() {
     this.dialogOpen = true;
   }
@@ -103,6 +76,5 @@ export class HelpToggler extends Component<{}> {
   private handleSelect(item: TocItem) {
     this.selectedItem = item;
     this.openDialog();
-    this.closePopup();
   }
 }
