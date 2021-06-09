@@ -23,7 +23,13 @@ export class CustomCache<T = unknown> {
     this.config = { ...defaultConfig, ...(config || {}) };
   }
 
-  match(key: string): T | undefined {
+  match(key: string, config?: CustomCacheConfig): T | undefined {
+    const { disabled }: CustomCacheConfig = { ...this.config, ...config };
+
+    if (disabled) {
+      return;
+    }
+
     if (this.store[key] && !this.isItemStale(this.store[key], new Date().getTime())) {
       return this.store[key].payload;
     }

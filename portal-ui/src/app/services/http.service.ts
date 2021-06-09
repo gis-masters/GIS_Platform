@@ -36,7 +36,7 @@ class Http {
   async get<T>(url: string, configWithCache: RequestConfigWithCache = {}): Promise<T> {
     const { cache: cacheConfig, ...config } = configWithCache;
     const resultUri = this.axios.getUri({ url, ...config });
-    const fromCache = this.cache.match(resultUri);
+    const fromCache = this.cache.match(resultUri, cacheConfig);
     let promise: Promise<AxiosResponse<T>>;
 
     if (fromCache) {

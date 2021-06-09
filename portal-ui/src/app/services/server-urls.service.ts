@@ -76,6 +76,10 @@ export async function getGeoserverImportTaskUrl(importId: number | string, taskI
   return `${await getGeoserverImportTasksUrl(importId)}/${taskId}`;
 }
 
+export async function getGeoserverImportTaskProgressUrl(importId: number | string, taskId: number): Promise<string> {
+  return `${await getGeoserverImportTasksUrl(importId)}/${taskId}/progress`;
+}
+
 export async function getGeoserverImportTaskLayerUrl(importId: number | string, taskId: number): Promise<string> {
   return `${await getGeoserverImportTaskUrl(importId, taskId)}/layer`;
 }

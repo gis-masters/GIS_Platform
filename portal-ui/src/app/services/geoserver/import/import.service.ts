@@ -4,7 +4,8 @@ import {
   getGeoserverImportsUrl,
   getGeoserverImportTaskLayerUrl,
   getGeoserverImportTaskUrl,
-  getGeoserverImportUrl
+  getGeoserverImportUrl,
+  getGeoserverImportTaskProgressUrl
 } from '../../server-urls.service';
 import {
   ImportLayer,
@@ -47,7 +48,9 @@ export async function getById(id: string) {
 }
 
 export async function checkImportStatus() {
-  const { import: scratch } = await http.get<InputStartResponseDto>(await getGeoserverImportUrl(currentImport.id));
+  const { import: scratch } = await http.get<InputStartResponseDto>(await getGeoserverImportUrl(currentImport.id), {
+    cache: { disabled: true }
+  });
   currentImport.fit({ scratch });
   fillTasks();
 }
@@ -150,7 +153,11 @@ export async function updateProgress() {
   const firstTask = currentImport.tasks[0];
 
   if (firstTask && firstTask.progress) {
-    currentImport.setProgress(await http.get<ImportTaskProgress>(firstTask.progress));
+    currentImport.setProgress(
+      await http.get<ImportTaskProgress>(await getGeoserverImportTaskProgressUrl(currentImport.id, firstTask.id), {
+        cache: { disabled: true }
+      })
+    );
   }
 }
 
