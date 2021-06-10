@@ -64,7 +64,7 @@
     <ng-container *ngFor="let editFeatureItem of editFeatureData">
       <div *ngIf="!editFeatureItem.property?.hidden">
         <div *ngIf="editFeatureItem.property?.valueType?.includes('URL')" class="row fiz-edit-item">
-          <crg-edit-feature-field type="url" [field]="editFeatureItem"> </crg-edit-feature-field>
+          <crg-edit-feature-field type="URL" [field]="editFeatureItem"> </crg-edit-feature-field>
         </div>
 
         <div
