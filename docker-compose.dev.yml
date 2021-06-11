@@ -33,3 +33,8 @@ services:
 
   portal-ui:
     build: portal-ui
+
+  audit-service:
+    build: audit-service
+    ports:
+    - 8086:8086

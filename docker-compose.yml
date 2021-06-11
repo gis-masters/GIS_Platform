@@ -25,7 +25,7 @@ services:
     volumes:
       - /opt/data/postgis:/var/lib/postgresql
     environment:
-      POSTGRES_DBNAME: crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda
+      POSTGRES_DBNAME: crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service
       POSTGRES_USER: $CRG_USER
       POSTGRES_PASS: $DB_PASS
       EXISTING_DATA_DIR: $IS_DATA_EXIST
@@ -259,3 +259,21 @@ services:
     ports:
       - 80:80
       - 443:443
+
+  audit-service:
+    container_name: crg-audit-service
+    image: $DOCKER_CRG_HOST/crg-audit-service:$CRG_AUDIT_SERVICE_TAG
+    restart: always
+    environment:
+      APM_URL: ${APM_URL}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_audit_service
+      SPRING_DATASOURCE_USERNAME: $CRG_USER
+      SPRING_DATASOURCE_PASSWORD: $DB_PASS
+    ports:
+      - 8086:8086
+    volumes:
+      - /opt/logs:/opt/logs
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
