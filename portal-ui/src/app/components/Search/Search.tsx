@@ -1,14 +1,15 @@
-import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 import { action, observable } from 'mobx';
+import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { SearchOutlined } from '@material-ui/icons';
 import { IconButton, InputBase, Popover, Paper, CircularProgress } from '@material-ui/core';
 
 import { mapService } from '../../services/map/map.service';
 import { geocodeService, YaGeoObjectCollection } from '../../services/yandex-geocode.service';
-
+import { getRosreestrMultipleAreaData, getRosreestrMultipleOksData } from '../../services/rosreestr-data.service';
+import { KadObject } from '../../services/kad-search.models';
 import { SearchResultList } from './ResultList/Search-ResultList';
 
 import '!style-loader!css-loader!sass-loader!./Search.scss';
@@ -21,8 +22,11 @@ export class Search extends Component {
   @observable private searchResult: YaGeoObjectCollection;
   @observable private resultListOpen = false;
   @observable private isLoading = false;
+  @observable private kadAreas: KadObject[] = [];
+  @observable private kadOks: KadObject[] = [];
 
   private anchor?: HTMLElement;
+  private kadNumRegex = new RegExp('[0-9]{2}?[:]?[0-9]{2}[:]?[0-9]{6}[:]');
 
   render() {
     return (
@@ -30,7 +34,7 @@ export class Search extends Component {
         <Paper component='form' className={cnSearch()} onSubmit={this.handleSubmit} elevation={3}>
           <InputBase
             className={cnSearch('Input')}
-            placeholder='Найти адрес или место'
+            placeholder='Найти адрес или кадастровый номер'
             onChange={this.handleInputChange}
           />
 
@@ -40,6 +44,7 @@ export class Search extends Component {
         </Paper>
 
         <Popover
+          classes={{ paper: cnSearch('Paper') }}
           open={this.resultListOpen}
           anchorEl={this.anchor}
           onClose={this.handleResultListClose}
@@ -52,7 +57,7 @@ export class Search extends Component {
             horizontal: 'center'
           }}
         >
-          <SearchResultList data={this.searchResult} onClick={this.closeResultList} />
+          <SearchResultList addressData={this.searchResult} kadAreasData={this.kadAreas} kadOksData={this.kadOks} />
         </Popover>
       </>
     );
@@ -74,6 +79,7 @@ export class Search extends Component {
   @boundMethod
   private async handleSubmit(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
+    this.clearKadItems();
 
     this.anchor = e.target as HTMLElement;
 
@@ -82,9 +88,14 @@ export class Search extends Component {
     }
 
     this.setLoading(true);
-    this.setSearchResult(await geocodeService.search(this.searchValue));
-    this.openResultList();
-    this.setLoading(false);
+    if (this.kadNumRegex.test(this.searchValue)) {
+      this.getKadItems(this.searchValue.replace(/[a-zа-яё\s]/gi, ''));
+      this.setSearchResult(null);
+    } else {
+      this.setSearchResult(await geocodeService.search(this.searchValue));
+      this.setLoading(false);
+      this.openResultList();
+    }
   }
 
   @boundMethod
@@ -95,12 +106,36 @@ export class Search extends Component {
   @action.bound
   private closeResultList() {
     this.resultListOpen = false;
-    mapService.clearMarkers();
   }
 
   @action
   private openResultList() {
     this.resultListOpen = true;
+  }
+
+  @action
+  private async getKadItems(kadNum: string) {
+    const [areas, oks] = await Promise.all([getRosreestrMultipleAreaData(kadNum), getRosreestrMultipleOksData(kadNum)])
+
+    if (areas || oks) {
+      this.setKadItems(areas as KadObject[], oks as KadObject[])
+    } else {
+      this.clearKadItems()
+    }
+    this.setLoading(false);
+    this.openResultList();
+  }
+
+  @action
+  private clearKadItems() {
+    this.kadAreas = [];
+    this.kadOks = [];
+  }
+
+  @action
+  private setKadItems(areas: KadObject[], oks: KadObject[]) {
+    this.kadAreas = areas;
+    this.kadOks = oks;
   }
 
   @action

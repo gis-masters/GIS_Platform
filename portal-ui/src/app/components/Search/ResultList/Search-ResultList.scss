@@ -1,3 +1,9 @@
-.Search-ResultList {
-  width: 400px;
+.Search {
+  &-ResultList {
+    width: 400px;
+  }
+
+  &-ListTitle {
+    padding-left: 0.5rem;
+  }
 }

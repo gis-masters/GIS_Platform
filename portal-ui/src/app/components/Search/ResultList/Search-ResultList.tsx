@@ -3,8 +3,10 @@ import { observer } from 'mobx-react';
 import { List } from '@material-ui/core';
 import { cn } from '@bem-react/classname';
 
-import { SearchResultListItem } from '../ResultListItem/Search-ResultListItem';
 import { YaGeoObjectCollection } from '../../../services/yandex-geocode.service';
+import { SearchResultListItem } from '../ResultListItem/Search-ResultListItem';
+import { SearchResultKadListItem } from '../ResultKadListItem/Search-ResultKadListItem';
+import { KadObject } from '../../../services/kad-search.models';
 
 import '!style-loader!css-loader!sass-loader!./Search-ResultList.scss';
 import '!style-loader!css-loader!sass-loader!../Empty/Search-Empty.scss';
@@ -13,18 +15,39 @@ import '!style-loader!css-loader!sass-loader!../PrimaryText/Search-PrimaryText.s
 const cnSearch = cn('Search');
 
 interface SearchResultListProps {
-  data?: YaGeoObjectCollection;
-  onClick: () => void;
+  addressData?: YaGeoObjectCollection;
+  kadAreasData?: KadObject[];
+  kadOksData?: KadObject[];
 }
 
-export const SearchResultList: FC<SearchResultListProps> = observer(({ data, onClick }) => (
+export const SearchResultList: FC<SearchResultListProps> = observer(({ addressData, kadAreasData, kadOksData }) => (
   <div className={cnSearch('ResultList')}>
-    {data && data.featureMember.length ?
+    {(addressData && addressData.featureMember.length) || kadAreasData.length || kadOksData.length ? (
       <List dense={true}>
-        {data.featureMember.map(item => (
-          <SearchResultListItem key={item.GeoObject.Point.pos} geoObject={item.GeoObject} onClick={onClick}/>
-        ))}
+        {kadAreasData.length ? (
+          <>
+            <div className={cnSearch('ListTitle')}>Участки:</div>
+            {kadAreasData.map(item => (
+              <SearchResultKadListItem key={item.value} kadObject={item} />
+            ))}
+          </>
+        ) : null}
+        {kadOksData.length ? (
+          <>
+            <div className={cnSearch('ListTitle')}>ОКС:</div>
+            {kadOksData.map(item => (
+              <SearchResultKadListItem key={item.value} kadObject={item} />
+            ))}
+          </>
+        ) : null}
+        {addressData &&
+          addressData.featureMember &&
+          addressData.featureMember.map(item => (
+            <SearchResultListItem key={item.GeoObject.Point.pos} geoObject={item.GeoObject} />
+          ))}
       </List>
-      : <div className={cnSearch('Empty')}>Нет результатов</div>}
+    ) : (
+      <div className={cnSearch('Empty')}>Нет результатов</div>
+    )}
   </div>
 ));

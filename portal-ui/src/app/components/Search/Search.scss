@@ -1,8 +1,16 @@
-.Search.Search {
+body .Search {
   display: flex;
   align-items: center;
 
-  width: 250px;
+  width: 350px;
   max-width: calc(100% - 55px);
   padding: 2px 4px 2px 8px;
+
+  &-Paper {
+    max-height: calc(100% - 150px);
+  }
+
+  &-Input{
+    width: 100%;
+  }
 }

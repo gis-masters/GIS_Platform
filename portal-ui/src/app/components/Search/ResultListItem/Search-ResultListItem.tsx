@@ -18,7 +18,6 @@ const cnSearch = cn('Search');
 
 export interface SearchResultListItemProps {
   geoObject: YaGeoObject;
-  onClick: () => void;
 }
 
 @observer
@@ -40,7 +39,7 @@ export class SearchResultListItem extends Component<SearchResultListItemProps> {
 
   @boundMethod
   private clickHandler() {
-    this.props.onClick();
+    mapService.clearMarkers();
 
     const { pos } = this.props.geoObject.Point;
     const posSplited = pos.split(' ');

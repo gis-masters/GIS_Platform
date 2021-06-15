@@ -426,8 +426,8 @@ class MapService {
     }
   }
 
-  fitToBbox(bbox: Extent, padding: [number, number, number, number]) {
-    this.map.getView().fit(bbox, { padding }); // constrainResolution Ломает view на слоях с геометрией Point
+  fitToBbox(bbox: Extent, padding: [number, number, number, number], minResolution?: number) {
+    this.map.getView().fit(bbox, { padding, minResolution }); // constrainResolution Ломает view на слоях с геометрией Point
   }
 
   getResolution() {
