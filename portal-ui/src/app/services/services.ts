@@ -17,21 +17,21 @@ class Services implements ServicesList {
 
   provided: Promise<void>;
 
-  private onfullfilled: () => void;
+  private onFulfilled: () => void;
 
-  constructor () {
-    this.provided = new Promise(onfullfilled => {
-      this.onfullfilled = onfullfilled;
+  constructor() {
+    this.provided = new Promise(onFulfilled => {
+      this.onFulfilled = onFulfilled;
     });
   }
 
-  provide (servicesList: ServicesList) {
+  provide(servicesList: ServicesList) {
     this.route = servicesList.route;
     this.router = servicesList.router;
     this.ngZone = servicesList.ngZone;
     this.logger = servicesList.logger;
 
-    this.onfullfilled();
+    this.onFulfilled();
   }
 }
 

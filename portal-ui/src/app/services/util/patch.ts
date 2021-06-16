@@ -1,4 +1,5 @@
 import { action } from 'mobx';
+import { isEqual } from 'lodash';
 
 export const patch: <T>(obj: T, patch: Partial<T>) => void = action((obj, patch) => {
   Object.assign(obj, patch);
@@ -12,7 +13,7 @@ export function getPatch<T>(
   const patch: Partial<T> = {};
 
   fields.forEach(key => {
-    if (objNew[key] !== objPrimal[key]) {
+    if (!isEqual(objNew[key], objPrimal[key])) {
       patch[key] = objNew[key];
       if (patch[key] === undefined) {
         patch[key] = null;

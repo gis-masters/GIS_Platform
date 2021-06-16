@@ -9,29 +9,16 @@ interface PageFormat {
 
 export type Orientation = 'p' | 'l';
 
+export const orientations: { title: string; value: Orientation }[] = [
+  { title: 'Ландшафтная', value: 'l' },
+  { title: 'Портретная', value: 'p' }
+];
+
 export const resolutions = [72, 150, 300];
 
 export const scales = [500000, 200000, 100000, 50000, 25000, 10000, 5000, 2000, 1000, 500];
 
 export const pageFormats: PageFormat[] = [
-  // {
-  //   id: 'a0',
-  //   name: 'A0',
-  //   width: 1189,
-  //   height: 841
-  // },
-  // {
-  //   id: 'a1',
-  //   name: 'A1',
-  //   width: 841,
-  //   height: 594
-  // },
-  // {
-  //   id: 'a2',
-  //   name: 'A2',
-  //   width: 594,
-  //   height: 420
-  // },
   {
     id: 'a3',
     name: 'A3',
@@ -53,7 +40,7 @@ export const pageFormats: PageFormat[] = [
 ];
 
 export interface PrintSettings {
-  pageFormat: PageFormat;
+  pageFormatId: string;
   resolution: number;
   scale: number;
   orientation: Orientation;
@@ -64,10 +51,13 @@ export interface PrintSettings {
     bottom: number;
     left: number;
   };
+  windRose: boolean;
+  border: boolean;
+  date: boolean;
 }
 
 const defaultPrintSettings: PrintSettings = {
-  pageFormat: pageFormats[1],
+  pageFormatId: pageFormats[1].id,
   resolution: resolutions[1],
   scale: scales[7],
   orientation: 'l',
@@ -77,11 +67,14 @@ const defaultPrintSettings: PrintSettings = {
     right: 10,
     bottom: 10,
     left: 10
-  }
+  },
+  windRose: true,
+  border: true,
+  date: true
 };
 
 class PrintSettingsStore implements PrintSettings {
-  @observable pageFormat: PageFormat;
+  @observable pageFormatId: string;
   @observable resolution: number;
   @observable scale: number;
   @observable orientation: Orientation = 'l';
@@ -92,6 +85,10 @@ class PrintSettingsStore implements PrintSettings {
     bottom: number;
     left: number;
   };
+  @observable windRose: boolean;
+  @observable border: boolean;
+  @observable date: boolean;
+  @observable rotation = 0;
 
   private static _instance: PrintSettingsStore;
 
@@ -111,7 +108,12 @@ class PrintSettingsStore implements PrintSettings {
   }
 
   private constructor() {
-    Object.assign(this, defaultPrintSettings);
+    this.setValues(defaultPrintSettings);
+  }
+
+  @action
+  setValues(values: Partial<PrintSettings>) {
+    Object.assign(this, values);
   }
 
   @computed
@@ -125,14 +127,24 @@ class PrintSettingsStore implements PrintSettings {
     }
   }
 
+  @computed
+  get pageFormat(): PageFormat {
+    return pageFormats.find(({ id }) => id === this.pageFormatId);
+  }
+
   @action
-  setPageFormat(formatId: string) {
-    this.pageFormat = pageFormats.find(({ id }) => id === formatId);
+  setPageFormatId(formatId: string) {
+    this.pageFormatId = formatId;
   }
 
   @action
   setPrintingStatus(printingInProcess: boolean) {
     this.printingInProcess = printingInProcess;
+  }
+
+  @action
+  setRotation(angle: number) {
+    this.rotation = angle;
   }
 }
 

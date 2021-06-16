@@ -1,10 +1,16 @@
+import { createElement } from 'react';
+import { render, unmountComponentAtNode } from 'react-dom';
+import domToImage from 'dom-to-image';
 import jsPDF from 'jspdf';
+import moment from 'moment';
 import { getPointResolution } from 'ol/proj';
 
 import { printSettings } from '../../stores/PrintSettings.store';
 import { mapService } from './map.service';
+import { PrintDialogDate } from '../../components/PrintDialog/Date/PrintDialog-Date';
 
 const BASE_SCALE_LINE_DPI = 150;
+export const BORDER_WIDTH_MM = 0.4;
 
 export async function printMap() {
   const { pageWidth, pageHeight, pageFormat, margin } = printSettings;
@@ -45,7 +51,7 @@ export async function getMapImage(
 
   printSettings.setPrintingStatus(true);
 
-  const imagePromise = new Promise<string>(resolve => {
+  const imagePromise = new Promise<string>(totalResolve => {
     map.once('rendercomplete', async () => {
       const mapCanvas = document.createElement('canvas');
       mapCanvas.width = width;
@@ -71,27 +77,105 @@ export async function getMapImage(
         }
       });
 
+      const imagesPromises: Promise<void>[] = [];
+      const designationsResize = resolution / BASE_SCALE_LINE_DPI;
+
+      CanvasRenderingContext2D.prototype.resetTransform.apply(mapContext);
+
       if (withDesignations) {
-        const scaleLineImg = new Image();
-        scaleLineImg.src = getScaleLineImageSrc();
-        const scaleResize = resolution / BASE_SCALE_LINE_DPI;
-        scaleLineImg.onload = () => {
-          mapContext.drawImage(
-            scaleLineImg,
-            0,
-            0,
-            400 * scaleResize,
-            50 * scaleResize,
-            19 * scaleResize,
-            height - 68 * scaleResize,
-            400 * scaleResize,
-            50 * scaleResize
-          );
-          resolve(mapCanvas.toDataURL('image/jpeg'));
-        };
-      } else {
-        resolve(mapCanvas.toDataURL('image/jpeg'));
+        imagesPromises.push(
+          new Promise(resolve => {
+            const scaleLineImg = new Image();
+            scaleLineImg.src = getScaleLineImageSrc();
+            scaleLineImg.onload = () => {
+              mapContext.drawImage(
+                scaleLineImg,
+                0,
+                0,
+                400 * designationsResize,
+                50 * designationsResize,
+                19 * designationsResize,
+                height - 68 * designationsResize,
+                400 * designationsResize,
+                50 * designationsResize
+              );
+
+              resolve();
+            };
+          })
+        );
       }
+
+      if (withDesignations && printSettings.windRose) {
+        imagesPromises.push(
+          new Promise(resolve => {
+            const roseImg = new Image();
+            roseImg.src = getWindRoseImageSrc();
+            roseImg.onload = () => {
+              const size = 150 * designationsResize;
+              const roseCanvas = document.createElement('canvas');
+              roseCanvas.width = size;
+              roseCanvas.height = size;
+              const roseContext = roseCanvas.getContext('2d');
+              roseContext.save();
+              roseContext.translate(size / 2, size / 2);
+              roseContext.rotate(printSettings.rotation);
+              roseContext.translate(-size / 2, -size / 2);
+              roseContext.drawImage(roseImg, 0, 0, size, size, 0, 0, size, size);
+              roseContext.restore();
+
+              mapContext.drawImage(
+                roseCanvas,
+                0,
+                0,
+                size,
+                size,
+                15 * designationsResize,
+                15 * designationsResize,
+                size,
+                size
+              );
+
+              resolve();
+            };
+          })
+        );
+      }
+
+      if (withDesignations && printSettings.date) {
+        imagesPromises.push(
+          new Promise(async resolve => {
+            const dateImg = new Image();
+            dateImg.src = await getDateImageSrc();
+            dateImg.onload = () => {
+              mapContext.drawImage(
+                dateImg,
+                0,
+                0,
+                dateImg.width,
+                dateImg.height,
+                width / 2 - dateImg.width / 2,
+                height - (dateImg.height + 15 * designationsResize),
+                dateImg.width,
+                dateImg.height
+              );
+
+              resolve();
+            };
+          })
+        );
+      }
+
+      await Promise.all(imagesPromises);
+
+      if (withDesignations && printSettings.border) {
+        const lineWidth = Math.round((BORDER_WIDTH_MM * resolution) / 25.4);
+        mapContext.lineWidth = lineWidth;
+        mapContext.strokeStyle = 'f00000';
+        mapContext.strokeRect(lineWidth / 2, lineWidth / 2, width - lineWidth, height - lineWidth);
+      }
+
+      totalResolve(mapCanvas.toDataURL('image/jpeg'));
 
       // Reset original map size
       scaleLine.setDpi(undefined);
@@ -120,4 +204,24 @@ export async function getMapImage(
 
 export function getScaleLineImageSrc(resolution?: number): string {
   return `/assets/images/scale${printSettings.scale}x${resolution || printSettings.resolution}.png`;
+}
+
+export function getWindRoseImageSrc(resolution?: number): string {
+  return `/assets/images/rose${resolution || printSettings.resolution}.png`;
+}
+
+export async function getDateImageSrc(resolution?: number): Promise<string> {
+  moment.locale('ru');
+  const el = document.createElement('div');
+  document.body.appendChild(el);
+  const reactElement = createElement(PrintDialogDate, {
+    forPrint: true,
+    resolution: resolution || printSettings.resolution
+  });
+  render(reactElement, el);
+  const src = await domToImage.toPng(el.childNodes[0]);
+  unmountComponentAtNode(el);
+  document.body.removeChild(el);
+
+  return src;
 }

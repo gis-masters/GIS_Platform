@@ -42,14 +42,14 @@ export class SearchResultListItem extends Component<SearchResultListItemProps> {
     mapService.clearMarkers();
 
     const { pos } = this.props.geoObject.Point;
-    const posSplited = pos.split(' ');
+    const posSplit = pos.split(' ');
     const { lowerCorner, upperCorner } = this.props.geoObject.boundedBy.Envelope;
-    const lowerSplited = lowerCorner.split(' ');
-    const upperSplited = upperCorner.split(' ');
+    const lowerSplit = lowerCorner.split(' ');
+    const upperSplit = upperCorner.split(' ');
 
-    this.drawMarker([Number(posSplited[0]), Number(posSplited[1])]);
+    this.drawMarker([Number(posSplit[0]), Number(posSplit[1])]);
     this.fitToBbox(
-      [Number(lowerSplited[0]), Number(lowerSplited[1]), Number(upperSplited[0]), Number(upperSplited[1])],
+      [Number(lowerSplit[0]), Number(lowerSplit[1]), Number(upperSplit[0]), Number(upperSplit[1])],
       [0, 0, 0, 0]
     );
   }

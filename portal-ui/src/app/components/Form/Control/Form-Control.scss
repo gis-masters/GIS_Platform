@@ -2,4 +2,11 @@
   align-self: center;
 
   width: 62%;
+
+  &_inSet {
+    flex-grow: 1;
+    flex-shrink: 1;
+
+    width: auto;
+  }
 }

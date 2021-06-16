@@ -1,0 +1,48 @@
+.PrintDialog-Preview {
+  margin-bottom: 14px;
+  padding-top: calc(
+  var(--PrintDialogPreviewSizeFactor) *
+  calc(var(--PrintDialogPreviewMarginTop) * var(--PrintDialogPreviewFormatFactor))
+  );
+  padding-right: calc(
+  var(--PrintDialogPreviewSizeFactor) *
+  calc(var(--PrintDialogPreviewMarginRight) * var(--PrintDialogPreviewFormatFactor))
+  );
+  padding-bottom: calc(
+  var(--PrintDialogPreviewSizeFactor) *
+  calc(var(--PrintDialogPreviewMarginBottom) * var(--PrintDialogPreviewFormatFactor))
+  );
+  padding-left: calc(
+  var(--PrintDialogPreviewSizeFactor) *
+  calc(var(--PrintDialogPreviewMarginLeft) * var(--PrintDialogPreviewFormatFactor))
+  );
+
+  --PrintDialogPreviewSizeFactor: 1.8;
+  --PrintDialogPreviewControlsFactor: calc(calc(var(--PrintDialogPreviewFormatFactor) + 2px) / 3);
+
+  &_orientation {
+    &_l {
+      width: calc(var(--PrintDialogPreviewSizeFactor) * 297px);
+      height: calc(var(--PrintDialogPreviewSizeFactor) * 210px);
+    }
+
+    &_p {
+      width: calc(var(--PrintDialogPreviewSizeFactor) * 210px);
+      height: calc(var(--PrintDialogPreviewSizeFactor) * 297px);
+    }
+  }
+
+  &_pageFormat {
+    &_a3 {
+      --PrintDialogPreviewFormatFactor: 0.5px;
+    }
+
+    &_a4 {
+      --PrintDialogPreviewFormatFactor: 1px;
+    }
+
+    &_a5 {
+      --PrintDialogPreviewFormatFactor: 2px;
+    }
+  }
+}

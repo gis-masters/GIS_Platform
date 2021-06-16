@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ComponentType, FC } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
@@ -14,6 +14,8 @@ export interface FormControlProps<T = unknown> extends IClassNameProps {
   property?: PropertySchema;
   fieldValue?: T;
   onChange?: ({ value: T, propertyName: string }) => void;
+  FormControl?: ComponentType<FormControlProps>;
+  inSet?: boolean;
 }
 
 export const FormControl: FC<FormControlProps> = ({ children, className }) => (

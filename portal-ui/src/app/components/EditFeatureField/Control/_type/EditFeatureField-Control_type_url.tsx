@@ -85,8 +85,8 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
     if (!this.content && !this.fetching) {
       this.setFetching(true);
       try {
-        const responce = await fetch(this.value.url);
-        const content = await responce.text();
+        const response = await fetch(this.value.url);
+        const content = await response.text();
         this.setContent(content);
       } catch (e) {
         this.setContent('Ошибка!');

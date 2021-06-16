@@ -13,14 +13,16 @@ export enum ValueType {
   DATETIME = 'DATETIME',
   LOOKUP = 'LOOKUP',
   UUID = 'UUID',
-  BINARY = 'BINARY'
+  BINARY = 'BINARY',
+  SET = 'SET', // пока что frontend only
+  CHECKBOX = 'CHECKBOX' // пока что frontend only
 }
 
-export interface FeatureDescription {
+export interface FeatureDescription<T = Record<string, unknown>> {
   name: string;
   title: string;
   description: string;
-  properties: PropertySchema[];
+  properties: PropertySchema<T>[];
   tableName: string;
   geometryType: SupportedGeometryType;
   customRuleFunction?: any;
@@ -38,38 +40,52 @@ export interface ContentType {
   attributes: PropertySchema[];
 }
 
-export type PropertyEnumerations = { value: string; title: string }[];
+export type PropertyEnumerations = { title: string; value: string | number }[];
 
-export interface PropertySchema {
-  name: string;
+export interface PropertySchema<T = Record<string, unknown>> {
+  name: keyof T;
   title: string;
-  description?: string;
   valueType: ValueType;
-
+  description?: string;
   required?: boolean;
-  mustBeEmpty?: boolean;
   hidden?: boolean;
-  isMultiple?: boolean;
-
+  mustBeEmpty?: boolean;
+  updateability?: Updateability;
   objectIdentityOnUi?: boolean;
 
-  updateability?: Updateability;
-  choice?: unknown;
-  foreignKeyType?: string;
+  // INT DOUBLE
+  totalDigits?: number;
+  minInclusive?: number;
+  maxInclusive?: number;
+  measureUnit?: string;
 
+  // DOUBLE
+  fractionDigits?: number;
+
+  // STRING TEXT
   length?: number;
   minLength?: number;
   maxLength?: number;
   pattern?: string;
   patternDescription?: string;
-  minInclusive?: number;
-  maxInclusive?: number;
-  totalDigits?: number;
-  fractionDigits?: number;
-  allowedValues?: string[];
+
+  // CHOICE
+  isMultiple?: boolean;
   enumerations?: PropertyEnumerations;
+  foreignKeyType?: string;
+
+  // DATETIME
   dateFormat?: string;
+
+  // URL
   displayMode?: 'in_popup';
+
+  // SET
+  fieldsSet?: PropertySchema[];
+
+  // хз
+  choice?: unknown;
+  allowedValues?: string[];
   resourcePath?: string;
 }
 
