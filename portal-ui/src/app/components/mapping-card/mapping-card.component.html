@@ -1,25 +1,44 @@
 <div *ngIf="!importLayer" class="mapping-card-content">
   <h4 class="text-center">Шаг сопоставления данных</h4>
-  <br><br>
+  <br /><br />
   <div *ngIf="metrics">
-    <h6 class="short-info">Всего импортируется <span class="allCounter">{{metrics.all}}</span> слоя(ёв)</h6>
-    <h6 class="short-info">Автоматически было сопоставлено: <span class="mappedCounter">{{metrics.mapped}}</span></h6>
-    <h6 class="short-info">Не сопоставлено: <span class="notMappedCounter">{{metrics.notMapped}}</span></h6>
+    <h6 class="short-info">
+      Всего импортируется <span class="allCounter">{{ metrics.all }}</span> слоя(ёв)
+    </h6>
+    <h6 class="short-info">
+      Автоматически было сопоставлено: <span class="mappedCounter">{{ metrics.mapped }}</span>
+    </h6>
+    <h6 class="short-info">
+      Не сопоставлено: <span class="notMappedCounter">{{ metrics.notMapped }}</span>
+    </h6>
   </div>
 </div>
 
 <div *ngIf="!!importLayer">
   <div class="row m-0 py-2">
     <div class="col-4 p-0 align-self-center"><h6>Сопоставьте слой</h6></div>
-    <mat-form-field class="col-8 p-0">
-      <mat-select placeholder="Целевой слой" [disabled]="featureDescriptions.length === 0"
-                  [(value)]="selectedFeatureType"
-                  (selectionChange)="featureTypeChanged($event.value)">
-        <mat-option *ngFor="let fDescription of featureDescriptions" [value]="fDescription.name">
-          <span style="font-size: smaller"
-                *ngIf="fDescription.tableName">({{fDescription.tableName}})</span> {{fDescription.title}}
+    <mat-form-field class="col-8 p-0" ng-app="featureSearch">
+      <input
+        matInput
+        type="text"
+        placeholder="Целевой слой"
+        [(value)]="selectedFeatureType"
+        (input)="onSearchChange($event.target.value)"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete
+        [disabled]="searchingFeatureDescriptions.length === 0"
+        #auto="matAutocomplete"
+        (optionSelected)="featureTypeChanged($event.option.value)"
+      >
+        <mat-option
+          *ngFor="let fDescription of searchingFeatureDescriptions"
+          [value]="{ name: fDescription.name, title: fDescription.title }"
+        >
+          <span style="font-size: smaller" *ngIf="fDescription.tableName">({{ fDescription.tableName }})</span>
+          {{ fDescription.title }}
         </mat-option>
-      </mat-select>
+      </mat-autocomplete>
     </mat-form-field>
   </div>
 
@@ -32,9 +51,11 @@
 
     <div class="container">
       <div *ngFor="let importedLayerAttribute of importLayer.attributes" style="margin-bottom: 5px">
-        <crg-mapping-pair [importedLayerAttribute]="importedLayerAttribute"
-                          [layerName]="importLayer.nativeName"
-                          [propertySchemas]="propertySchemas"></crg-mapping-pair>
+        <crg-mapping-pair
+          [importedLayerAttribute]="importedLayerAttribute"
+          [layerName]="importLayer.nativeName"
+          [propertySchemas]="propertySchemas"
+        ></crg-mapping-pair>
       </div>
     </div>
   </div>

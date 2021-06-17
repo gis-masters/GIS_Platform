@@ -17,10 +17,12 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   @Input() schemas: FeatureDescription[];
 
   featureDescriptions: FeatureDescription[] = [];
+  searchingFeatureDescriptions: FeatureDescription[] = [];
 
   propertySchemas: PropertySchema[] = [];
 
   selectedFeatureType: string;
+  searchWord: string;
 
   metrics: InputDataMetrics;
 
@@ -36,17 +38,16 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.selectedFeatureType = '';
     const simpleChange = changes.importLayer;
     if (simpleChange && !simpleChange.isFirstChange()) {
       if (simpleChange.currentValue) {
         const newLayer = simpleChange.currentValue as ImportLayerItem;
-
-        this.selectedFeatureType = undefined;
-
         const filteredByGeometrySchemas = FeatureUtil.filterByGeometry(this.schemas, newLayer);
         const sortedByBestMatching = FeatureUtil.sortByBestCompatibility(filteredByGeometrySchemas, newLayer);
 
         this.featureDescriptions = [NOT_IMPORT_LAYER, IMPORT_LAYER_AS_IS, ...sortedByBestMatching];
+        this.searchingFeatureDescriptions = [NOT_IMPORT_LAYER, IMPORT_LAYER_AS_IS, ...sortedByBestMatching];
 
         const comparableLayersPair = this.importData.findCompatiblePair(newLayer.nativeName);
         if (comparableLayersPair.isDisabled) {
@@ -75,17 +76,32 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  featureTypeChanged(selectedTableName: string) {
-    if (selectedTableName === IMPORT_LAYER_AS_IS.name) {
+  featureTypeChanged(selectedTable: { name: string; title: string }): void {
+    if (selectedTable.name === IMPORT_LAYER_AS_IS.name) {
+      this.selectedFeatureType = selectedTable.name;
       this.importData.setFeatureSchema(this.importLayer.nativeName, IMPORT_LAYER_AS_IS);
-    } else if (selectedTableName === NOT_IMPORT_LAYER.name) {
+    } else if (selectedTable.name === NOT_IMPORT_LAYER.name) {
+      this.selectedFeatureType = selectedTable.name;
       this.importData.deleteMapping(this.importLayer.nativeName);
     } else {
-      const featureDescription = this.findDescription(selectedTableName);
+      this.selectedFeatureType = '(' + selectedTable.name + ')' + ' ' + selectedTable.title;
+      const featureDescription = this.findDescription(selectedTable.name);
 
       this.importData.setFeatureSchema(this.importLayer.nativeName, featureDescription);
 
       this.propertySchemas = FeatureUtil.preparePropertySchema(featureDescription);
+    }
+  }
+
+  onSearchChange(searchValue: string): void {
+    this.searchingFeatureDescriptions = this.featureDescriptions.filter(
+      item => item.name.toLowerCase().indexOf(searchValue.toLowerCase()) + 1
+    );
+
+    if (!this.searchingFeatureDescriptions.length) {
+      this.searchingFeatureDescriptions = this.featureDescriptions.filter(
+        item => item.title.toLowerCase().indexOf(searchValue.toLowerCase()) + 1
+      );
     }
   }
 
