@@ -269,6 +269,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_audit_service
       SPRING_DATASOURCE_USERNAME: $CRG_USER
       SPRING_DATASOURCE_PASSWORD: $DB_PASS
+
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_audit_service
+      SPRING_FLYWAY_USER: $CRG_USER
+      SPRING_FLYWAY_PASSWORD: $DB_PASS
+
     ports:
       - 8086:8086
     volumes:
