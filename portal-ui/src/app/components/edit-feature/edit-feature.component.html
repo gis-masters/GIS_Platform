@@ -72,7 +72,7 @@
           *ngIf="editFeatureItem.property?.valueType?.includes('LOOKUP') && mode === 'single'"
         >
           <crg-edit-feature-field
-            type="lookup"
+            type="LOOKUP"
             [field]="editFeatureItem"
             [feature]="features[0]"
             [isNew]="isNew"
