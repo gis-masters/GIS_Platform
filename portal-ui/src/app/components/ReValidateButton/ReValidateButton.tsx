@@ -3,8 +3,11 @@ import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
 import { LoopOutlined, Loop } from '@material-ui/icons';
 import { IconButton, Tooltip } from '@material-ui/core';
+import { cn } from '@bem-react/classname';
 
 import { ValidateLayersDialog } from '../ValidateLayersDialog/ValidateLayersDialog';
+
+const cnReValidateButton = cn('ReValidateButton');
 
 @observer
 export class ReValidateButton extends Component {
@@ -14,7 +17,7 @@ export class ReValidateButton extends Component {
     return (
       <>
         <Tooltip title='Выполнить проверку данных'>
-          <IconButton onClick={this.openDialog} color='primary'>
+          <IconButton className={cnReValidateButton()} onClick={this.openDialog} color='primary'>
             {this.open ? <Loop /> : <LoopOutlined />}
           </IconButton>
         </Tooltip>

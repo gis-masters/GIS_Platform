@@ -30,7 +30,7 @@ export class BasemapsSelectItem extends Component<BasemapsSelectItemProps> {
   }
 
   render() {
-    const { thumbnailUrn, title } = this.props.basemap;
+    const { thumbnailUrn } = this.props.basemap;
 
     return (
       <MenuItem className={cnBasemapsSelectItem()} onClick={this.clickHandler}>
@@ -40,7 +40,7 @@ export class BasemapsSelectItem extends Component<BasemapsSelectItemProps> {
   }
 
   @boundMethod
-  private async clickHandler(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
+  private async clickHandler() {
     const { basemap, onClick } = this.props;
     onClick();
     await sleep(300);

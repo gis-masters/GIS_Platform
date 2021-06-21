@@ -36,7 +36,7 @@ export class Button extends Component<ButtonProps> {
 
     if (this.props.routerLink && !e.isDefaultPrevented()) {
       e.preventDefault();
-      this.navigate();
+      void this.navigate();
     }
   }
 
@@ -44,7 +44,7 @@ export class Button extends Component<ButtonProps> {
     await services.provided;
 
     services.ngZone.run(() => {
-      services.router.navigateByUrl(this.props.routerLink);
+      void services.router.navigateByUrl(this.props.routerLink);
     });
   }
 }

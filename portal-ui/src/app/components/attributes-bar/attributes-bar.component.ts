@@ -30,7 +30,7 @@ import { getProjection } from '../../services/geoserver/projections.service';
 import { fromMobx } from '../../services/util/fromMobx';
 
 export interface WfsFeatureView extends WfsFeature {
-  aliases?: {};
+  aliases?: Record<string, unknown>;
   updated?: string;
 }
 
@@ -41,8 +41,11 @@ export interface WfsFeatureView extends WfsFeature {
 })
 export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(DatatableComponent, { static: true }) attributeTable: DatatableComponent;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @ViewChild('filterTemplate', { static: true }) filterTemplate: TemplateRef<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @ViewChild('cellTemplate', { static: true }) cellTemplate: TemplateRef<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @ViewChild('customSelectAll', { static: true }) customSelectAll: TemplateRef<any>;
 
   layer?: CrgLayer;
@@ -80,7 +83,9 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  customRowIdentity = (row: WfsFeature) => row.id;
+  customRowIdentity(row: WfsFeature): string {
+    return row.id;
+  }
 
   constructor(private dialog: MatDialog, private logger: NGXLogger) {}
 
@@ -99,7 +104,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
           this.attributeTable.selected = [];
           mapService.clearDraft();
-          this.updateTable({ page: { pageSize: 25, offset: 0 } });
+          void this.updateTable({ page: { pageSize: 25, offset: 0 } });
           await this.checkPermissions();
         }
       });
@@ -109,26 +114,26 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     await projectsService.fetchCurrent();
 
     this.requestModel$.pipe(debounceTime(50), takeUntil(this.unsubscribe$)).subscribe((requestModel: CrgModels) => {
-      this.updateTable(requestModel);
+      void this.updateTable(requestModel);
     });
 
-    communicationService.featuresUpdated.on(() => {
+    communicationService.featuresUpdated.on(async () => {
       // TODO: Самый простой вариант с лишним запросом. Заменить на обновление данных без запроса.
       const lastRequest = this.requestModel$.getValue();
-      this.updateTable(lastRequest);
+      await this.updateTable(lastRequest);
     }, this);
 
     await this.checkPermissions();
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     mapService.clearDraft();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     communicationService.off(this);
   }
 
-  async updateTable(requestModel?: CrgModels) {
+  async updateTable(requestModel?: CrgModels): Promise<void> {
     this.loading = true;
     this.showPercent = false;
     const fCollection: WfsFeatureCollection = await getFeatures(
@@ -143,7 +148,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       if (this.isNeedPrepareColumn) {
         // TODO: новый запрос в пределах того же слоя не принесет новых колонок! Формировать колонки только
         //  при открытии или при переходе на новый слой
-        this.prepareColumns(fCollection.features[0]);
+        void this.prepareColumns(fCollection.features[0]);
         this.isNeedPrepareColumn = false;
       }
 
@@ -158,7 +163,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  showSelectedFeatures() {
+  showSelectedFeatures(): void {
     // Подсвечиваем выделенные если есть
     if (this.attributeTable.selected.length > 0) {
       mapService.highlightFeatures(this.attributeTable.selected, getProjection(this.layer.nativeCRS));
@@ -167,7 +172,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     window.dispatchEvent(new Event('resize'));
   }
 
-  setPage(pageInfo: Pageable) {
+  setPage(pageInfo: Pageable): void {
     this.pageInfo = pageInfo;
 
     const oldRequest = this.requestModel$.getValue();
@@ -176,7 +181,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.requestModel$.next(oldRequest);
   }
 
-  onSort(sortInfo: Sortable) {
+  onSort(sortInfo: Sortable): void {
     const oldRequest = this.requestModel$.getValue();
     oldRequest.page.offset = 0;
     oldRequest.sort = sortInfo;
@@ -184,7 +189,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.requestModel$.next(oldRequest);
   }
 
-  switchFilter() {
+  switchFilter(): void {
     this.enableFilter = !this.enableFilter;
 
     if (!this.enableFilter) {
@@ -211,12 +216,12 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  closeMe() {
+  closeMe(): void {
     mapService.clearDraft();
     sidebars.closeAttributes();
   }
 
-  onFilterChange(filterEvent: FilterEvent) {
+  onFilterChange(filterEvent: FilterEvent): void {
     const oldRequest = this.requestModel$.getValue();
     oldRequest.page.offset = 0;
 
@@ -235,10 +240,8 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
         }
       });
 
-      if (isNotExist) {
-        if (filterEvent.value.length > 0) {
-          oldFilter.push(filterEvent);
-        }
+      if (isNotExist && filterEvent.value.length > 0) {
+        oldFilter.push(filterEvent);
       }
     } else {
       oldRequest.filter = [filterEvent];
@@ -247,7 +250,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.requestModel$.next(oldRequest);
   }
 
-  onActivate(event: any) {
+  onActivate(event: { type: string; row: WfsFeature }): void {
     if (event.type === 'dblclick') {
       const feature: WfsFeature = event.row;
       if (feature.geometry) {
@@ -261,7 +264,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  async handleSelectAll() {
+  async handleSelectAll(): Promise<void> {
     if (this.features.length === 0) {
       return;
     }
@@ -289,13 +292,14 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  editFeatures() {
+  editFeatures(): void {
     const { selected } = this.attributeTable;
     if (this.checkSelectionEmptiness(selected)) {
       return;
     }
 
     // В таблице выводился нормальный id без префикса фичи. Теперь верну эту инфу назад.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const clonedFeatures: WfsFeature[] = cloneDeep(selected);
     clonedFeatures.forEach((feature: WfsFeature) => {
       feature.id = this.layer.tableName + '.' + feature.id;
@@ -307,7 +311,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     });
   }
 
-  async copyObjects() {
+  async copyObjects(): Promise<void> {
     const { selected } = this.attributeTable;
     if (this.checkSelectionEmptiness(selected)) {
       return;
@@ -324,7 +328,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  async moveObjects() {
+  async moveObjects(): Promise<void> {
     const { selected } = this.attributeTable;
     if (this.checkSelectionEmptiness(selected)) {
       return;
@@ -341,7 +345,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  deleteObjects() {
+  deleteObjects(): void {
     const { selected } = this.attributeTable;
     if (this.checkSelectionEmptiness(selected)) {
       return;
@@ -370,13 +374,14 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.deletingAllowed = await isFeaturesDeleteAllowed(dataset, tableName, schemaId);
   }
 
-  private checkSelectionEmptiness(selected: any[]) {
-    if (!selected.length) {
+  private checkSelectionEmptiness(selected: unknown[]) {
+    if (selected.length) {
       Toast.warn('Нет выделенных объектов');
+
       return true;
-    } else {
-      return false;
     }
+
+    return false;
   }
 
   private async getSuitableLayers(currentLayer: CrgLayer, layers: CrgLayer[]): Promise<CrgLayer[]> {
@@ -402,6 +407,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   private openEditDialog(title: string, layers: CrgLayer[]): Observable<CrgLayer> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.dialog
       .open(CopyFeaturesDialogComponent, {
         data: {
@@ -437,7 +443,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
           this.loading = false;
           Toast.info('Объекты скопированы');
           this.attributeTable.selected = [];
-          this.updateTable(this.requestModel$.getValue());
+          void this.updateTable(this.requestModel$.getValue());
           mapService.clearDraft();
         } else {
           this.loadPercent = percent > 100 ? 100 : percent;
@@ -450,6 +456,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     from(batchModel.batches)
       .pipe(
         concatMap(features => {
+          // eslint-disable-next-line etc/no-deprecated
           return combineLatest(
             of(features),
             transformFeature.insertFeatures(features, selectedLayer.tableName, this.layer.nativeCRS)
@@ -471,7 +478,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
           this.loading = false;
           Toast.info('Объекты перемещены');
 
-          this.updateTable(this.requestModel$.getValue());
+          void this.updateTable(this.requestModel$.getValue());
         } else {
           this.loadPercent = percent > 100 ? 100 : percent;
         }
@@ -482,6 +489,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     let i = 0;
     from(batchModel.batches)
       .pipe(
+        // eslint-disable-next-line sonarjs/no-identical-functions
         concatMap(features => {
           const featureIds = features.map(feature => feature.id);
 
@@ -499,7 +507,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
           mapService.clearDraft();
           mapService.refreshLayers();
 
-          this.updateTable(this.requestModel$.getValue());
+          void this.updateTable(this.requestModel$.getValue());
         } else {
           this.loadPercent = percent > 100 ? 100 : percent;
         }
@@ -579,9 +587,10 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  private fillAliases(properties: { [key: string]: any }): {} {
-    const resultObject: { [key: string]: any } = {};
+  private fillAliases(properties: Record<string, unknown>): Record<string, unknown> {
+    const resultObject: Record<string, unknown> = {};
 
+    // eslint-disable-next-line sonarjs/cognitive-complexity
     Object.keys(properties).forEach(property => {
       const simpleProperty = this.getSimpleProperty(property);
 
@@ -601,7 +610,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       } else if (simpleProperty.valueType === ValueType.DATETIME) {
         if (!simpleProperty.dateFormat) {
           if (properties[property]) {
-            resultObject[property] = new Date(properties[property]).toLocaleDateString();
+            resultObject[property] = new Date(String(properties[property])).toLocaleDateString();
           }
         } else if (properties[property]) {
           resultObject[property] = moment(properties[property]).locale('ru').format(simpleProperty.dateFormat);
@@ -610,14 +619,15 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
         resultObject[property] = properties[property];
       }
     });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 
     return resultObject;
   }
 
-  private getValueTitle(startValue: string, enumerations: PropertyEnumerations): string {
+  private getValueTitle(startValue: string | unknown, enumerations: PropertyEnumerations): string {
     return enumerations.reduce((acc, { value, title }) => {
       return String(startValue) === String(value) ? title : acc;
-    }, startValue);
+    }, String(startValue));
   }
 
   private definePropertySource(property: string) {
@@ -643,11 +653,12 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   private isSuitableLayersExist(suitableLayers: CrgLayer[]) {
-    if (!!suitableLayers.length) {
+    if (suitableLayers.length > 0) {
       return true;
-    } else {
-      Toast.warn('Нет подходящих слоев');
-      return false;
     }
+
+    Toast.warn('Нет подходящих слоев');
+
+    return false;
   }
 }

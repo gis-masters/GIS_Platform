@@ -89,8 +89,8 @@ export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
 
       Toast.info(`Успешно создан набор данных: \n"${this.newDatasetTitle}"`);
       this.props.onCreated();
-    } catch (err) {
-      Toast.error(`Произошла ошибка при создании набора данных`);
+    } catch {
+      Toast.error('Произошла ошибка при создании набора данных');
     } finally {
       this.clearState();
     }

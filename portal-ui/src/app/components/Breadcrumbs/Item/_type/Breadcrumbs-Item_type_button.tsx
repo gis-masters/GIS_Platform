@@ -22,7 +22,7 @@ class ContainerComponent extends Component<BreadcrumbsItemProps> {
   }
 
   @boundMethod
-  private handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  private handleClick() {
     const { payload, onClick } = this.props;
     if (onClick) {
       onClick(payload);

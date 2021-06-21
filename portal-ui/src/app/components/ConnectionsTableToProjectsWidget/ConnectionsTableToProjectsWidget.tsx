@@ -84,7 +84,7 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
     await this.fetchConnections();
   }
 
-  async createLayer(table: DataTable, dataset: Dataset, project: CrgProject) {
+  private async createLayer(table: DataTable, dataset: Dataset, project: CrgProject) {
     const dataStoreName = `scratch_database_${currentUser.orgId}`;
     const newLayer = {
       dataStoreName,

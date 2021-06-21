@@ -1,21 +1,25 @@
 .PrintDialog-Preview {
   margin-bottom: 14px;
-  padding-top: calc(
-  var(--PrintDialogPreviewSizeFactor) *
-  calc(var(--PrintDialogPreviewMarginTop) * var(--PrintDialogPreviewFormatFactor))
-  );
-  padding-right: calc(
-  var(--PrintDialogPreviewSizeFactor) *
-  calc(var(--PrintDialogPreviewMarginRight) * var(--PrintDialogPreviewFormatFactor))
-  );
-  padding-bottom: calc(
-  var(--PrintDialogPreviewSizeFactor) *
-  calc(var(--PrintDialogPreviewMarginBottom) * var(--PrintDialogPreviewFormatFactor))
-  );
-  padding-left: calc(
-  var(--PrintDialogPreviewSizeFactor) *
-  calc(var(--PrintDialogPreviewMarginLeft) * var(--PrintDialogPreviewFormatFactor))
-  );
+  padding-top:
+    calc(
+      var(--PrintDialogPreviewSizeFactor) *
+      calc(var(--PrintDialogPreviewMarginTop) * var(--PrintDialogPreviewFormatFactor))
+    );
+  padding-right:
+    calc(
+      var(--PrintDialogPreviewSizeFactor) *
+      calc(var(--PrintDialogPreviewMarginRight) * var(--PrintDialogPreviewFormatFactor))
+    );
+  padding-bottom:
+    calc(
+      var(--PrintDialogPreviewSizeFactor) *
+      calc(var(--PrintDialogPreviewMarginBottom) * var(--PrintDialogPreviewFormatFactor))
+    );
+  padding-left:
+    calc(
+      var(--PrintDialogPreviewSizeFactor) *
+      calc(var(--PrintDialogPreviewMarginLeft) * var(--PrintDialogPreviewFormatFactor))
+    );
 
   --PrintDialogPreviewSizeFactor: 1.8;
   --PrintDialogPreviewControlsFactor: calc(calc(var(--PrintDialogPreviewFormatFactor) + 2px) / 3);

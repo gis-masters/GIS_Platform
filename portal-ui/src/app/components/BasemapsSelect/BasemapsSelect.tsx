@@ -55,23 +55,20 @@ export class BasemapsSelect extends Component {
   @computed
   private get basemaps(): Basemap[] {
     const { basemaps, currentBasemap } = basemapsStore;
-    const basemapsWithCurrentLast = [...basemaps].sort(
-      (a, b) => Number(a.id === currentBasemap.id) - Number(b.id === currentBasemap.id)
-    );
 
-    return basemapsWithCurrentLast;
+    return [...basemaps].sort((a, b) => Number(a.id === currentBasemap.id) - Number(b.id === currentBasemap.id));
   }
 
   @action.bound
-  private handleBaseClick(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+  private handleBaseClick() {
     this.anchorEl = this.anchorEl ? null : this.ref.current;
-    this.doTooltips();
+    void this.doTooltips();
   }
 
   @action.bound
   private close() {
     this.anchorEl = null;
-    this.doTooltips();
+    void this.doTooltips();
   }
 
   @action

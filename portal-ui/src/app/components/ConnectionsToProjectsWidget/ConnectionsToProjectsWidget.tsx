@@ -139,7 +139,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
   }
 
   @boundMethod
-  handleOpen(item: ExplorerItemData<CrgProject>) {
+  private handleOpen(item: ExplorerItemData<CrgProject>) {
     if (item.type === ExplorerItemType.PROJECT) {
       this.handleSelect(item);
       this.submitProjectSelection();
@@ -147,7 +147,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
   }
 
   @boundMethod
-  private async submitProjectSelection() {
+  private submitProjectSelection() {
     const { onConnect } = this.props;
     this.closeSelectProjectDialog();
     onConnect(this.selectedProject);

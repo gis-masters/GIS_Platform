@@ -12,6 +12,6 @@ interface BasemapsSelectTooltipAnchorProps {
 
 export const BasemapsSelectTooltipAnchor: FC<BasemapsSelectTooltipAnchorProps> = ({ hidden }) => (
   <Tooltip title='Переключить карту' placement='top' hidden={hidden}>
-    <div className={cnBasemapsSelectTooltipAnchor()}></div>
+    <div className={cnBasemapsSelectTooltipAnchor()} />
   </Tooltip>
 );

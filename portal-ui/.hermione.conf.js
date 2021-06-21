@@ -37,12 +37,12 @@ const config = {
   },
 
   plugins: {
-    // 'html-reporter/hermione': {
-    //     enabled: true,
-    //     path: 'my/hermione-reports',
-    //     defaultView: 'all',
-    //     baseHost: 'http://localhost:3000'
-    // }
+    'html-reporter/hermione': {
+      enabled: true,
+      path: 'my/hermione-reports',
+      defaultView: 'all',
+      baseHost: 'http://localhost:3000'
+    }
   },
 
   prepareBrowser: function (browser) {

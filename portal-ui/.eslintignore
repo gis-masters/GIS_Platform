@@ -1,0 +1,7 @@
+.eslintrc.js
+
+dist
+my
+node_modules
+
+*.d.ts

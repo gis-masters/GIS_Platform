@@ -1,10 +1,10 @@
 .Layer {
-  --LayerCardBackground: rgba(0,0,0,0.17);
+  --LayerCardBackground: rgba(0, 0, 0, 0.17);
   --LayerHovered: 0;
   --LayerEditMode: 0;
 
   &_visible {
-    --LayerCardBackground: rgba(0,0,0,0.1);
+    --LayerCardBackground: rgba(0, 0, 0, 0.1);
   }
 
   &:hover {

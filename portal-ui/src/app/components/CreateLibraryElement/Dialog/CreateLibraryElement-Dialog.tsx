@@ -37,7 +37,7 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
     return (
       <>
         {schema && (
-          <Dialog disableBackdropClick={true} maxWidth={'md'} open={open} onClose={this.closeDialog}>
+          <Dialog disableBackdropClick maxWidth={'md'} open={open} onClose={this.closeDialog}>
             <DialogTitle>Создание нового элемента</DialogTitle>
 
             <DialogContent className={cnCreateLibraryElementDialog()}>
@@ -68,15 +68,23 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
   private get initialFormValue(): LibraryRecordRaw {
     const initialFormValue = {};
     (this.props.schema?.properties || []).forEach(property => {
-      if (property.valueType === ValueType.STRING) {
-        initialFormValue[property.name] = '';
-      } else if (property.valueType === ValueType.INT) {
-        initialFormValue[property.name] = '';
-      } else if (property.valueType === ValueType.CHOICE) {
-        initialFormValue[property.name] = property.enumerations[0].value;
-      } else {
-        initialFormValue[property.name] = '';
-        services.logger.warn('Unsupported valueType: ' + property.valueType);
+      switch (property.valueType) {
+        case ValueType.STRING: {
+          initialFormValue[property.name] = '';
+          break;
+        }
+        case ValueType.INT: {
+          initialFormValue[property.name] = '';
+          break;
+        }
+        case ValueType.CHOICE: {
+          initialFormValue[property.name] = property.enumerations[0].value;
+          break;
+        }
+        default: {
+          initialFormValue[property.name] = '';
+          services.logger.warn('Unsupported valueType: ' + property.valueType);
+        }
       }
     });
 

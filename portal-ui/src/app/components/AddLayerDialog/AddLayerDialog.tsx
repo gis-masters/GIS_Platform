@@ -30,7 +30,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   @observable private dataset?: Dataset;
   @observable private dataTable?: DataTable;
   @observable private usedDataTables: DataTable[] = [];
-  @observable private usedDataTablesRequests?: Promise<DataTable[]>;
+  @observable private usedDataTablesRequest?: Promise<DataTable[]>;
 
   async componentDidMount() {
     await this.checkUsedTables();
@@ -137,9 +137,9 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   }
 
   private async checkUsedTables(): Promise<DataTable> {
-    if (this.usedDataTablesRequests) {
-      await this.usedDataTablesRequests;
-      this.usedDataTablesRequests = null;
+    if (this.usedDataTablesRequest) {
+      await this.usedDataTablesRequest;
+      this.usedDataTablesRequest = null;
       await this.checkUsedTables();
 
       return;
@@ -149,7 +149,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
       currentProject.layers.some(layer => table.dataset === layer.dataset && table.identifier === layer.tableName)
     );
 
-    this.usedDataTablesRequests = Promise.all(
+    this.usedDataTablesRequest = Promise.all(
       currentProject.vectorLayers
         .filter(
           layer =>
@@ -170,10 +170,10 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         })
     );
 
-    const newUsedDataTables = await this.usedDataTablesRequests;
-    this.usedDataTablesRequests = null;
+    const newUsedDataTables = await this.usedDataTablesRequest;
+    this.usedDataTablesRequest = null;
 
-    if (alreadyUsedDataTables.length !== this.usedDataTables.length || newUsedDataTables.length) {
+    if (alreadyUsedDataTables.length !== this.usedDataTables.length || newUsedDataTables.length > 0) {
       this.setUsedDataTables([...alreadyUsedDataTables, ...newUsedDataTables]);
     }
   }

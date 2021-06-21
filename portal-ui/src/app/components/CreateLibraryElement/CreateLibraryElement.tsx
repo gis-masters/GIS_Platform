@@ -18,6 +18,7 @@ import { ExplorerStore } from '../Explorer/Explorer.store';
 import { CreateLibraryElementDialog } from './Dialog/CreateLibraryElement-Dialog';
 import { CreateLibraryElementMenuItem } from './MenuItem/CreateLibraryElement-MenuItem';
 import { CreateLibraryElementFolderButton } from './FolderButton/CreateLibraryElement-FolderButton';
+import { Dataset } from '../../services/data.service';
 
 export interface CreateLibraryElementsProps {
   schemaId: string;
@@ -136,9 +137,9 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
       await docLibraryService.createRecord(this.schema.tableName, formData);
 
       communicationService.libraryItemsUpdated.emit();
-    } catch (e) {
+    } catch (error) {
       Toast.error('Ошибка сохранения записи');
-      services.logger.error('Ошибка сохранения записи: ', e.message);
+      services.logger.error('Ошибка сохранения записи: ', error);
     }
 
     this.closeDialog();
@@ -154,24 +155,31 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     };
   }
 
-  private collectHumanPath() {
+  private collectHumanPath(): string {
     const { path } = this.props.store;
+
     return path.slice(1, -1).reduce((acc, item) => {
-      if (item.payload) {
-        return acc + ' -> ' + item.payload['title'];
-      } else {
-        return acc;
+      if ([ExplorerItemType.DATASET, ExplorerItemType.DOCUMENT].includes(item.type)) {
+        // eslint-disable-next-line total-functions/no-unsafe-type-assertion
+        const payload = item.payload as Dataset | LibraryRecord;
+
+        return `${acc} -> ${String(payload.title)}`;
       }
+
+      return acc;
     }, '');
   }
 
-  private inheritOktmo() {
+  private inheritOktmo(): string {
     const { path } = this.props.store;
     const pathElement = path[path.length - 2];
-    if (!!pathElement && pathElement.type === ExplorerItemType.FOLDER) {
-      return pathElement.payload['oktmo'];
-    } else {
-      return '';
+    if (pathElement && pathElement.type === ExplorerItemType.FOLDER) {
+      // FIXME
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return pathElement.payload.oktmo; // eslint-disable-line @typescript-eslint/no-unsafe-return
     }
+
+    return '';
   }
 }
