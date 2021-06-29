@@ -6,7 +6,8 @@
   width: var(--PrintDialogScaleWidth);
   height: calc(var(--PrintDialogScaleWidth) / 8);
 
-  --PrintDialogScaleWidth: calc(
-  var(--PrintDialogPreviewSizeFactor) * calc(69 * var(--PrintDialogPreviewControlsFactor))
-  );
+  --PrintDialogScaleWidth:
+    calc(
+      var(--PrintDialogPreviewSizeFactor) * calc(69 * var(--PrintDialogPreviewControlsFactor))
+    );
 }

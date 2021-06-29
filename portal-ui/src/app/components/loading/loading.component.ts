@@ -9,8 +9,7 @@ export class LoadingComponent {
   @Input() percents: string;
   @Input() noBackdrop: boolean;
 
-  get hasPercents (): boolean {
-    return (typeof this.percents === 'string' && Boolean(this.percents)) ||
-           (typeof this.percents === 'number');
+  get hasPercents(): boolean {
+    return (typeof this.percents === 'string' && Boolean(this.percents)) || typeof this.percents === 'number';
   }
 }

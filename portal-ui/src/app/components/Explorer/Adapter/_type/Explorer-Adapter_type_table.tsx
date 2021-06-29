@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { pluralize } from 'numeralize-ru';
 
@@ -20,15 +20,15 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeTable {
-  static getId(item: ExplorerItemData<DataTable>) {
+  static getId(item: ExplorerItemData<DataTable>): string {
     return `${item.type}:${item.payload.dataset}:${item.payload.identifier}`;
   }
 
-  static getTitle(item: ExplorerItemData<DataTable>) {
+  static getTitle(item: ExplorerItemData<DataTable>): string {
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<DataTable>) {
+  static getDescription(item: ExplorerItemData<DataTable>): ReactNode {
     const { details, createdAt } = item.payload;
     moment.locale('ru');
 
@@ -46,15 +46,15 @@ export class ExplorerAdapterTypeTable {
     );
   }
 
-  static getMeta(item: ExplorerItemData<DataTable>) {
+  static getMeta(item: ExplorerItemData<DataTable>): string {
     return item.payload.identifier;
   }
 
-  static getIcon(item: ExplorerItemData<DataTable>) {
+  static getIcon(item: ExplorerItemData<DataTable>): ReactNode {
     return <LayerIcon type='vector' schemaId={item.payload.schemaId} colorized />;
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return false;
   }
 
@@ -76,11 +76,11 @@ export class ExplorerAdapterTypeTable {
     };
   }
 
-  static async deleteItem(item: ExplorerItemData<DataTable>) {
+  static async deleteItem(item: ExplorerItemData<DataTable>): Promise<void> {
     await deleteDataTable(item.payload.dataset, item.payload.identifier);
   }
 
-  static getRefreshEmitters(item: ExplorerItemData): Emitter[] {
+  static getRefreshEmitters(): Emitter[] {
     return [communicationService.dataTablesUpdated];
   }
 }

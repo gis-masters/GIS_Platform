@@ -41,7 +41,7 @@ export class MapComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     await fetchBasemaps();
 
-    await mapService.createMap();
+    mapService.createMap();
 
     // Позиционируемся по BBOX проекта
     if (currentProject.bbox) {
@@ -58,7 +58,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
           const layers = batch.map(item => item.payload).reverse();
 
-          mapService.addLayers(
+          void mapService.addLayers(
             layers.filter(l => l.type !== CrgLayerType.EXTERNAL),
             visibleBatches.length - i,
             actualTransparency / 100
@@ -137,6 +137,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     if (!visibleLayers.length) {
       this.logger.debug('No visible layers');
+
       return;
     }
 
@@ -164,7 +165,7 @@ export class MapComponent implements OnInit, OnDestroy {
       })
     );
 
-    const features = collections.map(({ features }) => features || []).flat();
+    const features = collections.flatMap(({ features }) => features || []);
 
     if (features.length) {
       if (features.length > 1) {

@@ -6,7 +6,12 @@ import { PageableResponse } from './models';
 
 const ITEMS_PER_PAGE = 1000;
 
-interface RequestConfigWithCache extends AxiosRequestConfig {
+interface RequestConfig extends AxiosRequestConfig {
+  params?: Record<string, string | number>;
+  headers?: Record<string, string>;
+}
+
+interface RequestConfigWithCache extends RequestConfig {
   cache?: CustomCacheConfig;
 }
 
@@ -40,7 +45,7 @@ class Http {
     let promise: Promise<AxiosResponse<T>>;
 
     if (fromCache) {
-      promise = fromCache;
+      promise = fromCache as Promise<AxiosResponse<T>>;
     } else {
       promise = this.axios.get(url, config);
       this.cache.add(resultUri, promise, cacheConfig);
@@ -52,7 +57,7 @@ class Http {
   }
 
   async getPaged<T>(url: string, config: RequestConfigWithCache = {}): Promise<T[]> {
-    let result = [];
+    let result: T[] = [];
     let totalPages = 0;
     let page = 0;
 
@@ -67,33 +72,33 @@ class Http {
 
       if (response._embedded) {
         const key = Object.keys(response._embedded)[0];
-        result = result.concat(response._embedded[key]);
+        result = [...result, ...response._embedded[key]];
       }
     } while (page < totalPages);
 
     return result;
   }
 
-  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.axios.post(url, data, config);
+  async post<T>(url: string, data?: unknown, config?: RequestConfig): Promise<T> {
+    const response = await this.axios.post<T>(url, data, config);
     this.cache.clear();
 
     return response.data;
   }
 
-  async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.axios.put(url, data, config);
+  async put<T>(url: string, data?: unknown, config?: RequestConfig): Promise<T> {
+    const response = await this.axios.put<T>(url, data, config);
     this.cache.clear();
 
     return response.data;
   }
 
-  async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.axios.patch(url, data, {
+  async patch<T>(url: string, data?: unknown, config: RequestConfig = {}): Promise<T> {
+    const response = await this.axios.patch<T>(url, data, {
       ...config,
       headers: {
         'Content-Type': 'application/merge-patch+json',
-        ...config?.headers
+        ...(config?.headers || {})
       }
     });
     this.cache.clear();
@@ -101,8 +106,8 @@ class Http {
     return response.data;
   }
 
-  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.axios.delete(url, config);
+  async delete<T>(url: string, config?: RequestConfig): Promise<T> {
+    const response = await this.axios.delete<T>(url, config);
     this.cache.clear();
 
     return response.data;

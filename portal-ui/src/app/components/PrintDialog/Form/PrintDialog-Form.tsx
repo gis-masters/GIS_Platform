@@ -27,8 +27,8 @@ interface PrintDialogFormProps {
   onSubmit: () => void;
 }
 
-type MainFormValues = Pick<PrintSettings, 'pageFormatId' | 'scale' | 'resolution' | 'orientation'>;
-type ExtraFormValues = Pick<PrintSettings, 'margin' | 'windRose' | 'border' | 'date'>;
+type MainFormValues = Pick<PrintSettings, 'pageFormatId' | 'scale' | 'orientation'>;
+type ExtraFormValues = Pick<PrintSettings, 'resolution' | 'margin' | 'windRose' | 'border' | 'date'>;
 
 @observer
 export class PrintDialogForm extends Component<PrintDialogFormProps> {
@@ -48,12 +48,6 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
       enumerations: scales.map(scale => ({ title: `1 : ${scale}`, value: scale }))
     },
     {
-      name: 'resolution',
-      title: 'Разрешение',
-      valueType: ValueType.CHOICE,
-      enumerations: resolutions.map(resolution => ({ title: `${resolution} dpi`, value: resolution }))
-    },
-    {
       name: 'orientation',
       title: 'Ориентация',
       valueType: ValueType.CHOICE,
@@ -62,6 +56,12 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
   ];
 
   private extraFields: PropertySchema<ExtraFormValues>[] = [
+    {
+      name: 'resolution',
+      title: 'Разрешение',
+      valueType: ValueType.CHOICE,
+      enumerations: resolutions.map(resolution => ({ title: `${resolution} dpi`, value: resolution }))
+    },
     {
       name: 'margin',
       title: 'Поля (мм)',
@@ -119,10 +119,10 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
     const mainFormValues: MainFormValues = {
       pageFormatId,
       scale,
-      resolution,
       orientation
     };
     const extraFormValues: ExtraFormValues = {
+      resolution,
       margin,
       windRose,
       border,
@@ -165,6 +165,6 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
 
   @action.bound
   private handleFormChange(values: PrintSettings) {
-    printSettings.setValues(getPatch(values, printSettings, Object.keys(values) as (keyof PrintSettings)[]));
+    printSettings.setValues(getPatch(values, printSettings, Object.keys(values)));
   }
 }

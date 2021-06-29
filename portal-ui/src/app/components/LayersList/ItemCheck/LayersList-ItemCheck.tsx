@@ -9,7 +9,7 @@ export interface LayersListItemCheckProps {
   layer: CrgLayer;
   selected: boolean;
 
-  onSelect([layer, enable]);
+  onSelect([layer, enable]): void;
 }
 
 @observer

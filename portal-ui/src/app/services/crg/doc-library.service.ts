@@ -1,5 +1,5 @@
 import { http } from '../http.service';
-import { PageableResponse, SortDir } from '../models';
+import { PageableResponse, PageOptions, SortDir } from '../models';
 import { DataEntity, DataEntityType } from '../data.service';
 import { getDocLibrariesRecordsUrl, getDocLibrariesRecordUrl, getDocLibrariesUrl } from '../server-urls.service';
 
@@ -19,12 +19,17 @@ export interface LibraryRecord {
   [key: string]: unknown;
 
   id?: string;
+  type?: string;
   title?: string;
+  // eslint-disable-next-line camelcase
   inner_path?: string;
   parent?: string;
+  // eslint-disable-next-line camelcase
   content_type_id?: string;
   oktmo?: string;
+  // eslint-disable-next-line camelcase
   human_path?: string;
+  identifier?: string;
 
   libraryId: string;
   schemaId: string;
@@ -39,7 +44,9 @@ class DocLibraryService {
     return this._instance || (this._instance = new this());
   }
 
-  private constructor() {}
+  private constructor() {
+    //
+  }
 
   async getAllLibraries(
     page: number,
@@ -58,11 +65,7 @@ class DocLibraryService {
   async getAllRecords(
     libraryId: string,
     schemaId: string,
-    page: number,
-    pageSize: number,
-    sort?: string,
-    sortDir?: SortDir,
-    filter?: { [key: string]: string }
+    { page, pageSize, sort, sortDir, filter }: PageOptions
   ): Promise<[LibraryRecord[], number]> {
     const url = await getDocLibrariesRecordsUrl(libraryId);
     const params = {
@@ -90,7 +93,7 @@ class DocLibraryService {
 
   private prepareFormData(data: LibraryRecordRaw) {
     const formData = new FormData();
-    if (!!data.binary) {
+    if (data.binary) {
       formData.append('file', data.binary as File);
       delete data.binary;
     }

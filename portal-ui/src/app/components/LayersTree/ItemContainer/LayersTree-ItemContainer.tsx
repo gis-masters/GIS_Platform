@@ -5,6 +5,15 @@ import { Paper } from '@material-ui/core';
 
 import '!style-loader!css-loader!sass-loader!./LayersTree-ItemContainer.scss';
 
+declare module 'react-beautiful-dnd' {
+  export interface DraggingStyle {
+    [key: string]: string | number;
+  }
+  export interface NotDraggingStyle {
+    [key: string]: string | number;
+  }
+}
+
 const cnLayersTreeItemContainer = cn('LayersTree', 'ItemContainer');
 
 interface LayersTreeItemContainerProps {

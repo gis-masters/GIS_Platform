@@ -108,14 +108,14 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
               !this.updatingAllowed &&
               isNumber(property.fractionDigits)
             ) {
-              currentValue = currentValue.toFixed(property.fractionDigits);
+              currentValue = Number(currentValue).toFixed(property.fractionDigits);
             }
 
             if (property) {
               this.editFeatureData.push({
                 name: key,
                 property,
-                value: currentValue,
+                value: String(currentValue),
                 isFgistpProperty: true
               });
 
@@ -143,7 +143,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                   title: key,
                   valueType: ValueType.STRING
                 },
-                value: currentValue,
+                value: String(currentValue),
                 isFgistpProperty: false
               });
 
@@ -173,6 +173,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.editGeometryStore.initGeometry(this.features[0].geometry, getFeatureProjection(this.features[0]));
 
         if (this.updatingAllowed) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           fromMobx(() => this.editGeometryStore.geometry?.coordinates.flat(5), false)
             .pipe(first())
             .pipe(takeUntil(this.unsubscribe$))
@@ -217,7 +218,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       });
   }
 
-  async editFeature() {
+  async editFeature(): Promise<void> {
     if (this.editFeatureForm.pristine && (!this.isGeometryChanged || !this.isGeometryValid)) {
       return;
     }
@@ -262,7 +263,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     });
   }
 
-  async deleteFeature() {
+  deleteFeature(): void {
     const data: ConfirmDialogData = {
       title: 'Удалить объект?',
       approveBtnName: 'Удалить'
@@ -273,30 +274,26 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       .open(ConfirmDialogComponent, { width: '400px', data })
       .afterClosed()
       .pipe(filter(value => !!value))
-      .subscribe(() => {
-        transformFeature.deleteFeatures([newId], layerName).then(() => {
-          mapService.refreshLayers();
-          communicationService.featuresUpdated.emit();
-          sidebars.setFeaturesEdited(false);
-          if (this.viewFeatures) {
-            sidebars.openFeatures(this.viewFeatures);
-          } else {
-            sidebars.closeEdit();
-          }
-        });
+      .subscribe(async () => {
+        await transformFeature.deleteFeatures([newId], layerName);
+        mapService.refreshLayers();
+        communicationService.featuresUpdated.emit();
+        sidebars.setFeaturesEdited(false);
+        if (this.viewFeatures) {
+          sidebars.openFeatures(this.viewFeatures);
+        } else {
+          sidebars.closeEdit();
+        }
       });
   }
 
-  getTooltip() {
-    const featuresCount = this.features.length;
-    if (featuresCount) {
-      return `Сохранить данные для ${featuresCount} объектов`;
-    } else {
-      return 'Сохранить объект';
-    }
+  getTooltip(): string {
+    const count = this.features.length;
+
+    return count ? `Сохранить данные для ${count} объектов` : 'Сохранить объект';
   }
 
-  switchControl(property: PropertySchema) {
+  switchControl(property: PropertySchema): void {
     if (this.editFeatureForm.controls[property.name.toLowerCase()].disabled) {
       // formControl.setValue('Оставить как есть');
       this.editFeatureForm.controls[property.name.toLowerCase()].enable();
@@ -310,7 +307,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   @boundMethod
-  close() {
+  close(): void {
     if (sidebars.editFeaturesData.viewFeatures) {
       sidebars.openFeatures(sidebars.editFeaturesData.viewFeatures);
     } else {
@@ -320,6 +317,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
   getEnumerationTitle(enumerations: { value: string; title: string }[], value: string | number): string {
     const item = enumerations.find(i => String(i.value) === String(value));
+
     return item && item.title;
   }
 

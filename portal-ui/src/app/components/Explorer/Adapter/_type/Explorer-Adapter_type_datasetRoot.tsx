@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import { Database } from '../../../Icons/Database';
-import { SortDir } from '../../../../services/models';
+import { PageOptions, SortDir } from '../../../../services/models';
 import { Dataset, getDatasets } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 
@@ -15,37 +15,33 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeDatasetRoot {
-  static getId(item: ExplorerItemData<null>) {
+  static getId(): string {
     return 'dataSetRoot';
   }
 
-  static getTitle(item: ExplorerItemData<Dataset>) {
+  static getTitle(): string {
     return 'Наборы данных';
   }
 
-  static getDescription(item: ExplorerItemData<Dataset>) {
+  static getDescription(): string {
     return 'Данные для векторных слоёв';
   }
 
-  static getMeta(item: ExplorerItemData<Dataset>) {
+  static getMeta(): string {
     return '';
   }
 
-  static getIcon() {
+  static getIcon(): ReactNode {
     return <Database color='primary' />;
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return true;
   }
 
   static async getChildren(
     item: ExplorerItemData,
-    page: number,
-    pageSize: number,
-    sort?: string,
-    sortDir?: SortDir,
-    filter?: { [key: string]: string }
+    { page, pageSize, sort, sortDir, filter }: PageOptions
   ): Promise<[ExplorerItemData<Dataset>[], number]> {
     const [dataSets, pagesCount] = await getDatasets(page, pageSize, sort, sortDir, filter);
 

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 
 import { Library } from '../../../Icons/Library';
-import { SortDir } from '../../../../services/models';
+import { PageOptions, SortDir } from '../../../../services/models';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { docLibraryService, DocumentLibrary } from '../../../../services/crg/doc-library.service';
@@ -16,33 +16,29 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeLibraryRoot {
-  static getId(item: ExplorerItemData<null>) {
+  static getId(): string {
     return 'libraryRoot';
   }
 
-  static getTitle(item: ExplorerItemData<DocumentLibrary>) {
+  static getTitle(): string {
     return 'Библиотеки';
   }
 
-  static getMeta(item: ExplorerItemData<DocumentLibrary>) {
+  static getMeta(): string {
     return '';
   }
 
-  static getIcon() {
+  static getIcon(): ReactNode {
     return <Library color='primary' />;
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return true;
   }
 
   static async getChildren(
     item: ExplorerItemData,
-    page: number,
-    pageSize: number,
-    sort?: string,
-    sortDir?: SortDir,
-    filter?: { [key: string]: string }
+    { page, pageSize, sort, sortDir, filter }: PageOptions
   ): Promise<[ExplorerItemData<DocumentLibrary>[], number]> {
     const [libraries, pagesCount] = await docLibraryService.getAllLibraries(page, pageSize, sort, sortDir, filter);
 
@@ -78,7 +74,7 @@ export class ExplorerAdapterTypeLibraryRoot {
     return 'Поиск по названию';
   }
 
-  static getEmptyListView(item: ExplorerItemData): ReactNode | undefined {
+  static getEmptyListView(): ReactNode | undefined {
     return <EmptyListView text='Библиотеки отсутствуют' />;
   }
 }

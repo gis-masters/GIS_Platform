@@ -23,6 +23,11 @@
 
   --PrintDialogPreviewSizeFactor: 1.8;
   --PrintDialogPreviewControlsFactor: calc(calc(var(--PrintDialogPreviewFormatFactor) + 2px) / 3);
+  --PrintDialogPreviewHovered: 0;
+
+  &:hover {
+    --PrintDialogPreviewHovered: 1;
+  }
 
   &_orientation {
     &_l {

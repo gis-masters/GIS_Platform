@@ -4,10 +4,10 @@ import { ErrorOutlined } from '@material-ui/icons';
 
 import { LayerIconProps, cnLayerIcon } from '../LayerIcon';
 
-export const withTypeError = withBemMod<{}, LayerIconProps>(
+export const withTypeError = withBemMod<LayerIconProps, LayerIconProps>(
   cnLayerIcon(),
   { type: 'error' },
-  () => ({ className, colorized }) => (
-    <ErrorOutlined className={cnLayerIcon(null, [className])} htmlColor={colorized ? '#dc3545' : ''} />
-  )
+  () =>
+    ({ className, colorized }) =>
+      <ErrorOutlined className={cnLayerIcon(null, [className])} htmlColor={colorized ? '#dc3545' : ''} />
 );

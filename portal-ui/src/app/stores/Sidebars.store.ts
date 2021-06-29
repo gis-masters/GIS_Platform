@@ -86,6 +86,7 @@ class Sidebars {
 
   @action
   openFeatures(features: WfsFeature[]) {
+    // eslint-disable-next-line unicorn/prefer-prototype-methods
     if (this.needEditConfirmation(this.openFeatures.bind(this, features))) {
       return;
     }
@@ -103,6 +104,7 @@ class Sidebars {
 
   @action
   openEdit(data: EditFeaturesData) {
+    // eslint-disable-next-line unicorn/prefer-prototype-methods
     if (this.needEditConfirmation(this.openEdit.bind(this, data))) {
       return;
     }
@@ -168,11 +170,13 @@ class Sidebars {
         this.closeEditFeatureConfirmation();
         callback();
       };
+
       return true;
-    } else {
-      this.closeEditFeatureConfirmation();
-      return false;
     }
+
+    this.closeEditFeatureConfirmation();
+
+    return false;
   }
 
   @action

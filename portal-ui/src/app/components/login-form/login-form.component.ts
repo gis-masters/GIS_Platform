@@ -40,13 +40,15 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   }
 
   private goToProjects() {
-    this.router.navigateByUrl('/projects/default');
+    void this.router.navigateByUrl('/projects/default');
   }
 
-  async onSubmit() {
+  async onSubmit(): Promise<void> {
     this.busy = true;
     const credentials: AuthCredentials = {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       username: this.loginForm.value.username,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       password: this.loginForm.value.password
     };
 

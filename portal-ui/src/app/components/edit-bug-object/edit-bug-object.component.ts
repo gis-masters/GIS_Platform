@@ -42,20 +42,19 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const dataChanged = changes['data'];
+    const dataChanged = changes.data;
 
-    if (dataChanged) {
-      if (dataChanged.currentValue) {
-        // TODO: Берем только первое значение(В таблице пока нельзя выбирать)
-        const newObject = Object.assign({}, dataChanged.currentValue[0]);
+    if (dataChanged && dataChanged.currentValue) {
+      // TODO: Берем только первое значение(В таблице пока нельзя выбирать)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const newObject = Object.assign({}, dataChanged.currentValue[0] as ObjectDto);
 
-        this.object = newObject;
-        this.handleObject(newObject);
-      }
+      this.object = newObject;
+      void this.handleObject(newObject);
     }
   }
 
-  async editFeature() {
+  async editFeature(): Promise<void> {
     const { crgLayer } = this.data[0];
     if (this.wfsFeature && this.wfsFeature.properties) {
       const response = await transformFeature.updateFeatures(
@@ -79,7 +78,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
     }
   }
 
-  close() {
+  close(): void {
     this.closeMe.emit(true);
 
     mapService.clearDraft();
@@ -94,14 +93,14 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       this.wfsFeature = wfsFeature;
       this.featureDescription = await schemaService.getSchema(objectDto.crgLayer.schemaId);
 
-      if (!!this.featureDescription) {
+      if (this.featureDescription) {
         this.prepareEditForm(this.wfsFeature.properties);
       } else {
         this.logger.warn('Layer has not the schema?: ', objectDto.crgLayer.schemaId);
       }
 
       mapService.highlightFeatures([wfsFeature]);
-    } catch (err) {
+    } catch {
       this.isFeatureTypeLoaded = true;
     }
   }
@@ -111,7 +110,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
    *
    * @param featureProperties Свойства полученные из "фичи" геосервера
    */
-  private prepareEditForm(featureProperties: any) {
+  private prepareEditForm(featureProperties: Record<string, unknown>) {
     for (const key of Object.keys(featureProperties)) {
       if (key === 'bbox') {
         return;
@@ -133,7 +132,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
         this.editFeatureData.push({
           name: key,
           property: propertySchema,
-          value: currentValue,
+          value: String(currentValue),
           isFgistpProperty: true
         });
       } else {
@@ -145,7 +144,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
             title: key,
             valueType: ValueType.STRING
           },
-          value: currentValue,
+          value: String(currentValue),
           isFgistpProperty: false
         });
 

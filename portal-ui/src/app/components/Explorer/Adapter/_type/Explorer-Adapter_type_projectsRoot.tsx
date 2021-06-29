@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { MapOutlined } from '@material-ui/icons';
 
-import { SortDir } from '../../../../services/models';
+import { PageOptions, SortDir } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { projectsService } from '../../../../services/crg/projects.service';
 import { CrgProject } from '../../../../services/crg/projects.models';
@@ -16,33 +16,29 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeProjectsRoot {
-  static getId(item: ExplorerItemData<CrgProject>) {
+  static getId(): string {
     return 'datasetRoot';
   }
 
-  static getTitle(item: ExplorerItemData<CrgProject>) {
+  static getTitle(): string {
     return 'Проекты';
   }
 
-  static getMeta(item: ExplorerItemData<CrgProject>) {
+  static getMeta(): string {
     return '';
   }
 
-  static getIcon() {
+  static getIcon(): ReactNode {
     return <MapOutlined color='primary' />;
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return true;
   }
 
   static async getChildren(
     item: ExplorerItemData,
-    page: number,
-    pageSize: number,
-    sort?: string,
-    sortDir?: SortDir,
-    filter?: { [key: string]: string }
+    { page, pageSize, sort, sortDir, filter }: PageOptions
   ): Promise<[ExplorerItemData<CrgProject>[], number]> {
     const [projects, pagesCount] = await projectsService.getProjects(page, pageSize, sort, sortDir, filter);
 

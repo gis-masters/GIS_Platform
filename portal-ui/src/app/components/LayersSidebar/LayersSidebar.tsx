@@ -18,6 +18,7 @@ import {
   updateLayer,
   updateLayersGroup
 } from '../../services/geoserver/layers.service';
+import { services } from '../../services/services';
 import { LayersTree } from '../LayersTree/LayersTree';
 import { Loading } from '../Loading/Loading';
 import { Toast } from '../Toast/Toast';
@@ -28,7 +29,6 @@ import { LayersSidebarToolbar } from './Toolbar/LayersSidebar-Toolbar';
 import { LayersSidebarContent } from './Content/LayersSidebar-Content';
 
 import '!style-loader!css-loader!sass-loader!./LayersSidebar.scss';
-import { services } from '../../services/services';
 
 const cnLayersSidebar = cn('LayersSidebar');
 
@@ -86,8 +86,8 @@ export class LayersSidebar extends Component {
           currentProject.switchGroupId(createdGroup.id, generateNextGroupId());
         }
         currentProject.switchGroupId(group.id, createdGroup.id);
-      } catch (e) {
-        this.alertError(e, payload, 'создать группу', group.title);
+      } catch (error) {
+        this.alertError(error, payload, 'создать группу', group.title);
       }
       this.countQuery();
     }
@@ -95,8 +95,8 @@ export class LayersSidebar extends Component {
     for (const [groupId, patch] of currentProject.queriesQueue.groupsToPatch) {
       try {
         await updateLayersGroup(groupId, patch);
-      } catch (e) {
-        this.alertError(e, patch, 'изменить группу', `id: ${groupId}`);
+      } catch (error) {
+        this.alertError(error, patch, 'изменить группу', `id: ${groupId}`);
       }
       this.countQuery();
     }
@@ -108,8 +108,8 @@ export class LayersSidebar extends Component {
         if (layer.id !== createdLayer.id && currentProject.layers.some(({ id }) => id === createdLayer.id)) {
           currentProject.switchLayerId(createdLayer.id, generateNextLayerId());
         }
-      } catch (e) {
-        this.alertError(e, payload, 'создать слой', layer.title);
+      } catch (error) {
+        this.alertError(error, payload, 'создать слой', layer.title);
       }
       this.countQuery();
     }
@@ -117,8 +117,8 @@ export class LayersSidebar extends Component {
     for (const [layerId, patch] of currentProject.queriesQueue.layersToPatch) {
       try {
         await updateLayer(layerId, patch);
-      } catch (e) {
-        this.alertError(e, patch, 'изменить слой', `id: ${layerId}`);
+      } catch (error) {
+        this.alertError(error, patch, 'изменить слой', `id: ${layerId}`);
       }
       this.countQuery();
     }
@@ -126,8 +126,8 @@ export class LayersSidebar extends Component {
     for (const layerId of currentProject.queriesQueue.layersToDelete) {
       try {
         await deleteLayer(layerId);
-      } catch (e) {
-        this.alertError(e, { id: layerId }, 'удалить слой', `id: ${layerId}`);
+      } catch (error) {
+        this.alertError(error, { id: layerId }, 'удалить слой', `id: ${layerId}`);
       }
       this.countQuery();
     }
@@ -135,8 +135,8 @@ export class LayersSidebar extends Component {
     for (const groupId of currentProject.queriesQueue.groupsToDelete) {
       try {
         await deleteLayersGroup(groupId);
-      } catch (e) {
-        this.alertError(e, { id: groupId }, 'удалить группу', `id: ${groupId}`);
+      } catch (error) {
+        this.alertError(error, { id: groupId }, 'удалить группу', `id: ${groupId}`);
       }
       this.countQuery();
     }
@@ -149,11 +149,11 @@ export class LayersSidebar extends Component {
   }
 
   @action.bound
-  contentScrollHandler(e: React.UIEvent<HTMLDivElement, UIEvent>) {
+  private contentScrollHandler(e: React.UIEvent<HTMLDivElement, UIEvent>) {
     this.toolbarAbove = Boolean(e.currentTarget.scrollTop);
   }
 
-  private alertError(e: AxiosError, payload: object, actionText: string, actionName: string) {
+  private alertError(e: AxiosError, payload: Record<string, unknown>, actionText: string, actionName: string) {
     const payloadDetails = JSON.stringify(payload, null, 2);
     let responseDetails = '-';
     if (e.response) {
@@ -171,7 +171,7 @@ export class LayersSidebar extends Component {
     }
 
     const message = `Не удалось ${actionText} "${actionName}"`;
-    
+
     Toast.error({ message, details: `Запрос: \n${responseDetails} \n\nДанные: \n${payloadDetails}` });
     services.logger.error(message, e);
   }

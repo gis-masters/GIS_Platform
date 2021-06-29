@@ -51,8 +51,9 @@ export interface WfsFeature<T = Coordinate | CoordinateEdited> extends GeoJSONOb
   type: 'Feature';
   id: string;
   geometry: WfsGeometry<T>;
+  // eslint-disable-next-line camelcase
   geometry_name: string;
-  properties: any;
+  properties: Record<string, unknown>;
 }
 
 export interface WfsFeatureCollection extends GeoJSONObject {

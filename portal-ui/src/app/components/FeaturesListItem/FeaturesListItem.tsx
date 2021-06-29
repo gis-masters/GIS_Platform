@@ -31,7 +31,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   constructor(props: FeaturesListItemProps) {
     super(props);
 
-    this.fetchSchema();
+    void this.fetchSchema();
   }
 
   render() {
@@ -70,13 +70,14 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
       if (property) {
         const { name, enumerations, valueType } = property;
         if (valueType !== 'CHOICE') {
-          title = properties[name.toLowerCase()];
+          title = String(properties[name.toLowerCase()]);
         } else if (enumerations) {
+          // eslint-disable-next-line eqeqeq
           const valueTitleProjection = enumerations.find(item => item.value == properties[name]);
           title = valueTitleProjection ? valueTitleProjection.title : '';
         }
       } else {
-        title = properties.name;
+        title = String(properties.name);
       }
 
       this.setTitles(title, schema.title);
@@ -109,7 +110,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   private extractTableName(id: string) {
     const string = id.split(WFS_FEATURE_ID_DELIMITER)[0];
     if (!string) {
-      throw Error('Incorrect wfs feature id: ' + id);
+      throw new Error('Incorrect wfs feature id: ' + id);
     }
 
     return string;

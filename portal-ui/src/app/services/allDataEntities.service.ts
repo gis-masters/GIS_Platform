@@ -9,7 +9,7 @@ class AllDataEntitiesService {
   private static _instance: AllDataEntitiesService;
 
   private allDataEntitiesStoreInited = false;
-  private fetchingOperationId: Symbol;
+  private fetchingOperationId: symbol;
   private debouncedFetchAllDataEntitiesStore: () => Promise<void>;
 
   private constructor() {
@@ -30,7 +30,7 @@ class AllDataEntitiesService {
     await this.fetchAllDataEntitiesStore();
 
     communicationService.datasetsUpdated.on(() => {
-      this.debouncedFetchAllDataEntitiesStore();
+      void this.debouncedFetchAllDataEntitiesStore();
     }, this);
   }
 
@@ -52,8 +52,8 @@ class AllDataEntitiesService {
 
     for (const dataset of datasets) {
       try {
-        dataTables = dataTables.concat(await getAllDatasetTables(dataset));
-      } catch (e) {
+        dataTables = [...dataTables, ...(await getAllDatasetTables(dataset))];
+      } catch {
         Toast.error({
           message: `Ошибка получения таблиц в наборе "${dataset.title}" (${dataset.identifier})`,
           canBeSuppressed: true

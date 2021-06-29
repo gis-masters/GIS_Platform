@@ -13,9 +13,8 @@ import { DrawEvent } from 'ol/interaction/Draw';
 import { ModifyEvent } from 'ol/interaction/Modify';
 import { Layer, Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import BaseLayer from 'ol/layer/Base';
-import { get as getProjection, getPointResolution } from 'ol/proj';
+import { get as getProjection } from 'ol/proj';
 import { ImageWMS, OSM, TileArcGISRest, TileImage, TileWMS, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
-import { Options as XYZOptions } from 'ol/source/XYZ';
 import { Circle, Fill, Stroke, Style } from 'ol/style.js';
 import Tile from 'ol/Tile';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
@@ -46,7 +45,7 @@ import {
 // исправление ошибки в типах openlayers
 // актуально для ol: 6.4.3, @types/ol: ^6.4.1, typescript: ~3.8.3
 declare module '../../../../node_modules/@types/ol/Geolocation' {
-  type GeolocationPositionError = any;
+  type GeolocationPositionError = Error;
 }
 
 // WMS request parameters. At least a LAYERS param is required.
@@ -59,10 +58,15 @@ interface CrgAdditionalLayerInfo {
   isUserLayer: boolean;
 }
 
+interface LayerAdditionalProps {
+  crgInfo: CrgAdditionalLayerInfo;
+}
+
+const imageFormat = 'image/vnd.jpeg-png8';
+
 class MapService {
   private static _instance: MapService;
 
-  private CRG_INFO_PROP_NAME = 'crgInfo';
   private readonly isTiledWms: boolean;
 
   private readonly debouncedZoomEvent: () => void;
@@ -101,13 +105,13 @@ class MapService {
   private HIT_TOLERANCE = 10;
 
   // ZIndex чернового слоя который используется для подсвечивания объектов
-  readonly DRAFT_LAYER_ZINDEX = 10000;
-  readonly MEASURE_LAYER_ZINDEX = 10100;
-  readonly MARKERS_LAYER_ZINDEX = 10200;
+  readonly DRAFT_LAYER_ZINDEX = 10_000;
+  readonly MEASURE_LAYER_ZINDEX = 10_100;
+  readonly MARKERS_LAYER_ZINDEX = 10_200;
 
   // Default view options
   private defaultZoomValue = 9;
-  private defaultViewPoint = [3844444, 5644444];
+  private defaultViewPoint = [3_844_444, 5_644_444];
 
   constructor() {
     reaction(
@@ -133,7 +137,7 @@ class MapService {
     this.isTiledWms = Boolean(localStorage.getItem('tiledWms'));
   }
 
-  async createMap() {
+  createMap(): void {
     this.markersSource = new VectorSource({
       features: []
     });
@@ -192,6 +196,7 @@ class MapService {
       if (this.pickHandler) {
         this.pickHandler(e);
         delete this.pickHandler;
+
         return;
       }
 
@@ -244,8 +249,8 @@ class MapService {
           zIndex: zIndex
         });
 
-        const props: { [key: string]: CrgAdditionalLayerInfo } = {
-          [this.CRG_INFO_PROP_NAME]: { isUserLayer: true }
+        const props: LayerAdditionalProps = {
+          crgInfo: { isUserLayer: true }
         };
 
         tileLayer.setProperties(props);
@@ -266,42 +271,33 @@ class MapService {
     } else {
       const params: CrgWmsParams = {
         LAYERS: resultName,
-        FORMAT: 'image/vnd.jpeg-png8'
+        FORMAT: imageFormat
       };
 
-      let layer: ImageLayer | TileLayer;
-      if (this.isTiledWms) {
-        layer = new TileLayer({
-          source: new TileWMS({
-            url: await getWmsUrl(),
-            params: params,
-            tileLoadFunction: this.crgLayersLoadFunction,
-            serverType: 'geoserver',
-            crossOrigin: 'anonymous'
-          }),
-          visible: true,
-          opacity,
-          zIndex
-        });
-      } else {
-        layer = new ImageLayer({
-          source: new ImageWMS({
-            url: await getWmsUrl(),
-            params: params,
-            imageLoadFunction: this.crgLayersLoadFunction,
-            ratio: 1,
-            serverType: 'geoserver',
-            crossOrigin: 'anonymous'
-          }),
-          visible: true,
-          opacity,
-          zIndex
-        });
-      }
-
-      const props: { [key: string]: CrgAdditionalLayerInfo } = {
-        [this.CRG_INFO_PROP_NAME]: { isUserLayer: true }
+      const commonLayerParams = {
+        visible: true,
+        opacity,
+        zIndex
       };
+
+      const commonWMSParams = {
+        url: await getWmsUrl(),
+        params,
+        serverType: 'geoserver',
+        crossOrigin: 'anonymous'
+      };
+
+      const layer: ImageLayer | TileLayer = this.isTiledWms
+        ? new TileLayer({
+            source: new TileWMS({ tileLoadFunction: this.crgLayersLoadFunction, ...commonWMSParams }),
+            ...commonLayerParams
+          })
+        : new ImageLayer({
+            source: new ImageWMS({ imageLoadFunction: this.crgLayersLoadFunction, ...commonWMSParams, ratio: 1 }),
+            ...commonLayerParams
+          });
+
+      const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
 
       layer.setProperties(props);
 
@@ -313,9 +309,8 @@ class MapService {
     return layers.map(layer => layer.complexName).join(',');
   }
 
-  async deleteLayerFromMap(complexLayerName: string) {
+  deleteLayerFromMap(complexLayerName: string) {
     const layerByName = this.getLayerByName(complexLayerName);
-
     this.map.removeLayer(layerByName);
   }
 
@@ -363,7 +358,7 @@ class MapService {
     return this.getUserLayers().find(layer => {
       const source = layer.getSource() as TileWMS;
 
-      return source && source.getParams().LAYERS === complexLayerName;
+      return source && (source.getParams() as CrgWmsParams).LAYERS === complexLayerName;
     });
   }
 
@@ -388,8 +383,8 @@ class MapService {
    * Подсвечивает объект. (очищает черновой слой)
    */
   highlightFeatures(features: WfsFeature[], projection?: CrgProjection) {
-    const featuresInOlProjection: WfsFeature[] = []
-      .concat(features)
+    const featuresInOlProjection: WfsFeature[] = [features]
+      .flat()
       .filter(({ geometry }) => geometry)
       .map((feature: WfsFeature) => ({
         ...feature,
@@ -411,7 +406,7 @@ class MapService {
       },
       id: '',
       geometry_name: '',
-      properties: ''
+      properties: {}
     };
 
     const olFeature = wfsFeatureToFeature(feature);
@@ -421,13 +416,14 @@ class MapService {
       setTimeout(() => {
         try {
           this.draftSource.removeFeature(olFeature);
-        } catch (e) {}
+        } catch {}
       }, 500);
     }
   }
 
   fitToBbox(bbox: Extent, padding: [number, number, number, number], minResolution?: number) {
-    this.map.getView().fit(bbox, { padding, minResolution }); // constrainResolution Ломает view на слоях с геометрией Point
+    // constrainResolution Ломает view на слоях с геометрией Point
+    this.map.getView().fit(bbox, { padding, minResolution });
   }
 
   getResolution() {
@@ -438,10 +434,13 @@ class MapService {
     return this.view.getZoom();
   }
 
+  private round(n: number) {
+    return Number(n.toFixed(this.PRECISION));
+  }
+
   getBufferByCoordinates(pos: Coordinate) {
-    const round = (n: number) => Number(n.toFixed(this.PRECISION));
-    const res = round(this.getResolution() * this.HIT_TOLERANCE);
-    pos = pos.map(round);
+    const res = this.round(this.getResolution() * this.HIT_TOLERANCE);
+    pos = pos.map(num => this.round(num));
 
     const x1 = pos[0] + res / 2;
     const x2 = x1 - res;
@@ -521,6 +520,7 @@ class MapService {
     const olFeature: Feature = wfsFeatureToFeature(wfsFeature, true);
     if (!olFeature) {
       services.logger.warn('Incorrect feature: ', wfsFeature);
+
       return;
     }
 
@@ -528,9 +528,9 @@ class MapService {
     const size = this.map.getSize();
 
     const geometry = olFeature.getGeometry();
-    const extent = chunk(geometry.getExtent(), 2)
-      .map(coord => transform(projection, olProjection, coord))
-      .flat() as Extent;
+    const extent = chunk(geometry.getExtent(), 2).flatMap(coord =>
+      transform(projection, olProjection, coord)
+    ) as Extent;
 
     switch (geometry.getType()) {
       case GeometryType.POINT:
@@ -557,20 +557,21 @@ class MapService {
 
   private async crgLayersLoadFunction(tile: Tile | ImageWrapper, url: string) {
     currentMap.enrollLoadingStart();
-    let data: Blob | any;
+    let data: Blob;
     try {
       data = await http.get<Blob>(url, { responseType: 'blob' });
-    } catch (errorResponse) {
-      data = errorResponse.error;
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      data = error.error;
     }
-    const blob = new Blob([data], { type: 'image/vnd.jpeg-png8' });
+    const blob = new Blob([data], { type: imageFormat });
     ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
     currentMap.enrollLoadingFinish();
   }
 
   private async arcGisMapServerLoadFunction(tile: Tile | ImageWrapper, url: string) {
     currentMap.enrollLoadingStart();
-    let data: Blob | any;
+    let data: Blob;
 
     const replacedUrl = url
       .replace('256%2C256', '1024%2C1024')
@@ -583,11 +584,12 @@ class MapService {
       if (response.ok) {
         data = await response.blob();
       }
-    } catch (errorResponse) {
-      data = errorResponse.error;
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      data = error.error;
     }
 
-    const blob = new Blob([data], { type: 'image/vnd.jpeg-png8' });
+    const blob = new Blob([data], { type: imageFormat });
     ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
     currentMap.enrollLoadingFinish();
   }
@@ -613,12 +615,7 @@ class MapService {
       case SourceType.WMTS:
         return this.prepareWMTS(basemap);
       case SourceType.XYZ:
-        const options: XYZOptions = { crossOrigin: 'Anonymous' };
-        if (basemap.url) {
-          options.url = basemap.url;
-        }
-
-        return new XYZ(options);
+        return new XYZ({ crossOrigin: 'Anonymous', url: basemap.url || undefined });
     }
   }
 
@@ -627,12 +624,12 @@ class MapService {
       const projection = getProjection(basemap.projection);
       const projectionExtent = projection.getExtent();
       const size = getWidth(projectionExtent) / basemap.size;
-      const resolutions = new Array(basemap.resolution);
-      const matrixIds = new Array(basemap.matrixIds);
-      for (let z = 0; z < basemap.resolution; ++z) {
+      const resolutions = [];
+      const matrixIds = [];
+      for (let i = 0; i < basemap.resolution; ++i) {
         // generate resolutions and matrixIds arrays for this WMTS
-        resolutions[z] = size / Math.pow(2, z);
-        matrixIds[z] = basemap.projection + ':' + z;
+        resolutions[i] = size / Math.pow(2, i);
+        matrixIds[i] = `${basemap.projection}:${i}`;
       }
 
       return new WMTS({
@@ -640,8 +637,8 @@ class MapService {
         urls: [basemap.url],
         tileGrid: new WMTSTileGrid({
           origin: getTopLeft(projectionExtent),
-          resolutions: resolutions,
-          matrixIds: matrixIds
+          resolutions,
+          matrixIds
         }),
         style: basemap.style,
         layer: basemap.layerName,
@@ -651,24 +648,30 @@ class MapService {
         wrapX: true,
         crossOrigin: 'Anonymous'
       });
-    } catch (e) {
+    } catch {
       return undefined;
     }
   }
 
   private isUserLayer(layer: BaseLayer): boolean {
-    const crgInfo = layer.getProperties()[this.CRG_INFO_PROP_NAME];
+    const crgInfo: CrgAdditionalLayerInfo = (layer.getProperties() as LayerAdditionalProps).crgInfo;
     if (crgInfo) {
       return crgInfo.isUserLayer;
-    } else {
-      return false;
     }
+
+    return false;
   }
 
   private selectDraftColor() {
     const { imageColor, strokeColor } = this.getDraftColors();
+
+    // ошибка в типах openlayers
+    /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-call */
     // @ts-ignore
-    this.draftStyle.getImage().getFill().setColor(imageColor);
+    const fill = this.draftStyle.getImage().getFill() as Fill;
+    /* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-call */
+
+    fill.setColor(imageColor);
     this.draftStyle.getStroke().setColor(strokeColor);
 
     this.draftSource.addFeatures([]); // repaint
@@ -677,9 +680,9 @@ class MapService {
   private getDraftColors(): { strokeColor: string; imageColor: string } {
     if (this.isModifying || this.draftSourceDraw) {
       return { strokeColor: '#66f', imageColor: 'rgba(55, 55, 255, 0.8)' };
-    } else {
-      return { strokeColor: '#ff0018', imageColor: 'rgba(255, 55, 55, 0.8)' };
     }
+
+    return { strokeColor: '#ff0018', imageColor: 'rgba(255, 55, 55, 0.8)' };
   }
 }
 

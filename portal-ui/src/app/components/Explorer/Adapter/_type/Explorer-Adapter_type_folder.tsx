@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { FolderOutlined } from '@material-ui/icons';
 
-import { SortDir } from '../../../../services/models';
+import { PageOptions, SortDir } from '../../../../services/models';
 import { Emitter } from '../../../../services/util/Emitter';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 import { schemaService } from '../../../../services/crg/schema.service';
@@ -23,62 +23,54 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeFolder {
-  static getId(item: ExplorerItemData<LibraryRecord>) {
+  static getId(item: ExplorerItemData<LibraryRecord>): string {
     return `${item.type}:${item.payload.id}`;
   }
 
-  static getTitle(item: ExplorerItemData<LibraryRecord>) {
+  static getTitle(item: ExplorerItemData<LibraryRecord>): string {
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<LibraryRecord>) {
-    const { details, created_at } = item.payload;
+  static getDescription(item: ExplorerItemData<LibraryRecord>): ReactNode {
+    const { details, created_at: createdAt } = item.payload;
     moment.locale('ru');
 
     return (
       <>
         {details && <p>{details}</p>}
 
-        {created_at && (
+        {createdAt && (
           <p>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
-            {moment(created_at).format('LL')}
+            {moment(createdAt).format('LL')}
           </p>
         )}
       </>
     );
   }
 
-  static getMeta(item: ExplorerItemData<LibraryRecord>) {
+  static getMeta(item: ExplorerItemData<LibraryRecord>): string {
     return String(item.payload.id);
   }
 
-  static getIcon() {
+  static getIcon(): ReactNode {
     return <FolderOutlined color='primary' />;
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return true;
   }
 
   static async getChildren(
     explorerItem: ExplorerItemData<LibraryRecord>,
-    page: number,
-    pageSize: number,
-    sort?: string,
-    sortDir?: SortDir,
-    filter?: { [key: string]: string }
+    { page, pageSize, sort, sortDir, filter }: PageOptions
   ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
     const result: ExplorerItemData<LibraryRecord>[] = [];
 
     const [libraryRecords, pagesCount] = await docLibraryService.getAllRecords(
       explorerItem.payload.libraryId,
       explorerItem.payload.schemaId,
-      page,
-      pageSize,
-      sort,
-      sortDir,
-      { ...filter, parent: explorerItem.payload.id }
+      { page, pageSize, sort, sortDir, filter: { ...filter, parent: explorerItem.payload.id } }
     );
 
     const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schemaId);
@@ -131,7 +123,7 @@ export class ExplorerAdapterTypeFolder {
     return <CreateLibraryElement schemaId={item.payload.schemaId} parent={item.payload.id} store={store} />;
   }
 
-  static getEmptyListView(item: ExplorerItemData): ReactNode | undefined {
+  static getEmptyListView(): ReactNode | undefined {
     return (
       <EmptyListView
         text='Отсутствуют элементы для отображения'
@@ -140,7 +132,7 @@ export class ExplorerAdapterTypeFolder {
     );
   }
 
-  static getRefreshEmitters(item: ExplorerItemData): Emitter[] {
+  static getRefreshEmitters(): Emitter[] {
     return [communicationService.libraryItemsUpdated];
   }
 }

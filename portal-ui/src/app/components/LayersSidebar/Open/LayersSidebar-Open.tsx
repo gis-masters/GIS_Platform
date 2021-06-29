@@ -9,10 +9,8 @@ import '!style-loader!css-loader!sass-loader!./LayersSidebar-Open.scss';
 
 const cnLayersSidebarOpen = cn('LayersSidebar', 'Open');
 
-interface LayersSidebarOpenProps {}
-
 @observer
-export class LayersSidebarOpen extends Component<LayersSidebarOpenProps> {
+export class LayersSidebarOpen extends Component {
   render() {
     return <button className={cnLayersSidebarOpen({ open: sidebars.leftOpen })} onClick={this.toggleOpen} />;
   }

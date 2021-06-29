@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { InsertDriveFileOutlined } from '@material-ui/icons';
 
 import { services } from '../../../services/services';
-import { SortDir } from '../../../services/models';
+import { PageOptions, SortDir } from '../../../services/models';
 import { Emitter } from '../../../services/util/Emitter';
 import { Toast } from '../../Toast/Toast';
 
@@ -64,19 +64,15 @@ export function isFolder(item: ExplorerItemData): boolean {
 
 export async function getChildren(
   item: ExplorerItemData,
-  page: number,
-  pageSize: number,
-  sort?: string,
-  sortDir?: SortDir,
-  filter?: { [key: string]: string }
+  options: PageOptions
 ): Promise<[ExplorerItemData[], number] | undefined> {
   if (isFolder(item) && adapters[item.type].getChildren) {
     try {
-      return await adapters[item.type].getChildren(item, page, pageSize, sort, sortDir, filter);
-    } catch (e) {
-      const message = `Ошибка получения списка элементов для "${getTitle(item)}"`;
-      services.logger.error(message, e);
-      Toast.error({ message, details: e.message });
+      return await adapters[item.type].getChildren(item, options);
+    } catch (error) {
+      const message = `Ошибка получения списка элементов для "${String(getTitle(item))}"`;
+      services.logger.error(message, error);
+      Toast.error({ message, details: (error as Error).message });
 
       return [[], 1];
     }

@@ -42,9 +42,9 @@ export class PrintDialog extends Component<PrintDialogProps> {
   }
 
   @boundMethod
-  private submitHandler() {
-    printMap();
+  private async submitHandler() {
     this.props.onClose();
+    await printMap();
   }
 
   @boundMethod

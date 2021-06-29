@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { pluralize } from 'numeralize-ru';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
@@ -19,29 +19,27 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeBasemap {
-  static getId(item: ExplorerItemData<Basemap>) {
+  static getId(item: ExplorerItemData<Basemap>): string {
     return `${item.type}:${item.payload.id}`;
   }
 
-  static getTitle(item: ExplorerItemData<Basemap>) {
+  static getTitle(item: ExplorerItemData<Basemap>): string {
     return item.payload.title;
   }
 
-  static getDetails(item: ExplorerItemData<Basemap>) {
+  static getDetails(): string {
     return '';
   }
 
-  static getMeta(item: ExplorerItemData<Basemap>) {
-    const { name } = item.payload;
-
-    return `${name}`;
+  static getMeta(item: ExplorerItemData<Basemap>): string {
+    return item.payload.name;
   }
 
-  static getIcon(item: ExplorerItemData<Basemap>) {
+  static getIcon(): ReactNode {
     return <BasemapIcon color='primary' />;
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return false;
   }
 
@@ -60,11 +58,11 @@ export class ExplorerAdapterTypeBasemap {
     };
   }
 
-  static async deleteItem(item: ExplorerItemData<Basemap>) {
+  static async deleteItem(item: ExplorerItemData<Basemap>): Promise<void> {
     await deleteBasemap(item.payload.id);
   }
 
-  static getRefreshEmitters(item: ExplorerItemData): Emitter[] {
+  static getRefreshEmitters(): Emitter[] {
     return [communicationService.basemapsUpdated];
   }
 }

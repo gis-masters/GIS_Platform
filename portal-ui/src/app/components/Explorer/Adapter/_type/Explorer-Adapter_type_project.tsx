@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { MapOutlined } from '@material-ui/icons';
 
@@ -15,15 +15,15 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeProject {
-  static getId(item: ExplorerItemData<CrgProject>) {
+  static getId(item: ExplorerItemData<CrgProject>): string {
     return `${item.type}:${item.payload.id}`;
   }
 
-  static getTitle(item: ExplorerItemData<CrgProject>) {
+  static getTitle(item: ExplorerItemData<CrgProject>): string {
     return item.payload.name;
   }
 
-  static getMeta(item: ExplorerItemData<CrgProject>) {
+  static getMeta(item: ExplorerItemData<CrgProject>): string {
     const { createdAt, id } = item.payload;
     moment.locale('ru');
     const date = createdAt ? `${moment(createdAt).format('LL')}` : '';
@@ -31,11 +31,11 @@ export class ExplorerAdapterTypeProject {
     return `${date} (id: ${id})`;
   }
 
-  static getIcon() {
+  static getIcon(): ReactNode {
     return <MapOutlined color='primary' />;
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return false;
   }
 }

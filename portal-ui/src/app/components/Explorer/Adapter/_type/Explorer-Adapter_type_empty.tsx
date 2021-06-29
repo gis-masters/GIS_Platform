@@ -14,19 +14,19 @@ interface RootType {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeEmpty {
-  static getId(item: ExplorerItemData<RootType>) {
+  static getId(item: ExplorerItemData<RootType>): string {
     return item.type + item.payload.title;
   }
 
-  static getTitle(item: ExplorerItemData<RootType>) {
+  static getTitle(item: ExplorerItemData<RootType>): string {
     return item.payload.title;
   }
 
-  static getMeta() {
+  static getMeta(): string {
     return '';
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return true;
   }
 }

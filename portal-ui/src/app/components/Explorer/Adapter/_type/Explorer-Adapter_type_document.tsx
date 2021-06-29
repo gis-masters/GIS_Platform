@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { InsertDriveFile } from '@material-ui/icons';
 
@@ -21,41 +21,41 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeDocument {
-  static getId(item: ExplorerItemData<LibraryRecord>) {
+  static getId(item: ExplorerItemData<LibraryRecord>): string {
     return `${item.type}:${item.payload.id}`;
   }
 
-  static getTitle(item: ExplorerItemData<LibraryRecord>) {
+  static getTitle(item: ExplorerItemData<LibraryRecord>): string {
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<LibraryRecord>) {
-    const { details, created_at } = item.payload;
+  static getDescription(item: ExplorerItemData<LibraryRecord>): ReactNode {
+    const { details, created_at: createdAt } = item.payload;
     moment.locale('ru');
 
     return (
       <>
         {details && <p>{details}</p>}
 
-        {created_at && (
+        {createdAt && (
           <p>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
-            {moment(created_at).format('LL')}
+            {moment(createdAt).format('LL')}
           </p>
         )}
       </>
     );
   }
 
-  static getMeta(item: ExplorerItemData<LibraryRecord>) {
+  static getMeta(item: ExplorerItemData<LibraryRecord>): string {
     return String(item.payload.id);
   }
 
-  static getIcon() {
+  static getIcon(): ReactNode {
     return <InsertDriveFile color='primary' />;
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return false;
   }
 
@@ -80,16 +80,16 @@ export class ExplorerAdapterTypeDocument {
     };
   }
 
-  static async deleteItem(item: ExplorerItemData<LibraryRecord>) {
+  static async deleteItem(item: ExplorerItemData<LibraryRecord>): Promise<void> {
     const { id, libraryId } = item.payload;
 
     try {
       await docLibraryService.deleteRecord(libraryId, id);
 
       communicationService.libraryItemsUpdated.emit();
-    } catch (e) {
+    } catch (error) {
       Toast.error('Не удалось удалить файл');
-      services.logger.error('Не удалось удалить файл: ', e.message);
+      services.logger.error('Не удалось удалить файл: ', error);
     }
   }
 }

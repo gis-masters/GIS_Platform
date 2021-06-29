@@ -22,8 +22,8 @@ export class LayersTree extends Component<LayersTreeProps> {
   @observable combineEnabled = false;
   @observable highlightedGroupId?: number;
 
-  componentDidMount() {
-    projectsService.testCurrentProjectLayers();
+  async componentDidMount() {
+    await projectsService.testCurrentProjectLayers();
   }
 
   render() {
@@ -90,10 +90,10 @@ export class LayersTree extends Component<LayersTreeProps> {
 
     const beforeItem = forward
       ? destinationItem
-      : currentProject.visibleTreeWithEmptyGroups.slice()[destination.index - 1];
+      : [...currentProject.visibleTreeWithEmptyGroups][destination.index - 1];
     const afterItem = !forward
       ? destinationItem
-      : currentProject.visibleTreeWithEmptyGroups.slice()[destination.index + 1];
+      : [...currentProject.visibleTreeWithEmptyGroups][destination.index + 1];
     const newTree = [...currentProject.tree];
     const oldIndex = this.getItemIndex(sourceItem);
 

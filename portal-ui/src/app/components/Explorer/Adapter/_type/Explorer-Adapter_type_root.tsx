@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { HomeOutlined } from '@material-ui/icons';
 
 import { Dataset } from '../../../../services/data.service';
-import { SortDir } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 
 import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
@@ -15,31 +14,24 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeRoot {
-  static getId(item: ExplorerItemData<Dataset>) {
+  static getId(): string {
     return 'root';
   }
 
-  static getTitle(item: ExplorerItemData<Dataset>) {
+  static getTitle(): ReactNode {
     return <HomeOutlined />;
   }
 
-  static getMeta(item: ExplorerItemData<Dataset>) {
+  static getMeta(): string {
     return '';
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return true;
   }
 
-  static async getChildren(
-    item: ExplorerItemData,
-    page: number,
-    pageSize: number,
-    sort?: string,
-    sortDir?: SortDir,
-    filter?: { [key: string]: string }
-  ): Promise<[ExplorerItemData<Dataset>[], number]> {
-    return [
+  static getChildren(): Promise<[ExplorerItemData<Dataset>[], number]> {
+    return Promise.resolve([
       [
         {
           type: ExplorerItemType.DATASET_ROOT
@@ -52,6 +44,6 @@ export class ExplorerAdapterTypeRoot {
         }
       ],
       0
-    ];
+    ]);
   }
 }

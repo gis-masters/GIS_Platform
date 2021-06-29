@@ -7,6 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 import GeometryType from 'ol/geom/GeometryType';
 
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
+import { copyNodeToClipboard } from '../../../services/util/copyNodeToClipboard';
 
 const cnEditFeatureGeometryCopy = cn('EditFeatureGeometry', 'Copy');
 
@@ -39,18 +40,6 @@ export class EditFeatureGeometryCopy extends Component<EditFeatureGeometryCopyPr
 
   @boundMethod
   private clickHandler() {
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(this.props.tableRef.current);
-    selection.removeAllRanges();
-    selection.addRange(range);
-
-    try {
-      document.execCommand('copy');
-    } catch (e) {
-      throw new Error('Не копируется :(');
-    }
-
-    selection.removeAllRanges();
+    copyNodeToClipboard(this.props.tableRef.current);
   }
 }

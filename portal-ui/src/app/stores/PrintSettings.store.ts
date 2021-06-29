@@ -16,7 +16,7 @@ export const orientations: { title: string; value: Orientation }[] = [
 
 export const resolutions = [72, 150, 300];
 
-export const scales = [500000, 200000, 100000, 50000, 25000, 10000, 5000, 2000, 1000, 500];
+export const scales = [500_000, 200_000, 100_000, 50_000, 25_000, 10_000, 5000, 2000, 1000, 500];
 
 export const pageFormats: PageFormat[] = [
   {
@@ -96,19 +96,15 @@ class PrintSettingsStore implements PrintSettings {
     return this._instance || (this._instance = new this());
   }
 
+  private constructor() {
+    this.setValues(defaultPrintSettings);
+  }
+
   @computed
   get pageWidth(): number {
     const { width, height } = this.pageFormat;
 
-    if (this.orientation === 'l') {
-      return width;
-    } else {
-      return height;
-    }
-  }
-
-  private constructor() {
-    this.setValues(defaultPrintSettings);
+    return this.orientation === 'l' ? width : height;
   }
 
   @action
@@ -120,16 +116,22 @@ class PrintSettingsStore implements PrintSettings {
   get pageHeight(): number {
     const { width, height } = this.pageFormat;
 
-    if (this.orientation === 'l') {
-      return height;
-    } else {
-      return width;
-    }
+    return this.orientation === 'l' ? height : width;
   }
 
   @computed
   get pageFormat(): PageFormat {
     return pageFormats.find(({ id }) => id === this.pageFormatId);
+  }
+
+  @computed
+  get width(): number {
+    return Math.round(((this.pageWidth - this.margin.left - this.margin.right) * this.resolution) / 25.4);
+  }
+
+  @computed
+  get height(): number {
+    return Math.round(((this.pageHeight - this.margin.top - this.margin.bottom) * this.resolution) / 25.4);
   }
 
   @action

@@ -80,18 +80,17 @@ export class LayersList extends Component<LayersListProps> {
       return SelectedState.CLEAR;
     } else if (this.selectedLayers.length === currentProject.vectorLayers.length) {
       return SelectedState.ALL;
-    } else {
-      return SelectedState.INDETERMINATE;
     }
+
+    return SelectedState.INDETERMINATE;
   }
 
   @action.bound
   private onSelectAllCheckboxChanged() {
-    if (this.selectedState === SelectedState.INDETERMINATE || this.selectedState === SelectedState.CLEAR) {
-      this.selectedLayers = currentProject.vectorLayers;
-    } else {
-      this.selectedLayers = [];
-    }
+    this.selectedLayers =
+      this.selectedState === SelectedState.INDETERMINATE || this.selectedState === SelectedState.CLEAR
+        ? currentProject.vectorLayers
+        : [];
 
     this.props.onSelect(this.selectedLayers);
   }

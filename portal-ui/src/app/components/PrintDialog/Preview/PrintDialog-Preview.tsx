@@ -1,4 +1,4 @@
-import React, { Component, createRef, CSSProperties } from 'react';
+import React, { Component, createRef } from 'react';
 import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
@@ -15,6 +15,7 @@ import { PrintDialogPreviewImage } from '../PreviewImage/PrintDialog-PreviewImag
 import { PrintDialogWindRose } from '../WindRose/PrintDialog-WindRose';
 import { PrintDialogScale } from '../Scale/PrintDialog-Scale';
 import { PrintDialogDate } from '../Date/PrintDialog-Date';
+import { PrintDialogCopy } from '../Copy/PrintDialog-Copy';
 
 import '!style-loader!css-loader!sass-loader!./PrintDialog-Preview.scss';
 
@@ -62,24 +63,22 @@ export class PrintDialogPreview extends Component<PrintDialogPreviewProps> {
   }
 
   render() {
-    const { pageFormatId, orientation, margin, windRose, date, printingInProcess } = printSettings;
+    const { pageFormatId, orientation, margin, windRose, date, rotation, printingInProcess } = printSettings;
 
     return (
       <div className={cnPrintDialogPreview()}>
         <Paper
           className={cnPrintDialogPreview({ orientation, pageFormat: pageFormatId })}
-          style={
-            {
-              '--PrintDialogPreviewMarginTop': margin.top,
-              '--PrintDialogPreviewMarginRight': margin.right,
-              '--PrintDialogPreviewMarginBottom': margin.bottom,
-              '--PrintDialogPreviewMarginLeft': margin.left,
-              '--PrintDialogPreviewShiftX': this.previewDragX - this.previewDragStartX,
-              '--PrintDialogPreviewShiftY': this.previewDragY - this.previewDragStartY,
-              '--PrintDialogPreviewRotation': printSettings.rotation,
-              '--PrintDialogPreviewBorderWidth': BORDER_WIDTH_MM
-            } as CSSProperties
-          }
+          style={{
+            '--PrintDialogPreviewMarginTop': margin.top,
+            '--PrintDialogPreviewMarginRight': margin.right,
+            '--PrintDialogPreviewMarginBottom': margin.bottom,
+            '--PrintDialogPreviewMarginLeft': margin.left,
+            '--PrintDialogPreviewShiftX': this.previewDragX - this.previewDragStartX,
+            '--PrintDialogPreviewShiftY': this.previewDragY - this.previewDragStartY,
+            '--PrintDialogPreviewRotation': rotation,
+            '--PrintDialogPreviewBorderWidth': BORDER_WIDTH_MM
+          }}
           square
           elevation={3}
         >
@@ -89,7 +88,10 @@ export class PrintDialogPreview extends Component<PrintDialogPreviewProps> {
             onDrag={this.dragHandler}
           >
             {this.previewImageDataUri && (
-              <PrintDialogPreviewImage src={this.previewImageDataUri} imgRef={this.previewRef} />
+              <>
+                <PrintDialogPreviewImage src={this.previewImageDataUri} imgRef={this.previewRef} />
+                <PrintDialogCopy />
+              </>
             )}
 
             <PrintDialogScale />
@@ -119,6 +121,7 @@ export class PrintDialogPreview extends Component<PrintDialogPreviewProps> {
 
     if (this.updatingPreviewImage) {
       this.needUpdatePreviewImageAfterUpdate = true;
+
       return;
     }
 
@@ -127,12 +130,12 @@ export class PrintDialogPreview extends Component<PrintDialogPreviewProps> {
     }
 
     this.updatingPreviewImage = true;
-    this.setPreviewImageDataUri(await getMapImage(72, false, translateX, translateY));
+    this.setPreviewImageDataUri(await getMapImage({ resolution: 72, withDesignations: false, translateX, translateY }));
     this.resetDrag();
     this.updatingPreviewImage = false;
 
     if (this.needUpdatePreviewImageAfterUpdate) {
-      this.updatePreview();
+      void this.updatePreview();
     }
   }
 
@@ -155,14 +158,14 @@ export class PrintDialogPreview extends Component<PrintDialogPreviewProps> {
   }
 
   @boundMethod
-  private dragEndHandler(e: React.DragEvent<HTMLDivElement>) {
+  private async dragEndHandler(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
 
     const { clientWidth, clientHeight } = this.previewRef.current;
     const translateX = (this.previewDragX - this.previewDragStartX) / clientWidth;
     const translateY = (this.previewDragY - this.previewDragStartY) / clientHeight;
 
-    this.updatePreview(translateX, translateY);
+    await this.updatePreview(translateX, translateY);
   }
 
   @action

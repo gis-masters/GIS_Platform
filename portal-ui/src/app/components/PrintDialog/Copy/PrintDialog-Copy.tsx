@@ -1,0 +1,102 @@
+import React, { Component } from 'react';
+import { action, observable } from 'mobx';
+import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
+import { Fab, Tooltip } from '@material-ui/core';
+import { FileCopyOutlined } from '@material-ui/icons';
+import { boundMethod } from 'autobind-decorator';
+
+import { copyNodeToClipboard } from '../../../services/util/copyNodeToClipboard';
+import { getMapImage, ImageMime, prepareMapCopying } from '../../../services/map/map-print.service';
+import { Toast } from '../../Toast/Toast';
+
+import '!style-loader!css-loader!sass-loader!./PrintDialog-Copy.scss';
+
+const cnPrintDialogCopy = cn('PrintDialog', 'Copy');
+
+@observer
+export class PrintDialogCopy extends Component {
+  @observable private ready = false;
+  @observable private hover = false;
+  private node?: HTMLDivElement;
+  private operationId?: symbol;
+  private clipboardApiAvailable: boolean;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    this.clipboardApiAvailable = Boolean(navigator.clipboard?.write);
+  }
+
+  render() {
+    const disabled = !this.clipboardApiAvailable && !this.ready;
+
+    return (
+      <Tooltip title={disabled ? 'Подождите...' : 'Скопировать изображение в буфер обмена'}>
+        <div className={cnPrintDialogCopy()} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
+          <Fab
+            size='small'
+            onClick={this.handleClick}
+            disabled={disabled}
+            color={this.clipboardApiAvailable ? 'default' : 'primary'}
+          >
+            <FileCopyOutlined />
+          </Fab>
+        </div>
+      </Tooltip>
+    );
+  }
+
+  @boundMethod
+  private async handleMouseEnter() {
+    if (this.clipboardApiAvailable) {
+      return;
+    }
+    this.setHover(true);
+    const operationId = Symbol();
+    this.operationId = operationId;
+    const img = await prepareMapCopying();
+    if (this.hover && this.operationId === operationId) {
+      this.setReady(true);
+      this.node = img;
+    } else {
+      img.remove();
+    }
+  }
+
+  @boundMethod
+  private handleMouseLeave() {
+    if (this.clipboardApiAvailable) {
+      return;
+    }
+    this.setHover(false);
+    if (this.node) {
+      this.node.remove();
+      delete this.node;
+    }
+    this.setReady(false);
+  }
+
+  @boundMethod
+  private async handleClick() {
+    if (this.clipboardApiAvailable) {
+      const src = await getMapImage({ mime: ImageMime.PNG, hideScaleDigits: true });
+      const request = await fetch(src);
+      const blob = await request.blob();
+      const clipboardItemInput = new ClipboardItem({ [ImageMime.PNG]: blob });
+      await navigator.clipboard.write([clipboardItemInput]);
+    } else {
+      copyNodeToClipboard(this.node);
+    }
+    Toast.success('Скопировано в буфер обмена');
+  }
+
+  @action
+  private setHover(hover: boolean) {
+    this.hover = hover;
+  }
+
+  @action
+  private setReady(ready: boolean) {
+    this.ready = ready;
+  }
+}

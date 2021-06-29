@@ -24,7 +24,7 @@ export const LayersTreeInner: FC<LayersTreeInnerProps> = observer(
       {(editMode ? currentProject.visibleTreeWithEmptyGroups : currentProject.visibleTree).map((item, i) => (
         <LayersTreeItemContainer
           editMode={editMode}
-          key={`${item.isGroup}${item.id}`}
+          key={`${item.isGroup ? 'g' : 'l'}${item.id}`}
           index={i}
           id={`LayersTreeItem_${item.isGroup ? 'g' : 'l'}_${item.id}`}
         >

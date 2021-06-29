@@ -1,6 +1,6 @@
 import GeometryType from 'ol/geom/GeometryType';
 
-import { FeatureDescription, PropertySchema, ValueType } from './crg/schema.models';
+import { FeatureDescription, PropertySchema } from './crg/schema.models';
 
 interface PageableLink {
   href: string;
@@ -120,4 +120,12 @@ export const NOT_IMPORT_LAYER: FeatureDescription = {
 export enum SortDir {
   ASC = 'asc',
   DESC = 'desc'
+}
+
+export interface PageOptions {
+  page: number;
+  pageSize: number;
+  sort?: string;
+  sortDir?: SortDir;
+  filter?: { [key: string]: string };
 }

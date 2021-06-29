@@ -51,6 +51,7 @@ export class Link extends Component<LinkProps> {
     if (!target || disabled || delay) {
       if (disabled) {
         e.preventDefault();
+
         return;
       }
 
@@ -62,7 +63,7 @@ export class Link extends Component<LinkProps> {
         }
 
         services.ngZone.run(() => {
-          services.router.navigateByUrl(url);
+          void services.router.navigateByUrl(url);
         });
       }
     }

@@ -55,7 +55,7 @@ export interface ExplorerProps extends IClassNameProps {
 export class Explorer extends Component<ExplorerProps> {
   @observable private busy = false;
 
-  private gettingChildrenToken: Symbol;
+  private gettingChildrenToken: symbol;
   private onSelectReactionDispose: IReactionDisposer;
   private store: ExplorerStore;
   private subscribedRefreshEmitterTypes: ExplorerItemType[] = [];
@@ -85,7 +85,7 @@ export class Explorer extends Component<ExplorerProps> {
 
   componentDidUpdate(prevProps: ExplorerProps) {
     if (!isEqual(prevProps, this.props)) {
-      this.init(this.props);
+      this.init({ ...this.props });
     }
   }
 
@@ -126,32 +126,30 @@ export class Explorer extends Component<ExplorerProps> {
 
   @boundMethod
   private async openItem(item: ExplorerItemData, page: number, depth?: number) {
-    const { store, props } = this;
-
-    if (props.onOpen) {
-      props.onOpen(item, store.path);
+    if (this.props.onOpen) {
+      this.props.onOpen(item, this.store.path);
     }
 
     if (!isFolder(item)) {
       return;
     }
 
-    if (depth !== store.path.length - 2) {
-      store.setSortItems(getChildrenSortItems(item));
-      store.setSort(getChildrenSortDefaultValue(item));
-      store.setSortDir(getChildrenSortDefaultDirection(item));
-      store.setFilter({});
+    if (depth !== this.store.path.length - 2) {
+      this.store.setSortItems(getChildrenSortItems(item));
+      this.store.setSort(getChildrenSortDefaultValue(item));
+      this.store.setSortDir(getChildrenSortDefaultDirection(item));
+      this.store.setFilter({});
     }
 
     try {
-      store.selectItem(item);
+      this.store.selectItem(item);
       this.setBusy(true);
-      const { pageSize, sort, sortDir, filter } = store;
+      const { pageSize, sort, sortDir, filter } = this.store;
 
       const gettingChildrenToken = Symbol();
       this.gettingChildrenToken = gettingChildrenToken;
 
-      const [children, pagesCount] = await getChildren(item, page, pageSize, sort, sortDir, filter);
+      const [children, pagesCount] = await getChildren(item, { page, pageSize, sort, sortDir, filter });
 
       if (gettingChildrenToken === this.gettingChildrenToken) {
         children.forEach(child => {
@@ -164,11 +162,11 @@ export class Explorer extends Component<ExplorerProps> {
           }
         });
 
-        store.setPage(page);
+        this.store.setPage(page);
         this.setChildren(item, children, pagesCount, depth);
       }
-    } catch (e) {
-      throw Error('Ошибка при получении элементов' + e);
+    } catch (error) {
+      throw new Error('Ошибка при получении элементов' + String(error));
     } finally {
       this.setBusy(false);
     }
@@ -181,12 +179,10 @@ export class Explorer extends Component<ExplorerProps> {
     }
 
     const { path, selectedItem, openedItem: currentItem, page, totalPages } = this.store;
-    const action = (Object.keys(keyActions) as (keyof typeof keyActions)[]).find(key =>
-      keyActions[key].includes(e.key)
-    );
+    const action = Object.keys(keyActions).find(key => keyActions[key].includes(e.key));
 
     if (action === KeyAction.BACK && path.length >= 3) {
-      this.openItem(path[path.length - 3], 0, path.length - 3);
+      void this.openItem(path[path.length - 3], 0, path.length - 3);
     }
 
     if (action === KeyAction.PAGE_PREV && page > 0) {
@@ -209,20 +205,20 @@ export class Explorer extends Component<ExplorerProps> {
     }
 
     if (action === KeyAction.OPEN) {
-      this.openItem(selectedItem, 0);
+      void this.openItem(selectedItem, 0);
     }
   }
 
   @boundMethod
   private paginate(page: number) {
     const { path, openedItem: currentItem } = this.store;
-    this.openItem(currentItem, page, path.length - 2);
+    void this.openItem(currentItem, page, path.length - 2);
   }
 
   @boundMethod
   private handleQueryChange() {
     const { path, openedItem: currentItem } = this.store;
-    this.openItem(currentItem, 0, path.length - 2);
+    void this.openItem(currentItem, 0, path.length - 2);
   }
 
   @action
@@ -245,6 +241,6 @@ export class Explorer extends Component<ExplorerProps> {
   private refresh() {
     const { store } = this;
 
-    this.openItem(store.openedItem, 0, store.path.length - 2);
+    void this.openItem(store.openedItem, 0, store.path.length - 2);
   }
 }

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
-import { SortDir } from '../../../../services/models';
 import { Emitter } from '../../../../services/util/Emitter';
+import { PageOptions, SortDir } from '../../../../services/models';
 import { Basemap } from '../../../../services/crg/basemaps.models';
 import { getBasemaps } from '../../../../services/crg/basemaps.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
@@ -18,33 +18,29 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeBasemapsRoot {
-  static getId(item: ExplorerItemData<null>) {
+  static getId(): string {
     return 'basemapsRoot';
   }
 
-  static getTitle(item: ExplorerItemData<Basemap>) {
+  static getTitle(): string {
     return 'Подложки';
   }
 
-  static getMeta(item: ExplorerItemData<Basemap>) {
+  static getMeta(): string {
     return '';
   }
 
-  static getIcon() {
+  static getIcon(): ReactNode {
     return <BasemapIcon color='primary' />;
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return true;
   }
 
   static async getChildren(
     item: ExplorerItemData,
-    page: number,
-    pageSize: number,
-    sort?: string,
-    sortDir?: SortDir,
-    filter?: { [key: string]: string }
+    { page, pageSize, sort, sortDir, filter }: PageOptions
   ): Promise<[ExplorerItemData<Basemap>[], number]> {
     const [basemaps, totalPages] = await getBasemaps(page, pageSize, sort, sortDir, filter);
     const items: ExplorerItemData<Basemap>[] = basemaps.map(basemap => ({
@@ -72,7 +68,7 @@ export class ExplorerAdapterTypeBasemapsRoot {
     return SortDir.DESC;
   }
 
-  static getRefreshEmitters(item: ExplorerItemData): Emitter[] {
+  static getRefreshEmitters(): Emitter[] {
     return [communicationService.libraryItemsUpdated];
   }
 }

@@ -33,15 +33,23 @@ class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
     let Icon: SvgIconComponent;
     let htmlColor: string;
 
-    if (this.geometryType === GeometryType.MULTI_POLYGON) {
-      Icon = Shape;
-    } else if (this.geometryType === GeometryType.MULTI_LINE_STRING) {
-      Icon = Timeline;
-    } else if (this.geometryType === GeometryType.POINT) {
-      Icon = Adjust;
-    } else {
-      Icon = ReportProblemOutlined;
-      htmlColor = '#ffc107';
+    switch (this.geometryType) {
+      case GeometryType.MULTI_POLYGON: {
+        Icon = Shape;
+        break;
+      }
+      case GeometryType.MULTI_LINE_STRING: {
+        Icon = Timeline;
+        break;
+      }
+      case GeometryType.POINT: {
+        Icon = Adjust;
+        break;
+      }
+      default: {
+        Icon = ReportProblemOutlined;
+        htmlColor = '#ffc107';
+      }
     }
 
     return (
@@ -62,5 +70,7 @@ class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
 export const withTypeVector = withBemMod<LayerIconTypeVectorProps, LayerIconProps>(
   cnLayerIcon(),
   { type: 'vector' },
-  () => ({ className, ...props }) => <LayerIconTypeVector {...props} className={cnLayerIcon(null, [className])} />
+  () =>
+    ({ className, ...props }) =>
+      <LayerIconTypeVector {...props} className={cnLayerIcon(null, [className])} />
 );

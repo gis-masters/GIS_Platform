@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { Storage } from '@material-ui/icons';
 
 import { Dataset, DataTable, getDatasetTables } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { SortDir } from '../../../../services/models';
+import { PageOptions, SortDir } from '../../../../services/models';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -17,15 +17,15 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeDataset {
-  static getId(item: ExplorerItemData<Dataset>) {
+  static getId(item: ExplorerItemData<Dataset>): string {
     return `${item.type}:${item.payload.identifier}`;
   }
 
-  static getTitle(item: ExplorerItemData<Dataset>) {
+  static getTitle(item: ExplorerItemData<Dataset>): string {
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<Dataset>) {
+  static getDescription(item: ExplorerItemData<Dataset>): ReactNode {
     const { details, itemsCount, createdAt } = item.payload;
     moment.locale('ru');
 
@@ -48,25 +48,21 @@ export class ExplorerAdapterTypeDataset {
     );
   }
 
-  static getMeta(item: ExplorerItemData<Dataset>) {
+  static getMeta(item: ExplorerItemData<Dataset>): string {
     return item.payload.identifier;
   }
 
-  static getIcon() {
+  static getIcon(): ReactNode {
     return <Storage color='primary' />;
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return true;
   }
 
   static async getChildren(
     item: ExplorerItemData<Dataset>,
-    page: number,
-    pageSize: number,
-    sort?: string,
-    sortDir?: SortDir,
-    filter?: { [key: string]: string }
+    { page, pageSize, sort, sortDir, filter }: PageOptions
   ): Promise<[ExplorerItemData<DataTable>[], number]> {
     const [tables, pagesCount] = await getDatasetTables(item.payload, page, pageSize, sort, sortDir, filter);
 

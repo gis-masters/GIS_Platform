@@ -12,7 +12,7 @@ const defaultConfig: CustomCacheConfig = {
   maxAge: 15 * 60 * 1000
 };
 
-const STALE_CHECK_DELAY = 10000;
+const STALE_CHECK_DELAY = 10_000;
 
 export class CustomCache<T = unknown> {
   private lastStaleCheck = 0;
@@ -30,12 +30,12 @@ export class CustomCache<T = unknown> {
       return;
     }
 
-    if (this.store[key] && !this.isItemStale(this.store[key], new Date().getTime())) {
+    if (this.store[key] && !this.isItemStale(this.store[key], Date.now())) {
       return this.store[key].payload;
     }
   }
 
-  add(key: string, payload: T, config: CustomCacheConfig = {}) {
+  add(key: string, payload: T, config: CustomCacheConfig = {}): void {
     const { disabled, maxAge }: CustomCacheConfig = { ...this.config, ...config };
 
     if (disabled) {
@@ -43,19 +43,19 @@ export class CustomCache<T = unknown> {
     }
 
     this.store[key] = {
-      expires: new Date().getTime() + maxAge,
+      expires: Date.now() + maxAge,
       payload
     };
 
     this.checkForStale();
   }
 
-  clear() {
+  clear(): void {
     this.store = {};
   }
 
   private checkForStale() {
-    const now = new Date().getTime();
+    const now = Date.now();
 
     if (now < this.lastStaleCheck + STALE_CHECK_DELAY) {
       return;

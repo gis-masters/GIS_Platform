@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { LocalLibrary } from '@material-ui/icons';
 
-import { SortDir } from '../../../../services/models';
+import { PageOptions, SortDir } from '../../../../services/models';
 import { Emitter } from '../../../../services/util/Emitter';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 import { schemaService } from '../../../../services/crg/schema.service';
@@ -28,15 +28,15 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeLibrary {
-  static getId(item: ExplorerItemData<LibraryRecord>) {
+  static getId(item: ExplorerItemData<LibraryRecord>): string {
     return `${item.type}:${item.payload.identifier}`;
   }
 
-  static getTitle(item: ExplorerItemData<LibraryRecord>) {
+  static getTitle(item: ExplorerItemData<LibraryRecord>): string {
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<LibraryRecord>) {
+  static getDescription(item: ExplorerItemData<LibraryRecord>): ReactNode {
     const { details, createdAt } = item.payload;
     moment.locale('ru');
 
@@ -54,36 +54,28 @@ export class ExplorerAdapterTypeLibrary {
     );
   }
 
-  static getMeta(item: ExplorerItemData<LibraryRecord>) {
+  static getMeta(item: ExplorerItemData<LibraryRecord>): string {
     return String(item.payload.identifier);
   }
 
-  static getIcon() {
+  static getIcon(): ReactNode {
     return <LocalLibrary color='primary' />;
   }
 
-  static isFolder() {
+  static isFolder(): boolean {
     return true;
   }
 
   static async getChildren(
     explorerItem: ExplorerItemData<DocumentLibrary>,
-    page: number,
-    pageSize: number,
-    sort?: string,
-    sortDir?: SortDir,
-    filter?: { [key: string]: string }
+    pageOptions: PageOptions
   ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
     const result: ExplorerItemData<LibraryRecord>[] = [];
 
     const [libraryRecords, pagesCount] = await docLibraryService.getAllRecords(
       explorerItem.payload.identifier,
       explorerItem.payload.schemaId,
-      page,
-      pageSize,
-      sort,
-      sortDir,
-      filter
+      pageOptions
     );
 
     const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schemaId);
@@ -137,7 +129,7 @@ export class ExplorerAdapterTypeLibrary {
     return <CreateLibraryElement schemaId={item.payload.schemaId} store={store} />;
   }
 
-  static getEmptyListView(item: ExplorerItemData): ReactNode | undefined {
+  static getEmptyListView(): ReactNode {
     return (
       <EmptyListView
         text='Отсутствуют элементы для отображения'
@@ -146,7 +138,7 @@ export class ExplorerAdapterTypeLibrary {
     );
   }
 
-  static getRefreshEmitters(item: ExplorerItemData): Emitter[] {
+  static getRefreshEmitters(): Emitter[] {
     return [communicationService.libraryItemsUpdated];
   }
 }
