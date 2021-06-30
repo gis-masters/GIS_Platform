@@ -79,6 +79,7 @@ class PrintSettingsStore implements PrintSettings {
   @observable scale: number;
   @observable orientation: Orientation = 'l';
   @observable printingInProcess: boolean;
+  @observable printingResolution = 0;
   @observable margin: {
     top: number;
     right: number;
@@ -126,12 +127,12 @@ class PrintSettingsStore implements PrintSettings {
 
   @computed
   get width(): number {
-    return Math.round(((this.pageWidth - this.margin.left - this.margin.right) * this.resolution) / 25.4);
+    return Math.round(((this.pageWidth - this.margin.left - this.margin.right) * this.printingResolution) / 25.4);
   }
 
   @computed
   get height(): number {
-    return Math.round(((this.pageHeight - this.margin.top - this.margin.bottom) * this.resolution) / 25.4);
+    return Math.round(((this.pageHeight - this.margin.top - this.margin.bottom) * this.printingResolution) / 25.4);
   }
 
   @action
@@ -140,8 +141,9 @@ class PrintSettingsStore implements PrintSettings {
   }
 
   @action
-  setPrintingStatus(printingInProcess: boolean) {
+  setPrintingStatus(printingInProcess: boolean, printingResolution?: number) {
     this.printingInProcess = printingInProcess;
+    this.printingResolution = printingResolution;
   }
 
   @action

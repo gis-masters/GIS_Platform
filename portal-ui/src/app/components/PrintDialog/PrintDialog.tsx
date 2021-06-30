@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Dialog, DialogActions, DialogContent } from '@material-ui/core';
+import { Dialog, DialogActions } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { exportMap, printMap } from '../../services/map/map-print.service';
 import { Button } from '../Button/Button';
 
+import { PrintDialogContent } from './Content/PrintDialog-Content';
 import { PrintDialogPreview } from './Preview/PrintDialog-Preview';
 import { PrintDialogForm } from './Form/PrintDialog-Form';
 
@@ -24,10 +25,10 @@ export class PrintDialog extends Component<PrintDialogProps> {
 
     return (
       <Dialog open={open} onClose={onClose} PaperProps={{ className: cnPrintDialog() }}>
-        <DialogContent className='scroll'>
+        <PrintDialogContent>
           <PrintDialogPreview open={open} />
           <PrintDialogForm onSubmit={this.submitHandler} />
-        </DialogContent>
+        </PrintDialogContent>
         <DialogActions>
           <Button className={cnPrintDialog('JpegButton')} onClick={this.exportHandler}>
             Экспорт в JPG

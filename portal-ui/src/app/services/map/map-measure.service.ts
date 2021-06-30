@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { boundMethod } from 'autobind-decorator';
-import { LineString, Polygon } from 'ol/geom';
+import { Geometry, LineString, Polygon } from 'ol/geom';
 import OverlayPositioning from 'ol/OverlayPositioning';
 import { ModifyEvent } from 'ol/interaction/Modify';
 import GeometryType from 'ol/geom/GeometryType';
@@ -26,7 +26,7 @@ import { MapMeasureTooltip } from '../../components/MapMeasureTooltip/MapMeasure
 export type MeasureMode = 'area' | 'length';
 
 export interface MeasureItem {
-  id: Symbol;
+  id: symbol;
   feature: Feature;
   tooltipRoot: HTMLElement;
   tooltipOverlay: Overlay;
@@ -34,16 +34,19 @@ export interface MeasureItem {
 
 class MapMeasureService {
   private static _instance: MapMeasureService;
+
   private source = new VectorSource();
   private sourceDraw?: Draw;
   private featureGeometryChangeListeners: EventsKey | EventsKey[];
   private sketchItem?: MeasureItem;
+  private markFillColor = 'rgba(255, 255, 255, 0.5)';
+
   private layer = new VectorLayer({
     source: this.source,
     zIndex: mapService.MEASURE_LAYER_ZINDEX,
     style: new Style({
       fill: new Fill({
-        color: 'rgba(255, 255, 255, 0.2)'
+        color: this.markFillColor
       }),
       stroke: new Stroke({
         color: '#ffcc33',
@@ -97,17 +100,18 @@ class MapMeasureService {
       if (!Array.isArray(this.featureGeometryChangeListeners)) {
         this.featureGeometryChangeListeners = [this.featureGeometryChangeListeners];
       }
-      this.featureGeometryChangeListeners.concat(
-        e.features.getArray().map(feature => {
+      [
+        ...this.featureGeometryChangeListeners,
+        ...e.features.getArray().map(feature => {
           return feature.getGeometry().on('change', (e: BaseEvent) => {
             const modifyingItem = mapStore.measureItems.find(item => item.feature === feature);
             this.featureGeometryChangeHandler(e, modifyingItem);
           });
         })
-      );
+      ];
     });
 
-    modify.on('modifyend', (e: ModifyEvent) => {
+    modify.on('modifyend', () => {
       unByKey(this.featureGeometryChangeListeners);
     });
   }
@@ -120,7 +124,7 @@ class MapMeasureService {
 
   @boundMethod
   private featureGeometryChangeHandler(e: BaseEvent, item: MeasureItem = this.sketchItem) {
-    const geom = e.target;
+    const geom = e.target as Geometry;
     let tooltipCoord: Coordinate;
 
     if (geom instanceof Polygon) {
@@ -136,7 +140,7 @@ class MapMeasureService {
   }
 
   @boundMethod
-  private async drawEndHandler(e: DrawEvent) {
+  private drawEndHandler() {
     this.sketchItem.tooltipOverlay.setOffset([0, -6]);
     this.renderTooltip(this.sketchItem, false);
     mapStore.addMeasureItem(this.sketchItem);
@@ -177,7 +181,7 @@ class MapMeasureService {
 
   @boundMethod
   clearAll() {
-    mapStore.measureItems.slice().forEach(this.clearItem);
+    [...mapStore.measureItems].forEach(this.clearItem);
   }
 
   @boundMethod
@@ -208,7 +212,7 @@ class MapMeasureService {
       type: mode === 'length' ? GeometryType.LINE_STRING : GeometryType.POLYGON,
       style: new Style({
         fill: new Fill({
-          color: 'rgba(255, 255, 255, 0.2)'
+          color: this.markFillColor
         }),
         stroke: new Stroke({
           color: 'rgba(0, 0, 0, 0.5)',
@@ -221,7 +225,7 @@ class MapMeasureService {
             color: 'rgba(0, 0, 0, 0.7)'
           }),
           fill: new Fill({
-            color: 'rgba(255, 255, 255, 0.2)'
+            color: this.markFillColor
           })
         })
       })

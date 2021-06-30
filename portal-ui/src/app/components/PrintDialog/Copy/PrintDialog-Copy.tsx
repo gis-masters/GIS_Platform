@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Fab, Tooltip } from '@material-ui/core';
-import { FileCopyOutlined } from '@material-ui/icons';
+import { Tooltip } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { copyNodeToClipboard } from '../../../services/util/copyNodeToClipboard';
 import { getMapImage, ImageMime, prepareMapCopying } from '../../../services/map/map-print.service';
 import { Toast } from '../../Toast/Toast';
+
+import { PrintDialogCopyButton } from '../CopyButton/PrintDialog-CopyButton';
 
 import '!style-loader!css-loader!sass-loader!./PrintDialog-Copy.scss';
 
@@ -33,14 +34,11 @@ export class PrintDialogCopy extends Component {
     return (
       <Tooltip title={disabled ? 'Подождите...' : 'Скопировать изображение в буфер обмена'}>
         <div className={cnPrintDialogCopy()} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
-          <Fab
-            size='small'
+          <PrintDialogCopyButton
             onClick={this.handleClick}
             disabled={disabled}
             color={this.clipboardApiAvailable ? 'default' : 'primary'}
-          >
-            <FileCopyOutlined />
-          </Fab>
+          />
         </div>
       </Tooltip>
     );

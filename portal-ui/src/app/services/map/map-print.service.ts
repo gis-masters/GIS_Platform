@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { mapService } from './map.service';
 import { PrintDialogDate } from '../../components/PrintDialog/Date/PrintDialog-Date';
+import { mapStore } from '../../stores/Map.store';
 
 const BASE_SCALE_LINE_DPI = 150;
 
@@ -71,13 +72,15 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
     mime: ImageMime.JPG,
     ...options
   };
+
+  printSettings.setPrintingStatus(true, resolution);
+
   const { map, view, scaleLine } = mapService;
+  const { width, height, scale, windRose, date, border } = printSettings;
+
   const size = map.getSize();
   const viewResolution = view.getResolution();
-  const { width, height, scale, windRose, date, border } = printSettings;
   const scaleResolution = scale / 1000 / getPointResolution(view.getProjection(), resolution / 25.4, view.getCenter());
-
-  printSettings.setPrintingStatus(true);
 
   // Set print size
   scaleLine.setDpi(resolution);
@@ -119,6 +122,8 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
       const designationsResize = resolution / BASE_SCALE_LINE_DPI;
 
       CanvasRenderingContext2D.prototype.resetTransform.apply(mapContext);
+
+      await drawMeasurementsTooltips(mapContext);
 
       if (withDesignations) {
         imagesPromises.push(drawScaleLine(mapContext, designationsResize, hideScaleDigits));
@@ -256,4 +261,38 @@ export async function getDateImageSrc(resolution?: number): Promise<string> {
   el.remove();
 
   return src;
+}
+
+async function drawMeasurementsTooltips(mapContext: CanvasRenderingContext2D): Promise<void> {
+  for (const item of mapStore.measureItems) {
+    const container = item.tooltipOverlay.getElement().parentElement;
+    const translateFound = /(-?\d+(?:\.\d+)?)px, (-?\d+(?:\.\d+)?)px/.exec(container.style.transform);
+
+    if (!translateFound) {
+      return;
+    }
+
+    const [, translateX, translateY] = translateFound.map(Number);
+
+    const src = await domToImage.toPng(item.tooltipRoot.childNodes[0]);
+
+    await new Promise<void>(resolve => {
+      const img = new Image();
+      img.src = src;
+      img.addEventListener('load', () => {
+        mapContext.drawImage(
+          img,
+          0,
+          0,
+          img.width,
+          img.height,
+          translateX - img.width / 2,
+          translateY - img.height + 6,
+          img.width,
+          img.height
+        );
+        resolve();
+      });
+    });
+  }
 }

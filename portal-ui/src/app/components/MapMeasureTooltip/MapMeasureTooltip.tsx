@@ -1,4 +1,4 @@
-import React, { Component, FC } from 'react';
+import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
@@ -7,6 +7,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { mapStore } from '../../stores/Map.store';
+import { printSettings } from '../../stores/PrintSettings.store';
 import { MeasureItem } from '../../services/map/map-measure.service';
 import {
   formatArea,
@@ -30,6 +31,7 @@ interface MapMeasureTooltipProps {
 export class MapMeasureTooltip extends Component<MapMeasureTooltipProps> {
   render() {
     const { item, sketch } = this.props;
+    const { printingInProcess, printingResolution } = printSettings;
     const geom = item.feature.getGeometry();
     let value: number;
     let units: UnitsOfAreaMeasurement | UnitsOfLengthMeasurement;
@@ -48,9 +50,15 @@ export class MapMeasureTooltip extends Component<MapMeasureTooltipProps> {
     }
 
     return (
-      <div className={cnMapMeasureTooltip({ state: sketch ? 'sketch' : 'static' })}>
+      <div
+        className={cnMapMeasureTooltip({
+          state: sketch ? 'sketch' : 'static',
+          printing: printingInProcess
+        })}
+        style={{ '--MapMeasureTooltipPrintingResolution': printingResolution }}
+      >
         {value}{' '}
-        {switchingUnitsEnabled ? (
+        {switchingUnitsEnabled && !printingInProcess ? (
           <PseudoLink className={cnMapMeasureTooltip('UnitsSwitcher')} onClick={this.switchSquareUnits} color='inherit'>
             {units}
           </PseudoLink>

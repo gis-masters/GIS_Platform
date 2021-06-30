@@ -1,5 +1,6 @@
 dist
 my
 node_modules
+stylelint.config.js
 
 *.d.ts

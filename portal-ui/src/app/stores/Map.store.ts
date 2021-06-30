@@ -9,11 +9,11 @@ class MapStore {
   static get instance() {
     return this._instance || (this._instance = new this());
   }
-  
+
   measureItems: MeasureItem[] = observable.array([], { deep: false });
   @observable measureMode: MeasureMode | null;
   @observable unitsOfAreaMeasurement: UnitsOfAreaMeasurement = UnitsOfAreaMeasurement.HECTARE;
-  
+
   private constructor() {}
 
   @action
