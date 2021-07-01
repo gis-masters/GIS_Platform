@@ -1,23 +1,28 @@
 package ru.mycrg.audit_service.entity;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
+import dto.AuditEventDto;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "audit_events")
-@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
-public class AuditEventEntity {
+@TypeDef(
+        name = "jsonb-node",
+        typeClass = JsonNodeBinaryType.class
+)
+public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "event_date_time")
-    private Timestamp eventDateTime;
+    private LocalDateTime eventDateTime;
 
     @Column(name = "organization_id")
     private Long organizationId;
@@ -35,28 +40,33 @@ public class AuditEventEntity {
     private Long entityId;
 
     @Column(name = "entity_state_after")
-    @Type(type = "jsonb")
-    private String entityStateAfter;
+    @Type(type = "jsonb-node")
+    private JsonNode entityStateAfter;
 
-    public AuditEventEntity() {
+    public Event() {
+        // Framework required
     }
 
-    public AuditEventEntity(Long organizationId, String userName, String actionType, String entityName,
-                            Long entityId, String entityStateAfter) {
-        this.eventDateTime = new Timestamp(System.currentTimeMillis());
+    public Event(LocalDateTime eventDateTime, Long organizationId, String userName, String actionType) {
+        this.eventDateTime = eventDateTime;
         this.organizationId = organizationId;
         this.userName = userName;
         this.actionType = actionType;
-        this.entityName = entityName;
-        this.entityId = entityId;
-        this.entityStateAfter = entityStateAfter;
     }
 
-    public Timestamp getEventDateTime() {
+    public Event(AuditEventDto auditEventDto, Long organizationId, String userName) {
+        this(auditEventDto.getEventDateTime(), organizationId, userName, auditEventDto.getActionType());
+
+        this.entityName = auditEventDto.getEntityName();
+        this.entityId = auditEventDto.getEntityId();
+        this.entityStateAfter = auditEventDto.getEntityStateAfter();
+    }
+
+    public LocalDateTime getEventDateTime() {
         return eventDateTime;
     }
 
-    public void setEventDateTime(Timestamp eventDateTime) {
+    public void setEventDateTime(LocalDateTime eventDateTime) {
         this.eventDateTime = eventDateTime;
     }
 
@@ -108,11 +118,11 @@ public class AuditEventEntity {
         this.entityId = entityId;
     }
 
-    public String getEntityStateAfter() {
+    public JsonNode getEntityStateAfter() {
         return entityStateAfter;
     }
 
-    public void setEntityStateAfter(String entityStateAfter) {
+    public void setEntityStateAfter(JsonNode entityStateAfter) {
         this.entityStateAfter = entityStateAfter;
     }
 }

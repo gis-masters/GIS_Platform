@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS public.audit_events
     organization_id    bigint      NOT NULL,
     user_name          varchar(60) NOT NULL,
     action_type        varchar(20) NOT NULL,
-    entity_name        varchar(100) NOT NULL,
-    entity_id          bigint      NOT NULL,
+    entity_name        varchar(100),
+    entity_id          bigint,
     entity_state_after jsonb,
     CONSTRAINT crg_audit_events_pkey PRIMARY KEY (id)
 ) TABLESPACE pg_default;

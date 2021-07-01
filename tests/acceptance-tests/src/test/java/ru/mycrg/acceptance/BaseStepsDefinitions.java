@@ -1,5 +1,8 @@
 package ru.mycrg.acceptance;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -19,6 +22,7 @@ import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +66,9 @@ public class BaseStepsDefinitions {
     public static Map<String, String> filesPool = new LinkedHashMap<>();
 
     public static Integer currentId;
+
+    public ObjectMapper mapper = new ObjectMapper();
+    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public Integer getCurrentId() {
         return currentId;
@@ -153,6 +160,26 @@ public class BaseStepsDefinitions {
             default:
                 return input;
         }
+    }
+
+    public String generateJsonString(String command) {
+        if ("JSON".equals(command)) {
+            return "{\"name\": \"Jon\",  \"age\": \"19\"}";
+        }
+
+        return command;
+    }
+
+    public JsonNode createJsonNode(String jsonString) {
+        JsonNode jsonNode = null;
+
+        try {
+            jsonNode = mapper.readValue(jsonString, JsonNode.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return jsonNode;
     }
 
     public void checkPagesCount(String entityType, String entitiesPerPage) {

@@ -77,6 +77,7 @@
         <module>contracts/auth-service-contract</module>
         <module>contracts/integration-service-contract</module>
         <module>contracts/data-service-contract</module>
+        <module>contracts/audit-service-contract</module>
 
         <module>contracts/common-utils</module>
         <module>contracts/messagebus-starter</module>

@@ -57,6 +57,11 @@ zuul:
       path: /crg-ws-endpoint/**
       url: http://crg-data-service:8084/crg-ws-endpoint/
 
+    # AUDIT SERVICE
+    crg-audit-service:
+      path: /events/**
+      url: http://crg-audit-service:8086/events/
+
     # Geoserver
     geoserver:
       path: /geoserver/**

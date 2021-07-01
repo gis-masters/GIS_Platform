@@ -1,7 +1,9 @@
-package ru.mycrg.audit_service.entity;
+package dto;
 
 public enum AuditEventActionsType {
     CREATE,
     UPDATE,
-    DELETE
+    DELETE,
+    SIGN_IN,
+    SIGN_OUT
 }

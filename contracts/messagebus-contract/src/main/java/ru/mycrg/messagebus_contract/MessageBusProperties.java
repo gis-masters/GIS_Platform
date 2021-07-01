@@ -47,6 +47,11 @@ public class MessageBusProperties {
     public static final String USER_RESPONSE_FANOUT = "user.response.fanout";
     public static final String USER_RESPONSE_KEY = "user.response.key";
 
+    // Audit
+    public static final String AUDIT_REQUEST_QUEUE = "audit.request.queue";
+    public static final String AUDIT_REQUEST_FANOUT = "audit.request.fanout";
+    public static final String AUDIT_REQUEST_KEY = "audit.request.key";
+
     // deleteRemoteReferences
     public static final String COMMON_REQUEST_QUEUE = "commonRequestQueue";
     public static final String COMMON_RESPONSE_QUEUE = "commonResponseQueue";
