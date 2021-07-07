@@ -24,6 +24,7 @@ import { boundMethod } from 'autobind-decorator';
 import { mapStore } from '../../stores/Map.store';
 import { currentMap } from '../../stores/CurrentMap.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
+import { route } from '../../stores/Route.store';
 import { communicationService } from '../communication.service';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
 import { Basemap, SourceType } from '../crg/basemaps.models';
@@ -58,6 +59,11 @@ interface CrgAdditionalLayerInfo {
   isUserLayer: boolean;
 }
 
+interface MapPosition {
+  zoom: number;
+  center: string;
+}
+
 interface LayerAdditionalProps {
   crgInfo: CrgAdditionalLayerInfo;
 }
@@ -76,6 +82,7 @@ class MapService {
   }
 
   mapClick = new Emitter<Coordinate>();
+  mapMoved = new Emitter<MapPosition>();
   zoomChanged = new Emitter<number>();
   modificationEnabled = new Emitter();
   modificationDisabled = new Emitter();
@@ -88,6 +95,9 @@ class MapService {
   view: View;
   scaleLine: ScaleLine;
   private markersSource: VectorSource;
+
+  private zoom: number;
+  private center: number[];
 
   private draftStyle: Style;
   private draftSource: VectorSource;
@@ -148,9 +158,19 @@ class MapService {
 
     this.draftSourceModify = new Modify({ source: this.draftSource });
 
+    const queryParams = route.queryParams as { [key: string]: string };
+
+    if (queryParams.zoom && queryParams.center) {
+      this.zoom = Number(queryParams.zoom);
+      this.center = [Number(queryParams.center.split(',')[0]), Number(queryParams.center.split(',')[1])];
+    }
+
     this.view = new View({
-      center: this.defaultViewPoint,
-      zoom: this.defaultZoomValue,
+      center:
+        this.center && !Number.isNaN(this.center[0]) && !Number.isNaN(this.center[1])
+          ? this.center
+          : this.defaultViewPoint,
+      zoom: this.zoom && !Number.isNaN(this.zoom) ? this.zoom : this.defaultZoomValue,
       minZoom: 3,
       maxZoom: 25
     });
@@ -190,6 +210,13 @@ class MapService {
           zIndex: this.MARKERS_LAYER_ZINDEX
         })
       ]
+    });
+
+    this.map.on('moveend', () => {
+      this.mapMoved.emit({
+        zoom: this.map.getView().getZoom(),
+        center: this.map.getView().getCenter().join(',')
+      });
     });
 
     this.map.on('singleclick', e => {

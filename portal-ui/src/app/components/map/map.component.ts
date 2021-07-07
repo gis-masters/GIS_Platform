@@ -17,6 +17,8 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { fromMobx } from '../../services/util/fromMobx';
 import { Emitter } from '../../services/util/Emitter';
 import { sidebars } from '../../stores/Sidebars.store';
+import { services } from '../../services/services';
+import { route } from '../../stores/Route.store';
 
 type NamesChunks = { [srsName: string]: string[] };
 
@@ -44,7 +46,8 @@ export class MapComponent implements OnInit, OnDestroy {
     mapService.createMap();
 
     // Позиционируемся по BBOX проекта
-    if (currentProject.bbox) {
+
+    if (currentProject.bbox && !route.queryParams.center) {
       mapService.fitToBbox(JSON.parse(currentProject.bbox), [0, 0, 0, 0]);
     }
 
@@ -118,6 +121,7 @@ export class MapComponent implements OnInit, OnDestroy {
       });
 
     mapService.mapClick.on(coordinate => this.showFeaturesInfo(coordinate), this);
+    mapService.mapMoved.on(({ zoom, center }) => this.setMapPosition(zoom, center), this);
     mapService.zoomChanged.on(value => currentProject.changeZoom(value), this);
   }
 
@@ -180,5 +184,14 @@ export class MapComponent implements OnInit, OnDestroy {
       sidebars.closeFeatures();
       sidebars.closeEdit();
     }
+  }
+
+  private async setMapPosition(zoom: number, center: string): Promise<void> {
+    await services.router.navigate([location.pathname], {
+      queryParams: {
+        zoom: Number(zoom).toFixed(2),
+        center
+      }
+    });
   }
 }

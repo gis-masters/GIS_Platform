@@ -29,7 +29,7 @@ export class MapMeasure extends Component {
         </Tooltip>
         <Tooltip title='Измерить площадь'>
           <IconButton
-            onClick={this.handleAreraClick}
+            onClick={this.handleAreaClick}
             size='small'
             color={mapStore.measureMode === 'area' ? 'secondary' : 'default'}
           >
@@ -53,7 +53,7 @@ export class MapMeasure extends Component {
   }
 
   @boundMethod
-  private handleAreraClick() {
+  private handleAreaClick() {
     this.selectMode('area');
   }
 
