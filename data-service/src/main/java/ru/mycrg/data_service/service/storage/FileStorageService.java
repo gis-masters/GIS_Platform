@@ -48,7 +48,7 @@ public class FileStorageService {
 
             return targetLocation.normalize().toString();
         } catch (IOException e) {
-            throw new DataServiceException("Could not store file: " + targetLocation.toString(), e);
+            throw new DataServiceException("Could not store file: " + targetLocation, e);
         }
     }
 

@@ -120,7 +120,9 @@ export class ExplorerAdapterTypeFolder {
   }
 
   static getToolbarActions(item: ExplorerItemData<LibraryRecord>, store: ExplorerStore): ReactNode {
-    return <CreateLibraryElement schemaId={item.payload.schemaId} parent={item.payload.id} store={store} />;
+    const path = item.payload.path + '/' + item.payload.id;
+
+    return <CreateLibraryElement schemaId={item.payload.schemaId} path={path} store={store} />;
   }
 
   static getEmptyListView(): ReactNode | undefined {

@@ -20,6 +20,9 @@ public class DocumentLibrary {
     @Column(length = 1024)
     private String details;
 
+    @Column
+    private String path;
+
     @Column(nullable = false)
     private String tableName;
 
@@ -102,5 +105,13 @@ public class DocumentLibrary {
 
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

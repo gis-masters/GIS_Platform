@@ -1,173 +1,207 @@
 package ru.mycrg.data_service.service;
 
-import org.jetbrains.annotations.NotNull;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.common_utils.security.RoleHierarchy;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
-import ru.mycrg.data_service.dto.Roles;
+import ru.mycrg.data_service.dto.Resource;
 import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Principal;
-import ru.mycrg.data_service.entity.Resource;
-import ru.mycrg.data_service.exceptions.ConflictException;
-import ru.mycrg.data_service.exceptions.ForbiddenException;
-import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.repository.PermissionsRepository;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
-import ru.mycrg.data_service.security.UserDetails;
-import ru.mycrg.data_service.service.resources.PrincipalService;
+import ru.mycrg.data_service.entity.Role;
+import ru.mycrg.data_service.entity.SchemasAndTables;
+import ru.mycrg.data_service.exceptions.*;
+import ru.mycrg.data_service.repository.PermissionRepository;
+import ru.mycrg.data_service.repository.PrincipalRepository;
+import ru.mycrg.data_service.repository.RoleRepository;
+import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
+import ru.mycrg.data_service.security.AuthenticationFacade;
 import ru.mycrg.data_service.service.resources.ResourceProtector;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.common_utils.Paginator.getPage;
+import static ru.mycrg.data_service.util.RoleHandler.defineIdByRole;
 
 @Service
 @Transactional
 public class PermissionsService {
 
-    private final RoleHierarchy roleHierarchy;
-    private final PrincipalService principalService;
-    private final ResourceProtector resourceProtector;
     private final ProjectionFactory projectionFactory;
-    private final IAuthenticationFacade authenticationFacade;
-    private final PermissionsRepository permissionsRepository;
+    private final RoleRepository roleRepository;
+    private final ResourceProtector resourceProtector;
+    private final PrincipalService principalService;
+    private final AuthenticationFacade authenticationFacade;
+    private final PrincipalRepository principalRepository;
+    private final PermissionRepository permissionRepository;
+    private final SchemasAndTablesRepository schemasAndTablesRepository;
 
-    public PermissionsService(PermissionsRepository permissionsRepository,
-                              IAuthenticationFacade authenticationFacade,
+    public PermissionsService(ResourceProtector resourceProtector,
                               PrincipalService principalService,
-                              RoleHierarchy roleHierarchy,
-                              ResourceProtector resourceProtector,
-                              ProjectionFactory projectionFactory) {
-        this.roleHierarchy = roleHierarchy;
-        this.principalService = principalService;
+                              PermissionRepository permissionRepository,
+                              PrincipalRepository principalRepository,
+                              RoleRepository roleRepository,
+                              AuthenticationFacade authenticationFacade,
+                              ProjectionFactory projectionFactory,
+                              SchemasAndTablesRepository schemasAndTablesRepository) {
         this.resourceProtector = resourceProtector;
-        this.projectionFactory = projectionFactory;
-        this.permissionsRepository = permissionsRepository;
+        this.principalService = principalService;
+        this.permissionRepository = permissionRepository;
+        this.principalRepository = principalRepository;
+        this.roleRepository = roleRepository;
         this.authenticationFacade = authenticationFacade;
+        this.projectionFactory = projectionFactory;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
 
     /**
      * Возвращает выборку согласно {@link Pageable} запросу.
      * <p>
-     * Если пользователь является владельцем ресурса или имеет роли GLOBAL_ADMIN, ORG_ADMIN или OWNER, возвращаются все
+     * Если пользователь является владельцем ресурса или имеет роли GLOBAL_ADMIN, ORG_ADMIN, возвращаются все
      * разрешения.
      * <p>
      * Если у пользователя нет особых прав, возвращаются только его собственные разрешения выданные на данный ресурс.
      *
-     * @param resource Ресурс
-     * @param pageable Pagination information
+     * @param rQualifier Ресурс
+     * @param pageable   Pagination information
      */
-    public Page<PermissionProjection> getPaged(Resource resource, Pageable pageable) {
-        if (resourceProtector.isAbsoluteOwner(resource)) {
-            return permissionsRepository.getAllByResource(resource, pageable);
+    public Page<PermissionProjection> getAllByResourceId(ResourceQualifier rQualifier, Long resId, Pageable pageable) {
+        final String tableName = rQualifier.toString();
+
+        if (resourceProtector.isOwner(rQualifier)) {
+            return permissionRepository.findAllByResourceTableAndResourceId(tableName, resId, pageable);
         } else {
-            final Set<String> relatedRoles = getAllRelatedRoles(resource);
-            final Optional<String> oRole = roleHierarchy.defineBest(relatedRoles);
-            if (oRole.isEmpty()) {
-                return new PageImpl<>(new ArrayList<>());
-            }
+            final List<Principal> principals = principalService.getAll();
 
-            if (oRole.get().equals(Roles.OWNER.name())) {
-                return permissionsRepository.getAllByResource(resource, pageable);
-            } else {
-                final Set<PermissionProjection> relatedPermissions = getAllRelatedPermissions(resource);
-
-                return getPage(new ArrayList<>(relatedPermissions), pageable);
-            }
+            return permissionRepository
+                    .findAllByResourceTableAndResourceIdAndPrincipalIn(tableName, resId, principals, pageable);
         }
     }
 
-    /**
-     * Находим все роли исходя из разрешений выданных на данный ресурс, имеющие отношение к пользователю(т.е. заданные
-     * либо непосредственно для пользователя либо заданные на группу в которой пользователь состоит)
-     *
-     * @param resource Ресурс
-     */
-    public Set<String> getAllRelatedRoles(Resource resource) {
-        final UserDetails userDetails = authenticationFacade.getUserDetails();
+    public Page<Resource> getAll(Pageable pageable) {
+        final Page<SchemasAndTables> schemasAndTables = schemasAndTablesRepository.findAll(pageable);
 
-        return permissionsRepository
-                .findByRelatedPermissions(resource.getId(), userDetails.getUserId(), userDetails.getGroups())
+        final List<Resource> result = schemasAndTables
                 .stream()
-                .map(PermissionProjection::getRole)
-                .collect(Collectors.toSet());
+                .map(item -> {
+                    final Resource resource = new Resource();
+                    final List<PermissionProjection> permissions = permissionRepository
+                            .findAllByResourceTableAndResourceId("schemas_and_tables", item.getId());
+
+                    resource.setCreatedAt(item.getCreatedAt().toString());
+                    resource.setPermissions(permissions);
+
+                    final boolean isFolder = item.isFolder();
+                    if (isFolder) {
+                        resource.setType("SCHEMA");
+                        resource.setIdentifier(item.getIdentifier());
+                    } else {
+                        resource.setType("TABLE");
+
+                        try {
+                            final String id = item.getPath().split("/root/")[1];
+                            schemasAndTablesRepository
+                                    .findById(Long.valueOf(id))
+                                    .ifPresent(parent -> {
+                                        final String identifier = parent.getIdentifier() + "." + item.getIdentifier();
+                                        resource.setIdentifier(identifier);
+                                    });
+                        } catch (Exception e) {
+                            resource.setIdentifier(item.getIdentifier());
+                        }
+                    }
+
+                    return resource;
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(result, pageable, schemasAndTables.getTotalElements());
     }
 
     /**
-     * Возвращает все разрешения выданные на данный ресурс, имеющие отношение к пользователю(т.е. заданные либо
-     * непосредственно для пользователя либо заданные на группу в которой пользователь состоит)
+     * Создание правила.
      *
-     * @param resource Ресурс
+     * @param tableQualifier Определяет таблицу для которой создаётся правило
+     * @param resourceId     Идентификатор объекта
+     * @param dto            Модель правила
+     *
+     * @throws ForbiddenException если у пользователя нет прав на создание.
+     * @throws ConflictException  если такое правило уже существует.
      */
-    public Set<PermissionProjection> getAllRelatedPermissions(Resource resource) {
-        final UserDetails userDetails = authenticationFacade.getUserDetails();
-
-        return permissionsRepository.findByRelatedPermissions(resource.getId(),
-                                                              userDetails.getUserId(),
-                                                              userDetails.getGroups());
-    }
-
-    public PermissionProjection create(@NotNull Resource resource,
-                                       @NotNull PermissionCreateDto dto) {
-        Set<String> relatedRoles = getAllRelatedRoles(resource);
-        if (!resourceProtector.isCreatePermissionAllowed(resource, relatedRoles)) {
+    public PermissionProjection create(ResourceQualifier tableQualifier, Long resourceId, PermissionCreateDto dto) {
+        if (!resourceProtector.isOwner(tableQualifier)) {
             throw new ForbiddenException("Not allowed create permission for this resource");
         }
 
-        final Principal principal = principalService.getOrCreate(dto.getPrincipalId(), dto.getPrincipalType());
+        try {
+            final Role role = roleRepository.findById(defineIdByRole(dto.getRole()))
+                                            .orElseThrow(() -> new NotFoundException("Not found role"));
 
-        throwIfExist(resource, principal, dto.getRole());
+            final Principal principal = principalService.getOrCreate(dto.getPrincipalId(),
+                                                                     dto.getPrincipalType());
 
-        final Optional<Permission> oPermission = permissionsRepository.findByResourceAndPrincipal(resource, principal);
-        if (oPermission.isPresent()) { // Rewrite role
-            final Permission existPermission = oPermission.get();
-            existPermission.setRole(dto.getRole());
+            final Permission permission = new Permission();
+            permission.setRole(role);
+            permission.setPrincipal(principal);
+            permission.setResourceTable(tableQualifier.toString());
+            permission.setResourceId(resourceId);
+            permission.setCreatedBy(authenticationFacade.getLogin());
 
-            final Permission updatedPermission = permissionsRepository.save(existPermission);
-
-            return projectionFactory.createProjection(PermissionProjection.class, updatedPermission);
-        } else { // Create new permission
-            final Permission newPermission = permissionsRepository.save(
-                    new Permission(resource, principal, dto.getRole()));
+            final Permission newPermission = permissionRepository.save(permission);
 
             return projectionFactory.createProjection(PermissionProjection.class, newPermission);
+        } catch (DataIntegrityViolationException e) {
+            throw new ConflictException("Already joined");
+        } catch (Exception e) {
+            throw new DataServiceException("Failed to create permission. Reason: " + e.getMessage());
         }
     }
 
-    public void deleteById(@NotNull Resource resource, Long permissionId) {
-        resource.getPermissions().stream()
-                .filter(permission -> permission.getId() == permissionId)
-                .findFirst()
-                .ifPresentOrElse(permission -> {
-                    permissionsRepository.deleteById(permission.getId());
-
-                    principalService.deleteIfNoPermissions(permission.getPrincipal());
-                }, () -> {
-                    throw new NotFoundException(permissionId);
-                });
+    public void deleteById(Long permissionId) {
+        permissionRepository.deleteById(permissionId);
     }
 
-    public void throwIfExist(Resource resource, Principal principal, String role) {
-        permissionsRepository
-                .findByResourceAndPrincipalAndRole(resource, principal, role)
-                .ifPresent(permission -> {
-                    throw new ConflictException("Already joined");
-                });
+    public Permission addOwnerPermission(ResourceQualifier targetTable, long id) {
+        final Long userId = authenticationFacade.getUserDetails().getUserId();
+
+        final Role role = roleRepository.findById(30L)
+                                        .orElseThrow(() -> new NotFoundException("Not found role"));
+
+        Principal principal = principalRepository
+                .findByIdentifierAndType(userId, "user")
+                .orElseGet(() -> principalRepository.save(new Principal(userId, "user")));
+
+        final Permission permission = new Permission();
+        permission.setRole(role);
+        permission.setPrincipal(principal);
+        permission.setCreatedAt(LocalDateTime.now());
+        permission.setLastModified(LocalDateTime.now());
+        permission.setCreatedBy(authenticationFacade.getLogin());
+        permission.setResourceTable(targetTable.getTable());
+        permission.setResourceId(id);
+
+        return permissionRepository.save(permission);
     }
 
-    private Set<Permission> getPermissions(Long id, String type) {
-        return principalService.get(id, type)
-                               .map(Principal::getPermissions)
-                               .orElseGet(HashSet::new);
+    public void delete(Permission permission) {
+        permissionRepository.delete(permission);
+    }
+
+    public void deleteAssigned(ResourceQualifier targetTable, Long resourceId) {
+        permissionRepository.deleteByResourceTableAndResourceId(targetTable.getTable(), resourceId);
+    }
+
+    public Optional<Role> getBestDatasetRole(ResourceQualifier qualifier, Long resourceId) {
+        final List<Principal> principals = principalService.getAll();
+
+        return permissionRepository.bestRoleNonHierarchy(qualifier.getTable(), resourceId, principals)
+                                   .flatMap(roleRepository::findById);
     }
 }

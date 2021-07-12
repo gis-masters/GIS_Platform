@@ -5,7 +5,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
-import ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -105,19 +104,6 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
     @And("Статус импорта {string}")
     public void checkImportStatus(String importStatus) {
         assertThat(response.jsonPath().get("import.state"), is(equalTo(importStatus)));
-    }
-
-    @When("Пользователь делает запрос на текущий набор данных")
-    public void getDatasetInfo() {
-        DatasetsStepsDefinitions datasetsStepsDefinitions = new DatasetsStepsDefinitions();
-        datasetsStepsDefinitions.getNotExistDataset(currentDatasetName);
-    }
-
-    @Then("В наборе данных есть загруженные слои")
-    public void checkLayersAvailabilityInDataset() {
-        int itemsCounts = 1;
-
-        assertThat(itemsCounts, is(equalTo(response.jsonPath().get("itemsCount"))));
     }
 
     private String getImportTasks() {

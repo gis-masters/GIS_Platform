@@ -4,45 +4,38 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.Cookie;
-import io.restassured.response.Response;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.Thread.sleep;
-import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
-import static org.junit.Assert.*;
-import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static ru.mycrg.acceptance.auth_service.AuthorizationBase.AUTH_COOKIE;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 
 public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
-    public static final String AUTH_COOKIE = "crgAuthCookie";
-    public static final String AUTH_COOKIE_VALUE_SEPARATOR = "---crg---";
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @When("Авторизируемся под рутом")
-    public Cookie authorizeAsRoot() throws InterruptedException {
-        response = authorizeUser(rootUserName, rootPassword);
+    public Cookie authorizeAsRoot() {
+        response = authorizationBase.authorizeUser(rootUserName, rootPassword);
 
-        checkCookieAndWriteAsCurrent(response);
+        authorizationBase.checkCookieAndWriteAsCurrent(response);
 
         return response.getDetailedCookie(AUTH_COOKIE);
     }
 
     @When("Авторизируемся пользователем")
-    public void tryToAuthorizeUser() throws InterruptedException {
-        response = authorizeUser(userDto.getEmail(), userDto.getPassword());
-
-        checkCookieAndWriteAsCurrent(response);
+    public void authorizeAsCurrentUser() {
+        authorizationBase.loginAsCurrentUser();
     }
 
     @When("Авторизируемся владельцем организации")
-    public void tryToGetAuthorizeAdmin() throws InterruptedException {
-        response = authorizeUser(orgDto.getOwner().getEmail(), orgDto.getOwner().getPassword());
-
-        checkCookieAndWriteAsCurrent(response);
+    public void tryToGetAuthorizeAdmin() {
+        authorizationBase.loginAsOwner();
     }
 
     @And("Пользователь не может авторизоваться")
@@ -91,42 +84,12 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
                                            get("/projects");
     }
 
-    private Response authorizeUser(String login, String password) throws InterruptedException {
-        Response authResponse;
-
-        int currentAttempt = 0;
-        do {
-            System.out.println("authorizeUser attempt: " + currentAttempt);
-            currentAttempt++;
-
-            Map<String, String> queryParams = new HashMap<String, String>() {{
-                put("username", login);
-                put("password", password);
-                put("grant_type", "password");
-            }};
-
-            authResponse = getBaseRequest()
-                    .given().
-                            formParams(queryParams)
-                    .when().
-                            post("/oauth/token");
-
-            if (authResponse.statusCode() == SC_OK) {
-                return authResponse;
-            } else {
-                sleep(RETRY_DELAY);
-            }
-        } while (currentAttempt < MAX_RETRY_ATTEMPT);
-
-        throw new RuntimeException("User not authorized: " + login);
-    }
-
-    private void checkCookieAndWriteAsCurrent(Response response) {
-        cookie = response.getDetailedCookie(AUTH_COOKIE);
-        String accessToken = response.getBody().toString();
-
-        assertNotNull(cookie);
-        assertNotNull(accessToken);
-        assertTrue(cookie.getValue().contains(AUTH_COOKIE_VALUE_SEPARATOR));
-    }
+//    private void checkCookieAndWriteAsCurrent(Response response) {
+//        cookie = response.getDetailedCookie(AUTH_COOKIE);
+//        String accessToken = response.getBody().toString();
+//
+//        assertNotNull(cookie);
+//        assertNotNull(accessToken);
+//        assertTrue(cookie.getValue().contains(AUTH_COOKIE_VALUE_SEPARATOR));
+//    }
 }

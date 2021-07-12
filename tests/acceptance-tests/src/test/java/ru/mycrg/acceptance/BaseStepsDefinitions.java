@@ -35,7 +35,7 @@ import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.*;
-import static ru.mycrg.acceptance.auth_service.AuthorizationStepDefinitions.AUTH_COOKIE_VALUE_SEPARATOR;
+import static ru.mycrg.acceptance.auth_service.AuthorizationBase.AUTH_COOKIE_VALUE_SEPARATOR;
 
 public class BaseStepsDefinitions {
 
@@ -63,7 +63,7 @@ public class BaseStepsDefinitions {
     public static Map<Integer, LayerGroupCreateDto> layerGroupPool = new LinkedHashMap<>();
     public static Map<String, DatasetCreateDto> datasetsPool = new LinkedHashMap<>();
     public static Map<Integer, LayerCreateDto> layerPool = new LinkedHashMap<>();
-    public static Map<String, String> filesPool = new LinkedHashMap<>();
+    public static Map<String, Integer> filesPool = new LinkedHashMap<>();
 
     public static Integer currentId;
 

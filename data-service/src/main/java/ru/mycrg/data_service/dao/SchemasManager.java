@@ -7,7 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.ResourceManager;
 
 import java.util.List;
@@ -31,15 +31,15 @@ public class SchemasManager implements ResourceManager {
     }
 
     @Override
-    public void create(ResourceIdentifier rIdentifier) {
+    public void create(ResourceQualifier schemaQualifier) {
         final String dbOwner = environment.getRequiredProperty("spring.datasource.username");
         try {
-            log.debug("Создание схемы {}", rIdentifier.getId());
+            log.debug("Создание схемы {}", schemaQualifier);
 
-            jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS " + rIdentifier.getId() + "; " +
-                                         "ALTER SCHEMA " + rIdentifier.getId() + " OWNER TO " + dbOwner);
+            jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS " + schemaQualifier + "; " +
+                                         "ALTER SCHEMA " + schemaQualifier + " OWNER TO " + dbOwner);
         } catch (DataAccessException e) {
-            String msg = "Не удалось создать схему: " + rIdentifier.getId();
+            String msg = "Не удалось создать схему: " + schemaQualifier.getQualifier();
 
             log.error(msg);
 
@@ -48,19 +48,21 @@ public class SchemasManager implements ResourceManager {
     }
 
     @Override
-    public boolean isExist(ResourceIdentifier rIdentifier) {
-        if (systemSchemas.contains(rIdentifier.getId())) {
-            log.info("try use system schema: {}", rIdentifier.getId());
-
-            return true;
-        }
-
-        String sql = "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '" + rIdentifier.getId() + "')";
-
+    public boolean isExist(ResourceQualifier schemaQualifier) {
         try {
-            return jdbcTemplate.queryForObject(sql, Boolean.class);
+            if (systemSchemas.contains(schemaQualifier.getQualifier())) {
+                log.info("try use system schema: {}", schemaQualifier);
+
+                return true;
+            }
+
+            String sql = "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '" + schemaQualifier + "')";
+
+            final Boolean result = jdbcTemplate.queryForObject(sql, Boolean.class);
+
+            return Boolean.TRUE.equals(result);
         } catch (DataAccessException e) {
-            final String msg = "Check schema: " + rIdentifier.getId() + " failed: " + e.getMessage();
+            final String msg = "Check schema: " + schemaQualifier + " failed: " + e.getMessage();
             log.error(msg);
 
             throw new DataServiceException(msg, e.getCause());
@@ -68,13 +70,13 @@ public class SchemasManager implements ResourceManager {
     }
 
     @Override
-    public void delete(ResourceIdentifier rIdentifier) {
+    public void delete(ResourceQualifier schemaQualifier) {
         try {
-            log.debug("Удаление схемы {}", rIdentifier.getId());
+            log.debug("Удаление схемы {}", schemaQualifier);
 
-            jdbcTemplate.execute("DROP SCHEMA IF EXISTS " + rIdentifier.getId() + " CASCADE");
+            jdbcTemplate.execute("DROP SCHEMA IF EXISTS " + schemaQualifier + " CASCADE");
         } catch (DataAccessException e) {
-            String msg = "Не удалось удалить схему: " + rIdentifier.getId();
+            String msg = "Не удалось удалить схему: " + schemaQualifier;
 
             log.error(msg);
 

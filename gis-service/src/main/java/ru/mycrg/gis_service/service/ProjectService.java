@@ -115,6 +115,14 @@ public class ProjectService {
         return projectionFactory.createProjection(ProjectProjection.class, getById(id));
     }
 
+    public ProjectProjection getProjectionByIdUnsafe(Long id) {
+        final Project project = projectRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException(Project.class, id));
+
+        return projectionFactory.createProjection(ProjectProjection.class, project);
+    }
+
     /**
      * Обновление проекта. До тех пор пока меняется только название проекта, можно менять только алиас в нашей БД. Не
      * меняя названия рабочей области на геосервере и схемы в БД.

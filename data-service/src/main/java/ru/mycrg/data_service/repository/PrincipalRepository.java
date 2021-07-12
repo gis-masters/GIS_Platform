@@ -9,6 +9,5 @@ import java.util.Optional;
 @RepositoryRestResource(exported = false)
 public interface PrincipalRepository extends PagingAndSortingRepository<Principal, Long> {
 
-    Optional<Principal> findByIdentifierAndAndType(Long identifier, String type);
+    Optional<Principal> findByIdentifierAndType(Long identifier, String type);
 }
-

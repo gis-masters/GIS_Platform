@@ -62,7 +62,7 @@ export class ExplorerAdapterTypeDocument {
   static async getAllowedActions(item: ExplorerItemData<LibraryRecord>): Promise<AllowedActions> {
     const deletionAllowed = currentUser.isAdmin;
     const field = 'inner_path'; // temporary binary fieldName of default document library schema
-    const recordsUrl = await getDocLibrariesRecordsUrl('documents');
+    const recordsUrl = await getDocLibrariesRecordsUrl('dl_default'); // get real table name from schema
     const document = item.payload;
 
     return {

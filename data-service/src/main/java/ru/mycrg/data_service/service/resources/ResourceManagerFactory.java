@@ -18,8 +18,8 @@ public class ResourceManagerFactory {
     }
 
     @NotNull
-    public ResourceManager get(@NotNull ResourceIdentifier rIdentifier) {
-        switch (rIdentifier.getType()) {
+    public ResourceManager get(@NotNull ResourceQualifier rQualifier) {
+        switch (rQualifier.getType()) {
             case SCHEMA:
                 return context.getBean(SchemasManager.class);
             case TABLE:
@@ -27,7 +27,7 @@ public class ResourceManagerFactory {
             case LIBRARY:
                 return context.getBean(DocumentLibraryService.class);
             default:
-                throw new DataServiceException("Not supported resource type: " + rIdentifier.getType());
+                throw new DataServiceException("Not supported resource type: " + rQualifier.getType());
         }
     }
 }

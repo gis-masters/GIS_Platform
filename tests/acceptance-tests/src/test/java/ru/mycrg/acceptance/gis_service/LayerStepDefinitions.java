@@ -7,6 +7,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerUpdateDto;
 
@@ -27,6 +28,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     public static LayerCreateDto layerCreateDto;
     public static LayerUpdateDto layerUpdateDto;
     public static Integer layerId;
+
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -138,24 +141,17 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на обновление полей слоя проекта")
-    public void updateLayer(DataTable dataTable) {
-        List<String> data = dataTable.asList();
+    public void updateLayerAsUser(DataTable dataTable) {
+        authorizationBase.loginAsCurrentUser();
 
-        layerUpdateDto = new LayerUpdateDto(generateString(data.get(0)),
-                                            generateString(data.get(1)),
-                                            Boolean.parseBoolean(generateString(data.get(2))),
-                                            Integer.parseInt(generateString(data.get(3))),
-                                            Integer.parseInt(generateString(data.get(4))),
-                                            Integer.parseInt(generateString(data.get(5))),
-                                            Integer.parseInt(generateString(data.get(6))),
-                                            generateString(data.get(7)));
+        updateLayer(dataTable);
+    }
 
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(layerUpdateDto)).
-                        contentType("application/merge-patch+json")
-                .when().
-                        patch("" + layerId);
+    @When("Владелец делает запрос на обновление полей слоя проекта")
+    public void updateLayerAsOwner(DataTable dataTable) {
+        authorizationBase.loginAsOwner();
+
+        updateLayer(dataTable);
     }
 
     @Then("Обновленные поля слоя совпадают с переданными")
@@ -213,8 +209,19 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertNull(presentedData.get("parentId"));
     }
 
+    @When("Владелец делает запрос на удаление слоя")
+    public void deleteLayerAsOwner() {
+        authorizationBase.loginAsOwner();
+
+        super.deleteCurrentEntity();
+
+        layerPool.remove(layerId);
+    }
+
     @When("Пользователь делает запрос на удаление слоя")
     public void deleteLayer() {
+        authorizationBase.loginAsCurrentUser();
+
         super.deleteCurrentEntity();
 
         layerPool.remove(layerId);
@@ -248,5 +255,24 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     private boolean isLayerExistInPool(String title) {
         return layerPool.values().stream()
                         .anyMatch(dto -> title.equals(dto.getTitle()));
+    }
+
+    private void updateLayer(DataTable dataTable) {
+        List<String> data = dataTable.asList();
+        layerUpdateDto = new LayerUpdateDto(generateString(data.get(0)),
+                                            generateString(data.get(1)),
+                                            Boolean.parseBoolean(generateString(data.get(2))),
+                                            Integer.parseInt(generateString(data.get(3))),
+                                            Integer.parseInt(generateString(data.get(4))),
+                                            Integer.parseInt(generateString(data.get(5))),
+                                            Integer.parseInt(generateString(data.get(6))),
+                                            generateString(data.get(7)));
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(layerUpdateDto)).
+                        contentType("application/merge-patch+json")
+                .when().
+                        patch("" + layerId);
     }
 }

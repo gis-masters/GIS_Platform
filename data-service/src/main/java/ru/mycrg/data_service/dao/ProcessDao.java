@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service.dao.mappers.ProcessRowMapper;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.repository.ProcessRepository;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;

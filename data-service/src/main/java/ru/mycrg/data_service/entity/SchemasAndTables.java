@@ -1,24 +1,15 @@
 package ru.mycrg.data_service.entity;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OnDelete;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.annotation.LastModifiedDate;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.dto.ResourceType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-
-import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Entity
-@Table(name = "resource")
-public class Resource {
+@Table(name = "schemas_and_tables")
+public class SchemasAndTables {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,11 +22,14 @@ public class Resource {
     @Column(length = 1024)
     private String details;
 
-    @Column(updatable = false, length = 20, nullable = false)
-    private String type;
+    @Column
+    private boolean isFolder;
 
     @Column(updatable = false, nullable = false)
     private String identifier;
+
+    @Column
+    private String path;
 
     @Column
     private String crs;
@@ -46,9 +40,6 @@ public class Resource {
     @Column(name = "items_count")
     private Integer itemsCount;
 
-    @Column
-    private String createdBy;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -56,28 +47,20 @@ public class Resource {
     private @LastModifiedDate
     LocalDateTime lastModified = LocalDateTime.now();
 
-    @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "resource")
-    @OnDelete(action = CASCADE) // Поскольку таблицы создаются вручную, добавляю это сюда только чтобы отразить action
-    private Set<Permission> permissions = new HashSet<>();
-
-    public Resource() {
+    public SchemasAndTables() {
         // Required by framework
     }
 
-    public Resource(ResourceType rType, ResourceCreateDto dto, String identifier, String createdBy) {
+    public SchemasAndTables(ResourceType resourceType, ResourceCreateDto dto, String identifier, String path) {
+        this.identifier = identifier;
         this.title = dto.getTitle();
         this.details = dto.getDetails();
-        this.type = rType.name();
-        this.identifier = identifier;
+        this.isFolder = resourceType.equals(ResourceType.SCHEMA);
+        this.path = path;
+
         this.itemsCount = 0;
-        this.createdBy = createdBy;
         this.createdAt = LocalDateTime.now();
         this.lastModified = LocalDateTime.now();
-    }
-
-    public boolean isUserOwnMe(@NotNull String login) {
-        return Objects.equals(this.createdBy, login);
     }
 
     public long getId() {
@@ -104,12 +87,12 @@ public class Resource {
         this.details = details;
     }
 
-    public String getType() {
-        return type;
+    public boolean isFolder() {
+        return isFolder;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setFolder(boolean folder) {
+        isFolder = folder;
     }
 
     public String getIdentifier() {
@@ -128,14 +111,6 @@ public class Resource {
         this.itemsCount = itemsCount;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createBy) {
-        this.createdBy = createBy;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -152,10 +127,6 @@ public class Resource {
         this.lastModified = lastModified;
     }
 
-    public Set<Permission> getPermissions() {
-        return permissions;
-    }
-
     public String getCrs() {
         return crs;
     }
@@ -170,5 +141,17 @@ public class Resource {
 
     public void setSchemaId(String schemaId) {
         this.schemaId = schemaId;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String pathTo() {
+        return getPath() + "/" + getId();
     }
 }

@@ -1,14 +1,9 @@
 package ru.mycrg.data_service.entity;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name = "principal")
+@Table(name = "acl_principals")
 public class Principal {
 
     @Id
@@ -21,10 +16,6 @@ public class Principal {
 
     @Column(length = 20, nullable = false)
     private String type;
-
-    @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "principal")
-    private Set<Permission> permissions = new HashSet<>();
 
     public Principal() {
         // Framework required
@@ -57,13 +48,5 @@ public class Principal {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Set<Permission> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(Set<Permission> permissions) {
-        this.permissions = permissions;
     }
 }

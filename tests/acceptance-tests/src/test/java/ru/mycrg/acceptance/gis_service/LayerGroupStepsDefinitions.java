@@ -7,6 +7,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.gis_service.dto.LayerGroupCreateDto;
 
 import java.util.List;
@@ -26,6 +27,8 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
     public static LayerGroupCreateDto layerGroupDto;
     public static Integer layerGroupId;
     public static Integer parentLayerGroupId;
+
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -113,6 +116,17 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на удаление текущей группы слоев текущего проекта")
     public void deleteLayerGroup() {
+        authorizationBase.loginAsCurrentUser();
+
+        super.deleteCurrentEntity();
+
+        layerGroupPool.remove(getCurrentId());
+    }
+
+    @When("Владелец организации делает запрос на удаление текущей группы слоев текущего проекта")
+    public void deleteLayerGroupAsOwner() {
+        authorizationBase.loginAsOwner();
+
         super.deleteCurrentEntity();
 
         layerGroupPool.remove(getCurrentId());
@@ -169,16 +183,16 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на обновление полей групп слоев проекта {string}, {string}")
     public void updateLayerGroup(String newTitle, String newPosition) {
-        layerGroupDto = new LayerGroupCreateDto(newTitle, Integer.parseInt(newPosition));
+        authorizationBase.loginAsCurrentUser();
 
-        String payload = gson.toJson(layerGroupDto);
+        updateLayer(newTitle, newPosition);
+    }
 
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(payload).
-                        contentType("application/merge-patch+json")
-                .when().
-                        patch("" + layerGroupId);
+    @When("Владелец делает запрос на обновление полей групп слоев проекта {string}, {string}")
+    public void updateLayerGroupAsOwner(String newTitle, String newPosition) {
+        authorizationBase.loginAsOwner();
+
+        updateLayer(newTitle, newPosition);
     }
 
     @Then("Поля группы слоев проекта совпадают с переданными {string}, {int}")
@@ -217,5 +231,16 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
     private boolean isExactLayerGroupExistInPool(String title) {
         return layerGroupPool.values().stream()
                              .anyMatch(dto -> title.equals(dto.getTitle()));
+    }
+
+    private void updateLayer(String newTitle, String newPosition) {
+        layerGroupDto = new LayerGroupCreateDto(newTitle, Integer.parseInt(newPosition));
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(layerGroupDto)).
+                        contentType("application/merge-patch+json")
+                .when().
+                        patch("" + layerGroupId);
     }
 }

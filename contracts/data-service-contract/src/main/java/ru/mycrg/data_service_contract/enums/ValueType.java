@@ -1,6 +1,7 @@
 package ru.mycrg.data_service_contract.enums;
 
 public enum ValueType {
+    BOOLEAN,
     INT,
     STRING,
     TEXT,

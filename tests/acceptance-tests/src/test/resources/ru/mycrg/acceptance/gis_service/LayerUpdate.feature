@@ -10,7 +10,7 @@ Feature: Обновление слоя проектов
     Given Существует слой проекта
       | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
     When Авторизируемся владельцем организации
-    When Пользователь делает запрос на обновление полей слоя проекта
+    When Владелец делает запрос на обновление полей слоя проекта
       | <newTitle> | <newDataset> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> |
     Then Сервер отвечает со статус-кодом 204
     When Пользователь делает запрос на текущий слой
@@ -40,7 +40,6 @@ Feature: Обновление слоя проектов
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
     When Администратор делает запрос на создание правила на текущего пользователя
-    When Авторизируемся пользователем
     When Пользователь делает запрос на обновление полей слоя проекта
       | <newTitle> | <newDataset> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> |
     Then Сервер отвечает со статус-кодом 403

@@ -14,8 +14,8 @@ import ru.mycrg.data_service.exceptions.TransformationException;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.parsers.XmlParser;
 import ru.mycrg.data_service.service.parsers.exceptions.XmlParserException;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
-import ru.mycrg.data_service.service.tables.TableService;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service.util.CrsHandler;
 import ru.mycrg.data_service.util.ImportValidationHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -59,8 +59,8 @@ public class ImportMp implements Importer {
      * @throws DataServiceException Если парсинг xml  файла не выполнился успешно и если новая запись не добавлена в БД
      * @throws BadRequestException  Если преобразование геометрии не удалось
      */
-    public Integer doImport(MultipartFile file, ResourceIdentifier table) {
-        IResourceModel tableModel = tableService.getByIdentifier(table);
+    public Long doImport(MultipartFile file, ResourceQualifier table) {
+        IResourceModel tableModel = tableService.getInfo(table);
         SchemaDto schemaOfCurrentLayer =
                 schemaService.getSchemaByName(tableModel.getSchemaId())
                              .orElseThrow(() -> new NotFoundException(SchemaDto.class, tableModel.getSchemaId()));

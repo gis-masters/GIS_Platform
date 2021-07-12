@@ -24,11 +24,10 @@ export interface LibraryRecord {
   // eslint-disable-next-line camelcase
   inner_path?: string;
   parent?: string;
+  path?: string;
   // eslint-disable-next-line camelcase
   content_type_id?: string;
   oktmo?: string;
-  // eslint-disable-next-line camelcase
-  human_path?: string;
   identifier?: string;
 
   libraryId: string;
@@ -72,9 +71,9 @@ class DocLibraryService {
       params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) }
     };
 
-    const response = await http.get<PageableResponse<{ linkedHashMaps: { content: LibraryRecordRaw }[] }>>(url, params);
+    const response = await http.get<PageableResponse<{ records: { content: LibraryRecordRaw }[] }>>(url, params);
 
-    const libraryRecords = (response._embedded?.linkedHashMaps || []).map(linkedHashMap => ({
+    const libraryRecords = (response._embedded?.records || []).map(linkedHashMap => ({
       ...(linkedHashMap.content || []),
       libraryId: libraryId,
       schemaId: schemaId
@@ -84,7 +83,7 @@ class DocLibraryService {
   }
 
   async createRecord(libraryId: string, data: LibraryRecordRaw): Promise<CrgDocument> {
-    return await http.post<CrgDocument>(await getDocLibrariesRecordsUrl(libraryId), this.prepareFormData(data));
+    return http.post<CrgDocument>(await getDocLibrariesRecordsUrl(libraryId), this.prepareFormData(data));
   }
 
   async deleteRecord(libraryId: string, id: string) {

@@ -10,16 +10,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.TableCreateDto;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
-import ru.mycrg.data_service.service.tables.TableService;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.resources.TableService;
 
 import javax.validation.Valid;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
-import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 
 @RestController
 public class TablesController {
@@ -32,16 +30,7 @@ public class TablesController {
         this.tableService = tableService;
     }
 
-    @PostMapping("/datasets/{datasetId}/tables")
-    public ResponseEntity<IResourceModel> createTable(@PathVariable String datasetId,
-                                                      @Valid @RequestBody TableCreateDto dto) {
-        ResourceIdentifier tableId = new ResourceIdentifier(dto.getName(), TABLE, datasetId, SCHEMA);
-
-        IResourceModel resourceModel = tableService.create(tableId, dto);
-
-        return new ResponseEntity<>(resourceModel, CREATED);
-    }
-
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/datasets/{datasetId}/tables")
     public ResponseEntity<Object> getTables(@PathVariable String datasetId,
                                             @RequestParam(required = false, defaultValue = "") String title,
@@ -58,23 +47,35 @@ public class TablesController {
         return ResponseEntity.ok(pagedResources);
     }
 
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/datasets/{datasetId}/tables/{tableId}")
     public ResponseEntity<Object> getTable(@PathVariable String datasetId,
                                            @PathVariable String tableId) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
+        ResourceQualifier rQualifier = new ResourceQualifier(datasetId, tableId);
 
-        final IResourceModel dto = tableService.getByIdentifier(rIdentifier);
+        final IResourceModel dto = tableService.getInfo(rQualifier);
 
         return ResponseEntity.ok(dto);
     }
 
-    @DeleteMapping("/datasets/{datasetId}/tables/{tableId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PostMapping("/datasets/{datasetId}/tables")
+    public ResponseEntity<IResourceModel> createTable(@PathVariable String datasetId,
+                                                      @Valid @RequestBody TableCreateDto dto) {
+        ResourceQualifier rQualifier = new ResourceQualifier(datasetId, dto.getName());
+
+        IResourceModel resourceModel = tableService.create(rQualifier, dto);
+
+        return new ResponseEntity<>(resourceModel, CREATED);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @DeleteMapping("/datasets/{datasetId}/tables/{tableId}")
     public ResponseEntity<Object> deleteTable(@PathVariable String datasetId,
                                               @PathVariable String tableId) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
+        ResourceQualifier rQualifier = new ResourceQualifier(datasetId, tableId);
 
-        tableService.delete(rIdentifier);
+        tableService.delete(rQualifier);
 
         return ResponseEntity.noContent().build();
     }

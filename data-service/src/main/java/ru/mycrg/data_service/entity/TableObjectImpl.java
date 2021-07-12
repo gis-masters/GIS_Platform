@@ -2,22 +2,20 @@ package ru.mycrg.data_service.entity;
 
 import lombok.Data;
 
-import java.util.UUID;
-
 @Data
 public class TableObjectImpl implements ITableObject {
 
-    private UUID id;
+    private Long id;
 
-    public TableObjectImpl(UUID id) {
+    public TableObjectImpl(Long id) {
         this.id = id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return this.id;
     }
 }

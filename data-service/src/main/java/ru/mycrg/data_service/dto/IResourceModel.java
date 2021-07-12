@@ -1,8 +1,8 @@
 package ru.mycrg.data_service.dto;
 
-import java.time.LocalDateTime;
-
 public interface IResourceModel {
+
+    Long getId();
 
     String getRole();
 
@@ -20,9 +20,9 @@ public interface IResourceModel {
 
     void setIdentifier(String identifier);
 
-    LocalDateTime getCreatedAt();
+    String getCreatedAt();
 
-    void setCreatedAt(LocalDateTime createdAt);
+    void setCreatedAt(String createdAt);
 
     String getType();
 

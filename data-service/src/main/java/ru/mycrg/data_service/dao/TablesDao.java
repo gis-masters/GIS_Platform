@@ -1,7 +1,6 @@
 package ru.mycrg.data_service.dao;
 
 import com.healthmarketscience.sqlbuilder.*;
-import com.healthmarketscience.sqlbuilder.custom.postgresql.PgLimitClause;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
@@ -10,16 +9,16 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
-import ru.mycrg.data_service.util.filter.CrgFilter;
+import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
+import ru.mycrg.data_service.dto.Record;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.filter.FilterCondition;
 import ru.mycrg.data_service.util.filter.FilterItem;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -27,7 +26,12 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static ru.mycrg.data_service.dao.SqlBuilder.buildOrderBySection;
 
 @Service
 @Transactional
@@ -41,8 +45,8 @@ public class TablesDao {
         this.pJdbcTemplate = parameterJdbcTemplate;
     }
 
-    public Integer addRecord(@NotNull ResourceIdentifier rIdentifier,
-                             @NotNull Map<String, Object> body) throws CrgDaoException {
+    public Long addRecord(@NotNull ResourceQualifier rIdentifier,
+                          @NotNull Map<String, Object> body) throws CrgDaoException {
         try {
             final DbTable table = getSimpleDbTable(rIdentifier);
             final InsertQuery insertQuery = new InsertQuery(table);
@@ -57,7 +61,7 @@ public class TablesDao {
 
             log.debug("INSERT_QUERY: {}", query);
 
-            return pJdbcTemplate.getJdbcTemplate().queryForObject(query, Integer.class);
+            return pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
         } catch (DataAccessException e) {
             String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'. %s",
                                        rIdentifier, e.getCause().getMessage());
@@ -71,52 +75,10 @@ public class TablesDao {
         }
     }
 
-    public Page<Map<String, Object>> findPagedByFilter(ResourceIdentifier rIdentifier,
-                                                       SchemaDto schema,
-                                                       Pageable pageable,
-                                                       CrgFilter filter) throws CrgDaoException {
-        Integer total = countTotalRecords(rIdentifier);
-
-        final DbTable table = getDbTable(rIdentifier, schema);
-        final SelectQuery selectQuery = new SelectQuery().addAllTableColumns(table);
-
-        if (!filter.getFilters().isEmpty()) {
-            fillConditions(table, selectQuery, filter.getFilters());
-        }
-
-        if (pageable.getOffset() > -1) {
-            selectQuery.setOffset(pageable.getOffset());
-        }
-
-        if (pageable.getPageSize() > -1) {
-            PgLimitClause limitClause = new PgLimitClause(pageable.getPageSize());
-            selectQuery.addCustomization(limitClause);
-        }
-
-        pageable.getSort().forEach(order -> {
-            final String property = order.getProperty();
-
-            final OrderObject.Dir direction = order.getDirection().isAscending()
-                    ? OrderObject.Dir.ASCENDING
-                    : OrderObject.Dir.DESCENDING;
-
-            final DbColumn column = table.addColumn(property);
-
-            selectQuery.addOrdering(column, direction);
-        });
-
-        log.info("SELECT QUERY: {}", selectQuery);
-
-        final var result = pJdbcTemplate.getJdbcTemplate()
-                                        .query(selectQuery.toString(), (rs, rowNum) -> getRecordAsObjectMap(rs));
-
-        return new PageImpl<>(result, pageable, total);
-    }
-
-    public Optional<Map<String, Object>> findById(ResourceIdentifier rIdentifier, UUID id) {
+    public Optional<Map<String, Object>> findById(ResourceQualifier tableQualifier, Long id) {
         try {
             final var object = pJdbcTemplate.queryForObject(
-                    String.format("SELECT * FROM %s WHERE id = :id", rIdentifier.toString()),
+                    String.format("SELECT * FROM %s WHERE id = :id", tableQualifier),
                     new MapSqlParameterSource("id", id),
                     (rs, rowNum) -> getRecordAsObjectMap(rs));
 
@@ -126,27 +88,48 @@ public class TablesDao {
         }
     }
 
-    @NotNull
-    public Integer countTotalRecords(ResourceIdentifier rIdentifier) throws CrgDaoException {
-        try {
-            Integer result = pJdbcTemplate.getJdbcTemplate().queryForObject(
-                    String.format("SELECT count(1) FROM %s", rIdentifier.toString()),
-                    (rs, rowNum) -> rs.getInt(1));
+    public List<Record> findAllByPath(ResourceQualifier tableQualifier,
+                                      String path,
+                                      String title,
+                                      Pageable pageable) {
+        final MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("path", path)
+                .addValue("offset", pageable.getOffset())
+                .addValue("limit", pageable.getPageSize());
 
-            return Objects.requireNonNull(result);
-        } catch (DataAccessException e) {
-            throw new CrgDaoException("Failed count total records for: " + rIdentifier.toString(), e.getCause());
-        }
+        String sqlTemplate = "SELECT * FROM " + tableQualifier +
+                "  WHERE path = :path" +
+                "    AND LOWER(title) LIKE LOWER('%" + title + "%')" +
+                "  " + buildOrderBySection(pageable.getSort()) +
+                "  LIMIT :limit OFFSET :offset";
+
+        log.debug("Request find all by path: [{}]", sqlTemplate);
+
+        return pJdbcTemplate.query(sqlTemplate,
+                                   params,
+                                   new RowMapperResultSetExtractor<>(
+                                           new RecordRowMapper()
+                                   ));
     }
 
-    public void removeRecord(ResourceIdentifier rIdentifier, UUID id) throws CrgDaoException {
+    public long getTotalByPath(ResourceQualifier tableQualifier, String path, String title) {
+        String sqlTemplate = "SELECT count(*) FROM " + tableQualifier +
+                "  WHERE path = '" + path + "'" +
+                "  AND LOWER(title) LIKE LOWER('%" + title + "%')";
+
+        log.debug("Request find total by path: [{}]", sqlTemplate);
+
+        return pJdbcTemplate.getJdbcTemplate().queryForObject(sqlTemplate, Long.class);
+    }
+
+    public void removeRecord(ResourceQualifier tableQualifier, Long id) throws CrgDaoException {
         try {
             pJdbcTemplate.update(
-                    String.format("DELETE FROM %s WHERE id = :id", rIdentifier.toString()),
+                    String.format("DELETE FROM %s WHERE id = :id", tableQualifier),
                     new MapSqlParameterSource("id", id));
         } catch (Exception e) {
             final String msg = String.format("Не удалось выполнить удаление объекта: '%s' в: '%s'",
-                                             id, rIdentifier.toString());
+                                             id, tableQualifier);
 
             throw new CrgDaoException(msg, e.getCause());
         }
@@ -193,20 +176,20 @@ public class TablesDao {
         });
     }
 
-    private DbTable getDbTable(@NotNull ResourceIdentifier rIdentifier, SchemaDto schema) {
+    private DbTable getDbTable(@NotNull ResourceQualifier rQualifier, SchemaDto schema) {
         final DbSpec spec = new DbSpec();
-        final DbSchema dbSchema = spec.addSchema(rIdentifier.getParent().getId());
-        final DbTable dbTable = dbSchema.addTable(rIdentifier.getId());
+        final DbSchema dbSchema = spec.addSchema(rQualifier.getSchema());
+        final DbTable dbTable = dbSchema.addTable(rQualifier.getTable());
 
         schema.getProperties().forEach(propertyDto -> dbTable.addColumn(propertyDto.getName()));
 
         return dbTable;
     }
 
-    private DbTable getSimpleDbTable(@NotNull ResourceIdentifier rIdentifier) {
+    private DbTable getSimpleDbTable(@NotNull ResourceQualifier rQualifier) {
         final DbSpec spec = new DbSpec();
-        final DbSchema dbSchema = spec.addSchema(rIdentifier.getParent().getId());
+        final DbSchema dbSchema = spec.addSchema(rQualifier.getSchema());
 
-        return dbSchema.addTable(rIdentifier.getId());
+        return dbSchema.addTable(rQualifier.getTable());
     }
 }

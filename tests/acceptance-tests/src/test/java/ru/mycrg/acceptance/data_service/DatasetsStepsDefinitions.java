@@ -35,12 +35,16 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         get();
     }
 
-    @When("Пользователь делает запрос на несуществующий набор данных {string}")
-    public void getNotExistDataset(String datasetKey) {
-        String datasetName = generateString(datasetKey);
+    @When("Пользователь делает запрос на слои текущего набора данных")
+    public void getDatasetInfo() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/" + datasetName);
+                        get("/" + currentDatasetName + "/tables");
+    }
+
+    @When("Пользователь делает запрос на несуществующий набор данных {string}")
+    public void getNotExistDataset(String datasetKey) {
+        getDatasetByName(generateString(datasetKey));
     }
 
     @When("Пользователь делает запрос на набор данных {string}")
@@ -55,9 +59,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         }
 
         if (foundedDatasetName != null) {
-            response = getBaseRequestWithCurrentCookie()
-                    .when().
-                            get("/" + foundedDatasetName);
+            getDatasetByName(foundedDatasetName);
         } else {
             throw new RuntimeException("Not found dataset by title: " + datasetTitle);
         }
@@ -161,5 +163,11 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
     private String makeDatasetUrl(String datasetName) {
         return String.format("%s:%d/api/data/datasets/%s", testServerHost, testServerPort, datasetName);
+    }
+
+    private void getDatasetByName(String datasetName) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + datasetName);
     }
 }

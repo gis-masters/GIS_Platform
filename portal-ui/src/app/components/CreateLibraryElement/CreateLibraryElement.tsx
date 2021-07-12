@@ -18,12 +18,11 @@ import { ExplorerStore } from '../Explorer/Explorer.store';
 import { CreateLibraryElementDialog } from './Dialog/CreateLibraryElement-Dialog';
 import { CreateLibraryElementMenuItem } from './MenuItem/CreateLibraryElement-MenuItem';
 import { CreateLibraryElementFolderButton } from './FolderButton/CreateLibraryElement-FolderButton';
-import { Dataset } from '../../services/data.service';
 
 export interface CreateLibraryElementsProps {
   schemaId: string;
   store: ExplorerStore;
-  parent?: string;
+  path?: string;
 }
 
 @observer
@@ -149,25 +148,9 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     return {
       ...formData,
       content_type_id: this.contentTypeId,
-      parent: this.props.parent,
-      human_path: this.collectHumanPath(),
+      path: this.props.path,
       oktmo: formData.oktmo ? formData.oktmo : this.inheritOktmo()
     };
-  }
-
-  private collectHumanPath(): string {
-    const { path } = this.props.store;
-
-    return path.slice(1, -1).reduce((acc, item) => {
-      if ([ExplorerItemType.DATASET, ExplorerItemType.DOCUMENT].includes(item.type)) {
-        // eslint-disable-next-line total-functions/no-unsafe-type-assertion
-        const payload = item.payload as Dataset | LibraryRecord;
-
-        return `${acc} -> ${String(payload.title)}`;
-      }
-
-      return acc;
-    }, '');
   }
 
   private inheritOktmo(): string {

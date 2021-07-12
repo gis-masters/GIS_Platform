@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
@@ -7,50 +9,50 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
-import ru.mycrg.data_service.entity.Resource;
+import ru.mycrg.data_service.dto.IResourceModel;
+import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
-import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.service.PermissionsService;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
-import ru.mycrg.data_service.service.resources.ResourcesService;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.resources.TableService;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
-import static ru.mycrg.data_service.dto.ResourceType.TABLE;
+import static ru.mycrg.data_service.service.resources.SchemasAndTablesBase.schemasAndTablesQualifier;
 
 @RestController
 public class TablesPermissionsController {
 
+    private final TableService tableService;
     private final PermissionsService permissionsService;
-    private final ResourcesService resourcesService;
 
-    public TablesPermissionsController(PermissionsService permissionsService,
-                                       ResourcesService resourcesService) {
-        this.resourcesService = resourcesService;
+    public TablesPermissionsController(TableService tableService,
+                                       PermissionsService permissionsService) {
+        this.tableService = tableService;
+
         this.permissionsService = permissionsService;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/datasets/{datasetId}/tables/{tableId}/roleAssignment")
-    public ResponseEntity<PermissionProjection> addPermissionToTable(@PathVariable String datasetId,
-                                                                     @PathVariable String tableId,
-                                                                     @Valid @RequestBody PermissionCreateDto dto,
-                                                                     BindingResult bindingResult) {
+    public ResponseEntity<PermissionsService> addPermissionToTable(@PathVariable String datasetId,
+                                                                   @PathVariable String tableId,
+                                                                   @Valid @RequestBody PermissionCreateDto dto,
+                                                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        final ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
-        final Resource resource = resourcesService.get(rIdentifier)
-                                                  .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
+        final IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
 
-        final PermissionProjection permission = permissionsService.create(resource, dto);
+        final PermissionProjection permission = permissionsService
+                .create(schemasAndTablesQualifier, table.getId(), dto);
 
         final URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -67,11 +69,14 @@ public class TablesPermissionsController {
                                                       @PathVariable String tableId,
                                                       Pageable pageable,
                                                       PagedResourcesAssembler<PermissionProjection> pageAssembler) {
-        final ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
-        final Resource resource = resourcesService.get(rIdentifier)
-                                                  .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
+        Page<PermissionProjection> permissions;
+        try {
+            final IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
 
-        final var permissions = permissionsService.getPaged(resource, pageable);
+            permissions = permissionsService.getAllByResourceId(schemasAndTablesQualifier, table.getId(), pageable);
+        } catch (ForbiddenException e) {
+            permissions = new PageImpl<>(new ArrayList<>());
+        }
 
         final var pagedResources = pageAssembler.toResource(
                 permissions,
@@ -87,11 +92,7 @@ public class TablesPermissionsController {
     public ResponseEntity<Object> deleteTablePermission(@PathVariable String datasetId,
                                                         @PathVariable String tableId,
                                                         @PathVariable Long permissionId) {
-        final ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
-        final Resource resource = resourcesService.get(rIdentifier)
-                                                  .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
-
-        permissionsService.deleteById(resource, permissionId);
+        permissionsService.deleteById(permissionId);
 
         return ResponseEntity.noContent().build();
     }

@@ -56,17 +56,17 @@ export class ExplorerAdapterTypeDatasetRoot {
       },
       {
         label: 'Дате создания',
-        value: 'createdAt'
+        value: 'created_at'
       },
       {
         label: 'Количеству таблиц',
-        value: 'itemsCount'
+        value: 'items_сount'
       }
     ];
   }
 
   static getChildrenSortDefaultValue(): string {
-    return 'createdAt';
+    return 'created_at';
   }
 
   static getChildrenSortDefaultDirection(): SortDir {

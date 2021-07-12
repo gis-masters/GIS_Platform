@@ -7,14 +7,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.dto.WorkImport;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.import_.ImportMp;
 import ru.mycrg.data_service.service.import_.ImportService;
 import ru.mycrg.data_service.service.import_.Importer;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import javax.validation.Valid;
 
@@ -42,9 +41,9 @@ public class ImportController extends BaseController {
     }
 
     @PostMapping("/import/file")
-    public ResponseEntity<Integer> importXmlFileToDb(@RequestParam String datasetId,
-                                                     @RequestParam String tableId,
-                                                     @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Long> importXmlFileToDb(@RequestParam String datasetId,
+                                                  @RequestParam String tableId,
+                                                  @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             String msg = "Загружаемый файл пустой";
             log.warn(msg);
@@ -58,9 +57,9 @@ public class ImportController extends BaseController {
             throw new BadRequestException(msg);
         }
 
-        ResourceIdentifier table = new ResourceIdentifier(tableId, ResourceType.TABLE, datasetId, ResourceType.SCHEMA);
+        ResourceQualifier table = new ResourceQualifier(datasetId, tableId);
 
-        Integer objectId = importer.doImport(file, table);
+        Long objectId = importer.doImport(file, table);
 
         return ResponseEntity.status(OK).body(objectId);
     }

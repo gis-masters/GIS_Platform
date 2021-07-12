@@ -10,10 +10,9 @@ public enum SystemLibraryAttributes {
     INNER_PATH("inner_path"),
     FILE_TYPE("type"),
     SIZE("size"),
-    PARENT("parent"),
+    PATH("path"),
     CONTENT_TYPE_ID("content_type_id"),
-    OKTMO("oktmo"),
-    HUMAN_PATH("human_path");
+    OKTMO("oktmo");
 
     private final String name;
 

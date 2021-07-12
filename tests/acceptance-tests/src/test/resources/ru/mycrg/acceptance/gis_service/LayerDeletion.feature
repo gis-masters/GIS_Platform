@@ -9,7 +9,7 @@ Feature: Удаление слоев проектов
     Given Существует проект "STRING_10"
     Given Существует слой проекта
       | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
-    When Пользователь делает запрос на удаление слоя
+    When Владелец делает запрос на удаление слоя
     Then Сервер отвечает со статус-кодом 204
     When Пользователь делает запрос на текущий слой
     Then Сервер отвечает со статус-кодом 404
@@ -26,7 +26,6 @@ Feature: Удаление слоев проектов
       | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
     Given Существует пользователь
       | STRING_15 | STRING_15 | EMAIL_10 | testtestQ1 |
-    When Авторизируемся пользователем
     When Пользователь делает запрос на удаление слоя
     Then Сервер отвечает со статус-кодом 403
     Examples:

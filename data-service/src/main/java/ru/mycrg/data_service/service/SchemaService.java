@@ -44,7 +44,7 @@ public class SchemaService {
         final Schema schema = schemaRepository
                 .findByName(name).stream()
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException(name));
+                .orElseThrow(() -> new NotFoundException(SchemaDto.class, name));
 
         return Optional.ofNullable(schemaHandler.mapToSchemaDto(schema));
     }

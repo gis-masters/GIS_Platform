@@ -2,111 +2,62 @@ package ru.mycrg.data_service.service.resources;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_utils.security.RoleHierarchy;
-import ru.mycrg.data_service.dto.Roles;
-import ru.mycrg.data_service.entity.Resource;
+import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 
+import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 
 @Service
 public class ResourceProtector {
 
-    private final RoleHierarchy roleHierarchy;
-    private final ResourceManagerFactory resourceManagerFactory;
     private final IAuthenticationFacade authenticationFacade;
+    private final ResourceManagerFactory resourceManagerFactory;
+    private final BasePermissionsRepository basePermissionsRepository;
 
     public ResourceProtector(ResourceManagerFactory resourceManagerFactory,
-                             RoleHierarchy roleHierarchy,
-                             IAuthenticationFacade authenticationFacade) {
+                             IAuthenticationFacade authenticationFacade,
+                             BasePermissionsRepository basePermissionsRepository) {
         this.resourceManagerFactory = resourceManagerFactory;
         this.authenticationFacade = authenticationFacade;
-        this.roleHierarchy = roleHierarchy;
+        this.basePermissionsRepository = basePermissionsRepository;
     }
 
-    public void throwIfNotExist(@NotNull ResourceIdentifier rIdentifier) {
+    public void throwIfNotExist(@NotNull ResourceQualifier rIdentifier) {
         if (!resourceManagerFactory.get(rIdentifier).isExist(rIdentifier)) {
-            throw new NotFoundException(rIdentifier.toString());
+            throw new NotFoundException(rIdentifier.getQualifier());
         }
     }
 
-    public void throwIfExists(@NotNull ResourceIdentifier rIdentifier) {
+    public void throwIfExists(@NotNull ResourceQualifier rIdentifier) {
         if (resourceManagerFactory.get(rIdentifier).isExist(rIdentifier)) {
             throw new ConflictException("The resource " + rIdentifier + " already exist");
         }
     }
 
     /**
-     * Определяет роль пользователя для заданного ресурса.
-     * <p>
-     * Пользователи с ролями GLOBAL_ADMIN или ORG_ADMIN безусловно определяются как: OWNER
-     * <p>
-     * В случае если для пользователя заданы несколько правил будет выбрана "лучшая/сильнейшая" из ролей.
-     * <p>
-     * Пример 1. Непосредственно пользователю задана роль: CONTRIBUTOR, а группе в которой он состоит задана роль:
-     * VIEWER. Будет выбрана роль: CONTRIBUTOR.
-     * <p>
-     * Пример 2. Напрямую пользователю прав не задано, но он состоит в двух группах, одной из них выставлены права на
-     * чтение: VIEWER, другая - группа владельцев: OWNER. Будет выбрана роль: OWNER.
-     *
-     * @param resource Ресурс
-     * @param roles    все разрешения на ресурс для текущего пользователя
-     *
-     * @return Определяет роль пользователя для заданного ресурса если таковая может быть определена или пустой {@link
-     * Optional} объект.
-     */
-    public Optional<Roles> defineRole(Resource resource, Set<String> roles) {
-        if (isAbsoluteOwner(resource)) {
-            return Optional.of(OWNER);
-        }
-
-        return roleHierarchy.defineBest(roles)
-                            .map(Roles::valueOf);
-    }
-
-    public Optional<Roles> defineRole(Set<String> roles) {
-        return roleHierarchy.defineBest(roles)
-                            .map(Roles::valueOf);
-    }
-
-    /**
-     * Возвращает {@code true} если создание разрешений доступно пользователю.
-     * <p>
-     * Создание разрешений доступно для:
-     * <li> Владельца ресурса.
-     * <li> Пользователей являющихся GLOBAL_ADMIN или ORG_ADMIN.
-     * <li> Пользователей с ролью {@code OWNER}.
-     *
-     * @param resource Ресурс.
-     * @param roles    все разрешения на ресурс для текущего пользователя
-     *
-     * @return Возвращает {@code true} если создание разрешений доступно пользователю.
-     */
-    public boolean isCreatePermissionAllowed(Resource resource, Set<String> roles) {
-        if (isAbsoluteOwner(resource)) {
-            return true;
-        }
-
-        return roleHierarchy.defineBest(roles)
-                            .map(bestRole -> bestRole.equals(OWNER.name()))
-                            .orElse(false);
-    }
-
-    /**
-     * Считаем что пользователь является абсолютным владельцем ресурса, если:
-     * <li> Пользователь является владельцем ресурса.
+     * Считаем что пользователь является владельцем ресурса, если:
+     * <li> Пользователь имеет OWNER право.
      * <li> Пользователей является GLOBAL_ADMIN или ORG_ADMIN.
      *
-     * @param resource Ресурс
+     * @param rQualifier Ресурс
      */
-    public boolean isAbsoluteOwner(Resource resource) {
-        return resource.isUserOwnMe(authenticationFacade.getLogin())
-                || authenticationFacade.isOrganizationAdmin()
+    public boolean isOwner(ResourceQualifier rQualifier) {
+        return authenticationFacade.isOrganizationAdmin()
+                || isUserHasOwnPermission(rQualifier)
                 || authenticationFacade.isRoot();
+    }
+
+    private boolean isUserHasOwnPermission(ResourceQualifier rQualifier) {
+        Optional<String> oRole = basePermissionsRepository.bestRole(rQualifier, "/root");
+        if (oRole.isEmpty()) {
+            return false;
+        }
+
+        return Objects.equals(OWNER.name(), oRole.get());
     }
 }

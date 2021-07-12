@@ -375,7 +375,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   private checkSelectionEmptiness(selected: unknown[]) {
-    if (selected.length) {
+    if (!selected.length) {
       Toast.warn('Нет выделенных объектов');
 
       return true;

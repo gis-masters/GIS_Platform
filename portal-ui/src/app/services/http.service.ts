@@ -4,7 +4,7 @@ import { CustomCache, CustomCacheConfig } from './util/CustomCache';
 import { replaceUrl } from './server-urls.service';
 import { PageableResponse } from './models';
 
-const ITEMS_PER_PAGE = 1000;
+const ITEMS_PER_PAGE = 300;
 
 interface RequestConfig extends AxiosRequestConfig {
   params?: Record<string, string | number>;

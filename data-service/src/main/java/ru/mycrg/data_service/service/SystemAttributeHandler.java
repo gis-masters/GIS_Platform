@@ -16,19 +16,24 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 @Service
 public class SystemAttributeHandler {
 
-    private final SchemaService schemaService;
     private final IAuthenticationFacade authenticationFacade;
 
     private SchemaDto schema;
 
-    public SystemAttributeHandler(SchemaService schemaService,
-                                  IAuthenticationFacade authenticationFacade) {
-        this.schemaService = schemaService;
+    public SystemAttributeHandler(IAuthenticationFacade authenticationFacade) {
         this.authenticationFacade = authenticationFacade;
     }
 
-    public SystemAttributeHandler initSchema(@NotNull String schemaName) {
-        schemaService.getSchemaByName(schemaName).ifPresent(schemaDto -> this.schema = schemaDto);
+    public SystemAttributeHandler initSchema(@NotNull SchemaDto schema) {
+        this.schema = schema;
+
+        return this;
+    }
+
+    public SystemAttributeHandler addDefaultPath(@NotNull Map<String, Object> body) {
+        if (!body.containsKey(PATH.getName())) {
+            body.put(PATH.getName(), "/root");
+        }
 
         return this;
     }

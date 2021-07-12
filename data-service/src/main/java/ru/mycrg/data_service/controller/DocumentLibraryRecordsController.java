@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.dto.Record;
 import ru.mycrg.data_service.entity.ITableObject;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
@@ -22,12 +23,11 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.RecordsService;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
 import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageException;
 import ru.mycrg.data_service.service.storage.exceptions.StorageException;
-import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -44,13 +43,9 @@ import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
-import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.PagingAndSortingUtil.fetchFoldersFirst;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.INNER_PATH;
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.PARENT;
-import static ru.mycrg.data_service.util.filter.FilterCondition.*;
 
 @RestController
 public class DocumentLibraryRecordsController {
@@ -73,33 +68,17 @@ public class DocumentLibraryRecordsController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @PostMapping("/document-libraries/{docLibId}/records")
-    public Object createObject(@PathVariable String docLibId,
-                               @RequestParam(value = "file", required = false) MultipartFile file,
-                               @RequestParam(value = "body") String jsonBody) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
-
-        Map<String, Object> body = deserializeBody(jsonBody);
-        libraryService.checkObjectBySchema(body, rIdentifier.getId());
-
-        final ITableObject record = recordsService.createRecord(rIdentifier, body, file);
-
-        return new ResponseEntity<>(record, CREATED);
-    }
-
     @GetMapping("/document-libraries/{docLibId}/records")
     public ResponseEntity<Object> getAll(@PathVariable String docLibId,
-                                         @RequestParam(required = false, defaultValue = "") String parent,
+                                         @RequestParam(required = false) Long parent,
                                          @RequestParam(required = false, defaultValue = "") String title,
                                          Pageable pageable,
-                                         PagedResourcesAssembler<Map<String, Object>> pageAssembler) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
+                                         PagedResourcesAssembler<Record> pageAssembler) {
+        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
 
         checkSortedFields(docLibId, pageable);
 
-        final CrgFilter filter = prepareFilter(parent, title);
-        final SchemaDto schema = libraryService.getSchema(docLibId);
-        var result = recordsService.getPaged(rIdentifier, schema, fetchFoldersFirst(pageable), filter);
+        var result = recordsService.getPaged(rQualifier, fetchFoldersFirst(pageable), parent, title);
 
         var pagedResources = pageAssembler.toResource(
                 result,
@@ -110,10 +89,11 @@ public class DocumentLibraryRecordsController {
         return ResponseEntity.ok(pagedResources);
     }
 
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/document-libraries/{docLibId}/records/{recId}")
     public ResponseEntity<Map<String, Object>> getById(@PathVariable String docLibId,
-                                                       @PathVariable UUID recId) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
+                                                       @PathVariable Long recId) {
+        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
 
         Map<String, Object> entity = recordsService.getById(rIdentifier, recId);
 
@@ -121,10 +101,25 @@ public class DocumentLibraryRecordsController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PostMapping("/document-libraries/{docLibId}/records")
+    public Object createObject(@PathVariable String docLibId,
+                               @RequestParam(value = "file", required = false) MultipartFile file,
+                               @RequestParam(value = "body") String jsonBody) {
+        ResourceQualifier libraryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
+
+        Map<String, Object> body = deserializeBody(jsonBody);
+        libraryService.checkObjectBySchema(body, docLibId);
+
+        final ITableObject record = recordsService.createRecord(libraryQualifier, body, file);
+
+        return new ResponseEntity<>(record, CREATED);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     @DeleteMapping("/document-libraries/{docLibId}/records/{recId}")
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
-                                         @PathVariable UUID recId) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
+                                         @PathVariable Long recId) {
+        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
         final Map<String, Object> record = recordsService.getById(rIdentifier, recId);
         final String innerFileName = (String) record.get(INNER_PATH.getName());
 
@@ -144,16 +139,17 @@ public class DocumentLibraryRecordsController {
     @GetMapping("/document-libraries/{docLibId}/records/{recId}/{field}/download")
     public ResponseEntity<Resource> downloadBinary(@PathVariable String docLibId,
                                                    @PathVariable String field,
-                                                   @PathVariable UUID recId,
+                                                   @PathVariable Long recId,
                                                    HttpServletRequest request) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
+        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
         final Map<String, Object> record = recordsService.getById(rIdentifier, recId);
         final String innerFileName = (String) record.get(field);
 
         try {
             Resource resource = fileStorageService.loadAsResource(innerFileName);
 
-            final SystemAttributeHandler attributeHandler = this.systemAttributeHandler.initSchema(rIdentifier.getId());
+            final SchemaDto schema = libraryService.getSchema(docLibId);
+            final SystemAttributeHandler attributeHandler = this.systemAttributeHandler.initSchema(schema);
             final String contentLength = attributeHandler.getFileSize(record);
 
             ContentDisposition contentDisposition = ContentDisposition
@@ -174,22 +170,6 @@ public class DocumentLibraryRecordsController {
         } catch (MalformedURLStorageException e) {
             throw new DataServiceException(e.getMessage(), e.getCause());
         }
-    }
-
-    @NotNull
-    private CrgFilter prepareFilter(String parent, String title) {
-        final CrgFilter filter = new CrgFilter();
-        if (parent.isEmpty()) {
-            filter.addFilter(PARENT.getName(), parent, IS_NULL);
-        } else {
-            filter.addFilter(PARENT.getName(), parent, EQUAL_TO);
-        }
-
-        if (!title.isEmpty()) {
-            filter.addFilter("title", title, LIKE);
-        }
-
-        return filter;
     }
 
     @NotNull

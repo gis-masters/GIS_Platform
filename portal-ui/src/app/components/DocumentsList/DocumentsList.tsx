@@ -84,6 +84,7 @@ export class DocumentsList extends Component<DocumentsListProps> {
   }
 
   @action
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setLoading(isLoading: boolean) {
     this.loading = isLoading;
   }
@@ -107,12 +108,14 @@ export class DocumentsList extends Component<DocumentsListProps> {
 
   @boundMethod
   private async onFileChangeHandler(e) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
     e.preventDefault();
     if (this.loading) {
       return;
     }
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
       const selectedFile = e.target.files[0];
       if (!selectedFile) {
         return;
@@ -121,22 +124,24 @@ export class DocumentsList extends Component<DocumentsListProps> {
       this.setLoading(true);
 
       const { editedField, featureInfo } = this.props;
-      const crgDocument = await docLibraryService.createRecord(editedField.name, {
+      const crgDocument = await docLibraryService.createRecord('dl_default', {
         content_type_id: 'doc_v2',
         binary: selectedFile,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         title: selectedFile.name,
         category: 'loaded by old way'
       });
 
       if (crgDocument) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const payload = this.preparePayload(crgDocument, selectedFile.name);
 
         await transformFeature.updateProperty(featureInfo.layerName, featureInfo.feature.id, editedField.name, payload);
 
         this.props.modifyCallback(JSON.parse(payload));
       }
-    } catch (e) {
-      services.logger.error('Something went wrong: ', e);
+    } catch (error) {
+      services.logger.error('Something went wrong: ', error);
     } finally {
       this.setLoading(false);
     }

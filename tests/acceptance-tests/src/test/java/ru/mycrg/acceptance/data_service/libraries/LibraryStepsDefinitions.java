@@ -1,4 +1,4 @@
-package ru.mycrg.acceptance.data_service;
+package ru.mycrg.acceptance.data_service.libraries;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class LibraryStepsDefinitions extends BaseStepsDefinitions {
 
-    public static String documentId;
+    public static Integer documentId;
     public static String fileName;
     public static File file;
 
@@ -42,13 +42,15 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
                                   String.format("{\"title\":\"%s\",\"size\":%d}", file.getName(), file.length()))
                 .when().
                         log().ifValidationFails().
-                        post("/documents/records");
+                        post("/dl_default/records");
     }
 
     @And("Сервер передаёт ID файла в ответе")
     public void extractDocumentIdFromResponse() {
         documentId = response.jsonPath().get("id");
+
         assertThat(documentId, is(not(equalTo(null))));
+
         filesPool.put(fileName, documentId);
     }
 
@@ -56,7 +58,7 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
     public void initFile(DataTable dataTable) {
         String fileName = dataTable.asList().get(0);
 
-        if (isDocumentExistInPool(fileName)) {
+        if (filesPool.containsKey(fileName)) {
             makeExactDocumentAsCurrent(fileName);
         } else {
             createDocument(dataTable);
@@ -68,7 +70,7 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
     @When("Пользователь делает запрос на скачивание файла")
     public void downloadFile() {
         final String tempBinaryFieldNameOfDefaultLibrarySchema = "inner_path";
-        final String url = String.format("/documents/records/%s/%s/download",
+        final String url = String.format("/dl_default/records/%s/%s/download",
                                          documentId, tempBinaryFieldNameOfDefaultLibrarySchema);
 
         response = getBaseRequestWithCurrentCookie()
@@ -87,23 +89,17 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         log().ifValidationFails().
-                        delete(String.format("/documents/records/%s", documentId));
+                        delete(String.format("/dl_default/records/%s", documentId));
     }
 
-    private void makeExactDocumentAsCurrent(String fileNamePassed) {
+    private void makeExactDocumentAsCurrent(String fName) {
         filesPool.entrySet().stream()
-                 .filter(entry -> entry.getValue().equals(fileNamePassed))
+                 .filter(entry -> entry.getKey().equals(fName))
                  .findFirst()
                  .ifPresent(entry -> {
-                     documentId = entry.getKey();
-                     fileName = entry.getValue();
+                     fileName = entry.getKey();
+                     documentId = entry.getValue();
                      file = new File("src/test/resources/ru/mycrg/acceptance/data_service/files/" + fileName);
                  });
-    }
-
-    private boolean isDocumentExistInPool(String fileNamePassed) {
-        return filesPool
-                .values().stream()
-                .anyMatch(fileNamePassed::equals);
     }
 }

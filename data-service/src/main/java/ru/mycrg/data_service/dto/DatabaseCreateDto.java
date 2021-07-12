@@ -12,6 +12,7 @@ public class DatabaseCreateDto {
     private String name;
 
     public DatabaseCreateDto() {
+        // Required
     }
 
     public DatabaseCreateDto(String name) {

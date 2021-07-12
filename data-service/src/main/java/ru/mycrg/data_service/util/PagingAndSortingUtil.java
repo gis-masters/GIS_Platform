@@ -12,6 +12,10 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID
 
 public class PagingAndSortingUtil {
 
+    private PagingAndSortingUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * Add order DESC for content type field. This sets folders first.
      *

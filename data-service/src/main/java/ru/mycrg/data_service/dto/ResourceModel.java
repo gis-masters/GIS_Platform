@@ -1,12 +1,10 @@
 package ru.mycrg.data_service.dto;
 
-import ru.mycrg.data_service.entity.Resource;
-
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class ResourceModel implements IResourceModel {
 
+    private Long id;
     private String title;
     private String details;
     private String type;
@@ -14,46 +12,34 @@ public class ResourceModel implements IResourceModel {
     private Integer itemsCount;
     private String crs;
     private String schemaId;
+    private String createdAt;
     private String role;
-    private LocalDateTime createdAt;
 
     public ResourceModel() {
         // Required
     }
 
-    public ResourceModel(IResourceModel resource) {
-        this.title = resource.getTitle();
-        this.details = resource.getDetails();
-        this.type = resource.getType();
-        this.identifier = resource.getIdentifier();
-        this.itemsCount = resource.getItemsCount();
-        this.crs = resource.getCrs();
-        this.schemaId = resource.getSchemaId();
-        this.role = resource.getRole();
-        this.createdAt = resource.getCreatedAt();
-    }
-
-    public ResourceModel(Resource resource, Roles role) {
-        this.title = resource.getTitle();
-        this.details = resource.getDetails();
-        this.type = resource.getType();
-        this.identifier = resource.getIdentifier();
-        this.itemsCount = resource.getItemsCount();
-        this.crs = resource.getCrs();
-        this.schemaId = resource.getSchemaId();
-        this.role = role.name();
-        this.createdAt = resource.getCreatedAt();
-    }
-
-    public ResourceModel(String title, String details, String type, String identifier, String schemaId, String role,
-                         LocalDateTime createdAt) {
+    public ResourceModel(Long id, String title, String details, String type, String identifier, Integer itemsCount,
+                         String crs, String schemaId, String createdAt, String role) {
+        this.id = id;
         this.title = title;
         this.details = details;
         this.type = type;
         this.identifier = identifier;
+        this.itemsCount = itemsCount;
+        this.crs = crs;
         this.schemaId = schemaId;
-        this.role = role;
         this.createdAt = createdAt;
+        this.role = role;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
@@ -97,12 +83,12 @@ public class ResourceModel implements IResourceModel {
     }
 
     @Override
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
     @Override
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 

@@ -13,8 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.web.servlet.HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE;
-import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
-import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 
 @Component
 public class ResourcesInterceptor implements HandlerInterceptor {
@@ -37,12 +35,12 @@ public class ResourcesInterceptor implements HandlerInterceptor {
             String tableId = getAttribute(request, "tableId")
                     .orElseThrow(() -> new NotFoundException("Not found attribute 'tableId'"));
 
-            ResourceIdentifier tableResource = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
+            ResourceQualifier tableResource = new ResourceQualifier(datasetId, tableId);
 
             resourceProtector.throwIfNotExist(tableResource);
         } else if (isRequestToDatasets(request)) {
             getAttribute(request, "datasetId").ifPresent(datasetId -> {
-                resourceProtector.throwIfNotExist(new ResourceIdentifier(datasetId, SCHEMA));
+                resourceProtector.throwIfNotExist(new ResourceQualifier(datasetId));
             });
         }
 

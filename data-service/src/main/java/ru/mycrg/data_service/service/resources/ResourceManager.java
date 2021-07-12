@@ -2,9 +2,9 @@ package ru.mycrg.data_service.service.resources;
 
 public interface ResourceManager {
 
-    void create(ResourceIdentifier rIdentifier);
+    void create(ResourceQualifier rIdentifier);
 
-    boolean isExist(ResourceIdentifier rIdentifier);
+    boolean isExist(ResourceQualifier rIdentifier);
 
-    void delete(ResourceIdentifier rIdentifier);
+    void delete(ResourceQualifier rIdentifier);
 }

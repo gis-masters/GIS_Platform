@@ -52,9 +52,7 @@ public class CrgMigrationHandler {
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M1__initServiceTables.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M2__initOldSchemas.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M3__initDefaultBasemaps.sql"));
-                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M4__initDefaultLibraries.sql"));
-                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M5__alterDocumentsTable.sql"));
-                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M6__updateGeometryField.sql"));
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M7__initDefaultLibrary.sql"));
             }
 
             tempDataSource.close();

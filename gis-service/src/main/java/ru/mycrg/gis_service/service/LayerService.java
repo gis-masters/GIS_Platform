@@ -129,10 +129,9 @@ public class LayerService {
 
         return relatedLayers.stream()
                             .map(layer -> {
-                                LayerProjection lProjection = new LayerProjection(layer,
-                                                                                  getOrgWorkspaceName());
+                                LayerProjection lProjection = new LayerProjection(layer, getOrgWorkspaceName());
                                 ProjectProjection pProjection = projectService
-                                        .getProjectionById(layer.getProject().getId());
+                                        .getProjectionByIdUnsafe(layer.getProject().getId());
 
                                 return new RelatedLayersModel(lProjection, pProjection);
                             })

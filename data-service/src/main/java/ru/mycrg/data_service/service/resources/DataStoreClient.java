@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.datasets;
+package ru.mycrg.data_service.service.resources;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;

@@ -4,5 +4,5 @@ public enum ResourceType {
     LIBRARY,
     SCHEMA,
     TABLE,
-    OBJECT;
+    OBJECT
 }

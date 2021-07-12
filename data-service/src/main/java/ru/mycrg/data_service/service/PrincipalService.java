@@ -1,0 +1,70 @@
+package ru.mycrg.data_service.service;
+
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
+import ru.mycrg.data_service.entity.Principal;
+import ru.mycrg.data_service.repository.PrincipalRepository;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
+import ru.mycrg.data_service.security.UserDetails;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class PrincipalService {
+
+    private final IAuthenticationFacade authenticationFacade;
+    private final PrincipalRepository principalRepository;
+
+    public PrincipalService(IAuthenticationFacade authenticationFacade,
+                            PrincipalRepository principalRepository) {
+        this.authenticationFacade = authenticationFacade;
+        this.principalRepository = principalRepository;
+    }
+
+    /**
+     * Возвращает все сущности {@link Principal} относящиеся к пользователю.
+     * <p>
+     * Это могут быть как относящиеся непосредственно к пользователю по его идентификатору так и записи относительно
+     * групп в которых пользователь состоит
+     *
+     * @return список сущностей относящихся к пользователю
+     */
+    public List<Principal> getAll() {
+        List<Principal> allPrincipalIds = new ArrayList<>();
+
+        UserDetails userDetails = authenticationFacade.getUserDetails();
+
+        allPrincipalIds.add(getOrCreate(userDetails.getUserId(), "user"));
+        userDetails.getGroups()
+                   .forEach(groupId -> allPrincipalIds.add(getOrCreate(groupId, "group")));
+
+        return allPrincipalIds;
+    }
+
+    /**
+     * Возвращает все идентификаторы относящиеся к пользователю.
+     * <p>
+     * Это могут быть как относящиеся непосредственно к пользователю по его идентификатору так и записи относительно
+     * групп в которых пользователь состоит
+     *
+     * @return список идентификаторов относящихся к пользователю
+     */
+    public List<String> getAllIds() {
+        return getAll().stream()
+                       .map(aclPrincipal -> String.valueOf(aclPrincipal.getId()))
+                       .collect(Collectors.toList());
+    }
+
+    @NotNull
+    public Principal getOrCreate(Long id, String type) {
+        Optional<Principal> oUser = principalRepository.findByIdentifierAndType(id, type);
+        if (oUser.isEmpty()) {
+            return principalRepository.save(new Principal(id, type));
+        } else {
+            return oUser.get();
+        }
+    }
+}

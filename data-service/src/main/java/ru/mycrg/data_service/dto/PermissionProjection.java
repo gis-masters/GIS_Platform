@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 import ru.mycrg.data_service.entity.Permission;
@@ -8,9 +7,8 @@ import ru.mycrg.data_service.entity.Permission;
 import java.time.LocalDateTime;
 
 @Projection(
-        name = "permissionProjection",
+        name = "aclPermissionProjection",
         types = { Permission.class })
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public interface PermissionProjection {
 
     Long getId();
@@ -21,6 +19,7 @@ public interface PermissionProjection {
     @Value("#{target.principal.type}")
     String getPrincipalType();
 
+    @Value("#{target.role.name}")
     String getRole();
 
     LocalDateTime getCreatedAt();

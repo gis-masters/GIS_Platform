@@ -20,66 +20,21 @@ CREATE TABLE IF NOT EXISTS data.base_maps
     CONSTRAINT base_maps_pkey PRIMARY KEY (id)
 ) TABLESPACE pg_default;
 
-CREATE TABLE IF NOT EXISTS data.documents
+CREATE TABLE IF NOT EXISTS data.schemas_and_tables
 (
-    id              uuid NOT NULL,
-    parent          uuid,
-    title           character varying(500),
-    name            character varying,
-    type            character varying(50),
-    size            bigint,
-    inner_path      character varying,
-    category        character varying,
-    content_type_id character varying,
-    created_at      timestamp without time zone,
-    last_modified   timestamp without time zone,
-    created_by      character varying(50),
-    CONSTRAINT documents_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
-
-CREATE TABLE IF NOT EXISTS data.resource
-(
-    id            bigserial             NOT NULL,
-    title         character varying     NOT NULL,
+    id            bigserial         NOT NULL,
+    title         character varying NOT NULL,
     details       character varying(1024),
-    type          character varying(20) NOT NULL,
-    identifier    character varying     NOT NULL,
+    is_folder     boolean           NOT NULL,
+    identifier    character varying NOT NULL,
+    path          text,
     items_count   integer DEFAULT 0,
     schema_id     character varying(50),
     crs           character varying(20),
-    created_by    character varying,
     created_at    timestamp without time zone,
     last_modified timestamp without time zone,
-    CONSTRAINT resource_description_pkey PRIMARY KEY (id),
-    CONSTRAINT resource_identifier_type UNIQUE (identifier, type)
-) TABLESPACE pg_default;
-
-CREATE TABLE IF NOT EXISTS data.principal
-(
-    id         bigserial             NOT NULL,
-    identifier bigint                NOT NULL,
-    type       character varying(20) NOT NULL,
-    CONSTRAINT principal_pkey PRIMARY KEY (id),
-    CONSTRAINT principal_identifier_type UNIQUE (identifier, type)
-) TABLESPACE pg_default;
-
-CREATE TABLE IF NOT EXISTS data.permission
-(
-    id            bigserial NOT NULL,
-    role          character varying(20),
-    principal_id  bigint    NOT NULL,
-    resource_id   bigint    NOT NULL,
-    created_at    timestamp without time zone,
-    last_modified timestamp without time zone,
-    CONSTRAINT permission_pkey PRIMARY KEY (id),
-    CONSTRAINT fk3yfc65wpuf6tu7enud5iqkh9b FOREIGN KEY (resource_id)
-        REFERENCES data.resource (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE CASCADE,
-    CONSTRAINT fkcsq8yuy5497r2s4n8h1rh1a62 FOREIGN KEY (principal_id)
-        REFERENCES data.principal (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+    CONSTRAINT schemas_and_tables_description_pkey PRIMARY KEY (id),
+    CONSTRAINT schemas_and_tables_identifier_type UNIQUE (identifier, is_folder, path)
 ) TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS data.schemas
@@ -109,6 +64,7 @@ CREATE TABLE IF NOT EXISTS data.doc_libraries
     id            bigserial         NOT NULL,
     title         character varying,
     details       character varying(1024),
+    path          text,
     table_name    character varying NOT NULL,
     schema_id     character varying(50),
     created_by    character varying,
@@ -117,3 +73,53 @@ CREATE TABLE IF NOT EXISTS data.doc_libraries
     CONSTRAINT doc_libraries_pkey PRIMARY KEY (id),
     CONSTRAINT doc_libraries_table UNIQUE (table_name)
 ) TABLESPACE pg_default;
+
+CREATE TABLE IF NOT EXISTS data.acl_roles
+(
+    id   bigserial NOT NULL,
+    name character varying(255),
+    CONSTRAINT acl_roles_pkey PRIMARY KEY (id)
+) TABLESPACE pg_default;
+
+CREATE TABLE IF NOT EXISTS data.acl_principals
+(
+    id         bigserial             NOT NULL,
+    identifier bigint                NOT NULL,
+    type       character varying(20) NOT NULL,
+    CONSTRAINT acl_principals_pkey PRIMARY KEY (id),
+    CONSTRAINT acl_principals_unique_id_type UNIQUE (identifier, type)
+) TABLESPACE pg_default;
+
+CREATE TABLE IF NOT EXISTS data.acl_permissions
+(
+    id             bigserial              NOT NULL,
+    role_id        bigint                 NOT NULL,
+    principal_id   bigint                 NOT NULL,
+    resource_table character varying(255) NOT NULL,
+    resource_id    bigint                 NOT NULL,
+    created_by     character varying(50),
+    created_at     timestamp without time zone,
+    last_modified  timestamp without time zone,
+    CONSTRAINT acl_permissions_pkey PRIMARY KEY (id),
+    CONSTRAINT acl_permissions_fiz_unique UNIQUE (role_id, principal_id, resource_table, resource_id),
+    CONSTRAINT fk6qrdpnlh0khdvkr4usr5ip7ov FOREIGN KEY (principal_id)
+        REFERENCES data.acl_principals (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT fkjm34ygwboc77dpgpbfageb3ja FOREIGN KEY (role_id)
+        REFERENCES data.acl_roles (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+) TABLESPACE pg_default;
+
+INSERT INTO data.acl_roles (id, name)
+SELECT 10, 'VIEWER'
+WHERE NOT EXISTS(SELECT id FROM data.acl_roles WHERE name = 'VIEWER');
+
+INSERT INTO data.acl_roles (id, name)
+SELECT 20, 'CONTRIBUTOR'
+WHERE NOT EXISTS(SELECT id FROM data.acl_roles WHERE name = 'CONTRIBUTOR');
+
+INSERT INTO data.acl_roles (id, name)
+SELECT 30, 'OWNER'
+WHERE NOT EXISTS(SELECT id FROM data.acl_roles WHERE name = 'OWNER');

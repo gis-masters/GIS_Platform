@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.ResourceManager;
 
 @Service
@@ -24,27 +24,27 @@ public class TablesManager implements ResourceManager {
     }
 
     @Override
-    public void create(ResourceIdentifier rIdentifier) {
+    public void create(ResourceQualifier rIdentifier) {
         throw new DataServiceException("Not implemented");
     }
 
     /**
      * Вернёт true если существуют и схема и таблица.
      *
-     * @param table Обьект описывающий ресурс
+     * @param rQualifier Объект описывающий ресурс
      */
     @Override
-    public boolean isExist(ResourceIdentifier table) {
-        ResourceIdentifier schema = table.getParent();
-
+    public boolean isExist(ResourceQualifier rQualifier) {
         String sql = "SELECT EXISTS (SELECT 1 FROM information_schema.tables " +
-                "WHERE table_schema = '" + schema.getId() + "' " +
-                "AND table_name = '" + table.getId() + "')";
+                "WHERE table_schema = '" + rQualifier.getSchema() + "' " +
+                "AND table_name = '" + rQualifier.getTable() + "')";
 
         try {
-            return jdbcTemplate.queryForObject(sql, Boolean.class);
+            final Boolean result = jdbcTemplate.queryForObject(sql, Boolean.class);
+
+            return Boolean.TRUE.equals(result);
         } catch (DataAccessException e) {
-            log.warn("Check table: {} failed: {}", table.toString(), e.getMessage());
+            log.warn("Check table: {} failed: {}", rQualifier, e.getMessage());
 
             return true;
         }
@@ -52,10 +52,10 @@ public class TablesManager implements ResourceManager {
 
     @Override
     @Transactional
-    public void delete(ResourceIdentifier rIdentifier) {
-        log.debug("Try delete: {}", rIdentifier);
+    public void delete(ResourceQualifier rQualifier) {
+        log.debug("Try delete: {}", rQualifier);
 
         jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.\"%s\"",
-                                           rIdentifier.getParent().getId(), rIdentifier.getId()));
+                                           rQualifier.getSchema(), rQualifier.getTable()));
     }
 }

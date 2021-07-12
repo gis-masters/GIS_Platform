@@ -3,25 +3,26 @@ package ru.mycrg.data_service.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.TablesDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.dto.Record;
 import ru.mycrg.data_service.entity.ITableObject;
 import ru.mycrg.data_service.entity.TableObjectImpl;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
-import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.util.Map;
-import java.util.UUID;
-
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RecordsService {
@@ -30,65 +31,110 @@ public class RecordsService {
 
     private final TablesDao tablesDao;
     private final FileStorageService fileStorageService;
+    private final DocumentLibraryService librariesService;
     private final SystemAttributeHandler systemAttributeHandler;
+    private final BasePermissionsRepository permissionsRepository;
+    private final PermissionsService permissionsService;
+
+    private final String SYSTEM_ROOT_FOLDER_PATH = "/root";
 
     public RecordsService(TablesDao tablesDao,
                           FileStorageService fileStorageService,
-                          SystemAttributeHandler systemAttributeHandler) {
+                          DocumentLibraryService librariesService,
+                          SystemAttributeHandler systemAttributeHandler,
+                          BasePermissionsRepository permissionsRepository,
+                          PermissionsService permissionsService) {
         this.tablesDao = tablesDao;
         this.fileStorageService = fileStorageService;
+        this.librariesService = librariesService;
         this.systemAttributeHandler = systemAttributeHandler;
+        this.permissionsRepository = permissionsRepository;
+        this.permissionsService = permissionsService;
     }
 
-    public Page<Map<String, Object>> getPaged(ResourceIdentifier rIdentifier,
-                                              SchemaDto schema,
-                                              Pageable pageable,
-                                              CrgFilter filter) {
-        try {
-            return tablesDao.findPagedByFilter(rIdentifier, schema, pageable, filter);
-        } catch (CrgDaoException e) {
-            log.error(e.getMessage());
-            throw new DataServiceException("Failed obtain records from: " + rIdentifier.toString());
+    public Page<Record> getPaged(ResourceQualifier libraryTable,
+                                 Pageable pageable,
+                                 Long parentId,
+                                 String title) {
+        final long total;
+        final List<Record> allowedResources;
+
+        String path = SYSTEM_ROOT_FOLDER_PATH;
+        if (parentId != null) {
+            final Map<String, Object> parent = tablesDao
+                    .findById(libraryTable, parentId)
+                    .orElseThrow(() -> new NotFoundException("Not found record by id: " + parentId));
+
+            path = parent.get("path") + "/" + parentId;
+
+            Set<String> ids = extractFolderIdsFromPath(path);
+
+            boolean allowedByParentPermissions = permissionsRepository.isAllowedByParentsPermissions(libraryTable, ids);
+            if (allowedByParentPermissions) {
+                allowedResources = tablesDao.findAllByPath(libraryTable, path, title, pageable);
+                total = tablesDao.getTotalByPath(libraryTable, path, title);
+            } else {
+                allowedResources = permissionsRepository.findAllowedByParent(libraryTable, path, title, pageable);
+                total = permissionsRepository.getTotalByParent(libraryTable, path, title);
+            }
+        } else {
+            allowedResources = permissionsRepository.findAllowedByParent(libraryTable, path, title, pageable);
+            total = permissionsRepository.getTotalByParent(libraryTable, path, title);
         }
+
+        return new PageImpl<>(allowedResources, pageable, total);
     }
 
-    public Map<String, Object> getById(ResourceIdentifier resourceIdentifier, UUID recordId) {
-        return tablesDao.findById(resourceIdentifier, recordId)
+    public Map<String, Object> getById(ResourceQualifier resourceQualifier, Long recordId) {
+        return tablesDao.findById(resourceQualifier, recordId)
                         .orElseThrow(() -> new NotFoundException(recordId));
     }
 
-    public ITableObject createRecord(ResourceIdentifier rIdentifier,
+    @Transactional
+    public ITableObject createRecord(ResourceQualifier tableQualifier,
                                      Map<String, Object> body,
                                      MultipartFile file) {
         try {
             String innerFileName = UUID.randomUUID().toString();
 
-            systemAttributeHandler.initSchema(rIdentifier.getId())
-                                  .fillCreator(body)
-                                  .fillTimes(body)
-                                  .fillFileInfo(body, file)
-                                  .fillFileInnerName(body, innerFileName);
+            final SchemaDto schema = librariesService.getSchema(tableQualifier.getTable());
+
+            systemAttributeHandler.initSchema(schema)
+                                  .addDefaultPath(body)
+                                  .fillTimes(body);
 
             if (file != null) {
                 if (file.isEmpty()) {
                     throw new BadRequestException("File is empty");
                 }
 
+                systemAttributeHandler.initSchema(schema)
+                                      .fillFileInfo(body, file)
+                                      .fillFileInnerName(body, innerFileName);
+
                 fileStorageService.storeFile(file, innerFileName);
             }
 
-            UUID uuid = UUID.randomUUID();
-            body.put(ID.getName(), uuid);
+            final Long id = tablesDao.addRecord(tableQualifier, body);
+            permissionsService.addOwnerPermission(tableQualifier, id);
 
-            tablesDao.addRecord(rIdentifier, body);
-
-            return new TableObjectImpl(uuid);
+            return new TableObjectImpl(id);
         } catch (CrgDaoException e) {
             throw new DataServiceException(e.getMessage(), e.getCause());
         }
     }
 
-    public void deleteRecord(ResourceIdentifier resourceIdentifier, UUID id) throws CrgDaoException {
-        tablesDao.removeRecord(resourceIdentifier, id);
+    public void deleteRecord(ResourceQualifier resourceQualifier, Long id) throws CrgDaoException {
+        tablesDao.removeRecord(resourceQualifier, id);
+    }
+
+    private Set<String> extractFolderIdsFromPath(String path) {
+        final String[] splited = path.split("/root/");
+        if (splited.length < 2) {
+            return new HashSet<>();
+        }
+
+        return Arrays.stream(splited[1].split("/"))
+                     .collect(Collectors.toSet());
     }
 }

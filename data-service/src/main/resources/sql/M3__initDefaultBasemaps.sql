@@ -21,4 +21,3 @@ SELECT 'esriImagery',
        'XYZ',
        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
 WHERE NOT EXISTS(SELECT id FROM data.base_maps WHERE name = 'esriImagery');
-

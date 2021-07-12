@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "permission")
+@Table(name = "acl_permissions")
 public class Permission {
 
     @Id
@@ -14,30 +14,30 @@ public class Permission {
     @Column(columnDefinition = "serial")
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Resource resource;
+    @ManyToOne
+    private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Principal principal;
 
-    @Column(length = 20, nullable = false)
-    private String role;
+    @Column
+    private String resourceTable;
 
-    @Column(name = "created_at")
+    @Column
+    private Long resourceId;
+
+    @Column(length = 50)
+    private String createdBy;
+
+    @Column
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "last_modified")
+    @Column
     private @LastModifiedDate
     LocalDateTime lastModified = LocalDateTime.now();
 
     public Permission() {
         // Framework required
-    }
-
-    public Permission(Resource resource, Principal principal, String role) {
-        this.resource = resource;
-        this.principal = principal;
-        this.role = role;
     }
 
     public long getId() {
@@ -48,28 +48,12 @@ public class Permission {
         this.id = id;
     }
 
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
-
     public Principal getPrincipal() {
         return principal;
     }
 
     public void setPrincipal(Principal principal) {
         this.principal = principal;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -86,5 +70,37 @@ public class Permission {
 
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getResourceTable() {
+        return resourceTable;
+    }
+
+    public void setResourceTable(String resourceTable) {
+        this.resourceTable = resourceTable;
+    }
+
+    public Long getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(Long resourceId) {
+        this.resourceId = resourceId;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

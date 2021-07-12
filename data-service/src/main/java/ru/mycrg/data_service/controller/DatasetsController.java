@@ -11,15 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
-import ru.mycrg.data_service.service.datasets.DatasetService;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
+import ru.mycrg.data_service.service.resources.DatasetService;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import javax.validation.Valid;
 import java.net.URI;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 
 @RestController
 public class DatasetsController {
@@ -32,8 +31,8 @@ public class DatasetsController {
         this.datasetService = datasetService;
     }
 
-    @GetMapping("/datasets")
     @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/datasets")
     public ResponseEntity<Object> getDatasets(@RequestParam(required = false, defaultValue = "") String title,
                                               Pageable pageable,
                                               PagedResourcesAssembler<IResourceModel> pageAssembler) {
@@ -48,17 +47,16 @@ public class DatasetsController {
         return ResponseEntity.ok(pagedResources);
     }
 
-    @GetMapping("/datasets/{datasetId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/datasets/{datasetId}")
     public ResponseEntity<IResourceModel> getDataset(@PathVariable String datasetId) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(datasetId, SCHEMA);
-        final IResourceModel dto = datasetService.getInfo(rIdentifier);
+        final IResourceModel dto = datasetService.getInfo(datasetId);
 
         return ResponseEntity.ok(dto);
     }
 
-    @PostMapping("/datasets")
     @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PostMapping("/datasets")
     public ResponseEntity<Object> createDataset(@Valid @RequestBody ResourceCreateDto dto) {
         IResourceModel newDataset = datasetService.create(dto);
 
@@ -71,10 +69,10 @@ public class DatasetsController {
         return ResponseEntity.created(location).build();
     }
 
-    @DeleteMapping("/datasets/{datasetId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
+    @DeleteMapping("/datasets/{datasetId}")
     public ResponseEntity<Object> deleteDataset(@PathVariable String datasetId) {
-        datasetService.delete(new ResourceIdentifier(datasetId, SCHEMA));
+        datasetService.delete(new ResourceQualifier(datasetId));
 
         return ResponseEntity.noContent().build();
     }
