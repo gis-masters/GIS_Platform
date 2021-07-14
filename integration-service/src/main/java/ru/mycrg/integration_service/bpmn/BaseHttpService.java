@@ -25,12 +25,14 @@ public class BaseHttpService {
 
     private final URL gisServiceUrl;
     private final URL dataServiceUrl;
+    private final URL auditServiceUrl;
 
     public BaseHttpService(Environment environment) throws MalformedURLException {
         this.environment = environment;
 
         gisServiceUrl = new URL(environment.getRequiredProperty("crg-options.gis_service_url"));
         dataServiceUrl = new URL(environment.getRequiredProperty("crg-options.data_service_url"));
+        auditServiceUrl = new URL(environment.getRequiredProperty("crg-options.audit_service_url"));
     }
 
     public URL getGisServiceUrl() {
@@ -39,5 +41,9 @@ public class BaseHttpService {
 
     public URL getDataServiceUrl() {
         return dataServiceUrl;
+    }
+
+    public URL getAuditServiceUrl() {
+        return auditServiceUrl;
     }
 }

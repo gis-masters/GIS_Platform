@@ -13,7 +13,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ru.mycrg.gateway.domain.Authenticator;
 import ru.mycrg.gateway.domain.CookieProducer;
+import ru.mycrg.gateway.domain.TokenHandler;
 import ru.mycrg.gateway.filters.MainAuthFilter;
+import ru.mycrg.gateway.queue.MessageBusProducer;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
@@ -28,6 +30,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private Authenticator authenticator;
+
+    @Autowired
+    private MessageBusProducer producer;
+
+    @Autowired
+    private TokenHandler tokenHandler;
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -56,7 +64,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 .and()
                 // Add a filter to validate the tokens with every request
-                .addFilterAfter(new MainAuthFilter(cookieProducer, authenticator),
+                .addFilterAfter(new MainAuthFilter(cookieProducer, authenticator, producer, tokenHandler),
                                 UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests() // authorization requests config
                 .antMatchers(POST, "/oauth/token", "/organizations/init", "/perform_logout").permitAll()

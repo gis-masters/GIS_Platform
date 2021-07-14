@@ -22,7 +22,8 @@ public class MessageBusConsumer implements IMessageBusConsumer {
 
     @Override
     @RabbitListener(queues = {
-            ORG_REQUEST_QUEUE
+            ORG_REQUEST_QUEUE,
+            AUDIT_REQUEST_QUEUE
     })
     public void consume(IMessageBusEvent event) {
         messageBus.consume(event);

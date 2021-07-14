@@ -1,6 +1,6 @@
 Feature: Создание событий аудита
 
-  Background: Проверка организации
+  Background:
     Given Существует организация
       | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
     When Авторизируемся владельцем организации
@@ -19,9 +19,10 @@ Feature: Создание событий аудита
     When Пользователь делает запрос на создание события аудита "<eventDateTime>" "<actionType>" "<entityName>" "<entityId>" "<entityStateAfter>"
     Then Сервер отвечает со статус-кодом 400
     Examples:
-      | eventDateTime | actionType | entityName | entityId | entityStateAfter | reason                                                                                    |
-      | CURRENT_TIME  | STRING_4   | STRING_5   | 2        | JSON             | actionType: не допускаются значения, кроме- CREATE,  UPDATE,  DELETE,  SIGN_IN,  SIGN_OUT |
-      | CURRENT_TIME  | STRING_0   | STRING_5   | 325      | JSON             | actionType: пустое значение  не  допускается                                              |
-      | CURRENT_TIME  | CREATE     | STRING_101 | 555      | JSON             | entityName: значение, длинной более 100 символов, не допускается                          |
-      | CURRENT_TIME  | CREATE     | STRING_257 | -2       | JSON             | entityId: отрицательное значение и 0 не допускается                                       |
-      |               | CREATE     | STRING_0   | 1        | JSON             | eventDateTime: пустое значение не  допускается                                            |
+      | eventDateTime | actionType | entityName | entityId | entityStateAfter | reason                                                                                |
+      | CURRENT_TIME  | STRING_4   | STRING_5   | 2        | JSON             | actionType: не допускаются значения, кроме- CREATE, UPDATE, DELETE, SIGN_IN, SIGN_OUT |
+      | CURRENT_TIME  | STRING_0   | STRING_5   | 325      | JSON             | actionType: пустое значение не допускается                                            |
+      | CURRENT_TIME  | CREATE     | STRING_101 | 555      | JSON             | entityName: значение, длинной более 100 символов, не допускается                      |
+      | CURRENT_TIME  | CREATE     | STRING_257 | -2       | JSON             | entityId: отрицательное значение и 0 не допускается                                   |
+      |               | CREATE     | STRING_0   | 1        | JSON             | eventDateTime: пустое значение не  допускается                                        |
+      | CURRENT_TIME  | CREATE     | STRING_101 | 1        | JSON             | entityName: значение, больше 100 символов не допускается                              |

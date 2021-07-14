@@ -1,11 +1,14 @@
 package ru.mycrg.gateway.filters;
 
+import events.CrgAuditEvent;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.mycrg.gateway.domain.AuthConclusion;
 import ru.mycrg.gateway.domain.Authenticator;
 import ru.mycrg.gateway.domain.CookieProducer;
+import ru.mycrg.gateway.domain.TokenHandler;
+import ru.mycrg.gateway.queue.MessageBusProducer;
 import ru.mycrg.oauth_client.JwtToken;
 
 import javax.servlet.FilterChain;
@@ -14,15 +17,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static dto.AuditEventActionsType.SIGN_IN;
+import static dto.AuditEventActionsType.SIGN_OUT;
+
 @Log4j2
 public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
 
     private final CookieProducer cookieProducer;
     private final Authenticator authenticator;
+    private final MessageBusProducer producer;
+    private final TokenHandler tokenHandler;
 
-    public MainAuthFilter(CookieProducer cookieProducer, Authenticator authenticator) {
+    public MainAuthFilter(CookieProducer cookieProducer, Authenticator authenticator, MessageBusProducer producer,
+                          TokenHandler tokenHandler) {
         this.cookieProducer = cookieProducer;
         this.authenticator = authenticator;
+        this.producer = producer;
+        this.tokenHandler = tokenHandler;
     }
 
     @Override
@@ -30,6 +41,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                                     @NotNull HttpServletResponse response,
                                     @NotNull FilterChain chain) {
         if (isLogoutRequest(request)) {
+            producer.produce(new CrgAuditEvent(getToken(request), SIGN_OUT));
             response.addCookie(cookieProducer.makeDeletionCookie());
         } else if (isGetTokenRequest(request)) {
             log.debug("isGetTokenRequest");
@@ -42,6 +54,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                 authenticator.requestToken(username, password)
                              .ifPresentOrElse(token -> {
                                  prepareResponse(response, token);
+                                 producer.produce(new CrgAuditEvent(token.getAccess_token(), SIGN_IN));
                              }, () -> {
                                  sendUnauthorized(response);
                              });
@@ -57,6 +70,12 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
 
             tryAuthorize(request, response, chain);
         }
+    }
+
+    private String getToken(HttpServletRequest request) {
+        return tokenHandler.extract(request)
+                           .map(JwtToken::getAccess_token)
+                           .orElse("");
     }
 
     private void tryAuthorize(HttpServletRequest request,

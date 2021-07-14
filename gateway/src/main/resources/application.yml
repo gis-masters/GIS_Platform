@@ -7,6 +7,12 @@ spring:
       max-file-size: 50MB
       max-request-size: 60MB
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: fiz
+    password: 314
+
 zuul:
   host:
     connect-timeout-millis: 10000

@@ -1,6 +1,7 @@
 package ru.mycrg.acceptance.auth_service;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.Cookie;
@@ -56,9 +57,16 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
                         statusCode(SC_UNAUTHORIZED);
     }
 
-    @When("Пользователь разлогинивается")
+    @When("Происходит разлогинивание")
     public void logout() {
         response = getBaseRequest()
+                .when().
+                        post("/perform_logout");
+    }
+
+    @When("Пользователь разлогинивается")
+    public void logoutUser() {
+        response = getBaseRequestWithCurrentCookie()
                 .when().
                         post("/perform_logout");
     }

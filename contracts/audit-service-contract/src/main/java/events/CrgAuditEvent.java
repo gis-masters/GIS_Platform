@@ -1,5 +1,7 @@
 package events;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import dto.AuditEventActionsType;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
 import java.time.LocalDateTime;
@@ -8,37 +10,39 @@ import java.util.UUID;
 import static ru.mycrg.messagebus_contract.MessageBusProperties.AUDIT_REQUEST_FANOUT;
 import static ru.mycrg.messagebus_contract.MessageBusProperties.AUDIT_REQUEST_KEY;
 
-public class AuditEvent extends DefaultMessageBusRequestEvent {
+public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
 
     private String token;
-    private LocalDateTime eventDateTime;
-    private String actionType;
-    private String entityName;
-    private Long entityId;
-    private String entityStateAfter;
 
-    public AuditEvent() {
+    private LocalDateTime eventDateTime;
+
+    private AuditEventActionsType actionType;
+
+    private String entityName;
+
+    private Long entityId;
+
+    private JsonNode entityStateAfter;
+
+    public CrgAuditEvent() {
         super(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY);
     }
 
-    public AuditEvent(String token, String actionType,
-                      String entityName, Long entityId, String entityStateAfter) {
+    public CrgAuditEvent(String token, AuditEventActionsType actionType) {
         super(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY);
 
         this.token = token;
         this.eventDateTime = LocalDateTime.now();
         this.actionType = actionType;
+    }
+
+    public CrgAuditEvent(String token, AuditEventActionsType actionType,
+                         String entityName, Long entityId, JsonNode entityStateAfter) {
+        this(token, actionType);
+
         this.entityName = entityName;
         this.entityId = entityId;
         this.entityStateAfter = entityStateAfter;
-    }
-
-    public AuditEvent(String token, String actionType) {
-        super(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY);
-
-        this.token = token;
-        this.eventDateTime = LocalDateTime.now();
-        this.actionType = actionType;
     }
 
     public String getToken() {
@@ -57,11 +61,11 @@ public class AuditEvent extends DefaultMessageBusRequestEvent {
         this.eventDateTime = eventDateTime;
     }
 
-    public String getActionType() {
+    public AuditEventActionsType getActionType() {
         return actionType;
     }
 
-    public void setActionType(String actionType) {
+    public void setActionType(AuditEventActionsType actionType) {
         this.actionType = actionType;
     }
 
@@ -81,11 +85,11 @@ public class AuditEvent extends DefaultMessageBusRequestEvent {
         this.entityId = entityId;
     }
 
-    public String getEntityStateAfter() {
+    public JsonNode getEntityStateAfter() {
         return entityStateAfter;
     }
 
-    public void setEntityStateAfter(String entityStateAfter) {
+    public void setEntityStateAfter(JsonNode entityStateAfter) {
         this.entityStateAfter = entityStateAfter;
     }
 }

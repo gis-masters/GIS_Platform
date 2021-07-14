@@ -6,6 +6,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.audit_service.dto.AuditEventActionsType;
 import ru.mycrg.acceptance.audit_service.dto.AuditEventDto;
 
 import java.time.LocalDateTime;
@@ -13,9 +14,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.Thread.sleep;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
+import static ru.mycrg.acceptance.audit_service.dto.AuditEventActionsType.SIGN_IN;
+import static ru.mycrg.acceptance.audit_service.dto.AuditEventActionsType.SIGN_OUT;
+import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
 
 public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
@@ -54,8 +60,8 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
         if (isBlank(entityName) || isBlank(entityId) || isBlank(entityStateAfter)) {
             auditEventDto = new AuditEventDto(dateTime, generateString(actionType));
         } else {
-            auditEventDto = new AuditEventDto(dateTime, generateString(actionType),
-                                              generateString(entityName), Long.parseLong(entityId),
+            auditEventDto = new AuditEventDto(dateTime, generateString(actionType), generateString(entityName),
+                                              Long.parseLong(entityId),
                                               createJsonNode(generateJsonString(entityStateAfter)));
         }
 
@@ -130,6 +136,43 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     public void initializeAuditEvents(int count) {
         for (int i = 0; i < count; i++) {
             addEvent(CURRENT_TIME, "SIGN_IN", "", "", "");
+        }
+    }
+
+    @Then("Создан аудит лог о входе пользователя в систему")
+    public void checkAuditEventSignIn() {
+        assertTrue(chekAuditEvents(SIGN_IN));
+    }
+
+    @Then("Создан аудит лог о выходе пользователя из системы")
+    public void checkAuditEventSignOut() {
+        assertTrue(chekAuditEvents(SIGN_OUT));
+    }
+
+    @Then("Аудит лог о разлогинивании не создается")
+    public void checkSignOutWithoutToken() {
+        assertThrows(RuntimeException.class, () -> chekAuditEvents(SIGN_OUT));
+    }
+
+    private boolean chekAuditEvents(AuditEventActionsType actionsType) {
+        try {
+            int currentAttempt = 0;
+            do {
+                currentAttempt++;
+                System.out.println("attempt create audit event " + currentAttempt);
+
+                getAllAuditEntity();
+
+                if (response.jsonPath().getList("_embedded.events.actionType").contains(actionsType.name())) {
+                    return true;
+                }
+
+                sleep(200);
+            } while (currentAttempt < MAX_RETRY_ATTEMPT);
+
+            throw new RuntimeException("Audit event not created!");
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Audit event not created!");
         }
     }
 }

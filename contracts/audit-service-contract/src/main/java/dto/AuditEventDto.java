@@ -36,6 +36,15 @@ public class AuditEventDto {
         this.actionType = actionType;
     }
 
+    public AuditEventDto(LocalDateTime eventDateTime, String actionType, String entityName, Long entityId,
+                         JsonNode entityStateAfter) {
+        this(eventDateTime, actionType);
+
+        this.entityName = entityName;
+        this.entityId = entityId;
+        this.entityStateAfter = entityStateAfter;
+    }
+
     public LocalDateTime getEventDateTime() {
         return eventDateTime;
     }
