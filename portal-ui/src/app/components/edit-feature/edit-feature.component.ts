@@ -28,6 +28,7 @@ import { Toast } from '../Toast/Toast';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { getEmptyGeometry } from '../../services/geoserver/wfs.util';
 import { sleep } from '../../services/util/sleep';
+import { services } from '../../services/services';
 
 export interface Properties {
   [key: string]: any;
@@ -307,10 +308,15 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   @boundMethod
-  close(): void {
+  async close(): Promise<void> {
     if (sidebars.editFeaturesData.viewFeatures) {
       sidebars.openFeatures(sidebars.editFeaturesData.viewFeatures);
     } else {
+      await services.provided;
+      await services.router.navigate([location.pathname], {
+        queryParams: { features: null },
+        queryParamsHandling: 'merge'
+      });
       sidebars.closeEdit();
     }
   }

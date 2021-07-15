@@ -34,6 +34,7 @@
   "globals": {
     "__DEV__": true,
     "ClipboardItem": true,
+    "navigator": true,
     "ExplorerItemType": true,
     "ExplorerItemPayloads": true
   },

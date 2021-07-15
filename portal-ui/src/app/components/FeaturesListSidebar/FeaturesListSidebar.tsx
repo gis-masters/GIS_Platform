@@ -11,13 +11,12 @@ import { communicationService } from '../../services/communication.service';
 import { FeaturesList } from '../FeaturesList/FeaturesList';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListSidebar.scss';
+import { services } from '../../services/services';
 
 const cnFeaturesListSidebar = cn('FeaturesListSidebar');
 
-interface FeaturesListSidebarProps {}
-
 @observer
-export class FeaturesListSidebar extends Component<FeaturesListSidebarProps> {
+export class FeaturesListSidebar extends Component {
   componentDidMount() {
     communicationService.featuresUpdated.on(this.close, this);
   }
@@ -44,7 +43,12 @@ export class FeaturesListSidebar extends Component<FeaturesListSidebarProps> {
   }
 
   @boundMethod
-  private close() {
+  private async close() {
+    await services.provided;
+    await services.router.navigate([location.pathname], {
+      queryParams: { features: null },
+      queryParamsHandling: 'merge'
+    });
     sidebars.closeFeatures();
   }
 }

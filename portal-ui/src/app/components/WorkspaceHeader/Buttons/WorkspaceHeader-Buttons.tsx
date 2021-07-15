@@ -14,6 +14,7 @@ import { PrintButton } from '../../PrintButton/PrintButton';
 import { HelpToggler } from '../../HelpToggler/HelpToggler';
 import { ExportGmlButton } from '../../ExportGmlButton/ExportGmlButton';
 import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
+import { CopyUrlButton } from '../../CopyUrlButton/CopyUrlButton';
 
 import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-Buttons.scss';
 
@@ -24,8 +25,8 @@ export class WorkspaceHeaderButtons extends Component {
   render() {
     return (
       <div className={cnWorkspaceHeaderButtons()}>
+        <CopyUrlButton inHeader />
         {route.data.page === Pages.MAP && <PrintButton />}
-
         {route.data.page === Pages.MAP && env.platform === 'conv' && (
           <Tooltip title='Проверка ошибок по приказу'>
             <IconButton onClick={this.handleBugsClick} color='inherit'>

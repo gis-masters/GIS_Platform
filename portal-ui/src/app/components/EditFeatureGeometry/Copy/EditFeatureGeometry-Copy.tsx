@@ -7,7 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 import GeometryType from 'ol/geom/GeometryType';
 
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
-import { copyNodeToClipboard } from '../../../services/util/copyNodeToClipboard';
+import { copyNodeToClipboard } from '../../../services/util/clipboard.util';
 
 const cnEditFeatureGeometryCopy = cn('EditFeatureGeometry', 'Copy');
 

@@ -29,6 +29,18 @@ declare global {
     read?(): Promise<Array<ClipboardItem>>;
     write?(items: Array<ClipboardItem>): Promise<void>;
   }
+
+  interface ShareData {
+    text?: string;
+    title?: string;
+    url?: string;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  interface Navigator extends Navigator {
+    share: (options?: ShareData) => Promise<void>;
+  }
 }
 
 getEnvironment()

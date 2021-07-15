@@ -410,8 +410,7 @@ class MapService {
    * Подсвечивает объект. (очищает черновой слой)
    */
   highlightFeatures(features: WfsFeature[], projection?: CrgProjection) {
-    const featuresInOlProjection: WfsFeature[] = [features]
-      .flat()
+    const featuresInOlProjection: WfsFeature[] = [...features]
       .filter(({ geometry }) => geometry)
       .map((feature: WfsFeature) => ({
         ...feature,
@@ -467,6 +466,7 @@ class MapService {
 
   getBufferByCoordinates(pos: Coordinate) {
     const res = this.round(this.getResolution() * this.HIT_TOLERANCE);
+
     pos = pos.map(num => this.round(num));
 
     const x1 = pos[0] + res / 2;

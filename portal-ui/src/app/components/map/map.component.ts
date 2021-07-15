@@ -9,7 +9,7 @@ import '!style-loader!css-loader!sass-loader!ol/ol.css';
 import { cn } from '../../services/util/cn';
 import { CrgLayerType } from '../../services/crg/projects.models';
 import { mapService } from '../../services/map/map.service';
-import { getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
+import { getFeaturesById, getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
 import { makeXmlPolygonIntersect } from '../../services/util/wfs.util';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { fetchBasemaps } from '../../services/crg/basemaps.service';
@@ -17,10 +17,14 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { fromMobx } from '../../services/util/fromMobx';
 import { Emitter } from '../../services/util/Emitter';
 import { sidebars } from '../../stores/Sidebars.store';
-import { services } from '../../services/services';
 import { route } from '../../stores/Route.store';
+import { services } from '../../services/services';
+import { getFeatureLayer } from '../../services/geoserver/layers.service';
+import { WfsFeature } from '../../services/geoserver/wfs.models';
 
 type NamesChunks = { [srsName: string]: string[] };
+
+export const MAP_QUERY_PARAMS_DELIMITER = '~';
 
 @Component({
   selector: 'crg-map',
@@ -44,6 +48,47 @@ export class MapComponent implements OnInit, OnDestroy {
     await fetchBasemaps();
 
     mapService.createMap();
+
+    const queryParams = route.queryParams as { [key: string]: string };
+
+    if (queryParams.features) {
+      let features: WfsFeature[] = [];
+
+      const featuresInLayers: Record<string, string[]> = {};
+
+      queryParams.features.split(',').map(feature => {
+        const [featureId, workspace] = feature.split(MAP_QUERY_PARAMS_DELIMITER);
+
+        if (!featuresInLayers[workspace]) {
+          featuresInLayers[workspace] = [featureId];
+        } else {
+          featuresInLayers[workspace].push(featureId);
+        }
+      });
+
+      for (const key in featuresInLayers) {
+        const layerFeatures = await getFeaturesById(featuresInLayers[key], key);
+        features = [...features, ...layerFeatures];
+      }
+
+      mapService.highlightFeatures(features);
+
+      if (features.length === 1) {
+        sidebars.openEdit({
+          features,
+          mode: EditFeatureMode.single
+        });
+        // позиционирование если не указана позиция карты
+        if (!queryParams.center) {
+          // для позиционирования с учетом открытого окна атрибутов
+          setTimeout(() => {
+            mapService.positionToFeature(features[0]);
+          }, 200);
+        }
+      } else {
+        sidebars.openFeatures(features);
+      }
+    }
 
     // Позиционируемся по BBOX проекта
 
@@ -172,6 +217,18 @@ export class MapComponent implements OnInit, OnDestroy {
     const features = collections.flatMap(({ features }) => features || []);
 
     if (features.length) {
+      await services.provided;
+      await services.router.navigate([location.pathname], {
+        queryParams: {
+          features: features
+            .map(feature => {
+              return feature.id + MAP_QUERY_PARAMS_DELIMITER + getFeatureLayer(feature).complexName;
+            })
+            .join(',')
+        },
+        queryParamsHandling: 'merge'
+      });
+
       if (features.length > 1) {
         sidebars.openFeatures(features);
       } else {
@@ -183,6 +240,10 @@ export class MapComponent implements OnInit, OnDestroy {
     } else {
       sidebars.closeFeatures();
       sidebars.closeEdit();
+      await services.router.navigate([location.pathname], {
+        queryParams: { features: null },
+        queryParamsHandling: 'merge'
+      });
     }
   }
 
@@ -191,7 +252,8 @@ export class MapComponent implements OnInit, OnDestroy {
       queryParams: {
         zoom: Number(zoom).toFixed(2),
         center
-      }
+      },
+      queryParamsHandling: 'merge'
     });
   }
 }

@@ -1,6 +1,9 @@
 <div class="container-fluid edit-feature">
-  <div class="row" style="padding-top: 5px; padding-bottom: 5px; background-color: gainsboro">
-    <div class="col-12" style="padding-left: 5px; padding-right: 5px">
+  <div class="row" style="padding-top: 5px;
+  padding-bottom: 5px;
+
+  background-color: gainsboro;">
+    <div class="col-12" style=" padding-right: 5px; padding-left: 5px;">
       <button
         *ngIf="updatingAllowed"
         mat-stroked-button
@@ -50,6 +53,8 @@
       </mat-tab-group>
     </ng-container>
 
+    <crg-copy-url-button [feature]="features" class="copy-url-button"> </crg-copy-url-button>
+
     <crg-zoom-to-feature
       class="zoom-to-feature"
       [feature]="features[0]"
@@ -86,7 +91,7 @@
           <div class="col-6 px-0 edit-item-title">
             <span
               *ngIf="!editFeatureItem.isFgistpProperty"
-              style="color: grey"
+              style="color: grey;"
               matTooltip="Данное свойство не соответствует приказу"
             >
               {{ editFeatureItem.property?.title }}
@@ -123,7 +128,7 @@
           <div class="col-6 px-0 edit-item-title">
             <span
               *ngIf="!editFeatureItem.isFgistpProperty"
-              style="color: grey"
+              style="color: grey;"
               matTooltip="Данное свойство не соответствует приказу"
             >
               {{ editFeatureItem.property?.title }}
@@ -160,7 +165,7 @@
           <div class="col-6 px-0 edit-item-title">
             <span
               *ngIf="!editFeatureItem.isFgistpProperty"
-              style="color: grey"
+              style="color: grey;"
               matTooltip="Данное свойство не соответствует приказу"
               >{{ editFeatureItem.property?.title }}</span
             >
@@ -196,7 +201,7 @@
           <div class="col-6 px-0 edit-item-title">
             <span
               *ngIf="!editFeatureItem.isFgistpProperty"
-              style="color: grey"
+              style="color: grey;"
               matTooltip="Данное свойство не соответствует приказу"
               >{{ editFeatureItem.property?.title }}</span
             >

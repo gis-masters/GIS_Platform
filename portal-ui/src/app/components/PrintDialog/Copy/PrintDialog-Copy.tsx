@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { Tooltip } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { copyNodeToClipboard } from '../../../services/util/copyNodeToClipboard';
+import { copyNodeToClipboard } from '../../../services/util/clipboard.util';
 import { getMapImage, ImageMime, prepareMapCopying } from '../../../services/map/map-print.service';
 import { Toast } from '../../Toast/Toast';
 

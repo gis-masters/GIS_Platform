@@ -184,7 +184,7 @@
             "id": "org-admin-control",
             "title": "Управление организацией",
             "contentUrl": "/assets/help/map/orgManagement/00orgManagement.html"
-          }        
+          }
         ]
       },
       {
@@ -218,7 +218,7 @@
             "contentUrl": "/assets/help/map/03accountChange.html"
           }
         ]
-      },      
+      },
       {
         "id": "fullEditObject",
         "title": "Управление объектами",
@@ -283,6 +283,12 @@
             "title": "Внесение изменений в требуемую Приказом информацию",
             "platforms": ["conv"],
             "contentUrl": "/assets/help/map/fullEditObject/10edit.html"
+          },
+          {
+            "id": "copyUrl",
+            "title": "Копирование ссылки на объект",
+            "platforms": ["conv"],
+            "contentUrl": "/assets/help/map/08copy.html"
           }
         ]
       },

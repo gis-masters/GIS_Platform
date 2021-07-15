@@ -1,0 +1,8 @@
+body .CopyUrlButton {
+  &_in_sidebar {
+    position: absolute;
+    z-index: 2;
+    top: 46px;
+    right: 40px;
+  }
+}

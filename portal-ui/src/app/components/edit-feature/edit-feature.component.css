@@ -22,7 +22,7 @@
 .fiz-edit-item {
   align-items: center;
 
-  padding: 4px 6px 4px 6px;
+  padding: 4px 6px;
 }
 
 .edit-item-title {
@@ -31,11 +31,11 @@
 }
 
 .multiple-edit-badge {
-  padding: 0 2px 0 2px;
+  padding: 0 2px;
 }
 
 .error-badge {
-  padding: 0 2px 0 2px;
+  padding: 0 2px;
 
   background-color: tomato;
 }

@@ -15,7 +15,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { FileUploadModule } from 'ng2-file-upload';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 import { LoginFormModule } from './components/login-form/login-form.module';
@@ -68,6 +68,7 @@ import { BasemapsSelectComponent } from './components/basemaps-select/basemaps-s
 import { DataManagementComponent } from './components/data-management/data-management.component';
 import { LogoComponent } from './components/logo/logo.component';
 import { MapToolbarComponent } from './components/map-toolbar/map-toolbar.component';
+import { CopyUrlButtonComponent } from './components/copy-url-button/copy-url-button.component';
 
 @NgModule({
   declarations: [
@@ -116,7 +117,8 @@ import { MapToolbarComponent } from './components/map-toolbar/map-toolbar.compon
     BasemapsSelectComponent,
     DataManagementComponent,
     LogoComponent,
-    MapToolbarComponent
+    MapToolbarComponent,
+    CopyUrlButtonComponent
   ],
   imports: [
     HttpClientModule,
