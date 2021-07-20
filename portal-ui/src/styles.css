@@ -1,4 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
+@import './assets/fonts/Roboto/Roboto.css';
+
+@import './assets/fonts/MaterialIcons/MaterialIcons.css';
 
 @import '~@swimlane/ngx-datatable/index.css';
 

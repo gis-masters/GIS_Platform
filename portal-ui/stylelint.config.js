@@ -43,6 +43,7 @@ module.exports = {
     'declaration-colon-newline-after': 'always-multi-line',
     'declaration-colon-space-after': 'always-single-line',
     'declaration-colon-space-before': 'never',
+    'font-family-no-missing-generic-family-keyword': [true, { ignoreFontFamilies: ['Material Icons'] }],
     'order/order': [
       [
         'declarations',
@@ -458,7 +459,12 @@ module.exports = {
             'font-emphasize-position',
             'font-emphasize-style',
             'font-smooth',
-            'line-height'
+            'line-height',
+            '-webkit-font-feature-settings',
+            'font-feature-settings',
+            '-webkit-font-smoothing',
+            'font-smoothing',
+            'direction'
           ]
         }
       ],
@@ -510,7 +516,12 @@ module.exports = {
     'selector-pseudo-class-parentheses-space-inside': 'never',
     'selector-pseudo-element-case': 'lower',
     'selector-pseudo-element-colon-notation': 'double',
-    'selector-pseudo-element-no-unknown': true,
+    'selector-pseudo-element-no-unknown': [
+      true,
+      {
+        ignorePseudoElements: ['ng-deep']
+      }
+    ],
     'selector-type-case': 'lower',
     'selector-type-no-unknown': true,
     'shorthand-property-no-redundant-values': true,
