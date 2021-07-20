@@ -45811,8 +45811,8 @@ SELECT 'investmentzone',
       if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
       }
-
       return errors;',
        'var results = {};
 
