@@ -1,11 +1,4 @@
-import {
-  ActivatedRouteSnapshot,
-  RoutesRecognized,
-  UrlSegment,
-  Params,
-  ParamMap,
-  RouterEvent
-} from '@angular/router';
+import { ActivatedRouteSnapshot, RoutesRecognized, UrlSegment, Params, ParamMap, RouterEvent } from '@angular/router';
 import { observable, action } from 'mobx';
 
 import { services } from '../services/services';
@@ -34,7 +27,7 @@ class Route {
   }
 
   private constructor() {
-    this.subscribe();
+    void this.subscribe();
   }
 
   public static get instance() {

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { InputAdornment, TextField } from '@material-ui/core';
 
-import { ValueType } from '../../../../services/crg/schema.models';
+import { PropertySchemaInt, ValueType } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
@@ -12,6 +12,7 @@ import { cnFormControl, FormControlProps } from '../Form-Control';
 class FormControlTypeInt extends Component<FormControlProps> {
   render() {
     const { htmlId, className, fieldValue = '', property, inSet } = this.props;
+    const { measureUnit, title } = property as PropertySchemaInt;
 
     return (
       <div className={cnFormControl({ inSet }, [className])}>
@@ -20,12 +21,10 @@ class FormControlTypeInt extends Component<FormControlProps> {
           fullWidth={!inSet}
           type='number'
           InputProps={{
-            endAdornment: property.measureUnit ? (
-              <InputAdornment position='end'>{property.measureUnit}</InputAdornment>
-            ) : undefined
+            endAdornment: measureUnit ? <InputAdornment position='end'>{measureUnit}</InputAdornment> : undefined
           }}
           value={fieldValue}
-          label={inSet ? property.title : undefined}
+          label={inSet ? title : undefined}
           onChange={this.handleChange}
         />
       </div>
@@ -35,14 +34,16 @@ class FormControlTypeInt extends Component<FormControlProps> {
   @boundMethod
   private handleChange(event: React.ChangeEvent<{ value: unknown }>) {
     const { onChange, property } = this.props;
+    const { maxInclusive, minInclusive } = property as PropertySchemaInt;
+
     let value = Number(event.target.value || 0);
 
-    if (typeof property.maxInclusive === 'number' && value > property.maxInclusive) {
-      value = property.maxInclusive;
+    if (typeof maxInclusive === 'number' && value > maxInclusive) {
+      value = maxInclusive;
     }
 
-    if (typeof property.minInclusive === 'number' && value < property.minInclusive) {
-      value = property.minInclusive;
+    if (typeof minInclusive === 'number' && value < minInclusive) {
+      value = minInclusive;
     }
 
     onChange({
@@ -52,7 +53,7 @@ class FormControlTypeInt extends Component<FormControlProps> {
   }
 }
 
-export const withTypeInt = withBemMod<{}, FormControlProps>(
+export const withTypeInt = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
   { type: ValueType.INT },
   () => FormControlTypeInt

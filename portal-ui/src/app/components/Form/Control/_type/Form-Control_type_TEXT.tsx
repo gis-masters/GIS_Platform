@@ -20,7 +20,7 @@ class FormControlTypeText extends Component<FormControlProps> {
   }
 }
 
-export const withTypeText = withBemMod<{}, FormControlProps>(
+export const withTypeText = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
   { type: ValueType.TEXT },
   () => FormControlTypeText

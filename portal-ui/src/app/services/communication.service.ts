@@ -30,7 +30,7 @@ class CommunicationService {
   logout = new Emitter();
   basemapsUpdated = new Emitter();
 
-  off(scope: any) {
+  off(scope: unknown) {
     Emitter.scopeOff(scope);
   }
 }

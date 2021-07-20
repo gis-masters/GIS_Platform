@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
 import { PrincipalType } from '../../services/crg/permissions.models';
 import { allPermissions } from '../../stores/AllPermissions.store';
@@ -10,12 +11,12 @@ import '!style-loader!css-loader!sass-loader!./PermissionsCount.scss';
 
 const cnPermissionsCount = cn('PermissionsCount');
 
-interface PermissionsCountProps {
+interface PermissionsCountProps extends IClassNameProps {
   principalId: number;
   principalType: PrincipalType;
 }
 
-export const PermissionsCount: FC<PermissionsCountProps> = observer(({ principalId, principalType }) => {
+export const PermissionsCount: FC<PermissionsCountProps> = observer(({ principalId, principalType, className }) => {
   const lines: [string, PermissionsListItem[]][] = [
     ['проекты: ', allPermissions.forProjects],
     ['векторные слои: ', allPermissions.forTables],
@@ -23,7 +24,7 @@ export const PermissionsCount: FC<PermissionsCountProps> = observer(({ principal
   ];
 
   return (
-    <div className={cnPermissionsCount()}>
+    <div className={cnPermissionsCount(null, [className])}>
       {lines.map(([title, permissions]) => (
         <div className={cnPermissionsCount('Line')} key={title}>
           <span className={cnPermissionsCount('Title')}>{title}</span>

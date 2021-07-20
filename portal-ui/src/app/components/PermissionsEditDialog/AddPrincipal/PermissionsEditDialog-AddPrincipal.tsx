@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, ReactElement } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import {
@@ -51,7 +51,7 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
         />
       ),
       cellProps: { padding: 'checkbox' },
-      renderCellContent: this.renderCheckbox
+      CellContent: this.renderCheckbox
     },
     ...this.getColumns()
   ];
@@ -144,20 +144,20 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
   }
 
   @boundMethod
-  private renderCheckbox(principal: CrgUser | CrgGroup): ReactNode {
+  private renderCheckbox({ rowData }: { rowData: CrgUser | CrgGroup }): ReactElement {
     return (
       <PermissionsEditDialogCheckPrincipal
-        principal={principal}
+        principal={rowData}
         selectedPrincipals={this.selectedPrincipals}
-        avaiablePrincipals={this.availablePrincipals}
+        availablePrincipals={this.availablePrincipals}
       />
     );
   }
 
   private getColumns(): XTableColumn<CrgUser | CrgGroup>[] {
-    return (this.props.principalType === PrincipalType.USER
-      ? this.getUserColumns()
-      : this.getGroupColumns()) as XTableColumn<CrgUser | CrgGroup>[];
+    return (
+      this.props.principalType === PrincipalType.USER ? this.getUserColumns() : this.getGroupColumns()
+    ) as XTableColumn<CrgUser | CrgGroup>[];
   }
 
   private getUserColumns(): XTableColumn<CrgUser>[] {
@@ -187,7 +187,7 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
       {
         title: 'Пользователей',
         align: 'right',
-        renderCellContent: ({ users }) => users.length
+        CellContent: ({ rowData }) => <>{rowData.users.length}</>
       }
     ];
   }

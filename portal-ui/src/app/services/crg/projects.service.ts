@@ -22,6 +22,7 @@ import {
 } from '../server-urls.service';
 import { Toast } from '../../components/Toast/Toast';
 import { communicationService } from '../communication.service';
+import { AxiosError } from 'axios';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -33,14 +34,14 @@ class ProjectsService {
     this.debouncedFetchAllProjects = debounce(this.fetchAllProjects, 300);
 
     reaction(
-      () => route.params && route.params.projectId,
+      () => route.params?.projectId as string,
       async id => {
         await this.fetchCurrent(Number(id));
       }
     );
 
-    communicationService.projectsUpdated.on(() => {
-      this.debouncedFetchAllProjects();
+    communicationService.projectsUpdated.on(async () => {
+      await this.debouncedFetchAllProjects();
     });
 
     communicationService.logout.on(() => {
@@ -98,6 +99,7 @@ class ProjectsService {
 
     if (!id) {
       this.clearCurrent();
+
       return;
     }
 
@@ -160,8 +162,8 @@ class ProjectsService {
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(result, 'text/xml');
-      const errors = Array.from(xmlDoc.querySelectorAll('ServiceException')).map(
-        n => `Ошибка получения данных с сервера: ${n.innerHTML.trim()}`
+      const errors = [...xmlDoc.querySelectorAll('ServiceException')].map(
+        (n: Element) => `Ошибка получения данных с сервера: ${n.innerHTML.trim()}`
       );
 
       if (errors.length) {
@@ -231,11 +233,11 @@ class ProjectsService {
   private async getById(id: number): Promise<CrgProject | void> {
     try {
       return await http.get<CrgProject>(await getProjectUrl(id));
-    } catch (e) {
-      if (e.response && e.response.status === 404) {
-        Toast.warn('Не найден проект id: ' + id);
+    } catch (error) {
+      if ((error as AxiosError).response?.status === 404) {
+        Toast.warn(`Не найден проект id: ${id}`);
       } else {
-        throw e;
+        throw error;
       }
     }
   }

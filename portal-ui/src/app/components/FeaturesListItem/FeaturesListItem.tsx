@@ -10,6 +10,7 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { WFS_FEATURE_ID_DELIMITER } from '../../services/geoserver/wfs.service';
 import { schemaService } from '../../services/crg/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { ValueType } from '../../services/crg/schema.models';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
@@ -68,12 +69,11 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
       const property = schema.properties.find(prop => prop.objectIdentityOnUi);
 
       if (property) {
-        const { name, enumerations, valueType } = property;
-        if (valueType !== 'CHOICE') {
-          title = String(properties[name.toLowerCase()]);
-        } else if (enumerations) {
-          // eslint-disable-next-line eqeqeq
-          const valueTitleProjection = enumerations.find(item => item.value == properties[name]);
+        if (property.valueType !== ValueType.CHOICE) {
+          title = String(properties[property.name.toLowerCase()]);
+        } else if (property.enumerations) {
+          // eslint-disable-next-line eqeqeq -- тут так надо
+          const valueTitleProjection = property.enumerations.find(item => item.value == properties[property.name]);
           title = valueTitleProjection ? valueTitleProjection.title : '';
         }
       } else {

@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, ReactElement } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
@@ -50,13 +50,13 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
       title: 'Разрешения',
       cellProps: { padding: 'checkbox' },
       align: 'right',
-      renderCellContent: this.renderUserRoleSelect
+      CellContent: this.renderUserRoleSelect
     },
     {
       title: 'Действия',
       cellProps: { padding: 'checkbox' },
       align: 'right',
-      renderCellContent: this.renderUserActions
+      CellContent: this.renderUserActions
     }
   ];
 
@@ -78,25 +78,25 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
     {
       title: 'Пользователей',
       align: 'right',
-      renderCellContent: ({ users }) => users.length
+      CellContent: ({ rowData }) => <>{rowData.users.length}</>
     },
     {
       title: 'Разрешения',
       cellProps: { padding: 'checkbox' },
       align: 'right',
-      renderCellContent: this.renderGroupRoleSelect
+      CellContent: this.renderGroupRoleSelect
     },
     {
       title: 'Действия',
       cellProps: { padding: 'checkbox' },
       align: 'right',
-      renderCellContent: this.renderGroupActions
+      CellContent: this.renderGroupActions
     }
   ];
 
   componentDidMount() {
-    usersService.initUsersListStore();
-    groupsService.initAllGroupsStore();
+    void usersService.initUsersListStore();
+    void groupsService.initAllGroupsStore();
   }
 
   render() {
@@ -213,9 +213,9 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
 
   @boundMethod
   private async save() {
-    const { dataset, dataTable } = this.props;
-    let existing = this.props.permissions.slice();
-    const changed = this.changedPermissions.slice();
+    const { dataset, dataTable, permissions } = this.props;
+    let existing = [...permissions];
+    const changed = [...this.changedPermissions];
     const toCreate: RoleAssignmentBody[] = [];
     const toDelete: RoleAssignmentBody[] = [];
     this.setBusy(true);
@@ -257,7 +257,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
 
   @action.bound
   private handleAdd(permissions: RoleAssignmentBody[]) {
-    this.changedPermissions = this.currentPermissions.concat(permissions);
+    this.changedPermissions = [...this.currentPermissions, ...permissions];
   }
 
   @action.bound
@@ -266,16 +266,16 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
   }
 
   @boundMethod
-  private renderUserRoleSelect(user: CrgUser): ReactNode {
-    return this.renderRoleSelect(user, PrincipalType.USER);
+  private renderUserRoleSelect({ rowData }: { rowData: CrgUser }): ReactElement {
+    return this.renderRoleSelect(rowData, PrincipalType.USER);
   }
 
   @boundMethod
-  private renderGroupRoleSelect(group: CrgGroup): ReactNode {
-    return this.renderRoleSelect(group, PrincipalType.GROUP);
+  private renderGroupRoleSelect({ rowData }: { rowData: CrgGroup }): ReactElement {
+    return this.renderRoleSelect(rowData, PrincipalType.GROUP);
   }
 
-  private renderRoleSelect(principal: CrgUser | CrgGroup, principalType: PrincipalType): ReactNode {
+  private renderRoleSelect(principal: CrgUser | CrgGroup, principalType: PrincipalType): ReactElement {
     return (
       <PermissionsEditDialogRoleSelect
         currentPermissions={this.currentPermissions}
@@ -287,16 +287,16 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
   }
 
   @boundMethod
-  private renderUserActions(user: CrgUser): ReactNode {
-    return this.renderActions(user, PrincipalType.USER);
+  private renderUserActions({ rowData }: { rowData: CrgUser }): ReactElement {
+    return this.renderActions(rowData, PrincipalType.USER);
   }
 
   @boundMethod
-  private renderGroupActions(group: CrgGroup): ReactNode {
-    return this.renderActions(group, PrincipalType.GROUP);
+  private renderGroupActions({ rowData }: { rowData: CrgGroup }): ReactElement {
+    return this.renderActions(rowData, PrincipalType.GROUP);
   }
 
-  private renderActions(principal: CrgUser | CrgGroup, principalType: PrincipalType): ReactNode {
+  private renderActions(principal: CrgUser | CrgGroup, principalType: PrincipalType): ReactElement {
     return (
       <PermissionsEditDialogRemovePrincipal
         onRemove={this.removePrincipal}
@@ -308,11 +308,14 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
 
   @action.bound
   private changeRoleHandler(principalId: number, principalType: PrincipalType, role: Role) {
-    this.changedPermissions = filterOutPrincipal(principalId, principalType, this.currentPermissions).concat({
-      principalId,
-      principalType,
-      role
-    });
+    this.changedPermissions = [
+      ...filterOutPrincipal(principalId, principalType, this.currentPermissions),
+      {
+        principalId,
+        principalType,
+        role
+      }
+    ];
   }
 
   @action

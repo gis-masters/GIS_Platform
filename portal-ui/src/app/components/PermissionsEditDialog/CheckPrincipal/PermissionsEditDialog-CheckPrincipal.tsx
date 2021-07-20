@@ -12,7 +12,7 @@ const cnPermissionsEditDialogCheckPrincipal = cn('PermissionsEditDialog', 'Check
 interface PermissionsEditDialogCheckPrincipalProps {
   principal: CrgGroup | CrgUser;
   selectedPrincipals: (CrgGroup | CrgUser)[];
-  avaiablePrincipals: (CrgGroup | CrgUser)[];
+  availablePrincipals: (CrgGroup | CrgUser)[];
 }
 
 @observer
@@ -37,9 +37,9 @@ export class PermissionsEditDialogCheckPrincipal extends Component<PermissionsEd
 
   @computed
   private get alreadyAdded(): boolean {
-    const { principal, avaiablePrincipals } = this.props;
+    const { principal, availablePrincipals } = this.props;
 
-    return !avaiablePrincipals.some(({ id }) => principal.id === id);
+    return !availablePrincipals.some(({ id }) => principal.id === id);
   }
 
   @action.bound

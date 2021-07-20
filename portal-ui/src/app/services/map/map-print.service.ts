@@ -10,6 +10,7 @@ import { printSettings } from '../../stores/PrintSettings.store';
 import { mapService } from './map.service';
 import { PrintDialogDate } from '../../components/PrintDialog/Date/PrintDialog-Date';
 import { mapStore } from '../../stores/Map.store';
+import { Legend } from '../../components/Legend/Legend';
 
 const BASE_SCALE_LINE_DPI = 150;
 
@@ -76,7 +77,7 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
   printSettings.setPrintingStatus(true, resolution);
 
   const { map, view, scaleLine } = mapService;
-  const { width, height, scale, windRose, date, border } = printSettings;
+  const { width, height, scale } = printSettings;
 
   const size = map.getSize();
   const viewResolution = view.getResolution();
@@ -118,7 +119,6 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
         }
       });
 
-      const imagesPromises: Promise<void>[] = [];
       const designationsResize = resolution / BASE_SCALE_LINE_DPI;
 
       CanvasRenderingContext2D.prototype.resetTransform.apply(mapContext);
@@ -126,24 +126,7 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
       await drawMeasurementsTooltips(mapContext);
 
       if (withDesignations) {
-        imagesPromises.push(drawScaleLine(mapContext, designationsResize, hideScaleDigits));
-      }
-
-      if (withDesignations && windRose) {
-        imagesPromises.push(drawWindRose(mapContext, designationsResize));
-      }
-
-      if (withDesignations && date) {
-        imagesPromises.push(drawDate(mapContext, designationsResize));
-      }
-
-      await Promise.all(imagesPromises);
-
-      if (withDesignations && border) {
-        const lineWidth = Math.round((BORDER_WIDTH_MM * resolution) / 25.4);
-        mapContext.lineWidth = lineWidth;
-        mapContext.strokeStyle = 'f00000';
-        mapContext.strokeRect(lineWidth / 2, lineWidth / 2, width - lineWidth, height - lineWidth);
+        await drawDesignations(mapContext, resolution, designationsResize, hideScaleDigits);
       }
 
       resolve(mapCanvas.toDataURL(mime));
@@ -156,6 +139,39 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
       printSettings.setPrintingStatus(false);
     });
   });
+}
+
+async function drawDesignations(
+  mapContext: CanvasRenderingContext2D,
+  resolution: number,
+  designationsResize: number,
+  hideScaleDigits: boolean
+): Promise<void> {
+  const { width, height, windRose, date, legend, border } = printSettings;
+  const imagesPromises: Promise<void>[] = [];
+
+  imagesPromises.push(drawScaleLine(mapContext, designationsResize, hideScaleDigits));
+
+  if (windRose) {
+    imagesPromises.push(drawWindRose(mapContext, designationsResize));
+  }
+
+  if (date) {
+    imagesPromises.push(drawDate(mapContext, designationsResize));
+  }
+
+  if (legend.enabled && legend.items?.length) {
+    imagesPromises.push(drawLegend(mapContext));
+  }
+
+  await Promise.all(imagesPromises);
+
+  if (border) {
+    const lineWidth = Math.round((BORDER_WIDTH_MM * resolution) / 25.4);
+    mapContext.lineWidth = lineWidth;
+    mapContext.strokeStyle = 'f00000';
+    mapContext.strokeRect(lineWidth / 2, lineWidth / 2, width - lineWidth, height - lineWidth);
+  }
 }
 
 async function drawScaleLine(
@@ -295,4 +311,46 @@ async function drawMeasurementsTooltips(mapContext: CanvasRenderingContext2D): P
       });
     });
   }
+}
+
+async function drawLegend(mapContext: CanvasRenderingContext2D): Promise<void> {
+  const { width, height } = printSettings;
+  const legendImgSrc = await getLegendImageSrc();
+
+  return new Promise(resolve => {
+    const legendImg = new Image();
+    legendImg.src = legendImgSrc;
+    legendImg.addEventListener('load', () => {
+      mapContext.drawImage(
+        legendImg,
+        0,
+        0,
+        legendImg.width,
+        legendImg.height,
+        width - legendImg.width,
+        height - legendImg.height,
+        legendImg.width,
+        legendImg.height
+      );
+
+      resolve();
+    });
+  });
+}
+
+export async function getLegendImageSrc(resolution?: number): Promise<string> {
+  moment.locale('ru');
+  const el = document.createElement('div');
+  document.body.append(el);
+  const reactElement = createElement(Legend, {
+    rules: printSettings.legend.items,
+    forPrint: true,
+    resolution: resolution || printSettings.resolution
+  });
+  render(reactElement, el);
+  const src = await domToImage.toPng(el.childNodes[0]);
+  unmountComponentAtNode(el);
+  el.remove();
+
+  return src;
 }

@@ -19,20 +19,20 @@ class EditFeatureFieldControlTypeLookup extends Component<EditFeaturesControlPro
 
     try {
       this.setValue(JSON.parse(props.field.value));
-    } catch (e) {
+    } catch {
       services.logger.warn('Incorrect lookup value: ', props.field.value);
     }
   }
 
   render() {
-    const { className, field } = this.props;
+    const { className, field, featureInfo } = this.props;
 
     return (
       <div className={className}>
         <DocumentsList
           documents={this.lookupValue}
           editedField={field}
-          featureInfo={this.props.featureInfo}
+          featureInfo={featureInfo}
           modifyCallback={this.updateChild}
         />
       </div>
@@ -54,7 +54,7 @@ class EditFeatureFieldControlTypeLookup extends Component<EditFeaturesControlPro
   }
 }
 
-export const withTypeLookup = withBemMod<{}, EditFeaturesControlProps>(
+export const withTypeLookup = withBemMod<EditFeaturesControlProps, EditFeaturesControlProps>(
   cnEditFeatureFieldControl(),
   { type: ValueType.LOOKUP },
   () => EditFeatureFieldControlTypeLookup

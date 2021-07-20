@@ -20,8 +20,8 @@ class Services implements ServicesList {
   private onFulfilled: () => void;
 
   constructor() {
-    this.provided = new Promise(onFulfilled => {
-      this.onFulfilled = onFulfilled;
+    this.provided = new Promise(resolve => {
+      this.onFulfilled = resolve;
     });
   }
 

@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, ReactElement } from 'react';
 import { observable, computed, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip, IconButton, Dialog, DialogContent, DialogActions } from '@material-ui/core';
@@ -34,7 +34,7 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
   private cols: XTableColumn<CrgGroup>[] = [
     {
       cellProps: { padding: 'checkbox' },
-      renderCellContent: this.renderCheckbox
+      CellContent: this.renderCheckbox
     },
     {
       title: 'Название',
@@ -106,7 +106,7 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
     const { userGroups, user } = this.props;
     const selectedGroups = [...this.selected];
 
-    for (let group of userGroups) {
+    for (const group of userGroups) {
       if (selectedGroups.includes(group)) {
         selectedGroups.splice(selectedGroups.indexOf(group), 1);
       } else {
@@ -114,7 +114,7 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
       }
     }
 
-    for (let group of selectedGroups) {
+    for (const group of selectedGroups) {
       await groupsService.addUserToGroup(user, group);
     }
 
@@ -128,7 +128,7 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
   }
 
   @boundMethod
-  private renderCheckbox(group: CrgGroup): ReactNode {
-    return <OrgActionsUserGroupCheck group={group} selectedList={this.selected} />;
+  private renderCheckbox({ rowData }: { rowData: CrgGroup }): ReactElement {
+    return <OrgActionsUserGroupCheck group={rowData} selectedList={this.selected} />;
   }
 }

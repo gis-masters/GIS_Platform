@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, ReactElement } from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogContent, DialogActions, Tabs, Tab } from '@material-ui/core';
@@ -126,16 +126,17 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         cols: [
           ...baseXTablePropsSet[PermissionsListItemType.PROJECT].cols,
           {
+            // eslint-disable-next-line sonarjs/no-duplicate-string -- линтер тут не прав
             title: 'Разрешения',
             cellProps: { padding: 'checkbox' },
             align: 'right',
-            renderCellContent: this.renderProjectRoleSelect
+            CellContent: this.renderProjectRoleSelect
           },
           {
             title: 'Действия',
             cellProps: { padding: 'checkbox' },
             align: 'right',
-            renderCellContent: this.renderProjectActions
+            CellContent: this.renderProjectActions
           }
         ]
       },
@@ -148,13 +149,13 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
             title: 'Разрешения',
             cellProps: { padding: 'checkbox' },
             align: 'right',
-            renderCellContent: this.renderTableRoleSelect
+            CellContent: this.renderTableRoleSelect
           },
           {
             title: 'Действия',
             cellProps: { padding: 'checkbox' },
             align: 'right',
-            renderCellContent: this.renderTableActions
+            CellContent: this.renderTableActions
           }
         ],
         defaultSort: { field: 'createdAt', asc: false },
@@ -169,13 +170,13 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
             title: 'Разрешения',
             cellProps: { padding: 'checkbox' },
             align: 'right',
-            renderCellContent: this.renderDatasetRoleSelect
+            CellContent: this.renderDatasetRoleSelect
           },
           {
             title: 'Действия',
             cellProps: { padding: 'checkbox' },
             align: 'right',
-            renderCellContent: this.renderDatasetActions
+            CellContent: this.renderDatasetActions
           }
         ],
         defaultSort: { field: 'createdAt', asc: false },
@@ -201,37 +202,23 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
   @computed
   private get existingProjectsList(): PermissionsListItem<CrgProject>[] {
-    const { principalId, principalType } = this.props;
-
-    return allPermissions.forProjects
-      .map(item => ({
-        ...item,
-        permissions: item.permissions.filter(
-          permission => permission.principalId === principalId && permission.principalType === principalType
-        )
-      }))
-      .filter(({ permissions }) => permissions.length);
+    return this.preparePermissionsList(allPermissions.forProjects);
   }
 
   @computed
   private get existingTablesList(): PermissionsListItem<DataTable>[] {
-    const { principalId, principalType } = this.props;
-
-    return allPermissions.forTables
-      .map(item => ({
-        ...item,
-        permissions: item.permissions.filter(
-          permission => permission.principalId === principalId && permission.principalType === principalType
-        )
-      }))
-      .filter(({ permissions }) => permissions.length);
+    return this.preparePermissionsList(allPermissions.forTables);
   }
 
   @computed
   private get existingDatasetsList(): PermissionsListItem<Dataset>[] {
+    return this.preparePermissionsList(allPermissions.forDatasets);
+  }
+
+  private preparePermissionsList<T>(items: PermissionsListItem<T>[]): PermissionsListItem<T>[] {
     const { principalId, principalType } = this.props;
 
-    return allPermissions.forDatasets
+    return items
       .map(item => ({
         ...item,
         permissions: item.permissions.filter(
@@ -262,7 +249,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @action
-  setLoading(loading: boolean) {
+  private setLoading(loading: boolean) {
     this.loading = loading;
   }
 
@@ -343,12 +330,19 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   @boundMethod
   private handleAdd(items: PermissionsListItem[]) {
     this.initChangedLists();
-    if (this.activeTab === PermissionsListItemType.PROJECT) {
-      this.handleProjectAdd(items as PermissionsListItem<CrgProject>[]);
-    } else if (this.activeTab === PermissionsListItemType.TABLE) {
-      this.handleTableAdd(items as PermissionsListItem<DataTable>[]);
-    } else if (this.activeTab === PermissionsListItemType.DATASET) {
-      this.handleDatasetAdd(items as PermissionsListItem<Dataset>[]);
+    switch (this.activeTab) {
+      case PermissionsListItemType.PROJECT: {
+        this.handleProjectAdd(items as PermissionsListItem<CrgProject>[]);
+        break;
+      }
+      case PermissionsListItemType.TABLE: {
+        this.handleTableAdd(items as PermissionsListItem<DataTable>[]);
+        break;
+      }
+      case PermissionsListItemType.DATASET: {
+        this.handleDatasetAdd(items as PermissionsListItem<Dataset>[]);
+        break;
+      }
     }
   }
 
@@ -361,17 +355,17 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         }
       });
     });
-    this.changedProjectsList = this.changedProjectsList.concat(items);
+    this.changedProjectsList = [...this.changedProjectsList, ...items];
   }
 
   @action
   private handleTableAdd(items: PermissionsListItem<DataTable>[]) {
-    this.changedTablesList = this.changedTablesList.concat(items);
+    this.changedTablesList = [...this.changedTablesList, ...items];
   }
 
   @action
   private handleDatasetAdd(items: PermissionsListItem<Dataset>[]) {
-    this.changedDatasetsList = this.changedDatasetsList.concat(items);
+    this.changedDatasetsList = [...this.changedDatasetsList, ...items];
   }
 
   @boundMethod
@@ -407,10 +401,10 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
       }
     });
 
-    for (let [project, permission] of leftProjects) {
+    for (const [project, permission] of leftProjects) {
       await removeProjectPermission(permission, project);
     }
-    for (let [project, permission] of toCreateProjects) {
+    for (const [project, permission] of toCreateProjects) {
       await addProjectPermission(permission, project);
     }
 
@@ -431,10 +425,10 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         leftTables.splice(index, 1);
       }
     });
-    for (let [table, permission] of leftTables) {
+    for (const [table, permission] of leftTables) {
       await removeTablePermission(permission, table.dataset, table.identifier);
     }
-    for (let [table, permission] of toCreateTables) {
+    for (const [table, permission] of toCreateTables) {
       await addTablePermission(permission, table.dataset, table.identifier);
     }
 
@@ -456,10 +450,10 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
       }
     });
 
-    for (let [dataset, permission] of leftDatasets) {
+    for (const [dataset, permission] of leftDatasets) {
       await removeDatasetPermission(permission, dataset.identifier);
     }
-    for (let [dataset, permission] of toCreateDatasets) {
+    for (const [dataset, permission] of toCreateDatasets) {
       await addDatasetPermission(permission, dataset.identifier);
     }
 
@@ -469,17 +463,15 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   private prepareFlatList<T>(list: PermissionsListItem<T>[]): [T, RoleAssignmentBody][] {
-    return list
-      .map(({ entity, permissions }) =>
-        permissions.map(roleAssignment => [entity, roleAssignment] as [T, RoleAssignmentBody])
-      )
-      .flat();
+    return list.flatMap(({ entity, permissions }) =>
+      permissions.map(roleAssignment => [entity, roleAssignment] as [T, RoleAssignmentBody])
+    );
   }
 
   @boundMethod
-  private renderProjectRoleSelect({ id }: CrgProject): ReactNode {
+  private renderProjectRoleSelect({ rowData }: { rowData: CrgProject }): ReactElement {
     const { principalId, principalType } = this.props;
-    const item = this.currentProjectsPermissions.find(({ entity }) => entity.id === id);
+    const item = this.currentProjectsPermissions.find(({ entity }) => entity.id === rowData.id);
 
     return (
       <PermissionsListRoleSelect
@@ -493,10 +485,10 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @boundMethod
-  private renderTableRoleSelect({ identifier, dataset }: DataTable): ReactNode {
+  private renderTableRoleSelect({ rowData }: { rowData: DataTable }): ReactElement {
     const { principalId, principalType } = this.props;
     const item = this.currentTablesPermissions.find(
-      ({ entity }) => entity.identifier === identifier && entity.dataset === dataset
+      ({ entity }) => entity.identifier === rowData.identifier && entity.dataset === rowData.dataset
     );
 
     return (
@@ -511,9 +503,9 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @boundMethod
-  private renderDatasetRoleSelect({ identifier }: Dataset): ReactNode {
+  private renderDatasetRoleSelect({ rowData }: { rowData: Dataset }): ReactElement {
     const { principalId, principalType } = this.props;
-    const item = this.currentDatasetsPermissions.find(({ entity }) => entity.identifier === identifier);
+    const item = this.currentDatasetsPermissions.find(({ entity }) => entity.identifier === rowData.identifier);
 
     return (
       <PermissionsListRoleSelect
@@ -527,18 +519,24 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @boundMethod
-  private renderProjectActions({ id }: CrgProject): ReactNode {
-    return <PermissionsListActions id={id} onDelete={this.handleProjectDelete} />;
+  private renderProjectActions({ rowData }: { rowData: CrgProject }): ReactElement {
+    return <PermissionsListActions id={rowData.id} onDelete={this.handleProjectDelete} />;
   }
 
   @boundMethod
-  private renderTableActions({ identifier, dataset }: DataTable): ReactNode {
-    return <PermissionsListActions id={identifier} additionalId={dataset} onDelete={this.handleTableDelete} />;
+  private renderTableActions({ rowData }: { rowData: DataTable }): ReactElement {
+    return (
+      <PermissionsListActions
+        id={rowData.identifier}
+        additionalId={rowData.dataset}
+        onDelete={this.handleTableDelete}
+      />
+    );
   }
 
   @boundMethod
-  private renderDatasetActions({ identifier }: Dataset): ReactNode {
-    return <PermissionsListActions id={identifier} onDelete={this.handleDatasetDelete} />;
+  private renderDatasetActions({ rowData }: { rowData: Dataset }): ReactElement {
+    return <PermissionsListActions id={rowData.identifier} onDelete={this.handleDatasetDelete} />;
   }
 
   @action.bound

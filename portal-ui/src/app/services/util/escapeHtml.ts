@@ -1,4 +1,4 @@
-const htmlEscapes = {
+const htmlEscapes: Record<string, string> = {
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
@@ -8,7 +8,7 @@ const htmlEscapes = {
 };
 
 export function escapeHtml(str: string): string {
-  return str.replace(/[&<>"'\/]/g, function (match) {
+  return str.replace(/["&'/<>]/g, match => {
     return htmlEscapes[match];
   });
 }

@@ -9,11 +9,10 @@ export type CustomSortFieldsPrep<T> = { [key in keyof T]?: CustomFieldsPrep<T, k
 function compare<T>(
   a: T,
   b: T,
-  field: keyof T,
-  asc: boolean,
+  { field, asc }: SortParams<T>,
   customFieldsPrep?: CustomSortFieldsPrep<T>,
   fallBackSortField?: keyof T
-) {
+): number {
   let fieldA: T[keyof T] | number | string = a[field];
   let fieldB: T[keyof T] | number | string = b[field];
 
@@ -34,7 +33,7 @@ function compare<T>(
     result = -result;
   }
 
-  return result || (fallBackSortField ? compare(a, b, fallBackSortField, asc, customFieldsPrep) : 0);
+  return result || (fallBackSortField ? compare(a, b, { field: fallBackSortField, asc }, customFieldsPrep) : 0);
 }
 
 export function sortObjects<T>(
@@ -44,7 +43,7 @@ export function sortObjects<T>(
   fallBackSortField: keyof T,
   customFieldsPrep?: CustomSortFieldsPrep<T>
 ): T[] {
-  return arr.slice().sort((a, b) => {
-    return compare(a, b, field, asc, customFieldsPrep, fallBackSortField);
+  return [...arr].sort((a, b) => {
+    return compare(a, b, { field, asc }, customFieldsPrep, fallBackSortField);
   });
 }

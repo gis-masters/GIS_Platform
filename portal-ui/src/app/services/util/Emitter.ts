@@ -1,11 +1,11 @@
 import ee from 'event-emitter';
 
-type Listener<T = any> = (data?: T) => void;
+type Listener<T> = (data?: T) => void;
 
-interface Scoped {
+interface Scoped<T = unknown> {
   channel: string;
-  scope: any;
-  listener: Listener;
+  scope: unknown;
+  listener: Listener<T>;
 }
 
 export class Emitter<T = undefined> {
@@ -19,7 +19,7 @@ export class Emitter<T = undefined> {
     this.channel = String(Emitter.counter);
   }
 
-  static scopeOff(scope: any, channel?: string, listeners?: Listener[]) {
+  static scopeOff<D = unknown>(scope: unknown, channel?: string, listeners?: Listener<D>[]): void {
     this.scoped = this.scoped.filter(item => {
       if (
         scope === item.scope &&
@@ -27,18 +27,19 @@ export class Emitter<T = undefined> {
         (!listeners || listeners.includes(item.listener))
       ) {
         Emitter.ee.off(item.channel, item.listener);
+
         return false;
-      } else {
-        return true;
       }
+
+      return true;
     });
   }
 
-  emit(data?: T) {
+  emit(data?: T): void {
     Emitter.ee.emit(this.channel, data);
   }
 
-  off(listener: Listener<T>, scope?: any) {
+  off(listener: Listener<T>, scope?: unknown): void {
     if (scope) {
       this.scopeOff(scope, [listener]);
     } else {
@@ -46,21 +47,21 @@ export class Emitter<T = undefined> {
     }
   }
 
-  on(listener: Listener, scope?: any) {
+  on(listener: Listener<T>, scope?: unknown): void {
     Emitter.ee.on(this.channel, listener);
     if (scope) {
       Emitter.scoped.push({ channel: this.channel, scope, listener });
     }
   }
 
-  once(listener: Listener, scope?: any) {
+  once(listener: Listener<T>, scope?: unknown): void {
     Emitter.ee.once(this.channel, listener);
     if (scope) {
       Emitter.scoped.push({ channel: this.channel, scope, listener });
     }
   }
 
-  scopeOff(scope: any, listeners?: Listener[]) {
+  scopeOff(scope: unknown, listeners?: Listener<T>[]): void {
     Emitter.scopeOff(scope, this.channel, listeners);
   }
 }

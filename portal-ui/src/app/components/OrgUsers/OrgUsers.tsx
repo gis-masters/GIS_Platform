@@ -1,29 +1,25 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component } from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { Done, Block } from '@material-ui/icons';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { CrgUser, usersService } from '../../services/crg/users.service';
-import { PrincipalType } from '../../services/crg/permissions.models';
-import { FilterParams } from '../../services/util/filterObjects';
-import { OrgActions } from '../OrgActions/OrgActions';
-import { Highlight } from '../Highlight/Highlight';
-import { TextBadge } from '../TextBadge/TextBadge';
 import { XTable, XTableColumn } from '../XTable/XTable';
-import { PermissionsCount } from '../PermissionsCount/PermissionsCount';
 
 import { OrgUsersCreate } from './Create/OrgUsers-Create';
+import { OrgUsersEnabled } from './Enabled/OrgUsers-Enabled';
+import { OrgUsersUserEmail } from './UserEmail/OrgUsers-UserEmail';
+import { OrgUsersUserActions } from './UserActions/OrgUsers-UserActions';
+import { OrgUsersPermissionsCount } from './PermissionsCount/OrgUsers-PermissionsCount';
 
 import '!style-loader!css-loader!sass-loader!./OrgUsers.scss';
 
 const cnOrgUsers = cn('OrgUsers');
 
-interface CrgUserExtended extends CrgUser {
+export interface CrgUserExtended extends CrgUser {
   groups: CrgGroup[];
   groupsString: string;
 }
@@ -48,7 +44,7 @@ export class OrgUsers extends Component {
       field: 'enabled',
       sorting: true,
       align: 'right',
-      renderCellContent: this.renderUserEnabled
+      CellContent: OrgUsersEnabled
     },
     {
       title: 'e-mail / login',
@@ -56,7 +52,7 @@ export class OrgUsers extends Component {
       filtering: true,
       sorting: true,
       align: 'right',
-      renderCellContent: this.renderUserEmail
+      CellContent: OrgUsersUserEmail
     },
     {
       title: 'Группы',
@@ -66,14 +62,14 @@ export class OrgUsers extends Component {
     },
     {
       title: 'Разрешений',
-      renderCellContent: this.renderPermissionsCount,
+      CellContent: OrgUsersPermissionsCount,
       align: 'right'
     },
     {
       title: 'Действия',
       align: 'right',
       cellProps: { padding: 'checkbox' },
-      renderCellContent: this.renderUserActions
+      CellContent: OrgUsersUserActions
     }
   ];
 
@@ -109,37 +105,7 @@ export class OrgUsers extends Component {
     });
   }
 
-  @boundMethod
-  private renderUserEnabled(user: CrgUserExtended) {
-    return user.enabled ? <Done /> : <Block />;
-  }
-
-  @boundMethod
-  private renderUserEmail(user: CrgUserExtended, filterActive: boolean, filterParams: FilterParams<CrgUserExtended>) {
-    return (
-      <>
-        <Highlight word={filterParams.email} enabled={filterActive}>
-          {user.email}
-        </Highlight>
-        {user.login && user.login !== user.email && ` / ${user.login}`}
-        <TextBadge id={user.id} />
-      </>
-    );
-  }
-
-  @boundMethod
-  private renderPermissionsCount(rowData: CrgUserExtended): ReactNode {
-    return <PermissionsCount principalId={rowData.id} principalType={PrincipalType.USER} />;
-  }
-
-  @boundMethod
-  private renderUserActions(user: CrgUserExtended): ReactNode {
-    return <OrgActions user={user} userGroups={user.groups} />;
-  }
-
   private getUserId(user: CrgUserExtended): number {
     return user.id;
   }
-
-
 }

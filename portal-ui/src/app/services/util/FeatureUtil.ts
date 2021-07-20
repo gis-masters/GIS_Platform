@@ -6,7 +6,7 @@ import { CrgRootGeometry, GeometryItem } from './crg-root-geometry';
 import { AS_IS, NOT_IMPORT } from '../models';
 
 export class FeatureUtil {
-  static getLayerGeometry(importLayer: ImportLayerItem) {
+  static getLayerGeometry(importLayer: ImportLayerItem): string {
     return importLayer.attributes.find((attr: LayerAttribute) => attr.name === 'the_geom').binding;
   }
 
@@ -31,11 +31,7 @@ export class FeatureUtil {
   static getFeatureGeometry(featureDescription: FeatureDescription): string[] {
     const geometryProperty = featureDescription.properties.find(property => property.valueType === ValueType.GEOMETRY);
 
-    if (geometryProperty) {
-      return geometryProperty.allowedValues;
-    } else {
-      return [];
-    }
+    return geometryProperty ? geometryProperty.allowedValues : [];
   }
 
   static filterByGeometry(fDescription: FeatureDescription[], layer?: ImportLayerItem): FeatureDescription[] {
@@ -71,10 +67,11 @@ export class FeatureUtil {
     let result = {};
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-implied-eval
       const cFunction = new Function('obj', calcFunction);
-      result = cFunction(cloneDeep(featureObject)) || result;
-    } catch (e) {
-      throw Error('Ошибка при попытке просчитать атрибуты: ' + e);
+      result = (cFunction(cloneDeep(featureObject)) || result) as Partial<T>;
+    } catch (error) {
+      throw new Error(`Ошибка при попытке просчитать атрибуты: ${String(error)}`);
     }
 
     return result;
@@ -118,7 +115,6 @@ export class FeatureUtil {
       fDescription.properties.forEach(attribute => {
         if (sourceAttribute.name.toLowerCase() === attribute.name.toLowerCase()) {
           counter--;
-          return;
         }
       });
     });

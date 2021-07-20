@@ -13,15 +13,17 @@ export const WFS_FEATURE_ID_DELIMITER = '.';
 type Coords = Coordinate | Coordinate[][] | Coordinate[][][];
 type CoordsEdited = CoordinateEdited | CoordinateEdited[][] | CoordinateEdited[][][];
 
+const JSON_MIME = 'application/json';
+
 export async function getFeatureById(complexName: string, objectId: string): Promise<WfsFeature> {
   const url = await prepareLink(complexName, objectId);
   const featureCollection: WfsFeatureCollection = await http.get<WfsFeatureCollection>(url);
 
   if (featureCollection && featureCollection.features.length > 0) {
     return featureCollection.features[0];
-  } else {
-    throw new Error('Not found feature by ID: ' + objectId);
   }
+
+  throw new Error('Not found feature by ID: ' + objectId);
 }
 
 export async function getFeatures(
@@ -33,8 +35,8 @@ export async function getFeatures(
     service: 'wfs',
     // version: '2.0.0',
     request: 'GetFeature',
-    outputFormat: 'application/json',
-    exceptions: 'application/json',
+    outputFormat: JSON_MIME,
+    exceptions: JSON_MIME,
     typeName: complexName,
     // PROPERTYNAME: fillProp(complexName),
     sortBy: generateSortParam(requestModel),
@@ -50,7 +52,7 @@ export async function getFeatures(
   }
 
   const cqlFilter = generateFilter(requestModel);
-  if (!!cqlFilter) {
+  if (cqlFilter) {
     params.CQL_FILTER = cqlFilter;
   }
   const fCollection = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params });
@@ -65,14 +67,14 @@ export async function getFeatures(
 export async function getFeaturesByXmlFilter(xml: string): Promise<WfsFeatureCollection> {
   return http.post<WfsFeatureCollection>(await getWfsUrl(), xml, {
     headers: { 'Content-type': 'application/xml' },
-    params: { exceptions: 'application/json' }
+    params: { exceptions: JSON_MIME }
   });
 }
 
 export async function getFeaturesById(ids: string[], namespace: string): Promise<WfsFeature[]> {
-  const headers = { 'Content-type': 'application/json' };
+  const headers = { 'Content-type': JSON_MIME };
   const params = {
-    outputFormat: 'application/json',
+    outputFormat: JSON_MIME,
     service: 'wfs',
     version: '2.0.0',
     request: 'GetFeature',
@@ -90,11 +92,9 @@ export function isGeometryValid(geometry: WfsGeometry): boolean {
 }
 
 function hasUnclosedPolygons(geometry: WfsGeometry): boolean {
-  if (geometry.type === GeometryType.MULTI_POLYGON) {
-    return geometry.coordinates.some(polygon => polygon.some(loop => !isEqual(loop[0], loop[loop.length - 1])));
-  } else {
-    return false;
-  }
+  return geometry.type === GeometryType.MULTI_POLYGON
+    ? geometry.coordinates.some(polygon => polygon.some(loop => !isEqual(loop[0], loop[loop.length - 1])))
+    : false;
 }
 
 export function isCoordinateValid(coord: Coordinate): boolean {
@@ -102,19 +102,17 @@ export function isCoordinateValid(coord: Coordinate): boolean {
 }
 
 export function isDimensionValid(dimension: string | number): boolean {
-  return !isNaN(transformDimension(dimension));
+  return !Number.isNaN(transformDimension(dimension));
 }
 
 export function normalizeCoordinates(coord: CoordsEdited | string | number): Coords | number {
-  if (Array.isArray(coord)) {
-    return (coord as CoordsEdited[]).map(normalizeCoordinates) as Coords;
-  } else {
-    return transformDimension(coord);
-  }
+  return Array.isArray(coord)
+    ? ((coord as CoordsEdited[]).map(normalizeCoordinates) as Coords)
+    : transformDimension(coord);
 }
 
-export function transformDimension(dimension: number | string) {
-  return String(dimension).trim() === '' ? NaN : Number(dimension);
+export function transformDimension(dimension: number | string): number {
+  return String(dimension).trim() === '' ? Number.NaN : Number(dimension);
 }
 
 async function prepareLink(typeName: string, objectId: string): Promise<string> {

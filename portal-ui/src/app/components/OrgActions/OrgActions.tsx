@@ -15,11 +15,11 @@ import '!style-loader!css-loader!sass-loader!./OrgActions.scss';
 const cnOrgActions = cn('OrgActions');
 
 type OrgActionsProps =
-  | { user?: never; userGroups?: never; group: CrgGroup }
-  | { user: CrgUser; userGroups: CrgGroup[]; group?: never };
+  | { user?: never; userGroups?: never; group: CrgGroup; className?: string }
+  | { user: CrgUser; userGroups: CrgGroup[]; group?: never; className?: string };
 
-export const OrgActions: FC<OrgActionsProps> = ({ user, userGroups, group }) => (
-  <div className={cnOrgActions()}>
+export const OrgActions: FC<OrgActionsProps> = ({ user, userGroups, group, className }) => (
+  <div className={cnOrgActions(null, [className])}>
     {user && <OrgActionsGroups user={user} userGroups={userGroups} />}
     <OrgActionsListPermissions
       principalId={user ? user.id : group.id}

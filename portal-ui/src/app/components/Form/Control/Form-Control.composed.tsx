@@ -6,6 +6,7 @@ import { withTypeString } from './_type/Form-Control_type_STRING';
 import { withTypeChoice } from './_type/Form-Control_type_CHOICE';
 import { withTypeBinary } from './_type/Form-Control_type_BINARY';
 import { withTypeCheckbox } from './_type/Form-Control_type_CHECKBOX';
+import { withTypeCustom } from './_type/Form-Control_type_CUSTOM';
 import { withTypeSet } from './_type/Form-Control_type_SET';
 import { FormControl as Presenter } from './Form-Control';
 
@@ -16,5 +17,6 @@ export const FormControl = compose(
   withTypeChoice,
   withTypeBinary,
   withTypeCheckbox,
+  withTypeCustom,
   withTypeSet
 )(Presenter);

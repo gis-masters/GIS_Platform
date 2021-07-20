@@ -11,7 +11,7 @@ import { getSchemaUrl } from '../server-urls.service';
 import { services } from '../services';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { CrgLayer } from './projects.models';
-import { FeatureDescription, PropertySchema } from './schema.models';
+import { FeatureDescription, PropertySchema, PropertySchemaChoice, ValueType } from './schema.models';
 import { BugObject } from './validation.service';
 
 class SchemaService {
@@ -90,10 +90,8 @@ class SchemaService {
       if (!layerName.includes('_line')) {
         layerNameWithGeomType = layerName + '_line';
       }
-    } else if (geometryName.includes('Point')) {
-      if (!layerName.includes('_point')) {
-        layerNameWithGeomType = layerName + '_point';
-      }
+    } else if (geometryName.includes('Point') && !layerName.includes('_point')) {
+      layerNameWithGeomType = layerName + '_point';
     }
 
     return (await this.getById(layerNameWithGeomType, true)) || (await this.getById(layerName, true));
@@ -107,14 +105,10 @@ class SchemaService {
     }
 
     return schema.properties
-      .filter((simpleProperty: PropertySchema) => simpleProperty.enumerations)
-      .reduce((val: string, simpleProperty: PropertySchema) => {
-        return simpleProperty.enumerations.reduce((title: string, item) => {
-          if (String(bugObject.classId) === item.value || String(bugObject.classId) === item.value) {
-            return item.title;
-          } else {
-            return title;
-          }
+      .filter(simpleProperty => simpleProperty.valueType === ValueType.CHOICE && simpleProperty.enumerations)
+      .reduce<string>((val: string, simpleProperty: PropertySchemaChoice) => {
+        return simpleProperty.enumerations.reduce<string>((title: string, item) => {
+          return String(bugObject.classId) === item.value ? item.title : title;
         }, val);
       }, '');
   }
@@ -154,6 +148,7 @@ class SchemaService {
 
     const properties = schema.properties.reduce((acc: { [key: string]: null }, propertySchema) => {
       acc[propertySchema.name.toLowerCase()] = null;
+
       return acc;
     }, {});
 
@@ -193,16 +188,16 @@ class SchemaService {
         return 'Параметр обязателен к заполнению';
       } else if (error.toLowerCase().includes('totalDigits'.toLowerCase())) {
         return 'Превышено допустимое кол-в знаков';
-      } else {
-        return error;
       }
+
+      return error;
     });
   }
 
   async isReadOnly(schemaId: string): Promise<boolean> {
     try {
       return (await this.getSchema(schemaId)).readOnly;
-    } catch (e) {
+    } catch {
       return true;
     }
   }
@@ -224,6 +219,7 @@ class SchemaService {
       if (!schema) {
         Toast.error('Возникла ошибка при загрузке схемы');
         services.logger.error('Failed schema', schema);
+
         return;
       }
 

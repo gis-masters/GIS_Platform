@@ -1,3 +1,3 @@
-export function generateRandomId() {
-  return Math.random().toString(36).substring(2, 8);
+export function generateRandomId(): string {
+  return Math.random().toString(36).slice(2, 8);
 }

@@ -21,9 +21,9 @@ export enum UnitsOfLengthMeasurement {
 /**
  * Из {@link WfsFeature} формируем OpenLayer фичу {@link Feature}
  */
-export function wfsFeatureToFeature(wfsFeature: WfsFeature, supressError?: boolean): Feature | undefined {
+export function wfsFeatureToFeature(wfsFeature: WfsFeature, suppressError?: boolean): Feature | undefined {
   if (!wfsFeature.geometry) {
-    if (!supressError) {
+    if (!suppressError) {
       Toast.error({
         message: 'Ошибка отображения объекта',
         details: `ID: ${wfsFeature.id}.
@@ -33,6 +33,7 @@ export function wfsFeatureToFeature(wfsFeature: WfsFeature, supressError?: boole
 
     return;
   }
+
   return new Feature({
     geometry: wfsGeometryToGeometry(wfsFeature.geometry as WfsGeometry<Coordinate>)
   });
@@ -67,20 +68,18 @@ export function formatArea(polygon: Polygon, units: UnitsOfAreaMeasurement): [nu
 
   if (units === UnitsOfAreaMeasurement.HECTARE) {
     if (area > 100) {
-      value = Math.round((area / 10000) * 100) / 100;
+      value = Math.round((area / 10_000) * 100) / 100;
       outputUnits = UnitsOfAreaMeasurement.HECTARE;
     } else {
       value = Math.round(area * 100) / 100;
       outputUnits = UnitsOfAreaMeasurement.SQUARE_METER;
     }
+  } else if (area > 10_000) {
+    value = Math.round((area / 1_000_000) * 100) / 100;
+    outputUnits = UnitsOfAreaMeasurement.SQUARE_KILOMETER;
   } else {
-    if (area > 10000) {
-      value = Math.round((area / 1000000) * 100) / 100;
-      outputUnits = UnitsOfAreaMeasurement.SQUARE_KILOMETER;
-    } else {
-      value = Math.round(area * 100) / 100;
-      outputUnits = UnitsOfAreaMeasurement.SQUARE_METER;
-    }
+    value = Math.round(area * 100) / 100;
+    outputUnits = UnitsOfAreaMeasurement.SQUARE_METER;
   }
 
   return [value, outputUnits];

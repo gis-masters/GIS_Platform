@@ -5,11 +5,7 @@ export const patch: <T>(obj: T, patch: Partial<T>) => void = action((obj, patch)
   Object.assign(obj, patch);
 });
 
-export function getPatch<T>(
-  objNew: T,
-  objPrimal: T,
-  fields: (keyof T)[] = Object.keys(objPrimal) as (keyof T)[]
-): Partial<T> {
+export function getPatch<T>(objNew: T, objPrimal: T, fields: (keyof T)[] = Object.keys(objPrimal)): Partial<T> {
   const patch: Partial<T> = {};
 
   fields.forEach(key => {

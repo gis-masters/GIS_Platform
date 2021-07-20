@@ -1,4 +1,10 @@
 import { observable, computed, action } from 'mobx';
+import { Rule } from '../services/crg/projects.models';
+
+export interface RuleExtended extends Rule {
+  layerId: number;
+  layerTitle: string;
+}
 
 interface PageFormat {
   id: string;
@@ -39,6 +45,11 @@ export const pageFormats: PageFormat[] = [
   }
 ];
 
+interface LegendOptions {
+  enabled: boolean;
+  items: RuleExtended[];
+}
+
 export interface PrintSettings {
   pageFormatId: string;
   resolution: number;
@@ -54,6 +65,7 @@ export interface PrintSettings {
   windRose: boolean;
   border: boolean;
   date: boolean;
+  legend: LegendOptions;
 }
 
 const defaultPrintSettings: PrintSettings = {
@@ -70,7 +82,11 @@ const defaultPrintSettings: PrintSettings = {
   },
   windRose: true,
   border: true,
-  date: true
+  date: true,
+  legend: {
+    enabled: true,
+    items: []
+  }
 };
 
 class PrintSettingsStore implements PrintSettings {
@@ -89,6 +105,7 @@ class PrintSettingsStore implements PrintSettings {
   @observable windRose: boolean;
   @observable border: boolean;
   @observable date: boolean;
+  @observable legend: LegendOptions;
   @observable rotation = 0;
 
   private static _instance: PrintSettingsStore;
@@ -98,7 +115,7 @@ class PrintSettingsStore implements PrintSettings {
   }
 
   private constructor() {
-    this.setValues(defaultPrintSettings);
+    this.reset();
   }
 
   @computed
@@ -106,11 +123,6 @@ class PrintSettingsStore implements PrintSettings {
     const { width, height } = this.pageFormat;
 
     return this.orientation === 'l' ? width : height;
-  }
-
-  @action
-  setValues(values: Partial<PrintSettings>) {
-    Object.assign(this, values);
   }
 
   @computed
@@ -133,6 +145,15 @@ class PrintSettingsStore implements PrintSettings {
   @computed
   get height(): number {
     return Math.round(((this.pageHeight - this.margin.top - this.margin.bottom) * this.printingResolution) / 25.4);
+  }
+
+  @action
+  setValues(values: Partial<PrintSettings>) {
+    Object.assign(this, values);
+  }
+
+  reset() {
+    this.setValues(defaultPrintSettings);
   }
 
   @action

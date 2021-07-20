@@ -223,6 +223,7 @@
     // https://github.com/danielnixon/eslint-plugin-total-functions
     "total-functions/require-strict-mode": "off",
     "total-functions/no-unsafe-type-assertion": "off",
+    "total-functions/no-unsafe-readonly-mutable-assignment": "off",
 
     // https://github.com/xjamundx/eslint-plugin-promise
     "promise/always-return": "off",

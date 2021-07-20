@@ -41,6 +41,10 @@ declare global {
   interface Navigator extends Navigator {
     share: (options?: ShareData) => Promise<void>;
   }
+
+  interface NodeListOf<TNode extends Node> extends NodeList {
+    [Symbol.iterator](): IterableIterator<TNode>;
+  }
 }
 
 getEnvironment()

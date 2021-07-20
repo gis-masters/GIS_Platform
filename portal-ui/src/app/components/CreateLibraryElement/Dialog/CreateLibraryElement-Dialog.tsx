@@ -66,7 +66,7 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
   // TODO: убрать эту наркоманию
   @computed
   private get initialFormValue(): LibraryRecordRaw {
-    const initialFormValue = {};
+    const initialFormValue: Record<string, unknown> = {};
     (this.props.schema?.properties || []).forEach(property => {
       switch (property.valueType) {
         case ValueType.STRING: {

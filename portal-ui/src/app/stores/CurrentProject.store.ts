@@ -13,7 +13,7 @@ import {
 } from '../services/crg/projects.models';
 import { getPatch } from '../services/util/patch';
 
-const MAX_LAYERS_IN_BATCH_DEFAULT = 5;
+const MAX_LAYERS_IN_BATCH = 5;
 
 interface CrgProjectData extends CrgProject {
   layers: (CrgLayer | NewCrgLayer)[];
@@ -50,7 +50,6 @@ class CurrentProject implements CrgProjectData {
   @observable groups: (CrgLayersGroup | NewCrgLayersGroup)[];
   @observable primalLayers: CrgLayer[];
   @observable primalGroups: (CrgLayersGroup | NewCrgLayersGroup)[];
-  @observable _maxLayersInBatch?: number;
   @observable layersErrors: { [key: string]: string[] };
 
   @observable viewZoom: number;
@@ -75,16 +74,8 @@ class CurrentProject implements CrgProjectData {
         isGroup: false,
         errors: this.layersErrors[layer.complexName]
       })),
-      ...this.rasterLayers.map(layer => ({
-        id: layer.id,
-        payload: layer,
-        isGroup: false
-      })),
-      ...this.externalLayers.map(layer => ({
-        id: layer.id,
-        payload: layer,
-        isGroup: false
-      }))
+      ...this.rasterLayers.map(layer => ({ id: layer.id, payload: layer, isGroup: false })),
+      ...this.externalLayers.map(layer => ({ id: layer.id, payload: layer, isGroup: false }))
     ]
       .map((item: TreeItem, i, items) => {
         const parentId = item.isGroup ? (item.payload as CrgLayersGroup).parentId : (item.payload as CrgLayer).parentId;
@@ -140,7 +131,7 @@ class CurrentProject implements CrgProjectData {
       const transparency = item.actualTransparency;
       const typ = item.payload.type;
 
-      if (transparency === lastTransparency && typ === lastType && lastBatch.length < this.maxLayersInBatch) {
+      if (transparency === lastTransparency && typ === lastType && lastBatch.length < MAX_LAYERS_IN_BATCH) {
         lastBatch.push(item);
       } else {
         acc.push([item]);
@@ -168,11 +159,6 @@ class CurrentProject implements CrgProjectData {
   @computed
   get externalLayers() {
     return this.layers.filter(l => l.type === CrgLayerType.EXTERNAL);
-  }
-
-  @computed
-  private get maxLayersInBatch() {
-    return Number(this._maxLayersInBatch || MAX_LAYERS_IN_BATCH_DEFAULT);
   }
 
   @computed
@@ -291,7 +277,7 @@ class CurrentProject implements CrgProjectData {
       this.groups.splice(index, 1);
     }
 
-    this.layers.slice().forEach(layer => {
+    [...this.layers].forEach(layer => {
       if (layer.parentId === deletingGroup.id) {
         currentProject.deleteLayer(layer);
       }
@@ -352,11 +338,7 @@ class CurrentProject implements CrgProjectData {
   }
 
   private getGenusAtDept(item: TreeItem, depth: number): TreeItem {
-    if (item.depth === depth) {
-      return item;
-    } else {
-      return this.getGenusAtDept(item.parent, depth);
-    }
+    return item.depth === depth ? item : this.getGenusAtDept(item.parent, depth);
   }
 
   private getActualTransparency(item: TreeItem, value?: number): number {
@@ -367,11 +349,6 @@ class CurrentProject implements CrgProjectData {
     }
 
     return value;
-  }
-
-  @action.bound
-  setMaxLayersInBatch(count: number) {
-    this._maxLayersInBatch = count;
   }
 
   @action
@@ -420,7 +397,7 @@ class CurrentProject implements CrgProjectData {
       return false;
     }
 
-    const { expanded } = item.parent.payload as CrgLayersGroup;
+    const { expanded } = item.parent.payload;
 
     return expanded ? this.hasCollapsedParent(item.parent) : true;
   }
@@ -451,15 +428,10 @@ class CurrentProject implements CrgProjectData {
     const genusA = this.getGenusAtDept(a, depth);
     const genusB = this.getGenusAtDept(b, depth);
 
-    if (genusA.parent.id === genusB.parent.id) {
-      return genusA.parent;
-    } else {
-      return this.getClosestCommonAncestor(genusA.parent, genusB.parent);
-    }
+    return genusA.parent.id === genusB.parent.id
+      ? genusA.parent
+      : this.getClosestCommonAncestor(genusA.parent, genusB.parent);
   }
 }
 
 export const currentProject = CurrentProject.instance;
-
-// инструмент для эксперимента
-window['setMaxLayersInBatch'] = currentProject.setMaxLayersInBatch;

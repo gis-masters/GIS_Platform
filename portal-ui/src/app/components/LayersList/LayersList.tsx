@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, ReactElement } from 'react';
 import { Checkbox } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
@@ -25,7 +25,7 @@ enum SelectedState {
 }
 
 interface LayersListProps {
-  onSelect(layers: CrgLayer[]);
+  onSelect(layers: CrgLayer[]): void;
 }
 
 @observer
@@ -47,7 +47,7 @@ export class LayersList extends Component<LayersListProps> {
               />
             ),
             cellProps: { padding: 'checkbox' },
-            renderCellContent: this.renderCheckbox
+            CellContent: this.renderCheckbox
           },
           {
             title: 'Название',
@@ -68,9 +68,13 @@ export class LayersList extends Component<LayersListProps> {
   }
 
   @boundMethod
-  private renderCheckbox(layer: CrgLayer): ReactNode {
+  private renderCheckbox({ rowData }: { rowData: CrgLayer }): ReactElement {
     return (
-      <LayersListItemCheck layer={layer} selected={this.isItemSelected(layer)} onSelect={this.onSelectItemChanged} />
+      <LayersListItemCheck
+        layer={rowData}
+        selected={this.isItemSelected(rowData)}
+        onSelect={this.onSelectItemChanged}
+      />
     );
   }
 

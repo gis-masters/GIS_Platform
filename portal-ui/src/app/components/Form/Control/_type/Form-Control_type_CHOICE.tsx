@@ -4,7 +4,7 @@ import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { MenuItem, Select } from '@material-ui/core';
 
-import { ValueType } from '../../../../services/crg/schema.models';
+import { PropertySchemaChoice, ValueType } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
@@ -12,12 +12,13 @@ import { cnFormControl, FormControlProps } from '../Form-Control';
 class FormControlTypeChoice extends Component<FormControlProps> {
   render() {
     const { htmlId, className, fieldValue, property } = this.props;
+    const { enumerations } = property as PropertySchemaChoice;
 
     return (
       <div className={cnFormControl(null, [className])}>
-        {!!property.enumerations && (
+        {!!enumerations && (
           <Select id={htmlId} fullWidth value={fieldValue} onChange={this.handleChange}>
-            {property.enumerations.map((item, i) => {
+            {enumerations.map((item, i) => {
               return (
                 <MenuItem key={i} value={item.value}>
                   {item.title}
@@ -41,7 +42,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
   }
 }
 
-export const withTypeChoice = withBemMod<{}, FormControlProps>(
+export const withTypeChoice = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
   { type: ValueType.CHOICE },
   () => FormControlTypeChoice

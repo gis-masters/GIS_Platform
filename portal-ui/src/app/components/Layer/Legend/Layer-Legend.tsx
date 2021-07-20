@@ -15,20 +15,16 @@ interface LayerLegendProps {
 
 @observer
 export class LayerLegend extends Component<LayerLegendProps> {
-  constructor (props: LayerLegendProps) {
-    super(props);
+  async componentDidMount() {
+    await loadLayerLegend(this.props.layer);
   }
 
-  componentDidMount () {
-    loadLayerLegend(this.props.layer);
-  }
-
-  render () {
+  render() {
     const { layer } = this.props;
 
     return (
       <div className={cnLayerLegend()}>
-        {layer.legend ? <Legend rules={layer.legend} /> : <LinearProgress />}
+        {layer.legend ? <Legend rules={layer.legend} cleanDuplicates /> : <LinearProgress />}
       </div>
     );
   }

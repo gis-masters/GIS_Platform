@@ -35,7 +35,7 @@ interface BaseCrgLayer extends CrgEntity {
 //FIXME: не должно быть расширения на UI, может перенести эти св-ва в TreeItem?
 export interface CrgLayer extends BaseCrgLayer {
   geometryType?: SupportedGeometryType;
-  legend?: RuleWithLegend[];
+  legend?: Rule[];
   legendIsFetching?: boolean;
 }
 
@@ -104,8 +104,5 @@ export interface CrgProject {
 export interface Rule {
   name: string;
   title: string;
-}
-
-export interface RuleWithLegend extends Rule {
   legend: string;
 }

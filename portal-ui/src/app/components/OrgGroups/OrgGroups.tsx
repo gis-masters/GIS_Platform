@@ -6,18 +6,18 @@ import { cn } from '@bem-react/classname';
 
 import { allGroups } from '../../stores/AllGroups.store';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
-import { PrincipalType } from '../../services/crg/permissions.models';
-import { OrgActions } from '../OrgActions/OrgActions';
 import { XTable, XTableColumn } from '../XTable/XTable';
-import { PermissionsCount } from '../PermissionsCount/PermissionsCount';
+import { OrgActions } from '../OrgActions/OrgActions';
 
 import { OrgGroupsCreate } from './Create/OrgGroups-Create';
+import { OrgGroupsGroupActions } from './GroupActions/OrgGroups-GroupActions';
+import { OrgGroupsPermissionsCount } from './PermissionsCount/OrgGroups-PermissionsCount';
 
 import '!style-loader!css-loader!sass-loader!./OrgGroups.scss';
 
 const cnOrgGroups = cn('OrgGroups');
 
-interface CrgGroupExtended extends CrgGroup {
+export interface CrgGroupExtended extends CrgGroup {
   usersCount: number;
 }
 
@@ -47,14 +47,14 @@ export class OrgGroups extends Component {
     },
     {
       title: 'Разрешений',
-      renderCellContent: this.renderPermissionsCount,
+      CellContent: OrgGroupsPermissionsCount,
       align: 'right'
     },
     {
       title: 'Действия',
       align: 'right',
       cellProps: { padding: 'checkbox' },
-      renderCellContent: this.renderGroupActions
+      CellContent: OrgGroupsGroupActions
     }
   ];
 
@@ -82,11 +82,6 @@ export class OrgGroups extends Component {
       ...group,
       usersCount: group.users.length
     }));
-  }
-
-  @boundMethod
-  private renderPermissionsCount(rowData: CrgGroupExtended): ReactNode {
-    return <PermissionsCount principalId={rowData.id} principalType={PrincipalType.GROUP} />;
   }
 
   @boundMethod

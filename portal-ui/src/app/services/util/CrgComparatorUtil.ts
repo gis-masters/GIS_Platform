@@ -11,23 +11,19 @@ export class DirectComparison implements CrgComparison {
   private comparison: CrgComparison;
 
   compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
-    let result = null;
-    const shapeName = source.name.substr(0, 10).toLowerCase();
+    let result: PropertySchema;
+    const shapeName = source.name.slice(0, 10).toLowerCase();
     properties.forEach((property: PropertySchema) => {
-      const ourName = property.name.substr(0, 10).toLowerCase();
+      const ourName = property.name.slice(0, 10).toLowerCase();
       if (shapeName === ourName) {
         result = property;
       }
     });
 
-    if (result) {
-      return result;
-    } else {
-      return this.comparison.compare(source, properties);
-    }
+    return result || this.comparison.compare(source, properties);
   }
 
-  setNext(comparison: CrgComparison) {
+  setNext(comparison: CrgComparison): void {
     this.comparison = comparison;
   }
 }
@@ -40,7 +36,7 @@ export class GeometryComparison implements CrgComparison {
 
   // TODO: Сопоставление геометрии
   compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
-    let result = null;
+    let result: PropertySchema;
 
     if (
       source.binding.includes('MultiPolygon') ||
@@ -52,18 +48,15 @@ export class GeometryComparison implements CrgComparison {
     ) {
       result = {
         name: 'shape',
-        title: 'shape'
-      } as PropertySchema;
+        title: 'shape',
+        valueType: ValueType.STRING
+      };
     }
 
-    if (result) {
-      return result;
-    } else {
-      return this.comparison.compare(source, properties);
-    }
+    return result || this.comparison.compare(source, properties);
   }
 
-  setNext(comparison: CrgComparison) {
+  setNext(comparison: CrgComparison): void {
     this.comparison = comparison;
   }
 }
@@ -75,23 +68,20 @@ export class ObjectIdComparison implements CrgComparison {
   private comparison: CrgComparison;
 
   compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
-    let result = null;
+    let result: PropertySchema;
 
     if (source.name.toLowerCase().includes('objectid')) {
       result = {
         name: NOT_IMPORT.name,
-        title: NOT_IMPORT.title
+        title: NOT_IMPORT.title,
+        valueType: ValueType.STRING
       };
     }
 
-    if (result) {
-      return result;
-    } else {
-      return this.comparison.compare(source, properties);
-    }
+    return result ? result : this.comparison.compare(source, properties);
   }
 
-  setNext(comparison: CrgComparison) {
+  setNext(comparison: CrgComparison): void {
     this.comparison = comparison;
   }
 }
@@ -102,7 +92,7 @@ export class ObjectIdComparison implements CrgComparison {
  * Для него не задается "следующего" по цепочке.
  */
 export class LastComparison implements CrgComparison {
-  compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
+  compare(): PropertySchema {
     return {
       name: AS_IS.name,
       title: AS_IS.title,
@@ -110,7 +100,7 @@ export class LastComparison implements CrgComparison {
     };
   }
 
-  setNext(comparison: CrgComparison) {
-    throw Error('Wrong use last comparator');
+  setNext(): void {
+    throw new Error('Wrong use last comparator');
   }
 }

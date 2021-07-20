@@ -6,15 +6,16 @@ export type CustomFilterFieldsPrep<T> = { [key in keyof T]?: CustomFieldsPrep<T,
 export function filterObjects<T>(arr: T[], params: FilterParams<T>, customFieldsPrep?: CustomFilterFieldsPrep<T>): T[] {
   return arr.filter(item =>
     Object.entries(item).every(([key, value]) => {
-      if (!params[key]) {
+      const k = key as keyof T;
+      if (!params[k]) {
         return true;
       }
 
-      if (customFieldsPrep && customFieldsPrep[key]) {
-        value = customFieldsPrep[key](value, item);
+      if (customFieldsPrep && customFieldsPrep[k]) {
+        value = customFieldsPrep[k](value, item);
       }
 
-      return String(value).toLowerCase().includes(params[key].toLowerCase());
+      return String(value).toLowerCase().includes(params[k].toLowerCase());
     })
   );
 }

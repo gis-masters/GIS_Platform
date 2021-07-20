@@ -9,7 +9,7 @@ import { Button } from '../../../Button/Button';
 import { Loading } from '../../../Loading/Loading';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
 import { HtmlContent } from '../../../HtmlContent/HtmlContent';
-import { ValueType } from '../../../../services/crg/schema.models';
+import { PropertySchemaUrl, ValueType } from '../../../../services/crg/schema.models';
 import { services } from '../../../../services/services';
 import { Link } from '../../../Link/Link';
 
@@ -36,8 +36,8 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
     super(props);
 
     try {
-      this.value = JSON.parse(props.field.value);
-    } catch (e) {
+      this.value = JSON.parse(props.field.value) as FieldTypeUrlValue;
+    } catch {
       services.logger.warn('Incorrect url value: ', props.field.value);
     }
   }
@@ -49,7 +49,8 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
 
     const { text, disabled, url } = this.value;
     const { className, field } = this.props;
-    const inPopup = field.property.displayMode === 'in_popup';
+    const property = field.property as PropertySchemaUrl;
+    const inPopup = property.displayMode === 'in_popup';
 
     return (
       <div className={className}>
@@ -88,7 +89,7 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
         const response = await fetch(this.value.url);
         const content = await response.text();
         this.setContent(content);
-      } catch (e) {
+      } catch {
         this.setContent('Ошибка!');
       }
       this.setFetching(false);
@@ -108,7 +109,7 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
   @action.bound
   private openDialog() {
     this.isOpen = true;
-    this.fetchContent();
+    void this.fetchContent();
   }
 
   @action.bound
@@ -118,7 +119,7 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
   }
 }
 
-export const withTypeUrl = withBemMod<{}, EditFeaturesControlProps>(
+export const withTypeUrl = withBemMod<EditFeaturesControlProps, EditFeaturesControlProps>(
   cnEditFeatureFieldControl(),
   { type: ValueType.URL },
   () => EditFeatureFieldControlTypeUrl

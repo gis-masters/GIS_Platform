@@ -83,14 +83,14 @@ interface GeoserverCoverage {
   };
 }
 
-export async function deleteLayer(layerId: number) {
+export async function deleteLayer(layerId: number): Promise<void> {
   await http.delete(await getProjectLayerUrl(currentProject.id, layerId));
   if (sidebars.layerForAttributes?.id === layerId) {
     sidebars.closeAttributes();
   }
 }
 
-export async function loadLayerLegend(layer: CrgLayer) {
+export async function loadLayerLegend(layer: CrgLayer): Promise<void> {
   if (layer.legend || layer.legendIsFetching) {
     return;
   }
@@ -99,14 +99,14 @@ export async function loadLayerLegend(layer: CrgLayer) {
 
   const styleSld: string = await getStyleSld(layer.styleName);
   const xmlDoc = new DOMParser().parseFromString(styleSld, 'text/xml');
-  const rules: Rule[] = Array.from(xmlDoc.querySelectorAll('Rule'))
+  const rulesWithoutLegend: Omit<Rule, 'legend'>[] = [...xmlDoc.querySelectorAll('Rule')]
     .filter(rule => rule.querySelector('Name') && rule.querySelector('Title'))
     .map(rule => ({
       name: rule.querySelector('Name').innerHTML,
       title: rule.querySelector('Title').innerHTML
     }));
-  const rulesWithLegend = await Promise.all(
-    rules.map(async rule => {
+  const rules = await Promise.all(
+    rulesWithoutLegend.map(async rule => {
       const blob = await getLegendGraphicByRuleName(layer.complexName, rule.name);
       const img = await createImageFromBlob(blob);
 
@@ -118,7 +118,7 @@ export async function loadLayerLegend(layer: CrgLayer) {
   );
 
   patch(layer, {
-    legend: rulesWithLegend,
+    legend: rules,
     legendIsFetching: false
   });
 }

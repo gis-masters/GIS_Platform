@@ -11,26 +11,29 @@ import { generateRandomId } from '../../../services/util/randomId';
 import { FormField } from '../Field/Form-Field';
 import { FormLabel } from '../Label/Form-Label';
 import { FormControl } from '../Control/Form-Control.composed';
+import { FormHiddenField } from '../HiddenField/Form-HiddenField';
 
 const cnFormContent = cn('Form', 'Content');
 
-interface FormContentProps<T> extends IClassNameProps {
+interface FormContentProps<T extends Record<string, unknown>> extends IClassNameProps {
   fields: PropertySchema<T>[];
   formValue: T;
   onFormChange?: (changedValue: T) => void;
 }
 
 @observer
-export class FormContent<T> extends Component<FormContentProps<T>> {
+export class FormContent<T extends Record<string, unknown> = Record<string, unknown>> extends Component<
+  FormContentProps<T>
+> {
   render() {
     const { fields, formValue, className } = this.props;
 
     return (
       <div className={cnFormContent(null, [className])}>
-        {fields.map((propertySchema, i) => {
+        {fields.map((propertySchema: PropertySchema, i) => {
           const htmlId = 'formField_' + generateRandomId();
 
-          return (
+          return !propertySchema.hidden ? (
             <FormField key={i}>
               <FormLabel htmlFor={htmlId}>{propertySchema.title}</FormLabel>
               <FormControl
@@ -44,6 +47,8 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
                 {formValue[propertySchema.name]}
               </FormControl>
             </FormField>
+          ) : (
+            <FormHiddenField key={i} name={String(propertySchema.name)} value={formValue[propertySchema.name]} />
           );
         })}
       </div>

@@ -13,10 +13,10 @@ import '!style-loader!css-loader!sass-loader!./Form-Control_type_CHECKBOX.scss';
 @observer
 class FormControlTypeCheckbox extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue } = this.props;
+    const { htmlId, className, fieldValue, inSet } = this.props;
 
     return (
-      <div className={cnFormControl(null, [className])}>
+      <div className={cnFormControl({ inSet }, [className])}>
         <Checkbox
           checked={Boolean(fieldValue)}
           onChange={this.handleChange}
@@ -38,7 +38,7 @@ class FormControlTypeCheckbox extends Component<FormControlProps> {
   }
 }
 
-export const withTypeCheckbox = withBemMod<{}, FormControlProps>(
+export const withTypeCheckbox = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
   { type: ValueType.CHECKBOX },
   () => FormControlTypeCheckbox

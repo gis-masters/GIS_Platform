@@ -21,6 +21,7 @@ import { route } from '../../stores/Route.store';
 import { services } from '../../services/services';
 import { getFeatureLayer } from '../../services/geoserver/layers.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { printSettings } from '../../stores/PrintSettings.store';
 
 type NamesChunks = { [srsName: string]: string[] };
 
@@ -172,6 +173,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     mapService.destroyMap();
+    printSettings.reset();
     this.reactionDisposer();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

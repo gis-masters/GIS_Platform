@@ -13,6 +13,7 @@ import { Loading } from '../../Loading/Loading';
 import { PrintDialogPreviewImageContainer } from '../PreviewImageContainer/PrintDialog-PreviewImageContainer';
 import { PrintDialogPreviewImage } from '../PreviewImage/PrintDialog-PreviewImage';
 import { PrintDialogWindRose } from '../WindRose/PrintDialog-WindRose';
+import { PrintDialogLegend } from '../Legend/PrintDialog-Legend';
 import { PrintDialogScale } from '../Scale/PrintDialog-Scale';
 import { PrintDialogDate } from '../Date/PrintDialog-Date';
 import { PrintDialogCopy } from '../Copy/PrintDialog-Copy';
@@ -63,7 +64,7 @@ export class PrintDialogPreview extends Component<PrintDialogPreviewProps> {
   }
 
   render() {
-    const { pageFormatId, orientation, margin, windRose, date, rotation, printingInProcess } = printSettings;
+    const { pageFormatId, orientation, margin, windRose, date, legend, rotation, printingInProcess } = printSettings;
 
     return (
       <div className={cnPrintDialogPreview()}>
@@ -99,6 +100,8 @@ export class PrintDialogPreview extends Component<PrintDialogPreviewProps> {
             {windRose && <PrintDialogWindRose />}
 
             {date && <PrintDialogDate />}
+
+            {legend.enabled && Boolean(legend.items.length) && <PrintDialogLegend />}
 
             <Loading visible={printingInProcess} />
           </PrintDialogPreviewImageContainer>

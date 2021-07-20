@@ -37,7 +37,7 @@ class FormControlTypeString extends Component<FormControlProps> {
   }
 }
 
-export const withTypeString = withBemMod<{}, FormControlProps>(
+export const withTypeString = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
   { type: ValueType.STRING },
   () => FormControlTypeString

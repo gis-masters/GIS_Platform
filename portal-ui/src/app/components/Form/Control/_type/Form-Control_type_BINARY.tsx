@@ -31,7 +31,7 @@ class FormControlTypeBinary extends Component<FormControlProps> {
   }
 }
 
-export const withTypeBinary = withBemMod<{}, FormControlProps>(
+export const withTypeBinary = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
   { type: ValueType.BINARY },
   () => FormControlTypeBinary

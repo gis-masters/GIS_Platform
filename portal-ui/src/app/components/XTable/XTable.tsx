@@ -1,4 +1,4 @@
-import React, { Component, createRef, ReactNode, RefObject } from 'react';
+import React, { Component, ComponentType, createRef, ReactNode, RefObject } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
@@ -29,7 +29,7 @@ export interface XTableColumn<T> {
   field?: keyof T;
   filtering?: boolean;
   sorting?: boolean;
-  renderCellContent?: (rowData: T, filterActive: boolean, filterParams: FilterParams<T>) => ReactNode;
+  CellContent?: ComponentType<{ rowData: T; filterActive?: boolean; filterParams?: FilterParams<T> }>;
   getIdBadge?: (rowData: T) => string | number;
   cellProps?: TableCellProps;
   headerCellProps?: TableCellProps;
@@ -45,6 +45,7 @@ export interface XTableProps<T> extends IClassNameProps {
   defaultSort: SortParams<T>;
   secondarySortField: keyof T;
   filterable?: boolean;
+  onFilter?: (filtered: T[]) => void;
   getRowId?: (rowData: T) => string | number;
 }
 
@@ -106,10 +107,14 @@ export class XTable<T> extends Component<XTableProps<T>> {
                 ) : (
                   this.dataPaged.map((rowData, i) => (
                     <TableRow key={getRowId ? getRowId(rowData) : i} hover>
-                      {cols.map(({ field, renderCellContent, getIdBadge, cellProps, align }, i) => (
+                      {cols.map(({ field, CellContent, getIdBadge, cellProps, align }, i) => (
                         <TableCell key={i} align={align} {...(cellProps || {})}>
-                          {renderCellContent ? (
-                            renderCellContent(rowData, this.filterActive, this.filterParams)
+                          {CellContent ? (
+                            <CellContent
+                              rowData={rowData}
+                              filterActive={this.filterActive}
+                              filterParams={this.filterParams}
+                            />
                           ) : (
                             <>
                               <Highlight word={this.filterParams[field]} enabled={filterable && this.filterActive}>
@@ -188,8 +193,14 @@ export class XTable<T> extends Component<XTableProps<T>> {
 
   @action.bound
   private afterFilterChange() {
-    if (this.dataPaged.length === this.rowsPerPage || this.data === this.props.data) {
+    const { data, onFilter } = this.props;
+
+    if (this.dataPaged.length === this.rowsPerPage || this.data === data) {
       this.tableMinHeight = 0;
+    }
+
+    if (onFilter) {
+      onFilter(this.data);
     }
   }
 }
