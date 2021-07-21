@@ -28,10 +28,16 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-di
 import { currentProject } from '../../stores/CurrentProject.store';
 import { getProjection } from '../../services/geoserver/projections.service';
 import { fromMobx } from '../../services/util/fromMobx';
+import { generateFilter } from '../../services/geoserver/wfs.util';
 
 export interface WfsFeatureView extends WfsFeature {
   aliases?: Record<string, unknown>;
   updated?: string;
+}
+
+export interface AttributeTableFilter {
+  layerComplexName?: string;
+  filter?: string;
 }
 
 @Component({
@@ -104,7 +110,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
           this.attributeTable.selected = [];
           mapService.clearDraft();
-          void this.updateTable({ page: { pageSize: 25, offset: 0 } });
+          await this.updateTable({ page: { pageSize: 25, offset: 0 } });
           await this.checkPermissions();
         }
       });
@@ -141,14 +147,20 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       requestModel,
       this.layer.nativeCRS
     );
+
     if (fCollection) {
+      currentProject.updateAttributeTableFilter({
+        layerComplexName: this.layer.complexName,
+        filter: generateFilter(requestModel)
+      });
+
       this.loading = false;
       this.totalFeatures = fCollection.totalFeatures;
 
       if (this.isNeedPrepareColumn) {
         // TODO: новый запрос в пределах того же слоя не принесет новых колонок! Формировать колонки только
         //  при открытии или при переходе на новый слой
-        void this.prepareColumns(fCollection.features[0]);
+        await this.prepareColumns(fCollection.features[0]);
         this.isNeedPrepareColumn = false;
       }
 
@@ -219,6 +231,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   closeMe(): void {
     mapService.clearDraft();
     sidebars.closeAttributes();
+    currentProject.updateAttributeTableFilter({});
   }
 
   onFilterChange(filterEvent: FilterEvent): void {
@@ -619,7 +632,6 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
         resultObject[property] = properties[property];
       }
     });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 
     return resultObject;
   }

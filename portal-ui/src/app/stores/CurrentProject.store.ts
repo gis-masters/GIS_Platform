@@ -12,6 +12,7 @@ import {
   TreeItem
 } from '../services/crg/projects.models';
 import { getPatch } from '../services/util/patch';
+import { AttributeTableFilter } from '../components/attributes-bar/attributes-bar.component';
 
 const MAX_LAYERS_IN_BATCH = 5;
 
@@ -51,6 +52,7 @@ class CurrentProject implements CrgProjectData {
   @observable primalLayers: CrgLayer[];
   @observable primalGroups: (CrgLayersGroup | NewCrgLayersGroup)[];
   @observable layersErrors: { [key: string]: string[] };
+  @observable attributeTableFilter: AttributeTableFilter = {};
 
   @observable viewZoom: number;
 
@@ -119,26 +121,50 @@ class CurrentProject implements CrgProjectData {
 
   @computed
   get visibleLayersBatched(): TreeItem<CrgLayer>[][] {
-    return this.visibleOnMapLayers.reduce((acc: TreeItem<CrgLayer>[][], item: TreeItem<CrgLayer>) => {
+    return this.visibleOnMapLayers.reduce((acc: TreeItem<CrgLayer>[][], currentItem: TreeItem<CrgLayer>) => {
       if (!acc.length) {
-        return [[item]];
+        return [[currentItem]];
       }
 
       const lastBatch = acc[acc.length - 1];
-      const lastItem = lastBatch[lastBatch.length - 1];
-      const lastTransparency = lastItem.actualTransparency;
-      const lastType = lastItem.payload.type;
-      const transparency = item.actualTransparency;
-      const typ = item.payload.type;
+      const previousItem = lastBatch[lastBatch.length - 1];
 
-      if (transparency === lastTransparency && typ === lastType && lastBatch.length < MAX_LAYERS_IN_BATCH) {
-        lastBatch.push(item);
+      if (this.canBeBatched(lastBatch, previousItem, currentItem)) {
+        lastBatch.push(currentItem);
       } else {
-        acc.push([item]);
+        acc.push([currentItem]);
       }
 
       return acc;
     }, []);
+  }
+
+  private canBeBatched(
+    lastBatch: TreeItem<CrgLayer>[],
+    previousItem: TreeItem<CrgLayer>,
+    currentItem: TreeItem<CrgLayer>
+  ) {
+    const previousTransparency = previousItem.actualTransparency;
+    const previousType = previousItem.payload.type;
+    const currentTransparency = currentItem.actualTransparency;
+    const currentType = currentItem.payload.type;
+
+    return (
+      currentTransparency === previousTransparency &&
+      currentType === previousType &&
+      lastBatch.length < MAX_LAYERS_IN_BATCH &&
+      !this.isFiltered(currentItem.payload) &&
+      !this.isFiltered(previousItem.payload)
+    );
+  }
+
+  isFiltered(layer: CrgLayer) {
+    return this.attributeTableFilter?.layerComplexName === layer.complexName && this.attributeTableFilter.filter;
+  }
+
+  @action
+  updateAttributeTableFilter(data: AttributeTableFilter) {
+    this.attributeTableFilter = data;
   }
 
   @computed

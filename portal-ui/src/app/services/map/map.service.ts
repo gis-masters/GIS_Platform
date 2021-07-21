@@ -21,6 +21,7 @@ import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import ImageLayer from 'ol/layer/Image';
 import { boundMethod } from 'autobind-decorator';
 
+import { currentProject } from '../../stores/CurrentProject.store';
 import { mapStore } from '../../stores/Map.store';
 import { currentMap } from '../../stores/CurrentMap.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
@@ -53,6 +54,7 @@ declare module '../../../../node_modules/@types/ol/Geolocation' {
 interface CrgWmsParams {
   LAYERS: string;
   FORMAT?: string;
+  CQL_FILTER?: string;
 }
 
 interface CrgAdditionalLayerInfo {
@@ -289,9 +291,9 @@ class MapService {
 
   async addLayers(layers: CrgLayer[], zIndex: number, opacity: number) {
     const resultName = this.calcLayerName(layers);
-
     const layerOnMap = this.getLayerByName(resultName);
-    if (layerOnMap) {
+
+    if (layerOnMap && this.isNotFilteredLayer(layers)) {
       layerOnMap.setVisible(true);
       layerOnMap.setOpacity(opacity);
       layerOnMap.setZIndex(zIndex);
@@ -300,6 +302,11 @@ class MapService {
         LAYERS: resultName,
         FORMAT: imageFormat
       };
+
+      const { layerComplexName, filter } = currentProject.attributeTableFilter;
+      if (resultName === layerComplexName && filter) {
+        params.CQL_FILTER = filter;
+      }
 
       const commonLayerParams = {
         visible: true,
@@ -332,6 +339,10 @@ class MapService {
     }
   }
 
+  private isNotFilteredLayer(layers: CrgLayer[]) {
+    return !(layers.length === 1 && currentProject.isFiltered(layers[0]));
+  }
+
   private calcLayerName(layers: CrgLayer[]) {
     return layers.map(layer => layer.complexName).join(',');
   }
@@ -342,32 +353,12 @@ class MapService {
   }
 
   /**
-   * Установить прозрачность слоя.
-   *
-   * @param complexLayerName Название слоя в формате 'workspace:layerName'
-   * @param opacity   The opacity of the layer, allowed values range from 0 to 1.
-   */
-  setLayerOpacity(complexLayerName: string, opacity?: number) {
-    const layerByName = this.getLayerByName(complexLayerName);
-    if (layerByName) {
-      layerByName.setOpacity(opacity);
-    }
-  }
-
-  /**
    * @param complexLayerName Название слоя в формате 'workspace:layerName'
    */
   getLayerOpacity(complexLayerName: string) {
     const layerByName = this.getLayerByName(complexLayerName);
     if (layerByName) {
       return layerByName.getOpacity();
-    }
-  }
-
-  setLayerVisibility(complexLayerName: string, visibility: boolean) {
-    const layer = this.getLayerByName(complexLayerName);
-    if (layer) {
-      layer.setVisible(visibility);
     }
   }
 
@@ -454,10 +445,6 @@ class MapService {
 
   getResolution() {
     return this.view.getResolution();
-  }
-
-  getZoom() {
-    return this.view.getZoom();
   }
 
   private round(n: number) {

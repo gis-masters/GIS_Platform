@@ -7,7 +7,7 @@ import { Coordinate } from 'ol/coordinate';
 import '!style-loader!css-loader!sass-loader!ol/ol.css';
 
 import { cn } from '../../services/util/cn';
-import { CrgLayerType } from '../../services/crg/projects.models';
+import { CrgLayer, CrgLayerType, TreeItem } from '../../services/crg/projects.models';
 import { mapService } from '../../services/map/map.service';
 import { getFeaturesById, getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
 import { makeXmlPolygonIntersect } from '../../services/util/wfs.util';
@@ -23,7 +23,9 @@ import { getFeatureLayer } from '../../services/geoserver/layers.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { printSettings } from '../../stores/PrintSettings.store';
 
-type NamesChunks = { [srsName: string]: string[] };
+interface NamesChunks {
+  [srsName: string]: string[];
+}
 
 export const MAP_QUERY_PARAMS_DELIMITER = '~';
 
@@ -92,14 +94,13 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     // Позиционируемся по BBOX проекта
-
     if (currentProject.bbox && !route.queryParams.center) {
       mapService.fitToBbox(JSON.parse(currentProject.bbox), [0, 0, 0, 0]);
     }
 
     this.reactionDisposer = reaction(
-      () => currentProject.visibleLayersBatched,
-      visibleBatches => {
+      () => [currentProject.visibleLayersBatched, currentProject.attributeTableFilter],
+      ([visibleBatches]: [TreeItem<CrgLayer>[][]]) => {
         mapService.hideUserLayers();
 
         visibleBatches.forEach((batch, i) => {
