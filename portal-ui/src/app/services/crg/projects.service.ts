@@ -1,5 +1,6 @@
 import { reaction } from 'mobx';
 import { debounce } from 'lodash';
+import { AxiosError } from 'axios';
 
 import { route } from '../../stores/Route.store';
 import { allProjects } from '../../stores/AllProjects.store';
@@ -22,7 +23,6 @@ import {
 } from '../server-urls.service';
 import { Toast } from '../../components/Toast/Toast';
 import { communicationService } from '../communication.service';
-import { AxiosError } from 'axios';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -66,13 +66,13 @@ class ProjectsService {
     if (allProjects.inited) {
       return;
     }
-
     await this.fetchAllProjects();
   }
 
   private async fetchAllProjects() {
     const url = await getProjectsUrl();
     const request = http.getPaged<CrgProject>(url);
+
     this.fetchingAllProjectsRequest = request;
 
     const response = await this.fetchingAllProjectsRequest;
@@ -234,8 +234,10 @@ class ProjectsService {
     try {
       return await http.get<CrgProject>(await getProjectUrl(id));
     } catch (error) {
-      if ((error as AxiosError).response?.status === 404) {
-        Toast.warn(`Не найден проект id: ${id}`);
+      const err = error as AxiosError<{ status: string; message: string }>;
+      const message = err?.response?.data?.message;
+      if (message) {
+        Toast.warn(message);
       } else {
         throw error;
       }
