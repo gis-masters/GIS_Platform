@@ -181,6 +181,12 @@
             <version>2.2.6.RELEASE</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.geotools.xsd</groupId>
+            <artifactId>gt-xsd-wfs</artifactId>
+            <version>22.0</version>
+        </dependency>
+
         <!-- CRG -->
         <dependency>
             <groupId>ru.mycrg</groupId>

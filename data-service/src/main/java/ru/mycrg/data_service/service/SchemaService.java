@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.entity.Schema;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ConflictException;
-import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DataSchemaRepository;
 import ru.mycrg.data_service.util.SchemaHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -41,12 +40,9 @@ public class SchemaService {
     }
 
     public Optional<SchemaDto> getSchemaByName(@NotNull String name) {
-        final Schema schema = schemaRepository
-                .findByName(name).stream()
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException(SchemaDto.class, name));
-
-        return Optional.ofNullable(schemaHandler.mapToSchemaDto(schema));
+        return schemaRepository.findByName(name).stream()
+                               .findFirst()
+                               .map(schemaHandler::mapToSchemaDto);
     }
 
     public boolean isSchemaExist(String name) {

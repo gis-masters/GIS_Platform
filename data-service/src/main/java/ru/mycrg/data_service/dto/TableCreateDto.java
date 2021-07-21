@@ -20,6 +20,14 @@ public class TableCreateDto extends ResourceCreateDto {
     @Size(min = 2, max = 50)
     private String schemaId;
 
+    public TableCreateDto() {
+        super();
+    }
+
+    public TableCreateDto(String title) {
+        super(title);
+    }
+
     public String getName() {
         return this.name;
     }

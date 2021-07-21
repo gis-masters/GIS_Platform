@@ -12,8 +12,6 @@ import ru.mycrg.data_service_contract.dto.ValidationProcessModel;
 import ru.mycrg.data_service_contract.queue.request.ValidationRequestEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import java.security.Principal;
-
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service_contract.enums.ProcessType.VALIDATION;
 
@@ -39,7 +37,7 @@ public class ValidationService {
     /**
      * Запустить процесс валидации.
      *
-     * @param request   Список ресурсов {@link ValidationRequestDto}
+     * @param request Список ресурсов {@link ValidationRequestDto}
      */
     public Process validate(ValidationRequestDto request) {
         long orgId = authenticationFacade.getOrganizationId();

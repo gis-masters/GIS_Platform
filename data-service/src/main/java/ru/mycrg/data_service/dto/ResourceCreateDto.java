@@ -12,6 +12,13 @@ public class ResourceCreateDto {
     @Size(max = 1000)
     private String details;
 
+    public ResourceCreateDto() {
+    }
+
+    public ResourceCreateDto(String title) {
+        this.title = title;
+    }
+
     public String getTitle() {
         return title;
     }

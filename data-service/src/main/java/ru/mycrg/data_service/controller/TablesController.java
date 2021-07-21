@@ -31,6 +31,17 @@ public class TablesController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PostMapping("/datasets/{datasetId}/tables")
+    public ResponseEntity<IResourceModel> createTable(@PathVariable String datasetId,
+                                                      @Valid @RequestBody TableCreateDto dto) {
+        ResourceQualifier rQualifier = new ResourceQualifier(datasetId, dto.getName());
+
+        IResourceModel resourceModel = tableService.create(rQualifier, dto);
+
+        return new ResponseEntity<>(resourceModel, CREATED);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/datasets/{datasetId}/tables")
     public ResponseEntity<Object> getTables(@PathVariable String datasetId,
                                             @RequestParam(required = false, defaultValue = "") String title,
@@ -56,17 +67,6 @@ public class TablesController {
         final IResourceModel dto = tableService.getInfo(rQualifier);
 
         return ResponseEntity.ok(dto);
-    }
-
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    @PostMapping("/datasets/{datasetId}/tables")
-    public ResponseEntity<IResourceModel> createTable(@PathVariable String datasetId,
-                                                      @Valid @RequestBody TableCreateDto dto) {
-        ResourceQualifier rQualifier = new ResourceQualifier(datasetId, dto.getName());
-
-        IResourceModel resourceModel = tableService.create(rQualifier, dto);
-
-        return new ResponseEntity<>(resourceModel, CREATED);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

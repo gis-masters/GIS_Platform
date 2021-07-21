@@ -5,5 +5,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 public interface Importer {
 
+    String getType();
+
     Long doImport(MultipartFile file, ResourceQualifier rIdentifier);
 }

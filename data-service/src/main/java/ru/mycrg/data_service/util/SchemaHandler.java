@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.entity.Schema;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
@@ -43,9 +44,10 @@ public class SchemaHandler {
 
             return schemaDto;
         } catch (IOException e) {
-            log.warn("Failed convert JSON / Error: {}", e.getMessage());
-        }
+            String message = "Failed convert JSON / Error: " + e.getMessage();
+            log.warn(message);
 
-        return null;
+            throw new DataServiceException(message);
+        }
     }
 }

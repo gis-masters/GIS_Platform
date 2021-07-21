@@ -21,9 +21,7 @@ import ru.mycrg.data_service.util.ImportValidationHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,6 +45,11 @@ public class ImportMp implements Importer {
         this.crsHandler = crsHandler;
     }
 
+    @Override
+    public String getType() {
+        return "mp";
+    }
+
     /**
      * Импорт xml файла межевого плана в БД. При импорте межевого плана происходит парсинг файла, проверка типов полей,
      * согласно схеме БД, добавление записи в БД
@@ -61,16 +64,17 @@ public class ImportMp implements Importer {
      */
     public Long doImport(MultipartFile file, ResourceQualifier table) {
         IResourceModel tableModel = tableService.getInfo(table);
-        SchemaDto schemaOfCurrentLayer =
-                schemaService.getSchemaByName(tableModel.getSchemaId())
-                             .orElseThrow(() -> new NotFoundException(SchemaDto.class, tableModel.getSchemaId()));
+        Optional<SchemaDto> schemaOfCurrentLayer = schemaService.getSchemaByName(tableModel.getSchemaId());
+        if (schemaOfCurrentLayer.isEmpty()) {
+            throw new NotFoundException(SchemaDto.class, tableModel.getSchemaId());
+        }
+        Optional<SchemaDto> schemaOfMp = schemaService.getSchemaByName(SCHEMA_NAME);
+        if (schemaOfMp.isEmpty()) {
+            throw new NotFoundException(SchemaDto.class, SCHEMA_NAME);
+        }
 
-        SchemaDto schemaOfMp =
-                schemaService.getSchemaByName(SCHEMA_NAME)
-                             .orElseThrow(() -> new NotFoundException(SchemaDto.class, SCHEMA_NAME));
-
-        List<SimplePropertyDto> crossedProperties = getCrossedPropertiesFromTwoSchemas(schemaOfCurrentLayer,
-                                                                                       schemaOfMp);
+        List<SimplePropertyDto> crossedProperties = getCrossedPropertiesFromTwoSchemas(schemaOfCurrentLayer.get(),
+                                                                                       schemaOfMp.get());
 
         try {
             Map<String, Object> dataForSavingToDB = xmlParser

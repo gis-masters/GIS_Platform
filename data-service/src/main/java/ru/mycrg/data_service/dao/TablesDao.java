@@ -26,10 +26,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static ru.mycrg.data_service.dao.SqlBuilder.buildOrderBySection;
 
@@ -37,7 +34,7 @@ import static ru.mycrg.data_service.dao.SqlBuilder.buildOrderBySection;
 @Transactional
 public class TablesDao {
 
-    public static final Logger log = LoggerFactory.getLogger(TablesDao.class);
+    private static final Logger log = LoggerFactory.getLogger(TablesDao.class);
 
     private final NamedParameterJdbcTemplate pJdbcTemplate;
 
@@ -62,6 +59,43 @@ public class TablesDao {
             log.debug("INSERT_QUERY: {}", query);
 
             return pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
+        } catch (DataAccessException e) {
+            String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'. %s",
+                                       rIdentifier, e.getCause().getMessage());
+
+            throw new CrgDaoException(msg);
+        } catch (Exception e) {
+            String msg = String.format("Что то пошло не так при вставке в таблицу: '%s'. %s",
+                                       rIdentifier, e.getCause().getMessage());
+
+            throw new CrgDaoException(msg);
+        }
+    }
+
+    public void addRecordsAsBatch(@NotNull ResourceQualifier rIdentifier,
+                                  @NotNull Map<String, Object>[] body) throws CrgDaoException {
+        try {
+            Set<String> columnNames = body[0].keySet();
+            StringBuilder queryColumns = new StringBuilder();
+            StringBuilder queryValues = new StringBuilder();
+            String complexName = rIdentifier.getSchema() + "." + rIdentifier.getTable();
+            for (int i = 0; i < columnNames.size(); i++) {
+                if (i == columnNames.size() - 1) {
+                    queryColumns.append(columnNames.toArray()[i]);
+                    queryValues.append(" :").append(columnNames.toArray()[i]);
+                } else {
+                    queryColumns.append(columnNames.toArray()[i]).append(", ");
+                    queryValues.append(" :").append(columnNames.toArray()[i]).append(",");
+                }
+            }
+
+            String query =
+                    "insert into " + complexName + "(" + queryColumns.toString().toLowerCase() + ")" +
+                            " values (" + queryValues.toString().toLowerCase() + ")";
+
+            log.debug("INSERT_QUERY: {}", query);
+
+            pJdbcTemplate.batchUpdate(query, body);
         } catch (DataAccessException e) {
             String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'. %s",
                                        rIdentifier, e.getCause().getMessage());

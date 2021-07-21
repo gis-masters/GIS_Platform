@@ -18,7 +18,6 @@ import ru.mycrg.data_service.service.validation.ValidationService;
 import ru.mycrg.data_service.service.validation.ViolationService;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 @RestController

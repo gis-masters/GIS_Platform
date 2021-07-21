@@ -516,7 +516,7 @@ SELECT 'thermalpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -1114,7 +1114,7 @@ SELECT 'oilpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -1731,7 +1731,7 @@ SELECT 'telecomnetworkline_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -2592,7 +2592,7 @@ SELECT 'electrictransformer_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -3428,7 +3428,7 @@ SELECT 'railwayfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -3731,7 +3731,7 @@ SELECT 'admesrf',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -4578,7 +4578,7 @@ SELECT 'wastefacility_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -5316,7 +5316,7 @@ SELECT 'waterfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -5877,7 +5877,7 @@ SELECT 'publictransportservice_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -6609,7 +6609,7 @@ SELECT 'airtransportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -7323,7 +7323,7 @@ SELECT 'autoservice_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -8063,7 +8063,7 @@ SELECT 'heritage_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -8661,7 +8661,7 @@ SELECT 'resort_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -9502,7 +9502,7 @@ SELECT 'servicefacility_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -10165,7 +10165,7 @@ SELECT 'sewerfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -10876,7 +10876,7 @@ SELECT 'culture_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -11410,7 +11410,7 @@ SELECT 'mineraldep_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -11891,7 +11891,7 @@ SELECT 'transplogisticobj_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -12359,7 +12359,7 @@ SELECT 'publictransportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -12847,7 +12847,7 @@ SELECT 'envmonitoring_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -13274,7 +13274,7 @@ SELECT 'hydro_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -13760,7 +13760,7 @@ SELECT 'engprotectionobj_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -14329,7 +14329,7 @@ SELECT 'waterpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -15022,7 +15022,7 @@ SELECT 'culture',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -15857,7 +15857,7 @@ SELECT 'manufacturing',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -16654,7 +16654,7 @@ SELECT 'authorityservice',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -17393,7 +17393,7 @@ SELECT 'sport',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -17848,7 +17848,7 @@ SELECT 'naturalriskzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -18276,7 +18276,7 @@ SELECT 'natureprotectarea',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -18956,7 +18956,7 @@ SELECT 'gasfacility',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -19636,7 +19636,7 @@ SELECT 'gasfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -20104,7 +20104,7 @@ SELECT 'publictransportobj',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -20833,7 +20833,7 @@ SELECT 'thermalfacility',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -21311,7 +21311,7 @@ SELECT 'envmonitoring',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -22040,7 +22040,7 @@ SELECT 'thermalfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -22889,7 +22889,7 @@ SELECT 'road_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -23622,7 +23622,7 @@ SELECT 'telecomfacility',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -24216,7 +24216,7 @@ SELECT 'customcontrol',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -25039,7 +25039,7 @@ SELECT 'education',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -25593,7 +25593,7 @@ SELECT 'publictransportline_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -26272,7 +26272,7 @@ SELECT 'telecomfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -26873,7 +26873,7 @@ SELECT 'resort',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -27696,7 +27696,7 @@ SELECT 'servicefacility',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -28315,7 +28315,7 @@ SELECT 'admenp',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -28895,7 +28895,7 @@ SELECT 'transportobj',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -29517,7 +29517,7 @@ SELECT 'transportobj_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -30139,7 +30139,7 @@ SELECT 'transportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -31046,7 +31046,7 @@ SELECT 'wastefacility',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -31766,7 +31766,7 @@ SELECT 'waterfacility',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -32378,7 +32378,7 @@ SELECT 'otherobject',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -32859,7 +32859,7 @@ SELECT 'forest',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -33691,7 +33691,7 @@ SELECT 'education_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -34605,7 +34605,7 @@ SELECT 'electricpowerstation',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -35140,7 +35140,7 @@ SELECT 'publictransportservice',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -35854,7 +35854,7 @@ SELECT 'airtransportobj',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -36718,7 +36718,7 @@ SELECT 'electricpowerstation_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -37426,7 +37426,7 @@ SELECT 'autoservice',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -38110,7 +38110,7 @@ SELECT 'hydraulicstructures_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -38770,7 +38770,7 @@ SELECT 'gaspipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -39125,7 +39125,7 @@ SELECT 'street_line',
             "patternDescription": ""
           },
           {
-            "name": "SURFAСE_PLAN",
+            "name": "SURFACE_PLAN",
             "title": "Вид покрытия (проектный)",
             "choice": null,
             "hidden": false,
@@ -39352,7 +39352,7 @@ SELECT 'street_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -40013,7 +40013,7 @@ SELECT 'hydraulicstructures_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -40931,7 +40931,7 @@ SELECT 'health',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -41595,7 +41595,7 @@ SELECT 'customcontrol_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -42513,7 +42513,7 @@ SELECT 'health_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -43345,7 +43345,7 @@ SELECT 'railwayline_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -43981,7 +43981,7 @@ SELECT 'pipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -44609,7 +44609,7 @@ SELECT 'cemetery_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -45282,7 +45282,7 @@ SELECT 'cemetery',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -45776,7 +45776,7 @@ SELECT 'investmentzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -46532,7 +46532,7 @@ SELECT 'watertransportobj',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -47383,7 +47383,7 @@ SELECT 'electricline_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -48150,7 +48150,7 @@ SELECT 'watertransportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -48461,7 +48461,7 @@ SELECT 'historicsettlement',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -49142,7 +49142,7 @@ SELECT 'public',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -49819,7 +49819,7 @@ SELECT 'sewerfacility',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -50760,7 +50760,7 @@ SELECT 'functionalzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -51236,7 +51236,7 @@ SELECT 'technoriskarea',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -51463,7 +51463,7 @@ SELECT 'coastalprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -52046,7 +52046,7 @@ SELECT 'publictransportstops',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -52218,7 +52218,7 @@ SELECT 'hazardarea',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -52801,7 +52801,7 @@ SELECT 'publictransportstops_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -53431,7 +53431,7 @@ SELECT 'otherobject_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -53871,7 +53871,7 @@ SELECT 'resortarea',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -54650,7 +54650,7 @@ SELECT 'social',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -55690,7 +55690,7 @@ SELECT 'agriculture',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -56472,7 +56472,7 @@ SELECT 'social_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -57530,7 +57530,7 @@ SELECT 'agriculture_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -58043,7 +58043,7 @@ SELECT 'wildlifeprotection',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -58511,7 +58511,7 @@ SELECT 'heritagearea',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -58969,7 +58969,7 @@ SELECT 'mineraldep',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -59432,7 +59432,7 @@ SELECT 'transplogisticobj',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -59717,7 +59717,7 @@ SELECT 'heritageprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -59992,7 +59992,7 @@ SELECT 'engprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -60219,7 +60219,7 @@ SELECT 'foreshore',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -60478,7 +60478,7 @@ SELECT 'transpprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -61299,7 +61299,7 @@ SELECT 'recreation',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -61695,7 +61695,7 @@ SELECT 'natureprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -62019,7 +62019,7 @@ SELECT 'traditionalarea',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -62530,7 +62530,7 @@ SELECT 'specialeconomicarea',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -63258,7 +63258,7 @@ SELECT 'emergencyprotectionobj',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -64159,7 +64159,7 @@ SELECT 'electrictransformer',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -64977,7 +64977,7 @@ SELECT 'railwayfacility',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -65294,7 +65294,7 @@ SELECT 'admemo',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -65964,7 +65964,7 @@ SELECT 'oilfacility',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -66692,7 +66692,7 @@ SELECT 'emergencyprotectionobj_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -67561,7 +67561,7 @@ SELECT 'manufacturing_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -68376,7 +68376,7 @@ SELECT 'authorityservice_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -69133,7 +69133,7 @@ SELECT 'sport_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -69998,7 +69998,7 @@ SELECT 'recreation_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -70789,7 +70789,7 @@ SELECT 'public_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -71084,7 +71084,7 @@ SELECT 'waterprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -71402,7 +71402,7 @@ SELECT 'envdanger_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -71889,7 +71889,7 @@ SELECT 'prison',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -72291,7 +72291,7 @@ SELECT 'greeneryplanting',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -72624,7 +72624,7 @@ SELECT 'forestpark',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -73294,7 +73294,7 @@ SELECT 'oilfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -73597,7 +73597,7 @@ SELECT 'transpsanitarygapzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -73971,7 +73971,7 @@ SELECT 'sanitaryprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -74234,7 +74234,7 @@ SELECT 'drinkwaterprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -74428,7 +74428,7 @@ SELECT 'admerf',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -74687,7 +74687,7 @@ SELECT 'resortprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -74866,7 +74866,7 @@ SELECT 'landuse',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -75228,7 +75228,7 @@ SELECT 'mineralarea',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -75487,7 +75487,7 @@ SELECT 'engsanitarygapzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -75803,7 +75803,7 @@ SELECT 'otherzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -76131,7 +76131,7 @@ SELECT 'envdanger',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -76415,7 +76415,7 @@ SELECT 'streetv_line',
             "patternDescription": ""
           },
           {
-            "name": "SURFAСE_PLAN",
+            "name": "SURFACE_PLAN",
             "title": "Вид покрытия (проектный)",
             "choice": null,
             "hidden": false,
@@ -76642,7 +76642,7 @@ SELECT 'streetv_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -76940,7 +76940,7 @@ SELECT 'otherprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -77203,7 +77203,7 @@ SELECT 'protectionzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -77594,7 +77594,7 @@ SELECT 'hydro',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -77910,7 +77910,7 @@ SELECT 'floodarea',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -78320,7 +78320,7 @@ SELECT 'areabasedevelopment',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -78582,7 +78582,7 @@ SELECT 'fishprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -79062,7 +79062,7 @@ SELECT 'waterways_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -79295,7 +79295,7 @@ SELECT 'admborder_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -79686,7 +79686,7 @@ SELECT 'hydro_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -80219,7 +80219,7 @@ SELECT 'sewerpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -80698,7 +80698,7 @@ SELECT 'engprotectionobj_line',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -81145,7 +81145,7 @@ SELECT 'naturalriskzone_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -81591,7 +81591,7 @@ SELECT 'natureprotectarea_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -82001,7 +82001,7 @@ SELECT 'technoriskarea_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -82423,7 +82423,7 @@ SELECT 'resortarea_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -82925,7 +82925,7 @@ SELECT 'prison_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
@@ -83438,7 +83438,7 @@ SELECT 'wildlifeprotection_point',
             "patternDescription": ""
           },
           {
-            "name": "Geometry",
+            "name": "shape",
             "title": null,
             "choice": null,
             "hidden": false,
