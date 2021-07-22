@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:8-jre
+FROM azul/zulu-openjdk-alpine:11-jre
 LABEL MAINTAINER="Fanatic Fiz <fanaticfiz@outlook.com>"
 
 COPY ./target/apm-agent.jar apm-agent.jar

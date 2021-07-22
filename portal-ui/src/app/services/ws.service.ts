@@ -20,6 +20,7 @@ export interface ExportWsMsg {
   pathToLog: string;
   status: string;
   progress: number;
+  payload: string;
 }
 
 export interface ValidationWsMsg {
@@ -58,7 +59,7 @@ class WsService {
   private stompClient: CompatClient;
 
   private constructor() {
-    this.connect();
+    void this.connect();
   }
 
   async connect() {
@@ -84,5 +85,3 @@ class WsService {
 }
 
 export const wsService = WsService.instance;
-
-window['ws'] = wsService;

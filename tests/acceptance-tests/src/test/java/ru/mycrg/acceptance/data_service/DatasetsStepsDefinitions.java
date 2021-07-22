@@ -35,11 +35,13 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         get();
     }
 
-    @When("Пользователь делает запрос на слои текущего набора данных")
-    public void getDatasetInfo() {
+    @When("Проверяем наличие данных в наборе данных")
+    public void checkDataset() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + currentDatasetName + "/tables");
+
+        assertEquals(Integer.valueOf(1), response.jsonPath().get("page.totalElements"));
     }
 
     @When("Пользователь делает запрос на несуществующий набор данных {string}")
@@ -80,16 +82,14 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         currentDatasetDto = new DatasetCreateDto(generateString(titleKey),
                                                  generateString(descriptionKey));
 
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(currentDatasetDto)).
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        post();
+        createDataset(currentDatasetDto);
+    }
 
-        currentDatasetName = extractDatasetName();
-        datasetsPool.put(currentDatasetName, currentDatasetDto);
+    @When("Существует набор {string}")
+    public void initDataset(String titleKey) {
+        currentDatasetDto = new DatasetCreateDto(generateString(titleKey));
+
+        createDataset(currentDatasetDto);
     }
 
     @And("Сервер передаёт Location созданного набора")
@@ -154,6 +154,19 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         int realCount = getEntitiesCount("datasets");
 
         assertEquals(Integer.parseInt(datasetsSize), realCount);
+    }
+
+    private void createDataset(DatasetCreateDto dto) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(dto)).
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        post();
+
+        currentDatasetName = extractDatasetName();
+        datasetsPool.put(currentDatasetName, dto);
     }
 
     private String extractDatasetName() {

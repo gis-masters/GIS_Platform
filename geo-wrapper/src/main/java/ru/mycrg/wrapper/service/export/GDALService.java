@@ -10,14 +10,13 @@ import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
 import ru.mycrg.wrapper.config.CrgProperties;
 import ru.mycrg.wrapper.exceptions.ExportException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Service
 public class GDALService implements IExporter {
@@ -98,15 +97,14 @@ public class GDALService implements IExporter {
             processBuilder.directory(new File(rootPath));
             processBuilder.command("sh", "-c", allInOneCommandTest);
             Process process = processBuilder.start();
+            final boolean isSuccess = process.waitFor(20, SECONDS);
+            if (!isSuccess) {
+                logStream(process.getErrorStream());
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                log.debug("export console output: {}", line);
+                throw new ExportException("Export failed by timeout");
             }
 
-            int exitCode = process.waitFor();
-            assert exitCode == 0;
+            logStream(process.getInputStream());
 
             String pathToResultZip = rootPath + resource.getTableName() + ".zip";
             if (Files.exists(Paths.get(pathToResultZip))) {
@@ -120,6 +118,14 @@ public class GDALService implements IExporter {
             Thread.currentThread().interrupt();
 
             throw new ExportException(e.getMessage(), e);
+        }
+    }
+
+    private void logStream(InputStream inputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            log.debug("export console output: {}", line);
         }
     }
 

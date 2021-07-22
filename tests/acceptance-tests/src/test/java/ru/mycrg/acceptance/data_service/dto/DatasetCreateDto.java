@@ -5,6 +5,10 @@ public class DatasetCreateDto {
     private final String title;
     private final String details;
 
+    public DatasetCreateDto(String title) {
+        this(title, "Some description");
+    }
+
     public DatasetCreateDto(String title, String details) {
         this.title = title;
         this.details = details;

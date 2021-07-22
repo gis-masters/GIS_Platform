@@ -66,14 +66,6 @@
   color: darkgrey;
 }
 
-/*.content-text {*/
-/*  padding-left: 2px;*/
-/*  overflow: hidden;*/
-/*  white-space: nowrap;*/
-/*}*/
-
-
-
 .gml-link {
   padding-right: 10px;
 }
@@ -93,4 +85,8 @@
   cursor: pointer;
 
   font-family: monospace;
+}
+
+.content-description {
+  width: 295px;
 }

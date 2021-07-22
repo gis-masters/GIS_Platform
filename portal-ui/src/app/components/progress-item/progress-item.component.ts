@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { eventService, IEvent } from '../../services/event.service';
 import { DownloadFileService } from '../../services/download-file.service';
 import { ProcessStatus, ProcessType } from '../../services/models';
+import { ExportWsMsg, IWsMessage } from '../../services/ws.service';
 
 @Component({
   selector: 'crg-progress-item',
@@ -25,37 +26,39 @@ export class ProgressItemComponent implements OnDestroy {
   }
 
   getDescription(): string {
-    if (this.event.payload.payload.status === ProcessStatus.PENDING) {
-      return this.event.payload.payload.description;
-    } else if (this.event.payload.payload.status === ProcessStatus.TASK_DONE) {
-      return this.event.payload.payload.description;
-    } else if (this.event.payload.payload.status === ProcessStatus.DONE) {
-      if (this.event.payload.type === ProcessType.EXPORT) {
-        // @ts-ignore @FIXME
-        const layerName = this.event.payload.payload.description;
-        return layerName ? layerName : 'Готово';
+    switch (this.event.payload.payload.status) {
+      case ProcessStatus.PENDING: {
+        return this.event.payload.payload.description;
       }
-    } else if (this.event.payload.payload.status === ProcessStatus.ERROR) {
-      return 'Ошибка экспорта';
-    } else {
-      this.logger.warn('Unknown status');
-      return '';
+      case ProcessStatus.TASK_DONE: {
+        return this.event.payload.payload.description;
+      }
+      case ProcessStatus.DONE: {
+        if (this.event.payload.type === ProcessType.EXPORT) {
+          const layerName = this.event.payload.payload.description;
+
+          return layerName ? layerName : 'Готово';
+        }
+
+        break;
+      }
+      case ProcessStatus.ERROR: {
+        return 'Ошибка экспорта';
+      }
+      default: {
+        this.logger.warn('Unknown status');
+
+        return '';
+      }
     }
   }
 
-  isSpinner(): boolean {
-    if (!!this.event.payload.payload.progress) {
-      return (
-        this.event.payload.payload.status === ProcessStatus.PENDING ||
-        this.event.payload.payload.status === ProcessStatus.TASK_DONE
-      );
-    } else {
-      return false;
-    }
+  inProgress(): boolean {
+    return this.event.payload?.payload?.status === ProcessStatus.PENDING;
   }
 
   isProgress(): boolean {
-    if (!!this.event.payload.payload.progress) {
+    if (this.event.payload.payload.progress) {
       return false;
     }
 
@@ -65,13 +68,13 @@ export class ProgressItemComponent implements OnDestroy {
     );
   }
 
-  closeNotice() {
+  closeNotice(): void {
     eventService.delete(this.event.id);
   }
 
-  async download() {
-    const wsMessage = this.event.payload;
-    const exportWsMsg = wsMessage.payload as any;
+  async download(): Promise<void> {
+    const wsMessage: IWsMessage = this.event.payload;
+    const exportWsMsg: ExportWsMsg = wsMessage.payload as ExportWsMsg;
     const fileName = exportWsMsg.payload.split('/')[3];
     const data = await this.fileService.download(fileName);
     const blob = new Blob([data], { type: 'text/xml' });
@@ -88,15 +91,5 @@ export class ProgressItemComponent implements OnDestroy {
 
   isShowDownloadLink(): boolean {
     return this.event.payload.payload.status === ProcessStatus.DONE;
-  }
-
-  getLinkTitle(): string {
-    // if (this.event.payload.type === WsMessageType.GML_EXPORT) {
-    //   return 'Скачать GML';
-    // } else if (this.event.payload.type === WsMessageType.EXPORT) {
-    //   return 'Скачать Shape архив';
-    // } else {
-    return 'Скачать';
-    // }
   }
 }

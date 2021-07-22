@@ -1,15 +1,17 @@
-package ru.mycrg.acceptance.geo_api;
+package ru.mycrg.acceptance.data_service;
 
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
@@ -18,10 +20,14 @@ import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class ImportStepsDefinitions extends BaseStepsDefinitions {
 
+    public static final int MAX_RETRY_ATTEMPT = 20;
+    public static final int RETRY_DELAY = 2000;
+
+    public static Integer processId;
     public static Integer importId;
 
-    @When("Пользователь делает запрос на импорт в текущий проект в текущий набор данных")
-    public void importArchive() throws InterruptedException {
+    @When("Четвертый этап: импорт в текущий проект в текущий набор данных")
+    public void importToProject() {
         String importTasks = getImportTasks();
 
         response = getBaseRequestWithCurrentCookie()
@@ -32,11 +38,33 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
                         log().ifValidationFails().
                         post(String.format("/api/data/import/%d", projectId));
 
-        Thread.sleep(5000);
+        processId = extractEntityIdFromResponse(response);
     }
 
-    @When("Пользователь делает запрос на импорт в текущую организацию")
-    public void getImportId() {
+    @Then("Ожидаем успешного завершения импорта в проект")
+    public void waitImportToCurrentProject() throws InterruptedException {
+        int currentAttempt = 0;
+        do {
+            System.out.println("check import to project. Attempt: " + currentAttempt);
+            currentAttempt++;
+
+            Response response = getBaseRequestWithCurrentCookie()
+                    .when().
+                            log().ifValidationFails().
+                            get("/api/data/processes/" + processId);
+
+            if (response.jsonPath().get("status").equals("DONE")) {
+                return;
+            }
+
+            sleep(RETRY_DELAY);
+        } while (currentAttempt < MAX_RETRY_ATTEMPT);
+
+        throw new RuntimeException("Import to geoserver failed");
+    }
+
+    @When("Первый этап: инициализация на геосервере нового импорта")
+    public void initImport() {
         String payload = getInitImportInfo(orgId);
 
         response = getBaseRequestWithCurrentCookie()
@@ -46,16 +74,16 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         log().ifValidationFails().
                         post("/geoserver/rest/imports");
+
+        final JsonPath jsonPath = response.jsonPath();
+        assertThat(jsonPath.get("import.state"), is(equalTo("PENDING")));
+
+        importId = jsonPath.get("import.id");
     }
 
-    @And("Сервер передает ID импорта в ответе")
-    public void extractImportIdFromResponse() {
-        importId = response.jsonPath().get("import.id");
-    }
-
-    @When("Пользователь передает архив со слоями")
-    public void postArchive() {
-        File testArchive = new File("src/test/resources/ru/mycrg/acceptance/geo_api/files/test.zip");
+    @When("Второй этап: создание задачи в текущем импорте")
+    public void sendArchive() {
+        File testArchive = new File("src/test/resources/ru/mycrg/acceptance/data_service/files/test.zip");
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -64,30 +92,45 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
                         multiPart("filename", "test.zip").
                         multiPart("file", testArchive)
                 .when().
-                        log().ifValidationFails().
                         post(String.format("/geoserver/rest/imports/%d/tasks", importId));
     }
 
-    @Then("Пользователь передает пустое тело")
-    public void postEmptyBody() {
+    @Then("Третий этап: запуск процесса импорта")
+    public void runImport() {
+        // Ожидание ответа может продлиться более 10сек. - таймаут, отвалиться по 504 коду, но сам импорт при этом
+        // продолжится нормально.
+        // Неудачное API, геосервер ничего не возвращает до тех пор пока не "проглотит" импорт, а это может затянуться.
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body("{}").
                         contentType(ContentType.JSON)
                 .when().
-                        log().ifValidationFails().
                         post("/geoserver/rest/imports/" + importId);
     }
 
-    @When("Пользователь делает запрос на текущий импорт")
-    public void getImportInfo() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        log().ifValidationFails().
-                        get("/geoserver/rest/imports/" + importId);
+    @When("Ожидаем успешного завершения импорта на геосервере")
+    public void waitUntilImportCompleteOnGeoserver() throws InterruptedException {
+        int currentAttempt = 0;
+        do {
+            System.out.println("check import to geoserver. Attempt: " + currentAttempt);
+            currentAttempt++;
+
+            Response response = getBaseRequestWithCurrentCookie()
+                    .when().
+                            log().ifValidationFails().
+                            get("/geoserver/rest/imports/" + importId);
+
+            if (response.jsonPath().get("import.state").equals("COMPLETE")) {
+                return;
+            }
+
+            sleep(RETRY_DELAY);
+        } while (currentAttempt < MAX_RETRY_ATTEMPT);
+
+        throw new RuntimeException("Import to geoserver failed");
     }
 
-    @Then("В текущем проекте есть импортируемые слои")
+    @Then("Проверяем наличие импортируемых слоёв в проекте")
     public void checkLayersAvailabilityInProject() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
@@ -99,11 +142,6 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
         response.prettyPrint();
 
         assertThat(layers.isEmpty(), is(not(true)));
-    }
-
-    @And("Статус импорта {string}")
-    public void checkImportStatus(String importStatus) {
-        assertThat(response.jsonPath().get("import.state"), is(equalTo(importStatus)));
     }
 
     private String getImportTasks() {

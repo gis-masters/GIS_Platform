@@ -2,16 +2,20 @@ package ru.mycrg.data_service.service.export;
 
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dto.ExportRequestModel;
+import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.ProcessService;
 import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
+import ru.mycrg.data_service_contract.queue.response.ExportResponseEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
 import static ru.mycrg.data_service_contract.enums.ProcessType.EXPORT;
 
 @Service
@@ -21,15 +25,18 @@ public class ExportService {
     private final ProcessService processService;
     private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
+    private final WsNotificationService wsNotificationService;
 
     public ExportService(IMessageBusProducer messageBus,
                          SchemaService schemaService,
                          IAuthenticationFacade authenticationFacade,
-                         ProcessService processService) {
+                         ProcessService processService,
+                         WsNotificationService wsNotificationService) {
         this.messageBus = messageBus;
         this.schemaService = schemaService;
         this.processService = processService;
         this.authenticationFacade = authenticationFacade;
+        this.wsNotificationService = wsNotificationService;
     }
 
     public Process export(ExportRequestModel request) {
@@ -53,8 +60,12 @@ public class ExportService {
             });
         });
 
-        messageBus.produce(
-                new ExportRequestEvent(process.getId(), dbName, payload));
+        final ExportRequestEvent requestEvent = new ExportRequestEvent(process.getId(), dbName, payload);
+        messageBus.produce(requestEvent);
+
+        final ExportResponseEvent responseEvent = new ExportResponseEvent(requestEvent, PENDING, title, 0);
+        wsNotificationService.send(
+                new WsMessageDto<>(EXPORT, responseEvent), request.getWsUiId());
 
         return process;
     }
