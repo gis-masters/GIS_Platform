@@ -105,6 +105,7 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
                         body("{}").
                         contentType(ContentType.JSON)
                 .when().
+                        log().all().
                         post("/geoserver/rest/imports/" + importId);
     }
 
@@ -117,7 +118,7 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
 
             Response response = getBaseRequestWithCurrentCookie()
                     .when().
-                            log().ifValidationFails().
+                            log().all().
                             get("/geoserver/rest/imports/" + importId);
 
             if (response.jsonPath().get("import.state").equals("COMPLETE")) {

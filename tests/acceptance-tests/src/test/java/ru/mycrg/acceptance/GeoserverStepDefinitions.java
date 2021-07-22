@@ -2,6 +2,7 @@ package ru.mycrg.acceptance;
 
 import io.cucumber.core.exception.CucumberException;
 import io.cucumber.java.en.And;
+import io.restassured.response.Response;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -171,17 +172,21 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
     public void checkGeoserverLayersRulesIfUserIsAbsent() {
         String role = "admin_" + orgId;
 
-        final Map<Object, Object> layersRules = getBaseRequestWithCurrentCookie()
+        final Response response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/geoserver/rest/security/acl/layers")
-                .then().
-                        log().ifValidationFails().
+                        log().all().
+                        get("/geoserver/rest/security/acl/layers");
+
+        response.prettyPrint();
+
+        final Map<Object, Object> layersRules =
+                response.then().
                         statusCode(SC_OK).
-                        extract().jsonPath().
-                        getMap("");
+                                extract().jsonPath().
+                                getMap("");
 
         if (layersRules.containsValue(role)) {
-            throw new CucumberException(role + " are present in layers");
+            throw new CucumberException(role + " are present in layer rules");
         }
     }
 
