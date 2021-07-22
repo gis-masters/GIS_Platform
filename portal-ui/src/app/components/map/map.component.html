@@ -1,5 +1,8 @@
 <div [class]="cn()">
-  <div id="fiz-openLayer-map" [class]="cn('map')">
+  <div
+    id="fiz-openLayer-map"
+    [class]="cn('map', { default: isDefaultActive, selection: isSelectionActive })"
+  >
     <crg-map-toolbar></crg-map-toolbar>
     <crg-basemaps-select></crg-basemaps-select>
   </div>

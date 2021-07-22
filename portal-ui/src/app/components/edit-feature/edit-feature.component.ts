@@ -7,7 +7,7 @@ import { Coordinate } from 'ol/coordinate';
 import { boundMethod } from 'autobind-decorator';
 import { isNumber } from 'lodash';
 
-import { EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
+import { EditFeatureMode, EditFeaturesData, MapSelectionTypes, sidebars } from '../../stores/Sidebars.store';
 import { fromMobx } from '../../services/util/fromMobx';
 import { BatchModel } from '../../services/crg/batch-model';
 import { getFeaturesById } from '../../services/geoserver/wfs.service';
@@ -32,11 +32,6 @@ import { services } from '../../services/services';
 
 export interface Properties {
   [key: string]: any;
-}
-
-export enum EditFeatureMode {
-  multipleEdit = 'multipleEdit',
-  single = 'single'
 }
 
 @Component({
@@ -254,7 +249,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     sidebars.closeEdit();
 
     await sleep(0);
-
     sidebars.openEdit({
       mode: this.mode,
       features: savedFeatures,
@@ -281,7 +275,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         communicationService.featuresUpdated.emit();
         sidebars.setFeaturesEdited(false);
         if (this.viewFeatures) {
-          sidebars.openFeatures(this.viewFeatures);
+          sidebars.openFeatures(this.viewFeatures, MapSelectionTypes.REPLACE);
         } else {
           sidebars.closeEdit();
         }
@@ -309,8 +303,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
   @boundMethod
   async close(): Promise<void> {
-    if (sidebars.editFeaturesData.viewFeatures) {
-      sidebars.openFeatures(sidebars.editFeaturesData.viewFeatures);
+    if (sidebars.memorizedViewFeatures) {
+      sidebars.openFeatures(sidebars.memorizedViewFeatures, MapSelectionTypes.REPLACE);
     } else {
       await services.provided;
       await services.router.navigate([location.pathname], {

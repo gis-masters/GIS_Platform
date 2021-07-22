@@ -12,10 +12,9 @@ import { schemaService } from '../../services/crg/schema.service';
 import { FeatureDescription, ValueType, PropertyEnumerations, PropertySchema } from '../../services/crg/schema.models';
 import { BatchModel } from '../../services/crg/batch-model';
 import { CrgLayer } from '../../services/crg/projects.models';
-import { sidebars } from '../../stores/Sidebars.store';
+import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { getFeatures } from '../../services/geoserver/wfs.service';
 import { projectsService } from '../../services/crg/projects.service';
-import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { AttributeTableViewSettings, ViewMode } from './attribute.settings';
 import { communicationService } from '../../services/communication.service';
 import { mapService } from '../../services/map/map.service';
@@ -317,7 +316,6 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     clonedFeatures.forEach((feature: WfsFeature) => {
       feature.id = this.layer.tableName + '.' + feature.id;
     });
-
     sidebars.openEdit({
       features: clonedFeatures,
       mode: clonedFeatures.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single

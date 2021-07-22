@@ -85,6 +85,7 @@ class MapService {
 
   mapClick = new Emitter<Coordinate>();
   mapMoved = new Emitter<MapPosition>();
+  mapCreate = new Emitter();
   zoomChanged = new Emitter<number>();
   modificationEnabled = new Emitter();
   modificationDisabled = new Emitter();
@@ -228,18 +229,21 @@ class MapService {
 
         return;
       }
-
-      if (e.coordinate) {
-        if (!this.isModifying && !this.draftSourceDraw && !mapStore.measureMode) {
-          this.mapClick.emit(e.coordinate);
+      const originalEvent = e.originalEvent as MouseEvent;
+      if (!originalEvent.shiftKey && !originalEvent.ctrlKey) {
+        if (e.coordinate) {
+          if (!this.isModifying && !this.draftSourceDraw && !mapStore.measureMode) {
+            this.mapClick.emit(e.coordinate);
+          }
+        } else {
+          this.mapClick.emit([0, 0]);
         }
-      } else {
-        this.mapClick.emit([0, 0]);
       }
     });
 
     this.view.on('change:resolution', this.debouncedZoomEvent);
     this.debouncedZoomEvent();
+    this.mapCreate.emit();
   }
 
   destroyMap() {
@@ -451,7 +455,7 @@ class MapService {
     return Number(n.toFixed(this.PRECISION));
   }
 
-  getBufferByCoordinates(pos: Coordinate) {
+  getBufferByCoordinates(pos: Coordinate): MultiPolygon {
     const res = this.round(this.getResolution() * this.HIT_TOLERANCE);
 
     pos = pos.map(num => this.round(num));

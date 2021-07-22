@@ -11,11 +11,12 @@
   justify-content: stretch;
   grid-template-rows: 1fr auto;
   grid-template-columns: auto 1fr auto;
-  grid-template-areas: 'bar-left map bar-right'
-  'bar-bottom bar-bottom bar-bottom';
+  grid-template-areas:
+    'bar-left map bar-right'
+    'bar-bottom bar-bottom bar-bottom';
 
   justify-items: stretch;
-  grid-gap: 0 0;
+  grid-gap: 0;
 
   &__map {
     position: relative;
@@ -31,14 +32,15 @@
     ::ng-deep .ol-scale-text {
       white-space: nowrap;
 
-      text-shadow: 1px 1px 2px #fff,
-      -1px 1px 2px #fff,
-      1px -1px 2px #fff,
-      -1px -1px 2px #fff,
-      2px 0 2px #fff,
-      0 2px 2px #fff,
-      -2px 0 2px #fff,
-      0 -2px 2px #fff;
+      text-shadow:
+        1px 1px 2px #fff,
+        -1px 1px 2px #fff,
+        1px -1px 2px #fff,
+        -1px -1px 2px #fff,
+        2px 0 2px #fff,
+        0 2px 2px #fff,
+        -2px 0 2px #fff,
+        0 -2px 2px #fff;
     }
 
     ::ng-deep .ol-scale-text {
@@ -52,6 +54,18 @@
     ::ng-deep .ol-rotate {
       top: 60px;
       right: 15px;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &_default {
+      cursor: crosshair;
+    }
+
+    &:active.map__map_selection {
+      cursor: crosshair;
     }
   }
 

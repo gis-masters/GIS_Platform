@@ -1,31 +1,24 @@
 import { reaction, IReactionDisposer } from 'mobx';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
-import { Coordinate } from 'ol/coordinate';
 import '!style-loader!css-loader!sass-loader!ol/ol.css';
 
 import { cn } from '../../services/util/cn';
 import { CrgLayer, CrgLayerType, TreeItem } from '../../services/crg/projects.models';
 import { mapService } from '../../services/map/map.service';
-import { getFeaturesById, getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
-import { makeXmlPolygonIntersect } from '../../services/util/wfs.util';
-import { EditFeatureMode } from '../edit-feature/edit-feature.component';
+import { getFeaturesById } from '../../services/geoserver/wfs.service';
 import { fetchBasemaps } from '../../services/crg/basemaps.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { fromMobx } from '../../services/util/fromMobx';
 import { Emitter } from '../../services/util/Emitter';
-import { sidebars } from '../../stores/Sidebars.store';
+import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { route } from '../../stores/Route.store';
 import { services } from '../../services/services';
-import { getFeatureLayer } from '../../services/geoserver/layers.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { printSettings } from '../../stores/PrintSettings.store';
-
-interface NamesChunks {
-  [srsName: string]: string[];
-}
+import { MapModes, mapStore } from '../../stores/Map.store';
 
 export const MAP_QUERY_PARAMS_DELIMITER = '~';
 
@@ -39,6 +32,8 @@ export class MapComponent implements OnInit, OnDestroy {
   isBugReportSidebarActive = false;
   isFeaturesSidebarActive = false;
   isEditSidebarActive = false;
+  isDefaultActive = false;
+  isSelectionActive = false;
 
   cn = cn('map');
 
@@ -122,7 +117,11 @@ export class MapComponent implements OnInit, OnDestroy {
       },
       { fireImmediately: true }
     );
+    mapService.mapMoved.on(({ zoom, center }) => this.setMapPosition(zoom, center), this);
+    mapService.zoomChanged.on(value => currentProject.changeZoom(value), this);
+  }
 
+  ngAfterViewInit() {
     fromMobx(() => sidebars.leftOpen)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
@@ -141,7 +140,7 @@ export class MapComponent implements OnInit, OnDestroy {
       });
 
     fromMobx(() => sidebars.featuresOpen, true)
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.unsubscribe$), debounceTime(0))
       .subscribe(featuresOpen => {
         this.isFeaturesSidebarActive = featuresOpen;
         setTimeout(() => {
@@ -150,7 +149,7 @@ export class MapComponent implements OnInit, OnDestroy {
       });
 
     fromMobx(() => sidebars.editOpen, true)
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.unsubscribe$), debounceTime(0))
       .subscribe(editOpen => {
         this.isEditSidebarActive = editOpen;
         setTimeout(() => {
@@ -167,9 +166,21 @@ export class MapComponent implements OnInit, OnDestroy {
         }, 0);
       });
 
-    mapService.mapClick.on(coordinate => this.showFeaturesInfo(coordinate), this);
-    mapService.mapMoved.on(({ zoom, center }) => this.setMapPosition(zoom, center), this);
-    mapService.zoomChanged.on(value => currentProject.changeZoom(value), this);
+    fromMobx(() => mapStore.mode, true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(mode => {
+        setTimeout(() => {
+          this.isDefaultActive = mode === MapModes.SELECTION;
+        }, 0);
+      });
+
+    fromMobx(() => mapStore.selectionActive, true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(selectionActive => {
+        setTimeout(() => {
+          this.isSelectionActive = selectionActive;
+        }, 0);
+      });
   }
 
   ngOnDestroy(): void {
@@ -179,75 +190,6 @@ export class MapComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     Emitter.scopeOff(this);
-  }
-
-  /**
-   * Отобразить информацию об объектах, которые пересекают заданные координаты.
-   */
-  private async showFeaturesInfo(coordinate: Coordinate) {
-    const visibleLayers = currentProject.visibleLayersWithoutRasters.map(({ payload }) => payload);
-
-    if (!visibleLayers.length) {
-      this.logger.debug('No visible layers');
-
-      return;
-    }
-
-    const visibleLayersComplexNames: NamesChunks = visibleLayers.reduce((acc: NamesChunks, layer) => {
-      const { nativeCRS, complexName } = layer;
-
-      if (!acc[nativeCRS]) {
-        acc[nativeCRS] = [];
-      }
-
-      acc[nativeCRS].push(complexName);
-
-      return acc;
-    }, {});
-
-    const buffer = mapService.getBufferByCoordinates(coordinate);
-
-    mapService.showSelectionMarker(buffer.getCoordinates());
-
-    const collections = await Promise.all(
-      Object.entries(visibleLayersComplexNames).map(([srsName, complexNames]) => {
-        const xml = makeXmlPolygonIntersect(complexNames, buffer, srsName);
-
-        return getFeaturesByXmlFilter(xml);
-      })
-    );
-
-    const features = collections.flatMap(({ features }) => features || []);
-
-    if (features.length) {
-      await services.provided;
-      await services.router.navigate([location.pathname], {
-        queryParams: {
-          features: features
-            .map(feature => {
-              return feature.id + MAP_QUERY_PARAMS_DELIMITER + getFeatureLayer(feature).complexName;
-            })
-            .join(',')
-        },
-        queryParamsHandling: 'merge'
-      });
-
-      if (features.length > 1) {
-        sidebars.openFeatures(features);
-      } else {
-        sidebars.openEdit({
-          features,
-          mode: EditFeatureMode.single
-        });
-      }
-    } else {
-      sidebars.closeFeatures();
-      sidebars.closeEdit();
-      await services.router.navigate([location.pathname], {
-        queryParams: { features: null },
-        queryParamsHandling: 'merge'
-      });
-    }
   }
 
   private async setMapPosition(zoom: number, center: string): Promise<void> {

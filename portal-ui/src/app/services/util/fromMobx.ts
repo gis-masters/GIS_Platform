@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { computed } from 'mobx';
 
-export function fromMobx<T>(expression: () => T, invokeImmediately: boolean = true) : Observable<T> {
+export function fromMobx<T>(expression: () => T, invokeImmediately = true): Observable<T> {
   return new Observable(observer => {
     const computedValue = computed(expression);
     const disposer = computedValue.observe(changes => {
@@ -10,6 +10,6 @@ export function fromMobx<T>(expression: () => T, invokeImmediately: boolean = tr
 
     return () => {
       disposer && disposer();
-    }
+    };
   });
 }

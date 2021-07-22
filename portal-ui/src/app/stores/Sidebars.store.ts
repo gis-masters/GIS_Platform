@@ -3,7 +3,18 @@ import { observable, action, reaction } from 'mobx';
 import { route } from './Route.store';
 import { CrgLayer } from '../services/crg/projects.models';
 import { WfsFeature } from '../services/geoserver/wfs.models';
-import { EditFeatureMode, Properties } from '../components/edit-feature/edit-feature.component';
+import { Properties } from '../components/edit-feature/edit-feature.component';
+
+export enum MapSelectionTypes {
+  ADD,
+  REMOVE,
+  REPLACE
+}
+
+export enum EditFeatureMode {
+  multipleEdit = 'multipleEdit',
+  single = 'single'
+}
 
 export interface EditFeaturesData {
   features: WfsFeature[];
@@ -20,13 +31,15 @@ const defaultValues: Partial<Sidebars> = {
   layerForAttributes: null,
   featuresOpen: false,
   viewFeatures: null,
+  memorizedViewFeatures: null,
   editFeaturesData: null,
   editOpen: false,
   featuresEdited: false,
   featuresClosingConfirmationOpen: false,
   featuresClosingConfirmationCallback: null,
   bugReportOpen: false,
-  infoOpen: false
+  infoOpen: false,
+  isFeaturesLimitReached: false
 };
 
 class Sidebars {
@@ -38,12 +51,14 @@ class Sidebars {
   @observable featuresOpen: boolean;
   @observable editOpen: boolean;
   @observable viewFeatures?: WfsFeature[];
+  @observable memorizedViewFeatures?: WfsFeature[];
   @observable editFeaturesData?: EditFeaturesData;
   @observable featuresEdited: boolean;
   @observable featuresClosingConfirmationOpen: boolean;
   @observable featuresClosingConfirmationCallback?: () => void;
   @observable bugReportOpen: boolean;
   @observable infoOpen: boolean;
+  @observable isFeaturesLimitReached?: boolean;
 
   static get instance() {
     return this._instance || (this._instance = new this());
@@ -85,7 +100,7 @@ class Sidebars {
   }
 
   @action
-  openFeatures(features: WfsFeature[]) {
+  openFeatures(features: WfsFeature[], selectionType?: MapSelectionTypes) {
     // eslint-disable-next-line unicorn/prefer-prototype-methods
     if (this.needEditConfirmation(this.openFeatures.bind(this, features))) {
       return;
@@ -93,7 +108,37 @@ class Sidebars {
     this.closeBugReport();
     this.closeEdit();
     this.featuresOpen = true;
-    this.viewFeatures = features;
+
+    if (this.viewFeatures) {
+      if (selectionType === MapSelectionTypes.REPLACE) {
+        this.viewFeatures = features;
+      } else {
+        features.forEach(feature => {
+          const index = this.viewFeatures.findIndex(element => {
+            return element.id === feature.id;
+          });
+
+          if (selectionType === MapSelectionTypes.REMOVE && index !== -1) {
+            this.viewFeatures.splice(index, 1);
+          }
+
+          if (selectionType === MapSelectionTypes.ADD && index === -1) {
+            this.viewFeatures.push(feature);
+          }
+        });
+      }
+    } else if (selectionType !== MapSelectionTypes.REMOVE) {
+      this.viewFeatures = features;
+    }
+
+    if (!this.viewFeatures || this.viewFeatures.length === 0) {
+      this.closeFeatures();
+      this.closeEdit();
+    } else if (this.viewFeatures.length === 1) {
+      const feature = [this.viewFeatures[0]];
+      this.closeSidebar();
+      this.openEdit({ features: feature, mode: EditFeatureMode.single });
+    }
   }
 
   @action.bound
@@ -103,16 +148,37 @@ class Sidebars {
   }
 
   @action
+  closeSidebar() {
+    this.closeFeatures();
+    this.closeEdit();
+  }
+
+  @action
+  setSingleFeature(feature: WfsFeature) {
+    this.viewFeatures = [feature];
+  }
+
+  @action
+  setMemorizedFeatures(features: WfsFeature[]) {
+    this.memorizedViewFeatures = features;
+  }
+
+  @action
+  setFeaturesLimit(reached: boolean) {
+    this.isFeaturesLimitReached = reached;
+  }
+
+  @action
   openEdit(data: EditFeaturesData) {
     // eslint-disable-next-line unicorn/prefer-prototype-methods
     if (this.needEditConfirmation(this.openEdit.bind(this, data))) {
       return;
     }
-
     this.editFeaturesData = data;
     this.closeBugReport();
     this.editOpen = true;
     this.closeFeatures();
+    this.viewFeatures = data.features;
   }
 
   @action.bound

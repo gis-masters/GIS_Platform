@@ -35,7 +35,11 @@ export class FeaturesListSidebar extends Component {
               <Close />
             </IconButton>
           </div>
-
+          {sidebars.isFeaturesLimitReached && (
+            <div className={cnFeaturesListSidebar('Error')}>
+              Максимальное количество выбираемых объектов ограничено 100 объектами
+            </div>
+          )}
           <FeaturesList />
         </div>
       </div>

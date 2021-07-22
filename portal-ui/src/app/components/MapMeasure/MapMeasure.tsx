@@ -5,7 +5,7 @@ import { DeleteSweepOutlined, SquareFoot } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { mapStore } from '../../stores/Map.store';
+import { MapModes, mapStore } from '../../stores/Map.store';
 import { mapMeasureService, MeasureMode } from '../../services/map/map-measure.service';
 import { Ruler } from '../Icons/Ruler';
 
@@ -16,13 +16,15 @@ const cnMapMeasure = cn('MapMeasure');
 @observer
 export class MapMeasure extends Component {
   render() {
+    const isMeasureActive = mapStore.mode === MapModes.MEASURE;
+
     return (
       <div className={cnMapMeasure()}>
         <Tooltip title='Измерить длину'>
           <IconButton
             onClick={this.handleLengthClick}
             size='small'
-            color={mapStore.measureMode === 'length' ? 'secondary' : 'default'}
+            color={isMeasureActive && mapStore.measureMode === 'length' ? 'secondary' : 'default'}
           >
             <Ruler />
           </IconButton>
@@ -31,7 +33,7 @@ export class MapMeasure extends Component {
           <IconButton
             onClick={this.handleAreaClick}
             size='small'
-            color={mapStore.measureMode === 'area' ? 'secondary' : 'default'}
+            color={isMeasureActive && mapStore.measureMode === 'area' ? 'secondary' : 'default'}
           >
             <SquareFoot />
           </IconButton>

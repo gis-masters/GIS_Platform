@@ -1,4 +1,5 @@
 import { createElement } from 'react';
+import { reaction } from 'mobx';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { boundMethod } from 'autobind-decorator';
 import { Geometry, LineString, Polygon } from 'ol/geom';
@@ -17,7 +18,7 @@ import { unByKey } from 'ol/Observable';
 import { Feature, Overlay } from 'ol';
 import { EventsKey } from 'ol/events';
 
-import { mapStore } from '../../stores/Map.store';
+import { MapModes, mapStore } from '../../stores/Map.store';
 import { UnitsOfAreaMeasurement } from '../util/open-layers.util';
 import { communicationService } from '../communication.service';
 import { mapService } from './map.service';
@@ -72,11 +73,21 @@ class MapMeasureService {
       this.clearAll();
       mapStore.setMeasureMode(null);
     });
+
+    reaction(
+      () => mapStore.mode,
+      mode => {
+        if (mode === MapModes.SELECTION || mode === MapModes.DEFAULT || mode === MapModes.PICK) {
+          this.measureOff();
+        }
+      }
+    );
   }
 
   measureOn(mode: MeasureMode) {
     mapService.drawOff();
     this.measureOff();
+    mapStore.setMode(MapModes.MEASURE);
     mapStore.setMeasureMode(mode);
     if (!this.inited) {
       this.init();

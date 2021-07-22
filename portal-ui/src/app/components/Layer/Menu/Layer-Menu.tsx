@@ -16,7 +16,7 @@ import { boundMethod } from 'autobind-decorator';
 import { BBOX } from '@fiz/geoserver-types/BBOX';
 import { isEqual } from 'lodash';
 
-import { sidebars } from '../../../stores/Sidebars.store';
+import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgLayerType, TreeItemPayload } from '../../../services/crg/projects.models';
 import { getProjection, olProjection, transform } from '../../../services/geoserver/projections.service';
@@ -33,7 +33,6 @@ import {
 import { ImportOutlined } from '../../Icons/ImportOutlined';
 import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
-import { EditFeatureMode } from '../../edit-feature/edit-feature.component';
 import { Toast } from '../../Toast/Toast';
 
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
@@ -233,7 +232,6 @@ export class LayerMenu extends Component<LayerMenuProps> {
   private async addFeature() {
     const { entity, onClose } = this.props;
     const emptyFeature = await schemaService.getEmptyFeature(entity as CrgLayer);
-
     sidebars.openEdit({
       features: [emptyFeature],
       mode: EditFeatureMode.single,
@@ -260,7 +258,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     try {
       const { nativeBoundingBox } = await getFeatureType(entity as CrgLayer);
       this.goToBoundingBox(nativeBoundingBox);
-    } catch (e) {
+    } catch {
       this.showGoToBoundingBoxError();
     }
   }
@@ -270,7 +268,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     try {
       const { nativeBoundingBox } = await getLayerCoverage(entity as CrgLayer);
       this.goToBoundingBox(nativeBoundingBox);
-    } catch (e) {
+    } catch {
       this.showGoToBoundingBoxError();
     }
   }
@@ -281,14 +279,16 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
     if (isEqual([maxx, maxy, minx, miny], [-1, -1, 0, 0])) {
       this.showGoToBoundingBoxError();
+
       return;
     }
 
     const [x1, y1] = transform(projection, olProjection, [minx, miny]);
     const [x2, y2] = transform(projection, olProjection, [maxx, maxy]);
 
-    if (isNaN(x1) || isNaN(x2) || isNaN(y1) || isNaN(y2)) {
+    if (Number.isNaN(x1) || Number.isNaN(x2) || Number.isNaN(y1) || Number.isNaN(y2)) {
       this.showGoToBoundingBoxError();
+
       return;
     }
 
@@ -354,13 +354,13 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @action.bound
-  private async deleteGroup() {
+  private deleteGroup() {
     currentProject.deleteGroup(this.props.entity as CrgLayersGroup);
     this.testAttributesBar();
   }
 
   @action.bound
-  private async deleteLayer() {
+  private deleteLayer() {
     const layer = this.props.entity as CrgLayer;
     currentProject.deleteLayer(layer);
     this.testAttributesBar();

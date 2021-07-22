@@ -3,10 +3,9 @@ import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { sidebars } from '../../stores/Sidebars.store';
+import { MapSelectionTypes, sidebars } from '../../stores/Sidebars.store';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { mapService } from '../../services/map/map.service';
-import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
 
 import { FeaturesListEmpty } from './Empty/FeaturesList-Empty';
@@ -23,9 +22,6 @@ export class FeaturesList extends Component {
   componentDidMount() {
     if (this.features.length > 1) {
       mapService.highlightFeatures(this.features);
-    }
-    if (this.features.length === 1) {
-      sidebars.openEdit({ features: sidebars.viewFeatures, mode: EditFeatureMode.single });
     }
   }
 
@@ -77,10 +73,7 @@ export class FeaturesList extends Component {
 
   @action.bound
   private handleItemSelect(feature: WfsFeature) {
-    sidebars.openEdit({
-      features: [feature],
-      mode: EditFeatureMode.single,
-      viewFeatures: sidebars.viewFeatures
-    });
+    sidebars.setMemorizedFeatures(sidebars.viewFeatures);
+    sidebars.openFeatures([feature], MapSelectionTypes.REPLACE);
   }
 }

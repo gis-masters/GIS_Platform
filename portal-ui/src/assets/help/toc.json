@@ -274,6 +274,11 @@
             "contentUrl": "/assets/help/map/fullEditObject/08allEditObjects.html"
           },
           {
+            "id": "selectObjects",
+            "title": "Выбор объектов",
+            "contentUrl": "/assets/help/map/11multipleSampling.html"
+          },
+          {
             "id": "copy",
             "title": "Копирование и перенос векторных данных между слоями",
             "contentUrl": "/assets/help/map/fullEditObject/09copy.html"

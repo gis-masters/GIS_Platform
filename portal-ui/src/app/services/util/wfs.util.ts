@@ -4,6 +4,7 @@ import { intersects } from 'ol/format/filter';
 import MultiPolygon from 'ol/geom/MultiPolygon';
 
 import { olProjection } from '../geoserver/projections.service';
+import { MapSelectionTypes } from '../../stores/Sidebars.store';
 
 export function makeXmlIntersect(featuresComplexName: string[], coordinates: [number, number]): string {
   const featureRequest = new WFS().writeGetFeature({
@@ -17,25 +18,21 @@ export function makeXmlIntersect(featuresComplexName: string[], coordinates: [nu
   return new XMLSerializer().serializeToString(featureRequest);
 }
 
-export function makeXmlPolygonIntersect(featuresComplexName: string[], polygon: MultiPolygon, srsName: string): string {
+export function makeXmlPolygonIntersect(
+  featuresComplexName: string[],
+  polygon: MultiPolygon,
+  srsName: string,
+  featuresLimit: MapSelectionTypes
+): string {
   const featureRequest = new WFS().writeGetFeature({
     srsName,
     featureTypes: featuresComplexName,
     outputFormat: 'application/json',
     filter: intersects('shape', polygon, olProjection.id),
     featureNS: '',
-    featurePrefix: ''
+    featurePrefix: '',
+    maxFeatures: featuresLimit !== MapSelectionTypes.REMOVE ? 100 : undefined
   });
 
   return new XMLSerializer().serializeToString(featureRequest);
-}
-
-  // Из BaseLayer достанем название источника
-export function getComplexLayerName(baseLayer: any): string | undefined {
-  const source = baseLayer.getSource();
-  if (source && source.params_ && source.params_['LAYERS']) {
-    return source.params_['LAYERS'];
-  } else {
-    return undefined;
-  }
 }
