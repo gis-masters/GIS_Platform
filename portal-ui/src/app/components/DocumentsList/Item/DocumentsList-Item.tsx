@@ -5,16 +5,16 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AssignmentOutlined, Delete, DeleteOutline } from '@material-ui/icons';
 import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@material-ui/core';
-import { communicationService } from '../../../services/communication.service';
-import { services } from '../../../services/services';
 
 import { Link } from '../../Link/Link';
+import { Toast } from '../../Toast/Toast';
 import { Button } from '../../Button/Button';
+import { http } from '../../../services/http.service';
+import { services } from '../../../services/services';
 import { EditedField } from '../../../services/crg/schema.models';
 import { getBaseUrl } from '../../../services/server-urls.service';
 import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
-import { docLibraryService } from '../../../services/crg/doc-library.service';
-import { Toast } from '../../Toast/Toast';
+import { communicationService } from '../../../services/communication.service';
 
 import { DocumentListItemData } from '../DocumentsList';
 
@@ -35,7 +35,8 @@ interface DocumentItemProps {
 @observer
 export class DocumentsListItem extends Component<DocumentItemProps> {
   @observable private isDeleteDocumentDialogOpen = false;
-  @observable private url = '';
+  @observable private downloadUrl = '';
+  @observable private deleteUrl = '';
 
   async componentDidMount() {
     const baseUrl = await getBaseUrl();
@@ -43,7 +44,8 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
     const { resourcePath } = this.props.editedField.property;
 
     const field = 'inner_path'; // temporary binary fieldName of default document library schema
-    this.setUrl(`${baseUrl}${resourcePath}/records/${id}/${field}/download`);
+    this.setDownloadUrl(`${baseUrl}${resourcePath}/records/${id}/${field}/download`);
+    this.setDeleteUrl(`${baseUrl}${resourcePath}/records/${id}`);
   }
 
   render() {
@@ -54,7 +56,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
         <div className={cnDocumentsList('Item')}>
           <AssignmentOutlined className={cnDocumentsList('Icon')} color='action' fontSize='small' />
 
-          <Link className={cnDocumentsList('Content')} url={this.url} download={document.title}>
+          <Link className={cnDocumentsList('Content')} url={this.downloadUrl} download={document.title}>
             {document.title}
           </Link>
 
@@ -74,7 +76,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
             <DialogContentText>
               Вы действительно хотите удалить файл?
               <br />
-              {this.props.document.title}
+              {document.title}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -91,8 +93,13 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
   }
 
   @action
-  private setUrl(url: string) {
-    this.url = url;
+  private setDownloadUrl(url: string) {
+    this.downloadUrl = url;
+  }
+
+  @action
+  private setDeleteUrl(url: string) {
+    this.deleteUrl = url;
   }
 
   @action.bound
@@ -107,15 +114,15 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
 
   @boundMethod
   private async deleteDocument() {
-    const { document, editedField } = this.props;
+    const { document } = this.props;
 
     try {
-      await docLibraryService.deleteRecord(editedField.name, document.id);
+      await http.delete(this.deleteUrl);
 
       communicationService.libraryItemsUpdated.emit();
-    } catch (e) {
+    } catch {
       Toast.error('Не удалось удалить файл');
-      services.logger.error('Не удалось удалить файл: ', e.message);
+      services.logger.error('Не удалось удалить файл');
     }
 
     this.props.deleteCallback(document.id);
