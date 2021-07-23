@@ -69,8 +69,6 @@ public class RulesService extends GeoServerBaseService {
         String readRule = buildRule(workspaceName, READ);
         String writeRule = buildRule(workspaceName, WRITE);
 
-        log.debug("try delete rules for workspace: '{}'. Admin rule: {}", workspaceName, adminRule);
-
         deleteRule(adminRule);
         deleteRule(readRule);
         deleteRule(writeRule);
@@ -165,9 +163,12 @@ public class RulesService extends GeoServerBaseService {
         Request request = builderWithBearerAuth.url(LAYERS_URL + rule)
                                                .delete().build();
 
+        log.debug("try delete rule: {}", rule);
         final ResponseModel<Object> responseModel = httpClient.handleRequest(request);
         if (!responseModel.isSuccessful()) {
             log.warn("Failed delete layer rule: {}. Response Model: {}", rule, responseModel);
+        } else {
+            log.debug("Success delete rule: {}", responseModel);
         }
     }
 
