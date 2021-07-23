@@ -1,34 +1,20 @@
 Feature: Выборка проектов
 
-  Background: Проверка организации
+  Background:
     Given Существует организация
       | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
     When Авторизируемся владельцем организации
 
-  Scenario Outline: Получение всех проектов, когда проектов нет
-    When Отправляется запрос на создание организации
-      | <orgName> | <orgPhone> | <adminName> | <adminSurname> | <adminEmail> | <adminPassword> |
-    And В заголовке Location передается ID созданной организации
-    When Пользователь делает запрос на все проекты организации
-    Then Сервер отвечает со статус-кодом 200
-    And В ответе сервера для сущности "projects" отсутствует пункт "_embedded"
-    Examples:
-      | orgName         | orgPhone   | adminName | adminSurname | adminEmail | adminPassword |
-      | ООО БыкиИКоровы | 1234567890 | Иванов    | Иван         | EMAIL_20   | testPassword1 |
-
-  Scenario: Проверка представления всех проектов организации
+  Scenario: Проверка паджинированной выборки проектов
     When Пользователь делает запрос на все проекты организации
     Then Ответ имеет стандартное тело с паджинацией
 
-  Scenario Outline: Проверка представления созданного проекта
-    When Существует проект "<projectName>"
+  Scenario: Проверка представления созданного проекта
+    When Существует проект "STRING_6"
     When Администратор делает запрос на текущий проект
     And Представление проекта корректно
-    Examples:
-      | projectName |
-      | STRING_15   |
 
-  Scenario Outline: Выборка всех проектов c сортировкой (<sorting factor>|<sorting direction>)
+  Scenario Outline: Проверка сортировки проектов (<sorting factor>|<sorting direction>)
     When Существуют проекты
       | STRING_10 |
       | STRING_10 |
@@ -52,7 +38,7 @@ Feature: Выборка проектов
       | id             | asc               |
       | id             | desc              |
 
-  Scenario Outline: Выборка всех проектов постранично (<projectsPerPage> page/pages)
+  Scenario Outline: Проверка постраничной выборки проектов (<projectsPerPage> page/pages)
     When Существуют проекты
       | STRING_10 |
       | STRING_10 |

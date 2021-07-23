@@ -13,10 +13,8 @@ import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
@@ -35,6 +33,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     public static Integer userId;
     public static UserCreateDto userDto;
+
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @Override
     public Integer getCurrentId() {
@@ -56,33 +56,6 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         return super.getBaseRequestWithCurrentCookie().basePath("/users");
     }
 
-    @When("Администратор создает пользователя")
-    public void createUser(DataTable dataTable) {
-        List<String> data = new ArrayList<>(dataTable.asList());
-
-        data.removeIf(Objects::isNull);
-
-        switch (data.size()) {
-            case 4:
-                userDto = new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
-                                            generateString(data.get(2)), generateString(data.get(3)));
-                break;
-            case 7:
-                userDto = new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
-                                            generateString(data.get(2)), generateString(data.get(3)),
-                                            generateString(data.get(4)), generateString(data.get(5)),
-                                            generateString(data.get(6)));
-                break;
-        }
-
-        super.createEntity(userDto);
-    }
-
-    @When("Администратор повторно создает пользователя")
-    public void createAgainUser() {
-        super.createEntity(userDto);
-    }
-
     @Then("Пользователю присвоена роль = {string}")
     public void checkUserRole(String role) {
         getExactUser();
@@ -92,19 +65,40 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(jsonPath.getList("authorities.authority").get(0), role);
     }
 
+    @When("Администратор создает пользователя")
+    public void adminCreateUserWithoutCheck(DataTable dataTable) throws InterruptedException {
+        authorizationBase.loginAsOwner();
+
+        userDto = mapToDto(dataTable.asList());
+
+        super.createEntity(userDto);
+    }
+
+    @When("Администратор повторно создает пользователя")
+    public void createAgainUser() {
+        super.createEntity(userDto);
+    }
+
     @Given("Существует пользователь")
     public void initializeUser(DataTable dataTable) throws InterruptedException {
-        String eMail = generateString(dataTable.asList().get(2));
+        userDto = mapToDto(dataTable.asList());
 
-        if (isUserExistInPool(eMail)) {
-            makeExactUserAsCurrent(eMail);
-        } else {
-            createUser(dataTable);
-            assertEquals(SC_ACCEPTED, response.getStatusCode());
-            extractUserIdFromLocation();
+        createUser(userDto);
+    }
 
-            waitUntilUserSuccessfullyCreated(userId);
-        }
+    @Given("Существует некий пользователь")
+    public void initializeSomeUser() throws InterruptedException {
+        createRandomUser();
+    }
+
+    @Given("Существует первый пользователь")
+    public void initializeFirstUser() throws InterruptedException {
+        createRandomUser();
+    }
+
+    @Given("Существует второй пользователь")
+    public void initializeSecondUser() throws InterruptedException {
+        createRandomUser();
     }
 
     @When("Администратор организации удаляет пользователя")
@@ -161,7 +155,9 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void createMultipleUsers(DataTable dataTable) {
         List<List<String>> data = dataTable.asLists();
         for (List<String> user: data) {
-            createUser(user);
+            userDto = mapToDto(user);
+
+            super.createEntity(userDto);
         }
     }
 
@@ -291,15 +287,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                 });
     }
 
-    private void createUser(List<String> user) {
-        userDto = new UserCreateDto(generateString(user.get(0)), generateString(user.get(1)),
-                                    generateString(user.get(2)), generateString(user.get(3)));
-
-        super.createEntity(userDto);
-    }
-
     private void waitUntilUserSuccessfullyCreated(Integer id) throws InterruptedException {
-        System.out.println("check user status: " + id);
+        System.out.println("check status user: " + id);
 
         int currentAttempt = 1;
         do {
@@ -320,5 +309,44 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         } while (currentAttempt <= MAX_RETRY_ATTEMPT);
 
         throw new RuntimeException("User not created: " + id);
+    }
+
+    private void createUser(UserCreateDto dto) throws InterruptedException {
+        if (isUserExistInPool(dto.getEmail())) {
+            makeExactUserAsCurrent(dto.getEmail());
+        } else {
+            super.createEntity(dto);
+            assertEquals(SC_ACCEPTED, response.getStatusCode());
+            extractUserIdFromLocation();
+
+            waitUntilUserSuccessfullyCreated(userId);
+        }
+    }
+
+    private UserCreateDto mapToDto(List<String> data) {
+        if (data.size() > 4 && data.get(4) != null && data.get(5) != null && data.get(6) != null) {
+            return new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
+                                     generateString(data.get(2)), generateString(data.get(3)),
+                                     generateString(data.get(4)), generateString(data.get(5)),
+                                     generateString(data.get(6)));
+        } else if (data.get(0) != null && data.get(1) != null && data.get(2) != null && data.get(3) != null) {
+            return new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
+                                     generateString(data.get(2)), generateString(data.get(3)));
+        } else {
+            throw new IllegalStateException("Passed wrong data for user model");
+        }
+    }
+
+    private void createRandomUser() throws InterruptedException {
+        authorizationBase.loginAsOwner();
+
+        userDto = new UserCreateDto(generateString("STRING_10"),
+                                    generateString("STRING_10"),
+                                    generateString("EMAIL_10"),
+                                    "testtestQ1");
+
+        createUser(userDto);
+
+        authorizationBase.loginAsCurrentUser();
     }
 }

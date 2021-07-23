@@ -21,6 +21,12 @@ public class PermissionCreateDto {
         //Required by framework
     }
 
+    public PermissionCreateDto(Long principalId, String principalType, String role) {
+        this.principalId = principalId;
+        this.principalType = principalType;
+        this.role = role;
+    }
+
     public Long getPrincipalId() {
         return principalId;
     }

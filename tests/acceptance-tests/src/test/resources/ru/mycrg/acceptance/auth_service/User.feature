@@ -20,7 +20,7 @@ Feature: Действия с пользователями
       | BaseUserName     | STRING_10   | EMAIL_20  | testtestQ1   |            |           |           |
       | ExtendedUserName | STRING_10   | EMAIL_20  | testtestQ1   | STRING_10  | STRING_10 | NUMBER_10 |
 
-  Scenario Outline: Повторное создание пользователя c валидными данными
+  Scenario Outline: Нельзя создать пользователя c одинаковым email
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
     When Администратор повторно создает пользователя

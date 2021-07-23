@@ -14,7 +14,6 @@ import ru.mycrg.gis_service.service.ProjectService;
 
 import javax.validation.Valid;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RestController
@@ -48,7 +47,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<ProjectProjection> createProject(@Valid @RequestBody ProjectRequestDto projectDto) {
         ProjectProjection project = projectService.create(projectDto);
 
@@ -56,7 +55,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{projectId}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> updateProject(@PathVariable long projectId,
                                                 @Valid @RequestBody ProjectRequestDto projectDto) {
         projectService.update(projectId, projectDto.getProjectName());
@@ -65,7 +64,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectId}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> deleteProject(@PathVariable long projectId) {
         projectService.delete(projectId);
 

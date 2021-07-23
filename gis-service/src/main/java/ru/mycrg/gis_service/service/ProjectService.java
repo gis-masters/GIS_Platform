@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.gis_service.dto.PermissionCreateDto;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.gis_service.entity.Permission;
@@ -16,15 +17,13 @@ import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
+import ru.mycrg.gis_service.repository.PermissionRepository;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.security.IAuthenticationFacade;
 import ru.mycrg.gis_service.security.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultProjectName;
@@ -37,13 +36,16 @@ public class ProjectService {
 
     private final ProjectionFactory projectionFactory;
     private final ProjectRepository projectRepository;
+    private final PermissionRepository permissionRepository;
     private final IAuthenticationFacade authenticationFacade;
 
     public ProjectService(ProjectionFactory projectionFactory,
                           ProjectRepository projectRepository,
+                          PermissionRepository permissionRepository,
                           IAuthenticationFacade authenticationFacade) {
         this.projectionFactory = projectionFactory;
         this.projectRepository = projectRepository;
+        this.permissionRepository = permissionRepository;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -78,7 +80,7 @@ public class ProjectService {
     /**
      * Retrieves an entity by their id.
      *
-     * @param id             must not be null
+     * @param id must not be null
      *
      * @return the entity with the given id.
      *
@@ -127,21 +129,20 @@ public class ProjectService {
      * Обновление проекта. До тех пор пока меняется только название проекта, можно менять только алиас в нашей БД. Не
      * меняя названия рабочей области на геосервере и схемы в БД.
      *
-     * @param id          Идентификатор проекта.
+     * @param projectId   Идентификатор проекта.
      * @param projectName Новое название проекта.
      */
-    public void update(long id, String projectName) {
+    public void update(long projectId, String projectName) {
         Project project;
         if (authenticationFacade.isRoot()) {
             project = projectRepository
-                    .findById(id)
-                    .orElseThrow(() -> new NotFoundException(id));
+                    .findById(projectId)
+                    .orElseThrow(() -> new NotFoundException(projectId));
         } else {
-            Long orgId = authenticationFacade.getOrganizationId();
-
-            project = projectRepository
-                    .findByIdAndOrganizationId(id, orgId)
-                    .orElseThrow(() -> new NotFoundException(id));
+            project = getById(projectId);
+            if (!isOwner(project)) {
+                throw new ForbiddenException("Not Allowed");
+            }
         }
 
         project.setName(projectName);
@@ -151,7 +152,8 @@ public class ProjectService {
     }
 
     public ProjectProjection create(ProjectRequestDto dto) {
-        Long orgId = authenticationFacade.getOrganizationId();
+        final Long orgId = authenticationFacade.getOrganizationId();
+        final Long userId = authenticationFacade.getUserDetails().getUserId();
 
         log.info("Init create project: {} for organization: {}", dto.getProjectName(), orgId);
 
@@ -167,17 +169,30 @@ public class ProjectService {
         savedProject.setInternalName(getDefaultProjectName(savedProject.getId()));
 
         projectRepository.save(savedProject);
+        permissionRepository.save(new Permission(new PermissionCreateDto(userId, "user", "OWNER"), savedProject));
 
         return projectionFactory.createProjection(ProjectProjection.class, savedProject);
     }
 
     public void delete(Long projectId) {
-        Long orgId = authenticationFacade.getOrganizationId();
-        Project project = projectRepository
-                .findByIdAndOrganizationId(projectId, orgId)
-                .orElseThrow(() -> new NotFoundException(projectId));
+        Project project = getById(projectId);
+        if (isOwner(project)) {
+            projectRepository.delete(project);
+        } else {
+            throw new ForbiddenException("Not Allowed");
+        }
+    }
 
-        projectRepository.delete(project);
+    private boolean isOwner(Project project) {
+        if (authenticationFacade.isOrganizationAdmin()) {
+            return true;
+        }
+
+        final Long userId = authenticationFacade.getUserDetails().getUserId();
+
+        return project.getPermissions().stream()
+                      .filter(permission -> Objects.equals(permission.getPrincipalId(), userId))
+                      .anyMatch(permission -> permission.getRole().equals("OWNER"));
     }
 
     private List<Project> filterByPermissions(List<Project> projects, UserDetails userDetails) {

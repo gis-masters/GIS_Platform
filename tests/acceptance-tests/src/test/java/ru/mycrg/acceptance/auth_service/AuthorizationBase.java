@@ -19,13 +19,13 @@ public class AuthorizationBase extends BaseStepsDefinitions {
     public static final String AUTH_COOKIE = "crgAuthCookie";
     public static final String AUTH_COOKIE_VALUE_SEPARATOR = "---crg---";
 
-    public Response authorizeUser(String login, String password) {
+    public Response authorizeUser(String login, String password, String user) {
         try {
             Response authResponse;
 
             int currentAttempt = 0;
             do {
-                System.out.println("authorizeUser attempt: " + currentAttempt);
+                System.out.println("authorize as " + user + ". Attempt: " + currentAttempt);
                 currentAttempt++;
 
                 Map<String, String> queryParams = new HashMap<String, String>() {{
@@ -54,13 +54,13 @@ public class AuthorizationBase extends BaseStepsDefinitions {
     }
 
     public void loginAsOwner() {
-        final Response response = authorizeUser(orgDto.getOwner().getEmail(), orgDto.getOwner().getPassword());
+        final Response response = authorizeUser(orgDto.getOwner().getEmail(), orgDto.getOwner().getPassword(), "onwer");
 
         checkCookieAndWriteAsCurrent(response);
     }
 
     public void loginAsCurrentUser() {
-        final Response response = authorizeUser(userDto.getEmail(), userDto.getPassword());
+        final Response response = authorizeUser(userDto.getEmail(), userDto.getPassword(), "current_user");
 
         checkCookieAndWriteAsCurrent(response);
     }

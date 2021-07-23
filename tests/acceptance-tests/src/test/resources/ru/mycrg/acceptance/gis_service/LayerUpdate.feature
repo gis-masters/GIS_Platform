@@ -39,7 +39,7 @@ Feature: Обновление слоя проектов
       | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
-    When Администратор делает запрос на создание правила на текущего пользователя
+    When Администратор даёт доступ: "VIEWER" для текущего пользователя на текущий проект
     When Пользователь делает запрос на обновление полей слоя проекта
       | <newTitle> | <newDataset> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> |
     Then Сервер отвечает со статус-кодом 403

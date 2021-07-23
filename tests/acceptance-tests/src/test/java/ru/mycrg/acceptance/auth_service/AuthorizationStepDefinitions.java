@@ -22,7 +22,7 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
     @When("Авторизируемся под рутом")
     public Cookie authorizeAsRoot() {
-        response = authorizationBase.authorizeUser(rootUserName, rootPassword);
+        response = authorizationBase.authorizeUser(rootUserName, rootPassword, "root");
 
         authorizationBase.checkCookieAndWriteAsCurrent(response);
 
