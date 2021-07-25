@@ -9,15 +9,14 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.TablesDao;
 import ru.mycrg.data_service.dao.TablesManager;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.dto.DatasetModel;
-import ru.mycrg.data_service.dto.ResourceCreateDto;
-import ru.mycrg.data_service.dto.TableCreateDto;
+import ru.mycrg.data_service.dto.*;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.parsers.GmlParser;
 import ru.mycrg.data_service.service.parsers.model.*;
 import ru.mycrg.data_service.service.resources.DatasetService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.validation.ValidationService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
@@ -37,17 +36,20 @@ public class ImportGml {
     private final TablesManager tablesManager;
     private final GmlParser gmlParser;
     private final DatasetService datasetService;
+    private final ValidationService validationService;
 
     public ImportGml(TablesDao tablesDao,
                      SchemaService schemaService,
                      TablesManager tablesManager,
                      GmlParser gmlParser,
-                     DatasetService datasetService) {
+                     DatasetService datasetService,
+                     ValidationService validationService) {
         this.tablesDao = tablesDao;
         this.schemaService = schemaService;
         this.tablesManager = tablesManager;
         this.gmlParser = gmlParser;
         this.datasetService = datasetService;
+        this.validationService = validationService;
     }
 
     public ImportReport doImport(MultipartFile file, String title) {
@@ -103,6 +105,10 @@ public class ImportGml {
                 final int count = addRecordsToTable(createdTable, objectsBySchema);
 
                 layerReport.setCount(count);
+
+                if (count > 0) {
+                    layerValidation(datasetIdentifier, schema.getName(), tableCreateDto.getName());
+                }
             }
         } catch (Exception e) {
             String message = String.format("Таблица %s не была создана. %s", schema.getName(), e.getMessage());
@@ -223,5 +229,19 @@ public class ImportGml {
             default:
                 return stringValue;
         }
+    }
+
+    private void layerValidation(String datasetIdentifier, String schemaId, String tableName) {
+        ExportResourceModel resourceModel = new ExportResourceModel();
+        resourceModel.setDataset(datasetIdentifier);
+        resourceModel.setSchemaId(schemaId);
+        resourceModel.setTable(tableName);
+
+        List<ExportResourceModel> exportResourceModels = new ArrayList<>();
+        exportResourceModels.add(resourceModel);
+
+        ValidationRequestDto dto = new ValidationRequestDto();
+        dto.setResources(exportResourceModels);
+        validationService.validate(dto);
     }
 }
