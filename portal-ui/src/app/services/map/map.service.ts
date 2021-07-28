@@ -5,13 +5,12 @@ import { defaults as defaultControls } from 'ol/control';
 import { Coordinate } from 'ol/coordinate';
 import { Extent, getTopLeft, getWidth } from 'ol/extent';
 import Feature from 'ol/Feature';
-import { Geometry, MultiPolygon } from 'ol/geom';
-import GeometryType from 'ol/geom/GeometryType';
+import { Geometry, MultiPolygon, SimpleGeometry } from 'ol/geom';
 import ImageWrapper from 'ol/Image';
 import { Draw, Modify } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { ModifyEvent } from 'ol/interaction/Modify';
-import { Layer, Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import BaseLayer from 'ol/layer/Base';
 import { get as getProjection } from 'ol/proj';
 import { ImageWMS, OSM, TileArcGISRest, TileImage, TileWMS, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
@@ -30,10 +29,10 @@ import { communicationService } from '../communication.service';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
 import { Basemap, SourceType } from '../crg/basemaps.models';
 import { CrgLayer } from '../crg/projects.models';
-import { WfsFeature } from '../geoserver/wfs.models';
+import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs.models';
 import { getWmsUrl } from '../server-urls.service';
 import { ScaleLine } from '../ol/ScaleLine';
-import { Emitter } from '../util/Emitter';
+import { Emitter } from '../common/Emitter';
 import { services } from '../services';
 import { http } from '../http.service';
 import {
@@ -43,12 +42,8 @@ import {
   transform,
   transformGeometry
 } from '../geoserver/projections.service';
-
-// исправление ошибки в типах openlayers
-// актуально для ol: 6.4.3, @types/ol: ^6.4.1, typescript: ~3.8.3
-declare module '../../../../node_modules/@types/ol/Geolocation' {
-  type GeolocationPositionError = Error;
-}
+import TileSource from 'ol/source/Tile';
+import ImageSource from 'ol/source/Image';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -97,19 +92,19 @@ class MapService {
   map: Map;
   view: View;
   scaleLine: ScaleLine;
-  private markersSource: VectorSource;
+  private markersSource: VectorSource<SimpleGeometry>;
 
   private zoom: number;
   private center: number[];
 
   private draftStyle: Style;
-  private draftSource: VectorSource;
+  private draftSource: VectorSource<SimpleGeometry>;
   private draftSourceModify?: Modify;
   private draftSourceDraw?: Draw;
   private drawHandler: (e: DrawEvent) => void;
 
   private isModifying = false;
-  private pickHandler: (e: MapBrowserEvent) => void;
+  private pickHandler: (e: MapBrowserEvent<UIEvent>) => void;
 
   // Кол-во десятичных в координатах
   private PRECISION = 4;
@@ -325,7 +320,7 @@ class MapService {
         crossOrigin: 'anonymous'
       };
 
-      const layer: ImageLayer | TileLayer = this.isTiledWms
+      const layer: ImageLayer<ImageSource> | TileLayer<TileSource> = this.isTiledWms
         ? new TileLayer({
             source: new TileWMS({ tileLoadFunction: this.crgLayersLoadFunction, ...commonWMSParams }),
             ...commonLayerParams
@@ -376,7 +371,7 @@ class MapService {
   /**
    * @param complexLayerName Название слоя в формате 'workspace:layerName'
    */
-  private getLayerByName(complexLayerName: string): ImageLayer | TileLayer | undefined {
+  private getLayerByName(complexLayerName: string): ImageLayer<ImageSource> | TileLayer<TileSource> | undefined {
     return this.getUserLayers().find(layer => {
       const source = layer.getSource() as TileWMS;
 
@@ -386,7 +381,7 @@ class MapService {
 
   // Принудительный рефреш
   refreshLayers() {
-    this.getUserLayers().forEach(layer => (layer as Layer).getSource().refresh());
+    this.getUserLayers().forEach(layer => layer.getSource().refresh());
   }
 
   // Очистить карту от слоя, который отображал объект.
@@ -404,7 +399,7 @@ class MapService {
   /**
    * Подсвечивает объект. (очищает черновой слой)
    */
-  highlightFeatures(features: WfsFeature[], projection?: CrgProjection) {
+  highlightFeatures(features: WfsFeature<Coordinate | CoordinateEdited>[], projection?: CrgProjection) {
     const featuresInOlProjection: WfsFeature[] = [...features]
       .filter(({ geometry }) => geometry)
       .map((feature: WfsFeature) => ({
@@ -525,7 +520,7 @@ class MapService {
     }
   }
 
-  pickPoint(handler: (e: MapBrowserEvent) => void) {
+  pickPoint(handler: (e: MapBrowserEvent<UIEvent>) => void) {
     this.pickHandler = handler;
   }
 
@@ -535,7 +530,7 @@ class MapService {
 
   positionToFeature(wfsFeature: WfsFeature, projection?: CrgProjection) {
     projection = projection || getFeatureProjection(wfsFeature);
-    const olFeature: Feature = wfsFeatureToFeature(wfsFeature, true);
+    const olFeature: Feature<SimpleGeometry> = wfsFeatureToFeature(wfsFeature, true);
     if (!olFeature) {
       services.logger.warn('Incorrect feature: ', wfsFeature);
 
@@ -565,7 +560,7 @@ class MapService {
     }
   }
 
-  drawMarkers(features: Feature[]) {
+  drawMarkers(features: Feature<SimpleGeometry>[]) {
     this.markersSource.addFeatures(features);
   }
 
@@ -615,11 +610,11 @@ class MapService {
   /**
    * Все слои которые являются пользовательскими
    */
-  private getUserLayers(): TileLayer[] {
+  private getUserLayers(): (ImageLayer<ImageSource> | TileLayer<TileSource>)[] {
     return this.map
       .getLayers()
       .getArray()
-      .filter(layer => this.isUserLayer(layer)) as TileLayer[];
+      .filter(layer => this.isUserLayer(layer)) as (ImageLayer<ImageSource> | TileLayer<TileSource>)[];
   }
 
   private prepareTileSource(basemap: Basemap): TileImage | undefined {

@@ -1,8 +1,14 @@
 import { Coordinate } from 'ol/coordinate';
-import GeometryType from 'ol/geom/GeometryType';
 import { isEqual } from 'lodash';
 
-import { WfsFeature, WfsFeatureCollection, CoordinateEdited, WfsGeometry } from './wfs.models';
+import {
+  WfsFeature,
+  WfsFeatureCollection,
+  CoordinateEdited,
+  WfsGeometry,
+  WfsMultiPolygonGeometry,
+  GeometryType
+} from './wfs.models';
 import { getGeoServerUrl, getWfsUrl } from '../server-urls.service';
 import { generateFilter, generateSortParam } from './wfs.util';
 import { CrgModels } from '../models';
@@ -93,7 +99,9 @@ export function isGeometryValid(geometry: WfsGeometry): boolean {
 
 function hasUnclosedPolygons(geometry: WfsGeometry): boolean {
   return geometry.type === GeometryType.MULTI_POLYGON
-    ? geometry.coordinates.some(polygon => polygon.some(loop => !isEqual(loop[0], loop[loop.length - 1])))
+    ? (geometry as WfsMultiPolygonGeometry).coordinates.some(polygon =>
+        polygon.some(loop => !isEqual(loop[0], loop[loop.length - 1]))
+      )
     : false;
 }
 

@@ -1,18 +1,17 @@
 import { BBOX } from '@fiz/geoserver-types/BBOX';
+import { Coordinate } from 'ol/coordinate';
 
 import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { WfsFeature } from './wfs.models';
+import { CoordinateEdited, WfsFeature } from './wfs.models';
 import { http } from '../http.service';
-import { patch } from '../util/patch';
 import {
   CrgLayer,
   CrgLayersGroup,
   CrgLayerType,
   CrgProject,
   NewCrgLayer,
-  NewCrgLayersGroup,
-  Rule
+  NewCrgLayersGroup
 } from '../crg/projects.models';
 import {
   getGeoServerUrl,
@@ -20,7 +19,6 @@ import {
   getProjectGroupUrl,
   getProjectLayersUrl,
   getProjectLayerUrl,
-  getWmsUrl,
   replaceUrl
 } from '../server-urls.service';
 
@@ -90,103 +88,10 @@ export async function deleteLayer(layerId: number): Promise<void> {
   }
 }
 
-export async function loadLayerLegend(layer: CrgLayer): Promise<void> {
-  if (layer.legend || layer.legendIsFetching) {
-    return;
-  }
-
-  patch(layer, { legendIsFetching: true });
-
-  const styleSld: string = await getStyleSld(layer.styleName);
-  const xmlDoc = new DOMParser().parseFromString(styleSld, 'text/xml');
-  const rulesWithoutLegend: Omit<Rule, 'legend'>[] = [...xmlDoc.querySelectorAll('Rule')]
-    .filter(rule => rule.querySelector('Name') && rule.querySelector('Title'))
-    .map(rule => ({
-      name: rule.querySelector('Name').innerHTML,
-      title: rule.querySelector('Title').innerHTML
-    }));
-  const rules = await Promise.all(
-    rulesWithoutLegend.map(async rule => {
-      const blob = await getLegendGraphicByRuleName(layer.complexName, rule.name);
-      const img = await createImageFromBlob(blob);
-
-      return {
-        ...rule,
-        legend: img
-      };
-    })
-  );
-
-  patch(layer, {
-    legend: rules,
-    legendIsFetching: false
-  });
-}
-
-export function getFeatureLayer(feature: WfsFeature): CrgLayer {
+export function getFeatureLayer(feature: WfsFeature<Coordinate | CoordinateEdited>): CrgLayer {
   const [layerName] = feature.id.split('.');
 
   return currentProject.vectorLayers.find(l => l.tableName === layerName);
-}
-
-function createImageFromBlob(image: Blob): Promise<string> {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-
-    reader.addEventListener(
-      'load',
-      () => {
-        resolve(reader.result as string);
-      },
-      false
-    );
-
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  });
-}
-
-/**
- * Get a graphic that is representative of specific rule by their name.
- *
- * @param complexLayerName  Название слоя в формате 'workspace:layerName'
- * @param ruleName          Название правила в стиле. Ожидаем что в названии стиля будет использован атрибут на
- *                          основе которого сделан фильтр.
- */
-async function getLegendGraphicByRuleName(complexLayerName: string, ruleName: string): Promise<Blob> {
-  const params = {
-    REQUEST: 'GetLegendGraphic',
-    VERSION: '1.3.0',
-    FORMAT: 'image/png',
-    WIDTH: '40',
-    HEIGHT: '20',
-    LAYER: complexLayerName,
-    RULE: ruleName
-  };
-
-  return http.get(await getWmsUrl(), { responseType: 'blob', params });
-}
-
-/**
- * Get the style SLD definition body.
- *
- * @param complexStyleName style name or complex style name ("workspace_name:style_name")
- */
-async function getStyleSld(complexStyleName: string): Promise<string> {
-  const styleNameArr = complexStyleName.split(':');
-  const styleName = styleNameArr.pop();
-  const geoServerUrl = await getGeoServerUrl();
-  const workspacesUrl = geoServerUrl + '/rest/workspaces/';
-  const workspaceName = styleNameArr[0];
-  const url: string = workspaceName
-    ? `${workspacesUrl}${workspaceName}/styles/${styleName}.sld`
-    : `${geoServerUrl}/rest/styles/${styleName}.sld`;
-
-  return http.get<string>(url, {
-    headers: { 'Content-Type': 'application/vnd.ogc.sld+xml' },
-    responseType: 'text'
-  });
 }
 
 export function generateNextGroupId(): number {

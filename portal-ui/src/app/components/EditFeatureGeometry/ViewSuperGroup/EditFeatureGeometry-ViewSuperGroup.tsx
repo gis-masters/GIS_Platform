@@ -15,7 +15,10 @@ interface EditFeatureGeometryViewSuperGroupProps {
   store: EditFeatureGeometryStore;
 }
 
-export const EditFeatureGeometryViewSuperGroup: FC<EditFeatureGeometryViewSuperGroupProps> = ({ coordinates, store }) => (
+export const EditFeatureGeometryViewSuperGroup: FC<EditFeatureGeometryViewSuperGroupProps> = ({
+  coordinates,
+  store
+}) => (
   <div className={cnEditFeatureGeometryViewSuperGroup()}>
     {coordinates.map((coordinatesGroup, i) => (
       <EditFeatureGeometryViewGroup coordinates={coordinatesGroup} key={i} store={store} index={0} />

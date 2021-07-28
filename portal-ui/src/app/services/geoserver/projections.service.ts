@@ -1,7 +1,7 @@
+/* eslint-disable camelcase */
 import { cloneDeep, isEqual } from 'lodash';
 import { register } from 'ol/proj/proj4';
 import { Coordinate } from 'ol/coordinate';
-import GeometryType from 'ol/geom/GeometryType';
 import proj4 from 'proj4';
 
 import {
@@ -10,7 +10,8 @@ import {
   WfsGeometry,
   WfsPointGeometry,
   WfsMultiLineStringGeometry,
-  WfsMultiPolygonGeometry
+  WfsMultiPolygonGeometry,
+  GeometryType
 } from './wfs.models';
 import { getFeatureLayer } from './layers.service';
 import { normalizeCoordinates, isCoordinateValid } from './wfs.service';
@@ -22,61 +23,17 @@ export interface CrgProjection {
 
 type Coord = Coordinate | CoordinateEdited;
 
-proj4.defs(
-  'EPSG:28406',
-  '+proj=tmerc ' +
-    '+lat_0=0 ' +
-    '+lon_0=33 ' +
-    '+k=1 ' +
-    '+x_0=6500000 ' +
-    '+y_0=0 ' +
-    '+ellps=krass ' +
-    '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
-    '+units=m ' +
-    '+no_defs'
-);
+function proj4Str({ lat_0, lon_0, x_0 }: { lat_0: number; lon_0: number; x_0: number }) {
+  return `+proj=tmerc +lat_0=${lat_0} +lon_0=${lon_0} +k=1 +x_0=${x_0} +y_0=0 +ellps=krass +towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 +units=m +no_defs`;
+}
 
-proj4.defs(
-  'EPSG:28407',
-  '+proj=tmerc ' +
-    '+lat_0=0 ' +
-    '+lon_0=39 ' +
-    '+k=1 ' +
-    '+x_0=7500000 ' +
-    '+y_0=0 ' +
-    '+ellps=krass ' +
-    '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
-    '+units=m ' +
-    '+no_defs'
-);
+proj4.defs('EPSG:28406', proj4Str({ lat_0: 0, lon_0: 33, x_0: 6_500_000 }));
 
-proj4.defs(
-  'EPSG:314315',
-  '+proj=tmerc ' +
-    '+lat_0=0.0833333333333333 ' +
-    '+lon_0=32.5 ' +
-    '+k=1 ' +
-    '+x_0=4300000 ' +
-    '+y_0=0 ' +
-    '+ellps=krass ' +
-    '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
-    '+units=m ' +
-    '+no_defs'
-);
+proj4.defs('EPSG:28407', proj4Str({ lat_0: 0, lon_0: 39, x_0: 7_500_000 }));
 
-proj4.defs(
-  'EPSG:314314',
-  '+proj=tmerc ' +
-    '+lat_0=0.0833333333333333 ' +
-    '+lon_0=35.5 ' +
-    '+k=1 ' +
-    '+x_0=5300000 ' +
-    '+y_0=0 ' +
-    '+ellps=krass ' +
-    '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
-    '+units=m ' +
-    '+no_defs'
-);
+proj4.defs('EPSG:314315', proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 32.5, x_0: 4_300_000 }));
+
+proj4.defs('EPSG:314314', proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 35.5, x_0: 5_300_000 }));
 
 register(proj4);
 
@@ -114,7 +71,7 @@ export function getProjection(projectionStr: string): CrgProjection {
       proj4(projectionStr);
 
       return { id: projectionStr, title: 'unknown' };
-    } catch (e) {
+    } catch {
       throw new Error('Неподдерживаемая проекция ' + projectionStr);
     }
   }
@@ -122,7 +79,7 @@ export function getProjection(projectionStr: string): CrgProjection {
   return projection;
 }
 
-export function getFeatureProjection(feature: WfsFeature): CrgProjection {
+export function getFeatureProjection(feature: WfsFeature<Coordinate | CoordinateEdited>): CrgProjection {
   const layer = getFeatureLayer(feature);
 
   return getProjection(layer.nativeCRS);
@@ -130,7 +87,7 @@ export function getFeatureProjection(feature: WfsFeature): CrgProjection {
 
 export const olProjection = projections.find(({ id }) => id === 'EPSG:3857');
 
-export function transform(projFrom: CrgProjection, projTo: CrgProjection, coordinate: Coordinate) {
+export function transform(projFrom: CrgProjection, projTo: CrgProjection, coordinate: Coordinate): Coordinate {
   if (projFrom.id === projTo.id) {
     return coordinate;
   }

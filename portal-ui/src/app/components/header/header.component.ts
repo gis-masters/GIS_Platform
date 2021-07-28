@@ -17,15 +17,15 @@ export class HeaderComponent {
     this.envPlatform = (await getEnvironment()).platform;
   }
 
-  how() {
-    this.router.navigate(['/about']);
+  how(): void {
+    void this.router.navigate(['/about']);
   }
 
-  login() {
-    this.router.navigate(['/login']);
+  login(): void {
+    void this.router.navigate(['/login']);
   }
 
-  register() {
-    this.router.navigate(['/register']);
+  register(): void {
+    void this.router.navigate(['/register']);
   }
 }

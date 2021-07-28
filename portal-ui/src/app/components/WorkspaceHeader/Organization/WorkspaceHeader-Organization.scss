@@ -1,4 +1,6 @@
-.WorkspaceHeader-Organisation {
+.WorkspaceHeader-Organization {
+  grid-area: organization;
+
   overflow: hidden;
 
   min-width: 200px;
@@ -10,6 +12,4 @@
 
   font-size: 18px;
   line-height: 1.2;
-
-  grid-area: organisation;;
 }

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Geometry } from 'ol/geom';
+import { SimpleGeometry } from 'ol/geom';
 import { boundMethod } from 'autobind-decorator';
 
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { olProjection, transformGeometry } from '../../services/geoserver/projections.service';
 import { mapService } from '../../services/map/map.service';
-import { supportedGeometryTypes } from '../../services/geoserver/wfs.models';
-import { Emitter } from '../../services/util/Emitter';
+import { supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs.models';
+import { Emitter } from '../../services/common/Emitter';
 
 import { EditFeatureGeometryError } from './Error/EditFeatureGeometry-Error';
 import { EditFeatureGeometryHeader } from './Header/EditFeatureGeometry-Header';
@@ -31,7 +31,7 @@ export class EditFeatureGeometry extends Component<EditFeatureGeometryProps> {
     mapService.modificationDone.on(this.modifyHandler, this);
   }
 
-  componentWillUnmount()  {
+  componentWillUnmount() {
     Emitter.scopeOff(this);
   }
 
@@ -61,19 +61,17 @@ export class EditFeatureGeometry extends Component<EditFeatureGeometryProps> {
   }
 
   @boundMethod
-  private modifyHandler(g: Geometry) {
+  private modifyHandler(g: SimpleGeometry) {
     const { nativeProjection, geometry, geometryType, setGeometry } = this.props.store;
     const { coordinates } = transformGeometry(
-      // @ts-ignore
-      { type: geometryType, coordinates: g.getCoordinates() },
+      {
+        type: geometryType,
+        coordinates: g.getCoordinates()
+      },
       olProjection,
       nativeProjection
     );
 
-    // @ts-ignore
-    setGeometry({
-      ...geometry,
-      coordinates
-    });
+    setGeometry({ ...geometry, coordinates } as WfsGeometry);
   }
 }

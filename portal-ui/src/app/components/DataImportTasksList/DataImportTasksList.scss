@@ -3,6 +3,22 @@
     width: 100%;
   }
 
+  &-TaskStatus {
+    width: 25%;
+    padding: 4px 0;
+  }
+
+  & &-TaskDelIcon {
+    transition: opacity 0.3s;
+
+    opacity: 0.2;
+    color: var(--danger);
+
+    &:focus {
+      opacity: 1;
+    }
+  }
+
   &-Task {
     transition: opacity 0.4s;
 
@@ -38,11 +54,6 @@
     padding: 4px 20px 4px 15px;
   }
 
-  &-TaskStatus {
-    width: 25%;
-    padding: 4px 0;
-  }
-
   &-TaskProgress {
     width: 25%;
     padding: 4px 10px 4px 20px;
@@ -54,16 +65,5 @@
     padding-right: 15px;
 
     text-align: right;
-  }
-
-  & &-TaskDelIcon {
-    transition: opacity 0.3s;
-
-    opacity: 0.2;
-    color: var(--danger);
-
-    &:focus {
-      opacity: 1;
-    }
   }
 }

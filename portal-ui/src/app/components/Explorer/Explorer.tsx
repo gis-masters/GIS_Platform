@@ -7,7 +7,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { Loading } from '../Loading/Loading';
-import { Emitter } from '../../services/util/Emitter';
+import { Emitter } from '../../services/common/Emitter';
 
 import { ExplorerStore } from './Explorer.store';
 import { emptyItem, ExplorerItemData, ExplorerItemType, KeyAction, keyActions } from './Explorer.models';

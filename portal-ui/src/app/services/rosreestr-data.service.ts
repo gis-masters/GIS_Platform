@@ -8,41 +8,41 @@ const rosreestrApi = 'https://pkk.rosreestr.ru/api/';
 
 export async function getRosreestrSingleAreaData(kadNum: string): Promise<KadItem | void> {
   try {
-    const response = await axios.get(`${rosreestrApi}features/1?&text=${kadNum}`);
+    const response = await axios.get<{ features: KadItem }>(`${rosreestrApi}features/1?&text=${kadNum}`);
 
     return response.data.features;
-  } catch (e) {
-    showError(e, kadNum);
+  } catch (error) {
+    showError(error, kadNum);
   }
 }
 
 export async function getRosreestrMultipleAreaData(kadNum: string): Promise<KadObject[] | void> {
   try {
-    const response = await axios.get(`${rosreestrApi}typeahead/1?&text=${kadNum}`);
+    const response = await axios.get<{ results: KadObject[] }>(`${rosreestrApi}typeahead/1?&text=${kadNum}`);
 
     return response.data.results;
-  } catch (e) {
-    showError(e, kadNum);
+  } catch (error) {
+    showError(error, kadNum);
   }
 }
 
 export async function getRosreestrSingleOksData(kadNum: string): Promise<KadItem | void> {
   try {
-    const response = await axios.get(`${rosreestrApi}features/5?&text=${kadNum}`);
+    const response = await axios.get<{ features: KadItem }>(`${rosreestrApi}features/5?&text=${kadNum}`);
 
     return response.data.features;
-  } catch (e) {
-    showError(e, kadNum);
+  } catch (error) {
+    showError(error, kadNum);
   }
 }
 
 export async function getRosreestrMultipleOksData(kadNum: string): Promise<KadObject[] | void> {
   try {
-    const response = await axios.get(`${rosreestrApi}typeahead/5?&text=${kadNum}`);
+    const response = await axios.get<{ results: KadObject[] }>(`${rosreestrApi}typeahead/5?&text=${kadNum}`);
 
     return response.data.results;
-  } catch (e) {
-    showError(e, kadNum);
+  } catch (error) {
+    showError(error, kadNum);
   }
 }
 

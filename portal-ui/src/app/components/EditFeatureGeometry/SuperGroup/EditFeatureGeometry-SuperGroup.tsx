@@ -3,14 +3,13 @@ import { action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { IconButton, Tooltip } from '@material-ui/core';
-import GeometryType from 'ol/geom/GeometryType';
 import { Coordinate } from 'ol/coordinate';
 import { compose } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
-import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
+import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs.models';
 import { ContourAdd } from '../../Icons/ContourAdd';
 
 import { EditFeatureGeometryToolbarRight } from '../ToolbarRight/EditFeatureGeometry-ToolbarRight';

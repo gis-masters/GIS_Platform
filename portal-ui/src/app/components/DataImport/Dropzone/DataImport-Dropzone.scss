@@ -26,7 +26,7 @@
       transition: background-color 0.3s, backdrop-filter 0.3s, color 0.3s;
       text-align: center;
 
-      color: rgba(255,255,255,0);
+      color: rgba(255, 255, 255, 0);
 
       font: 60px/170px 'Material Icons';
     }
@@ -40,7 +40,7 @@
     &_fileOver {
       &::before {
         color: #fff;
-        background-color: rgba(0,0,0,0.15);
+        background-color: rgba(0, 0, 0, 0.15);
 
         backdrop-filter: blur(1px);
       }

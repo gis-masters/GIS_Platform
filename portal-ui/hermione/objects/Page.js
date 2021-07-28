@@ -9,11 +9,9 @@ module.exports = class Page extends Block {
     super(browser);
   }
 
-  testUrl () {
-    return this.browser.getUrl()
-      .then((url) => {
-        assert.include(url, this.url, 'Некорректный url');
-      });
+  async testUrl() {
+    const url = await this.browser.getUrl();
+    return assert.include(url, this.url, 'Некорректный url');
   }
 
   open() {

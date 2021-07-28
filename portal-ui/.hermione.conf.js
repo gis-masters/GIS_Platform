@@ -19,7 +19,7 @@ const config = {
     chrome: {
       desiredCapabilities: {
         browserName: 'chrome',
-        chromeOptions: {
+        'goog:chromeOptions': {
           args: ['--headless']
         }
       },
@@ -28,7 +28,7 @@ const config = {
     ff: {
       desiredCapabilities: {
         browserName: 'firefox',
-        chromeOptions: {
+        'moz:firefoxOptions': {
           args: ['-headless']
         }
       },
@@ -45,10 +45,10 @@ const config = {
     }
   },
 
-  prepareBrowser: function (browser) {
-    browser.addCommand('crgWaitForHidden', require('./hermione/commands/crgWaitForHidden').bind({ browser }));
-    browser.addCommand('crgWaitForVisible', require('./hermione/commands/crgWaitForVisible').bind(browser));
-  },
+  // prepareBrowser: function (browser) {
+  //   // browser.addCommand('crgWaitForHidden', require('./hermione/commands/crgWaitForHidden').bind({ browser }));
+  //   // browser.addCommand('crgWaitForVisible', require('./hermione/commands/crgWaitForVisible').bind(browser));
+  // },
 
   retry: 2,
 

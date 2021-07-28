@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { LinearProgress } from '@material-ui/core';
 
-import { loadLayerLegend } from '../../../services/geoserver/layers.service';
+import { loadLayerStyle } from '../../../services/geoserver/styles.service';
 import { CrgLayer } from '../../../services/crg/projects.models';
 import { Legend } from '../../Legend/Legend';
 
@@ -16,7 +16,7 @@ interface LayerLegendProps {
 @observer
 export class LayerLegend extends Component<LayerLegendProps> {
   async componentDidMount() {
-    await loadLayerLegend(this.props.layer);
+    await loadLayerStyle(this.props.layer);
   }
 
   render() {
@@ -24,7 +24,7 @@ export class LayerLegend extends Component<LayerLegendProps> {
 
     return (
       <div className={cnLayerLegend()}>
-        {layer.legend ? <Legend rules={layer.legend} cleanDuplicates /> : <LinearProgress />}
+        {layer.style ? <Legend rules={layer.style} cleanDuplicates /> : <LinearProgress />}
       </div>
     );
   }

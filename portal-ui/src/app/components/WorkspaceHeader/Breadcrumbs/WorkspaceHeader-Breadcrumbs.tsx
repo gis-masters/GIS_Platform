@@ -22,7 +22,7 @@ export const WorkspaceHeaderBreadcrumbs: FC = observer(() => {
 
   let root: { url: string; title: string };
 
-  switch (route.data.page) {
+  switch (page) {
     case Pages.ORG_ADMIN:
       root = { url: '/org-admin', title: 'Управление организацией' };
       break;

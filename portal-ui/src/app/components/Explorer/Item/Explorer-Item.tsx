@@ -26,7 +26,7 @@ export interface ExplorerItemProps {
 @observer
 export class ExplorerItem extends Component<ExplorerItemProps> {
   render() {
-    const { title, meta, selected, isFolder } = this.props;
+    const { title, meta, selected, isFolder, icon } = this.props;
 
     return (
       <ListItem
@@ -37,7 +37,7 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
         onDoubleClick={this.openHandler}
         disabled={this.disabled}
       >
-        <ListItemIcon>{this.props.icon}</ListItemIcon>
+        <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={title} secondary={meta} />
         {isFolder && (
           <ListItemSecondaryAction>

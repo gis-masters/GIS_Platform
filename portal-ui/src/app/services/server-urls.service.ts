@@ -48,7 +48,7 @@ export async function getWfsUrl(): Promise<string> {
   return (await getGeoServerUrl()) + '/wfs';
 }
 
-async function getWmtsUrl(): Promise<string> {
+export async function getWmtsUrl(): Promise<string> {
   return (await getGeoServerUrl()) + '/gwc/service/wmts';
 }
 
@@ -192,7 +192,7 @@ export async function getDocLibrariesUrl(): Promise<string> {
   return `${await getDataUrl()}/document-libraries`;
 }
 
-export async function getDocLibrariesRecordsUrl(libraryName): Promise<string> {
+export async function getDocLibrariesRecordsUrl(libraryName: string): Promise<string> {
   return `${await getDataUrl()}/document-libraries/${libraryName}/records`;
 }
 
@@ -244,7 +244,7 @@ export async function getAllPermissionsUrl(): Promise<string> {
   return (await getDataUrl()) + '/all-permissions';
 }
 
-export async function replaceUrl(url: string, addPath?: boolean) {
+export async function replaceUrl(url: string, addPath?: boolean): Promise<string> {
   if (!url) {
     return '';
   }

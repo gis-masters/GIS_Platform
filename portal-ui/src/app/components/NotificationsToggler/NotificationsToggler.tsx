@@ -13,10 +13,8 @@ import { sidebars } from '../../stores/Sidebars.store';
 
 const cnNotificationsToggler = cn('NotificationsToggler');
 
-interface NotificationsTogglerProps {}
-
 @observer
-export class NotificationsToggler extends Component<NotificationsTogglerProps> {
+export class NotificationsToggler extends Component {
   private unsubscribe$: Subject<void> = new Subject<void>();
   @observable private count = 0;
 

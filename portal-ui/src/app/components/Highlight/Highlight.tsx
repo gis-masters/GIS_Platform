@@ -18,7 +18,7 @@ export const Highlight: FC<HighlightProps> = ({ enabled, word, children }) =>
       className={cnHighlight()}
       highlightClassName={cnHighlight('Mark')}
       searchWords={[word]}
-      autoEscape={true}
+      autoEscape
       textToHighlight={String(children)}
     />
   ) : (

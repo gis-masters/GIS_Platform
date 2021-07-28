@@ -15,7 +15,7 @@ bootstrap table theme
 }
 
 .ngx-datatable.fiz-bootstrap .datatable-header .datatable-header-cell {
-  padding: 0.10rem;
+  padding: 0.1rem;
 
   vertical-align: bottom;
 
@@ -25,6 +25,11 @@ bootstrap table theme
 
 .ngx-datatable.fiz-bootstrap .datatable-header .datatable-header-cell .datatable-header-cell-label {
   line-height: 24px;
+}
+
+.ngx-datatable.fiz-bootstrap .datatable-summary-row .datatable-body-row {
+  border-bottom: 1px solid #c3c3c3;
+  background-color: #dcdcdc;
 }
 
 .ngx-datatable.fiz-bootstrap .datatable-body .datatable-body-row {
@@ -39,17 +44,13 @@ bootstrap table theme
   background-color: rgba(1, 138, 206, 0.15);
 }
 
-.ngx-datatable.fiz-bootstrap .datatable-body .datatable-body-row.datatable-row-even {
-  /*background-color: rgba(0, 0, 0, 0.03);*/
-}
-
 .ngx-datatable.fiz-bootstrap .datatable-body .datatable-body-row.active {
   color: #fff;
   background-color: #018ace;
 }
 
 .ngx-datatable.fiz-bootstrap .datatable-body .datatable-body-row .datatable-body-cell {
-  padding: 0.10rem;
+  padding: 0.1rem;
 
   text-align: left;
   vertical-align: top;
@@ -61,7 +62,7 @@ bootstrap table theme
   position: relative;
 
   margin-bottom: 0;
-  padding: 0.10rem 1.10rem;
+  padding: 0.1rem 1.1rem;
 }
 
 .ngx-datatable.fiz-bootstrap .datatable-footer {
@@ -86,13 +87,6 @@ bootstrap table theme
   margin: 10px 0;
 }
 
-.ngx-datatable.fiz-bootstrap .datatable-footer .datatable-pager ul li:not(.disabled).active a,
-.ngx-datatable.fiz-bootstrap .datatable-footer .datatable-pager ul li:not(.disabled):hover a {
-  background-color: #a9a7a7;
-
-  font-weight: bold;
-}
-
 .ngx-datatable.fiz-bootstrap .datatable-footer .datatable-pager a {
   min-width: 24px;
   height: 22px;
@@ -109,6 +103,13 @@ bootstrap table theme
   line-height: 22px;
 }
 
+.ngx-datatable.fiz-bootstrap .datatable-footer .datatable-pager ul li:not(.disabled).active a,
+.ngx-datatable.fiz-bootstrap .datatable-footer .datatable-pager ul li:not(.disabled):hover a {
+  background-color: #a9a7a7;
+
+  font-weight: bold;
+}
+
 .ngx-datatable.fiz-bootstrap .datatable-footer .datatable-pager .datatable-icon-left,
 .ngx-datatable.fiz-bootstrap .datatable-footer .datatable-pager .datatable-icon-skip,
 .ngx-datatable.fiz-bootstrap .datatable-footer .datatable-pager .datatable-icon-right,
@@ -117,11 +118,6 @@ bootstrap table theme
 
   font-size: 18px;
   line-height: 27px;
-}
-
-.ngx-datatable.fiz-bootstrap .datatable-summary-row .datatable-body-row {
-  border-bottom: 1px solid #c3c3c3;
-  background-color: #dcdcdc;
 }
 
 .ngx-datatable.fiz-bootstrap .datatable-summary-row .datatable-body-row .datatable-body-cell {

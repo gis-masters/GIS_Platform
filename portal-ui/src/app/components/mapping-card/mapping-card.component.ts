@@ -32,39 +32,39 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
     this.importData.metrics$.subscribe((metrics: InputDataMetrics) => (this.metrics = metrics));
   }
 
-  async ngOnInit() {
-    this.propertySchemas.push({ name: NOT_IMPORT.name, title: NOT_IMPORT.title, valueType: ValueType.STRING });
-    this.propertySchemas.push({ name: AS_IS.name, title: AS_IS.title, valueType: ValueType.STRING });
+  ngOnInit() {
+    this.propertySchemas.push(
+      { name: NOT_IMPORT.name, title: NOT_IMPORT.title, valueType: ValueType.STRING },
+      { name: AS_IS.name, title: AS_IS.title, valueType: ValueType.STRING }
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.selectedFeatureType = '';
     const simpleChange = changes.importLayer;
-    if (simpleChange && !simpleChange.isFirstChange()) {
-      if (simpleChange.currentValue) {
-        const newLayer = simpleChange.currentValue as ImportLayerItem;
-        const filteredByGeometrySchemas = FeatureUtil.filterByGeometry(this.schemas, newLayer);
-        const sortedByBestMatching = FeatureUtil.sortByBestCompatibility(filteredByGeometrySchemas, newLayer);
+    if (simpleChange && !simpleChange.isFirstChange() && simpleChange.currentValue) {
+      const newLayer = simpleChange.currentValue as ImportLayerItem;
+      const filteredByGeometrySchemas = FeatureUtil.filterByGeometry(this.schemas, newLayer);
+      const sortedByBestMatching = FeatureUtil.sortByBestCompatibility(filteredByGeometrySchemas, newLayer);
 
-        this.featureDescriptions = [NOT_IMPORT_LAYER, IMPORT_LAYER_AS_IS, ...sortedByBestMatching];
-        this.searchingFeatureDescriptions = [NOT_IMPORT_LAYER, IMPORT_LAYER_AS_IS, ...sortedByBestMatching];
+      this.featureDescriptions = [NOT_IMPORT_LAYER, IMPORT_LAYER_AS_IS, ...sortedByBestMatching];
+      this.searchingFeatureDescriptions = [NOT_IMPORT_LAYER, IMPORT_LAYER_AS_IS, ...sortedByBestMatching];
 
-        const comparableLayersPair = this.importData.findCompatiblePair(newLayer.nativeName);
-        if (comparableLayersPair.isDisabled) {
-          this.selectedFeatureType = NOT_IMPORT_LAYER.name;
-        } else if (comparableLayersPair.targetLayer.schemaName === IMPORT_LAYER_AS_IS.tableName) {
-          this.selectedFeatureType = IMPORT_LAYER_AS_IS.name;
-        } else {
-          const schemaName = comparableLayersPair.targetLayer.schemaName;
-          if (schemaName) {
-            const featureDescription = this.findDescription(schemaName);
-            if (featureDescription) {
-              this.selectedFeatureType = featureDescription.name;
+      const comparableLayersPair = this.importData.findCompatiblePair(newLayer.nativeName);
+      if (comparableLayersPair.isDisabled) {
+        this.selectedFeatureType = NOT_IMPORT_LAYER.name;
+      } else if (comparableLayersPair.targetLayer.schemaName === IMPORT_LAYER_AS_IS.tableName) {
+        this.selectedFeatureType = IMPORT_LAYER_AS_IS.name;
+      } else {
+        const schemaName = comparableLayersPair.targetLayer.schemaName;
+        if (schemaName) {
+          const featureDescription = this.findDescription(schemaName);
+          if (featureDescription) {
+            this.selectedFeatureType = featureDescription.name;
 
-              this.propertySchemas = FeatureUtil.preparePropertySchema(featureDescription);
-            } else {
-              this.logger.warn('Not found schema:', schemaName);
-            }
+            this.propertySchemas = FeatureUtil.preparePropertySchema(featureDescription);
+          } else {
+            this.logger.warn('Not found schema:', schemaName);
           }
         }
       }
@@ -109,7 +109,7 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
     return this.schemas.find((type: FeatureDescription) => type.tableName === tableName);
   }
 
-  openAttributes() {
+  openAttributes(): boolean {
     return (
       !!this.selectedFeatureType &&
       this.selectedFeatureType !== 'NOT_IMPORT_LAYER' &&

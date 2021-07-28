@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
-import {CdkTreeModule} from '@angular/cdk/tree';
-import {CdkTableModule} from '@angular/cdk/table';
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import { NgModule } from '@angular/core';
+import { CdkTreeModule } from '@angular/cdk/tree';
+import { CdkTableModule } from '@angular/cdk/table';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
@@ -74,8 +74,7 @@ import { MatTreeModule } from '@angular/material/tree';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule,
+    MatTreeModule
   ]
 })
-export class MaterialModule {
-}
+export class MaterialModule {}

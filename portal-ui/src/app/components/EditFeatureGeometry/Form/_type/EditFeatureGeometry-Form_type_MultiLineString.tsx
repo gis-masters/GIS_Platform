@@ -1,8 +1,7 @@
 import React from 'react';
-import GeometryType from 'ol/geom/GeometryType';
 import { withBemMod } from '@bem-react/core';
 
-import { WfsMultiLineStringGeometry } from '../../../../services/geoserver/wfs.models';
+import { GeometryType, WfsMultiLineStringGeometry } from '../../../../services/geoserver/wfs.models';
 
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import {
@@ -12,17 +11,17 @@ import {
 } from '../EditFeatureGeometry-Form';
 
 class EditFeatureGeometryFormTypeMultiLineString extends EditFeatureGeometryForm {
-  render () {
+  render() {
     const { store, className } = this.props;
     const geometry = store.geometry as WfsMultiLineStringGeometry;
 
     return (
       <div className={cnEditFeatureGeometryForm(null, [className, 'scroll'])}>
         <EditFeatureGeometrySuperGroup
-            geometryPart={geometry.coordinates}
-            minCoordsPerGroup={2}
-            store={store}
-            index={0}
+          geometryPart={geometry.coordinates}
+          minCoordsPerGroup={2}
+          store={store}
+          index={0}
         />
       </div>
     );

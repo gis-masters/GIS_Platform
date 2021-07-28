@@ -25,12 +25,12 @@ interface TableHeadCellProps<T> extends TableCellProps {
 @observer
 export class TableHeadCell<T> extends Component<TableHeadCellProps<T>> {
   render() {
-    const { field, sorting, sortParams, filtering, filterParams, children, headerCellProps } = this.props;
+    const { field, sorting, sortParams, filtering, filterParams, children, headerCellProps, className } = this.props;
 
     const cellProps = {
       ...headerCellProps,
       ...this.props,
-      className: cnTableHeadCell({ sorting, filtering }, [this.props.className])
+      className: cnTableHeadCell({ sorting, filtering }, [className])
     };
 
     delete cellProps.field;

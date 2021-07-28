@@ -23,7 +23,7 @@ interface SearchResultListProps {
 export const SearchResultList: FC<SearchResultListProps> = observer(({ addressData, kadAreasData, kadOksData }) => (
   <div className={cnSearch('ResultList')}>
     {(addressData && addressData.featureMember.length) || kadAreasData.length || kadOksData.length ? (
-      <List dense={true}>
+      <List dense>
         {kadAreasData.length ? (
           <>
             <div className={cnSearch('ListTitle')}>Участки:</div>

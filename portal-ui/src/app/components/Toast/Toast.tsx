@@ -1,4 +1,4 @@
-import React, { Component, FC } from 'react';
+import React, { Component, FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
@@ -16,8 +16,8 @@ import '!style-loader!css-loader!sass-loader!./Toast.scss';
 const cnToast = cn('Toast');
 
 interface ToastOpts extends ToastOptions {
-  message?: JSX.Element | string;
-  details?: JSX.Element | string;
+  message?: ReactNode;
+  details?: ReactNode;
 }
 
 interface ToastErrorOpts extends ToastOpts {
@@ -33,12 +33,13 @@ interface ToastProps extends ToastOpts {
   toastInfo: {
     id: Id;
   };
-  icon: JSX.Element;
+  icon: ReactNode;
 }
 
 @observer
 export class Toast extends Component<ToastProps> {
   static defaultDuration = 5000;
+  private static toastInfo: { id: Id } = { id: '0' };
 
   private static icons: { [key: string]: FC<SvgIconProps> } = {
     error: Error,
@@ -50,20 +51,16 @@ export class Toast extends Component<ToastProps> {
   @observable
   open = false;
 
-  static show(message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
+  static show(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
     const normalizedOpts = this.normalizeOpts(message, opts);
     const Icon = this.icons[normalizedOpts.type] || null;
-    const toastInfo: { id: Id } = { id: '0' };
-    const closeHandler = () => {
-      toast.dismiss(toastInfo.id);
-    };
 
     opts = {
       ...normalizedOpts,
       className: 'Toast-Toastify',
       closeButton: (
         <>
-          <IconButton type='button' className={cnToast('Close')} onClick={closeHandler}>
+          <IconButton type='button' className={cnToast('Close')} onClick={this.closeHandler}>
             <Close className={cnToast('CloseIcon')} />
           </IconButton>
         </>
@@ -73,36 +70,40 @@ export class Toast extends Component<ToastProps> {
     const props: ToastProps = {
       ...opts,
       icon: Icon ? <Icon className={cnToast('Icon')} /> : null,
-      toastInfo
+      toastInfo: this.toastInfo
     };
 
-    toastInfo.id = toast(<Toast {...props} />, opts);
+    this.toastInfo.id = toast(<Toast {...props} />, opts);
   }
 
-  static info(message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
+  private static closeHandler() {
+    toast.dismiss(this.toastInfo.id);
+  }
+
+  static info(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
     this.show({
       ...this.normalizeOpts(message, opts),
       type: 'info'
     } as ToastOpts);
   }
 
-  static warn(message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
+  static warn(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
     this.show({
       ...this.normalizeOpts(message, opts),
       type: 'warning'
     } as ToastOpts);
   }
 
-  static success(message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
+  static success(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
     this.show({
       ...this.normalizeOpts(message, opts),
       type: 'success'
     } as ToastOpts);
   }
 
-  private static normalizeOpts(message: JSX.Element | string | ToastOpts, opts?: ToastOpts): ToastOpts {
+  private static normalizeOpts(message: ReactNode | ToastOpts, opts?: ToastOpts): ToastOpts {
     if (!opts) {
-      if (message.hasOwnProperty('message')) {
+      if ((message as ToastOpts).message) {
         opts = message as ToastOpts;
         message = opts.message;
       } else {
@@ -112,18 +113,18 @@ export class Toast extends Component<ToastProps> {
 
     return {
       ...opts,
-      message: message as JSX.Element | string
+      message: message as ReactNode
     };
   }
 
-  static error(messageOrOpts: JSX.Element | string | ToastErrorOpts, opts?: ToastErrorOpts) {
+  static error(messageOrOpts: ReactNode | ToastErrorOpts, opts?: ToastErrorOpts): void {
     let message = messageOrOpts;
     if (!opts) {
       if (
-        messageOrOpts.hasOwnProperty('message') ||
-        messageOrOpts.hasOwnProperty('error') ||
-        messageOrOpts.hasOwnProperty('details') ||
-        messageOrOpts.hasOwnProperty('source')
+        (messageOrOpts as ToastErrorOpts).message ||
+        (messageOrOpts as ToastErrorOpts).error ||
+        (messageOrOpts as ToastErrorOpts).details ||
+        (messageOrOpts as ToastErrorOpts).source
       ) {
         opts = messageOrOpts as ToastErrorOpts;
         message = opts.message;
@@ -136,7 +137,7 @@ export class Toast extends Component<ToastProps> {
       message = 'Произошла ошибка.';
     }
 
-    const { source, error, details, fileno, columnNumber } = opts;
+    const { source, error, details, fileno, columnNumber, canBeSuppressed, suppress } = opts;
     const sourceFile = source ? new URL(source).pathname : '';
     const protocol = window.location.protocol.slice(0, -1);
 
@@ -146,28 +147,28 @@ export class Toast extends Component<ToastProps> {
     } else {
       try {
         tgMsg = JSON.stringify(message, null, 2) || String(message);
-      } catch (e) {}
+      } catch {}
     }
     if (details) {
       tgMsg += `
-${details}`;
+${String(details)}`;
     }
     if (error) {
       tgMsg += `
 ${error.message ? error.message : error.toString()}`;
     }
 
-    sendTelegramError(tgMsg);
+    void sendTelegramError(tgMsg);
 
-    if ((env.supressToastErrors[protocol] && opts.canBeSuppressed) || opts.suppress) {
+    if ((env.supressToastErrors[protocol] && canBeSuppressed) || suppress) {
       return;
     }
 
     this.show({
-      autoClose: 10000,
+      autoClose: 10_000,
       ...opts,
       type: 'error',
-      message: message as JSX.Element | string,
+      message: message as ReactNode,
       details:
         error || details || source ? (
           <>
@@ -189,12 +190,12 @@ ${error.message ? error.message : error.toString()}`;
   }
 
   render() {
-    const { details, message, type } = this.props;
+    const { details, message, type, icon } = this.props;
 
     return (
       <div className={cnToast({ type })}>
         <div className={cnToast('Head')}>
-          {this.props.icon}
+          {icon}
           <div className={cnToast('Title')}>{nl2br(message)}</div>
           {details ? (
             <div className={cnToast('Moar')} onClick={this.toggleOpen}>
@@ -211,7 +212,7 @@ ${error.message ? error.message : error.toString()}`;
   private toggleOpen() {
     this.open = !this.open;
     toast.update(this.props.toastInfo.id, {
-      autoClose: !this.open && (this.props.hasOwnProperty('autoClose') ? this.props.autoClose : Toast.defaultDuration)
+      autoClose: !this.open && (this.props.autoClose ? this.props.autoClose : Toast.defaultDuration)
     });
   }
 }

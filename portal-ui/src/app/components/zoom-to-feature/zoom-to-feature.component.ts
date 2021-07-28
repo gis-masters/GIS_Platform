@@ -1,12 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  OnChanges,
-  Input,
-  ViewChild,
-  ElementRef
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 
@@ -22,15 +14,15 @@ export class ZoomToFeatureComponent implements OnInit, OnDestroy, OnChanges {
   @Input() feature: WfsFeature;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
-  ngOnInit () {
+  ngOnInit() {
     this.renderReactElement();
   }
 
-  ngOnDestroy () {
+  ngOnDestroy() {
     unmountComponentAtNode(this.ref.nativeElement);
   }
 
-  ngOnChanges () {
+  ngOnChanges() {
     this.renderReactElement();
   }
 

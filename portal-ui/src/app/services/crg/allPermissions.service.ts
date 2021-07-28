@@ -15,7 +15,7 @@ export interface PermissionsListItem<T = unknown> {
 class AllPermissionsService {
   private static _instance: AllPermissionsService;
   private allPermissionsStoreInited = false;
-  private fetchingOperationId?: Symbol;
+  private fetchingOperationId?: symbol;
   private debouncedFetchPermissionsListStore: () => Promise<void>;
 
   private constructor() {
@@ -40,7 +40,7 @@ class AllPermissionsService {
     this.allPermissionsStoreInited = true;
 
     communicationService.permissionsUpdated.on(() => {
-      this.debouncedFetchPermissionsListStore();
+      void this.debouncedFetchPermissionsListStore();
     }, this);
 
     await this.fetchPermissionsListStore();

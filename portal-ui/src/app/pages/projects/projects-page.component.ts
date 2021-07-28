@@ -4,4 +4,4 @@ import { Component } from '@angular/core';
   selector: 'crg-projects-page',
   templateUrl: './projects-page.component.html'
 })
-export class ProjectsPageComponent { }
+export class ProjectsPageComponent {}

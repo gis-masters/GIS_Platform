@@ -37,6 +37,8 @@ export interface ViolationItem {
   errorTypes: string[];
 }
 
+const headers = { 'Content-Type': 'application/json' };
+
 class ValidationService {
   private static _instance: ValidationService;
 
@@ -45,9 +47,7 @@ class ValidationService {
   }
 
   async initValidation(layers: CrgLayer[]): Promise<ValidationWsMsg> {
-    return http.post<ValidationWsMsg>(await getValidationUrl(), this.preparePayload(layers), {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return http.post<ValidationWsMsg>(await getValidationUrl(), this.preparePayload(layers), { headers });
   }
 
   async getValidationResults(
@@ -65,18 +65,13 @@ class ValidationService {
 
     const url = `${await getValidationUrl()}/results`;
 
-    return http.post<ValidationResultsResponse>(url, JSON.stringify(resource), {
-      headers: { 'Content-Type': 'application/json' },
-      params: params
-    });
+    return http.post<ValidationResultsResponse>(url, JSON.stringify(resource), { headers, params });
   }
 
   async getShortInfo(layers: CrgLayer[]): Promise<ValidationBrieflyInfo[]> {
     const url = `${await getValidationUrl()}/short`;
 
-    return http.post<ValidationBrieflyInfo[]>(url, this.preparePayload(layers), {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return http.post<ValidationBrieflyInfo[]>(url, this.preparePayload(layers), { headers });
   }
 
   private preparePayload(layers: CrgLayer[]): string {

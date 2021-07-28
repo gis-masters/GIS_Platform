@@ -58,7 +58,7 @@ export class FileInput extends Component<FileInputProps> {
   }
 
   @action.bound
-  private handleChange(e?: React.ChangeEvent<HTMLInputElement>) {
+  private handleChange() {
     const { onChange } = this.props;
     const files = this.inputRef.current.files;
     const initial = !this.caption;

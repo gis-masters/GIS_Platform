@@ -15,7 +15,7 @@ export class PropertiesComparatorService {
     const objectIdComparison = new ObjectIdComparison();
     const lastComparison = new LastComparison();
 
-    // Задаем цепочку. Да неочень красиво, мне нравится юзать Builder - но лень.
+    // Задаем цепочку. Да не очень красиво, мне нравится юзать Builder - но лень.
     // Например: http://sh2533.blogspot.com/2012/03/chain-of-responsibility.html
 
     this.initialComparison.setNext(geometryComparison);

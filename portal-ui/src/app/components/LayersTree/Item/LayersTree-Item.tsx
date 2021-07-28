@@ -45,6 +45,7 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
 
     if (item.visible) {
       item.payload.enabled = false;
+
       return;
     }
 

@@ -12,13 +12,13 @@ import { getFeaturesById } from '../../services/geoserver/wfs.service';
 import { fetchBasemaps } from '../../services/crg/basemaps.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { fromMobx } from '../../services/util/fromMobx';
-import { Emitter } from '../../services/util/Emitter';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { route } from '../../stores/Route.store';
 import { services } from '../../services/services';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { MapModes, mapStore } from '../../stores/Map.store';
+import { Emitter } from '../../services/common/Emitter';
 
 export const MAP_QUERY_PARAMS_DELIMITER = '~';
 
@@ -54,7 +54,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
       const featuresInLayers: Record<string, string[]> = {};
 
-      queryParams.features.split(',').map(feature => {
+      queryParams.features.split(',').forEach(feature => {
         const [featureId, workspace] = feature.split(MAP_QUERY_PARAMS_DELIMITER);
 
         if (!featuresInLayers[workspace]) {

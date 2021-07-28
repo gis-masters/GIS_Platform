@@ -64,7 +64,7 @@ export class ExplorerAdapterTypeDataset {
     item: ExplorerItemData<Dataset>,
     { page, pageSize, sort, sortDir, filter }: PageOptions
   ): Promise<[ExplorerItemData<DataTable>[], number]> {
-    const [tables, pagesCount] = await getDatasetTables(item.payload, page, pageSize, sort, sortDir, filter);
+    const [tables, pagesCount] = await getDatasetTables(item.payload, { page, pageSize, sort, sortDir, filter });
 
     return [tables.map(payload => ({ type: ExplorerItemType.TABLE, payload })), pagesCount];
   }

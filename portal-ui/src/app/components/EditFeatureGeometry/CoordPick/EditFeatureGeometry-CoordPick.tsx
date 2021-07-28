@@ -107,7 +107,7 @@ export class EditFeatureGeometryCoordPick extends Component<EditFeatureGeometryC
   }
 
   @action.bound
-  private pickHandler(e: MapBrowserEvent) {
+  private pickHandler(e: MapBrowserEvent<UIEvent>) {
     const { store, onPick } = this.props;
     onPick(transform(olProjection, store.currentProjection, e.coordinate));
     this.offPicking();

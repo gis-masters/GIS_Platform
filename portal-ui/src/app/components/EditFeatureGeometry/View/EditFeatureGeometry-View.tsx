@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import GeometryType from 'ol/geom/GeometryType';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { GeometryType } from '../../../services/geoserver/wfs.models';
 
 import { EditFeatureGeometryError } from '../Error/EditFeatureGeometry-Error';
 

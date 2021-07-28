@@ -1,8 +1,9 @@
 import { observable, action, reaction } from 'mobx';
+import { Coordinate } from 'ol/coordinate';
 
 import { route } from './Route.store';
 import { CrgLayer } from '../services/crg/projects.models';
-import { WfsFeature } from '../services/geoserver/wfs.models';
+import { CoordinateEdited, WfsFeature } from '../services/geoserver/wfs.models';
 import { Properties } from '../components/edit-feature/edit-feature.component';
 
 export enum MapSelectionTypes {
@@ -17,7 +18,7 @@ export enum EditFeatureMode {
 }
 
 export interface EditFeaturesData {
-  features: WfsFeature[];
+  features: WfsFeature<Coordinate | CoordinateEdited>[];
   mode: EditFeatureMode;
   viewFeatures?: WfsFeature[];
   layer?: CrgLayer;
@@ -50,8 +51,8 @@ class Sidebars {
   @observable layerForAttributes?: CrgLayer;
   @observable featuresOpen: boolean;
   @observable editOpen: boolean;
-  @observable viewFeatures?: WfsFeature[];
-  @observable memorizedViewFeatures?: WfsFeature[];
+  @observable viewFeatures?: WfsFeature<Coordinate | CoordinateEdited>[];
+  @observable memorizedViewFeatures?: WfsFeature<Coordinate | CoordinateEdited>[];
   @observable editFeaturesData?: EditFeaturesData;
   @observable featuresEdited: boolean;
   @observable featuresClosingConfirmationOpen: boolean;
@@ -100,7 +101,7 @@ class Sidebars {
   }
 
   @action
-  openFeatures(features: WfsFeature[], selectionType?: MapSelectionTypes) {
+  openFeatures(features: WfsFeature<Coordinate | CoordinateEdited>[], selectionType?: MapSelectionTypes) {
     // eslint-disable-next-line unicorn/prefer-prototype-methods
     if (this.needEditConfirmation(this.openFeatures.bind(this, features))) {
       return;
@@ -159,7 +160,7 @@ class Sidebars {
   }
 
   @action
-  setMemorizedFeatures(features: WfsFeature[]) {
+  setMemorizedFeatures(features: WfsFeature<Coordinate | CoordinateEdited>[]) {
     this.memorizedViewFeatures = features;
   }
 

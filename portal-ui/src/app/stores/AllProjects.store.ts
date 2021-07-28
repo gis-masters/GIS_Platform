@@ -26,9 +26,8 @@ class AllProjects {
   @computed
   get displayedList(): CrgProject[] {
     const filtered = filterObjects(this.list, { name: this.nameFilter });
-    const sorted = sortObjects(filtered, this.sortBy, this.sortAsc, 'id');
 
-    return sorted;
+    return sortObjects(filtered, this.sortBy, this.sortAsc, 'id');
   }
 
   @computed

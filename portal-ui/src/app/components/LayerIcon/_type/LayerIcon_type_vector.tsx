@@ -3,9 +3,8 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
 import { Adjust, SvgIconComponent, Timeline, ReportProblemOutlined } from '@material-ui/icons';
-import GeometryType from 'ol/geom/GeometryType';
 
-import { SupportedGeometryType } from '../../../services/geoserver/wfs.models';
+import { GeometryType, SupportedGeometryType } from '../../../services/geoserver/wfs.models';
 import { schemaService } from '../../../services/crg/schema.service';
 import { LayerIconProps, cnLayerIcon } from '../LayerIcon';
 import { Shape } from '../../Icons/Shape';

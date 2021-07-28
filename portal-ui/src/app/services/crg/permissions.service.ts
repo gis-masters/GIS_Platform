@@ -2,7 +2,7 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { PrincipalType, Role, RoleAssignmentBody, roles } from './permissions.models';
 import { getProjectPermissions, getTablePermissions } from './permissions.client';
-import { CrgLayer, CrgProject } from './projects.models';
+import { CrgProject } from './projects.models';
 import { schemaService } from './schema.service';
 import { groupsService } from './groups.service';
 import { CrgUser, usersService } from './users.service';
@@ -165,12 +165,12 @@ async function getActualRoleIn(permissions: RoleAssignmentBody[], user?: CrgUser
     user = await usersService.getCurrentUser();
   }
 
-  const groupsIds = (await groupsService.getUserGroups(user)).map(({ id }) => id);
+  const groupsIds = new Set((await groupsService.getUserGroups(user)).map(({ id }) => id));
 
   return permissions.reduce((resultRole: Role | undefined, { principalId, principalType, role }) => {
     if (
       (principalId === user.id && principalType === PrincipalType.USER) ||
-      (groupsIds.includes(principalId) &&
+      (groupsIds.has(principalId) &&
         principalType === PrincipalType.GROUP &&
         roles.indexOf(role) > roles.indexOf(resultRole))
     ) {
@@ -178,5 +178,5 @@ async function getActualRoleIn(permissions: RoleAssignmentBody[], user?: CrgUser
     }
 
     return resultRole;
-  }, undefined);
+  }, undefined); // eslint-disable-line unicorn/no-useless-undefined
 }

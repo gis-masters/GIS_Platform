@@ -8,7 +8,8 @@
 
   transform: rotate(calc(var(--PrintDialogPreviewRotation) * 1rad));
 
-  --PrintDialogWindRoseWidth: calc(
-  var(--PrintDialogPreviewSizeFactor) * calc(25 * var(--PrintDialogPreviewControlsFactor))
-  );
+  --PrintDialogWindRoseWidth:
+    calc(
+      var(--PrintDialogPreviewSizeFactor) * calc(25 * var(--PrintDialogPreviewControlsFactor))
+    );
 }

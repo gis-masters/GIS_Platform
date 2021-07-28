@@ -4,4 +4,4 @@ import { Component } from '@angular/core';
   selector: 'crg-login-page',
   templateUrl: './login-page.component.html'
 })
-export class LoginPageComponent { }
+export class LoginPageComponent {}

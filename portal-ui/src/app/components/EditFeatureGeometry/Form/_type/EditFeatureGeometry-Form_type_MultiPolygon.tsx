@@ -1,10 +1,9 @@
 import React from 'react';
 import { action } from 'mobx';
 import { observer } from 'mobx-react';
-import GeometryType from 'ol/geom/GeometryType';
 import { withBemMod } from '@bem-react/core';
 
-import { WfsMultiPolygonGeometry, CoordinateEdited } from '../../../../services/geoserver/wfs.models';
+import { WfsMultiPolygonGeometry, CoordinateEdited, GeometryType } from '../../../../services/geoserver/wfs.models';
 import { env } from '../../../../stores/Env.store';
 
 import {
@@ -27,7 +26,7 @@ class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
           <EditFeatureGeometrySuperGroup
             geometryPart={geometryPart}
             minCoordsPerGroup={4}
-            groupsMustBeClosed={true}
+            groupsMustBeClosed
             store={store}
             index={index}
             key={index}

@@ -103,7 +103,7 @@ class EventService {
   private getFromLocalStorage(): IEvent[] {
     const events = localStorage.getItem(this.EVENTS_KEY);
 
-    return JSON.parse(events);
+    return JSON.parse(events) as IEvent[];
   }
 }
 

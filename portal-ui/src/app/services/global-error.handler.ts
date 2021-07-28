@@ -7,7 +7,7 @@ import { Toast } from '../components/Toast/Toast';
 export class GlobalErrorHandler implements ErrorHandler {
   constructor(private logger: NGXLogger) {}
 
-  handleError(error: Error) {
+  handleError(error: Error): void {
     Toast.error({ error, canBeSuppressed: true });
     this.logger.error(error);
   }

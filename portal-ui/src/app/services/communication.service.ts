@@ -1,5 +1,5 @@
 import { CrgLayer, CrgProject } from './crg/projects.models';
-import { Emitter } from './util/Emitter';
+import { Emitter } from './common/Emitter';
 
 export interface ObjectDto {
   id: string;

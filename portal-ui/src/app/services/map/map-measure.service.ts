@@ -2,10 +2,9 @@ import { createElement } from 'react';
 import { reaction } from 'mobx';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { boundMethod } from 'autobind-decorator';
-import { Geometry, LineString, Polygon } from 'ol/geom';
+import { LineString, Polygon, SimpleGeometry } from 'ol/geom';
 import OverlayPositioning from 'ol/OverlayPositioning';
 import { ModifyEvent } from 'ol/interaction/Modify';
-import GeometryType from 'ol/geom/GeometryType';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { Fill, Stroke, Style } from 'ol/style';
 import { Draw, Modify } from 'ol/interaction';
@@ -21,6 +20,7 @@ import { EventsKey } from 'ol/events';
 import { MapModes, mapStore } from '../../stores/Map.store';
 import { UnitsOfAreaMeasurement } from '../util/open-layers.util';
 import { communicationService } from '../communication.service';
+import { GeometryType } from '../geoserver/wfs.models';
 import { mapService } from './map.service';
 import { MapMeasureTooltip } from '../../components/MapMeasureTooltip/MapMeasureTooltip';
 
@@ -28,7 +28,7 @@ export type MeasureMode = 'area' | 'length';
 
 export interface MeasureItem {
   id: symbol;
-  feature: Feature;
+  feature: Feature<SimpleGeometry>;
   tooltipRoot: HTMLElement;
   tooltipOverlay: Overlay;
 }
@@ -113,7 +113,7 @@ class MapMeasureService {
       }
       [
         ...this.featureGeometryChangeListeners,
-        ...e.features.getArray().map(feature => {
+        ...(e.features.getArray() as Feature<SimpleGeometry>[]).map(feature => {
           return feature.getGeometry().on('change', (e: BaseEvent) => {
             const modifyingItem = mapStore.measureItems.find(item => item.feature === feature);
             this.featureGeometryChangeHandler(e, modifyingItem);
@@ -130,12 +130,14 @@ class MapMeasureService {
   @boundMethod
   private measureDrawStartHandler(e: DrawEvent) {
     this.sketchItem = this.createItem(e.feature);
-    this.featureGeometryChangeListeners = e.feature.getGeometry().on('change', this.featureGeometryChangeHandler);
+    this.featureGeometryChangeListeners = (e.feature as Feature<SimpleGeometry>)
+      .getGeometry()
+      .on('change', this.featureGeometryChangeHandler);
   }
 
   @boundMethod
   private featureGeometryChangeHandler(e: BaseEvent, item: MeasureItem = this.sketchItem) {
-    const geom = e.target as Geometry;
+    const geom = e.target as SimpleGeometry;
     let tooltipCoord: Coordinate;
 
     if (geom instanceof Polygon) {
@@ -159,7 +161,7 @@ class MapMeasureService {
     delete this.sketchItem;
   }
 
-  private createItem(feature: Feature): MeasureItem {
+  private createItem(feature: Feature<SimpleGeometry>): MeasureItem {
     const tooltipNode = document.createElement('div');
     tooltipNode.className = 'MapMeasureTooltipRoot';
     const tooltipOverlay = new Overlay({

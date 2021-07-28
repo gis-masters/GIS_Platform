@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios';
+
 import { getEnvironment } from '../../environment';
 import { GeoUtil } from '../../util/GeoUtil';
 import {
@@ -36,18 +38,18 @@ interface ImportRequestData {
   };
 }
 
-export async function fetchCurrentImport(importId: string) {
+export async function fetchCurrentImport(importId: string): Promise<void> {
   currentImport.fit({ scratch: await getById(importId) });
   fillTasks();
 }
 
-export async function getById(id: string) {
+export async function getById(id: string): Promise<ScratchImport> {
   const url = await getGeoserverImportUrl(id);
 
   return (await http.get<InputStartResponseDto>(url)).import;
 }
 
-export async function checkImportStatus() {
+export async function checkImportStatus(): Promise<void> {
   const { import: scratch } = await http.get<InputStartResponseDto>(await getGeoserverImportUrl(currentImport.id), {
     cache: { disabled: true }
   });
@@ -100,10 +102,10 @@ export async function initScratchImport(file: File): Promise<ScratchImport> {
     await uploadTasks(await getGeoserverImportUrl(scratchImport.id), file);
 
     return scratchImport;
-  } catch (err) {
-    currentImport.setError(err);
+  } catch (error) {
+    currentImport.setError();
 
-    return Promise.reject(err);
+    return Promise.reject(error);
   }
 }
 
@@ -122,9 +124,10 @@ async function uploadTasks(url: string, file: File) {
     if (tasks.length) {
       await uploadToScratch();
     }
-  } catch (err) {
-    currentImport.setError(err);
-    return Promise.reject(err);
+  } catch (error) {
+    currentImport.setError();
+
+    return Promise.reject(error);
   }
 }
 
@@ -132,24 +135,24 @@ async function uploadTasks(url: string, file: File) {
  * Последний шаг, после всех приготовлений, стартуем импорт.
  */
 async function uploadToScratch() {
-  // Geoserver "держит" этот запрос до самого конца импорта соответственно в зависимости от обьема ответ может
+  // Geoserver "держит" этот запрос до самого конца импорта соответственно в зависимости от объема ответ может
   // придти и через 10 минут... Наш gateway оборвет запрос через 10 сек, поэтому ошибку по таймауту 504 не считаем
-  // ошибкой, ретраи здесь также не нужны.
+  // ошибкой, повторы здесь также не нужны.
   try {
     return await http.post(`${await getGeoserverImportsUrl()}/${currentImport.id}`, {});
-  } catch (e) {
-    if (!e.response || e.response.status !== 504) {
-      currentImport.setError(e);
+  } catch (error) {
+    if ((error as AxiosError).response?.status !== 504) {
+      currentImport.setError();
     }
   }
 }
 
-export async function fillTasks() {
-  const tasks = currentImport.notFullfilledTasks;
+export function fillTasks(): void {
+  const tasks = currentImport.notFulfilledTasks;
   tasks.forEach(async task => currentImport.setFullTasks([await getFullImportTask(task)]));
 }
 
-export async function updateProgress() {
+export async function updateProgress(): Promise<void> {
   const firstTask = currentImport.tasks[0];
 
   if (firstTask && firstTask.progress) {
@@ -169,7 +172,7 @@ async function getFullImportTask(shortTask: ImportTaskShort): Promise<ImportTask
   return task;
 }
 
-export async function deleteTask(task: ImportTaskShort) {
+export async function deleteTask(task: ImportTaskShort): Promise<void> {
   await http.delete(await getGeoserverImportTaskUrl(currentImport.id, task.id));
   await checkImportStatus();
 }

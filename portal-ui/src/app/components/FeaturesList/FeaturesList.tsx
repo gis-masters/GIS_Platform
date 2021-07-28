@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { Coordinate } from 'ol/coordinate';
 
 import { MapSelectionTypes, sidebars } from '../../stores/Sidebars.store';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { CoordinateEdited, WfsFeature } from '../../services/geoserver/wfs.models';
 import { mapService } from '../../services/map/map.service';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
 
@@ -39,7 +40,7 @@ export class FeaturesList extends Component {
     return (
       <div className={cnFeaturesList(null, ['scroll'])}>
         {this.features.length ? (
-          this.features.map(feature => (
+          this.features.map((feature: WfsFeature) => (
             <FeaturesListItem
               feature={feature}
               highlighted={feature.id === this.highlightedFeatureId}
@@ -56,7 +57,7 @@ export class FeaturesList extends Component {
   }
 
   @computed
-  private get features(): WfsFeature[] {
+  private get features(): WfsFeature<Coordinate | CoordinateEdited>[] {
     return sidebars.viewFeatures ? sidebars.viewFeatures : [];
   }
 

@@ -29,17 +29,15 @@ const handleClick = ({ item, depth, onOpen }: ExplorerBreadcrumbItemData) => {
 };
 
 export const ExplorerTitle: FC<ExplorerTitleProps> = observer(({ store, onOpen }) => {
-  const items: BreadcrumbItemData<ExplorerBreadcrumbItemData>[] = store.path
-    .slice(0, store.path.length - 1)
-    .map((pathItem, i) => ({
-      title: getTitle(pathItem),
-      payload: {
-        item: pathItem,
-        depth: i,
-        onOpen
-      },
-      onClick: handleClick
-    }));
+  const items: BreadcrumbItemData<ExplorerBreadcrumbItemData>[] = store.path.slice(0, -1).map((pathItem, i) => ({
+    title: getTitle(pathItem),
+    payload: {
+      item: pathItem,
+      depth: i,
+      onOpen
+    },
+    onClick: handleClick
+  }));
 
   return <Breadcrumbs className={cnExplorerTitle()} items={items} itemsType='button' />;
 });

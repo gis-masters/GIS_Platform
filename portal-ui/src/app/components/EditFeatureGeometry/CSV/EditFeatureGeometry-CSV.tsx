@@ -3,14 +3,13 @@ import { action } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { ArchiveOutlined, UnarchiveOutlined } from '@material-ui/icons';
-import GeometryType from 'ol/geom/GeometryType';
 import { saveAs } from 'file-saver';
 import { parse, unparse } from 'papaparse';
 import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
-import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
+import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs.models';
 
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
 
@@ -72,7 +71,16 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
 
   @boundMethod
   private exportClickHandler() {
-    this.saveAs(unparse(this.props.coordinates.map(coord => clone(coord).reverse())));
+    this.saveAs(
+      unparse(
+        this.props.coordinates.map(coord => {
+          const newCoords = clone(coord);
+          newCoords.reverse();
+
+          return newCoords;
+        })
+      )
+    );
   }
 
   @boundMethod
@@ -88,7 +96,6 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
 
   @action
   private doImport(csv: string) {
-    // @ts-ignore
     const result = parse(csv, { skipEmptyLines: 'greedy' });
 
     if (result.errors.length) {
@@ -97,7 +104,11 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
 
     const { coordinates, mustBeClosed } = this.props;
     const newCoordinates: CoordinateEdited[] = result.data
-      .map((point: CoordinateEdited) => point.reverse())
+      .map((point: CoordinateEdited) => {
+        point.reverse();
+
+        return point;
+      })
       .filter((point: CoordinateEdited) => point[0] && point[1]);
 
     if (mustBeClosed && !isEqual(newCoordinates[0], newCoordinates[newCoordinates.length - 1])) {

@@ -6,7 +6,7 @@ import { staticImplements } from '../../../../services/util/staticImplements';
 import { deleteBasemap, getBasemapConnections } from '../../../../services/crg/basemaps.service';
 import { communicationService } from '../../../../services/communication.service';
 import { Basemap } from '../../../../services/crg/basemaps.models';
-import { Emitter } from '../../../../services/util/Emitter';
+import { Emitter } from '../../../../services/common/Emitter';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 
 import { Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';

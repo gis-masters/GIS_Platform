@@ -38,10 +38,10 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   @observable private permissions: RoleAssignmentBody[] = [];
   @observable private moarExpanded: Partial<{ [key in Role]: true }> = {};
 
-  async componentDidMount() {
-    usersService.initUsersListStore();
-    groupsService.initAllGroupsStore();
-    this.fetchPermissions();
+  componentDidMount() {
+    void usersService.initUsersListStore();
+    void groupsService.initAllGroupsStore();
+    void this.fetchPermissions();
     communicationService.permissionsUpdated.on(this.fetchPermissions, this);
   }
 
@@ -50,7 +50,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
     const { dataTable: prevDataTable, dataset: prevDataset } = prevProps;
 
     if (dataTable.identifier !== prevDataTable.identifier || dataset.identifier !== prevDataset.identifier) {
-      this.fetchPermissions();
+      void this.fetchPermissions();
     }
   }
 
@@ -76,9 +76,9 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
 
           {this.fetching ? (
             <>
-              <Skeleton height={20} animation='wave' width={40 + Math.random() * 60 + '%'} />
-              <Skeleton height={20} animation='wave' width={40 + Math.random() * 60 + '%'} />
-              <Skeleton height={20} animation='wave' width={40 + Math.random() * 60 + '%'} />
+              <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />
+              <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />
+              <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />
             </>
           ) : (
             roles
@@ -167,7 +167,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   }
 
   private getListForRole<T extends CrgUser | CrgGroup>(listRole: Role, arr: T[], type: PrincipalType): T[] {
-    const greaterRoles = roles.slice(roles.indexOf(listRole) + 1, roles.length);
+    const greaterRoles = new Set(roles.slice(roles.indexOf(listRole) + 1, roles.length));
 
     return arr
       .filter(
@@ -177,7 +177,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
           ) &&
           !this.permissions.some(
             ({ principalId, principalType, role }) =>
-              principalId === id && principalType === type && greaterRoles.includes(role)
+              principalId === id && principalType === type && greaterRoles.has(role)
           )
       )
       .sort((a, b) => ((a as CrgUser).surname + a.name > (b as CrgUser).surname + b.name ? 1 : -1));

@@ -53,12 +53,12 @@ export class DataImportDialog extends Component<DataImportDialogProps> {
   @action.bound
   private handleNext() {
     this.busy = true;
-    this.next();
+    void this.next();
   }
 
   private async next() {
     await services.provided;
     await Promise.all(currentImport.errorTasks.map(task => deleteTask(task)));
-    services.router.navigate([this.props.nextUrl], { replaceUrl: true });
+    await services.router.navigate([this.props.nextUrl], { replaceUrl: true });
   }
 }

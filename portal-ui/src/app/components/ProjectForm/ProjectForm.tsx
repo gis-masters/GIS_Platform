@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { AxiosError } from 'axios';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { TextField } from '@material-ui/core';
@@ -63,12 +64,12 @@ export class ProjectForm extends Component<ProjectFormProps> {
   }
 
   @action
-  setError(error: string) {
+  private setError(error: string) {
     this.error = error;
   }
 
   @action
-  setBusy(busy: boolean) {
+  private setBusy(busy: boolean) {
     this.busy = busy;
   }
 
@@ -91,9 +92,11 @@ export class ProjectForm extends Component<ProjectFormProps> {
       });
       Toast.success('Проект создан');
       this.props.onClose();
-    } catch (err) {
-      if (err.response && err.response.status === 409) {
-        this.setError(err.message);
+    } catch (error) {
+      const err = error as AxiosError;
+
+      if (err?.response?.status === 409) {
+        this.setError(err?.message);
       } else {
         this.setError('Ошибка при создании проекта');
       }

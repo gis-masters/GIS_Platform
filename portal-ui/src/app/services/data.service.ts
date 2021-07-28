@@ -1,6 +1,6 @@
 import { getDatasetsUrl, getDatasetTablesUrl, getDatasetTableUrl, getTableConnectionsUrl } from './server-urls.service';
 import { CrgLayer, CrgProject } from './crg/projects.models';
-import { PageableResponse, SortDir } from './models';
+import { PageableResponse, PageOptions, SortDir } from './models';
 import { Role } from './crg/permissions.models';
 import { http } from './http.service';
 import { communicationService } from './communication.service';
@@ -57,11 +57,7 @@ export async function getAllDatasets(): Promise<Dataset[]> {
 
 export async function getDatasetTables(
   dataset: Dataset,
-  page: number,
-  pageSize: number,
-  sort?: string,
-  sortDir?: SortDir,
-  filter?: { [key: string]: string }
+  { page, pageSize, sort, sortDir, filter }: PageOptions
 ): Promise<[DataTable[], number]> {
   const response = await http.get<PageableResponse<{ tables: Omit<DataTable, 'dataset'>[] }>>(
     await getDatasetTablesUrl(dataset.identifier),
@@ -105,7 +101,7 @@ export async function getDataTableConnections(dataTableId: string): Promise<Data
   return await http.get<DataTableConnection[]>(await getTableConnectionsUrl(), { params });
 }
 
-export async function createDataset(title: string, details: string) {
+export async function createDataset(title: string, details: string): Promise<void> {
   await http.post(await getDatasetsUrl(), { title, details });
 }
 

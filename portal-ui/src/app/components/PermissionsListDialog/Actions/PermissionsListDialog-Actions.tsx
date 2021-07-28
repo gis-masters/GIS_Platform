@@ -26,7 +26,7 @@ export class PermissionsListActions extends Component<PermissionsListActionsProp
   }
 
   @boundMethod
-  private async handleDelete() {
+  private handleDelete() {
     const { id, onDelete, additionalId } = this.props;
     onDelete(id, additionalId);
   }

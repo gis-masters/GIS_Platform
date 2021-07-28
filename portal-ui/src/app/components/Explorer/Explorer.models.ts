@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 import { PageOptions, SortDir } from '../../services/models';
-import { Emitter } from '../../services/util/Emitter';
+import { Emitter } from '../../services/common/Emitter';
 
 import { ExplorerStore } from './Explorer.store';
 

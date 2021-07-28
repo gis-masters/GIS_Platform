@@ -11,13 +11,16 @@
 
     content: '';
 
-    background-image: repeating-linear-gradient(to bottom,
-    transparent,
-    transparent 3px,
-    var(--light) 3px,
-    var(--light) 36px,
-    transparent 36px,
-    transparent 39px);
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 3px,
+        var(--light) 3px,
+        var(--light) 36px,
+        transparent 36px,
+        transparent 39px
+      );
   }
 
   &::before {

@@ -1,5 +1,16 @@
 import { Coordinate } from 'ol/coordinate';
-import GeometryType from 'ol/geom/GeometryType';
+
+export enum GeometryType {
+  POINT = 'Point',
+  LINE_STRING = 'LineString',
+  LINEAR_RING = 'LinearRing',
+  POLYGON = 'Polygon',
+  MULTI_POINT = 'MultiPoint',
+  MULTI_LINE_STRING = 'MultiLineString',
+  MULTI_POLYGON = 'MultiPolygon',
+  GEOMETRY_COLLECTION = 'GeometryCollection',
+  CIRCLE = 'Circle'
+}
 
 export type CoordinateEdited = (number | string)[];
 
@@ -47,7 +58,7 @@ export type SupportedWfsGeometry<T = Coordinate> =
 
 export type WfsGeometry<T = Coordinate | CoordinateEdited> = SupportedWfsGeometry<T> | OtherGeometry<T>;
 
-export interface WfsFeature<T = Coordinate | CoordinateEdited> extends GeoJSONObject {
+export interface WfsFeature<T extends Coordinate | CoordinateEdited = Coordinate> extends GeoJSONObject {
   type: 'Feature';
   id: string;
   geometry: WfsGeometry<T>;

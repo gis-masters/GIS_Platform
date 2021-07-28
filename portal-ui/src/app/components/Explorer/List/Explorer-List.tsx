@@ -39,7 +39,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
         {Boolean(this.currentList?.length) &&
           this.currentList.map(this.getItemProps).map(props => <ExplorerItem {...props} key={getId(props.item)} />)}
 
-        {Boolean(!this.currentList?.length) ? (
+        {!this.currentList?.length ? (
           <>{emptyListView ? <ExplorerEmpty>{emptyListView}</ExplorerEmpty> : null}</>
         ) : null}
       </List>

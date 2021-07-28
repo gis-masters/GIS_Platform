@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { MyLocation } from '@material-ui/icons';
 import { IconButton, ListItem, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import IconAnchorUnits from 'ol/style/IconAnchorUnits';
+import { SimpleGeometry } from 'ol/geom';
 import { Icon, Style } from 'ol/style';
 import { fromLonLat } from 'ol/proj';
 import { Extent } from 'ol/extent';
@@ -72,7 +73,7 @@ export class SearchResultListItem extends Component<SearchResultListItemProps> {
       })
     });
 
-    const iconFeature = new Feature({
+    const iconFeature = new Feature<SimpleGeometry>({
       geometry: new Point(lonLat)
     });
 

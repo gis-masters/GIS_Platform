@@ -54,7 +54,7 @@ export class ValidateLayersDialog extends Component<ValidateLayersDialogProps> {
   private async executeValidation() {
     try {
       await validationService.initValidation(this.selectedLayers);
-    } catch (error) {
+    } catch {
       Toast.error('Ошибка проверки данных');
       communicationService.validationInitiated.emit(false);
     } finally {

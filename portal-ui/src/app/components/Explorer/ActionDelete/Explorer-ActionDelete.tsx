@@ -75,7 +75,7 @@ export class ExplorerActionDelete extends Component<ExplorerActionDeleteProps> {
     if (this.props.actionDetails.needConfirmation) {
       this.openDialog();
     } else {
-      this.doDeletion();
+      void this.doDeletion();
     }
   }
 

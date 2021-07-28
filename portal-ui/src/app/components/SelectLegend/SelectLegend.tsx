@@ -5,8 +5,8 @@ import { cn } from '@bem-react/classname';
 
 import { currentProject } from '../../stores/CurrentProject.store';
 import { printSettings, RuleExtended } from '../../stores/PrintSettings.store';
+import { loadAllLayersStyles } from '../../services/geoserver/styles.service';
 import { SortParams } from '../../services/util/sortObjects';
-import { loadLayerLegend } from '../../services/geoserver/layers.service';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { Button } from '../Button/Button';
@@ -49,11 +49,7 @@ export class SelectLegend extends Component<FormControlProps> {
     this.disposer = reaction(
       () => currentProject.visibleLayersWithoutRasters,
       async () => {
-        for (const { payload: layer } of currentProject.visibleLayersWithoutRasters) {
-          if (!layer.legend && !layer.legendIsFetching) {
-            await loadLayerLegend(layer);
-          }
-        }
+        await loadAllLayersStyles();
       }
     );
   }
@@ -88,7 +84,7 @@ export class SelectLegend extends Component<FormControlProps> {
   @computed
   private get legend(): RuleExtended[] {
     return currentProject.visibleLayersWithoutRasters.flatMap(({ payload }) =>
-      (payload.legend || []).map(rule => ({ ...rule, layerId: payload.id, layerTitle: payload.title }))
+      (payload.style || []).map((rule: RuleExtended) => ({ ...rule, layerId: payload.id, layerTitle: payload.title }))
     );
   }
 

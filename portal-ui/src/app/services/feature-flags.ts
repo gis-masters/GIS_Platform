@@ -19,7 +19,7 @@ class Flags implements FlagsList {
   dataManagement = false;
 
   private constructor() {
-    this.init();
+    void this.init();
   }
 
   private async init() {
@@ -31,7 +31,7 @@ class Flags implements FlagsList {
     keys.forEach(key => {
       const stored = localStorage.getItem(lsKey(key));
       if (stored) {
-        this[key] = JSON.parse(stored);
+        this[key] = JSON.parse(stored) as FlagsList[keyof FlagsList];
       }
     });
   }
@@ -48,7 +48,7 @@ class Flags implements FlagsList {
   }
 
   get list(): string {
-    return keys.map(key => `${key}: ${this[key]}`).join('\n');
+    return keys.map(key => `${key}: ${String(this[key])}`).join('\n');
   }
 
   reset() {
@@ -61,4 +61,5 @@ class Flags implements FlagsList {
 
 export const flags = Flags.instance;
 
+// eslint-disable-next-line dot-notation
 window['flags'] = flags;

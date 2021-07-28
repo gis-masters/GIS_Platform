@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
-import { Rule } from '../../services/crg/projects.models';
+import { Rule } from '../../services/geoserver/styles.service';
 
 import '!style-loader!css-loader!sass-loader!./Legend.scss';
 
@@ -34,7 +34,7 @@ export const Legend: FC<LegendProps> = ({ rules, forPrint, resolution, className
             return true;
           })
         : rules
-      ).map(({ legend, title }, i) => (
+      ).map(({ legend, title }: Rule, i) => (
         <div className={cnLegend('Rule')} key={i}>
           <img src={legend} className={cnLegend('Img')} />
           <div className={cnLegend('Title')}>{title}</div>

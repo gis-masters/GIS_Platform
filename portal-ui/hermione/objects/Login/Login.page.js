@@ -7,9 +7,10 @@ module.exports = class LoginPage extends Page {
 
   url = 'login';
 
-  waitForVisible () {
+  async waitForVisible() {
     const { container } = this._elements;
+    const $container = await this.browser.$(container);
 
-    return this.browser.crgWaitForVisible(container, 5000, 'Не появилась страница входа');
+    return $container.waitForDisplayed({ timeout: 5000, timeoutMsg: 'Не появилась страница входа' });
   }
 };

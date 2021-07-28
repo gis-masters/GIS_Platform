@@ -48,7 +48,7 @@ export class User extends Component {
   }
 
   @boundMethod
-  logout() {
-    authService.logout();
+  private logout() {
+    void authService.logout();
   }
 }

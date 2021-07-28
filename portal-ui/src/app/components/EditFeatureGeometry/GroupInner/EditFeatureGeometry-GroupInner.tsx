@@ -27,5 +27,5 @@ export const EditFeatureGeometryGroupInner: FC<EditFeatureGeometryGroupInnerProp
     <div className={cnEditFeatureGeometryGroupInner(null, ['scroll'])} style={style} onScroll={onScroll} ref={innerRef}>
       {children}
     </div>
-  )
+  );
 };

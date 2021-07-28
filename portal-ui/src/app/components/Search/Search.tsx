@@ -26,7 +26,8 @@ export class Search extends Component {
   @observable private kadOks: KadObject[] = [];
 
   private anchor?: HTMLElement;
-  private kadNumRegex = new RegExp('[0-9]{2}?[:]?[0-9]{2}[:]?[0-9]{6}[:]');
+
+  private kadNumRegex = /\d{2}?:?\d{2}:?\d{6}:/;
 
   render() {
     return (
@@ -89,7 +90,7 @@ export class Search extends Component {
 
     this.setLoading(true);
     if (this.kadNumRegex.test(this.searchValue)) {
-      this.getKadItems(this.searchValue.replace(/[a-zа-яё\s]/gi, ''));
+      await this.getKadItems(this.searchValue.replace(/[\sa-zа-яё]/gi, ''));
       this.setSearchResult(null);
     } else {
       this.setSearchResult(await geocodeService.search(this.searchValue));
@@ -115,12 +116,12 @@ export class Search extends Component {
 
   @action
   private async getKadItems(kadNum: string) {
-    const [areas, oks] = await Promise.all([getRosreestrMultipleAreaData(kadNum), getRosreestrMultipleOksData(kadNum)])
+    const [areas, oks] = await Promise.all([getRosreestrMultipleAreaData(kadNum), getRosreestrMultipleOksData(kadNum)]);
 
     if (areas || oks) {
-      this.setKadItems(areas as KadObject[], oks as KadObject[])
+      this.setKadItems(areas as KadObject[], oks as KadObject[]);
     } else {
-      this.clearKadItems()
+      this.clearKadItems();
     }
     this.setLoading(false);
     this.openResultList();

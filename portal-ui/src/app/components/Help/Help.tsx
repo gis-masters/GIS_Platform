@@ -30,8 +30,8 @@ export class Help extends Component<HelpProps> {
     this.helpPart = this.props.helpPart || new HelpPart(this.props.path);
   }
 
-  componentDidMount() {
-    this.helpPart.initContent();
+  async componentDidMount() {
+    await this.helpPart.initContent();
   }
 
   render() {

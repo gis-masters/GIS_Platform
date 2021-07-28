@@ -10,10 +10,5 @@ interface LayerGapProps {
 }
 
 export const LayerGap: FC<LayerGapProps> = ({ gap }) => (
-
-  <div
-    className={cnLayer('Gap')}
-    // @ts-ignore
-    style={{ '--layer-gap': gap }}
-  />
+  <div className={cnLayer('Gap')} style={{ '--layer-gap': gap }} />
 );

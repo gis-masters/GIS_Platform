@@ -3,17 +3,18 @@ const Page = require('../Page');
 module.exports = class HomePage extends Page {
   _elements = {
     container: 'crg-home-page .container'
-  }
+  };
 
-  url = '';
+  url = '/';
 
-  waitForVisible () {
+  async waitForVisible() {
     const { container } = this._elements;
+    const $container = await this.browser.$(container);
 
-    return this.browser.crgWaitForVisible(container, 5000, 'Не появляется начальная страница');
+    return $container.waitForDisplayed({ timeout: 5000, timeoutMsg: 'Не появляется начальная страница' });
   }
 
-  assertSelfie () {
+  assertSelfie() {
     const { container } = this._elements;
 
     return this.browser.assertView('plain', container);

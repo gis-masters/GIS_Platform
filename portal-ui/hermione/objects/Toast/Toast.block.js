@@ -7,47 +7,53 @@ module.exports = class Toast extends Block {
     details: '.Toast-Details',
     fileName: '.Toast-Source',
     fileNums: '.Toast-FileNums'
-  }
+  };
 
-  clickMoar () {
+  async clickMoar() {
     const { moar } = this._elements;
+    const $moar = await this.browser.$(moar);
 
-    return this.browser.click(moar);
+    return await $moar.click();
   }
 
-  produceError () {
+  produceError() {
     return this.browser.execute(() => {
-      setTimeout(()=>{ window.notexistFunction(); }, 1000);
+      setTimeout(() => {
+        window.notExistFunction();
+      }, 1000);
     });
   }
 
-  async mockErrorFile () {
+  async mockErrorFile() {
     await this.browser.execute(({ fileName, fileNums }) => {
       document.querySelector(fileName).innerText = '/fakeFileName.js';
       document.querySelector(fileNums).innerText = '13:13';
     }, this._elements);
   }
 
-  async waitForVisible () {
+  async waitForVisible() {
     const { container } = this._elements;
+    const $container = await this.browser.$(container);
 
-    await this.browser.crgWaitForVisible(container, 2000, 'Не появляется уведомление');
+    await $container.waitForDisplayed({ timeout: 2000, timeoutMsg: 'Не появляется уведомление' });
     await this.browser.pause(1000); // animation
   }
 
-  async waitForDetails () {
+  async waitForDetails() {
     const { details } = this._elements;
+    const $details = await this.browser.$(details);
 
-    await this.browser.crgWaitForVisible(details, 'Не появляются детали');
+    await $details.waitForDisplayed({ timeout: 2000, timeoutMsg: 'Не появляются детали' });
   }
 
-  async waitForDetailsHidden () {
+  async waitForDetailsHidden() {
     const { details } = this._elements;
+    const $details = await this.browser.$(details);
 
-    await this.browser.crgWaitForHidden(details, 'Не скрываются детали');
+    await $details.waitForDisplayed({ reverse: true, timeoutMsg: 'Не скрываются детали' });
   }
 
-  assertSelfie () {
+  assertSelfie() {
     const { container } = this._elements;
 
     return this.browser.assertView('plain', container);

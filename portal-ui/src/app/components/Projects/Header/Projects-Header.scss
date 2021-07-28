@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 30px;
 
   margin-top: 20px;
   margin-bottom: 20px;
@@ -15,12 +16,10 @@
 
   background: white;
 
-  gap: 30px;
-
   &_stuck {
     transition: box-shadow 0.3s;
 
-    box-shadow: 0 3px 3px -2px rgba(0,0,0,0.2), 0 3px 4px 0 rgba(0,0,0,0.14), 0 1px 8px 0 rgba(0,0,0,0.12);
+    box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12);
   }
 
   &::before {

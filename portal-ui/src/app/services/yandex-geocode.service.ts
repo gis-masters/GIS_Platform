@@ -24,6 +24,7 @@ export interface YaGeoObject {
       text: string;
       kind: string;
       Address: {
+        // eslint-disable-next-line camelcase
         country_code: string;
         formatted: string;
         Components: { kind: string; name: string }[];
@@ -74,30 +75,31 @@ class YandexGeocodeService {
   async search(value: string): Promise<YaGeoObjectCollection> {
     const response = await fetch(
       this.URL +
-        new URLSearchParams({
-          apikey: this.API_KEY,
-          geocode: value,
-          format: 'json'
-        })
-    ).catch(errorResponse => {
-      services.logger.error(errorResponse);
+        String(
+          new URLSearchParams({
+            apikey: this.API_KEY,
+            geocode: value,
+            format: 'json'
+          })
+        )
+    ).catch((error: unknown) => {
+      services.logger.error(error);
     });
 
     if (response && response.ok) {
-      const responseWrapper: YaApiResponseWrapper = await response.json();
+      const responseWrapper: YaApiResponseWrapper = (await response.json()) as YaApiResponseWrapper;
       if (!(responseWrapper && responseWrapper.response && responseWrapper.response.GeoObjectCollection)) {
-        throw Error('Unsupported response body');
+        throw new Error('Unsupported response body');
       }
 
       return responseWrapper.response.GeoObjectCollection;
-    } else {
-      services.logger.error('error', response);
-
-      return {
-        featureMember: [],
-        metaDataProperty: undefined
-      };
     }
+    services.logger.error('error', response);
+
+    return {
+      featureMember: [],
+      metaDataProperty: undefined
+    };
   }
 }
 

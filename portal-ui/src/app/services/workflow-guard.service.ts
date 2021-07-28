@@ -13,19 +13,18 @@ export class WorkflowGuardService implements CanActivate {
 
   async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
     try {
-      const id = route.params && route.params.projectId;
+      const id = (route.params as Record<string, string>)?.projectId;
       await projectsService.fetchCurrent(id && Number(id));
 
       if (currentProject.id) {
         return true;
-      } else {
-        this.router.navigateByUrl('/projects');
-
-        return false;
       }
-    } catch (err) {
-      this.router.navigateByUrl('/projects');
-      this.logger.warn('Wrong workflow: empty project', err);
+      void this.router.navigateByUrl('/projects');
+
+      return false;
+    } catch (error) {
+      void this.router.navigateByUrl('/projects');
+      this.logger.warn('Wrong workflow: empty project', error);
 
       return false;
     }

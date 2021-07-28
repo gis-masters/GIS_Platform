@@ -1,8 +1,7 @@
 import React, { FC } from 'react';
-import GeometryType from 'ol/geom/GeometryType';
 import { withBemMod } from '@bem-react/core';
 
-import { WfsMultiPolygonGeometry } from '../../../../services/geoserver/wfs.models';
+import { GeometryType, WfsMultiPolygonGeometry } from '../../../../services/geoserver/wfs.models';
 
 import { EditFeatureGeometryViewProps, cnEditFeatureGeometryView } from '../EditFeatureGeometry-View';
 import { EditFeatureGeometryViewSuperGroup } from '../../ViewSuperGroup/EditFeatureGeometry-ViewSuperGroup';

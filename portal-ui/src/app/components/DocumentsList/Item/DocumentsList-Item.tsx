@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
+import { AxiosError } from 'axios';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AssignmentOutlined, Delete, DeleteOutline } from '@material-ui/icons';
 import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@material-ui/core';
 
-import { Link } from '../../Link/Link';
-import { Toast } from '../../Toast/Toast';
-import { Button } from '../../Button/Button';
 import { http } from '../../../services/http.service';
 import { services } from '../../../services/services';
 import { EditedField } from '../../../services/crg/schema.models';
 import { getBaseUrl } from '../../../services/server-urls.service';
-import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
 import { communicationService } from '../../../services/communication.service';
+import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
+import { Button } from '../../Button/Button';
+import { Toast } from '../../Toast/Toast';
+import { Link } from '../../Link/Link';
 
 import { DocumentListItemData } from '../DocumentsList';
 
@@ -120,9 +121,9 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
       await http.delete(this.deleteUrl);
 
       communicationService.libraryItemsUpdated.emit();
-    } catch {
+    } catch (error) {
       Toast.error('Не удалось удалить файл');
-      services.logger.error('Не удалось удалить файл');
+      services.logger.error('Не удалось удалить файл: ', (error as AxiosError).message);
     }
 
     this.props.deleteCallback(document.id);

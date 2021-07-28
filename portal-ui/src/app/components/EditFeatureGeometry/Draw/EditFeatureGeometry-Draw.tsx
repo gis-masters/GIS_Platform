@@ -3,16 +3,15 @@ import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { Coordinate } from 'ol/coordinate';
 import { DrawEvent } from 'ol/interaction/Draw';
-import GeometryType from 'ol/geom/GeometryType';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { Brush, BrushOutlined, SvgIconComponent } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { transform, olProjection, transformGeometry } from '../../../services/geoserver/projections.service';
+import { transform, olProjection } from '../../../services/geoserver/projections.service';
 import { mapService } from '../../../services/map/map.service';
-import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
-import { Emitter } from '../../../services/util/Emitter';
+import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs.models';
+import { Emitter } from '../../../services/common/Emitter';
 import { boundMethod } from 'autobind-decorator';
 
 const cnEditFeatureGeometryDraw = cn('EditFeatureGeometryDraw');
@@ -31,7 +30,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   @observable private active = false;
 
   componentDidMount() {
-    mapService.modificationDisabled.on(this.disactivate);
+    mapService.modificationDisabled.on(this.deactivate);
   }
 
   componentWillUnmount() {
@@ -71,17 +70,20 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   private handleDraw(e: DrawEvent) {
     const { point, store, onDraw } = this.props;
 
+    // ошибки в типах openlayers
+    /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+    /* eslint-disable @typescript-eslint/no-unsafe-call */
     if (point) {
-      // @ts-ignore
-      const drawed = e.feature.getGeometry().getCoordinates() as Coordinate;
+      const drawed = e.feature.getGeometry()?.getCoordinates() as Coordinate;
       point.splice(0, point.length, ...transform(olProjection, store.currentProjection, drawed));
       onDraw(point);
     } else {
-      // @ts-ignore
       const drawed = e.feature.getGeometry().getCoordinates() as Coordinate[][];
       const newPart = drawed[0].map(coord => transform(olProjection, store.currentProjection, coord));
       onDraw(newPart);
     }
+    /* eslint-enable @typescript-eslint/no-unsafe-call */
+    /* eslint-enable @typescript-eslint/no-unsafe-member-access */
   }
 
   @boundMethod
@@ -94,7 +96,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
     } else {
       mapService.drawOff();
       mapService.disableDraftModification();
-      this.disactivate();
+      this.deactivate();
     }
   }
 
@@ -104,7 +106,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   }
 
   @action.bound
-  private disactivate() {
+  private deactivate() {
     this.active = false;
   }
 }

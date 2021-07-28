@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-import { Emitter } from '../../../../services/util/Emitter';
+import { Emitter } from '../../../../services/common/Emitter';
 import { PageOptions, SortDir } from '../../../../services/models';
 import { Basemap } from '../../../../services/crg/basemaps.models';
 import { getBasemaps } from '../../../../services/crg/basemaps.service';

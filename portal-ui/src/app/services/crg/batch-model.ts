@@ -7,7 +7,7 @@ export class BatchModel<T> {
 
   private BATCH_SIZE = 200;
 
-  constructor (objects: T[]) {
+  constructor(objects: T[]) {
     this.batches = chunk(objects, this.BATCH_SIZE);
     this.totalBatches = this.batches.length;
     this.percentOfOneBatch = 100 / this.totalBatches;

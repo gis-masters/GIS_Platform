@@ -37,55 +37,51 @@ export class ExplorerStore {
   get openedItem(): ExplorerItemData {
     const { path } = this;
 
-    if (path.length > 1) {
-      return path[path.length - 2];
-    } else {
-      return path[0];
-    }
+    return path.length > 1 ? path[path.length - 2] : path[0];
   }
 
   @action
-  setPath(path: ExplorerItemData[]) {
+  setPath(path: ExplorerItemData[]): void {
     this.path = path;
   }
 
   @action
-  selectItem(item: ExplorerItemData) {
+  selectItem(item: ExplorerItemData): void {
     this.path[this.path.length - 1] = item;
   }
 
   @action
-  setSortItems(items?: SortItem[]) {
+  setSortItems(items?: SortItem[]): void {
     this.sortItems = items || [];
   }
 
   @action
-  setSort(sort?: string) {
+  setSort(sort?: string): void {
     this.sort = sort || '';
   }
 
   @action
-  setSortDir(dir?: SortDir) {
+  setSortDir(dir?: SortDir): void {
     this.sortDir = dir || SortDir.ASC;
   }
 
   @action
-  setPage(page: number) {
+  setPage(page: number): void {
     this.page = page;
   }
 
   @action
-  setFilter(filter: { [key: string]: string }) {
+  setFilter(filter: { [key: string]: string }): void {
     this.filter = filter;
   }
 
   @action
-  setPageSize(size: number) {
+  setPageSize(size: number): void {
     this.pageSize = size;
   }
 
   @action
-  setDisabledItems(disabledItems: ExplorerItemData[]) {
+  setDisabledItems(disabledItems: ExplorerItemData[]): void {
     this.disabledItems = disabledItems;
   }
 }

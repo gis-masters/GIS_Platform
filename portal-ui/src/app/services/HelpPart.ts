@@ -10,51 +10,50 @@ export class HelpPart {
 
   private platform: Platform;
 
-  constructor (path?: string) {
+  constructor(path?: string) {
     this.path = path ? path.split('/') : [];
-    this.inited = new Promise((resolve) => {
-      this.init(resolve);
+    this.inited = new Promise(resolve => {
+      void this.init(resolve);
     });
   }
 
-  async initContent (items?: Toc) {
+  async initContent(items?: Toc): Promise<void> {
     await this.inited;
-    (items || this.items).forEach(async (item) => {
+    (items || this.items).forEach(async item => {
       if (item.children) {
-        this.initContent(item.children);
+        void this.initContent(item.children);
       }
       if (item.contentUrl && !item.content) {
-        const responce = await fetch(item.contentUrl);
-        const content = await responce.text();
-        const folder = item.contentUrl.split('/').slice(0, -1).join('/')
-        const contentWithCorrectImg = content.replace(/(<img\ssrc=["']?)([^"' ]+)/ig, `$1${folder}/$2`);
+        const response = await fetch(item.contentUrl);
+        const content = await response.text();
+        const folder = item.contentUrl.split('/').slice(0, -1).join('/');
+        const contentWithCorrectImg = content.replace(/(<img\ssrc=["']?)([^ "']+)/gi, `$1${folder}/$2`);
         store.setItemContent(contentWithCorrectImg, item);
       }
     });
   }
 
-  private async init (resolve: () => void) {
+  private async init(resolve: () => void) {
     this.platform = (await getEnvironment()).platform;
     if (!store.tocLoaded) {
-      await this.initToc()
+      await this.initToc();
     }
     this.setItems(this.getCurrentItems(store.toc, this.path));
     resolve();
   }
 
   @action
-  private setItems (items: Toc) {
+  private setItems(items: Toc) {
     this.items = items;
   }
 
-  private async initToc () {
-    const responce = await fetch('/assets/help/toc.json');
-    const toc = await responce.json();
+  private async initToc() {
+    const response = await fetch('/assets/help/toc.json');
+    const toc = (await response.json()) as Toc;
     store.setToc(this.filterByPlatform(toc));
   }
 
-
-  private filterByPlatform (toc: Toc): Toc {
+  private filterByPlatform(toc: Toc): Toc {
     toc = toc.filter(item => !item.platforms || item.platforms.includes(this.platform));
     toc.forEach(item => {
       if (item.children) {
@@ -65,7 +64,7 @@ export class HelpPart {
     return toc;
   }
 
-  private getCurrentItems (tocPart: Toc, path: string[]): Toc {
+  private getCurrentItems(tocPart: Toc, path: string[]): Toc {
     const currPath = path[0];
     const pathLeft = path.slice(1);
 

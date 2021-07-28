@@ -29,7 +29,7 @@ export class EditFeatureField extends Component<EditFeatureFieldProps> {
     const { type, field, featureInfo } = this.props;
 
     return (
-      <div className={cnEditFeatureField({ type: this.props.type })}>
+      <div className={cnEditFeatureField({ type })}>
         <EditFeatureFieldLabel>{field.property.title}</EditFeatureFieldLabel>
         <EditFeatureFieldField type={type} field={field} featureInfo={featureInfo} />
       </div>

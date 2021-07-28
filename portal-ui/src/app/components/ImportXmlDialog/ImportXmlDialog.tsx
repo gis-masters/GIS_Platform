@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
-import { boundMethod } from 'autobind-decorator';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { AxiosError } from 'axios';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
+import { boundMethod } from 'autobind-decorator';
 
 import { services } from '../../services/services';
 import { importXml } from '../../services/import-xml.service';
@@ -66,16 +67,16 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
 
     try {
       this.setLoading(true);
-      let objectId = await importXml(this.file, datasetId, tableId);
-      let wfsFeature = await getFeaturesById([objectId.toString()], complexName);
+      const objectId = await importXml(this.file, datasetId, tableId);
+      const wfsFeature = await getFeaturesById([objectId.toString()], complexName);
       if (wfsFeature.length > 0) {
         mapService.highlightFeatures(wfsFeature);
         mapService.positionToFeature(wfsFeature[0]);
       }
       Toast.success('Объекты из файла импортированы успешно');
-    } catch (ex) {
-      Toast.warn('Возникла ошибка при загрузке файла. ' + ex.message);
-      services.logger.warn('Возникла ошибка при загрузке файла: ', ex.message);
+    } catch (error) {
+      Toast.warn('Возникла ошибка при загрузке файла. ' + (error as AxiosError).message);
+      services.logger.warn('Возникла ошибка при загрузке файла: ', (error as AxiosError).message);
     }
     this.reset();
 

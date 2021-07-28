@@ -4,10 +4,10 @@ import { Coordinate } from 'ol/coordinate';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { FileCopyOutlined } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
-import GeometryType from 'ol/geom/GeometryType';
 
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
 import { copyNodeToClipboard } from '../../../services/util/clipboard.util';
+import { GeometryType } from '../../../services/geoserver/wfs.models';
 
 const cnEditFeatureGeometryCopy = cn('EditFeatureGeometry', 'Copy');
 

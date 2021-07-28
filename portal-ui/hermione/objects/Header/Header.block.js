@@ -5,17 +5,19 @@ module.exports = class Header extends Block {
     container: 'crg-header',
     regButton: '.header__button_type_reg',
     loginButton: '.header__button_type_login'
-  }
+  };
 
-  clickRegButton () {
+  async clickRegButton() {
     const { regButton } = this._elements;
+    const $regButton = await this.browser.$(regButton);
 
-    return this.browser.click(regButton);
+    return await $regButton.click();
   }
 
-  clickLoginButton () {
+  async clickLoginButton() {
     const { loginButton } = this._elements;
+    const $loginButton = await this.browser.$(loginButton);
 
-    return this.browser.click(loginButton);
+    return await $loginButton.click();
   }
 };

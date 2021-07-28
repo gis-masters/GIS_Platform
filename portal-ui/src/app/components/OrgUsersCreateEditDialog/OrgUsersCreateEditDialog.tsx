@@ -75,7 +75,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
                     value={email}
                     error={Boolean(this.errorFields.email)}
                     helperText={this.errorFields.email}
-                    fullWidth={true}
+                    fullWidth
                   />
                 </FormControl>
               </FormField>
@@ -88,7 +88,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
                     value={name}
                     error={Boolean(this.errorFields.name)}
                     helperText={this.errorFields.name}
-                    fullWidth={true}
+                    fullWidth
                   />
                 </FormControl>
               </FormField>
@@ -101,7 +101,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
                     value={surname}
                     error={Boolean(this.errorFields.surname)}
                     helperText={this.errorFields.surname}
-                    fullWidth={true}
+                    fullWidth
                   />
                 </FormControl>
               </FormField>
@@ -123,7 +123,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
                       value={password}
                       error={Boolean(this.errorFields.password)}
                       helperText={this.errorFields.password}
-                      fullWidth={true}
+                      fullWidth
                     />
                   </FormControl>
                 </FormField>
@@ -137,7 +137,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
             <Button onClick={onClose}>Отмена</Button>
           </DialogActions>
         </Dialog>
-        <Loading global={true} visible={this.locked} />
+        <Loading global visible={this.locked} />
       </>
     );
   }
@@ -148,9 +148,10 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
 
     try {
       await usersService.create(this.userData);
-    } catch (e) {
+    } catch (error) {
       this.unlock();
-      this.handleErrors(e);
+      this.handleErrors(error);
+
       return;
     }
     this.props.onClose();
@@ -165,9 +166,10 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
 
     try {
       await usersService.edit(getPatch(this.userData, user), user.id);
-    } catch (e) {
+    } catch (error) {
       this.unlock();
-      this.handleErrors(e);
+      this.handleErrors(error);
+
       return;
     }
 
@@ -176,7 +178,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
   }
 
   @action.bound
-  private handleErrors(err: AxiosError) {
+  private handleErrors(err: AxiosError<{ errors: Record<string, string>[] }>) {
     this.errorFields = cloneDeep(defaultErrors);
     const errors = err?.response?.data?.errors || [];
     errors.forEach((fieldError: { [key: string]: string }) => {

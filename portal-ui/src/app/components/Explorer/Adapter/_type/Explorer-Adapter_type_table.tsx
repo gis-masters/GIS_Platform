@@ -7,7 +7,7 @@ import { DataTable, deleteDataTable, getDataTableConnections } from '../../../..
 import { communicationService } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { LayerIcon } from '../../../LayerIcon/LayerIcon.composed';
-import { Emitter } from '../../../../services/util/Emitter';
+import { Emitter } from '../../../../services/common/Emitter';
 
 import { Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';

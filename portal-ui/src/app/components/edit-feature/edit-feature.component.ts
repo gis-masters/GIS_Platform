@@ -13,7 +13,7 @@ import { BatchModel } from '../../services/crg/batch-model';
 import { getFeaturesById } from '../../services/geoserver/wfs.service';
 import { getFeatureLayer } from '../../services/geoserver/layers.service';
 import { communicationService } from '../../services/communication.service';
-import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
+import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
 import { mapService } from '../../services/map/map.service';
 import { schemaService } from '../../services/crg/schema.service';
 import { PropertySchema, ValueType } from '../../services/crg/schema.models';
@@ -31,7 +31,7 @@ import { sleep } from '../../services/util/sleep';
 import { services } from '../../services/services';
 
 export interface Properties {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 @Component({
@@ -41,7 +41,7 @@ export interface Properties {
 })
 export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy {
   mode: EditFeatureMode;
-  features: WfsFeature[];
+  features: WfsFeature<Coordinate | CoordinateEdited>[];
   private viewFeatures?: WfsFeature[];
   layer: CrgLayer;
   private properties?: Properties;
@@ -334,7 +334,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
   private async batchUpdateFeatures(
     layerName: string,
-    features: WfsFeature[],
+    features: WfsFeature<Coordinate | CoordinateEdited>[],
     newProperties: Properties,
     geometry?: WfsGeometry<Coordinate>
   ) {

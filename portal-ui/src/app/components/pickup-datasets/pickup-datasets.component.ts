@@ -27,7 +27,7 @@ export class PickupDatasetsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(PickupDatasets, {  onDatasetSelected: this.onDatasetSelected  });
+    const reactElement = createElement(PickupDatasets, { onDatasetSelected: this.onDatasetSelected });
 
     render(reactElement, this.ref.nativeElement);
   }

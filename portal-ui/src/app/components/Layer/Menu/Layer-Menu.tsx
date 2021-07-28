@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import GeometryType from 'ol/geom/GeometryType';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, Menu, MenuItem } from '@material-ui/core';
@@ -22,6 +21,7 @@ import { CrgLayer, CrgLayersGroup, CrgLayerType, TreeItemPayload } from '../../.
 import { getProjection, olProjection, transform } from '../../../services/geoserver/projections.service';
 import { getFeatureType } from '../../../services/geoserver/featuretypes.service';
 import { getLayerCoverage } from '../../../services/geoserver/layers.service';
+import { GeometryType } from '../../../services/geoserver/wfs.models';
 import { schemaService } from '../../../services/crg/schema.service';
 import { exportService } from '../../../services/crg/export.service';
 import { mapService } from '../../../services/map/map.service';

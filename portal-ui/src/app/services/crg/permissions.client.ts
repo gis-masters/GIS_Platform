@@ -15,8 +15,9 @@ import { Toast } from '../../components/Toast/Toast';
 export async function getTablePermissions(datasetId: string, tableId: string): Promise<RoleAssignmentBody[]> {
   try {
     return await http.getPaged<RoleAssignmentBody>(await getTableRoleAssignmentUrl(datasetId, tableId));
-  } catch (e) {
+  } catch {
     Toast.error(`Ошибка получения прав для таблицы ${tableId} в наборе ${datasetId}`);
+
     return [];
   }
 }
@@ -26,50 +27,58 @@ export async function getAllTablesAndDatasetsPermissions(): Promise<ResourcePerm
     const response = await http.getPaged<ResourcePermissions>(await getAllPermissionsUrl());
 
     return response.filter(({ permissions }) => permissions?.length);
-  } catch (e) {
-    Toast.error(`Ошибка получения прав для списка таблиц`);
+  } catch {
+    Toast.error('Ошибка получения прав для списка таблиц');
 
     return [];
   }
 }
 
-export async function addTablePermission(payload: RoleAssignmentBody, datasetId: string, tableId: string) {
+export async function addTablePermission(
+  payload: RoleAssignmentBody,
+  datasetId: string,
+  tableId: string
+): Promise<void> {
   const url = await getTableRoleAssignmentUrl(datasetId, tableId);
 
   try {
     await http.post(url, payload);
-  } catch (e) {
-    handleSavingError(e, payload, 'добавить', 'таблицы', `${datasetId}:${tableId}`);
+  } catch (error) {
+    handleSavingError(error, payload, 'добавить', 'таблицы', `${datasetId}:${tableId}`);
   }
 }
 
-export async function removeTablePermission(payload: RoleAssignmentBody, datasetId: string, tableId: string) {
+export async function removeTablePermission(
+  payload: RoleAssignmentBody,
+  datasetId: string,
+  tableId: string
+): Promise<void> {
   const url = await getTableRoleAssignmentUrl(datasetId, tableId);
 
   try {
     await http.delete(`${url}/${payload.id}`);
-  } catch (e) {
-    handleSavingError(e, payload, 'удалить', 'таблицы', `${datasetId}:${tableId}`);
+  } catch (error) {
+    handleSavingError(error, payload, 'удалить', 'таблицы', `${datasetId}:${tableId}`);
   }
 }
 
-export async function addDatasetPermission(payload: RoleAssignmentBody, datasetId: string) {
+export async function addDatasetPermission(payload: RoleAssignmentBody, datasetId: string): Promise<void> {
   const url = await getDatasetRoleAssignmentUrl(datasetId);
 
   try {
     await http.post(url, payload);
-  } catch (e) {
-    handleSavingError(e, payload, 'добавить', 'набора данных', datasetId);
+  } catch (error) {
+    handleSavingError(error, payload, 'добавить', 'набора данных', datasetId);
   }
 }
 
-export async function removeDatasetPermission(payload: RoleAssignmentBody, datasetId: string) {
+export async function removeDatasetPermission(payload: RoleAssignmentBody, datasetId: string): Promise<void> {
   const url = await getDatasetRoleAssignmentUrl(datasetId);
 
   try {
     await http.delete(`${url}/${payload.id}`);
-  } catch (e) {
-    handleSavingError(e, payload, 'удалить', 'набора данных', datasetId);
+  } catch (error) {
+    handleSavingError(error, payload, 'удалить', 'набора данных', datasetId);
   }
 }
 
@@ -78,7 +87,7 @@ export async function getProjectPermissions(project: CrgProject): Promise<RoleAs
     const list = await http.get<RoleAssignmentBody[]>(await getProjectPermissionsUrl(project.id));
 
     return list.map(item => ({ ...item, principalId: Number(item.principalId) }));
-  } catch (e) {
+  } catch {
     Toast.error(`Ошибка получения прав для проекта ${project.id}`);
 
     return [];
@@ -88,31 +97,31 @@ export async function getProjectPermissions(project: CrgProject): Promise<RoleAs
 export async function getAllProjectsPermissions(): Promise<{ [projectId: string]: RoleAssignmentBody[] }> {
   try {
     return await http.get<{ [projectId: string]: RoleAssignmentBody[] }>(await getAllProjectsPermissionsUrl());
-  } catch (e) {
-    Toast.error(`Ошибка получения прав для списка проектов`);
+  } catch {
+    Toast.error('Ошибка получения прав для списка проектов');
 
     return {};
   }
 }
 
-export async function addProjectPermission(payload: RoleAssignmentBody, project: CrgProject) {
+export async function addProjectPermission(payload: RoleAssignmentBody, project: CrgProject): Promise<void> {
   try {
     await http.post(await getProjectPermissionsUrl(project.id), payload);
-  } catch (e) {
-    handleSavingError(e, payload, 'добавить', 'проекта', project.name);
+  } catch (error) {
+    handleSavingError(error, payload, 'добавить', 'проекта', project.name);
   }
 }
 
-export async function removeProjectPermission(payload: RoleAssignmentBody, project: CrgProject) {
+export async function removeProjectPermission(payload: RoleAssignmentBody, project: CrgProject): Promise<void> {
   try {
     await http.delete(await getProjectPermissionUrl(project.id, payload.id));
-  } catch (e) {
-    handleSavingError(e, payload, 'удалить', 'проекта', project.name);
+  } catch (error) {
+    handleSavingError(error, payload, 'удалить', 'проекта', project.name);
   }
 }
 
 function handleSavingError(
-  e: any,
+  e: unknown,
   payload: RoleAssignmentBody,
   actionType: string,
   entityType: string,

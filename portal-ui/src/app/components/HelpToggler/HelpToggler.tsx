@@ -16,7 +16,7 @@ import '!style-loader!css-loader!sass-loader!./HelpToggler.scss';
 const cnHelpToggler = cn('HelpToggler');
 
 @observer
-export class HelpToggler extends Component<{}> {
+export class HelpToggler extends Component {
   @observable private dialogOpen = false;
   @observable private selectedItem?: TocItem;
   private ref = createRef<HTMLButtonElement>();
@@ -37,14 +37,13 @@ export class HelpToggler extends Component<{}> {
         <Dialog open={this.dialogOpen} onClose={this.closeDialog} PaperProps={{ className: cnHelpToggler('Dialog') }}>
           <DialogContent>
             <DialogContentText>Справка</DialogContentText>
-            <Help
-              className={cnHelpToggler('Help')}
-              selectedItem={this.selectedItem}
-              helpPart={this.helpPart}
-            />
+            <Help className={cnHelpToggler('Help')} selectedItem={this.selectedItem} helpPart={this.helpPart} />
           </DialogContent>
           <DialogActions>
-            <Button color='primary' routerLink='/about'> Все статьи</Button>
+            <Button color='primary' routerLink='/about'>
+              {' '}
+              Все статьи
+            </Button>
             <Button onClick={this.closeDialog}>Закрыть</Button>
           </DialogActions>
         </Dialog>

@@ -13,9 +13,6 @@ describe('conv: Начальная страница', () => {
 
     await homePage.open();
     await homePage.waitForVisible();
-
-    // TODO: удалить, когда будет сделана #135
-    await this.browser.pause(2000);
   });
 
   /**
@@ -23,7 +20,7 @@ describe('conv: Начальная страница', () => {
    *   When пользователь заходит на главную страницу
    *   Then главная страница выглядит как положено
    */
-  it('Внешний вид', async function() {
+  it('Внешний вид', async function () {
     const homePage = new HomePage(this.browser);
 
     await homePage.assertSelfie();
@@ -35,7 +32,7 @@ describe('conv: Начальная страница', () => {
    *   And  нажимает на кнопку "зарегистрироваться"
    *   Then открывается страница регистрации предприятия
    */
-  it('Переход на страницу регистрации', async function() {
+  it('Переход на страницу регистрации', async function () {
     const header = new Header(this.browser);
     const registerPage = new RegisterPage(this.browser);
 
@@ -50,7 +47,7 @@ describe('conv: Начальная страница', () => {
    *   And  нажимает кнопку "Войти"
    *   Then открывается страница авторизации
    */
-  it('Переход на страницу входа', async function() {
+  it('Переход на страницу входа', async function () {
     const header = new Header(this.browser);
     const loginPage = new LoginPage(this.browser);
 

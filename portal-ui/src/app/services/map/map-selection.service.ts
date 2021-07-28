@@ -99,6 +99,9 @@ class MapSelectionService {
       mapService.map.addInteraction(this.areaExtentRemove);
       mapService.map.addInteraction(this.areaExtentAdd);
 
+      // ошибка в типах ol
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       mapService.map.on('pointerdown', (e: MapBrowserEvent<UIEvent>) => {
         const originalEvent = e.originalEvent as MouseEvent;
 
@@ -127,10 +130,16 @@ class MapSelectionService {
         }
       });
 
+      // ошибка в типах ol
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       mapService.map.on('wheel', () => {
         this.areaExtentReplace.setActive(false);
       });
 
+      // ошибка в типах ol
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       mapService.map.on('pointerup', async (e: MapBrowserEvent<UIEvent>) => {
         const originalEvent = e.originalEvent as MouseEvent;
 

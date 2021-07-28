@@ -35,16 +35,13 @@ export class PermissionsEditDialogRoleSelect extends Component<PermissionsEditDi
 
   private getPrincipalRole(): Role {
     const { principalId, principalType, currentPermissions } = this.props;
+
     return currentPermissions.reduce((role: Role, permission: RoleAssignmentBody) => {
-      if (
-        principalType === permission.principalType &&
+      return principalType === permission.principalType &&
         principalId === permission.principalId &&
         roles.indexOf(permission.role) > roles.indexOf(role)
-      ) {
-        return permission.role;
-      } else {
-        return role;
-      }
+        ? permission.role
+        : role;
     }, roles[0]);
   }
 

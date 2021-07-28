@@ -4,13 +4,13 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Dialog, DialogContent, DialogActions, TextField, IconButton, Tooltip } from '@material-ui/core';
 import { ListAlt } from '@material-ui/icons';
-import GeometryType from 'ol/geom/GeometryType';
 import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 
 import { getEmptyGeometry, selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
 import {
   CoordinateEdited,
+  GeometryType,
   WfsMultiLineStringGeometry,
   WfsMultiPolygonGeometry,
   WfsPointGeometry
@@ -66,8 +66,8 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
               className={cnEditFeatureGeometry('Text')}
               value={this.text}
               onChange={this.changeHandler}
-              multiline={true}
-              autoFocus={true}
+              multiline
+              autoFocus
             />
           </DialogContent>
           <DialogActions>
@@ -82,7 +82,16 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
   }
 
   private initText() {
-    this.setText(this.props.coordinates.map(coord => clone(coord).reverse().join('\t')).join('\n'));
+    this.setText(
+      this.props.coordinates
+        .map(coord => {
+          const newCoord = clone(coord);
+          newCoord.reverse();
+
+          return newCoord.join('\t');
+        })
+        .join('\n')
+    );
   }
 
   @boundMethod
@@ -114,16 +123,28 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
       .split('\n')
       .map(row => row.trim().replace(/\s+/g, ' '))
       .filter(row => row)
-      .map(row => row.split(/\s/).reverse());
+      .map(row => {
+        const rowArr = row.split(/\s/);
+        rowArr.reverse();
+
+        return rowArr;
+      });
 
     if (!newCoordinates.length) {
       const emptyGeometry = getEmptyGeometry(geometryType);
-      if (geometryType === GeometryType.POINT) {
-        newCoordinates = [(emptyGeometry as WfsPointGeometry<CoordinateEdited>).coordinates];
-      } else if (geometryType === GeometryType.MULTI_LINE_STRING) {
-        newCoordinates = (emptyGeometry as WfsMultiLineStringGeometry).coordinates[0];
-      } else if (geometryType === GeometryType.MULTI_POLYGON) {
-        newCoordinates = (emptyGeometry as WfsMultiPolygonGeometry).coordinates[0][0];
+      switch (geometryType) {
+        case GeometryType.POINT: {
+          newCoordinates = [(emptyGeometry as WfsPointGeometry<CoordinateEdited>).coordinates];
+          break;
+        }
+        case GeometryType.MULTI_LINE_STRING: {
+          newCoordinates = (emptyGeometry as WfsMultiLineStringGeometry).coordinates[0];
+          break;
+        }
+        case GeometryType.MULTI_POLYGON: {
+          newCoordinates = (emptyGeometry as WfsMultiPolygonGeometry).coordinates[0][0];
+          break;
+        }
       }
     }
 

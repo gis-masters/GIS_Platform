@@ -4,4 +4,4 @@ import { Component } from '@angular/core';
   selector: 'crg-data-management-page',
   templateUrl: './data-management-page.component.html'
 })
-export class DataManagementPageComponent { }
+export class DataManagementPageComponent {}

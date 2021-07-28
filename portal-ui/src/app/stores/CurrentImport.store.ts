@@ -39,16 +39,20 @@ const taskStatusesList: { [key in TaskStatusCode]: string } = {
   UNKNOWN: 'Неопределенный статус'
 };
 
-const taskErrorCodes: TaskStatusCode[] = [
+const taskErrorCodes: Set<TaskStatusCode> = new Set([
   TaskStatusCode.NO_CRS,
   TaskStatusCode.NO_BOUNDS,
   TaskStatusCode.NO_FORMAT,
   TaskStatusCode.BAD_FORMAT,
   TaskStatusCode.ERROR,
   TaskStatusCode.CANCELED
-];
+]);
 
-const taskPendingCodes: TaskStatusCode[] = [TaskStatusCode.PENDING, TaskStatusCode.READY, TaskStatusCode.RUNNING];
+const taskPendingCodes: Set<TaskStatusCode> = new Set([
+  TaskStatusCode.PENDING,
+  TaskStatusCode.READY,
+  TaskStatusCode.RUNNING
+]);
 
 class CurrentImport implements ImportInfo {
   private static _instance: CurrentImport;
@@ -75,11 +79,7 @@ class CurrentImport implements ImportInfo {
 
   @computed
   get id(): string | null {
-    if (this.scratch) {
-      return String(this.scratch.id);
-    } else {
-      return null;
-    }
+    return this.scratch ? String(this.scratch.id) : null;
   }
 
   @computed
@@ -89,9 +89,9 @@ class CurrentImport implements ImportInfo {
 
   @computed
   get isError(): boolean {
-    const { scratch } = this;
+    const { scratch, error, isWrongExt } = this;
 
-    return this.error || this.isWrongExt || (scratch && scratch.state === 'ERROR');
+    return error || isWrongExt || (scratch && scratch.state === 'ERROR');
   }
 
   @computed
@@ -103,29 +103,31 @@ class CurrentImport implements ImportInfo {
         ...task,
         layer: fullTask && fullTask.layer,
         progress: fullTask && fullTask.progress,
-        isError: taskErrorCodes.includes(task.state),
-        isPending: taskPendingCodes.includes(task.state),
+        isError: taskErrorCodes.has(task.state),
+        isPending: taskPendingCodes.has(task.state),
         statusText: this.getDescription(task)
       };
     });
   }
 
   @computed
-  get notFullfilledTasks(): ImportTaskShort[] {
+  get notFulfilledTasks(): ImportTaskShort[] {
     return ((this.scratch && this.scratch.tasks) || []).filter(t => !this.fullTasks[t.id]);
   }
 
   @computed
   get isWrongExt(): boolean {
-    if (!this.file) { return false; }
+    if (!this.file) {
+      return false;
+    }
+
     return this.file.name.split('.')[1] !== 'zip';
   }
 
   @computed
   get isFinished(): boolean {
-    const { scratch } = this;
     const hasPendingTasks = this.tasks.some(t => t.isPending);
-    const state = scratch && scratch.state;
+    const state = this.scratch?.state;
 
     return this.on && (state === 'COMPLETE' || this.isError || (!hasPendingTasks && Boolean(this.tasks.length)));
   }
@@ -161,7 +163,7 @@ class CurrentImport implements ImportInfo {
   }
 
   @action
-  setError(err: any) {
+  setError() {
     this.error = true;
     // TODO отобразить бы error
   }
@@ -181,11 +183,7 @@ class CurrentImport implements ImportInfo {
   private getDescription(task: ImportTask): string {
     const { state } = task;
 
-    if (Object.keys(taskStatusesList).includes(state)) {
-      return taskStatusesList[state];
-    } else {
-      return 'Неопределенный статус';
-    }
+    return Object.keys(taskStatusesList).includes(state) ? taskStatusesList[state] : 'Неопределенный статус';
   }
 }
 

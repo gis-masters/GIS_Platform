@@ -76,7 +76,7 @@ export class OrgActionsDel extends Component<OrgActionsDelProps> {
   }
 
   @action
-  setLoading(loading: boolean) {
+  private setLoading(loading: boolean) {
     this.loading = loading;
   }
 }

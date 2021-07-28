@@ -49,12 +49,12 @@ class GroupsService {
   async create(groupData: NewGroupData) {
     const url = await getGroupsUrl();
     await http.post<CrgGroup>(url, groupData);
-    this.debouncedFetchGroupsListStore();
+    void this.debouncedFetchGroupsListStore();
   }
 
   async delete(group: CrgGroup) {
     await http.delete(await getGroupUrl(group.id));
-    this.debouncedFetchGroupsListStore();
+    void this.debouncedFetchGroupsListStore();
   }
 
   async getUserGroups(user: CrgUser): Promise<CrgGroup[]> {
@@ -65,12 +65,12 @@ class GroupsService {
 
   async addUserToGroup(user: CrgUser, group: CrgGroup) {
     await http.post(await getGroupUserUrl(group.id, user.id), {});
-    this.debouncedFetchGroupsListStore();
+    void this.debouncedFetchGroupsListStore();
   }
 
   async removeUserFromGroup(user: CrgUser, group: CrgGroup) {
     await http.delete(await getGroupUserUrl(group.id, user.id));
-    this.debouncedFetchGroupsListStore();
+    void this.debouncedFetchGroupsListStore();
   }
 
   async initAllGroupsStore() {
@@ -78,6 +78,7 @@ class GroupsService {
       if (this.allGroupsFetching) {
         await this.allGroupsFetching;
       }
+
       return;
     }
 
@@ -92,7 +93,8 @@ class GroupsService {
     }
 
     if (allGroups.fetching) {
-      this.debouncedFetchGroupsListStore();
+      void this.debouncedFetchGroupsListStore();
+
       return;
     }
 

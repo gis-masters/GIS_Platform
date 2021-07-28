@@ -20,7 +20,7 @@ export class ProjectsHeader extends Component {
   private intersectionObserver: IntersectionObserver;
   @observable private stuck = false;
 
-  constructor(props: {}) {
+  constructor(props: Record<never, unknown>) {
     super(props);
 
     this.intersectionObserver = new IntersectionObserver(
@@ -31,7 +31,7 @@ export class ProjectsHeader extends Component {
     );
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.intersectionObserver.observe(this.ref.current);
   }
 

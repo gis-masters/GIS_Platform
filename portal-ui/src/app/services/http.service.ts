@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-import { CustomCache, CustomCacheConfig } from './util/CustomCache';
+import { CustomCache, CustomCacheConfig } from './common/CustomCache';
 import { replaceUrl } from './server-urls.service';
 import { PageableResponse } from './models';
 

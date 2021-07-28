@@ -1,5 +1,6 @@
 import { observable, computed, action } from 'mobx';
-import { Rule } from '../services/crg/projects.models';
+
+import { Rule } from '../services/geoserver/styles.service';
 
 export interface RuleExtended extends Rule {
   layerId: number;

@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios';
+
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { communicationService } from '../communication.service';
@@ -35,7 +37,7 @@ export async function getBasemaps(
   return [(response._embedded && response._embedded.basemaps) || [], response.page.totalPages];
 }
 
-export async function deleteBasemap(basemapId: number) {
+export async function deleteBasemap(basemapId: number): Promise<void> {
   await http.delete(await getBasemapUrl(basemapId));
   communicationService.basemapsUpdated.emit();
 }
@@ -43,10 +45,10 @@ export async function deleteBasemap(basemapId: number) {
 /**
  * Fetch all basemaps for project
  */
-export async function fetchBasemaps() {
+export async function fetchBasemaps(): Promise<void> {
   await services.provided;
 
-  let projectBasemaps = await fetchProjectBasemaps(currentProject.id);
+  const projectBasemaps = await fetchProjectBasemaps(currentProject.id);
   if (!projectBasemaps.length) {
     basemapsStore.clear();
 
@@ -62,12 +64,12 @@ export async function fetchBasemaps() {
       const crgBaseMaps = handleBasemaps(projectBasemaps, response._embedded.basemaps);
       basemapsStore.initBaseMaps(crgBaseMaps);
     }
-  } catch (e) {
-    services.logger.error('Подложки не подготовлены? ', e);
+  } catch (error) {
+    services.logger.error('Подложки не подготовлены? ', error);
   }
 }
 
-export async function connectBasemapToProject(project: CrgProject, basemap: Basemap) {
+export async function connectBasemapToProject(project: CrgProject, basemap: Basemap): Promise<void> {
   await http.post(await getProjectBasemapsUrl(project.id), {
     baseMapId: basemap.id,
     title: basemap.title
@@ -77,25 +79,22 @@ export async function connectBasemapToProject(project: CrgProject, basemap: Base
 export async function getBasemapConnections(basemapId: number): Promise<CrgProject[]> {
   try {
     return await http.get<CrgProject[]>(await getBasemapConnectionsUrl(basemapId));
-  } catch (e) {
+  } catch (error) {
     const message = `Ошибка получения проектов относящихся к подложке: "${basemapId}"`;
-    services.logger.error(message, e);
-    Toast.error({ message, details: e.message });
+    services.logger.error(message, error);
+    Toast.error({ message, details: (error as AxiosError).message });
   }
 }
 
 // К подложкам применяются кастомизации указанные для них в проекте: сортируем по position, меняем title
 function handleBasemaps(projectBaseMaps: ProjectBasemap[], basemaps: Basemap[]): Basemap[] {
   const result: Basemap[] = [];
-  projectBaseMaps
-    .slice()
+  [...projectBaseMaps]
     .sort((a, b) => a.position - b.position || a.id - b.id)
     .forEach(projectBasemap => {
       const basemap = basemaps.find(({ id }) => id === projectBasemap.baseMapId);
-      if (projectBasemap.title) {
-        if (basemap) {
-          basemap.title = projectBasemap.title;
-        }
+      if (projectBasemap.title && basemap) {
+        basemap.title = projectBasemap.title;
       }
 
       if (basemap) {
@@ -112,7 +111,7 @@ function handleBasemaps(projectBaseMaps: ProjectBasemap[], basemaps: Basemap[]):
 async function fetchProjectBasemaps(projectId: number): Promise<ProjectBasemap[]> {
   try {
     return await http.get<ProjectBasemap[]>(await getProjectBasemapsUrl(projectId));
-  } catch (e) {
-    services.logger.error('Не удалось получить подложки проекта.', e);
+  } catch (error) {
+    services.logger.error('Не удалось получить подложки проекта.', error);
   }
 }

@@ -5,6 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 import { MyLocation } from '@material-ui/icons';
 import { IconButton, ListItem, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import IconAnchorUnits from 'ol/style/IconAnchorUnits';
+import { SimpleGeometry } from 'ol/geom';
 import { Icon, Style } from 'ol/style';
 import { Extent } from 'ol/extent';
 import Point from 'ol/geom/Point';
@@ -13,7 +14,7 @@ import { cn } from '@bem-react/classname';
 
 import { mapService } from '../../../services/map/map.service';
 import { getRosreestrSingleAreaData, getRosreestrSingleOksData } from '../../../services/rosreestr-data.service';
-import { KadObject } from '../../../services/kad-search.models';
+import { KadItem, KadObject } from '../../../services/kad-search.models';
 
 const cnSearch = cn('Search');
 
@@ -23,7 +24,7 @@ export interface SearchResultKadListItemProps {
 
 @observer
 export class SearchResultKadListItem extends Component<SearchResultKadListItemProps> {
-  @observable private pointExist: boolean = true;
+  @observable private pointExist = true;
 
   render(): ReactNode {
     const { value, title } = this.props.kadObject;
@@ -51,11 +52,11 @@ export class SearchResultKadListItem extends Component<SearchResultKadListItemPr
     const value = await Promise.all([
       getRosreestrSingleAreaData(this.props.kadObject.value),
       getRosreestrSingleOksData(this.props.kadObject.value)
-    ])
+    ]);
 
-    const item = value.flat(2)[0];
+    const item = value.flat(2)[0] as KadItem | undefined;
 
-    if (item && item.center) {
+    if (item?.center) {
       const center = item.center;
 
       this.drawMarker([center.x, center.y]);
@@ -79,7 +80,7 @@ export class SearchResultKadListItem extends Component<SearchResultKadListItemPr
       })
     });
 
-    const iconFeature = new Feature({
+    const iconFeature = new Feature<SimpleGeometry>({
       geometry: new Point(pos)
     });
 

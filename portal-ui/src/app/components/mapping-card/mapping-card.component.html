@@ -35,7 +35,7 @@
           *ngFor="let fDescription of searchingFeatureDescriptions"
           [value]="{ name: fDescription.name, title: fDescription.title }"
         >
-          <span style="font-size: smaller" *ngIf="fDescription.tableName">({{ fDescription.tableName }})</span>
+          <span style="font-size: smaller;" *ngIf="fDescription.tableName">({{ fDescription.tableName }})</span>
           {{ fDescription.title }}
         </mat-option>
       </mat-autocomplete>
@@ -43,14 +43,14 @@
   </div>
 
   <div *ngIf="openAttributes()">
-    <div class="row" style="text-align: center">
+    <div class="row" style="text-align: center;">
       <div class="col-12">
         <h3 class="mat-h2 m-0">Сопоставьте атрибуты</h3>
       </div>
     </div>
 
     <div class="container">
-      <div *ngFor="let importedLayerAttribute of importLayer.attributes" style="margin-bottom: 5px">
+      <div *ngFor="let importedLayerAttribute of importLayer.attributes" style="margin-bottom: 5px;">
         <crg-mapping-pair
           [importedLayerAttribute]="importedLayerAttribute"
           [layerName]="importLayer.nativeName"

@@ -77,17 +77,17 @@ class UsersService {
 
   async create(userData: NewUserData) {
     await http.post(await getUsersUrl(), userData);
-    this.debouncedFetchUsersListStore();
+    void this.debouncedFetchUsersListStore();
   }
 
   async edit(patch: Partial<CrgUser>, id: number) {
     await http.patch(await getUserUrl(id), patch);
-    this.debouncedFetchUsersListStore();
+    void this.debouncedFetchUsersListStore();
   }
 
   async delete(user: CrgUser) {
     await http.delete(await getUserUrl(user.id));
-    this.debouncedFetchUsersListStore();
+    void this.debouncedFetchUsersListStore();
   }
 
   async initUsersListStore() {
@@ -111,14 +111,15 @@ class UsersService {
   private async fetchingCurrent(): Promise<void> {
     try {
       currentUser.setOrgInfo(await http.get<OrgInfo>(await getUserUrl('current')));
-    } catch (e) {
+    } catch {
       currentUser.setOrgInfo();
     }
   }
 
   private async fetchUsersListStore() {
     if (allUsers.fetching) {
-      this.debouncedFetchUsersListStore();
+      void this.debouncedFetchUsersListStore();
+
       return;
     }
 

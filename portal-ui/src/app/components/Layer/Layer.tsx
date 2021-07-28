@@ -63,19 +63,9 @@ export class Layer extends Component<LayerProps> {
   }
 
   render() {
-    const {
-      className,
-      data,
-      isGroup,
-      isEmptyGroup,
-      depth,
-      onEyeClick,
-      visible,
-      hiddenByZoom,
-      editMode,
-      highlighted
-    } = this.props;
-    const { title, enabled } = data;
+    const { className, data, isGroup, isEmptyGroup, depth, onEyeClick, visible, hiddenByZoom, editMode, highlighted } =
+      this.props;
+    const { title, enabled, transparency } = data;
     const { expanded } = data as CrgLayersGroup;
     const out = currentProject.viewZoom > (data as CrgLayer).minZoom;
     const hiddenByZoomTooltipText = hiddenByZoom
@@ -86,7 +76,7 @@ export class Layer extends Component<LayerProps> {
       <div className={cnLayer({ open: this.open, group: isGroup, visible, editMode }, [className])}>
         <LayerCard onContextMenu={this.handleContextMenu} highlighted={highlighted}>
           <LayerDrag />
-          {!hiddenByZoom && <LayerTransparencyIndicator value={data.transparency} />}
+          {!hiddenByZoom && <LayerTransparencyIndicator value={transparency} />}
           {hiddenByZoom && <LayerZoomWarning out={out} tooltipText={hiddenByZoomTooltipText} />}
           <LayerEye
             enabled={enabled}
@@ -133,7 +123,7 @@ export class Layer extends Component<LayerProps> {
   @computed
   private get errors(): string[] {
     if (this.props.errors) {
-      return this._errors.concat(this.props.errors);
+      return [...this._errors, ...(this.props.errors || [])];
     }
 
     return this._errors;
@@ -155,8 +145,8 @@ export class Layer extends Component<LayerProps> {
 
     if (type === CrgLayerType.VECTOR) {
       try {
-        const { geometryType } = await schemaService.getSchema(schemaId);
-      } catch (e) {
+        await schemaService.getSchema(schemaId);
+      } catch {
         this.addError('Не найдена схема для слоя.');
       }
     }
@@ -198,7 +188,7 @@ export class Layer extends Component<LayerProps> {
     this.menuAnchor = e.target as HTMLButtonElement;
     this.menuOpen = true;
 
-    const button = document.querySelector(':focus') as HTMLButtonElement;
+    const button: HTMLButtonElement = document.querySelector(':focus');
     if (button) {
       button.blur();
     }

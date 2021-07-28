@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { getBaseUrl, getDatasetsUrl, getProcessUrl } from '../server-urls.service';
+import { getProcessUrl } from '../server-urls.service';
 import { http } from '../http.service';
 import { Process } from '../models';
 

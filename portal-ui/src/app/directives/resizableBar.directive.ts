@@ -29,23 +29,23 @@ export class ResizableBarDirective implements OnInit {
   constructor(private el: ElementRef) {}
 
   ngOnInit() {
-    this.initialCursor = this.el.nativeElement.style.cursor;
+    this.initialCursor = (this.el.nativeElement as HTMLElement).style.cursor;
     this.cursor = cursors[this.direction];
   }
 
-  @HostListener('mousemove', ['$event']) onMouseMove(e: MouseEvent) {
+  @HostListener('mousemove', ['$event']) onMouseMove(e: MouseEvent): void {
     this.setResizeReadyState(this.testResizeZone(this.getPosFromE(e)));
   }
 
-  @HostListener('mouseenter', ['$event']) onMouseEnter(e: MouseEvent) {
+  @HostListener('mouseenter', ['$event']) onMouseEnter(e: MouseEvent): void {
     this.setResizeReadyState(this.testResizeZone(this.getPosFromE(e)));
   }
 
-  @HostListener('mouseleave') onMouseLeave() {
+  @HostListener('mouseleave') onMouseLeave(): void {
     this.setResizeReadyState(false);
   }
 
-  @HostListener('mousedown', ['$event']) onMouseDown(e: MouseEvent) {
+  @HostListener('mousedown', ['$event']) onMouseDown(e: MouseEvent): void {
     if (this.resizeReady) {
       this.initialPos = this.getPosFromE(e);
       this.initialSize = this.size;
@@ -75,7 +75,7 @@ export class ResizableBarDirective implements OnInit {
 
   private testResizeZone(pos: number): boolean {
     const dragZoneSize = 3;
-    const rect: DOMRect = this.el.nativeElement.getBoundingClientRect();
+    const rect: DOMRect = (this.el.nativeElement as HTMLElement).getBoundingClientRect();
     let offset: number;
 
     if (this.direction === 'top') {
@@ -87,7 +87,7 @@ export class ResizableBarDirective implements OnInit {
 
   private setResizeReadyState(ready: boolean): void {
     if (this.resizeReady !== ready) {
-      this.el.nativeElement.style.cursor = ready ? this.cursor : this.initialCursor;
+      (this.el.nativeElement as HTMLElement).style.cursor = ready ? this.cursor : this.initialCursor;
       this.resizeReady = ready;
     }
   }
@@ -116,18 +116,16 @@ export class ResizableBarDirective implements OnInit {
   }
 
   private get size(): number {
-    if (this.direction === 'top' || this.direction === 'bottom') {
-      return this.el.nativeElement.offsetHeight;
-    } else {
-      return this.el.nativeElement.offsetWidth;
-    }
+    return this.direction === 'top' || this.direction === 'bottom'
+      ? (this.el.nativeElement as HTMLElement).offsetHeight
+      : (this.el.nativeElement as HTMLElement).offsetWidth;
   }
 
   private set size(size: number) {
     if (this.direction === 'top' || this.direction === 'bottom') {
-      this.el.nativeElement.style.height = `${size}px`;
+      (this.el.nativeElement as HTMLElement).style.height = `${size}px`;
     } else {
-      this.el.nativeElement.style.width = `${size}px`;
+      (this.el.nativeElement as HTMLElement).style.width = `${size}px`;
     }
   }
 }

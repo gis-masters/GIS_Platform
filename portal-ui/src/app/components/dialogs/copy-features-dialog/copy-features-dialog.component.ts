@@ -10,11 +10,9 @@ import { CrgLayer } from '../../../services/crg/projects.models';
   styleUrls: ['./copy-features-dialog.component.css']
 })
 export class CopyFeaturesDialogComponent {
-
   selectedLayer: CrgLayer;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: CopyFeaturesDialogData) {}
-
 }
 
 export interface CopyFeaturesDialogData {

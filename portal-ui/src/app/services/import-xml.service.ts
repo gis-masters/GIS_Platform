@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios';
+
 import { http } from './http.service';
 import { getApiImportXmlUrl } from './server-urls.service';
 
@@ -9,7 +11,7 @@ export async function importXml(file: File, datasetId: string, tableId: string):
   formData.append('file', file);
   try {
     return await http.post<number>(await getApiImportXmlUrl(), formData);
-  } catch (e) {
-    throw new Error(e?.response?.data?.message);
+  } catch (error) {
+    throw new Error((error as AxiosError<{ message: string }>).response?.data?.message);
   }
 }

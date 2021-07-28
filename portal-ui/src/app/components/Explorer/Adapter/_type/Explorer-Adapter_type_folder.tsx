@@ -3,7 +3,7 @@ import moment from 'moment';
 import { FolderOutlined } from '@material-ui/icons';
 
 import { PageOptions, SortDir } from '../../../../services/models';
-import { Emitter } from '../../../../services/util/Emitter';
+import { Emitter } from '../../../../services/common/Emitter';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 import { schemaService } from '../../../../services/crg/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';

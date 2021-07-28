@@ -79,7 +79,7 @@ export class OrgGroupsCreate extends Component {
             <Button onClick={this.closeDialog}>Отмена</Button>
           </DialogActions>
         </Dialog>
-        <Loading global={true} visible={this.locked} />
+        <Loading global visible={this.locked} />
       </>
     );
   }
@@ -90,9 +90,10 @@ export class OrgGroupsCreate extends Component {
 
     try {
       await groupsService.create(this.groupData);
-    } catch (e) {
+    } catch (error) {
       this.unlock();
-      this.handleErrors(e);
+      this.handleErrors(error);
+
       return;
     }
 
@@ -101,10 +102,10 @@ export class OrgGroupsCreate extends Component {
   }
 
   @action.bound
-  private handleErrors(err: AxiosError) {
+  private handleErrors(err: AxiosError<{ errors: Record<string, string>[] }>) {
     this.errorFields = cloneDeep(defaultValue);
-    const errors = err?.response?.data?.errors || [];
-    errors.forEach((fieldError: { [key: string]: string }) => {
+    const errors = err.response?.data?.errors || [];
+    errors.forEach((fieldError: Record<string, string>) => {
       if (fieldError.field) {
         this.errorFields[fieldError.field] = fieldError.defaultMessage || 'ошибка';
       }

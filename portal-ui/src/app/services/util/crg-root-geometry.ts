@@ -19,7 +19,7 @@ export class CrgRootGeometry implements GeometryItem {
         {
           name: 'LineString',
           child: []
-        },
+        }
       ]
     },
     {
@@ -42,7 +42,7 @@ export class CrgRootGeometry implements GeometryItem {
               child: []
             }
           ]
-        },
+        }
       ]
     },
     {
@@ -59,7 +59,7 @@ export class CrgRootGeometry implements GeometryItem {
                   child: []
                 }
               ]
-            },
+            }
           ]
         },
         {
@@ -73,7 +73,7 @@ export class CrgRootGeometry implements GeometryItem {
                   child: []
                 }
               ]
-            },
+            }
           ]
         },
         {
@@ -84,8 +84,8 @@ export class CrgRootGeometry implements GeometryItem {
               child: []
             }
           ]
-        },
+        }
       ]
-    },
+    }
   ];
 }

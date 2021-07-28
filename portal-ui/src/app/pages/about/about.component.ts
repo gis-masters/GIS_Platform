@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 
@@ -17,11 +11,11 @@ import { Help } from '../../components/Help/Help';
 export class AboutComponent implements OnInit, OnDestroy {
   @ViewChild('helpReact', { read: ElementRef, static: true }) ref: ElementRef;
 
-  ngOnInit () {
+  ngOnInit() {
     this.renderReactElement();
   }
 
-  ngOnDestroy () {
+  ngOnDestroy() {
     unmountComponentAtNode(this.ref.nativeElement);
   }
 

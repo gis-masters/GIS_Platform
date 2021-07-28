@@ -11,7 +11,7 @@ interface HtmlContentProps extends IClassNameProps {
 }
 
 const rebaseLinks = (html: string): string => {
-  const baseUrl = location.href.substring(0, location.href.lastIndexOf(location.hash));
+  const baseUrl = location.href.slice(0, Math.max(0, location.href.lastIndexOf(location.hash)));
 
   return html.replace(/(href=")(#)([^"]+)/gi, `$1${baseUrl}#$3`);
 };

@@ -4,7 +4,7 @@ import { cn } from '@bem-react/classname';
 import { Favicon } from '../Favicon/Favicon';
 
 import { WorkspaceHeaderBurger } from './Burger/WorkspaceHeader-Burger';
-import { WorkspaceHeaderOrganisation } from './Organisation/WorkspaceHeader-Organisation';
+import { WorkspaceHeaderOrganization } from './Organization/WorkspaceHeader-Organization';
 import { WorkspaceHeaderBreadcrumbs } from './Breadcrumbs/WorkspaceHeader-Breadcrumbs';
 import { WorkspaceHeaderButtons } from './Buttons/WorkspaceHeader-Buttons';
 import { WorkspaceHeaderLoader } from './Loader/WorkspaceHeader-Loader';
@@ -17,7 +17,7 @@ export const WorkspaceHeader: FC = () => (
   <div className={cnWorkspaceHeader()}>
     <Favicon />
     <WorkspaceHeaderBurger />
-    <WorkspaceHeaderOrganisation />
+    <WorkspaceHeaderOrganization />
     <WorkspaceHeaderBreadcrumbs />
     <WorkspaceHeaderButtons />
     <WorkspaceHeaderLoader />

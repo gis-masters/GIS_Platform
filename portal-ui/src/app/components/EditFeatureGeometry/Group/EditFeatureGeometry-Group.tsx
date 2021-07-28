@@ -81,7 +81,7 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
                 key={i + this.startOffset}
                 index={i + this.startOffset}
                 onDelete={this.deleteHandler}
-                withControls={true}
+                withControls
                 canBeDeleted={coordinates.length > minCoordsCount}
                 disabled={isLast && mustBeClosed}
                 onChange={this.changeHandler}

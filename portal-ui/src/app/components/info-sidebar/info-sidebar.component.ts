@@ -32,7 +32,7 @@ export class InfoSidebarComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  closeMe() {
+  closeMe(): void {
     sidebars.closeInfo();
   }
 }

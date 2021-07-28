@@ -81,7 +81,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
                 }
               />
             </FormControl>
-            <List className={cnPickupDatasets('Content', ['scroll'])} dense={true}>
+            <List className={cnPickupDatasets('Content', ['scroll'])} dense>
               {this.datasets.map((dataset: Dataset) => (
                 <PickupDatasetsItem key={dataset.identifier} item={dataset} onClick={this.handleSelection} />
               ))}
@@ -129,7 +129,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
   }
 
   @boundMethod
-  private async onFilterChanged(event) {
+  private async onFilterChanged(event: React.ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
 
     this.isInitial = false;

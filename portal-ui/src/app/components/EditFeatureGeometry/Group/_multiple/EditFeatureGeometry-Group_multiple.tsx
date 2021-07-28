@@ -10,7 +10,7 @@ import {
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Group_multiple.scss';
 
-const Container: FC = (props: ContainerProps) => <Paper {...props} square={true} elevation={2} />;
+const Container: FC = (props: ContainerProps) => <Paper {...props} square elevation={2} />;
 
 export const withMultiple = withBemMod<EditFeatureGeometryGroupProps>(
   cnEditFeatureGeometryGroup(),

@@ -4,4 +4,4 @@ import { Component } from '@angular/core';
   selector: 'crg-org-admin-page',
   templateUrl: './org-admin-page.component.html'
 })
-export class OrgAdminPageComponent { }
+export class OrgAdminPageComponent {}

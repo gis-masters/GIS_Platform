@@ -1,19 +1,19 @@
 import { ImportTaskResponse, ImportTaskShort } from '../geoserver/import/models';
 
-export class GeoUtil {
+export const GeoUtil = {
   /**
    * Приведем в нормальный вид ответ от API геосервера.
    * @param importTask Объект с тасками полученный от геосервера
    */
-  static tasksHandler(importTask?: ImportTaskResponse): ImportTaskShort[] {
+  tasksHandler(importTask?: ImportTaskResponse): ImportTaskShort[] {
     if (!importTask) {
       return [];
     }
 
     return importTask.task ? [importTask.task] : importTask.tasks || [];
-  }
+  },
 
-  static getAliasForBaseType(type: string) {
+  getAliasForBaseType(type: string): string {
     if (type.toLowerCase() === 'string') {
       return 'Строка';
     } else if (type.toLowerCase() === 'integer') {
@@ -22,8 +22,8 @@ export class GeoUtil {
       return 'Целое';
     } else if (type.toLowerCase() === 'double') {
       return 'Дробное';
-    } else {
-      return type;
     }
+
+    return type;
   }
-}
+};

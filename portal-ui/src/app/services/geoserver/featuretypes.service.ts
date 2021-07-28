@@ -12,7 +12,7 @@ export async function getFeatureType({ complexName, dataset, tableName }: CrgLay
   try {
     await http.put(url, result, { params: { recalculate: 'nativebbox' } });
     result = await http.get<{ featureType: FeatureType }>(url, {});
-  } catch (e) {}
+  } catch {}
 
   return result.featureType;
 }

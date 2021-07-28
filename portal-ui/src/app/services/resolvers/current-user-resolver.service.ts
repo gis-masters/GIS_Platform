@@ -8,9 +8,9 @@ import { usersService } from '../crg/users.service';
 })
 export class CurrentUserResolver implements Resolve<void> {
   /**
-   * Сходим за инфой пользователя/организации перед загрузкой старницы
+   * Сходим за инфой пользователя/организации перед загрузкой страницы
    */
-  async resolve() {
+  async resolve(): Promise<void> {
     await usersService.fetchCurrentUser();
   }
 }

@@ -3,7 +3,7 @@ import { InsertDriveFileOutlined } from '@material-ui/icons';
 
 import { services } from '../../../services/services';
 import { PageOptions, SortDir } from '../../../services/models';
-import { Emitter } from '../../../services/util/Emitter';
+import { Emitter } from '../../../services/common/Emitter';
 import { Toast } from '../../Toast/Toast';
 
 import { ExplorerStore } from '../Explorer.store';

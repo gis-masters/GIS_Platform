@@ -1,14 +1,13 @@
 import { Feature } from 'ol';
 import WFS, { WriteTransactionOptions } from 'ol/format/WFS';
 import { Geometry, MultiLineString, MultiPolygon, Point } from 'ol/geom';
-import GeometryType from 'ol/geom/GeometryType';
 import { Coordinate } from 'ol/coordinate';
 
 import { currentUser } from '../../stores/CurrentUser.store';
 import { wfsGeometryToGeometry } from '../util/open-layers.util';
 import { getFeatureProjection } from './projections.service';
 import { FeatureDescription } from '../crg/schema.models';
-import { WfsFeature, WfsGeometry } from './wfs.models';
+import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from './wfs.models';
 import { usersService } from '../crg/users.service';
 import { getWfsUrl } from '../server-urls.service';
 import { FeatureUtil } from '../util/FeatureUtil';
@@ -23,13 +22,13 @@ export enum TransactionType {
 }
 
 interface Properties {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export class TransformFeatureService {
   private static _instance: TransformFeatureService;
 
-  static get instance() {
+  static get instance(): TransformFeatureService {
     return this._instance || (this._instance = new this());
   }
 
@@ -61,7 +60,7 @@ export class TransformFeatureService {
 
   async updateFeatures(
     layerName: string,
-    features: WfsFeature[],
+    features: WfsFeature<Coordinate | CoordinateEdited>[],
     schema: FeatureDescription,
     newProperties: Properties,
     geometry?: WfsGeometry<Coordinate>
@@ -71,7 +70,7 @@ export class TransformFeatureService {
     const { scratchWorkspaceName } = await getEnvironment();
     const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
 
-    const featuresForUpdate: Feature[] = features.map(feature => {
+    const featuresForUpdate: Feature<Geometry>[] = features.map(feature => {
       const calculated = FeatureUtil.calculateByFunction(
         { ...feature.properties, ...newProperties },
         schema.calcFiledFunction
@@ -130,12 +129,12 @@ export class TransformFeatureService {
       gmlOptions: { srsName }
     };
 
-    const featuresToInsert: Feature[] = featuresData.map((featureData: WfsFeature) => {
+    const featuresToInsert: Feature<Geometry>[] = featuresData.map((featureData: WfsFeature) => {
       const feature = new Feature(featureData.properties);
 
       // TODO: брать поле с геометрией из схемы
       if (featureData.geometry) {
-        feature.set('shape', wfsGeometryToGeometry(featureData.geometry as WfsGeometry<Coordinate>));
+        feature.set('shape', wfsGeometryToGeometry(featureData.geometry));
       }
 
       return feature;
@@ -150,14 +149,13 @@ export class TransformFeatureService {
 
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(responseXML, 'text/xml');
-    const ids = Array.prototype.slice
-      .call(xmlDoc.querySelector('InsertResults').querySelectorAll('FeatureId'))
-      .map((f: Element) => f.getAttribute('fid'));
 
-    return ids;
+    return [...xmlDoc.querySelector('InsertResults').querySelectorAll('FeatureId')].map((f: Element) =>
+      f.getAttribute('fid')
+    );
   }
 
-  async deleteFeatures(featureIds: string[], layerName: string) {
+  async deleteFeatures(featureIds: string[], layerName: string): Promise<unknown> {
     await usersService.fetchCurrentUser();
 
     const { scratchWorkspaceName } = await getEnvironment();
@@ -184,7 +182,7 @@ export class TransformFeatureService {
     return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
-  private getNode(type: TransactionType, features: Feature[], options: WriteTransactionOptions): Node {
+  private getNode(type: TransactionType, features: Feature<Geometry>[], options: WriteTransactionOptions): Node {
     let node: Node;
     switch (type) {
       case TransactionType.INSERT:

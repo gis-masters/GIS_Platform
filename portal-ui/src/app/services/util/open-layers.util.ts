@@ -1,10 +1,9 @@
-import { Geometry, LineString, MultiLineString, MultiPolygon, Point, Polygon } from 'ol/geom';
-import GeometryType from 'ol/geom/GeometryType';
+import { LineString, MultiLineString, MultiPolygon, Point, Polygon, SimpleGeometry } from 'ol/geom';
 import { getArea, getLength } from 'ol/sphere';
 import { Coordinate } from 'ol/coordinate';
 import { Feature } from 'ol';
 
-import { WfsFeature, WfsGeometry } from '../geoserver/wfs.models';
+import { GeometryType, WfsFeature, WfsGeometry } from '../geoserver/wfs.models';
 import { Toast } from '../../components/Toast/Toast';
 
 export enum UnitsOfAreaMeasurement {
@@ -21,7 +20,10 @@ export enum UnitsOfLengthMeasurement {
 /**
  * Из {@link WfsFeature} формируем OpenLayer фичу {@link Feature}
  */
-export function wfsFeatureToFeature(wfsFeature: WfsFeature, suppressError?: boolean): Feature | undefined {
+export function wfsFeatureToFeature(
+  wfsFeature: WfsFeature,
+  suppressError?: boolean
+): Feature<SimpleGeometry> | undefined {
   if (!wfsFeature.geometry) {
     if (!suppressError) {
       Toast.error({
@@ -34,15 +36,15 @@ export function wfsFeatureToFeature(wfsFeature: WfsFeature, suppressError?: bool
     return;
   }
 
-  return new Feature({
-    geometry: wfsGeometryToGeometry(wfsFeature.geometry as WfsGeometry<Coordinate>)
+  return new Feature<SimpleGeometry>({
+    geometry: wfsGeometryToGeometry(wfsFeature.geometry)
   });
 }
 
 /**
  * Из {@link WfsGeometry} формируем OpenLayer {@link Geometry}
  */
-export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry<Coordinate>): Geometry | undefined | void {
+export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry<Coordinate>): SimpleGeometry | undefined | void {
   if (!wfsGeometry) {
     Toast.error('Некорректная геометрия');
 

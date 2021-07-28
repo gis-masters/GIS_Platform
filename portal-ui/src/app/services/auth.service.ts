@@ -28,7 +28,7 @@ interface AuthenticationResult {
   wrongPassword?: boolean;
 }
 
-http.axios.interceptors.request.use(config => {
+http.axios.interceptors.request.use((config: { headers: Record<string, string> }) => {
   if (authService.token) {
     config.headers.Authorization = 'Bearer ' + authService.token;
   }
@@ -43,8 +43,8 @@ http.axios.interceptors.response.use(
 
     if (
       e.response?.status === 401 &&
-      !(e.config?.url === (await getAuthUrl())) &&
-      !(e.config?.url === (await getUserUrl('current')))
+      e.config?.url !== (await getAuthUrl()) &&
+      e.config?.url !== (await getUserUrl('current'))
     ) {
       await authService.logout();
     }
@@ -100,12 +100,10 @@ class AuthService {
       await usersService.fetchCurrentUser();
 
       return { ok: true };
-    } catch (e) {
-      if (e.response && e.response.status === 401) {
-        return { ok: false, wrongPassword: true };
-      } else {
-        return { ok: false, userDisabled: true };
-      }
+    } catch (error) {
+      return (error as AxiosError).response?.status === 401
+        ? { ok: false, wrongPassword: true }
+        : { ok: false, userDisabled: true };
     }
   }
 
@@ -114,13 +112,13 @@ class AuthService {
     this.token = '';
     localStorage.removeItem(TOKEN_KEY);
     services.ngZone.run(() => {
-      services.router.navigate(['/']);
+      void services.router.navigate(['/']);
     });
     communicationService.logout.emit();
   }
 
   // TODO: Создание новой орг в модуле аутентификации???
-  async registration(regData: RegData): Promise<{}> {
+  async registration(regData: RegData): Promise<void> {
     const url = await getOrganizationsUrl();
     const payload = {
       name: regData.company,

@@ -4,12 +4,11 @@
 
 .fiz-inner {
   display: grid;
-  /*overflow: hidden;*/
+  grid-template-columns: 65% 35%;
 
   width: 100%;
 
   grid-column-gap: 10px;
-  grid-template-columns: 65% 35%;
 }
 
 .prop-title {

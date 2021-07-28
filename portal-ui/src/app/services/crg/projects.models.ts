@@ -1,3 +1,4 @@
+import { Rule } from '../geoserver/styles.service';
 import { SupportedGeometryType } from '../geoserver/wfs.models';
 import { Role } from './permissions.models';
 
@@ -35,8 +36,7 @@ interface BaseCrgLayer extends CrgEntity {
 //FIXME: не должно быть расширения на UI, может перенести эти св-ва в TreeItem?
 export interface CrgLayer extends BaseCrgLayer {
   geometryType?: SupportedGeometryType;
-  legend?: Rule[];
-  legendIsFetching?: boolean;
+  style?: Rule[];
 }
 
 export type NewCrgLayer = Pick<
@@ -99,10 +99,4 @@ export interface CrgProject {
   order: number;
   organizationId: number;
   createdAt: string;
-}
-
-export interface Rule {
-  name: string;
-  title: string;
-  legend: string;
 }

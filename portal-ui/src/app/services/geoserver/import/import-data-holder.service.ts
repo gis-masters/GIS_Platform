@@ -40,7 +40,7 @@ export class ImportDataHolderService {
     });
   }
 
-  getWorkTasks() {
+  getWorkTasks(): TaskImport[] {
     return this._comparableLayers
       .filter((layerPair: ComparableLayersPair) => !layerPair.isDisabled)
       .map((layerPair: ComparableLayersPair) => {
@@ -50,9 +50,9 @@ export class ImportDataHolderService {
 
   /**
    * Импортированному слою подбирается схема данных.
-   * @param importLayer Импортированыый слой
+   * @param importLayer Импортированный слой
    */
-  async createCompatiblePair(importLayer: ImportLayerItem) {
+  async createCompatiblePair(importLayer: ImportLayerItem): Promise<void> {
     const layerNativeName = importLayer.nativeName;
     const srs = importLayer.srs;
 
@@ -92,7 +92,7 @@ export class ImportDataHolderService {
    * @param source          Атрибут импортированного слоя.
    * @param propertySchema  Сопоставленная схема атрибута
    */
-  updateAttributeMapping(layerNativeName: string, source: LayerAttribute, propertySchema: PropertySchema) {
+  updateAttributeMapping(layerNativeName: string, source: LayerAttribute, propertySchema: PropertySchema): void {
     const comparableLayersPair = this.findCompatiblePair(layerNativeName);
     const attributePair = this.findAttributePair(comparableLayersPair, source);
     if (attributePair) {
@@ -103,7 +103,7 @@ export class ImportDataHolderService {
           } else if (propertySchema.name === AS_IS.name) {
             mapItem.target = {
               name: source.name,
-              type: AS_IS.name as ImportTargetType
+              type: AS_IS.name
             };
           } else {
             mapItem.target = {
@@ -120,7 +120,7 @@ export class ImportDataHolderService {
     this.updateMetrics(this._comparableLayers);
   }
 
-  deleteMapping(layerNativeName: string) {
+  deleteMapping(layerNativeName: string): void {
     const layerPair = this.findCompatiblePair(layerNativeName);
     layerPair.isDisabled = true;
     layerPair.targetLayer.workTableName = NOT_IMPORT_LAYER.name;
@@ -135,7 +135,7 @@ export class ImportDataHolderService {
    * @param layerNativeName   Название импортированного слоя.
    * @param featureSchemaName Название схемы данных
    */
-  setFeatureSchema(layerNativeName: string, schema: FeatureDescription) {
+  setFeatureSchema(layerNativeName: string, schema: FeatureDescription): void {
     const layerPair = this.findCompatiblePair(layerNativeName);
     layerPair.targetLayer.workTableName = layerNativeName;
     layerPair.targetLayer.pairs = [];
@@ -170,7 +170,7 @@ export class ImportDataHolderService {
     );
   }
 
-  clear() {
+  clear(): void {
     this._comparableLayers = [];
     this.comparableLayers$.emit(this._comparableLayers);
     this.updateMetrics(this._comparableLayers);
@@ -194,7 +194,7 @@ export class ImportDataHolderService {
         source: source,
         target: {
           name: source.name,
-          type: targetProperty.name as ImportTargetType
+          type: targetProperty.name
         }
       };
     }

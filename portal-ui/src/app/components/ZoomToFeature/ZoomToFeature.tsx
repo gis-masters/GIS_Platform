@@ -12,13 +12,13 @@ const cnZoomToFeature = cn('ZoomToFeature');
 
 interface ZoomToFeatureProps extends IClassNameProps {
   feature: WfsFeature;
-  onClick?: (feature: WfsFeature) => void
+  onClick?: (feature: WfsFeature) => void;
 }
 
 export class ZoomToFeature extends Component<ZoomToFeatureProps> {
   private btnRef = createRef<HTMLButtonElement>();
 
-  render () {
+  render() {
     const { className } = this.props;
 
     return (
@@ -31,7 +31,7 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
   }
 
   @boundMethod
-  private clickHandler () {
+  private clickHandler() {
     const { feature, onClick } = this.props;
 
     mapService.positionToFeature(feature);
