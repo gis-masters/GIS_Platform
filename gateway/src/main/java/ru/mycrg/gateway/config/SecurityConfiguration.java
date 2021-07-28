@@ -32,7 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private Authenticator authenticator;
 
     @Autowired
-    private MessageBusProducer producer;
+    private MessageBusProducer messageBus;
 
     @Autowired
     private TokenHandler tokenHandler;
@@ -64,7 +64,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 .and()
                 // Add a filter to validate the tokens with every request
-                .addFilterAfter(new MainAuthFilter(cookieProducer, authenticator, producer, tokenHandler),
+                .addFilterAfter(new MainAuthFilter(cookieProducer, authenticator, messageBus, tokenHandler),
                                 UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests() // authorization requests config
                 .antMatchers(POST, "/oauth/token", "/organizations/init", "/perform_logout").permitAll()

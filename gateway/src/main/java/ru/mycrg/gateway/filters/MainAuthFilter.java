@@ -25,14 +25,16 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
 
     private final CookieProducer cookieProducer;
     private final Authenticator authenticator;
-    private final MessageBusProducer producer;
+    private final MessageBusProducer messageBus;
     private final TokenHandler tokenHandler;
 
-    public MainAuthFilter(CookieProducer cookieProducer, Authenticator authenticator, MessageBusProducer producer,
+    public MainAuthFilter(CookieProducer cookieProducer,
+                          Authenticator authenticator,
+                          MessageBusProducer messageBus,
                           TokenHandler tokenHandler) {
         this.cookieProducer = cookieProducer;
         this.authenticator = authenticator;
-        this.producer = producer;
+        this.messageBus = messageBus;
         this.tokenHandler = tokenHandler;
     }
 
@@ -41,7 +43,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                                     @NotNull HttpServletResponse response,
                                     @NotNull FilterChain chain) {
         if (isLogoutRequest(request)) {
-            producer.produce(new CrgAuditEvent(getToken(request), SIGN_OUT));
+            messageBus.produce(new CrgAuditEvent(getToken(request), SIGN_OUT));
             response.addCookie(cookieProducer.makeDeletionCookie());
         } else if (isGetTokenRequest(request)) {
             log.debug("isGetTokenRequest");
@@ -54,7 +56,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                 authenticator.requestToken(username, password)
                              .ifPresentOrElse(token -> {
                                  prepareResponse(response, token);
-                                 producer.produce(new CrgAuditEvent(token.getAccess_token(), SIGN_IN));
+                                 messageBus.produce(new CrgAuditEvent(token.getAccess_token(), SIGN_IN));
                              }, () -> {
                                  sendUnauthorized(response);
                              });

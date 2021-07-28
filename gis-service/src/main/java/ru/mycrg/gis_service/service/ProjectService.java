@@ -1,5 +1,7 @@
 package ru.mycrg.gis_service.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import events.CrgAuditEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
+import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.PermissionRepository;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.security.IAuthenticationFacade;
@@ -26,7 +29,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static dto.AuditEventActionsType.*;
+import static dto.AuditEventEntityType.PROJECT;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultProjectName;
+import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 
 @Service
 @Transactional
@@ -38,15 +44,18 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final PermissionRepository permissionRepository;
     private final IAuthenticationFacade authenticationFacade;
+    private final MessageBusProducer messageBus;
 
     public ProjectService(ProjectionFactory projectionFactory,
                           ProjectRepository projectRepository,
                           PermissionRepository permissionRepository,
-                          IAuthenticationFacade authenticationFacade) {
+                          IAuthenticationFacade authenticationFacade,
+                          MessageBusProducer messageBus) {
         this.projectionFactory = projectionFactory;
         this.projectRepository = projectRepository;
         this.permissionRepository = permissionRepository;
         this.authenticationFacade = authenticationFacade;
+        this.messageBus = messageBus;
     }
 
     public Page<ProjectProjection> getPaged(String name, Pageable pageable) {
@@ -149,6 +158,13 @@ public class ProjectService {
         project.setLastModified(LocalDateTime.now());
 
         projectRepository.save(project);
+
+        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                             UPDATE,
+                                             projectName,
+                                             PROJECT,
+                                             project.getId(),
+                                             objectMapper.convertValue(project, JsonNode.class)));
     }
 
     public ProjectProjection create(ProjectRequestDto dto) {
@@ -171,6 +187,13 @@ public class ProjectService {
         projectRepository.save(savedProject);
         permissionRepository.save(new Permission(new PermissionCreateDto(userId, "user", "OWNER"), savedProject));
 
+        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                             CREATE,
+                                             savedProject.getName(),
+                                             PROJECT,
+                                             savedProject.getId(),
+                                             objectMapper.convertValue(savedProject, JsonNode.class)));
+
         return projectionFactory.createProjection(ProjectProjection.class, savedProject);
     }
 
@@ -178,6 +201,11 @@ public class ProjectService {
         Project project = getById(projectId);
         if (isOwner(project)) {
             projectRepository.delete(project);
+            messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                                 DELETE,
+                                                 project.getName(),
+                                                 PROJECT,
+                                                 projectId));
         } else {
             throw new ForbiddenException("Not Allowed");
         }

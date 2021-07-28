@@ -14,6 +14,7 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import java.net.URL;
 
+import static java.util.Objects.isNull;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 
@@ -40,8 +41,13 @@ public class AuditEventHandler implements IEventHandler {
         try {
             CrgAuditEvent event = (CrgAuditEvent) mqEvent;
 
-            AuditEventDto auditEventDto = new AuditEventDto(event.getEventDateTime(), event.getActionType().name(),
-                                                            event.getEntityName(), event.getEntityId(),
+            String entityType = isNull(event.getEntityType()) ? null: event.getEntityType().name();
+
+            AuditEventDto auditEventDto = new AuditEventDto(event.getEventDateTime(),
+                                                            event.getActionType().name(),
+                                                            event.getEntityName(),
+                                                            entityType,
+                                                            event.getEntityId(),
                                                             event.getEntityStateAfter());
 
             Request req = new Request.Builder()

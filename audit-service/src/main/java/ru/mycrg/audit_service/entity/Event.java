@@ -36,6 +36,9 @@ public class Event {
     @Column(name = "entity_name")
     private String entityName;
 
+    @Column(name = "entity_type")
+    private String entityType;
+
     @Column(name = "entity_id")
     private Long entityId;
 
@@ -58,6 +61,7 @@ public class Event {
         this(auditEventDto.getEventDateTime(), organizationId, userName, auditEventDto.getActionType());
 
         this.entityName = auditEventDto.getEntityName();
+        this.entityType =auditEventDto.getEntityType();
         this.entityId = auditEventDto.getEntityId();
         this.entityStateAfter = auditEventDto.getEntityStateAfter();
     }
@@ -92,6 +96,14 @@ public class Event {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(String entityType) {
+        this.entityType = entityType;
     }
 
     public String getActionType() {

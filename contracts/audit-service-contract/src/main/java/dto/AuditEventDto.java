@@ -1,7 +1,7 @@
 package dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import dto.validator.ValueOfEnum;
+import dto.validator.ValidateEnum;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -16,11 +16,17 @@ public class AuditEventDto {
 
     @NotBlank
     @Size(max = 20)
-    @ValueOfEnum(enumClass = AuditEventActionsType.class)
+    @ValidateEnum(targetClassType = AuditEventActionsType.class, message = "Укажите одно из значений: CREATE, " +
+            "UPDATE, DELETE, SIGN_IN, SIGN_OUT")
     private String actionType;
 
     @Size(max = 100)
     private String entityName;
+
+    @Size(max = 50)
+    @ValidateEnum(targetClassType = AuditEventEntityType.class, message = "Укажите одно из значений:  PROJECT, " +
+            "LAYER")
+    private String entityType;
 
     @Min(value = 1)
     private Long entityId;
@@ -36,11 +42,16 @@ public class AuditEventDto {
         this.actionType = actionType;
     }
 
-    public AuditEventDto(LocalDateTime eventDateTime, String actionType, String entityName, Long entityId,
+    public AuditEventDto(LocalDateTime eventDateTime,
+                         String actionType,
+                         String entityName,
+                         String entityType,
+                         Long entityId,
                          JsonNode entityStateAfter) {
         this(eventDateTime, actionType);
 
         this.entityName = entityName;
+        this.entityType = entityType;
         this.entityId = entityId;
         this.entityStateAfter = entityStateAfter;
     }
@@ -69,6 +80,14 @@ public class AuditEventDto {
         this.entityName = entityName;
     }
 
+    public String getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(String entityType) {
+        this.entityType = entityType;
+    }
+
     public Long getEntityId() {
         return entityId;
     }
@@ -91,6 +110,7 @@ public class AuditEventDto {
                 "eventDateTime=" + eventDateTime +
                 ", actionType='" + actionType + '\'' +
                 ", entityName='" + entityName + '\'' +
+                ", entityType='" + entityType + '\'' +
                 ", entityId=" + entityId +
                 ", entityStateAfter=" + entityStateAfter +
                 '}';

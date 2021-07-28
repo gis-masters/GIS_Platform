@@ -2,8 +2,6 @@ package ru.mycrg.acceptance.audit_service.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.time.LocalDateTime;
-
 public class AuditEventDto {
 
     private String eventDateTime;
@@ -11,6 +9,8 @@ public class AuditEventDto {
     private String actionType;
 
     private String entityName;
+
+    private String entityType;
 
     private Long entityId;
 
@@ -25,11 +25,16 @@ public class AuditEventDto {
         this.actionType = actionType;
     }
 
-    public AuditEventDto(String eventDateTime, String actionType, String entityName, Long entityId,
+    public AuditEventDto(String eventDateTime,
+                         String actionType,
+                         String entityName,
+                         String entityType,
+                         Long entityId,
                          JsonNode entityStateAfter) {
         this(eventDateTime, actionType);
 
         this.entityName = entityName;
+        this.entityType = entityType;
         this.entityId = entityId;
         this.entityStateAfter = entityStateAfter;
     }
@@ -58,6 +63,14 @@ public class AuditEventDto {
         this.entityName = entityName;
     }
 
+    public String getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(String entityType) {
+        this.entityType = entityType;
+    }
+
     public Long getEntityId() {
         return entityId;
     }
@@ -80,6 +93,7 @@ public class AuditEventDto {
                 "eventDateTime=" + eventDateTime +
                 ", actionType='" + actionType + '\'' +
                 ", entityName='" + entityName + '\'' +
+                ", entityType='" + entityType + '\'' +
                 ", entityId=" + entityId +
                 ", entityStateAfter=" + entityStateAfter +
                 '}';

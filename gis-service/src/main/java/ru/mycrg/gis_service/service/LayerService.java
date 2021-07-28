@@ -1,5 +1,7 @@
 package ru.mycrg.gis_service.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import events.CrgAuditEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.exceptions.ErrorInfo;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.json.JsonPatcher;
+import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.LayerRepository;
 import ru.mycrg.gis_service.security.IAuthenticationFacade;
 
@@ -26,6 +29,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static dto.AuditEventActionsType.*;
+import static dto.AuditEventEntityType.LAYER;
+import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;
 
 @Service
@@ -40,15 +46,18 @@ public class LayerService {
     private final ProjectService projectService;
     private final LayerRepository layerRepository;
     private final IAuthenticationFacade authenticationFacade;
+    private final MessageBusProducer messageBus;
 
     public LayerService(JsonPatcher jsonPatcher,
                         LayerRepository layerRepository,
                         ProjectService projectService,
-                        IAuthenticationFacade authenticationFacade) {
+                        IAuthenticationFacade authenticationFacade,
+                        MessageBusProducer messageBus) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.layerRepository = layerRepository;
         this.authenticationFacade = authenticationFacade;
+        this.messageBus = messageBus;
     }
 
     public List<LayerProjection> findAll(long projectId) {
@@ -86,6 +95,13 @@ public class LayerService {
 
         Layer layer = createLayer(dto, project);
 
+        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                             CREATE,
+                                             layer.getTableName(),
+                                             LAYER,
+                                             layer.getId(),
+                                             objectMapper.convertValue(dto, JsonNode.class)));
+
         return new LayerProjection(layer, getOrgWorkspaceName());
     }
 
@@ -103,10 +119,24 @@ public class LayerService {
         layerForUpdate.setLastModified(LocalDateTime.now());
 
         layerRepository.save(layerForUpdate);
+
+        messageBus.produce(
+                new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                  UPDATE,
+                                  layerForUpdate.getTableName(),
+                                  LAYER,
+                                  layerForUpdate.getId(),
+                                  objectMapper.convertValue(layerDto, JsonNode.class)));
     }
 
     public void delete(@NotNull Layer layer) {
         layerRepository.deleteLayerById(layer.getId());
+
+        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                             DELETE,
+                                             layer.getTableName(),
+                                             LAYER,
+                                             layer.getId()));
     }
 
     public void deleteByTableName(String tableName) {

@@ -2,6 +2,7 @@ package events;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import dto.AuditEventActionsType;
+import dto.AuditEventEntityType;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,8 @@ public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
 
     private String entityName;
 
+    private AuditEventEntityType entityType;
+
     private Long entityId;
 
     private JsonNode entityStateAfter;
@@ -36,12 +39,26 @@ public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
         this.actionType = actionType;
     }
 
-    public CrgAuditEvent(String token, AuditEventActionsType actionType,
-                         String entityName, Long entityId, JsonNode entityStateAfter) {
+    public CrgAuditEvent(String token,
+                         AuditEventActionsType actionType,
+                         String entityName,
+                         AuditEventEntityType entityType,
+                         Long entityId) {
         this(token, actionType);
 
         this.entityName = entityName;
+        this.entityType = entityType;
         this.entityId = entityId;
+    }
+
+    public CrgAuditEvent(String token,
+                         AuditEventActionsType actionType,
+                         String entityName,
+                         AuditEventEntityType entityType,
+                         Long entityId,
+                         JsonNode entityStateAfter) {
+        this(token, actionType, entityName, entityType, entityId);
+
         this.entityStateAfter = entityStateAfter;
     }
 
@@ -75,6 +92,14 @@ public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
 
     public void setEntityName(String entityName) {
         this.entityName = entityName;
+    }
+
+    public AuditEventEntityType getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(AuditEventEntityType entityType) {
+        this.entityType = entityType;
     }
 
     public Long getEntityId() {

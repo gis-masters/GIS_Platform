@@ -22,6 +22,8 @@ public interface EventFullProjection {
 
     String getEntityName();
 
+    String getEntityType();
+
     Long getEntityId();
 
     JsonNode getEntityStateAfter();
