@@ -9,6 +9,7 @@ export async function importXml(file: File, datasetId: string, tableId: string):
   formData.append('datasetId', datasetId);
   formData.append('tableId', tableId);
   formData.append('file', file);
+  formData.append('importType', 'mp');
   try {
     return await http.post<number>(await getApiImportXmlUrl(), formData);
   } catch (error) {
