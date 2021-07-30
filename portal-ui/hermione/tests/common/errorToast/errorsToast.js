@@ -30,7 +30,7 @@ describe('common: Нотификация пользователя при неп�
   });
 
   /**
-   * Scenario: возникновение ошибки
+   * Scenario: подробности ошибки
    *   When пользователь заходит на главную страницу
    *   Given возникает ошибка
    *   Then появляется нотификация
@@ -49,5 +49,20 @@ describe('common: Нотификация пользователя при неп�
     await toast.assertSelfie();
     await toast.clickMoar();
     await toast.waitForDetailsHidden();
+  });
+
+  /**
+   * Scenario: закрытие ошибки
+   *   When пользователь заходит на главную страницу
+   *   Given возникает ошибка
+   *   Then появляется нотификация
+   *   When пользователь нажимает на кнопку "Закрыть"
+   *   Then исчезает нотификация
+   */
+  it('Закрытие', async function () {
+    const toast = new Toast(this.browser);
+
+    await toast.clickClose();
+    await toast.waitForHidden();
   });
 });

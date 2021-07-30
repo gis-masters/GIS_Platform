@@ -4,6 +4,7 @@ module.exports = class Toast extends Block {
   _elements = {
     container: '.Toast',
     moar: '.Toast-Moar',
+    close: '.Toast-Close',
     details: '.Toast-Details',
     fileName: '.Toast-Source',
     fileNums: '.Toast-FileNums'
@@ -14,6 +15,13 @@ module.exports = class Toast extends Block {
     const $moar = await this.browser.$(moar);
 
     return await $moar.click();
+  }
+
+  async clickClose() {
+    const { close } = this._elements;
+    const $close = await this.browser.$(close);
+
+    return await $close.click();
   }
 
   produceError() {
@@ -36,6 +44,14 @@ module.exports = class Toast extends Block {
     const $container = await this.browser.$(container);
 
     await $container.waitForDisplayed({ timeout: 2000, timeoutMsg: 'Не появляется уведомление' });
+    await this.browser.pause(1000); // animation
+  }
+
+  async waitForHidden() {
+    const { container } = this._elements;
+    const $container = await this.browser.$(container);
+
+    await $container.waitForDisplayed({ timeout: 2000, reverse: true, timeoutMsg: 'Не скрывается уведомление' });
     await this.browser.pause(1000); // animation
   }
 

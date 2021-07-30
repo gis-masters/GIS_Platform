@@ -39,7 +39,6 @@ interface ToastProps extends ToastOpts {
 @observer
 export class Toast extends Component<ToastProps> {
   static defaultDuration = 5000;
-  private static toastInfo: { id: Id } = { id: '0' };
 
   private static icons: { [key: string]: FC<SvgIconProps> } = {
     error: Error,
@@ -54,13 +53,17 @@ export class Toast extends Component<ToastProps> {
   static show(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
     const normalizedOpts = this.normalizeOpts(message, opts);
     const Icon = this.icons[normalizedOpts.type] || null;
+    const toastInfo: { id: Id } = { id: '0' };
+    const closeHandler = () => {
+      toast.dismiss(toastInfo.id);
+    };
 
     opts = {
       ...normalizedOpts,
       className: 'Toast-Toastify',
       closeButton: (
         <>
-          <IconButton type='button' className={cnToast('Close')} onClick={this.closeHandler}>
+          <IconButton type='button' className={cnToast('Close')} onClick={closeHandler}>
             <Close className={cnToast('CloseIcon')} />
           </IconButton>
         </>
@@ -70,14 +73,10 @@ export class Toast extends Component<ToastProps> {
     const props: ToastProps = {
       ...opts,
       icon: Icon ? <Icon className={cnToast('Icon')} /> : null,
-      toastInfo: this.toastInfo
+      toastInfo
     };
 
-    this.toastInfo.id = toast(<Toast {...props} />, opts);
-  }
-
-  private static closeHandler() {
-    toast.dismiss(this.toastInfo.id);
+    toastInfo.id = toast(<Toast {...props} />, opts);
   }
 
   static info(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
