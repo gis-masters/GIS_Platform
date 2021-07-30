@@ -83,14 +83,10 @@ public class SystemAttributeHandler {
     @NotNull
     public String getFileName(@NotNull Map<String, Object> body) {
         if (attributeDefined(TITLE)) {
-            if (attributeDefined(FILE_TYPE)) {
-                return body.get(TITLE.getName()) + "." + body.get(FILE_TYPE.getName());
-            }
-
-            return body.get(TITLE.getName()) + ".file";
+            return body.get(TITLE.getName()).toString();
         }
 
-        return "default.file";
+        return "";
     }
 
     @NotNull
