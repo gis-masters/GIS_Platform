@@ -6,6 +6,8 @@ import dto.AuditEventEntityType;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.UUID;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.AUDIT_REQUEST_FANOUT;
@@ -35,7 +37,7 @@ public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
         super(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY);
 
         this.token = token;
-        this.eventDateTime = LocalDateTime.now();
+        this.eventDateTime = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
         this.actionType = actionType;
     }
 

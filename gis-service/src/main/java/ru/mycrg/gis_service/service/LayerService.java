@@ -39,8 +39,9 @@ import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;
 public class LayerService {
 
     public static final Logger log = LoggerFactory.getLogger(LayerService.class);
-
     public static final String DATA_SERVICE_API_PREFIX = "/api/data";
+
+    private static String separator = "_";
 
     private final JsonPatcher jsonPatcher;
     private final ProjectService projectService;
@@ -97,7 +98,7 @@ public class LayerService {
 
         messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                              CREATE,
-                                             layer.getTableName(),
+                                             buildLayerInfo(project, layer),
                                              LAYER,
                                              layer.getId(),
                                              objectMapper.convertValue(dto, JsonNode.class)));
@@ -123,7 +124,7 @@ public class LayerService {
         messageBus.produce(
                 new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                   UPDATE,
-                                  layerForUpdate.getTableName(),
+                                  buildLayerInfo(project, layerForUpdate),
                                   LAYER,
                                   layerForUpdate.getId(),
                                   objectMapper.convertValue(layerDto, JsonNode.class)));
@@ -134,7 +135,7 @@ public class LayerService {
 
         messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                              DELETE,
-                                             layer.getTableName(),
+                                             buildLayerInfo(layer.getProject(), layer),
                                              LAYER,
                                              layer.getId()));
     }
@@ -184,6 +185,11 @@ public class LayerService {
         } else {
             layer.setParent(null);
         }
+    }
+
+    @NotNull
+    private String buildLayerInfo(Project project, Layer layer) {
+        return project.getName() + separator + layer.getTableName() + separator + layer.getTitle();
     }
 
     @NotNull
