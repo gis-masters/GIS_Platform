@@ -126,11 +126,9 @@ function parseFilter({ property, value }: FilterEvent): string {
     return `${property.name.toLowerCase()} BETWEEN ${String(value)} AND ${Number(value) + 0.9}`;
   }
 
-  // foreignKeyType string => IN('110'), other => IN(110)
+  // some_property IN('110')
   if (property.valueType === 'CHOICE') {
-    return property.foreignKeyType === 'STRING'
-      ? `${property.name.toLowerCase()} IN(${prepareChoiceValue(value)})`
-      : `${property.name.toLowerCase()} IN(${String(value)})`;
+    return `${property.name.toLowerCase()} IN(${prepareChoiceValue(value)})`;
   }
 
   return '';
