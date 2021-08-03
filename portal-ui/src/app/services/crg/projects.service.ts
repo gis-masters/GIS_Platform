@@ -120,15 +120,24 @@ class ProjectsService {
     }
 
     const layers = await this.getProjectLayers(project.id);
+    const layersErrors: Record<string, string[]> = {};
     const layersPermissions = await Promise.all(
-      layers.map(
-        ({ dataset, tableName, type }) => type !== CrgLayerType.VECTOR || isFeaturesReadAllowed(dataset, tableName)
-      )
+      layers.map(async ({ dataset, tableName, type, complexName }) => {
+        try {
+          return type !== CrgLayerType.VECTOR || (await isFeaturesReadAllowed(dataset, tableName));
+        } catch {
+          const message = `Ошибка получения прав для таблицы ${tableName} в наборе ${dataset}`;
+          layersErrors[complexName] = [message];
+          Toast.error({ message, suppress: true });
+
+          return true;
+        }
+      })
     );
     const allowedLayers = layers.filter((layer, i) => layersPermissions[i]);
 
     if (project.id === id) {
-      currentProject.setProject(project, allowedLayers, await this.getProjectGroups(project.id));
+      currentProject.setProject(project, allowedLayers, await this.getProjectGroups(project.id), layersErrors);
     } else {
       delete this.fetchingCurrentProject;
       await this.fetchCurrent(id);

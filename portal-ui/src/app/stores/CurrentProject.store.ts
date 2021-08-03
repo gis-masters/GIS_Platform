@@ -273,13 +273,19 @@ class CurrentProject implements CrgProjectData {
   }
 
   @action
-  setProject(project: CrgProject, layers: CrgLayer[], groups: CrgLayersGroup[]) {
+  setProject(
+    project: CrgProject,
+    layers: CrgLayer[],
+    groups: CrgLayersGroup[],
+    layersErrors: Record<string, string[]>
+  ) {
     Object.assign(this, emptyProject, {
       ...project,
       layers,
       groups,
       primalLayers: cloneDeep(layers),
-      primalGroups: cloneDeep(groups)
+      primalGroups: cloneDeep(groups),
+      layersErrors
     });
   }
 

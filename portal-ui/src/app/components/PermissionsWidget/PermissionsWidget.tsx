@@ -18,6 +18,7 @@ import { Dataset, DataTable } from '../../services/data.service';
 import { PermissionsEditDialog } from '../PermissionsEditDialog/PermissionsEditDialog';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Button } from '../Button/Button';
+import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./PermissionsWidget.scss';
 
@@ -185,12 +186,17 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
 
   @boundMethod
   private async fetchPermissions() {
-    const [datasetId, dataTableId] = this.getIds();
+    const [datasetId, tableId] = this.getIds();
     this.setPermissions([], true);
-    const permissions = await getTablePermissions(datasetId, dataTableId);
-    // не изменилось ли чего за время запроса
-    if (isEqual([datasetId, dataTableId], this.getIds())) {
-      this.setPermissions(permissions, false);
+    try {
+      const permissions = await getTablePermissions(datasetId, tableId);
+
+      // не изменилось ли чего за время запроса
+      if (isEqual([datasetId, tableId], this.getIds())) {
+        this.setPermissions(permissions, false);
+      }
+    } catch {
+      Toast.error(`Ошибка получения прав для таблицы ${tableId} в наборе ${datasetId}`);
     }
   }
 

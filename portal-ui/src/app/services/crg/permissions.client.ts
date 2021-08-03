@@ -13,13 +13,7 @@ import { http } from '../http.service';
 import { Toast } from '../../components/Toast/Toast';
 
 export async function getTablePermissions(datasetId: string, tableId: string): Promise<RoleAssignmentBody[]> {
-  try {
-    return await http.getPaged<RoleAssignmentBody>(await getTableRoleAssignmentUrl(datasetId, tableId));
-  } catch {
-    Toast.error(`Ошибка получения прав для таблицы ${tableId} в наборе ${datasetId}`);
-
-    return [];
-  }
+  return http.getPaged<RoleAssignmentBody>(await getTableRoleAssignmentUrl(datasetId, tableId));
 }
 
 export async function getAllTablesAndDatasetsPermissions(): Promise<ResourcePermissions[]> {
