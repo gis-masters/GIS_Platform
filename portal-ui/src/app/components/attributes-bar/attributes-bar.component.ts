@@ -270,6 +270,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
         const projection = getProjection(this.layer.nativeCRS);
         mapService.highlightFeatures([feature], projection);
         mapService.positionToFeature(feature, projection);
+        this.editFeatures([feature]);
       } else {
         Toast.info(`У объекта [id:${feature.id}] отсутствует геометрия`);
       }
@@ -304,14 +305,12 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  editFeatures(): void {
-    const { selected } = this.attributeTable;
+  editFeatures(selected: WfsFeature[] = this.attributeTable.selected as WfsFeature[]): void {
     if (this.checkSelectionEmptiness(selected)) {
       return;
     }
 
     // В таблице выводился нормальный id без префикса фичи. Теперь верну эту инфу назад.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const clonedFeatures: WfsFeature[] = cloneDeep(selected);
     clonedFeatures.forEach((feature: WfsFeature) => {
       feature.id = this.layer.tableName + '.' + feature.id;
