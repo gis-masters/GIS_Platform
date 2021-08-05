@@ -63,6 +63,10 @@
 
       content: '';
     }
+
+    &_disabled {
+      color: var(--gray);
+    }
   }
 
   &-Title {
@@ -71,6 +75,10 @@
     padding-bottom: 2px;
 
     line-height: 1.1;
+
+    &_disabled {
+      color: var(--gray);
+    }
   }
 
   &-Layer {

@@ -12,7 +12,7 @@ import { Toast } from '../Toast/Toast';
 import { services } from '../../services/services';
 import { getFeatureLayer } from '../../services/geoserver/layers.service';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { MAP_QUERY_PARAMS_DELIMITER } from '../map/map.component';
+import { MAP_QUERY_PARAMS_DELIMITER } from '../../services/map/map-link-following.service';
 
 import '!style-loader!css-loader!sass-loader!./CopyUrlButton.scss';
 

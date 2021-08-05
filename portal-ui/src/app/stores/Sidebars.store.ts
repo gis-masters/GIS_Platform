@@ -1,10 +1,10 @@
 import { observable, action, reaction } from 'mobx';
-import { Coordinate } from 'ol/coordinate';
 
 import { route } from './Route.store';
 import { CrgLayer } from '../services/crg/projects.models';
-import { CoordinateEdited, WfsFeature } from '../services/geoserver/wfs.models';
+import { WfsFeature } from '../services/geoserver/wfs.models';
 import { Properties } from '../components/edit-feature/edit-feature.component';
+import { FeatureError } from '../services/map/map-link-following.service';
 
 export enum MapSelectionTypes {
   ADD,
@@ -18,7 +18,7 @@ export enum EditFeatureMode {
 }
 
 export interface EditFeaturesData {
-  features: WfsFeature<Coordinate | CoordinateEdited>[];
+  features: WfsFeature[];
   mode: EditFeatureMode;
   viewFeatures?: WfsFeature[];
   layer?: CrgLayer;
@@ -33,7 +33,9 @@ const defaultValues: Partial<Sidebars> = {
   featuresOpen: false,
   viewFeatures: null,
   memorizedViewFeatures: null,
+  deletedFeatures: null,
   editFeaturesData: null,
+  featuresWithErrors: null,
   editOpen: false,
   featuresEdited: false,
   featuresClosingConfirmationOpen: false,
@@ -51,9 +53,13 @@ class Sidebars {
   @observable layerForAttributes?: CrgLayer;
   @observable featuresOpen: boolean;
   @observable editOpen: boolean;
-  @observable viewFeatures?: WfsFeature<Coordinate | CoordinateEdited>[];
-  @observable memorizedViewFeatures?: WfsFeature<Coordinate | CoordinateEdited>[];
+  @observable viewFeatures?: WfsFeature[];
+  @observable memorizedViewFeatures?: WfsFeature[];
+  @observable deletedFeatures?: FeatureError[];
+  @observable featuresWithNoAccess?: FeatureError[];
+  @observable deletedLayers?: FeatureError[];
   @observable editFeaturesData?: EditFeaturesData;
+  @observable featuresWithErrors?: number;
   @observable featuresEdited: boolean;
   @observable featuresClosingConfirmationOpen: boolean;
   @observable featuresClosingConfirmationCallback?: () => void;
@@ -101,7 +107,7 @@ class Sidebars {
   }
 
   @action
-  openFeatures(features: WfsFeature<Coordinate | CoordinateEdited>[], selectionType?: MapSelectionTypes) {
+  openFeatures(features: WfsFeature[], selectionType?: MapSelectionTypes) {
     // eslint-disable-next-line unicorn/prefer-prototype-methods
     if (this.needEditConfirmation(this.openFeatures.bind(this, features))) {
       return;
@@ -132,13 +138,9 @@ class Sidebars {
       this.viewFeatures = features;
     }
 
-    if (!this.viewFeatures || this.viewFeatures.length === 0) {
+    if ((!this.viewFeatures || this.viewFeatures.length === 0) && !this.featuresWithErrors) {
       this.closeFeatures();
       this.closeEdit();
-    } else if (this.viewFeatures.length === 1) {
-      const feature = [this.viewFeatures[0]];
-      this.closeSidebar();
-      this.openEdit({ features: feature, mode: EditFeatureMode.single });
     }
   }
 
@@ -146,6 +148,11 @@ class Sidebars {
   closeFeatures() {
     this.featuresOpen = false;
     this.viewFeatures = null;
+  }
+
+  @action.bound
+  openFeaturesWithError() {
+    this.featuresOpen = true;
   }
 
   @action
@@ -160,7 +167,7 @@ class Sidebars {
   }
 
   @action
-  setMemorizedFeatures(features: WfsFeature<Coordinate | CoordinateEdited>[]) {
+  setMemorizedFeatures(features: WfsFeature[]) {
     this.memorizedViewFeatures = features;
   }
 
@@ -220,6 +227,33 @@ class Sidebars {
   @action
   setFeaturesEdited(edited: boolean) {
     this.featuresEdited = edited;
+  }
+
+  @action
+  setFeaturesWithErrors(features: number): void {
+    this.featuresWithErrors = features;
+  }
+
+  @action
+  setDeletedFeatures(features: FeatureError[]): void {
+    this.deletedFeatures = features;
+  }
+
+  @action
+  setNoAccessFeatures(features: FeatureError[]): void {
+    this.featuresWithNoAccess = features;
+  }
+
+  @action
+  setDeletedLayers(features: FeatureError[]): void {
+    this.deletedLayers = features;
+  }
+
+  @action
+  clearFeaturesWithError(): void {
+    this.deletedLayers = [];
+    this.deletedFeatures = [];
+    this.featuresWithNoAccess = [];
   }
 
   @action.bound

@@ -48,6 +48,7 @@ class CurrentProject implements CrgProjectData {
   @observable organizationId: number;
   @observable default: boolean;
   @observable layers: (CrgLayer | NewCrgLayer)[];
+  @observable allLayers: Record<string, string>[];
   @observable groups: (CrgLayersGroup | NewCrgLayersGroup)[];
   @observable primalLayers: CrgLayer[];
   @observable primalGroups: (CrgLayersGroup | NewCrgLayersGroup)[];

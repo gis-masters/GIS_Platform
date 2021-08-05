@@ -21,7 +21,7 @@ import { CrgLayer, CrgLayersGroup, CrgLayerType, TreeItemPayload } from '../../.
 import { getProjection, olProjection, transform } from '../../../services/geoserver/projections.service';
 import { getFeatureType } from '../../../services/geoserver/featuretypes.service';
 import { getLayerCoverage } from '../../../services/geoserver/layers.service';
-import { GeometryType } from '../../../services/geoserver/wfs.models';
+import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs.models';
 import { schemaService } from '../../../services/crg/schema.service';
 import { exportService } from '../../../services/crg/export.service';
 import { mapService } from '../../../services/map/map.service';
@@ -231,7 +231,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @boundMethod
   private async addFeature() {
     const { entity, onClose } = this.props;
-    const emptyFeature = await schemaService.getEmptyFeature(entity as CrgLayer);
+    const emptyFeature = (await schemaService.getEmptyFeature(entity as CrgLayer)) as WfsFeature;
     sidebars.openEdit({
       features: [emptyFeature],
       mode: EditFeatureMode.single,

@@ -61,7 +61,6 @@ export class Layer extends Component<LayerProps> {
       this.setOpen(false);
     }
   }
-
   render() {
     const { className, data, isGroup, isEmptyGroup, depth, onEyeClick, visible, hiddenByZoom, editMode, highlighted } =
       this.props;
@@ -123,7 +122,7 @@ export class Layer extends Component<LayerProps> {
   @computed
   private get errors(): string[] {
     if (this.props.errors) {
-      return [...this._errors, ...(this.props.errors || [])];
+      return [...this._errors, ...this.props.errors];
     }
 
     return this._errors;
@@ -136,7 +135,6 @@ export class Layer extends Component<LayerProps> {
 
   private async testSchema() {
     const { data, isGroup } = this.props;
-
     if (isGroup) {
       return;
     }

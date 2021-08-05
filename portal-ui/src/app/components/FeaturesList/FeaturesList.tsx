@@ -2,16 +2,15 @@ import React, { Component } from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Coordinate } from 'ol/coordinate';
 
-import { MapSelectionTypes, sidebars } from '../../stores/Sidebars.store';
-import { CoordinateEdited, WfsFeature } from '../../services/geoserver/wfs.models';
+import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
+import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { mapService } from '../../services/map/map.service';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
-
 import { FeaturesListEmpty } from './Empty/FeaturesList-Empty';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesList.scss';
+import { FeatureError } from '../../services/map/map-link-following.service';
 
 const cnFeaturesList = cn('FeaturesList');
 
@@ -21,9 +20,7 @@ export class FeaturesList extends Component {
   private highlightAllFeaturesTimeout: number;
 
   componentDidMount() {
-    if (this.features.length > 1) {
-      mapService.highlightFeatures(this.features);
-    }
+    mapService.highlightFeatures(this.features);
   }
 
   componentDidUpdate() {
@@ -37,27 +34,35 @@ export class FeaturesList extends Component {
   }
 
   render() {
+    const featuresErrors: FeatureError[] = [
+      ...(sidebars.deletedFeatures || []),
+      ...(sidebars.featuresWithNoAccess || []),
+      ...(sidebars.deletedLayers || [])
+    ];
+
     return (
       <div className={cnFeaturesList(null, ['scroll'])}>
-        {this.features.length ? (
-          this.features.map((feature: WfsFeature) => (
-            <FeaturesListItem
-              feature={feature}
-              highlighted={feature.id === this.highlightedFeatureId}
-              onSelect={this.handleItemSelect}
-              onHighlight={this.handleItemHighlight}
-              key={feature.id}
-            />
-          ))
-        ) : (
-          <FeaturesListEmpty />
-        )}
+        {this.features.map(feature => (
+          <FeaturesListItem
+            feature={feature}
+            highlighted={feature.id === this.highlightedFeatureId}
+            onSelect={this.handleItemSelect}
+            onHighlight={this.handleItemHighlight}
+            key={feature.id}
+          />
+        ))}
+
+        {featuresErrors.map(featureError => (
+          <FeaturesListItem errorData={featureError} key={featureError.id} />
+        ))}
+
+        {!this.features.length && !featuresErrors.length && <FeaturesListEmpty />}
       </div>
     );
   }
 
   @computed
-  private get features(): WfsFeature<Coordinate | CoordinateEdited>[] {
+  private get features(): WfsFeature[] {
     return sidebars.viewFeatures ? sidebars.viewFeatures : [];
   }
 
@@ -75,6 +80,7 @@ export class FeaturesList extends Component {
   @action.bound
   private handleItemSelect(feature: WfsFeature) {
     sidebars.setMemorizedFeatures(sidebars.viewFeatures);
-    sidebars.openFeatures([feature], MapSelectionTypes.REPLACE);
+    sidebars.closeSidebar();
+    sidebars.openEdit({ features: [feature], mode: EditFeatureMode.single });
   }
 }

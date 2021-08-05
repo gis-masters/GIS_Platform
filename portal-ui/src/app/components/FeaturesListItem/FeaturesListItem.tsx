@@ -12,16 +12,19 @@ import { schemaService } from '../../services/crg/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { ValueType } from '../../services/crg/schema.models';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
+import { FeatureError } from '../../services/map/map-link-following.service';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 
 const cnFeaturesListItem = cn('FeaturesListItem');
 
 interface FeaturesListItemProps {
-  feature: WfsFeature;
-  onSelect: (item: WfsFeature) => void;
-  onHighlight: (item: WfsFeature) => void;
-  highlighted: boolean;
+  feature?: WfsFeature;
+  onSelect?: (item: WfsFeature) => void;
+  onHighlight?: (item: WfsFeature) => void;
+  highlighted?: boolean;
+  errorData?: FeatureError;
+  message?: string;
 }
 
 @observer
@@ -32,27 +35,35 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   constructor(props: FeaturesListItemProps) {
     super(props);
 
-    void this.fetchSchema();
+    if (!props.errorData) void this.fetchSchema();
   }
 
   render() {
-    const { feature, highlighted } = this.props;
+    const { feature, highlighted, errorData } = this.props;
 
     return (
       <div className={cnFeaturesListItem({ highlighted })}>
-        <div className={cnFeaturesListItem('Id')} onDoubleClick={this.selectIt} onClick={this.highlightIt}>
-          {feature.id.split('.')[1]}
+        <div
+          className={cnFeaturesListItem('Id', { disabled: !!errorData })}
+          onDoubleClick={this.selectIt}
+          onClick={this.highlightIt}
+        >
+          {errorData ? errorData.id : feature.id.split('.')[1]}
         </div>
-        <div className={cnFeaturesListItem('Title')}>{this.title}</div>
-        <div className={cnFeaturesListItem('Layer')}>{this.layerTitle}</div>
-        <div className={cnFeaturesListItem('Buttons')}>
-          <ZoomToFeature feature={feature} onClick={this.zoomHandler} />
-          <Tooltip title='Открыть'>
-            <IconButton onClick={this.selectIt}>
-              <ArrowForward />
-            </IconButton>
-          </Tooltip>
+        <div className={cnFeaturesListItem('Title', { disabled: !!errorData })}>
+          {errorData ? errorData.message : this.title}
         </div>
+        <div className={cnFeaturesListItem('Layer')}>{errorData ? errorData.layerTitle : this.layerTitle}</div>
+        {!errorData ? (
+          <div className={cnFeaturesListItem('Buttons')}>
+            <ZoomToFeature feature={feature} onClick={this.zoomHandler} />
+            <Tooltip title='Открыть'>
+              <IconButton onClick={this.selectIt}>
+                <ArrowForward />
+              </IconButton>
+            </Tooltip>
+          </div>
+        ) : null}
       </div>
     );
   }
@@ -92,14 +103,18 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
 
   @boundMethod
   private selectIt() {
-    const { onSelect, feature } = this.props;
-    onSelect(feature);
+    if (!this.props.errorData) {
+      const { onSelect, feature } = this.props;
+      onSelect(feature);
+    }
   }
 
   @boundMethod
   private highlightIt() {
-    const { feature, highlighted, onHighlight } = this.props;
-    onHighlight(highlighted ? null : feature);
+    if (!this.props.errorData) {
+      const { feature, highlighted, onHighlight } = this.props;
+      onHighlight(highlighted ? null : feature);
+    }
   }
 
   @boundMethod

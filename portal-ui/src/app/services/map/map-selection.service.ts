@@ -11,8 +11,9 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { getFeaturesByXmlFilter } from '../geoserver/wfs.service';
 import { MapActions, MapModes, mapStore } from '../../stores/Map.store';
 import { MapSelectionTypes, sidebars } from '../../stores/Sidebars.store';
-import { MAP_QUERY_PARAMS_DELIMITER } from '../../components/map/map.component';
 import { getFeatureLayer } from '../geoserver/layers.service';
+import { MAP_QUERY_PARAMS_DELIMITER } from './map-link-following.service';
+import { WfsFeature } from '../geoserver/wfs.models';
 
 type NamesChunks = { [srsName: string]: string[] };
 
@@ -179,6 +180,8 @@ class MapSelectionService {
     mapService.mapClick.on(async coordinate => {
       if (mapStore.allowedActions.includes(MapActions.PROKOL)) {
         await this.showFeaturesInfo(MapSelectionTypes.REPLACE, mapService.getBufferByCoordinates(coordinate));
+
+        sidebars.clearFeaturesWithError();
       }
     }, this);
   }
@@ -276,10 +279,25 @@ class MapSelectionService {
     }
 
     if (features.length) {
+      let queryFeatures: WfsFeature[];
+      if (selectionType === MapSelectionTypes.ADD) {
+        queryFeatures = sidebars.viewFeatures ? [...features, ...sidebars.viewFeatures] : features;
+      } else if (selectionType === MapSelectionTypes.REPLACE) {
+        queryFeatures = features;
+      } else {
+        queryFeatures = [...sidebars.viewFeatures]
+          .map(feature => {
+            if (!features.some(feat => feat.id === feature.id)) {
+              return feature;
+            }
+          })
+          .filter(feature => feature);
+      }
+
       await services.provided;
       await services.router.navigate([location.pathname], {
         queryParams: {
-          features: features
+          features: queryFeatures
             .map(feature => {
               return `${feature.id}${MAP_QUERY_PARAMS_DELIMITER}${getFeatureLayer(feature).complexName}`;
             })
