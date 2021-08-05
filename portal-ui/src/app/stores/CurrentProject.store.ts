@@ -291,6 +291,22 @@ class CurrentProject implements CrgProjectData {
   }
 
   @action
+  patchLayer(layerId: number, patch: Partial<CrgLayer>): CrgLayer {
+    return Object.assign(
+      this.layers.find(({ id }) => id === layerId),
+      patch
+    );
+  }
+
+  @action
+  patchGroup(groupId: number, patch: Partial<CrgLayersGroup>): CrgLayersGroup {
+    return Object.assign(
+      this.groups.find(({ id }) => id === groupId),
+      patch
+    );
+  }
+
+  @action
   clearProject() {
     Object.assign(this, emptyProject);
   }

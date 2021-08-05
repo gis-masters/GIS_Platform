@@ -3,6 +3,7 @@ import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
+import { projectsService } from '../../../services/crg/projects.service';
 import { TreeItem } from '../../../services/crg/projects.models';
 import { Layer } from '../../Layer/Layer';
 
@@ -49,20 +50,10 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
       return;
     }
 
-    this.getDisabledAncestors(item).forEach(element => (element.payload.enabled = true));
-  }
+    item.payload.enabled = true;
 
-  getDisabledAncestors(item: TreeItem, result: TreeItem[] = []): TreeItem[] {
-    if (!item.parent || item.parent.visible) {
-      result.push(item);
-
-      return result;
+    if (item.payload.parentId) {
+      projectsService.enableGroupAndAncestors(item.payload.parentId);
     }
-
-    if (!item.payload.enabled) {
-      result.push(item);
-    }
-
-    return this.getDisabledAncestors(item.parent, result);
   }
 }

@@ -23,12 +23,13 @@ import {
 } from '../server-urls.service';
 import { Toast } from '../../components/Toast/Toast';
 import { communicationService } from '../communication.service';
-import { mapLinkFollowing } from '../map/map-link-following.service';
+import { mapLinkFollowing, MAP_QUERY_PARAMS_DELIMITER } from '../map/map-link-following.service';
 
 class ProjectsService {
   private static _instance: ProjectsService;
   private fetchingCurrentProject?: Promise<CrgProject | void>;
   private fetchingAllProjectsRequest?: Promise<CrgProject[]>;
+  private enabledQueryLayers?: boolean;
   private debouncedFetchAllProjects: () => Promise<void>;
 
   private constructor() {
@@ -50,6 +51,21 @@ class ProjectsService {
       delete this.fetchingCurrentProject;
       delete this.fetchingAllProjectsRequest;
     });
+
+    reaction(
+      () => route.queryParams?.features as string,
+      features => {
+        if (features) {
+          this.enabledQueryLayers = true;
+        }
+      }
+    );
+
+    communicationService.mapInited.on(isRender => {
+      if (isRender) {
+        this.enabledQueryLayers = false;
+      }
+    }, this);
   }
 
   static get instance() {
@@ -139,10 +155,42 @@ class ProjectsService {
     const allowedLayers = layers.filter((layer, i) => layersPermissions[i]);
 
     if (project.id === id) {
-      currentProject.setProject(project, allowedLayers, await this.getProjectGroups(project.id), layersErrors);
+      const queryParams = route.queryParams as { [key: string]: string };
+
+      const groups = await this.getProjectGroups(project.id);
+      currentProject.setProject(project, allowedLayers, groups, layersErrors);
+
+      let activeLayers: string[] = [];
+
+      if (this.enabledQueryLayers) {
+        if (queryParams.features) {
+          activeLayers = [
+            ...new Set(
+              queryParams.features.split(',').map(feature => {
+                return feature.split(MAP_QUERY_PARAMS_DELIMITER)[1];
+              })
+            )
+          ];
+        }
+
+        currentProject.layers.forEach(layer => {
+          if (activeLayers.includes(layer.complexName)) {
+            currentProject.patchLayer(layer.id, { enabled: true });
+            this.enableGroupAndAncestors(layer.parentId);
+          }
+        });
+      }
     } else {
       delete this.fetchingCurrentProject;
       await this.fetchCurrent(id);
+    }
+  }
+
+  enableGroupAndAncestors(groupId: number) {
+    const group = currentProject.patchGroup(groupId, { enabled: true });
+
+    if (group.parentId) {
+      this.enableGroupAndAncestors(group.parentId);
     }
   }
 
