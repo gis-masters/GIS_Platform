@@ -3,8 +3,6 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { currentUser } from '../../../stores/CurrentUser.store';
-
 import { ProjectsFilter } from '../Filter/Projects-Filter';
 import { ProjectsSortBy } from '../SortBy/Projects-SortBy';
 import { ProjectsSortOrder } from '../SortOrder/Projects-SortOrder';
@@ -45,7 +43,7 @@ export class ProjectsHeader extends Component {
         <ProjectsFilter />
         <ProjectsSortBy />
         <ProjectsSortOrder />
-        {currentUser.isAdmin && <ProjectsAdd />}
+        <ProjectsAdd />
       </div>
     );
   }

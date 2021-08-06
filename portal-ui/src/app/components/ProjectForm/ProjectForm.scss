@@ -19,8 +19,9 @@ body .ProjectForm {
   }
 
   &-Error {
-    height: 20px;
-    margin-bottom: 5px;
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 7px;
 
     color: var(--danger);
 

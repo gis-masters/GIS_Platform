@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
-import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { cn } from '@bem-react/classname';
 import { TextField } from '@material-ui/core';
 
 import { communicationService } from '../../services/communication.service';
@@ -23,7 +23,7 @@ interface ProjectFormProps {
 @observer
 export class ProjectForm extends Component<ProjectFormProps> {
   @observable private newProjectName = '';
-  @observable private error = '';
+  @observable private error: string[] = [];
   @observable private busy = false;
 
   private maxLength = 50;
@@ -41,7 +41,11 @@ export class ProjectForm extends Component<ProjectFormProps> {
           onChange={this.handleChange}
         />
 
-        <div className={cnProjectForm('Error')}>{this.error}</div>
+        {this.error.map((error, index) => (
+          <div key={index} className={cnProjectForm('Error')}>
+            {error}
+          </div>
+        ))}
 
         {this.busy ? <Loading global /> : null}
 
@@ -60,11 +64,11 @@ export class ProjectForm extends Component<ProjectFormProps> {
   @action.bound
   private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     this.newProjectName = e.target.value;
-    this.error = '';
+    this.error = [];
   }
 
   @action
-  private setError(error: string) {
+  setError(error: string[]): void {
     this.error = error;
   }
 
@@ -81,7 +85,7 @@ export class ProjectForm extends Component<ProjectFormProps> {
       return;
     }
 
-    this.setError('');
+    this.setError([]);
     this.setBusy(true);
 
     try {
@@ -93,12 +97,13 @@ export class ProjectForm extends Component<ProjectFormProps> {
       Toast.success('Проект создан');
       this.props.onClose();
     } catch (error) {
-      const err = error as AxiosError;
-
-      if (err?.response?.status === 409) {
-        this.setError(err?.message);
+      const err = error as AxiosError<{ errors: Record<string, unknown>[] }>;
+      if (err.response?.status === 409) {
+        this.setError([err?.message]);
       } else {
-        this.setError('Ошибка при создании проекта');
+        const errors = ['Ошибка при создании проекта'];
+        err.response?.data?.errors?.forEach(({ message }) => errors.push(message as string));
+        this.setError(errors);
       }
     } finally {
       this.setBusy(false);
