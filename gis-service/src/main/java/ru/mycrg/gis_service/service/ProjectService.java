@@ -33,6 +33,7 @@ import static dto.AuditEventActionsType.*;
 import static dto.AuditEventEntityType.PROJECT;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultProjectName;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
+import static ru.mycrg.gis_service.security.Roles.OWNER;
 
 @Service
 @Transactional
@@ -40,13 +41,13 @@ public class ProjectService {
 
     private static final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
-    private final ProjectionFactory projectionFactory;
+    private final ProjectProjectionFactory projectionFactory;
     private final ProjectRepository projectRepository;
     private final PermissionRepository permissionRepository;
     private final IAuthenticationFacade authenticationFacade;
     private final MessageBusProducer messageBus;
 
-    public ProjectService(ProjectionFactory projectionFactory,
+    public ProjectService(ProjectProjectionFactory projectionFactory,
                           ProjectRepository projectRepository,
                           PermissionRepository permissionRepository,
                           IAuthenticationFacade authenticationFacade,
@@ -77,7 +78,7 @@ public class ProjectService {
             }
         }
 
-        return projects.map(project -> projectionFactory.createProjection(ProjectProjection.class, project));
+        return projects.map(projectionFactory::createProjection);
     }
 
     public List<Project> getAll() {
@@ -123,7 +124,7 @@ public class ProjectService {
     }
 
     public ProjectProjection getProjectionById(Long id) {
-        return projectionFactory.createProjection(ProjectProjection.class, getById(id));
+        return projectionFactory.createProjection(getById(id));
     }
 
     public ProjectProjection getProjectionByIdUnsafe(Long id) {
@@ -131,7 +132,7 @@ public class ProjectService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException(Project.class, id));
 
-        return projectionFactory.createProjection(ProjectProjection.class, project);
+        return projectionFactory.createProjection(project);
     }
 
     /**
@@ -185,7 +186,7 @@ public class ProjectService {
         savedProject.setInternalName(getDefaultProjectName(savedProject.getId()));
 
         projectRepository.save(savedProject);
-        permissionRepository.save(new Permission(new PermissionCreateDto(userId, "user", "OWNER"), savedProject));
+        permissionRepository.save(new Permission(new PermissionCreateDto(userId, "user", OWNER.name()), savedProject));
 
         messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                              CREATE,
@@ -194,7 +195,7 @@ public class ProjectService {
                                              savedProject.getId(),
                                              objectMapper.convertValue(savedProject, JsonNode.class)));
 
-        return projectionFactory.createProjection(ProjectProjection.class, savedProject);
+        return projectionFactory.createProjection(savedProject);
     }
 
     public void delete(Long projectId) {
@@ -220,7 +221,7 @@ public class ProjectService {
 
         return project.getPermissions().stream()
                       .filter(permission -> Objects.equals(permission.getPrincipalId(), userId))
-                      .anyMatch(permission -> permission.getRole().equals("OWNER"));
+                      .anyMatch(permission -> permission.getRole().equals(OWNER.name()));
     }
 
     private List<Project> filterByPermissions(List<Project> projects, UserDetails userDetails) {

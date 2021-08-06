@@ -7,11 +7,9 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
-import { currentUser } from '../../../stores/CurrentUser.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { NewCrgLayer, NewCrgLayersGroup } from '../../../services/crg/projects.models';
 import { generateNextGroupId } from '../../../services/geoserver/layers.service';
-import { usersService } from '../../../services/crg/users.service';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
 import { AddLayerDialog } from '../../AddLayerDialog/AddLayerDialog';
@@ -37,13 +35,6 @@ interface LayersSidebarToolbarProps {
 export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
   @observable private createGroupDialogOpen = false;
   @observable private addLayerDialogOpen = false;
-  @observable private projectContributionAllowed = false;
-
-  async componentDidMount() {
-    // this.setProjectContributionAllowness(await isLayersManagementAllowed(currentProject));
-    await usersService.fetchCurrentUser();
-    this.setProjectContributionAllowness(currentUser.isAdmin);
-  }
 
   render() {
     const { editMode, above } = this.props;
@@ -52,7 +43,7 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
       <>
         <div className={cnLayersSidebarToolbar({ above })}>
           <LayersSidebarToolbarLeft>
-            {editMode && this.projectContributionAllowed && (
+            {editMode && currentProject.canBeEdited && (
               <Tooltip title='Сохранить для всех пользователей'>
                 <span>
                   <IconButton onClick={this.save} disabled={!currentProject.queriesQueueLength} color='primary'>
@@ -148,11 +139,6 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
     currentProject.groups.splice(0, 0, newGroup);
 
     this.closeCreateGroupDialog();
-  }
-
-  @action
-  private setProjectContributionAllowness(allowed: boolean) {
-    this.projectContributionAllowed = allowed;
   }
 
   @boundMethod

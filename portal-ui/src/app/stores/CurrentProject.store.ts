@@ -12,6 +12,7 @@ import {
   TreeItem
 } from '../services/crg/projects.models';
 import { getPatch } from '../services/util/patch';
+import { Role } from '../services/crg/permissions.models';
 import { AttributeTableFilter } from '../components/attributes-bar/attributes-bar.component';
 
 const MAX_LAYERS_IN_BATCH = 5;
@@ -33,7 +34,8 @@ const emptyProject: CrgProjectData = {
   internalName: '',
   layers: [],
   layersErrors: {},
-  groups: []
+  groups: [],
+  role: undefined
 };
 
 class CurrentProject implements CrgProjectData {
@@ -54,6 +56,7 @@ class CurrentProject implements CrgProjectData {
   @observable primalGroups: (CrgLayersGroup | NewCrgLayersGroup)[];
   @observable layersErrors: { [key: string]: string[] };
   @observable attributeTableFilter: AttributeTableFilter = {};
+  @observable role: Role;
 
   @observable viewZoom: number;
 
@@ -166,6 +169,11 @@ class CurrentProject implements CrgProjectData {
   @action
   updateAttributeTableFilter(data: AttributeTableFilter) {
     this.attributeTableFilter = data;
+  }
+
+  @computed
+  get canBeEdited(): boolean {
+    return this.role === Role.OWNER;
   }
 
   @computed

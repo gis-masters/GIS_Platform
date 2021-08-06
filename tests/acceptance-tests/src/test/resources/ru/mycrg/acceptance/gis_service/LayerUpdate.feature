@@ -19,7 +19,7 @@ Feature: Обновление слоя проектов
       | title    | dataset  | tableName | styleName | type   | schemaId | dataStoreName | nativeCRS  | dataSourceUri | newTitle | newDataset | enabled | position | transparency | minZoom | maxZoom | newNativeCrs |
       | STRING_5 | STRING_5 | STRING_5  | STRING_5  | vector | STRING_5 | STRING_5      | EPSG:28406 | STRING_6      | newTitle | newDataset | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   |
 
-  Scenario Outline: Добавление слою проекта папку-родителя администратором организации
+  Scenario Outline: Добавление слою проекта папки-родителя администратором организации
     Given Существует проект "STRING_10"
     Given Существует группа слоев проекта "STRING_10", "NUMBER_2"
     Given Существует слой проекта
@@ -33,7 +33,7 @@ Feature: Обновление слоя проектов
       | title    | dataset  | tableName | styleName | type   | schemaId | dataStoreName | nativeCRS  | dataSourceUri |
       | STRING_5 | STRING_5 | STRING_5  | STRING_5  | vector | STRING_5 | STRING_5      | EPSG:28406 | STRING_6      |
 
-  Scenario Outline: Обновление слоя проекта пользователем организации
+  Scenario Outline: Обновление слоёв проекта недоступно пользователям с уровнем доступа "VIEWER"
     Given Существует проект "STRING_10"
     Given Существует слой проекта
       | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |

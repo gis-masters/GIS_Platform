@@ -12,17 +12,19 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.dto.LayerProjection;
 import ru.mycrg.gis_service.entity.Layer;
+import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BindingErrorsException;
+import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.service.LayerService;
 import ru.mycrg.gis_service.service.ProjectService;
+import ru.mycrg.gis_service.service.ResourceProtector;
 import ru.mycrg.gis_service.validators.CrgLayerValidator;
 
 import javax.json.JsonMergePatch;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
@@ -35,6 +37,7 @@ public class LayerController {
     private final LayerService layerService;
     private final ProjectService projectService;
     private final CrgLayerValidator validator;
+    private final ResourceProtector resourceProtector;
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -43,10 +46,12 @@ public class LayerController {
 
     public LayerController(LayerService layerService,
                            ProjectService projectService,
-                           CrgLayerValidator validator) {
+                           CrgLayerValidator validator,
+                           ResourceProtector resourceProtector) {
         this.layerService = layerService;
         this.projectService = projectService;
         this.validator = validator;
+        this.resourceProtector = resourceProtector;
     }
 
     @GetMapping("/layers")
@@ -58,11 +63,10 @@ public class LayerController {
     }
 
     @PostMapping("/layers")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<LayerProjection> createLayer(@PathVariable(name = "project_id") long projectId,
                                                        @Valid @RequestBody LayerCreateDto dto,
                                                        BindingResult bindingResult) {
-
         log.debug("Request create layer: {}", dto.getTableName());
 
         if (bindingResult.hasErrors()) {
@@ -84,7 +88,7 @@ public class LayerController {
     }
 
     @PatchMapping(path = "/layers/{layer_id}", consumes = APPLICATION_JSON_MERGE_PATCH)
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> updateLayer(@PathVariable(name = "project_id") long projectId,
                                               @PathVariable(name = "layer_id") long layerId,
                                               @RequestBody JsonMergePatch patchDto) {
@@ -96,13 +100,17 @@ public class LayerController {
     }
 
     @DeleteMapping("/layers/{layer_id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> deleteLayer(@PathVariable(name = "project_id") long projectId,
                                               @PathVariable(name = "layer_id") long layerId) {
         log.debug("Request for deletion layer: {}", layerId);
 
-        Layer layer = projectService
-                .getById(projectId)
+        final Project project = projectService.getById(projectId);
+        if (!resourceProtector.isOwner(project)) {
+            throw new ForbiddenException("Недостаточно прав для удаления проекта: " + project.getName());
+        }
+
+        Layer layer = project
                 .getLayers().stream()
                 .filter(l -> layerId == l.getId())
                 .findFirst()

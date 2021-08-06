@@ -59,12 +59,6 @@ export type NewCrgLayer = Pick<
   | 'type'
 >;
 
-export interface CrgSource {
-  role: Role;
-  identifier: string;
-  type: string;
-}
-
 export interface CrgLayersGroup extends CrgEntity {
   parentId?: number;
   expanded: boolean;
@@ -99,4 +93,5 @@ export interface CrgProject {
   order: number;
   organizationId: number;
   createdAt: string;
+  role: Role;
 }

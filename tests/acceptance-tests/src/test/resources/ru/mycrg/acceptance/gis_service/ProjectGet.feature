@@ -10,12 +10,12 @@ Feature: Выборка проектов
     Then Ответ имеет стандартное тело с паджинацией
 
   Scenario: Проверка представления созданного проекта
-    When Существует проект "STRING_6"
+    Given Существует проект "STRING_6"
     When Администратор делает запрос на текущий проект
-    And Представление проекта корректно
+    Then Представление проекта корректно
 
   Scenario Outline: Проверка сортировки проектов (<sorting factor>|<sorting direction>)
-    When Существуют проекты
+    Given Существуют проекты
       | STRING_10 |
       | STRING_10 |
       | STRING_10 |
@@ -39,7 +39,7 @@ Feature: Выборка проектов
       | id             | desc              |
 
   Scenario Outline: Проверка постраничной выборки проектов (<projectsPerPage> page/pages)
-    When Существуют проекты
+    Given Существуют проекты
       | STRING_10 |
       | STRING_10 |
       | STRING_10 |
@@ -54,7 +54,7 @@ Feature: Выборка проектов
       | 3               |
 
   Scenario Outline: Фильтрация по названию проекта должна быть не чувствительна к регистру
-    When Существуют проекты
+    Given Существуют проекты
       | ProjectNameWithSomeUpperLiterals |
       | project_name                     |
       | otherName                        |

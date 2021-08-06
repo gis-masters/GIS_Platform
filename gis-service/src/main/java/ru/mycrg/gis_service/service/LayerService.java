@@ -13,10 +13,7 @@ import ru.mycrg.gis_service.dto.*;
 import ru.mycrg.gis_service.entity.Group;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
-import ru.mycrg.gis_service.exceptions.BadRequestException;
-import ru.mycrg.gis_service.exceptions.ConflictException;
-import ru.mycrg.gis_service.exceptions.ErrorInfo;
-import ru.mycrg.gis_service.exceptions.NotFoundException;
+import ru.mycrg.gis_service.exceptions.*;
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.LayerRepository;
@@ -48,17 +45,20 @@ public class LayerService {
     private final LayerRepository layerRepository;
     private final IAuthenticationFacade authenticationFacade;
     private final MessageBusProducer messageBus;
+    private final ResourceProtector resourceProtector;
 
     public LayerService(JsonPatcher jsonPatcher,
                         LayerRepository layerRepository,
                         ProjectService projectService,
                         IAuthenticationFacade authenticationFacade,
-                        MessageBusProducer messageBus) {
+                        MessageBusProducer messageBus,
+                        ResourceProtector resourceProtector) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.layerRepository = layerRepository;
         this.authenticationFacade = authenticationFacade;
         this.messageBus = messageBus;
+        this.resourceProtector = resourceProtector;
     }
 
     public List<LayerProjection> findAll(long projectId) {
@@ -108,6 +108,11 @@ public class LayerService {
 
     public void update(long projectId, long layerId, JsonMergePatch patchDto) {
         Project project = projectService.getById(projectId);
+
+        if (!resourceProtector.isOwner(project)) {
+            throw new ForbiddenException("Недостаточно прав для обновления проекта: " + project.getName());
+        }
+
         Layer layerForUpdate = findLayerById(project.getLayers(), layerId);
 
         LayerUpdateDto layerDto = layerMapper.toDto(layerForUpdate);

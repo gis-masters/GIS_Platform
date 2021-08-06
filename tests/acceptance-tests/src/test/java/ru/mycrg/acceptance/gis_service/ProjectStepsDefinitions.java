@@ -76,10 +76,9 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Представление проекта корректно")
-    public void checkProjectKeys() {
+    public void checkProjectBody() {
         Map<String, String> presentedData = response
                 .then().
-                        log().ifValidationFails().
                         statusCode(SC_OK).
                         extract().jsonPath().
                         getMap("");
@@ -90,7 +89,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         assertTrue(presentedData.containsKey("name"));
         assertTrue(presentedData.containsKey("default"));
         assertTrue(presentedData.containsKey("id"));
-        assertTrue(presentedData.containsKey("_links"));
+        assertTrue(presentedData.containsKey("role"));
     }
 
     @When("Существуют проекты")
