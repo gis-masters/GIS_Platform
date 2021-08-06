@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { AxiosError } from 'axios';
 import { NGXLogger } from 'ngx-logger';
 
 import { currentProject } from '../stores/CurrentProject.store';
@@ -23,8 +24,9 @@ export class WorkflowGuardService implements CanActivate {
 
       return false;
     } catch (error) {
+      const err = error as AxiosError;
       void this.router.navigateByUrl('/projects');
-      this.logger.warn('Wrong workflow: empty project', error);
+      this.logger.warn('Wrong workflow: empty project', err.message);
 
       return false;
     }

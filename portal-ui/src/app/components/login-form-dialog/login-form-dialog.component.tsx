@@ -2,14 +2,14 @@ import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef } from '
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 
-import { LoginForm } from '../LoginForm/LoginForm';
+import { LoginFormDialog } from '../LoginFormDialog/LoginFormDialog';
 
 @Component({
-  selector: 'crg-login-form',
-  template: '<div class="login-form" #react></div>',
-  styleUrls: ['./login-form.component.scss']
+  selector: 'crg-login-form-dialog',
+  template: '<div class="login-form-dialog" #react></div>',
+  styleUrls: ['./login-form-dialog.component.scss']
 })
-export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
+export class LoginFormDialogComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
   ngOnInit() {
@@ -25,7 +25,7 @@ export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(LoginForm, {});
+    const reactElement = createElement(LoginFormDialog, {});
 
     render(reactElement, this.ref.nativeElement);
   }

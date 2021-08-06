@@ -1,8 +1,7 @@
 import { AxiosError } from 'axios';
 
-import { getAuthUrl, getLogoutUrl, getOrganizationsUrl, getUserUrl } from './server-urls.service';
+import { getAuthUrl, getLogoutUrl, getOrganizationsUrl } from './server-urls.service';
 import { communicationService } from './communication.service';
-import { usersService } from './crg/users.service';
 import { getEnvironment } from './environment';
 import { services } from './services';
 import { http } from './http.service';
@@ -38,18 +37,8 @@ http.axios.interceptors.request.use((config: { headers: Record<string, string> }
 
 http.axios.interceptors.response.use(
   value => value,
-  async (e: AxiosError) => {
-    const err = e.toJSON ? { ...e.toJSON(), response: e.response } : e;
-
-    if (
-      e.response?.status === 401 &&
-      e.config?.url !== (await getAuthUrl()) &&
-      e.config?.url !== (await getUserUrl('current'))
-    ) {
-      await authService.logout();
-    }
-
-    throw err;
+  (e: AxiosError) => {
+    throw e.toJSON ? { ...e.toJSON(), response: e.response } : e;
   }
 );
 
@@ -88,7 +77,6 @@ class AuthService {
         (!environment.server.wsPort || environment.server.wsPort === location.port);
 
       const token = await http.post<string>(authUrl, params.toString(), options);
-
       if (!sameOrigin) {
         this.token = token;
         localStorage.setItem(TOKEN_KEY, token);
@@ -96,8 +84,6 @@ class AuthService {
         delete this.token;
         localStorage.removeItem(TOKEN_KEY);
       }
-
-      await usersService.fetchCurrentUser();
 
       return { ok: true };
     } catch (error) {
@@ -111,6 +97,7 @@ class AuthService {
     await http.post(await getLogoutUrl(), {}, { withCredentials: true });
     this.token = '';
     localStorage.removeItem(TOKEN_KEY);
+    http.cache.clear();
     services.ngZone.run(() => {
       void services.router.navigate(['/']);
     });

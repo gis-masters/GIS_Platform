@@ -10,14 +10,14 @@ import { RecoveryComponent } from './pages/recovery/recovery.component';
 import { ProjectsPageComponent } from './pages/projects/projects-page.component';
 import { ImportPageComponent } from './pages/import/import-page.component';
 import { MappingPageComponent } from './pages/mapping/mapping-page.component';
+import { OrgAdminPageComponent } from './pages/org-admin/org-admin-page.component';
+import { DataManagementPageComponent } from './pages/data-management/data-management-page.component';
 
 import { AuthGuardService } from './services/auth-guard.service';
 import { OrgAdminGuardService } from './services/org-admin-guard.service';
 import { WorkflowGuardService } from './services/workflow-guard.service';
 import { ProjectsGuardService } from './services/projects-guard.service';
 import { CurrentUserResolver } from './services/resolvers/current-user-resolver.service';
-import { OrgAdminPageComponent } from './pages/org-admin/org-admin-page.component';
-import { DataManagementPageComponent } from './pages/data-management/data-management-page.component';
 
 export enum Pages {
   HOME = 'home',
@@ -34,6 +34,7 @@ export enum Pages {
 
 export interface AppRouteData extends Data {
   page: Pages;
+  isAuthRequired: boolean;
 }
 
 interface AppRoute extends Route {
@@ -55,7 +56,7 @@ const routes: AppRoutes = [
   {
     path: '',
     component: HomePageComponent,
-    data: { page: Pages.HOME }
+    data: { page: Pages.HOME, isAuthRequired: false }
   },
   {
     path: 'login',
@@ -63,22 +64,22 @@ const routes: AppRoutes = [
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.LOGIN }
+    data: { page: Pages.LOGIN, isAuthRequired: false }
   },
   {
     path: 'register',
     component: RegisterComponent,
-    data: { page: Pages.REGISTER }
+    data: { page: Pages.REGISTER, isAuthRequired: false }
   },
   {
     path: 'recovery',
     component: RecoveryComponent,
-    data: { page: Pages.RECOVERY }
+    data: { page: Pages.RECOVERY, isAuthRequired: false }
   },
   {
     path: 'about',
     component: AboutComponent,
-    data: { page: Pages.ABOUT }
+    data: { page: Pages.ABOUT, isAuthRequired: false }
   },
   {
     path: 'projects/default',
@@ -87,7 +88,7 @@ const routes: AppRoutes = [
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.PROJECTS }
+    data: { page: Pages.PROJECTS, isAuthRequired: true }
   },
   {
     path: 'projects',
@@ -96,7 +97,7 @@ const routes: AppRoutes = [
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.PROJECTS }
+    data: { page: Pages.PROJECTS, isAuthRequired: true }
   },
   {
     path: 'projects/:projectId',
@@ -109,7 +110,7 @@ const routes: AppRoutes = [
         resolve: {
           user: CurrentUserResolver
         },
-        data: { page: Pages.IMPORT }
+        data: { page: Pages.IMPORT, isAuthRequired: true }
       },
       {
         path: 'import/:importId',
@@ -118,7 +119,7 @@ const routes: AppRoutes = [
         resolve: {
           user: CurrentUserResolver
         },
-        data: { page: Pages.IMPORT }
+        data: { page: Pages.IMPORT, isAuthRequired: true }
       },
       {
         path: 'import/:importId/mapping',
@@ -127,7 +128,7 @@ const routes: AppRoutes = [
         resolve: {
           user: CurrentUserResolver
         },
-        data: { page: Pages.IMPORT }
+        data: { page: Pages.IMPORT, isAuthRequired: true }
       },
       {
         path: 'map',
@@ -136,7 +137,7 @@ const routes: AppRoutes = [
         resolve: {
           user: CurrentUserResolver
         },
-        data: { page: Pages.MAP }
+        data: { page: Pages.MAP, isAuthRequired: true }
       },
       {
         path: '**',
@@ -151,7 +152,7 @@ const routes: AppRoutes = [
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.ORG_ADMIN }
+    data: { page: Pages.ORG_ADMIN, isAuthRequired: true }
   },
   {
     path: 'data-management',
@@ -160,7 +161,7 @@ const routes: AppRoutes = [
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.DATA_MANAGEMENT }
+    data: { page: Pages.DATA_MANAGEMENT, isAuthRequired: true }
   },
   {
     path: '**',

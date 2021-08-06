@@ -1,8 +1,11 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import { CustomCache, CustomCacheConfig } from './common/CustomCache';
 import { replaceUrl } from './server-urls.service';
 import { PageableResponse } from './models';
+import { communicationService } from './communication.service';
+import { Emitter } from './common/Emitter';
+import { route } from '../stores/Route.store';
 
 const ITEMS_PER_PAGE = 300;
 
@@ -24,6 +27,8 @@ class Http {
   static get instance() {
     return this._instance || (this._instance = new this());
   }
+
+  authDialog = new Emitter<boolean>();
 
   private constructor() {
     this.cache = new CustomCache({ maxAge: 2 * 60 * 1000 });
@@ -51,9 +56,20 @@ class Http {
       this.cache.add(resultUri, promise, cacheConfig);
     }
 
-    const response = await promise;
+    try {
+      const response = await promise;
 
-    return response.data;
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response.status === 401 && route.data.isAuthRequired) {
+        await this.waitForAuth();
+
+        return this.get<T>(url, configWithCache);
+      }
+
+      throw error;
+    }
   }
 
   async getPaged<T>(url: string, config: RequestConfigWithCache = {}): Promise<T[]> {
@@ -83,14 +99,36 @@ class Http {
     const response = await this.axios.post<T>(url, data, config);
     this.cache.clear();
 
-    return response.data;
+    try {
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response.status === 401 && route.data.isAuthRequired) {
+        await this.waitForAuth();
+
+        return this.post<T>(url, data, config);
+      }
+
+      throw error;
+    }
   }
 
   async put<T>(url: string, data?: unknown, config?: RequestConfig): Promise<T> {
     const response = await this.axios.put<T>(url, data, config);
     this.cache.clear();
 
-    return response.data;
+    try {
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response.status === 401 && route.data.isAuthRequired) {
+        await this.waitForAuth();
+
+        return this.put<T>(url, data, config);
+      }
+
+      throw error;
+    }
   }
 
   async patch<T>(url: string, data?: unknown, config: RequestConfig = {}): Promise<T> {
@@ -103,14 +141,44 @@ class Http {
     });
     this.cache.clear();
 
-    return response.data;
+    try {
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response.status === 401 && route.data.isAuthRequired) {
+        await this.waitForAuth();
+
+        return this.patch<T>(url, data, config);
+      }
+
+      throw error;
+    }
   }
 
   async delete<T>(url: string, config?: RequestConfig): Promise<T> {
     const response = await this.axios.delete<T>(url, config);
     this.cache.clear();
 
-    return response.data;
+    try {
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response.status === 401 && route.data.isAuthRequired) {
+        await this.waitForAuth();
+
+        return this.delete<T>(url, config);
+      }
+
+      throw error;
+    }
+  }
+
+  async waitForAuth() {
+    communicationService.authDialogOpen.emit();
+
+    return new Promise(resolve => {
+      communicationService.authDialogSuccess.once(() => resolve(true), this);
+    });
   }
 }
 

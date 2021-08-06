@@ -1,4 +1,5 @@
 import { debounce } from 'lodash';
+import { AxiosError } from 'axios';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { currentUser } from '../../stores/CurrentUser.store';
@@ -7,6 +8,8 @@ import { communicationService } from '../communication.service';
 import { BuildInRole } from './permissions.models';
 import { PageableResponse } from '../models';
 import { http } from '../http.service';
+import { route } from '../../stores/Route.store';
+import { services } from '../services';
 
 export interface ApiLink {
   href: string;
@@ -37,7 +40,6 @@ class UsersService {
   private static _instance: UsersService;
   private usersListStoreInited = false;
   private debouncedFetchUsersListStore: () => Promise<void>;
-  private currentUserInfoRequest?: Promise<void> | null;
   private allUsersRequest?: Promise<void> | null;
 
   private constructor() {
@@ -47,7 +49,6 @@ class UsersService {
       allUsers.reset();
       currentUser.reset();
       this.usersListStoreInited = false;
-      delete this.currentUserInfoRequest;
       delete this.allUsersRequest;
     });
   }
@@ -56,17 +57,23 @@ class UsersService {
     return this._instance || (this._instance = new this());
   }
 
-  async fetchCurrentUser() {
-    if (currentUser.login) {
-      return;
+  async fetchCurrentUser(autoLogin?: boolean) {
+    if (route.data.isAuthRequired) {
+      try {
+        const userInfo = await http.get<OrgInfo>(await getUserUrl('current'));
+        if (userInfo.id !== currentUser.id) currentUser.setOrgInfo(userInfo);
+      } catch {
+        currentUser.setOrgInfo();
+      }
     }
 
-    if (!this.currentUserInfoRequest) {
-      this.currentUserInfoRequest = this.fetchingCurrent();
+    if (autoLogin) {
+      try {
+        return await http.get<OrgInfo>(await getUserUrl('current'));
+      } catch (error) {
+        services.logger.error((error as AxiosError).message);
+      }
     }
-
-    await this.currentUserInfoRequest;
-    this.currentUserInfoRequest = null;
   }
 
   async getAll(): Promise<CrgUser[]> {
@@ -100,20 +107,6 @@ class UsersService {
     await this.allUsersRequest;
     this.allUsersRequest = null;
     this.usersListStoreInited = true;
-  }
-
-  async getCurrentUser(): Promise<CrgUser> {
-    await this.fetchCurrentUser();
-
-    return currentUser;
-  }
-
-  private async fetchingCurrent(): Promise<void> {
-    try {
-      currentUser.setOrgInfo(await http.get<OrgInfo>(await getUserUrl('current')));
-    } catch {
-      currentUser.setOrgInfo();
-    }
   }
 
   private async fetchUsersListStore() {

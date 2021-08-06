@@ -1,0 +1,18 @@
+.LoginForm {
+  &-Error {
+    text-align: center;
+
+    color: var(--danger);
+  }
+
+  &-Recovery {
+    color: gray;
+  }
+
+  &-Actions {
+    display: flex;
+    justify-content: space-between;
+
+    padding-top: 20px;
+  }
+}

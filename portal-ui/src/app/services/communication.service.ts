@@ -18,6 +18,8 @@ class CommunicationService {
   validationInitiated = new Emitter<boolean>();
   needUpdateValidationResults = new Emitter<boolean>();
   mapInited = new Emitter<boolean>();
+  authDialogOpen = new Emitter();
+  authDialogSuccess = new Emitter();
   featuresUpdated = new Emitter();
   permissionsUpdated = new Emitter();
   datasetsUpdated = new Emitter();

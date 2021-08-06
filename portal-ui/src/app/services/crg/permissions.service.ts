@@ -162,7 +162,9 @@ async function getActualRoleInProject(project: CrgProject, user?: CrgUser): Prom
 
 async function getActualRoleIn(permissions: RoleAssignmentBody[], user?: CrgUser): Promise<Role | undefined> {
   if (!user) {
-    user = await usersService.getCurrentUser();
+    await usersService.fetchCurrentUser();
+
+    user = currentUser;
   }
 
   const groupsIds = new Set((await groupsService.getUserGroups(user)).map(({ id }) => id));

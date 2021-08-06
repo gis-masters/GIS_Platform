@@ -18,7 +18,6 @@ import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { HttpClientModule } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-import { LoginFormModule } from './components/login-form/login-form.module';
 import { LoadingModule } from './components/loading/loading.module';
 
 import { FilterLayersPipe } from './pipes/filter-layers.pipe';
@@ -69,6 +68,8 @@ import { DataManagementComponent } from './components/data-management/data-manag
 import { LogoComponent } from './components/logo/logo.component';
 import { MapToolbarComponent } from './components/map-toolbar/map-toolbar.component';
 import { CopyUrlButtonComponent } from './components/copy-url-button/copy-url-button.component';
+import { LoginFormDialogComponent } from './components/login-form-dialog/login-form-dialog.component';
+import { LoginFormComponent } from './components/login-form/login-form.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { CopyUrlButtonComponent } from './components/copy-url-button/copy-url-bu
     ErrorsBadgeComponent,
     InfoSidebarComponent,
     LayersSidebarComponent,
+    LoginFormDialogComponent,
     ProgressItemComponent,
     ProjectsComponent,
     ConfirmDialogComponent,
@@ -118,7 +120,8 @@ import { CopyUrlButtonComponent } from './components/copy-url-button/copy-url-bu
     DataManagementComponent,
     LogoComponent,
     MapToolbarComponent,
-    CopyUrlButtonComponent
+    CopyUrlButtonComponent,
+    LoginFormComponent
   ],
   imports: [
     HttpClientModule,
@@ -141,7 +144,6 @@ import { CopyUrlButtonComponent } from './components/copy-url-button/copy-url-bu
     NgxDatatableModule,
     NgSelectModule,
 
-    LoginFormModule,
     LoadingModule
   ],
   entryComponents: [AlertDialogComponent, ConfirmDialogComponent, CopyFeaturesDialogComponent],
