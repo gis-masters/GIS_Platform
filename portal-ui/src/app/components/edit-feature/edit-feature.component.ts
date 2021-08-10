@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -105,6 +106,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
               isNumber(property.fractionDigits)
             ) {
               currentValue = Number(currentValue).toFixed(property.fractionDigits);
+            }
+
+            if (property?.valueType === ValueType.DATETIME && currentValue) {
+              currentValue = moment(currentValue).format('YYYY-MM-DD');
             }
 
             if (property) {
@@ -322,7 +327,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   getDateTime(value: string | number): string {
-    return new Date(value).toLocaleDateString();
+    return moment(value).format('DD.MM.YYYY');
   }
 
   private async checkPermissions() {
