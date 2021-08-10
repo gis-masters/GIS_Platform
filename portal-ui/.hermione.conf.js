@@ -1,14 +1,10 @@
 const config = {
   sets: {
-    common: {
-      files: 'hermione/tests/common'
-    },
-    conv: {
-      files: ['hermione/tests/common', 'hermione/tests/conv']
-    },
-    simf: {
-      files: ['hermione/tests/common', 'hermione/tests/simf']
-    }
+    simf: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/simf'] },
+    staging: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/staging'] },
+    test: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/test'] },
+    zakaratcha: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/zakaratcha'] },
+    ui: { files: ['hermione/tests/ui'] }
   },
 
   baseUrl: 'http://localhost:4200/',
@@ -24,16 +20,16 @@ const config = {
         }
       },
       windowSize: '1300x900'
-    },
-    ff: {
-      desiredCapabilities: {
-        browserName: 'firefox',
-        'moz:firefoxOptions': {
-          args: ['-headless']
-        }
-      },
-      windowSize: '1300x900'
     }
+    // ff: {
+    //   desiredCapabilities: {
+    //     browserName: 'firefox',
+    //     'moz:firefoxOptions': {
+    //       args: ['-headless']
+    //     }
+    //   },
+    //   windowSize: '1300x900'
+    // }
   },
 
   plugins: {
@@ -46,14 +42,15 @@ const config = {
   },
 
   // prepareBrowser: function (browser) {
-  //   // browser.addCommand('crgWaitForHidden', require('./hermione/commands/crgWaitForHidden').bind({ browser }));
-  //   // browser.addCommand('crgWaitForVisible', require('./hermione/commands/crgWaitForVisible').bind(browser));
+  //   browser.addCommand('testMeta', require('./hermione/objects/commands/testMeta').bind({ browser }));
+  //   browser.addCommand('crgWaitForVisible', require('./hermione/commands/crgWaitForVisible').bind(browser));
   // },
 
   retry: 2,
 
   system: {
-    parallelLimit: 1
+    parallelLimit: 1,
+    fileExtensions: ['.ts', '.js']
   }
 };
 

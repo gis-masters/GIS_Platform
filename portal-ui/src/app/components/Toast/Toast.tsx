@@ -159,7 +159,7 @@ ${error.message ? error.message : error.toString()}`;
 
     void sendTelegramError(tgMsg);
 
-    if ((env.supressToastErrors[protocol] && canBeSuppressed) || suppress) {
+    if ((env.suppressToastErrors[protocol] && canBeSuppressed) || suppress) {
       return;
     }
 

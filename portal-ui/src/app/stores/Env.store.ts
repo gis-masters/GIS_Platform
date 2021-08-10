@@ -11,7 +11,7 @@ const emptyEnv: Environment = {
   flags: null,
   logo: null,
   favicon: null,
-  supressToastErrors: {
+  suppressToastErrors: {
     http: false,
     https: false
   },
@@ -21,7 +21,7 @@ const emptyEnv: Environment = {
   }
 };
 
-class Env implements Environment {
+export class Env implements Environment {
   private static _instance: Env;
 
   @observable platform: Platform;
@@ -32,17 +32,17 @@ class Env implements Environment {
   @observable logo?: string;
   @observable favicon?: string;
   @observable loaded = false;
-  @observable supressToastErrors: ProtocolsBoolean;
+  @observable suppressToastErrors: ProtocolsBoolean;
   @observable sendErrorsToTG: ProtocolsBoolean;
 
-  public static get instance() {
+  public static get instance(): Env {
     return this._instance || (this._instance = new this());
   }
 
   private constructor() {}
 
   @action
-  setEnv(env: Environment) {
+  setEnv(env: Environment): void {
     Object.assign(this, emptyEnv, env);
     this.loaded = true;
   }

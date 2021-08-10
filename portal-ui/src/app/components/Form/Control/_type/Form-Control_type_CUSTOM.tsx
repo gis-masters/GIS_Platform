@@ -7,8 +7,6 @@ import { PropertySchemaCustom, ValueType } from '../../../../services/crg/schema
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
-import '!style-loader!css-loader!sass-loader!./Form-Control_type_CHECKBOX.scss';
-
 @observer
 class FormControlTypeCustom extends Component<FormControlProps> {
   render() {

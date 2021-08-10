@@ -18,13 +18,13 @@ interface RequestConfigWithCache extends RequestConfig {
   cache?: CustomCacheConfig;
 }
 
-class Http {
+export class Http {
   axios: AxiosInstance;
   cache: CustomCache<Promise<AxiosResponse>>;
 
   private static _instance: Http;
 
-  static get instance() {
+  static get instance(): Http {
     return this._instance || (this._instance = new this());
   }
 
@@ -183,3 +183,6 @@ class Http {
 }
 
 export const http = Http.instance;
+
+// for autotests
+Object.assign(window, { http, axios });

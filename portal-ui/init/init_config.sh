@@ -25,7 +25,7 @@ echo -e "{\
 \"scratchWorkspaceName\":\"$UI_SWN\",\
 \"logo\":\"$UI_LOGO\",\
 \"favicon\":\"$UI_FAVICON\",\
-\"supressToastErrors\":{\
+\"suppressToastErrors\":{\
   \"http\":\"$UI_SUPRESS_TOAST_ERRORS_HTTP\",\
   \"https\":\"$UI_SUPRESS_TOAST_ERRORS_HTTPS\"\
 },\

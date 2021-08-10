@@ -24,7 +24,7 @@ export interface Environment {
   flags?: FlagsList;
   logo?: string;
   favicon?: string;
-  supressToastErrors: ProtocolsBoolean;
+  suppressToastErrors: ProtocolsBoolean;
   sendErrorsToTG: ProtocolsBoolean;
 }
 
@@ -39,6 +39,11 @@ const fetchEnv = async (): Promise<Environment> => {
 
 const envPromise: Promise<Environment> = fetchEnv();
 
-export function getEnvironment(): Promise<Environment> {
-  return envPromise;
+export async function getEnvironment(): Promise<Environment> {
+  await envPromise;
+
+  return env;
 }
+
+// for autotests
+Object.assign(window, { env });

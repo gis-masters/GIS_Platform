@@ -13,7 +13,7 @@
     "dataManagement": true
   },
   "favicon": "/assets/logo/dev/favicon.png",
-  "supressToastErrors": {
+  "suppressToastErrors": {
     "http": false,
     "https": false
   },
