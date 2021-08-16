@@ -1,0 +1,101 @@
+package ru.mycrg.data_service.dao.query_builder.rule_handlers;
+
+import com.healthmarketscience.sqlbuilder.Condition;
+import com.healthmarketscience.sqlbuilder.CustomCondition;
+import com.healthmarketscience.sqlbuilder.CustomSql;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
+import org.locationtech.jts.geom.*;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.mycrg.data_service.dto.styles.RuleFilter;
+import ru.mycrg.data_service.dto.styles.SpatialLiteral;
+import ru.mycrg.data_service.dto.styles.SpatialRuleFilter;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import static org.geotools.referencing.crs.DefaultGeographicCRS.WGS84;
+import static ru.mycrg.data_service.dto.styles.SpatialLiteralType.MULTIPOLYGON;
+
+public class SpatialRuleHandler implements RuleHandler {
+
+    public static final Logger log = LoggerFactory.getLogger(SpatialRuleHandler.class);
+
+    private final MathTransform mathTransform;
+    private final GeometryFactory geometryFactory;
+
+    public SpatialRuleHandler() throws FactoryException {
+        this.geometryFactory = new GeometryFactory();
+        this.mathTransform = CRS.findMathTransform(CRS.decode("EPSG:3857"), WGS84);
+    }
+
+    @Override
+    public Condition handle(RuleFilter ruleFilter) throws FactoryException, TransformException {
+        final SpatialRuleFilter filter = (SpatialRuleFilter) ruleFilter;
+        final SpatialLiteral spatialLiteral = filter.getLiteral();
+
+        if (!spatialLiteral.getType().equals(MULTIPOLYGON)) {
+            throw new TransformException("Support only MULTIPOLYGON yet");
+        }
+
+        final Polygon[] polygons = extractPolygons(spatialLiteral.getCoordinates());
+        final MultiPolygon multiPolygon = geometryFactory.createMultiPolygon(polygons);
+
+        final Geometry transformed = JTS.transform(multiPolygon, mathTransform);
+        transformed.setSRID(4326);
+
+        return new CustomCondition(
+                new CustomSql(
+                        "public.st_intersects('SRID=4326;" + transformed + "', public.st_transform(shape, 4326))"));
+    }
+
+    private Polygon[] extractPolygons(List<List<List<Object>>> dataPolygons) {
+        final Polygon[] polygons = new Polygon[dataPolygons.size()];
+        IntStream.range(0, dataPolygons.size())
+                 .forEach(j -> {
+                     LinearRing[] rings = extractRings(dataPolygons.get(j));
+
+                     final LinearRing shell = rings[0];
+                     final LinearRing[] holes = Arrays.copyOfRange(rings, 1, rings.length);
+                     final Polygon polygon = geometryFactory.createPolygon(shell, holes);
+
+                     polygons[j] = polygon;
+                 });
+
+        return polygons;
+    }
+
+    private LinearRing[] extractRings(List<List<Object>> dataRings) {
+        final LinearRing[] rings = new LinearRing[dataRings.size()];
+        IntStream.range(0, dataRings.size())
+                 .forEach(k -> {
+                     final CoordinateXY[] pointsArray = extractPoints(dataRings.get(k));
+                     final LinearRing linearRing = geometryFactory.createLinearRing(pointsArray);
+
+                     rings[k] = linearRing;
+                 });
+
+        return rings;
+    }
+
+    private CoordinateXY[] extractPoints(List<Object> ringPoints) {
+        final CoordinateXY[] pointsArray = new CoordinateXY[ringPoints.size()];
+        IntStream.range(0, ringPoints.size())
+                 .forEach(i -> {
+                     Object point = ringPoints.get(i);
+                     List<Double> points = (List<Double>) point;
+                     final CoordinateXY coordinateXY = new CoordinateXY(
+                             Double.parseDouble(String.valueOf(points.get(0))),
+                             Double.parseDouble(String.valueOf(points.get(1))));
+
+                     pointsArray[i] = coordinateXY;
+                 });
+
+        return pointsArray;
+    }
+}

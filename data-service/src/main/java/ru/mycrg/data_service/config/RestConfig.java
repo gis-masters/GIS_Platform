@@ -12,5 +12,4 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
     public SpelAwareProxyProjectionFactory projectionFactory() {
         return new SpelAwareProxyProjectionFactory();
     }
-
 }

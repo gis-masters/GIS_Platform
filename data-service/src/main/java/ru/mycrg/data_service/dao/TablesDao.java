@@ -122,6 +122,16 @@ public class TablesDao {
         }
     }
 
+    public List<Record> customQuery(String sqlRequest) {
+        log.debug("Custom query: [{}]", sqlRequest);
+
+        return pJdbcTemplate.getJdbcTemplate()
+                            .query(sqlRequest,
+                                   new RowMapperResultSetExtractor<>(
+                                           new RecordRowMapper()
+                                   ));
+    }
+
     public List<Record> findAllByPath(ResourceQualifier tableQualifier,
                                       String path,
                                       String title,
