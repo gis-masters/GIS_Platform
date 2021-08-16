@@ -1,6 +1,7 @@
 package ru.mycrg.geoserver_client.services;
 
 import com.google.gson.Gson;
+import okhttp3.HttpUrl;
 import okhttp3.Request;
 import org.jetbrains.annotations.NotNull;
 import ru.mycrg.geoserver_client.GeoserverInfo;
@@ -25,5 +26,16 @@ public class GeoServerBaseService {
                 .append("http://")
                 .append(geoserverInfo.getHost()).append(":").append(geoserverInfo.getPort())
                 .append("/geoserver/rest");
+    }
+
+    @NotNull
+    public static HttpUrl getGeoserverWmsUrl() {
+        return new HttpUrl.Builder()
+                .scheme("http")
+                .host(geoserverInfo.getHost())
+                .port(geoserverInfo.getPort())
+                .addPathSegment("geoserver")
+                .addPathSegment("wms")
+                .build();
     }
 }

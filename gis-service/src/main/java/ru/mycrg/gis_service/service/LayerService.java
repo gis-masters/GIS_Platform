@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import static dto.AuditEventActionsType.*;
 import static dto.AuditEventEntityType.LAYER;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;
 
@@ -37,8 +38,6 @@ public class LayerService {
 
     public static final Logger log = LoggerFactory.getLogger(LayerService.class);
     public static final String DATA_SERVICE_API_PREFIX = "/api/data";
-
-    private static String separator = "_";
 
     private final JsonPatcher jsonPatcher;
     private final ProjectService projectService;
@@ -194,7 +193,7 @@ public class LayerService {
 
     @NotNull
     private String buildLayerInfo(Project project, Layer layer) {
-        return project.getName() + separator + layer.getTableName() + separator + layer.getTitle();
+        return String.format("%s_%s_%s", project.getName(), layer.getTableName(), layer.getTitle());
     }
 
     @NotNull
@@ -227,6 +226,6 @@ public class LayerService {
 
     @NotNull
     private String getOrgWorkspaceName() {
-        return "scratch_database_" + authenticationFacade.getOrganizationId();
+        return getScratchWorkspaceName(authenticationFacade.getOrganizationId());
     }
 }

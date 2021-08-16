@@ -81,4 +81,8 @@ public class HttpClient {
 
         return handleRequest(request, type);
     }
+
+    public IHttpRequestHandler getRequestHandler() {
+        return requestHandler;
+    }
 }

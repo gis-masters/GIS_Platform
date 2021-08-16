@@ -16,14 +16,15 @@ import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 
 @Service
 public class DataStoreService {
 
     public static final Logger log = LoggerFactory.getLogger(DataStoreService.class);
-    private final IAuthenticationFacade authenticationFacade;
 
     private final Environment environment;
+    private final IAuthenticationFacade authenticationFacade;
 
     public DataStoreService(IAuthenticationFacade authenticationFacade,
                             Environment environment) {
@@ -32,15 +33,16 @@ public class DataStoreService {
     }
 
     public void create(String dataStoreId) {
-        Long orgId = authenticationFacade.getOrganizationId();
-
         try {
             log.debug("Try create storage {} on geoserver", dataStoreId);
 
-            final String orgWorkspace = "scratch_database_" + orgId;
-            ResponseModel<Object> responseModel = new VectorStorage(authenticationFacade.getAccessToken())
-                    .create(orgWorkspace, new DataStore(dataStoreId, prepareConnectionParameters(orgId, dataStoreId)));
+            final Long orgId = authenticationFacade.getOrganizationId();
+            final String orgWorkspace = getScratchWorkspaceName(orgId);
 
+            final VectorStorage vectorStorage = new VectorStorage(authenticationFacade.getAccessToken());
+            final DataStore dataStore = new DataStore(dataStoreId, prepareConnectionParameters(orgId, dataStoreId));
+
+            ResponseModel<Object> responseModel = vectorStorage.create(orgWorkspace, dataStore);
             if (!responseModel.isSuccessful()) {
                 throw new ThirdPartyServiceException("Не удалось создать хранилище на геосервере", responseModel);
             }
@@ -53,10 +55,8 @@ public class DataStoreService {
         try {
             log.debug("Try delete storage {} on geoserver", dataStoreId);
 
-            Long orgId = authenticationFacade.getOrganizationId();
-            final String orgWorkspace = "scratch_database_" + orgId;
-
-            String token = authenticationFacade.getAccessToken();
+            final String token = authenticationFacade.getAccessToken();
+            final String orgWorkspace = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
 
             ResponseModel<Object> responseModel = new VectorStorage(token).delete(orgWorkspace, dataStoreId);
             if (!responseModel.isSuccessful()) {

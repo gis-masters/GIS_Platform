@@ -72,7 +72,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на текущий слой")
-    public void checkExactLayer() {
+    public void getCurrentLayer() {
         super.getCurrentEntity();
     }
 

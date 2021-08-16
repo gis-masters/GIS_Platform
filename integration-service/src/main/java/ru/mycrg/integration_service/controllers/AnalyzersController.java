@@ -7,6 +7,7 @@ import ru.mycrg.integration_service.dto.ResourceAnalyzeModel;
 import ru.mycrg.integration_service.service.ResourceAnalyzerService;
 
 import java.util.List;
+import java.util.Set;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
@@ -28,8 +29,10 @@ public class AnalyzersController {
 
     @PostMapping
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<String> analyze(@RequestParam(name = "resourceType", required = false) String resourceType) {
-        final String processId = resourceAnalyzerService.analyze(resourceType);
+    public ResponseEntity<String> analyze(
+            @RequestParam(name = "resourceType", required = false) String resourceType,
+            @RequestParam(name = "analyzerIds", required = false) Set<String> analyzerIds) {
+        final String processId = resourceAnalyzerService.analyze(resourceType, analyzerIds);
 
         return ResponseEntity.accepted()
                              .body(processId);

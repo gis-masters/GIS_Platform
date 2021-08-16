@@ -4,17 +4,17 @@ import ru.mycrg.resource_analyzer_contract.IResourceAnalyzerResult;
 
 public class ResourceAnalyzerResult implements IResourceAnalyzerResult {
 
-    private final boolean isPassed;
+    private final boolean passed;
     private final String id;
 
-    public ResourceAnalyzerResult(String id, boolean isPassed) {
+    public ResourceAnalyzerResult(String id, boolean passed) {
         this.id = id;
-        this.isPassed = isPassed;
+        this.passed = passed;
     }
 
     @Override
     public boolean isPassed() {
-        return isPassed;
+        return passed;
     }
 
     @Override

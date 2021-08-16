@@ -16,6 +16,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
 import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
+import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class ImportStepsDefinitions extends BaseStepsDefinitions {
@@ -143,6 +144,8 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
         response.prettyPrint();
 
         assertThat(layers.isEmpty(), is(not(true)));
+
+        layerId = (Integer) layers.get(0).get("id");
     }
 
     private String getImportTasks() {

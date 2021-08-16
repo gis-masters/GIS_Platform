@@ -54,20 +54,13 @@ public class ResourceAnalyzerService {
         resourceAnalyzersBasePath = environment.getRequiredProperty("crg-options.resource_analyzers_base_path");
     }
 
-    public String analyze(String resourceType) {
+    public String analyze(String resourceType, Set<String> requiredAnalyzerIds) {
         if (resourceType != null && getAnalyzersByResourceType(resourceType).isEmpty()) {
             throw new NotFoundException("No exist resourceType: " + resourceType);
         }
 
-        final List<ResourceAnalyzeModel> foundedAnalyzers;
-        if (resourceType == null) {
-            foundedAnalyzers = getAllAnalyzers();
-        } else {
-            foundedAnalyzers = getAnalyzersByResourceType(resourceType);
-        }
-
-        final List<ResourceAnalyzeTask> tasks = prepareTasks(resourceType, foundedAnalyzers);
-        log.debug("Start analyze process. Where are: {} tasks", tasks.size());
+        final List<ResourceAnalyzeTask> tasks = prepareTasks(resourceType, requiredAnalyzerIds);
+        log.debug("Start analyze process. Where are prepared: {} tasks", tasks.size());
 
         final VariableMap variables = Variables.putValue(TASKS.name(), asJava(tasks))
                                                .putValue(RESOURCES_QUERY_BASE_PATH.name(),
@@ -103,8 +96,21 @@ public class ResourceAnalyzerService {
         return result;
     }
 
-    private List<ResourceAnalyzeTask> prepareTasks(String resourceType, List<ResourceAnalyzeModel> analyzers) {
+    private List<ResourceAnalyzeTask> prepareTasks(String resourceType, Set<String> requiredAnalyzerIds) {
         List<ResourceAnalyzeTask> tasks = new ArrayList<>();
+
+        List<ResourceAnalyzeModel> analyzers;
+        if (resourceType == null) {
+            analyzers = getAllAnalyzers();
+        } else {
+            analyzers = getAnalyzersByResourceType(resourceType);
+        }
+
+        if (requiredAnalyzerIds != null && !requiredAnalyzerIds.isEmpty()) {
+            analyzers = analyzers.stream()
+                                 .filter(analyzer -> requiredAnalyzerIds.contains(analyzer.getId()))
+                                 .collect(Collectors.toList());
+        }
 
         analyzers.forEach(analyzersModel -> {
             analyzersModel.getResourceDefinitions()

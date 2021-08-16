@@ -8,6 +8,7 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
+import ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions;
 
 import java.util.Map;
 
@@ -21,6 +22,9 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
     public static String currentDatasetName;
     public static DatasetCreateDto currentDatasetDto;
+
+    private final ImportStepsDefinitions importStepsDefinitions = new ImportStepsDefinitions();
+    private final ProjectStepsDefinitions projectStepsDefinitions = new ProjectStepsDefinitions();
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
@@ -154,6 +158,19 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         int realCount = getEntitiesCount("datasets");
 
         assertEquals(Integer.parseInt(datasetsSize), realCount);
+    }
+
+    @Given("Импортируем архив с валидным Shape-файлом в проект")
+    public void initializeDataSetWithVerifiedLayers() throws InterruptedException {
+        projectStepsDefinitions.initializeProject("STRING_10");
+        initDataset("STRING_10");
+        importStepsDefinitions.initImport();
+        importStepsDefinitions.sendArchive();
+        importStepsDefinitions.runImport();
+        importStepsDefinitions.waitUntilImportCompleteOnGeoserver();
+        importStepsDefinitions.importToProject();
+        importStepsDefinitions.waitImportToCurrentProject();
+        importStepsDefinitions.checkLayersAvailabilityInProject();
     }
 
     private void createDataset(DatasetCreateDto dto) {
