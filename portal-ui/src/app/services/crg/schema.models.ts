@@ -122,7 +122,7 @@ export interface PropertySchemaUrl<T extends Record<string, unknown> = Record<st
 export interface PropertySchemaCustom<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
   valueType: ValueType.CUSTOM;
-  Component: ComponentType<FormControlProps>;
+  ControlComponent: ComponentType<FormControlProps>;
 }
 
 export interface PropertySchemaOther<T extends Record<string, unknown> = Record<string, unknown>>

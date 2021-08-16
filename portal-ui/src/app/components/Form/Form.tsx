@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchema } from '../../services/crg/schema.models';
+import { NewPropertySchema } from '../../services/crg/schemaNew.models';
 
 import { FormContent } from './Content/Form-Content';
 
@@ -17,7 +17,7 @@ export { FormControl } from './Control/Form-Control.composed';
 export const cnForm = cn('Form');
 
 interface FormProps<T> extends React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement> {
-  fields?: PropertySchema[];
+  fields?: NewPropertySchema[];
   formValue?: T;
   onFormChange?: (changedValue: T) => void;
   onFormSubmit?: (changedValue: T) => void;

@@ -12,6 +12,7 @@ import { sleep } from '../../../services/util/sleep';
 import { Loading } from '../../Loading/Loading';
 import { Button } from '../../Button/Button';
 import { Form } from '../../Form/Form';
+import { convertSchema } from '../../../services/crg/schema.utils';
 
 const cnCreateLibraryElementDialog = cn('CreateLibraryElement', 'Dialog');
 
@@ -37,13 +38,13 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
     return (
       <>
         {schema && (
-          <Dialog disableBackdropClick maxWidth={'md'} open={open} onClose={this.closeDialog}>
+          <Dialog maxWidth={'md'} open={open} onClose={this.closeDialog}>
             <DialogTitle>Создание нового элемента</DialogTitle>
 
             <DialogContent className={cnCreateLibraryElementDialog()}>
               <Form
                 id='createLibraryElementForm'
-                fields={schema.properties}
+                fields={convertSchema(schema.properties)}
                 formValue={this.formValue}
                 onFormChange={this.formChanged}
                 onFormSubmit={this.formSubmitHandler}

@@ -5,7 +5,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
-import { PropertySchema } from '../../../services/crg/schema.models';
+import { NewPropertySchema } from '../../../services/crg/schemaNew.models';
 import { generateRandomId } from '../../../services/util/randomId';
 
 import { FormField } from '../Field/Form-Field';
@@ -16,7 +16,7 @@ import { FormHiddenField } from '../HiddenField/Form-HiddenField';
 const cnFormContent = cn('Form', 'Content');
 
 interface FormContentProps<T extends Record<string, unknown>> extends IClassNameProps {
-  fields: PropertySchema<T>[];
+  fields?: NewPropertySchema<T>[];
   formValue: T;
   onFormChange?: (changedValue: T) => void;
 }
@@ -30,7 +30,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
 
     return (
       <div className={cnFormContent(null, [className])}>
-        {fields.map((propertySchema: PropertySchema, i) => {
+        {fields.map((propertySchema: NewPropertySchema, i) => {
           const htmlId = 'formField_' + generateRandomId();
 
           return !propertySchema.hidden ? (
@@ -39,7 +39,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
               <FormControl
                 htmlId={htmlId}
                 property={propertySchema}
-                type={propertySchema.valueType}
+                type={propertySchema.fieldType}
                 onChange={this.fieldChanged}
                 fieldValue={formValue[propertySchema.name]}
                 FormControl={FormControl}

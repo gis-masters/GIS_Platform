@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { InputAdornment, TextField } from '@material-ui/core';
 
-import { PropertySchemaInt, ValueType } from '../../../../services/crg/schema.models';
+import { FieldType, PropertySchemaInt } from '../../../../services/crg/schemaNew.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
@@ -34,16 +34,16 @@ class FormControlTypeInt extends Component<FormControlProps> {
   @boundMethod
   private handleChange(event: React.ChangeEvent<{ value: unknown }>) {
     const { onChange, property } = this.props;
-    const { maxInclusive, minInclusive } = property as PropertySchemaInt;
+    const { maxValue, minValue } = property as PropertySchemaInt;
 
     let value = Number(event.target.value || 0);
 
-    if (typeof maxInclusive === 'number' && value > maxInclusive) {
-      value = maxInclusive;
+    if (typeof maxValue === 'number' && value > maxValue) {
+      value = maxValue;
     }
 
-    if (typeof minInclusive === 'number' && value < minInclusive) {
-      value = minInclusive;
+    if (typeof minValue === 'number' && value < minValue) {
+      value = minValue;
     }
 
     onChange({
@@ -55,6 +55,6 @@ class FormControlTypeInt extends Component<FormControlProps> {
 
 export const withTypeInt = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
-  { type: ValueType.INT },
+  { type: FieldType.INT },
   () => FormControlTypeInt
 );

@@ -4,14 +4,14 @@ import { withBemMod } from '@bem-react/core';
 import { Checkbox } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { ValueType } from '../../../../services/crg/schema.models';
+import { FieldType } from '../../../../services/crg/schemaNew.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
-import '!style-loader!css-loader!sass-loader!./Form-Control_type_CHECKBOX.scss';
+import '!style-loader!css-loader!sass-loader!./Form-Control_type_bool.scss';
 
 @observer
-class FormControlTypeCheckbox extends Component<FormControlProps> {
+class FormControlTypeBool extends Component<FormControlProps> {
   render() {
     const { htmlId, className, fieldValue, inSet } = this.props;
 
@@ -38,8 +38,8 @@ class FormControlTypeCheckbox extends Component<FormControlProps> {
   }
 }
 
-export const withTypeCheckbox = withBemMod<FormControlProps, FormControlProps>(
+export const withTypeBool = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
-  { type: ValueType.CHECKBOX },
-  () => FormControlTypeCheckbox
+  { type: FieldType.BOOL },
+  () => FormControlTypeBool
 );

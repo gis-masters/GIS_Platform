@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { FileInput } from '../../../FileInput/FileInput';
-import { ValueType } from '../../../../services/crg/schema.models';
+import { FieldType } from '../../../../services/crg/schemaNew.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
@@ -33,6 +33,6 @@ class FormControlTypeBinary extends Component<FormControlProps> {
 
 export const withTypeBinary = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
-  { type: ValueType.BINARY },
+  { type: FieldType.BINARY },
   () => FormControlTypeBinary
 );

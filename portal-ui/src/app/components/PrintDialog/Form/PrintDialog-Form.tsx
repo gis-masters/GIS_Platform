@@ -13,9 +13,9 @@ import {
   scales
 } from '../../../stores/PrintSettings.store';
 import { getPatch } from '../../../services/util/patch';
-import { PropertySchema, ValueType } from '../../../services/crg/schema.models';
 import { SelectLegend } from '../../SelectLegend/SelectLegend';
 import { Form, FormContent } from '../../Form/Form';
+import { FieldType, NewPropertySchema } from '../../../services/crg/schemaNew.models';
 
 import { PrintDialogExtra } from '../Extra/PrintDialog-Extra';
 
@@ -73,105 +73,115 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
   }
 
   @computed
-  private get mainFields(): PropertySchema<MainFormValues>[] {
+  private get mainFields(): NewPropertySchema<MainFormValues>[] {
     return [
       {
         name: 'pageFormatId',
         title: 'Формат',
-        valueType: ValueType.CHOICE,
-        enumerations: pageFormats.map(({ id, name }) => ({ title: name, value: id }))
+        display: 'select',
+        fieldType: FieldType.CHOICE,
+        options: pageFormats.map(({ id, name }) => ({ title: name, value: id }))
       },
       {
         name: 'scale',
         title: 'Масштаб',
-        valueType: ValueType.CHOICE,
-        enumerations: scales.map(scale => ({ title: `1 : ${scale}`, value: scale }))
+        display: 'select',
+        fieldType: FieldType.CHOICE,
+        options: scales.map(scale => ({ title: `1 : ${scale}`, value: scale }))
       },
       {
         name: 'orientation',
         title: 'Ориентация',
-        valueType: ValueType.CHOICE,
-        enumerations: orientations
+        display: 'select',
+        fieldType: FieldType.CHOICE,
+        options: orientations
       },
       {
         name: 'legend',
         title: 'Легенда',
-        valueType: ValueType.SET,
+        fieldType: FieldType.SET,
         fieldsSet: [
           {
             name: 'enabled',
             title: '',
-            valueType: ValueType.CHECKBOX
+            display: 'checkbox',
+            fieldType: FieldType.BOOL
           },
           {
             name: 'items',
             title: 'Знаки легенды',
-            valueType: ValueType.CUSTOM,
+            fieldType: FieldType.CUSTOM,
             hidden: !printSettings.legend.enabled,
-            Component: SelectLegend
+            ControlComponent: SelectLegend
           }
         ]
       }
     ];
   }
 
-  private get extraFields(): PropertySchema<ExtraFormValues>[] {
+  private get extraFields(): NewPropertySchema<ExtraFormValues>[] {
     return [
       {
         name: 'resolution',
         title: 'Разрешение',
-        valueType: ValueType.CHOICE,
-        enumerations: resolutions.map(resolution => ({ title: `${resolution} dpi`, value: resolution }))
+        display: 'select',
+        fieldType: FieldType.CHOICE,
+        options: resolutions.map(resolution => ({ title: `${resolution} dpi`, value: resolution }))
       },
       {
         name: 'margin',
         title: 'Поля (мм)',
-        valueType: ValueType.SET,
+        fieldType: FieldType.SET,
         fieldsSet: [
           {
             name: 'left',
             title: 'слева',
-            valueType: ValueType.INT,
-            minInclusive: 0,
-            maxInclusive: 50
+            defaultValue: 0,
+            display: 'number',
+            fieldType: FieldType.INT,
+            minValue: 0,
+            maxValue: 50
           },
           {
             name: 'right',
             title: 'справа',
-            valueType: ValueType.INT,
-            minInclusive: 0,
-            maxInclusive: 50
+            defaultValue: 0,
+            display: 'number',
+            fieldType: FieldType.INT,
+            minValue: 0,
+            maxValue: 50
           },
           {
             name: 'top',
             title: 'сверху',
-            valueType: ValueType.INT,
-            minInclusive: 0,
-            maxInclusive: 50
+            defaultValue: 0,
+            display: 'number',
+            fieldType: FieldType.INT,
+            minValue: 0,
+            maxValue: 50
           },
           {
             name: 'bottom',
             title: 'снизу',
-            valueType: ValueType.INT,
-            minInclusive: 0,
-            maxInclusive: 50
+            defaultValue: 0,
+            display: 'number',
+            fieldType: FieldType.INT,
+            minValue: 0,
+            maxValue: 50
           }
         ]
       },
       {
         name: 'windRose',
         title: 'Роза ветров',
-        valueType: ValueType.CHECKBOX
-      },
-      {
-        name: 'border',
-        title: 'Рамка',
-        valueType: ValueType.CHECKBOX
+        display: 'checkbox',
+        fieldType: FieldType.BOOL
       },
       {
         name: 'date',
         title: 'Дата',
-        valueType: ValueType.CHECKBOX
+        display: 'checkbox',
+        fieldType: FieldType.BOOL
       }
     ];
   }
