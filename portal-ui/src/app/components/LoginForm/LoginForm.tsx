@@ -14,6 +14,7 @@ import { usersService } from '../../services/crg/users.service';
 import { services } from '../../services/services';
 import { route } from '../../stores/Route.store';
 import { Pages } from '../../app-routing.module';
+import { Loading } from '../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./LoginForm.scss';
 
@@ -40,6 +41,7 @@ export class LoginForm extends Component<LoginFormProps> {
   @observable private isUserDisabled: boolean;
   @observable private isWrongPassword: boolean;
   @observable private userData: AuthUserData = cloneDeep(defaultData);
+  @observable private loading: boolean;
 
   async componentDidMount() {
     if (route.data.page === Pages.LOGIN) {
@@ -53,46 +55,50 @@ export class LoginForm extends Component<LoginFormProps> {
   render() {
     return (
       <>
-        <Form className={cnLoginForm()} id='LoginForm' onSubmit={this.submitHandler}>
-          <FormField>
-            <FormControl fullWidth>
-              <TextField
-                label='E-mail'
-                id='authUserEmail'
-                onChange={this.handleEmail}
-                value={this.userData.username}
-                error={Boolean(this.usernameError)}
-                helperText={this.usernameError}
-                required
-                fullWidth
-              />
-            </FormControl>
-          </FormField>
-          <FormField>
-            <FormControl fullWidth>
-              <TextField
-                label='Пароль'
-                id='authUserPassword'
-                onChange={this.handlePassword}
-                value={this.userData.password}
-                type='password'
-                required
-                fullWidth
-              />
-            </FormControl>
-          </FormField>
-          {this.isWrongPassword && <div className={cnLoginForm('Error')}>Неверное имя пользователя или пароль</div>}
-          {this.isUserDisabled && (
-            <div className={cnLoginForm('Error')}>Запрос на создание принят и обрабатывается. Попробуйте позже.</div>
-          )}
-          {this.passwordRecovery ? <div className={cnLoginForm('Recovery')}>{this.passwordRecovery}</div> : null}
-          <div className={cnLoginForm('Actions')}>
-            <Button form='LoginForm' type='submit' color='primary'>
-              Войти
-            </Button>
-            <Button onClick={this.handlePasswordRecovery}>Забыли пароль?</Button>
-          </div>
-        </Form>
+        {!this.loading ? (
+          <Form className={cnLoginForm()} id='LoginForm' onSubmit={this.submitHandler}>
+            <FormField>
+              <FormControl fullWidth>
+                <TextField
+                  label='E-mail'
+                  id='authUserEmail'
+                  onChange={this.handleEmail}
+                  value={this.userData.username}
+                  error={Boolean(this.usernameError)}
+                  helperText={this.usernameError}
+                  required
+                  fullWidth
+                />
+              </FormControl>
+            </FormField>
+            <FormField>
+              <FormControl fullWidth>
+                <TextField
+                  label='Пароль'
+                  id='authUserPassword'
+                  onChange={this.handlePassword}
+                  value={this.userData.password}
+                  type='password'
+                  required
+                  fullWidth
+                />
+              </FormControl>
+            </FormField>
+            {this.isWrongPassword && <div className={cnLoginForm('Error')}>Неверное имя пользователя или пароль</div>}
+            {this.isUserDisabled && (
+              <div className={cnLoginForm('Error')}>Запрос на создание принят и обрабатывается. Попробуйте позже.</div>
+            )}
+            {this.passwordRecovery ? <div className={cnLoginForm('Recovery')}>{this.passwordRecovery}</div> : null}
+            <div className={cnLoginForm('Actions')}>
+              <Button form='LoginForm' type='submit' color='primary'>
+                Войти
+              </Button>
+              <Button onClick={this.handlePasswordRecovery}>Забыли пароль?</Button>
+            </div>
+          </Form>
+        ) : (
+          <Loading visible={this.loading} />
+        )}
       </>
     );
   }
@@ -127,9 +133,15 @@ export class LoginForm extends Component<LoginFormProps> {
       'Отправьте заявку на восстановление пароля администратору ГИСОГД на почтовый адрес middel.erde@gmail.com';
   }
 
+  @action.bound
+  private handleLoading(isLoading: boolean): void {
+    this.loading = isLoading;
+  }
+
   @boundMethod
   private async submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    this.handleLoading(true);
     if (
       !this.userData.username.length ||
       !/^[\w!#$%&*+./=?^`{|}~’-]+@[\da-z-]+(?:\.[\da-z-]+)*$/i.test(this.userData.username)
@@ -140,7 +152,7 @@ export class LoginForm extends Component<LoginFormProps> {
     if (this.usernameError) return;
 
     const result = await authService.authenticate(this.userData);
-
+    this.handleLoading(false);
     if (result.ok) {
       if (this.props.inDialog) {
         communicationService.authDialogSuccess.emit();
