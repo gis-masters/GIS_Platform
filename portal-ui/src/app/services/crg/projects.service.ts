@@ -187,10 +187,12 @@ class ProjectsService {
   }
 
   enableGroupAndAncestors(groupId: number) {
-    const group = currentProject.patchGroup(groupId, { enabled: true });
+    if (groupId) {
+      const group = currentProject.patchGroup(groupId, { enabled: true });
 
-    if (group.parentId) {
-      this.enableGroupAndAncestors(group.parentId);
+      if (group.parentId) {
+        this.enableGroupAndAncestors(group.parentId);
+      }
     }
   }
 

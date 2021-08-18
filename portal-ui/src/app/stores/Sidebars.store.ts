@@ -138,6 +138,18 @@ class Sidebars {
       this.viewFeatures = features;
     }
 
+    if (
+      !this.featuresWithErrors &&
+      this.viewFeatures.length === 1 &&
+      features.length === 1 &&
+      (selectionType === MapSelectionTypes.REPLACE || selectionType === MapSelectionTypes.ADD)
+    ) {
+      this.openEdit({
+        features: features,
+        mode: EditFeatureMode.single
+      });
+    }
+
     if ((!this.viewFeatures || this.viewFeatures.length === 0) && !this.featuresWithErrors) {
       this.closeFeatures();
       this.closeEdit();
