@@ -16,9 +16,16 @@ export { FormControl } from './Control/Form-Control.composed';
 
 export const cnForm = cn('Form');
 
+export interface FormErrors {
+  field: string;
+  defaultMessage?: string;
+  message?: string;
+}
+
 interface FormProps<T> extends React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement> {
   fields?: NewPropertySchema[];
   formValue?: T;
+  formErrors?: FormErrors[] | null;
   onFormChange?: (changedValue: T) => void;
   onFormSubmit?: (changedValue: T) => void;
 }
@@ -26,12 +33,31 @@ interface FormProps<T> extends React.DetailedHTMLProps<React.FormHTMLAttributes<
 @observer
 export class Form<T extends { [key: string]: unknown }> extends Component<FormProps<T>> {
   render() {
-    const { fields, formValue = {}, children, className, onFormChange, onFormSubmit, ...otherProps } = this.props;
+    const {
+      fields,
+      formValue = {},
+      children,
+      className,
+      formErrors,
+      onFormChange,
+      onFormSubmit,
+      ...otherProps
+    } = this.props;
+
+    const errors = {};
+
+    fields?.forEach(field => {
+      formErrors?.forEach(error => {
+        if (field.name === error.field) {
+          errors[field.name] = error.defaultMessage ? error.defaultMessage : error.message;
+        }
+      });
+    });
 
     return (
       <form action='#' onSubmit={this.submitHandler} {...otherProps} className={cnForm(null, [className])}>
         {children}
-        {!!fields && <FormContent fields={fields} formValue={formValue} onFormChange={onFormChange} />}
+        {!!fields && <FormContent fields={fields} formValue={formValue} onFormChange={onFormChange} errors={errors} />}
       </form>
     );
   }

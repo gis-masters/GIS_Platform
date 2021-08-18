@@ -7,15 +7,17 @@ import { FileInput } from '../../../FileInput/FileInput';
 import { FieldType } from '../../../../services/crg/schemaNew.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
+import { FormError } from '../../Error/Form-Error';
 
 @observer
 class FormControlTypeBinary extends Component<FormControlProps> {
   render() {
-    const { htmlId, className } = this.props;
+    const { htmlId, className, error } = this.props;
 
     return (
       <div className={cnFormControl(null, [className])}>
         <FileInput id={htmlId} onChange={this.handleChange} />
+        {error && <FormError>{error}</FormError>}
       </div>
     );
   }

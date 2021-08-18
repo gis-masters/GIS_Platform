@@ -11,7 +11,7 @@ import { services } from '../../../services/services';
 import { sleep } from '../../../services/util/sleep';
 import { Loading } from '../../Loading/Loading';
 import { Button } from '../../Button/Button';
-import { Form } from '../../Form/Form';
+import { Form, FormErrors } from '../../Form/Form';
 import { convertSchema } from '../../../services/crg/schema.utils';
 
 const cnCreateLibraryElementDialog = cn('CreateLibraryElement', 'Dialog');
@@ -20,6 +20,7 @@ export interface ExplorerCreateElementDialogProps {
   schema?: FeatureDescription;
   open: boolean;
   loading: boolean;
+  formErrors?: FormErrors[];
   onClose: () => void;
   onCreate: (formValue: LibraryRecordRaw) => void;
 }
@@ -33,7 +34,7 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
   }
 
   render() {
-    const { open, loading, schema } = this.props;
+    const { open, loading, schema, formErrors } = this.props;
 
     return (
       <>
@@ -48,6 +49,7 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
                 formValue={this.formValue}
                 onFormChange={this.formChanged}
                 onFormSubmit={this.formSubmitHandler}
+                formErrors={formErrors}
               />
               <Loading visible={loading} />
             </DialogContent>

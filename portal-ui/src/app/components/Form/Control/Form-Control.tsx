@@ -16,6 +16,7 @@ export interface FormControlProps<T extends Record<string, unknown> = Record<str
   onChange?: ({ value: T, propertyName: string }) => void;
   FormControl?: ComponentType<FormControlProps>;
   inSet?: boolean;
+  error?: string;
 }
 
 export const FormControl: FC<FormControlProps> = ({ children, className }) => (

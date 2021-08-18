@@ -11,7 +11,7 @@ import { cnFormControl, FormControlProps } from '../Form-Control';
 @observer
 class FormControlTypeInt extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue = '', property, inSet } = this.props;
+    const { htmlId, className, fieldValue = '', property, inSet, error } = this.props;
     const { measureUnit, title } = property as PropertySchemaInt;
 
     return (
@@ -26,6 +26,8 @@ class FormControlTypeInt extends Component<FormControlProps> {
           value={fieldValue}
           label={inSet ? title : undefined}
           onChange={this.handleChange}
+          error={!!error}
+          helperText={error}
         />
       </div>
     );

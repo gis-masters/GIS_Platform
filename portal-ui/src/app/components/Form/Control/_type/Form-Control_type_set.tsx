@@ -7,6 +7,7 @@ import { PropertySchemaSet, FieldType } from '../../../../services/crg/schemaNew
 
 import { FormHiddenField } from '../../HiddenField/Form-HiddenField';
 import { cnFormControl, FormControlProps } from '../Form-Control';
+import { FormError } from '../../Error/Form-Error';
 
 import '!style-loader!css-loader!sass-loader!./Form-Control_type_set.scss';
 
@@ -15,30 +16,33 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
   FormControlProps<T>
 > {
   render() {
-    const { htmlId, className, property, FormControl, fieldValue } = this.props;
+    const { htmlId, className, property, FormControl, fieldValue = '', error } = this.props;
     const { fieldsSet } = property as PropertySchemaSet;
     const valueTyped = fieldValue as unknown as Record<string, unknown>;
 
     return (
-      <div className={cnFormControl(null, [className])}>
-        {fieldsSet.map((subProperty, i) =>
-          !subProperty.hidden ? (
-            <FormControl
-              htmlId={!i ? htmlId : undefined}
-              key={subProperty.name}
-              property={subProperty}
-              type={subProperty.fieldType}
-              onChange={this.fieldChanged}
-              fieldValue={valueTyped[subProperty.name]}
-              FormControl={FormControl}
-              inSet
-            >
-              {fieldValue}
-            </FormControl>
-          ) : (
-            <FormHiddenField key={i} name={String(subProperty.name)} value={valueTyped[subProperty.name]} />
-          )
-        )}
+      <div className={cnFormControl()}>
+        <div className={className}>
+          {fieldsSet.map((subProperty, i) =>
+            !subProperty.hidden ? (
+              <FormControl
+                htmlId={!i ? htmlId : undefined}
+                key={subProperty.name}
+                property={subProperty}
+                type={subProperty.fieldType}
+                onChange={this.fieldChanged}
+                fieldValue={valueTyped[subProperty.name]}
+                FormControl={FormControl}
+                inSet
+              >
+                {fieldValue}
+              </FormControl>
+            ) : (
+              <FormHiddenField key={i} name={String(subProperty.name)} value={valueTyped[subProperty.name]} />
+            )
+          )}
+        </div>
+        {error && <FormError>{error}</FormError>}
       </div>
     );
   }

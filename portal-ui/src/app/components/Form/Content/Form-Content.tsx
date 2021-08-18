@@ -18,6 +18,7 @@ const cnFormContent = cn('Form', 'Content');
 interface FormContentProps<T extends Record<string, unknown>> extends IClassNameProps {
   fields?: NewPropertySchema<T>[];
   formValue: T;
+  errors?: Record<keyof T, string>;
   onFormChange?: (changedValue: T) => void;
 }
 
@@ -26,7 +27,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   FormContentProps<T>
 > {
   render() {
-    const { fields, formValue, className } = this.props;
+    const { fields, formValue, className, errors } = this.props;
 
     return (
       <div className={cnFormContent(null, [className])}>
@@ -43,6 +44,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
                 onChange={this.fieldChanged}
                 fieldValue={formValue[propertySchema.name]}
                 FormControl={FormControl}
+                error={errors[propertySchema.name]}
               >
                 {formValue[propertySchema.name]}
               </FormControl>

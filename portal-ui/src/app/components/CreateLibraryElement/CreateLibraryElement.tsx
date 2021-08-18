@@ -3,9 +3,8 @@ import { observer } from 'mobx-react';
 import { action, computed, observable } from 'mobx';
 import { NoteAddOutlined } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
+import { AxiosError } from 'axios';
 
-import { Toast } from '../Toast/Toast';
-import { services } from '../../services/services';
 import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
 import { schemaService } from '../../services/crg/schema.service';
 import { communicationService } from '../../services/communication.service';
@@ -18,6 +17,7 @@ import { ExplorerStore } from '../Explorer/Explorer.store';
 import { CreateLibraryElementDialog } from './Dialog/CreateLibraryElement-Dialog';
 import { CreateLibraryElementMenuItem } from './MenuItem/CreateLibraryElement-MenuItem';
 import { CreateLibraryElementFolderButton } from './FolderButton/CreateLibraryElement-FolderButton';
+import { FormErrors } from '../Form/Form';
 
 export interface CreateLibraryElementsProps {
   schemaId: string;
@@ -31,6 +31,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   @observable private contentTypeId: string;
   @observable private dialogOpen = false;
   @observable private dialogLoading = false;
+  @observable private formErrors?: FormErrors[];
 
   async componentDidMount() {
     const schema = await schemaService.getSchema(this.props.schemaId);
@@ -60,6 +61,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
           schema={this.preparedSchema}
           onClose={this.closeDialog}
           onCreate={this.create}
+          formErrors={this.formErrors}
         />
       </>
     );
@@ -120,10 +122,13 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     this.dialogLoading = loading;
   }
 
+  @action
+  private setFormErrors(errors?: FormErrors[]) {
+    this.formErrors = errors;
+  }
+
   @boundMethod
   private async create(formValue: LibraryRecord) {
-    this.setDialogLoading(true);
-
     const formData = this.fillSystemAttributes(formValue);
     for (const propName in formData) {
       // Удаляем пустые строки и нули? Наркомания...
@@ -137,11 +142,10 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
 
       communicationService.libraryItemsUpdated.emit();
     } catch (error) {
-      Toast.error('Ошибка сохранения записи');
-      services.logger.error('Ошибка сохранения записи: ', error);
-    }
+      const err = error as AxiosError<{ errors?: FormErrors[] }>;
 
-    this.closeDialog();
+      this.setFormErrors(err?.response?.data?.errors);
+    }
   }
 
   private fillSystemAttributes(formData: LibraryRecord) {

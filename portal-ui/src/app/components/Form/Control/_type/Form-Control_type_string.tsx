@@ -11,7 +11,7 @@ import { cnFormControl, FormControlProps } from '../Form-Control';
 @observer
 class FormControlTypeString extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue = '', inSet, property } = this.props;
+    const { htmlId, className, fieldValue = '', inSet, property, error } = this.props;
 
     return (
       <div className={cnFormControl({ inSet }, [className])}>
@@ -19,6 +19,8 @@ class FormControlTypeString extends Component<FormControlProps> {
           id={htmlId}
           fullWidth={!inSet}
           value={fieldValue}
+          error={!!error}
+          helperText={error}
           label={inSet ? property.title : undefined}
           onChange={this.handleChange}
         />
