@@ -9,8 +9,7 @@ import ru.mycrg.data_service_contract.dto.PropertyViolation;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import static org.junit.Assert.assertEquals;
-import static ru.mycrg.wrapper.dao.DaoProperties.CLASS_ID;
-import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
+import static ru.mycrg.wrapper.dao.DaoProperties.*;
 import static ru.mycrg.wrapper.service.util.StringDecoder.decode;
 
 public class ValidationUtilTest {
@@ -26,14 +25,15 @@ public class ValidationUtilTest {
         ObjectValidationResult object = new ObjectValidationResult();
         object.setClassId(CLASS_ID);
         object.setObjectId(PRIMARY_KEY);
+        object.setGlobalId(GLOBAL_KEY);
         object.setxMin("xmin");
         object.addPropertyViolation(propertyViolation);
         object.addObjectViolation(new ErrorDescription("status", "some text"));
 
         JsonNode jsonNode = Util.convertToJson(object);
 
-        assertEquals("{\"objectId\":\"objectid\",\"classId\":\"classid\",\"xMin\":\"xmin\",\"" +
-                             "propertyViolations\":[{\"name\":\"pName\",\"value\":\"pValue\",\"" +
+        assertEquals("{\"objectId\":\"objectid\",\"globalId\":\"globalid\",\"classId\":\"classid\",\"xMin\":\"xmin\"," +
+                             "\"propertyViolations\":[{\"name\":\"pName\",\"value\":\"pValue\",\"" +
                              "errorTypes\":[\"INT\",\"CHOICE\",\"DOUBLE\"]}],\"objectViolations\":" +
                              "[{\"attribute\":\"status\",\"error\":\"some text\"}]}",
                      jsonNode.toString());

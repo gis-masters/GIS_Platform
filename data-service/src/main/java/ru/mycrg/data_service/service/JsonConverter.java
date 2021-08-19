@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class JsonConverter {
 
     private JsonConverter() {
@@ -33,5 +35,15 @@ public class JsonConverter {
         return mapper.writer()
                      .withDefaultPrettyPrinter()
                      .writeValueAsString(value);
+    }
+
+    public static JsonNode toJsonNodeFromString(String json) {
+        try {
+            return mapper.readTree(json);
+        } catch (IOException e) {
+            log.error("Failed convert to jsonNode: {}", e.getMessage());
+
+            return JacksonUtil.toJsonNode("");
+        }
     }
 }

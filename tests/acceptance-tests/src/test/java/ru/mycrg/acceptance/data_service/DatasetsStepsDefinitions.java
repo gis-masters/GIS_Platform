@@ -14,17 +14,17 @@ import java.util.Map;
 
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
     public static String currentDatasetName;
     public static DatasetCreateDto currentDatasetDto;
 
-    private final ImportStepsDefinitions importStepsDefinitions = new ImportStepsDefinitions();
-    private final ProjectStepsDefinitions projectStepsDefinitions = new ProjectStepsDefinitions();
+    private final ImportStepsDefinitions importSteps = new ImportStepsDefinitions();
+    private final ValidationReportStepDefinition validationSteps = new ValidationReportStepDefinition();
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
@@ -160,17 +160,23 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(Integer.parseInt(datasetsSize), realCount);
     }
 
-    @Given("Импортируем архив с валидным Shape-файлом в проект")
+    @Given("Существует набор данных с проверенным слоем в нем")
     public void initializeDataSetWithVerifiedLayers() throws InterruptedException {
-        projectStepsDefinitions.initializeProject("STRING_10");
+        importValidShape();
+        validationSteps.validateLayer();
+    }
+
+    @Given("Импортируем архив с валидным Shape-файлом в проект")
+    public void importValidShape() throws InterruptedException {
         initDataset("STRING_10");
-        importStepsDefinitions.initImport();
-        importStepsDefinitions.sendArchive();
-        importStepsDefinitions.runImport();
-        importStepsDefinitions.waitUntilImportCompleteOnGeoserver();
-        importStepsDefinitions.importToProject();
-        importStepsDefinitions.waitImportToCurrentProject();
-        importStepsDefinitions.checkLayersAvailabilityInProject();
+        importSteps.initImport();
+        importSteps.sendArchive();
+        importSteps.runImport();
+        importSteps.waitUntilImportCompleteOnGeoserver();
+        importSteps.importToProject();
+        importSteps.waitImportToCurrentProject();
+        importSteps.checkLayersAvailabilityInProject();
+        checkDataset();
     }
 
     private void createDataset(DatasetCreateDto dto) {

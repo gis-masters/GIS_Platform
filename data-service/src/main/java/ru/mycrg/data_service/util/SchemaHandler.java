@@ -8,6 +8,7 @@ import ru.mycrg.data_service.entity.Schema;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.dto.ValueTitleProjection;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
 import java.io.IOException;
@@ -49,5 +50,21 @@ public class SchemaHandler {
 
             throw new DataServiceException(message);
         }
+    }
+
+    public String getEnumerationTitleByValue(SimplePropertyDto property, String value) {
+        return property
+                .getEnumerations().stream()
+                .filter(en -> en.getValue().equals(value))
+                .findFirst()
+                .map(ValueTitleProjection::getTitle)
+                .orElse(value);
+    }
+
+    public Optional<SimplePropertyDto> getPropertyByName(SchemaDto schemaDto, String name) {
+        return schemaDto
+                .getProperties().stream()
+                .filter(prDto -> prDto.getName().equalsIgnoreCase(name))
+                .findFirst();
     }
 }

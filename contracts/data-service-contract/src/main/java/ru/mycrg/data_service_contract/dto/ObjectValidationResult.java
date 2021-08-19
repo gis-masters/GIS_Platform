@@ -10,6 +10,7 @@ import java.util.List;
 public class ObjectValidationResult {
 
     private String objectId;
+    private String globalId;
     private String classId;
     private String xMin;
     private List<PropertyViolation> propertyViolations = new ArrayList<>();
@@ -29,6 +30,14 @@ public class ObjectValidationResult {
 
     public void setObjectId(String objectId) {
         this.objectId = objectId;
+    }
+
+    public String getGlobalId() {
+        return globalId;
+    }
+
+    public void setGlobalId(String globalId) {
+        this.globalId = globalId;
     }
 
     public List<PropertyViolation> getPropertyViolations() {

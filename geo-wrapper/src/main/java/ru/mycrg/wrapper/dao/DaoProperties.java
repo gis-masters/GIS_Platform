@@ -14,6 +14,8 @@ public class DaoProperties {
      */
     public static final String PRIMARY_KEY = "objectid";
 
+    public static final String GLOBAL_KEY = "globalid";
+
     public static final String CLASS_ID = "classid";
 
     public static final String GLOBAL_ID = "globalid";

@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.dao;
 
-import com.healthmarketscience.sqlbuilder.*;
+import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
@@ -19,9 +19,6 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.dto.Record;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.util.filter.FilterCondition;
-import ru.mycrg.data_service.util.filter.FilterItem;
-import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -190,44 +187,6 @@ public class TablesDao {
         }
 
         return selectedRow;
-    }
-
-    private void fillConditions(DbTable table, SelectQuery selectQuery, List<FilterItem> filters) {
-        filters.forEach(filterItem -> {
-            final FilterCondition condition = filterItem.getCondition();
-            final String value = filterItem.getValue();
-            final String field = filterItem.getField();
-
-            final DbColumn fieldColumn = table.findColumn(field);
-            switch (condition) {
-                case IS_NULL:
-                    selectQuery.addCondition(UnaryCondition.isNull(fieldColumn));
-
-                    break;
-                case EQUAL_TO:
-                    selectQuery.addCondition(BinaryCondition.equalTo(fieldColumn, value));
-
-                    break;
-                case LIKE:
-                    final String likeCondition = String.format("LOWER(%s) LIKE LOWER('%%%s%%')",
-                                                               fieldColumn.getColumnNameSQL(), value);
-                    selectQuery.addCondition(new CustomCondition(likeCondition));
-
-                    break;
-                default:
-                    log.warn("Unsupported filter condition: {}", condition);
-            }
-        });
-    }
-
-    private DbTable getDbTable(@NotNull ResourceQualifier rQualifier, SchemaDto schema) {
-        final DbSpec spec = new DbSpec();
-        final DbSchema dbSchema = spec.addSchema(rQualifier.getSchema());
-        final DbTable dbTable = dbSchema.addTable(rQualifier.getTable());
-
-        schema.getProperties().forEach(propertyDto -> dbTable.addColumn(propertyDto.getName()));
-
-        return dbTable;
     }
 
     private DbTable getSimpleDbTable(@NotNull ResourceQualifier rQualifier) {

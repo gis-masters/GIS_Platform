@@ -26,6 +26,8 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
 
     public static Integer processId;
     public static Integer importId;
+    public static String tableName;
+    public static String schemaId;
 
     @When("Четвертый этап: импорт в текущий проект в текущий набор данных")
     public void importToProject() {
@@ -140,6 +142,9 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
                         get(String.format("/projects/%d/layers/", projectId));
 
         List<LinkedHashMap<Integer, Object>> layers = response.jsonPath().get();
+
+        tableName = response.jsonPath().getList("tableName").get(0).toString();
+        schemaId = response.jsonPath().getList("schemaId").get(0).toString();
 
         response.prettyPrint();
 

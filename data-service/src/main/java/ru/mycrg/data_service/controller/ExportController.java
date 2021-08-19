@@ -11,10 +11,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.ExportRequestModel;
+import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.StorageService;
 import ru.mycrg.data_service.service.export.ExportService;
+import ru.mycrg.data_service.service.export.LayerValidationReportService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -26,12 +28,15 @@ public class ExportController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(ExportController.class);
 
     private final ExportService exportService;
+    private final LayerValidationReportService reporter;
     private final StorageService storageService;
 
     @Autowired
     public ExportController(StorageService storageService,
+                            LayerValidationReportService reporter,
                             ExportService exportService) {
         this.exportService = exportService;
+        this.reporter = reporter;
         this.storageService = storageService;
     }
 
@@ -40,6 +45,22 @@ public class ExportController extends BaseController {
         Process process = exportService.export(dto);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/export/validation_results")
+    public ResponseEntity<Resource> exportValidationResults(@Valid @RequestBody ValidationRequestDto dto,
+                                                            HttpServletRequest request) {
+        log.debug("Request to download validation results file with: {}", dto.getResources());
+
+        String fileName = reporter.generateReport(dto.getResources());
+
+        Resource res = storageService.load(fileName);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.parseMediaType(determinateContentType(request, res)))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + res.getFilename() + "\"")
+                .body(res);
     }
 
     @GetMapping("/export/{fileName:.+}")
