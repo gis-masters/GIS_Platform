@@ -1,18 +1,66 @@
-import { getGeoServerUrl, getWmsUrl } from '../server-urls.service';
-import { CrgLayer } from '../crg/projects.models';
-import { http } from '../http.service';
-
 import { currentProject } from '../../stores/CurrentProject.store';
-import { sleep } from '../util/sleep';
+import { getActualLegendUrl, getGeoServerUrl, getWmsUrl } from '../server-urls.service';
+import { CrgLayer } from '../crg/projects.models';
+import { mapService } from '../map/map.service';
+import { WfsGeometry } from './wfs.models';
+import { http } from '../http.service';
 import { patch } from '../util/patch';
 
 export interface Rule {
   name: string;
   title: string;
   legend: string;
+  filter: StyleFilter;
 }
 
-const sldStyles: Record<string, Promise<string>> = {};
+export interface FilteredStylesResponse {
+  dataset: string;
+  identifier: string;
+  rules: string[];
+}
+
+enum StyleFilterOperator {
+  AND = 'And',
+  OR = 'Or',
+  NOT = 'Not',
+  EQUAL_TO = 'PropertyIsEqualTo',
+  NOT_EQUAL_TO = 'PropertyIsNotEqualTo',
+  LESS_THAN = 'PropertyIsLessThan',
+  LESS_THAN_OR_EQUAL_TO = 'PropertyIsLessThanOrEqualTo',
+  GREATER_THEN = 'PropertyIsGreaterThan',
+  GREATER_THEN_OR_EQUAL_TO = 'PropertyIsGreaterThanOrEqualTo',
+  LIKE = 'PropertyIsLike',
+  INTERSECTS = 'Intersects'
+}
+
+type StyleFilter = StyleFilterLogical | StyleFilterComparison | StyleFilterSpatial;
+
+interface StyleFilterLogical {
+  operator: StyleFilterOperator.AND | StyleFilterOperator.OR | StyleFilterOperator.NOT;
+  filters: StyleFilter[];
+}
+
+interface StyleFilterComparison {
+  operator:
+    | StyleFilterOperator.EQUAL_TO
+    | StyleFilterOperator.NOT_EQUAL_TO
+    | StyleFilterOperator.LESS_THAN
+    | StyleFilterOperator.LESS_THAN_OR_EQUAL_TO
+    | StyleFilterOperator.GREATER_THEN
+    | StyleFilterOperator.GREATER_THEN_OR_EQUAL_TO
+    | StyleFilterOperator.LIKE;
+  propertyName: string;
+  literal: string | number;
+  matchCase?: boolean;
+}
+
+interface StyleFilterSpatial {
+  operator: StyleFilterOperator.INTERSECTS;
+  propertyName?: string;
+  literal: WfsGeometry;
+}
+
+const sldStyles: Record<string, Promise<void>> = {};
 
 export async function loadAllLayersStyles(): Promise<void> {
   for (const { payload: layer } of currentProject.visibleLayersWithoutRasters) {
@@ -21,22 +69,25 @@ export async function loadAllLayersStyles(): Promise<void> {
 }
 
 export async function loadLayerStyle(layer: CrgLayer): Promise<void> {
-  if (sldStyles[layer.styleName]) {
-    await sldStyles[layer.styleName];
-    await sleep(0);
-
-    return;
+  if (!sldStyles[layer.styleName]) {
+    sldStyles[layer.styleName] = _loadLayerStyle(layer);
   }
 
-  sldStyles[layer.styleName] = getStyleSld(layer.styleName);
-  const sldStyle = await sldStyles[layer.styleName];
+  await sldStyles[layer.styleName];
+}
+
+async function _loadLayerStyle(layer: CrgLayer) {
+  const sldStyle = await getStyleSld(layer.styleName);
   const xmlDoc = new DOMParser().parseFromString(sldStyle, 'text/xml');
+
   const rulesWithoutLegend: Omit<Rule, 'legend'>[] = [...xmlDoc.querySelectorAll('Rule')]
     .filter(ruleXml => ruleXml.querySelector('Name') && ruleXml.querySelector('Title'))
     .map(ruleXml => ({
       name: ruleXml.querySelector('Name').innerHTML,
-      title: ruleXml.querySelector('Title').innerHTML
+      title: ruleXml.querySelector('Title').innerHTML,
+      filter: parseFilter(ruleXml.querySelector('Filter')?.firstElementChild)
     }));
+
   const rules = await Promise.all(
     rulesWithoutLegend.map(async rule => {
       const blob = await getLegendGraphicByRuleName(layer.complexName, rule.name);
@@ -50,6 +101,47 @@ export async function loadLayerStyle(layer: CrgLayer): Promise<void> {
   );
 
   patch(layer, { style: rules });
+}
+
+function parseFilter(xmlFilter?: Element): StyleFilter | undefined {
+  let operator = xmlFilter?.tagName;
+
+  if (operator?.includes(':')) {
+    operator = operator.split(':')[1];
+  }
+
+  if (
+    operator === StyleFilterOperator.EQUAL_TO ||
+    operator === StyleFilterOperator.NOT_EQUAL_TO ||
+    operator === StyleFilterOperator.EQUAL_TO ||
+    operator === StyleFilterOperator.NOT_EQUAL_TO ||
+    operator === StyleFilterOperator.LESS_THAN ||
+    operator === StyleFilterOperator.LESS_THAN_OR_EQUAL_TO ||
+    operator === StyleFilterOperator.GREATER_THEN ||
+    operator === StyleFilterOperator.GREATER_THEN_OR_EQUAL_TO
+  ) {
+    return {
+      operator,
+      propertyName: xmlFilter.querySelector('PropertyName').innerHTML,
+      literal: xmlFilter.querySelector('Literal').innerHTML
+    };
+  }
+
+  if (operator === StyleFilterOperator.INTERSECTS) {
+    // not implemented
+    return;
+  }
+
+  if (
+    operator === StyleFilterOperator.AND ||
+    operator === StyleFilterOperator.OR ||
+    operator === StyleFilterOperator.NOT
+  ) {
+    return {
+      operator,
+      filters: [...xmlFilter.children].map(parseFilter).filter(filter => filter)
+    };
+  }
 }
 
 function createImageFromBlob(image: Blob): Promise<string> {
@@ -109,4 +201,42 @@ async function getStyleSld(complexStyleName: string): Promise<string> {
     headers: { 'Content-Type': 'application/vnd.ogc.sld+xml' },
     responseType: 'text'
   });
+}
+
+export async function filterLegendForCurrentMapView(layers: CrgLayer[]): Promise<FilteredStylesResponse[]> {
+  const [x1, y1, x2, y2] = mapService.view.calculateExtent();
+
+  return http.post<FilteredStylesResponse[]>(
+    await getActualLegendUrl(),
+    layers.map(layer => ({
+      dataset: layer.dataset,
+      identifier: layer.tableName,
+      filter: {
+        operator: 'Intersects',
+        propertyName: 'shape',
+        literal: {
+          type: 'MultiPolygon',
+          coordinates: [
+            [
+              [
+                [x1, y1],
+                [x2, y1],
+                [x2, y2],
+                [x1, y2],
+                [x1, y1]
+              ]
+            ]
+          ]
+        }
+      },
+      rules:
+        layer.style
+          ?.filter(({ filter }) => filter)
+          .map(rule => ({
+            name: rule.name,
+            filter: rule.filter
+          })) || []
+    })),
+    { cache: { disabled: false, clear: false } }
+  );
 }

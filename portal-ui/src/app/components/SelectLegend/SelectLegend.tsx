@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
+import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -9,8 +9,8 @@ import { loadAllLayersStyles } from '../../services/geoserver/styles.service';
 import { SortParams } from '../../services/util/sortObjects';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { FormControlProps } from '../Form/Control/Form-Control';
-import { Button } from '../Button/Button';
 import { XTableColumn } from '../XTable/XTable';
+import { Button } from '../Button/Button';
 
 import { SelectLegendImg } from './Img/SelectLegend-Img';
 import { SelectLegendCount } from './Count/SelectLegend-Count';
@@ -67,7 +67,7 @@ export class SelectLegend extends Component<FormControlProps> {
         </div>
         <ChooseXTableDialog<RuleExtended>
           title='Выбор знаков легенды'
-          items={this.legend}
+          items={printSettings.allLegend}
           selectedItems={printSettings.legend.items}
           cols={this.cols}
           defaultSort={this.sortParams}
@@ -78,13 +78,6 @@ export class SelectLegend extends Component<FormControlProps> {
           getRowId={this.getItemId}
         />
       </>
-    );
-  }
-
-  @computed
-  private get legend(): RuleExtended[] {
-    return currentProject.visibleLayersWithoutRasters.flatMap(({ payload }) =>
-      (payload.style || []).map((rule: RuleExtended) => ({ ...rule, layerId: payload.id, layerTitle: payload.title }))
     );
   }
 
@@ -100,6 +93,7 @@ export class SelectLegend extends Component<FormControlProps> {
 
   @action.bound
   private select(items: RuleExtended[]) {
+    printSettings.legend.auto = false;
     printSettings.legend.items = items;
     this.closeDialog();
   }

@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import { CustomCache, CustomCacheConfig } from './common/CustomCache';
+import { communicationService } from './communication.service';
 import { replaceUrl } from './server-urls.service';
 import { PageableResponse } from './models';
-import { communicationService } from './communication.service';
 import { Emitter } from './common/Emitter';
 import { route } from '../stores/Route.store';
 
@@ -45,15 +45,15 @@ export class Http {
 
   async get<T>(url: string, configWithCache: RequestConfigWithCache = {}): Promise<T> {
     const { cache: cacheConfig, ...config } = configWithCache;
-    const resultUri = this.axios.getUri({ url, ...config });
-    const fromCache = this.cache.match(resultUri, cacheConfig);
+    const cacheKey = 'GET:' + this.axios.getUri({ url, ...config });
+    const fromCache = this.cache.match(cacheKey, cacheConfig);
     let promise: Promise<AxiosResponse<T>>;
 
     if (fromCache) {
       promise = fromCache as Promise<AxiosResponse<T>>;
     } else {
       promise = this.axios.get(url, config);
-      this.cache.add(resultUri, promise, cacheConfig);
+      this.cache.add(cacheKey, promise, cacheConfig);
     }
 
     try {
@@ -95,11 +95,23 @@ export class Http {
     return result;
   }
 
-  async post<T>(url: string, data?: unknown, config?: RequestConfig): Promise<T> {
-    const response = await this.axios.post<T>(url, data, config);
-    this.cache.clear();
+  async post<T>(url: string, data?: unknown, configWithCache?: RequestConfigWithCache): Promise<T> {
+    const { cache: requestCacheConfig, ...config } = configWithCache;
+    const cacheConfig = { disabled: true, clear: true, ...requestCacheConfig };
+    const cacheKey = 'POST:' + this.axios.getUri({ url, ...config }) + ' DATA:' + JSON.stringify(data);
+    const fromCache = this.cache.match(cacheKey, { disabled: true, clear: true, ...cacheConfig });
+    let promise: Promise<AxiosResponse<T>>;
+
+    if (fromCache) {
+      promise = fromCache as Promise<AxiosResponse<T>>;
+    } else {
+      promise = this.axios.post<T>(url, data, config);
+      this.cache.add(cacheKey, promise, cacheConfig);
+    }
 
     try {
+      const response = await promise;
+
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -173,7 +185,7 @@ export class Http {
     }
   }
 
-  async waitForAuth() {
+  async waitForAuth(): Promise<boolean> {
     communicationService.authDialogOpen.emit();
 
     return new Promise(resolve => {

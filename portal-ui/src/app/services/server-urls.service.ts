@@ -184,6 +184,10 @@ export async function getApiImportXmlUrl(): Promise<string> {
   return `${await getDataUrl()}/import/file`;
 }
 
+export async function getActualLegendUrl(): Promise<string> {
+  return `${await getDataUrl()}/styles/actual`;
+}
+
 export async function getDatasetsUrl(): Promise<string> {
   return `${await getDataUrl()}/datasets`;
 }

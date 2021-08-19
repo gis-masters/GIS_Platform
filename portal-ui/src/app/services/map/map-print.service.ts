@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import domToImage from 'dom-to-image';
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import moment from 'moment';
 import { getPointResolution } from 'ol/proj';
 import { saveAs } from 'file-saver';
@@ -11,6 +11,7 @@ import { mapService } from './map.service';
 import { PrintDialogDate } from '../../components/PrintDialog/Date/PrintDialog-Date';
 import { mapStore } from '../../stores/Map.store';
 import { Legend } from '../../components/Legend/Legend';
+import { filterLegendForCurrentMapView, loadLayerStyle } from '../geoserver/styles.service';
 
 const BASE_SCALE_LINE_DPI = 150;
 
@@ -77,27 +78,19 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
   printSettings.setPrintingStatus(true, resolution);
 
   const { map, view, scaleLine } = mapService;
-  const { width, height, scale } = printSettings;
+  const { width, height, legend } = printSettings;
 
   const size = map.getSize();
   const viewResolution = view.getResolution();
-  const scaleResolution = scale / 1000 / getPointResolution(view.getProjection(), resolution / 25.4, view.getCenter());
 
-  // Set print size
-  scaleLine.setDpi(resolution);
-  map.setSize([width, height]);
-  view.setResolution(scaleResolution);
-
-  if (translateX || translateY) {
-    view.centerOn(
-      view.getCenter(),
-      [width, height],
-      [width / 2 + width * translateX, height / 2 + height * translateY]
-    );
-  }
+  setPrintSize(resolution, translateX, translateY);
 
   return new Promise<string>(resolve => {
     map.once('rendercomplete', async () => {
+      if (legend.auto) {
+        await autoFilterLegend();
+      }
+
       const mapCanvas = document.createElement('canvas');
       mapCanvas.width = width;
       mapCanvas.height = height;
@@ -353,4 +346,50 @@ export async function getLegendImageSrc(resolution?: number): Promise<string> {
   el.remove();
 
   return src;
+}
+
+let lastFilteredLegendRequestId: symbol;
+
+async function autoFilterLegend() {
+  const filteredLegendRequestId = Symbol();
+  lastFilteredLegendRequestId = filteredLegendRequestId;
+
+  await Promise.all(printSettings.layers.map(layer => loadLayerStyle(layer)));
+
+  const filteredLegendResponse = await filterLegendForCurrentMapView(printSettings.layers);
+
+  // если за время обращения к api случился следующий запрос
+  if (lastFilteredLegendRequestId !== filteredLegendRequestId) {
+    return;
+  }
+
+  printSettings.setLegendItems(
+    filteredLegendResponse.flatMap(({ dataset, identifier, rules: rulesNames }) =>
+      rulesNames.map(ruleName => {
+        const layer = printSettings.layers.find(l => l.tableName === identifier && l.dataset === dataset);
+
+        return printSettings.allLegend.find(
+          legendRule => legendRule.layerId === layer.id && legendRule.name === ruleName
+        );
+      })
+    )
+  );
+}
+
+function setPrintSize(resolution: number, translateX: number, translateY: number) {
+  const { map, view, scaleLine } = mapService;
+  const { width, height, scale } = printSettings;
+  const scaleResolution = scale / 1000 / getPointResolution(view.getProjection(), resolution / 25.4, view.getCenter());
+
+  scaleLine.setDpi(resolution);
+  map.setSize([width, height]);
+  view.setResolution(scaleResolution);
+
+  if (translateX || translateY) {
+    view.centerOn(
+      view.getCenter(),
+      [width, height],
+      [width / 2 + width * translateX, height / 2 + height * translateY]
+    );
+  }
 }

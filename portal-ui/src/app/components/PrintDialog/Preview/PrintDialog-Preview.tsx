@@ -41,9 +41,9 @@ export class PrintDialogPreview extends Component<PrintDialogPreviewProps> {
   async componentDidMount() {
     this.reactionDisposer = reaction(
       () => {
-        const { orientation, pageFormat, scale, margin } = printSettings;
+        const { orientation, pageFormat, scale, margin, legend } = printSettings;
 
-        return [orientation, pageFormat, scale, margin];
+        return [orientation, pageFormat, scale, margin, legend.auto];
       },
       async () => {
         await this.updatePreview();

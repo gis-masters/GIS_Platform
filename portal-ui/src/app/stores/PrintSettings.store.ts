@@ -1,6 +1,9 @@
 import { observable, computed, action } from 'mobx';
+import { cloneDeep } from 'lodash';
 
 import { Rule } from '../services/geoserver/styles.service';
+import { CrgLayer } from '../services/crg/projects.models';
+import { currentProject } from './CurrentProject.store';
 
 export interface RuleExtended extends Rule {
   layerId: number;
@@ -48,6 +51,7 @@ export const pageFormats: PageFormat[] = [
 
 interface LegendOptions {
   enabled: boolean;
+  auto: boolean;
   items: RuleExtended[];
 }
 
@@ -86,6 +90,7 @@ const defaultPrintSettings: PrintSettings = {
   date: true,
   legend: {
     enabled: true,
+    auto: true,
     items: []
   }
 };
@@ -148,13 +153,25 @@ class PrintSettingsStore implements PrintSettings {
     return Math.round(((this.pageHeight - this.margin.top - this.margin.bottom) * this.printingResolution) / 25.4);
   }
 
+  @computed
+  get layers(): CrgLayer[] {
+    return currentProject.visibleLayersWithoutRasters.flatMap(({ payload }) => payload);
+  }
+
+  @computed
+  get allLegend(): RuleExtended[] {
+    return printSettings.layers.flatMap(layer =>
+      (layer.style || []).map((rule: RuleExtended) => ({ ...rule, layerId: layer.id, layerTitle: layer.title }))
+    );
+  }
+
   @action
   setValues(values: Partial<PrintSettings>) {
     Object.assign(this, values);
   }
 
   reset() {
-    this.setValues(defaultPrintSettings);
+    this.setValues(cloneDeep(defaultPrintSettings));
   }
 
   @action
@@ -171,6 +188,11 @@ class PrintSettingsStore implements PrintSettings {
   @action
   setRotation(angle: number) {
     this.rotation = angle;
+  }
+
+  @action
+  setLegendItems(legend: RuleExtended[]) {
+    this.legend.items = legend;
   }
 }
 

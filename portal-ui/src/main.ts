@@ -43,6 +43,10 @@ declare global {
   interface NodeListOf<TNode extends Node> extends NodeList {
     [Symbol.iterator](): IterableIterator<TNode>;
   }
+
+  interface HTMLCollection {
+    [Symbol.iterator](): IterableIterator<Element>;
+  }
 }
 
 getEnvironment()

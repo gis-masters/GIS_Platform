@@ -1,6 +1,7 @@
 export interface CustomCacheConfig {
   maxAge?: number;
   disabled?: boolean;
+  clear?: boolean;
 }
 
 interface StoreItem<T> {
@@ -37,6 +38,12 @@ export class CustomCache<T = unknown> {
 
   add(key: string, payload: T, config: CustomCacheConfig = {}): void {
     const { disabled, maxAge }: CustomCacheConfig = { ...this.config, ...config };
+
+    if (config.clear) {
+      this.clear();
+
+      return;
+    }
 
     if (disabled) {
       return;

@@ -113,6 +113,13 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
             fieldType: FieldType.CUSTOM,
             hidden: !printSettings.legend.enabled,
             ControlComponent: SelectLegend
+          },
+          {
+            name: 'auto',
+            title: 'авто',
+            hidden: !printSettings.legend.enabled,
+            display: 'checkbox',
+            fieldType: FieldType.BOOL
           }
         ]
       }

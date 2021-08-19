@@ -5,6 +5,7 @@ import { Checkbox } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { FieldType } from '../../../../services/crg/schemaNew.models';
+import { generateRandomId } from '../../../../services/util/randomId';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormError } from '../../Error/Form-Error';
@@ -14,7 +15,7 @@ import '!style-loader!css-loader!sass-loader!./Form-Control_type_bool.scss';
 @observer
 class FormControlTypeBool extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue, inSet, error } = this.props;
+    const { htmlId = 'formField_' + generateRandomId(), className, fieldValue, inSet, property, error } = this.props;
 
     return (
       <div className={cnFormControl({ inSet }, [className])}>
@@ -24,6 +25,7 @@ class FormControlTypeBool extends Component<FormControlProps> {
           inputProps={{ id: htmlId }}
           color='primary'
         />
+        {inSet && property.title && <label htmlFor={htmlId}>{property.title}</label>}
         {error && <FormError>{error}</FormError>}
       </div>
     );
