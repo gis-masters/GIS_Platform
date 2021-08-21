@@ -107,7 +107,7 @@ public class LayerController {
 
         final Project project = projectService.getById(projectId);
         if (!resourceProtector.isOwner(project)) {
-            throw new ForbiddenException("Недостаточно прав для удаления проекта: " + project.getName());
+            throw new ForbiddenException("редактирования", "проекта", project.getName());
         }
 
         Layer layer = project

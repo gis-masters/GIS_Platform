@@ -309,6 +309,12 @@ public class BaseStepsDefinitions {
         return list.size();
     }
 
+    public void checkErrorResponseMessage(String expectedMsg) {
+        jsonPath = response.jsonPath();
+
+        assertEquals(expectedMsg, jsonPath.get("message"));
+    }
+
     public void checkCurrentIdInResponse() {
         checkIdInResponse(getCurrentId());
     }

@@ -9,6 +9,7 @@ import ru.mycrg.gis_service.dto.GroupUpdateDto;
 import ru.mycrg.gis_service.entity.Group;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
+import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.GroupRepository;
@@ -29,15 +30,18 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final JsonPatcher jsonPatcher;
     private final ProjectionFactory projectionFactory;
+    private final ResourceProtector resourceProtector;
 
     public GroupService(GroupRepository groupRepository,
                         ProjectService projectService,
                         JsonPatcher jsonPatcher,
-                        ProjectionFactory projectionFactory) {
+                        ProjectionFactory projectionFactory,
+                        ResourceProtector resourceProtector) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.groupRepository = groupRepository;
         this.projectionFactory = projectionFactory;
+        this.resourceProtector = resourceProtector;
     }
 
     public List<GroupProjection> getAll(long projectId) {
@@ -49,6 +53,9 @@ public class GroupService {
 
     public GroupProjection create(long projectId, GroupCreateDto dto) {
         Project project = projectService.getById(projectId);
+        if (!resourceProtector.isOwner(project)) {
+            throw new ForbiddenException("редактирования", "проекта", project.getName());
+        }
 
         Group group = new Group(dto);
         if (isInvalidGroupRelation(group, project.getGroups())) {
@@ -70,7 +77,12 @@ public class GroupService {
     }
 
     public void update(long projectId, long groupId, JsonMergePatch patchDto) {
-        List<Group> groups = getProjectGroups(projectId);
+        final Project project = projectService.getById(projectId);
+        if (!resourceProtector.isOwner(project)) {
+            throw new ForbiddenException("редактирования", "проекта", project.getName());
+        }
+
+        List<Group> groups = project.getGroups();
         Group groupForUpdate = getGroupById(groups, groupId);
 
         GroupUpdateDto groupDto = groupMapper.toDto(groupForUpdate);
@@ -88,7 +100,12 @@ public class GroupService {
     }
 
     public void delete(long projectId, long groupId) {
-        List<Group> groups = getProjectGroups(projectId);
+        final Project project = projectService.getById(projectId);
+        if (!resourceProtector.isOwner(project)) {
+            throw new ForbiddenException("редактирования", "проекта", project.getName());
+        }
+
+        List<Group> groups = project.getGroups();
         Group group = getGroupById(groups, groupId);
 
         groupRepository.deleteGroupById(group.getId());

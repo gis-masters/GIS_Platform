@@ -6,9 +6,13 @@ public class LayerGroupCreateDto {
     private final int position;
     private Long parentId;
 
+    public LayerGroupCreateDto() {
+        this("Default layer group title", 314);
+    }
+
     public LayerGroupCreateDto(String title, int position, Long parentId) {
-        this.title = title;
-        this.position = position;
+        this(title, position);
+
         this.parentId = parentId;
     }
 

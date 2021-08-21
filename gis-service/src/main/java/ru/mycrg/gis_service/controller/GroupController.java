@@ -40,7 +40,7 @@ public class GroupController {
     }
 
     @PostMapping("/groups")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<GroupProjection> createGroup(@PathVariable(name = "project_id") long projectId,
                                                        @Valid @RequestBody GroupCreateDto dto) {
         GroupProjection groupProjection = groupService.create(projectId, dto);
@@ -58,7 +58,7 @@ public class GroupController {
     }
 
     @PatchMapping(path = "/groups/{group_id}", consumes = APPLICATION_JSON_MERGE_PATCH)
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> updateGroup(@PathVariable(name = "project_id") long projectId,
                                               @PathVariable(name = "group_id") long groupId,
                                               @RequestBody JsonMergePatch patchDto) {
@@ -70,7 +70,7 @@ public class GroupController {
     }
 
     @DeleteMapping("/groups/{group_id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> deleteGroup(@PathVariable(name = "project_id") long projectId,
                                               @PathVariable(name = "group_id") long groupId) {
         groupService.delete(projectId, groupId);

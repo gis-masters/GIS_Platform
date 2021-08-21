@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
@@ -55,6 +56,20 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
         layerGroupDto = new LayerGroupCreateDto(generateString(title), Integer.parseInt(generateString(position)));
 
         super.createEntity(layerGroupDto);
+    }
+
+    @When("Пользователь делает запрос на добавление группы в проект")
+    public void createRandomLayerGroup() {
+        authorizationBase.loginAsCurrentUser();
+
+        layerGroupDto = new LayerGroupCreateDto();
+
+        super.createEntity(layerGroupDto);
+    }
+
+    @And("Сообщение об отсутствии прав на добавление группы соответствует заданному формату")
+    public void checkResponseMessageWhenAddLayerGroupForbidden() {
+        super.checkErrorResponseMessage("Недостаточно прав для редактирования проекта: " + projectDto.getProjectName());
     }
 
     @And("Сервер передает ID группы слоев проекта в ответе")

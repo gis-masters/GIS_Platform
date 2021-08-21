@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
 import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
+import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class LayerStepDefinitions extends BaseStepsDefinitions {
@@ -60,6 +61,18 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                                             generateString(data.get(4)), generateString(data.get(5)),
                                             generateString(data.get(6)), generateString(data.get(7)),
                                             generateString(data.get(8)));
+
+        super.createEntity(layerCreateDto);
+    }
+
+    @When("Пользователь делает запрос на добавление слоя в проект")
+    public void createRandomLayer() {
+        authorizationBase.loginAsCurrentUser();
+
+        layerCreateDto = new LayerCreateDto(generateString("STRING_5"), generateString("STRING_5"),
+                                            generateString("STRING_5"), generateString("STRING_5"),
+                                            "vector", generateString("STRING_5"), generateString("STRING_5"),
+                                            "EPSG:28406", generateString("STRING_8"));
 
         super.createEntity(layerCreateDto);
     }
@@ -230,6 +243,11 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     @And("В ответе на удаление слоя проекта есть упоминание ID")
     public void checkCurrentIdInResponse() {
         super.checkCurrentIdInResponse();
+    }
+
+    @And("Сообщение об отсутствии прав на добавление слоя соответствует заданному формату")
+    public void checkResponseMessageWhenAddLayerForbidden() {
+        super.checkErrorResponseMessage("Недостаточно прав для редактирования проекта: " + projectDto.getProjectName());
     }
 
     private void makeLastAvailableLayerAsCurrent() {

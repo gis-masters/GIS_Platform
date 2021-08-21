@@ -9,4 +9,8 @@ public class ForbiddenException extends RuntimeException {
 	public ForbiddenException(String msg) {
 		super(msg);
 	}
+
+	public ForbiddenException(String action, String entity, String title) {
+		super(String.format("Недостаточно прав для %s %s: %s", action, entity, title));
+	}
 }

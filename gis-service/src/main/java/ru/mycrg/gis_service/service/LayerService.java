@@ -107,9 +107,8 @@ public class LayerService {
 
     public void update(long projectId, long layerId, JsonMergePatch patchDto) {
         Project project = projectService.getById(projectId);
-
         if (!resourceProtector.isOwner(project)) {
-            throw new ForbiddenException("Недостаточно прав для обновления проекта: " + project.getName());
+            throw new ForbiddenException("редактирования", "проекта", project.getName());
         }
 
         Layer layerForUpdate = findLayerById(project.getLayers(), layerId);
