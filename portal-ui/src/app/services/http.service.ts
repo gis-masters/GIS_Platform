@@ -95,8 +95,8 @@ export class Http {
     return result;
   }
 
-  async post<T>(url: string, data?: unknown, configWithCache?: RequestConfigWithCache): Promise<T> {
-    const { cache: requestCacheConfig, ...config } = configWithCache;
+  async post<T>(url: string, data?: unknown, configWithCache: RequestConfigWithCache = {}): Promise<T> {
+    const { cache: requestCacheConfig = {}, ...config } = configWithCache;
     const cacheConfig = { disabled: true, clear: true, ...requestCacheConfig };
     const cacheKey = 'POST:' + this.axios.getUri({ url, ...config }) + ' DATA:' + JSON.stringify(data);
     const fromCache = this.cache.match(cacheKey, { disabled: true, clear: true, ...cacheConfig });
