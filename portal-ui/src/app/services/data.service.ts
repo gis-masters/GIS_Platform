@@ -31,6 +31,7 @@ export interface DataTable extends DataEntity {
   crs: string;
   schemaId: string;
   dataset: string;
+  role: Role;
 }
 
 export interface DataTableConnection {

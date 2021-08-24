@@ -44,7 +44,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
                 onChange={this.fieldChanged}
                 fieldValue={formValue[propertySchema.name]}
                 FormControl={FormControl}
-                error={errors[propertySchema.name]}
+                error={errors ? errors[propertySchema.name] : null}
               >
                 {formValue[propertySchema.name]}
               </FormControl>
