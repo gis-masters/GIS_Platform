@@ -1,5 +1,5 @@
 import { CoordinateEdited, GeometryType, WfsGeometry } from './wfs.models';
-import { CrgModels, FilterEvent } from '../models';
+import { RequestAttribute, FilterEvent } from '../models';
 
 export function getEmptyGeometry(geometryType: GeometryType): WfsGeometry<CoordinateEdited> {
   if (geometryType === GeometryType.POINT) {
@@ -73,28 +73,28 @@ export function selectLabelForGeometryType(
   return ifOther || ifPointOrOther;
 }
 
-export function generateSortParam(requestModel: CrgModels): string {
-  if (!requestModel || !requestModel.sort || !requestModel.sort.column) {
+export function generateSortParam(requestAttribute: RequestAttribute): string {
+  if (!requestAttribute || !requestAttribute.sort || !requestAttribute.sort.column) {
     return '';
   }
 
   let order = '+A';
-  if (requestModel.sort.newValue === 'desc') {
+  if (requestAttribute.sort.newValue === 'desc') {
     order = '+D';
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  const columnName = (requestModel.sort.column.prop as string).split('.')[1];
+  const columnName = (requestAttribute.sort.column.prop as string).split('.')[1];
 
   return columnName ? columnName + order : '';
 }
 
-export function generateFilter(requestModel: CrgModels): string | undefined {
-  if (!requestModel) {
+export function generateFilter(requestAttribute: RequestAttribute): string | undefined {
+  if (!requestAttribute) {
     return undefined;
   }
 
-  const filter = requestModel.filter;
+  const filter = requestAttribute.filter;
   if (!filter || !filter.length) {
     return undefined;
   }

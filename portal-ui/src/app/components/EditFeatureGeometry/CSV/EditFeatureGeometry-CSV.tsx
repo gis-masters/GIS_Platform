@@ -3,13 +3,13 @@ import { action } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { ArchiveOutlined, UnarchiveOutlined } from '@material-ui/icons';
-import { saveAs } from 'file-saver';
 import { parse, unparse } from 'papaparse';
 import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
 import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs.models';
+import { saveAsCsv } from '../../../services/util/FileSaver';
 
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
 
@@ -71,7 +71,8 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
 
   @boundMethod
   private exportClickHandler() {
-    this.saveAs(
+    saveAsCsv(
+      'coordinates.csv',
       unparse(
         this.props.coordinates.map(coord => {
           const newCoords = clone(coord);
@@ -116,10 +117,5 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
     }
 
     coordinates.splice(0, coordinates.length, ...newCoordinates);
-  }
-
-  private saveAs(data: string) {
-    const file = new Blob([data], { type: 'text/plain' });
-    saveAs(file, 'coordinates.csv', { autoBom: false });
   }
 }

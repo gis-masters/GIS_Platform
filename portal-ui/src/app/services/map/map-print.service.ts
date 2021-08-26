@@ -4,9 +4,9 @@ import domToImage from 'dom-to-image';
 import { jsPDF } from 'jspdf';
 import moment from 'moment';
 import { getPointResolution } from 'ol/proj';
-import { saveAs } from 'file-saver';
 
 import { printSettings } from '../../stores/PrintSettings.store';
+import { saveAsBlob } from '../util/FileSaver';
 import { mapService } from './map.service';
 import { PrintDialogDate } from '../../components/PrintDialog/Date/PrintDialog-Date';
 import { mapStore } from '../../stores/Map.store';
@@ -39,7 +39,7 @@ export async function printMap(): Promise<void> {
 }
 
 export async function exportMap(): Promise<void> {
-  saveAs(await getMapImage({ hideScaleDigits: true }), 'map.jpg');
+  saveAsBlob('map.jpg', await getMapImage({ hideScaleDigits: true }));
 }
 
 export async function prepareMapCopying(): Promise<HTMLDivElement> {

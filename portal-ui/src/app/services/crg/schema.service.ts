@@ -1,5 +1,6 @@
 import { boundMethod } from 'autobind-decorator';
 import { debounce, DebouncedFunc } from 'lodash';
+import moment from 'moment';
 
 import { Toast } from '../../components/Toast/Toast';
 import { currentProject } from '../../stores/CurrentProject.store';
@@ -11,7 +12,13 @@ import { getSchemaUrl } from '../server-urls.service';
 import { services } from '../services';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { CrgLayer } from './projects.models';
-import { FeatureDescription, PropertySchema, PropertySchemaChoice, ValueType } from './schema.models';
+import {
+  FeatureDescription,
+  PropertyEnumerations,
+  PropertySchema,
+  PropertySchemaChoice,
+  ValueType
+} from './schema.models';
 import { BugObject } from './validation.service';
 
 class SchemaService {
@@ -200,6 +207,62 @@ class SchemaService {
     } catch {
       return true;
     }
+  }
+
+  /**
+   * Свойства фичи заменяются на алиасы для сложных типов данных, таких как CHOICE например.
+   *
+   * @example
+   * inputFeature {
+   *   status: 314,
+   *   reg_status: 1
+   * }
+   * outputFeature {
+   *   status: 'Линии электропередач 10кВт',
+   *   reg_status: 'Утверждено'
+   * }
+   *
+   * @param schema
+   * @param featureProperties
+   */
+  replaceRowDataToAliases(
+    schema: FeatureDescription,
+    featureProperties: Record<string, unknown>
+  ): Record<string, unknown> {
+    const resultObject: Record<string, unknown> = {};
+
+    // eslint-disable-next-line sonarjs/cognitive-complexity
+    Object.keys(featureProperties).forEach(key => {
+      const schemaProperty = schema.properties.find(prop => prop.name.toLowerCase() === key.toLowerCase());
+      if (!schemaProperty) {
+        return;
+      }
+
+      if (schemaProperty.valueType === ValueType.CHOICE) {
+        const valueTitle = this.getValueTitle(featureProperties[key], schemaProperty.enumerations);
+        if (valueTitle) {
+          resultObject[key] = valueTitle;
+        }
+      } else if (schemaProperty.valueType === ValueType.DATETIME) {
+        if (!schemaProperty.dateFormat) {
+          if (featureProperties[key]) {
+            resultObject[key] = new Date(String(featureProperties[key])).toLocaleDateString();
+          }
+        } else if (featureProperties[key]) {
+          resultObject[key] = moment(featureProperties[key]).locale('ru').format(schemaProperty.dateFormat);
+        }
+      } else {
+        resultObject[key] = featureProperties[key];
+      }
+    });
+
+    return resultObject;
+  }
+
+  private getValueTitle(startValue: string | unknown, enumerations: PropertyEnumerations): string {
+    return enumerations.reduce((acc, { value, title }) => {
+      return String(startValue) === String(value) ? title : acc;
+    }, String(startValue));
   }
 
   private async fetch(fetchAll?: boolean): Promise<void> {

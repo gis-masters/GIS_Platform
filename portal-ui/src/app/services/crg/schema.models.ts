@@ -56,6 +56,7 @@ interface BasePropertySchema<T extends Record<string, unknown> = Record<string, 
   mustBeEmpty?: boolean;
   updateability?: Updateability;
   objectIdentityOnUi?: boolean;
+  sequenceNumber?: number;
 
   // хз
   choice?: unknown;

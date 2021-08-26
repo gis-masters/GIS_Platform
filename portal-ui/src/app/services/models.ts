@@ -19,7 +19,7 @@ export interface PageableResponse<T> {
   page: PageablePage;
 }
 
-export interface CrgModels {
+export interface RequestAttribute {
   page?: Pageable;
   sort?: Sortable;
   filter?: FilterEvent[];

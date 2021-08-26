@@ -3,6 +3,7 @@
     <div class="attributes-bar__title">{{ layer?.title }}</div>
 
     <div class="attributes-bar__header-right-side">
+      <crg-button class="attributes-bar__head-button" icon="unarchive" [matMenuTriggerFor]="exportMenu"></crg-button>
       <crg-button class="attributes-bar__head-button" [matMenuTriggerFor]="editMenu">Правка</crg-button>
 
       <crg-button
@@ -75,7 +76,7 @@
 
       <crg-table-filter
         *ngIf="enableFilter"
-        [property]="getSimpleProperty(column.prop.split('.')[1])"
+        [property]="getSchemaProperty(column.prop.split('.')[1])"
         (filterEvent)="onFilterChange($event)"
       ></crg-table-filter>
     </ng-template>
@@ -103,5 +104,20 @@
   <button mat-menu-item (click)="deleteObjects()" *ngIf="deletingAllowed">
     <mat-icon>delete</mat-icon>
     <span>Удалить</span>
+  </button>
+</mat-menu>
+
+<mat-menu #exportMenu="matMenu">
+  <button mat-menu-item (click)="exportAll()">
+    <mat-icon>unarchive</mat-icon>
+    <span>Экспортировать всё</span>
+  </button>
+  <button mat-menu-item (click)="exportSelected()" [disabled]="!attributeTable.selected?.length">
+    <mat-icon>unarchive</mat-icon>
+    <span>Экспортировать выделенное</span>
+  </button>
+  <button mat-menu-item (click)="exportByFilter()" [disabled]="isNotFiltered()">
+    <mat-icon>unarchive</mat-icon>
+    <span>Экспортировать по фильтру</span>
   </button>
 </mat-menu>

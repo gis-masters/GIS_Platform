@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { saveAs } from 'file-saver';
 import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
 
+import { saveAsBlob } from '../../services/util/FileSaver';
 import { eventService, IEvent } from '../../services/event.service';
 import { DownloadFileService } from '../../services/download-file.service';
 import { ProcessStatus, ProcessType } from '../../services/models';
@@ -79,7 +79,7 @@ export class ProgressItemComponent implements OnDestroy {
     const data = await this.fileService.download(fileName);
     const blob = new Blob([data], { type: 'text/xml' });
 
-    saveAs(blob, fileName);
+    saveAsBlob(fileName, blob);
   }
 
   isShowActionBlock(): boolean {

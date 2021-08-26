@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnDestroy, TemplateRef, ViewChild, OnInit } from '@angular/core';
-import moment from 'moment';
 import { cloneDeep } from 'lodash';
 import { NGXLogger } from 'ngx-logger';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,18 +8,17 @@ import { catchError, concatMap, debounceTime, filter, takeUntil } from 'rxjs/ope
 
 import { Toast } from '../Toast/Toast';
 import { schemaService } from '../../services/crg/schema.service';
-import { FeatureDescription, ValueType, PropertyEnumerations, PropertySchema } from '../../services/crg/schema.models';
 import { BatchModel } from '../../services/crg/batch-model';
 import { CrgLayer } from '../../services/crg/projects.models';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { getFeatures } from '../../services/geoserver/wfs.service';
 import { projectsService } from '../../services/crg/projects.service';
-import { AttributeTableViewSettings, ViewMode } from './attribute.settings';
 import { communicationService } from '../../services/communication.service';
 import { mapService } from '../../services/map/map.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/models';
+import { RequestAttribute, FilterEvent, Pageable, Sortable } from '../../services/models';
 import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs.models';
+import { FeatureDescription, ValueType, PropertySchema } from '../../services/crg/schema.models';
 import { isFeaturesUpdateAllowed, isFeaturesDeleteAllowed } from '../../services/crg/permissions.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
@@ -28,6 +26,7 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { getProjection } from '../../services/geoserver/projections.service';
 import { fromMobx } from '../../services/util/fromMobx';
 import { generateFilter } from '../../services/geoserver/wfs.util';
+import { csvExporter } from '../../services/csvExporter';
 
 export interface WfsFeatureView extends WfsFeature {
   aliases?: Record<string, unknown>;
@@ -67,9 +66,6 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   enableFilter = false;
   loading = true;
-  viewSettings: AttributeTableViewSettings = {
-    viewMode: ViewMode.alias
-  };
 
   tableMessages = {
     emptyMessage: 'Нет данных для отображения',
@@ -84,8 +80,10 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   deletingAllowed = false;
   updatingAllowed = false;
 
+  lastRequestAttribute: RequestAttribute;
+
   private schema: FeatureDescription;
-  private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
+  private requestAttribute$: BehaviorSubject<RequestAttribute> = new BehaviorSubject<RequestAttribute>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   customRowIdentity(row: WfsFeature): string {
@@ -105,7 +103,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
         if (layer && layerChanged) {
           this.schema = await schemaService.getSchema(layer.schemaId);
           this.isNeedPrepareColumn = true;
-          this.requestModel$.next({ page: { pageSize: 25, offset: 0 } });
+          this.requestAttribute$.next({ page: { pageSize: 25, offset: 0 } });
 
           this.attributeTable.selected = [];
           mapService.clearDraft();
@@ -118,13 +116,15 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   async ngAfterViewInit() {
     await projectsService.fetchCurrent();
 
-    this.requestModel$.pipe(debounceTime(50), takeUntil(this.unsubscribe$)).subscribe((requestModel: CrgModels) => {
-      void this.updateTable(requestModel);
-    });
+    this.requestAttribute$
+      .pipe(debounceTime(50), takeUntil(this.unsubscribe$))
+      .subscribe((attribute: RequestAttribute) => {
+        void this.updateTable(attribute);
+      });
 
     communicationService.featuresUpdated.on(async () => {
       // TODO: Самый простой вариант с лишним запросом. Заменить на обновление данных без запроса.
-      const lastRequest = this.requestModel$.getValue();
+      const lastRequest = this.requestAttribute$.getValue();
       await this.updateTable(lastRequest);
     }, this);
 
@@ -138,19 +138,21 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     communicationService.off(this);
   }
 
-  async updateTable(requestModel?: CrgModels): Promise<void> {
+  async updateTable(requestAttribute?: RequestAttribute): Promise<void> {
     this.loading = true;
     this.showPercent = false;
+
+    this.lastRequestAttribute = requestAttribute;
     const fCollection: WfsFeatureCollection = await getFeatures(
       this.layer.complexName,
-      requestModel,
-      this.layer.nativeCRS
+      this.layer.nativeCRS,
+      requestAttribute
     );
 
     if (fCollection) {
       currentProject.updateAttributeTableFilter({
         layerComplexName: this.layer.complexName,
-        filter: generateFilter(requestModel)
+        filter: generateFilter(requestAttribute)
       });
 
       this.loading = false;
@@ -159,13 +161,13 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       if (this.isNeedPrepareColumn) {
         // TODO: новый запрос в пределах того же слоя не принесет новых колонок! Формировать колонки только
         //  при открытии или при переходе на новый слой
-        await this.prepareColumns(fCollection.features[0]);
         this.isNeedPrepareColumn = false;
+        await this.prepareColumns(fCollection.features[0]);
       }
 
       this.features = fCollection.features.map((feature: WfsFeature) => {
         const wfsFeatureView: WfsFeatureView = feature;
-        wfsFeatureView.aliases = this.fillAliases(feature.properties);
+        wfsFeatureView.aliases = schemaService.replaceRowDataToAliases(this.schema, feature.properties);
 
         return wfsFeatureView;
       });
@@ -186,29 +188,29 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   setPage(pageInfo: Pageable): void {
     this.pageInfo = pageInfo;
 
-    const oldRequest = this.requestModel$.getValue();
+    const oldRequest = this.requestAttribute$.getValue();
     oldRequest.page = pageInfo;
 
-    this.requestModel$.next(oldRequest);
+    this.requestAttribute$.next(oldRequest);
   }
 
   onSort(sortInfo: Sortable): void {
-    const oldRequest = this.requestModel$.getValue();
+    const oldRequest = this.requestAttribute$.getValue();
     oldRequest.page.offset = 0;
     oldRequest.sort = sortInfo;
 
-    this.requestModel$.next(oldRequest);
+    this.requestAttribute$.next(oldRequest);
   }
 
   switchFilter(): void {
     this.enableFilter = !this.enableFilter;
 
     if (!this.enableFilter) {
-      const oldRequest = this.requestModel$.getValue();
+      const oldRequest = this.requestAttribute$.getValue();
       oldRequest.page.offset = 0;
       oldRequest.filter = [];
 
-      this.requestModel$.next(oldRequest);
+      this.requestAttribute$.next(oldRequest);
     }
 
     // костыль для того, чтобы заставить datatable пересчитать свои размеры
@@ -217,7 +219,25 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }, 100);
   }
 
-  getSimpleProperty(name: string): PropertySchema | undefined {
+  async exportAll(): Promise<void> {
+    this.loading = true;
+    await csvExporter.exportLayer(this.layer);
+    this.loading = false;
+  }
+
+  async exportSelected(): Promise<void> {
+    this.loading = true;
+    await csvExporter.exportFeatures(this.layer.schemaId, this.attributeTable.selected);
+    this.loading = false;
+  }
+
+  async exportByFilter(): Promise<void> {
+    this.loading = true;
+    await csvExporter.exportLayer(this.layer, this.lastRequestAttribute?.filter);
+    this.loading = false;
+  }
+
+  getSchemaProperty(name: string): PropertySchema | undefined {
     if (!name) {
       return;
     }
@@ -234,7 +254,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   onFilterChange(filterEvent: FilterEvent): void {
-    const oldRequest = this.requestModel$.getValue();
+    const oldRequest = this.requestAttribute$.getValue();
     oldRequest.page.offset = 0;
 
     const oldFilter = oldRequest.filter;
@@ -259,7 +279,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       oldRequest.filter = [filterEvent];
     }
 
-    this.requestModel$.next(oldRequest);
+    this.requestAttribute$.next(oldRequest);
   }
 
   onActivate(event: { type: string; row: WfsFeature }): void {
@@ -284,16 +304,16 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
     this.isSelectAll = !this.isSelectAll;
     if (this.isSelectAll) {
-      const currentRequestModel = this.requestModel$.getValue();
-      const clonedRequestModel: CrgModels = cloneDeep(currentRequestModel);
-      clonedRequestModel.page = undefined;
+      const currentRequestAttribute = this.requestAttribute$.getValue();
+      const clonedRequestAttribute: RequestAttribute = cloneDeep(currentRequestAttribute);
+      clonedRequestAttribute.page = undefined;
 
       this.loading = true;
       this.showPercent = false;
       const fCollection: WfsFeatureCollection = await getFeatures(
         this.layer.complexName,
-        clonedRequestModel,
-        this.layer.nativeCRS
+        this.layer.nativeCRS,
+        clonedRequestAttribute
       );
       this.attributeTable.selected = fCollection.features;
       this.loading = false;
@@ -328,13 +348,15 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
 
     const layers = await this.getSuitableLayers(this.layer, currentProject.vectorLayers);
-    if (this.isSuitableLayersExist(layers)) {
+    if (layers.length > 0) {
       this.openEditDialog('Копирование', layers)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((selectedLayer: CrgLayer) => {
           const batchModel = this.prepareBatchProcess(selected);
           this.batchInsertFeatures(selectedLayer, batchModel);
         });
+    } else {
+      Toast.warn('Нет подходящих слоев');
     }
   }
 
@@ -345,13 +367,15 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
 
     const layers = await this.getSuitableLayers(this.layer, currentProject.vectorLayers);
-    if (this.isSuitableLayersExist(layers)) {
+    if (layers) {
       this.openEditDialog('Перемещение', layers)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((selectedLayer: CrgLayer) => {
           const batchModel = this.prepareBatchProcess(selected);
           this.batchReplaceFeatures(selectedLayer, batchModel);
         });
+    } else {
+      Toast.warn('Нет подходящих слоев');
     }
   }
 
@@ -375,6 +399,14 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
         this.batchDeleteFeatures(batchModel);
         this.attributeTable.selected = [];
       });
+  }
+
+  isNotFiltered(): boolean {
+    if (!this.enableFilter) {
+      return true;
+    }
+
+    return this.lastRequestAttribute?.filter?.length ? !this.attributeTable.count : true;
   }
 
   private async checkPermissions() {
@@ -453,7 +485,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
           this.loading = false;
           Toast.info('Объекты скопированы');
           this.attributeTable.selected = [];
-          void this.updateTable(this.requestModel$.getValue());
+          void this.updateTable(this.requestAttribute$.getValue());
           mapService.clearDraft();
         } else {
           this.loadPercent = percent > 100 ? 100 : percent;
@@ -488,7 +520,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
           this.loading = false;
           Toast.info('Объекты перемещены');
 
-          void this.updateTable(this.requestModel$.getValue());
+          void this.updateTable(this.requestAttribute$.getValue());
         } else {
           this.loadPercent = percent > 100 ? 100 : percent;
         }
@@ -517,7 +549,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
           mapService.clearDraft();
           mapService.refreshLayers();
 
-          void this.updateTable(this.requestModel$.getValue());
+          void this.updateTable(this.requestAttribute$.getValue());
         } else {
           this.loadPercent = percent > 100 ? 100 : percent;
         }
@@ -534,6 +566,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   private async prepareColumns(wfsFeature: WfsFeature) {
+    this.columns = [];
     this.columns = [
       {
         name: '',
@@ -557,12 +590,12 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
         headerTemplate: this.customSelectAll
       },
       {
-        name: this.viewSettings.viewMode === ViewMode.internal ? 'ID' : 'Идентификатор',
+        name: 'Идентификатор',
         prop: 'id',
         sortable: false,
         resizeable: false,
-        width: 100,
-        maxWidth: 100,
+        width: 110,
+        maxWidth: 110,
         headerTemplate: this.filterTemplate
         // summaryTemplate: this.headerFilterTemplate
       }
@@ -571,20 +604,20 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     if (wfsFeature) {
       const schema = await schemaService.getSchema(this.layer.schemaId);
 
-      Object.keys(wfsFeature.properties).forEach(propertyName => {
-        const pSchema = schema.properties.find(propertySchema => propertySchema.name === propertyName);
+      Object.keys(wfsFeature.properties).forEach(key => {
+        const pSchema = schema.properties.find(propertySchema => propertySchema.name === key);
         if (pSchema && pSchema.valueType === ValueType.LOOKUP) {
           return;
         }
 
-        if (propertyName !== 'bbox') {
+        if (key !== 'bbox') {
           const newProperty: TableColumn = {
-            name: this.defineColumnName(propertyName),
-            prop: this.definePropertySource(propertyName),
+            name: this.defineColumnName(key),
+            prop: this.definePropertySource(key),
             headerTemplate: this.filterTemplate
           };
 
-          if (propertyName.toLowerCase() === 'globalid') {
+          if (key.toLowerCase() === 'globalid') {
             newProperty.width = 300;
             newProperty.resizeable = false;
           }
@@ -597,77 +630,14 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  private fillAliases(properties: Record<string, unknown>): Record<string, unknown> {
-    const resultObject: Record<string, unknown> = {};
-
-    // eslint-disable-next-line sonarjs/cognitive-complexity
-    Object.keys(properties).forEach(property => {
-      const simpleProperty = this.getSimpleProperty(property);
-
-      if (!simpleProperty) {
-        return;
-      }
-
-      if (simpleProperty.valueType === ValueType.CHOICE) {
-        if (this.viewSettings.viewMode === ViewMode.internal) {
-          resultObject[property] = properties[property];
-        } else {
-          const valueTitle = this.getValueTitle(properties[property], simpleProperty.enumerations);
-          if (valueTitle) {
-            resultObject[property] = valueTitle;
-          }
-        }
-      } else if (simpleProperty.valueType === ValueType.DATETIME) {
-        if (!simpleProperty.dateFormat) {
-          if (properties[property]) {
-            resultObject[property] = new Date(String(properties[property])).toLocaleDateString();
-          }
-        } else if (properties[property]) {
-          resultObject[property] = moment(properties[property]).locale('ru').format(simpleProperty.dateFormat);
-        }
-      } else {
-        resultObject[property] = properties[property];
-      }
-    });
-
-    return resultObject;
-  }
-
-  private getValueTitle(startValue: string | unknown, enumerations: PropertyEnumerations): string {
-    return enumerations.reduce((acc, { value, title }) => {
-      return String(startValue) === String(value) ? title : acc;
-    }, String(startValue));
-  }
-
   private definePropertySource(property: string) {
-    if (this.viewSettings.viewMode === ViewMode.internal) {
-      return 'properties.' + property;
-    } else if (this.viewSettings.viewMode === ViewMode.alias) {
-      return 'aliases.' + property;
-    }
-
-    return 'properties.' + property;
+    return 'aliases.' + property;
   }
 
   private defineColumnName(property: string) {
-    let result = property;
-    if (this.viewSettings.viewMode === ViewMode.alias) {
-      const simpleProperty = this.getSimpleProperty(property);
-      if (simpleProperty) {
-        result = simpleProperty.title;
-      }
-    }
+    const result = property;
+    const simpleProperty = this.getSchemaProperty(property);
 
-    return result;
-  }
-
-  private isSuitableLayersExist(suitableLayers: CrgLayer[]) {
-    if (suitableLayers.length > 0) {
-      return true;
-    }
-
-    Toast.warn('Нет подходящих слоев');
-
-    return false;
+    return simpleProperty ? simpleProperty.title : result;
   }
 }

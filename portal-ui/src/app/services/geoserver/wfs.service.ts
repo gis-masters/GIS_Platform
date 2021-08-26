@@ -11,7 +11,7 @@ import {
 } from './wfs.models';
 import { getGeoServerUrl, getWfsUrl } from '../server-urls.service';
 import { generateFilter, generateSortParam } from './wfs.util';
-import { CrgModels } from '../models';
+import { RequestAttribute } from '../models';
 import { http } from '../http.service';
 
 export const WFS_FEATURE_ID_DELIMITER = '.';
@@ -34,8 +34,8 @@ export async function getFeatureById(complexName: string, objectId: string): Pro
 
 export async function getFeatures(
   complexName: string,
-  requestModel?: CrgModels,
-  srsName?: string
+  srsName?: string,
+  requestAttribute?: RequestAttribute
 ): Promise<WfsFeatureCollection> {
   const params: { [key: string]: string } = {
     service: 'wfs',
@@ -45,19 +45,19 @@ export async function getFeatures(
     exceptions: JSON_MIME,
     typeName: complexName,
     // PROPERTYNAME: fillProp(complexName),
-    sortBy: generateSortParam(requestModel),
+    sortBy: generateSortParam(requestAttribute),
     srsName
   };
 
-  if (requestModel && requestModel.page) {
-    const countRows = requestModel.page.pageSize ? requestModel.page.pageSize.toString() : '100';
-    const offset = requestModel.page.offset ? requestModel.page.offset.toString() : '0';
+  if (requestAttribute && requestAttribute.page) {
+    const countRows = requestAttribute.page.pageSize ? requestAttribute.page.pageSize.toString() : '100';
+    const offset = requestAttribute.page.offset ? requestAttribute.page.offset.toString() : '0';
 
     params.startindex = String(Number(offset) * Number(countRows));
     params.count = countRows;
   }
 
-  const cqlFilter = generateFilter(requestModel);
+  const cqlFilter = generateFilter(requestAttribute);
   if (cqlFilter) {
     params.CQL_FILTER = cqlFilter;
   }
