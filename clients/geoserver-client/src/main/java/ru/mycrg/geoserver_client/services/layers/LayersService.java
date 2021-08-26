@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class LayersService extends GeoServerBaseService {
 
-    public static final Logger log = LoggerFactory.getLogger(LayersService.class);
+    private static final Logger log = LoggerFactory.getLogger(LayersService.class);
 
     public LayersService(String accessToken) {
         super(accessToken);

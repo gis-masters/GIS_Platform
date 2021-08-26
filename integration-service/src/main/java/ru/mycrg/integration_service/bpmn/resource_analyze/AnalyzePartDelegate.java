@@ -28,7 +28,7 @@ import static ru.mycrg.integration_service.bpmn.enums.ResourceAnalyzeProcessVari
 @Service("analyzePartDelegate")
 public class AnalyzePartDelegate implements JavaDelegate {
 
-    public static final Logger log = LoggerFactory.getLogger(AnalyzePartDelegate.class);
+    private static final Logger log = LoggerFactory.getLogger(AnalyzePartDelegate.class);
 
     private final Gson gson = new Gson();
     private final MediaType jsonMediaType = MediaType.parse("application/json");

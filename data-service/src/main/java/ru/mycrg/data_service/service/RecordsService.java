@@ -1,7 +1,5 @@
 package ru.mycrg.data_service.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -26,8 +24,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class RecordsService {
-
-    public static final Logger log = LoggerFactory.getLogger(RecordsService.class);
 
     private final TablesDao tablesDao;
     private final FileStorageService fileStorageService;

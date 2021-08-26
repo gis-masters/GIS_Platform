@@ -34,7 +34,7 @@ import static ru.mycrg.data_service.dto.Roles.OWNER;
 @Service
 public class DatasetService extends SchemasAndTablesBase {
 
-    public static final Logger log = LoggerFactory.getLogger(DatasetService.class);
+    private static final Logger log = LoggerFactory.getLogger(DatasetService.class);
 
     public static final String SCHEMA_PREFIX = "dataset";
 

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Component
 public class TransformationGeometryUtils {
 
-    public static final Logger log = LoggerFactory.getLogger(TransformationGeometryUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(TransformationGeometryUtils.class);
 
     private final EpsgCodes epsgCodes;
 

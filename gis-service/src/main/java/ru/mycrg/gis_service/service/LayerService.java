@@ -3,8 +3,6 @@ package ru.mycrg.gis_service.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import events.CrgAuditEvent;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,7 +34,6 @@ import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;
 @Transactional
 public class LayerService {
 
-    public static final Logger log = LoggerFactory.getLogger(LayerService.class);
     public static final String DATA_SERVICE_API_PREFIX = "/api/data";
 
     private final JsonPatcher jsonPatcher;

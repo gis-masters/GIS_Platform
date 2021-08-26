@@ -17,7 +17,7 @@ import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
 @Service
 public class CrgMigrationHandler {
 
-    public static final Logger log = LoggerFactory.getLogger(CrgMigrationHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(CrgMigrationHandler.class);
 
     private final ApplicationContext ctx;
     private final CrgDataSourcesPool crgDataSourcesPool;
@@ -53,6 +53,7 @@ public class CrgMigrationHandler {
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M2__initOldSchemas.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M3__initDefaultBasemaps.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M7__initDefaultLibrary.sql"));
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M8__addSrid314and315.sql"));
             }
 
             tempDataSource.close();

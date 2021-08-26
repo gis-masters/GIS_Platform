@@ -2,9 +2,9 @@ package ru.mycrg.data_service.dto.styles;
 
 public class ComparisonRuleFilter implements RuleFilter {
 
-    public ComparisonRuleOperator operator;
-    public String propertyName;
-    public String literal;
+    private ComparisonRuleOperator operator;
+    private String propertyName;
+    private String literal;
 
     public ComparisonRuleFilter() {
         // Required

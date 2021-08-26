@@ -21,7 +21,7 @@ import java.net.URL;
 @Service
 public class DataStoreClient {
 
-    public static final Logger log = LoggerFactory.getLogger(DataStoreClient.class);
+    private static final Logger log = LoggerFactory.getLogger(DataStoreClient.class);
 
     private final HttpClient httpClient;
     private final IAuthenticationFacade authenticationFacade;

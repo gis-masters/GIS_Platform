@@ -17,7 +17,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
                       @Type(value = ComparisonRuleFilter.class, name = "PropertyIsGreaterThanOrEqualTo"),
                       @Type(value = ComparisonRuleFilter.class, name = "PropertyIsLike"),
                       @Type(value = ComparisonRuleFilter.class, name = "PropertyIsNull"),
-                      @Type(value = ComparisonRuleFilter.class, name = "PropertyIsBetween")
+                      @Type(value = ComparisonRuleFilter.class, name = "PropertyIsBetween"),
+                      @Type(value = ElseRuleFilter.class, name = "ElseFilter")
               })
 public interface RuleFilter {
 

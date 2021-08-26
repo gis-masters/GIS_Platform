@@ -9,8 +9,6 @@ import org.locationtech.jts.geom.*;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.dto.styles.RuleFilter;
 import ru.mycrg.data_service.dto.styles.SpatialLiteral;
 import ru.mycrg.data_service.dto.styles.SpatialRuleFilter;
@@ -22,20 +20,18 @@ import java.util.stream.IntStream;
 import static org.geotools.referencing.crs.DefaultGeographicCRS.WGS84;
 import static ru.mycrg.data_service.dto.styles.SpatialLiteralType.MULTIPOLYGON;
 
-public class SpatialRuleHandler implements RuleHandler {
-
-    public static final Logger log = LoggerFactory.getLogger(SpatialRuleHandler.class);
+public class SpatialRuleMapper implements RuleMapper {
 
     private final MathTransform mathTransform;
     private final GeometryFactory geometryFactory;
 
-    public SpatialRuleHandler() throws FactoryException {
+    public SpatialRuleMapper() throws FactoryException {
         this.geometryFactory = new GeometryFactory();
         this.mathTransform = CRS.findMathTransform(CRS.decode("EPSG:3857"), WGS84);
     }
 
     @Override
-    public Condition handle(RuleFilter ruleFilter) throws FactoryException, TransformException {
+    public Condition map(RuleFilter ruleFilter) throws FactoryException, TransformException {
         final SpatialRuleFilter filter = (SpatialRuleFilter) ruleFilter;
         final SpatialLiteral spatialLiteral = filter.getLiteral();
 

@@ -1,7 +1,5 @@
 package ru.mycrg.data_service.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +25,6 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
 @RestController
 public class DocumentLibraryRecordPermissionController {
-
-    public static final Logger log = LoggerFactory.getLogger(DocumentLibraryRecordPermissionController.class);
 
     private final RecordsService recordsService;
     private final PermissionsService permissionsService;

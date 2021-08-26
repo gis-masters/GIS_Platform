@@ -119,7 +119,7 @@ public class TablesDao {
         }
     }
 
-    public List<Record> customQuery(String sqlRequest) {
+    public List<Record> customListQuery(String sqlRequest) {
         log.debug("Custom query: [{}]", sqlRequest);
 
         return pJdbcTemplate.getJdbcTemplate()

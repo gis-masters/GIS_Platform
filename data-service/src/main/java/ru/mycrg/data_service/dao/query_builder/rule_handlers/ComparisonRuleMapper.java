@@ -10,12 +10,12 @@ import ru.mycrg.data_service.dto.styles.RuleFilter;
 
 import static com.healthmarketscience.sqlbuilder.BinaryCondition.*;
 
-public class ComparisonRuleHandler implements RuleHandler {
+public class ComparisonRuleMapper implements RuleMapper {
 
-    public static final Logger log = LoggerFactory.getLogger(ComparisonRuleHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(ComparisonRuleMapper.class);
 
     @Override
-    public Condition handle(RuleFilter ruleFilter) {
+    public Condition map(RuleFilter ruleFilter) {
         log.info("ComparisonRuleHandler");
 
         final ComparisonRuleFilter filter = (ComparisonRuleFilter) ruleFilter;

@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class ImportValidationHandler {
 
-    public static final Logger log = LoggerFactory.getLogger(ImportValidationHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(ImportValidationHandler.class);
 
     private ImportValidationHandler() {
         throw new IllegalStateException("Utility class");

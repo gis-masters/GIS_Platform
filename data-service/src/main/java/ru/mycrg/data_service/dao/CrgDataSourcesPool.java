@@ -14,7 +14,7 @@ import java.util.Map;
 @Service
 public class CrgDataSourcesPool {
 
-    public static final Logger log = LoggerFactory.getLogger(CrgDataSourcesPool.class);
+    private static final Logger log = LoggerFactory.getLogger(CrgDataSourcesPool.class);
 
     public static final String SYSTEM_SCHEMA_NAME = "data";
     public static final String INITIAL_SCHEMA_NAME = "public";

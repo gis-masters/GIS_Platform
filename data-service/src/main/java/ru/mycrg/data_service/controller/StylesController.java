@@ -18,7 +18,7 @@ import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 @RestController
 public class StylesController {
 
-    public static final Logger log = LoggerFactory.getLogger(StylesController.class);
+    private static final Logger log = LoggerFactory.getLogger(StylesController.class);
 
     private final StylesService stylesService;
 
@@ -28,10 +28,10 @@ public class StylesController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/styles/actual")
-    public ResponseEntity<Object> getActualStyles(@RequestBody List<ActualStylesRequestModel> data) {
-        log.debug("getActualStyles: {}", data.toString());
+    public ResponseEntity<Object> getActualStyles(@RequestBody List<ActualStylesRequestModel> styles) {
+        log.debug("getActualStyles: {}", styles);
 
-        List<ActualStylesResponseModel> response = stylesService.defineActualStyles(data);
+        List<ActualStylesResponseModel> response = stylesService.defineActualStyles(styles);
 
         return ResponseEntity.ok().body(response);
     }

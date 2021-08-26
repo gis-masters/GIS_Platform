@@ -17,7 +17,7 @@ import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 
 public class StyleService extends GeoServerBaseService {
 
-    public static final Logger log = LoggerFactory.getLogger(StyleService.class);
+    private static final Logger log = LoggerFactory.getLogger(StyleService.class);
 
     public StyleService(String accessToken) {
         super(accessToken);

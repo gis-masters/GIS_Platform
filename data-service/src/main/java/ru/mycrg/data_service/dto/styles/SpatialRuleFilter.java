@@ -2,9 +2,9 @@ package ru.mycrg.data_service.dto.styles;
 
 public class SpatialRuleFilter implements RuleFilter {
 
-    public SpacialRuleOperator operator;
-    public String propertyName;
-    public SpatialLiteral literal;
+    private SpacialRuleOperator operator;
+    private String propertyName;
+    private SpatialLiteral literal;
 
     public SpatialRuleFilter() {
         // Required

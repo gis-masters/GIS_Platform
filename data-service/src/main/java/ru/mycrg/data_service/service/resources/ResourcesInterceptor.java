@@ -17,8 +17,6 @@ import static org.springframework.web.servlet.HandlerMapping.URI_TEMPLATE_VARIAB
 @Component
 public class ResourcesInterceptor implements HandlerInterceptor {
 
-    public static final Logger log = LoggerFactory.getLogger(ResourcesInterceptor.class);
-
     private final ResourceProtector resourceProtector;
 
     public ResourcesInterceptor(ResourceProtector resourceProtector) {

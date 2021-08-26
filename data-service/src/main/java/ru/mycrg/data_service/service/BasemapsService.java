@@ -25,7 +25,7 @@ import static ru.mycrg.data_service.mappers.BasemapMapper.basemapMapper;
 @RepositoryEventHandler
 public class BasemapsService {
 
-    public static final Logger log = LoggerFactory.getLogger(BasemapsService.class);
+    private static final Logger log = LoggerFactory.getLogger(BasemapsService.class);
 
     private final Validator validator;
     private final IMessageBusProducer messageBus;

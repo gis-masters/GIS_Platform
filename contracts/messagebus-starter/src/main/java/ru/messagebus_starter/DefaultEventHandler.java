@@ -7,7 +7,7 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 public class DefaultEventHandler implements IEventHandler {
 
-    public static final Logger log = LoggerFactory.getLogger(DefaultEventHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultEventHandler.class);
 
     @Override
     public String getEventType() {

@@ -1,7 +1,5 @@
 package ru.mycrg.data_service.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -19,8 +17,6 @@ import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RestController
 public class DocumentLibraryController {
-
-    public static final Logger log = LoggerFactory.getLogger(DocumentLibraryController.class);
 
     private final DocumentLibraryService librariesService;
 

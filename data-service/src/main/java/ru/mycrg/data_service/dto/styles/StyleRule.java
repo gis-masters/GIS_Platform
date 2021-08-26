@@ -2,8 +2,8 @@ package ru.mycrg.data_service.dto.styles;
 
 public class StyleRule {
 
-    public String name;
-    public RuleFilter filter;
+    private String name;
+    private RuleFilter filter;
 
     public StyleRule() {
         // Required

@@ -18,7 +18,7 @@ import static ru.mycrg.data_service.dao.CrgDataSourcesPool.INITIAL_SCHEMA_NAME;
 @Service
 public class DatabaseDDL {
 
-    public static final Logger log = LoggerFactory.getLogger(DatabaseDDL.class);
+    private static final Logger log = LoggerFactory.getLogger(DatabaseDDL.class);
 
     private final JdbcTemplate jdbcTemplate;
     private final CrgDataSourcesPool crgDataSourcesPool;

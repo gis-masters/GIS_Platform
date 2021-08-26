@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class SqlBuilder {
 
-    public static final Logger log = LoggerFactory.getLogger(SqlBuilder.class);
+    private static final Logger log = LoggerFactory.getLogger(SqlBuilder.class);
 
     public static String fillWhereSectionByFilter(CrgFilter filter) {
         StringBuilder result = new StringBuilder();
@@ -49,15 +49,6 @@ public class SqlBuilder {
         }
 
         return result.toString();
-    }
-
-    @NotNull
-    public static String buildWhereInSection(@NotNull String key, List<String> ids) {
-        if (!ids.isEmpty()) {
-            return " WHERE " + key + " IN (" + buildInSection(ids) + ")";
-        } else {
-            return "";
-        }
     }
 
     public static String buildInSection(Collection<String> ids) {

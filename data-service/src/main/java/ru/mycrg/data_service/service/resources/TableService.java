@@ -33,7 +33,7 @@ import static ru.mycrg.data_service.dto.Roles.OWNER;
 @Service
 public class TableService extends SchemasAndTablesBase {
 
-    public static final Logger log = LoggerFactory.getLogger(TableService.class);
+    private static final Logger log = LoggerFactory.getLogger(TableService.class);
 
     private final TablesManager tablesManager;
     private final IMessageBusProducer messageBus;

@@ -12,7 +12,7 @@ import ru.mycrg.data_service.exceptions.TransformationException;
 @Service
 public class CrsHandler {
 
-    public static final Logger log = LoggerFactory.getLogger(CrsHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(CrsHandler.class);
 
     private final EpsgCodes epsgCodes;
 

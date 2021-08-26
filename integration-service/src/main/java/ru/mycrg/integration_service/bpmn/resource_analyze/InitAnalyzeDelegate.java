@@ -15,7 +15,7 @@ import static ru.mycrg.integration_service.bpmn.enums.ResourceAnalyzeProcessVari
 @Service("initAnalyzeDelegate")
 public class InitAnalyzeDelegate implements JavaDelegate {
 
-    public static final Logger log = LoggerFactory.getLogger(InitAnalyzeDelegate.class);
+    private static final Logger log = LoggerFactory.getLogger(InitAnalyzeDelegate.class);
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {

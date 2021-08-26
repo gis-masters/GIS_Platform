@@ -5,7 +5,7 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import ru.mycrg.data_service.dto.styles.RuleFilter;
 
-public interface RuleHandler {
+public interface RuleMapper {
 
-    Condition handle(RuleFilter filter) throws IllegalArgumentException, FactoryException, TransformException;
+    Condition map(RuleFilter filter) throws FactoryException, TransformException;
 }

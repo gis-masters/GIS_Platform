@@ -25,7 +25,7 @@ import static ru.mycrg.integration_service.bpmn.enums.ResourceAnalyzeProcessVari
 @Service("taskExecutorDelegate")
 public class TaskExecutorDelegate implements JavaDelegate {
 
-    public static final Logger log = LoggerFactory.getLogger(TaskExecutorDelegate.class);
+    private static final Logger log = LoggerFactory.getLogger(TaskExecutorDelegate.class);
 
     private String accessToken;
     private Integer currentPage;

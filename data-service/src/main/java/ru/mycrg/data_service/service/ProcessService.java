@@ -27,7 +27,7 @@ import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 @Service
 public class ProcessService {
 
-    public static final Logger log = LoggerFactory.getLogger(ProcessService.class);
+    private static final Logger log = LoggerFactory.getLogger(ProcessService.class);
 
     private final ProcessDao processDao;
     private final ProcessRepository processRepository;

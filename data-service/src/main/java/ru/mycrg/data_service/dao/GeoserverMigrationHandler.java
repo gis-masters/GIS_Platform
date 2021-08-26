@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class GeoserverMigrationHandler {
 
-    public static final Logger log = LoggerFactory.getLogger(GeoserverMigrationHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(GeoserverMigrationHandler.class);
 
     private final Environment environment;
     private final CrgDataSourcesPool crgDataSourcesPool;

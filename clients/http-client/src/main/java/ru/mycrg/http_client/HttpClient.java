@@ -15,7 +15,7 @@ import java.net.URL;
 
 public class HttpClient {
 
-    public static final Logger log = LoggerFactory.getLogger(HttpClient.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpClient.class);
 
     private static final Gson gson = new Gson();
 

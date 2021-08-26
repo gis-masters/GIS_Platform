@@ -5,8 +5,8 @@ import java.util.List;
 
 public class LogicalRuleFilter implements RuleFilter {
 
-    public LogicalRuleOperator operator;
-    public List<RuleFilter> filters = new ArrayList<>();
+    private LogicalRuleOperator operator;
+    private List<RuleFilter> filters = new ArrayList<>();
 
     public LogicalRuleFilter() {
         // Required

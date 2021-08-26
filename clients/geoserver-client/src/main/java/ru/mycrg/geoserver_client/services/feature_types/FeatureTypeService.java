@@ -13,7 +13,7 @@ import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 
 public class FeatureTypeService extends GeoServerBaseService implements IFeatureTypes {
 
-    public static final Logger log = LoggerFactory.getLogger(FeatureTypeService.class);
+    private static final Logger log = LoggerFactory.getLogger(FeatureTypeService.class);
 
     public static final String WORKSPACES = "/workspaces/";
     public static final String DATA_STORES = "/datastores/";

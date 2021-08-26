@@ -15,7 +15,7 @@ import static java.lang.Thread.sleep;
 
 public class RetryableRequestHandler implements IHttpRequestHandler {
 
-    public static final Logger log = LoggerFactory.getLogger(RetryableRequestHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(RetryableRequestHandler.class);
 
     private final RetryConfig config;
     private final IHttpRequestHandler requestHandler;

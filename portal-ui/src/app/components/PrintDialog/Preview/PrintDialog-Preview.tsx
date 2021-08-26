@@ -83,6 +83,7 @@ export class PrintDialogPreview extends Component<PrintDialogPreviewProps> {
           square
           elevation={3}
         >
+          <Loading visible={!this.previewImageDataUri} />
           <PrintDialogPreviewImageContainer
             onDragStart={this.dragStartHandler}
             onDragEnd={this.dragEndHandler}

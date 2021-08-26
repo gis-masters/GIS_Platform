@@ -21,7 +21,7 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 @Service
 public class DataStoreService {
 
-    public static final Logger log = LoggerFactory.getLogger(DataStoreService.class);
+    private static final Logger log = LoggerFactory.getLogger(DataStoreService.class);
 
     private final Environment environment;
     private final IAuthenticationFacade authenticationFacade;

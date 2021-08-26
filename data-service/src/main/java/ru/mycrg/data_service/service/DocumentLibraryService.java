@@ -25,7 +25,7 @@ import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
 @Service
 public class DocumentLibraryService implements ResourceManager {
 
-    public static final Logger log = LoggerFactory.getLogger(DocumentLibraryService.class);
+    private static final Logger log = LoggerFactory.getLogger(DocumentLibraryService.class);
 
     public static final ResourceQualifier docLibrariesQualifier =
             new ResourceQualifier(SYSTEM_SCHEMA_NAME, "doc_libraries");

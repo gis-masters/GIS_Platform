@@ -1,15 +1,11 @@
 package ru.mycrg.data_service.dto.styles;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ActualStylesResponseModel extends ActualStylesModel {
 
-    public List<String> rules = new ArrayList<>();
-
-    public ActualStylesResponseModel() {
-        // Required
-    }
+    private final Set<String> rules = new HashSet<>();
 
     public ActualStylesResponseModel(ActualStylesRequestModel requestModel) {
         this.dataset = requestModel.getDataset();
@@ -18,6 +14,10 @@ public class ActualStylesResponseModel extends ActualStylesModel {
 
     public void addRule(String rule) {
         this.rules.add(rule);
+    }
+
+    public Set<String> getRules() {
+        return rules;
     }
 
     @Override
