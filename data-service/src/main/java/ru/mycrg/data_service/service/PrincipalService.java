@@ -44,6 +44,11 @@ public class PrincipalService {
         return allPrincipalIds;
     }
 
+    public void deleteByIdentifierAndType(String type, Long identifier) {
+        principalRepository.findByIdentifierAndType(identifier, type)
+                           .ifPresent(oPrincipal -> principalRepository.deleteById(oPrincipal.getId()));
+    }
+
     /**
      * Возвращает все идентификаторы относящиеся к пользователю.
      * <p>

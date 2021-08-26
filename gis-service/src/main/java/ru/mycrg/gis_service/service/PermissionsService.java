@@ -102,6 +102,21 @@ public class PermissionsService {
         permissionRepository.deletePermissionById(permission.getId());
     }
 
+    public void deletePermissions(Long principalId, String principalType) {
+        projectService.getAll()
+                      .forEach(project ->
+                                       getProjectPermissions(project).forEach(permission -> {
+                                           if (isSuitable(permission, principalType, principalId)) {
+                                               permissionRepository.deletePermissionById(permission.getId());
+                                           }
+                                       }));
+    }
+
+    private boolean isSuitable(PermissionProjection permission, String principalType, Long principalId) {
+        return permission.getPrincipalType().equalsIgnoreCase(principalType)
+                && permission.getPrincipalId().equals(principalId);
+    }
+
     private void checkPermission(PermissionCreateDto patchedPermission,
                                  Long projectId,
                                  @Nullable Long originPermissionId) {

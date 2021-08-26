@@ -2,11 +2,13 @@ package ru.mycrg.geoserver_client.services.user_role;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import ru.mycrg.geoserver_client.dto.UserGeoserverDto;
+import ru.mycrg.geoserver_client.dto.UserGeoserverDtoWrapper;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
+import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
-import static ru.mycrg.geoserver_client.GeoserverClient.XML_ATOM_MEDIA_TYPE;
 
 public class UsersAndRolesService extends GeoServerBaseService {
 
@@ -30,13 +32,9 @@ public class UsersAndRolesService extends GeoServerBaseService {
         httpClient.handleRequest(request);
     }
 
-    public void createUser(String user, String password) throws HttpClientException {
-        RequestBody body = RequestBody.create(XML_ATOM_MEDIA_TYPE,
-                                              "<user>\n" +
-                                                      "    <enabled>true</enabled>\n" +
-                                                      "    <userName>" + user + "</userName>\n" +
-                                                      "    <password>" + password + "</password>\n" +
-                                                      "</user>");
+    public ResponseModel<Object> createUser(String login, String password) throws HttpClientException {
+        UserGeoserverDtoWrapper user = new UserGeoserverDtoWrapper(new UserGeoserverDto(login, password, true));
+        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, gson.toJson(user));
 
         String url = String.format("%s/security/usergroup/service/%s/users",
                                    getGeoserverRestUrl(), geoserverInfo.getUserServiceName());
@@ -44,22 +42,22 @@ public class UsersAndRolesService extends GeoServerBaseService {
         Request request = builderWithBearerAuth.url(url)
                                                .post(body).build();
 
-        httpClient.handleRequest(request);
+        return httpClient.handleRequest(request);
     }
 
-    public void deleteUser(String userName) throws HttpClientException {
+    public ResponseModel<Object> deleteUser(String userName) throws HttpClientException {
         String url = String.format("%s/security/usergroup/service/%s/user/%s",
                                    getGeoserverRestUrl(), geoserverInfo.getUserServiceName(), userName);
 
         Request request = builderWithBearerAuth.url(url)
                                                .delete().build();
 
-        httpClient.handleRequest(request);
+        return httpClient.handleRequest(request);
     }
 
     // https://docs.geoserver.org/2.13.2/user/rest/api/userrole.html
     // /rest/roles/[service/<serviceName>/]role/<role>/user/<user>
-    public void associateUserWithRole(String userName, String role) throws HttpClientException {
+    public ResponseModel<Object> associateUserWithRole(String userName, String role) throws HttpClientException {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, "");
 
         String cName = prepareUserNameForGeoserver(userName);
@@ -68,7 +66,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
                 .url(getGeoserverRestUrl() + "/security/roles/role/" + role + "/user/" + cName)
                 .post(body).build();
 
-        httpClient.handleRequest(request);
+        return httpClient.handleRequest(request);
     }
 
     // Вот тут (org/geoserver/rest/security/RolesRestController.java) видно что прилетающее имя пользователя, например:

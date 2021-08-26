@@ -11,6 +11,7 @@ import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,6 +19,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
 import static ru.mycrg.acceptance.data_service.InitialBaseMapsStepsDefinitions.baseMapId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
@@ -56,6 +58,29 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
     @When("Пользователь делает запрос на текущую подложку проекта")
     public void getCurrentProjectBaseMapInfoById() {
         super.getCurrentEntity();
+    }
+
+    @When("Пользователь делает запрос на удаленную подложку проекта")
+    public void getDeletedProjectBaseMapInfoById() {
+        try {
+            int currentAttempt = 0;
+            do {
+                currentAttempt++;
+                System.out.println("attempt getDeletedProjectBaseMapInfoById " + currentAttempt);
+
+                super.getCurrentEntity();
+
+                if (response.getStatusCode() == 404) {
+                    return;
+                }
+
+                sleep(800);
+            } while (currentAttempt < MAX_RETRY_ATTEMPT);
+
+            throw new RuntimeException("Current Project BaseMap not deleted!");
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Current Project BaseMap not deleted!");
+        }
     }
 
     @And("Поля подложки проекта совпадают с переданными")

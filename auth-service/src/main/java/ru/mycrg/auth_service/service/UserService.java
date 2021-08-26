@@ -172,11 +172,11 @@ public class UserService {
         log.debug("Try delete user: {}", userProjection.getEmail());
 
         userRepository.findById(id).ifPresent(user -> {
-            messageBus.produce(
-                    new UserDeletedEvent(user.getLogin(), authenticationFacade.getAccessToken()));
-
             user.getOrganizations().forEach(org -> org.getUsers().remove(user));
             userRepository.deleteById(user.getId());
+
+            messageBus.produce(
+                    new UserDeletedEvent(user.getLogin(), authenticationFacade.getAccessToken(), id));
         });
     }
 

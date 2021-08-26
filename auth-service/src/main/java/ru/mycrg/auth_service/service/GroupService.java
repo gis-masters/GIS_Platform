@@ -15,10 +15,12 @@ import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exceptions.CrgValidationException;
 import ru.mycrg.auth_service.exceptions.NotFoundException;
+import ru.mycrg.auth_service.queue.MessageBusProducer;
 import ru.mycrg.auth_service.repository.GroupRepository;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.security.IAuthenticationFacade;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
+import ru.mycrg.auth_service_contract.events.request.UserGroupDeletedEvent;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -32,22 +34,28 @@ public class GroupService {
 
     private static final Logger log = LoggerFactory.getLogger(GroupService.class);
 
+    private static final String GROUP = "Группа";
+    private static final String ORGANIZATION = "Организация";
+
     private final Validator validator;
     private final GroupRepository groupRepository;
     private final ProjectionFactory projectionFactory;
     private final OrganizationRepository orgRepository;
     private final IAuthenticationFacade authenticationFacade;
+    private final MessageBusProducer messageBus;
 
     public GroupService(Validator validator,
                         GroupRepository groupRepository,
                         ProjectionFactory projectionFactory,
                         IAuthenticationFacade authenticationFacade,
-                        OrganizationRepository orgRepository) {
+                        OrganizationRepository orgRepository,
+                        MessageBusProducer messageBus) {
         this.validator = validator;
         this.orgRepository = orgRepository;
         this.groupRepository = groupRepository;
         this.projectionFactory = projectionFactory;
         this.authenticationFacade = authenticationFacade;
+        this.messageBus = messageBus;
     }
 
     @HandleBeforeSave
@@ -59,7 +67,7 @@ public class GroupService {
         final Long orgId = authenticationFacade.getOrganizationId();
 
         Organization organization = orgRepository.findById(orgId)
-                                                 .orElseThrow(() -> new NotFoundException(orgId));
+                                                 .orElseThrow(() -> new NotFoundException(ORGANIZATION, orgId));
 
         Group newGroup = new Group();
         newGroup.setName(dto.getName());
@@ -77,7 +85,7 @@ public class GroupService {
         Long orgId = authenticationFacade.getOrganizationId();
         Group byId = groupRepository
                 .findByIdAndOrganizationId(id, orgId)
-                .orElseThrow(() -> new NotFoundException(id));
+                .orElseThrow(() -> new NotFoundException(GROUP, id));
 
         return projectionFactory.createProjection(GroupProjection.class, byId);
     }
@@ -94,16 +102,16 @@ public class GroupService {
         Long orgId = authenticationFacade.getOrganizationId();
         Group group = groupRepository
                 .findByIdAndOrganizationId(groupId, orgId)
-                .orElseThrow(() -> new NotFoundException(groupId));
+                .orElseThrow(() -> new NotFoundException(GROUP, groupId));
 
         Organization organization = orgRepository
                 .findById(orgId)
-                .orElseThrow(() -> new NotFoundException(orgId));
+                .orElseThrow(() -> new NotFoundException(ORGANIZATION, orgId));
 
         User user = organization.getUsers().stream()
                                 .filter(u -> u.getId().equals(userId))
                                 .findFirst()
-                                .orElseThrow(() -> new NotFoundException(userId));
+                                .orElseThrow(() -> new NotFoundException("Пользователь", userId));
 
         group.addUser(user);
 
@@ -116,9 +124,19 @@ public class GroupService {
         Long orgId = authenticationFacade.getOrganizationId();
         Group group = groupRepository
                 .findByIdAndOrganizationId(groupId, orgId)
-                .orElseThrow(() -> new NotFoundException(groupId));
+                .orElseThrow(() -> new NotFoundException(GROUP, groupId));
 
         group.removeUser(userId);
+    }
+
+    public void delete(Long groupId) {
+        Group group = groupRepository
+                .findByIdAndOrganizationId(groupId, authenticationFacade.getOrganizationId())
+                .orElseThrow(() -> new NotFoundException(GROUP, groupId));
+
+        groupRepository.delete(group);
+
+        messageBus.produce(new UserGroupDeletedEvent(authenticationFacade.getAccessToken(), groupId));
     }
 
     private <T> void validate(T bean) {

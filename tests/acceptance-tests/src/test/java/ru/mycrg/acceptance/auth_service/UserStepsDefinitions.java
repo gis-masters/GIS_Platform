@@ -66,7 +66,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Администратор создает пользователя")
-    public void adminCreateUserWithoutCheck(DataTable dataTable) throws InterruptedException {
+    public void adminCreateUserWithoutCheck(DataTable dataTable) {
         authorizationBase.loginAsOwner();
 
         userDto = mapToDto(dataTable.asList());
@@ -236,7 +236,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void performsDisableEnableUsers(String isEnabled) {
         getBaseRequestWithCurrentCookie()
                 .given().
-                body(format("{\"enabled\":\"%s\"}", isEnabled)).
+                        body(format("{\"enabled\":\"%s\"}", isEnabled)).
                         contentType(ContentType.JSON)
                 .when().
                         patch(String.valueOf(userId))

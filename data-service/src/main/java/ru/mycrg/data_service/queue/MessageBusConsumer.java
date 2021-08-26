@@ -10,7 +10,6 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import java.util.List;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.*;
-import static ru.mycrg.messagebus_contract.MessageBusProperties.COMMON_RESPONSE_QUEUE;
 
 @Service
 public class MessageBusConsumer implements IMessageBusConsumer {

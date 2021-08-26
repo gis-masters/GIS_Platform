@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0t630pa" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.9.0">
+  <bpmn:process id="integration_clearGroupPermissionProcess" name="clear group permission process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_2" name="Start clear group permission process">
+      <bpmn:outgoing>Flow_0ft4h07</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0ft4h07" sourceRef="StartEvent_2" targetRef="Activity_12jkl0ig" />
+    <bpmn:endEvent id="Event_1uadag" name="Successful end clear group permission process">
+      <bpmn:incoming>Flow_1sac5lw</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_12jkl0ig" name="delete group permission on data service" camunda:asyncBefore="true" camunda:delegateExpression="${dataServiceGroupPermissionDeleteDelegate}">
+      <bpmn:incoming>Flow_0ft4h07</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vbmqm3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_12jkl0ug" name="delete group permission on gis service" camunda:asyncBefore="true" camunda:delegateExpression="${gisGroupPermissionDeleteDelegate}">
+      <bpmn:incoming>Flow_0vbmqm3</bpmn:incoming>
+      <bpmn:outgoing>Flow_1sac5lw</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1sac5lw" sourceRef="Activity_12jkl0ug" targetRef="Event_1uadag" />
+    <bpmn:sequenceFlow id="Flow_0vbmqm3" sourceRef="Activity_12jkl0ig" targetRef="Activity_12jkl0ug" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="integration_clearGroupPermissionProcess">
+      <bpmndi:BPMNEdge id="Flow_0vbmqm3_di" bpmnElement="Flow_0vbmqm3">
+        <di:waypoint x="360" y="117" />
+        <di:waypoint x="430" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1sac5lw_di" bpmnElement="Flow_1sac5lw">
+        <di:waypoint x="530" y="117" />
+        <di:waypoint x="602" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ft4h07_di" bpmnElement="Flow_0ft4h07">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="260" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_2">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="142" width="82" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1mgjkls_di" bpmnElement="Event_1uadag">
+        <dc:Bounds x="602" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="585" y="142" width="75" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_01qvi0j_di" bpmnElement="Activity_12jkl0ig">
+        <dc:Bounds x="260" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0y2jesa_di" bpmnElement="Activity_12jkl0ug">
+        <dc:Bounds x="430" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

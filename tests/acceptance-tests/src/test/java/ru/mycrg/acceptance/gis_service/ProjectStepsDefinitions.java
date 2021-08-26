@@ -132,6 +132,13 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         addPermissionToProject(userId, "user", role);
     }
 
+    @When("Администратор даёт доступ: {string} для текущей пользовательской группы на текущий проект")
+    public void giveCurrentGroupPermToCurrentProject(String role) {
+        authorizationBase.loginAsOwner();
+
+        addPermissionToProject(usersGroupId, "group", role);
+    }
+
     @When("Администратор присваивает текущей группе роль {string}")
     public void addPermissionToCurrentGroup(String role) {
         addPermissionToProject(usersGroupId, "group", role);

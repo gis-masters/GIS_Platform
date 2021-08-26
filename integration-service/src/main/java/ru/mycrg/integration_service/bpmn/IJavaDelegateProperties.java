@@ -14,4 +14,6 @@ public interface IJavaDelegateProperties {
     String PROCESS_ID_VAR_NAME = "processId";
     String COUNTER_VAR_NAME = "counter";
     String CHECK_STATUS_VAR_NAME = "checkStatus";
+
+    String ENTITY_ID_VAR_NAME = "entityId";
 }

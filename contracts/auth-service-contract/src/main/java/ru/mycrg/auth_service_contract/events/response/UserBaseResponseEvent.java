@@ -3,7 +3,8 @@ package ru.mycrg.auth_service_contract.events.response;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
-import static ru.mycrg.messagebus_contract.MessageBusProperties.*;
+import static ru.mycrg.messagebus_contract.MessageBusProperties.USER_RESPONSE_FANOUT;
+import static ru.mycrg.messagebus_contract.MessageBusProperties.USER_RESPONSE_KEY;
 
 public class UserBaseResponseEvent extends DefaultMessageBusRequestEvent {
 

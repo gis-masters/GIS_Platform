@@ -6,7 +6,6 @@ import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.PermissionCreateDto;
 import ru.mycrg.gis_service.dto.PermissionProjection;
@@ -17,6 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
@@ -42,7 +42,8 @@ public class PermissionController {
 
     @GetMapping("/{project_id}/permissions")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<List<PermissionProjection>> getPermissions(@PathVariable(name = "project_id") long projectId) {
+    public ResponseEntity<List<PermissionProjection>> getPermissions(
+            @PathVariable(name = "project_id") long projectId) {
         List<PermissionProjection> permissions = permissionsService.getAll(projectId);
 
         return ResponseEntity.ok(permissions);
@@ -87,6 +88,17 @@ public class PermissionController {
         log.debug("Request for deletion permission {} for project {}", permissionId, projectId);
 
         permissionsService.delete(projectId, permissionId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/permissions/{id}")
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> deleteEntityPermissions(@RequestParam(name = "principal_type") String principalType,
+                                                          @PathVariable(name = "id") long principalId) {
+        log.debug("Запрос на удаление разрешений {}: {} ", principalType, principalId);
+
+        permissionsService.deletePermissions(principalId, principalType);
 
         return ResponseEntity.noContent().build();
     }
