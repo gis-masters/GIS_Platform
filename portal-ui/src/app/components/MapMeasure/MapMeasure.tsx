@@ -65,6 +65,10 @@ export class MapMeasure extends Component {
     } else {
       mapMeasureService.measureOn(mode);
     }
+
+    if (mapStore.mode === MapModes.MEASURE && !mapStore.measureMode) {
+      mapStore.setMode(MapModes.DEFAULT);
+    }
   }
 
   @boundMethod

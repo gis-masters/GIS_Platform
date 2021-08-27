@@ -144,6 +144,7 @@ class Sidebars {
       features.length === 1 &&
       (selectionType === MapSelectionTypes.REPLACE || selectionType === MapSelectionTypes.ADD)
     ) {
+      this.closeFeatures();
       this.openEdit({
         features: features,
         mode: EditFeatureMode.single
