@@ -27,7 +27,7 @@ export class WorkspaceHeaderButtons extends Component {
       <div className={cnWorkspaceHeaderButtons()}>
         <CopyUrlButton inHeader />
         {route.data.page === Pages.MAP && <PrintButton />}
-        {route.data.page === Pages.MAP && env.platform === 'conv' && (
+        {route.data.page === Pages.MAP && (
           <Tooltip title='Проверка ошибок по приказу'>
             <IconButton onClick={this.handleBugsClick} color='inherit'>
               {sidebars.bugReportOpen ? <BugReport /> : <BugReportOutlined />}
