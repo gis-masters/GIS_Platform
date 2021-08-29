@@ -80,6 +80,8 @@
 
       &_right {
         grid-area: bar-right;
+
+        box-shadow: 0 8px 16px 0 rgb(0 0 0 / 16%);
       }
 
       &_bottom {

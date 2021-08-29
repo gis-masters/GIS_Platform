@@ -33,7 +33,7 @@ export class LayersList extends Component<LayersListProps> {
   @observable private selectedLayers: CrgLayer[] = [];
 
   render() {
-    return currentProject.vectorLayers.length ? (
+    return currentProject.vectorLayers.length && this.selectedLayers ? (
       <XTable
         className={cnLayersList()}
         data={currentProject.vectorLayers}
@@ -101,11 +101,9 @@ export class LayersList extends Component<LayersListProps> {
 
   @action.bound
   private onSelectItemChanged([layer, enabled]) {
-    if (enabled) {
-      this.selectedLayers.push(layer);
-    } else {
-      this.selectedLayers.splice(this.selectedLayers.indexOf(layer), 1);
-    }
+    this.selectedLayers = enabled
+      ? ([...this.selectedLayers, layer] as CrgLayer[])
+      : this.selectedLayers.filter(item => item !== layer);
 
     this.props.onSelect(this.selectedLayers);
   }
