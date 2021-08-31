@@ -42,7 +42,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.PagingAndSortingUtil.fetchFoldersFirst;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.INNER_PATH;

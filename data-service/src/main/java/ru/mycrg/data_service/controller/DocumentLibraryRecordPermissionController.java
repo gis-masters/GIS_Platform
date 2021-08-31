@@ -20,7 +20,7 @@ import java.util.Map;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
 @RestController

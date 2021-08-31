@@ -7,100 +7,154 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service.dao.DatasourceFactory;
 import ru.mycrg.data_service.dao.ValidationResultRepository;
-import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.Record;
-import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.dto.ValidationRequestDto;
+import ru.mycrg.data_service.entity.Process;
+import ru.mycrg.data_service.security.AuthenticationFacade;
 import ru.mycrg.data_service.service.CsvHandler;
+import ru.mycrg.data_service.service.JsonConverter;
+import ru.mycrg.data_service.service.ProcessService;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.SchemaHandler;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service.util.filter.FilterCondition;
+import ru.mycrg.data_service_contract.dto.ResourceReport;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.dto.ValidationReportModel;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import static java.util.Objects.nonNull;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.data_service.dao.TablesManager.EXTENSION_POSTFIX;
 import static ru.mycrg.data_service.service.JsonConverter.toJsonNodeFromString;
+import static ru.mycrg.data_service_contract.enums.ProcessType.VALIDATION_REPORT;
 
 @Service
 public class LayerValidationReportService {
 
     public static final Logger log = LoggerFactory.getLogger(LayerValidationReportService.class);
 
-    private static final String EXTENSION = "_extension";
     private static final Integer PAGE_SIZE = 100;
+    private static final String NOT_PASSED = "не обработан ";
 
-    private final String EXPORT_STORAGE_PATH;
+    private final String exportStoragePath;
     private final String[] header;
 
     private CsvHandler csvHandler;
+    private ValidationResultRepository validationResultRepository;
 
+    private final DatasourceFactory datasourceFactory;
     private final SchemaService schemaService;
     private final SchemaHandler schemaHandler;
-    private final ValidationResultRepository validationResult;
+    private final AuthenticationFacade authenticationFacade;
+    private final ProcessService processService;
 
     public LayerValidationReportService(SchemaService schemaService,
                                         SchemaHandler schemaHandler,
-                                        ValidationResultRepository validationResult,
-                                        Environment environment) {
+                                        Environment environment,
+                                        AuthenticationFacade authenticationFacade,
+                                        ProcessService processService,
+                                        DatasourceFactory datasourceFactory) {
         this.schemaService = schemaService;
         this.schemaHandler = schemaHandler;
-        this.validationResult = validationResult;
-        EXPORT_STORAGE_PATH = environment.getRequiredProperty("crg-options.exportStoragePath");
+        this.authenticationFacade = authenticationFacade;
+        this.processService = processService;
+        this.datasourceFactory = datasourceFactory;
 
+        exportStoragePath = environment.getRequiredProperty("crg-options.exportStoragePath");
         header = new String[]{" Класс объектов", " Объект класса", " Идентификатор объекта(GLOBALID)", " Имя атрибута",
                 " Значение", " Описание ошибки"};
     }
 
-    public String generateReport(List<ExportResourceModel> resources) {
-        String fileName = initFileName();
+    public Process generateReport(ValidationRequestDto request) {
+        final List<ExportResourceModel> resources = request.getResources();
+        final String title = String.format("Экспорт отчета об ошибках. Кол-во слоев: %d", resources.size());
+        final Map<String, SchemaDto> schemas = fetchSchemas(resources);
+        final String dbName = getDefaultDatabaseName(authenticationFacade.getOrganizationId());
+        final Process process = processService.create(authenticationFacade.getLogin(),
+                                                      title,
+                                                      VALIDATION_REPORT,
+                                                      request);
 
-        try {
-            csvHandler = new CsvHandler(EXPORT_STORAGE_PATH + fileName, header);
-            resources.forEach(this::handleResource);
-        } catch (IOException e) {
-            log.error("Не удалось создать соединение: {}", e.getMessage());
-            throw new DataServiceException("Что-то пошло не так.");
-        } finally {
-            csvHandler.close();
-        }
+        validationResultRepository = new ValidationResultRepository(datasourceFactory, dbName);
 
-        return fileName;
+        CompletableFuture
+                .runAsync(() -> {
+                    try {
+                        log.info("Init feature: generateReport");
+
+                        ValidationReportModel reportModel = handleResources(resources, schemas);
+                        processService.complete(dbName,
+                                                process.getId(),
+                                                JsonConverter.toJsonNode(reportModel));
+                    } catch (Exception e) {
+                        log.error("Не удалось создать отчет: {}", e.getMessage());
+                        processService.error(dbName, process);
+                    } finally {
+                        if (nonNull(csvHandler)) {
+                            csvHandler.close();
+                        }
+                    }
+                });
+
+        return process;
     }
 
-    private void handleResource(ExportResourceModel resource) {
-        try {
+    private ValidationReportModel handleResources(List<ExportResourceModel> resources,
+                                                  Map<String, SchemaDto> schemas) throws IOException {
+        final String fileName = initFileName();
+        final String filePath = exportStoragePath + fileName;
+        ValidationReportModel model = new ValidationReportModel(filePath);
+        csvHandler = new CsvHandler(filePath, header);
+
+        resources.forEach(resource -> {
             String schemaName = resource.getSchemaId();
-            Optional<SchemaDto> oSchemaDto = schemaService.getSchemaByName(schemaName);
-            if (oSchemaDto.isEmpty()) {
+            SchemaDto schemaDto = schemas.get(schemaName);
+            if (schemas.containsKey(schemaName)) {
+                model.addResourceReports(handleResource(resource, schemaDto));
+            } else {
                 csvHandler.append(
-                        new String[]{"", "", resource.toString(), "", "не обработан", schemaName + " не найдена"});
-
-                return;
+                        new String[]{"", "", resource.toString(), "", NOT_PASSED, schemaName + " не найдена"});
+                model.addResourceReports(new ResourceReport(schemaName, "не найдена", false));
             }
+        });
 
+        return model;
+    }
+
+    private ResourceReport handleResource(ExportResourceModel resource, SchemaDto schemaDto) {
+        try {
             ResourceQualifier rQualifier = new ResourceQualifier(resource.getDataset(),
-                                                                 resource.getTable() + EXTENSION);
+                                                                 resource.getTable() + EXTENSION_POSTFIX);
             CrgFilter crgFilter = new CrgFilter();
             crgFilter.addFilter("valid", "false", FilterCondition.EQUAL_TO);
-            long countPage = (validationResult.getTotal(rQualifier, crgFilter) + PAGE_SIZE - 1) / PAGE_SIZE;
+            long countPage = (validationResultRepository.getTotal(rQualifier, crgFilter) + PAGE_SIZE - 1) / PAGE_SIZE;
 
             for (int i = 0; i < countPage; i++) {
                 Pageable pageable = PageRequest.of(i, PAGE_SIZE);
 
-                validationResult
+                validationResultRepository
                         .findPagedByFilter(rQualifier, pageable, crgFilter).stream()
                         .map(this::extractViolations)
-                        .forEach(violations -> writeViolations(violations, oSchemaDto.get()));
+                        .forEach(violations -> writeViolations(violations, schemaDto));
             }
-        } catch (CrgDaoException e) {
-            csvHandler.append(new String[]{"", "", resource.toString(), "", "не обработан", e.getMessage()});
+
+            return new ResourceReport(schemaDto.getTitle(), "обработан", true);
+        } catch (Exception e) {
+            csvHandler.append(new String[]{"", "", resource.toString(), "", NOT_PASSED, e.getMessage()});
+
+            return new ResourceReport(schemaDto.getTitle(), NOT_PASSED + e.getMessage(), false);
         }
     }
 
@@ -161,37 +215,21 @@ public class LayerValidationReportService {
     private String prepareErrorMsg(String errorType) {
         if (errorType.startsWith("required")) {
             return "Параметр обязателен к заполнению";
-        }
-
-        if (errorType.startsWith("minLength")) {
+        } else if (errorType.startsWith("minLength")) {
             return "Строка слишком короткая";
-        }
-
-        if (errorType.startsWith("maxLength")) {
+        } else if (errorType.startsWith("maxLength")) {
             return "Значение превышает допустимый максимум";
-        }
-
-        if (errorType.startsWith("pattern")) {
+        } else if (errorType.startsWith("pattern")) {
             return "Строка не соответствует паттерну";
-        }
-
-        if (errorType.startsWith("enumeration")) {
+        } else if (errorType.startsWith("enumeration")) {
             return "Значение не соответствует справочному";
-        }
-
-        if (errorType.startsWith("notDoubleType")) {
+        } else if (errorType.startsWith("notDoubleType")) {
             return "Значение не является дробным числом";
-        }
-
-        if (errorType.startsWith("notLongType")) {
+        } else if (errorType.startsWith("notLongType")) {
             return "Значение не является целым числом";
-        }
-
-        if (errorType.startsWith("maxInclusive")) {
+        } else if (errorType.startsWith("maxInclusive")) {
             return "Значение превышает допустимый максимум";
-        }
-
-        if (errorType.startsWith("totalDigits")) {
+        } else if (errorType.startsWith("totalDigits")) {
             return "Превышено допустимое кол-во знаков";
         } else {
             log.warn("Заданный errorType: {} не найден", errorType);
@@ -200,7 +238,17 @@ public class LayerValidationReportService {
         return errorType;
     }
 
-    public String initFileName() {
+    private Map<String, SchemaDto> fetchSchemas(List<ExportResourceModel> resources) {
+        Map<String, SchemaDto> schemas = new HashMap<>();
+        resources.forEach(res -> {
+            schemaService.getSchemaByName(res.getSchemaId())
+                         .ifPresent(schemaDto -> schemas.put(res.getSchemaId(), schemaDto));
+        });
+
+        return schemas;
+    }
+
+    private String initFileName() {
         //TODO формирование рандомного имени, и после скачивания удалять файл
         return "validation.csv";
     }

@@ -14,19 +14,19 @@ public class GeoserverMigrationHandler {
     private static final Logger log = LoggerFactory.getLogger(GeoserverMigrationHandler.class);
 
     private final Environment environment;
-    private final CrgDataSourcesPool crgDataSourcesPool;
+    private final DatasourceFactory datasourceFactory;
 
-    public GeoserverMigrationHandler(CrgDataSourcesPool crgDataSourcesPool,
+    public GeoserverMigrationHandler(DatasourceFactory datasourceFactory,
                                      Environment environment) {
         this.environment = environment;
-        this.crgDataSourcesPool = crgDataSourcesPool;
+        this.datasourceFactory = datasourceFactory;
     }
 
     public void handle() {
         String dbUser = environment.getRequiredProperty("spring.datasource.username");
         String dbName = environment.getRequiredProperty("crg-options.geoserverDbName");
 
-        HikariDataSource tempDataSource = crgDataSourcesPool.getNotPoolableDataSource(dbName, "public");
+        HikariDataSource tempDataSource = datasourceFactory.getNotPoolableDataSource(dbName, "public");
 
         try {
             log.debug("Initialize geoserver tables");

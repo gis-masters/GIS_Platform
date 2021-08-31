@@ -13,7 +13,7 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.util.EpsgCodes;
 import ru.mycrg.data_service.util.GeometryProjection;
 
-import static ru.mycrg.data_service.dao.CrgDataSourcesPool.INITIAL_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.DatasourceFactory.INITIAL_SCHEMA_NAME;
 
 @Service
 public class DatabaseDDL {
@@ -21,16 +21,16 @@ public class DatabaseDDL {
     private static final Logger log = LoggerFactory.getLogger(DatabaseDDL.class);
 
     private final JdbcTemplate jdbcTemplate;
-    private final CrgDataSourcesPool crgDataSourcesPool;
+    private final DatasourceFactory datasourceFactory;
     private final NamedParameterJdbcTemplate parameterJdbcTemplate;
     private final EpsgCodes epsgCodes;
 
     public DatabaseDDL(JdbcTemplate jdbcTemplate,
-                       CrgDataSourcesPool crgDataSourcesPool,
+                       DatasourceFactory datasourceFactory,
                        NamedParameterJdbcTemplate parameterJdbcTemplate,
                        EpsgCodes epsgCodes) {
         this.jdbcTemplate = jdbcTemplate;
-        this.crgDataSourcesPool = crgDataSourcesPool;
+        this.datasourceFactory = datasourceFactory;
         this.parameterJdbcTemplate = parameterJdbcTemplate;
         this.epsgCodes = epsgCodes;
     }
@@ -46,7 +46,7 @@ public class DatabaseDDL {
             log.debug("Try create db: {}", dbName);
 
             final String sql = "CREATE DATABASE " + dbName + " WITH " +
-                    " OWNER = " + crgDataSourcesPool.getInitialUser() +
+                    " OWNER = " + datasourceFactory.getInitialUser() +
                     " ENCODING = 'UTF8'" +
                     " LC_COLLATE = 'en_US.UTF-8'" +
                     " LC_CTYPE = 'en_US.UTF-8'" +
@@ -55,10 +55,10 @@ public class DatabaseDDL {
                     " TEMPLATE template0";
 
             jdbcTemplate.execute(sql);
-            jdbcTemplate.execute("GRANT ALL ON DATABASE " + dbName + " TO " + crgDataSourcesPool.getInitialUser());
+            jdbcTemplate.execute("GRANT ALL ON DATABASE " + dbName + " TO " + datasourceFactory.getInitialUser());
 
             // Подсоединяемся к только что созданной БД и создаем расширние postgis
-            newDataSource = crgDataSourcesPool.getNotPoolableDataSource(dbName, INITIAL_SCHEMA_NAME);
+            newDataSource = datasourceFactory.getNotPoolableDataSource(dbName, INITIAL_SCHEMA_NAME);
 
             JdbcTemplate newDbJdbcTemplate = new JdbcTemplate(newDataSource);
 

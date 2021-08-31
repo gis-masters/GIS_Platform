@@ -10,9 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
@@ -26,16 +25,15 @@ import java.util.List;
 
 import static ru.mycrg.data_service.dao.SqlBuilder.fillWhereSectionByFilter;
 
-@Service
 @Transactional
 public class ValidationResultRepository {
 
     private static final Logger log = LoggerFactory.getLogger(ValidationResultRepository.class);
 
-    private final NamedParameterJdbcTemplate pJdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    public ValidationResultRepository(NamedParameterJdbcTemplate pJdbcTemplate) {
-        this.pJdbcTemplate = pJdbcTemplate;
+    public ValidationResultRepository(DatasourceFactory datasourceFactory, String dbName) {
+        this.jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(dbName));
     }
 
     public List<Record> findPagedByFilter(ResourceQualifier rQualifier,
@@ -62,8 +60,8 @@ public class ValidationResultRepository {
             final String property = order.getProperty();
 
             final OrderObject.Dir direction = order.getDirection().isAscending()
-                    ? OrderObject.Dir.ASCENDING
-                    : OrderObject.Dir.DESCENDING;
+                                              ? OrderObject.Dir.ASCENDING
+                                              : OrderObject.Dir.DESCENDING;
 
             final DbColumn column = table.addColumn(property);
 
@@ -72,11 +70,11 @@ public class ValidationResultRepository {
 
         log.info("SELECT QUERY: {}", selectQuery);
 
-        return pJdbcTemplate.getJdbcTemplate()
-                            .query(selectQuery.toString(),
-                                   new RowMapperResultSetExtractor<>(
-                                           new RecordRowMapper()
-                                   ));
+        return jdbcTemplate
+                .query(selectQuery.toString(),
+                       new RowMapperResultSetExtractor<>(
+                               new RecordRowMapper()
+                       ));
     }
 
     public long getTotal(ResourceQualifier tableQualifier, CrgFilter filter) throws CrgDaoException {
@@ -89,7 +87,7 @@ public class ValidationResultRepository {
 
             log.debug("Request find total by: [{}]", sqlTemplate);
 
-            return pJdbcTemplate.getJdbcTemplate().queryForObject(sqlTemplate, Long.class);
+            return jdbcTemplate.queryForObject(sqlTemplate, Long.class);
         } catch (Exception e) {
             throw new CrgDaoException(String.format("Не удалось подсчитать общее кол-во в: %s",
                                                     tableQualifier.getQualifier()), e.getCause());

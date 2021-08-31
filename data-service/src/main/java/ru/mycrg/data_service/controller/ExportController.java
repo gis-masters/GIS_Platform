@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +20,8 @@ import ru.mycrg.data_service.service.export.LayerValidationReportService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+
+import static org.springframework.http.HttpStatus.ACCEPTED;
 
 @RestController
 public class ExportController extends BaseController {
@@ -44,23 +45,16 @@ public class ExportController extends BaseController {
     public ResponseEntity<Process> exportProjectLayers(@Valid @RequestBody ExportRequestModel dto) {
         Process process = exportService.export(dto);
 
-        return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), ACCEPTED);
     }
 
     @PostMapping("/export/validation_results")
-    public ResponseEntity<Resource> exportValidationResults(@Valid @RequestBody ValidationRequestDto dto,
-                                                            HttpServletRequest request) {
+    public ResponseEntity<Process> exportValidationResults(@Valid @RequestBody ValidationRequestDto dto) {
         log.debug("Request to download validation results file with: {}", dto.getResources());
 
-        String fileName = reporter.generateReport(dto.getResources());
+        Process process = reporter.generateReport(dto);
 
-        Resource res = storageService.load(fileName);
-
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.parseMediaType(determinateContentType(request, res)))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + res.getFilename() + "\"")
-                .body(res);
+        return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), ACCEPTED);
     }
 
     @GetMapping("/export/{fileName:.+}")

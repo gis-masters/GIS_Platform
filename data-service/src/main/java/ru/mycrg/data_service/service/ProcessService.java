@@ -18,6 +18,7 @@ import ru.mycrg.data_service_contract.enums.ProcessType;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.security.Principal;
+import java.sql.SQLException;
 import java.util.Optional;
 
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
@@ -70,6 +71,12 @@ public class ProcessService {
         final Process newProcess = new Process(userName, title, type, JsonConverter.toJsonNode(payload));
 
         return processRepository.save(newProcess);
+    }
+
+    public void complete(String dbName, Long processId, JsonNode details) throws SQLException {
+        processDao.updateDetailsAndStatus(processId, DONE, dbName, details);
+
+        log.info("Successfully complete process with id {}, details: {} ", processId, details);
     }
 
     public void complete(String dbName, Process process) {

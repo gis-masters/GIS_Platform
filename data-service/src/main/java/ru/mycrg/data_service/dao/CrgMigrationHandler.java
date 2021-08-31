@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Connection;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
-import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 
 @Service
 public class CrgMigrationHandler {
@@ -20,19 +20,19 @@ public class CrgMigrationHandler {
     private static final Logger log = LoggerFactory.getLogger(CrgMigrationHandler.class);
 
     private final ApplicationContext ctx;
-    private final CrgDataSourcesPool crgDataSourcesPool;
+    private final DatasourceFactory datasourceFactory;
 
-    public CrgMigrationHandler(CrgDataSourcesPool crgDataSourcesPool,
+    public CrgMigrationHandler(DatasourceFactory datasourceFactory,
                                ApplicationContext ctx) {
         this.ctx = ctx;
-        this.crgDataSourcesPool = crgDataSourcesPool;
+        this.datasourceFactory = datasourceFactory;
     }
 
     public void handle() {
         try {
             log.info("Handle migrations");
 
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(crgDataSourcesPool.getInitialDataSource());
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getInitialDataSource());
 
             String selectAllOrganizationsDb = "SELECT datname FROM pg_database WHERE datname like '" +
                     getDefaultDatabaseName() + "%'";
@@ -47,7 +47,7 @@ public class CrgMigrationHandler {
 
     public void initMigration(String dbName) {
         try {
-            HikariDataSource tempDataSource = crgDataSourcesPool.getNotPoolableDataSource(dbName, SYSTEM_SCHEMA_NAME);
+            HikariDataSource tempDataSource = datasourceFactory.getNotPoolableDataSource(dbName, SYSTEM_SCHEMA_NAME);
             try (final Connection connection = tempDataSource.getConnection()) {
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M1__initServiceTables.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M2__initOldSchemas.sql"));

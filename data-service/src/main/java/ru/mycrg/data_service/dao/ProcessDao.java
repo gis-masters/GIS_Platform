@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.dao;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -9,17 +11,18 @@ import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.repository.ProcessRepository;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 @Service
 public class ProcessDao {
 
-    private final CrgDataSourcesPool crgDataSourcesPool;
+    private final DatasourceFactory datasourceFactory;
     private final ProcessRepository processRepository;
 
     public ProcessDao(ProcessRepository processRepository,
-                      CrgDataSourcesPool crgDataSourcesPool) {
-        this.crgDataSourcesPool = crgDataSourcesPool;
+                      DatasourceFactory datasourceFactory) {
+        this.datasourceFactory = datasourceFactory;
         this.processRepository = processRepository;
     }
 
@@ -28,7 +31,7 @@ public class ProcessDao {
     }
 
     public Optional<Process> findById(Long id, String dbName) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(crgDataSourcesPool.getDataSource(dbName));
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(dbName));
 
         final Process process = jdbcTemplate.queryForObject("SELECT * FROM processes WHERE id = ?",
                                                             new Object[]{id},
@@ -39,11 +42,28 @@ public class ProcessDao {
 
     public void updateStatus(Long id, ProcessStatus status, String dbName) {
         NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(
-                crgDataSourcesPool.getDataSource(dbName));
+                datasourceFactory.getDataSource(dbName));
 
         final MapSqlParameterSource source = new MapSqlParameterSource()
                 .addValue("status", status.name())
                 .addValue("rowId", id);
         jdbcTemplate.update("UPDATE processes SET status = :status WHERE id = :rowId", source);
+    }
+
+    public void updateDetailsAndStatus(Long id, ProcessStatus status, String dbName, JsonNode details)
+            throws SQLException {
+        NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(
+                datasourceFactory.getDataSource(dbName));
+
+        PGobject pgDetails = new PGobject();
+        pgDetails.setType("json");
+        pgDetails.setValue(details.toString());
+
+        final MapSqlParameterSource source = new MapSqlParameterSource()
+                .addValue("details", pgDetails)
+                .addValue("status", status.name())
+                .addValue("rowId", id);
+
+        jdbcTemplate.update("UPDATE processes SET status = :status, details = :details WHERE id = :rowId", source);
     }
 }

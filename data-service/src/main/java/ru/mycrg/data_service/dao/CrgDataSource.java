@@ -18,7 +18,7 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
  * Наш декоратор над DataSource.
  * В нем мы подменяем базу данных исходя из инфы в токене пользователя.
  */
-public class CrgDataSource extends CrgDataSourcesPool implements DataSource {
+public class CrgDataSource extends DatasourceFactory implements DataSource {
 
     private static final Logger log = LoggerFactory.getLogger(CrgDataSource.class);
 
