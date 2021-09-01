@@ -58,9 +58,9 @@ public class TablesController {
     @GetMapping("/datasets/{datasetId}/tables/{tableId}")
     public ResponseEntity<Object> getTable(@PathVariable String datasetId,
                                            @PathVariable String tableId) {
-        ResourceQualifier rQualifier = new ResourceQualifier(datasetId, tableId);
+        ResourceQualifier tQualifier = new ResourceQualifier(datasetId, tableId);
 
-        final IResourceModel dto = tableService.getInfo(rQualifier);
+        final IResourceModel dto = tableService.getInfo(tQualifier);
 
         return ResponseEntity.ok(dto);
     }

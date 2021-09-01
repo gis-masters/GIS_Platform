@@ -80,11 +80,7 @@ public class TableService extends SchemasAndTablesBase {
     }
 
     public IResourceModel getInfo(ResourceQualifier tQualifier) {
-        SchemasAndTables dataset = schemasAndTablesRepository
-                .findByIdentifier(tQualifier.getSchema())
-                .orElseThrow(() -> new NotFoundException(tQualifier.getQualifier()));
-
-        Optional<String> oRole = permissionsRepository.bestRole(schemasAndTablesQualifier, dataset.pathTo());
+        Optional<String> oRole = permissionsRepository.bestRole(tQualifier);
         if (oRole.isPresent()) {
             SchemasAndTables table = schemasAndTablesRepository
                     .findByIdentifier(tQualifier.getTable())

@@ -225,4 +225,28 @@ public class BasePermissionsRepository {
 
         return defineRoleById(roleId);
     }
+
+    public Optional<String> bestRole(ResourceQualifier tableQualifier) {
+        String tableName = tableQualifier.getTable();
+        String schemaName = tableQualifier.getSchema();
+
+        List<String> allPrincipalIds = principalService.getAllIds();
+
+        String requestTemplate = "" +
+                "SELECT max(p.role_id) FROM data.schemas_and_tables AS res " +
+                "JOIN data.acl_permissions AS p " +
+                "ON p.resource_id = res.id " +
+                "AND p.resource_table = 'schemas_and_tables' " +
+                "AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
+                "AND (" +
+                "   res.identifier = '" + tableName + "'" +
+                "   OR res.identifier = '" + schemaName + "'" +
+                ")";
+
+        log.debug("Request bestRole: [{}]", requestTemplate);
+
+        Long roleId = pJdbcTemplate.getJdbcTemplate().queryForObject(requestTemplate, Long.class);
+
+        return defineRoleById(roleId);
+    }
 }
