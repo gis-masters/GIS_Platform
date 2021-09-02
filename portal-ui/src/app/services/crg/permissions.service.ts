@@ -1,9 +1,11 @@
+import { AxiosError } from 'axios';
+
 import { currentUser } from '../../stores/CurrentUser.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { PrincipalType, Role, RoleAssignmentBody, roles } from './permissions.models';
 import { CrgProject } from './projects.models';
 import { schemaService } from './schema.service';
-import { getDataTable } from '../data.service';
+import { DataTable, getDataTable } from '../data.service';
 
 export enum BuildInRole {
   GLOBAL_ADMIN = 'GLOBAL_ADMIN',
@@ -72,8 +74,20 @@ async function isAllowedWithTable(
   schemaIdForReadonlyCheck?: string
 ): Promise<boolean> {
   const readOnly = schemaIdForReadonlyCheck && (await schemaService.isReadOnly(schemaIdForReadonlyCheck));
-  const table = await getDataTable(datasetIdentifier, tableIdentifier);
-  let role = table.role;
+
+  let table: DataTable;
+  try {
+    table = await getDataTable(datasetIdentifier, tableIdentifier);
+  } catch (error) {
+    const err = error as AxiosError;
+
+    if (err.response.status !== 403) {
+      throw err;
+    }
+  }
+
+  let role = table?.role;
+
   if (currentUser.isAdmin) {
     role = Role.OWNER;
   }
