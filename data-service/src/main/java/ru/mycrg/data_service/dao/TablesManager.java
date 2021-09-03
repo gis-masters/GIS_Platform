@@ -8,12 +8,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dto.TableCreateDto;
+import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.resources.ResourceManager;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.CrsHandler;
-import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ForeignKeyType;
+import ru.mycrg.data_service_contract.enums.ValueType;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TablesManager implements ResourceManager {
@@ -25,21 +30,37 @@ public class TablesManager implements ResourceManager {
 
     private final JdbcTemplate jdbcTemplate;
     private final CrsHandler crsHandler;
+    private final SchemasAndTablesRepository schemasAndTablesRepository;
 
-    public TablesManager(JdbcTemplate jdbcTemplate, CrsHandler crsHandler) {
+    public TablesManager(JdbcTemplate jdbcTemplate,
+                         CrsHandler crsHandler,
+                         SchemasAndTablesRepository schemasAndTablesRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.crsHandler = crsHandler;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
 
-    public void createTable(String targetSchema, TableCreateDto dto, SchemaDto schemaDto) {
+    public void createTable(String targetSchema, TableCreateDto dto, List<SimplePropertyDto> schemaProperties) {
         String targetTable = dto.getName();
         Integer crsCode = crsHandler.extractCrsNumber(dto.getCrs());
         String target = targetSchema + "." + targetTable;
         String extensionTable = targetTable + EXTENSION_POSTFIX;
 
-        String properties = "";
-        for (SimplePropertyDto property: schemaDto.getProperties()) {
-            properties = properties + "," + generatePropertySqlString(property);
+        //added additional fields to properties
+        addAdditionalFields(schemaProperties, dto.getAdditionalFields());
+
+        Optional<SimplePropertyDto> ruleidOpt = schemaProperties
+                .stream()
+                .filter(simplePropertyDto -> simplePropertyDto.getName().equalsIgnoreCase("ruleid"))
+                .findFirst();
+
+        StringBuilder propertiesBuilder = new StringBuilder("");
+        if (ruleidOpt.isEmpty()) {
+            propertiesBuilder.append(" ,ruleid character varying(255)");
+        }
+
+        for (SimplePropertyDto property: schemaProperties) {
+            propertiesBuilder.append(",").append(generatePropertySqlString(property));
         }
 
         String createTableSql = String.format(
@@ -47,7 +68,7 @@ public class TablesManager implements ResourceManager {
                         "CONSTRAINT %4$s_pkey PRIMARY KEY (%2$s);",
                 target,
                 PRIMARY_KEY,
-                properties,
+                propertiesBuilder,
                 targetTable);
 
         // Add GEOMETRY CONSTRAINT
@@ -64,7 +85,7 @@ public class TablesManager implements ResourceManager {
 
     @Override
     public void create(ResourceQualifier rIdentifier) {
-
+    //Not implemented yet
     }
 
     /**
@@ -93,9 +114,13 @@ public class TablesManager implements ResourceManager {
     @Transactional
     public void delete(ResourceQualifier rQualifier) {
         log.debug("Try delete: {}", rQualifier);
+        String extensionTable = rQualifier.getTable() + EXTENSION_POSTFIX;
 
-        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.\"%s\"",
-                                           rQualifier.getSchema(), rQualifier.getTable()));
+        //drop with extension table
+        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %1$s.\"%2$s\",%1$s.\"%3$s\" ",
+                                           rQualifier.getSchema(), rQualifier.getTable(), extensionTable));
+
+        schemasAndTablesRepository.deleteByIdentifier(rQualifier.getTable());
     }
 
     private static boolean isGeometryExist(String createTableSql) {
@@ -163,5 +188,24 @@ public class TablesManager implements ResourceManager {
                 "   class_id integer);" +
                 "ALTER TABLE ONLY " + targetSchema + "." + extensionTable +
                 "   ADD CONSTRAINT " + extensionTable + "_pkey PRIMARY KEY (object_id);";
+    }
+
+    private void addAdditionalFields(List<SimplePropertyDto> schemaProperties,
+                                     List<AdditionalFieldDto> additionalFields) {
+        if (!additionalFields.isEmpty()) {
+            additionalFields.forEach(additionalField -> {
+                SimplePropertyDto additionalProperty = new SimplePropertyDto();
+                additionalProperty.setName(additionalField.getName());
+                try {
+                    additionalProperty.setValueType(ValueType.valueOf(additionalField.getType().toUpperCase()));
+                } catch (IllegalArgumentException ex) {
+                    log.warn("Unknown type : {} . Additional field type cannot be cast. {}",
+                             additionalField.getType(),
+                             ex.getMessage());
+                    additionalProperty.setValueType(ValueType.STRING);
+                }
+                schemaProperties.add(additionalProperty);
+            });
+        }
     }
 }

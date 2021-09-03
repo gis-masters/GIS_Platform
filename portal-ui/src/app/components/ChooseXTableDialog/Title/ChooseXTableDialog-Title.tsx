@@ -10,13 +10,16 @@ interface ChooseXTableDialogTitleProps {
   title: string;
   items: unknown[];
   selectedItems: unknown[];
+  single: boolean;
 }
 
-export const ChooseXTableDialogTitle: FC<ChooseXTableDialogTitleProps> = ({ title, items, selectedItems }) => (
+export const ChooseXTableDialogTitle: FC<ChooseXTableDialogTitleProps> = ({ title, items, selectedItems, single }) => (
   <span className={cnChooseXTableDialogTitle()}>
     {title}{' '}
-    <span className={cnChooseXTableDialogTitleCount()}>
-      (выбрано {selectedItems.length} из {items.length})
-    </span>
+    {!single && (
+      <span className={cnChooseXTableDialogTitleCount()}>
+        (выбрано {selectedItems.length} из {items.length})
+      </span>
+    )}
   </span>
 );

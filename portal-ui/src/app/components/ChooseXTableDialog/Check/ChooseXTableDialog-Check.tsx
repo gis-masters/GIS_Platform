@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox, Radio } from '@material-ui/core';
 
 const cnChooseXTableDialogCheck = cn('ChooseXTableDialog', 'Check');
 
@@ -10,12 +10,15 @@ interface ChooseXTableDialogCheckProps<T> {
   item: T;
   selectedItems: T[];
   getRowId: (rowData: T) => string | number;
+  single: boolean;
 }
 
 @observer
 export class ChooseXTableDialogCheck<T> extends Component<ChooseXTableDialogCheckProps<T>> {
   render() {
-    return <Checkbox className={cnChooseXTableDialogCheck()} checked={this.selected} onChange={this.changeHandler} />;
+    const Check = this.props.single ? Radio : Checkbox;
+
+    return <Check className={cnChooseXTableDialogCheck()} checked={this.selected} onChange={this.changeHandler} />;
   }
 
   @computed
@@ -27,9 +30,10 @@ export class ChooseXTableDialogCheck<T> extends Component<ChooseXTableDialogChec
 
   @action.bound
   private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
-    const { item, selectedItems, getRowId } = this.props;
-
-    if (checked) {
+    const { item, selectedItems, getRowId, single } = this.props;
+    if (single && checked) {
+      selectedItems.splice(0, selectedItems.length, item);
+    } else if (checked) {
       selectedItems.push(item);
     } else {
       selectedItems.splice(

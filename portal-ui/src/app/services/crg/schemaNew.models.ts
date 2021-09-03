@@ -185,7 +185,7 @@ export interface PropertySchemaIdentities<T extends Record<string, unknown> = Re
 export interface PropertySchemaBinary<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
   fieldType: FieldType.BINARY;
-  allowedContentTypes?: string[];
+  accept?: string;
   maxSize?: number;
   isDefault?: string[];
   isEmbeded?: boolean;

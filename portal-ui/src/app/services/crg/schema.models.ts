@@ -44,7 +44,10 @@ export interface ContentType {
   attributes: PropertySchema[];
 }
 
-export type PropertyEnumerations = { title: string; value: string | number }[];
+export interface PropertyEnumeration {
+  title: string;
+  value: string | number;
+}
 
 interface BasePropertySchema<T extends Record<string, unknown> = Record<string, unknown>> {
   name: keyof T;
@@ -104,7 +107,7 @@ export interface PropertySchemaChoice<T extends Record<string, unknown> = Record
   extends BasePropertySchema<T> {
   valueType: ValueType.CHOICE;
   isMultiple?: boolean;
-  enumerations?: PropertyEnumerations;
+  enumerations?: PropertyEnumeration[];
   foreignKeyType?: string;
 }
 

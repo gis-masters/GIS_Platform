@@ -2,37 +2,39 @@ Feature: При изменении слоя, осуществляется зап
 
   Background:
     Given Существует организация
-      | ООО НетБыкамИКоровамLayer | 32145688 | Петров | Петр | EMAIL_20 | testPassword9 |
+      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
     Given Авторизируемся владельцем организации
 
   Scenario Outline: Создание слоя заносится в аудит лог
     Given Существует проект "STRING_10"
-    When Пользователь делает запрос на создание слоя проекта
-      | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
-    Then Создан аудит лог о создании слоя
+    Given Существует набор
+    Given Существует таблица
+    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>"
+    And Создан аудит лог о создании слоя
     And Записано корректное тело слоя
     Examples:
-      | title    | dataset  | tableName | styleName | type   | schemaId | dataStoreName | nativeCRS  | dataSourceUri |
-      | STRING_5 | STRING_5 | STRING_5  | STRING_5  | vector | STRING_5 | STRING_5      | EPSG:28406 | STRING_6      |
+      | title                             | styleName    | type   | schemaId     | nativeCRS  | dataSourceUri |
+      | Искусственные дорожные сооружения | transportobj | vector | transportobj | EPSG:28406 | STRING_6      |
+
 
   Scenario Outline: Изменение слоя заносится в аудит лог
     Given Существует проект "STRING_10"
+    Given Существует набор
+    Given Существует таблица
     Given Существует слой проекта
-      | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
     When Владелец делает запрос на обновление полей слоя проекта
-      | <newTitle> | <newDataset> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> |
+      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> |
     And Создан аудит лог об изменении слоя
     And Записано корректное тело слоя
     Examples:
-      | title    | dataset  | tableName | styleName | type   | schemaId | dataStoreName | nativeCRS  | dataSourceUri | newTitle | newDataset | enabled | position | transparency | minZoom | maxZoom | newNativeCrs |
-      | STRING_5 | STRING_5 | STRING_5  | STRING_5  | vector | STRING_5 | STRING_5      | EPSG:28406 | STRING_6      | newTitle | newDataset | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   |
+      | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs |
+      | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   |
 
-  Scenario Outline: Удаление слоя заносится в аудит лог
+  Scenario: Удаление слоя заносится в аудит лог
     Given Существует проект "STRING_10"
+    Given Существует набор
+    Given Существует таблица
     Given Существует слой проекта
-      | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
     When Владелец делает запрос на удаление слоя
     And Создан аудит лог об удалении слоя
-    Examples:
-      | title    | dataset  | tableName | styleName | type   | schemaId | dataStoreName | nativeCRS  | dataSourceUri |
-      | STRING_5 | STRING_5 | STRING_5  | STRING_5  | vector | STRING_5 | STRING_5      | EPSG:28406 | STRING_6      |
+

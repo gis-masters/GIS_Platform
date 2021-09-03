@@ -34,12 +34,12 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
       <Dialog open={open} onClose={onClose}>
         <DialogTitle>Импорт межевого плана из XML</DialogTitle>
         <DialogContent>
-          <DialogContentText>Выберете межевой план в формате XML</DialogContentText>
+          <DialogContentText>Выберите межевой план в формате XML</DialogContentText>
           <Form id='importXmlFileForm' onSubmit={this.submitHandler}>
             <FormField>
               <FormLabel htmlFor='importXmlFileField'>Файл</FormLabel>
               <FormControl>
-                <FileInput fullWidth onChange={this.changeHandler} />
+                <FileInput accept={'text/xml'} fullWidth onChange={this.changeHandler} />
               </FormControl>
             </FormField>
           </Form>

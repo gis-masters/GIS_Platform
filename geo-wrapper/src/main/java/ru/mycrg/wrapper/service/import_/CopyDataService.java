@@ -22,17 +22,17 @@ import static ru.mycrg.wrapper.dao.DaoProperties.*;
  * В случае неудачи откатывает свои изменения и генерит ошибку.
  */
 @Service
-public class InitialImportService extends AbstractImportChainItem {
+public class CopyDataService extends AbstractImportChainItem {
 
-    private static final Logger log = LoggerFactory.getLogger(InitialImportService.class);
+    private static final Logger log = LoggerFactory.getLogger(CopyDataService.class);
 
     private final IMessageBusProducer messageBus;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
 
-    public InitialImportService(BaseDaoService baseDaoService,
-                                IMessageBusProducer messageBus,
-                                DatasourceFactory datasourceFactory) {
+    public CopyDataService(BaseDaoService baseDaoService,
+                           IMessageBusProducer messageBus,
+                           DatasourceFactory datasourceFactory) {
         this.messageBus = messageBus;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
@@ -40,7 +40,6 @@ public class InitialImportService extends AbstractImportChainItem {
 
     /**
      * Первый этап импорта
-     * - Генерирование новой таблицы
      * - Сам импорт: перенос данных из источника в новую таблицу.
      */
     public void handle(ImportRequestEvent event, ImportMqTask importTask) {
@@ -61,8 +60,6 @@ public class InitialImportService extends AbstractImportChainItem {
             if (ruleIdNotExist(mapping)) {
                 mapping.add(ruleIdMapping);
             }
-
-            baseDaoService.createTable(jdbcTemplate, importTask);
 
             mapping.remove(ruleIdMapping);
 

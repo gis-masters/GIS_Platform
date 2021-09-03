@@ -2,7 +2,7 @@ package ru.mycrg.data_service.service.parsers;
 
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.gml.GMLException;
-import org.geotools.referencing.crs.DefaultProjectedCRS;
+import org.geotools.referencing.crs.AbstractCRS;
 import org.geotools.wfs.GML;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.feature.simple.SimpleFeature;
@@ -11,6 +11,7 @@ import org.postgis.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,8 +19,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.parsers.exceptions.GmlParserException;
-import ru.mycrg.data_service.service.parsers.model.Property;
-import ru.mycrg.data_service.service.parsers.model.SchemaProperties;
+import ru.mycrg.data_service.service.parsers.model.FeatureData;
+import ru.mycrg.data_service.service.parsers.model.FeatureObject;
+import ru.mycrg.data_service.service.parsers.model.FeatureProperty;
 import ru.mycrg.data_service.service.parsers.model.SimpleFeatureData;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -32,6 +34,8 @@ import java.io.InputStream;
 import java.util.*;
 
 import static java.util.Objects.nonNull;
+import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
+import static javax.xml.XMLConstants.ACCESS_EXTERNAL_SCHEMA;
 
 @Service
 public class GmlParser {
@@ -45,6 +49,9 @@ public class GmlParser {
     public GmlParser() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
+        factory.setAttribute(ACCESS_EXTERNAL_DTD, "");
+        factory.setAttribute(ACCESS_EXTERNAL_SCHEMA, "");
+
         this.documentBuilder = factory.newDocumentBuilder();
 
         this.gml = new GML(GML.Version.GML3);
@@ -52,7 +59,7 @@ public class GmlParser {
 
     public List<SimpleFeatureData> parseFeatureData(MultipartFile file) throws GMLException {
         try (SimpleFeatureIterator iter = gml.decodeFeatureIterator(file.getInputStream())) {
-            return parseTablesDtoFromFeature(iter);
+            return parseFeatures(iter);
         } catch (IOException | ParserConfigurationException | SAXException e) {
             String msg = ERROR_MESSAGE + e.getMessage();
             log.error(msg);
@@ -61,52 +68,10 @@ public class GmlParser {
         }
     }
 
-    private List<SimpleFeatureData> parseTablesDtoFromFeature(SimpleFeatureIterator iter) {
-        List<SimpleFeatureData> featureDataList = new ArrayList<>();
-        while (iter.hasNext()) {
-            SimpleFeature feature = iter.next();
-            String schemaName = feature.getName().getLocalPart();
-
-            Set<String> geoTypes = new HashSet<>();
-            geoTypes.add("Point");
-            geoTypes.add("Polygon");
-            geoTypes.add("LineString");
-
-            Optional<SimpleFeatureData> existedSchema =
-                    featureDataList.stream()
-                                   .filter(geometryData -> geometryData.getSchemaName().equals(schemaName))
-                                   .findFirst();
-            SimpleFeatureData simpleFeatureData = new SimpleFeatureData();
-            if (existedSchema.isPresent()) {
-                simpleFeatureData = existedSchema.get();
-            } else {
-                simpleFeatureData.setSchemaName(schemaName);
-            }
-
-            if (nonNull(feature.getDefaultGeometry())) {
-                Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
-                DefaultProjectedCRS userData = (DefaultProjectedCRS) defaultGeometry.getUserData();
-                if (nonNull(userData)) {
-                    final Optional<ReferenceIdentifier> oEpsgIdentifier = userData.getIdentifiers().stream().findFirst();
-                    if (oEpsgIdentifier.isPresent()) {
-                        simpleFeatureData.setEpsgCode(oEpsgIdentifier.get().toString());
-                    }
-                }
-            }
-
-            simpleFeatureData.setTypeOfGeometry(geoTypes);
-
-            if (existedSchema.isEmpty()) {
-                featureDataList.add(simpleFeatureData);
-            }
-        }
-
-        return featureDataList;
-    }
-
-    public SchemaProperties parseAttributes(MultipartFile file, SchemaDto schema) throws GMLException {
+    public FeatureData parseAttributes(MultipartFile file, SchemaDto schema, boolean invertCoordinates)
+            throws GMLException {
         final String schemaName = schema.getOriginName();
-        SchemaProperties result = new SchemaProperties();
+        FeatureData result = new FeatureData();
         result.setName(schemaName);
 
         try (InputStream inputStream = file.getInputStream()) {
@@ -114,17 +79,17 @@ public class GmlParser {
             doc.getDocumentElement().normalize();
 
             NodeList nodeList = doc.getElementsByTagNameNS("*", schemaName);
-            List<List<Property>> objects = new ArrayList<>();
+            List<FeatureObject> featureObjects = new ArrayList<>();
 
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Element element = (Element) nodeList.item(i);
-                List<Property> properties = prepareProperties(element, schema);
-                if (!properties.isEmpty()) {
-                    objects.add(properties);
+                FeatureObject featureObject = prepareProperties(element, schema, invertCoordinates);
+                if (!featureObject.getProperties().isEmpty()) {
+                    featureObjects.add(featureObject);
                 }
             }
 
-            result.setObjects(objects);
+            result.setObjects(featureObjects);
         } catch (IOException | SAXException e) {
             String msg = ERROR_MESSAGE + e.getMessage();
             log.error(msg);
@@ -135,21 +100,62 @@ public class GmlParser {
         return result;
     }
 
-    private List<Property> prepareProperties(Element element, SchemaDto schemaDto) {
-        List<Property> propertyList = new ArrayList<>();
+    private List<SimpleFeatureData> parseFeatures(SimpleFeatureIterator featureIterator) {
+        List<SimpleFeatureData> featureDataList = new ArrayList<>();
+        while (featureIterator.hasNext()) {
+            SimpleFeature feature = featureIterator.next();
+            String schemaName = feature.getName().getLocalPart();
+
+            Optional<SimpleFeatureData> existedSchema =
+                    featureDataList.stream()
+                                   .filter(geometryData -> geometryData.getSchemaName().equals(schemaName))
+                                   .findFirst();
+            SimpleFeatureData simpleFeatureData = new SimpleFeatureData();
+            simpleFeatureData.setGeometryTypes("Point", "Polygon", "LineString");
+
+            if (existedSchema.isPresent()) {
+                simpleFeatureData = existedSchema.get();
+            } else {
+                simpleFeatureData.setSchemaName(schemaName);
+            }
+
+            if (nonNull(feature.getDefaultGeometry())) {
+                Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
+                AbstractCRS userData = (AbstractCRS) defaultGeometry.getUserData();
+                if (nonNull(userData)) {
+                    final Optional<ReferenceIdentifier> oEpsgIdentifier = userData.getIdentifiers().stream().findFirst();
+                    if (oEpsgIdentifier.isPresent()) {
+                        simpleFeatureData.setEpsgCode(oEpsgIdentifier.get().toString());
+                    }
+                }
+            }
+
+            if (existedSchema.isEmpty()) {
+                featureDataList.add(simpleFeatureData);
+            }
+        }
+
+        return featureDataList;
+    }
+
+    private FeatureObject prepareProperties(Element element, SchemaDto schemaDto, boolean invertCoordinates) {
+        final FeatureObject featureObject = new FeatureObject();
         try {
             String geometryType = getGeometryType(element);
             if (isSchemaWithAppropriateGeometryType(schemaDto, geometryType)) {
-                List<SimplePropertyDto> properties = schemaDto.getProperties();
-                parsingElementToProperties(properties, element, propertyList);
-                parsingGeometry(element, propertyList);
+                List<FeatureProperty> objectProperties = new ArrayList<>();
+
+                parsingElement(element, objectProperties, schemaDto.getProperties());
+                parsingGeometry(element, objectProperties, invertCoordinates);
+
+                featureObject.setProperties(objectProperties);
             }
         } catch (Exception ex) {
             String msg = String.format("Error while getting attribute in %s. %s", schemaDto.getName(), ex.getMessage());
             log.debug(msg);
         }
 
-        return propertyList;
+        return featureObject;
     }
 
     private boolean isSchemaWithAppropriateGeometryType(SchemaDto schemaDto, String geometryType) {
@@ -175,6 +181,8 @@ public class GmlParser {
                 return "polygon";
             } else if (element.getElementsByTagName("gml:LineString").getLength() > 0) {
                 return "line";
+            } else if (element.getElementsByTagName("gml:Curve").getLength() > 0) {
+                return "line";
             } else {
                 throw new GmlParserException("Undefined geometry type!");
             }
@@ -183,43 +191,53 @@ public class GmlParser {
         }
     }
 
-    private void parsingElementToProperties(List<SimplePropertyDto> properties,
-                                            Element element,
-                                            List<Property> propertyList) {
-        for (SimplePropertyDto property: properties) {
-            Property propertyDto = new Property();
-            String propertyName = property.getName().toUpperCase();
-            propertyDto.setName(propertyName.toLowerCase());
-            NodeList elementsByTagName = element.getElementsByTagNameNS("*", propertyName);
-            propertyDto.setType(property.getValueType());
+    private void parsingElement(Element element,
+                                List<FeatureProperty> objectProperties,
+                                List<SimplePropertyDto> schemaProperties) {
+        for (SimplePropertyDto schemaProperty: schemaProperties) {
+            FeatureProperty property = new FeatureProperty();
+            String propertyName = schemaProperty.getName().toLowerCase();
+            property.setName(propertyName);
+            NodeList elementsByTagName = element.getElementsByTagNameNS("*", propertyName.toUpperCase());
+            if (elementsByTagName.getLength() == 0) {
+                elementsByTagName = element.getElementsByTagNameNS("*", propertyName);
+                if (elementsByTagName.getLength() == 0) {
+                    elementsByTagName = element.getElementsByTagNameNS("*", StringUtils.capitalize(propertyName));
+                }
+            }
+            property.setType(schemaProperty.getValueType());
             if (elementsByTagName.getLength() > 0) {
                 Element propertyElement = (Element) elementsByTagName.item(0);
                 String value = propertyElement.getTextContent();
-                propertyDto.setValue(value);
+                property.setValue(value);
             }
-            propertyList.add(propertyDto);
+            objectProperties.add(property);
         }
     }
 
-    private void parsingGeometry(Element element, List<Property> propertyList) {
+    private void parsingGeometry(Element element, List<FeatureProperty> objectProperties,
+                                 boolean invertCoordinates) {
         if ((element.getElementsByTagName("gml:posList").getLength() > 0)
                 || (element.getElementsByTagName("gml:pos").getLength() > 0)
                 || (element.getElementsByTagName("gml:coordinates").getLength() > 0)) {
-            Property shape = propertyList.stream()
-                                         .filter(property -> "shape".equalsIgnoreCase(property.getName()))
-                                         .findFirst()
-                                         .orElseThrow();
+            FeatureProperty shape = objectProperties
+                    .stream()
+                    .filter(featureProperty -> "shape".equalsIgnoreCase(featureProperty.getName()))
+                    .findFirst()
+                    .orElseThrow();
 
             if (element.getElementsByTagName("gml:MultiCurve").getLength() > 0) {
 
                 Element attributeElement = (Element) element.getElementsByTagName("gml:MultiCurve").item(0);
                 Integer srid = getCrs(attributeElement);
 
-                List<Point> coordinatesFromPosList = getCoordinatesFromPosList(attributeElement);
+                List<Point> coordinatesFromElement = getCoordinatesFromElement(attributeElement, invertCoordinates);
 
-                LineString lineString = new LineString(coordinatesFromPosList.toArray(Point[]::new));
-                lineString.setSrid(srid);
-                PGgeometry pGgeometry = new PGgeometry(lineString);
+                LineString lineString = new LineString(coordinatesFromElement.toArray(Point[]::new));
+                MultiLineString multiLineString = new MultiLineString(List.of(lineString).toArray(LineString[]::new));
+                multiLineString.setSrid(srid);
+
+                PGgeometry pGgeometry = new PGgeometry(multiLineString);
                 shape.setValue(pGgeometry);
             } else if (element.getElementsByTagName("gml:MultiSurface").getLength() > 0) {
 
@@ -231,22 +249,23 @@ public class GmlParser {
                 for (int i = 0; i < allLineStrings.getLength(); i++) {
                     Element linearRingElement = (Element) allLineStrings.item(i);
 
-                    List<Point> coordinateList = getCoordinatesFromPosList(linearRingElement);
+                    List<Point> coordinateList = getCoordinatesFromElement(linearRingElement, invertCoordinates);
 
                     LinearRing linearRing = new LinearRing(coordinateList.toArray(Point[]::new));
                     linearRingList.add(linearRing);
                 }
                 Polygon polygon = new Polygon(linearRingList.toArray(LinearRing[]::new));
-                polygon.setSrid(srid);
+                MultiPolygon multiPolygon = new MultiPolygon(List.of(polygon).toArray(Polygon[]::new));
+                multiPolygon.setSrid(srid);
 
-                PGgeometry pGgeometry = new PGgeometry(polygon);
+                PGgeometry pGgeometry = new PGgeometry(multiPolygon);
                 shape.setValue(pGgeometry);
             } else if (element.getElementsByTagName("gml:MultiPoint").getLength() > 0) {
 
                 Element multiPointElement = (Element) element.getElementsByTagName("gml:MultiPoint").item(0);
                 Integer srid = getCrs(multiPointElement);
 
-                Point point = getCoordinatesFromPosList(multiPointElement).get(0);
+                Point point = getCoordinatesFromElement(multiPointElement, invertCoordinates).get(0);
                 point.setSrid(srid);
 
                 PGgeometry pGgeometry = new PGgeometry(point);
@@ -256,7 +275,7 @@ public class GmlParser {
                 Element attributeElement = (Element) element.getElementsByTagName("gml:Point").item(0);
                 Integer srid = getCrs(attributeElement);
 
-                Point point = getCoordinatesFromElement(attributeElement).get(0);
+                Point point = getCoordinatesFromElement(attributeElement, invertCoordinates).get(0);
                 point.setSrid(srid);
 
                 PGgeometry pGgeometry = new PGgeometry(point);
@@ -264,58 +283,84 @@ public class GmlParser {
             } else if (element.getElementsByTagName("gml:Polygon").getLength() > 0) {
                 Element polygonElement = (Element) element.getElementsByTagName("gml:Polygon").item(0);
                 Integer srid = getCrs(polygonElement);
-                NodeList allLineStrings = polygonElement.getElementsByTagName("gml:LinearRing");
+                NodeList allLinearRing = polygonElement.getElementsByTagName("gml:LinearRing");
                 List<LinearRing> linearRingList = new ArrayList<>();
-                for (int i = 0; i < allLineStrings.getLength(); i++) {
-                    Element linearRingElement = (Element) allLineStrings.item(i);
+                for (int i = 0; i < allLinearRing.getLength(); i++) {
+                    Element linearRingElement = (Element) allLinearRing.item(i);
 
-                    List<Point> coordinateList = getCoordinatesFromElement(linearRingElement);
+                    List<Point> coordinateList = getCoordinatesFromElement(linearRingElement, invertCoordinates);
 
                     LinearRing linearRing = new LinearRing(coordinateList.toArray(Point[]::new));
                     linearRingList.add(linearRing);
                 }
                 Polygon polygon = new Polygon(linearRingList.toArray(LinearRing[]::new));
-                polygon.setSrid(srid);
+                MultiPolygon multiPolygon = new MultiPolygon(List.of(polygon).toArray(Polygon[]::new));
+                multiPolygon.setSrid(srid);
 
-                PGgeometry pGgeometry = new PGgeometry(polygon);
+                PGgeometry pGgeometry = new PGgeometry(multiPolygon);
                 shape.setValue(pGgeometry);
             } else if (element.getElementsByTagName("gml:LineString").getLength() > 0) {
                 Element attributeElement = (Element) element.getElementsByTagName("gml:LineString").item(0);
                 Integer srid = getCrs(attributeElement);
-                List<Point> coordinateList = getCoordinatesFromElement(attributeElement);
+                List<Point> coordinateList = getCoordinatesFromElement(attributeElement, invertCoordinates);
 
                 LineString lineString = new LineString(coordinateList.toArray(Point[]::new));
-                lineString.setSrid(srid);
-                PGgeometry pGgeometry = new PGgeometry(lineString);
+                MultiLineString multiLineString = new MultiLineString(List.of(lineString).toArray(LineString[]::new));
+                multiLineString.setSrid(srid);
+
+                PGgeometry pGgeometry = new PGgeometry(multiLineString);
+                shape.setValue(pGgeometry);
+            } else if (element.getElementsByTagName("gml:Curve").getLength() > 0) {
+                Element attributeElement = (Element) element.getElementsByTagName("gml:Curve").item(0);
+                Integer srid = getCrs(attributeElement);
+                int quantityOfPosList = element.getElementsByTagName("gml:posList").getLength();
+                List<LineString> lineStrings = new ArrayList<>();
+                for (int i = 0; i < quantityOfPosList; i++) {
+                    List<Point> coordinateList = getCoordinatesFromPosList(attributeElement, i, invertCoordinates);
+                    LineString lineString = new LineString(coordinateList.toArray(Point[]::new));
+                    lineStrings.add(lineString);
+                }
+
+                MultiLineString multiLineString = new MultiLineString(lineStrings.toArray(LineString[]::new));
+                multiLineString.setSrid(srid);
+
+                PGgeometry pGgeometry = new PGgeometry(multiLineString);
                 shape.setValue(pGgeometry);
             }
         }
     }
 
-    private List<Point> getCoordinatesFromElement(Element element) {
-        String coordinates = element.getElementsByTagName("gml:coordinates").item(0).getTextContent();
-        String[] points = coordinates.split("\\s+");
+    private List<Point> getCoordinatesFromElement(Element element, boolean invertCoordinates) {
+        NodeList coordinateElement = element.getElementsByTagName("gml:coordinates");
         List<Point> coordinateList = new ArrayList<>();
-        for (String pointCoordinate: points) {
-            String[] pointXY = pointCoordinate.split(",");
-            if (pointXY.length == 2) {
-                double pointX = Double.parseDouble(pointXY[0]);
-                double pointY = Double.parseDouble(pointXY[1]);
-                Point point = new Point(pointX, pointY);
-                coordinateList.add(point);
+        if (coordinateElement.getLength() > 0) {
+            String coordinates = coordinateElement.item(0).getTextContent();
+            String[] points = coordinates.split("\\s+");
+            for (String pointCoordinate: points) {
+                String[] pointXY = pointCoordinate.split(",");
+                if (pointXY.length == 2) {
+                    double pointX = Double.parseDouble(pointXY[1]);
+                    double pointY = Double.parseDouble(pointXY[0]);
+                    Point point = invertCoordinates
+                            ? new Point(pointY, pointX)
+                            : new Point(pointX, pointY);
+                    coordinateList.add(point);
+                }
             }
+        } else {
+            coordinateList = getCoordinatesFromPosList(element, 0, invertCoordinates);
         }
 
         return coordinateList;
     }
 
-    private List<Point> getCoordinatesFromPosList(Element element) {
+    private List<Point> getCoordinatesFromPosList(Element element, int posListNumber, boolean invertCoordinates) {
         String coordinates = "";
 
         if (element.getElementsByTagName("gml:posList").getLength() > 0) {
-            coordinates = element.getElementsByTagName("gml:posList").item(0).getTextContent();
+            coordinates = element.getElementsByTagName("gml:posList").item(posListNumber).getTextContent();
         } else if (element.getElementsByTagName("gml:pos").getLength() > 0) {
-            coordinates = element.getElementsByTagName("gml:pos").item(0).getTextContent();
+            coordinates = element.getElementsByTagName("gml:pos").item(posListNumber).getTextContent();
         }
 
         String[] splitCoordinates = coordinates.split("\\s+");
@@ -323,9 +368,11 @@ public class GmlParser {
         List<Point> coordinateList = new ArrayList<>();
         if (splitCoordinates.length % 2 == 0) {
             for (int i = 0; i < splitCoordinates.length; i = i + 2) {
-                double pointX = Double.parseDouble(splitCoordinates[i]);
-                double pointY = Double.parseDouble(splitCoordinates[i + 1]);
-                Point point = new Point(pointX, pointY);
+                double pointX = Double.parseDouble(splitCoordinates[i + 1]);
+                double pointY = Double.parseDouble(splitCoordinates[i]);
+                Point point = invertCoordinates
+                        ? new Point(pointY, pointX)
+                        : new Point(pointX, pointY);
                 coordinateList.add(point);
             }
         } else {

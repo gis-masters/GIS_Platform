@@ -24,19 +24,19 @@ Feature: Наборы данных (datasets)
     Then Сервер отвечает со статус-кодом 404
 
   Scenario Outline: Создание набора данных с валидными данными (<reason>)
-    When Отправляется запрос на создание набора "<title>" "<description>"
+    When Отправляется запрос на создание набора "<title>" "<description>" "<oktmo>" "<docType>" "<scale>"
     Then Сервер отвечает со статус-кодом 201
     And Сервер передаёт Location созданного набора
     And Текущий набор существует в БД
     And На геосервере создано хранилище с тем же названием
     Examples:
-      | title      | description | reason                     |
-      | STRING_1   | STRING_1    | Граничные нижние значения  |
-      | STRING_250 | STRING_1000 | Граничные верхние значения |
-      | STRING_10  | STRING_0    | Пустое описание допустимо  |
+      | title      | description | oktmo     | docType    | scale  | reason                     |
+      | STRING_1   | STRING_1    | STRING_1  | STRING_1   | 500    | Граничные нижние значения  |
+      | STRING_250 | STRING_1000 | STRING_50 | STRING_100 | 100000 | Граничные верхние значения |
+      | STRING_10  | STRING_0    | STRING_0  | STRING_0   | 500    | Пустое описание допустимо  |
 
   Scenario: Удаление набора данных
-    When Отправляется запрос на создание набора "STRING_5" "STRING_5"
+    When Отправляется запрос на создание набора "STRING_5" "STRING_5" "STRING_5" "STRING_5" "500"
     Then Сервер передаёт Location созданного набора
     And Текущий набор существует в БД
     And На геосервере создано хранилище с тем же названием
@@ -46,7 +46,7 @@ Feature: Наборы данных (datasets)
     And На геосервере отсутствует хранилище
 
   Scenario Outline: Фильтрация по title 'набора данных' должна быть не чувствительна к регистру
-    When Отправляется запрос на создание набора "someDatasetTitle" "STRING_5"
+    When Отправляется запрос на создание набора "someDatasetTitle" "STRING_5" "STRING_0" "STRING_0" "500"
     When Администратор делает запрос на выборку наборов с фильтрацией по полю "<filterKey>" и значению: "<filterValue>"
     Then В выборке присутствуют определённое кол-во элементов: "1"
     Examples:

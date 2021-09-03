@@ -39,27 +39,27 @@ Feature: Проверка API установки прав на наборы да
     And Количество правил соответствует ожидаемому: "<expected>"
     And Общее кол-во страниц соответствует ожидаемому: "<expectedTotalPages>"
     Examples:
-      | pageSize | expected | expectedTotalPages  |
-      | 1        | 1        | 9                   |
-      | 10       | 9        | 1                   |
+      | pageSize | expected | expectedTotalPages |
+      | 1        | 1        | 9                  |
+      | 10       | 9        | 1                  |
 
   Scenario Outline: Пользователь, создающий набор, является владельцем
     Given Существует пользователь
       | STRING_5 | STRING_10 | EMAIL_7 | testtestQ1 |
     Given Авторизируемся пользователем
-    Given Отправляется запрос на создание набора "<title>" "<description>"
+    Given Отправляется запрос на создание набора "<title>" "<description>" "<oktmo>" "<docType>" "<scale>"
     When Пользователь делает запрос на набор данных "<title>"
     Then Сервер отвечает со статус-кодом 200
     Then В ответе пункт "role" имеет значение "OWNER"
     Examples:
-      | title            | description |
-      | Test Fiz dataset | STRING_7    |
+      | title            | description | oktmo    | docType  | scale |
+      | Test Fiz dataset | STRING_7    | STRING_0 | STRING_0 | 10000 |
 
   Scenario: Владелец набора может создавать правила
     Given Существует пользователь
       | STRING_5 | STRING_10 | EMAIL_7 | testtestQ1 |
     Given Авторизируемся пользователем
-    Given Отправляется запрос на создание набора "STRING_6" "STRING_10>"
+    Given Отправляется запрос на создание набора "STRING_6" "STRING_10>" "STRING_5" "STRING_5" "5000"
     When Текущему набору задаётся некое кол-во правил: 1
     Then Сервер отвечает со статус-кодом 201
 
@@ -110,12 +110,12 @@ Feature: Проверка API установки прав на наборы да
     Given Существует пользователь
       | STRING_5 | STRING_10 | EMAIL_7 | testtestQ1 |
     Given Авторизируемся пользователем
-    Given Отправляется запрос на создание набора "<title>" "<description>"
+    Given Отправляется запрос на создание набора "<title>" "<description>" "<oktmo>" "<docType>" "<scale>"
     Given Текущему набору задаётся некое кол-во правил: 7
     When Пользователь запрашивает правила для текущего набора
     Examples:
-      | title            | description |
-      | Test Fiz dataset | STRING_7    |
+      | title            | description | oktmo    | docType  | scale |
+      | Test Fiz dataset | STRING_7    | STRING_0 | STRING_0 | 10000 |
 
   Scenario: На пользователя должны распространяться права группы в которой он состоит
     Given Существуют заданное кол-во наборов: 1

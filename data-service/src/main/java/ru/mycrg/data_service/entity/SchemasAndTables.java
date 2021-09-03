@@ -47,6 +47,18 @@ public class SchemasAndTables {
     private @LastModifiedDate
     LocalDateTime lastModified = LocalDateTime.now();
 
+    @Column
+    private String oktmo;
+
+    @Column(name = "document_type")
+    private String documentType;
+
+    @Column(name = "doc_approve_date")
+    private LocalDateTime docApproveDate;
+
+    @Column(name = "scale")
+    private Integer scale;
+
     public SchemasAndTables() {
         // Required by framework
     }
@@ -55,6 +67,10 @@ public class SchemasAndTables {
         this.identifier = identifier;
         this.title = dto.getTitle();
         this.details = dto.getDetails();
+        this.documentType = dto.getDocType();
+        this.docApproveDate = dto.getDocApproveDate();
+        this.oktmo = dto.getOktmo();
+        this.scale = dto.getScale();
         this.isFolder = resourceType.equals(ResourceType.SCHEMA);
         this.path = path;
 
@@ -153,5 +169,37 @@ public class SchemasAndTables {
 
     public String pathTo() {
         return getPath() + "/" + getId();
+    }
+
+    public String getOktmo() {
+        return oktmo;
+    }
+
+    public void setOktmo(String oktmo) {
+        this.oktmo = oktmo;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
+    }
+
+    public LocalDateTime getDocApproveDate() {
+        return docApproveDate;
+    }
+
+    public void setDocApproveDate(LocalDateTime docApproveDate) {
+        this.docApproveDate = docApproveDate;
+    }
+
+    public Integer getScale() {
+        return scale;
+    }
+
+    public void setScale(Integer scale) {
+        this.scale = scale;
     }
 }

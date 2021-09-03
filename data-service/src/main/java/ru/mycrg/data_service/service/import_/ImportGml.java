@@ -10,21 +10,32 @@ import ru.mycrg.data_service.dao.TablesDao;
 import ru.mycrg.data_service.dao.TablesManager;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.*;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.import_.model.DataTable;
+import ru.mycrg.data_service.service.import_.model.GmlInfo;
+import ru.mycrg.data_service.service.import_.model.ImportLayerReport;
+import ru.mycrg.data_service.service.import_.model.ImportReport;
 import ru.mycrg.data_service.service.parsers.GmlParser;
-import ru.mycrg.data_service.service.parsers.model.*;
+import ru.mycrg.data_service.service.parsers.model.FeatureData;
+import ru.mycrg.data_service.service.parsers.model.FeatureObject;
+import ru.mycrg.data_service.service.parsers.model.FeatureProperty;
+import ru.mycrg.data_service.service.parsers.model.SimpleFeatureData;
 import ru.mycrg.data_service.service.resources.DatasetService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service.service.validation.ValidationService;
+import ru.mycrg.data_service.util.CrgScriptEngine;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
-import static ru.mycrg.data_service.dto.ResourceType.TABLE;
+import static ru.mycrg.data_service_contract.enums.ValueType.STRING;
 
 @Service
 public class ImportGml {
@@ -37,43 +48,73 @@ public class ImportGml {
     private final GmlParser gmlParser;
     private final DatasetService datasetService;
     private final ValidationService validationService;
+    private final CrgScriptEngine scriptEngine;
+    private final TableService tableService;
 
     public ImportGml(TablesDao tablesDao,
                      SchemaService schemaService,
                      TablesManager tablesManager,
                      GmlParser gmlParser,
                      DatasetService datasetService,
-                     ValidationService validationService) {
+                     ValidationService validationService,
+                     CrgScriptEngine scriptEngine,
+                     TableService tableService) {
         this.tablesDao = tablesDao;
         this.schemaService = schemaService;
         this.tablesManager = tablesManager;
         this.gmlParser = gmlParser;
         this.datasetService = datasetService;
         this.validationService = validationService;
+        this.scriptEngine = scriptEngine;
+        this.tableService = tableService;
     }
 
-    public ImportReport doImport(MultipartFile file, String title) {
+    public ImportReport doImport(MultipartFile file, GmlInfo gmlInfo) {
+        ImportReport importResult = new ImportReport();
 
-        DatasetModel createdDataset = datasetService.create(new ResourceCreateDto(title));
+        LocalDate dateTime = LocalDate.parse(gmlInfo.getDocDateApprove());
+
+        ResourceCreateDto resource = new ResourceCreateDto(gmlInfo.getTitle(), gmlInfo.getDetails(),
+                                                           gmlInfo.getOktmo(), gmlInfo.getDocumentType(),
+                                                           dateTime.atStartOfDay(), gmlInfo.getScale());
+
+        DatasetModel createdDataset = datasetService.create(resource);
         final String datasetIdentifier = createdDataset.getIdentifier();
-
-        ImportReport importReport = new ImportReport(datasetIdentifier);
+        importResult.setDatasetIdentifier(datasetIdentifier);
 
         try {
             List<SimpleFeatureData> features = gmlParser.parseFeatureData(file);
+            List<DataTable> createdDataTables = new ArrayList<>();
+            List<ImportLayerReport> importLayerReports = new ArrayList<>();
 
-            getExistingSchemas(features, importReport).forEach(schema -> {
+            getExistingSchemas(features, importLayerReports).forEach(schema -> {
                 Optional<String> oEpsg = getEpsg(features, schema);
                 if (oEpsg.isPresent()) {
-                    LayerReport layerReport = importLayer(file, oEpsg.get(), schema, datasetIdentifier);
+                    String epsgCode = oEpsg.get();
+                    ImportLayerReport importLayerReport = importLayer(file, epsgCode, schema, datasetIdentifier,
+                                                                      gmlInfo.isInvertCoordinates());
+                    DataTable dataTable = new DataTable(schema.getTitle(),
+                                                        importLayerReport.getTableIdentifier(),
+                                                        epsgCode,
+                                                        schema.getName());
 
-                    importReport.addLayer(layerReport);
+                    if (importLayerReport.getSuccessCount() > 0 || Objects.nonNull(importLayerReport.getReason())) {
+                        importLayerReports.add(importLayerReport);
+                    }
+                    if (importLayerReport.isSuccess()) {
+                        createdDataTables.add(dataTable);
+                    }
                 }
             });
 
-            return importReport;
+            importResult.setImportLayerReports(importLayerReports);
+            importResult.setCreatedTables(createdDataTables);
+
+            return importResult;
         } catch (GMLException e) {
             throw new DataServiceException(e.getMessage());
+        } catch (Exception e) {
+            throw new DataServiceException("Не удалось выполнить импорт. Причина: " + e.getMessage());
         }
     }
 
@@ -85,8 +126,12 @@ public class ImportGml {
                        .map(SimpleFeatureData::getEpsgCode);
     }
 
-    private LayerReport importLayer(MultipartFile file, String epsgCode, SchemaDto schema, String datasetIdentifier) {
-        LayerReport layerReport = new LayerReport(schema.getName());
+    private ImportLayerReport importLayer(MultipartFile file,
+                                          String epsgCode,
+                                          SchemaDto schema,
+                                          String datasetIdentifier,
+                                          boolean invertCoordinates) {
+        ImportLayerReport importLayerReport = new ImportLayerReport(schema.getName());
 
         try {
             TableCreateDto tableCreateDto = new TableCreateDto(schema.getTitle());
@@ -94,38 +139,54 @@ public class ImportGml {
             tableCreateDto.setSchemaId(schema.getName());
             tableCreateDto.setCrs(epsgCode);
 
-            tablesManager.createTable(datasetIdentifier, tableCreateDto, schema);
+            final ResourceQualifier tableQualifier = new ResourceQualifier(datasetIdentifier, tableCreateDto.getName());
 
-            layerReport.setSuccess(true);
+            tableService.create(tableQualifier, tableCreateDto);
 
-            SchemaProperties objectsBySchema = gmlParser.parseAttributes(file, schema);
-            if (!objectsBySchema.getObjects().isEmpty()) {
-                var createdTable = new ResourceQualifier(datasetIdentifier, tableCreateDto.getName(), TABLE);
+            FeatureData featureData = gmlParser.parseAttributes(file, schema, invertCoordinates);
 
-                final int count = addRecordsToTable(createdTable, objectsBySchema);
-
-                layerReport.setCount(count);
-
-                if (count > 0) {
-                    layerValidation(datasetIdentifier, schema.getName(), tableCreateDto.getName());
-                }
+            if (schema.getCalcFiledFunction() != null) {
+                calculateFieldsByCustomRules(featureData, schema.getCalcFiledFunction());
             }
+
+            if (!featureData.getObjects().isEmpty()) {
+                final int addedRecords = addRecordsToTable(tableQualifier, featureData);
+                if (addedRecords > 0) {
+                    runValidation(datasetIdentifier, schema.getName(), tableCreateDto.getName());
+                }
+
+                importLayerReport.setSuccess(true);
+                importLayerReport.setTableIdentifier(tableCreateDto.getName());
+                importLayerReport.setSuccessCount(addedRecords);
+                importLayerReport.setTableTitle(schema.getTitle());
+            } else {
+                // delete table if no any records
+                tablesManager.delete(tableQualifier);
+            }
+        } catch (BadRequestException e) {
+            String message = String.format("Не удалось создать таблицу для слоя: %s", schema.getTitle());
+            log.error(message, e.getCause());
+
+            importLayerReport.setSuccess(false);
+            importLayerReport.setReason(message);
         } catch (Exception e) {
-            String message = String.format("Таблица %s не была создана. %s", schema.getName(), e.getMessage());
-            log.error(message);
-            layerReport.setSuccess(false);
-            layerReport.setReason(message);
+            String message = String.format("Не удалось выполнить импорт слоя: '%s', по причине: %s",
+                                           schema.getTitle(), e.getMessage());
+            log.error(message, e.getCause());
+
+            importLayerReport.setSuccess(false);
+            importLayerReport.setReason(message);
         }
 
-        return layerReport;
+        return importLayerReport;
     }
 
     private Set<SchemaDto> getExistingSchemas(List<SimpleFeatureData> featureDataList,
-                                              ImportReport importReport) {
+                                              List<ImportLayerReport> importLayerReports) {
         Set<SchemaDto> existedSchemas = new HashSet<>();
 
         for (SimpleFeatureData featureData: featureDataList) {
-            Set<String> geotypePostfixBySchema = featureData.getTypeOfGeometry();
+            Set<String> geometryTypes = featureData.getGeometryTypes();
             String tableName = featureData.getSchemaName();
             Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(tableName.toLowerCase());
 
@@ -135,7 +196,7 @@ public class ImportGml {
                         ? "polygon"
                         : geoTypeOfSchema;
 
-                Optional<String> appropriateGeoTypeForSchema = geotypePostfixBySchema
+                Optional<String> appropriateGeoTypeForSchema = geometryTypes
                         .stream()
                         .filter(Objects::nonNull)
                         .filter(postfix -> postfix.equalsIgnoreCase(geoTypeReplaced)).findFirst();
@@ -143,19 +204,19 @@ public class ImportGml {
                 // if table with appropriate name has another geometry type
                 if (appropriateGeoTypeForSchema.isPresent()) {
                     existedSchemas.add(schemaByName.get());
-                    geotypePostfixBySchema.remove(appropriateGeoTypeForSchema.get());
+                    geometryTypes.remove(appropriateGeoTypeForSchema.get());
                 }
-                existedSchemas.addAll(findSchemasByPostfixAndName(geotypePostfixBySchema, tableName));
+                existedSchemas.addAll(findSchemasByPostfixAndName(geometryTypes, tableName));
             } else {
-                List<SchemaDto> tableByPostfixAndName = findSchemasByPostfixAndName(geotypePostfixBySchema, tableName);
+                List<SchemaDto> tableByPostfixAndName = findSchemasByPostfixAndName(geometryTypes, tableName);
                 if (tableByPostfixAndName.isEmpty()) {
                     String msg = String.format("Схемы для таблицы %s не существует.", tableName);
                     log.error(msg);
 
-                    LayerReport layerReport = new LayerReport(tableName);
-                    layerReport.setSuccess(false);
-                    layerReport.setReason(msg);
-                    importReport.addLayer(layerReport);
+                    ImportLayerReport importLayerReport = new ImportLayerReport(tableName);
+                    importLayerReport.setSuccess(false);
+                    importLayerReport.setReason(msg);
+                    importLayerReports.add(importLayerReport);
                 } else {
                     existedSchemas.addAll(tableByPostfixAndName);
                 }
@@ -179,8 +240,8 @@ public class ImportGml {
                        .collect(Collectors.toList());
     }
 
-    private int addRecordsToTable(ResourceQualifier tableQualifier, SchemaProperties propertiesBySchema) {
-        List<List<Property>> objects = propertiesBySchema.getObjects();
+    private int addRecordsToTable(ResourceQualifier tableQualifier, FeatureData propertiesBySchema) {
+        List<FeatureObject> objects = propertiesBySchema.getObjects();
 
         Map<String, Object>[] objectList = preparePropsToDB(objects);
 
@@ -196,22 +257,22 @@ public class ImportGml {
         return 0;
     }
 
-    private Map<String, Object>[] preparePropsToDB(List<List<Property>> objects) {
+    private Map<String, Object>[] preparePropsToDB(List<FeatureObject> objects) {
         Map<String, Object>[] objectMaps = new HashMap[objects.size()];
 
         for (int i = 0, objectsSize = objects.size(); i < objectsSize; i++) {
-            List<Property> props = objects.get(i);
-            Map<String, Object> propertiesForDB = new HashMap<>();
+            final FeatureObject featureObject = objects.get(i);
 
-            for (Property property: props) {
-                ValueType type = property.getType();
+            Map<String, Object> propertiesForDB = new HashMap<>();
+            for (FeatureProperty featureProperty: featureObject.getProperties()) {
+                ValueType type = featureProperty.getType();
                 Object value = null;
-                if (nonNull(property.getValue())) {
+                if (nonNull(featureProperty.getValue())) {
                     value = type.equals(ValueType.GEOMETRY)
-                            ? property.getValue()
-                            : convertToNecessaryType(property.getValue().toString(), type);
+                            ? featureProperty.getValue()
+                            : convertToNecessaryType(featureProperty.getValue().toString(), type);
                 }
-                propertiesForDB.put(property.getName().toLowerCase(), value);
+                propertiesForDB.put(featureProperty.getName().toLowerCase(), value);
             }
 
             objectMaps[i] = propertiesForDB;
@@ -231,7 +292,7 @@ public class ImportGml {
         }
     }
 
-    private void layerValidation(String datasetIdentifier, String schemaId, String tableName) {
+    private void runValidation(String datasetIdentifier, String schemaId, String tableName) {
         ExportResourceModel resourceModel = new ExportResourceModel();
         resourceModel.setDataset(datasetIdentifier);
         resourceModel.setSchemaId(schemaId);
@@ -243,5 +304,19 @@ public class ImportGml {
         ValidationRequestDto dto = new ValidationRequestDto();
         dto.setResources(exportResourceModels);
         validationService.validate(dto);
+    }
+
+    private void calculateFieldsByCustomRules(FeatureData featureData, String calcFieldFunction) {
+        featureData.getObjects().forEach(featureObject -> {
+            Map<String, Object> props = new HashMap<>();
+            final List<FeatureProperty> properties = featureObject.getProperties();
+            properties.forEach(featureProperty -> props.put(featureProperty.getName(),
+                                                            featureProperty.getValue()));
+
+            var calculatedFields = (Map<String, Object>) scriptEngine.invokeFunction(props, calcFieldFunction);
+            calculatedFields.forEach((key, value) -> {
+                properties.add(new FeatureProperty(key, value, STRING));
+            });
+        });
     }
 }

@@ -17,17 +17,16 @@ import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 
 /**
  * <p>Сервис обрабатывающий событие импорта.</p>
- *
+ * <p>
  * Формирует/инициирует последовательность действий необходимых для импорта:
  * <ul>
  *     <li>Копирование данных из чернового источника</li>
  *     <li>Постобработка данных</li>
- *     <li>Создание фичи на геосервере</li>
- *     <li>Присоединение стиля к слою</li>
+ *     <li>Запрос к gis-service на создание слоя</li>
  *     <li>Запрос к data-service на создание таблицы</li>
  *     <li>Очистка данных чернового импорта.<br>
  *         В случае, если импорт не удался, очистка не выполняется, чтобы можно было проанализировать ситауцию<br>
-*      </li>
+ *      </li>
  * </ul>
  */
 @Service
@@ -38,27 +37,23 @@ public class ImportRequestHandler implements IEventHandler {
     private final IMessageBusProducer messageBus;
     private final CrgChainable<ImportMqTask> initialImportService;
 
-    public ImportRequestHandler(InitialImportService initialImporter,
+    public ImportRequestHandler(DataServiceHandler dataServiceHandler,
                                 GeometryHandler geometryHandler,
-                                DataServiceHandler dataServiceHandler,
+                                CopyDataService copyDataService,
                                 GisServiceLayerHandler gisServiceLayerHandler,
                                 PostImportService postImporter,
-                                GeoserverFeatureTypeHandler featureTypeHandler,
-                                GeoserverStyleHandler styleHandler,
                                 ScratchImportCleaner importCleaner,
                                 IMessageBusProducer messageBus) {
         this.messageBus = messageBus;
-        this.initialImportService = initialImporter;
+        this.initialImportService = dataServiceHandler;
 
-        // Задаем цепочку отбработчиков
+        // Задаем цепочку обработчиков
         this.initialImportService.setHandlers(geometryHandler, null);
-        geometryHandler.setHandlers(dataServiceHandler, initialImportService);
-        dataServiceHandler.setHandlers(gisServiceLayerHandler, geometryHandler);
-        gisServiceLayerHandler.setHandlers(postImporter, dataServiceHandler);
-        postImporter.setHandlers(featureTypeHandler, gisServiceLayerHandler);
-        featureTypeHandler.setHandlers(styleHandler, postImporter);
-        styleHandler.setHandlers(importCleaner, featureTypeHandler);
-        importCleaner.setHandlers(null, styleHandler);
+        geometryHandler.setHandlers(copyDataService, initialImportService);
+        copyDataService.setHandlers(gisServiceLayerHandler, geometryHandler);
+        gisServiceLayerHandler.setHandlers(postImporter, geometryHandler);
+        postImporter.setHandlers(importCleaner, gisServiceLayerHandler);
+        importCleaner.setHandlers(null, postImporter);
     }
 
     @Override

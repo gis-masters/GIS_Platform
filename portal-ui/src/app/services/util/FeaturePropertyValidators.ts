@@ -1,10 +1,10 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { isEmpty } from 'validate.js';
-import { Toast } from '../../components/Toast/Toast';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
+import { Toast } from '../../components/Toast/Toast';
 import {
   PropertySchema,
-  PropertyEnumerations,
+  PropertyEnumeration,
   ValueType,
   PropertySchemaChoice,
   PropertySchemaStringText,
@@ -237,7 +237,7 @@ export class FeaturePropertyValidators {
     }
   }
 
-  private static isEnumIncludeValue(enumerations: PropertyEnumerations, currentValue: unknown): boolean {
+  private static isEnumIncludeValue(enumerations: PropertyEnumeration[], currentValue: unknown): boolean {
     if (!currentValue) {
       return false;
     }

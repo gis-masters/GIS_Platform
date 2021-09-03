@@ -50,6 +50,7 @@ export class BaseEdit implements OnDestroy {
     if (!this.featureDescription) {
       return;
     }
+
     FeaturePropertyValidators.validateCustomRules(
       featureProperties,
       this.featureDescription.customRuleFunction,

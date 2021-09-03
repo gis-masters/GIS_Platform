@@ -30,9 +30,9 @@ public class TablesController {
     @PostMapping("/datasets/{datasetId}/tables")
     public ResponseEntity<IResourceModel> createTable(@PathVariable String datasetId,
                                                       @Valid @RequestBody TableCreateDto dto) {
-        ResourceQualifier rQualifier = new ResourceQualifier(datasetId, dto.getName());
+        ResourceQualifier tQualifier = new ResourceQualifier(datasetId, dto.getName());
 
-        IResourceModel resourceModel = tableService.create(rQualifier, dto);
+        IResourceModel resourceModel = tableService.create(tQualifier, dto);
 
         return new ResponseEntity<>(resourceModel, CREATED);
     }

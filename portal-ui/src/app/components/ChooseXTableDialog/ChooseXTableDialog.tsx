@@ -31,6 +31,7 @@ interface ChooseXTableDialogProps<T> {
   onClose(): void;
   onSelect(items: T[]): void;
   getRowId: (rowData: T) => string | number;
+  single?: boolean;
 }
 
 @observer
@@ -46,12 +47,9 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
   }
 
   componentDidUpdate(prevProps: ChooseXTableDialogProps<T>) {
-    const { open, items, selectedItems = [], getRowId } = this.props;
+    const { open, items, selectedItems = [] } = this.props;
 
-    if (
-      (open && prevProps.items.length !== items.length) ||
-      prevProps.items.every((item, i) => getRowId(item) === getRowId(items[i]))
-    ) {
+    if (this.isItemsCanBeViewed(prevProps)) {
       this.setViewed([...items]);
     }
 
@@ -61,14 +59,16 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
   }
 
   render() {
-    const { title, open, items, defaultSort, secondarySortField, onClose, actionLabel } = this.props;
+    const { title, open, items, defaultSort, secondarySortField, onClose, actionLabel, single } = this.props;
 
     return (
       <Dialog PaperProps={{ className: cnChooseXTableDialog() }} open={open} onClose={onClose}>
         <DialogContent>
           <XTable<T>
             className={cnChooseXTableDialog('Table')}
-            title={<ChooseXTableDialogTitle title={title} items={items} selectedItems={this.selected} />}
+            title={
+              <ChooseXTableDialogTitle title={title} items={items} selectedItems={this.selected} single={single} />
+            }
             data={items}
             cols={this.cols}
             defaultSort={defaultSort}
@@ -79,7 +79,7 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
         </DialogContent>
         <DialogActions>
           {this.changed && (
-            <Button onClick={this.select} color='primary'>
+            <Button disabled={!this.selected.length} onClick={this.select} color='primary'>
               {actionLabel || 'Выбрать'}
             </Button>
           )}
@@ -93,13 +93,13 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
   get cols(): XTableColumn<T>[] {
     return [
       {
-        title: (
+        title: !this.props.single ? (
           <Checkbox
             indeterminate={this.selected.length > 0 && !this.allSelected}
             checked={this.allSelected}
             onChange={this.selectAll}
           />
-        ),
+        ) : null,
         cellProps: { padding: 'checkbox' },
         CellContent: this.renderCheckbox
       },
@@ -136,11 +136,27 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
 
   @boundMethod
   private renderCheckbox({ rowData }: { rowData: T }): ReactElement {
-    return <ChooseXTableDialogCheck item={rowData} selectedItems={this.selected} getRowId={this.props.getRowId} />;
+    return (
+      <ChooseXTableDialogCheck
+        single={this.props.single}
+        item={rowData}
+        selectedItems={this.selected}
+        getRowId={this.props.getRowId}
+      />
+    );
   }
 
   @boundMethod
   private selectAll() {
     this.setSelected(this.allSelected ? [] : [...this.viewed]);
+  }
+
+  private isItemsCanBeViewed(prevProps: ChooseXTableDialogProps<T>) {
+    const { open, items, getRowId } = this.props;
+
+    return (
+      (open && prevProps.items.length !== items.length) ||
+      prevProps.items.every((item, i) => getRowId(item) === getRowId(items[i]))
+    );
   }
 }

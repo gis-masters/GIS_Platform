@@ -12,8 +12,10 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.import_.ImportGml;
 import ru.mycrg.data_service.service.import_.ImportService;
 import ru.mycrg.data_service.service.import_.Importer;
-import ru.mycrg.data_service.service.parsers.model.ImportReport;
+import ru.mycrg.data_service.service.import_.model.GmlInfo;
+import ru.mycrg.data_service.service.import_.model.ImportReport;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.validators.ImportParametersValidator;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -25,8 +27,6 @@ import static org.springframework.http.HttpStatus.OK;
 public class ImportController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(ImportController.class);
-    private static final String APPLICATION_GML_XML = "application/gml+xml";
-    private static final String GML_XML = "gml+xml";
 
     private final List<Importer> importers;
     private final ImportService importService;
@@ -49,10 +49,10 @@ public class ImportController extends BaseController {
     }
 
     @PostMapping("/import/file")
-    public ResponseEntity<Long> importXmlFileToDb(@RequestParam String datasetId,
-                                                  @RequestParam String tableId,
-                                                  @RequestParam("file") MultipartFile file,
-                                                  @RequestParam String importType) {
+    public ResponseEntity<Long> importXml(@RequestParam String datasetId,
+                                          @RequestParam String tableId,
+                                          @RequestParam("file") MultipartFile file,
+                                          @RequestParam String importType) {
         Importer importMp = importers.stream()
                                      .filter(importer -> importType.equalsIgnoreCase(importer.getType()))
                                      .findFirst()
@@ -78,30 +78,19 @@ public class ImportController extends BaseController {
     }
 
     @PostMapping("/import/file/gml")
-    public ResponseEntity<ImportReport> importGmlFileToDb(@RequestParam("file") MultipartFile file,
-                                                          @RequestParam("title") String title) {
+    public ResponseEntity<ImportReport> importGml(@RequestParam("gmlFile") MultipartFile file,
+                                                  @RequestParam("oktmo") String oktmo,
+                                                  @RequestParam("documentType") String documentType,
+                                                  @RequestParam(value = "details", required = false) String details,
+                                                  @RequestParam("docDateApprove") String docDateApprove,
+                                                  @RequestParam("scale") Integer scale,
+                                                  @RequestParam("title") String title,
+                                                  @RequestParam(value = "invertCoordinates", required = false,
+                                                                defaultValue = "false") boolean invertCoordinates) {
+        GmlInfo doc = new GmlInfo(title, documentType, details, docDateApprove, scale, oktmo, invertCoordinates);
+        ImportParametersValidator.throwIfNotValid(doc, file);
 
-        if (file.isEmpty()) {
-            String msg = "Загружаемый файл пустой";
-            log.warn(msg);
-
-            throw new BadRequestException(msg);
-        } else if (!APPLICATION_GML_XML.equals(file.getContentType())
-                && !GML_XML.equals(file.getContentType())) {
-            String msg = "Тип файла не GML";
-            log.warn(msg);
-
-            throw new BadRequestException(msg);
-        }
-
-        if (title.length() > 250) {
-            String msg = "Поле title не должно превышать 250 символов";
-            log.warn(msg);
-
-            throw new BadRequestException(msg);
-        }
-
-        ImportReport importReport = importGml.doImport(file, title);
+        ImportReport importReport = importGml.doImport(file, doc);
 
         return ResponseEntity.status(OK).body(importReport);
     }

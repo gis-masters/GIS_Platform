@@ -8,7 +8,6 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
-import ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions;
 
 import java.util.Map;
 
@@ -81,17 +80,24 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         get("/" + datasetName + "/tables/" + tableName);
     }
 
-    @When("Отправляется запрос на создание набора {string} {string}")
-    public void createDatasetRequest(String titleKey, String descriptionKey) {
+    @When("Отправляется запрос на создание набора {string} {string} {string} {string} {string}")
+    public void createDatasetRequest(String titleKey,
+                                     String descriptionKey,
+                                     String oktmoKey,
+                                     String docTypeKey,
+                                     String scale) {
         currentDatasetDto = new DatasetCreateDto(generateString(titleKey),
-                                                 generateString(descriptionKey));
+                                                 generateString(descriptionKey),
+                                                 generateString(oktmoKey),
+                                                 generateString(docTypeKey),
+                                                 Integer.parseInt(scale));
 
         createDataset(currentDatasetDto);
     }
 
-    @When("Существует набор {string}")
-    public void initDataset(String titleKey) {
-        currentDatasetDto = new DatasetCreateDto(generateString(titleKey));
+    @When("Существует набор")
+    public void initDataset() {
+        currentDatasetDto = new DatasetCreateDto(generateString("STRING_10"));
 
         createDataset(currentDatasetDto);
     }
@@ -137,7 +143,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     @Given("Существуют заданное кол-во наборов: {int}")
     public void initializeDatasets(int count) {
         for (int i = 0; i < count; i++) {
-            createDatasetRequest("STRING_5", "STRING_10");
+            createDatasetRequest("STRING_5", "STRING_10", "", "", "500");
         }
     }
 
@@ -168,7 +174,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Импортируем архив с валидным Shape-файлом в проект")
     public void importValidShape() throws InterruptedException {
-        initDataset("STRING_10");
+        initDataset();
         importSteps.initImport();
         importSteps.sendArchive();
         importSteps.runImport();

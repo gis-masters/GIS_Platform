@@ -7,42 +7,41 @@ Feature: Обновление слоя проектов
 
   Scenario Outline: Обновление слоя проекта администратором организации
     Given Существует проект "STRING_10"
+    Given Существует набор
+    Given Существует таблица
     Given Существует слой проекта
-      | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
     When Авторизируемся владельцем организации
     When Владелец делает запрос на обновление полей слоя проекта
-      | <newTitle> | <newDataset> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> |
+      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> |
     Then Сервер отвечает со статус-кодом 204
     When Пользователь делает запрос на текущий слой
     Then Обновленные поля слоя совпадают с переданными
     Examples:
-      | title    | dataset  | tableName | styleName | type   | schemaId | dataStoreName | nativeCRS  | dataSourceUri | newTitle | newDataset | enabled | position | transparency | minZoom | maxZoom | newNativeCrs |
-      | STRING_5 | STRING_5 | STRING_5  | STRING_5  | vector | STRING_5 | STRING_5      | EPSG:28406 | STRING_6      | newTitle | newDataset | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   |
+      | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs |
+      | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   |
 
-  Scenario Outline: Добавление слою проекта папки-родителя администратором организации
+  Scenario: Добавление слою проекта папки-родителя администратором организации
     Given Существует проект "STRING_10"
     Given Существует группа слоев проекта "STRING_10", "NUMBER_2"
+    Given Существует набор
+    Given Существует таблица
     Given Существует слой проекта
-      | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
     When Авторизируемся владельцем организации
     When Пользователь делает запрос на добавление слоя в папку-родитель
     Then Сервер отвечает со статус-кодом 204
     When Пользователь делает запрос на текущий слой
     Then В полях слоя есть упоминание папки родителя
-    Examples:
-      | title    | dataset  | tableName | styleName | type   | schemaId | dataStoreName | nativeCRS  | dataSourceUri |
-      | STRING_5 | STRING_5 | STRING_5  | STRING_5  | vector | STRING_5 | STRING_5      | EPSG:28406 | STRING_6      |
 
   Scenario Outline: Обновление слоёв проекта недоступно пользователям с уровнем доступа "VIEWER"
     Given Существует проект "STRING_10"
-    Given Существует слой проекта
-      | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
+    Given Существует набор
+    Given Существует таблица
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
     When Администратор даёт доступ: "VIEWER" для текущего пользователя на текущий проект
     When Пользователь делает запрос на обновление полей слоя проекта
-      | <newTitle> | <newDataset> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> |
+      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> |
     Then Сервер отвечает со статус-кодом 403
     Examples:
-      | userName  | userSurname | userEmail | userPassword | title    | dataset  | tableName | styleName | type   | schemaId | dataStoreName | nativeCRS  | dataSourceUri | newTitle | newDataset | enabled | position | transparency | minZoom | maxZoom | newNativeCrs |
-      | STRING_10 | STRING_10   | EMAIL_10  | testtestQ1   | STRING_5 | STRING_5 | STRING_5  | STRING_5  | vector | STRING_5 | STRING_5      | EPSG:28406 | STRING_6      | newTitle | newDataset | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   |
+      | userName  | userSurname | userEmail | userPassword | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs |
+      | STRING_10 | STRING_10   | EMAIL_10  | testtestQ1   | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   |

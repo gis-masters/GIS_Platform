@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { FileInput } from '../../../FileInput/FileInput';
-import { FieldType } from '../../../../services/crg/schemaNew.models';
+import { FieldType, PropertySchemaBinary } from '../../../../services/crg/schemaNew.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormError } from '../../Error/Form-Error';
@@ -12,11 +12,12 @@ import { FormError } from '../../Error/Form-Error';
 @observer
 class FormControlTypeBinary extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, error } = this.props;
+    const { htmlId, className, property, error } = this.props;
+    const { accept } = property as PropertySchemaBinary;
 
     return (
       <div className={cnFormControl(null, [className])}>
-        <FileInput id={htmlId} onChange={this.handleChange} />
+        <FileInput accept={accept} id={htmlId} onChange={this.handleChange} />
         {error && <FormError>{error}</FormError>}
       </div>
     );

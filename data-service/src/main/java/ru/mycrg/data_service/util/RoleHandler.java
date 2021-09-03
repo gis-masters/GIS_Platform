@@ -10,11 +10,18 @@ import java.util.Optional;
 
 public class RoleHandler {
 
-    private static final Map<String, Long> roles = new HashMap<>() {{
-        put(Roles.VIEWER.name(), 10L);
-        put(Roles.CONTRIBUTOR.name(), 20L);
-        put(Roles.OWNER.name(), 30L);
-    }};
+    private static final Map<String, Long> roles;
+
+    static {
+        roles = new HashMap<>();
+        roles.put(Roles.VIEWER.name(), 10L);
+        roles.put(Roles.CONTRIBUTOR.name(), 20L);
+        roles.put(Roles.OWNER.name(), 30L);
+    }
+
+    private RoleHandler() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static Optional<String> defineRoleById(Long id) {
         for (Map.Entry<String, Long> entry: roles.entrySet()) {

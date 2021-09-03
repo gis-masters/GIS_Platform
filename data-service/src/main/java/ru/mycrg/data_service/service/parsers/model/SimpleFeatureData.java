@@ -1,12 +1,14 @@
 package ru.mycrg.data_service.service.parsers.model;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 public class SimpleFeatureData {
 
     String schemaName;
     String epsgCode;
-    Set<String> typeOfGeometry;
+    Set<String> geometryTypes = new HashSet<>();
 
     public String getSchemaName() {
         return schemaName;
@@ -24,11 +26,11 @@ public class SimpleFeatureData {
         this.epsgCode = epsgCode;
     }
 
-    public Set<String> getTypeOfGeometry() {
-        return typeOfGeometry;
+    public Set<String> getGeometryTypes() {
+        return geometryTypes;
     }
 
-    public void setTypeOfGeometry(Set<String> typeOfGeometry) {
-        this.typeOfGeometry = typeOfGeometry;
+    public void setGeometryTypes(String... geometryTypes) {
+        this.geometryTypes.addAll(Arrays.asList(geometryTypes));
     }
 }

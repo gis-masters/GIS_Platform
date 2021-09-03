@@ -2,13 +2,21 @@ package ru.mycrg.data_service.service.parsers.model;
 
 import ru.mycrg.data_service_contract.enums.ValueType;
 
-public class Property {
+public class FeatureProperty {
 
     private String name;
-
     private Object value;
-
     private ValueType type;
+
+    public FeatureProperty() {
+        // Required
+    }
+
+    public FeatureProperty(String name, Object value, ValueType type) {
+        this.name = name;
+        this.value = value;
+        this.type = type;
+    }
 
     public String getName() {
         return name;

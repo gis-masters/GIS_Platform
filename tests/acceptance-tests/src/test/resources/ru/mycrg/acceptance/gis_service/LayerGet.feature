@@ -17,12 +17,10 @@ Feature: Выборка слоев проекта
       | orgName         | orgPhone   | adminName | adminSurname | adminEmail | adminPassword |
       | ООО БыкиИКоровы | 1234567890 | Иванов    | Иван         | EMAIL_20   | testPassword1 |
 
-  Scenario Outline: Проверка представления созданного слоя проекта
+  Scenario: Проверка представления созданного слоя проекта
     Given Существует проект "STRING_10"
+    Given Существует набор
+    Given Существует таблица
     Given Существует слой проекта
-      | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
     When Пользователь делает запрос на текущий слой
     And Представление слоя проекта корректно
-    Examples:
-      | title    | dataset  | tableName | styleName | type   | schemaId | dataStoreName | nativeCRS  | dataSourceUri |
-      | STRING_5 | STRING_5 | STRING_5     | STRING_5  | vector | STRING_5 | STRING_5      | EPSG:28406 | STRING_6      |

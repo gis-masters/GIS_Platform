@@ -20,6 +20,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
+import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
+import static ru.mycrg.acceptance.data_service.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
@@ -29,6 +31,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     public static LayerCreateDto layerCreateDto;
     public static LayerUpdateDto layerUpdateDto;
     public static Integer layerId;
+    public static String layerTitle = "Искусственные дорожные сооружения";
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -52,15 +55,20 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerId = id;
     }
 
-    @When("Пользователь делает запрос на создание слоя проекта")
-    public void createLayer(DataTable dataTable) {
-        List<String> data = dataTable.asList();
+    @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} {string}")
+    public void createLayer(String title, String styleName, String type, String schemaId, String epsg, String dataSourceUri) {
 
-        layerCreateDto = new LayerCreateDto(generateString(data.get(0)), generateString(data.get(1)),
-                                            generateString(data.get(2)), generateString(data.get(3)),
-                                            generateString(data.get(4)), generateString(data.get(5)),
-                                            generateString(data.get(6)), generateString(data.get(7)),
-                                            generateString(data.get(8)));
+        String dataStoreName = "scratch_database_" + orgId;
+
+        layerCreateDto = new LayerCreateDto(generateString(title),
+                                            currentDatasetName,
+                                            currentTableName,
+                                            generateString(styleName),
+                                            type,
+                                            generateString(schemaId),
+                                            generateString(dataStoreName),
+                                            generateString(epsg),
+                                            generateString(dataSourceUri));
 
         super.createEntity(layerCreateDto);
     }
@@ -105,15 +113,18 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует слой проекта")
-    public void initLayer(DataTable dataTable) {
-        List<String> data = dataTable.asList();
-        String title = data.get(0);
-        if (isLayerExistInPool(title)) {
-            makeExactLayerAsCurrent(title);
+    public void initLayer() {
+        if (isLayerExistInPool(layerTitle)) {
+            makeExactLayerAsCurrent(layerTitle);
         } else if (!layerPool.isEmpty()) {
             makeLastAvailableLayerAsCurrent();
         } else {
-            createLayer(dataTable);
+            createLayer(layerTitle,
+                        "transportobj",
+                        "vector",
+                        "transportobj",
+                        "EPSG:28406",
+                        generateString("STRING_6"));
             assertEquals(SC_CREATED, response.getStatusCode());
             extractAndSetLayerIdFromBody();
         }
@@ -278,13 +289,13 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     private void updateLayer(DataTable dataTable) {
         List<String> data = dataTable.asList();
         layerUpdateDto = new LayerUpdateDto(generateString(data.get(0)),
-                                            generateString(data.get(1)),
-                                            Boolean.parseBoolean(generateString(data.get(2))),
+                                            currentDatasetName,
+                                            Boolean.parseBoolean(generateString(data.get(1))),
+                                            Integer.parseInt(generateString(data.get(2))),
                                             Integer.parseInt(generateString(data.get(3))),
                                             Integer.parseInt(generateString(data.get(4))),
                                             Integer.parseInt(generateString(data.get(5))),
-                                            Integer.parseInt(generateString(data.get(6))),
-                                            generateString(data.get(7)));
+                                            generateString(data.get(6)));
 
         response = getBaseRequestWithCurrentCookie()
                 .given().

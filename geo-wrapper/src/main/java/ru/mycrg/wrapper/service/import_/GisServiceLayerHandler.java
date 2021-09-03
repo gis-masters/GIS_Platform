@@ -20,7 +20,6 @@ import ru.mycrg.wrapper.exceptions.ImportException;
 
 import java.net.URL;
 
-import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultStoreName;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_ERROR;
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 
@@ -45,20 +44,19 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
         SchemaDto schemaDto = importTask.getFeatureDescription();
         String layerName = importTask.getLayerName();
         String styleName = importTask.getStyleName();
-        String title = schemaDto.getTitle() == null ? layerName: schemaDto.getTitle();
+        String workspaceName = importTask.getWorkspaceName();
+        String title = schemaDto.getTitle() == null ? layerName : schemaDto.getTitle();
         String schemaId = schemaDto.getName();
 
         log.debug("Add layer {} to crg-gis-service", layerName);
 
-        String databaseName = importTask.getTargetResource().getDbName();
         String datasetName = importTask.getTargetResource().getSchemaName();
-        String storeName = getDefaultStoreName(databaseName);
 
         json.put("title", title);
         json.put("dataset", datasetName);
         json.put("tableName", layerName);
         json.put("schemaId", schemaId);
-        json.put("dataStoreName", storeName);
+        json.put("dataStoreName", workspaceName);
         json.put("nativeCRS", "EPSG:" + importTask.getSrs());
         json.put("type", "vector");
         json.put("styleName", styleName);

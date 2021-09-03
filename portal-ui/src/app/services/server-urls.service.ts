@@ -183,6 +183,9 @@ export async function getApiImportUrl(projectId: number): Promise<string> {
 export async function getApiImportXmlUrl(): Promise<string> {
   return `${await getDataUrl()}/import/file`;
 }
+export async function getApiImportGmlUrl(): Promise<string> {
+  return `${await getDataUrl()}/import/file/gml`;
+}
 
 export async function getActualLegendUrl(): Promise<string> {
   return `${await getDataUrl()}/styles/actual`;

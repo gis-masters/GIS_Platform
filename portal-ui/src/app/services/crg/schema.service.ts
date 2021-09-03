@@ -14,7 +14,7 @@ import { FeatureUtil } from '../util/FeatureUtil';
 import { CrgLayer } from './projects.models';
 import {
   FeatureDescription,
-  PropertyEnumerations,
+  PropertyEnumeration,
   PropertySchema,
   PropertySchemaChoice,
   ValueType
@@ -259,7 +259,7 @@ class SchemaService {
     return resultObject;
   }
 
-  private getValueTitle(startValue: string | unknown, enumerations: PropertyEnumerations): string {
+  private getValueTitle(startValue: string | unknown, enumerations: PropertyEnumeration[]): string {
     return enumerations.reduce((acc, { value, title }) => {
       return String(startValue) === String(value) ? title : acc;
     }, String(startValue));

@@ -13,11 +13,14 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.PermissionsService;
+import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.queue.request.LayerReferencesDeletionEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
@@ -37,26 +40,26 @@ public class TableService extends SchemasAndTablesBase {
 
     private final TablesManager tablesManager;
     private final IMessageBusProducer messageBus;
-    private final ResourceProtector resourceProtector;
     private final IAuthenticationFacade authenticationFacade;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final PermissionsService permissionsService;
     private final BasePermissionsRepository permissionsRepository;
+    private final SchemaService schemaService;
 
     public TableService(TablesManager tablesManager,
                         IMessageBusProducer messageBus,
-                        ResourceProtector resourceProtector,
                         IAuthenticationFacade authenticationFacade,
                         SchemasAndTablesRepository schemasAndTablesRepository,
                         PermissionsService permissionsService,
-                        BasePermissionsRepository permissionsRepository) {
+                        BasePermissionsRepository permissionsRepository,
+                        SchemaService schemaService) {
         this.messageBus = messageBus;
         this.tablesManager = tablesManager;
-        this.resourceProtector = resourceProtector;
         this.authenticationFacade = authenticationFacade;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
         this.permissionsRepository = permissionsRepository;
+        this.schemaService = schemaService;
     }
 
     public Page<IResourceModel> getPaged(String datasetIdentifier, String title, Pageable pageable) {
@@ -73,7 +76,9 @@ public class TableService extends SchemasAndTablesBase {
                     .map(record -> new TableModel(record.getContent()))
                     .collect(Collectors.toList());
 
-            final long total = permissionsRepository.getTotalByParent(schemasAndTablesQualifier, dataset.pathTo(), title);
+            final long total = permissionsRepository.getTotalByParent(schemasAndTablesQualifier,
+                                                                      dataset.pathTo(),
+                                                                      title);
 
             return new PageImpl<>(allowedResources, pageable, total);
         }
@@ -94,25 +99,30 @@ public class TableService extends SchemasAndTablesBase {
 
     @Transactional
     public IResourceModel create(ResourceQualifier tableIdentifier, TableCreateDto dto) {
-        log.warn("ATTENTION. NOT CREATE REAL TABLE YET. Just write info to the resource description table");
-
         final String datasetId = tableIdentifier.getSchema();
         final SchemasAndTables dataset = schemasAndTablesRepository
                 .findByIdentifier(datasetId)
                 .orElseThrow(() -> new NotFoundException("Not found dataset: " + datasetId));
 
-        // Add record to schemasAndTables table
-        String path = dataset.getPath() + "/" + dataset.getId();
-        final SchemasAndTables table = new SchemasAndTables(TABLE, dto, tableIdentifier.getTable(), path);
-        table.setCrs(dto.getCrs());
-        table.setSchemaId(dto.getSchemaId());
+        Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(dto.getSchemaId());
+        if (schemaByName.isPresent()) {
+            tablesManager.createTable(datasetId, dto, schemaByName.get().getProperties());
 
-        final SchemasAndTables newEntity = schemasAndTablesRepository.save(table);
+            // Add record to schemasAndTables table
+            String path = dataset.getPath() + "/" + dataset.getId();
+            final SchemasAndTables table = new SchemasAndTables(TABLE, dto, tableIdentifier.getTable(), path);
+            table.setCrs(dto.getCrs());
+            table.setSchemaId(dto.getSchemaId());
 
-        // Create OWNER permission
-        permissionsService.addOwnerPermission(schemasAndTablesQualifier, newEntity.getId());
+            final SchemasAndTables newEntity = schemasAndTablesRepository.save(table);
 
-        return new TableModel(newEntity, OWNER.name());
+            // Create OWNER permission
+            permissionsService.addOwnerPermission(schemasAndTablesQualifier, newEntity.getId());
+
+            return new TableModel(newEntity, OWNER.name());
+        } else {
+            throw new BadRequestException("Schema for table doesn't exist!");
+        }
     }
 
     @Transactional

@@ -2,9 +2,15 @@ package ru.mycrg.acceptance.data_service;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
+
+import java.util.Locale;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -32,6 +38,16 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                                              generateString(schemaId));
 
         super.createEntity(currentTableDto);
+    }
+
+    @When("Существует таблица")
+    public void initDataset() {
+        String schemaId = "transportobj";
+        createTablesRequest((schemaId + "_" + generateString("STRING_5")),
+                            "Искусственные дорожные сооружения",
+                            "some description",
+                            "EPSG:28406",
+                            schemaId);
     }
 
     @When("Пользователь делает запрос на текущую таблицу")

@@ -9,9 +9,12 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.import_.ImportMqResponse;
 import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.dto.import_.MatchingPair;
 import ru.mycrg.data_service_contract.queue.request.ImportRequestEvent;
 import ru.mycrg.data_service_contract.queue.response.ImportResponseEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
@@ -19,6 +22,8 @@ import ru.mycrg.wrapper.config.CrgProperties;
 import ru.mycrg.wrapper.exceptions.ImportException;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_ERROR;
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
@@ -49,12 +54,17 @@ public class DataServiceHandler extends AbstractImportChainItem {
         log.debug("Add table {} to data-service. To dataset: {} / {} / {}",
                   tableName, datasetName, tableTitle, tableDescription);
 
+        SchemaDto schema = importTask.getFeatureDescription();
+        List<MatchingPair> allProperties = importTask.getPairs();
+        List<SimplePropertyDto> schemaProperties = schema.getProperties();
+
         JSONObject json = new JSONObject();
         json.put("name", tableName);
         json.put("title", tableTitle);
         json.put("details", tableDescription);
         json.put("crs", "EPSG:" + importTask.getSrs());
         json.put("schemaId", schemaDto.getName());
+        json.put("additionalFields", addAdditionalFields(schemaProperties, allProperties));
 
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, json.toString());
 
@@ -96,5 +106,23 @@ public class DataServiceHandler extends AbstractImportChainItem {
         } catch (Exception e) {
             throw new ImportException("Failed build url to datasets", e.getCause());
         }
+    }
+
+    private List<AdditionalFieldDto> addAdditionalFields(List<SimplePropertyDto> schemaProperties,
+                                                         List<MatchingPair> allProperties) {
+        List<AdditionalFieldDto> additionalFields = new ArrayList<>();
+
+        for (MatchingPair matchingPair: allProperties) {
+            String name = matchingPair.getTarget().getName();
+            long count = schemaProperties.stream()
+                                         .filter(property -> property.getName().equalsIgnoreCase(name))
+                                         .count();
+            if (count < 1) {
+                AdditionalFieldDto additionalField = new AdditionalFieldDto(name, matchingPair.getTarget().getType());
+                additionalFields.add(additionalField);
+            }
+        }
+
+        return additionalFields;
     }
 }
