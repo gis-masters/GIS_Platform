@@ -20,6 +20,14 @@ public class LogicalRuleFilter implements RuleFilter {
         this.operator = operator;
     }
 
+    public List<RuleFilter> getFilters() {
+        return filters;
+    }
+
+    public void setFilters(List<RuleFilter> filters) {
+        this.filters = filters;
+    }
+
     @Override
     public String toString() {
         return "{" +

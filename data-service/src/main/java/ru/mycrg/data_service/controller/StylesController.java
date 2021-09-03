@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,10 +12,12 @@ import ru.mycrg.data_service.dto.styles.ActualStylesRequestModel;
 import ru.mycrg.data_service.dto.styles.ActualStylesResponseModel;
 import ru.mycrg.data_service.service.StylesService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
+@Validated
 @RestController
 public class StylesController {
 
@@ -28,7 +31,7 @@ public class StylesController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/styles/actual")
-    public ResponseEntity<Object> getActualStyles(@RequestBody List<ActualStylesRequestModel> styles) {
+    public ResponseEntity<Object> getActualStyles(@Valid @RequestBody List<ActualStylesRequestModel> styles) {
         log.debug("getActualStyles: {}", styles);
 
         List<ActualStylesResponseModel> response = stylesService.defineActualStyles(styles);

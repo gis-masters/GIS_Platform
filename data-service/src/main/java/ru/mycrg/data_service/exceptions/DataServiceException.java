@@ -12,12 +12,18 @@ public class DataServiceException extends RuntimeException {
 
     private final List<ErrorInfo> errors = new ArrayList<>();
 
-    public DataServiceException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
-
     public DataServiceException(String msg) {
         super(msg);
+    }
+
+    public DataServiceException(String msg, ErrorInfo errorInfo) {
+        super(msg);
+
+        this.errors.add(errorInfo);
+    }
+
+    public DataServiceException(String msg, Throwable cause) {
+        super(msg, cause);
     }
 
     public DataServiceException(String msg, ResponseModel<Object> response) {

@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service;
 
 import com.healthmarketscience.sqlbuilder.*;
+import com.healthmarketscience.sqlbuilder.custom.postgresql.PgLimitClause;
 import org.jetbrains.annotations.NotNull;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
@@ -15,6 +16,7 @@ import ru.mycrg.data_service.dto.Record;
 import ru.mycrg.data_service.dto.styles.*;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.util.*;
@@ -56,15 +58,33 @@ public class StylesService {
 
         try {
             final SpatialRuleFilter bboxFilter = requestModel.getFilter();
-            final String sqlQuery = selectQueryWithBbox(tQualifier, ruleFilters, bboxFilter);
-            final List<Record> records = tablesDao.customListQuery(sqlQuery);
 
-            analyzeComparisonRule(styleRules, records, response);
-            analyzeElseRule(styleRules, ruleFilters, response, bboxFilter);
+            if (isCommonRuleExist(ruleFilters)) {
+                final String sqlQuery = buildQueryByCommonRule(tQualifier, bboxFilter);
+                final List<Record> records = tablesDao.customListQuery(sqlQuery);
+                if (!records.isEmpty()) {
+                    styleRules.stream()
+                               .filter(styleRule -> styleRule.getFilter() instanceof CommonRuleFilter)
+                               .findFirst()
+                               .ifPresent(styleRule -> response.addRule(styleRule.getName()));
+                }
+            } else {
+                final String sqlQuery = buildQuery(tQualifier, ruleFilters, bboxFilter);
+                final List<Record> records = tablesDao.customListQuery(sqlQuery);
+
+                analyzeComparisonRule(styleRules, records, response);
+                analyzeElseRule(styleRules, ruleFilters, response, bboxFilter);
+            }
 
             return response;
         } catch (BadSqlGrammarException e) {
-            throw new DataServiceException("Failed to define actual styles");
+            String msg = "Failed to define actual styles";
+            final Throwable cause = e.getCause();
+            if (cause != null) {
+                throw new DataServiceException(msg, new ErrorInfo("sqlQuery", cause.getMessage()));
+            }
+
+            throw new DataServiceException(msg);
         } catch (Exception e) {
             final String msg = "Failed to define actual styles. Reason: " + e.getMessage();
             log.error(msg, e.getCause());
@@ -126,29 +146,39 @@ public class StylesService {
         return !records.isEmpty();
     }
 
-    private String selectQueryWithBbox(ResourceQualifier tQualifier,
-                                       List<RuleFilter> filters,
-                                       SpatialRuleFilter bboxFilter) {
+    private String buildQuery(ResourceQualifier tQualifier,
+                              List<RuleFilter> filters,
+                              SpatialRuleFilter bboxFilter) {
         try {
-            final SelectQuery selectQuery = new SelectQuery(true);
-            selectQuery.addCustomFromTable(tQualifier.getQualifier());
-            selectQuery.addCustomColumns("columnsTemplate");
-
             final ComboCondition orCondition = ComboCondition.or();
             for (RuleFilter filter: filters) {
                 orCondition.addCondition(mapToCondition(filter));
             }
 
-            selectQuery.addCondition(
-                    ComboCondition.and(orCondition, mapToCondition(bboxFilter))
-            );
-
             final String propNames = String.join(",", getFields(filters));
 
-            return selectQuery.toString()
-                              .replace("'columnsTemplate'", propNames);
+            return new SelectQuery(true)
+                    .addCustomFromTable(tQualifier.getQualifier())
+                    .addCustomColumns("columnsTemplate")
+                    .addCondition(
+                            ComboCondition.and(orCondition, mapToCondition(bboxFilter))
+                    ).toString()
+                    .replace("'columnsTemplate'", propNames);
         } catch (Exception e) {
             throw new QueryBuilderException("Failed to build query. Reason: " + e.getMessage());
+        }
+    }
+
+    private String buildQueryByCommonRule(ResourceQualifier tQualifier, SpatialRuleFilter bboxFilter) {
+        try {
+            return new SelectQuery()
+                    .addCustomFromTable(tQualifier.getQualifier())
+                    .addAllColumns()
+                    .addCondition(mapToCondition(bboxFilter))
+                    .addCustomization(new PgLimitClause(1))
+                    .toString();
+        } catch (Exception e) {
+            throw new QueryBuilderException("Failed to build query by common rule. Reason: " + e.getMessage());
         }
     }
 
@@ -186,5 +216,9 @@ public class StylesService {
                       .map(RuleFilter::getPropertyName)
                       .filter(Objects::nonNull)
                       .collect(Collectors.toSet());
+    }
+
+    private boolean isCommonRuleExist(List<RuleFilter> ruleFilters) {
+        return ruleFilters.stream().anyMatch(ruleFilter -> ruleFilter instanceof CommonRuleFilter);
     }
 }
