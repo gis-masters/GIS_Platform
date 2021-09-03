@@ -14,7 +14,6 @@ import ru.mycrg.data_service.dao.query_builder.exceptions.QueryBuilderException;
 import ru.mycrg.data_service.dao.query_builder.rule_handlers.RuleMappersFactory;
 import ru.mycrg.data_service.dto.Record;
 import ru.mycrg.data_service.dto.styles.*;
-import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -45,26 +44,23 @@ public class StylesService {
     }
 
     public ActualStylesResponseModel defineActualStyle(ActualStylesRequestModel requestModel) {
-        ActualStylesResponseModel response = new ActualStylesResponseModel(requestModel);
+        final ActualStylesResponseModel response = new ActualStylesResponseModel(requestModel);
         final ResourceQualifier tQualifier = new ResourceQualifier(requestModel.getDataset(),
                                                                    requestModel.getIdentifier());
-        final List<StyleRule> styleRules = requestModel.getRules();
-        final List<RuleFilter> ruleFilters = styleRules.stream()
-                                                       .map(StyleRule::getFilter)
-                                                       .collect(Collectors.toList());
-        if (ruleFilters.contains(null)) {
-            throw new BadRequestException("Some rule is not correct");
-        }
 
         try {
+            final List<StyleRule> styleRules = requestModel.getRules();
+            final List<RuleFilter> ruleFilters = styleRules.stream()
+                                                           .map(StyleRule::getFilter)
+                                                           .collect(Collectors.toList());
             final SpatialRuleFilter bboxFilter = requestModel.getFilter();
 
-            if (isCommonRuleExist(ruleFilters)) {
-                final String sqlQuery = buildQueryByCommonRule(tQualifier, bboxFilter);
+            if (ruleFilters.contains(null)) { // Правило без фильтра подразумевает выборку без условий
+                final String sqlQuery = buildQuery(tQualifier, bboxFilter);
                 final List<Record> records = tablesDao.customListQuery(sqlQuery);
                 if (!records.isEmpty()) {
                     styleRules.stream()
-                               .filter(styleRule -> styleRule.getFilter() instanceof CommonRuleFilter)
+                               .filter(styleRule -> styleRule.getFilter() == null)
                                .findFirst()
                                .ifPresent(styleRule -> response.addRule(styleRule.getName()));
                 }
@@ -169,7 +165,7 @@ public class StylesService {
         }
     }
 
-    private String buildQueryByCommonRule(ResourceQualifier tQualifier, SpatialRuleFilter bboxFilter) {
+    private String buildQuery(ResourceQualifier tQualifier, SpatialRuleFilter bboxFilter) {
         try {
             return new SelectQuery()
                     .addCustomFromTable(tQualifier.getQualifier())
@@ -218,7 +214,7 @@ public class StylesService {
                       .collect(Collectors.toSet());
     }
 
-    private boolean isCommonRuleExist(List<RuleFilter> ruleFilters) {
-        return ruleFilters.stream().anyMatch(ruleFilter -> ruleFilter instanceof CommonRuleFilter);
-    }
+//    private boolean isCommonRuleExist(List<RuleFilter> ruleFilters) {
+//        return ruleFilters.stream().anyMatch(ruleFilter -> ruleFilter instanceof CommonRuleFilter);
+//    }
 }

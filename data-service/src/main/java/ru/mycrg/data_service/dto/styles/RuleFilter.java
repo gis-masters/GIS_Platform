@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "operator", visible = true)
 @JsonSubTypes({
-        @Type(value = CommonRuleFilter.class, name = "Common"),
         @Type(value = LogicalRuleFilter.class, name = "And"),
         @Type(value = LogicalRuleFilter.class, name = "Or"),
         @Type(value = LogicalRuleFilter.class, name = "Not"),

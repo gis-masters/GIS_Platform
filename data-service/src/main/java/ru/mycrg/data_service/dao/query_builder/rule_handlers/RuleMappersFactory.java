@@ -14,8 +14,6 @@ public class RuleMappersFactory {
             return new SpatialRuleMapper();
         } else if (filter instanceof ElseRuleFilter) {
             return new ElseRuleFilterMapper();
-        } else if (filter instanceof CommonRuleFilter) {
-            return new CommonRuleFilterMapper();
         } else {
             throw new IllegalArgumentException("Unknown filter");
         }

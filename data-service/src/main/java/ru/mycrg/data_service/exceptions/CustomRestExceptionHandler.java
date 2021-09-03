@@ -205,8 +205,10 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Object> handleBadRequest(final RuntimeException ex) {
-        final ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, ex.getLocalizedMessage());
+    public ResponseEntity<Object> handleBadRequest(final RuntimeException e) {
+        final BadRequestException ex = (BadRequestException) e;
+
+        final ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, ex.getMessage(), ex.getErrors());
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }

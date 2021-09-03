@@ -1,16 +1,11 @@
 package ru.mycrg.data_service.dto.styles;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ActualStylesRequestModel extends ActualStylesModel {
 
     private SpatialRuleFilter filter;
-
-    @Valid
-    @NotEmpty(message = "Должно быть указано хотябы одно правило")
     private List<StyleRule> rules = new ArrayList<>();
 
     public ActualStylesRequestModel() {

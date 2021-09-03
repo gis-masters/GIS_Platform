@@ -1,9 +1,16 @@
 package ru.mycrg.data_service.dto.styles;
 
+import org.jetbrains.annotations.NotNull;
+
 public class SpatialRuleFilter implements RuleFilter {
 
+    @NotNull
     private SpacialRuleOperator operator;
+
+    @NotNull
     private String propertyName;
+
+    @NotNull
     private SpatialLiteral literal;
 
     public SpatialRuleFilter() {
