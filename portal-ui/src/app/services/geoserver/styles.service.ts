@@ -30,10 +30,11 @@ enum StyleFilterOperator {
   GREATER_THEN = 'PropertyIsGreaterThan',
   GREATER_THEN_OR_EQUAL_TO = 'PropertyIsGreaterThanOrEqualTo',
   LIKE = 'PropertyIsLike',
-  INTERSECTS = 'Intersects'
+  INTERSECTS = 'Intersects',
+  ELSE = 'ElseFilter'
 }
 
-type StyleFilter = StyleFilterLogical | StyleFilterComparison | StyleFilterSpatial;
+type StyleFilter = StyleFilterLogical | StyleFilterComparison | StyleFilterSpatial | StyleFilterElse;
 
 interface StyleFilterLogical {
   operator: StyleFilterOperator.AND | StyleFilterOperator.OR | StyleFilterOperator.NOT;
@@ -58,6 +59,10 @@ interface StyleFilterSpatial {
   operator: StyleFilterOperator.INTERSECTS;
   propertyName?: string;
   literal: WfsGeometry;
+}
+
+interface StyleFilterElse {
+  operator: StyleFilterOperator.ELSE;
 }
 
 const sldStyles: Record<string, Promise<void>> = {};
@@ -85,7 +90,9 @@ async function _loadLayerStyle(layer: CrgLayer) {
     .map(ruleXml => ({
       name: ruleXml.querySelector('Name').innerHTML,
       title: ruleXml.querySelector('Title').innerHTML,
-      filter: parseFilter(ruleXml.querySelector('Filter')?.firstElementChild)
+      filter: ruleXml.querySelector('ElseFilter')
+        ? { operator: StyleFilterOperator.ELSE }
+        : parseFilter(ruleXml.querySelector('Filter')?.firstElementChild)
     }));
 
   const rules = await Promise.all(
@@ -230,12 +237,10 @@ export async function filterLegendForCurrentMapView(layers: CrgLayer[]): Promise
         }
       },
       rules:
-        layer.style
-          ?.filter(({ filter }) => filter)
-          .map(rule => ({
-            name: rule.name,
-            filter: rule.filter
-          })) || []
+        layer.style?.map(rule => ({
+          name: rule.name,
+          filter: rule.filter
+        })) || []
     })),
     { cache: { disabled: false, clear: false } }
   );
