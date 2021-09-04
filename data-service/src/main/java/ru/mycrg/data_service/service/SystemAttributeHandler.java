@@ -11,6 +11,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Service
@@ -32,7 +33,7 @@ public class SystemAttributeHandler {
 
     public SystemAttributeHandler addDefaultPath(@NotNull Map<String, Object> body) {
         if (!body.containsKey(PATH.getName())) {
-            body.put(PATH.getName(), "/root");
+            body.put(PATH.getName(), ROOT_FOLDER_PATH);
         }
 
         return this;

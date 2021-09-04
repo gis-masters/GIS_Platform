@@ -25,9 +25,10 @@ import ru.mycrg.http_client.ResponseModel;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.generateDatasetName;
+import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 
@@ -36,16 +37,12 @@ public class DatasetService extends SchemasAndTablesBase {
 
     private static final Logger log = LoggerFactory.getLogger(DatasetService.class);
 
-    public static final String SCHEMA_PREFIX = "dataset";
-
     private final BasePermissionsRepository permissionsRepository;
     private final SchemasManager schemasManager;
     private final DataStoreClient dataStoreClient;
     private final ResourceProtector resourceProtector;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final PermissionsService permissionsService;
-
-    private final String SYSTEM_ROOT_FOLDER_PATH = "/root";
 
     public DatasetService(BasePermissionsRepository permissionsRepository,
                           ResourceProtector resourceProtector,
@@ -63,11 +60,11 @@ public class DatasetService extends SchemasAndTablesBase {
 
     public Page<IResourceModel> getPaged(String title, Pageable pageable) {
         final List<IResourceModel> allowedResources = permissionsRepository
-                .findAllowedByParent(schemasAndTablesQualifier, SYSTEM_ROOT_FOLDER_PATH, title, pageable).stream()
+                .findAllowedByParent(schemasAndTablesQualifier, ROOT_FOLDER_PATH, title, pageable).stream()
                 .map(record -> new DatasetModel(record.getContent()))
                 .collect(Collectors.toList());
 
-        final long total = permissionsRepository.getTotalByParent(schemasAndTablesQualifier, SYSTEM_ROOT_FOLDER_PATH, title);
+        final long total = permissionsRepository.getTotalByParent(schemasAndTablesQualifier, ROOT_FOLDER_PATH, title);
 
         return new PageImpl<>(allowedResources, pageable, total);
     }
@@ -90,22 +87,23 @@ public class DatasetService extends SchemasAndTablesBase {
     }
 
     public DatasetModel create(ResourceCreateDto dto) {
-        String datasetId = String.format("%s_%s", SCHEMA_PREFIX, UUID.randomUUID().toString().substring(0, 6));
+        String datasetName = generateDatasetName();
 
-        ResourceQualifier rDataset = new ResourceQualifier(datasetId);
+        ResourceQualifier rDataset = new ResourceQualifier(datasetName);
         resourceProtector.throwIfExists(rDataset);
 
         // Create schema
         schemasManager.create(rDataset);
 
         // Add record to schemasAndTables table
-        final SchemasAndTables dataset = new SchemasAndTables(SCHEMA, dto, datasetId, SYSTEM_ROOT_FOLDER_PATH);
+        final SchemasAndTables dataset = new SchemasAndTables(SCHEMA, dto, datasetName, ROOT_FOLDER_PATH);
         final SchemasAndTables newEntity = schemasAndTablesRepository.save(dataset);
 
         // Create OWNER permission
-        final Permission ownerPermission = permissionsService.addOwnerPermission(schemasAndTablesQualifier, newEntity.getId());
+        final Permission ownerPermission = permissionsService.addOwnerPermission(schemasAndTablesQualifier,
+                                                                                 newEntity.getId());
 
-        ResponseModel<Object> responseModel = dataStoreClient.create(datasetId);
+        ResponseModel<Object> responseModel = dataStoreClient.create(datasetName);
         if (!responseModel.isSuccessful()) {
             schemasAndTablesRepository.delete(newEntity);
             schemasManager.delete(rDataset);

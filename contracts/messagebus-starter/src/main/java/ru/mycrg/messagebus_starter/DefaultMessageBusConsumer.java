@@ -1,4 +1,4 @@
-package ru.messagebus_starter;
+package ru.mycrg.messagebus_starter;
 
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusConsumer;

@@ -2,9 +2,9 @@ package ru.mycrg.audit_service.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
-import dto.AuditEventDto;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import ru.mycrg.audit_service_contract.dto.AuditEventDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

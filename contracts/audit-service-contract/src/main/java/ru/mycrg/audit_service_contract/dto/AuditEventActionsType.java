@@ -1,4 +1,4 @@
-package dto;
+package ru.mycrg.audit_service_contract.dto;
 
 public enum AuditEventActionsType {
     CREATE,

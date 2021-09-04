@@ -1,8 +1,6 @@
 package ru.mycrg.auth_service_contract;
 
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Authorities {
@@ -18,7 +16,7 @@ public class Authorities {
     public static final String HAS_ANY_AUTHORITY =
             "hasAnyAuthority('" + GLOBAL_ADMIN + "', '" + ORG_ADMIN + "', '" + USER + "')";
 
-    private static final List<String> builtInAuthorities = Collections.unmodifiableList(Arrays.asList(ORG_ADMIN, USER));
+    private static final List<String> builtInAuthorities = List.of(ORG_ADMIN, USER);
 
     private Authorities() {
         throw new IllegalStateException("Utility class");

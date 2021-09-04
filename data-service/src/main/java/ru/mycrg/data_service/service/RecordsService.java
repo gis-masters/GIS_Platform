@@ -22,6 +22,8 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
+
 @Service
 public class RecordsService {
 
@@ -31,8 +33,6 @@ public class RecordsService {
     private final SystemAttributeHandler systemAttributeHandler;
     private final BasePermissionsRepository permissionsRepository;
     private final PermissionsService permissionsService;
-
-    private final String SYSTEM_ROOT_FOLDER_PATH = "/root";
 
     public RecordsService(TablesDao tablesDao,
                           FileStorageService fileStorageService,
@@ -55,7 +55,7 @@ public class RecordsService {
         final long total;
         final List<Record> allowedResources;
 
-        String path = SYSTEM_ROOT_FOLDER_PATH;
+        String path = ROOT_FOLDER_PATH;
         if (parentId != null) {
             final Map<String, Object> parent = tablesDao
                     .findById(libraryTable, parentId)

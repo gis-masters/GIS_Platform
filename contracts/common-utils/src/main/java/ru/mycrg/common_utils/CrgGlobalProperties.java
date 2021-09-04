@@ -3,6 +3,7 @@ package ru.mycrg.common_utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class CrgGlobalProperties {
 
@@ -11,6 +12,7 @@ public class CrgGlobalProperties {
     private static final String DEFAULT_PROJECT_NAME = "workspace";
     private static final String DEFAULT_STORE_POSTFIX = "store";
     private static final String DEFAULT_ROLE_NAME = "admin";
+    private static final String DEFAULT_SCHEMA_PREFIX = "dataset";
     private static final String SEPARATOR = "_";
 
     private CrgGlobalProperties() {
@@ -55,6 +57,11 @@ public class CrgGlobalProperties {
     @NotNull
     public static String getDefaultRoleName(Object orgId) {
         return DEFAULT_ROLE_NAME + SEPARATOR + orgId;
+    }
+
+    @NotNull
+    public static String generateDatasetName() {
+        return DEFAULT_SCHEMA_PREFIX + SEPARATOR + UUID.randomUUID().toString().substring(0, 6);
     }
 
     public static Optional<Long> extractIdFromDbName(@NotNull String dbName) {

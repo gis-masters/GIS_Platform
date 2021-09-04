@@ -2,7 +2,7 @@ package ru.mycrg.data_service.queue;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
-import ru.messagebus_starter.DefaultMessageBusConsumer;
+import ru.mycrg.messagebus_starter.DefaultMessageBusConsumer;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusConsumer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;

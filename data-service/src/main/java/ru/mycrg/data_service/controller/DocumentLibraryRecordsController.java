@@ -22,6 +22,7 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.RecordsService;
+import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
@@ -52,15 +53,18 @@ public class DocumentLibraryRecordsController {
 
     private static final Logger log = LoggerFactory.getLogger(DocumentLibraryRecordsController.class);
 
+    private final SchemaService schemaService;
     private final RecordsService recordsService;
     private final FileStorageService fileStorageService;
     private final DocumentLibraryService libraryService;
     private final SystemAttributeHandler systemAttributeHandler;
 
-    public DocumentLibraryRecordsController(RecordsService recordsService,
+    public DocumentLibraryRecordsController(SchemaService schemaService,
+                                            RecordsService recordsService,
                                             FileStorageService fileStorageService,
                                             SystemAttributeHandler systemAttributeHandler,
                                             DocumentLibraryService libraryService) {
+        this.schemaService = schemaService;
         this.libraryService = libraryService;
         this.recordsService = recordsService;
         this.fileStorageService = fileStorageService;
@@ -108,9 +112,10 @@ public class DocumentLibraryRecordsController {
         ResourceQualifier libraryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
 
         Map<String, Object> body = deserializeBody(jsonBody);
-        libraryService.checkObjectBySchema(body, docLibId);
+        String schemaId = libraryService.getByTableName(docLibId).getSchemaId();
+        schemaService.throwIfNotMathSchema(schemaId, body);
 
-        final ITableObject record = recordsService.createRecord(libraryQualifier, body, file);
+        ITableObject record = recordsService.createRecord(libraryQualifier, body, file);
 
         return new ResponseEntity<>(record, CREATED);
     }
@@ -192,7 +197,8 @@ public class DocumentLibraryRecordsController {
         final HashMap<String, Object> body = new HashMap<>();
         pageable.getSort().forEach(order -> body.put(order.getProperty(), ""));
 
-        libraryService.checkObjectBySchema(body, docLibId);
+        String schemaId = libraryService.getByTableName(docLibId).getSchemaId();
+        schemaService.throwIfNotMathSchema(schemaId, body);
     }
 
     private Map<String, Object> deserializeBody(@Nullable String jsonString) {

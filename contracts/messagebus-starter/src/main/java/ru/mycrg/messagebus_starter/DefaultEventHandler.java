@@ -1,4 +1,4 @@
-package ru.messagebus_starter;
+package ru.mycrg.messagebus_starter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

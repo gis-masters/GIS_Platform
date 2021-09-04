@@ -1,6 +1,5 @@
 package ru.mycrg.audit_service.service;
 
-import dto.AuditEventDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -12,6 +11,7 @@ import ru.mycrg.audit_service.entity.Event;
 import ru.mycrg.audit_service.exceptions.AuditServiceException;
 import ru.mycrg.audit_service.repository.CrgAuditEventRepository;
 import ru.mycrg.audit_service.security.IAuthenticationFacade;
+import ru.mycrg.audit_service_contract.dto.AuditEventDto;
 
 import javax.transaction.Transactional;
 

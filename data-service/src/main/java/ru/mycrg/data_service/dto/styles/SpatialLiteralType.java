@@ -5,5 +5,5 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum SpatialLiteralType {
 
     @JsonProperty("MultiPolygon")
-    MULTIPOLYGON;
+    MULTIPOLYGON
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class DetailsModel {
 
-    private List<TaskModel> tasks = new ArrayList<>();
+    private final List<TaskModel> tasks = new ArrayList<>();
 
     public DetailsModel() {
         // Required

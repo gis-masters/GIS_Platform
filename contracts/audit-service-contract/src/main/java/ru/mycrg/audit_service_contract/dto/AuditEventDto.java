@@ -1,7 +1,7 @@
-package dto;
+package ru.mycrg.audit_service_contract.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import dto.validator.ValidateEnum;
+import ru.mycrg.audit_service_contract.dto.validator.ValidateEnum;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -16,16 +16,16 @@ public class AuditEventDto {
 
     @NotBlank
     @Size(max = 20)
-    @ValidateEnum(targetClassType = AuditEventActionsType.class, message = "Укажите одно из значений: CREATE, " +
-            "UPDATE, DELETE, SIGN_IN, SIGN_OUT")
+    @ValidateEnum(targetClassType = AuditEventActionsType.class,
+                  message = "Укажите одно из значений: CREATE, UPDATE, DELETE, SIGN_IN, SIGN_OUT")
     private String actionType;
 
     @Size(max = 100)
     private String entityName;
 
     @Size(max = 50)
-    @ValidateEnum(targetClassType = AuditEventEntityType.class, message = "Укажите одно из значений:  PROJECT, " +
-            "LAYER")
+    @ValidateEnum(targetClassType = AuditEventEntityType.class,
+                  message = "Укажите одно из значений:  PROJECT, LAYER")
     private String entityType;
 
     @Min(value = 1)

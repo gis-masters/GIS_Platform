@@ -1,13 +1,12 @@
-package events;
+package ru.mycrg.audit_service_contract.events;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import dto.AuditEventActionsType;
-import dto.AuditEventEntityType;
+import ru.mycrg.audit_service_contract.dto.AuditEventActionsType;
+import ru.mycrg.audit_service_contract.dto.AuditEventEntityType;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.UUID;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.AUDIT_REQUEST_FANOUT;

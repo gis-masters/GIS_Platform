@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.repository;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.entity.Schema;
@@ -10,6 +11,8 @@ import java.util.List;
 @Repository
 public interface DataSchemaRepository extends PagingAndSortingRepository<Schema, Long> {
 
+    @Override
+    @NotNull
     List<Schema> findAll();
 
     List<Schema> findByNameIn(Collection<String> names);

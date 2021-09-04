@@ -1,9 +1,9 @@
 package ru.mycrg.gateway.filters;
 
-import events.CrgAuditEvent;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.gateway.domain.AuthConclusion;
 import ru.mycrg.gateway.domain.Authenticator;
 import ru.mycrg.gateway.domain.CookieProducer;
@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static dto.AuditEventActionsType.SIGN_IN;
-import static dto.AuditEventActionsType.SIGN_OUT;
+import static ru.mycrg.audit_service_contract.dto.AuditEventActionsType.SIGN_IN;
+import static ru.mycrg.audit_service_contract.dto.AuditEventActionsType.SIGN_OUT;
 
 @Log4j2
 public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {

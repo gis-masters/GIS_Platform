@@ -1,7 +1,5 @@
 package ru.mycrg.integration_service.queue.handlers;
 
-import dto.AuditEventDto;
-import events.CrgAuditEvent;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -9,6 +7,8 @@ import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.audit_service_contract.dto.AuditEventDto;
+import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;

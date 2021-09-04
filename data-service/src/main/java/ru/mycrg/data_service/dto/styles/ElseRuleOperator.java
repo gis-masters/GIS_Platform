@@ -5,5 +5,5 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum ElseRuleOperator {
 
     @JsonProperty("ElseFilter")
-    ELSE_FILTER;
+    ELSE_FILTER
 }

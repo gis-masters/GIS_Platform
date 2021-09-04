@@ -1,7 +1,5 @@
 package ru.mycrg.data_service.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,15 +15,13 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 
 @Service
 public class DocumentLibraryService implements ResourceManager {
-
-    private static final Logger log = LoggerFactory.getLogger(DocumentLibraryService.class);
 
     public static final ResourceQualifier docLibrariesQualifier =
             new ResourceQualifier(SYSTEM_SCHEMA_NAME, "doc_libraries");
@@ -33,8 +29,6 @@ public class DocumentLibraryService implements ResourceManager {
     private final SchemaService schemaService;
     private final DocumentLibraryRepository libraryRepository;
     private final BasePermissionsRepository permissionsRepository;
-
-    private final String SYSTEM_ROOT_FOLDER_PATH = "/root";
 
     public DocumentLibraryService(DocumentLibraryRepository libraryRepository,
                                   SchemaService schemaService,
@@ -46,12 +40,11 @@ public class DocumentLibraryService implements ResourceManager {
 
     public Page<IResourceModel> getPaged(String title, Pageable pageable) {
         final List<IResourceModel> allowedResources = permissionsRepository
-                .findAllowedByParent(docLibrariesQualifier, SYSTEM_ROOT_FOLDER_PATH, title, pageable).stream()
+                .findAllowedByParent(docLibrariesQualifier, ROOT_FOLDER_PATH, title, pageable).stream()
                 .map(record -> new LibraryModel(record.getContent()))
                 .collect(Collectors.toList());
 
-        final long total = permissionsRepository.getTotalByParent(docLibrariesQualifier, SYSTEM_ROOT_FOLDER_PATH,
-                                                                  title);
+        final long total = permissionsRepository.getTotalByParent(docLibrariesQualifier, ROOT_FOLDER_PATH, title);
 
         return new PageImpl<>(allowedResources, pageable, total);
     }
@@ -82,11 +75,5 @@ public class DocumentLibraryService implements ResourceManager {
         return schemaService
                 .getSchemaByName(documentLibrary.getSchemaId())
                 .orElseThrow(() -> new NotFoundException("Not found schema for library: " + docLibId));
-    }
-
-    public void checkObjectBySchema(Map<String, Object> body, String tableName) {
-        final String schemaId = getByTableName(tableName).getSchemaId();
-
-        schemaService.checkObjectBySchema(body, schemaId);
     }
 }

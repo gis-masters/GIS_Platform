@@ -2,7 +2,7 @@ package ru.mycrg.auth_service.queue;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
-import ru.messagebus_starter.DefaultMessageBusProducer;
+import ru.mycrg.messagebus_starter.DefaultMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 

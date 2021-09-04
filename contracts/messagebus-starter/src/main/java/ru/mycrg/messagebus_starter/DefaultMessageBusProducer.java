@@ -1,4 +1,4 @@
-package ru.messagebus_starter;
+package ru.mycrg.messagebus_starter;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;

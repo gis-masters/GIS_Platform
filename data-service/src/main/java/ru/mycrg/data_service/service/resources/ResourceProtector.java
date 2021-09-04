@@ -10,6 +10,7 @@ import ru.mycrg.data_service.security.IAuthenticationFacade;
 import java.util.Objects;
 import java.util.Optional;
 
+import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 
 @Service
@@ -53,7 +54,7 @@ public class ResourceProtector {
     }
 
     private boolean isUserHasOwnPermission(ResourceQualifier rQualifier) {
-        Optional<String> oRole = basePermissionsRepository.bestRole(rQualifier, "/root");
+        Optional<String> oRole = basePermissionsRepository.bestRole(rQualifier, ROOT_FOLDER_PATH);
         if (oRole.isEmpty()) {
             return false;
         }

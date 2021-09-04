@@ -13,10 +13,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import ru.mycrg.data_service.exceptions.TransformationException;
 import ru.mycrg.data_service.service.parsers.exceptions.XmlParserException;
 import ru.mycrg.data_service.util.CrsHandler;
-import ru.mycrg.data_service.util.SchemaHandler;
 import ru.mycrg.data_service.util.TransformationGeometryUtils;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
@@ -31,6 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static ru.mycrg.data_service.service.parsers.XmlParserUtils.*;
+import static ru.mycrg.data_service.util.SchemaUtil.getPropertyNameByType;
 
 @Service
 public class XmlParser {
@@ -38,22 +37,19 @@ public class XmlParser {
     private static final Logger log = LoggerFactory.getLogger(XmlParser.class);
 
     private final DocumentBuilder documentBuilder;
-    private final SchemaHandler schemaHandler;
     private final TransformationGeometryUtils transformationGeometryUtils;
     private final CrsHandler crsHandler;
 
-    public XmlParser(SchemaHandler schemaHandler,
-                     TransformationGeometryUtils transformationGeometryUtils,
+    public XmlParser(TransformationGeometryUtils transformationGeometryUtils,
                      CrsHandler crsHandler) throws ParserConfigurationException {
         this.transformationGeometryUtils = transformationGeometryUtils;
         this.documentBuilder = DocumentBuilderFactory.newDefaultInstance().newDocumentBuilder();
-        this.schemaHandler = schemaHandler;
         this.crsHandler = crsHandler;
     }
 
     public Map<String, Object> parseByScheme(MultipartFile xmlFile,
                                              List<SimplePropertyDto> simpleProperties,
-                                             Integer srid) throws XmlParserException, TransformationException {
+                                             Integer srid) {
         Map<String, Object> result = new HashMap<>();
 
         List<String> schemaProperties = simpleProperties.stream()
@@ -85,8 +81,7 @@ public class XmlParser {
                     result.putAll(parseAttributes(element, schemaProperties));
                 }
                 // adding geometry parsing
-                Optional<String> geometryFieldName = schemaHandler.getPropertyNameByType(ValueType.GEOMETRY,
-                                                                                         simpleProperties);
+                Optional<String> geometryFieldName = getPropertyNameByType(ValueType.GEOMETRY, simpleProperties);
 
                 if (tagElementName.equalsIgnoreCase("EntitySpatial")
                         && geometryFieldName.isPresent()
@@ -107,7 +102,7 @@ public class XmlParser {
 
     private Map<String, Object> parseGeometry(NodeList nodeList,
                                               Integer srid,
-                                              String geometryFieldName) throws TransformationException {
+                                              String geometryFieldName) {
         Map<String, Object> result = new HashMap<>();
         GeometryFactory geometryFactory = new GeometryFactory();
 

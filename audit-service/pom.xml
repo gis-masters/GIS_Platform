@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>audit-service</name>
-    <description>Audit of user actions</description>
+    <description>Audit service</description>
 
     <parent>
         <artifactId>gis-portal</artifactId>
@@ -115,7 +115,6 @@
                 </configuration>
             </plugin>
 
-
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
@@ -158,5 +157,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

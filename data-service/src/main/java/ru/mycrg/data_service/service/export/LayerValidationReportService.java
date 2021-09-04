@@ -17,7 +17,6 @@ import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.security.AuthenticationFacade;
 import ru.mycrg.data_service.service.*;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.util.SchemaHandler;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service.util.filter.FilterCondition;
 import ru.mycrg.data_service_contract.dto.ResourceReport;
@@ -32,8 +31,9 @@ import java.util.concurrent.CompletableFuture;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.TablesManager.EXTENSION_POSTFIX;
-import static ru.mycrg.data_service.service.JsonConverter.toJsonNodeFromString;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
+import static ru.mycrg.data_service.util.SchemaUtil.getEnumerationTitleByValue;
+import static ru.mycrg.data_service.util.SchemaUtil.getPropertyByName;
 import static ru.mycrg.data_service_contract.enums.ProcessType.VALIDATION_REPORT;
 
 @Service
@@ -52,20 +52,17 @@ public class LayerValidationReportService {
 
     private final DatasourceFactory datasourceFactory;
     private final SchemaService schemaService;
-    private final SchemaHandler schemaHandler;
     private final AuthenticationFacade authenticationFacade;
     private final ProcessService processService;
     private final WsNotificationService wsNotificationService;
 
     public LayerValidationReportService(SchemaService schemaService,
-                                        SchemaHandler schemaHandler,
                                         Environment environment,
                                         AuthenticationFacade authenticationFacade,
                                         ProcessService processService,
                                         DatasourceFactory datasourceFactory,
                                         WsNotificationService wsNotificationService) {
         this.schemaService = schemaService;
-        this.schemaHandler = schemaHandler;
         this.authenticationFacade = authenticationFacade;
         this.processService = processService;
         this.datasourceFactory = datasourceFactory;
@@ -176,12 +173,12 @@ public class LayerValidationReportService {
         final String objectId = violationNode.get("globalId").asText();
 
         String objectClass;
-        Optional<SimplePropertyDto> oProperty = schemaHandler.getPropertyByName(schemaDto, propertyName);
+        Optional<SimplePropertyDto> oProperty = getPropertyByName(schemaDto, propertyName);
         if (oProperty.isEmpty()) {
             objectClass = propertyName;
         } else {
             String classIdValue = violationNode.get("classId").asText();
-            objectClass = schemaHandler.getEnumerationTitleByValue(oProperty.get(), classIdValue);
+            objectClass = getEnumerationTitleByValue(oProperty.get(), classIdValue);
         }
 
         JsonNode objectsViolationsNode = violationNode.get("objectViolations");
@@ -213,7 +210,7 @@ public class LayerValidationReportService {
     }
 
     private JsonNode extractViolations(Record record) {
-        return toJsonNodeFromString((String) record.getContent().get("violations"));
+        return JsonConverter.toJsonNodeFromString((String) record.getContent().get("violations"));
     }
 
     private String prepareValue(String value) {

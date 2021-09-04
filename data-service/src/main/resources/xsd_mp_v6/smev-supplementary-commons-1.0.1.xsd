@@ -599,7 +599,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
-            <xs:pattern value="[а-яА-ЯёЁ\-0-9][а-яА-ЯёЁ\-\s'',.0-9]*"/>
+            <xs:pattern value="[а-яА-ЯёЁ\-0-9][а-яА-ЯёЁ\-\s',.0-9]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="rus-and-num-500">
@@ -641,7 +641,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
-            <xs:pattern value="[а-яА-ЯёЁ\-0-9][а-яА-ЯёЁ\-\s'',.]*"/>
+            <xs:pattern value="[а-яА-ЯёЁ\-0-9][а-яА-ЯёЁ\-\s',.]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="rus-500">

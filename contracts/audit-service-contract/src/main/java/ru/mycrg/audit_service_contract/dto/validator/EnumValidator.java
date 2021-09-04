@@ -1,4 +1,4 @@
-package dto.validator;
+package ru.mycrg.audit_service_contract.dto.validator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

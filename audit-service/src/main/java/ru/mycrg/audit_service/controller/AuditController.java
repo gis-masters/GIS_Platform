@@ -1,6 +1,5 @@
 package ru.mycrg.audit_service.controller;
 
-import dto.AuditEventDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.audit_service.dto.EventFullProjection;
 import ru.mycrg.audit_service.service.AuditEventService;
+import ru.mycrg.audit_service_contract.dto.AuditEventDto;
 
 import java.net.URI;
 

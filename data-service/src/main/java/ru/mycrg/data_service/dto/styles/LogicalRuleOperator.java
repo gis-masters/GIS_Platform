@@ -11,5 +11,5 @@ public enum LogicalRuleOperator {
     OR,
 
     @JsonProperty("Not")
-    NOT;
+    NOT
 }

@@ -1,7 +1,6 @@
 package ru.mycrg.gis_service.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import events.CrgAuditEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.geoserver_client.services.feature_types.FeatureTypeService;
 import ru.mycrg.geoserver_client.services.styles.StyleService;
 import ru.mycrg.gis_service.dto.*;
@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static dto.AuditEventActionsType.*;
-import static dto.AuditEventEntityType.LAYER;
+import static ru.mycrg.audit_service_contract.dto.AuditEventActionsType.*;
+import static ru.mycrg.audit_service_contract.dto.AuditEventEntityType.LAYER;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;

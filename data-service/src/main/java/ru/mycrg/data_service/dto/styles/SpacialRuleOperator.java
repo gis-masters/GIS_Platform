@@ -5,5 +5,5 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum SpacialRuleOperator {
 
     @JsonProperty("Intersects")
-    INTERSECTS;
+    INTERSECTS
 }

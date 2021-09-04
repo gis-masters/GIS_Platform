@@ -29,5 +29,5 @@ public enum ComparisonRuleOperator {
     IS_NULL,
 
     @JsonProperty("PropertyIsBetween")
-    IS_BETWEEN;
+    IS_BETWEEN
 }
