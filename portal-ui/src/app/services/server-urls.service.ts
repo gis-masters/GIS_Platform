@@ -108,6 +108,10 @@ export async function getExportUrl(): Promise<string> {
   return (await getDataUrl()) + '/export';
 }
 
+export async function getExportValidationResultUrl(): Promise<string> {
+  return (await getDataUrl()) + '/export/validation_results';
+}
+
 export async function getUsersUrl(): Promise<string> {
   return (await getBaseUrl()) + '/users';
 }

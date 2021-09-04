@@ -6,6 +6,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/
 import { boundMethod } from 'autobind-decorator';
 
 import { sidebars } from '../../stores/Sidebars.store';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { communicationService } from '../../services/communication.service';
 import { validationService } from '../../services/crg/validation.service';
 import { CrgLayer } from '../../services/crg/projects.models';
@@ -37,7 +38,7 @@ export class ValidateLayersDialog extends Component<ValidateLayersDialogProps> {
         </DialogTitle>
 
         <DialogContent className={cnValidateLayersDialog('Content')}>
-          <LayersList onSelect={this.onSelect} />
+          <LayersList layers={currentProject.vectorLayers} onSelect={this.onSelect} />
         </DialogContent>
 
         <DialogActions>

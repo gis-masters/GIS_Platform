@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
@@ -19,6 +19,7 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 })
 export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   @Input() isActive: boolean;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
   layers: CrgLayer[];
 
   commonInfo: Map<string, ValidationBrieflyInfo> = new Map<string, ValidationBrieflyInfo>();
@@ -32,17 +33,19 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   commonProgress = 0;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
+  layersWithErrors: CrgLayer[];
 
   constructor(private logger: NGXLogger) {
     this.layers = currentProject.vectorLayers;
-    this.updateBrieflyInfo(this.layers);
+    void this.updateBrieflyInfo(this.layers);
+    this.layersWithErrors = this.layers.filter(layer => this.commonInfo.get(layer.tableName)?.totalViolations)
 
     communicationService.validationInitiated.on(value => {
       this.isValidationInited = value;
     }, this);
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     communicationService.editBugObject.on((objects: ObjectDto[]) => {
       this.isEditMode = true;
       this.objectsToEdit = objects;
@@ -57,14 +60,14 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe((wsMessage: IWsMessage<ValidationWsMsg>) => this.handleWsMessage(wsMessage.payload));
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  async ngOnChanges(changes: SimpleChanges) {
     this.layers = currentProject.vectorLayers;
 
     this.commonProgress = 0;
     const layersChange = changes.layers;
 
     if (layersChange) {
-      this.updateBrieflyInfo(this.layers);
+      await this.updateBrieflyInfo(this.layers);
     }
   }
 
@@ -74,74 +77,87 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     communicationService.off(this);
   }
 
-  setStep(index: number) {
+  setStep(index: number): void {
     this.step = index;
   }
 
-  nextStep() {
+  nextStep(): void {
     this.step++;
   }
 
-  prevStep() {
+  prevStep(): void {
     this.step--;
   }
 
-  closeMe() {
+  closeMe(): void {
     mapService.clearDraft();
     sidebars.closeBugReport();
   }
 
-  switchMode() {
+  switchMode(): void {
     this.isEditMode = !this.isEditMode;
   }
 
-  isDone(name: string) {
+  isDone(name: string): boolean {
     const brieflyInfo = this.commonInfo.get(name);
     if (brieflyInfo) {
       return brieflyInfo.validated && brieflyInfo.totalViolations < 1;
-    } else {
-      return false;
+    }
+
+    return false;
+  }
+
+  private async handleWsMessage(validationWsMsg: ValidationWsMsg) {
+    switch (validationWsMsg.status) {
+      case ProcessStatus.PENDING: {
+        this.commonProgress = validationWsMsg.progress;
+
+        break;
+      }
+      case ProcessStatus.TASK_DONE: {
+        // есть инфа о названии слоя
+        this.commonInfo.set(validationWsMsg.description, null);
+
+        break;
+      }
+      case ProcessStatus.DONE: {
+        this.isValidationInited = false;
+        await this.updateBrieflyInfo(this.layers);
+
+        break;
+      }
+      default: {
+        this.logger.warn('Unknown processStatus');
+      }
     }
   }
 
-  private handleWsMessage(validationWsMsg: ValidationWsMsg) {
-    if (validationWsMsg.status === ProcessStatus.PENDING) {
-      this.commonProgress = validationWsMsg.progress;
-    } else if (validationWsMsg.status === ProcessStatus.TASK_DONE) {
-      // есть инфа о названии слоя
-      this.commonInfo.set(validationWsMsg.description, null);
-    } else if (validationWsMsg.status === ProcessStatus.DONE) {
-      this.isValidationInited = false;
-      this.updateBrieflyInfo(this.layers);
-    }
-  }
-
-  private updateBrieflyInfo(layers: CrgLayer[]) {
+  private async updateBrieflyInfo(layers: CrgLayer[]) {
     if (!layers || layers.length === 0) {
       return;
     }
 
-    validationService.getShortInfo(layers).then(
-      (response: ValidationBrieflyInfo[]) => {
-        this.isValidationInited = false;
+    try {
+      const response: ValidationBrieflyInfo[] = await validationService.getShortInfo(layers);
 
-        if (!response) {
-          this.logger.warn('Cant get layer info', response);
-        } else {
-          response.forEach((brieflyInfo: ValidationBrieflyInfo) => {
-            if (brieflyInfo.status === 'ERROR') {
-              this.logger.warn('Error for feature: ', brieflyInfo);
-            } else {
-              this.commonInfo.set(brieflyInfo.featureName, brieflyInfo);
-            }
-          });
-        }
-      },
-      error => {
-        this.isValidationInited = false;
+      this.isValidationInited = false;
 
-        this.logger.error('Cant get validation info: ', error);
+      if (!response) {
+        this.logger.warn('Cant get layer info', response);
+      } else {
+        response.forEach((brieflyInfo: ValidationBrieflyInfo) => {
+          if (brieflyInfo.status === 'ERROR') {
+            this.logger.warn('Error for feature: ', brieflyInfo);
+          } else {
+            this.commonInfo.set(brieflyInfo.featureName, brieflyInfo);
+          }
+        });
+        this.layersWithErrors = this.layers.filter(layer => this.commonInfo.get(layer.tableName)?.totalViolations)
       }
-    );
+    } catch (error) {
+      this.isValidationInited = false;
+
+      this.logger.error('Cant get validation info: ', error);
+    }
   }
 }

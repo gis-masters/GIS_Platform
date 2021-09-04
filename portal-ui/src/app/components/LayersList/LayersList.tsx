@@ -7,7 +7,6 @@ import { action, computed, observable } from 'mobx';
 
 import { XTable } from '../XTable/XTable';
 import { CrgLayer } from '../../services/crg/projects.models';
-import { currentProject } from '../../stores/CurrentProject.store';
 
 import { LayersListItemCheck } from './ItemCheck/LayersList-ItemCheck';
 import { LayersListEmpty } from './Empty/LayersList-Empty';
@@ -25,6 +24,7 @@ enum SelectedState {
 }
 
 interface LayersListProps {
+  layers: CrgLayer[];
   onSelect(layers: CrgLayer[]): void;
 }
 
@@ -33,10 +33,12 @@ export class LayersList extends Component<LayersListProps> {
   @observable private selectedLayers: CrgLayer[] = [];
 
   render() {
-    return currentProject.vectorLayers.length && this.selectedLayers ? (
+    const { layers } = this.props;
+
+    return layers?.length && this.selectedLayers ? (
       <XTable
         className={cnLayersList()}
-        data={currentProject.vectorLayers}
+        data={layers}
         cols={[
           {
             title: (
@@ -82,7 +84,7 @@ export class LayersList extends Component<LayersListProps> {
   private get selectedState(): SelectedState {
     if (this.selectedLayers.length === 0) {
       return SelectedState.CLEAR;
-    } else if (this.selectedLayers.length === currentProject.vectorLayers.length) {
+    } else if (this.selectedLayers.length === this.props.layers.length) {
       return SelectedState.ALL;
     }
 
@@ -93,7 +95,7 @@ export class LayersList extends Component<LayersListProps> {
   private onSelectAllCheckboxChanged() {
     this.selectedLayers =
       this.selectedState === SelectedState.INDETERMINATE || this.selectedState === SelectedState.CLEAR
-        ? currentProject.vectorLayers
+        ? this.props.layers
         : [];
 
     this.props.onSelect(this.selectedLayers);

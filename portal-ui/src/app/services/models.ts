@@ -68,7 +68,8 @@ export enum ProcessType {
 
   IMPORT = 'IMPORT',
   VALIDATION = 'VALIDATION',
-  EXPORT = 'EXPORT'
+  EXPORT = 'EXPORT',
+  VALIDATION_REPORT = 'VALIDATION_REPORT'
 }
 
 // Править в соответствии с: ru/mycrg/common/enums/ProcessStatus.java

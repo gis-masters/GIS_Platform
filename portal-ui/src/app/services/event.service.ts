@@ -48,9 +48,13 @@ class EventService {
       .subscribe((wsMessage: IWsMessage) => this.handleMessage(wsMessage));
   }
 
-  // Пока только експорт
+  // Пока только EXPORT и VALIDATION_REPORT
   private isAllowedMessageType(msg: IWsMessage) {
-    return msg.type === ProcessType.EXPORT;
+    if (msg.type === 'EXPORT') {
+      return msg.type === ProcessType.EXPORT;
+    } else if (msg.type === 'VALIDATION_REPORT') {
+      return msg.type === ProcessType.VALIDATION_REPORT;
+    }
   }
 
   /**

@@ -120,7 +120,12 @@ public class ProcessService {
         try {
             JsonNode extra = process.getExtra();
             if (extra != null) {
-                final JsonNode jsonNode = mapper.readTree(extra.asText());
+                final JsonNode jsonNode;
+                if (extra.isValueNode()) {
+                    jsonNode = mapper.readTree(extra.asText());
+                } else {
+                    jsonNode = mapper.readTree(extra.toString());
+                }
 
                 return jsonNode.get("wsUiId").asText();
             } else {

@@ -2,6 +2,7 @@
   <div class="crg-report-sidebar-header" *ngIf="!isEditMode">
     <re-validate-button class="report-sidebar-button"></re-validate-button>
     Проверка данных
+    <crg-export-validation-report-button [layers]="layersWithErrors"></crg-export-validation-report-button>
     <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
   </div>
 
@@ -24,10 +25,10 @@
                     <mat-panel-title>
                       <div style="position: relative; top: 4px;">
                         <mat-icon *ngIf="commonInfo.get(layer.tableName)?.totalViolations > 0" style="color: tomato;"
-                          >error
+                        >error
                         </mat-icon>
                         <mat-icon *ngIf="!commonInfo.get(layer.tableName)?.validated" style="color: lightgrey;"
-                          >warning
+                        >warning
                         </mat-icon>
                         <mat-icon *ngIf="isDone(layer.tableName)" style="color: forestgreen;">done</mat-icon>
                       </div>
@@ -39,7 +40,7 @@
                         <mat-chip-list>
                           <mat-chip style="color: tomato;">{{
                             commonInfo.get(layer.tableName)?.totalViolations
-                          }}</mat-chip>
+                            }}</mat-chip>
                         </mat-chip-list>
                       </div>
                     </div>

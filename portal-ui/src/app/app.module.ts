@@ -68,6 +68,7 @@ import { DataManagementComponent } from './components/data-management/data-manag
 import { LogoComponent } from './components/logo/logo.component';
 import { MapToolbarComponent } from './components/map-toolbar/map-toolbar.component';
 import { CopyUrlButtonComponent } from './components/copy-url-button/copy-url-button.component';
+import { ExportValidationReportButtonComponent } from './components/export-validation-report-button/export-validation-report-button.component';
 import { LoginFormDialogComponent } from './components/login-form-dialog/login-form-dialog.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 
@@ -121,6 +122,7 @@ import { LoginFormComponent } from './components/login-form/login-form.component
     LogoComponent,
     MapToolbarComponent,
     CopyUrlButtonComponent,
+    ExportValidationReportButtonComponent,
     LoginFormComponent
   ],
   imports: [

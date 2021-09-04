@@ -34,7 +34,7 @@ export class ProgressItemComponent implements OnDestroy {
         return this.event.payload.payload.description;
       }
       case ProcessStatus.DONE: {
-        if (this.event.payload.type === ProcessType.EXPORT) {
+        if (this.event.payload.type === ProcessType.EXPORT || this.event.payload.type === ProcessType.VALIDATION_REPORT) {
           const layerName = this.event.payload.payload.description;
 
           return layerName ? layerName : 'Готово';

@@ -11,6 +11,7 @@ import { LayersList } from '../LayersList/LayersList';
 import { sidebars } from '../../stores/Sidebars.store';
 import { CrgLayer } from '../../services/crg/projects.models';
 import { ExportResourceModel, exportService } from '../../services/crg/export.service';
+import { currentProject } from '../../stores/CurrentProject.store';
 
 import '!style-loader!css-loader!sass-loader!./ExportGmlDialog.scss';
 
@@ -100,7 +101,7 @@ export class ExportGmlDialog extends Component<ExportGmlDialogProps> {
             </Select>
           </Form>
 
-          <LayersList onSelect={this.onSelect} />
+          <LayersList layers={currentProject.vectorLayers} onSelect={this.onSelect} />
         </DialogContent>
 
         <DialogActions>

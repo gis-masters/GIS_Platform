@@ -113,7 +113,7 @@ public class ValidationReportStepDefinition extends BaseStepsDefinitions {
     private String extractFileName() {
         waitUntilProcessDone();
 
-        String filePath = response.jsonPath().getMap("details").get("filePath").toString();
+        String filePath = response.jsonPath().getMap("details").get("payload").toString();
         String[] address = filePath.split("/");
 
         return address[address.length - 1];
@@ -160,6 +160,7 @@ public class ValidationReportStepDefinition extends BaseStepsDefinitions {
 
     private String getValidationRequestDto(ExportResourceModel exportResourceModel) {
         ValidationRequestDto requestDto = new ValidationRequestDto();
+        requestDto.setWsUiId("1011g");
         requestDto.setResources(Collections.singletonList(exportResourceModel));
 
         return gson.toJson(requestDto);
