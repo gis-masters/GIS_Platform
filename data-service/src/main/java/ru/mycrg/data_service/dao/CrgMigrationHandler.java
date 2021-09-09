@@ -56,6 +56,7 @@ public class CrgMigrationHandler {
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M8__addSrid314and315.sql"));
                 ScriptUtils.executeSqlScript(connection,
                                              ctx.getResource("classpath:sql/M9__updateSchemasAndTables.sql"));
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M10__delete_unused_tables.sql"));
             }
 
             tempDataSource.close();
