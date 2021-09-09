@@ -17,7 +17,7 @@ import static ru.mycrg.data_service_contract.enums.ProcessType.VALIDATION;
 @Service
 public class ValidationHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(ValidationHandler.class);
+    private final Logger log = LoggerFactory.getLogger(ValidationHandler.class);
 
     private final ProcessService processService;
     private final WsNotificationService wsNotificationService;

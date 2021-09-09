@@ -15,7 +15,7 @@ import static ru.mycrg.data_service.service.JsonConverter.mapper;
 @Service
 public class SchemaMapper {
 
-    private static final Logger log = LoggerFactory.getLogger(SchemaMapper.class);
+    private final Logger log = LoggerFactory.getLogger(SchemaMapper.class);
 
     public SchemaDto mapToDto(Schema schema) {
         try {

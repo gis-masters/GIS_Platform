@@ -19,7 +19,7 @@ import static ru.mycrg.data_service.validators.ActualStyleRequestModelValidator.
 @RestController
 public class StylesController {
 
-    private static final Logger log = LoggerFactory.getLogger(StylesController.class);
+    private final Logger log = LoggerFactory.getLogger(StylesController.class);
 
     private final StylesService stylesService;
 

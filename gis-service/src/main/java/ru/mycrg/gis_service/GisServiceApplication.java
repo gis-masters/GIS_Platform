@@ -18,9 +18,9 @@ import ru.mycrg.gis_service.config.CrgProperties;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class GisServiceApplication {
 
-    private static final Logger log = LoggerFactory.getLogger(GisServiceApplication.class);
-
     public static final ObjectMapper objectMapper = new ObjectMapper();
+
+    private final Logger log = LoggerFactory.getLogger(GisServiceApplication.class);
 
     private final CrgProperties properties;
 

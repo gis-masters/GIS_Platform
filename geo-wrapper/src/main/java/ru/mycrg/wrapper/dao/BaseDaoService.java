@@ -25,7 +25,7 @@ import static ru.mycrg.wrapper.dao.DaoProperties.EXTENSION_POSTFIX;
 @Service
 public class BaseDaoService {
 
-    private static final Logger log = LoggerFactory.getLogger(BaseDaoService.class);
+    private final Logger log = LoggerFactory.getLogger(BaseDaoService.class);
 
     ResourceLoader resourceLoader;
     DatasourceFactory datasourceFactory;

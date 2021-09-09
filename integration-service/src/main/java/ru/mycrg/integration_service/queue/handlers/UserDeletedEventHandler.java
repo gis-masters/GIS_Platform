@@ -16,7 +16,7 @@ import static ru.mycrg.integration_service.bpmn.enums.BpmnProcessKey.USER_DELETE
 @Service
 public class UserDeletedEventHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(UserDeletedEventHandler.class);
+    private final Logger log = LoggerFactory.getLogger(UserDeletedEventHandler.class);
 
     private final RuntimeService bpmnRuntimeService;
 

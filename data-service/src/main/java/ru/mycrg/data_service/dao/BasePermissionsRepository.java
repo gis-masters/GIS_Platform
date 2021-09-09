@@ -24,7 +24,7 @@ import static ru.mycrg.data_service.util.RoleHandler.defineRoleById;
 @Transactional
 public class BasePermissionsRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(BasePermissionsRepository.class);
+    private final Logger log = LoggerFactory.getLogger(BasePermissionsRepository.class);
 
     private final PrincipalService principalService;
     private final NamedParameterJdbcTemplate pJdbcTemplate;

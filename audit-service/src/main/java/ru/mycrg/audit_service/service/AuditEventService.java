@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 @Transactional
 public class AuditEventService {
 
-    private static final Logger log = LoggerFactory.getLogger(AuditEventService.class);
+    private final Logger log = LoggerFactory.getLogger(AuditEventService.class);
 
     private final CrgAuditEventRepository auditRepository;
     private final IAuthenticationFacade authenticationFacade;

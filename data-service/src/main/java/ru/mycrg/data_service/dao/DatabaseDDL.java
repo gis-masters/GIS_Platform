@@ -18,7 +18,7 @@ import static ru.mycrg.data_service.dao.DatasourceFactory.INITIAL_SCHEMA_NAME;
 @Service
 public class DatabaseDDL {
 
-    private static final Logger log = LoggerFactory.getLogger(DatabaseDDL.class);
+    private final Logger log = LoggerFactory.getLogger(DatabaseDDL.class);
 
     private final JdbcTemplate jdbcTemplate;
     private final DatasourceFactory datasourceFactory;

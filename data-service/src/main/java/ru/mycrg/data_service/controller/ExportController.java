@@ -26,7 +26,7 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 @RestController
 public class ExportController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(ExportController.class);
+    private final Logger log = LoggerFactory.getLogger(ExportController.class);
 
     private final ExportService exportService;
     private final LayerValidationReportService reporter;

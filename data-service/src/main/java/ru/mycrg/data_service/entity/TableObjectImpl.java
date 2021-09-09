@@ -1,11 +1,12 @@
 package ru.mycrg.data_service.entity;
 
-import lombok.Data;
-
-@Data
 public class TableObjectImpl implements ITableObject {
 
     private Long id;
+
+    public TableObjectImpl() {
+        // Required
+    }
 
     public TableObjectImpl(Long id) {
         this.id = id;

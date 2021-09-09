@@ -12,7 +12,7 @@ import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 
 public class RasterStorage extends GeoServerBaseService {
 
-    private static final Logger log = LoggerFactory.getLogger(RasterStorage.class);
+    private final Logger log = LoggerFactory.getLogger(RasterStorage.class);
 
     public static final String WORKSPACES = "/workspaces/";
     public static final String COVERAGE_STORES = "/coveragestores/";

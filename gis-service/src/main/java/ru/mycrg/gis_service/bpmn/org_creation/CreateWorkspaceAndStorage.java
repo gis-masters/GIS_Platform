@@ -21,7 +21,7 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 @Service("createWorkspaceAndStorage")
 public class CreateWorkspaceAndStorage implements JavaDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(CreateWorkspaceAndStorage.class);
+    private final Logger log = LoggerFactory.getLogger(CreateWorkspaceAndStorage.class);
 
     @Autowired
     private Environment environment;

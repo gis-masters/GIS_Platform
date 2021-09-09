@@ -1,6 +1,7 @@
 package unit;
 
 import org.geotools.referencing.CRS;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengis.referencing.FactoryException;
@@ -15,17 +16,12 @@ import ru.mycrg.data_service.util.CrsHandler;
 import ru.mycrg.data_service.util.EpsgCodes;
 
 import static org.junit.Assert.assertEquals;
+import static unit.EpsgUtil.defineEpsgCodes;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = DataServiceApplication.class)
-@ComponentScan("ru.mycrg.data_service")
 public class CrsHandlerTest {
 
-    @Autowired
-    CrsHandler crsHandler;
-
-    @Autowired
-    EpsgCodes epsgCodes;
+    private final EpsgCodes epsgCodes = defineEpsgCodes();
+    private final CrsHandler crsHandler = new CrsHandler(epsgCodes);
 
     @Test
     public void defineCrsByXCoordinateFiveZone() throws FactoryException {

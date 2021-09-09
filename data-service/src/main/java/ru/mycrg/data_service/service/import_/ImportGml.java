@@ -34,6 +34,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service_contract.enums.ValueType.STRING;
 
@@ -265,14 +266,8 @@ public class ImportGml {
 
             Map<String, Object> propertiesForDB = new HashMap<>();
             for (FeatureProperty featureProperty: featureObject.getProperties()) {
-                ValueType type = featureProperty.getType();
-                Object value = null;
-                if (nonNull(featureProperty.getValue())) {
-                    value = type.equals(ValueType.GEOMETRY)
-                            ? featureProperty.getValue()
-                            : convertToNecessaryType(featureProperty.getValue().toString(), type);
-                }
-                propertiesForDB.put(featureProperty.getName().toLowerCase(), value);
+                propertiesForDB.put(featureProperty.getName().toLowerCase(),
+                                    convertToNecessaryType(featureProperty.getValue(), featureProperty.getType()));
             }
 
             objectMaps[i] = propertiesForDB;
@@ -281,14 +276,26 @@ public class ImportGml {
         return objectMaps;
     }
 
-    private Object convertToNecessaryType(String stringValue, ValueType type) {
-        switch (type) {
-            case DOUBLE:
-                return Double.parseDouble(stringValue);
-            case INT:
-                return Integer.parseInt(stringValue);
-            default:
-                return stringValue;
+    private Object convertToNecessaryType(Object value, ValueType type) {
+        if (isNull(value)) {
+            return null;
+        }
+
+        try {
+            switch (type) {
+                case DOUBLE:
+                    return Double.parseDouble(value.toString().replace(",", "."));
+                case INT:
+                    return Integer.parseInt(value.toString());
+                case GEOMETRY:
+                    return value;
+                default:
+                    return value.toString();
+            }
+        } catch (NumberFormatException ex) {
+            log.warn("Problem with converting to necessary type. {}", ex.getMessage());
+
+            return null;
         }
     }
 

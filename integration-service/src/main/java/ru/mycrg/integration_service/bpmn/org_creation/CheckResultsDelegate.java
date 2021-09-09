@@ -15,10 +15,10 @@ import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 @Service("checkResultsDelegate")
 public class CheckResultsDelegate implements JavaDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(CheckResultsDelegate.class);
-
     public static final int REPEAT_LIMIT = 4;
     public static final long WAIT_INTERVAL = 5_000L;
+
+    private final Logger log = LoggerFactory.getLogger(CheckResultsDelegate.class);
 
     private final HistoryService historyService;
 

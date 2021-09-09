@@ -15,7 +15,7 @@ import java.util.Objects;
 @Service
 public class DatasourceFactory {
 
-    private static final Logger log = LoggerFactory.getLogger(DatasourceFactory.class);
+    private final Logger log = LoggerFactory.getLogger(DatasourceFactory.class);
 
     private final Map<String, HikariDataSource> dataSources = new HashMap<>();
 

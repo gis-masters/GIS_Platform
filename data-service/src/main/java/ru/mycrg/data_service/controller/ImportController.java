@@ -26,7 +26,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 public class ImportController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(ImportController.class);
+    private final Logger log = LoggerFactory.getLogger(ImportController.class);
 
     private final List<Importer> importers;
     private final ImportService importService;

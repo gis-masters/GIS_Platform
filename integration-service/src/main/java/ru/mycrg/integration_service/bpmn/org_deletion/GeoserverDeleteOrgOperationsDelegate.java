@@ -21,7 +21,7 @@ import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 @Service
 public class GeoserverDeleteOrgOperationsDelegate implements JavaDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(GeoserverDeleteOrgOperationsDelegate.class);
+    private final Logger log = LoggerFactory.getLogger(GeoserverDeleteOrgOperationsDelegate.class);
 
     private final BaseHttpService baseHttpService;
 

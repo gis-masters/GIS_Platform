@@ -16,7 +16,7 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 @Service
 public class BasemapReferencesDeletionEventHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(BasemapReferencesDeletionEventHandler.class);
+    private final Logger log = LoggerFactory.getLogger(BasemapReferencesDeletionEventHandler.class);
 
     private final BasemapService basemapService;
 

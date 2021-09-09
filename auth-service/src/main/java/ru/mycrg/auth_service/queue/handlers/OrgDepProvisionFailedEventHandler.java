@@ -18,7 +18,7 @@ import static ru.mycrg.auth_service.service.OrganizationStatus.PROVISIONING_FAIL
 @Transactional
 public class OrgDepProvisionFailedEventHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(OrgDepProvisionFailedEventHandler.class);
+    private final Logger log = LoggerFactory.getLogger(OrgDepProvisionFailedEventHandler.class);
 
     private final OrganizationRepository organizationRepository;
 

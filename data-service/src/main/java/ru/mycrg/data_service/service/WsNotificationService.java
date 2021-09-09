@@ -10,7 +10,7 @@ import ru.mycrg.data_service.dto.WsMessageDto;
 @Service
 public class WsNotificationService {
 
-    private static final Logger log = LoggerFactory.getLogger(WsNotificationService.class);
+    private final Logger log = LoggerFactory.getLogger(WsNotificationService.class);
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 

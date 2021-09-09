@@ -1,10 +1,10 @@
 package unit;
 
 import org.geotools.referencing.CRS;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -12,30 +12,22 @@ import org.locationtech.jts.geom.Polygon;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.postgis.Point;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.junit4.SpringRunner;
-import ru.mycrg.data_service.DataServiceApplication;
 import ru.mycrg.data_service.util.EpsgCodes;
+import ru.mycrg.data_service.util.GeometryProjection;
 import ru.mycrg.data_service.util.TransformationGeometryUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static unit.EpsgUtil.defineEpsgCodes;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = DataServiceApplication.class)
-@ComponentScan("ru.mycrg.data_service")
 public class TransformationGeometryTest {
 
-    @Autowired
-    private TransformationGeometryUtils transformationGeometryUtils;
-
-    @Autowired
-    EpsgCodes epsgCodes;
+    private final EpsgCodes epsgCodes = defineEpsgCodes();
+    private final TransformationGeometryUtils transformationGeometryUtils = new TransformationGeometryUtils(epsgCodes);
 
     private final List<Polygon> polygons = new ArrayList<>();
     private final GeometryFactory geometryFactory = new GeometryFactory();

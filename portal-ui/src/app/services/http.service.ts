@@ -16,6 +16,7 @@ interface RequestConfig extends AxiosRequestConfig {
 
 interface RequestConfigWithCache extends RequestConfig {
   cache?: CustomCacheConfig;
+  isAuthenticate?: boolean;
 }
 
 export class Http {
@@ -96,7 +97,7 @@ export class Http {
   }
 
   async post<T>(url: string, data?: unknown, configWithCache: RequestConfigWithCache = {}): Promise<T> {
-    const { cache: requestCacheConfig = {}, ...config } = configWithCache;
+    const { cache: requestCacheConfig = {}, isAuthenticate, ...config } = configWithCache;
     const cacheConfig = { disabled: true, clear: true, ...requestCacheConfig };
     const cacheKey = 'POST:' + this.axios.getUri({ url, ...config }) + ' DATA:' + JSON.stringify(data);
     const fromCache = this.cache.match(cacheKey, { disabled: true, clear: true, ...cacheConfig });
@@ -115,6 +116,11 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
+
+      if (err.response.status === 401 && isAuthenticate) {
+        throw error;
+      }
+
       if (err.response.status === 401 && route.data.isAuthRequired) {
         await this.waitForAuth();
 

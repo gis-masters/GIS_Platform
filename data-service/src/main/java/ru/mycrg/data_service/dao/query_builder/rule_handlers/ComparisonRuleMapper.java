@@ -12,7 +12,7 @@ import static com.healthmarketscience.sqlbuilder.BinaryCondition.*;
 
 public class ComparisonRuleMapper implements RuleMapper {
 
-    private static final Logger log = LoggerFactory.getLogger(ComparisonRuleMapper.class);
+    private final Logger log = LoggerFactory.getLogger(ComparisonRuleMapper.class);
 
     @Override
     public Condition map(RuleFilter ruleFilter) {

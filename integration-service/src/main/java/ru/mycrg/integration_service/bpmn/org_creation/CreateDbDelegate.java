@@ -23,7 +23,7 @@ import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.IS_CREAT
 @Service
 public class CreateDbDelegate implements JavaDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(CreateDbDelegate.class);
+    private final Logger log = LoggerFactory.getLogger(CreateDbDelegate.class);
 
     private final BaseHttpService baseHttpService;
 

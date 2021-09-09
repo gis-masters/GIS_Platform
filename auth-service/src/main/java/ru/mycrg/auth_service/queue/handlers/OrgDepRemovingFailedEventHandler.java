@@ -10,7 +10,7 @@ import ru.mycrg.messagebus_contract.IEventHandler;
 @Service
 public class OrgDepRemovingFailedEventHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(OrgDepRemovingFailedEventHandler.class);
+    private final Logger log = LoggerFactory.getLogger(OrgDepRemovingFailedEventHandler.class);
 
     public OrgDepRemovingFailedEventHandler() {
         // Required

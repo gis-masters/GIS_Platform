@@ -1,12 +1,10 @@
 package ru.mycrg.data_service.exceptions;
 
-import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.util.Collections;
 import java.util.List;
 
-@Data
 public class ApiErrorModel {
 
     private HttpStatus status;
@@ -28,5 +26,29 @@ public class ApiErrorModel {
     public ApiErrorModel(final HttpStatus status, String message) {
         this.status = status;
         this.message = message;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(HttpStatus status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public List<ErrorInfo> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(List<ErrorInfo> errors) {
+        this.errors = errors;
     }
 }

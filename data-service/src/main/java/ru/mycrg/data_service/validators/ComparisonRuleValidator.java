@@ -10,6 +10,10 @@ public class ComparisonRuleValidator {
     }
 
     public static boolean validate(ComparisonRuleFilter filter, Object actualValue) {
+        if (actualValue == null) {
+            return false;
+        }
+
         final String expected = filter.getLiteral();
         final ComparisonRuleOperator operator = filter.getOperator();
 

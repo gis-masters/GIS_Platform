@@ -67,7 +67,7 @@ class AuthService {
       'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'
     };
 
-    const options = { withCredentials: true, headers };
+    const options = { withCredentials: true, isAuthenticate: true, headers };
     const authUrl = await getAuthUrl();
     try {
       const environment = await getEnvironment();

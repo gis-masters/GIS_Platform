@@ -46,9 +46,9 @@ import static ru.mycrg.wrapper.service.export.GmlUtil.*;
 @Service
 public class GmlGenerator implements IExporter {
 
-    private static final Logger log = LoggerFactory.getLogger(GmlGenerator.class);
-
     private static final String GML_ID = "gml:id";
+
+    private final Logger log = LoggerFactory.getLogger(GmlGenerator.class);
 
     private final WKBReader wkb = new WKBReader();
     private long idCounter = 1;

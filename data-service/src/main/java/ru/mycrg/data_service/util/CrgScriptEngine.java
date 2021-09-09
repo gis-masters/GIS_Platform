@@ -11,7 +11,7 @@ import java.util.Map;
 @Service
 public class CrgScriptEngine {
 
-    private static final Logger log = LoggerFactory.getLogger(CrgScriptEngine.class);
+    private final Logger log = LoggerFactory.getLogger(CrgScriptEngine.class);
 
     private final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
     private final Compilable compilable = (Compilable) engine;

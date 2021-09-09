@@ -51,7 +51,7 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.INNER_PATH;
 @RestController
 public class DocumentLibraryRecordsController {
 
-    private static final Logger log = LoggerFactory.getLogger(DocumentLibraryRecordsController.class);
+    private final Logger log = LoggerFactory.getLogger(DocumentLibraryRecordsController.class);
 
     private final SchemaService schemaService;
     private final RecordsService recordsService;

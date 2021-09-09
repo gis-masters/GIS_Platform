@@ -54,7 +54,7 @@ class CurrentProject implements CrgProjectData {
   @observable groups: (CrgLayersGroup | NewCrgLayersGroup)[];
   @observable primalLayers: CrgLayer[];
   @observable primalGroups: (CrgLayersGroup | NewCrgLayersGroup)[];
-  @observable layersErrors: { [key: string]: string[] };
+  @observable layersErrors: Record<string, string[]>;
   @observable attributeTableFilter: AttributeTableFilter = {};
   @observable role: Role;
 
@@ -94,7 +94,6 @@ class CurrentProject implements CrgProjectData {
       })
       .map((item, i, tree) => {
         item.depth = this.getDept(item);
-        item.visible = !(item.errors && item.errors.length) && this.getGenusVisibility(item);
         item.hiddenByZoom = this.isHiddenByZoom(item);
 
         if (!item.isGroup) {
@@ -102,6 +101,16 @@ class CurrentProject implements CrgProjectData {
         } else {
           item.isEmptyGroup = !tree.some(someItem => !someItem.isGroup && this.isAncestor(someItem, item));
         }
+
+        if (!item.errors && (item.payload as NewCrgLayer).complexName) {
+          const itemPayload = item.payload as NewCrgLayer;
+
+          if (this.layersErrors[itemPayload.complexName]) {
+            item.errors = this.layersErrors[itemPayload.complexName];
+          }
+        }
+
+        item.visible = !(item.errors && item.errors.length) && this.getGenusVisibility(item);
 
         return item;
       })
@@ -183,17 +192,17 @@ class CurrentProject implements CrgProjectData {
 
   @computed
   get vectorLayers() {
-    return this.layers.filter(l => l.type === CrgLayerType.VECTOR);
+    return this.layers?.filter(l => l.type === CrgLayerType.VECTOR) || [];
   }
 
   @computed
   get rasterLayers() {
-    return this.layers.filter(l => l.type === CrgLayerType.RASTER);
+    return this.layers?.filter(l => l.type === CrgLayerType.RASTER) || [];
   }
 
   @computed
   get externalLayers() {
-    return this.layers.filter(l => l.type === CrgLayerType.EXTERNAL);
+    return this.layers?.filter(l => l.type === CrgLayerType.EXTERNAL) || [];
   }
 
   @computed

@@ -20,7 +20,7 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
  */
 public class CrgDataSource extends DatasourceFactory implements DataSource {
 
-    private static final Logger log = LoggerFactory.getLogger(CrgDataSource.class);
+    private final Logger log = LoggerFactory.getLogger(CrgDataSource.class);
 
     private final DataSource dataSource;
     private final HttpServletRequest httpServletRequest;

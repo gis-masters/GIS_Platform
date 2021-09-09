@@ -18,7 +18,7 @@ import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 @Service
 public class DeleteDbDelegate implements JavaDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(DeleteDbDelegate.class);
+    private final Logger log = LoggerFactory.getLogger(DeleteDbDelegate.class);
 
     private final BaseHttpService baseHttpService;
 

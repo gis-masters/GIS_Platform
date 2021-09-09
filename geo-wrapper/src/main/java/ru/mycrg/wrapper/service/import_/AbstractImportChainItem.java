@@ -8,7 +8,7 @@ import ru.mycrg.wrapper.service.CrgChainable;
 
 public abstract class AbstractImportChainItem implements CrgChainable<ImportMqTask> {
 
-    private static final Logger log = LoggerFactory.getLogger(AbstractImportChainItem.class);
+    private final Logger log = LoggerFactory.getLogger(AbstractImportChainItem.class);
 
     @Nullable
     CrgChainable<ImportMqTask> nextImporter;

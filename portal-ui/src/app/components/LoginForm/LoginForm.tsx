@@ -149,7 +149,11 @@ export class LoginForm extends Component<LoginFormProps> {
       this.setUsernameError('Пожалуйста введите корректный e-mail в формате name@domain');
     }
 
-    if (this.usernameError) return;
+    if (this.usernameError) {
+      this.handleLoading(false);
+
+      return;
+    }
 
     const result = await authService.authenticate(this.userData);
     this.handleLoading(false);

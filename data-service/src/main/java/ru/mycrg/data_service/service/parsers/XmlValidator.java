@@ -20,7 +20,7 @@ import static javax.xml.validation.SchemaFactory.newInstance;
 @Component
 public class XmlValidator {
 
-    private static final Logger log = LoggerFactory.getLogger(XmlValidator.class);
+    private final Logger log = LoggerFactory.getLogger(XmlValidator.class);
 
     private final SchemaFactory factory;
     private final ResourceLoader resourceLoader;

@@ -65,7 +65,7 @@ interface StyleFilterElse {
   operator: StyleFilterOperator.ELSE;
 }
 
-const sldStyles: Record<string, Promise<void>> = {};
+const sldStyles: Record<string, Promise<Rule[]>> = {};
 
 export async function loadAllLayersStyles(): Promise<void> {
   for (const { payload: layer } of currentProject.visibleLayersWithoutRasters) {
@@ -78,10 +78,10 @@ export async function loadLayerStyle(layer: CrgLayer): Promise<void> {
     sldStyles[layer.styleName] = _loadLayerStyle(layer);
   }
 
-  await sldStyles[layer.styleName];
+  patch(layer, { style: await sldStyles[layer.styleName] });
 }
 
-async function _loadLayerStyle(layer: CrgLayer) {
+async function _loadLayerStyle(layer: CrgLayer): Promise<Rule[]> {
   const sldStyle = await getStyleSld(layer.styleName);
   const xmlDoc = new DOMParser().parseFromString(sldStyle, 'text/xml');
 
@@ -95,7 +95,7 @@ async function _loadLayerStyle(layer: CrgLayer) {
         : parseFilter(ruleXml.querySelector('Filter')?.firstElementChild)
     }));
 
-  const rules = await Promise.all(
+  return await Promise.all(
     rulesWithoutLegend.map(async rule => {
       const blob = await getLegendGraphicByRuleName(layer.complexName, rule.name);
       const img = await createImageFromBlob(blob);
@@ -106,8 +106,6 @@ async function _loadLayerStyle(layer: CrgLayer) {
       };
     })
   );
-
-  patch(layer, { style: rules });
 }
 
 function parseFilter(xmlFilter?: Element): StyleFilter | undefined {

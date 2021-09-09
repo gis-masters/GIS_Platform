@@ -32,7 +32,7 @@ import java.util.Set;
 @RepositoryEventHandler
 public class GroupService {
 
-    private static final Logger log = LoggerFactory.getLogger(GroupService.class);
+    private final Logger log = LoggerFactory.getLogger(GroupService.class);
 
     private static final String GROUP = "Группа";
     private static final String ORGANIZATION = "Организация";

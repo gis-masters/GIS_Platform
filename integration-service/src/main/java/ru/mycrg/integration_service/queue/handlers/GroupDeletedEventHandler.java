@@ -17,7 +17,7 @@ import static ru.mycrg.integration_service.bpmn.enums.BpmnProcessKey.CLEAR_GROUP
 @Service
 public class GroupDeletedEventHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(GroupDeletedEventHandler.class);
+    private final Logger log = LoggerFactory.getLogger(GroupDeletedEventHandler.class);
 
     private final RuntimeService bpmnRuntimeService;
 

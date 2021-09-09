@@ -20,7 +20,7 @@ import static ru.mycrg.auth_service.service.OrganizationStatus.PROVISIONED;
 @Transactional
 public class OrgDepProvisionSuccessEventHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(OrgDepProvisionSuccessEventHandler.class);
+    private final Logger log = LoggerFactory.getLogger(OrgDepProvisionSuccessEventHandler.class);
 
     private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;

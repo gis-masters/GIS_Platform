@@ -33,7 +33,7 @@ import static ru.mycrg.integration_service.bpmn.enums.ResourceAnalyzeProcessVari
 @Service
 public class ResourceAnalyzerService {
 
-    private static final Logger log = LoggerFactory.getLogger(ResourceAnalyzerService.class);
+    private final Logger log = LoggerFactory.getLogger(ResourceAnalyzerService.class);
 
     private final RuntimeService bpmnRuntimeService;
     private final IAuthenticationFacade authenticationFacade;

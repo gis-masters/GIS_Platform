@@ -25,7 +25,7 @@ public class AuditEventHandler implements IEventHandler {
 
     public static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
 
-    private static final Logger log = LoggerFactory.getLogger(AuditEventHandler.class);
+    private final Logger log = LoggerFactory.getLogger(AuditEventHandler.class);
 
     private final BaseHttpService baseHttpService;
 

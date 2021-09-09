@@ -18,7 +18,7 @@ import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_ERROR;
 @Service
 public class GeometryHandler extends AbstractImportChainItem {
 
-    private static final Logger log = LoggerFactory.getLogger(GeometryHandler.class);
+    private final Logger log = LoggerFactory.getLogger(GeometryHandler.class);
 
     private final IMessageBusProducer messageBus;
     private final CrgDaoGeometryHelper geometryHelper;

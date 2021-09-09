@@ -17,7 +17,7 @@ import static ru.mycrg.data_service.dao.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 @Service
 public class CrgMigrationHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(CrgMigrationHandler.class);
+    private final Logger log = LoggerFactory.getLogger(CrgMigrationHandler.class);
 
     private final ApplicationContext ctx;
     private final DatasourceFactory datasourceFactory;

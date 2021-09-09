@@ -37,7 +37,7 @@ import static ru.mycrg.auth_service_contract.Authorities.USER;
 @Transactional
 public class UserService {
 
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 

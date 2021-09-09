@@ -31,7 +31,7 @@ import static ru.mycrg.data_service.dao.SqlBuilder.buildOrderBySection;
 @Transactional
 public class TablesDao {
 
-    private static final Logger log = LoggerFactory.getLogger(TablesDao.class);
+    private final Logger log = LoggerFactory.getLogger(TablesDao.class);
 
     private final NamedParameterJdbcTemplate pJdbcTemplate;
 

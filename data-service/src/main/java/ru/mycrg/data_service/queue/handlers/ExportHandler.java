@@ -17,7 +17,7 @@ import static ru.mycrg.data_service_contract.enums.ProcessType.EXPORT;
 @Service
 public class ExportHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(ExportHandler.class);
+    private final Logger log = LoggerFactory.getLogger(ExportHandler.class);
 
     private final ProcessService processService;
     private final WsNotificationService wsNotificationService;

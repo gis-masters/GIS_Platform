@@ -10,6 +10,12 @@ public class ComparisonRuleFilter implements RuleFilter {
         // Required
     }
 
+    public ComparisonRuleFilter(ComparisonRuleOperator operator, String propertyName, String literal) {
+        this.operator = operator;
+        this.propertyName = propertyName;
+        this.literal = literal;
+    }
+
     public ComparisonRuleOperator getOperator() {
         return operator;
     }

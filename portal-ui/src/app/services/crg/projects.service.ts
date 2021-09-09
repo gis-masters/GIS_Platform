@@ -23,7 +23,7 @@ import {
 } from '../server-urls.service';
 import { Toast } from '../../components/Toast/Toast';
 import { communicationService } from '../communication.service';
-import { mapLinkFollowing, MAP_QUERY_PARAMS_DELIMITER } from '../map/map-link-following.service';
+import { MAP_QUERY_PARAMS_DELIMITER } from '../map/map-link-following.service';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -197,8 +197,6 @@ class ProjectsService {
   }
 
   async testCurrentProjectLayers() {
-    const serverErrors: Record<string, string>[] = [];
-
     const testingProjectId = currentProject.id;
 
     for (const layer of currentProject.layers) {
@@ -230,13 +228,10 @@ class ProjectsService {
       );
 
       if (errors.length) {
-        serverErrors.push({ schemaId: layer.schemaId, error: errors[0] });
         currentProject.setLayerError(layer.complexName, errors);
         services.logger.error(errors);
       }
     }
-
-    mapLinkFollowing.showLayersServerErrorMessage(serverErrors, 'Ошибка получения данных слоя с сервера');
   }
 
   async create(name: string): Promise<CrgProject> {

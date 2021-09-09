@@ -13,7 +13,7 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 @Service
 public class LayerReferencesDeletionEventHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(LayerReferencesDeletionEventHandler.class);
+    private final Logger log = LoggerFactory.getLogger(LayerReferencesDeletionEventHandler.class);
 
     private final LayerService layerService;
 

@@ -1,4 +1,3 @@
-import { Toast } from '../../components/Toast/Toast';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { route } from '../../stores/Route.store';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
@@ -121,19 +120,6 @@ class MapLinkFollowing {
       sidebars.openFeatures(this.features);
     } else if ((!this.features.length && this.featuresWithErrors) || this.features.length > 1) {
       sidebars.openFeaturesWithError();
-    }
-  }
-
-  showLayersServerErrorMessage(rejectedSchemas: Record<string, string>[], message: string): void {
-    if (rejectedSchemas.length) {
-      Toast.warn({
-        message,
-        details: rejectedSchemas
-          .map(layer => {
-            return `${layer.error}`;
-          })
-          .join('\n')
-      });
     }
   }
 }

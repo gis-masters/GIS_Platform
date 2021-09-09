@@ -20,7 +20,7 @@ import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 @Service
 public class ImportHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(ImportHandler.class);
+    private final Logger log = LoggerFactory.getLogger(ImportHandler.class);
 
     private final ProcessService processService;
     private final WsNotificationService wsNotificationService;

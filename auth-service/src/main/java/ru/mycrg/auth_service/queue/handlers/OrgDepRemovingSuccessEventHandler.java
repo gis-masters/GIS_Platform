@@ -15,7 +15,7 @@ import javax.transaction.Transactional;
 @Transactional
 public class OrgDepRemovingSuccessEventHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(OrgDepRemovingSuccessEventHandler.class);
+    private final Logger log = LoggerFactory.getLogger(OrgDepRemovingSuccessEventHandler.class);
 
     private final OrganizationRepository organizationRepository;
 

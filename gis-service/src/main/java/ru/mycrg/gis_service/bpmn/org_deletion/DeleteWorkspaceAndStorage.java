@@ -15,7 +15,7 @@ import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.WORKSPACES_VAR_NAME;
 @Service("deleteWorkspaceAndStorage")
 public class DeleteWorkspaceAndStorage implements JavaDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(DeleteWorkspaceAndStorage.class);
+    private final Logger log = LoggerFactory.getLogger(DeleteWorkspaceAndStorage.class);
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {

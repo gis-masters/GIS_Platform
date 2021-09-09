@@ -18,7 +18,7 @@ import static ru.mycrg.geoserver_client.services.rule.RulesUtil.*;
 
 public class RulesService extends GeoServerBaseService {
 
-    private static final Logger log = LoggerFactory.getLogger(RulesService.class);
+    private final Logger log = LoggerFactory.getLogger(RulesService.class);
 
     public static final String LAYERS_URL = getGeoserverRestUrl() + "/security/acl/layers/";
     public static final String REST_URL = getGeoserverRestUrl() + "/security/acl/rest";

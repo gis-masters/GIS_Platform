@@ -12,7 +12,7 @@ import ru.mycrg.gis_service.dto.LayerCreateDto;
 @Service
 public class CrgLayerValidator implements Validator {
 
-    private static final Logger log = LoggerFactory.getLogger(CrgLayerValidator.class);
+    private final Logger log = LoggerFactory.getLogger(CrgLayerValidator.class);
 
     public static final String NATIVE_CRS = "nativeCRS";
     public static final String DATA_STORE_NAME = "dataStoreName";

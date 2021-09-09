@@ -13,7 +13,7 @@ import static ru.mycrg.wrapper.dao.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 @Service
 public class CrgDaoGeometryHelper {
 
-    private static final Logger log = LoggerFactory.getLogger(CrgDaoGeometryHelper.class);
+    private final Logger log = LoggerFactory.getLogger(CrgDaoGeometryHelper.class);
 
     public CrgDaoGeometryHelper() {
         // Required

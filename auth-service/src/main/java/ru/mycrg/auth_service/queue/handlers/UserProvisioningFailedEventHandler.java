@@ -15,7 +15,7 @@ import javax.transaction.Transactional;
 @Transactional
 public class UserProvisioningFailedEventHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(UserProvisioningFailedEventHandler.class);
+    private final Logger log = LoggerFactory.getLogger(UserProvisioningFailedEventHandler.class);
 
     private final UserRepository userRepository;
 

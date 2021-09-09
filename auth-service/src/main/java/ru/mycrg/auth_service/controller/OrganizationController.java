@@ -24,7 +24,7 @@ import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_
 @RequestMapping(value = "/organizations")
 public class OrganizationController {
 
-    private static final Logger log = LoggerFactory.getLogger(OrganizationController.class);
+    private final Logger log = LoggerFactory.getLogger(OrganizationController.class);
 
     @Autowired
     private OrganizationService organizationService;
