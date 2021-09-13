@@ -339,8 +339,8 @@ public class GmlParser {
             for (String pointCoordinate: points) {
                 String[] pointXY = pointCoordinate.split(",");
                 if (pointXY.length == 2) {
-                    double pointX = Double.parseDouble(pointXY[1]);
-                    double pointY = Double.parseDouble(pointXY[0]);
+                    double pointX = Double.parseDouble(pointXY[0]);
+                    double pointY = Double.parseDouble(pointXY[1]);
                     Point point = invertCoordinates
                             ? new Point(pointY, pointX)
                             : new Point(pointX, pointY);
@@ -368,8 +368,8 @@ public class GmlParser {
         List<Point> coordinateList = new ArrayList<>();
         if (splitCoordinates.length % 2 == 0) {
             for (int i = 0; i < splitCoordinates.length; i = i + 2) {
-                double pointX = Double.parseDouble(splitCoordinates[i + 1]);
-                double pointY = Double.parseDouble(splitCoordinates[i]);
+                double pointX = Double.parseDouble(splitCoordinates[i]);
+                double pointY = Double.parseDouble(splitCoordinates[i + 1]);
                 Point point = invertCoordinates
                         ? new Point(pointY, pointX)
                         : new Point(pointX, pointY);
