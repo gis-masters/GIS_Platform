@@ -106,6 +106,7 @@ export class Layer extends Component<LayerProps> {
           y={this.menuY}
           anchor={this.menuAnchor}
           onClose={this.handleContextMenuClose}
+          layerWithError={this.isError}
           editMode={editMode}
         />
       </div>

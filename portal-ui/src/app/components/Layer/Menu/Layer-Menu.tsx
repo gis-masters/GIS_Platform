@@ -46,6 +46,7 @@ interface LayerMenuProps {
   onClose: () => void;
   isGroup: boolean;
   editMode: boolean;
+  layerWithError: boolean;
 }
 
 @observer
@@ -63,7 +64,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   render() {
-    const { open, x, y, onClose, anchor, entity, isGroup, editMode } = this.props;
+    const { open, x, y, onClose, anchor, entity, isGroup, editMode, layerWithError } = this.props;
 
     return (
       <>
@@ -126,7 +127,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && editMode && this.layersDeleteAllowed && (
+          {((!isGroup && layerWithError) || (!isGroup && editMode && this.layersDeleteAllowed)) && (
             <MenuItem onClick={this.deleteLayer}>
               <ListItemIcon>
                 <DeleteOutline />

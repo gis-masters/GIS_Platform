@@ -141,6 +141,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    mapStore.setMode(MapModes.DEFAULT);
     mapService.destroyMap();
     printSettings.reset();
     this.reactionDisposer();
