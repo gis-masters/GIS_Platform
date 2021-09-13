@@ -140,7 +140,7 @@ class MapService {
       { fireImmediately: true }
     );
 
-    this.debouncedZoomEvent = debounce(() => this.zoomChanged.emit(this.view.getZoom()), 100);
+    this.debouncedZoomEvent = debounce(() => this.zoomChanged.emit(this.view?.getZoom()), 100);
 
     this.isTiledWms = Boolean(localStorage.getItem('tiledWms'));
   }
