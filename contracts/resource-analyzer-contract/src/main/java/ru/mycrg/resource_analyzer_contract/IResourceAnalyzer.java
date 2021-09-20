@@ -1,5 +1,6 @@
 package ru.mycrg.resource_analyzer_contract;
 
+import java.net.URL;
 import java.util.List;
 
 public interface IResourceAnalyzer {
@@ -15,4 +16,6 @@ public interface IResourceAnalyzer {
     String getErrorMessageTemplate();
 
     int getBatchSize();
+
+    URL getReceiveDataUrl();
 }

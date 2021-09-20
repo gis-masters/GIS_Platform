@@ -85,7 +85,8 @@ public class TaskExecutorDelegate implements JavaDelegate {
 
     @NotNull
     private URL buildUrl(DelegateExecution execution, ResourceAnalyzeTask task) throws MalformedURLException {
-        final URL serviceRoot = task.getAnalyzer().getUrl();
+        URL serviceRoot = task.getAnalyzer().getReceiveDataUrl();
+
         final Integer batchSize = task.getAnalyzer().getBatchSize();
         final String resourcePath = String.format("%s/%s/entities?size=%d&page=%d",
                                                   resourcesQueryBasePath,

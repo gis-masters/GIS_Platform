@@ -2,6 +2,7 @@ package ru.mycrg.gis_service.service.resource_analyze.analyzers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.mycrg.geoserver_client.services.layers.LayersService;
 import ru.mycrg.geoserver_client.services.layers.models.Layer;
@@ -19,6 +20,8 @@ import ru.mycrg.resource_analyzer_contract.IResourceDefinition;
 import ru.mycrg.resource_analyzer_contract.impl.ResourceAnalyzerResult;
 import ru.mycrg.resource_analyzer_contract.impl.ResourceDefinition;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,10 +34,15 @@ public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
     private final LayerService layerService;
     private final IAuthenticationFacade authenticationFacade;
 
+    private final URL gisServiceUrl;
+
     public VectorLayerDefaultStyleAnalyzer(LayerService layerService,
-                                           IAuthenticationFacade authenticationFacade) {
+                                           Environment environment,
+                                           IAuthenticationFacade authenticationFacade) throws MalformedURLException {
         this.layerService = layerService;
         this.authenticationFacade = authenticationFacade;
+
+        this.gisServiceUrl = new URL(environment.getRequiredProperty("crg-options.gis-service-url"));
     }
 
     /**
@@ -78,6 +86,11 @@ public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
     @Override
     public int getBatchSize() {
         return 10;
+    }
+
+    @Override
+    public URL getReceiveDataUrl() {
+        return gisServiceUrl;
     }
 
     private void checkResourcesForAppropriateType(List<? extends IResource> resources) {

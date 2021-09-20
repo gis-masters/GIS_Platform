@@ -3,8 +3,8 @@ package ru.mycrg.data_service.service.resource_analyze;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.mycrg.resource_analyzer_contract.IResourceAnalyzer;
-import ru.mycrg.resource_analyzer_contract.impl.BaseResourceAnalyzerService;
 import ru.mycrg.resource_analyzer_contract.IResourceAnalyzerService;
+import ru.mycrg.resource_analyzer_contract.impl.BaseResourceAnalyzerService;
 
 import java.util.ArrayList;
 import java.util.List;

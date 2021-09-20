@@ -1,8 +1,8 @@
 package ru.mycrg.data_service.service;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.core.annotation.HandleAfterDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.entity.BaseMap;
 import ru.mycrg.data_service.exceptions.CrgValidationException;
+import ru.mycrg.data_service.repository.BaseMapRepository;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service_contract.queue.request.BasemapReferencesDeletionEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
@@ -25,18 +26,19 @@ import static ru.mycrg.data_service.mappers.BasemapMapper.basemapMapper;
 @RepositoryEventHandler
 public class BasemapsService {
 
-    private static final Logger log = LoggerFactory.getLogger(BasemapsService.class);
-
     private final Validator validator;
     private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
+    private final BaseMapRepository baseMapRepository;
 
     public BasemapsService(Validator validator,
                            IMessageBusProducer messageBus,
-                           IAuthenticationFacade authenticationFacade) {
+                           IAuthenticationFacade authenticationFacade,
+                           BaseMapRepository baseMapRepository) {
         this.validator = validator;
         this.messageBus = messageBus;
         this.authenticationFacade = authenticationFacade;
+        this.baseMapRepository = baseMapRepository;
     }
 
     @Transactional
@@ -58,6 +60,10 @@ public class BasemapsService {
                 new BasemapReferencesDeletionEvent(baseMap.getId(),
                                                    baseMap.getLayerName(),
                                                    authenticationFacade.getAccessToken()));
+    }
+
+    public Page<BaseMap> getWithNotNullLayerName(Pageable pageable) {
+        return baseMapRepository.findBaseMapByLayerNameNotNull(pageable);
     }
 
     private <T> void validate(T bean) {

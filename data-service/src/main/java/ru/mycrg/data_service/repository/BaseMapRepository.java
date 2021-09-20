@@ -21,4 +21,6 @@ public interface BaseMapRepository extends PagingAndSortingRepository<BaseMap, L
 
     // Do not remove. Method used: "/api/data/basemaps/search/findByIdIn?ids="
     Page<BaseMap> findByIdIn(@Param("ids") Collection<Long> ids, Pageable p);
+
+    Page<BaseMap> findBaseMapByLayerNameNotNull(Pageable pageable);
 }

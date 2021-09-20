@@ -3,6 +3,7 @@ package ru.mycrg.gis_service.service.resource_analyze.analyzers;
 import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.mycrg.geoserver_client.services.wms.WmsProperties;
 import ru.mycrg.geoserver_client.services.wms.WmsService;
@@ -16,6 +17,8 @@ import ru.mycrg.resource_analyzer_contract.IResourceDefinition;
 import ru.mycrg.resource_analyzer_contract.impl.ResourceAnalyzerResult;
 import ru.mycrg.resource_analyzer_contract.impl.ResourceDefinition;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,8 +35,13 @@ public class LayerExistenceByWmsAnalyzer implements IResourceAnalyzer {
 
     private final IAuthenticationFacade authenticationFacade;
 
-    public LayerExistenceByWmsAnalyzer(IAuthenticationFacade authenticationFacade) {
+    private final URL gisServiceUrl;
+
+    public LayerExistenceByWmsAnalyzer(Environment environment,
+                                       IAuthenticationFacade authenticationFacade) throws MalformedURLException {
         this.authenticationFacade = authenticationFacade;
+
+        this.gisServiceUrl = new URL(environment.getRequiredProperty("crg-options.gis-service-url"));
     }
 
     @Override
@@ -69,6 +77,11 @@ public class LayerExistenceByWmsAnalyzer implements IResourceAnalyzer {
     @Override
     public int getBatchSize() {
         return 5;
+    }
+
+    @Override
+    public URL getReceiveDataUrl() {
+        return gisServiceUrl;
     }
 
     private ResourceAnalyzerResult analyzeResource(IResource layer) {

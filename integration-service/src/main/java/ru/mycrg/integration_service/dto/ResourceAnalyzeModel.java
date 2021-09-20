@@ -14,6 +14,7 @@ public class ResourceAnalyzeModel implements Serializable {
     private List<ResourceDefinition> resourceDefinitions;
     private String errorMessageTemplate;
     private URL url;
+    private URL receiveDataUrl;
 
     public ResourceAnalyzeModel() {
         // Required
@@ -66,5 +67,13 @@ public class ResourceAnalyzeModel implements Serializable {
 
     public void setUrl(URL url) {
         this.url = url;
+    }
+
+    public URL getReceiveDataUrl() {
+        return receiveDataUrl;
+    }
+
+    public void setReceiveDataUrl(URL receiveDataUrl) {
+        this.receiveDataUrl = receiveDataUrl;
     }
 }

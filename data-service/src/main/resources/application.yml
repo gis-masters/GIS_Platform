@@ -46,6 +46,7 @@ management:
 crg-options:
   auth-service-url: http://127.0.0.1:9000
   gis-service-url: http://127.0.0.1:8082
+  data-service-url: http://127.0.0.1:8084
   fileStoragePath: /opt/file_storage
   geoserverDbName: geoserver_db
   exportStoragePath: /opt/export/
