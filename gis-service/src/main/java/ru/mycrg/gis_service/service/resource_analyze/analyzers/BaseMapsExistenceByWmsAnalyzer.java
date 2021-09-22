@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import ru.mycrg.geoserver_client.services.layers.LayersService;
+import ru.mycrg.geoserver_client.services.layers.VectorLayer;
 import ru.mycrg.geoserver_client.services.layers.models.Layer;
 import ru.mycrg.geoserver_client.services.wms.WmsProperties;
 import ru.mycrg.geoserver_client.services.wms.WmsService;
@@ -55,10 +55,10 @@ public class BaseMapsExistenceByWmsAnalyzer implements IResourceAnalyzer {
     @Override
     public List<IResourceAnalyzerResult> analyze(List<? extends IResource> resources) {
         checkResourcesBody(resources);
-        final LayersService layersService = new LayersService(authenticationFacade.getAccessToken());
+        final VectorLayer vectorLayer = new VectorLayer(authenticationFacade.getAccessToken());
 
         return resources.stream()
-                        .map(baseMap -> analyzeResource(baseMap, layersService))
+                        .map(baseMap -> analyzeResource(baseMap, vectorLayer))
                         .collect(Collectors.toUnmodifiableList());
     }
 
@@ -92,10 +92,10 @@ public class BaseMapsExistenceByWmsAnalyzer implements IResourceAnalyzer {
         return dataServiceUrl;
     }
 
-    private ResourceAnalyzerResult analyzeResource(IResource baseMap, LayersService layersService) {
+    private ResourceAnalyzerResult analyzeResource(IResource baseMap, VectorLayer vectorLayer) {
         final String layerName = baseMap.getResourceProperties().get("layerName").toString();
         try {
-            Optional<Layer> oLayer = layersService.getByName(layerName);
+            Optional<Layer> oLayer = vectorLayer.getByName(layerName);
             if (oLayer.isEmpty()) {
                 throw new GisServiceException("Не удалось найти подложку: " + layerName);
             }

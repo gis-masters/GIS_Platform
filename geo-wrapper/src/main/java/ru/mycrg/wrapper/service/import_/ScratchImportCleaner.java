@@ -8,7 +8,7 @@ import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
 import ru.mycrg.data_service_contract.queue.request.ImportRequestEvent;
 import ru.mycrg.geoserver_client.services.feature_types.FeatureTypeService;
-import ru.mycrg.geoserver_client.services.layers.LayersService;
+import ru.mycrg.geoserver_client.services.layers.VectorLayer;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
@@ -50,7 +50,7 @@ public class ScratchImportCleaner extends AbstractImportChainItem {
             final String workspaceName = importTask.getWorkspaceName();
             final String dataStoreName = getDefaultStoreName(workspaceName);
 
-            new LayersService(importTask.getRootToken()).delete(workspaceName, sourceTableName);
+            new VectorLayer(importTask.getRootToken()).delete(workspaceName, sourceTableName);
             new FeatureTypeService(importTask.getRootToken()).delete(workspaceName, dataStoreName, sourceTableName);
         } catch (HttpClientException e) {
             log.warn("Cant cleanUp geoserver featureTypes");

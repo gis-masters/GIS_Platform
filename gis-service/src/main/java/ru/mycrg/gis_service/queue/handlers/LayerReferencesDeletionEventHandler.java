@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.queue.request.LayerReferencesDeletionEvent;
 import ru.mycrg.geoserver_client.services.feature_types.FeatureTypeService;
-import ru.mycrg.geoserver_client.services.layers.LayersService;
+import ru.mycrg.geoserver_client.services.layers.VectorLayer;
 import ru.mycrg.gis_service.service.LayerService;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
@@ -35,7 +35,7 @@ public class LayerReferencesDeletionEventHandler implements IEventHandler {
 
             layerService.deleteByTableName(event.getTableName());
 
-            new LayersService(event.getAuthToken())
+            new VectorLayer(event.getAuthToken())
                     .delete(event.getWorkspaceName(), event.getTableName());
             new FeatureTypeService(event.getAuthToken())
                     .delete(event.getWorkspaceName(), event.getDatasetName(), event.getTableName());

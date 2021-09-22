@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.queue.request.BasemapReferencesDeletionEvent;
 import ru.mycrg.geoserver_client.services.coverages.Coverages;
-import ru.mycrg.geoserver_client.services.layers.LayersService;
+import ru.mycrg.geoserver_client.services.layers.VectorLayer;
 import ru.mycrg.geoserver_client.services.layers.models.Layer;
 import ru.mycrg.geoserver_client.services.storage.raster.RasterStorage;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
@@ -55,12 +55,12 @@ public class BasemapReferencesDeletionEventHandler implements IEventHandler {
             final String workspaceName = complexLayerName.split(":")[0];
             final String layerName = complexLayerName.split(":")[1];
 
-            final Layer geoserverLayer = new LayersService(event.getAuthToken())
+            final Layer geoserverLayer = new VectorLayer(event.getAuthToken())
                     .getByName(layerName)
                     .orElseThrow(() -> new NotFoundException("Not found layer: '" + layerName + "' on geoserver"));
 
             final String coverageName = getCoverageName(geoserverLayer);
-            new LayersService(event.getAuthToken())
+            new VectorLayer(event.getAuthToken())
                     .delete(workspaceName, layerName);
 
             new Coverages(event.getAuthToken())

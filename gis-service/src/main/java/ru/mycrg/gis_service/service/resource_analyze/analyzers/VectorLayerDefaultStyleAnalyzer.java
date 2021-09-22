@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import ru.mycrg.geoserver_client.services.layers.LayersService;
+import ru.mycrg.geoserver_client.services.layers.VectorLayer;
 import ru.mycrg.geoserver_client.services.layers.models.Layer;
 import ru.mycrg.gis_service.dto.LayerProjection;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
@@ -110,7 +110,7 @@ public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
 
     private ResourceAnalyzerResult analyzeVectorLayerForDefaultStyle(IResource vectorLayer) {
         boolean isSameStyle = false;
-        LayersService geoserverLayerService = new LayersService(
+        VectorLayer geoserverLayerService = new VectorLayer(
                 CrgAuthHelper.getToken(authenticationFacade.getAuthentication()));
 
         try {

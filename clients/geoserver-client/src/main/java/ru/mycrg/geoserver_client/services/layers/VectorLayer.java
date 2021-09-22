@@ -11,11 +11,11 @@ import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import java.util.Optional;
 
-public class LayersService extends GeoServerBaseService {
+public class VectorLayer extends GeoServerBaseService {
 
-    private final Logger log = LoggerFactory.getLogger(LayersService.class);
+    private final Logger log = LoggerFactory.getLogger(VectorLayer.class);
 
-    public LayersService(String accessToken) {
+    public VectorLayer(String accessToken) {
         super(accessToken);
     }
 
