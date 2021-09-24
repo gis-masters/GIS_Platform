@@ -11,10 +11,17 @@ import javax.validation.constraints.Pattern;
 public class LayerCreateDto {
 
     @NotBlank
+    @Pattern(regexp = "^(vector|raster|external)$", message = "Допустимые значения поля type: vector/raster/external")
+    private String type;
+
+    @NotBlank
     @Length(min = 2, max = 255)
     private String title;
 
     @NotBlank
+    @Length(min = 2, max = 255)
+    private String tableName;
+
     @Length(min = 2, max = 255)
     private String dataset;
 
@@ -39,16 +46,8 @@ public class LayerCreateDto {
     @CrgParentGroup
     private Long parentId;
 
-    @NotBlank
-    @Length(min = 2, max = 255)
-    private String tableName;
-
     @Length(min = 2, max = 255)
     private String styleName;
-
-    @NotBlank
-    @Pattern(regexp = "^(vector|raster|external)$", message = "Допустимые значения поля type: vector/raster/external")
-    private String type;
 
     @Length(min = 2, max = 100)
     private String schemaId;
@@ -187,5 +186,26 @@ public class LayerCreateDto {
 
     public void setDataSourceUri(String dataSourceUri) {
         this.dataSourceUri = dataSourceUri;
+    }
+
+    @Override
+    public String toString() {
+        return "LayerCreateDto{" +
+                "type='" + type + '\'' +
+                ", title='" + title + '\'' +
+                ", dataset='" + dataset + '\'' +
+                ", tableName='" + tableName + '\'' +
+                ", enabled='" + enabled + '\'' +
+                ", position=" + position +
+                ", transparency=" + transparency +
+                ", minZoom=" + minZoom +
+                ", maxZoom=" + maxZoom +
+                ", parentId=" + parentId +
+                ", styleName='" + styleName + '\'' +
+                ", schemaId='" + schemaId + '\'' +
+                ", dataStoreName='" + dataStoreName + '\'' +
+                ", nativeCRS='" + nativeCRS + '\'' +
+                ", dataSourceUri='" + dataSourceUri + '\'' +
+                '}';
     }
 }

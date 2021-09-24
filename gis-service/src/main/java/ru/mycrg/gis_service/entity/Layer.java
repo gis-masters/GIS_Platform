@@ -97,6 +97,12 @@ public class Layer implements Identifiable<Long> {
         lastModified = LocalDateTime.now();
     }
 
+    public Layer(LayerCreateDto dto, Project project) {
+        this(dto);
+
+        this.project = project;
+    }
+
     @Override
     public Long getId() {
         return id;

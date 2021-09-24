@@ -5,7 +5,6 @@ import ru.mycrg.gis_service.validators.CrgParentGroup;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 public class LayerUpdateDto {
@@ -13,7 +12,6 @@ public class LayerUpdateDto {
     @Length(min = 2, max = 255)
     private String title;
 
-    @NotBlank
     @Length(min = 2, max = 255)
     private String dataset;
 
@@ -38,12 +36,11 @@ public class LayerUpdateDto {
     @CrgParentGroup
     private Long parentId;
 
-    @NotBlank
     @Length(min = 6, max = 255)
     private String nativeCRS;
 
     public LayerUpdateDto() {
-        //Required by framework
+        // Required by framework
     }
 
     public String getTitle() {
@@ -74,8 +71,7 @@ public class LayerUpdateDto {
         return this.position;
     }
 
-    public void setPosition(
-            int position) {
+    public void setPosition(int position) {
         this.position = position;
     }
 
@@ -91,8 +87,7 @@ public class LayerUpdateDto {
         return this.minZoom;
     }
 
-    public void setMinZoom(
-            int minZoom) {
+    public void setMinZoom(int minZoom) {
         this.minZoom = minZoom;
     }
 
@@ -100,8 +95,7 @@ public class LayerUpdateDto {
         return this.maxZoom;
     }
 
-    public void setMaxZoom(
-            int maxZoom) {
+    public void setMaxZoom(int maxZoom) {
         this.maxZoom = maxZoom;
     }
 

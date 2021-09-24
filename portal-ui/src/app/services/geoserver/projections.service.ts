@@ -19,6 +19,7 @@ import { normalizeCoordinates, isCoordinateValid } from './wfs.service';
 export interface CrgProjection {
   id: string;
   title: string;
+  hidden?: boolean;
 }
 
 type Coord = Coordinate | CoordinateEdited;
@@ -35,6 +36,10 @@ proj4.defs('EPSG:314315', proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 32.5
 
 proj4.defs('EPSG:314314', proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 35.5, x_0: 5_300_000 }));
 
+proj4.defs('EPSG:7828', proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 32.5, x_0: 4_300_000 }));
+
+proj4.defs('EPSG:7829', proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 35.5, x_0: 5_300_000 }));
+
 register(proj4);
 
 export const projections: CrgProjection[] = [
@@ -47,18 +52,39 @@ export const projections: CrgProjection[] = [
     title: 'Pulkovo 1942 / Gauss-Kruger zone 7'
   },
   {
-    id: 'EPSG:314314',
+    id: 'EPSG:7829',
     title: 'Pulkovo 1942 / CS63 zone X5'
   },
   {
-    id: 'EPSG:314315',
+    id: 'EPSG:7828',
     title: 'Pulkovo 1942 / CS63 zone X4'
   },
   {
     id: 'EPSG:3857',
     title: 'WGS 84 / Pseudo-Mercator'
+  },
+  {
+    id: 'EPSG:314314',
+    title: 'Pulkovo 1942 / CS63 zone X5',
+    hidden: true
+  },
+  {
+    id: 'EPSG:314315',
+    title: 'Pulkovo 1942 / CS63 zone X4',
+    hidden: true
   }
 ];
+
+export const viewedProjections: CrgProjection[] = projections.filter(({ hidden }) => !hidden);
+
+export function replaceHiddenProjectionId(projectionId: string): string {
+  const replaceMap: Record<string, string> = {
+    'EPSG:314315': 'EPSG:7828',
+    'EPSG:314314': 'EPSG:7829'
+  };
+
+  return replaceMap[projectionId] || projectionId;
+}
 
 export function getProjection(projectionStr: string): CrgProjection {
   // мы ожидаем, что запрашивается одна из зарегистрированных проекций по id

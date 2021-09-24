@@ -6,7 +6,6 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { User } from '../../User/User';
-import { env } from '../../../stores/Env.store';
 import { route } from '../../../stores/Route.store';
 import { Pages } from '../../../app-routing.module';
 import { sidebars } from '../../../stores/Sidebars.store';
@@ -35,7 +34,7 @@ export class WorkspaceHeaderButtons extends Component {
           </Tooltip>
         )}
 
-        {route.data.page === Pages.MAP && env.platform === 'conv' && <ExportGmlButton />}
+        {route.data.page === Pages.MAP && <ExportGmlButton />}
 
         <HelpToggler />
         <NotificationsToggler />

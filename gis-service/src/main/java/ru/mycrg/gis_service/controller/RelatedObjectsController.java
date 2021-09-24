@@ -7,7 +7,7 @@ import ru.mycrg.gis_service.dto.RelatedLayersModel;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ErrorInfo;
 import ru.mycrg.gis_service.service.BasemapService;
-import ru.mycrg.gis_service.service.LayerService;
+import ru.mycrg.gis_service.service.layers.LayerService;
 
 import java.util.List;
 

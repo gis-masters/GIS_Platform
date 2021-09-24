@@ -242,17 +242,17 @@ public class BaseStepsDefinitions {
         String userName = "test_2_3@fiz";
 
         given().
-                       log().ifValidationFails().
-                       baseUri("http://localhost").
-                       port(8080).
-                       basePath("/").
-                       headers("Authorization", "Bearer " + accessToken)
-               .when().
-                       get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
-               .then().
-                       log().ifValidationFails().
-                       statusCode(SC_OK).
-                       body("users.findAll { it.enabled == true }.userName", hasItems(userName));
+                        log().ifValidationFails().
+                        baseUri("http://localhost").
+                        port(8080).
+                        basePath("/").
+                        headers("Authorization", "Bearer " + accessToken)
+                .when().
+                        get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK).
+                        body("users.findAll { it.enabled == true }.userName", hasItems(userName));
     }
 
     public Integer extractEntityIdFromResponse(Response response) {
@@ -370,6 +370,7 @@ public class BaseStepsDefinitions {
     private void getEntity(Integer id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
+                        log().all().
                         get(String.valueOf(id));
     }
 }

@@ -3,22 +3,22 @@ package ru.mycrg.acceptance.gis_service.dto;
 public class LayerCreateDto {
 
     private final String title;
-
-    private final String dataset;
-
-    private final String tableName;
-
-    private final String styleName;
-
     private final String type;
 
-    private final String schemaId;
+    private String dataset;
+    private String tableName;
+    private String styleName;
+    private String schemaId;
+    private String dataStoreName;
+    private String nativeCRS;
+    private String dataSourceUri;
+    private long minZoom;
+    private long maxZoom;
 
-    private final String dataStoreName;
-
-    private final String nativeCRS;
-
-    private final String dataSourceUri;
+    public LayerCreateDto(String title, String type) {
+        this.title = title;
+        this.type = type;
+    }
 
     public LayerCreateDto(String title, String dataset, String tableName, String styleName, String type,
                           String schemaId, String dataStoreName, String nativeCRS, String dataSourceUri) {
@@ -67,5 +67,49 @@ public class LayerCreateDto {
 
     public String getDataSourceUri() {
         return dataSourceUri;
+    }
+
+    public void setDataset(String dataset) {
+        this.dataset = dataset;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
+    }
+
+    public void setSchemaId(String schemaId) {
+        this.schemaId = schemaId;
+    }
+
+    public void setDataStoreName(String dataStoreName) {
+        this.dataStoreName = dataStoreName;
+    }
+
+    public void setNativeCRS(String nativeCRS) {
+        this.nativeCRS = nativeCRS;
+    }
+
+    public void setDataSourceUri(String dataSourceUri) {
+        this.dataSourceUri = dataSourceUri;
+    }
+
+    public long getMinZoom() {
+        return minZoom;
+    }
+
+    public void setMinZoom(long minZoom) {
+        this.minZoom = minZoom;
+    }
+
+    public long getMaxZoom() {
+        return maxZoom;
+    }
+
+    public void setMaxZoom(long maxZoom) {
+        this.maxZoom = maxZoom;
     }
 }

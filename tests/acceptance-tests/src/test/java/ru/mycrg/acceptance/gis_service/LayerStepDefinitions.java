@@ -56,7 +56,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} {string}")
-    public void createLayer(String title, String styleName, String type, String schemaId, String epsg, String dataSourceUri) {
+    public void createLayer(String title, String styleName, String type, String schemaId, String epsg,
+                            String dataSourceUri) {
 
         String dataStoreName = "scratch_database_" + orgId;
 
@@ -71,6 +72,19 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                                             generateString(dataSourceUri));
 
         super.createEntity(layerCreateDto);
+    }
+
+    @When("Пользователь делает запрос на создание внешнего слоя")
+    public void createExternalLayer() {
+        layerCreateDto = new LayerCreateDto("Земельные участки", "external");
+        layerCreateDto.setDataSourceUri("https://pkk.rosreestr.ru/arcgis/rest/services/PKK6/CadastreObjects/MapServer/export");
+        layerCreateDto.setTableName("show:24");
+        layerCreateDto.setMinZoom(15);
+        layerCreateDto.setMaxZoom(40);
+
+        super.createEntity(layerCreateDto);
+
+        layerId = extractEntityIdFromResponse(response);
     }
 
     @When("Пользователь делает запрос на добавление слоя в проект")
@@ -97,8 +111,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         super.getCurrentEntity();
     }
 
-    @And("Поля слоя проекта совпадают с переданными")
-    public void checkLayerData() {
+    @And("Поля векторного слоя совпадают с переданными")
+    public void checkVectorLayerData() {
         jsonPath = response.jsonPath();
 
         assertEquals(layerCreateDto.getTitle(), jsonPath.get("title"));
@@ -110,6 +124,16 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(layerCreateDto.getNativeCRS(), jsonPath.get("nativeCRS"));
         assertEquals(String.format("scratch_database_%s:%s", orgId, layerCreateDto.getTableName()),
                      jsonPath.get("complexName"));
+    }
+
+    @And("Поля внешнего слоя совпадают с переданными")
+    public void checkExternalLayerData() {
+        jsonPath = response.jsonPath();
+
+        assertEquals(layerCreateDto.getTitle(), jsonPath.get("title"));
+        assertEquals(layerCreateDto.getTableName(), jsonPath.get("tableName"));
+        assertEquals(layerCreateDto.getType(), jsonPath.get("type"));
+        assertEquals(layerCreateDto.getDataSourceUri(), jsonPath.get("dataSourceUri"));
     }
 
     @Given("Существует слой проекта")
@@ -176,6 +200,11 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
 
         updateLayer(dataTable);
+    }
+
+    @When("Администратор делает запрос на обновление полей слоя {string}")
+    public void updateLayerAsJson(String json) {
+        updateLayer(json);
     }
 
     @Then("Обновленные поля слоя совпадают с переданными")
@@ -297,9 +326,17 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                                             Integer.parseInt(generateString(data.get(5))),
                                             generateString(data.get(6)));
 
+        updateLayer(layerUpdateDto);
+    }
+
+    private void updateLayer(LayerUpdateDto dto) {
+        updateLayer(gson.toJson(dto));
+    }
+
+    private void updateLayer(String json) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        body(gson.toJson(layerUpdateDto)).
+                        body(json).
                         contentType("application/merge-patch+json")
                 .when().
                         patch("" + layerId);

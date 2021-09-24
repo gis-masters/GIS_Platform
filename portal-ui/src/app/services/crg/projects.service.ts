@@ -199,7 +199,7 @@ class ProjectsService {
   async testCurrentProjectLayers() {
     const testingProjectId = currentProject.id;
 
-    for (const layer of currentProject.layers) {
+    for (const layer of currentProject.vectorLayers) {
       // если пользователь успел убежать из проекта, пока мы слои щупали
       if (currentProject.id !== testingProjectId) {
         break;

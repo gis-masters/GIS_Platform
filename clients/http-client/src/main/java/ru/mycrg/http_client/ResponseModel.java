@@ -18,6 +18,14 @@ public class ResponseModel<T> {
         this.successful = response.isSuccessful();
     }
 
+    public ResponseModel(Response response, String body) {
+        this.code = response.code();
+        this.msg = response.message();
+        this.headers = response.headers();
+        this.successful = response.isSuccessful();
+        this.body = (T) body;
+    }
+
     public int getCode() {
         return code;
     }

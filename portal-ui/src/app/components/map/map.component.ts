@@ -18,6 +18,8 @@ import { services } from '../../services/services';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { MapModes, mapStore } from '../../stores/Map.store';
 import { Emitter } from '../../services/common/Emitter';
+import { Pages } from '../../app-routing.module';
+import { sleep } from '../../services/util/sleep';
 
 @Component({
   selector: 'crg-map',
@@ -151,12 +153,15 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private async setMapPosition(zoom: number, center: string): Promise<void> {
-    await services.router.navigate([location.pathname], {
-      queryParams: {
-        zoom: Number(zoom).toFixed(2),
-        center
-      },
-      queryParamsHandling: 'merge'
-    });
+    await sleep(100);
+    if (route.data.page === Pages.MAP) {
+      await services.router.navigate([location.pathname], {
+        queryParams: {
+          zoom: Number(zoom).toFixed(2),
+          center
+        },
+        queryParamsHandling: 'merge'
+      });
+    }
   }
 }

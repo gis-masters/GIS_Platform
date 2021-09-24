@@ -12,7 +12,7 @@ import ru.mycrg.gis_service.exceptions.ErrorInfo;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.security.CrgAuthHelper;
 import ru.mycrg.gis_service.security.IAuthenticationFacade;
-import ru.mycrg.gis_service.service.LayerService;
+import ru.mycrg.gis_service.service.layers.LayerService;
 import ru.mycrg.resource_analyzer_contract.IResource;
 import ru.mycrg.resource_analyzer_contract.IResourceAnalyzer;
 import ru.mycrg.resource_analyzer_contract.IResourceAnalyzerResult;

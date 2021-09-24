@@ -1,17 +1,14 @@
-package ru.mycrg.gis_service.service;
+package ru.mycrg.gis_service.service.layers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
-import ru.mycrg.geoserver_client.services.feature_types.FeatureTypeService;
-import ru.mycrg.geoserver_client.services.styles.StyleService;
 import ru.mycrg.gis_service.dto.*;
 import ru.mycrg.gis_service.entity.Group;
 import ru.mycrg.gis_service.entity.Layer;
@@ -21,17 +18,20 @@ import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.LayerRepository;
 import ru.mycrg.gis_service.security.IAuthenticationFacade;
-import ru.mycrg.http_client.ResponseModel;
+import ru.mycrg.gis_service.service.ProjectService;
+import ru.mycrg.gis_service.service.ResourceProtector;
 import ru.mycrg.http_client.exceptions.HttpClientException;
-import ru.mycrg.oauth_client.OAuthClient;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.audit_service_contract.dto.AuditEventActionsType.*;
 import static ru.mycrg.audit_service_contract.dto.AuditEventEntityType.LAYER;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
@@ -42,7 +42,8 @@ import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;
 @Transactional
 public class LayerService {
 
-    public static final Logger log = LoggerFactory.getLogger(LayerService.class);
+    public final Logger log = LoggerFactory.getLogger(LayerService.class);
+
     public static final String DATA_SERVICE_API_PREFIX = "/api/data";
 
     private final JsonPatcher jsonPatcher;
@@ -51,8 +52,7 @@ public class LayerService {
     private final IAuthenticationFacade authenticationFacade;
     private final MessageBusProducer messageBus;
     private final ResourceProtector resourceProtector;
-    private final OAuthClient oAuthClient;
-    private final Environment environment;
+    private final Map<String, ILayerHandler> layerHandlers;
 
     public LayerService(JsonPatcher jsonPatcher,
                         LayerRepository layerRepository,
@@ -60,16 +60,15 @@ public class LayerService {
                         IAuthenticationFacade authenticationFacade,
                         MessageBusProducer messageBus,
                         ResourceProtector resourceProtector,
-                        OAuthClient oAuthClient,
-                        Environment environment) {
+                        List<ILayerHandler> layerHandlers) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.layerRepository = layerRepository;
         this.authenticationFacade = authenticationFacade;
         this.messageBus = messageBus;
-        this.oAuthClient = oAuthClient;
-        this.environment = environment;
         this.resourceProtector = resourceProtector;
+        this.layerHandlers = layerHandlers.stream()
+                                          .collect(toMap(ILayerHandler::getType, Function.identity()));
     }
 
     public List<LayerProjection> findAll(long projectId) {
@@ -94,7 +93,8 @@ public class LayerService {
         return new LayerProjection(foundLayer, getOrgWorkspaceName());
     }
 
-    public LayerProjection findById(long projectId, long layerId) {
+    public LayerProjection findById(long projectId,
+                                    long layerId) {
         List<Layer> layers = projectService.getById(projectId).getLayers();
 
         Layer layer = findLayerById(layers, layerId);
@@ -102,24 +102,39 @@ public class LayerService {
         return new LayerProjection(layer, getOrgWorkspaceName());
     }
 
-    public LayerProjection create(long projectId, LayerCreateDto dto) {
+    /**
+     * Создание векторных, растровых и внешних слоёв. В нашем проекте и на геосервере при необходимости.
+     *
+     * @param projectId Идентфикатор проекта
+     * @param layerDto  Модель слоя
+     */
+    public LayerProjection create(long projectId, LayerCreateDto layerDto) {
         Project project = projectService.getById(projectId);
 
-        Layer layer = createLayer(dto, project);
+        try {
+            Layer layer = layerHandlers.get(layerDto.getType())
+                                       .create(project, layerDto);
 
-        createLayerOnGeoserver(layer);
+            updateGroup(layer, layerDto.getParentId(), project.getGroups());
 
-        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                             CREATE,
-                                             buildLayerInfo(project, layer),
-                                             LAYER,
-                                             layer.getId(),
-                                             objectMapper.convertValue(dto, JsonNode.class)));
+            messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                                 CREATE,
+                                                 buildLayerInfo(project, layer),
+                                                 LAYER,
+                                                 layer.getId(),
+                                                 objectMapper.convertValue(layerDto, JsonNode.class)));
 
-        return new LayerProjection(layer, getOrgWorkspaceName());
+            return new LayerProjection(layer, getOrgWorkspaceName());
+        } catch (HttpClientException e) {
+            String msg = String.format("Не удалось создать слой: '%s'", layerDto.getTitle());
+
+            throw new GisServiceException(msg, e.getCause());
+        }
     }
 
-    public void update(long projectId, long layerId, JsonMergePatch patchDto) {
+    public void update(long projectId,
+                       long layerId,
+                       JsonMergePatch patchDto) {
         Project project = projectService.getById(projectId);
         if (!resourceProtector.isOwner(project)) {
             throw new ForbiddenException("редактирования", "проекта", project.getName());
@@ -161,7 +176,8 @@ public class LayerService {
         layerRepository.deleteByTableName(tableName);
     }
 
-    public List<RelatedLayersModel> findRelatedLayers(String field, String value) {
+    public List<RelatedLayersModel> findRelatedLayers(String field,
+                                                      String value) {
         Set<Long> projectIds = projectService.getAll().stream()
                                              .map(Project::getId)
                                              .collect(Collectors.toSet());
@@ -186,11 +202,15 @@ public class LayerService {
                             .collect(Collectors.toList());
     }
 
-    public Page<Layer> findLayers(String raster, List<Project> projects, Pageable pageable) {
+    public Page<Layer> findLayers(String raster,
+                                  List<Project> projects,
+                                  Pageable pageable) {
         return layerRepository.findByTypeAndProjectIn(raster, projects, pageable);
     }
 
-    private void updateGroup(Layer layer, Long parentId, List<Group> groups) {
+    private void updateGroup(Layer layer,
+                             Long parentId,
+                             List<Group> groups) {
         if (parentId != null) {
             Group parentGroup = groups
                     .stream()
@@ -209,95 +229,16 @@ public class LayerService {
         return String.format("%s_%s_%s", project.getName(), layer.getTableName(), layer.getTitle());
     }
 
-    @NotNull
-    private Layer createLayer(LayerCreateDto dto, Project project) {
-        if (layerRepository.findByTableNameAndProject(dto.getTableName(), project).isPresent()) {
-            throw new ConflictException("Layer with same tableName already exist");
-        }
-
-        Layer newLayer = new Layer(dto);
-        if ("vector".equals(dto.getType())) {
-            String dataSourceUri = DATA_SERVICE_API_PREFIX + "/datasets/" + dto.getDataset() + "/tables/" + dto.getTableName();
-            newLayer.setDataSourceUri(dataSourceUri);
-        }
-
-        newLayer.setProject(project);
-
-        final Layer savedLayer = layerRepository.save(newLayer);
-
-        updateGroup(savedLayer, dto.getParentId(), project.getGroups());
-
-        return savedLayer;
-    }
-
-    private Layer findLayerById(List<Layer> layers, Long layerId) {
+    private Layer findLayerById(List<Layer> layers,
+                                Long layerId) {
         return layers.stream()
                      .filter(l -> layerId.equals(l.getId()))
                      .findFirst()
                      .orElseThrow(() -> new NotFoundException(layerId));
     }
 
-    private String getRootAccessToken() {
-        try {
-            String rootUserName = environment.getRequiredProperty("crg-options.root-user-name");
-            String rootUserPass = environment.getRequiredProperty("crg-options.root-user-password");
-
-            return oAuthClient
-                    .getToken(rootUserName, rootUserPass)
-                    .getAccess_token();
-        } catch (Exception e) {
-            throw new GisServiceException("Error get root token");
-        }
-    }
-
     @NotNull
     private String getOrgWorkspaceName() {
         return getScratchWorkspaceName(authenticationFacade.getOrganizationId());
-    }
-
-    private void createLayerOnGeoserver(Layer layer) {
-        try {
-            log.debug("Publish feature: {} on geoserver workspace: {} Datastore: {}",
-                      layer.getTableName(), layer.getDataset(), layer.getDataStoreName());
-
-            String[] splitCrs = layer.getNativeCRS().split(":");
-            Integer crs = Integer.valueOf(splitCrs[1]);
-
-            final ResponseModel<Object> responseModel = new FeatureTypeService(getRootAccessToken())
-                    .create(layer.getDataStoreName(), layer.getDataset(), layer.getTableName(), crs);
-
-            if (responseModel.isSuccessful()) {
-                associateStyle(layer);
-            } else {
-                if (responseModel.getBody() != null) {
-                    logAndInitRollback(layer.getId(), layer.getTableName(), responseModel.getBody().toString());
-                } else {
-                    logAndInitRollback(layer.getId(), layer.getTableName(), responseModel.getMsg());
-                }
-            }
-        } catch (HttpClientException e) {
-            logAndInitRollback(layer.getId(), layer.getTableName(), e.getMessage());
-        }
-    }
-
-    private void associateStyle(Layer layer) {
-        log.debug("Add style: {} to layer: {}", layer.getStyleName(), layer.getTableName());
-        try {
-            ResponseModel<Object> response = new StyleService(getRootAccessToken())
-                    .associate(layer.getDataStoreName() + ":" + layer.getTableName(), layer.getStyleName());
-            if (!response.isSuccessful()) {
-                log.warn("Style not associated: {}", response);
-            }
-        } catch (Exception e) {
-            String msg = "Не удалось прикрепить стиль к слою: " + layer.getTableName();
-            log.error(msg, e);
-        }
-    }
-
-    private void logAndInitRollback(Long layerId, String layerName, String msg) {
-        String message = String.format("Не удалось опубликовать слой %s на геосервере. Reason: %s", layerName, msg);
-        log.error(message);
-        layerRepository.deleteLayerById(layerId);
-        throw new BadRequestException(message);
     }
 }

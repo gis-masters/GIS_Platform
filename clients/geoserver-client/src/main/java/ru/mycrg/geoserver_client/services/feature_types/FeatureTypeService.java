@@ -22,7 +22,8 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
         super(accessToken);
     }
 
-    public FeatureTypes getFeatures(String workspaceName, String dataStoreName) throws HttpClientException {
+    public FeatureTypes getFeatures(String workspaceName,
+                                    String dataStoreName) throws HttpClientException {
         log.debug("try get all features from workspace: {} dataset: {}", workspaceName, dataStoreName);
 
         String url = getGeoserverRestUrl()
@@ -42,24 +43,45 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
         }
     }
 
+    public boolean isExist(String workspaceName, String featureName) throws HttpClientException {
+        log.debug("try get feature: {} in: {}", featureName, workspaceName);
+
+        String url = getGeoserverRestUrl()
+                .append(WORKSPACES).append(workspaceName)
+                .append("/featuretypes/")
+                .append(featureName).append(".json").toString();
+
+        Request request = builderWithBearerAuth.url(url).get().build();
+
+        log.debug("get feature request {} ", request);
+
+        try {
+            return httpClient.handleRequest(request).isSuccessful();
+        } catch (JsonSyntaxException e) {
+            return false;
+        }
+    }
+
     @Override
-    public ResponseModel<Object> create(String workspaceName, String dataStoreName, String featureName, Integer srs)
-            throws HttpClientException {
+    public ResponseModel<Object> create(String workspaceName,
+                                        String dataStoreName,
+                                        String featureName,
+                                        Integer srs) throws HttpClientException {
         log.debug("try create feature: {} in: {}", featureName, workspaceName);
 
         RequestBody body = RequestBody.create(
                 JSON_MEDIA_TYPE,
                 "{\"featureType\": " +
-                    "{" +
+                        "{" +
                         "\"name\": \"" + featureName + "\"," +
                         "\"nativeCRS\": \"EPSG:" + srs.toString() + "\"" +
-                    "}" +
-                "}");
+                        "}" +
+                        "}");
 
         String url = getGeoserverRestUrl()
                 .append(WORKSPACES).append(workspaceName)
                 .append(DATA_STORES).append(dataStoreName)
-                .append("/featuretypes").toString();
+                .append("/featuretypes.json").toString();
 
         Request request = builderWithBearerAuth.url(url)
                                                .post(body).build();
@@ -70,7 +92,9 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
     }
 
     @Override
-    public void delete(String workspaceName, String dataStoreName, String featureName) throws HttpClientException {
+    public void delete(String workspaceName,
+                       String dataStoreName,
+                       String featureName) throws HttpClientException {
         log.debug("try delete feature: {} in: {}", featureName, workspaceName);
 
         String url = getGeoserverRestUrl()

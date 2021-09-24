@@ -12,6 +12,14 @@ public class LayerUpdateDto {
     private int transparency = 1;
     private Long parentId;
 
+    public LayerUpdateDto() {
+        // Resuired
+    }
+
+    public LayerUpdateDto(Long parentId) {
+        this.parentId = parentId;
+    }
+
     public LayerUpdateDto(String title, String dataset, Boolean enabled, int position, int transparency, int minZoom,
                           int maxZoom, String nativeCRS) {
         this.title = title;
@@ -22,21 +30,6 @@ public class LayerUpdateDto {
         this.minZoom = minZoom;
         this.maxZoom = maxZoom;
         this.nativeCRS = nativeCRS;
-    }
-
-    public LayerUpdateDto(String title, String dataset, Boolean enabled, int minZoom, int maxZoom,
-                          String nativeCRS, Long parentId) {
-        this.title = title;
-        this.dataset = dataset;
-        this.enabled = enabled;
-        this.minZoom = minZoom;
-        this.maxZoom = maxZoom;
-        this.nativeCRS = nativeCRS;
-        this.parentId = parentId;
-    }
-
-    public LayerUpdateDto(Long parentId) {
-        this.parentId = parentId;
     }
 
     public String getTitle() {

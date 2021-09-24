@@ -41,7 +41,7 @@ public class HttpClient {
             } else {
                 log.error("Request failed: {} / Body: {}", response, body);
 
-                return new ResponseModel<>(response);
+                return new ResponseModel<>(response, body);
             }
         } catch (IOException e) {
             throw new HttpClientException("Host unreachable", e.getCause());

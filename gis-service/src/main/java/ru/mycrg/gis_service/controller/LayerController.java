@@ -16,7 +16,7 @@ import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BindingErrorsException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
-import ru.mycrg.gis_service.service.LayerService;
+import ru.mycrg.gis_service.service.layers.LayerService;
 import ru.mycrg.gis_service.service.ProjectService;
 import ru.mycrg.gis_service.service.ResourceProtector;
 import ru.mycrg.gis_service.validators.CrgLayerValidator;
@@ -67,7 +67,7 @@ public class LayerController {
     public ResponseEntity<LayerProjection> createLayer(@PathVariable(name = "project_id") long projectId,
                                                        @Valid @RequestBody LayerCreateDto dto,
                                                        BindingResult bindingResult) {
-        log.debug("Request create layer: {}", dto.getTableName());
+        log.debug("Request create layer: {}", dto);
 
         if (bindingResult.hasErrors()) {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);

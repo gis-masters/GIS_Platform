@@ -3,7 +3,11 @@ import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { projections, getProjection } from '../../../services/geoserver/projections.service';
+import {
+  viewedProjections,
+  getProjection,
+  replaceHiddenProjectionId
+} from '../../../services/geoserver/projections.service';
 import { FormField, FormLabel, FormControl } from '../../Form/Form';
 import { Select } from '../../Select/Select';
 
@@ -28,9 +32,9 @@ export const EditFeatureGeometryProjSel: FC<Props> = observer(({ store }: Props)
       <FormLabel htmlFor='projSel'>Система координат</FormLabel>
       <FormControl>
         <Select
-          options={projections.map(proj => ({ value: proj.id, children: proj.title }))}
+          options={viewedProjections.map(proj => ({ value: proj.id, children: proj.title }))}
           onChange={handleChange}
-          value={store.currentProjection.id}
+          value={replaceHiddenProjectionId(store.currentProjection.id)}
         />
       </FormControl>
     </FormField>

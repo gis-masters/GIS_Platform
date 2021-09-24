@@ -1,5 +1,6 @@
 package ru.mycrg.geoserver_client.services.storage.raster;
 
+import com.google.gson.JsonSyntaxException;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.slf4j.Logger;
@@ -29,8 +30,8 @@ public class RasterStorage extends GeoServerBaseService {
      * @param url       Path to file.
      */
     public ResponseModel<Object> createGeoTIFF(String workspace, String name, String url) throws HttpClientException {
-        final CoverageStoreRequestModel coverageStore = new CoverageStoreRequestModel(name, workspace, true, "GeoTIFF",
-                                                                                      url);
+        final CoverageStoreRequestModel coverageStore =
+                new CoverageStoreRequestModel(name, workspace, true, "GeoTIFF", url);
 
         String payload = gson.toJson(new CoverageStoreRequest(coverageStore));
 
@@ -43,17 +44,33 @@ public class RasterStorage extends GeoServerBaseService {
     }
 
     public ResponseModel<CoverageStoreResponse> getStorage(String workspace, String store) throws HttpClientException {
-        Request request = builderWithBearerAuth
-                .url(getGeoserverRestUrl() + WORKSPACES + workspace + COVERAGE_STORES + store)
-                .get().build();
+        String url = getGeoserverRestUrl().append(WORKSPACES).append(workspace)
+                                          .append(COVERAGE_STORES).append(store)
+                                          .toString();
+
+        Request request = builderWithBearerAuth.url(url)
+                                               .get().build();
 
         return httpClient.handleRequest(request, CoverageStoreResponse.class);
     }
 
-    public ResponseModel<Object> delete(String workspaceName,
-                                        String coverageStore) throws HttpClientException {
-        log.debug("try delete coverageStore: '{}' in workspace: '{}'",
-                  coverageStore, workspaceName);
+    public boolean isExist(String workspace, String store) throws HttpClientException {
+        String url = getGeoserverRestUrl().append(WORKSPACES).append(workspace)
+                                          .append(COVERAGE_STORES).append(store)
+                                          .toString();
+
+        Request request = builderWithBearerAuth.url(url)
+                                               .get().build();
+
+        try {
+            return httpClient.handleRequest(request).isSuccessful();
+        } catch (JsonSyntaxException e) {
+            return false;
+        }
+    }
+
+    public ResponseModel<Object> delete(String workspaceName, String coverageStore) throws HttpClientException {
+        log.debug("try delete coverageStore: '{}' in workspace: '{}'", coverageStore, workspaceName);
 
         String coverageUrl = getGeoserverRestUrl().append(WORKSPACES).append(workspaceName)
                                                   .append(COVERAGE_STORES).append(coverageStore)

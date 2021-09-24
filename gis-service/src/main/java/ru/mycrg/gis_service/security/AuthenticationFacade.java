@@ -1,6 +1,7 @@
 package ru.mycrg.gis_service.security;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,6 +10,8 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.stereotype.Component;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
+import ru.mycrg.gis_service.exceptions.GisServiceException;
+import ru.mycrg.oauth_client.OAuthClient;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -25,6 +28,14 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     private static final String CLAIM_USER_ID = "user_id";
     private static final String CLAIM_ORGANIZATIONS = "organizations";
     private static final String CLAIM_GROUPS = "groups";
+
+    private final OAuthClient oAuthClient;
+    private final Environment environment;
+
+    public AuthenticationFacade(OAuthClient oAuthClient, Environment environment) {
+        this.oAuthClient = oAuthClient;
+        this.environment = environment;
+    }
 
     private static Map<String, Object> decode(Principal principal) {
         var authentication = (OAuth2Authentication) principal;
@@ -117,6 +128,18 @@ public class AuthenticationFacade implements IAuthenticationFacade {
             return userDetails;
         } catch (Exception e) {
             throw new ForbiddenException("Incorrect group claims");
+        }
+    }
+
+    public String getRootAccessToken() {
+        try {
+            String rootUserName = environment.getRequiredProperty("crg-options.root-user-name");
+            String rootUserPass = environment.getRequiredProperty("crg-options.root-user-password");
+
+            return oAuthClient.getToken(rootUserName, rootUserPass)
+                              .getAccess_token();
+        } catch (Exception e) {
+            throw new GisServiceException("Error get root token");
         }
     }
 
