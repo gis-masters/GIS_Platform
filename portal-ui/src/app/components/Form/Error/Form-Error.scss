@@ -1,6 +1,4 @@
 .Form-Error {
-  margin-top: 3px;
-
   text-align: left;
   letter-spacing: 0.03333em;
 
@@ -8,4 +6,8 @@
 
   font-size: 0.75rem;
   line-height: 1.66;
+
+  &:first-child {
+    margin-top: 3px;
+  }
 }

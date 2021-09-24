@@ -1,4 +1,4 @@
-import { PropertySchema, ValueType } from '../crg/schema.models';
+import { OldPropertySchema, ValueType } from '../crg/schemaOld.models';
 import { CrgComparison } from '../properties-comparator.service';
 import { LayerAttribute } from '../geoserver/import/models';
 import { AS_IS, NOT_IMPORT } from '../models';
@@ -10,16 +10,17 @@ import { AS_IS, NOT_IMPORT } from '../models';
 export class DirectComparison implements CrgComparison {
   private comparison: CrgComparison;
 
-  compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
-    let result: PropertySchema;
+  compare(source: LayerAttribute, properties: OldPropertySchema[]): OldPropertySchema {
+    let result: OldPropertySchema;
     const shapeName = source.name.slice(0, 10).toLowerCase();
-    properties.forEach((property: PropertySchema) => {
+    properties.forEach((property: OldPropertySchema) => {
       const ourName = property.name.slice(0, 10).toLowerCase();
       if (shapeName === ourName) {
         result = property;
       }
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return result || this.comparison.compare(source, properties);
   }
 
@@ -35,8 +36,8 @@ export class GeometryComparison implements CrgComparison {
   private comparison: CrgComparison;
 
   // TODO: Сопоставление геометрии
-  compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
-    let result: PropertySchema;
+  compare(source: LayerAttribute, properties: OldPropertySchema[]): OldPropertySchema {
+    let result: OldPropertySchema;
 
     if (
       source.binding.includes('MultiPolygon') ||
@@ -67,8 +68,8 @@ export class GeometryComparison implements CrgComparison {
 export class ObjectIdComparison implements CrgComparison {
   private comparison: CrgComparison;
 
-  compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
-    let result: PropertySchema;
+  compare(source: LayerAttribute, properties: OldPropertySchema[]): OldPropertySchema {
+    let result: OldPropertySchema;
 
     if (source.name.toLowerCase().includes('objectid')) {
       result = {
@@ -92,7 +93,7 @@ export class ObjectIdComparison implements CrgComparison {
  * Для него не задается "следующего" по цепочке.
  */
 export class LastComparison implements CrgComparison {
-  compare(): PropertySchema {
+  compare(): OldPropertySchema {
     return {
       name: AS_IS.name,
       title: AS_IS.title,

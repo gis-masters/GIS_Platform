@@ -20,7 +20,7 @@ import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/aler
 import { currentImport } from '../../stores/CurrentImport.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/crg/schema.service';
-import { FeatureDescription } from '../../services/crg/schema.models';
+import { OldFeatureDescription } from '../../services/crg/schemaOld.models';
 
 @Component({
   selector: 'crg-mapping-page',
@@ -35,11 +35,12 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   prevLink: string;
   nextLink: string;
 
-  schemas?: FeatureDescription[];
+  schemas?: OldFeatureDescription[];
 
   private CHECK_STATUS_INTERVAL = 1000;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
+  // eslint-disable-next-line max-params
   constructor(
     private dialog: MatDialog,
     private organizationService: OrganizationService,
@@ -52,13 +53,13 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.schemas = await schemaService.getAllSchemas();
 
-    const { projectId, importId } = this.route.snapshot.params;
+    const { projectId, importId } = this.route.snapshot.params as Record<string, string>;
     this.prevLink = `/projects/${projectId}/import/${importId}`;
     this.nextLink = `/projects/${projectId}/map`;
 
     // TODO: Перенести логику блокирования страницы при неверных данных, по примеру WorkflowGuardService
     if (!currentImport.scratch) {
-      this.router.navigateByUrl(`/projects/${projectId}/import`);
+      void this.router.navigateByUrl(`/projects/${projectId}/import`);
     }
 
     this.importData.comparableLayers$.subscribe((comparableLayers: ComparableLayersPair[]) => {
@@ -68,7 +69,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
     const importLayers = await getAllImportLayers();
 
     importLayers.forEach((importLayer: ImportLayer) => {
-      this.importData.createCompatiblePair(importLayer.layer as ImportLayerItem);
+      void this.importData.createCompatiblePair(importLayer.layer);
     });
   }
 
@@ -79,12 +80,12 @@ export class MappingPageComponent implements OnInit, OnDestroy {
     this.importData.clear();
   }
 
-  selectLayer(comparableLayersPair: ComparableLayersPair) {
+  selectLayer(comparableLayersPair: ComparableLayersPair): void {
     comparableLayersPair.isActive = true;
     this.selectedLayer = comparableLayersPair.originalLayer;
   }
 
-  async startWorkImport() {
+  async startWorkImport(): Promise<void> {
     if (!this.importData.isWorkImportReady) {
       this.dialog.open(AlertDialogComponent, { data: { message: 'Есть не обработанные слои' } });
 
@@ -99,6 +100,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
 
     // TODO: Нельзя чтобы в рпбочем импорте такси ссылались на одну рабочую таблицу!
     // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
+    // eslint-disable-next-line promise/catch-or-return
     projectsService.doWorkImport(workTasks, currentProject.id, this.selectedDataset.identifier).then(
       (crgProcess: Process) => {
         interval(this.CHECK_STATUS_INTERVAL)
@@ -109,8 +111,8 @@ export class MappingPageComponent implements OnInit, OnDestroy {
               this.unsubscribe$.next();
               projectsService.clearCurrent();
 
-              const { projectId } = this.route.snapshot.params;
-              this.router.navigateByUrl(`/projects/${projectId}/map`);
+              const { projectId } = this.route.snapshot.params as Record<string, string>;
+              void this.router.navigateByUrl(`/projects/${projectId}/map`);
 
               Toast.success('Импортировано успешно');
             } else if (response.status === ProcessStatus.ERROR) {
@@ -121,8 +123,8 @@ export class MappingPageComponent implements OnInit, OnDestroy {
             }
           });
       },
-      errorResponse => {
-        this.logger.info('ERROR: ', errorResponse);
+      (error: unknown) => {
+        this.logger.info('ERROR: ', error);
 
         this.isWorkImportInited = false;
 
@@ -131,11 +133,11 @@ export class MappingPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  isActive(comparablePair: ComparableLayersPair) {
+  isActive(comparablePair: ComparableLayersPair): boolean {
     return this.selectedLayer ? this.selectedLayer.name === comparablePair.originalLayer.name : false;
   }
 
-  onDatasetSelected(dataset: Dataset) {
+  onDatasetSelected(dataset: Dataset): void {
     this.selectedDataset = dataset;
   }
 }

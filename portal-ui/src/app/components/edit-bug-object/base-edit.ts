@@ -2,7 +2,7 @@ import { OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 
-import { EditedField, FeatureDescription } from '../../services/crg/schema.models';
+import { EditedField, OldFeatureDescription } from '../../services/crg/schemaOld.models';
 import { mapService } from '../../services/map/map.service';
 import { FeaturePropertyValidators, ValidationError } from '../../services/util/FeaturePropertyValidators';
 
@@ -12,7 +12,7 @@ export class BaseEdit implements OnDestroy {
   editFeatureForm: FormGroup;
   editFeatureData: EditedField[] = [];
 
-  protected featureDescription: FeatureDescription;
+  protected featureDescription: OldFeatureDescription;
 
   protected unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -24,6 +24,7 @@ export class BaseEdit implements OnDestroy {
 
   getActualValuesFromForm(): Properties {
     return this.getDirtyAndValidProperties().reduce((newProperties: Properties, item) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       newProperties[item.name] = this.editFeatureForm.controls[item.name].value;
 
       return newProperties;
@@ -46,7 +47,7 @@ export class BaseEdit implements OnDestroy {
     return result;
   }
 
-  validateCustomRules(featureProperties: { [key: string]: any }) {
+  validateCustomRules(featureProperties: { [key: string]: any }): void {
     if (!this.featureDescription) {
       return;
     }

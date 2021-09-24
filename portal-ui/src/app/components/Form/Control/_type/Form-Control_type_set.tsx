@@ -3,11 +3,11 @@ import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertySchemaSet, FieldType } from '../../../../services/crg/schemaNew.models';
+import { PropertySchemaSet, FieldType } from '../../../../services/crg/schema.models';
 
 import { FormHiddenField } from '../../HiddenField/Form-HiddenField';
 import { cnFormControl, FormControlProps } from '../Form-Control';
-import { FormError } from '../../Error/Form-Error';
+import { FormErrors } from '../../Errors/Form-Errors';
 
 import '!style-loader!css-loader!sass-loader!./Form-Control_type_set.scss';
 
@@ -16,7 +16,7 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
   FormControlProps<T>
 > {
   render() {
-    const { htmlId, className, property, FormControl, fieldValue = '', error } = this.props;
+    const { htmlId, className, property, FormControl, fieldValue = '', errors } = this.props;
     const { fieldsSet } = property as PropertySchemaSet;
     const valueTyped = fieldValue as unknown as Record<string, unknown>;
 
@@ -42,7 +42,7 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
             )
           )}
         </div>
-        {error && <FormError>{error}</FormError>}
+        <FormErrors errors={errors} />
       </div>
     );
   }

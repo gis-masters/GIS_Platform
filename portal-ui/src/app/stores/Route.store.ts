@@ -1,8 +1,10 @@
-import { ActivatedRouteSnapshot, RoutesRecognized, UrlSegment, Params, ParamMap, RouterEvent } from '@angular/router';
+import { ActivatedRouteSnapshot, RoutesRecognized, UrlSegment, ParamMap, RouterEvent } from '@angular/router';
 import { observable, action } from 'mobx';
 
 import { services } from '../services/services';
 import { AppRouteData } from '../app-routing.module';
+
+type Params = Record<string, string>;
 
 class Route {
   private static _instance: Route;

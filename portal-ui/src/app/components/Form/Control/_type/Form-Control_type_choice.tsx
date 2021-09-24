@@ -4,22 +4,32 @@ import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { MenuItem, Select } from '@material-ui/core';
 
-import { FieldType, PropertySchemaChoice } from '../../../../services/crg/schemaNew.models';
+import { FieldType, PropertySchemaChoice } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
-import { FormError } from '../../Error/Form-Error';
+import { FormErrors } from '../../Errors/Form-Errors';
+
+const EMPTY = '~~~empty_value~~~';
 
 @observer
 class FormControlTypeChoice extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue, property, error } = this.props;
+    const { htmlId, className, fieldValue = EMPTY, property, errors } = this.props;
     const { options } = property as PropertySchemaChoice;
+    const valueIsAllowed = options.some(({ value }) => String(value) === String(fieldValue));
+    const valueCanBeDisplayed =
+      fieldValue !== EMPTY && (typeof fieldValue === 'number' || typeof fieldValue === 'string');
 
     return (
       <div className={cnFormControl(null, [className])}>
         {!!options && (
           <>
-            <Select id={htmlId} fullWidth value={fieldValue} onChange={this.handleChange} error={!!error}>
+            <Select id={htmlId} fullWidth value={fieldValue} onChange={this.handleChange} error={!!errors?.length}>
+              {!valueIsAllowed && (
+                <MenuItem value={fieldValue as string | number} color='#666'>
+                  <em>{valueCanBeDisplayed ? fieldValue : 'Не выбрано'}</em>
+                </MenuItem>
+              )}
               {options.map((item, i) => {
                 return (
                   <MenuItem key={i} value={item.value}>
@@ -28,7 +38,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
                 );
               })}
             </Select>
-            {error && <FormError>{error}</FormError>}
+            <FormErrors errors={errors} />
           </>
         )}
       </div>
@@ -36,13 +46,22 @@ class FormControlTypeChoice extends Component<FormControlProps> {
   }
 
   @boundMethod
-  private handleChange(event: React.ChangeEvent<{ value: unknown }>) {
-    const { onChange, property } = this.props;
+  private handleChange(event: React.ChangeEvent<{ value: string | number }>) {
+    const { onChange, onNeedValidate, property } = this.props;
 
-    onChange({
-      value: event.target.value,
-      propertyName: property.name
-    });
+    if (onChange) {
+      onChange({
+        value: event.target.value,
+        propertyName: property.name
+      });
+    }
+
+    if (onNeedValidate) {
+      onNeedValidate({
+        value: event.target.value,
+        propertyName: property.name
+      });
+    }
   }
 }
 

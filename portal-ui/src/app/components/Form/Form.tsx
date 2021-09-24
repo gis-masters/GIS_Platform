@@ -3,61 +3,58 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { NewPropertySchema } from '../../services/crg/schemaNew.models';
+import { PropertySchema } from '../../services/crg/schema.models';
+import { FieldErrors } from '../../services/crg/formValidation.service';
 
+export { FormField } from './Field/Form-Field';
 import { FormContent } from './Content/Form-Content';
+export { FormLabel } from './Label/Form-Label';
+export { FormControl } from './Control/Form-Control.composed';
 
 import '!style-loader!css-loader!sass-loader!./Form.scss';
 
-export { FormField } from './Field/Form-Field';
-export { FormLabel } from './Label/Form-Label';
-export { FormContent } from './Content/Form-Content';
-export { FormControl } from './Control/Form-Control.composed';
-
 export const cnForm = cn('Form');
 
-export interface FormErrors {
-  field: string;
-  defaultMessage?: string;
-  message?: string;
-}
-
-interface FormProps<T> extends React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement> {
-  fields?: NewPropertySchema[];
-  formValue?: T;
-  formErrors?: FormErrors[] | null;
+interface FormProps<T extends Record<string, unknown>>
+  extends React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement> {
+  fields?: PropertySchema<T>[];
+  value?: T;
+  errors?: FieldErrors[];
   onFormChange?: (changedValue: T) => void;
   onFormSubmit?: (changedValue: T) => void;
+  onFieldChange?: (value: T[keyof T], propertyName: string) => void;
+  onFieldNeedValidate?: (value: T[keyof T], propertyName: keyof T) => void;
 }
 
 @observer
-export class Form<T extends { [key: string]: unknown }> extends Component<FormProps<T>> {
+export class Form<T extends Record<string, unknown> = Record<string, unknown>> extends Component<FormProps<T>> {
   render() {
     const {
       fields,
-      formValue = {},
+      value = {} as T,
       children,
       className,
-      formErrors,
+      errors,
       onFormChange,
       onFormSubmit,
+      onFieldChange,
+      onFieldNeedValidate,
       ...otherProps
     } = this.props;
-
-    const errors = {};
-
-    fields?.forEach(field => {
-      formErrors?.forEach(error => {
-        if (field.name === error.field) {
-          errors[field.name] = error.defaultMessage ? error.defaultMessage : error.message;
-        }
-      });
-    });
 
     return (
       <form action='#' onSubmit={this.submitHandler} {...otherProps} className={cnForm(null, [className])}>
         {children}
-        {!!fields && <FormContent fields={fields} formValue={formValue} onFormChange={onFormChange} errors={errors} />}
+        {!!fields && (
+          <FormContent<T>
+            fields={fields}
+            formValue={value}
+            onFormChange={onFormChange}
+            onFieldChange={onFieldChange}
+            onFieldNeedValidate={onFieldNeedValidate}
+            errors={errors}
+          />
+        )}
       </form>
     );
   }
@@ -66,7 +63,7 @@ export class Form<T extends { [key: string]: unknown }> extends Component<FormPr
   private submitHandler(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
 
-    const { onFormSubmit, formValue } = this.props;
+    const { onFormSubmit, value: formValue } = this.props;
     if (onFormSubmit) {
       onFormSubmit(formValue);
     }

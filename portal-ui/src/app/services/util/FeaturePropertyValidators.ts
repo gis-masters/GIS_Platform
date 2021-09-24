@@ -3,14 +3,14 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import { Toast } from '../../components/Toast/Toast';
 import {
-  PropertySchema,
+  OldPropertySchema,
   PropertyEnumeration,
   ValueType,
-  PropertySchemaChoice,
-  PropertySchemaStringText,
-  PropertySchemaInt,
-  PropertySchemaDouble
-} from '../crg/schema.models';
+  OldPropertySchemaChoice,
+  OldPropertySchemaStringText,
+  OldPropertySchemaInt,
+  OldPropertySchemaDouble
+} from '../crg/schemaOld.models';
 import { services } from '../services';
 
 export interface ValidationError {
@@ -56,7 +56,7 @@ export class FeaturePropertyValidators {
     return errors;
   }
 
-  static validate(propertySchema: PropertySchema): ValidatorFn {
+  static validate(propertySchema: OldPropertySchema): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors: ErrorMessages = {};
 
@@ -114,7 +114,7 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет список приемлемых значений
-  private static enumeration(value: string, propertySchema: PropertySchemaChoice, errors: ErrorMessages): void {
+  private static enumeration(value: string, propertySchema: OldPropertySchemaChoice, errors: ErrorMessages): void {
     if (!propertySchema.enumerations || propertySchema.valueType !== ValueType.CHOICE) {
       return;
     }
@@ -125,7 +125,7 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет точное число символов или объектов списка. Должно быть равно или больше нуля
-  private static facetLength(value: string, propertySchema: PropertySchema, errors: ErrorMessages): void {
+  private static facetLength(value: string, propertySchema: OldPropertySchema, errors: ErrorMessages): void {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- хз, что тут происходит и откуда у схемы .length
     // @ts-ignore
     if (!propertySchema.length || propertySchema.length === -1) {
@@ -142,7 +142,7 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет минимальное число символов или объектов списка. Должно быть равно или больше нуля
-  private static minLength(value: string, propertySchema: PropertySchemaStringText, errors: ErrorMessages): void {
+  private static minLength(value: string, propertySchema: OldPropertySchemaStringText, errors: ErrorMessages): void {
     if (!propertySchema.minLength || propertySchema.minLength === -1) {
       return;
     }
@@ -153,7 +153,7 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет максимальное число символов или объектов списка. Должно быть равно или больше нуля
-  private static maxLength(value: string, propertySchema: PropertySchemaStringText, errors: ErrorMessages): void {
+  private static maxLength(value: string, propertySchema: OldPropertySchemaStringText, errors: ErrorMessages): void {
     if (!propertySchema.maxLength || propertySchema.maxLength === -1) {
       return;
     }
@@ -164,7 +164,7 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет точную последовательность приемлемых символов
-  private static pattern(value: string, propertySchema: PropertySchemaStringText, errors: ErrorMessages): void {
+  private static pattern(value: string, propertySchema: OldPropertySchemaStringText, errors: ErrorMessages): void {
     if (!propertySchema.pattern) {
       return;
     }
@@ -177,7 +177,7 @@ export class FeaturePropertyValidators {
   // Определяет точное количество допустимых цифр. Должно быть больше нуля
   private static totalDigits(
     value: string,
-    propertySchema: PropertySchemaInt | PropertySchemaDouble,
+    propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble,
     errors: ErrorMessages
   ): void {
     if (!propertySchema.totalDigits || propertySchema.totalDigits === -1) {
@@ -190,7 +190,7 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет максимальное число знаков после десятичной запятой. Должно быть равно или больше нуля
-  private static fractionDigits(value: string, propertySchema: PropertySchemaDouble, errors: ErrorMessages): void {
+  private static fractionDigits(value: string, propertySchema: OldPropertySchemaDouble, errors: ErrorMessages): void {
     if (!propertySchema.fractionDigits || propertySchema.fractionDigits === -1) {
       return;
     }
@@ -204,7 +204,7 @@ export class FeaturePropertyValidators {
   // Определяет нижнюю границу для числовых значений (значение должно быть больше указанного здесь)
   private static minInclusive(
     value: string,
-    propertySchema: PropertySchemaInt | PropertySchemaDouble,
+    propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble,
     errors: ErrorMessages
   ): void {
     if (!propertySchema.minInclusive || propertySchema.minInclusive === -1) {
@@ -219,7 +219,7 @@ export class FeaturePropertyValidators {
   // Определяет верхнюю границу для числовых значений (значение должно быть меньше или равно указанному здесь)
   private static maxInclusive(
     value: string,
-    propertySchema: PropertySchemaInt | PropertySchemaDouble,
+    propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble,
     errors: ErrorMessages
   ): void {
     if (!propertySchema.maxInclusive || propertySchema.maxInclusive === -1) {

@@ -7,7 +7,7 @@ import { AddBoxOutlined } from '@material-ui/icons';
 
 import { Loading } from '../Loading/Loading';
 import { services } from '../../services/services';
-import { EditedField } from '../../services/crg/schema.models';
+import { EditedField } from '../../services/crg/schemaOld.models';
 import { EditFeatureInfo } from '../EditFeatureField/EditFeatureField';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { CrgDocument, docLibraryService } from '../../services/crg/doc-library.service';

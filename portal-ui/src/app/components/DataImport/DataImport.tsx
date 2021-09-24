@@ -44,14 +44,9 @@ export class DataImport extends Component {
     return `${this.importUrl}/${route.params.importId}/mapping`;
   }
 
-  constructor(props: {}) {
-    super(props);
-
-    // прогреем схемы, понадобятся на следующем шаге
-    schemaService.getAllSchemas();
-  }
-
   async componentDidMount() {
+    // прогреем схемы, понадобятся на следующем шаге
+    void schemaService.getAllSchemas();
     const urlImportId = route.params.importId;
 
     if (urlImportId) {
@@ -62,13 +57,11 @@ export class DataImport extends Component {
       try {
         await fetchCurrentImport(urlImportId);
         this.startPolling();
-      } catch (err) {
+      } catch {
         this.reset();
       }
-    } else {
-      if (currentImport.id) {
-        this.reset();
-      }
+    } else if (currentImport.id) {
+      this.reset();
     }
 
     await projectsService.fetchCurrent();
@@ -111,6 +104,7 @@ export class DataImport extends Component {
   @computed
   private get loading(): boolean {
     const { file, id, isError, isFinished } = currentImport;
+
     return Boolean(file || id) && !isError && !isFinished;
   }
 
@@ -128,16 +122,16 @@ export class DataImport extends Component {
   private reset() {
     this.stopPolling();
     currentImport.reset();
-    services.ngZone.run(async () => {
+    void services.ngZone.run(async () => {
       await services.router.navigate([this.importUrl], { replaceUrl: true });
     });
   }
 
   private start() {
-    services.ngZone.run(async () => {
+    void services.ngZone.run(async () => {
       const { id } = await initScratchImport(currentImport.file);
       if (currentImport.file) {
-        // if was not reseted
+        // if was not reset
         await services.router.navigate([`${this.importUrl}/${id}`]);
         this.startPolling();
       }
@@ -146,7 +140,7 @@ export class DataImport extends Component {
 
   private startPolling() {
     this.pollingOn = true;
-    this.poll();
+    void this.poll();
   }
 
   @boundMethod

@@ -10,7 +10,7 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { WFS_FEATURE_ID_DELIMITER } from '../../services/geoserver/wfs.service';
 import { schemaService } from '../../services/crg/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { ValueType } from '../../services/crg/schema.models';
+import { ValueType } from '../../services/crg/schemaOld.models';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 import { FeatureError } from '../../services/map/map-link-following.service';
 

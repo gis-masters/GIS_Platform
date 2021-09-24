@@ -4,14 +4,14 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { TextField } from '@material-ui/core';
 
-import { FieldType } from '../../../../services/crg/schemaNew.models';
+import { FieldType } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
 @observer
 class FormControlTypeString extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue = '', inSet, property, error } = this.props;
+    const { htmlId, className, fieldValue = '', inSet, property, errors } = this.props;
 
     return (
       <div className={cnFormControl({ inSet }, [className])}>
@@ -19,10 +19,11 @@ class FormControlTypeString extends Component<FormControlProps> {
           id={htmlId}
           fullWidth={!inSet}
           value={fieldValue}
-          error={!!error}
-          helperText={error}
+          error={!!errors?.length}
+          helperText={errors}
           label={inSet ? property.title : undefined}
           onChange={this.handleChange}
+          onBlur={this.handleBlur}
         />
       </div>
     );
@@ -32,10 +33,24 @@ class FormControlTypeString extends Component<FormControlProps> {
   private handleChange(event: React.ChangeEvent<{ value: string }>) {
     const { onChange, property } = this.props;
 
-    onChange({
-      value: event.target.value,
-      propertyName: property.name
-    });
+    if (onChange) {
+      onChange({
+        value: event.target.value,
+        propertyName: property.name
+      });
+    }
+  }
+
+  @boundMethod
+  private handleBlur() {
+    const { onNeedValidate, fieldValue, property } = this.props;
+
+    if (onNeedValidate) {
+      onNeedValidate({
+        value: fieldValue,
+        propertyName: property.name
+      });
+    }
   }
 }
 

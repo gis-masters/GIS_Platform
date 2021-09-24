@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, OnChanges, Input, ViewChild, ElementRef }
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 
-import { EditedField, ValueType } from '../../services/crg/schema.models';
+import { EditedField, ValueType } from '../../services/crg/schemaOld.models';
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { CrgLayer } from '../../services/crg/projects.models';

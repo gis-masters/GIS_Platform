@@ -14,8 +14,9 @@ import {
 } from '../../../stores/PrintSettings.store';
 import { getPatch } from '../../../services/util/patch';
 import { SelectLegend } from '../../SelectLegend/SelectLegend';
-import { Form, FormContent } from '../../Form/Form';
-import { FieldType, NewPropertySchema } from '../../../services/crg/schemaNew.models';
+import { FieldType, PropertySchema } from '../../../services/crg/schema.models';
+import { FormContent } from '../../Form/Content/Form-Content';
+import { Form } from '../../Form/Form';
 
 import { PrintDialogExtra } from '../Extra/PrintDialog-Extra';
 
@@ -73,7 +74,7 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
   }
 
   @computed
-  private get mainFields(): NewPropertySchema<MainFormValues>[] {
+  private get mainFields(): PropertySchema<MainFormValues>[] {
     return [
       {
         name: 'pageFormatId',
@@ -126,7 +127,7 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
     ];
   }
 
-  private get extraFields(): NewPropertySchema<ExtraFormValues>[] {
+  private get extraFields(): PropertySchema<ExtraFormValues>[] {
     return [
       {
         name: 'resolution',
@@ -143,8 +144,6 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
           {
             name: 'left',
             title: 'слева',
-            defaultValue: 0,
-            display: 'number',
             fieldType: FieldType.INT,
             minValue: 0,
             maxValue: 50
@@ -152,8 +151,6 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
           {
             name: 'right',
             title: 'справа',
-            defaultValue: 0,
-            display: 'number',
             fieldType: FieldType.INT,
             minValue: 0,
             maxValue: 50
@@ -161,8 +158,6 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
           {
             name: 'top',
             title: 'сверху',
-            defaultValue: 0,
-            display: 'number',
             fieldType: FieldType.INT,
             minValue: 0,
             maxValue: 50
@@ -170,8 +165,6 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
           {
             name: 'bottom',
             title: 'снизу',
-            defaultValue: 0,
-            display: 'number',
             fieldType: FieldType.INT,
             minValue: 0,
             maxValue: 50

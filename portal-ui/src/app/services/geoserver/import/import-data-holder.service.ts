@@ -3,7 +3,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { ImportLayerItem, LayerAttribute } from './models';
 import { MatchingPair, TaskImport } from './taskImport';
 import { schemaService } from '../../crg/schema.service';
-import { FeatureDescription, PropertySchema, ValueType } from '../../crg/schema.models';
+import { OldFeatureDescription, OldPropertySchema, ValueType } from '../../crg/schemaOld.models';
 import { AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../models';
 import { PropertiesComparatorService } from '../../properties-comparator.service';
 import { FeatureUtil } from '../../util/FeatureUtil';
@@ -92,7 +92,7 @@ export class ImportDataHolderService {
    * @param source          Атрибут импортированного слоя.
    * @param propertySchema  Сопоставленная схема атрибута
    */
-  updateAttributeMapping(layerNativeName: string, source: LayerAttribute, propertySchema: PropertySchema): void {
+  updateAttributeMapping(layerNativeName: string, source: LayerAttribute, propertySchema: OldPropertySchema): void {
     const comparableLayersPair = this.findCompatiblePair(layerNativeName);
     const attributePair = this.findAttributePair(comparableLayersPair, source);
     if (attributePair) {
@@ -135,7 +135,7 @@ export class ImportDataHolderService {
    * @param layerNativeName   Название импортированного слоя.
    * @param featureSchemaName Название схемы данных
    */
-  setFeatureSchema(layerNativeName: string, schema: FeatureDescription): void {
+  setFeatureSchema(layerNativeName: string, schema: OldFeatureDescription): void {
     const layerPair = this.findCompatiblePair(layerNativeName);
     layerPair.targetLayer.workTableName = layerNativeName;
     layerPair.targetLayer.pairs = [];
@@ -176,7 +176,7 @@ export class ImportDataHolderService {
     this.updateMetrics(this._comparableLayers);
   }
 
-  private addAttributeMapping(layerNativeName: string, source: LayerAttribute, targetProperty: PropertySchema) {
+  private addAttributeMapping(layerNativeName: string, source: LayerAttribute, targetProperty: OldPropertySchema) {
     if (targetProperty.name === NOT_IMPORT.name) {
       return;
     }

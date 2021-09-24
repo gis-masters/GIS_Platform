@@ -68,14 +68,12 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const step = changes['step'];
-    if (step && !step.isFirstChange()) {
-      if (step.currentValue) {
-        this._step = step.currentValue;
+    const step = changes.step;
+    if (step && !step.isFirstChange() && step.currentValue) {
+      this._step = Number(step.currentValue);
 
-        if (this.index === this._step) {
-          this.getValidation();
-        }
+      if (this.index === this._step) {
+        void this.getValidation();
       }
     }
   }
@@ -89,21 +87,20 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          if (this.isActive) {
-            return validationService.getValidationResults(
-              {
-                dataset: this.crgLayer.dataset,
-                table: this.crgLayer.tableName,
-                schemaId: this.crgLayer.schemaId
-              },
-              this.paginator.pageIndex,
-              this.paginator.pageSize,
-              this.sort.active,
-              this.sort.direction
-            );
-          } else {
-            return of(null);
-          }
+
+          return this.isActive
+            ? validationService.getValidationResults(
+                {
+                  dataset: this.crgLayer.dataset,
+                  table: this.crgLayer.tableName,
+                  schemaId: this.crgLayer.schemaId
+                },
+                this.paginator.pageIndex,
+                this.paginator.pageSize,
+                this.sort.active,
+                this.sort.direction
+              )
+            : of(null);
         }),
         takeUntil(this.unsubscribe$)
       )
@@ -116,7 +113,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
     communicationService.off(this);
   }
 
-  async getValidation() {
+  async getValidation(): Promise<void> {
     const response: ValidationResultsResponse = await validationService.getValidationResults(
       {
         dataset: this.crgLayer.dataset,
@@ -132,7 +129,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
     this.handleResponse(response);
   }
 
-  async showObject(event: Event, objectId: string) {
+  async showObject(event: Event, objectId: string): Promise<void> {
     event.stopPropagation();
     const wfsFeature: WfsFeature = await getFeatureById(this.crgLayer.complexName, objectId);
 
@@ -141,7 +138,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
     mapService.positionToFeature(wfsFeature, projection);
   }
 
-  editObject(event: Event, objectId: string) {
+  editObject(event: Event, objectId: string): void {
     event.stopPropagation();
 
     communicationService.editBugObject.emit([{ id: objectId, crgLayer: this.crgLayer }]);

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, O
 import { fromEvent, Subject } from 'rxjs';
 
 import { FilterEvent } from '../../services/models';
-import { PropertySchema } from '../../services/crg/schema.models';
+import { OldPropertySchema } from '../../services/crg/schemaOld.models';
 import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
 
@@ -12,7 +12,7 @@ import { MatSelectChange } from '@angular/material/select';
   styleUrls: ['./table-filter.component.css']
 })
 export class TableFilterComponent implements AfterViewInit, OnDestroy {
-  @Input() property: PropertySchema;
+  @Input() property: OldPropertySchema;
   @Output() filterEvent = new EventEmitter<FilterEvent>();
   @ViewChild('filterInput') filterInput: ElementRef;
 
@@ -20,19 +20,17 @@ export class TableFilterComponent implements AfterViewInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor() {}
-
   ngAfterViewInit(): void {
     if (this.filterInput) {
       fromEvent(this.filterInput.nativeElement, 'keyup')
         .pipe(
-          map((e: any) => e.target.value),
+          map((e: KeyboardEvent) => (e.target as HTMLInputElement).value),
           debounceTime(500),
           distinctUntilChanged(),
           takeUntil(this.unsubscribe$)
         )
         .subscribe(value => {
-          if (!!value) {
+          if (value) {
             this.filterEvent.emit({ value: [value], property: this.property });
           } else {
             this.filterEvent.emit({ value: [], property: this.property });
@@ -46,7 +44,7 @@ export class TableFilterComponent implements AfterViewInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  isInputProperties(valueType: string) {
+  isInputProperties(valueType: string): boolean {
     if (!valueType) {
       return false;
     }
@@ -56,8 +54,9 @@ export class TableFilterComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  onSelection(event: MatSelectChange) {
+  onSelection(event: MatSelectChange): void {
     this.selectionChangeEvent$.next(event.value);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.filterEvent.emit({ value: event.value, property: this.property });
   }
 }

@@ -1,21 +1,28 @@
+/* eslint-disable unicorn/numeric-separators-style */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable sonarjs/no-duplicate-string */
+/* eslint-disable dot-notation */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable no-undef */
+
 import { FormControl } from '@angular/forms';
 
-import { PropertySchema } from '../crg/schema.models';
-import { FeaturePropertyValidators, ValueType } from './FeaturePropertyValidators';
+import { OldPropertySchema, ValueType } from '../crg/schemaOld.models';
+import { FeaturePropertyValidators } from './FeaturePropertyValidators';
 
 describe('Property validation test', () => {
   it('should validate required', () => {
-    const requiredProperty: PropertySchema = {
+    const requiredProperty: OldPropertySchema = {
       name: 'requiredProperty',
       title: 'Required property',
-      valueType: 'CHOICE',
+      valueType: ValueType.CHOICE,
       required: true
     };
 
-    const notRequiredProperty: PropertySchema = {
+    const notRequiredProperty: OldPropertySchema = {
       name: 'requiredProperty',
       title: 'Required property',
-      valueType: 'CHOICE',
+      valueType: ValueType.CHOICE,
       required: false
     };
 
@@ -34,7 +41,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate minLength', () => {
-    const minLengthProperty: PropertySchema = {
+    const minLengthProperty: OldPropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -42,7 +49,7 @@ describe('Property validation test', () => {
       minLength: 5
     };
 
-    const requiredStringProperty: PropertySchema = {
+    const requiredStringProperty: OldPropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -50,7 +57,7 @@ describe('Property validation test', () => {
       minLength: 0
     };
 
-    const requiredUndefinedProperty: PropertySchema = {
+    const requiredUndefinedProperty: OldPropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -58,7 +65,7 @@ describe('Property validation test', () => {
       minLength: undefined
     };
 
-    const notMinLengthProperty: PropertySchema = {
+    const notMinLengthProperty: OldPropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -92,7 +99,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate maxLength', () => {
-    const maxLengthProperty: PropertySchema = {
+    const maxLengthProperty: OldPropertySchema = {
       name: 'maxLengthProperty',
       title: 'maxLength property',
       valueType: ValueType.STRING,
@@ -100,7 +107,7 @@ describe('Property validation test', () => {
       maxLength: 5
     };
 
-    const nullMaxLengthProperty: PropertySchema = {
+    const nullMaxLengthProperty: OldPropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -108,7 +115,7 @@ describe('Property validation test', () => {
       minLength: 0
     };
 
-    const undefinedMaxLengthProperty: PropertySchema = {
+    const undefinedMaxLengthProperty: OldPropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -116,7 +123,7 @@ describe('Property validation test', () => {
       minLength: undefined
     };
 
-    const notMaxLengthProperty: PropertySchema = {
+    const notMaxLengthProperty: OldPropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -155,7 +162,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate pattern', () => {
-    const patternProperty: PropertySchema = {
+    const patternProperty: OldPropertySchema = {
       name: 'patternProperty',
       title: 'pattern property',
       valueType: ValueType.STRING,
@@ -163,7 +170,7 @@ describe('Property validation test', () => {
       pattern: '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$'
     };
 
-    const nullPatternProperty: PropertySchema = {
+    const nullPatternProperty: OldPropertySchema = {
       name: 'patternProperty',
       title: 'pattern property',
       valueType: ValueType.STRING,
@@ -171,7 +178,7 @@ describe('Property validation test', () => {
       pattern: null
     };
 
-    const undefinedPatternProperty: PropertySchema = {
+    const undefinedPatternProperty: OldPropertySchema = {
       name: 'patternProperty',
       title: 'pattern property',
       valueType: ValueType.STRING,
@@ -198,7 +205,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate minInclusive', () => {
-    const mi5: PropertySchema = {
+    const mi5: OldPropertySchema = {
       name: 'minInclusiveProperty',
       title: 'minInclusive property',
       valueType: ValueType.INT,
@@ -206,7 +213,7 @@ describe('Property validation test', () => {
       minInclusive: 5
     };
 
-    const mi0: PropertySchema = {
+    const mi0: OldPropertySchema = {
       name: 'minInclusiveProperty',
       title: 'minInclusive property',
       valueType: ValueType.INT,
@@ -214,7 +221,7 @@ describe('Property validation test', () => {
       minInclusive: 0
     };
 
-    const miUndefined: PropertySchema = {
+    const miUndefined: OldPropertySchema = {
       name: 'minInclusiveProperty',
       title: 'minInclusive property',
       valueType: ValueType.INT,
@@ -222,7 +229,7 @@ describe('Property validation test', () => {
       minInclusive: undefined
     };
 
-    const miNotSet: PropertySchema = {
+    const miNotSet: OldPropertySchema = {
       name: 'minInclusiveProperty',
       title: 'minInclusive property',
       valueType: ValueType.INT,
@@ -246,7 +253,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate maxInclusive', () => {
-    const max5: PropertySchema = {
+    const max5: OldPropertySchema = {
       name: 'maxInclusiveProperty',
       title: 'maxInclusive property',
       valueType: ValueType.INT,
@@ -254,7 +261,7 @@ describe('Property validation test', () => {
       maxInclusive: 5
     };
 
-    const notSetMax: PropertySchema = {
+    const notSetMax: OldPropertySchema = {
       name: 'maxInclusiveProperty',
       title: 'maxInclusive property',
       valueType: ValueType.INT,
@@ -262,7 +269,7 @@ describe('Property validation test', () => {
       maxInclusive: -1
     };
 
-    const notRequiredMax: PropertySchema = {
+    const notRequiredMax: OldPropertySchema = {
       name: 'maxInclusiveProperty',
       title: 'maxInclusive property',
       valueType: ValueType.INT,
@@ -291,10 +298,10 @@ describe('Property validation test', () => {
       }
     ];
 
-    const simpleProperty: PropertySchema = {
+    const simpleProperty: OldPropertySchema = {
       name: 'enumerationProperty',
       title: 'enumerationProperty',
-      valueType: 'CHOICE',
+      valueType: ValueType.CHOICE,
       required: true,
       description: 'description',
       enumerations: enumerations
@@ -319,7 +326,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate totalDigits', () => {
-    const notRequiredDoubleProperty: PropertySchema = {
+    const notRequiredDoubleProperty: OldPropertySchema = {
       name: 'DoubleProperty',
       title: 'DoubleProperty',
       valueType: ValueType.DOUBLE,
@@ -328,7 +335,7 @@ describe('Property validation test', () => {
       totalDigits: -1
     };
 
-    const requiredDoubleProperty: PropertySchema = {
+    const requiredDoubleProperty: OldPropertySchema = {
       name: 'stringProperty',
       title: 'stringProperty',
       valueType: ValueType.DOUBLE,

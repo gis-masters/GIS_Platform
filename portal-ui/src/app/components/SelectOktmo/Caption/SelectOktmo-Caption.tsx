@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { PropertyEnumeration } from '../../../services/crg/schema.models';
+import { PropertyOption } from '../../../services/crg/schema.models';
 
 import '!style-loader!css-loader!sass-loader!./SelectOktmo-Caption.scss';
 
 const cnSelectOktmoCaption = cn('SelectOktmo', 'Caption');
 
 interface SelectOktmoCaptionProps {
-  item?: PropertyEnumeration;
+  item?: PropertyOption;
 }
 
 export const SelectOktmoCaption: FC<SelectOktmoCaptionProps> = ({ item }) => (

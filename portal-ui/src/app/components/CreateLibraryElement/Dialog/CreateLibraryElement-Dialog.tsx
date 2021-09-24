@@ -2,54 +2,51 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { action, computed, observable } from 'mobx';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
-import { FeatureDescription, ValueType } from '../../../services/crg/schema.models';
 import { LibraryRecordRaw } from '../../../services/crg/doc-library.service';
-import { services } from '../../../services/services';
-import { sleep } from '../../../services/util/sleep';
+import { FieldErrors } from '../../../services/crg/formValidation.service';
 import { Loading } from '../../Loading/Loading';
 import { Button } from '../../Button/Button';
-import { Form, FormErrors } from '../../Form/Form';
-import { convertSchema } from '../../../services/crg/schema.utils';
+import { Form } from '../../Form/Form';
+import { PropertySchema } from '../../../services/crg/schema.models';
 
 const cnCreateLibraryElementDialog = cn('CreateLibraryElement', 'Dialog');
 
 export interface ExplorerCreateElementDialogProps {
-  schema?: FeatureDescription;
+  fields?: PropertySchema[];
   open: boolean;
   loading: boolean;
-  formErrors?: FormErrors[];
-  onClose: () => void;
-  onCreate: (formValue: LibraryRecordRaw) => void;
+  formValue: LibraryRecordRaw;
+  formErrors?: FieldErrors[];
+  onClose(): void;
+  onCreate(formValue: LibraryRecordRaw): void;
+  onChange(formValue: LibraryRecordRaw): void;
+  onFieldChange: (value: LibraryRecordRaw[keyof LibraryRecordRaw], propertyName: string) => void;
+  onFieldNeedValidate: (value: LibraryRecordRaw[keyof LibraryRecordRaw], propertyName: string) => void;
 }
 
 @observer
 export class CreateLibraryElementDialog extends React.Component<ExplorerCreateElementDialogProps> {
-  @observable private formValue: LibraryRecordRaw = {};
-
-  componentDidMount() {
-    this.setFormValue(this.initialFormValue);
-  }
-
   render() {
-    const { open, loading, schema, formErrors } = this.props;
+    const { open, loading, fields, formValue, formErrors, onFieldChange, onFieldNeedValidate } = this.props;
 
     return (
       <>
-        {schema && (
+        {fields && (
           <Dialog maxWidth={'md'} open={open} onClose={this.closeDialog}>
             <DialogTitle>Создание нового элемента</DialogTitle>
 
             <DialogContent className={cnCreateLibraryElementDialog()}>
-              <Form
+              <Form<LibraryRecordRaw>
                 id='createLibraryElementForm'
-                fields={convertSchema(schema.properties)}
-                formValue={this.formValue}
+                fields={fields}
+                value={formValue}
                 onFormChange={this.formChanged}
                 onFormSubmit={this.formSubmitHandler}
-                formErrors={formErrors}
+                onFieldChange={onFieldChange}
+                onFieldNeedValidate={onFieldNeedValidate}
+                errors={formErrors}
               />
               <Loading visible={loading} />
             </DialogContent>
@@ -66,54 +63,20 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
     );
   }
 
-  // TODO: убрать эту наркоманию
-  @computed
-  private get initialFormValue(): LibraryRecordRaw {
-    const initialFormValue: Record<string, unknown> = {};
-    (this.props.schema?.properties || []).forEach(property => {
-      switch (property.valueType) {
-        case ValueType.STRING: {
-          initialFormValue[property.name] = '';
-          break;
-        }
-        case ValueType.INT: {
-          initialFormValue[property.name] = '';
-          break;
-        }
-        case ValueType.CHOICE: {
-          initialFormValue[property.name] = property.enumerations[0].value;
-          break;
-        }
-        default: {
-          initialFormValue[property.name] = '';
-          services.logger.warn('Unsupported valueType: ' + property.valueType);
-        }
-      }
-    });
-
-    return initialFormValue;
-  }
-
   @boundMethod
-  private async formSubmitHandler(formValue: LibraryRecordRaw) {
-    this.props.onCreate(formValue);
-    await sleep(0);
-    this.setFormValue(this.initialFormValue);
+  private formSubmitHandler(formValue: LibraryRecordRaw) {
+    const { onCreate } = this.props;
+    onCreate(formValue);
   }
 
   @boundMethod
   private formChanged(formValue: LibraryRecordRaw) {
-    this.setFormValue(formValue);
+    const { onChange } = this.props;
+    onChange(formValue);
   }
 
   @boundMethod
   private closeDialog() {
     this.props.onClose();
-    this.setFormValue(this.initialFormValue);
-  }
-
-  @action
-  private setFormValue(formValue: LibraryRecordRaw) {
-    this.formValue = formValue;
   }
 }

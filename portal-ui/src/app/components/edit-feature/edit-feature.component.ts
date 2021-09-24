@@ -17,7 +17,7 @@ import { communicationService } from '../../services/communication.service';
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
 import { mapService } from '../../services/map/map.service';
 import { schemaService } from '../../services/crg/schema.service';
-import { PropertySchema, ValueType } from '../../services/crg/schema.models';
+import { OldPropertySchema, ValueType } from '../../services/crg/schemaOld.models';
 import { getFeatureProjection } from '../../services/geoserver/projections.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
@@ -94,7 +94,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           .forEach(key => {
             let currentValue = this.features[0].properties[key];
 
-            let property: PropertySchema;
+            let property: OldPropertySchema;
             if (this.featureDescription) {
               property = schemaService.getPropertySchemaByName(key, this.featureDescription.properties);
             }
@@ -293,7 +293,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     return count ? `Сохранить данные для ${count} объектов` : 'Сохранить объект';
   }
 
-  switchControl(property: PropertySchema): void {
+  switchControl(property: OldPropertySchema): void {
     if (this.editFeatureForm.controls[property.name.toLowerCase()].disabled) {
       // formControl.setValue('Оставить как есть');
       this.editFeatureForm.controls[property.name.toLowerCase()].enable();
@@ -302,7 +302,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     }
   }
 
-  isShowTemplate(property: PropertySchema): boolean {
+  isShowTemplate(property: OldPropertySchema): boolean {
     return this.editFeatureForm.controls[property.name.toLowerCase()].disabled;
   }
 

@@ -15,6 +15,7 @@ import { services } from '../../services/services';
 import { route } from '../../stores/Route.store';
 import { Pages } from '../../app-routing.module';
 import { Loading } from '../Loading/Loading';
+import { knownRegex } from '../../services/regexp.service';
 
 import '!style-loader!css-loader!sass-loader!./LoginForm.scss';
 
@@ -142,10 +143,8 @@ export class LoginForm extends Component<LoginFormProps> {
   private async submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     this.handleLoading(true);
-    if (
-      !this.userData.username.length ||
-      !/^[\w!#$%&*+./=?^`{|}~’-]+@[\da-z-]+(?:\.[\da-z-]+)*$/i.test(this.userData.username)
-    ) {
+    const regExp = new RegExp(knownRegex.email);
+    if (!this.userData.username.length || !regExp.test(this.userData.username)) {
       this.setUsernameError('Пожалуйста введите корректный e-mail в формате name@domain');
     }
 

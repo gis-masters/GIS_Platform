@@ -1,9 +1,19 @@
-import GeometryType from 'ol/geom/GeometryType';
+/* eslint-disable unicorn/numeric-separators-style */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable eqeqeq */
+/* eslint-disable unicorn/no-lonely-if */
+/* eslint-disable sonarjs/no-collapsible-if */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable no-undef */
 
 import { GeoUtil } from './GeoUtil';
 import { ImportTaskResponse } from '../geoserver/import/models';
-import { FeatureDescription } from '../crg/schema.models';
+import { OldFeatureDescription, ValueType } from '../crg/schemaOld.models';
 import { FeatureUtil } from './FeatureUtil';
+import { GeometryType } from '../geoserver/wfs.models';
 
 describe('GeoUtil test', () => {
   it('should convert ImportTask to ImportTasks', () => {
@@ -12,26 +22,26 @@ describe('GeoUtil test', () => {
     const task3 = { id: 3, href: 'third', state: 'ready' };
     const tasks = [task1, task2];
 
-    const importTask_case1 = {
+    const importTaskCase1 = {
       tasks: tasks,
       task: undefined
     } as ImportTaskResponse;
 
-    const importTasks_case1 = GeoUtil.tasksHandler(importTask_case1);
-    expect(2).toEqual(importTasks_case1.length);
+    const importTasksCase1 = GeoUtil.tasksHandler(importTaskCase1);
+    expect(2).toEqual(importTasksCase1.length);
 
-    const importTask_case2 = {
+    const importTaskCase2 = {
       tasks: undefined,
       task: task3
     } as ImportTaskResponse;
 
-    const importTasks = GeoUtil.tasksHandler(importTask_case2);
+    const importTasks = GeoUtil.tasksHandler(importTaskCase2);
     expect(1).toEqual(importTasks.length);
     expect(3).toEqual(importTasks[0].id);
   });
 
   it('should correct mapping geometry between Layer and EntityType', () => {
-    const entityPoint: FeatureDescription = {
+    const entityPoint: OldFeatureDescription = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -40,7 +50,7 @@ describe('GeoUtil test', () => {
         {
           name: 'geometry',
           title: '',
-          valueType: 'GEOMETRY',
+          valueType: ValueType.GEOMETRY,
           allowedValues: ['Point']
         }
       ],
@@ -48,7 +58,7 @@ describe('GeoUtil test', () => {
       readOnly: false
     };
 
-    const entityLineString: FeatureDescription = {
+    const entityLineString: OldFeatureDescription = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -57,7 +67,7 @@ describe('GeoUtil test', () => {
         {
           name: 'geometry',
           title: '',
-          valueType: 'GEOMETRY',
+          valueType: ValueType.GEOMETRY,
           allowedValues: ['LineString']
         }
       ],
@@ -65,7 +75,7 @@ describe('GeoUtil test', () => {
       readOnly: false
     };
 
-    const entityPolygon: FeatureDescription = {
+    const entityPolygon: OldFeatureDescription = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -74,7 +84,7 @@ describe('GeoUtil test', () => {
         {
           name: 'geometry',
           title: '',
-          valueType: 'GEOMETRY',
+          valueType: ValueType.GEOMETRY,
           allowedValues: ['Polygon']
         }
       ],
@@ -82,7 +92,7 @@ describe('GeoUtil test', () => {
       readOnly: false
     };
 
-    const entityMultiGeometry: FeatureDescription = {
+    const entityMultiGeometry: OldFeatureDescription = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -91,7 +101,7 @@ describe('GeoUtil test', () => {
         {
           name: 'geometry',
           title: '',
-          valueType: 'GEOMETRY',
+          valueType: ValueType.GEOMETRY,
           allowedValues: ['Polygon', 'Curve']
         }
       ],
@@ -109,7 +119,7 @@ describe('GeoUtil test', () => {
 
   it('should check custom rules', () => {
     const object1 = {
-      classid: 602050202,
+      classid: 602_050_202,
       fp_type: 1,
       status: 1
     };
@@ -119,7 +129,7 @@ describe('GeoUtil test', () => {
     expect(true).toEqual(result1.some(item => item.type === 'must_be_empty'));
 
     const object2 = {
-      classid: 604010104,
+      classid: 604_010_104,
       fp_type: 1,
       status: 1
     };
@@ -131,7 +141,7 @@ describe('GeoUtil test', () => {
 });
 
 function customRule(obj) {
-  var errors = [];
+  const errors = [];
 
   // В приказе - "Н"
   if (!(obj.classid == '604010103' || obj.classid == '604010104')) {
@@ -153,7 +163,7 @@ function customRule(obj) {
 }
 
 function functionalZoneCustomRule(obj) {
-  var errors = [];
+  const errors = [];
 
   if (obj.classid == '701010301') {
     if (!obj.fz_mfstp) {

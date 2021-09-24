@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { PropertyEnumeration } from '../../services/crg/schema.models';
+import { PropertyOption } from '../../services/crg/schema.models';
 
 import { SortParams } from '../../services/util/sortObjects';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
@@ -21,7 +21,7 @@ const cnSelectOktmo = cn('SelectOktmo');
 export class SelectOktmo extends Component<FormControlProps> {
   @observable private dialogOpen = false;
 
-  private cols: XTableColumn<PropertyEnumeration>[] = [
+  private cols: XTableColumn<PropertyOption>[] = [
     {
       field: 'title',
       title: 'Название населённого пункта',
@@ -36,7 +36,7 @@ export class SelectOktmo extends Component<FormControlProps> {
     }
   ];
 
-  private sortParams: SortParams<PropertyEnumeration> = { asc: true, field: 'title' };
+  private sortParams: SortParams<PropertyOption> = { asc: true, field: 'title' };
 
   render() {
     const value = this.props.fieldValue as string;
@@ -48,7 +48,7 @@ export class SelectOktmo extends Component<FormControlProps> {
           <SelectOktmoCaption item={selectedItem} />
           <Button onClick={this.openDialog}>Выбрать</Button>
         </div>
-        <ChooseXTableDialog<PropertyEnumeration>
+        <ChooseXTableDialog<PropertyOption>
           title='Выбор ОКТМО'
           items={oktmo}
           selectedItems={selectedItem && [selectedItem]}
@@ -76,13 +76,13 @@ export class SelectOktmo extends Component<FormControlProps> {
   }
 
   @action.bound
-  private select([item]: PropertyEnumeration[]) {
+  private select([item]: PropertyOption[]) {
     const { onChange, property } = this.props;
     onChange({ value: item.value, propertyName: property.name });
     this.closeDialog();
   }
 
-  private getItemId({ value }: PropertyEnumeration): string {
+  private getItemId({ value }: PropertyOption): string {
     return String(value);
   }
 }

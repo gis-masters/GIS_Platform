@@ -9,7 +9,7 @@ import { Button } from '../../../Button/Button';
 import { Loading } from '../../../Loading/Loading';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
 import { HtmlContent } from '../../../HtmlContent/HtmlContent';
-import { PropertySchemaUrl, ValueType } from '../../../../services/crg/schema.models';
+import { OldPropertySchemaUrl, ValueType } from '../../../../services/crg/schemaOld.models';
 import { services } from '../../../../services/services';
 import { Link } from '../../../Link/Link';
 
@@ -49,7 +49,7 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
 
     const { text, disabled, url } = this.value;
     const { className, field } = this.props;
-    const property = field.property as PropertySchemaUrl;
+    const property = field.property as OldPropertySchemaUrl;
     const inPopup = property.displayMode === 'in_popup';
 
     return (

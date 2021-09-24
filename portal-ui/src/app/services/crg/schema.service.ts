@@ -13,19 +13,19 @@ import { services } from '../services';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { CrgLayer } from './projects.models';
 import {
-  FeatureDescription,
-  PropertyEnumeration,
-  PropertySchema,
-  PropertySchemaChoice,
-  ValueType
-} from './schema.models';
+  OldFeatureDescription,
+  OldPropertySchema,
+  OldPropertySchemaChoice,
+  ValueType,
+  PropertyEnumeration
+} from './schemaOld.models';
 import { BugObject } from './validation.service';
 
 class SchemaService {
   private static _instance: SchemaService;
 
-  private schemas: { [key: string]: Promise<FeatureDescription> } = {};
-  private schemasResolvers: { [key: string]: (value?: FeatureDescription) => void } = {};
+  private schemas: { [key: string]: Promise<OldFeatureDescription> } = {};
+  private schemasResolvers: { [key: string]: (value?: OldFeatureDescription) => void } = {};
   private schemasRejecters: { [key: string]: () => void } = {};
   private fetchingPool: string[] = [];
   private fetchingAllSchemas?: Promise<void>;
@@ -41,7 +41,7 @@ class SchemaService {
   }
 
   @boundMethod
-  async getSchema(name: string): Promise<FeatureDescription> {
+  async getSchema(name: string): Promise<OldFeatureDescription> {
     if (!this.schemas[name]) {
       this.schemas[name] = new Promise((resolve, reject) => {
         this.schemasResolvers[name] = resolve;
@@ -54,13 +54,13 @@ class SchemaService {
     return this.schemas[name];
   }
 
-  async getCurrentProjectSchemas(): Promise<FeatureDescription[]> {
+  async getCurrentProjectSchemas(): Promise<OldFeatureDescription[]> {
     const names = currentProject.vectorLayers.map(layer => layer.schemaId);
 
     return Promise.all(names.map(this.getSchema));
   }
 
-  async getAllSchemas(): Promise<FeatureDescription[]> {
+  async getAllSchemas(): Promise<OldFeatureDescription[]> {
     if (!this.fetchingAllSchemas) {
       this.fetchingAllSchemas = this.fetch(true);
     }
@@ -70,7 +70,7 @@ class SchemaService {
     return Promise.all(Object.values(this.schemas));
   }
 
-  async getById(schemaId: string, global?: boolean): Promise<FeatureDescription | undefined> {
+  async getById(schemaId: string, global?: boolean): Promise<OldFeatureDescription | undefined> {
     if (!schemaId) {
       return;
     }
@@ -88,7 +88,7 @@ class SchemaService {
    * Метод опирается на название и геометрию слоя.
    * @param layer Слой
    */
-  async getSchemaByLayer(layer: ImportLayerItem): Promise<FeatureDescription | undefined> {
+  async getSchemaByLayer(layer: ImportLayerItem): Promise<OldFeatureDescription | undefined> {
     const layerName = layer.originalName.toLowerCase();
     let layerNameWithGeomType: string;
 
@@ -113,7 +113,7 @@ class SchemaService {
 
     return schema.properties
       .filter(simpleProperty => simpleProperty.valueType === ValueType.CHOICE && simpleProperty.enumerations)
-      .reduce<string>((val: string, simpleProperty: PropertySchemaChoice) => {
+      .reduce<string>((val: string, simpleProperty: OldPropertySchemaChoice) => {
         return simpleProperty.enumerations.reduce<string>((title: string, item) => {
           return String(bugObject.classId) === item.value ? item.title : title;
         }, val);
@@ -145,7 +145,7 @@ class SchemaService {
    * @param key Наименование свойства, полученное из "фичи" геосервера
    * @param propertySchemas Свойства полученные из схемы.
    */
-  getPropertySchemaByName(key: string, propertySchemas: PropertySchema[]) {
+  getPropertySchemaByName(key: string, propertySchemas: OldPropertySchema[]) {
     return propertySchemas.find(({ name }) => name.toLowerCase() === key.toLowerCase());
   }
 
@@ -226,12 +226,11 @@ class SchemaService {
    * @param featureProperties
    */
   replaceRowDataToAliases(
-    schema: FeatureDescription,
+    schema: OldFeatureDescription,
     featureProperties: Record<string, unknown>
   ): Record<string, unknown> {
     const resultObject: Record<string, unknown> = {};
 
-    // eslint-disable-next-line sonarjs/cognitive-complexity
     Object.keys(featureProperties).forEach(key => {
       const schemaProperty = schema.properties.find(prop => prop.name.toLowerCase() === key.toLowerCase());
       if (!schemaProperty) {
@@ -270,7 +269,7 @@ class SchemaService {
     await services.provided;
     const payload = fetchAll ? [] : this.fetchingPool.splice(0);
     const params = { schemaIds: payload.join(',') };
-    const response = await http.get<(FeatureDescription | null)[]>(await getSchemaUrl(), { params });
+    const response = await http.get<(OldFeatureDescription | null)[]>(await getSchemaUrl(), { params });
 
     if (!response) {
       this.fetchingNow--;

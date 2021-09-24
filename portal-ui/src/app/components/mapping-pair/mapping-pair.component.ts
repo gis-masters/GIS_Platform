@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { GeoUtil } from '../../services/util/GeoUtil';
-import { PropertySchema } from '../../services/crg/schema.models';
+import { OldPropertySchema } from '../../services/crg/schemaOld.models';
 import { PropertiesComparatorService } from '../../services/properties-comparator.service';
 import { LayerAttribute } from '../../services/geoserver/import/models';
 import { ImportDataHolderService } from '../../services/geoserver/import/import-data-holder.service';
@@ -17,10 +17,10 @@ import { ImportTargetType, NOT_IMPORT, AS_IS } from '../../services/models';
 export class MappingPairComponent implements OnInit, OnChanges {
   @Input() layerName: string;
   @Input() importedLayerAttribute: LayerAttribute; // Атрибут импортированного шейпа
-  @Input() propertySchemas: PropertySchema[]; // Атрибуты описанные в схеме
+  @Input() propertySchemas: OldPropertySchema[]; // Атрибуты описанные в схеме
 
   columnForm: FormGroup;
-  selectedProperty: PropertySchema;
+  selectedProperty: OldPropertySchema;
 
   constructor(
     private importData: ImportDataHolderService,
@@ -45,6 +45,7 @@ export class MappingPairComponent implements OnInit, OnChanges {
           this.columnForm = this.formBuilder.group({
             columnFiz: [this.propertySchemas[1]]
           });
+          // eslint-disable-next-line sonarjs/no-duplicated-branches
         } else {
           this.columnForm = this.formBuilder.group({
             columnFiz: [this.propertySchemas[1]]
@@ -63,7 +64,7 @@ export class MappingPairComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const propertySchemasChanged = changes['propertySchemas'];
+    const propertySchemasChanged = changes.propertySchemas;
     if (propertySchemasChanged && !propertySchemasChanged.isFirstChange()) {
       this.setIdenticalColumn();
     }
@@ -75,34 +76,34 @@ export class MappingPairComponent implements OnInit, OnChanges {
 
     this.importData.updateAttributeMapping(this.layerName, this.importedLayerAttribute, bestCompareProperty);
 
-    this.columnForm.controls['columnFiz'].patchValue(bestCompareProperty);
+    this.columnForm.controls.columnFiz.patchValue(bestCompareProperty);
     this.selectedProperty = bestCompareProperty;
   }
 
-  typeToString(type: string) {
+  typeToString(type: string): string {
     const splitType = type.split('.');
 
     return GeoUtil.getAliasForBaseType(splitType[splitType.length - 1]);
   }
 
-  compareFn(c1: any, c2: any): boolean {
+  compareFn(c1: { name?: unknown }, c2?: { name?: unknown }): boolean {
     return c1 && c2 ? c1.name === c2.name : c1 === c2;
   }
 
-  columnChanged() {
-    this.selectedProperty = this.columnForm.controls['columnFiz'].value as PropertySchema;
+  columnChanged(): void {
+    this.selectedProperty = this.columnForm.controls.columnFiz.value as OldPropertySchema;
 
     this.importData.updateAttributeMapping(this.layerName, this.importedLayerAttribute, this.selectedProperty);
   }
 
-  getOptionText(property: PropertySchema): string {
+  getOptionText(property: OldPropertySchema): string {
     const { valueType, name, title } = property;
     const isSpecial = name === NOT_IMPORT.name || name === AS_IS.name;
 
-    return `${isSpecial ? title : name} ${valueType !== undefined ? `(${valueType})` : ''}`;
+    return (isSpecial ? title : name) + (valueType !== undefined ? ` (${valueType})` : '');
   }
 
   private getPropertySchema(name: string) {
-    return this.propertySchemas.find((propertySchema: PropertySchema) => propertySchema.name === name);
+    return this.propertySchemas.find((propertySchema: OldPropertySchema) => propertySchema.name === name);
   }
 }

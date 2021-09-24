@@ -1,20 +1,23 @@
 import { cloneDeep } from 'lodash';
-import { FeatureDescription, PropertySchema, ValueType } from './schema.models';
+import { OldFeatureDescription, OldPropertySchema, ValueType } from './schemaOld.models';
 import {
   FieldType,
-  NewPropertySchema,
+  PropertySchema,
   PropertySchemaChoice,
   PropertySchemaDatetime,
   PropertySchemaFloat,
   PropertySchemaUrl
-} from './schemaNew.models';
+} from './schema.models';
 
-export function getSchemaWithAppliedContentType(schema: FeatureDescription, contentTypeId: string): FeatureDescription {
-  const clonedSchema: FeatureDescription = cloneDeep(schema);
+export function getSchemaWithAppliedContentType(
+  schema: OldFeatureDescription,
+  contentTypeId?: string
+): OldFeatureDescription {
+  const clonedSchema: OldFeatureDescription = cloneDeep(schema);
 
   const contentType = clonedSchema.contentTypes.find(cType => cType.id === contentTypeId);
   if (contentType) {
-    const actualProperties: PropertySchema[] = contentType.attributes.map(contentTypeDescription => {
+    const actualProperties: OldPropertySchema[] = contentType.attributes.map(contentTypeDescription => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeDescription.name);
 
       return { ...schemaProperty, ...contentTypeDescription };
@@ -27,16 +30,16 @@ export function getSchemaWithAppliedContentType(schema: FeatureDescription, cont
 }
 
 export function convertSchema<T extends Record<string, unknown>>(
-  oldFields: PropertySchema<T>[]
-): NewPropertySchema<T>[] {
+  oldFields: OldPropertySchema<T>[]
+): PropertySchema<T>[] {
   return oldFields.map(oldField => {
-    const field: Partial<NewPropertySchema<T>> = { ...oldField };
+    const field: Partial<PropertySchema<T>> = { ...oldField };
 
     if (oldField.valueType === ValueType.STRING || oldField.valueType === ValueType.TEXT) {
       field.fieldType = FieldType.STRING;
     }
 
-    field.isTitle = oldField.objectIdentityOnUi;
+    field.asTitle = oldField.objectIdentityOnUi;
 
     if (oldField.valueType === ValueType.DOUBLE) {
       field.fieldType = FieldType.FLOAT;
@@ -89,8 +92,8 @@ export function convertSchema<T extends Record<string, unknown>>(
       field.fieldType = FieldType.SET;
     }
 
-    delete (field as Partial<PropertySchema>).valueType;
+    delete (field as Partial<OldPropertySchema>).valueType;
 
-    return field as NewPropertySchema<T>;
+    return field as PropertySchema<T>;
   });
 }

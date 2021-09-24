@@ -9,7 +9,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } f
 
 import { http } from '../../../services/http.service';
 import { services } from '../../../services/services';
-import { EditedField } from '../../../services/crg/schema.models';
+import { EditedField } from '../../../services/crg/schemaOld.models';
 import { getBaseUrl } from '../../../services/server-urls.service';
 import { communicationService } from '../../../services/communication.service';
 import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';

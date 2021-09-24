@@ -1,6 +1,6 @@
-import { PropertyEnumeration } from '../../services/crg/schema.models';
+import { PropertyOption } from '../../services/crg/schema.models';
 
-export const oktmo: PropertyEnumeration[] = [
+export const oktmo: PropertyOption[] = [
   { title: 'Муниципальные образования Республики Крым', value: '35000000' },
   { title: 'Городские округа Республики Крым', value: '35700000' },
   { title: 'Алушта', value: '35703000' },
@@ -22,7 +22,7 @@ export const oktmo: PropertyEnumeration[] = [
 
   { title: 'пгт Партенит', value: '35703000104' },
   { title: 'с Изобильное', value: '35703000106' },
-  { title: 'С Верхняя Кутузовка', value: '35703000111' },
+  { title: 'с Верхняя Кутузовка', value: '35703000111' },
   { title: 'с Нижняя Кутузовка', value: '35703000116' },
   { title: 'п Розовый', value: '35703000121' },
   { title: 'с Лучистое', value: '35703000126' },

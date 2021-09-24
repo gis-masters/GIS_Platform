@@ -4,18 +4,18 @@ import { withBemMod } from '@bem-react/core';
 import { Checkbox } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { FieldType } from '../../../../services/crg/schemaNew.models';
+import { FieldType } from '../../../../services/crg/schema.models';
 import { generateRandomId } from '../../../../services/util/randomId';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
-import { FormError } from '../../Error/Form-Error';
+import { FormErrors } from '../../Errors/Form-Errors';
 
 import '!style-loader!css-loader!sass-loader!./Form-Control_type_bool.scss';
 
 @observer
 class FormControlTypeBool extends Component<FormControlProps> {
   render() {
-    const { htmlId = 'formField_' + generateRandomId(), className, fieldValue, inSet, property, error } = this.props;
+    const { htmlId = 'formField_' + generateRandomId(), className, fieldValue, inSet, property, errors } = this.props;
 
     return (
       <div className={cnFormControl({ inSet }, [className])}>
@@ -26,19 +26,28 @@ class FormControlTypeBool extends Component<FormControlProps> {
           color='primary'
         />
         {inSet && property.title && <label htmlFor={htmlId}>{property.title}</label>}
-        {error && <FormError>{error}</FormError>}
+        <FormErrors errors={errors} />
       </div>
     );
   }
 
   @boundMethod
   private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { onChange, property } = this.props;
+    const { onChange, onNeedValidate, property } = this.props;
 
-    onChange({
-      value: e.target.checked,
-      propertyName: property.name
-    });
+    if (onChange) {
+      onChange({
+        value: e.target.checked,
+        propertyName: property.name
+      });
+    }
+
+    if (onNeedValidate) {
+      onNeedValidate({
+        value: e.target.checked,
+        propertyName: property.name
+      });
+    }
   }
 }
 

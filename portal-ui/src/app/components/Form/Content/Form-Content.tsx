@@ -5,7 +5,8 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
-import { NewPropertySchema } from '../../../services/crg/schemaNew.models';
+import { FieldErrors } from '../../../services/crg/formValidation.service';
+import { PropertySchema } from '../../../services/crg/schema.models';
 import { generateRandomId } from '../../../services/util/randomId';
 
 import { FormField } from '../Field/Form-Field';
@@ -16,10 +17,12 @@ import { FormHiddenField } from '../HiddenField/Form-HiddenField';
 const cnFormContent = cn('Form', 'Content');
 
 interface FormContentProps<T extends Record<string, unknown>> extends IClassNameProps {
-  fields?: NewPropertySchema<T>[];
+  fields?: PropertySchema<T>[];
   formValue: T;
-  errors?: Record<keyof T, string>;
+  errors?: FieldErrors[];
   onFormChange?: (changedValue: T) => void;
+  onFieldChange?: (value: T[keyof T], propertyName: keyof T) => void;
+  onFieldNeedValidate?: (value: T[keyof T], propertyName: keyof T) => void;
 }
 
 @observer
@@ -27,11 +30,11 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   FormContentProps<T>
 > {
   render() {
-    const { fields, formValue, className, errors } = this.props;
+    const { fields, formValue, className, errors = [] } = this.props;
 
     return (
       <div className={cnFormContent(null, [className])}>
-        {fields.map((propertySchema: NewPropertySchema, i) => {
+        {fields.map((propertySchema: PropertySchema, i) => {
           const htmlId = 'formField_' + generateRandomId();
 
           return !propertySchema.hidden ? (
@@ -41,10 +44,11 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
                 htmlId={htmlId}
                 property={propertySchema}
                 type={propertySchema.fieldType}
-                onChange={this.fieldChanged}
+                onChange={this.fieldChangeHandler}
+                onNeedValidate={this.fieldNeedValidateHandler}
                 fieldValue={formValue[propertySchema.name]}
                 FormControl={FormControl}
-                error={errors ? errors[propertySchema.name] : null}
+                errors={errors.filter(({ field }) => field === propertySchema.name).flatMap(({ messages }) => messages)}
               >
                 {formValue[propertySchema.name]}
               </FormControl>
@@ -58,12 +62,26 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   }
 
   @boundMethod
-  private fieldChanged({ value, propertyName }: { value: T[keyof T]; propertyName: keyof T }) {
-    const { formValue, onFormChange } = this.props;
+  private fieldChangeHandler({ value, propertyName }: { value: T[keyof T]; propertyName: keyof T }) {
+    const { formValue, onFormChange, onFieldChange } = this.props;
+
+    if (onFieldChange) {
+      onFieldChange(value, propertyName);
+    }
+
     if (onFormChange) {
       const newFormValue = cloneDeep(formValue);
       newFormValue[propertyName] = value;
       onFormChange(newFormValue);
+    }
+  }
+
+  @boundMethod
+  private fieldNeedValidateHandler({ value, propertyName }: { value: T[keyof T]; propertyName: keyof T }) {
+    const { onFieldNeedValidate } = this.props;
+
+    if (onFieldNeedValidate) {
+      onFieldNeedValidate(value, propertyName);
     }
   }
 }

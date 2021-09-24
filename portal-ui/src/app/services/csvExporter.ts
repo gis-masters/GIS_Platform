@@ -1,7 +1,7 @@
 import { services } from './services';
 import { saveAsCsv } from './util/FileSaver';
 import { CrgLayer } from './crg/projects.models';
-import { FeatureDescription } from './crg/schema.models';
+import { OldFeatureDescription } from './crg/schemaOld.models';
 import { schemaService } from './crg/schema.service';
 import { getFeatures } from './geoserver/wfs.service';
 import { FilterEvent, RequestAttribute } from './models';
@@ -76,14 +76,14 @@ class CsvExporter {
     return result;
   }
 
-  private unparseFeatures(schema: FeatureDescription, allFeatures: WfsFeature[]): string {
+  private unparseFeatures(schema: OldFeatureDescription, allFeatures: WfsFeature[]): string {
     const header = schema.properties.map(prop => prop.title).join(';');
     const body = allFeatures.map(feature => this.unparseFeature(schema, feature)).join('\n');
 
     return header + '\n' + body;
   }
 
-  private unparseFeature(schema: FeatureDescription, feature: WfsFeature): string {
+  private unparseFeature(schema: OldFeatureDescription, feature: WfsFeature): string {
     const aliasedFeature = schemaService.replaceRowDataToAliases(schema, feature.properties);
 
     return schema.properties

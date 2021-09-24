@@ -1,6 +1,6 @@
 import { NGXLogger } from 'ngx-logger';
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { FeatureDescription, PropertySchema, ValueType } from '../../services/crg/schema.models';
+import { OldFeatureDescription, OldPropertySchema, ValueType } from '../../services/crg/schemaOld.models';
 import { Subject } from 'rxjs';
 import { ImportLayerItem } from '../../services/geoserver/import/models';
 import { AS_IS, IMPORT_LAYER_AS_IS, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../services/models';
@@ -14,12 +14,12 @@ import { FeatureUtil } from '../../services/util/FeatureUtil';
 })
 export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   @Input() importLayer: ImportLayerItem;
-  @Input() schemas: FeatureDescription[];
+  @Input() schemas: OldFeatureDescription[];
 
-  featureDescriptions: FeatureDescription[] = [];
-  searchingFeatureDescriptions: FeatureDescription[] = [];
+  featureDescriptions: OldFeatureDescription[] = [];
+  searchingFeatureDescriptions: OldFeatureDescription[] = [];
 
-  propertySchemas: PropertySchema[] = [];
+  propertySchemas: OldPropertySchema[] = [];
 
   selectedFeatureType: string;
   searchWord: string;
@@ -105,8 +105,8 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  findDescription(tableName: string): FeatureDescription {
-    return this.schemas.find((type: FeatureDescription) => type.tableName === tableName);
+  findDescription(tableName: string): OldFeatureDescription {
+    return this.schemas.find((type: OldFeatureDescription) => type.tableName === tableName);
   }
 
   openAttributes(): boolean {

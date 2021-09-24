@@ -6,7 +6,7 @@ import { Coordinate } from 'ol/coordinate';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { wfsGeometryToGeometry } from '../util/open-layers.util';
 import { getFeatureProjection } from './projections.service';
-import { FeatureDescription } from '../crg/schema.models';
+import { OldFeatureDescription } from '../crg/schemaOld.models';
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from './wfs.models';
 import { usersService } from '../crg/users.service';
 import { getWfsUrl } from '../server-urls.service';
@@ -61,7 +61,7 @@ export class TransformFeatureService {
   async updateFeatures(
     layerName: string,
     features: WfsFeature<Coordinate | CoordinateEdited>[],
-    schema: FeatureDescription,
+    schema: OldFeatureDescription,
     newProperties: Properties,
     geometry?: WfsGeometry<Coordinate>
   ): Promise<string> {

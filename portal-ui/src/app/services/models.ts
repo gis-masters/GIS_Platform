@@ -1,4 +1,4 @@
-import { FeatureDescription, PropertySchema } from './crg/schema.models';
+import { OldFeatureDescription, OldPropertySchema } from './crg/schemaOld.models';
 import { GeometryType } from './geoserver/wfs.models';
 
 interface PageableLink {
@@ -40,7 +40,7 @@ export interface Sortable {
 }
 
 export interface FilterEvent {
-  property?: PropertySchema;
+  property?: OldPropertySchema;
   value?: string[];
 }
 
@@ -99,7 +99,7 @@ export const NOT_IMPORT = {
   name: ImportTargetType.NOT_IMPORT
 };
 
-export const IMPORT_LAYER_AS_IS: FeatureDescription = {
+export const IMPORT_LAYER_AS_IS: OldFeatureDescription = {
   name: 'IMPORT_LAYER_AS_IS',
   title: 'Импортировать как есть',
   description: '',
@@ -108,7 +108,7 @@ export const IMPORT_LAYER_AS_IS: FeatureDescription = {
   properties: []
 };
 
-export const NOT_IMPORT_LAYER: FeatureDescription = {
+export const NOT_IMPORT_LAYER: OldFeatureDescription = {
   name: 'NOT_IMPORT_LAYER',
   title: 'Не импортировать',
   description: '',

@@ -3,34 +3,43 @@ import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
+import { FieldType, PropertySchemaBinary } from '../../../../services/crg/schema.models';
 import { FileInput } from '../../../FileInput/FileInput';
-import { FieldType, PropertySchemaBinary } from '../../../../services/crg/schemaNew.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
-import { FormError } from '../../Error/Form-Error';
+import { FormErrors } from '../../Errors/Form-Errors';
 
 @observer
 class FormControlTypeBinary extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, property, error } = this.props;
+    const { htmlId, className, errors, property } = this.props;
     const { accept } = property as PropertySchemaBinary;
 
     return (
       <div className={cnFormControl(null, [className])}>
         <FileInput accept={accept} id={htmlId} onChange={this.handleChange} />
-        {error && <FormError>{error}</FormError>}
+        <FormErrors errors={errors} />
       </div>
     );
   }
 
   @boundMethod
   private handleChange(selectedFiles: FileList | null) {
-    const { onChange, property } = this.props;
+    const { onChange, onNeedValidate, property } = this.props;
 
-    onChange({
-      value: selectedFiles[0],
-      propertyName: property.name
-    });
+    if (onChange) {
+      onChange({
+        value: selectedFiles && selectedFiles[0],
+        propertyName: property.name
+      });
+    }
+
+    if (onNeedValidate) {
+      onNeedValidate({
+        value: selectedFiles && selectedFiles[0],
+        propertyName: property.name
+      });
+    }
   }
 }
 

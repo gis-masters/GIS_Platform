@@ -3,8 +3,9 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip 
 import { boundMethod } from 'autobind-decorator';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { AxiosError } from 'axios';
 
-import { FieldType, NewPropertySchema } from '../../services/crg/schemaNew.models';
+import { FieldType, PropertySchema } from '../../services/crg/schema.models';
 import { DataTable } from '../../services/data.service';
 import { createLayer, createLayersGroup } from '../../services/geoserver/layers.service';
 import { http } from '../../services/http.service';
@@ -21,13 +22,14 @@ import { SelectProject } from '../SelectProject/SelectProject';
 import { oktmo } from './oktmo';
 import { CrgLayerType, CrgProject, NewCrgLayersGroup } from '../../services/crg/projects.models';
 import { projectsService } from '../../services/crg/projects.service';
+import { FieldErrors, normalizeServerErrors } from '../../services/crg/formValidation.service';
 
 interface ImportGmlFormData extends Record<string, unknown> {
   oktmo: string;
   documentType: string;
   details?: string;
   date: string;
-  gmlFile: Blob;
+  file: Blob;
   scale: string;
   project?: CrgProject;
   invertCoordinates?: string;
@@ -52,7 +54,7 @@ const defaultFormData: ImportGmlFormData = {
   date: '',
   documentType: '',
   details: '',
-  gmlFile: undefined,
+  file: undefined,
   oktmo: '',
   title: '',
   scale: '10000',
@@ -69,7 +71,8 @@ export class ImportGml extends Component {
   @observable private loading = false;
   @observable private formData: ImportGmlFormData = { ...defaultFormData };
   @observable private formDialogOpen = false;
-  @observable private formFields: NewPropertySchema[] = [
+  @observable private formErrors: FieldErrors[] = [];
+  @observable private formFields: PropertySchema<ImportGmlFormData>[] = [
     { name: 'details', title: 'Описание', fieldType: FieldType.STRING },
     { name: 'date', title: 'Дата утверждения документа', fieldType: FieldType.DATETIME, required: true },
     {
@@ -96,7 +99,7 @@ export class ImportGml extends Component {
       required: true,
       options: scales.map(scale => ({ title: `1 : ${scale}`, value: scale }))
     },
-    { name: 'gmlFile', title: 'Файл', fieldType: FieldType.BINARY, accept: '.gml', required: true },
+    { name: 'file', title: 'Файл', fieldType: FieldType.BINARY, accept: '.gml', required: true },
     {
       name: 'project',
       title: 'Добавить в',
@@ -120,9 +123,11 @@ export class ImportGml extends Component {
             <Form<ImportGmlFormData>
               id='importGmlForm'
               fields={this.formFields}
+              errors={this.formErrors}
               onFormSubmit={this.submitHandler}
               onFormChange={this.onChangeHandler}
-              formValue={this.formData}
+              onFieldChange={this.formFieldChanged}
+              value={this.formData}
             />
           </DialogContent>
           <DialogActions>
@@ -138,9 +143,7 @@ export class ImportGml extends Component {
           projectIsNew={!this.formData.project}
           project={project}
           reports={this.reports}
-        >
-          {' '}
-        </ImportGmlResultDialog>
+        />
       </>
     );
   }
@@ -168,7 +171,7 @@ export class ImportGml extends Component {
   private async submitHandler(data: ImportGmlFormData) {
     this.setLoading(true);
     const formData = new FormData();
-    const oktmoTitle = oktmo.find(o => o.value == data.oktmo).title;
+    const oktmoTitle = oktmo.find(o => o.value === String(data.oktmo))?.title;
     const year = new Date(data.date).getFullYear();
 
     const title = `${data.documentType} ${oktmoTitle} ${year} ${Number(data.scale) / 1000}K`;
@@ -177,61 +180,71 @@ export class ImportGml extends Component {
     formData.append('documentType', data.documentType);
     formData.append('details', data.details);
     formData.append('docDateApprove', data.date);
-    formData.append('gmlFile', data.gmlFile);
+    formData.append('gmlFile', data.file);
     formData.append('scale', data.scale);
     formData.append('title', title);
     if (data.invertCoordinates) {
       formData.append('invertCoordinates', data.invertCoordinates);
     }
 
-    const { createdTables, datasetIdentifier, importLayerReports } = await http.post<ImportResult>(
-      await getApiImportGmlUrl(),
-      formData
-    );
-    this.reports = importLayerReports;
-
-    const newGroup: NewCrgLayersGroup = {
-      title: title,
-      enabled: false,
-      expanded: true,
-      transparency: 100,
-      position: -1
-    };
-
-    let createdGroupId: number | undefined;
-
-    if (data.project) {
-      createdGroupId = (await createLayersGroup(newGroup, data.project)).id;
-    } else {
-      this.createdProject = await projectsService.create(title);
-    }
-
-    for (const table of createdTables) {
-      const dataStoreName = `scratch_database_${currentUser.orgId}`;
-
-      await createLayer(
-        {
-          dataStoreName,
-          title: table.title,
-          complexName: `${dataStoreName}:${table.identifier}`,
-          enabled: false,
-          nativeCRS: table.crs,
-          dataset: datasetIdentifier,
-          tableName: table.identifier,
-          type: CrgLayerType.VECTOR,
-          schemaId: table.schemaId,
-          styleName: table.schemaId,
-          position: -42,
-          transparency: 70,
-          parentId: createdGroupId
-        },
-        data.project ? data.project : this.createdProject
+    try {
+      const { createdTables, datasetIdentifier, importLayerReports } = await http.post<ImportResult>(
+        await getApiImportGmlUrl(),
+        formData
       );
+
+      this.reports = importLayerReports;
+
+      const newGroup: NewCrgLayersGroup = {
+        title: title,
+        enabled: false,
+        expanded: true,
+        transparency: 100,
+        position: -1
+      };
+
+      let createdGroupId: number | undefined;
+
+      if (data.project) {
+        createdGroupId = (await createLayersGroup(newGroup, data.project)).id;
+      } else {
+        this.createdProject = await projectsService.create(title);
+      }
+
+      for (const table of createdTables) {
+        const dataStoreName = `scratch_database_${currentUser.orgId}`;
+
+        await createLayer(
+          {
+            dataStoreName,
+            title: table.title,
+            complexName: `${dataStoreName}:${table.identifier}`,
+            enabled: false,
+            nativeCRS: table.crs,
+            dataset: datasetIdentifier,
+            tableName: table.identifier,
+            type: CrgLayerType.VECTOR,
+            schemaId: table.schemaId,
+            styleName: table.schemaId,
+            position: -42,
+            transparency: 70,
+            parentId: createdGroupId
+          },
+          data.project ? data.project : this.createdProject
+        );
+      }
+
+      this.openResultDialog();
+      this.closeFormDialog();
+      this.reset();
+    } catch (error) {
+      const err = error as AxiosError<{ errors?: FieldErrors[] }>;
+      if (err?.response?.data?.errors) {
+        this.setFormErrors(normalizeServerErrors(err.response.data.errors));
+      }
     }
 
-    this.openResultDialog();
-    this.closeFormDialog();
-    this.reset();
+    this.setLoading(false);
   }
 
   @action.bound
@@ -257,5 +270,15 @@ export class ImportGml extends Component {
   @action.bound
   private closeResultDialog() {
     this.resultDialogOpen = false;
+  }
+
+  @action
+  private setFormErrors(errors: FieldErrors[]) {
+    this.formErrors = errors;
+  }
+
+  @boundMethod
+  private formFieldChanged(value: unknown, fieldName: string) {
+    this.setFormErrors(this.formErrors?.filter(({ field }) => field !== fieldName));
   }
 }

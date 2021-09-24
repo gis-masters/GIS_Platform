@@ -7,17 +7,23 @@ import { AxiosError } from 'axios';
 
 import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
 import { schemaService } from '../../services/crg/schema.service';
+import {
+  FieldErrors,
+  getDefaultValues,
+  normalizeServerErrors,
+  validateFormValue
+} from '../../services/crg/formValidation.service';
 import { communicationService } from '../../services/communication.service';
-import { getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
-import { ContentType, FeatureDescription } from '../../services/crg/schema.models';
-import { docLibraryService, LibraryRecord } from '../../services/crg/doc-library.service';
+import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
+import { ContentType, OldFeatureDescription } from '../../services/crg/schemaOld.models';
+import { docLibraryService, LibraryRecord, LibraryRecordRaw } from '../../services/crg/doc-library.service';
+import { PropertySchema } from '../../services/crg/schema.models';
 import { ExplorerItemType } from '../Explorer/Explorer.models';
 import { ExplorerStore } from '../Explorer/Explorer.store';
 
 import { CreateLibraryElementDialog } from './Dialog/CreateLibraryElement-Dialog';
 import { CreateLibraryElementMenuItem } from './MenuItem/CreateLibraryElement-MenuItem';
 import { CreateLibraryElementFolderButton } from './FolderButton/CreateLibraryElement-FolderButton';
-import { FormErrors } from '../Form/Form';
 
 export interface CreateLibraryElementsProps {
   schemaId: string;
@@ -27,15 +33,18 @@ export interface CreateLibraryElementsProps {
 
 @observer
 export class CreateLibraryElement extends Component<CreateLibraryElementsProps> {
-  @observable private schema: FeatureDescription;
+  @observable private schema: OldFeatureDescription;
   @observable private contentTypeId: string;
   @observable private dialogOpen = false;
   @observable private dialogLoading = false;
-  @observable private formErrors?: FormErrors[];
+  @observable private formErrors?: FieldErrors[];
+  @observable private serverFormErrors?: FieldErrors[];
+  @observable private formValue: LibraryRecordRaw = {};
 
   async componentDidMount() {
     const schema = await schemaService.getSchema(this.props.schemaId);
     this.setSchema(schema);
+    this.setFormValue(getDefaultValues(this.fields));
   }
 
   render() {
@@ -57,11 +66,15 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
 
         <CreateLibraryElementDialog
           open={this.dialogOpen}
+          formValue={this.formValue}
           loading={this.dialogLoading}
-          schema={this.preparedSchema}
+          fields={this.fields}
           onClose={this.closeDialog}
           onCreate={this.create}
-          formErrors={this.formErrors}
+          onChange={this.setFormValue}
+          formErrors={[...(this.serverFormErrors || []), ...(this.formErrors || [])]}
+          onFieldChange={this.formFieldChanged}
+          onFieldNeedValidate={this.formFieldValidateHandler}
         />
       </>
     );
@@ -82,12 +95,21 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   }
 
   @computed
-  private get preparedSchema(): FeatureDescription | null {
-    if (!this.schema || !this.contentTypeId) {
+  private get preparedSchema(): OldFeatureDescription | null {
+    if (!this.schema) {
       return null;
     }
 
     return getSchemaWithAppliedContentType(this.schema, this.contentTypeId);
+  }
+
+  @computed
+  private get fields(): PropertySchema[] {
+    if (!this.preparedSchema) {
+      return [];
+    }
+
+    return convertSchema(this.preparedSchema.properties);
   }
 
   @boundMethod
@@ -105,10 +127,13 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   private closeDialog() {
     this.dialogOpen = false;
     this.setDialogLoading(false);
+    this.setErrors([]);
+    this.setServerErrors([]);
+    this.setFormValue(getDefaultValues(this.fields));
   }
 
   @action
-  private setSchema(schema: FeatureDescription) {
+  private setSchema(schema: OldFeatureDescription) {
     this.schema = schema;
   }
 
@@ -122,11 +147,6 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     this.dialogLoading = loading;
   }
 
-  @action
-  private setFormErrors(errors?: FormErrors[]) {
-    this.formErrors = errors;
-  }
-
   @boundMethod
   private async create(formValue: LibraryRecord) {
     const formData = this.fillSystemAttributes(formValue);
@@ -137,14 +157,22 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
       }
     }
 
+    this.setErrors(validateFormValue(formData, this.fields));
+    if (this.formErrors?.length) {
+      return;
+    }
+
     try {
       await docLibraryService.createRecord(this.schema.tableName, formData);
 
       communicationService.libraryItemsUpdated.emit();
+      this.closeDialog();
     } catch (error) {
-      const err = error as AxiosError<{ errors?: FormErrors[] }>;
+      const err = error as AxiosError<{ errors?: FieldErrors[] }>;
 
-      this.setFormErrors(err?.response?.data?.errors);
+      if (err?.response?.data?.errors) {
+        this.setServerErrors(normalizeServerErrors(err.response.data.errors));
+      }
     }
   }
 
@@ -161,12 +189,43 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     const { path } = this.props.store;
     const pathElement = path[path.length - 2];
     if (pathElement && pathElement.type === ExplorerItemType.FOLDER) {
-      // FIXME
+      // FIXME // KILLME
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return pathElement.payload.oktmo; // eslint-disable-line @typescript-eslint/no-unsafe-return
     }
 
     return '';
+  }
+
+  @boundMethod
+  private formFieldChanged(value: unknown, fieldName: string) {
+    this.filterFieldErrors(fieldName);
+  }
+
+  @boundMethod
+  private formFieldValidateHandler(value: unknown, fieldName: string) {
+    this.filterFieldErrors(fieldName);
+    this.setErrors(validateFormValue(this.formValue, this.fields));
+  }
+
+  @action
+  private setErrors(errors: FieldErrors[] = []) {
+    this.formErrors = errors.filter(({ messages }) => messages.length);
+  }
+
+  @action
+  private setServerErrors(errors: FieldErrors[]) {
+    this.serverFormErrors = errors;
+  }
+
+  @action.bound
+  private setFormValue(formValue: LibraryRecordRaw) {
+    this.formValue = formValue;
+  }
+
+  private filterFieldErrors(fieldName: string) {
+    this.setErrors(this.formErrors?.filter(({ field }) => field !== fieldName));
+    this.setServerErrors(this.serverFormErrors?.filter(({ field }) => field !== fieldName));
   }
 }

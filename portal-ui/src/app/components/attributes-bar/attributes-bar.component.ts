@@ -18,7 +18,7 @@ import { mapService } from '../../services/map/map.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { RequestAttribute, FilterEvent, Pageable, Sortable } from '../../services/models';
 import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs.models';
-import { FeatureDescription, ValueType, PropertySchema } from '../../services/crg/schema.models';
+import { OldFeatureDescription, ValueType, OldPropertySchema } from '../../services/crg/schemaOld.models';
 import { isFeaturesUpdateAllowed, isFeaturesDeleteAllowed } from '../../services/crg/permissions.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
@@ -82,7 +82,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   lastRequestAttribute: RequestAttribute;
 
-  private schema: FeatureDescription;
+  private schema: OldFeatureDescription;
   private requestAttribute$: BehaviorSubject<RequestAttribute> = new BehaviorSubject<RequestAttribute>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -237,7 +237,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.loading = false;
   }
 
-  getSchemaProperty(name: string): PropertySchema | undefined {
+  getSchemaProperty(name: string): OldPropertySchema | undefined {
     if (!name) {
       return;
     }
