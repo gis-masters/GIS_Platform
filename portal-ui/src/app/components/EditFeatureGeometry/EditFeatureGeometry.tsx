@@ -61,16 +61,18 @@ export class EditFeatureGeometry extends Component<EditFeatureGeometryProps> {
   }
 
   @boundMethod
-  private modifyHandler(g: SimpleGeometry) {
+  private modifyHandler(g?: SimpleGeometry) {
     const { nativeProjection, geometry, geometryType, setGeometry } = this.props.store;
-    const { coordinates } = transformGeometry(
-      {
-        type: geometryType,
-        coordinates: g.getCoordinates()
-      },
-      olProjection,
-      nativeProjection
-    );
+    const coordinates = g
+      ? transformGeometry(
+          {
+            type: geometryType,
+            coordinates: g.getCoordinates()
+          },
+          olProjection,
+          nativeProjection
+        ).coordinates
+      : geometry.coordinates;
 
     setGeometry({ ...geometry, coordinates } as WfsGeometry);
   }

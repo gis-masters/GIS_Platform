@@ -17,6 +17,8 @@ import { ImageWMS, OSM, TileArcGISRest, TileImage, TileWMS, Vector as VectorSour
 import { Circle, Fill, Stroke, Style } from 'ol/style.js';
 import Tile from 'ol/Tile';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
+import TileSource from 'ol/source/Tile';
+import ImageSource from 'ol/source/Image';
 import ImageLayer from 'ol/layer/Image';
 import { boundMethod } from 'autobind-decorator';
 
@@ -42,8 +44,7 @@ import {
   transform,
   transformGeometry
 } from '../geoserver/projections.service';
-import TileSource from 'ol/source/Tile';
-import ImageSource from 'ol/source/Image';
+import { sleep } from '../util/sleep';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -493,7 +494,8 @@ class MapService {
 
   @boundMethod
   modificationHandler(e: ModifyEvent) {
-    this.modificationDone.emit(e.features.item(0).getGeometry());
+    const geometry = (e.features.item(0) as Feature<SimpleGeometry>).getGeometry();
+    this.modificationDone.emit(geometry.getType() !== GeometryType.POLYGON && geometry);
   }
 
   draw(geometryType: GeometryType, handler: (e: DrawEvent) => void) {
@@ -505,7 +507,11 @@ class MapService {
       type: geometryType
     });
 
-    this.drawHandler = handler;
+    this.drawHandler = async (e: DrawEvent) => {
+      handler(e);
+      await sleep(500);
+      this.modificationDone.emit();
+    };
 
     this.draftSourceDraw.on('drawend', this.drawHandler);
     this.map.addInteraction(this.draftSourceDraw);

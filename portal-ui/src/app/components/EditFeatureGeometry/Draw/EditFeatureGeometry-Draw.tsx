@@ -5,6 +5,8 @@ import { Coordinate } from 'ol/coordinate';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { Brush, BrushOutlined, SvgIconComponent } from '@material-ui/icons';
+import { Feature } from 'ol';
+import { SimpleGeometry } from 'ol/geom';
 import { cn } from '@bem-react/classname';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
@@ -70,20 +72,15 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   private handleDraw(e: DrawEvent) {
     const { point, store, onDraw } = this.props;
 
-    // ошибки в типах openlayers
-    /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-    /* eslint-disable @typescript-eslint/no-unsafe-call */
     if (point) {
-      const drawed = e.feature.getGeometry()?.getCoordinates() as Coordinate;
+      const drawed = (e.feature as Feature<SimpleGeometry>).getGeometry()?.getCoordinates() as Coordinate;
       point.splice(0, point.length, ...transform(olProjection, store.currentProjection, drawed));
       onDraw(point);
     } else {
-      const drawed = e.feature.getGeometry().getCoordinates() as Coordinate[][];
+      const drawed = (e.feature as Feature<SimpleGeometry>).getGeometry().getCoordinates() as Coordinate[][];
       const newPart = drawed[0].map(coord => transform(olProjection, store.currentProjection, coord));
       onDraw(newPart);
     }
-    /* eslint-enable @typescript-eslint/no-unsafe-call */
-    /* eslint-enable @typescript-eslint/no-unsafe-member-access */
   }
 
   @boundMethod
