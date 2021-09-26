@@ -9,6 +9,7 @@ import { cn } from '@bem-react/classname';
 import { projectsService } from '../../../services/crg/projects.service';
 import { CrgProject } from '../../../services/crg/projects.models';
 import { currentUser } from '../../../stores/CurrentUser.store';
+import { Role } from '../../../services/crg/permissions.models';
 import { Button } from '../../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Delete.scss';
@@ -24,7 +25,7 @@ export class ProjectCardDelete extends Component<ProjectCardDeleteProps> {
   @observable private dialogOpen = false;
 
   render() {
-    if (!currentUser.isAdmin) {
+    if (!currentUser.isAdmin && this.props.project.role !== Role.OWNER) {
       return null;
     }
 
