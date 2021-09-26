@@ -10,6 +10,10 @@ import { Emitter } from '../../../../services/common/Emitter';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 
 import { Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';
+import { BasemapDetails } from '../../../BasemapDetails/BasemapDetails';
+import { ConnectionsBasemapToProjectsWidget } from '../../../ConnectionsBasemapToProjectsWidget/ConnectionsBasemapToProjectsWidget';
+import { sleep } from '../../../../services/util/sleep';
+import { ExplorerProps } from '../../Explorer';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -33,6 +37,20 @@ export class ExplorerAdapterTypeBasemap {
 
   static getMeta(item: ExplorerItemData<Basemap>): string {
     return item.payload.name;
+  }
+
+  static async getWidgets(
+    item: ExplorerItemData<Basemap>,
+    Explorer: React.ComponentType<ExplorerProps>
+  ): Promise<ReactNode> {
+    await sleep(0);
+
+    return (
+      <>
+        <BasemapDetails basemap={item.payload} />
+        <ConnectionsBasemapToProjectsWidget Explorer={Explorer} basemap={item.payload} />
+      </>
+    );
   }
 
   static getIcon(): ReactNode {

@@ -160,6 +160,6 @@ export function filterByPrincipal(
   permissions: RoleAssignmentBody[]
 ): RoleAssignmentBody[] {
   return permissions.filter(
-    ({ principalId, principalType }) => principalId === filteringPrincipalId || principalType === filteringPrincipalType
+    ({ principalId, principalType }) => principalId === filteringPrincipalId && principalType === filteringPrincipalType
   );
 }

@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 import { Skeleton } from '@material-ui/lab';
 import { Edit, EditOutlined, Group, Person } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
-import { isEqual } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 
 import { allUsers } from '../../stores/AllUsers.store';
@@ -14,19 +13,20 @@ import { communicationService } from '../../services/communication.service';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { getTablePermissions } from '../../services/crg/permissions.client';
 import { CrgUser, usersService } from '../../services/crg/users.service';
-import { Dataset, DataTable } from '../../services/data.service';
-import { PermissionsEditDialog } from '../PermissionsEditDialog/PermissionsEditDialog';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
+import { PermissionsEditDialog } from '../PermissionsEditDialog/PermissionsEditDialog';
+import { ExplorerItemEntityType } from '../Explorer/Explorer.models';
 
 import '!style-loader!css-loader!sass-loader!./PermissionsWidget.scss';
 
 const cnPermissionsWidget = cn('PermissionsWidget');
 
 interface PermissionsWidgetProps {
-  dataTable: DataTable;
-  dataset: Dataset;
+  url: string;
+  title?: string;
+  itemEntityType?: ExplorerItemEntityType;
 }
 
 const MAX_PRINCIPALS_TO_SHOW = 20;
@@ -47,10 +47,10 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   }
 
   componentDidUpdate(prevProps: PermissionsWidgetProps) {
-    const { dataTable, dataset } = this.props;
-    const { dataTable: prevDataTable, dataset: prevDataset } = prevProps;
+    const { url } = this.props;
+    const { url: prevUrl } = prevProps;
 
-    if (dataTable.identifier !== prevDataTable.identifier || dataset.identifier !== prevDataset.identifier) {
+    if (url !== prevUrl) {
       void this.fetchPermissions();
     }
   }
@@ -60,7 +60,6 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   }
 
   render() {
-    const { dataset, dataTable } = this.props;
     const EditIcon = this.dialogOpen ? Edit : EditOutlined;
 
     return (
@@ -137,9 +136,10 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
           onClose={this.closeModal}
           open={this.dialogOpen}
           onChange={this.fetchPermissions}
-          dataset={dataset}
-          dataTable={dataTable}
+          url={this.props.url}
+          title={this.props.title}
           permissions={this.permissions}
+          itemEntityType={this.props.itemEntityType}
         />
       </>
     );
@@ -186,24 +186,19 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
 
   @boundMethod
   private async fetchPermissions() {
-    const [datasetId, tableId] = this.getIds();
+    const { url, title } = this.props;
     this.setPermissions([], true);
-    try {
-      const permissions = await getTablePermissions(datasetId, tableId);
 
-      // не изменилось ли чего за время запроса
-      if (isEqual([datasetId, tableId], this.getIds())) {
+    try {
+      const permissions = await getTablePermissions(url);
+      // тут так надо
+      // eslint-disable-next-line unicorn/consistent-destructuring
+      if (url === this.props.url) {
         this.setPermissions(permissions, false);
       }
     } catch {
-      Toast.error(`Ошибка получения прав для таблицы ${tableId} в наборе ${datasetId}`);
+      Toast.error(`Ошибка получения прав для ${title}`);
     }
-  }
-
-  private getIds(): [string, string] {
-    const { dataset, dataTable } = this.props;
-
-    return [dataset.identifier, dataTable.identifier];
   }
 
   @action.bound

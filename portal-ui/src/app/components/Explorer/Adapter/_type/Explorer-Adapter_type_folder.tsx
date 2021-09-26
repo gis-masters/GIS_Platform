@@ -12,8 +12,10 @@ import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibrar
 import { ContentTypeTypes, docLibraryService, LibraryRecord } from '../../../../services/crg/doc-library.service';
 
 import { ExplorerStore } from '../../Explorer.store';
-import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
+import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -55,6 +57,12 @@ export class ExplorerAdapterTypeFolder {
 
   static getIcon(): ReactNode {
     return <FolderOutlined color='primary' />;
+  }
+
+  static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
+    const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
+
+    return <PermissionsWidget url={url} title={item.payload.title} itemEntityType={ExplorerItemEntityType.FOLDER} />;
   }
 
   static isFolder(): boolean {

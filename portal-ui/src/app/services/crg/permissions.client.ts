@@ -11,9 +11,10 @@ import { CrgProject } from './projects.models';
 import { services } from '../services';
 import { http } from '../http.service';
 import { Toast } from '../../components/Toast/Toast';
+import { ExplorerItemEntityType } from '../../components/Explorer/Explorer.models';
 
-export async function getTablePermissions(datasetId: string, tableId: string): Promise<RoleAssignmentBody[]> {
-  return http.getPaged<RoleAssignmentBody>(await getTableRoleAssignmentUrl(datasetId, tableId));
+export async function getTablePermissions(url: string): Promise<RoleAssignmentBody[]> {
+  return http.getPaged<RoleAssignmentBody>(url);
 }
 
 export async function getAllTablesAndDatasetsPermissions(): Promise<ResourcePermissions[]> {
@@ -25,6 +26,32 @@ export async function getAllTablesAndDatasetsPermissions(): Promise<ResourcePerm
     Toast.error('Ошибка получения прав для списка таблиц');
 
     return [];
+  }
+}
+
+export async function addEntityPermission(
+  payload: RoleAssignmentBody,
+  url: string,
+  title: string,
+  itemEntityType?: ExplorerItemEntityType
+): Promise<void> {
+  try {
+    await http.post(url, payload);
+  } catch (error) {
+    handleSavingError(error, payload, 'добавить', `${itemEntityType}`, `${title}`);
+  }
+}
+
+export async function removeEntityPermission(
+  payload: RoleAssignmentBody,
+  url: string,
+  title: string,
+  itemEntityType?: ExplorerItemEntityType
+): Promise<void> {
+  try {
+    await http.delete(`${url}/${payload.id}`);
+  } catch (error) {
+    handleSavingError(error, payload, 'удалить', `${itemEntityType}`, `${title}`);
   }
 }
 

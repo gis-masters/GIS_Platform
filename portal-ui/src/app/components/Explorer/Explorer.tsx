@@ -22,9 +22,9 @@ import {
 } from './Adapter/Explorer-Adapter';
 import { ExplorerPagination } from './Pagination/Explorer-Pagination';
 import { ExplorerToolbar } from './Toolbar/Explorer-Toolbar';
-import { ExplorerInfo } from './Info/Explorer-Info.composed';
 import { ExplorerTitle } from './Title/Explorer-Title';
 import { ExplorerList } from './List/Explorer-List';
+import { ExplorerInfo } from './Info/Explorer-Info';
 
 import '!style-loader!css-loader!sass-loader!./Explorer.scss';
 
@@ -102,7 +102,7 @@ export class Explorer extends Component<ExplorerProps> {
         {!withoutTitle && <ExplorerTitle store={this.store} onOpen={this.openItem} />}
         <ExplorerList store={this.store} onOpen={this.openItem} />
         <ExplorerToolbar store={this.store} onChange={this.handleQueryChange} />
-        {withInfoPanel && <ExplorerInfo store={this.store} type={this.store.selectedItem.type} Explorer={Explorer} />}
+        {withInfoPanel && <ExplorerInfo store={this.store} Explorer={Explorer} />}
         <ExplorerPagination store={this.store} onChange={this.paginate} />
         <Loading visible={this.busy} noBackdrop />
       </div>

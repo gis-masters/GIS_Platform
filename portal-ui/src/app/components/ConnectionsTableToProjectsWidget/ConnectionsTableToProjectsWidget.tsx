@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 
 import { currentUser } from '../../stores/CurrentUser.store';
 import { createLayer } from '../../services/geoserver/layers.service';
-import { Dataset, DataTable, getDataTableConnections } from '../../services/data.service';
+import { DataTable, getDataTableConnections } from '../../services/data.service';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
 import { ExplorerProps } from '../Explorer/Explorer';
 import { CrgLayerType, CrgProject } from '../../services/crg/projects.models';
@@ -15,7 +15,6 @@ const cnConnectionsTableToProjectsWidget = cn('ConnectionsTableToProjectsWidget'
 
 interface ConnectionsTableToProjectsWidgetProps {
   dataTable: DataTable;
-  dataset: Dataset;
   Explorer: React.ComponentType<ExplorerProps>;
 }
 
@@ -79,16 +78,16 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
 
   @boundMethod
   private async connectHandler(project: CrgProject) {
-    const { dataTable, dataset } = this.props;
-    await this.createLayer(dataTable, dataset, project);
+    const { dataTable } = this.props;
+    await this.createLayer(dataTable, dataTable.dataset, project);
     await this.fetchConnections();
   }
 
-  private async createLayer(table: DataTable, dataset: Dataset, project: CrgProject) {
+  private async createLayer(table: DataTable, dataset: string, project: CrgProject) {
     const dataStoreName = `scratch_database_${currentUser.orgId}`;
     const newLayer = {
       dataStoreName,
-      dataset: dataset.identifier,
+      dataset: dataset,
       tableName: table.identifier,
       complexName: `${dataStoreName}:${table.identifier}`,
       title: table.title,

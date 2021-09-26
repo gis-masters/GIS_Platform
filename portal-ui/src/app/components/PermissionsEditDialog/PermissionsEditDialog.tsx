@@ -7,13 +7,13 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
-import { addTablePermission, removeTablePermission } from '../../services/crg/permissions.client';
+import { addEntityPermission, removeEntityPermission } from '../../services/crg/permissions.client';
 import { PrincipalType, Role, RoleAssignmentBody } from '../../services/crg/permissions.models';
 import { filterByPrincipal, filterOutPrincipal } from '../../services/crg/permissions.service';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { communicationService } from '../../services/communication.service';
 import { CrgUser, usersService } from '../../services/crg/users.service';
-import { Dataset, DataTable } from '../../services/data.service';
+import { ExplorerItemEntityType } from '../Explorer/Explorer.models';
 import { XTable, XTableColumn } from '../XTable/XTable';
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';
@@ -28,9 +28,10 @@ import '!style-loader!css-loader!sass-loader!./Table/PermissionsEditDialog-Table
 const cnPermissionsEditDialog = cn('PermissionsEditDialog');
 
 interface PermissionsEditDialogProps {
-  dataset: Dataset;
-  dataTable: DataTable;
+  url: string;
+  title?: string;
   permissions: RoleAssignmentBody[];
+  itemEntityType?: ExplorerItemEntityType;
   open: boolean;
   onClose: () => void;
   onChange: () => void;
@@ -100,7 +101,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
   }
 
   render() {
-    const { open, onClose, dataTable } = this.props;
+    const { open, onClose, title } = this.props;
 
     return (
       <Dialog
@@ -110,7 +111,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
         onClose={onClose}
         maxWidth='xl'
       >
-        <DialogTitle>Разрешения для таблицы "{dataTable.title}"</DialogTitle>
+        <DialogTitle>Разрешения для "{title}"</DialogTitle>
         <DialogContent>
           <Tabs value={this.activeTab} onChange={this.handleTabsChange}>
             <Tab label='Пользователи' value={PrincipalType.USER} />
@@ -213,7 +214,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
 
   @boundMethod
   private async save() {
-    const { dataset, dataTable, permissions } = this.props;
+    const { permissions, url, title, itemEntityType } = this.props;
     let existing = [...permissions];
     const changed = [...this.changedPermissions];
     const toCreate: RoleAssignmentBody[] = [];
@@ -242,12 +243,12 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
 
     toDelete.splice(toDelete.length, 0, ...existing);
 
-    for (const item of toDelete) {
-      await removeTablePermission(item, dataset.identifier, dataTable.identifier);
+    for (const item of toCreate) {
+      await addEntityPermission(item, url, title, itemEntityType);
     }
 
-    for (const item of toCreate) {
-      await addTablePermission(item, dataset.identifier, dataTable.identifier);
+    for (const item of toDelete) {
+      await removeEntityPermission(item, url, title, itemEntityType);
     }
 
     communicationService.permissionsUpdated.emit();

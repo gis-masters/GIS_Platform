@@ -1,9 +1,10 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 import { PageOptions, SortDir } from '../../services/models';
 import { Emitter } from '../../services/common/Emitter';
 
 import { ExplorerStore } from './Explorer.store';
+import { ExplorerProps } from './Explorer';
 
 export enum ExplorerItemType {
   EMPTY = 'empty',
@@ -23,6 +24,14 @@ export enum ExplorerItemType {
   PROJECTS_ROOT = 'projectsRoot',
   BASEMAPS_ROOT = 'basemapsRoot',
   ROOT = 'root'
+}
+
+export enum ExplorerItemEntityType {
+  DATASET = 'набора данных',
+  TABLE = 'табилцы',
+
+  LIBRARY = 'библиотеки',
+  FOLDER = 'папки'
 }
 
 export interface ExplorerItemData<T = ExplorerItemPayloads[ExplorerItemType]> {
@@ -62,6 +71,7 @@ export interface Adapter {
   getId: (item: ExplorerItemData) => string;
   getTitle: (item: ExplorerItemData) => ReactNode;
   getMeta: (item: ExplorerItemData) => string;
+  getWidgets?: (item: ExplorerItemData, Explorer: React.ComponentType<ExplorerProps>) => Promise<ReactNode>;
   getDescription?: (item: ExplorerItemData) => ReactNode;
   getIcon?: (item: ExplorerItemData) => ReactNode;
   isFolder: (item: ExplorerItemData) => boolean;

@@ -17,8 +17,10 @@ import {
 } from '../../../../services/crg/doc-library.service';
 
 import { ExplorerStore } from '../../Explorer.store';
-import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
+import { getDocumentLibraryRoleAssignmentUrl } from '../../../../services/server-urls.service';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -56,6 +58,12 @@ export class ExplorerAdapterTypeLibrary {
 
   static getMeta(item: ExplorerItemData<LibraryRecord>): string {
     return String(item.payload.identifier);
+  }
+
+  static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
+    const url = await getDocumentLibraryRoleAssignmentUrl(item.payload.identifier);
+
+    return <PermissionsWidget url={url} title={item.payload.title} itemEntityType={ExplorerItemEntityType.LIBRARY} />;
   }
 
   static getIcon(): ReactNode {

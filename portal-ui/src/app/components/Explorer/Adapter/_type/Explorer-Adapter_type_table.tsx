@@ -9,8 +9,12 @@ import { staticImplements } from '../../../../services/util/staticImplements';
 import { LayerIcon } from '../../../LayerIcon/LayerIcon.composed';
 import { Emitter } from '../../../../services/common/Emitter';
 
-import { Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';
+import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
+import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { ExplorerProps } from '../../Explorer';
+import { getTableRoleAssignmentUrl } from '../../../../services/server-urls.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -48,6 +52,20 @@ export class ExplorerAdapterTypeTable {
 
   static getMeta(item: ExplorerItemData<DataTable>): string {
     return item.payload.identifier;
+  }
+
+  static async getWidgets(
+    item: ExplorerItemData<DataTable>,
+    Explorer: React.ComponentType<ExplorerProps>
+  ): Promise<ReactNode> {
+    const url = await getTableRoleAssignmentUrl(item.payload.dataset, item.payload.identifier);
+
+    return (
+      <>
+        <ConnectionsTableToProjectsWidget dataTable={item.payload} Explorer={Explorer} />
+        <PermissionsWidget url={url} title={item.payload.title} itemEntityType={ExplorerItemEntityType.TABLE} />
+      </>
+    );
   }
 
   static getIcon(item: ExplorerItemData<DataTable>): ReactNode {

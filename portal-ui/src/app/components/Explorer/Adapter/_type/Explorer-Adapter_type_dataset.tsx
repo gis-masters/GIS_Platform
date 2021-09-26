@@ -6,8 +6,10 @@ import { Dataset, DataTable, getDatasetTables } from '../../../../services/data.
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { PageOptions, SortDir } from '../../../../services/models';
 
-import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
+import { getDatasetRoleAssignmentUrl } from '../../../../services/server-urls.service';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -50,6 +52,12 @@ export class ExplorerAdapterTypeDataset {
 
   static getMeta(item: ExplorerItemData<Dataset>): string {
     return item.payload.identifier;
+  }
+
+  static async getWidgets(item: ExplorerItemData<Dataset>): Promise<ReactNode> {
+    const url = await getDatasetRoleAssignmentUrl(item.payload.identifier);
+
+    return <PermissionsWidget url={url} title={item.payload.title} itemEntityType={ExplorerItemEntityType.DATASET} />;
   }
 
   static getIcon(): ReactNode {

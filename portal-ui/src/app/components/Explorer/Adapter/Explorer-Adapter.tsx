@@ -21,6 +21,7 @@ import { ExplorerAdapterTypeProject } from './_type/Explorer-Adapter_type_projec
 import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_projectsRoot';
 import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basemap';
 import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_basemapsRoot';
+import { ExplorerProps } from '../Explorer';
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.EMPTY]: ExplorerAdapterTypeEmpty,
@@ -52,6 +53,15 @@ export function getDescription(item: ExplorerItemData): ReactNode {
 
 export function getMeta(item: ExplorerItemData): string {
   return adapters[item.type].getMeta(item);
+}
+
+export async function getWidgets(
+  item: ExplorerItemData,
+  Explorer: React.ComponentType<ExplorerProps>
+): Promise<ReactNode> {
+  if (adapters[item.type].getWidgets) {
+    return await adapters[item.type].getWidgets(item, Explorer);
+  }
 }
 
 export function getIcon(item: ExplorerItemData): ReactNode {
