@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { TextField } from '@material-ui/core';
 
-import { FieldType } from '../../../../services/crg/schema.models';
+import { FieldType, PropertySchemaString } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
@@ -12,6 +12,7 @@ import { cnFormControl, FormControlProps } from '../Form-Control';
 class FormControlTypeString extends Component<FormControlProps> {
   render() {
     const { htmlId, className, fieldValue = '', inSet, property, errors } = this.props;
+    const { display } = property as PropertySchemaString;
 
     return (
       <div className={cnFormControl({ inSet }, [className])}>
@@ -24,6 +25,7 @@ class FormControlTypeString extends Component<FormControlProps> {
           label={inSet ? property.title : undefined}
           onChange={this.handleChange}
           onBlur={this.handleBlur}
+          multiline={display === 'multiline'}
         />
       </div>
     );
