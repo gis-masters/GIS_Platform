@@ -211,7 +211,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
 
   @action
   private setErrors(errors: FieldErrors[] = []) {
-    this.formErrors = errors.filter(({ messages }) => messages.length);
+    this.formErrors = errors.filter(({ messages }) => messages?.length);
   }
 
   @action
