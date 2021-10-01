@@ -32,6 +32,7 @@ class CommunicationService {
   beforeMapDestroy = new Emitter();
   logout = new Emitter();
   basemapsUpdated = new Emitter();
+  drawOff = new Emitter();
 
   off(scope: unknown) {
     Emitter.scopeOff(scope);

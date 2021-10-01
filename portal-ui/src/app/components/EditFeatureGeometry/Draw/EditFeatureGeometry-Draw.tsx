@@ -11,8 +11,9 @@ import { cn } from '@bem-react/classname';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { transform, olProjection } from '../../../services/geoserver/projections.service';
-import { mapService } from '../../../services/map/map.service';
 import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs.models';
+import { communicationService } from '../../../services/communication.service';
+import { mapService } from '../../../services/map/map.service';
 import { Emitter } from '../../../services/common/Emitter';
 import { boundMethod } from 'autobind-decorator';
 
@@ -32,6 +33,16 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   @observable private active = false;
 
   componentDidMount() {
+    communicationService.drawOff.on(() => {
+      this.activate();
+      this.clickHandler();
+    }, this);
+
+    if (!this.props.store.isValid) {
+      this.deactivate();
+      this.clickHandler();
+    }
+
     mapService.modificationDisabled.on(this.deactivate);
   }
 
@@ -41,6 +52,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
       mapService.disableDraftModification();
     }
 
+    communicationService.off(this);
     Emitter.scopeOff(this);
   }
 

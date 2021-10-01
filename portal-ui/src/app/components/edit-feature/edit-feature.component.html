@@ -40,7 +40,7 @@
     <crg-loading *ngIf="isSaveInProgress" [percents]="loadPercent"></crg-loading>
 
     <ng-container *ngIf="mode === 'single'; else editAttrsForm">
-      <mat-tab-group class="tabs">
+      <mat-tab-group class="tabs" [(selectedIndex)]="selectTab">
         <mat-tab label="Атрибуты">
           <ng-container *ngTemplateOutlet="editAttrsForm"></ng-container>
         </mat-tab>

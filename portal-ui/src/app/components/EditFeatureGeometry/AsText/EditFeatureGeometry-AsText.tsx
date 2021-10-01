@@ -8,6 +8,7 @@ import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 
 import { getEmptyGeometry, selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
+import { communicationService } from '../../../services/communication.service';
 import {
   CoordinateEdited,
   GeometryType,
@@ -108,6 +109,8 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
   private openDialog() {
     this.initText();
     this.isOpen = true;
+
+    communicationService.drawOff.emit();
   }
 
   @action.bound

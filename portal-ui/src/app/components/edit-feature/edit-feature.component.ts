@@ -47,6 +47,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   layer: CrgLayer;
   private properties?: Properties;
   isNew: boolean;
+  selectTab: number;
 
   deletingAllowed = false;
   updatingAllowed = false;
@@ -78,6 +79,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.layer = data.layer || getFeatureLayer(this.features[0]);
         this.properties = data.properties;
         this.isNew = data.isNew;
+        this.selectTab = Number(data.isNew);
 
         if (!this.isNew) {
           mapService.highlightFeatures(this.features);
@@ -220,6 +222,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   async editFeature(): Promise<void> {
+    if (this.isNew && !this.isGeometryValid) {
+      this.selectTab = Number(!this.isGeometryValid);
+
+      return;
+    }
+
     if (this.editFeatureForm.pristine && (!this.isGeometryChanged || !this.isGeometryValid)) {
       return;
     }

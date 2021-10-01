@@ -10,6 +10,7 @@ import { boundMethod } from 'autobind-decorator';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
 import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs.models';
 import { saveAsCsv } from '../../../services/util/FileSaver';
+import { communicationService } from '../../../services/communication.service';
 
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
 
@@ -26,7 +27,6 @@ interface EditFeatureGeometryCSVProps {
 
 export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProps> {
   private inputRef = createRef<HTMLInputElement>();
-
   render() {
     const { readOnly, empty, geometryType, first } = this.props;
     const partLabel = selectLabelForGeometryType(
@@ -67,6 +67,8 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
   @boundMethod
   private importClickHandler() {
     this.inputRef.current.click();
+
+    communicationService.drawOff.emit();
   }
 
   @boundMethod
@@ -82,6 +84,8 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
         })
       )
     );
+
+    communicationService.drawOff.emit();
   }
 
   @boundMethod
