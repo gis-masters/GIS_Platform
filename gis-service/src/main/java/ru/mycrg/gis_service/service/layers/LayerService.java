@@ -93,8 +93,7 @@ public class LayerService {
         return new LayerProjection(foundLayer, getOrgWorkspaceName());
     }
 
-    public LayerProjection findById(long projectId,
-                                    long layerId) {
+    public LayerProjection findById(long projectId, long layerId) {
         List<Layer> layers = projectService.getById(projectId).getLayers();
 
         Layer layer = findLayerById(layers, layerId);
@@ -132,9 +131,7 @@ public class LayerService {
         }
     }
 
-    public void update(long projectId,
-                       long layerId,
-                       JsonMergePatch patchDto) {
+    public void update(long projectId, long layerId, JsonMergePatch patchDto) {
         Project project = projectService.getById(projectId);
         if (!resourceProtector.isOwner(project)) {
             throw new ForbiddenException("редактирования", "проекта", project.getName());
@@ -176,8 +173,7 @@ public class LayerService {
         layerRepository.deleteByTableName(tableName);
     }
 
-    public List<RelatedLayersModel> findRelatedLayers(String field,
-                                                      String value) {
+    public List<RelatedLayersModel> findRelatedLayers(String field, String value) {
         Set<Long> projectIds = projectService.getAll().stream()
                                              .map(Project::getId)
                                              .collect(Collectors.toSet());
@@ -202,15 +198,15 @@ public class LayerService {
                             .collect(Collectors.toList());
     }
 
-    public Page<Layer> findLayers(String raster,
-                                  List<Project> projects,
-                                  Pageable pageable) {
-        return layerRepository.findByTypeAndProjectIn(raster, projects, pageable);
+    public Page<Layer> findLayers(String layerType, List<Project> projects, Pageable pageable) {
+        return layerRepository.findByTypeAndProjectIn(layerType, projects, pageable);
     }
 
-    private void updateGroup(Layer layer,
-                             Long parentId,
-                             List<Group> groups) {
+    public Page<Layer> findLayers(String layerType, String schemaId, Pageable pageable) {
+        return layerRepository.findByTypeAndSchemaId(layerType, schemaId, pageable);
+    }
+
+    private void updateGroup(Layer layer, Long parentId, List<Group> groups) {
         if (parentId != null) {
             Group parentGroup = groups
                     .stream()

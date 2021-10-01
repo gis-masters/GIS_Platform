@@ -25,6 +25,12 @@ public class SchemasController {
         return schemaService.getSchemas(schemaIds);
     }
 
+    @GetMapping("/reglaments_schemas")
+    @PreAuthorize("isAuthenticated()")
+    public List<SchemaDto> getSchemasWithReglaments() {
+        return schemaService.getSchemasWithReglaments();
+    }
+
     @PostMapping("/schemas")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Object> createSchema(@RequestBody SchemaDto schemaDto) {

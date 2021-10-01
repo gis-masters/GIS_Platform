@@ -131,6 +131,7 @@ services:
       CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
       CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
+      CRG_OPTIONS_UI_SERVICE_URL: http://portal-ui:80
       CRG_OPTIONS_FILE_STORAGE_PATH: /opt/file_storage
       CRG_OPTIONS_GEOSERVER_DB_NAME: geoserver_db
       CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/export/

@@ -5,15 +5,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class AuditEventDto {
 
     private String eventDateTime;
-
     private String actionType;
-
     private String entityName;
-
     private String entityType;
-
     private Long entityId;
-
     private JsonNode entityStateAfter;
 
     public AuditEventDto() {

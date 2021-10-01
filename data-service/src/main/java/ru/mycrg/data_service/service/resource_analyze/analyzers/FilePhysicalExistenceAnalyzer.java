@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class FilePhysicalExistenceAnalyzer implements IResourceAnalyzer {
 
-    private static final Logger log = LoggerFactory.getLogger(FilePhysicalExistenceAnalyzer.class);
+    private final Logger log = LoggerFactory.getLogger(FilePhysicalExistenceAnalyzer.class);
 
     private final URL dataServiceUrl;
 

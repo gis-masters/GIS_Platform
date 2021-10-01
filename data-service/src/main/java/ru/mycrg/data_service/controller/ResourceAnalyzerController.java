@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.resource_analyzer_contract.IResourceAnalyzer;
 import ru.mycrg.resource_analyzer_contract.IResourceAnalyzerResult;
@@ -58,13 +59,30 @@ public class ResourceAnalyzerController {
     }
 
     private void checkForIllegalObjects(List<Resource> resources) {
+        final String NEEDED = "должен быть указан";
         resources.forEach(resource -> {
             if (resource.getId() == null) {
                 throw new BadRequestException("Expected objects with id");
             }
 
-            if (resource.getResourceDefinition() == null || resource.getResourceDefinition().getType() == null) {
-                throw new BadRequestException("Expected object with type");
+            if (resource.getResourceDefinition() == null) {
+                throw new BadRequestException("Не указан resourceDefinition",
+                                              new ErrorInfo("resourceDefinition", NEEDED));
+            }
+
+            if (resource.getResourceDefinition().getType() == null) {
+                throw new BadRequestException("Не указан resourceDefinition.type",
+                                              new ErrorInfo("resourceDefinition.type", NEEDED));
+            }
+
+            if (resource.getResourceDefinition().getTypeTitle() == null) {
+                throw new BadRequestException("Не указан resourceDefinition.typeTitle",
+                                              new ErrorInfo("resourceDefinition.typeTitle", NEEDED));
+            }
+
+            if (resource.getResourceProperties() == null || resource.getResourceProperties().isEmpty()) {
+                throw new BadRequestException("Не указан resourceProperties",
+                                              new ErrorInfo("resourceProperties", "не может быть пустым"));
             }
         });
     }

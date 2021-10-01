@@ -24,6 +24,8 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
 
     Page<Layer> findByTypeAndProjectIn(String type, Collection<Project> projects, Pageable pageable);
 
+    Page<Layer> findByTypeAndSchemaId(String type, String schemaId, Pageable pageable);
+
     @Query("FROM Layer l WHERE l.tableName = :tableName AND l.project.id IN :projectIds")
     List<Layer> findRelatedByTableName(@Param("tableName") String tableName, Set<Long> projectIds);
 

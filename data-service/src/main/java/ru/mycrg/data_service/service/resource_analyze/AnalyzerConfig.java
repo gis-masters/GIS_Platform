@@ -6,7 +6,6 @@ import ru.mycrg.resource_analyzer_contract.IResourceAnalyzer;
 import ru.mycrg.resource_analyzer_contract.IResourceAnalyzerService;
 import ru.mycrg.resource_analyzer_contract.impl.BaseResourceAnalyzerService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -14,6 +13,6 @@ public class AnalyzerConfig {
 
     @Bean
     public IResourceAnalyzerService resourceAnalyzerService(List<IResourceAnalyzer> resourceAnalyzers) {
-        return new BaseResourceAnalyzerService(new ArrayList<>());
+        return new BaseResourceAnalyzerService(resourceAnalyzers);
     }
 }

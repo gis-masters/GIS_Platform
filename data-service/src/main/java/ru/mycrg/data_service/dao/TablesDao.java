@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -151,6 +152,28 @@ public class TablesDao {
                                    new RowMapperResultSetExtractor<>(
                                            new RecordRowMapper()
                                    ));
+    }
+
+    public List<Record> findAll(ResourceQualifier tableQualifier) {
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+
+        String sqlTemplate = String.format("SELECT * FROM %s.%s ", tableQualifier.getSchema(),
+                                           tableQualifier.getTable());
+
+        log.debug("Request find all: [{}]", sqlTemplate);
+
+        List<Record> records = new ArrayList<>();
+        try {
+            records = pJdbcTemplate.query(sqlTemplate,
+                                          params,
+                                          new RowMapperResultSetExtractor<>(
+                                                  new RecordRowMapper()
+                                          ));
+        } catch (BadSqlGrammarException e) {
+            log.warn("Не удалось получить данные из {}, ошибка: {}", tableQualifier, e.getMessage());
+        }
+
+        return records;
     }
 
     public long getTotalByPath(ResourceQualifier tableQualifier, String path, String title) {

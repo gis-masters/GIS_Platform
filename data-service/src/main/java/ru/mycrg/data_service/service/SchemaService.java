@@ -13,10 +13,12 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.service.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SchemaUtil.isPropertyExist;
+import static ru.mycrg.data_service_contract.enums.ValueType.URL;
 
 @Service
 public class SchemaService {
@@ -42,10 +44,34 @@ public class SchemaService {
         }
     }
 
+    public List<SchemaDto> getSchemasWithReglaments() {
+        return schemaRepository.findAll().stream()
+                               .filter(this::isReglamentsExist)
+                               .map(schemaMapper::mapToDto)
+                               .collect(Collectors.toList());
+    }
+
     public Optional<SchemaDto> getSchemaByName(@NotNull String name) {
         return schemaRepository.findByName(name).stream()
                                .findFirst()
                                .map(schemaMapper::mapToDto);
+    }
+
+    /**
+     * Проверяем у схемы в "properties" наличие поля "valueType":"URL",
+     * что является косвенным признаком наличия регламентов
+     */
+    private boolean isReglamentsExist(Schema schema) {
+        AtomicBoolean isReglamentExist = new AtomicBoolean(false);
+        schema.getClassRule().get("properties").forEach(props -> {
+            if (props.get("valueType").toString().equals("\"" + URL.name() + "\"")) {
+                isReglamentExist.set(true);
+
+                return;
+            }
+        });
+
+        return isReglamentExist.get();
     }
 
     public boolean isSchemaExist(String name) {

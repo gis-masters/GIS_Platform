@@ -20,7 +20,7 @@ public class AuditEventDto {
                   message = "Укажите одно из значений: CREATE, UPDATE, DELETE, SIGN_IN, SIGN_OUT")
     private String actionType;
 
-    @Size(max = 100)
+    @Size(max = 700)
     private String entityName;
 
     @Size(max = 50)
