@@ -67,6 +67,10 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             gotoNextFilter(request, response, chain);
         } else if (isActuatorPaths(request)) {
             gotoNextFilter(request, response, chain);
+        } else if (isIntegrationPaths(request)) {
+            log.debug("Request to: {}", request.getServletPath());
+
+            gotoNextFilter(request, response, chain);
         } else {
             log.debug("Path: {}", request.getServletPath());
 
@@ -133,6 +137,10 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
 
     private boolean isActuatorPaths(HttpServletRequest request) {
         return request.getMethod().equals("GET") && request.getServletPath().equals("/actuator/health");
+    }
+
+    private boolean isIntegrationPaths(HttpServletRequest request) {
+        return request.getMethod().equals("POST") && request.getServletPath().contains("/integration/");
     }
 
     private void prepareResponse(@NotNull HttpServletResponse response, JwtToken jwtToken) {

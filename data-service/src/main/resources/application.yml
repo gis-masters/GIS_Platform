@@ -19,6 +19,11 @@ spring:
     url: jdbc:postgresql://127.0.0.1:5434/crg_data_service
     username: fiz
     password: 314
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://127.0.0.1:5434/crg_data_service
+    user: fiz
+    password: 314
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false

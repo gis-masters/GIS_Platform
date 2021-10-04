@@ -57,7 +57,7 @@ public class BasemapAnalyzeStepsDefinitions extends BaseStepsDefinitions {
                         extract().response();
     }
 
-    @Then("Результат проверки слоя отрицателен")
+    @Then("Результат проверки слоя отрицателен\\(ответ геосервера содержит ServiceException)")
     public void checkNegativeAnalyzeResult() {
         assertTrue(response.jsonPath().get("passed").toString().contains("false"));
     }

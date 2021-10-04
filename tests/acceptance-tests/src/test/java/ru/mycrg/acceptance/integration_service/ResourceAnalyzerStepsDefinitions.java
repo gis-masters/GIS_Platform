@@ -1,4 +1,4 @@
-package ru.mycrg.acceptance.integratio_service;
+package ru.mycrg.acceptance.integration_service;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;

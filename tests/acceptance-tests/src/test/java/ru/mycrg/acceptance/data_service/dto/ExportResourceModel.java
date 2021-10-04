@@ -3,9 +3,7 @@ package ru.mycrg.acceptance.data_service.dto;
 public class ExportResourceModel {
 
     private String dataset;
-
     private String table;
-
     private String schemaId;
 
     public ExportResourceModel(String dataset, String table, String schemaId) {

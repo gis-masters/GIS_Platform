@@ -114,7 +114,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     public void currentDatasetExist() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/" + currentDatasetName)
+                        get("/" + currentDatasetName)
                 .then().
                         statusCode(SC_OK);
     }
@@ -135,7 +135,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     public void currentDatasetNotExist() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/" + currentDatasetName)
+                        get("/" + currentDatasetName)
                 .then().
                         statusCode(SC_NOT_FOUND);
     }

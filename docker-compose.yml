@@ -128,6 +128,10 @@ services:
       SPRING_RABBITMQ_USERNAME: $CRG_USER
       SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
 
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_data_service
+      SPRING_FLYWAY_USER: $CRG_USER
+      SPRING_FLYWAY_PASSWORD: $DB_PASS
+
       CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
       CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084

@@ -2,7 +2,6 @@ package ru.mycrg.gateway.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,6 +19,7 @@ import ru.mycrg.gateway.queue.MessageBusProducer;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 @EnableWebSecurity
@@ -68,7 +68,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                                 UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests() // authorization requests config
                 .antMatchers(POST, "/oauth/token", "/organizations/init", "/perform_logout").permitAll()
-                .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+                .antMatchers(POST, "/integration/ais_ums/import").permitAll()
+                .antMatchers(GET, "/actuator/health").permitAll()
                 .anyRequest().authenticated(); // Any other request must be authenticated
     }
 }
