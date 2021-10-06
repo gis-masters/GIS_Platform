@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { Paper } from '@material-ui/core';
+import { Paper } from '@mui/material';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Toolbar.scss';
 

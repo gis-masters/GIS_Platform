@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { computed, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox } from '@mui/material';
 
 import { CrgGroup } from '../../../services/crg/groups.service';
 

@@ -1,8 +1,8 @@
 import React, { Component, ChangeEvent } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogContent, DialogActions, TextField } from '@material-ui/core';
-import { GroupAdd, GroupAddOutlined } from '@material-ui/icons';
+import { Dialog, DialogContent, DialogActions, TextField } from '@mui/material';
+import { GroupAdd, GroupAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
@@ -55,6 +55,7 @@ export class OrgGroupsCreate extends Component {
                     value={name}
                     error={Boolean(this.errorFields.name)}
                     helperText={this.errorFields.name}
+                    variant='standard'
                   />
                 </FormControl>
               </FormField>
@@ -67,6 +68,7 @@ export class OrgGroupsCreate extends Component {
                     value={description || ''}
                     error={Boolean(this.errorFields.description)}
                     helperText={this.errorFields.description}
+                    variant='standard'
                   />
                 </FormControl>
               </FormField>

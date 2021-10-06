@@ -1,8 +1,8 @@
 import React, { Component, createRef } from 'react';
 import { observable, computed, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Dialog, DialogContent, DialogContentText, DialogActions, Tooltip } from '@material-ui/core';
-import { LiveHelp, LiveHelpOutlined } from '@material-ui/icons';
+import { IconButton, Dialog, DialogContent, DialogContentText, DialogActions, Tooltip } from '@mui/material';
+import { LiveHelp, LiveHelpOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { HelpPart } from '../../services/HelpPart';
@@ -41,7 +41,6 @@ export class HelpToggler extends Component {
           </DialogContent>
           <DialogActions>
             <Button color='primary' routerLink='/about'>
-              {' '}
               Все статьи
             </Button>
             <Button onClick={this.closeDialog}>Закрыть</Button>

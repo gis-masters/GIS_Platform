@@ -1,4 +1,5 @@
-import React, { FC, useCallback, ChangeEvent } from 'react';
+import React, { FC, useCallback } from 'react';
+import { SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
@@ -21,8 +22,8 @@ interface Props {
 
 export const EditFeatureGeometryProjSel: FC<Props> = observer(({ store }: Props) => {
   const handleChange = useCallback(
-    (e: ChangeEvent<{ name?: string; value: unknown }>) => {
-      store.setProjection(getProjection(e.target.value as string));
+    (e: SelectChangeEvent) => {
+      store.setProjection(getProjection(e.target.value));
     },
     [store]
   );

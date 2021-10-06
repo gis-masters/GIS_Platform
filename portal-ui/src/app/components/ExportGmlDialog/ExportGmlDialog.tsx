@@ -3,7 +3,16 @@ import { observer } from 'mobx-react';
 import { action, computed, observable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, Select } from '@material-ui/core';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent
+} from '@mui/material';
 
 import { Form } from '../Form/Form';
 import { Button } from '../Button/Button';
@@ -92,6 +101,7 @@ export class ExportGmlDialog extends Component<ExportGmlDialogProps> {
               labelId='schema-select-id'
               value={this.selectedSchema}
               onChange={this.handleSchemaChange}
+              variant='standard'
             >
               {knownSchemas.map(schema => (
                 <MenuItem key={schema.value} value={schema.value}>
@@ -143,7 +153,7 @@ export class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   }
 
   @action.bound
-  private handleSchemaChange(e: React.ChangeEvent<SpatialPlanningSchema>) {
+  private handleSchemaChange(e: SelectChangeEvent) {
     this.selectedSchema = e.target.value;
   }
 

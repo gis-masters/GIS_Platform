@@ -2,7 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import { LibraryRecordRaw } from '../../../services/crg/doc-library.service';
 import { FieldErrors } from '../../../services/crg/formValidation.service';

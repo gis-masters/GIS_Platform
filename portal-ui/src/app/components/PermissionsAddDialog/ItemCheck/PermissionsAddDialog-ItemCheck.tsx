@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { Dataset, DataTable } from '../../../services/data.service';

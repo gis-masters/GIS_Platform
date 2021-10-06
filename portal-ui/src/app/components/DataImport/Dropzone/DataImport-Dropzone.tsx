@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import Dropzone from 'react-dropzone';
-import { IconButton } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { Delete } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { Loading } from '../../Loading/Loading';
@@ -33,7 +33,7 @@ export const DataImportDropzone: FC<DataImportDropzoneProps> = props => {
 
   return (
     <div className={cnDataImport('Dropzone')}>
-      <Dropzone onDrop={onDrop} preventDropOnDocument={true} disabled={loading || Boolean(file)}>
+      <Dropzone onDrop={onDrop} preventDropOnDocument disabled={loading || Boolean(file)}>
         {({ getRootProps, getInputProps, isDragActive }) => (
           <div className={cnDataImport('DropzoneControl', { fileOver: isDragActive })} {...getRootProps()}>
             <div className={cnDataImport('DropzoneCaption')}>

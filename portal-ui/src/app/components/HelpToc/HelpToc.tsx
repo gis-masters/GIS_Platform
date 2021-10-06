@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import TreeView from '@material-ui/lab/TreeView';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import { IconButton, TextField } from '@material-ui/core';
-import { SearchOutlined, Clear } from '@material-ui/icons';
+import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
+import { IconButton, TextField } from '@mui/material';
+import { ArrowDropDown, ArrowRight, Clear, SearchOutlined } from '@mui/icons-material';
+import { TreeView } from '@mui/lab';
 
 import { Toc, TocItem } from '../../stores/Help.store';
 import { HelpTocItem } from './Item/HelpToc-Item';
@@ -24,9 +22,9 @@ interface HelpTocProps extends IClassNameProps {
 
 @observer
 export class HelpToc extends Component<HelpTocProps> {
-  @observable private filterParam: string = '';
+  @observable private filterParam = '';
   @observable private searchResults: Toc = [];
-  @observable private tocTreeHiden: boolean = false;
+  @observable private tocTreeHidden = false;
 
   render() {
     const { className, items, onSelect } = this.props;
@@ -46,8 +44,9 @@ export class HelpToc extends Component<HelpTocProps> {
               </IconButton>
             )
           }}
+          variant='standard'
         />
-        {this.tocTreeHiden
+        {this.tocTreeHidden
           ? this.searchResults.map(item => (
               <div
                 className={cnHelpToc('ItemTitleLink')}
@@ -59,9 +58,9 @@ export class HelpToc extends Component<HelpTocProps> {
           : items.map(item => (
               <TreeView
                 key={item.id}
-                defaultCollapseIcon={<ArrowDropDownIcon className={cnHelpToc('TitleIcon')} />}
-                defaultExpandIcon={<ArrowRightIcon className={cnHelpToc('TitleIcon')} />}
-                disableSelection={true}
+                defaultCollapseIcon={<ArrowDropDown className={cnHelpToc('TitleIcon')} />}
+                defaultExpandIcon={<ArrowRight className={cnHelpToc('TitleIcon')} />}
+                disableSelection
               >
                 <HelpTocItem item={item} onSelect={onSelect} />
               </TreeView>
@@ -79,26 +78,30 @@ export class HelpToc extends Component<HelpTocProps> {
   private search(word: string) {
     const regEx = new RegExp('(' + word + ')(?!([^<]+)?>)', 'gi');
 
-    function searchRegExp(text) {
-      return text.replace(regEx, `<span class=${cnHelpToc('Mark')}>$1</span>`);
-    }
-
     this.setSearchResults(
       this.flatArray
         .map(item => {
           if (regEx.test(item.title) || regEx.test(item.content)) {
-            return { ...item, title: searchRegExp(item.title), content: searchRegExp(item.content) };
+            return {
+              ...item,
+              title: this.searchRegExp(item.title, regEx),
+              content: this.searchRegExp(item.content, regEx)
+            };
           }
         })
         .filter(item => item !== undefined)
     );
   }
 
+  private searchRegExp(text: string, regEx: RegExp): string {
+    return text.replace(regEx, `<span class=${cnHelpToc('Mark')}>$1</span>`);
+  }
+
   @action.bound
   private handleFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
     this.setFilterParam(e.target.value);
     this.search(e.target.value);
-    e.target.value.trim() ? this.setTocTreeHiden(true) : this.setTocTreeHiden(false);
+    e.target.value.trim() ? this.setTocTreeHidden(true) : this.setTocTreeHidden(false);
   }
 
   @action
@@ -112,15 +115,15 @@ export class HelpToc extends Component<HelpTocProps> {
   }
 
   @action
-  private setTocTreeHiden(status: boolean) {
-    this.tocTreeHiden = status;
+  private setTocTreeHidden(status: boolean) {
+    this.tocTreeHidden = status;
   }
 
   @action.bound
   private handleFilterClear() {
     this.setFilterParam('');
     this.search('');
-    this.setTocTreeHiden(false);
+    this.setTocTreeHidden(false);
   }
 
   @computed
@@ -129,7 +132,7 @@ export class HelpToc extends Component<HelpTocProps> {
   }
 
   @action
-  private alignArray (arr: Toc): Toc {
-    return arr.map(article => (article.children ? this.alignArray(article.children) : article)).flat(2);
-  };
+  private alignArray(arr: Toc): Toc {
+    return arr.map(article => (article.children ? this.alignArray(article.children) : article)).flat(2) as Toc;
+  }
 }

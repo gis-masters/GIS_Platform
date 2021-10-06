@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
-import { MenuItem, Select } from '@material-ui/core';
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 import { FieldType, PropertySchemaChoice } from '../../../../services/crg/schema.models';
 
@@ -24,7 +24,14 @@ class FormControlTypeChoice extends Component<FormControlProps> {
       <div className={cnFormControl(null, [className])}>
         {!!options && (
           <>
-            <Select id={htmlId} fullWidth value={fieldValue} onChange={this.handleChange} error={!!errors?.length}>
+            <Select
+              id={htmlId}
+              fullWidth
+              value={fieldValue}
+              onChange={this.handleChange}
+              error={!!errors?.length}
+              variant='standard'
+            >
               {!valueIsAllowed && (
                 <MenuItem value={fieldValue as string | number} color='#666'>
                   <em>{valueCanBeDisplayed ? fieldValue : 'Не выбрано'}</em>
@@ -46,7 +53,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
   }
 
   @boundMethod
-  private handleChange(event: React.ChangeEvent<{ value: string | number }>) {
+  private handleChange(event: SelectChangeEvent<string | number>) {
     const { onChange, onNeedValidate, property } = this.props;
 
     if (onChange) {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { IClassNameProps } from '@bem-react/core';
 
 import { Dataset, DataTable } from '../../services/data.service';

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 
 import { allProjects } from '../../../stores/AllProjects.store';
 
@@ -19,6 +19,7 @@ export class ProjectsFilter extends Component {
     return (
       <TextField
         label='Поиск по названию'
+        variant='standard'
         value={allProjects.nameFilter}
         className={cnProjectsFilter()}
         onChange={this.handleChange}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { LineString, Polygon } from 'ol/geom';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';

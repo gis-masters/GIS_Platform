@@ -2,7 +2,7 @@ import React, { Component, ReactElement } from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Dialog, DialogContent, DialogActions, Checkbox, Select, MenuItem } from '@material-ui/core';
+import { Dialog, DialogContent, DialogActions, Checkbox, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { allProjects } from '../../stores/AllProjects.store';
@@ -16,6 +16,7 @@ import {
   PermissionsListItemType,
   PermissionsXTablePropsSet
 } from '../PermissionsListDialog/PermissionsListDialog.models';
+import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
 import { XTable, XTableColumn } from '../XTable/XTable';
 import { Button } from '../Button/Button';
 
@@ -57,17 +58,19 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
           <XTable<any> title='Добавление разрешений' {...this.tableProps[type]} data={this.availableItems} filterable />
         </DialogContent>
         <DialogActions>
-          <Select value={this.role} onChange={this.handleRoleChange}>
-            {(type === PermissionsListItemType.PROJECT ? projectRoles : roles).map(roleName => (
-              <MenuItem value={roleName} key={roleName}>
-                {rolesTitles[roleName]}
-              </MenuItem>
-            ))}
-          </Select>
-          <Button onClick={this.add} color='primary' disabled={!this.selectedItems.length}>
-            Добавить
-          </Button>
-          <Button onClick={this.close}>Отмена</Button>
+          <DialogActionsRight>
+            <Select value={this.role} onChange={this.handleRoleChange} variant='standard'>
+              {(type === PermissionsListItemType.PROJECT ? projectRoles : roles).map(roleName => (
+                <MenuItem value={roleName} key={roleName}>
+                  {rolesTitles[roleName]}
+                </MenuItem>
+              ))}
+            </Select>
+            <Button onClick={this.add} color='primary' disabled={!this.selectedItems.length}>
+              Добавить
+            </Button>
+            <Button onClick={this.close}>Отмена</Button>
+          </DialogActionsRight>
         </DialogActions>
       </Dialog>
     );
@@ -167,8 +170,8 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   }
 
   @action.bound
-  private handleRoleChange(e: React.ChangeEvent<{ name?: string; value: Role }>) {
-    this.role = e.target.value;
+  private handleRoleChange(e: SelectChangeEvent<Role>) {
+    this.role = e.target.value as Role;
   }
 
   @boundMethod

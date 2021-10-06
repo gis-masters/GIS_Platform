@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
-import { Adjust, SvgIconComponent, Timeline, ReportProblemOutlined } from '@material-ui/icons';
+import { Adjust, SvgIconComponent, Timeline, ReportProblemOutlined } from '@mui/icons-material';
 
 import { GeometryType, SupportedGeometryType } from '../../../services/geoserver/wfs.models';
 import { schemaService } from '../../../services/crg/schema.service';

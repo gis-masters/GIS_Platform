@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -63,7 +63,13 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
             <FormField>
               <FormLabel htmlFor='addLayerTitle'>Название</FormLabel>
               <FormControl>
-                <TextField id='addLayerTitle' value={this.title} onChange={this.handleTitleChange} fullWidth />
+                <TextField
+                  id='addLayerTitle'
+                  value={this.title}
+                  onChange={this.handleTitleChange}
+                  fullWidth
+                  variant='standard'
+                />
               </FormControl>
             </FormField>
           </Form>

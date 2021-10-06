@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { LocalLibrary } from '@material-ui/icons';
+import { LocalLibrary } from '@mui/icons-material';
 
 import { PageOptions, SortDir } from '../../../../services/models';
 import { Emitter } from '../../../../services/common/Emitter';

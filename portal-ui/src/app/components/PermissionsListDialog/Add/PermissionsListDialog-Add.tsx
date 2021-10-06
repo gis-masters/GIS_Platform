@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Tooltip, IconButton } from '@material-ui/core';
-import { AddCircleOutline } from '@material-ui/icons';
+import { Tooltip, IconButton } from '@mui/material';
+import { AddCircleOutline } from '@mui/icons-material';
 
 import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
 import { PrincipalType } from '../../../services/crg/permissions.models';

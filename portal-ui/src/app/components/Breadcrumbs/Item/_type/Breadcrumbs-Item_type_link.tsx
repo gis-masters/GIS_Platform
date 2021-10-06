@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
-import { ButtonBase } from '@material-ui/core';
+import { ButtonBase } from '@mui/material';
 
 import { Link } from '../../../Link/Link';
 

@@ -4,8 +4,8 @@ import { action, observable } from 'mobx';
 import { AxiosError } from 'axios';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AssignmentOutlined, Delete, DeleteOutline } from '@material-ui/icons';
-import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@material-ui/core';
+import { AssignmentOutlined, Delete, DeleteOutline } from '@mui/icons-material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@mui/material';
 
 import { http } from '../../../services/http.service';
 import { services } from '../../../services/services';

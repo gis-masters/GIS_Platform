@@ -1,8 +1,8 @@
-import React, { Component, ChangeEvent } from 'react';
+import React, { Component } from 'react';
 import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Slider } from '@material-ui/core';
+import { Slider } from '@mui/material';
 
 import { TreeItemPayload } from '../../../services/crg/projects.models';
 
@@ -30,7 +30,7 @@ export class LayerTransparency extends Component<LayerTransparencyProps> {
   }
 
   @action.bound
-  private handleChange(e: ChangeEvent, value: number) {
+  private handleChange(e: Event, value: number) {
     this.props.entity.transparency = value;
   }
 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
 import { cn } from '@bem-react/classname';
-import { TextField, Dialog, DialogTitle, DialogActions, DialogContent } from '@material-ui/core';
+import { TextField, Dialog, DialogTitle, DialogActions, DialogContent } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { Toast } from '../Toast/Toast';
@@ -48,6 +48,7 @@ export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
                   autoFocus
                   inputProps={{ maxLength: this.maxNameLength }}
                   onChange={this.handleNameChange}
+                  variant='standard'
                 />
               </FormControl>
             </FormField>
@@ -58,10 +59,10 @@ export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
                   id='datasetDesc'
                   multiline
                   rows={5}
-                  rowsMax={10}
                   helperText={`${this.newDatasetDesc.length}/${this.maxDescLength}`}
                   inputProps={{ maxLength: this.maxDescLength }}
                   onChange={this.handleDescChange}
+                  variant='standard'
                 />
               </FormControl>
             </FormField>

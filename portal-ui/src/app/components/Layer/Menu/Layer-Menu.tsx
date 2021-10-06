@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { ListItemIcon, Menu, MenuItem } from '@material-ui/core';
+import { ListItemIcon, Menu, MenuItem } from '@mui/material';
 import {
   AddCircleOutline,
   CropFree,
@@ -10,7 +10,7 @@ import {
   Edit,
   ListAlt,
   UnarchiveOutlined
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { BBOX } from '@fiz/geoserver-types/BBOX';
 import { isEqual } from 'lodash';

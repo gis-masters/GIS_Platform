@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { cn } from '@bem-react/classname';
-import { Paper } from '@material-ui/core';
+import { Paper } from '@mui/material';
 
 import '!style-loader!css-loader!sass-loader!./LayersTree-ItemContainer.scss';
 

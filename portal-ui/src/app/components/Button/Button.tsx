@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Button as BaseButton } from '@material-ui/core';
-import { ButtonProps as BaseButtonProps } from '@material-ui/core/Button/Button';
+import React, { Component, RefObject } from 'react';
+import { Button as BaseButton } from '@mui/material';
+import { ButtonProps as BaseButtonProps } from '@mui/material/Button/Button';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -12,18 +12,21 @@ const cnButton = cn('Button');
 
 interface ButtonProps extends BaseButtonProps {
   routerLink?: string;
+  btnRef?: RefObject<HTMLButtonElement>;
 }
 
 export class Button extends Component<ButtonProps> {
   render() {
+    const { routerLink, href, btnRef, className, ...props } = this.props;
     const extendedProps: ButtonProps = {
+      color: 'inherit',
       variant: 'outlined',
-      ...this.props,
-      className: cnButton(null, [this.props.className]),
-      href: this.props.routerLink || this.props.href,
+      ref: btnRef,
+      className: cnButton(null, [className]),
+      href: routerLink || href,
+      ...props,
       onClick: this.onClickHandler
     };
-    delete extendedProps.routerLink;
 
     return <BaseButton {...extendedProps} />;
   }

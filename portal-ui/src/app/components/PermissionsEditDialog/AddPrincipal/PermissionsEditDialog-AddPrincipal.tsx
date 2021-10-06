@@ -9,15 +9,17 @@ import {
   IconButton,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Tooltip
-} from '@material-ui/core';
-import { GroupAdd, GroupAddOutlined, PersonAdd, PersonAddOutlined } from '@material-ui/icons';
+} from '@mui/material';
+import { GroupAdd, GroupAddOutlined, PersonAdd, PersonAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../../stores/AllUsers.store';
 import { allGroups } from '../../../stores/AllGroups.store';
 import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../../services/crg/permissions.models';
+import { DialogActionsRight } from '../../DialogActionsRight/DialogActionsRight';
 import { CrgGroup } from '../../../services/crg/groups.service';
 import { CrgUser } from '../../../services/crg/users.service';
 import { XTable, XTableColumn } from '../../XTable/XTable';
@@ -82,17 +84,19 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
             />
           </DialogContent>
           <DialogActions>
-            <Select value={this.role} onChange={this.handleRoleChange}>
-              {roles.map(roleName => (
-                <MenuItem value={roleName} key={roleName}>
-                  {rolesTitles[roleName]}
-                </MenuItem>
-              ))}
-            </Select>
-            <Button onClick={this.handleAdd} color='primary' disabled={!this.selectedPrincipals.length}>
-              Добавить
-            </Button>
-            <Button onClick={this.close}>Отмена</Button>
+            <DialogActionsRight>
+              <Select value={this.role} onChange={this.handleRoleChange} variant='standard'>
+                {roles.map(roleName => (
+                  <MenuItem value={roleName} key={roleName}>
+                    {rolesTitles[roleName]}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Button onClick={this.handleAdd} color='primary' disabled={!this.selectedPrincipals.length}>
+                Добавить
+              </Button>
+              <Button onClick={this.close}>Отмена</Button>
+            </DialogActionsRight>
           </DialogActions>
         </Dialog>
       </>
@@ -127,8 +131,8 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
   }
 
   @action.bound
-  private handleRoleChange(e: React.ChangeEvent<{ name?: string; value: Role }>) {
-    this.role = e.target.value;
+  private handleRoleChange(e: SelectChangeEvent<Role>) {
+    this.role = e.target.value as Role;
   }
 
   @action.bound

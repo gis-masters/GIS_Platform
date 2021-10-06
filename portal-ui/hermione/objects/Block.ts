@@ -13,7 +13,7 @@ export class Block<S extends Record<string, string> = Record<string, string>> {
   }
 
   async getElement(key: keyof this['selectors']): Promise<WebdriverIO.Element> {
-    return await this.browser.$(String(this.selectors[key]));
+    return await this.browser.$((this.parentSelector || '') + String(this.selectors[key]));
   }
 
   getElements(keys: (keyof this['selectors'])[]): Promise<WebdriverIO.Element[]> {

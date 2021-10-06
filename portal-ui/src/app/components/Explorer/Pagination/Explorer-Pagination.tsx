@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Pagination } from '@material-ui/lab';
+import { Pagination } from '@mui/material';
 
 import { ExplorerStore } from '../Explorer.store';
 

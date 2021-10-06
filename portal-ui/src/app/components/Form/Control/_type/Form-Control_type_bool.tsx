@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { FieldType } from '../../../../services/crg/schema.models';

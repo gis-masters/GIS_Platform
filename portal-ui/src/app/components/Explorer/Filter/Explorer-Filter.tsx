@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { getChildrenFilterField, getChildrenFilterLabel } from '../Adapter/Explorer-Adapter';
@@ -30,6 +30,7 @@ export class ExplorerFilter extends Component<ExplorerFilterProps> {
           InputProps={{
             startAdornment: ' '
           }}
+          variant='standard'
         />
       )
     );

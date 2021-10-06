@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import { observer } from 'mobx-react';
-import { MyLocation } from '@material-ui/icons';
-import { IconButton, ListItem, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
+import { MyLocation } from '@mui/icons-material';
+import { IconButton, ListItem, ListItemSecondaryAction, ListItemText } from '@mui/material';
 import IconAnchorUnits from 'ol/style/IconAnchorUnits';
 import { SimpleGeometry } from 'ol/geom';
 import { Icon, Style } from 'ol/style';

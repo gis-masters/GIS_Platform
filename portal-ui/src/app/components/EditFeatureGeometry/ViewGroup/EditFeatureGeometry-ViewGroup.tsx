@@ -1,7 +1,7 @@
 import React, { Component, FC, createRef, RefObject } from 'react';
 import { cn } from '@bem-react/classname';
 import { Coordinate } from 'ol/coordinate';
-import { Paper, PaperProps, Table, TableContainer, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core';
+import { Paper, PaperProps, Table, TableContainer, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 

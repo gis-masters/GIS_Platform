@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { MenuItem, Select } from '@material-ui/core';
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
@@ -23,6 +23,7 @@ export class PermissionsEditDialogRoleSelect extends Component<PermissionsEditDi
         className={cnPermissionsEditDialogRoleSelect()}
         value={this.getPrincipalRole()}
         onChange={this.changeHandler}
+        variant='standard'
       >
         {roles.map(roleName => (
           <MenuItem value={roleName} key={roleName}>
@@ -46,8 +47,8 @@ export class PermissionsEditDialogRoleSelect extends Component<PermissionsEditDi
   }
 
   @boundMethod
-  private changeHandler(e: React.ChangeEvent<{ value: Role }>) {
+  private changeHandler(e: SelectChangeEvent<Role>) {
     const { onChange, principalId, principalType } = this.props;
-    onChange(principalId, principalType, e.target.value);
+    onChange(principalId, principalType, e.target.value as Role);
   }
 }

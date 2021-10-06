@@ -3,8 +3,8 @@ import { cn } from '@bem-react/classname';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
-import { SearchOutlined } from '@material-ui/icons';
-import { IconButton, InputBase, Popover, Paper, CircularProgress } from '@material-ui/core';
+import { SearchOutlined } from '@mui/icons-material';
+import { IconButton, InputBase, Popover, Paper, CircularProgress } from '@mui/material';
 
 import { mapService } from '../../services/map/map.service';
 import { geocodeService, YaGeoObjectCollection } from '../../services/yandex-geocode.service';

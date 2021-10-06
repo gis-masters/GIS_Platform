@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { IconButton } from '@material-ui/core';
-import { Clear } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { Clear } from '@mui/icons-material';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';

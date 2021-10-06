@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { IClassNameProps } from '@bem-react/core';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { Share } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@mui/material';
+import { Share } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';

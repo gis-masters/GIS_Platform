@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
@@ -24,7 +24,14 @@ export class ExplorerPageSize extends Component<ExplorerPageSizeProps> {
 
     return (
       <div className={cnExplorerPageSize()}>
-        <TextField label='На&nbsp;странице' value={pageSize} select fullWidth onChange={this.changeHandler}>
+        <TextField
+          label='На&nbsp;странице'
+          value={pageSize}
+          select
+          fullWidth
+          onChange={this.changeHandler}
+          variant='standard'
+        >
           {pageSizeVariants.map(size => (
             <MenuItem value={size} key={size}>
               {size}

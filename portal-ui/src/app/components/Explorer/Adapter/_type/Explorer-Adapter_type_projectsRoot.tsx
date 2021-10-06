@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { MapOutlined } from '@material-ui/icons';
+import { MapOutlined } from '@mui/icons-material';
 
 import { PageOptions, SortDir } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';

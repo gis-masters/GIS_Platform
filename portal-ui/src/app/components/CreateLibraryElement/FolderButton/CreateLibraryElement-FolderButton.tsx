@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
-import { IconButton } from '@material-ui/core';
-import { CreateNewFolderOutlined } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { CreateNewFolderOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
 const cnCreateLibraryElementFolderButton = cn('CreateLibraryElement', 'FolderButton');

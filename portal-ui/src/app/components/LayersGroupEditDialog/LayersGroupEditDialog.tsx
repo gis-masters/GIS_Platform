@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -41,6 +41,7 @@ export class LayersGroupEditDialog extends Component<LayersGroupEditDialogProps>
                   onChange={this.handleGroupNameChange}
                   inputProps={{ maxLength: LAYERS_GROUP_TITLE_MAX_LENGTH }}
                   autoFocus
+                  variant='standard'
                 />
               </FormControl>
             </FormField>

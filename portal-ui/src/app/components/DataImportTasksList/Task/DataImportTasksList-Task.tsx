@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip, Dialog, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import { IconButton, Tooltip, Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Delete } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { currentImport, ImportTaskExtended } from '../../../stores/CurrentImport.store';

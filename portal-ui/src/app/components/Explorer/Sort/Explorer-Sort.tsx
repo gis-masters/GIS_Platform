@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
@@ -26,7 +26,7 @@ export class ExplorerSort extends Component<ExplorerSortProps> {
 
     return sortItems?.length ? (
       <div className={cnExplorerSort()}>
-        <TextField label='Сортировать&nbsp;по' value={sort} onChange={this.handleSortChange} select>
+        <TextField label='Сортировать&nbsp;по' value={sort} onChange={this.handleSortChange} select variant='standard'>
           {sortItems.map(({ label, value }, i) => (
             <MenuItem value={value} key={i}>
               {label}

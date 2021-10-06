@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, observable } from 'mobx';
-import { LibraryAdd, LibraryAddOutlined } from '@material-ui/icons';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { LibraryAdd, LibraryAddOutlined } from '@mui/icons-material';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { Button } from '../Button/Button';

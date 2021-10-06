@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { CancelOutlined, CreateNewFolder, CreateNewFolderOutlined, SaveOutlined } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@mui/material';
+import { CancelOutlined, CreateNewFolder, CreateNewFolderOutlined, SaveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';

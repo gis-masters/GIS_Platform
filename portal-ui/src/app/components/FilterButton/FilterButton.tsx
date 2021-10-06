@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { Tooltip, IconButton } from '@material-ui/core';
-import { FilterList } from '@material-ui/icons';
+import { Tooltip, IconButton } from '@mui/material';
+import { FilterList } from '@mui/icons-material';
 import { IClassNameProps } from '@bem-react/core';
 
 const cnFilterButton = cn('TableOverHead', 'FilterButton');

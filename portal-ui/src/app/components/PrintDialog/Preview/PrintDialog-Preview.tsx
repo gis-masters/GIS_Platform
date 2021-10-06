@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Paper } from '@material-ui/core';
+import { Paper } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { printSettings } from '../../../stores/PrintSettings.store';

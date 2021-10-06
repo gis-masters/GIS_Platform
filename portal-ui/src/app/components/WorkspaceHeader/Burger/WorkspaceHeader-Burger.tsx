@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Menu, MenuItem, ListItemIcon } from '@material-ui/core';
-import { Menu as MenuIcon, Map, ViewModule, Business, CloudDownload, Storage } from '@material-ui/icons';
+import { IconButton, Menu, MenuItem, ListItemIcon } from '@mui/material';
+import { Menu as MenuIcon, Map, ViewModule, Business, CloudDownload, Storage } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { currentProject } from '../../../stores/CurrentProject.store';

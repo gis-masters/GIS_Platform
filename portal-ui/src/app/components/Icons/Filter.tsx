@@ -1,16 +1,20 @@
-import React, { FC } from 'react';
-import { SvgIcon, SvgIconProps } from '@material-ui/core';
+import React from 'react';
+import { SvgIcon } from '@mui/material';
+import { SvgIconComponent } from '@mui/icons-material';
 
-export const Filter: FC<SvgIconProps> = props => (
-  <SvgIcon {...props} viewBox='0 0 19 20'>
-    <path
-      d='M1 1h17l-6 8v10l-5-4V9z'
-      strokeWidth='2'
-      stroke='currentColor'
-      fill='currentColor'
-      fillRule='evenodd'
-      strokeLinecap='round'
-      strokeLinejoin='round'
-    />
-  </SvgIcon>
+export const Filter: SvgIconComponent = Object.assign(
+  props => (
+    <SvgIcon {...props} viewBox='0 0 19 20'>
+      <path
+        d='M1 1h17l-6 8v10l-5-4V9z'
+        strokeWidth='2'
+        stroke='currentColor'
+        fill='currentColor'
+        fillRule='evenodd'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </SvgIcon>
+  ),
+  { muiName: 'Filter' }
 );

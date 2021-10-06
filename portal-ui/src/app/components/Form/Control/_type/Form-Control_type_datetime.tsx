@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 
 import { FieldType } from '../../../../services/crg/schema.models';
 
@@ -22,6 +22,7 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
           value={fieldValue}
           label={inSet ? property.title : undefined}
           onChange={this.handleChange}
+          variant='standard'
         />
       </div>
     );

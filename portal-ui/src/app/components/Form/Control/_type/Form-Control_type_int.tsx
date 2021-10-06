@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import { InputAdornment, TextField } from '@material-ui/core';
+import { InputAdornment, TextField } from '@mui/material';
 
 import { FieldType, PropertySchemaInt } from '../../../../services/crg/schema.models';
 
@@ -29,6 +29,7 @@ class FormControlTypeInt extends Component<FormControlProps> {
           error={!!errors?.length}
           helperText={errors}
           onBlur={this.handleBlur}
+          variant='standard'
         />
       </div>
     );

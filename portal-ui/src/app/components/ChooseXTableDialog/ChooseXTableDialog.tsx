@@ -1,7 +1,7 @@
 import React, { Component, ReactElement } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Checkbox, Dialog, DialogActions, DialogContent } from '@material-ui/core';
+import { Checkbox, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';

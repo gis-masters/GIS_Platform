@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { IconButton, Tooltip } from '@material-ui/core';
+import { IconButton, Tooltip } from '@mui/material';
 
 import { Filter } from '../../Icons/Filter';
 import { FilterOutlined } from '../../Icons/FilterOutlined';

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react';
-import { Dialog, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
+import { Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { sidebars } from '../../stores/Sidebars.store';

@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
-import { Paper } from '@material-ui/core';
+import { Paper } from '@mui/material';
 import { IClassNameProps } from '@bem-react/core';
 
 import '!style-loader!css-loader!sass-loader!./TextBadge.scss';

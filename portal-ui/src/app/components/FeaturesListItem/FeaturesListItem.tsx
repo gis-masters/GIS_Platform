@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { ArrowForward } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@mui/material';
+import { ArrowForward } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
 import { currentProject } from '../../stores/CurrentProject.store';

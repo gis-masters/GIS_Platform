@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
-import { Delete, DeleteOutline } from '@material-ui/icons';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Delete, DeleteOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
@@ -11,8 +11,6 @@ import { Button } from '../../Button/Button';
 import { ExplorerStore } from '../Explorer.store';
 import { ActionDetails } from '../Explorer.models';
 import { deleteItem } from '../Adapter/Explorer-Adapter';
-
-import '!style-loader!css-loader!sass-loader!./Explorer-ActionDelete.scss';
 
 const cnExplorerActionDelete = cn('Explorer', 'ActionDelete');
 
@@ -37,6 +35,7 @@ export class ExplorerActionDelete extends Component<ExplorerActionDeleteProps> {
             onClick={this.buttonHandler}
             startIcon={this.dialogOpen ? <Delete /> : <DeleteOutline />}
             disabled={disabled}
+            color='error'
           >
             Удалить
           </Button>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@material-ui/core';
+import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';

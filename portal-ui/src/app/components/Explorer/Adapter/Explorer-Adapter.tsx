@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { InsertDriveFileOutlined } from '@material-ui/icons';
+import { InsertDriveFileOutlined } from '@mui/icons-material';
 
 import { services } from '../../../services/services';
 import { PageOptions, SortDir } from '../../../services/models';

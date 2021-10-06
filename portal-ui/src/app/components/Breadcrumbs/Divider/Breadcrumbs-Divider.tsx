@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { ChevronRight } from '@material-ui/icons';
+import { ChevronRight } from '@mui/icons-material';
 
 import '!style-loader!css-loader!sass-loader!./Breadcrumbs-Divider.scss';
 

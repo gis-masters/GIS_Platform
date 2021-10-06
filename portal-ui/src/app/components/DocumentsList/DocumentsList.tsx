@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AddBoxOutlined } from '@material-ui/icons';
+import { AddBoxOutlined } from '@mui/icons-material';
 
 import { Loading } from '../Loading/Loading';
 import { services } from '../../services/services';

@@ -1,7 +1,7 @@
 import React, { Component, ChangeEvent } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogContent, DialogActions, TextField, Checkbox, FormHelperText } from '@material-ui/core';
+import { Dialog, DialogContent, DialogActions, TextField, Checkbox, FormHelperText } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 import { AxiosError } from 'axios';
@@ -76,6 +76,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
                     error={Boolean(this.errorFields.email)}
                     helperText={this.errorFields.email}
                     fullWidth
+                    variant='standard'
                   />
                 </FormControl>
               </FormField>
@@ -89,6 +90,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
                     error={Boolean(this.errorFields.name)}
                     helperText={this.errorFields.name}
                     fullWidth
+                    variant='standard'
                   />
                 </FormControl>
               </FormField>
@@ -102,6 +104,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
                     error={Boolean(this.errorFields.surname)}
                     helperText={this.errorFields.surname}
                     fullWidth
+                    variant='standard'
                   />
                 </FormControl>
               </FormField>
@@ -124,6 +127,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
                       error={Boolean(this.errorFields.password)}
                       helperText={this.errorFields.password}
                       fullWidth
+                      variant='standard'
                     />
                   </FormControl>
                 </FormField>

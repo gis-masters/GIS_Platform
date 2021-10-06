@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 
 import { FieldType, PropertySchemaString } from '../../../../services/crg/schema.models';
 
@@ -26,6 +26,7 @@ class FormControlTypeString extends Component<FormControlProps> {
           onChange={this.handleChange}
           onBlur={this.handleBlur}
           multiline={display === 'multiline'}
+          variant='standard'
         />
       </div>
     );

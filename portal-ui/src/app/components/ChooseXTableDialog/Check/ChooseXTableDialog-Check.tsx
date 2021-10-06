@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Checkbox, Radio } from '@material-ui/core';
+import { Checkbox, Radio } from '@mui/material';
 
 const cnChooseXTableDialogCheck = cn('ChooseXTableDialog', 'Check');
 

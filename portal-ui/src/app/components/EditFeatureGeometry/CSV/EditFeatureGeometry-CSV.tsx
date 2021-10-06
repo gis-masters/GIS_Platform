@@ -1,8 +1,8 @@
 import React, { Component, ChangeEvent, createRef } from 'react';
 import { action } from 'mobx';
 import { cn } from '@bem-react/classname';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { ArchiveOutlined, UnarchiveOutlined } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@mui/material';
+import { ArchiveOutlined, UnarchiveOutlined } from '@mui/icons-material';
 import { parse, unparse } from 'papaparse';
 import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { ListItemIcon, MenuItem } from '@material-ui/core';
-import { CreateNewFolderOutlined, DescriptionOutlined, SvgIconComponent } from '@material-ui/icons';
+import { ListItemIcon, MenuItem } from '@mui/material';
+import { CreateNewFolderOutlined, DescriptionOutlined, SvgIconComponent } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 

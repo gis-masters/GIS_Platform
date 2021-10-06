@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Tooltip, IconButton } from '@material-ui/core';
-import { PlaylistAddCheck } from '@material-ui/icons';
+import { Tooltip, IconButton } from '@mui/material';
+import { PlaylistAddCheck } from '@mui/icons-material';
 
 import { PrincipalType } from '../../../services/crg/permissions.models';
 import { PermissionsListDialog } from '../../PermissionsListDialog/PermissionsListDialog';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { MenuItem } from '@material-ui/core';
+import { MenuItem } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { basemapsStore } from '../../../stores/Basemaps.store';

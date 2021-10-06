@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
-import Paper from '@material-ui/core/Paper';
+import Paper from '@mui/material/Paper';
 
 import {
   EditFeatureGeometryGroupProps,

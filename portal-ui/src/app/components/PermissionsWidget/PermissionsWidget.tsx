@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Skeleton } from '@material-ui/lab';
-import { Edit, EditOutlined, Group, Person } from '@material-ui/icons';
-import { cn } from '@bem-react/classname';
+import { Skeleton } from '@mui/material';
+import { Edit, EditOutlined, Group, Person } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
+import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';

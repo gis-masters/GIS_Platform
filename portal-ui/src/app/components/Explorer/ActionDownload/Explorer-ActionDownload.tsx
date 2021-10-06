@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { GetApp } from '@material-ui/icons';
+import { GetApp } from '@mui/icons-material';
 
 import { Link } from '../../Link/Link';
 import { Button } from '../../Button/Button';

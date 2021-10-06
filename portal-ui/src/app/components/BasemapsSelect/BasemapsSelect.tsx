@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Menu, Paper, Tooltip, ButtonBase } from '@material-ui/core';
+import { Menu, Paper, Tooltip, ButtonBase } from '@mui/material';
 
 import { sleep } from '../../services/util/sleep';
 import { basemapsStore } from '../../stores/Basemaps.store';
@@ -20,9 +20,14 @@ const cnBasemapsSelect = cn('BasemapsSelect');
 
 @observer
 export class BasemapsSelect extends Component {
-  @observable private anchorEl: HTMLButtonElement | null = null;
   @observable private tooltipsOpen = false;
+  @observable private open = false;
+  @observable private ready = false;
   private ref = createRef<HTMLButtonElement>();
+
+  componentDidMount() {
+    this.setReady();
+  }
 
   render() {
     const { currentBasemap } = basemapsStore;
@@ -30,24 +35,37 @@ export class BasemapsSelect extends Component {
     return (
       <>
         <Paper className={cnBasemapsSelect()} onClick={this.handleBaseClick} elevation={3}>
-          <ButtonBase ref={this.ref}>
-            <BasemapsSelectThumbnail urn={currentBasemap.thumbnailUrn} />
-            <BasemapsSelectTooltipAnchor hidden={Boolean(this.anchorEl)} />
-          </ButtonBase>
+          <span ref={this.ref}>
+            <ButtonBase>
+              <BasemapsSelectThumbnail urn={currentBasemap.thumbnailUrn} />
+              <BasemapsSelectTooltipAnchor hidden={this.open} ready={this.ready} />
+            </ButtonBase>
+          </span>
         </Paper>
-        <Menu
-          PaperProps={{ className: cnBasemapsSelect('MenuPaper'), square: true, elevation: 0 }}
-          MenuListProps={{ className: cnBasemapsSelect('MenuList') }}
-          open={Boolean(this.anchorEl)}
-          anchorEl={this.anchorEl}
-          onClose={this.close}
-        >
-          {this.basemaps.map(basemap => (
-            <Tooltip title={basemap.title} key={basemap.id} placement='left' arrow open={this.tooltipsOpen}>
-              <BasemapsSelectItem key={basemap.id} basemap={basemap} onClick={this.close} />
-            </Tooltip>
-          ))}
-        </Menu>
+        {this.ready && (
+          <Menu
+            PaperProps={{ className: cnBasemapsSelect('MenuPaper'), square: true, elevation: 0 }}
+            MenuListProps={{ className: cnBasemapsSelect('MenuList') }}
+            open={this.open}
+            anchorEl={this.ref.current}
+            onClose={this.close}
+          >
+            {this.basemaps.map(basemap => (
+              <Tooltip
+                disableInteractive
+                title={basemap.title}
+                key={basemap.id}
+                placement='left'
+                arrow
+                open={this.tooltipsOpen}
+              >
+                <span>
+                  <BasemapsSelectItem key={basemap.id} basemap={basemap} onClick={this.close} />
+                </span>
+              </Tooltip>
+            ))}
+          </Menu>
+        )}
       </>
     );
   }
@@ -61,13 +79,13 @@ export class BasemapsSelect extends Component {
 
   @action.bound
   private handleBaseClick() {
-    this.anchorEl = this.anchorEl ? null : this.ref.current;
+    this.open = !this.open;
     void this.doTooltips();
   }
 
   @action.bound
   private close() {
-    this.anchorEl = null;
+    this.open = false;
     void this.doTooltips();
   }
 
@@ -76,8 +94,13 @@ export class BasemapsSelect extends Component {
     this.tooltipsOpen = open;
   }
 
+  @action
+  private setReady() {
+    this.ready = true;
+  }
+
   private async doTooltips() {
-    if (this.anchorEl) {
+    if (this.open) {
       await sleep(300);
       this.setTooltips(true);
     } else {

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { DragIndicator } from '@material-ui/icons';
+import { DragIndicator } from '@mui/icons-material';
 
 import '!style-loader!css-loader!sass-loader!./Layer-Drag.scss';
 

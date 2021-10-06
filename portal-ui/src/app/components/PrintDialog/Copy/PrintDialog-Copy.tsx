@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { copyNodeToClipboard } from '../../../services/util/clipboard.util';

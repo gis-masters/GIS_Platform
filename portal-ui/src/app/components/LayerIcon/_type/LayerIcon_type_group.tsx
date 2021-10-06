@@ -1,6 +1,6 @@
 import React from 'react';
 import { withBemMod } from '@bem-react/core';
-import { Folder, FolderOpen } from '@material-ui/icons';
+import { Folder, FolderOpen } from '@mui/icons-material';
 
 import { LayerIconProps, cnLayerIcon } from '../LayerIcon';
 

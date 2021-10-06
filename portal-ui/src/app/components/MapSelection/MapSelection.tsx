@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { PlaylistAdd } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@mui/material';
+import { PlaylistAdd } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 

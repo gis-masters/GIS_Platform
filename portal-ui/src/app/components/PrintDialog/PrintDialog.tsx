@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dialog, DialogActions } from '@material-ui/core';
+import { Dialog, DialogActions } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 

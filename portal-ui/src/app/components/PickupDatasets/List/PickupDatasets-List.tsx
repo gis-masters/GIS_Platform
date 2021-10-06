@@ -3,9 +3,8 @@ import { debounce } from 'lodash';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, observable } from 'mobx';
-import { Search } from '@material-ui/icons';
-import { Pagination } from '@material-ui/lab';
-import { InputAdornment, FormControl, List, Input, InputLabel } from '@material-ui/core';
+import { Search } from '@mui/icons-material';
+import { InputAdornment, FormControl, List, Input, InputLabel, Pagination } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { Loading } from '../../Loading/Loading';

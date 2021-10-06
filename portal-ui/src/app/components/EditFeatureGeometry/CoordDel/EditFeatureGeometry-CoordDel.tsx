@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { DeleteOutline } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@mui/material';
+import { DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 

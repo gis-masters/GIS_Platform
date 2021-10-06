@@ -1,7 +1,7 @@
 import React, { Component, ReactElement } from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogContent, DialogActions, Tabs, Tab } from '@material-ui/core';
+import { Dialog, DialogContent, DialogActions, Tabs, Tab } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 

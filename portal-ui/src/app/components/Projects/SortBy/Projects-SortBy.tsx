@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { allProjects } from '../../../stores/AllProjects.store';
@@ -20,6 +20,7 @@ export class ProjectsSortBy extends Component {
     return (
       <TextField
         label='Сортировать по'
+        variant='standard'
         value={allProjects.sortBy}
         className={cnProjectsSortBy()}
         onChange={this.handleChange}

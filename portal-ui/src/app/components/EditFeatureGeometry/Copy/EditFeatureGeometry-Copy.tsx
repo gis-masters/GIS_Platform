@@ -1,8 +1,8 @@
 import React, { Component, RefObject } from 'react';
 import { cn } from '@bem-react/classname';
 import { Coordinate } from 'ol/coordinate';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { FileCopyOutlined } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@mui/material';
+import { FileCopyOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';

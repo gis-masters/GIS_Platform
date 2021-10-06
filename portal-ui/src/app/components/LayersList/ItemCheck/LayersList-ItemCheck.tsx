@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action } from 'mobx';
 import { observer } from 'mobx-react';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox } from '@mui/material';
 
 import { CrgLayer } from '../../../services/crg/projects.models';
 

@@ -1,4 +1,8 @@
 .Button {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.Button:not(.MuiButton-containedPrimary) {
   &.MuiButton-root {
     text-transform: none;
 

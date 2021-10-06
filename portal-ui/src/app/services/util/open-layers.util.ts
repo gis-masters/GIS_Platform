@@ -44,7 +44,7 @@ export function wfsFeatureToFeature(
 /**
  * Из {@link WfsGeometry} формируем OpenLayer {@link Geometry}
  */
-export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry<Coordinate>): SimpleGeometry | undefined | void {
+export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry<Coordinate>): SimpleGeometry | undefined {
   if (!wfsGeometry) {
     Toast.error('Некорректная геометрия');
 

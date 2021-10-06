@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { InsertDriveFile } from '@material-ui/icons';
+import { InsertDriveFile } from '@mui/icons-material';
 
 import { Toast } from '../../../Toast/Toast';
 import { services } from '../../../../services/services';

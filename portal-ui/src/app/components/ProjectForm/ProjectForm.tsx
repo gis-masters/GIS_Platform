@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 
 import { communicationService } from '../../services/communication.service';
 import { projectsService } from '../../services/crg/projects.service';
@@ -39,6 +39,7 @@ export class ProjectForm extends Component<ProjectFormProps> {
           inputProps={{ maxLength: this.maxLength }}
           FormHelperTextProps={{ className: cnProjectForm('HelperText') }}
           onChange={this.handleChange}
+          variant='standard'
         />
 
         {this.error.map((error, index) => (

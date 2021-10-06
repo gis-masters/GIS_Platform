@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { Tabs, Tab } from '@material-ui/core';
+import { Tabs, Tab } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';

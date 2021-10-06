@@ -3,8 +3,8 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { MapBrowserEvent } from 'ol';
 import { Coordinate } from 'ol/coordinate';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { LocationSearching, SvgIconComponent } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@mui/material';
+import { LocationSearching, SvgIconComponent } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 

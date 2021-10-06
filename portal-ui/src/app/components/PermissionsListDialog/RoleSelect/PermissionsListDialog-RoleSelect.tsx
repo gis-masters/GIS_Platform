@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { Select, MenuItem } from '@material-ui/core';
+import { Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { Role, PrincipalType, roles, projectRoles, rolesTitles } from '../../../services/crg/permissions.models';
@@ -27,7 +27,7 @@ export class PermissionsListRoleSelect extends Component<PermissionsListRoleSele
   render() {
     return (
       <div className={cnPermissionsListRoleSelect()}>
-        <Select value={this.value} onChange={this.handleChange}>
+        <Select value={this.value} onChange={this.handleChange} variant='standard'>
           {this.roles.map(roleName => (
             <MenuItem value={roleName} key={roleName}>
               {rolesTitles[roleName]}
@@ -49,13 +49,13 @@ export class PermissionsListRoleSelect extends Component<PermissionsListRoleSele
   }
 
   @action.bound
-  private handleChange(e: React.ChangeEvent<{ value: Role }>) {
+  private handleChange(e: SelectChangeEvent<Role>) {
     const { listItem, onChange, principalId, principalType } = this.props;
     onChange({
       ...listItem,
       permissions: [
         ...filterOutPrincipal(principalId, principalType, listItem.permissions),
-        { principalId, principalType, role: e.target.value }
+        { principalId, principalType, role: e.target.value as Role }
       ]
     });
   }

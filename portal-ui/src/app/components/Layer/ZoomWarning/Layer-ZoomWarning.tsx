@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 
 import { ZoomOutWarning } from '../../Icons/ZoomOutWarning';
 import { ZoomInWarning } from '../../Icons/ZoomInWarning';

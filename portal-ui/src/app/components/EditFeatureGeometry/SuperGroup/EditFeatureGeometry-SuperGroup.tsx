@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
-import { IconButton, Tooltip } from '@material-ui/core';
+import { IconButton, Tooltip } from '@mui/material';
 import { Coordinate } from 'ol/coordinate';
 import { compose } from '@bem-react/core';
 import { cn } from '@bem-react/classname';

@@ -1,10 +1,10 @@
 import React, { Component, ReactElement } from 'react';
 import { observable, computed, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { Tooltip, IconButton, Dialog, DialogContent, DialogActions } from '@material-ui/core';
+import { Tooltip, IconButton, Dialog, DialogContent, DialogActions } from '@mui/material';
 import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
-import { People, PeopleOutline } from '@material-ui/icons';
+import { People, PeopleOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
 import { CrgUser } from '../../../services/crg/users.service';

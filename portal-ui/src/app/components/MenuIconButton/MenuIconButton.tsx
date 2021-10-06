@@ -1,8 +1,8 @@
 import React, { Component, createRef, RefObject } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { ArrowDropDown, SvgIconComponent } from '@material-ui/icons';
-import { IconButton, Menu, PropTypes } from '@material-ui/core';
+import { ArrowDropDown, SvgIconComponent } from '@mui/icons-material';
+import { IconButton, Menu, PropTypes } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./MenuIconButton.scss';

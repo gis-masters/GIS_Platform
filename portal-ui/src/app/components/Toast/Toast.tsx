@@ -4,9 +4,9 @@ import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { toast, Id, ToastOptions } from 'react-toastify';
 import nl2br from 'react-nl2br';
-import { IconButton } from '@material-ui/core';
-import { CheckCircle, Error, Info, Warning, Close } from '@material-ui/icons';
-import { SvgIconProps } from '@material-ui/core/SvgIcon/';
+import { IconButton } from '@mui/material';
+import { CheckCircle, Error, Info, Warning, Close } from '@mui/icons-material';
+import { SvgIconProps } from '@mui/material/SvgIcon/';
 
 import { env } from '../../stores/Env.store';
 import { sendTelegramError } from '../../services/telegram.service';

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 
 import { TextBadge } from '../../TextBadge/TextBadge';
 

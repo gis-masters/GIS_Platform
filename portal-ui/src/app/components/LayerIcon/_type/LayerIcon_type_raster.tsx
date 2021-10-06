@@ -1,6 +1,6 @@
 import React from 'react';
 import { withBemMod } from '@bem-react/core';
-import { Texture } from '@material-ui/icons';
+import { Texture } from '@mui/icons-material';
 
 import { LayerIconProps, cnLayerIcon } from '../LayerIcon';
 

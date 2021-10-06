@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { TableCell, TableSortLabel, TableCellProps, TextField } from '@material-ui/core';
+import { TableCell, TableSortLabel, TableCellProps, TextField } from '@mui/material';
 
 import { SortParams } from '../../../services/util/sortObjects';
 import { FilterParams } from '../../../services/util/filterObjects';

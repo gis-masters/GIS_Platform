@@ -47,11 +47,14 @@ function validateField(value: unknown, property: PropertySchema, formValue: Reco
     .filter(err => err);
 }
 
-export function validateFormValue(formValue: Record<string, unknown>, fields: PropertySchema[]): FieldErrors[] {
+export function validateFormValue<T extends Record<string, unknown> = Record<string, unknown>>(
+  formValue: Partial<T>,
+  fields: PropertySchema<T>[]
+): FieldErrors[] {
   return fields.map(field => ({
     field: field.name,
-    messages: validateField(formValue[field.name], field, formValue)
-  }));
+    messages: validateField(formValue[field.name], field as PropertySchema, formValue)
+  })) as FieldErrors[];
 }
 
 // common

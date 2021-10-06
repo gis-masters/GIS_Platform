@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { FolderOutlined } from '@material-ui/icons';
+import { FolderOutlined } from '@mui/icons-material';
 
 import { PageOptions, SortDir } from '../../../../services/models';
 import { Emitter } from '../../../../services/common/Emitter';

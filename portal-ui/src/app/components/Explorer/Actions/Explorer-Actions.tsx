@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, observable } from 'mobx';
-import { CardActions } from '@material-ui/core';
+import { CardActions } from '@mui/material';
 
 import { ExplorerStore } from '../Explorer.store';
 import { AllowedActions } from '../Explorer.models';

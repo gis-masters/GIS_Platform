@@ -1,8 +1,8 @@
 import React, { Component, createRef } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { MyLocation } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@mui/material';
+import { MyLocation } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
 import { WfsFeature } from '../../services/geoserver/wfs.models';

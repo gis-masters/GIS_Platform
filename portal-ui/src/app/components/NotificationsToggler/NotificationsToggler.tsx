@@ -3,8 +3,8 @@ import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { Tooltip, IconButton, Badge } from '@material-ui/core';
-import { Notifications, NotificationsOutlined } from '@material-ui/icons';
+import { Tooltip, IconButton, Badge } from '@mui/material';
+import { Notifications, NotificationsOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 

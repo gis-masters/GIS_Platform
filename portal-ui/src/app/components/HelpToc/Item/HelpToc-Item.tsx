@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { observer } from 'mobx-react';
-import TreeItem from '@material-ui/lab/TreeItem';
+import { TreeItem } from '@mui/lab';
 import { action } from 'mobx';
 
 import { TocItem } from '../../../stores/Help.store';

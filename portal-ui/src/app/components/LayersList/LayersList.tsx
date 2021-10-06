@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';

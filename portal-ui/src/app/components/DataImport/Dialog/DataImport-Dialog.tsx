@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
+import { Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { Button } from '../../Button/Button';

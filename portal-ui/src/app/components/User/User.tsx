@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { Menu, MenuItem, ListItemIcon } from '@material-ui/core';
-import { AccountCircle, ExitToApp } from '@material-ui/icons';
+import { Menu, MenuItem, ListItemIcon } from '@mui/material';
+import { AccountCircle, ExitToApp } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Dialog, DialogContent, DialogActions, TextField, IconButton, Tooltip } from '@material-ui/core';
-import { ListAlt } from '@material-ui/icons';
+import { Dialog, DialogContent, DialogActions, TextField, IconButton, Tooltip } from '@mui/material';
+import { ListAlt } from '@mui/icons-material';
 import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 
@@ -69,6 +69,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
               onChange={this.changeHandler}
               multiline
               autoFocus
+              variant='standard'
             />
           </DialogContent>
           <DialogActions>

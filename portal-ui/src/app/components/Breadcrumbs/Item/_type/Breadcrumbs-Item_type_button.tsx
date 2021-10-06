@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
-import { ButtonBase } from '@material-ui/core';
+import { ButtonBase } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { BreadcrumbItemData, BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item';

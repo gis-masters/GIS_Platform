@@ -2,7 +2,7 @@ import React, { Component, ReactNode } from 'react';
 import { observer } from 'mobx-react';
 import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { IClassNameProps } from '@bem-react/core';
-import { Card, CardContent } from '@material-ui/core';
+import { Card, CardContent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { ExplorerStore } from '../Explorer.store';

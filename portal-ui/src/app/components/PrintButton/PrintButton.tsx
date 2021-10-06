@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { Print, PrintOutlined } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@mui/material';
+import { Print, PrintOutlined } from '@mui/icons-material';
 
 import { printSettings } from '../../stores/PrintSettings.store';
 import { PrintDialog } from '../PrintDialog/PrintDialog';

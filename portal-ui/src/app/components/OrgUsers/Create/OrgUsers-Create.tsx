@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { PersonAdd, PersonAddOutlined } from '@material-ui/icons';
+import { PersonAdd, PersonAddOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { Button } from '../../Button/Button';

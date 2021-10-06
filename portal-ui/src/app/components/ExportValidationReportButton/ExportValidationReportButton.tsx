@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { GetApp, GetAppOutlined } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@mui/material';
+import { GetApp, GetAppOutlined } from '@mui/icons-material';
 
 import { ExportValidationReportDialog } from '../ExportValidationReportDialog/ExportValidationReportDialog';
 import { CrgLayer } from '../../services/crg/projects.models';

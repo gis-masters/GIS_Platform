@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cloneDeep } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
-import { FormControl, TextField } from '@material-ui/core';
+import { FormControl, TextField } from '@mui/material';
 
 import { Form, FormField } from '../Form/Form';
 import { Button } from '../Button/Button';
@@ -69,6 +69,7 @@ export class LoginForm extends Component<LoginFormProps> {
                   helperText={this.usernameError}
                   required
                   fullWidth
+                  variant='standard'
                 />
               </FormControl>
             </FormField>
@@ -82,6 +83,7 @@ export class LoginForm extends Component<LoginFormProps> {
                   type='password'
                   required
                   fullWidth
+                  variant='standard'
                 />
               </FormControl>
             </FormField>

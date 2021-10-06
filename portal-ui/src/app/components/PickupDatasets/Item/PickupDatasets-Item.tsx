@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
-import { ListItem, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
+import { ListItem, ListItemSecondaryAction, ListItemText } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { pluralize } from 'numeralize-ru';

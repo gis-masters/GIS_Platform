@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { Storage } from '@material-ui/icons';
+import { Storage } from '@mui/icons-material';
 
 import { Dataset, DataTable, getDatasetTables } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';

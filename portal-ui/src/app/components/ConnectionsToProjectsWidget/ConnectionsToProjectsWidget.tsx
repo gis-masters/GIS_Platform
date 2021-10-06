@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Skeleton } from '@material-ui/lab';
-import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@material-ui/core';
-import { AddCircle, AddCircleOutlineOutlined } from '@material-ui/icons';
+import { Skeleton, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@mui/material';
+import { AddCircle, AddCircleOutlineOutlined } from '@mui/icons-material';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';

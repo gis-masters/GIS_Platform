@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { MapOutlined } from '@material-ui/icons';
+import { MapOutlined } from '@mui/icons-material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { CrgProject } from '../../../../services/crg/projects.models';

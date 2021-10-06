@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { Fab, PropTypes } from '@material-ui/core';
-import { FileCopyOutlined } from '@material-ui/icons';
+import { Fab, PropTypes } from '@mui/material';
+import { FileCopyOutlined } from '@mui/icons-material';
 
 import '!style-loader!css-loader!sass-loader!./PrintDialog-CopyButton.scss';
 

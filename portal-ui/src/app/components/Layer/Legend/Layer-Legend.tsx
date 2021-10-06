@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { LinearProgress } from '@material-ui/core';
+import { LinearProgress } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { filterLegendForCurrentMapView, loadLayerStyle, Rule } from '../../../services/geoserver/styles.service';

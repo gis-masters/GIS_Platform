@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { ArrowDropDown, ArrowDropUp } from '@material-ui/icons';
+import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 
 import '!style-loader!css-loader!sass-loader!./PrintDialog-ExtraIcon.scss';
 

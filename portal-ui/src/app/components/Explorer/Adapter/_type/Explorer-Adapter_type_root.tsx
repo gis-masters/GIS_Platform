@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { HomeOutlined } from '@material-ui/icons';
+import { HomeOutlined } from '@mui/icons-material';
 
 import { Dataset } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';

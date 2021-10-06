@@ -16,9 +16,9 @@ import {
   ListItemText,
   Tooltip,
   Typography
-} from '@material-ui/core';
+} from '@mui/material';
 
-import { KeyboardArrowDown, Warning } from '@material-ui/icons';
+import { KeyboardArrowDown, Warning } from '@mui/icons-material';
 import { CrgProject } from '../../services/crg/projects.models';
 import { Button } from '../Button/Button';
 import { TableReport } from '../ImportGml/ImportGml';
@@ -68,6 +68,7 @@ export class ImportGmlResultDialog extends Component<ImportGmlResultDialogProps>
                         </ListItemSecondaryAction>
                       </ListItem>
                     );
+                    // eslint-disable-next-line eqeqeq
                   } else if (!reportItem.success && reportItem.successCount == 0 && reportItem.reason) {
                     return (
                       <ListItem key={reportItem.schemaId}>

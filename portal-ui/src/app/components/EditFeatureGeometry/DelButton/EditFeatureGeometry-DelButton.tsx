@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { DeleteSweepOutlined } from '@material-ui/icons';
-import { Tooltip, IconButton } from '@material-ui/core';
+import { DeleteSweepOutlined } from '@mui/icons-material';
+import { Tooltip, IconButton } from '@mui/material';
 
 const cnEditFeatureGeometryDelButton = cn('EditFeatureGeometry', 'DelButton');
 

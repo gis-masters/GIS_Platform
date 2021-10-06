@@ -3,8 +3,16 @@ import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
-import { Table, TableBody, TableCell, TableCellProps, TableContainer, TableHead, TableRow } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableCellProps,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Pagination
+} from '@mui/material';
 
 import { filterObjects, FilterParams } from '../../services/util/filterObjects';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';

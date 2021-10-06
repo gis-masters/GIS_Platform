@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -12,18 +12,20 @@ export { FormLabel } from './Label/Form-Label';
 export { FormControl } from './Control/Form-Control.composed';
 
 import '!style-loader!css-loader!sass-loader!./Form.scss';
+import { FormActions } from './Actions/Form-Actions';
 
 export const cnForm = cn('Form');
 
 interface FormProps<T extends Record<string, unknown>>
-  extends React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement> {
+  extends Omit<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'ref'> {
   fields?: PropertySchema<T>[];
   value?: T;
   errors?: FieldErrors[];
-  onFormChange?: (changedValue: T) => void;
-  onFormSubmit?: (changedValue: T) => void;
-  onFieldChange?: (value: T[keyof T], propertyName: string) => void;
-  onFieldNeedValidate?: (value: T[keyof T], propertyName: keyof T) => void;
+  onFormChange?(changedValue: T): void;
+  onFormSubmit?(changedValue: T): void;
+  onFieldChange?(value: T[keyof T], propertyName: string): void;
+  onFieldNeedValidate?(value: T[keyof T], propertyName: keyof T): void;
+  actions?: ReactNode;
 }
 
 @observer
@@ -39,6 +41,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
       onFormSubmit,
       onFieldChange,
       onFieldNeedValidate,
+      actions,
       ...otherProps
     } = this.props;
 
@@ -55,6 +58,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
             errors={errors}
           />
         )}
+        {actions && <FormActions>{actions}</FormActions>}
       </form>
     );
   }

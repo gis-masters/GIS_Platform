@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { Coordinate } from 'ol/coordinate';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 

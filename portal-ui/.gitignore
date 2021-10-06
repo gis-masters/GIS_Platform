@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/bl
 /tmp
 /out-tsc
 

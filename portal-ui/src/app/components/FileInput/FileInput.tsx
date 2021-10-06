@@ -1,8 +1,8 @@
 import React, { Component, createRef, DetailedHTMLProps, InputHTMLAttributes, RefObject } from 'react';
-import { action, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 import { cn } from '@bem-react/classname';
@@ -23,15 +23,11 @@ interface FileInputProps
 export class FileInput extends Component<FileInputProps> {
   private inputRef: RefObject<HTMLInputElement> = createRef();
   private btnRef: RefObject<HTMLButtonElement> = createRef();
-  @observable private caption = '';
-  @observable private empty = true;
-
-  componentDidMount() {
-    this.handleChange();
-  }
+  @observable private _empty = true;
+  @observable private files: FileList | null = null;
 
   render() {
-    const { className, onChange, fullWidth, ...otherProps } = this.props;
+    const { className, onChange, fullWidth, value, ...otherProps } = this.props;
 
     return (
       <span className={cnFileInput({ fullWidth, empty: this.empty }, [className])}>
@@ -45,42 +41,51 @@ export class FileInput extends Component<FileInputProps> {
           tabIndex={-1}
         />
         {!this.empty && (
-          <IconButton size='small' tabIndex='-1' onClick={this.clearClickHandler} className={cnFileInput('Clear')}>
+          <IconButton size='small' onClick={this.clearClickHandler} className={cnFileInput('Clear')}>
             <Close fontSize='small' />
           </IconButton>
         )}
-        <Button innerRef={this.btnRef} onClick={this.browseClickHandler} className={cnFileInput('Browse')}>
+        <Button btnRef={this.btnRef} onClick={this.browseClickHandler} className={cnFileInput('Browse')}>
           Выбрать
         </Button>
       </span>
     );
   }
 
+  @computed
+  private get empty(): boolean {
+    return this._empty && !this.props.value;
+  }
+
+  @computed
+  private get caption(): string {
+    const count = this.files?.length || (this.props.value && 1);
+
+    if (!count) {
+      return 'Файл не выбран';
+    }
+
+    const name = this.files && this.files[0]?.name;
+
+    return count === 1 && name
+      ? name
+      : `${pluralize(count, 'Выбран', 'Выбрано', 'Выбрано')} ${count} ${pluralize(count, 'файл', 'файла', 'файлов')}`;
+  }
+
   @action.bound
   private handleChange() {
     const { onChange } = this.props;
-    const files = this.inputRef.current.files;
-    const initial = !this.caption;
 
-    if (files.length === 1) {
-      this.caption = files[0].name;
-      this.empty = false;
-    } else if (files.length > 1) {
-      this.empty = false;
-      this.caption = `Выбрано ${files.length} ${pluralize(files.length, 'файл', 'файла', 'файлов')}`;
-    } else {
-      this.empty = true;
-      this.caption = 'Файл не выбран';
-    }
+    this.files = this.inputRef.current.files;
+    this._empty = !this.files.length;
 
-    if (!initial && onChange) {
-      onChange(files);
-    }
+    onChange(this.files);
   }
 
-  @boundMethod
+  @action.bound
   private clearClickHandler() {
     this.inputRef.current.value = '';
+    this.files = null;
     this.handleChange();
   }
 

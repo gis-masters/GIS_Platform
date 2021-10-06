@@ -12,12 +12,12 @@ import { FormErrors } from '../../Errors/Form-Errors';
 @observer
 class FormControlTypeBinary extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, errors, property } = this.props;
+    const { htmlId, className, errors, property, fieldValue } = this.props;
     const { accept } = property as PropertySchemaBinary;
 
     return (
       <div className={cnFormControl(null, [className])}>
-        <FileInput accept={accept} id={htmlId} onChange={this.handleChange} />
+        <FileInput accept={accept} id={htmlId} onChange={this.handleChange} value={fieldValue as string} />
         <FormErrors errors={errors} />
       </div>
     );

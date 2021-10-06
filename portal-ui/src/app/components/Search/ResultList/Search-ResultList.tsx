@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react';
-import { List } from '@material-ui/core';
+import { List } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { YaGeoObjectCollection } from '../../../services/yandex-geocode.service';

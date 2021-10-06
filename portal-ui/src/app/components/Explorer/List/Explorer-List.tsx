@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { List } from '@material-ui/core';
+import { List } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { getEmptyListView, getIcon, getId, getMeta, getTitle, isFolder } from '../Adapter/Explorer-Adapter';
