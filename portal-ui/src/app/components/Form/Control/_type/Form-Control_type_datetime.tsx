@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
-import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 import { TextField } from '@mui/material';
 
-import { FieldType } from '../../../../services/crg/schema.models';
+import { FieldType, PropertySchemaDatetime } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
+import { FormErrors } from '../../Errors/Form-Errors';
 
 @observer
 class FormControlTypeDatetime extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue = '', inSet, property } = this.props;
+    const { htmlId, className, fieldValue = '', inSet, property, errors } = this.props;
+    const { defaultValue } = property as PropertySchemaDatetime;
 
     return (
       <div className={cnFormControl({ inSet }, [className])}>
@@ -19,23 +21,37 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
           type='date'
           id={htmlId}
           fullWidth={!inSet}
-          value={fieldValue}
-          label={inSet ? property.title : undefined}
+          value={fieldValue ? (fieldValue as string) : defaultValue || ''}
           onChange={this.handleChange}
+          label={inSet ? property.title : undefined}
+          InputLabelProps={{
+            shrink: true
+          }}
           variant='standard'
         />
+        <FormErrors errors={errors} />
       </div>
     );
   }
 
   @boundMethod
-  private handleChange(event: React.ChangeEvent<{ value: string }>) {
-    const { onChange, property } = this.props;
+  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { onChange, property, onNeedValidate } = this.props;
+    const date = e.target.value;
 
-    onChange({
-      value: event.target.value,
-      propertyName: property.name
-    });
+    if (onChange) {
+      onChange({
+        value: date,
+        propertyName: property.name
+      });
+    }
+
+    if (onNeedValidate) {
+      onNeedValidate({
+        value: date,
+        propertyName: property.name
+      });
+    }
   }
 }
 

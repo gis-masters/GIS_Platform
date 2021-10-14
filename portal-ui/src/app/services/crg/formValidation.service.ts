@@ -1,8 +1,10 @@
+import moment from 'moment';
 import { knownRegex } from '../regexp.service';
 import {
   FieldType,
   PropertySchema,
   PropertySchemaChoice,
+  PropertySchemaDatetime,
   PropertySchemaFloat,
   PropertySchemaInt,
   PropertySchemaString
@@ -38,6 +40,7 @@ const fieldValidators: Partial<Record<FieldType, FieldValidator[]>> = {
   float: [numberRequired, numberMinMax],
   bool: [simpleRequired],
   binary: [simpleRequired],
+  dateTime: [simpleRequired, datetimeValid, datetimeMinMax],
   choice: [choiceRequired, choiceValueInOptions]
 };
 
@@ -76,6 +79,23 @@ function choiceRequired(value: unknown, { required }: PropertySchema): string[] 
 function choiceValueInOptions(value: unknown, { options }: PropertySchemaChoice): string[] | undefined {
   if (value && !options.some(option => option.value === value)) {
     return [messages.required];
+  }
+}
+
+// datetime
+
+function datetimeValid(value: unknown): string[] | undefined {
+  if (!moment(value).isValid()) {
+    return ['`Некорректная дата'];
+  }
+}
+
+function datetimeMinMax(value: unknown, { maxValue, minValue }: PropertySchemaDatetime): string[] | undefined {
+  if (maxValue && moment(value).isAfter(maxValue)) {
+    return [`Максимальная дата ${maxValue} `];
+  }
+  if (minValue && moment(value).isBefore(minValue)) {
+    return [`Минимальная дата ${minValue} `];
   }
 }
 
