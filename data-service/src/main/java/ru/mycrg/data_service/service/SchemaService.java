@@ -7,7 +7,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.repository.DataSchemaRepository;
-import ru.mycrg.data_service.util.SchemaMapper;
+import ru.mycrg.data_service.mappers.SchemaMapper;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;

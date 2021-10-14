@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.generateDatasetName;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
-import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
+import static ru.mycrg.data_service.dto.ResourceType.DATASET;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 
 @Service
@@ -96,7 +96,7 @@ public class DatasetService extends SchemasAndTablesBase {
         schemasManager.create(rDataset);
 
         // Add record to schemasAndTables table
-        final SchemasAndTables dataset = new SchemasAndTables(SCHEMA, dto, datasetName, ROOT_FOLDER_PATH);
+        final SchemasAndTables dataset = new SchemasAndTables(DATASET, dto, datasetName, ROOT_FOLDER_PATH);
         final SchemasAndTables newEntity = schemasAndTablesRepository.save(dataset);
 
         // Create OWNER permission

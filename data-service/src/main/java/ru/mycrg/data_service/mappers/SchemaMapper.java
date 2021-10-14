@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.util;
+package ru.mycrg.data_service.mappers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;

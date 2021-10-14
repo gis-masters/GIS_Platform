@@ -20,7 +20,7 @@ public class ResourceManagerFactory {
     @NotNull
     public ResourceManager get(@NotNull ResourceQualifier rQualifier) {
         switch (rQualifier.getType()) {
-            case SCHEMA:
+            case DATASET:
                 return context.getBean(SchemasManager.class);
             case TABLE:
                 return context.getBean(TablesManager.class);

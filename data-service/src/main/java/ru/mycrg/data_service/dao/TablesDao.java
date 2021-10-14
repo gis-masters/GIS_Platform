@@ -1,6 +1,8 @@
 package ru.mycrg.data_service.dao;
 
+import com.healthmarketscience.sqlbuilder.CustomCondition;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
+import com.healthmarketscience.sqlbuilder.UpdateQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
@@ -27,6 +29,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static ru.mycrg.data_service.dao.SqlBuilder.buildOrderBySection;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
 @Service
 @Transactional
@@ -54,7 +57,7 @@ public class TablesDao {
             String query = insertQuery.validate().toString();
             query = query + " returning lastval();";
 
-            log.debug("INSERT_QUERY: {}", query);
+            log.debug("INSERT QUERY: [{}]", query);
 
             return pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
         } catch (DataAccessException e) {
@@ -91,7 +94,7 @@ public class TablesDao {
                     "insert into " + complexName + "(" + queryColumns.toString().toLowerCase() + ")" +
                             " values (" + queryValues.toString().toLowerCase() + ")";
 
-            log.debug("INSERT_QUERY: {}", query);
+            log.debug("BATCH INSERT QUERY: [{}]", query);
 
             pJdbcTemplate.batchUpdate(query, body);
         } catch (DataAccessException e) {
@@ -184,6 +187,34 @@ public class TablesDao {
         log.debug("Request find total by path: [{}]", sqlTemplate);
 
         return pJdbcTemplate.getJdbcTemplate().queryForObject(sqlTemplate, Long.class);
+    }
+
+    public void updateRecordById(ResourceQualifier recordQualifier, Map<String, Object> data) throws CrgDaoException {
+        try {
+            DbTable table = getSimpleDbTable(recordQualifier);
+            UpdateQuery updateQuery = new UpdateQuery(table);
+            updateQuery.addCondition(
+                    new CustomCondition(String.format("%s = %d", ID.getName(), recordQualifier.getRecord())));
+
+            data.forEach((key, value) -> {
+                updateQuery.addSetClause(table.addColumn(key), value);
+            });
+            String query = updateQuery.validate().toString();
+
+            log.debug("UPDATE QUERY: [{}]", query);
+
+            pJdbcTemplate.getJdbcTemplate().update(query);
+        } catch (DataAccessException e) {
+            String msg = String.format("Не удалось выполнить обновление записи: '%s'. %s",
+                                       recordQualifier.getQualifier(), e.getCause().getMessage());
+
+            throw new CrgDaoException(msg);
+        } catch (Exception e) {
+            String msg = String.format("Что то пошло не так при обновлении записи: '%s'. %s",
+                                       recordQualifier.getQualifier(), e.getCause().getMessage());
+
+            throw new CrgDaoException(msg);
+        }
     }
 
     public void removeRecord(ResourceQualifier tableQualifier, Long id) throws CrgDaoException {

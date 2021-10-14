@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +21,18 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Service
 public class RecordsService {
+
+    private final Logger log = LoggerFactory.getLogger(RecordsService.class);
 
     private final TablesDao tablesDao;
     private final FileStorageService fileStorageService;
@@ -120,8 +127,49 @@ public class RecordsService {
         }
     }
 
+    /**
+     * Update record.
+     *
+     * @param recordQualifier Идентификатор записи в библиотеке
+     * @param payload         Данные для обновления
+     */
+    public void update(ResourceQualifier recordQualifier, Map<String, Object> payload) {
+        try {
+            log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), payload);
+
+            ResourceQualifier tQualifier = new ResourceQualifier(recordQualifier.getSchema(),
+                                                                 recordQualifier.getTable());
+            Map<String, Object> record = getById(tQualifier, recordQualifier.getRecord());
+            Map<String, Object> newData = clearSystemAttributes(payload);
+            newData.put(LAST_MODIFIED.getName(), LocalDateTime.now().format(ISO_LOCAL_DATE_TIME).replace("T", " "));
+
+            newData.forEach((key, value) -> record.put(key, newData.get(key)));
+
+            tablesDao.updateRecordById(recordQualifier, newData);
+
+            log.debug("successfully patched");
+        } catch (Exception e) {
+            throw new DataServiceException("Failed to update record: " + recordQualifier.getQualifier(), e.getCause());
+        }
+    }
+
     public void deleteRecord(ResourceQualifier resourceQualifier, Long id) throws CrgDaoException {
         tablesDao.removeRecord(resourceQualifier, id);
+    }
+
+    private Map<String, Object> clearSystemAttributes(Map<String, Object> patchedRecord) {
+        Map<String, Object> result = new HashMap<>();
+        patchedRecord.forEach((key, value) -> {
+            if (!key.equals(ID.getName()) &&
+                    !key.equals(PATH.getName()) &&
+                    !key.equals(CREATED_AT.getName()) &&
+                    !key.equals(LAST_MODIFIED.getName()) &&
+                    !key.equals("is_folder")) {
+                result.put(key, value);
+            }
+        });
+
+        return result;
     }
 
     private Set<String> extractFolderIdsFromPath(String path) {

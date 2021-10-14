@@ -71,7 +71,7 @@ public class SchemasAndTables {
         this.docApproveDate = dto.getDocApproveDate();
         this.oktmo = dto.getOktmo();
         this.scale = dto.getScale();
-        this.isFolder = resourceType.equals(ResourceType.SCHEMA);
+        this.isFolder = resourceType.equals(ResourceType.DATASET);
         this.path = path;
 
         this.itemsCount = 0;

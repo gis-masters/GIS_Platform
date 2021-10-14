@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import javax.json.Json;
 import javax.json.JsonMergePatch;
 import javax.json.JsonReader;
 
-import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_MERGE_PATCH_VALUE;
+import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
 @Component
 public class JsonMergePatchHttpMessageConverter extends AbstractHttpMessageConverter<JsonMergePatch> {
@@ -21,7 +22,7 @@ public class JsonMergePatchHttpMessageConverter extends AbstractHttpMessageConve
     private static final Logger log = LoggerFactory.getLogger(JsonMergePatchHttpMessageConverter.class);
 
     public JsonMergePatchHttpMessageConverter() {
-        super(APPLICATION_MERGE_PATCH_VALUE);
+        super(MediaType.valueOf(APPLICATION_JSON_MERGE_PATCH));
     }
 
     @Override

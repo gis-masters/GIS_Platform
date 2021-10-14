@@ -6,7 +6,7 @@ import ru.mycrg.data_service.entity.SchemasAndTables;
 
 import java.util.Map;
 
-import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
+import static ru.mycrg.data_service.dto.ResourceType.DATASET;
 
 @Relation(collectionRelation = "datasets")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -20,7 +20,7 @@ public class DatasetModel extends ResourceModel implements IResourceModel {
         super(resource.getId(),
               resource.getTitle(),
               resource.getDetails(),
-              SCHEMA.name(),
+              DATASET.name(),
               resource.getIdentifier(),
               resource.getItemsCount(),
               null,
@@ -33,7 +33,7 @@ public class DatasetModel extends ResourceModel implements IResourceModel {
         super(Long.valueOf(String.valueOf(dataset.get("id"))),
               String.valueOf(dataset.get("title")),
               String.valueOf(dataset.get("details")),
-              SCHEMA.name(),
+              DATASET.name(),
               String.valueOf(dataset.get("identifier")),
               dataset.get("items_count") != null ? Integer.parseInt(String.valueOf(dataset.get("items_count"))) : 0,
               dataset.get("crs") != null ? String.valueOf(dataset.get("crs")) : null,
