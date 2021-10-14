@@ -16,6 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryBasePermissions.currentPermission;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryBasePermissions.makeLibraryPermissionUrl;
 
 public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
@@ -87,6 +88,8 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         final String url = String.format("/%s/roleAssignment", libraryName);
 
         libraryBasePermissions.addPermission(url, userId, "user", role);
+
+        currentPermission = extractIdFromLocation();
     }
 
     @Given("В тестовой библиотеке существует следующая структура каталогов: Вариант {int}")
@@ -129,6 +132,8 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         final String urlToFolder = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, folder1Id);
 
         libraryBasePermissions.addPermission(urlToFolder, userId, "user", "VIEWER");
+
+        currentPermission = extractIdFromLocation();
     }
 
     @Then("Пользователь не видит файлов и папок в тестовой библиотеке")
@@ -176,6 +181,8 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         final String urlToFile = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, file1112Id);
 
         libraryBasePermissions.addPermission(urlToFile, userId, "user", "VIEWER");
+
+        currentPermission = extractIdFromLocation();
     }
 
     @Then("Пользователю становятся доступна только цепочка каталогов: folder_1->folder_1_1->folder_1_1_1, ведущая к файлу")
@@ -201,5 +208,23 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         getBaseRequestWithCurrentCookie()
                 .when().get(String.format("/%s/records?parent=%d", DEFAULT_LIBRARY, folder111Id))
                 .then().body("_embedded.records.content.id", IsCollectionWithSize.hasSize(1));
+    }
+
+    @When("Пользователь пытается добавить правило для библиотеки: {string}")
+    public void tryAddPermission(String libraryName) {
+        authorizationBase.loginAsCurrentUser();
+
+        final String url = String.format("/%s/roleAssignment", libraryName);
+
+        libraryBasePermissions.addPermission(url, userId, "user", "VIEWER");
+    }
+
+    @When("Пользователь пытается удалить любое из правил для библиотеки: {string}")
+    public void tryRemovePermission(String libraryName) {
+        authorizationBase.loginAsCurrentUser();
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete(String.format("%s/roleAssignment/%d", libraryName, currentPermission));
     }
 }

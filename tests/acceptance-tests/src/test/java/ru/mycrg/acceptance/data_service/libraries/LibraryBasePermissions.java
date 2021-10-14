@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class LibraryBasePermissions extends BaseStepsDefinitions {
 
+    public static Integer currentPermission;
+
     @Override
     public RequestSpecification getBaseRequest() {
         return super.getBaseRequest().basePath("/api/data/document-libraries");

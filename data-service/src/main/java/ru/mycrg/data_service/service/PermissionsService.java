@@ -14,7 +14,10 @@ import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Principal;
 import ru.mycrg.data_service.entity.Role;
 import ru.mycrg.data_service.entity.SchemasAndTables;
-import ru.mycrg.data_service.exceptions.*;
+import ru.mycrg.data_service.exceptions.ConflictException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.ForbiddenException;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.PermissionRepository;
 import ru.mycrg.data_service.repository.PrincipalRepository;
 import ru.mycrg.data_service.repository.RoleRepository;
@@ -164,7 +167,11 @@ public class PermissionsService {
         }
     }
 
-    public void deleteById(Long permissionId) {
+    public void deleteById(ResourceQualifier tQualifier, Long permissionId) {
+        if (!resourceProtector.isOwner(tQualifier)) {
+            throw new ForbiddenException("Not allowed delete permission for this resource");
+        }
+
         permissionRepository.deleteById(permissionId);
     }
 

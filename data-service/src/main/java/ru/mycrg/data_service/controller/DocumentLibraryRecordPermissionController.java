@@ -36,6 +36,28 @@ public class DocumentLibraryRecordPermissionController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/document-libraries/{docLibId}/records/{recId}/roleAssignment")
+    public ResponseEntity<Object> getLibraryPermissions(@PathVariable String docLibId,
+                                                        Pageable pageable,
+                                                        @PathVariable Long recId,
+                                                        PagedResourcesAssembler<PermissionProjection> pageAssembler) {
+        ResourceQualifier libraryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
+
+        final Map<String, Object> record = recordsService.getById(libraryQualifier, recId);
+        final Long recordId = Long.valueOf(record.get(ID.getName()).toString());
+
+        final var permissions = permissionsService.getAllByResourceId(libraryQualifier, recordId, pageable);
+
+        final var pagedResources = pageAssembler.toResource(
+                permissions,
+                linkTo(DatasetPermissionsController.class)
+                        .slash("/api/data/document-libraries/" + docLibId)
+                        .withSelfRel());
+
+        return ResponseEntity.ok(pagedResources);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/document-libraries/{docLibId}/records/{recId}/roleAssignment")
     public ResponseEntity<PermissionProjection> addPermissionToLibrary(@PathVariable String docLibId,
                                                                        @Valid @RequestBody PermissionCreateDto dto,
@@ -62,31 +84,13 @@ public class DocumentLibraryRecordPermissionController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @GetMapping("/document-libraries/{docLibId}/records/{recId}/roleAssignment")
-    public ResponseEntity<Object> getLibraryPermissions(@PathVariable String docLibId,
-                                                        Pageable pageable,
-                                                        @PathVariable Long recId,
-                                                        PagedResourcesAssembler<PermissionProjection> pageAssembler) {
+    @DeleteMapping("/document-libraries/{docLibId}/records/{recId}/roleAssignment/{permissionId}")
+    public ResponseEntity<Object> delete(@PathVariable String docLibId,
+                                         @PathVariable String recId,
+                                         @PathVariable Long permissionId) {
         ResourceQualifier libraryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
 
-        final Map<String, Object> record = recordsService.getById(libraryQualifier, recId);
-        final Long recordId = Long.valueOf(record.get(ID.getName()).toString());
-
-        final var permissions = permissionsService.getAllByResourceId(libraryQualifier, recordId, pageable);
-
-        final var pagedResources = pageAssembler.toResource(
-                permissions,
-                linkTo(DatasetPermissionsController.class)
-                        .slash("/api/data/document-libraries/" + docLibId)
-                        .withSelfRel());
-
-        return ResponseEntity.ok(pagedResources);
-    }
-
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    @DeleteMapping("/document-libraries/{docLibId}/records/{recId}/roleAssignment/{permissionId}")
-    public ResponseEntity<Object> delete(@PathVariable Long permissionId) {
-        permissionsService.deleteById(permissionId);
+        permissionsService.deleteById(libraryQualifier, permissionId);
 
         return ResponseEntity.noContent().build();
     }

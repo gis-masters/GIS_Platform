@@ -92,7 +92,7 @@ public class TablesPermissionsController {
     public ResponseEntity<Object> deleteTablePermission(@PathVariable String datasetId,
                                                         @PathVariable String tableId,
                                                         @PathVariable Long permissionId) {
-        permissionsService.deleteById(permissionId);
+        permissionsService.deleteById(schemasAndTablesQualifier, permissionId);
 
         return ResponseEntity.noContent().build();
     }

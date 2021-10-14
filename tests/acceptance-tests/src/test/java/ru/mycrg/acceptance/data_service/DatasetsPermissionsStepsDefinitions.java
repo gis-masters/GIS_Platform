@@ -7,6 +7,7 @@ import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.PermissionCreateDto;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,6 +18,8 @@ import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
 
 public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
+
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
@@ -40,11 +43,6 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
         assertThat(url, equalTo(makeDatasetPermissionUrl(currentDatasetName, permissionId)));
     }
 
-    private String makeDatasetPermissionUrl(String datasetName, Integer permissionId) {
-        return String.format("%s:%d/api/data/datasets/%s/roleAssignment/%s",
-                             testServerHost, testServerPort, datasetName, permissionId);
-    }
-
     @When("Администратор даёт доступ: {string} для текущего пользователя на текущий набор данных")
     public void createPermissionForCurrentUserForCurrentDataset(String role) {
         createPermissionForCurrentDataset(new PermissionCreateDto("user", userId, role));
@@ -53,6 +51,19 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
     @When("Администратор даёт доступ: {string} для текущей группы на текущий набор данных")
     public void createPermissionForCurrentGroupForCurrentDataset(String role) {
         createPermissionForCurrentDataset(new PermissionCreateDto("group", usersGroupId, role));
+    }
+
+    @When("Пользователь пытается удалить любое из правил для текущего набора")
+    public void tryDeleteAnyPermission() {
+        authorizationBase.loginAsCurrentUser();
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(currentDatasetName + "/roleAssignment");
+
+        Integer firstPermissionId = response.jsonPath().get("_embedded.permissions[0].id");
+
+        deletePermissionForCurrentDataset(firstPermissionId);
     }
 
     @Given("Текущему набору задаётся некое кол-во правил: {int}")
@@ -99,9 +110,20 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
                         post(currentDatasetName + "/roleAssignment");
     }
 
+    private void deletePermissionForCurrentDataset(Integer permissionId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete(String.format("%s/roleAssignment/%d", currentDatasetName, permissionId));
+    }
+
     private PermissionCreateDto generateRandomPermission() {
         return new PermissionCreateDto(random.nextBoolean() ? "group" : "user",
                                        random.nextInt(77777),
                                        random.nextBoolean() ? "CONTRIBUTOR" : "VIEWER");
+    }
+
+    private String makeDatasetPermissionUrl(String datasetName, Integer permissionId) {
+        return String.format("%s:%d/api/data/datasets/%s/roleAssignment/%s",
+                             testServerHost, testServerPort, datasetName, permissionId);
     }
 }

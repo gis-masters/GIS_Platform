@@ -7,9 +7,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
+import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.resources.DatasetService;
@@ -73,7 +73,7 @@ public class DatasetPermissionsController {
     @DeleteMapping("/datasets/{datasetId}/roleAssignment/{permissionId}")
     public ResponseEntity<Object> deleteDatasetPermission(@PathVariable String datasetId,
                                                           @PathVariable Long permissionId) {
-        permissionsService.deleteById(permissionId);
+        permissionsService.deleteById(schemasAndTablesQualifier, permissionId);
 
         return ResponseEntity.noContent().build();
     }
