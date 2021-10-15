@@ -6,13 +6,13 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
 
-import { copyToClipboard } from '../../services/util/clipboard.util';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { Toast } from '../Toast/Toast';
-import { services } from '../../services/services';
-import { getFeatureLayer } from '../../services/geoserver/layers.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { MAP_QUERY_PARAMS_DELIMITER } from '../../services/map/map-link-following.service';
+import { getFeatureLayer } from '../../services/geoserver/layers.service';
+import { copyToClipboard } from '../../services/util/clipboard.util';
+import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { services } from '../../services/services';
+import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./CopyUrlButton.scss';
 

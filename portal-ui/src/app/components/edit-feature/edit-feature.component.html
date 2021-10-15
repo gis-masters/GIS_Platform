@@ -1,9 +1,14 @@
 <div class="container-fluid edit-feature">
-  <div class="row" style="padding-top: 5px;
-  padding-bottom: 5px;
+  <div
+    class="row"
+    style="
+      padding-top: 5px;
+      padding-bottom: 5px;
 
-  background-color: gainsboro;">
-    <div class="col-12" style=" padding-right: 5px; padding-left: 5px;">
+      background-color: gainsboro;
+"
+  >
+    <div class="col-12" style="padding-right: 5px; padding-left: 5px;">
       <button
         *ngIf="updatingAllowed"
         mat-stroked-button
@@ -61,6 +66,11 @@
       *ngIf="mode === 'single' && !isNew && features"
     >
     </crg-zoom-to-feature>
+
+    <crg-open-in-another-project
+      *ngIf="mode === 'single' && !isNew && features"
+      [features]="features"
+    ></crg-open-in-another-project>
   </div>
 </div>
 

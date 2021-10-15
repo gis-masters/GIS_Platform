@@ -71,6 +71,7 @@ import { CopyUrlButtonComponent } from './components/copy-url-button/copy-url-bu
 import { ExportValidationReportButtonComponent } from './components/export-validation-report-button/export-validation-report-button.component';
 import { LoginFormDialogComponent } from './components/login-form-dialog/login-form-dialog.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
+import { OpenInAnotherProjectComponent } from './components/open-in-another-project/open-in-another-project.component';
 
 @NgModule({
   declarations: [
@@ -123,7 +124,8 @@ import { LoginFormComponent } from './components/login-form/login-form.component
     MapToolbarComponent,
     CopyUrlButtonComponent,
     ExportValidationReportButtonComponent,
-    LoginFormComponent
+    LoginFormComponent,
+    OpenInAnotherProjectComponent
   ],
   imports: [
     HttpClientModule,
