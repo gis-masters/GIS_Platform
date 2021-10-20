@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import {
   Accordion,
@@ -17,12 +18,10 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-
 import { KeyboardArrowDown, Warning } from '@mui/icons-material';
-import { CrgProject } from '../../services/crg/projects.models';
-import { Button } from '../Button/Button';
-import { TableReport } from '../ImportGml/ImportGml';
 import { Link } from '../Link/Link';
+import { Button } from '../Button/Button';
+import { ImportResult } from '../../services/crg/processes.service';
 
 import '!style-loader!css-loader!sass-loader!./ImportGmlResultDialog.scss';
 
@@ -31,34 +30,32 @@ const cnImportGmlResultDialog = cn('ImportGmlResultDialog');
 interface ImportGmlResultDialogProps {
   open: boolean;
   onClose(): void;
-  projectIsNew: boolean;
-  project?: CrgProject;
-  reports: TableReport[];
+  reports: ImportResult;
 }
 
+@observer
 export class ImportGmlResultDialog extends Component<ImportGmlResultDialogProps> {
   render() {
-    const { open, reports, onClose, projectIsNew, project } = this.props;
-
-    if (!project || !reports) {
-      return null;
-    }
+    const { open, reports, onClose } = this.props;
+    const { projectIsNew, projectId, projectName, importLayerReports } = reports;
 
     return (
       <Dialog open={open} onClose={onClose} PaperProps={{ className: cnImportGmlResultDialog() }}>
         <DialogTitle>Импорт завершён</DialogTitle>
         <DialogContent>
           <DialogContentText>Данные загружены в {projectIsNew && 'новый'} проект:</DialogContentText>
-          <DialogContentText>
-            <Link url={`/projects/${project.id}/map`}>{project.name}</Link>
-          </DialogContentText>
+          {projectId && (
+            <DialogContentText>
+              <Link url={`/projects/${projectId}/map`}>{projectName}</Link>
+            </DialogContentText>
+          )}
           <Accordion>
-            <AccordionSummary expandIcon={<KeyboardArrowDown />} aria-controls='panel1a-content' id='panel1a-header'>
+            <AccordionSummary expandIcon={<KeyboardArrowDown />}>
               <Typography>Отчёт по загруженным объектам</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <List className={cnImportGmlResultDialog('ReportList')}>
-                {reports.map(reportItem => {
+                {importLayerReports.map(reportItem => {
                   if (reportItem.success) {
                     return (
                       <ListItem key={reportItem.tableIdentifier}>
@@ -69,7 +66,7 @@ export class ImportGmlResultDialog extends Component<ImportGmlResultDialogProps>
                       </ListItem>
                     );
                     // eslint-disable-next-line eqeqeq
-                  } else if (!reportItem.success && reportItem.successCount == 0 && reportItem.reason) {
+                  } else if (!reportItem.success && reportItem.successCount === 0 && reportItem.reason) {
                     return (
                       <ListItem key={reportItem.schemaId}>
                         <ListItemText primary={reportItem.tableTitle} secondary={reportItem.schemaId} />

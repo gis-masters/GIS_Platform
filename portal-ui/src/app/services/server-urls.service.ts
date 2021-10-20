@@ -180,6 +180,10 @@ export async function getProcessUrl(processId: number): Promise<string> {
   return `${await getDataUrl()}/processes/${processId}`;
 }
 
+export async function getProcessesUrl(): Promise<string> {
+  return `${await getDataUrl()}/processes`;
+}
+
 export async function getApiImportUrl(projectId: number): Promise<string> {
   return `${await getDataUrl()}/import/${projectId}`;
 }

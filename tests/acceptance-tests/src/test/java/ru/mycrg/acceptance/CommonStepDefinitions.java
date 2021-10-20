@@ -105,7 +105,7 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
     public void checkNonExistentField(String entity, String field) {
         getBaseRequestWithCurrentCookie()
                 .when().
-                get(String.format("%s/", entity))
+                        get(String.format("%s/", entity))
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
@@ -113,7 +113,7 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("В ответе пункт {string} имеет значение {string}")
-    public void checkValueInTheField(String field, String value) {
-        assertEquals(value, response.jsonPath().get(field));
+    public void checkResponseValue(String field, String value) {
+        super.checkResponseValue(field, value);
     }
 }

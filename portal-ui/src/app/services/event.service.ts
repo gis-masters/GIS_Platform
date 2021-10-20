@@ -2,9 +2,11 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, publishReplay, refCount } from 'rxjs/operators';
 import { remove } from 'lodash';
 
+import { ProcessType } from './models';
 import { generateRandomId } from './util/randomId';
 import { IWsMessage, wsService } from './ws.service';
-import { ProcessType } from './models';
+import { WsImportGmlModel } from './crg/processes.service';
+import { communicationService } from './communication.service';
 
 // Пока события будут завязаны на IWsMessage
 export interface IEvent {
@@ -54,6 +56,8 @@ class EventService {
       return msg.type === ProcessType.EXPORT;
     } else if (msg.type === 'VALIDATION_REPORT') {
       return msg.type === ProcessType.VALIDATION_REPORT;
+    } else if (msg.type === 'IMPORT_GML') {
+      return msg.type === ProcessType.IMPORT_GML;
     }
   }
 
@@ -84,6 +88,7 @@ class EventService {
     }
 
     this.update(events);
+    this.analyzeEvents(events);
   }
 
   /**
@@ -108,6 +113,18 @@ class EventService {
     const events = localStorage.getItem(this.EVENTS_KEY);
 
     return JSON.parse(events) as IEvent[];
+  }
+
+  private analyzeEvents(events: IEvent[]) {
+    events.forEach(event => {
+      const { type, payload } = event.payload;
+      if (type === 'IMPORT_GML' && (payload.status === 'DONE' || payload.status === 'ERROR')) {
+        const importGml = payload as WsImportGmlModel;
+        if (importGml.payload.projectIsNew) {
+          communicationService.projectsUpdated.emit();
+        }
+      }
+    });
   }
 }
 

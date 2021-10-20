@@ -18,13 +18,13 @@ public class WsNotificationService {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    public void send(@NotNull WsMessageDto<Object> payload, @NotNull String userId) {
-        if (userId.isEmpty()) {
-            throw new IllegalArgumentException("Invalid userId: " + userId);
+    public void send(@NotNull WsMessageDto<Object> payload, String wsUiId) {
+        if (wsUiId == null || wsUiId.isBlank()) {
+            throw new IllegalArgumentException("Invalid wsUiId: " + wsUiId);
         }
 
-        simpMessagingTemplate.convertAndSend("/topic/" + userId + "/events", payload);
+        simpMessagingTemplate.convertAndSend("/topic/" + wsUiId + "/events", payload);
 
-        log.debug("WS. Msg type: {} Send to: /topic/{}/events", payload.getType(), userId);
+        log.debug("WS. Msg type: {} Send to: /topic/{}/events", payload.getType(), wsUiId);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.TablesDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.IResourceModel;
+import ru.mycrg.data_service.entity.RecordImpl;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -21,7 +22,10 @@ import ru.mycrg.data_service.util.ImportValidationHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -82,7 +86,7 @@ public class ImportMp implements Importer {
             Map<String, Object> dataForSavingToDBValid = ImportValidationHandler
                     .removeNonMatchingBySchemaProperties(dataForSavingToDB, crossedProperties);
 
-            return tablesDao.addRecord(table, dataForSavingToDBValid);
+            return tablesDao.addRecord(table, new RecordImpl(dataForSavingToDBValid)).getId();
         } catch (CrgDaoException e) {
             log.error(e.getMessage());
 

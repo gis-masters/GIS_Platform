@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.dto.Record;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.sql.ResultSet;
@@ -43,13 +44,13 @@ public class TablesDao {
         this.pJdbcTemplate = parameterJdbcTemplate;
     }
 
-    public Long addRecord(@NotNull ResourceQualifier rIdentifier,
-                          @NotNull Map<String, Object> body) throws CrgDaoException {
+    public IRecord addRecord(@NotNull ResourceQualifier rIdentifier,
+                             @NotNull IRecord record) throws CrgDaoException {
         try {
             final DbTable table = getSimpleDbTable(rIdentifier);
             final InsertQuery insertQuery = new InsertQuery(table);
 
-            body.forEach((key, value) -> {
+            record.getContent().forEach((key, value) -> {
                 final DbColumn dbColumn = table.addColumn(key);
 
                 insertQuery.addColumn(dbColumn, value);
@@ -59,7 +60,11 @@ public class TablesDao {
 
             log.debug("INSERT QUERY: [{}]", query);
 
-            return pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
+            final Long id = pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
+
+            record.getContent().put(ID.getName(), id);
+
+            return record;
         } catch (DataAccessException e) {
             String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'. %s",
                                        rIdentifier, e.getCause().getMessage());

@@ -110,7 +110,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @And("в заголовке Location передает ID созданного пользователя")
     public void extractUserIdFromLocation() {
-        userId = extractIdFromLocation();
+        userId = extractId(response.getHeader("Location"));
 
         userPool.put(userId, userDto);
     }

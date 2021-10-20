@@ -69,7 +69,9 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
         </Tooltip>
         <ChooseXTableDialog<CrgProject>
           title='Выбор проекта'
-          actionLabel='Открыть'
+          actionButtonProps={{
+            children: 'Открыть'
+          }}
           items={this.projects}
           cols={this.cols}
           defaultSort={this.sortParams}

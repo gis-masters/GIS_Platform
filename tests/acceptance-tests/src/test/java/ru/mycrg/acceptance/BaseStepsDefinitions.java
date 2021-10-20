@@ -119,10 +119,9 @@ public class BaseStepsDefinitions {
         return getBaseRequest(port);
     }
 
-    public Integer extractIdFromLocation() {
-        String header = response.getHeader("Location");
+    public Integer extractId(String target) {
         Pattern pattern = Pattern.compile("\\d+$");
-        Matcher matcher = pattern.matcher(header);
+        Matcher matcher = pattern.matcher(target);
 
         Integer id = null;
 
@@ -135,14 +134,18 @@ public class BaseStepsDefinitions {
         return id;
     }
 
-    public String generateString(String input) {
-        String[] params = input.split("_");
+    public String generateString(String controlKey) {
+        if (controlKey.equals("NULL")) {
+            return null;
+        }
+
+        String[] params = controlKey.split("_");
         String type = params[0];
         int length;
 
         try {
             if (params.length == 1) {
-                return input;
+                return controlKey;
             } else {
                 length = Integer.parseInt(params[1]);
             }
@@ -158,7 +161,7 @@ public class BaseStepsDefinitions {
             case "EMAIL":
                 return String.format("%s@t", random((length - 2), true, true).toLowerCase());
             default:
-                return input;
+                return controlKey;
         }
     }
 
@@ -352,6 +355,10 @@ public class BaseStepsDefinitions {
         layerGroupPool.clear();
         datasetsPool.clear();
         layerPool.clear();
+    }
+
+    public void checkResponseValue(String field, String value) {
+        assertEquals(value, response.jsonPath().get(field));
     }
 
     private void deleteEntity(Integer id) {

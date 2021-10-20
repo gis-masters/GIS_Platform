@@ -3,11 +3,6 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { ProjectsFilter } from '../Filter/Projects-Filter';
-import { ProjectsSortBy } from '../SortBy/Projects-SortBy';
-import { ProjectsSortOrder } from '../SortOrder/Projects-SortOrder';
-import { ProjectsAdd } from '../Add/Projects-Add';
-
 import '!style-loader!css-loader!sass-loader!./Projects-Header.scss';
 
 const cnProjectsHeader = cn('Projects', 'Header');
@@ -40,10 +35,7 @@ export class ProjectsHeader extends Component {
   render() {
     return (
       <div className={cnProjectsHeader({ stuck: this.stuck })} ref={this.ref}>
-        <ProjectsFilter />
-        <ProjectsSortBy />
-        <ProjectsSortOrder />
-        <ProjectsAdd />
+        {this.props.children}
       </div>
     );
   }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dto.TaskModel;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
-import ru.mycrg.data_service.service.ProcessService;
+import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service_contract.dto.import_.ImportMqResponse;
 import ru.mycrg.data_service_contract.queue.response.ImportResponseEvent;

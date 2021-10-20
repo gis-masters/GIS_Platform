@@ -88,7 +88,7 @@ class ProjectsService {
 
   private async fetchAllProjects() {
     const url = await getProjectsUrl();
-    const request = http.getPaged<CrgProject>(url);
+    const request = http.getPaged<CrgProject>(url, { cache: { disabled: true } });
 
     this.fetchingAllProjectsRequest = request;
 

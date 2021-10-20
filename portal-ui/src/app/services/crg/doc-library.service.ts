@@ -29,6 +29,7 @@ export interface LibraryRecord {
   content_type_id?: string;
   oktmo?: string;
   identifier?: string;
+  intents?: string;
 
   libraryId: string;
   schemaId: string;

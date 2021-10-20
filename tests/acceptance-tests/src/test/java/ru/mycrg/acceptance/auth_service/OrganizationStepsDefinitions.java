@@ -12,6 +12,8 @@ import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +43,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @And("В заголовке Location передается ID созданной организации")
     public void checkOrgIdInLocationSetAsCurrentPutInPool() {
-        orgId = super.extractIdFromLocation();
+        orgId = super.extractId(response.getHeader("Location"));
 
         orgPool.put(orgId, orgDto);
     }
@@ -116,6 +118,32 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             checkOrgIdInLocationSetAsCurrentPutInPool();
 
             waitUntilOrganizationSuccessfullyCreated(orgId);
+        }
+    }
+
+    /**
+     * Берем любую существующую организацию из пула. Создаём если пул организаций еще пуст.
+     */
+    @Given("Существует любая организация")
+    public void getExistOrg() throws InterruptedException {
+        final Iterator<Map.Entry<Integer, OrganizationCreateDto>> iterator = orgPool.entrySet().iterator();
+        if (iterator.hasNext()) {
+            Map.Entry<Integer, OrganizationCreateDto> entry = iterator.next();
+            orgId = entry.getKey();
+            orgDto = entry.getValue();
+        } else {
+            final List<String> data = new ArrayList<>();
+            data.add("ООО FizИКоровы");
+            data.add("1234567890");
+            data.add("Ivanov");
+            data.add("Ivan");
+            data.add("EMAIL_20");
+            data.add("testPassword1");
+
+            final List<List<String>> raw = new ArrayList<>();
+            raw.add(data);
+
+            initOrg(DataTable.create(raw));
         }
     }
 

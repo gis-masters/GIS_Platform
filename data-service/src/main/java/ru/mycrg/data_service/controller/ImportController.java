@@ -9,13 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dto.WorkImport;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.service.import_.ImportGml;
 import ru.mycrg.data_service.service.import_.ImportService;
 import ru.mycrg.data_service.service.import_.Importer;
-import ru.mycrg.data_service.service.import_.model.GmlInfo;
-import ru.mycrg.data_service.service.import_.model.ImportReport;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.validators.ImportParametersValidator;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -30,14 +26,11 @@ public class ImportController extends BaseController {
 
     private final List<Importer> importers;
     private final ImportService importService;
-    private final ImportGml importGml;
 
     public ImportController(List<Importer> importers,
-                            ImportService importService,
-                            ImportGml importGml) {
+                            ImportService importService) {
         this.importers = importers;
         this.importService = importService;
-        this.importGml = importGml;
     }
 
     @PostMapping("/import/{projectId}")
@@ -75,23 +68,5 @@ public class ImportController extends BaseController {
         Long objectId = importMp.doImport(file, table);
 
         return ResponseEntity.status(OK).body(objectId);
-    }
-
-    @PostMapping("/import/file/gml")
-    public ResponseEntity<ImportReport> importGml(@RequestParam("gmlFile") MultipartFile file,
-                                                  @RequestParam("oktmo") String oktmo,
-                                                  @RequestParam("documentType") String documentType,
-                                                  @RequestParam(value = "details", required = false) String details,
-                                                  @RequestParam("docDateApprove") String docDateApprove,
-                                                  @RequestParam("scale") Integer scale,
-                                                  @RequestParam("title") String title,
-                                                  @RequestParam(value = "invertCoordinates", required = false,
-                                                                defaultValue = "false") boolean invertCoordinates) {
-        GmlInfo doc = new GmlInfo(title, documentType, details, docDateApprove, scale, oktmo, invertCoordinates);
-        ImportParametersValidator.throwIfNotValid(doc, file);
-
-        ImportReport importReport = importGml.doImport(file, doc);
-
-        return ResponseEntity.status(OK).body(importReport);
     }
 }

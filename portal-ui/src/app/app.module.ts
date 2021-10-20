@@ -72,6 +72,7 @@ import { ExportValidationReportButtonComponent } from './components/export-valid
 import { LoginFormDialogComponent } from './components/login-form-dialog/login-form-dialog.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { OpenInAnotherProjectComponent } from './components/open-in-another-project/open-in-another-project.component';
+import { ImportGmlResultButtonComponent } from './components/import-gml-results-button/import-gml-result-button';
 
 @NgModule({
   declarations: [
@@ -125,7 +126,9 @@ import { OpenInAnotherProjectComponent } from './components/open-in-another-proj
     CopyUrlButtonComponent,
     ExportValidationReportButtonComponent,
     LoginFormComponent,
-    OpenInAnotherProjectComponent
+    OpenInAnotherProjectComponent,
+    LoginFormComponent,
+    ImportGmlResultButtonComponent
   ],
   imports: [
     HttpClientModule,

@@ -12,6 +12,9 @@
         <mat-icon class="content-link-icon info">archive</mat-icon>
         <span class="content-link-text">Скачать</span>
       </div>
+
+      <crg-import-gml-results-button [event]="event.payload"></crg-import-gml-results-button>
+
       <mat-icon class="info-close-icon" (click)="closeNotice()">delete</mat-icon>
     </div>
   </div>

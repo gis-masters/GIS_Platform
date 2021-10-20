@@ -10,7 +10,7 @@ import '!style-loader!css-loader!sass-loader!./Button.scss';
 
 const cnButton = cn('Button');
 
-interface ButtonProps extends BaseButtonProps {
+export interface ButtonProps extends BaseButtonProps {
   routerLink?: string;
   btnRef?: RefObject<HTMLButtonElement>;
 }

@@ -2,10 +2,10 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
 
-import { saveAsBlob } from '../../services/util/FileSaver';
-import { eventService, IEvent } from '../../services/event.service';
 import { DownloadFileService } from '../../services/download-file.service';
+import { eventService, IEvent } from '../../services/event.service';
 import { ProcessStatus, ProcessType } from '../../services/models';
+import { saveAsBlob } from '../../services/util/FileSaver';
 import { ExportWsMsg, IWsMessage } from '../../services/ws.service';
 
 @Component({
@@ -15,6 +15,8 @@ import { ExportWsMsg, IWsMessage } from '../../services/ws.service';
 })
 export class ProgressItemComponent implements OnDestroy {
   @Input() event: IEvent;
+
+  openResultDialog = false;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -34,7 +36,11 @@ export class ProgressItemComponent implements OnDestroy {
         return this.event.payload.payload.description;
       }
       case ProcessStatus.DONE: {
-        if (this.event.payload.type === ProcessType.EXPORT || this.event.payload.type === ProcessType.VALIDATION_REPORT) {
+        if (
+          this.event.payload.type === ProcessType.EXPORT ||
+          this.event.payload.type === ProcessType.VALIDATION_REPORT ||
+          this.event.payload.type === ProcessType.IMPORT_GML
+        ) {
           const layerName = this.event.payload.payload.description;
 
           return layerName ? layerName : 'Готово';
@@ -43,10 +49,10 @@ export class ProgressItemComponent implements OnDestroy {
         break;
       }
       case ProcessStatus.ERROR: {
-        return 'Ошибка экспорта';
+        return 'Процесс завершился ошибкой';
       }
       default: {
-        this.logger.warn('Unknown status');
+        this.logger.warn('Unknown status. Event is: ', this.event.payload);
 
         return '';
       }
@@ -90,6 +96,8 @@ export class ProgressItemComponent implements OnDestroy {
   }
 
   isShowDownloadLink(): boolean {
-    return this.event.payload.payload.status === ProcessStatus.DONE;
+    const { type, payload } = this.event;
+
+    return type !== ProcessType.IMPORT_GML && payload.payload.status === ProcessStatus.DONE;
   }
 }

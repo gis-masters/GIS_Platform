@@ -12,7 +12,9 @@ public enum SystemLibraryAttributes {
     SIZE("size"),
     PATH("path"),
     CONTENT_TYPE_ID("content_type_id"),
-    OKTMO("oktmo");
+    OKTMO("oktmo"),
+    INTENTS("intents"),
+    IS_FOLDER("is_folder");
 
     private final String name;
 

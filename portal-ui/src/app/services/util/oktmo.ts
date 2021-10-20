@@ -1,4 +1,4 @@
-import { PropertyOption } from '../../services/crg/schema.models';
+import { PropertyOption } from '../crg/schema.models';
 
 export const oktmo: PropertyOption[] = [
   { title: 'Муниципальные образования Республики Крым', value: '35000000' },

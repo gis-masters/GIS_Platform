@@ -151,7 +151,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Сервер передает ID созданной подложки")
     public void extractBaseMapIdFromLocation() {
-        baseMapId = extractIdFromLocation();
+        baseMapId = extractId(response.getHeader("Location"));
 
         baseMapsPool.put(baseMapId, baseMapDto);
     }

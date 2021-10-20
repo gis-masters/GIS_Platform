@@ -12,11 +12,12 @@ import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.TablesDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.Record;
-import ru.mycrg.data_service.entity.ITableObject;
-import ru.mycrg.data_service.entity.TableObjectImpl;
+import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.entity.RecordImpl;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentIntentHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -40,19 +41,22 @@ public class RecordsService {
     private final SystemAttributeHandler systemAttributeHandler;
     private final BasePermissionsRepository permissionsRepository;
     private final PermissionsService permissionsService;
+    private final SimpleIntentIntentHandler simpleIntentHandler;
 
     public RecordsService(TablesDao tablesDao,
                           FileStorageService fileStorageService,
                           DocumentLibraryService librariesService,
                           SystemAttributeHandler systemAttributeHandler,
                           BasePermissionsRepository permissionsRepository,
-                          PermissionsService permissionsService) {
+                          PermissionsService permissionsService,
+                          SimpleIntentIntentHandler simpleIntentHandler) {
         this.tablesDao = tablesDao;
         this.fileStorageService = fileStorageService;
         this.librariesService = librariesService;
         this.systemAttributeHandler = systemAttributeHandler;
         this.permissionsRepository = permissionsRepository;
         this.permissionsService = permissionsService;
+        this.simpleIntentHandler = simpleIntentHandler;
     }
 
     public Page<Record> getPaged(ResourceQualifier libraryTable,
@@ -90,21 +94,25 @@ public class RecordsService {
 
     public Map<String, Object> getById(ResourceQualifier resourceQualifier, Long recordId) {
         return tablesDao.findById(resourceQualifier, recordId)
-                        .orElseThrow(() -> new NotFoundException(recordId));
+                        .orElseThrow(() -> new NotFoundException(resourceQualifier, recordId));
     }
 
     @Transactional
-    public ITableObject createRecord(ResourceQualifier tableQualifier,
-                                     Map<String, Object> body,
-                                     MultipartFile file) {
+    public IRecord createRecord(ResourceQualifier tableQualifier,
+                                RecordImpl record,
+                                MultipartFile file) {
         try {
+            log.debug("try create record: {}", record);
+
             String innerFileName = UUID.randomUUID().toString();
 
             final SchemaDto schema = librariesService.getSchema(tableQualifier.getTable());
 
             systemAttributeHandler.initSchema(schema)
-                                  .addDefaultPath(body)
-                                  .fillTimes(body);
+                                  .fillByContentType(record.getContent())
+                                  .addDefaultPath(record.getContent())
+                                  .fillCreator(record.getContent())
+                                  .fillTimes(record.getContent());
 
             if (file != null) {
                 if (file.isEmpty()) {
@@ -112,16 +120,17 @@ public class RecordsService {
                 }
 
                 systemAttributeHandler.initSchema(schema)
-                                      .fillFileInfo(body, file)
-                                      .fillFileInnerName(body, innerFileName);
+                                      .fillFileInfo(record.getContent(), file)
+                                      .fillFileInnerName(record.getContent(), innerFileName);
 
                 fileStorageService.storeFile(file, innerFileName);
             }
 
-            final Long id = tablesDao.addRecord(tableQualifier, body);
-            permissionsService.addOwnerPermission(tableQualifier, id);
+            simpleIntentHandler.updateIntents(record);
+            IRecord newRecord = tablesDao.addRecord(tableQualifier, record);
+            permissionsService.addOwnerPermission(tableQualifier, record.getId());
 
-            return new TableObjectImpl(id);
+            return newRecord;
         } catch (CrgDaoException e) {
             throw new DataServiceException(e.getMessage(), e.getCause());
         }

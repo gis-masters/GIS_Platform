@@ -1,21 +1,29 @@
 import React, { Component, createRef } from 'react';
-import { action, observable } from 'mobx';
+import { AxiosError } from 'axios';
 import { observer } from 'mobx-react';
+import { action, observable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { AddBoxOutlined } from '@mui/icons-material';
 
 import { communicationService } from '../../services/communication.service';
 import { projectsService } from '../../services/crg/projects.service';
 import { CrgProject } from '../../services/crg/projects.models';
 import { allProjects } from '../../stores/AllProjects.store';
+import { ProjectsAdd } from '../ProjectAdd/ProjectsAdd';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { sleep } from '../../services/util/sleep';
+import { Toast } from '../Toast/Toast';
 
+import { ProjectsFilter } from './Filter/Projects-Filter';
 import { ProjectsLoader } from './Loader/Projects-Loader';
 import { ProjectsHeader } from './Header/Projects-Header';
 import { ProjectsList } from './List/Projects-List';
+import { ProjectsSortBy } from './SortBy/Projects-SortBy';
+import { ProjectsSortOrder } from './SortOrder/Projects-SortOrder';
 
 import '!style-loader!css-loader!sass-loader!./Projects.scss';
+import '!style-loader!css-loader!sass-loader!./Add/Projects-Add.scss';
 
 const cnProjects = cn('Projects');
 
@@ -23,7 +31,11 @@ const cnProjects = cn('Projects');
 export class Projects extends Component {
   private thisRef = createRef<HTMLDivElement>();
   private newProjectRef = createRef<HTMLDivElement>();
+
   @observable private newProjectId = 0;
+  @observable private addFormBusy = false;
+  @observable private addFormOpen = false;
+  @observable private addFormErrors: string[] = [];
 
   async componentDidMount() {
     await projectsService.initAllProjectsStore();
@@ -42,7 +54,26 @@ export class Projects extends Component {
           <ProjectsLoader />
         ) : (
           <>
-            <ProjectsHeader />
+            <ProjectsHeader>
+              <ProjectsFilter />
+              <ProjectsSortBy />
+              <ProjectsSortOrder />
+              <ProjectsAdd
+                className={cnProjects('Add')}
+                busy={this.addFormBusy}
+                onSubmit={this.handleProjectCreation}
+                onChange={this.setErrors}
+                onClose={this.closeAddForm}
+                onOpen={this.openAddForm}
+                open={this.addFormOpen}
+                errors={this.addFormErrors}
+                buttonProps={{
+                  variant: 'contained',
+                  color: 'primary',
+                  startIcon: <AddBoxOutlined />
+                }}
+              />
+            </ProjectsHeader>
             <ProjectsList>
               {allProjects.displayedList.map((project, i) => (
                 <ProjectCard
@@ -79,5 +110,66 @@ export class Projects extends Component {
   @action
   private setNewProjectId(id: number) {
     this.newProjectId = id;
+  }
+
+  @boundMethod
+  private async handleProjectCreation(name: string) {
+    if (this.addFormBusy) {
+      return;
+    }
+
+    this.setErrors([]);
+    this.setBusy(true);
+
+    try {
+      const newProject = await projectsService.create(name);
+      communicationService.projectsUpdated.emit();
+      communicationService.allProjectsFetched.once(() => {
+        communicationService.projectCreated.emit(newProject);
+      });
+      Toast.success('Проект создан');
+
+      this.closeAddForm();
+    } catch (error) {
+      const err = error as AxiosError<{ errors: Record<string, unknown>[] }>;
+      if (err.response?.status === 409) {
+        this.setErrors([err?.message]);
+      } else {
+        const errors = [];
+        err.response?.data?.errors?.forEach(({ message }) => {
+          if (message) {
+            errors.push(message as string);
+          }
+        });
+
+        if (!errors.length) {
+          errors.push('Не удалось создать проект');
+        }
+
+        this.setErrors(errors);
+      }
+    } finally {
+      this.setBusy(false);
+    }
+  }
+
+  @action.bound
+  private closeAddForm() {
+    this.addFormOpen = false;
+  }
+
+  @action.bound
+  private openAddForm() {
+    this.addFormOpen = true;
+  }
+
+  @action.bound
+  setErrors(errors: string[] = []): void {
+    this.addFormErrors = errors;
+  }
+
+  @action
+  private setBusy(busy: boolean) {
+    this.addFormBusy = busy;
   }
 }

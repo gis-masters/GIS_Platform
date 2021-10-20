@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service;
+package ru.mycrg.data_service.service.processes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
@@ -13,6 +13,7 @@ import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.ProcessRepository;
+import ru.mycrg.data_service.service.JsonConverter;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import javax.validation.constraints.NotNull;
@@ -85,6 +86,14 @@ public class ProcessService {
         log.info("Successfully complete process: {} / {}", process.getId(), process.getTitle());
     }
 
+    public void error(String dbName, Long processId, JsonNode details) {
+        try {
+            processDao.updateDetailsAndStatus(processId, ERROR, dbName, details);
+        } catch (SQLException e) {
+            log.error("Failed to complete with error process: {}. Reason: {}", processId, e.getMessage(), e.getCause());
+        }
+    }
+
     public void error(String dbName, Process process) {
         processDao.updateStatus(process.getId(), ERROR, dbName);
 
@@ -111,10 +120,6 @@ public class ProcessService {
         }
     }
 
-    public boolean isUserOwnProcess(String userName, long id) {
-        return userName.equals(getById(id).getUserName());
-    }
-
     @NotNull
     public String getWsUiId(Process process) {
         try {
@@ -133,6 +138,27 @@ public class ProcessService {
             }
         } catch (Exception e) {
             throw new DataServiceException("");
+        }
+    }
+
+    @NotNull
+    public String getValueFromExtra(Process process, String key) {
+        try {
+            JsonNode extra = process.getExtra();
+            if (extra != null) {
+                final JsonNode jsonNode;
+                if (extra.isValueNode()) {
+                    jsonNode = mapper.readTree(extra.asText());
+                } else {
+                    jsonNode = mapper.readTree(extra.toString());
+                }
+
+                return jsonNode.get(key).asText();
+            } else {
+                throw new DataServiceException("Failed to get value from process by key: " + key);
+            }
+        } catch (Exception e) {
+            throw new DataServiceException("Failed to get value from process by key: " + key);
         }
     }
 }

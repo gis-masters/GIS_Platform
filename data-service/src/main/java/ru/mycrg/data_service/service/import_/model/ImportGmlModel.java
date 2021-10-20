@@ -1,23 +1,27 @@
 package ru.mycrg.data_service.service.import_.model;
 
-public class GmlInfo {
+import java.time.LocalDateTime;
+
+public class ImportGmlModel {
 
     private String title;
     private String documentType;
     private String details;
-    private String docDateApprove;
+    private LocalDateTime docDateApprove;
     private Integer scale;
     private String oktmo;
     private boolean invertCoordinates;
+    private String fileName;
 
-    public GmlInfo(String title, String documentType, String details, String docDateApprove, Integer scale,
-                   String oktmo, boolean invertCoordinates) {
+    public ImportGmlModel(String title, String documentType, String details, LocalDateTime docDateApprove,
+                          Integer scale, String oktmo, String fileName, boolean invertCoordinates) {
         this.title = title;
         this.documentType = documentType;
         this.details = details;
         this.docDateApprove = docDateApprove;
         this.scale = scale;
         this.oktmo = oktmo;
+        this.fileName = fileName;
         this.invertCoordinates = invertCoordinates;
     }
 
@@ -45,11 +49,11 @@ public class GmlInfo {
         this.details = details;
     }
 
-    public String getDocDateApprove() {
+    public LocalDateTime getDocDateApprove() {
         return docDateApprove;
     }
 
-    public void setDocDateApprove(String docDateApprove) {
+    public void setDocDateApprove(LocalDateTime docDateApprove) {
         this.docDateApprove = docDateApprove;
     }
 
@@ -75,5 +79,13 @@ public class GmlInfo {
 
     public void setInvertCoordinates(boolean invertCoordinates) {
         this.invertCoordinates = invertCoordinates;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

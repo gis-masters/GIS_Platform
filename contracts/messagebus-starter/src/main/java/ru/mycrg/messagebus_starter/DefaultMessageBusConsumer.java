@@ -1,8 +1,9 @@
 package ru.mycrg.messagebus_starter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusConsumer;
-import ru.mycrg.messagebus_contract.MessagebusException;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.toMap;
 
 public class DefaultMessageBusConsumer implements IMessageBusConsumer {
+
+    private final Logger log = LoggerFactory.getLogger(DefaultMessageBusConsumer.class);
 
     private final IEventHandler defaultHandler;
     private final Map<String, IEventHandler> eventHandlers;
@@ -34,9 +37,8 @@ public class DefaultMessageBusConsumer implements IMessageBusConsumer {
             eventHandlers.getOrDefault(event.getClass().getSimpleName(), defaultHandler)
                          .handle(event);
         } catch (Exception e) {
-            throw new MessagebusException(
-                    String.format("Failed consume event: %s:%s", event.getClass().getSimpleName(), event.getId()),
-                    e.getCause());
+            log.error(String.format("Failed consume event: %s:%s", event.getClass().getSimpleName(), event.getId()),
+                      e.getCause());
         }
     }
 }

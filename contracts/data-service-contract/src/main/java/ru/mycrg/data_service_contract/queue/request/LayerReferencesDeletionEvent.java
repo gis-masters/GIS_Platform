@@ -22,7 +22,6 @@ public class LayerReferencesDeletionEvent extends DefaultMessageBusRequestEvent 
         this.workspaceName = null;
     }
 
-
     public LayerReferencesDeletionEvent(String workspaceName, String datasetName, String tableName, String authToken) {
         super(UUID.randomUUID(), COMMON_REQUEST_QUEUE);
 

@@ -76,7 +76,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void shouldReturnCorrectLibraryPermissionLocation(String libraryName) {
         String url = response.getHeader("Location");
 
-        Integer permissionId = extractIdFromLocation();
+        Integer permissionId = extractId(response.getHeader("Location"));
 
         assertThat(url, equalTo(makeLibraryPermissionUrl(libraryName, permissionId)));
     }
@@ -89,7 +89,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
         libraryBasePermissions.addPermission(url, userId, "user", role);
 
-        currentPermission = extractIdFromLocation();
+        currentPermission = super.extractId(response.getHeader("Location"));
     }
 
     @Given("В тестовой библиотеке существует следующая структура каталогов: Вариант {int}")
@@ -133,7 +133,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
         libraryBasePermissions.addPermission(urlToFolder, userId, "user", "VIEWER");
 
-        currentPermission = extractIdFromLocation();
+        currentPermission = super.extractId(response.getHeader("Location"));
     }
 
     @Then("Пользователь не видит файлов и папок в тестовой библиотеке")
@@ -182,7 +182,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
         libraryBasePermissions.addPermission(urlToFile, userId, "user", "VIEWER");
 
-        currentPermission = extractIdFromLocation();
+        currentPermission = super.extractId(response.getHeader("Location"));
     }
 
     @Then("Пользователю становятся доступна только цепочка каталогов: folder_1->folder_1_1->folder_1_1_1, ведущая к файлу")

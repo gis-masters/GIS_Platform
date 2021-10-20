@@ -39,7 +39,7 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void shouldReturnCorrectDatasetPermissionLocation() {
         String url = response.getHeader("Location");
 
-        Integer permissionId = extractIdFromLocation();
+        Integer permissionId = extractId(response.getHeader("Location"));
         assertThat(url, equalTo(makeDatasetPermissionUrl(currentDatasetName, permissionId)));
     }
 

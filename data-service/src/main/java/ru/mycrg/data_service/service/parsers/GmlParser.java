@@ -10,6 +10,7 @@ import org.opengis.referencing.ReferenceIdentifier;
 import org.postgis.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,7 +58,7 @@ public class GmlParser {
         this.gml = new GML(GML.Version.GML3);
     }
 
-    public List<SimpleFeatureData> parseFeatureData(MultipartFile file) throws GMLException {
+    public List<SimpleFeatureData> parseFeatureData(Resource file) throws GMLException {
         try (SimpleFeatureIterator iter = gml.decodeFeatureIterator(file.getInputStream())) {
             return parseFeatures(iter);
         } catch (IOException | ParserConfigurationException | SAXException e) {
@@ -68,7 +69,7 @@ public class GmlParser {
         }
     }
 
-    public FeatureData parseAttributes(MultipartFile file, SchemaDto schema, boolean invertCoordinates)
+    public FeatureData parseAttributes(Resource file, SchemaDto schema, boolean invertCoordinates)
             throws GMLException {
         final String schemaName = schema.getOriginName();
         FeatureData result = new FeatureData();

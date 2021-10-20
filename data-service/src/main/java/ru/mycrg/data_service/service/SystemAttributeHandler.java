@@ -1,6 +1,8 @@
 package ru.mycrg.data_service.service;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +18,8 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Service
 public class SystemAttributeHandler {
+
+    private final Logger log = LoggerFactory.getLogger(SystemAttributeHandler.class);
 
     private final IAuthenticationFacade authenticationFacade;
 
@@ -76,6 +80,27 @@ public class SystemAttributeHandler {
     public SystemAttributeHandler fillFileInnerName(@NotNull Map<String, Object> body, String innerFileName) {
         if (attributeDefined(INNER_PATH)) {
             body.put(INNER_PATH.getName(), innerFileName);
+        }
+
+        return this;
+    }
+
+    public SystemAttributeHandler fillByContentType(@NotNull Map<String, Object> content) {
+        if (attributeDefined(CONTENT_TYPE_ID)) {
+            final String contentTypeId = String.valueOf(content.get(CONTENT_TYPE_ID.getName()));
+
+            schema.getContentTypes().stream()
+                  .filter(contentType -> contentType.getId().equals(contentTypeId))
+                  .findFirst()
+                  .ifPresent(contentType -> {
+                      if (contentType.getType().equals("FOLDER")) {
+                          content.put(IS_FOLDER.getName(), "true");
+                      } else if (contentType.getType().equals("DOCUMENT")) {
+                          content.put(IS_FOLDER.getName(), "false");
+                      } else {
+                          log.warn("Unknown CONTENT_TYPE_ID: {}", contentType.getType());
+                      }
+                  });
         }
 
         return this;

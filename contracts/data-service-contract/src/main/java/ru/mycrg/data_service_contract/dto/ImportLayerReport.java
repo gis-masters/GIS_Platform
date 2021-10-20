@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.import_.model;
+package ru.mycrg.data_service_contract.dto;
 
 public class ImportLayerReport {
 
@@ -9,9 +9,21 @@ public class ImportLayerReport {
     private String reason;
     private String tableIdentifier;
     private String tableTitle;
+    private String crs;
 
-    public ImportLayerReport(String schemaId) {
+    public ImportLayerReport() {
+        // Required
+    }
+
+    public ImportLayerReport(String schemaId, boolean isSuccess, String reason) {
         this.schemaId = schemaId;
+        this.success = isSuccess;
+        this.reason = reason;
+    }
+
+    public ImportLayerReport(String schemaId, String crs) {
+        this.schemaId = schemaId;
+        this.crs = crs;
     }
 
     public String getSchemaId() {
@@ -68,5 +80,27 @@ public class ImportLayerReport {
 
     public void setTableTitle(String tableTitle) {
         this.tableTitle = tableTitle;
+    }
+
+    public String getCrs() {
+        return crs;
+    }
+
+    public void setCrs(String crs) {
+        this.crs = crs;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"schemaId\":" + (schemaId == null ? "null" : "\"" + schemaId + "\"") + ", " +
+                "\"successCount\":\"" + successCount + "\"" + ", " +
+                "\"failedCount\":\"" + failedCount + "\"" + ", " +
+                "\"success\":\"" + success + "\"" + ", " +
+                "\"reason\":" + (reason == null ? "null" : "\"" + reason + "\"") + ", " +
+                "\"tableIdentifier\":" + (tableIdentifier == null ? "null" : "\"" + tableIdentifier + "\"") + ", " +
+                "\"tableTitle\":" + (tableTitle == null ? "null" : "\"" + tableTitle + "\"") + ", " +
+                "\"crs\":" + (crs == null ? "null" : "\"" + crs + "\"") +
+                "}";
     }
 }

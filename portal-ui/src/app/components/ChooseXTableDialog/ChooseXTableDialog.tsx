@@ -1,4 +1,4 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, ReactElement, ReactNode } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox, Dialog, DialogActions, DialogContent } from '@mui/material';
@@ -7,8 +7,10 @@ import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
 import { SortParams } from '../../services/util/sortObjects';
+import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
+import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
 import { XTable, XTableColumn } from '../XTable/XTable';
-import { Button } from '../Button/Button';
+import { Button, ButtonProps } from '../Button/Button';
 
 import { ChooseXTableDialogCheck } from './Check/ChooseXTableDialog-Check';
 import { ChooseXTableDialogTitle } from './Title/ChooseXTableDialog-Title';
@@ -20,7 +22,7 @@ const cnChooseXTableDialog = cn('ChooseXTableDialog');
 
 interface ChooseXTableDialogProps<T> {
   title: string;
-  actionLabel?: string;
+  actionButtonProps?: Omit<ButtonProps, 'ref'>;
   open: boolean;
   items: T[];
   selectedItems?: T[];
@@ -32,6 +34,7 @@ interface ChooseXTableDialogProps<T> {
   onSelect(items: T[]): void;
   getRowId: (rowData: T) => string | number;
   single?: boolean;
+  additionalAction?: ReactNode;
 }
 
 @observer
@@ -59,7 +62,17 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
   }
 
   render() {
-    const { title, open, items, defaultSort, secondarySortField, onClose, actionLabel, single } = this.props;
+    const {
+      title,
+      open,
+      items,
+      defaultSort,
+      secondarySortField,
+      onClose,
+      actionButtonProps = {},
+      single,
+      additionalAction
+    } = this.props;
 
     return (
       <Dialog PaperProps={{ className: cnChooseXTableDialog() }} open={open} onClose={onClose}>
@@ -78,12 +91,15 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
           />
         </DialogContent>
         <DialogActions>
-          {this.changed && (
-            <Button disabled={!this.selected.length} onClick={this.select} color='primary'>
-              {actionLabel || 'Выбрать'}
-            </Button>
-          )}
-          <Button onClick={onClose}>{this.changed ? 'Отмена' : 'Закрыть'}</Button>
+          <DialogActionsLeft>{additionalAction}</DialogActionsLeft>
+          <DialogActionsRight>
+            {this.changed && (
+              <Button disabled={!this.selected.length} onClick={this.select} color='primary' {...actionButtonProps}>
+                {actionButtonProps.children || 'Выбрать'}
+              </Button>
+            )}
+            <Button onClick={onClose}>{this.changed ? 'Отмена' : 'Закрыть'}</Button>
+          </DialogActionsRight>
         </DialogActions>
       </Dialog>
     );

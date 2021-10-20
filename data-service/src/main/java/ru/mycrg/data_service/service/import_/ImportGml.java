@@ -4,19 +4,16 @@ import net.bytebuddy.utility.RandomString;
 import org.geotools.gml.GMLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.data_service.dao.GeometryHelper;
 import ru.mycrg.data_service.dao.TablesDao;
-import ru.mycrg.data_service.dao.TablesManager;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.*;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.SchemaService;
-import ru.mycrg.data_service.service.import_.model.DataTable;
-import ru.mycrg.data_service.service.import_.model.GmlInfo;
-import ru.mycrg.data_service.service.import_.model.ImportLayerReport;
-import ru.mycrg.data_service.service.import_.model.ImportReport;
+import ru.mycrg.data_service.service.import_.exceptions.ImportException;
+import ru.mycrg.data_service.service.import_.model.ImportGmlModel;
 import ru.mycrg.data_service.service.parsers.GmlParser;
 import ru.mycrg.data_service.service.parsers.model.FeatureData;
 import ru.mycrg.data_service.service.parsers.model.FeatureObject;
@@ -27,15 +24,15 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service.service.validation.ValidationService;
 import ru.mycrg.data_service.util.CrgScriptEngine;
+import ru.mycrg.data_service_contract.dto.ImportLayerReport;
+import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service_contract.enums.ValueType.STRING;
 
 @Service
@@ -45,7 +42,7 @@ public class ImportGml {
 
     private final TablesDao tablesDao;
     private final SchemaService schemaService;
-    private final TablesManager tablesManager;
+    private final GeometryHelper geometryHelper;
     private final GmlParser gmlParser;
     private final DatasetService datasetService;
     private final ValidationService validationService;
@@ -54,15 +51,14 @@ public class ImportGml {
 
     public ImportGml(TablesDao tablesDao,
                      SchemaService schemaService,
-                     TablesManager tablesManager,
-                     GmlParser gmlParser,
+                     GeometryHelper geometryHelper, GmlParser gmlParser,
                      DatasetService datasetService,
                      ValidationService validationService,
                      CrgScriptEngine scriptEngine,
                      TableService tableService) {
         this.tablesDao = tablesDao;
         this.schemaService = schemaService;
-        this.tablesManager = tablesManager;
+        this.geometryHelper = geometryHelper;
         this.gmlParser = gmlParser;
         this.datasetService = datasetService;
         this.validationService = validationService;
@@ -70,52 +66,45 @@ public class ImportGml {
         this.tableService = tableService;
     }
 
-    public ImportReport doImport(MultipartFile file, GmlInfo gmlInfo) {
-        ImportReport importResult = new ImportReport();
-
-        LocalDate dateTime = LocalDate.parse(gmlInfo.getDocDateApprove());
-
-        ResourceCreateDto resource = new ResourceCreateDto(gmlInfo.getTitle(), gmlInfo.getDetails(),
-                                                           gmlInfo.getOktmo(), gmlInfo.getDocumentType(),
-                                                           dateTime.atStartOfDay(), gmlInfo.getScale());
-
-        DatasetModel createdDataset = datasetService.create(resource);
-        final String datasetIdentifier = createdDataset.getIdentifier();
-        importResult.setDatasetIdentifier(datasetIdentifier);
-
+    public ImportReport doImport(Resource file, ImportGmlModel importGmlModel) {
         try {
+            ImportReport importResult = new ImportReport();
+
+            ResourceCreateDto dataset = new ResourceCreateDto(importGmlModel.getTitle(),
+                                                              importGmlModel.getDetails(),
+                                                              importGmlModel.getOktmo(),
+                                                              importGmlModel.getDocumentType(),
+                                                              importGmlModel.getDocDateApprove(),
+                                                              importGmlModel.getScale());
+
+            DatasetModel createdDataset = datasetService.create(dataset);
+            final String datasetIdentifier = createdDataset.getIdentifier();
+            importResult.setDatasetIdentifier(datasetIdentifier);
+
             List<SimpleFeatureData> features = gmlParser.parseFeatureData(file);
-            List<DataTable> createdDataTables = new ArrayList<>();
             List<ImportLayerReport> importLayerReports = new ArrayList<>();
 
             getExistingSchemas(features, importLayerReports).forEach(schema -> {
                 Optional<String> oEpsg = getEpsg(features, schema);
-                if (oEpsg.isPresent()) {
-                    String epsgCode = oEpsg.get();
-                    ImportLayerReport importLayerReport = importLayer(file, epsgCode, schema, datasetIdentifier,
-                                                                      gmlInfo.isInvertCoordinates());
-                    DataTable dataTable = new DataTable(schema.getTitle(),
-                                                        importLayerReport.getTableIdentifier(),
-                                                        epsgCode,
-                                                        schema.getName());
+                if (oEpsg.isEmpty()) {
+                    return;
+                }
 
-                    if (importLayerReport.getSuccessCount() > 0 || Objects.nonNull(importLayerReport.getReason())) {
-                        importLayerReports.add(importLayerReport);
-                    }
-                    if (importLayerReport.isSuccess()) {
-                        createdDataTables.add(dataTable);
-                    }
+                ImportLayerReport importLayerReport = importLayer(file, oEpsg.get(), schema, datasetIdentifier,
+                                                                  importGmlModel.isInvertCoordinates());
+
+                if (importLayerReport.getSuccessCount() > 0 || Objects.nonNull(importLayerReport.getReason())) {
+                    importLayerReports.add(importLayerReport);
                 }
             });
 
             importResult.setImportLayerReports(importLayerReports);
-            importResult.setCreatedTables(createdDataTables);
 
             return importResult;
         } catch (GMLException e) {
-            throw new DataServiceException(e.getMessage());
+            throw new ImportException(e.getMessage());
         } catch (Exception e) {
-            throw new DataServiceException("Не удалось выполнить импорт. Причина: " + e.getMessage());
+            throw new ImportException("Не удалось выполнить импорт. Причина: " + e.getMessage());
         }
     }
 
@@ -127,22 +116,18 @@ public class ImportGml {
                        .map(SimpleFeatureData::getEpsgCode);
     }
 
-    private ImportLayerReport importLayer(MultipartFile file,
+    private ImportLayerReport importLayer(Resource file,
                                           String epsgCode,
                                           SchemaDto schema,
                                           String datasetIdentifier,
                                           boolean invertCoordinates) {
-        ImportLayerReport importLayerReport = new ImportLayerReport(schema.getName());
+        ImportLayerReport importLayerReport = new ImportLayerReport(schema.getName(), epsgCode);
 
         try {
             TableCreateDto tableCreateDto = new TableCreateDto(schema.getTitle());
             tableCreateDto.setName(schema.getName() + "_" + RandomString.make(6).toLowerCase());
             tableCreateDto.setSchemaId(schema.getName());
             tableCreateDto.setCrs(epsgCode);
-
-            final ResourceQualifier tableQualifier = new ResourceQualifier(datasetIdentifier, tableCreateDto.getName());
-
-            tableService.create(tableQualifier, tableCreateDto);
 
             FeatureData featureData = gmlParser.parseAttributes(file, schema, invertCoordinates);
 
@@ -151,18 +136,21 @@ public class ImportGml {
             }
 
             if (!featureData.getObjects().isEmpty()) {
-                final int addedRecords = addRecordsToTable(tableQualifier, featureData);
-                if (addedRecords > 0) {
+                ResourceQualifier tableQualifier = new ResourceQualifier(datasetIdentifier, tableCreateDto.getName());
+                tableService.create(tableQualifier, tableCreateDto);
+
+                int countOfAddedRecords = addRecordsToTable(tableQualifier, featureData);
+
+                geometryHelper.makeValid(tableQualifier.getSchema(), tableQualifier.getTable());
+
+                if (countOfAddedRecords > 0) {
                     runValidation(datasetIdentifier, schema.getName(), tableCreateDto.getName());
                 }
 
                 importLayerReport.setSuccess(true);
                 importLayerReport.setTableIdentifier(tableCreateDto.getName());
-                importLayerReport.setSuccessCount(addedRecords);
+                importLayerReport.setSuccessCount(countOfAddedRecords);
                 importLayerReport.setTableTitle(schema.getTitle());
-            } else {
-                // delete table if no any records
-                tablesManager.delete(tableQualifier);
             }
         } catch (BadRequestException e) {
             String message = String.format("Не удалось создать таблицу для слоя: %s", schema.getTitle());
@@ -188,8 +176,8 @@ public class ImportGml {
 
         for (SimpleFeatureData featureData: featureDataList) {
             Set<String> geometryTypes = featureData.getGeometryTypes();
-            String tableName = featureData.getSchemaName();
-            Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(tableName.toLowerCase());
+            String schemaName = featureData.getSchemaName();
+            Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(schemaName.toLowerCase());
 
             if (schemaByName.isPresent()) {
                 String geoTypeOfSchema = schemaByName.get().getGeometryType().getType();
@@ -207,17 +195,14 @@ public class ImportGml {
                     existedSchemas.add(schemaByName.get());
                     geometryTypes.remove(appropriateGeoTypeForSchema.get());
                 }
-                existedSchemas.addAll(findSchemasByPostfixAndName(geometryTypes, tableName));
+                existedSchemas.addAll(findSchemasByPostfixAndName(geometryTypes, schemaName));
             } else {
-                List<SchemaDto> tableByPostfixAndName = findSchemasByPostfixAndName(geometryTypes, tableName);
+                List<SchemaDto> tableByPostfixAndName = findSchemasByPostfixAndName(geometryTypes, schemaName);
                 if (tableByPostfixAndName.isEmpty()) {
-                    String msg = String.format("Схемы для таблицы %s не существует.", tableName);
-                    log.error(msg);
+                    String msg = String.format("Схемы для таблицы %s не существует.", schemaName);
+                    log.warn(msg);
 
-                    ImportLayerReport importLayerReport = new ImportLayerReport(tableName);
-                    importLayerReport.setSuccess(false);
-                    importLayerReport.setReason(msg);
-                    importLayerReports.add(importLayerReport);
+                    importLayerReports.add(new ImportLayerReport(schemaName, false, msg));
                 } else {
                     existedSchemas.addAll(tableByPostfixAndName);
                 }

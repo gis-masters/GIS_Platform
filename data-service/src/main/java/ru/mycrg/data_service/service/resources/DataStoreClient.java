@@ -26,7 +26,7 @@ public class DataStoreClient {
     private final HttpClient httpClient;
     private final IAuthenticationFacade authenticationFacade;
 
-    private final URL baseUrl;
+    private final URL gisServiceUrl;
 
     public DataStoreClient(Environment environment,
                            IAuthenticationFacade authenticationFacade) throws MalformedURLException {
@@ -34,17 +34,16 @@ public class DataStoreClient {
 
         httpClient = new HttpClient(new BaseRequestHandler(new OkHttpClient()));
 
-        baseUrl = new URL(environment.getRequiredProperty("crg-options.gis-service-url"));
+        gisServiceUrl = new URL(environment.getRequiredProperty("crg-options.gis-service-url"));
     }
 
     public ResponseModel<Object> create(String dataStoreName) {
         try {
             log.debug("Try create dataStore {} via gis-service on geoserver", dataStoreName);
 
-            // TODO: user geoserver client
             Request request = new Request.Builder()
                     .addHeader("Authorization", "Bearer " + authenticationFacade.getAccessToken())
-                    .url(new URL(baseUrl, "/geoserver/datastores/" + dataStoreName))
+                    .url(new URL(gisServiceUrl, "/geoserver/datastores/" + dataStoreName))
                     .post(RequestBody.create(MediaType.parse("application/json"), ""))
                     .build();
 
@@ -60,7 +59,7 @@ public class DataStoreClient {
 
             Request request = new Request.Builder()
                     .addHeader("Authorization", "Bearer " + authenticationFacade.getAccessToken())
-                    .url(new URL(baseUrl, "/geoserver/datastores/" + dataStoreName))
+                    .url(new URL(gisServiceUrl, "/geoserver/datastores/" + dataStoreName))
                     .delete().build();
 
             return httpClient.handleRequest(request);

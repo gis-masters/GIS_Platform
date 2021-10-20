@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.Record;
-import ru.mycrg.data_service.entity.ITableObject;
+import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.entity.RecordImpl;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
@@ -97,7 +98,7 @@ public class DocumentLibraryRecordsController {
         String schemaId = libraryService.getByTableName(docLibId).getSchemaId();
         schemaService.throwIfNotMathSchema(schemaId, body);
 
-        ITableObject record = recordsService.createRecord(libraryQualifier, body, file);
+        IRecord record = recordsService.createRecord(libraryQualifier, new RecordImpl(body), file);
 
         return new ResponseEntity<>(record, CREATED);
     }

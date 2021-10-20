@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
-import ru.mycrg.data_service.service.ProcessService;
+import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.dto.ValidationProcessModel;

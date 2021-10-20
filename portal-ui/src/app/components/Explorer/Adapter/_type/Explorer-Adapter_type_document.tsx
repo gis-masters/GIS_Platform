@@ -6,8 +6,9 @@ import { Toast } from '../../../Toast/Toast';
 import { services } from '../../../../services/services';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { docLibraryService, LibraryRecord } from '../../../../services/crg/doc-library.service';
 import { communicationService } from '../../../../services/communication.service';
+import { DocumentActionsWidget } from '../../../DocumentActionsWidget/DocumentActionsWidget';
+import { docLibraryService, LibraryRecord } from '../../../../services/crg/doc-library.service';
 
 import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -49,6 +50,10 @@ export class ExplorerAdapterTypeDocument {
 
   static getMeta(item: ExplorerItemData<LibraryRecord>): string {
     return String(item.payload.id);
+  }
+
+  static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
+    return <DocumentActionsWidget document={item.payload} />;
   }
 
   static getIcon(): ReactNode {

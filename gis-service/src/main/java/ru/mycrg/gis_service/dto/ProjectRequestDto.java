@@ -13,7 +13,11 @@ public class ProjectRequestDto {
     private String projectName;
 
     public ProjectRequestDto() {
-        //Required by framework
+        // Required by framework
+    }
+
+    public ProjectRequestDto(String projectName) {
+        this.projectName = projectName;
     }
 
     public String getProjectName() {

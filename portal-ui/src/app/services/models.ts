@@ -60,16 +60,13 @@ export interface ProcessTasks {
   error: string;
 }
 
-// Править в соответствии с: ru/mycrg/common/enums/ProcessType.java
+// Править в соответствии с: src/main/java/ru/mycrg/data_service_contract/enums/ProcessType.java
 export enum ProcessType {
-  CREATE_ORG = 'CREATE_ORG',
-  CREATE_PROJECT = 'CREATE_PROJECT',
-  DELETE_PROJECT = 'DELETE_PROJECT',
-
   IMPORT = 'IMPORT',
+  IMPORT_GML = 'IMPORT_GML',
   VALIDATION = 'VALIDATION',
-  EXPORT = 'EXPORT',
-  VALIDATION_REPORT = 'VALIDATION_REPORT'
+  VALIDATION_REPORT = 'VALIDATION_REPORT',
+  EXPORT = 'EXPORT'
 }
 
 // Править в соответствии с: ru/mycrg/common/enums/ProcessStatus.java
