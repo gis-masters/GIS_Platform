@@ -11,6 +11,8 @@ export class OrganizationService {
   async getProcessById(processId: number): Promise<Process> {
     const url = await getProcessUrl(processId);
 
-    return http.get<Process>(url);
+    return http.get<Process>(url, {
+      cache: { disabled: true }
+    });
   }
 }
