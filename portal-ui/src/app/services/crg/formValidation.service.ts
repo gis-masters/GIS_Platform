@@ -36,7 +36,7 @@ type FieldValidator = (
 
 const fieldValidators: Partial<Record<FieldType, FieldValidator[]>> = {
   string: [simpleRequired, stringLength, stringRegex, stringWellKnownRegex],
-  integer: [numberRequired, numberMinMax],
+  integer: [numberRequired, numberMinMax, numberInteger],
   float: [numberRequired, numberMinMax],
   bool: [simpleRequired],
   binary: [simpleRequired],
@@ -106,7 +106,7 @@ function stringLength(value: unknown, { maxLength, minLength }: PropertySchemaSt
   if (maxLength && String(value).length > maxLength) {
     errors.push(`Максимальное количество символов ${maxLength} `);
   }
-  if (minLength && String(value).length < minLength) {
+  if (minLength && String(value).length < minLength && String(value).length !== 0) {
     errors.push(`Минимальное количество символов ${minLength} `);
   }
 
@@ -133,6 +133,12 @@ function numberRequired(value: unknown, { required }: PropertySchema): string[] 
     !(typeof value === 'number' || (typeof value === 'string' && value && !Number.isNaN(Number(value))))
   ) {
     return [messages.required];
+  }
+}
+
+function numberInteger(value: number): string[] | undefined {
+  if (!Number.isNaN(value) && String(value).includes('.')) {
+    return ['Только целые числа'];
   }
 }
 

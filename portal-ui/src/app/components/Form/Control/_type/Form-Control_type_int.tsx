@@ -38,13 +38,10 @@ class FormControlTypeInt extends Component<FormControlProps> {
   @boundMethod
   private handleChange(event: React.ChangeEvent<{ value: unknown }>) {
     const { onChange, property } = this.props;
-    const { minValue, maxValue } = property as PropertySchemaInt;
+    const { maxValue } = property as PropertySchemaInt;
+    const targetValue = event.target.value;
 
-    let value = Number(event.target.value || 0);
-
-    if (typeof minValue === 'number' && value < minValue) {
-      value = minValue;
-    }
+    let value = targetValue ? Number(targetValue) : targetValue;
 
     if (typeof maxValue === 'number' && value > maxValue) {
       value = maxValue;
