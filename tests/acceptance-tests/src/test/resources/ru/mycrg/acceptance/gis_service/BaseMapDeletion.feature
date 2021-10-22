@@ -17,16 +17,22 @@ Feature: Удаление подложек проектов
       | baseMapId | title    | position |
       | NUMBER_5  | STRING_5 | NUMBER_2 |
 
-  Scenario Outline: Удаление подложки проекта пользователем организации
-    Given Существует организация
-      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
+  Scenario Outline: Удаление чужой подложки недопустимо
     Given Существует проект "STRING_15"
     Given Существует подложкa проекта "<baseMapId>", "<title>", "<position>"
-    Given Существует пользователь
-      | STRING_15 | STRING_15 | EMAIL_10 | testtestQ1 |
-    When Авторизируемся пользователем
+    Given Существует некий пользователь
     When Пользователь делает запрос на удаление текущей подложки текущего проекта
     Then Сервер отвечает со статус-кодом 403
+    Examples:
+      | baseMapId | title    | position |
+      | NUMBER_5  | STRING_5 | NUMBER_2 |
+
+  Scenario Outline: Владелец проекта может удалить подложку
+    Given Существует некий пользователь
+    Given Существует проект "STRING_15"
+    Given Существует подложкa проекта "<baseMapId>", "<title>", "<position>"
+    When Пользователь делает запрос на удаление текущей подложки текущего проекта
+    Then Сервер отвечает со статус-кодом 204
     Examples:
       | baseMapId | title    | position |
       | NUMBER_5  | STRING_5 | NUMBER_2 |

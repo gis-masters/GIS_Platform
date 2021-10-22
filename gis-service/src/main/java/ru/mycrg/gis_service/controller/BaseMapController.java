@@ -14,7 +14,6 @@ import javax.json.JsonMergePatch;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
@@ -48,7 +47,7 @@ public class BaseMapController {
     }
 
     @PostMapping("/basemaps")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<BaseMapProjection> addBaseMap(@PathVariable(name = "project_id") long projectId,
                                                         @Valid @RequestBody BaseMapCreateDto dto) {
         BaseMapProjection baseMap = baseMapService.create(projectId, dto);
@@ -57,7 +56,7 @@ public class BaseMapController {
     }
 
     @PatchMapping(path = "/basemaps/{base_map_id}", consumes = APPLICATION_JSON_MERGE_PATCH)
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> updateBaseMap(@PathVariable(name = "project_id") long projectId,
                                                 @PathVariable(name = "base_map_id") long baseMapId,
                                                 @RequestBody JsonMergePatch patchDto) {
@@ -69,7 +68,7 @@ public class BaseMapController {
     }
 
     @DeleteMapping("/basemaps/{id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> deleteBaseMap(@PathVariable(name = "project_id") long projectId,
                                                 @PathVariable(name = "id") long id) {
         baseMapService.delete(projectId, id);
