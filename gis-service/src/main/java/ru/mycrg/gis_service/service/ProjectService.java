@@ -15,7 +15,6 @@ import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
-import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
@@ -25,7 +24,10 @@ import ru.mycrg.gis_service.security.IAuthenticationFacade;
 import ru.mycrg.gis_service.security.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.audit_service_contract.dto.AuditEventActionsType.*;
@@ -172,12 +174,6 @@ public class ProjectService {
         final Long userId = authenticationFacade.getUserDetails().getUserId();
 
         log.info("Init create project: {} for organization: {}", dto.getProjectName(), orgId);
-
-        Optional<Project> projectWithSameName =
-                projectRepository.findByNameAndOrganizationId(dto.getProjectName(), orgId);
-        if (projectWithSameName.isPresent()) {
-            throw new ConflictException("Проект с таким именем уже существует");
-        }
 
         Project newProject = new Project(dto.getProjectName(), orgId);
         Project savedProject = projectRepository.save(newProject);

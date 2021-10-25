@@ -19,6 +19,4 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
     List<Project> findAllByOrganizationId(Long orgId);
 
     Optional<Project> findByIdAndOrganizationId(Long id, Long organizationId);
-
-    Optional<Project> findByNameAndOrganizationId(String name, Long organizationId);
 }
