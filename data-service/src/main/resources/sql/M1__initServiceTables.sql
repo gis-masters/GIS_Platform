@@ -22,21 +22,23 @@ CREATE TABLE IF NOT EXISTS data.base_maps
 
 CREATE TABLE IF NOT EXISTS data.schemas_and_tables
 (
-    id                  bigserial         NOT NULL,
-    title               character varying NOT NULL,
-    details             character varying(1024),
-    is_folder           boolean           NOT NULL,
-    identifier          character varying NOT NULL,
-    path                text,
-    items_count         integer DEFAULT 0,
-    schema_id           character varying(50),
-    crs                 character varying(20),
-    created_at          timestamp without time zone,
-    last_modified       timestamp without time zone,
-    oktmo               character varying(50),
-    scale               integer,
-    document_type       character varying(100),
-    doc_approve_date    timestamp without time zone,
+    id               bigserial         NOT NULL,
+    title            character varying NOT NULL,
+    details          character varying(1024),
+    is_folder        boolean           NOT NULL,
+    identifier       character varying NOT NULL,
+    path             text,
+    items_count      integer DEFAULT 0,
+    schema_id        character varying(50),
+    crs              character varying(20),
+    created_at       timestamp without time zone,
+    last_modified    timestamp without time zone,
+
+    oktmo            character varying(50),
+    scale            integer,
+    document_type    character varying(100),
+    doc_approve_date timestamp without time zone,
+
     CONSTRAINT schemas_and_tables_description_pkey PRIMARY KEY (id),
     CONSTRAINT schemas_and_tables_identifier_type UNIQUE (identifier, is_folder, path)
 ) TABLESPACE pg_default;
@@ -115,6 +117,100 @@ CREATE TABLE IF NOT EXISTS data.acl_permissions
         ON UPDATE NO ACTION
         ON DELETE CASCADE
 ) TABLESPACE pg_default;
+
+
+CREATE TABLE IF NOT EXISTS data.entity_description
+(
+    table_name                 character varying(64) NOT NULL,
+    title                      character varying,
+    description                character varying(500),
+    readonly                   boolean default false,
+    calc_fields_function       text,
+    entity_validation_function text,
+    CONSTRAINT entity_description_pkey PRIMARY KEY (table_name)
+) TABLESPACE pg_default;
+ALTER TABLE data.entity_description
+    OWNER to fiz;
+
+CREATE TABLE IF NOT EXISTS data.entity_properties
+(
+    -- Primary/Unique keys
+    id                            bigserial             NOT NULL,
+    name                          character varying(50),
+    property_type                 character varying(50) NOT NULL,
+    title                         character varying     NOT NULL,
+
+    -- common info
+    description                   character varying(500),
+    category                      character varying,
+    is_system_managed             boolean default false,
+    hidden                        boolean default false,
+    disabled                      boolean default false,
+    required                      boolean default false,
+    as_title                      boolean default false,
+    is_indexed                    boolean default false,
+
+    -- specific all
+    display                       character varying(50),
+    mask                          character varying,
+    min_length                    integer,
+    max_length                    integer,
+    well_know_regex               character varying(20),
+    regex                         character varying,
+    regex_error_message           character varying,
+    default_value                 character varying,
+    allow_multiple_values         boolean default false,
+    step                          integer default 1,
+    min_value                     double precision,
+    max_value                     double precision,
+    precision                     integer,
+    true_label                    character varying,
+    false_label                   character varying,
+    format                        character varying,
+    value_type                    character varying(50),
+    allow_fill_in                 boolean default false,
+    multiple                      boolean default false,
+    enable_preview                boolean default false,
+    well_know_formula             character varying(1000),
+    formula                       character varying(1000),
+    geometry_type                 character varying(50),
+    is_default_geometry           boolean default false,
+    lookup_table_name             character varying,
+    lookup_field_name             character varying,
+    additional_fields             character varying,
+    b_accept                      character varying,
+    b_max_size                    integer,
+    is_default                    boolean default false,
+    is_embedded                   boolean default false,
+    additional                    jsonb,
+    entity_description_table_name character varying(64),
+    entity_content_type_name      character varying(50),
+
+    -- system
+    created_by                    character varying(50),
+    created_at                    timestamp without time zone,
+    last_modified                 timestamp without time zone,
+
+    CONSTRAINT entity_properties_pkey PRIMARY KEY (id),
+    CONSTRAINT ukl6md4800a2xf7rbrq2qgmkprb UNIQUE (id, name, property_type, title)
+
+) TABLESPACE pg_default;
+ALTER TABLE data.entity_properties
+    OWNER to fiz;
+
+CREATE TABLE IF NOT EXISTS data.entity_content_types
+(
+    name                          character varying(50) NOT NULL,
+    type                          character varying(20) NOT NULL,
+    title                         character varying(100),
+    icon                          character varying(50),
+    entity_description_table_name character varying(64),
+
+    CONSTRAINT entity_content_types_pkey PRIMARY KEY (name)
+) TABLESPACE pg_default;
+ALTER TABLE data.entity_content_types
+    OWNER to fiz;
+
 
 INSERT INTO data.acl_roles (id, name)
 SELECT 10, 'VIEWER'

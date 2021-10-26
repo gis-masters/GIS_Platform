@@ -1,7 +1,6 @@
 package unit;
 
 import org.geotools.referencing.CRS;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,11 +12,9 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.postgis.Point;
 import ru.mycrg.data_service.util.EpsgCodes;
-import ru.mycrg.data_service.util.GeometryProjection;
 import ru.mycrg.data_service.util.TransformationGeometryUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;

@@ -8,15 +8,11 @@ public class PropertyBase extends SystemRequired {
     private boolean hidden;
     private boolean disabled;
     private boolean required;
-    private boolean isTitle;
+    private boolean asTitle;
     private boolean isIndexed;
 
     public PropertyBase() {
         super();
-    }
-
-    public PropertyBase(String name, PropertyType type, String title) {
-        super(name, type, title);
     }
 
     public String getDescription() {
@@ -67,12 +63,12 @@ public class PropertyBase extends SystemRequired {
         this.required = required;
     }
 
-    public boolean isTitle() {
-        return isTitle;
+    public boolean isAsTitle() {
+        return asTitle;
     }
 
-    public void setTitle(boolean title) {
-        isTitle = title;
+    public void setAsTitle(boolean asTitle) {
+        this.asTitle = asTitle;
     }
 
     public boolean isIndexed() {

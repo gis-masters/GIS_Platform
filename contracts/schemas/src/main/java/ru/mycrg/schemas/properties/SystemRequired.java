@@ -1,21 +1,24 @@
 package ru.mycrg.schemas.properties;
 
-public class SystemRequired {
+import ru.mycrg.schemas.IEntityProperty;
 
-    private String name;
+public class SystemRequired implements IEntityProperty {
+
     private PropertyType propertyType;
+    private String name;
     private String title;
 
     public SystemRequired() {
         // Required
     }
 
-    public SystemRequired(String name, PropertyType propertyType, String title) {
+    public SystemRequired(String name, PropertyType type, String title) {
         this.name = name;
-        this.propertyType = propertyType;
+        this.propertyType = type;
         this.title = title;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -24,14 +27,16 @@ public class SystemRequired {
         this.name = name;
     }
 
-    public PropertyType getFieldType() {
+    @Override
+    public PropertyType getPropertyType() {
         return propertyType;
     }
 
-    public void setFieldType(PropertyType propertyType) {
+    public void setPropertyType(PropertyType propertyType) {
         this.propertyType = propertyType;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }

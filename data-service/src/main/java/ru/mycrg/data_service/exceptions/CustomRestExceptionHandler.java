@@ -60,7 +60,8 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   final HttpHeaders headers,
                                                                   final HttpStatus status,
                                                                   final WebRequest request) {
-        final ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, "Not readable request body");
+        final ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST,
+                                                           "Not readable request body. Reason: " + ex.getMessage());
 
         return handleExceptionInternal(ex, errorModel, headers, errorModel.getStatus(), request);
     }
@@ -71,7 +72,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                                                         final HttpStatus status,
                                                         final WebRequest request) {
         final String errorMsg = String.format("%s value for %s should be of type %s",
-                ex.getValue(), ex.getPropertyName(), ex.getRequiredType());
+                                              ex.getValue(), ex.getPropertyName(), ex.getRequiredType());
 
         ErrorInfo error = new ErrorInfo(ex.getPropertyName(), errorMsg);
         final ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, ex.getLocalizedMessage(), error);
@@ -179,7 +180,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex,
                                                             final WebRequest request) {
         final List<ErrorInfo> errors = new ArrayList<>();
-        for (final ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+        for (final ConstraintViolation<?> violation: ex.getConstraintViolations()) {
             errors.add(new ErrorInfo(violation.getRootBeanClass().getName(), violation.getMessage()));
         }
 
@@ -234,7 +235,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         final BindingErrorsException bindEx = (BindingErrorsException) ex;
 
         final ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, bindEx.getMessage(),
-                mapBindingErrors(bindEx.getBindingResult()));
+                                                           mapBindingErrors(bindEx.getBindingResult()));
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
@@ -275,14 +276,14 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
     private List<ErrorInfo> mapBindingErrors(BindingResult bindingResult) {
         ArrayList<ErrorInfo> errors = bindingResult.getFieldErrors().stream()
-                .map(error -> new ErrorInfo(error.getField(), error.getDefaultMessage()))
-                .collect(Collectors.toCollection(ArrayList::new));
+                                                   .map(error -> new ErrorInfo(error.getField(),
+                                                                               error.getDefaultMessage()))
+                                                   .collect(Collectors.toCollection(ArrayList::new));
 
         bindingResult.getGlobalErrors().stream()
-                .map(error -> new ErrorInfo(error.getObjectName(), error.getDefaultMessage()))
-                .forEach(errors::add);
+                     .map(error -> new ErrorInfo(error.getObjectName(), error.getDefaultMessage()))
+                     .forEach(errors::add);
 
         return errors;
     }
-
 }

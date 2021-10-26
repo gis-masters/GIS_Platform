@@ -45,6 +45,7 @@ public class DocumentLibraryController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public Object getLibrary(@PathVariable String docLibId) {
         DocumentLibrary documentLibrary = librariesService.getByTableName(docLibId);
+
         return ResponseEntity.ok(documentLibrary);
     }
 

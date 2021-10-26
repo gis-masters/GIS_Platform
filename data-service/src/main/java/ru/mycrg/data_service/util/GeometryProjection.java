@@ -7,6 +7,7 @@ public class GeometryProjection {
     private String proj4text;
 
     public GeometryProjection() {
+        // Required
     }
 
     public Integer getSrid() {
