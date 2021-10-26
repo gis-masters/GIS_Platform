@@ -12,7 +12,7 @@ import { fetchBasemaps } from '../../services/crg/basemaps.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { fromMobx } from '../../services/util/fromMobx';
 import { sidebars } from '../../stores/Sidebars.store';
-import { mapLinkFollowing } from '../../services/map/map-link-following.service';
+import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
 import { route } from '../../stores/Route.store';
 import { services } from '../../services/services';
 import { printSettings } from '../../stores/PrintSettings.store';
@@ -45,7 +45,7 @@ export class MapComponent implements OnInit, OnDestroy {
     await fetchBasemaps();
 
     mapService.createMap();
-    await mapLinkFollowing.setQueryParams();
+    await applyMapStateFromNavigator();
 
     // Позиционируемся по BBOX проекта
     if (currentProject.bbox && !route.queryParams.center) {

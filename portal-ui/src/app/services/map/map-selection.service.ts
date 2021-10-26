@@ -301,7 +301,9 @@ class MapSelectionService {
             .map(feature => {
               return `${feature.id}${MAP_QUERY_PARAMS_DELIMITER}${getFeatureLayer(feature).complexName}`;
             })
-            .join(',')
+            .join(','),
+          queryFilter: null,
+          queryLayers: null
         },
         queryParamsHandling: 'merge'
       });
@@ -311,7 +313,11 @@ class MapSelectionService {
       sidebars.closeFeatures();
       sidebars.closeEdit();
       await services.router.navigate([location.pathname], {
-        queryParams: { features: null },
+        queryParams: {
+          features: null,
+          queryFilter: null,
+          queryLayers: null
+        },
         queryParamsHandling: 'merge'
       });
     }

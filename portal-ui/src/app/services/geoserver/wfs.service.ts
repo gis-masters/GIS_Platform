@@ -13,13 +13,12 @@ import { getGeoServerUrl, getWfsUrl } from '../server-urls.service';
 import { generateFilter, generateSortParam } from './wfs.util';
 import { RequestAttribute } from '../models';
 import { http } from '../http.service';
+import { Mime } from '../util/Mime';
 
 export const WFS_FEATURE_ID_DELIMITER = '.';
 
 type Coords = Coordinate | Coordinate[][] | Coordinate[][][];
 type CoordsEdited = CoordinateEdited | CoordinateEdited[][] | CoordinateEdited[][][];
-
-const JSON_MIME = 'application/json';
 
 export async function getFeatureById(complexName: string, objectId: string): Promise<WfsFeature> {
   const url = await prepareLink(complexName, objectId);
@@ -41,8 +40,8 @@ export async function getFeatures(
     service: 'wfs',
     // version: '2.0.0',
     request: 'GetFeature',
-    outputFormat: JSON_MIME,
-    exceptions: JSON_MIME,
+    outputFormat: Mime.JSON,
+    exceptions: Mime.JSON,
     typeName: complexName,
     // PROPERTYNAME: fillProp(complexName),
     sortBy: generateSortParam(requestAttribute),
@@ -72,15 +71,15 @@ export async function getFeatures(
  */
 export async function getFeaturesByXmlFilter(xml: string): Promise<WfsFeatureCollection> {
   return http.post<WfsFeatureCollection>(await getWfsUrl(), xml, {
-    headers: { 'Content-type': 'application/xml' },
-    params: { exceptions: JSON_MIME }
+    headers: { 'Content-Type': Mime.XML },
+    params: { exceptions: Mime.JSON }
   });
 }
 
 export async function getFeaturesById(ids: string[], namespace: string): Promise<WfsFeature[]> {
-  const headers = { 'Content-type': JSON_MIME };
+  const headers = { 'Content-Type': Mime.JSON };
   const params = {
-    outputFormat: JSON_MIME,
+    outputFormat: Mime.JSON,
     service: 'wfs',
     version: '2.0.0',
     request: 'GetFeature',

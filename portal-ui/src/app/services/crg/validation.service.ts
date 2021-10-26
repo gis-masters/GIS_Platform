@@ -5,6 +5,7 @@ import { ExportResourceModel } from './export.service';
 import { CrgLayer } from './projects.models';
 import { ProcessStatus } from '../models';
 import { http } from '../http.service';
+import { Mime } from '../util/Mime';
 
 export interface ValidationResultsResponse {
   validated: boolean;
@@ -37,7 +38,7 @@ export interface ViolationItem {
   errorTypes: string[];
 }
 
-const headers = { 'Content-Type': 'application/json' };
+const headers = { 'Content-Type': Mime.JSON };
 
 class ValidationService {
   private static _instance: ValidationService;

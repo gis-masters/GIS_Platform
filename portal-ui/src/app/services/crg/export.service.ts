@@ -1,4 +1,5 @@
 import { Process } from '../models';
+import { Mime } from '../util/Mime';
 import { http } from '../http.service';
 import { wsService } from '../ws.service';
 import { getExportUrl } from '../server-urls.service';
@@ -46,7 +47,7 @@ class ExportService {
 
   private async export(payload: ExportRequest): Promise<Process> {
     return http.post<Process>(await getExportUrl(), JSON.stringify(payload), {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': Mime.JSON }
     });
   }
 }

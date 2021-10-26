@@ -24,6 +24,7 @@ import {
 import { Toast } from '../../components/Toast/Toast';
 import { communicationService } from '../communication.service';
 import { MAP_QUERY_PARAMS_DELIMITER } from '../map/map-link-following.service';
+import { Mime } from '../util/Mime';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -36,7 +37,7 @@ class ProjectsService {
     this.debouncedFetchAllProjects = debounce(this.fetchAllProjects, 300);
 
     reaction(
-      () => route.params?.projectId as string,
+      () => route.params?.projectId,
       async id => {
         await this.fetchCurrent(Number(id));
       }
@@ -53,7 +54,7 @@ class ProjectsService {
     });
 
     reaction(
-      () => route.queryParams?.features as string,
+      () => route.queryParams?.features,
       features => {
         if (features) {
           this.enabledQueryLayers = true;
@@ -222,7 +223,7 @@ class ProjectsService {
       const result = await http.get<string>(url.toString());
 
       const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(result, 'text/xml');
+      const xmlDoc = parser.parseFromString(result, Mime.XML);
       const errors = [...xmlDoc.querySelectorAll('ServiceException')].map(
         (n: Element) => `Ошибка получения данных с сервера: ${n.innerHTML.trim()}`
       );

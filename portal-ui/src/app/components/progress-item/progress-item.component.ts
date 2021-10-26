@@ -7,6 +7,7 @@ import { eventService, IEvent } from '../../services/event.service';
 import { ProcessStatus, ProcessType } from '../../services/models';
 import { saveAsBlob } from '../../services/util/FileSaver';
 import { ExportWsMsg, IWsMessage } from '../../services/ws.service';
+import { Mime } from '../../services/util/Mime';
 
 @Component({
   selector: 'crg-progress-item',
@@ -83,7 +84,7 @@ export class ProgressItemComponent implements OnDestroy {
     const exportWsMsg: ExportWsMsg = wsMessage.payload as ExportWsMsg;
     const fileName = exportWsMsg.payload.split('/')[3];
     const data = await this.fileService.download(fileName);
-    const blob = new Blob([data], { type: 'text/xml' });
+    const blob = new Blob([data], { type: Mime.XML });
 
     saveAsBlob(fileName, blob);
   }

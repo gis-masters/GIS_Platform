@@ -5,6 +5,7 @@ import { communicationService } from './communication.service';
 import { replaceUrl } from './server-urls.service';
 import { PageableResponse } from './models';
 import { Emitter } from './common/Emitter';
+import { Mime } from './util/Mime';
 import { route } from '../stores/Route.store';
 
 const ITEMS_PER_PAGE = 300;
@@ -153,7 +154,7 @@ export class Http {
     const response = await this.axios.patch<T>(url, data, {
       ...config,
       headers: {
-        'Content-Type': 'application/merge-patch+json',
+        'Content-Type': Mime.JSON_PATCH,
         ...(config?.headers || {})
       }
     });

@@ -5,6 +5,7 @@ import { AxiosError } from 'axios';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
+import { Mime } from '../../services/util/Mime';
 import { services } from '../../services/services';
 import { importXml } from '../../services/import-xml.service';
 import { mapService } from '../../services/map/map.service';
@@ -39,7 +40,7 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
             <FormField>
               <FormLabel htmlFor='importXmlFileField'>Файл</FormLabel>
               <FormControl>
-                <FileInput accept={'text/xml'} fullWidth onChange={this.changeHandler} />
+                <FileInput accept={Mime.XML} fullWidth onChange={this.changeHandler} />
               </FormControl>
             </FormField>
           </Form>

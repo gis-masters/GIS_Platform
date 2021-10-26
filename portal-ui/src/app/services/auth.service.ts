@@ -5,6 +5,7 @@ import { communicationService } from './communication.service';
 import { getEnvironment } from './environment';
 import { services } from './services';
 import { http } from './http.service';
+import { Mime } from './util/Mime';
 
 export interface AuthCredentials {
   username: string;
@@ -64,7 +65,7 @@ class AuthService {
     params.append('grant_type', 'password');
 
     const headers = {
-      'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'
+      'Content-Type': Mime.FORM_URLENCODED
     };
 
     const options = { withCredentials: true, isAuthenticate: true, headers };

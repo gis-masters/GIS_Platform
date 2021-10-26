@@ -50,7 +50,11 @@ export class FeaturesListSidebar extends Component {
   private async close() {
     await services.provided;
     await services.router.navigate([location.pathname], {
-      queryParams: { features: null },
+      queryParams: {
+        features: null,
+        queryFilter: null,
+        queryLayers: null
+      },
       queryParamsHandling: 'merge'
     });
     sidebars.closeFeatures();

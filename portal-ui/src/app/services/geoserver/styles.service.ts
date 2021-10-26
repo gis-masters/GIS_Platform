@@ -5,6 +5,7 @@ import { mapService } from '../map/map.service';
 import { WfsGeometry } from './wfs.models';
 import { http } from '../http.service';
 import { patch } from '../util/patch';
+import { Mime } from '../util/Mime';
 
 export interface Rule {
   name: string;
@@ -83,7 +84,7 @@ export async function loadLayerStyle(layer: CrgLayer): Promise<void> {
 
 async function _loadLayerStyle(layer: CrgLayer): Promise<Rule[]> {
   const sldStyle = await getStyleSld(layer.styleName);
-  const xmlDoc = new DOMParser().parseFromString(sldStyle, 'text/xml');
+  const xmlDoc = new DOMParser().parseFromString(sldStyle, Mime.XML);
 
   const rulesWithoutLegend: Omit<Rule, 'legend'>[] = [...xmlDoc.querySelectorAll('Rule')]
     .filter(ruleXml => ruleXml.querySelector('Name') && ruleXml.querySelector('Title'))
@@ -203,7 +204,7 @@ async function getStyleSld(complexStyleName: string): Promise<string> {
     : `${geoServerUrl}/rest/styles/${styleName}.sld`;
 
   return http.get<string>(url, {
-    headers: { 'Content-Type': 'application/vnd.ogc.sld+xml' },
+    headers: { 'Content-Type': Mime.SLD },
     responseType: 'text'
   });
 }

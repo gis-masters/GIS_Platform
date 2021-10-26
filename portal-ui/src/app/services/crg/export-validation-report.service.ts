@@ -1,8 +1,9 @@
-import { http } from '../http.service';
-import { wsService } from '../ws.service';
 import { getExportValidationResultUrl } from '../server-urls.service';
-import { Process } from '../models';
 import { ExportResourceModel } from './export.service';
+import { wsService } from '../ws.service';
+import { http } from '../http.service';
+import { Mime } from '../util/Mime';
+import { Process } from '../models';
 
 export interface ExportValidationReportRequest {
   wsUiId?: string;
@@ -27,7 +28,7 @@ class ExportValidationReportService {
 
   private async export(payload: ExportValidationReportRequest): Promise<Process> {
     return http.post<Process>(await getExportValidationResultUrl(), JSON.stringify(payload), {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': Mime.JSON }
     });
   }
 }

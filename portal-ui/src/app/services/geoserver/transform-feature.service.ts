@@ -14,6 +14,7 @@ import { FeatureUtil } from '../util/FeatureUtil';
 import { getEnvironment } from '../environment';
 import { services } from '../services';
 import { http } from '../http.service';
+import { Mime } from '../util/Mime';
 
 export enum TransactionType {
   INSERT = 'insert',
@@ -55,7 +56,7 @@ export class TransformFeatureService {
         </Update>
       </Transaction>`;
 
-    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
+    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
   }
 
   async updateFeatures(
@@ -112,7 +113,7 @@ export class TransformFeatureService {
       .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '')
       .replace(/<Name>geometry<\/Name>/g, '<Name>shape</Name>');
 
-    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
+    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
   }
 
   async insertFeatures(featuresData: WfsFeature[], layerName: string, srsName: string): Promise<string[]> {
@@ -143,12 +144,12 @@ export class TransformFeatureService {
     const payload = this.xs.serializeToString(this.getNode(TransactionType.INSERT, featuresToInsert, options));
 
     const responseXML = await http.post<string>(await getWfsUrl(), payload, {
-      headers: { 'Content-Type': 'text/xml' },
+      headers: { 'Content-Type': Mime.XML },
       responseType: 'text'
     });
 
     const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(responseXML, 'text/xml');
+    const xmlDoc = parser.parseFromString(responseXML, Mime.XML);
 
     return [...xmlDoc.querySelector('InsertResults').querySelectorAll('FeatureId')].map((f: Element) =>
       f.getAttribute('fid')
@@ -179,7 +180,7 @@ export class TransformFeatureService {
       .serializeToString(this.getNode(TransactionType.DELETE, featuresToDelete, options))
       .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '');
 
-    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
+    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
   }
 
   private getNode(type: TransactionType, features: Feature<Geometry>[], options: WriteTransactionOptions): Node {
