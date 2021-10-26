@@ -1,5 +1,3 @@
-import { Rule } from '../geoserver/styles.service';
-import { SupportedGeometryType } from '../geoserver/wfs.models';
 import { Role } from './permissions.models';
 
 export enum CrgLayerType {
@@ -16,8 +14,7 @@ interface CrgEntity {
   transparency: number;
 }
 
-// layer from api
-interface BaseCrgLayer extends CrgEntity {
+export interface CrgLayer extends CrgEntity {
   dataset: string;
   dataStoreName?: string;
   tableName: string;
@@ -32,15 +29,8 @@ interface BaseCrgLayer extends CrgEntity {
   parentId?: number;
 }
 
-// extended on ui
-//FIXME: не должно быть расширения на UI, может перенести эти св-ва в TreeItem?
-export interface CrgLayer extends BaseCrgLayer {
-  geometryType?: SupportedGeometryType;
-  style?: Rule[];
-}
-
 export type NewCrgLayer = Pick<
-  BaseCrgLayer,
+  CrgLayer,
   | 'id'
   | 'title'
   | 'dataStoreName'

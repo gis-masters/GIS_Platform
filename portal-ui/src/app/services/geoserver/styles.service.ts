@@ -1,13 +1,11 @@
-import { currentProject } from '../../stores/CurrentProject.store';
 import { getActualLegendUrl, getGeoServerUrl, getWmsUrl } from '../server-urls.service';
 import { CrgLayer } from '../crg/projects.models';
 import { mapService } from '../map/map.service';
 import { WfsGeometry } from './wfs.models';
 import { http } from '../http.service';
-import { patch } from '../util/patch';
 import { Mime } from '../util/Mime';
 
-export interface Rule {
+export interface StyleRule {
   name: string;
   title: string;
   legend: string;
@@ -66,27 +64,21 @@ interface StyleFilterElse {
   operator: StyleFilterOperator.ELSE;
 }
 
-const sldStyles: Record<string, Promise<Rule[]>> = {};
+const sldStyles: Record<string, Promise<StyleRule[]>> = {};
 
-export async function loadAllLayersStyles(): Promise<void> {
-  for (const { payload: layer } of currentProject.visibleLayersWithoutRasters) {
-    await loadLayerStyle(layer);
-  }
-}
-
-export async function loadLayerStyle(layer: CrgLayer): Promise<void> {
+export async function getLayerStyleRules(layer: CrgLayer): Promise<StyleRule[]> {
   if (!sldStyles[layer.styleName]) {
     sldStyles[layer.styleName] = _loadLayerStyle(layer);
   }
 
-  patch(layer, { style: await sldStyles[layer.styleName] });
+  return await sldStyles[layer.styleName];
 }
 
-async function _loadLayerStyle(layer: CrgLayer): Promise<Rule[]> {
+async function _loadLayerStyle(layer: CrgLayer): Promise<StyleRule[]> {
   const sldStyle = await getStyleSld(layer.styleName);
   const xmlDoc = new DOMParser().parseFromString(sldStyle, Mime.XML);
 
-  const rulesWithoutLegend: Omit<Rule, 'legend'>[] = [...xmlDoc.querySelectorAll('Rule')]
+  const rulesWithoutLegend: Omit<StyleRule, 'legend'>[] = [...xmlDoc.querySelectorAll('Rule')]
     .filter(ruleXml => ruleXml.querySelector('Name') && ruleXml.querySelector('Title'))
     .map(ruleXml => ({
       name: ruleXml.querySelector('Name').innerHTML,
@@ -214,33 +206,31 @@ export async function filterLegendForCurrentMapView(layers: CrgLayer[]): Promise
 
   return http.post<FilteredStylesResponse[]>(
     await getActualLegendUrl(),
-    layers.map(layer => ({
-      dataset: layer.dataset,
-      identifier: layer.tableName,
-      filter: {
-        operator: 'Intersects',
-        propertyName: 'shape',
-        literal: {
-          type: 'MultiPolygon',
-          coordinates: [
-            [
+    await Promise.all(
+      layers.map(async layer => ({
+        dataset: layer.dataset,
+        identifier: layer.tableName,
+        filter: {
+          operator: 'Intersects',
+          propertyName: 'shape',
+          literal: {
+            type: 'MultiPolygon',
+            coordinates: [
               [
-                [x1, y1],
-                [x2, y1],
-                [x2, y2],
-                [x1, y2],
-                [x1, y1]
+                [
+                  [x1, y1],
+                  [x2, y1],
+                  [x2, y2],
+                  [x1, y2],
+                  [x1, y1]
+                ]
               ]
             ]
-          ]
-        }
-      },
-      rules:
-        layer.style?.map(rule => ({
-          name: rule.name,
-          filter: rule.filter
-        })) || []
-    })),
+          }
+        },
+        rules: await getLayerStyleRules(layer)
+      }))
+    ),
     { cache: { disabled: false, clear: false } }
   );
 }

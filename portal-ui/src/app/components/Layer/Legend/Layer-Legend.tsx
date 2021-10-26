@@ -4,7 +4,11 @@ import { observer } from 'mobx-react';
 import { LinearProgress } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { filterLegendForCurrentMapView, loadLayerStyle, Rule } from '../../../services/geoserver/styles.service';
+import {
+  filterLegendForCurrentMapView,
+  getLayerStyleRules,
+  StyleRule
+} from '../../../services/geoserver/styles.service';
 import { CrgLayer } from '../../../services/crg/projects.models';
 import { mapService } from '../../../services/map/map.service';
 import { Emitter } from '../../../services/common/Emitter';
@@ -22,12 +26,13 @@ interface LayerLegendProps {
 
 @observer
 export class LayerLegend extends Component<LayerLegendProps> {
+  @observable private legend?: StyleRule[] = [];
+  @observable private filteredLegend?: StyleRule[];
   @observable private filterEnabled = true;
-  @observable private filteredLegend?: Rule[];
-  private filteredLegendRequestId?: symbol;
+  private legendRequestId?: symbol;
 
   async componentDidMount() {
-    await loadLayerStyle(this.props.layer);
+    this.setLegend(await getLayerStyleRules(this.props.layer));
 
     await this.filterLegend();
 
@@ -41,14 +46,13 @@ export class LayerLegend extends Component<LayerLegendProps> {
   }
 
   render() {
-    const { layer } = this.props;
-    const legend: Rule[] = this.filterEnabled ? this.filteredLegend : layer.style;
+    const legend: StyleRule[] = this.filterEnabled ? this.filteredLegend : this.legend;
 
     return (
       <div className={cnLayerLegend()}>
         {legend ? (
           <>
-            {Boolean(layer.style?.length) && (
+            {Boolean(this.legend.length) && (
               <LayerLegendFilterToggler enabled={this.filterEnabled} onClick={this.toggleFilter} />
             )}
             <Legend rules={legend} cleanDuplicates />
@@ -63,35 +67,44 @@ export class LayerLegend extends Component<LayerLegendProps> {
   private async filterLegend() {
     const { layer } = this.props;
 
-    const filteredLegendRequestId = Symbol();
-    this.filteredLegendRequestId = filteredLegendRequestId;
+    const legendRequestId = Symbol();
+    this.legendRequestId = legendRequestId;
 
-    const filteredStylesResponse = await filterLegendForCurrentMapView([layer]);
+    try {
+      const filteredStylesResponse = await filterLegendForCurrentMapView([layer]);
 
-    // если за время обращения к api случился следующий запрос
-    if (this.filteredLegendRequestId !== filteredLegendRequestId) {
-      return;
+      // если за время обращения к api случился следующий запрос
+      if (this.legendRequestId !== legendRequestId) {
+        return;
+      }
+
+      const filteredLegend: StyleRule[] =
+        this.legend?.filter(rule => {
+          const resultItem = filteredStylesResponse.find(
+            ({ dataset, identifier }) => dataset === layer.dataset && identifier === layer.tableName
+          );
+
+          return resultItem?.rules.includes(rule.name);
+        }) || [];
+
+      this.setFilteredLegend(filteredLegend);
+    } catch {
+      this.setFilteredLegend(this.legend || []);
     }
-
-    const filteredLegend: Rule[] =
-      layer.style?.filter(rule => {
-        const resultItem = filteredStylesResponse.find(
-          ({ dataset, identifier }) => dataset === layer.dataset && identifier === layer.tableName
-        );
-
-        return resultItem?.rules.includes(rule.name);
-      }) || [];
-
-    this.setFilteredLegend(filteredLegend);
   }
 
   @action
-  private setFilteredLegend(legend: Rule[]) {
+  private setFilteredLegend(legend: StyleRule[]) {
     this.filteredLegend = legend;
   }
 
   @action.bound
   private toggleFilter() {
     this.filterEnabled = !this.filterEnabled;
+  }
+
+  @action
+  private setLegend(legend: StyleRule[]) {
+    this.legend = legend;
   }
 }

@@ -4,10 +4,10 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { currentProject } from '../../stores/CurrentProject.store';
-import { printSettings, RuleExtended } from '../../stores/PrintSettings.store';
-import { loadAllLayersStyles } from '../../services/geoserver/styles.service';
-import { SortParams } from '../../services/util/sortObjects';
+import { printSettings, StyleRuleExtended } from '../../stores/PrintSettings.store';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
+import { loadAllLayersStyles } from '../../services/map/map-print.service';
+import { SortParams } from '../../services/util/sortObjects';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { XTableColumn } from '../XTable/XTable';
 import { Button } from '../Button/Button';
@@ -24,7 +24,7 @@ export class SelectLegend extends Component<FormControlProps> {
   private disposer: IReactionDisposer;
   @observable private dialogOpen = false;
 
-  private cols: XTableColumn<RuleExtended>[] = [
+  private cols: XTableColumn<StyleRuleExtended>[] = [
     {
       title: 'Знак',
       CellContent: SelectLegendImg
@@ -43,7 +43,7 @@ export class SelectLegend extends Component<FormControlProps> {
     }
   ];
 
-  private sortParams: SortParams<RuleExtended> = { asc: true, field: 'layerTitle' };
+  private sortParams: SortParams<StyleRuleExtended> = { asc: true, field: 'layerTitle' };
 
   componentDidMount() {
     this.disposer = reaction(
@@ -65,7 +65,7 @@ export class SelectLegend extends Component<FormControlProps> {
           <Button onClick={this.openDialog}>Выбрать</Button>
           <SelectLegendCount />
         </div>
-        <ChooseXTableDialog<RuleExtended>
+        <ChooseXTableDialog<StyleRuleExtended>
           title='Выбор знаков легенды'
           items={printSettings.allLegend}
           selectedItems={printSettings.legend.items}
@@ -92,13 +92,13 @@ export class SelectLegend extends Component<FormControlProps> {
   }
 
   @action.bound
-  private select(items: RuleExtended[]) {
+  private select(items: StyleRuleExtended[]) {
     printSettings.legend.auto = false;
     printSettings.legend.items = items;
     this.closeDialog();
   }
 
-  private getItemId({ name, layerId }: RuleExtended): string {
+  private getItemId({ name, layerId }: StyleRuleExtended): string {
     return `${name}:${layerId}`;
   }
 }

@@ -5,13 +5,14 @@ import { jsPDF } from 'jspdf';
 import moment from 'moment';
 import { getPointResolution } from 'ol/proj';
 
-import { printSettings } from '../../stores/PrintSettings.store';
+import { printSettings, StyleRuleExtended } from '../../stores/PrintSettings.store';
 import { saveAsBlob } from '../util/FileSaver';
 import { mapService } from './map.service';
 import { PrintDialogDate } from '../../components/PrintDialog/Date/PrintDialog-Date';
 import { mapStore } from '../../stores/Map.store';
 import { Legend } from '../../components/Legend/Legend';
-import { filterLegendForCurrentMapView, loadLayerStyle } from '../geoserver/styles.service';
+import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles.service';
+import { currentProject } from '../../stores/CurrentProject.store';
 
 const BASE_SCALE_LINE_DPI = 150;
 
@@ -354,26 +355,30 @@ async function autoFilterLegend() {
   const filteredLegendRequestId = Symbol();
   lastFilteredLegendRequestId = filteredLegendRequestId;
 
-  await Promise.all(printSettings.layers.map(layer => loadLayerStyle(layer)));
+  // await Promise.all(printSettings.layers.map(layer => getLayerStyleRules(layer)));
 
-  const filteredLegendResponse = await filterLegendForCurrentMapView(printSettings.layers);
+  try {
+    const filteredLegendResponse = await filterLegendForCurrentMapView(printSettings.layers);
 
-  // если за время обращения к api случился следующий запрос
-  if (lastFilteredLegendRequestId !== filteredLegendRequestId) {
-    return;
+    // если за время обращения к api случился следующий запрос
+    if (lastFilteredLegendRequestId !== filteredLegendRequestId) {
+      return;
+    }
+
+    printSettings.setLegendItems(
+      filteredLegendResponse.flatMap(({ dataset, identifier, rules: rulesNames }) =>
+        rulesNames.map(ruleName => {
+          const layer = printSettings.layers.find(l => l.tableName === identifier && l.dataset === dataset);
+
+          return printSettings.allLegend.find(
+            legendRule => legendRule.layerId === layer.id && legendRule.name === ruleName
+          );
+        })
+      )
+    );
+  } catch {
+    printSettings.setLegendItems(printSettings.allLegend);
   }
-
-  printSettings.setLegendItems(
-    filteredLegendResponse.flatMap(({ dataset, identifier, rules: rulesNames }) =>
-      rulesNames.map(ruleName => {
-        const layer = printSettings.layers.find(l => l.tableName === identifier && l.dataset === dataset);
-
-        return printSettings.allLegend.find(
-          legendRule => legendRule.layerId === layer.id && legendRule.name === ruleName
-        );
-      })
-    )
-  );
 }
 
 function setPrintSize(resolution: number, translateX: number, translateY: number) {
@@ -392,4 +397,17 @@ function setPrintSize(resolution: number, translateX: number, translateY: number
       [width / 2 + width * translateX, height / 2 + height * translateY]
     );
   }
+}
+
+export async function loadAllLayersStyles(): Promise<void> {
+  const extendedRules = await Promise.all(
+    currentProject.visibleLayersWithoutRasters.map(
+      async ({ payload }): Promise<StyleRuleExtended[]> =>
+        (
+          await getLayerStyleRules(payload)
+        ).map((rule): StyleRuleExtended => ({ ...rule, layerId: payload.id, layerTitle: payload.title }))
+    )
+  );
+
+  printSettings.setAllLegend(extendedRules.flat());
 }
