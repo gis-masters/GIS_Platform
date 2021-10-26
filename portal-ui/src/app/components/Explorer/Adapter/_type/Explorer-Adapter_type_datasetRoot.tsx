@@ -4,8 +4,10 @@ import { Database } from '../../../Icons/Database';
 import { PageOptions, SortDir } from '../../../../services/models';
 import { Dataset, getDatasets } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { CreateDatasetElement } from '../../../CreateDatasetElement/CreateDatasetElement';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { ExplorerStore } from '../../Explorer.store';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -79,5 +81,9 @@ export class ExplorerAdapterTypeDatasetRoot {
 
   static getChildrenFilterLabel(): string {
     return 'Поиск по названию';
+  }
+
+  static getToolbarActions(item: ExplorerItemData<Dataset>, store: ExplorerStore): ReactNode {
+    return <CreateDatasetElement store={store} />;
   }
 }

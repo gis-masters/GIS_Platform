@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { CreateNewFolderOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
@@ -14,9 +14,11 @@ interface CreateLibraryElementFolderButtonProps {
 export class CreateLibraryElementFolderButton extends Component<CreateLibraryElementFolderButtonProps> {
   render() {
     return (
-      <IconButton className={cnCreateLibraryElementFolderButton()} onClick={this.clickHandler}>
-        <CreateNewFolderOutlined />
-      </IconButton>
+      <Tooltip title='Создание нового элемента'>
+        <IconButton className={cnCreateLibraryElementFolderButton()} onClick={this.clickHandler}>
+          <CreateNewFolderOutlined />
+        </IconButton>
+      </Tooltip>
     );
   }
 

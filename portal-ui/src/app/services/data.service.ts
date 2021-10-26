@@ -27,6 +27,8 @@ export interface Dataset extends DataEntity {
   role: Role;
 }
 
+export type NewDataset = Pick<Dataset, 'title' | 'details'>;
+
 export interface DataTable extends DataEntity {
   type: DataEntityType.TABLE;
   crs: string;
