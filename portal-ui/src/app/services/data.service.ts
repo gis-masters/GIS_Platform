@@ -1,4 +1,4 @@
-import { getDatasetsUrl, getDatasetTablesUrl, getDatasetTableUrl, getTableConnectionsUrl } from './server-urls.service';
+import { getDatasetsUrl, getDatasetTablesUrl, getDatasetTableUrl, getDatasetUrl, getTableConnectionsUrl } from './server-urls.service';
 import { CrgLayer, CrgProject } from './crg/projects.models';
 import { PageableResponse, PageOptions, SortDir } from './models';
 import { Role } from './crg/permissions.models';
@@ -24,6 +24,7 @@ export interface DataEntity {
 
 export interface Dataset extends DataEntity {
   type: DataEntityType.DATASET;
+  role: Role;
 }
 
 export interface DataTable extends DataEntity {
@@ -54,6 +55,10 @@ export async function getDatasets(
 
 export async function getAllDatasets(): Promise<Dataset[]> {
   return await http.getPaged<Dataset>(await getDatasetsUrl());
+}
+
+export async function getDataset(identifier: string): Promise<Dataset> {
+  return await http.get<Dataset>(await getDatasetUrl(identifier));
 }
 
 export async function getDatasetTables(

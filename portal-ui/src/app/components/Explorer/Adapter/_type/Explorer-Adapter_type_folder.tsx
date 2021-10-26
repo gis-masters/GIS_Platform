@@ -10,12 +10,14 @@ import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import { ContentTypeTypes, docLibraryService, LibraryRecord } from '../../../../services/crg/doc-library.service';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
+import { Role } from '../../../../services/crg/permissions.models';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 
 import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -61,8 +63,16 @@ export class ExplorerAdapterTypeFolder {
 
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
+    const currentItem = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
 
-    return <PermissionsWidget url={url} title={item.payload.title} itemEntityType={ExplorerItemEntityType.FOLDER} />;
+    return (
+      <PermissionsWidget
+        url={url}
+        title={item.payload.title}
+        itemEntityType={ExplorerItemEntityType.FOLDER}
+        disabled={!(currentUser.isAdmin || currentItem.role === Role.OWNER)}
+      />
+    );
   }
 
   static isFolder(): boolean {

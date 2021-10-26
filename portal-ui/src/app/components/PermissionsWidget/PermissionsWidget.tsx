@@ -26,6 +26,7 @@ const cnPermissionsWidget = cn('PermissionsWidget');
 interface PermissionsWidgetProps {
   url: string;
   title?: string;
+  disabled?: boolean;
   itemEntityType?: ExplorerItemEntityType;
 }
 
@@ -69,6 +70,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
             className={cnPermissionsWidget('Header')}
             endIcon={<EditIcon fontSize='inherit' />}
             variant='text'
+            disabled={this.props.disabled}
             onClick={this.openModal}
           >
             Разрешения

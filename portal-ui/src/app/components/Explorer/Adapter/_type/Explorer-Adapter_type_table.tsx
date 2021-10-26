@@ -3,18 +3,20 @@ import moment from 'moment';
 import { pluralize } from 'numeralize-ru';
 
 import { isTableDeletionAllowed } from '../../../../services/crg/permissions.service';
-import { DataTable, deleteDataTable, getDataTableConnections } from '../../../../services/data.service';
+import { DataTable, deleteDataTable, getDataTable, getDataTableConnections } from '../../../../services/data.service';
 import { communicationService } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { LayerIcon } from '../../../LayerIcon/LayerIcon.composed';
 import { Emitter } from '../../../../services/common/Emitter';
+import { getTableRoleAssignmentUrl } from '../../../../services/server-urls.service';
+import { Role } from '../../../../services/crg/permissions.models';
+import { currentUser } from '../../../../stores/CurrentUser.store';
+import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 
 import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ExplorerProps } from '../../Explorer';
-import { getTableRoleAssignmentUrl } from '../../../../services/server-urls.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -58,12 +60,19 @@ export class ExplorerAdapterTypeTable {
     item: ExplorerItemData<DataTable>,
     Explorer: React.ComponentType<ExplorerProps>
   ): Promise<ReactNode> {
-    const url = await getTableRoleAssignmentUrl(item.payload.dataset, item.payload.identifier);
+    const { dataset, identifier, title } = item.payload;
+    const url = await getTableRoleAssignmentUrl(dataset, identifier);
+    const currentItem = await getDataTable(dataset, identifier);
 
     return (
       <>
         <ConnectionsTableToProjectsWidget dataTable={item.payload} Explorer={Explorer} />
-        <PermissionsWidget url={url} title={item.payload.title} itemEntityType={ExplorerItemEntityType.TABLE} />
+        <PermissionsWidget
+          url={url}
+          title={title}
+          itemEntityType={ExplorerItemEntityType.TABLE}
+          disabled={!(currentUser.isAdmin || currentItem.role === Role.OWNER)}
+        />
       </>
     );
   }

@@ -7,12 +7,23 @@ import { services } from '../../../../services/services';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
+import {
+  getDocLibrariesRecordsUrl,
+  getDocumentLibraryRecordRoleAssignmentUrl
+} from '../../../../services/server-urls.service';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { Role } from '../../../../services/crg/permissions.models';
 import { DocumentActionsWidget } from '../../../DocumentActionsWidget/DocumentActionsWidget';
 import { docLibraryService, LibraryRecord } from '../../../../services/crg/doc-library.service';
 
-import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
+import {
+  Adapter,
+  AllowedActions,
+  ExplorerItemData,
+  ExplorerItemEntityType,
+  ExplorerItemType
+} from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { getDocLibrariesRecordsUrl } from '../../../../services/server-urls.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -52,12 +63,25 @@ export class ExplorerAdapterTypeDocument {
     return String(item.payload.id);
   }
 
-  static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
-    return <DocumentActionsWidget document={item.payload} />;
-  }
-
   static getIcon(): ReactNode {
     return <InsertDriveFile color='primary' />;
+  }
+
+  static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
+    const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
+    const currentItem = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
+
+    return (
+      <>
+        <DocumentActionsWidget document={item.payload} />
+        <PermissionsWidget
+          url={url}
+          title={item.payload.title}
+          itemEntityType={ExplorerItemEntityType.DOCUMENT}
+          disabled={!(currentUser.isAdmin || currentItem.role === Role.OWNER)}
+        />
+      </>
+    );
   }
 
   static isFolder(): boolean {

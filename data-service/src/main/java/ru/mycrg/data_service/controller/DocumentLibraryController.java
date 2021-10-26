@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.dto.IResourceModel;
+import ru.mycrg.data_service.entity.DocumentLibrary;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -38,6 +39,13 @@ public class DocumentLibraryController {
                         .withSelfRel());
 
         return ResponseEntity.ok(pagedResources);
+    }
+
+    @GetMapping("/document-libraries/{docLibId}")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public Object getLibrary(@PathVariable String docLibId) {
+        DocumentLibrary documentLibrary = librariesService.getByTableName(docLibId);
+        return ResponseEntity.ok(documentLibrary);
     }
 
     @GetMapping("/document-libraries/{docLibId}/schema")

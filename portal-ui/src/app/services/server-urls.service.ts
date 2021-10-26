@@ -207,6 +207,10 @@ export async function getDocLibrariesUrl(): Promise<string> {
   return `${await getDataUrl()}/document-libraries`;
 }
 
+export async function getDocLibraryUrl(libraryName: string): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${libraryName}`;
+}
+
 export async function getDocLibrariesRecordsUrl(libraryName: string): Promise<string> {
   return `${await getDataUrl()}/document-libraries/${libraryName}/records`;
 }

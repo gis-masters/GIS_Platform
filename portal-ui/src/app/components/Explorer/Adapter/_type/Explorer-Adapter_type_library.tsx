@@ -15,12 +15,14 @@ import {
   DocumentLibrary,
   LibraryRecord
 } from '../../../../services/crg/doc-library.service';
+import { getDocumentLibraryRoleAssignmentUrl } from '../../../../services/server-urls.service';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { Role } from '../../../../services/crg/permissions.models';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 
 import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { getDocumentLibraryRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -62,8 +64,16 @@ export class ExplorerAdapterTypeLibrary {
 
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRoleAssignmentUrl(item.payload.identifier);
+    const currentItem = await docLibraryService.getLibrary(item.payload.identifier);
 
-    return <PermissionsWidget url={url} title={item.payload.title} itemEntityType={ExplorerItemEntityType.LIBRARY} />;
+    return (
+      <PermissionsWidget
+        url={url}
+        title={item.payload.title}
+        itemEntityType={ExplorerItemEntityType.LIBRARY}
+        disabled={!(currentUser.isAdmin || currentItem.role === Role.OWNER)}
+      />
+    );
   }
 
   static getIcon(): ReactNode {

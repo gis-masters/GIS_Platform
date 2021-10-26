@@ -1,7 +1,8 @@
 import { http } from '../http.service';
 import { PageableResponse, PageOptions, SortDir } from '../models';
 import { DataEntity, DataEntityType } from '../data.service';
-import { getDocLibrariesRecordsUrl, getDocLibrariesRecordUrl, getDocLibrariesUrl } from '../server-urls.service';
+import { getDocLibrariesRecordsUrl, getDocLibrariesRecordUrl, getDocLibrariesUrl, getDocLibraryUrl } from '../server-urls.service';
+import { Role } from './permissions.models';
 
 export enum ContentTypeTypes {
   FOLDER = 'FOLDER'
@@ -9,6 +10,7 @@ export enum ContentTypeTypes {
 
 export interface DocumentLibrary extends DataEntity {
   type: DataEntityType.LIBRARY;
+  role: Role
 }
 
 export interface CrgDocument {
@@ -62,6 +64,10 @@ class DocLibraryService {
     return [(response._embedded && response._embedded.libraries) || [], response.page.totalPages];
   }
 
+  async getLibrary(identifier: string): Promise<DocumentLibrary> {
+    return await http.get<DocumentLibrary>(await getDocLibraryUrl(identifier));
+  }
+
   async getAllRecords(
     libraryId: string,
     schemaId: string,
@@ -89,6 +95,12 @@ class DocLibraryService {
 
   async deleteRecord(libraryId: string, id: string) {
     await http.delete(await getDocLibrariesRecordUrl(libraryId, id));
+  }
+
+  async getRecord(libraryId: string, id: string) {
+    return http.get<LibraryRecord>(
+      await getDocLibrariesRecordUrl(libraryId, id)
+    );
   }
 
   private prepareFormData(data: LibraryRecordRaw) {

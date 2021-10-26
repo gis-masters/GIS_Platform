@@ -31,7 +31,8 @@ export enum ExplorerItemEntityType {
   TABLE = 'табилцы',
 
   LIBRARY = 'библиотеки',
-  FOLDER = 'папки'
+  FOLDER = 'папки',
+  DOCUMENT = 'документа'
 }
 
 export interface ExplorerItemData<T = ExplorerItemPayloads[ExplorerItemType]> {

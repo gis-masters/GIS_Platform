@@ -8,11 +8,11 @@ import { communicationService } from '../../../../services/communication.service
 import { Basemap } from '../../../../services/crg/basemaps.models';
 import { Emitter } from '../../../../services/common/Emitter';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
-
-import { Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';
 import { BasemapDetails } from '../../../BasemapDetails/BasemapDetails';
 import { ConnectionsBasemapToProjectsWidget } from '../../../ConnectionsBasemapToProjectsWidget/ConnectionsBasemapToProjectsWidget';
 import { sleep } from '../../../../services/util/sleep';
+
+import { Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';
 import { ExplorerProps } from '../../Explorer';
 
 declare module '../../Explorer.models' {

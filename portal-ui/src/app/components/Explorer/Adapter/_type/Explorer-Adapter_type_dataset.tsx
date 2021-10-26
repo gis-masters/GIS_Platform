@@ -2,14 +2,16 @@ import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { Storage } from '@mui/icons-material';
 
-import { Dataset, DataTable, getDatasetTables } from '../../../../services/data.service';
+import { Dataset, DataTable, getDataset, getDatasetTables } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { PageOptions, SortDir } from '../../../../services/models';
+import { getDatasetRoleAssignmentUrl } from '../../../../services/server-urls.service';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { currentUser } from '../../../../stores/CurrentUser.store';
+import { Role } from '../../../../services/crg/permissions.models';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { getDatasetRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -56,8 +58,16 @@ export class ExplorerAdapterTypeDataset {
 
   static async getWidgets(item: ExplorerItemData<Dataset>): Promise<ReactNode> {
     const url = await getDatasetRoleAssignmentUrl(item.payload.identifier);
+    const currentItem = await getDataset(item.payload.identifier);
 
-    return <PermissionsWidget url={url} title={item.payload.title} itemEntityType={ExplorerItemEntityType.DATASET} />;
+    return (
+      <PermissionsWidget
+        url={url}
+        title={item.payload.title}
+        itemEntityType={ExplorerItemEntityType.DATASET}
+        disabled={!(currentUser.isAdmin || currentItem.role === Role.OWNER)}
+      />
+    );
   }
 
   static getIcon(): ReactNode {
