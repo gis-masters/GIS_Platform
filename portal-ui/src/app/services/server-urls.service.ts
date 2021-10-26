@@ -227,6 +227,10 @@ export async function getDocumentLibraryRecordRoleAssignmentUrl(lidraryid: strin
   return `${await getDocLibrariesUrl()}/${lidraryid}/records/${id}/roleAssignment`;
 }
 
+export async function getDocLibrariesRecordChildrenUrl(libraryName: string, id: string): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${libraryName}/records?parent=${id}`;
+}
+
 export async function getDatasetUrl(datasetId: string): Promise<string> {
   return `${await getDatasetsUrl()}/${datasetId}`;
 }

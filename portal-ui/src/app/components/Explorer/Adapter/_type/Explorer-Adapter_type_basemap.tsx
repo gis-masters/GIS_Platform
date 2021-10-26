@@ -70,6 +70,7 @@ export class ExplorerAdapterTypeBasemap {
       delete: {
         visible: true,
         disabled: !deletionAllowed,
+        itemTitle: item.payload.title,
         needConfirmation: true,
         confirmationText: count ? `Используется в ${count} ${textProjects}.` : 'Не используется в проектах.'
       }

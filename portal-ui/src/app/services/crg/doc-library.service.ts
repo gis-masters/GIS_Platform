@@ -1,8 +1,14 @@
 import { http } from '../http.service';
 import { PageableResponse, PageOptions, SortDir } from '../models';
 import { DataEntity, DataEntityType } from '../data.service';
-import { getDocLibrariesRecordsUrl, getDocLibrariesRecordUrl, getDocLibrariesUrl, getDocLibraryUrl } from '../server-urls.service';
+import {
+  getDocLibrariesRecordsUrl,
+  getDocLibrariesRecordUrl,
+  getDocLibrariesUrl,
+  getDocLibraryUrl
+} from '../server-urls.service';
 import { Role } from './permissions.models';
+import { communicationService } from '../communication.service';
 
 export enum ContentTypeTypes {
   FOLDER = 'FOLDER'
@@ -10,7 +16,7 @@ export enum ContentTypeTypes {
 
 export interface DocumentLibrary extends DataEntity {
   type: DataEntityType.LIBRARY;
-  role: Role
+  role: Role;
 }
 
 export interface CrgDocument {
@@ -35,6 +41,8 @@ export interface LibraryRecord {
 
   libraryId: string;
   schemaId: string;
+
+  role?: Role;
 }
 
 export type LibraryRecordRaw = Omit<LibraryRecord, 'library' | 'schemaId'>;
@@ -46,9 +54,7 @@ class DocLibraryService {
     return this._instance || (this._instance = new this());
   }
 
-  private constructor() {
-    //
-  }
+  private constructor() {}
 
   async getAllLibraries(
     page: number,
@@ -68,7 +74,7 @@ class DocLibraryService {
     return await http.get<DocumentLibrary>(await getDocLibraryUrl(identifier));
   }
 
-  async getAllRecords(
+  async getRecords(
     libraryId: string,
     schemaId: string,
     { page, pageSize, sort, sortDir, filter }: PageOptions
@@ -90,17 +96,19 @@ class DocLibraryService {
   }
 
   async createRecord(libraryId: string, data: LibraryRecordRaw): Promise<CrgDocument> {
-    return http.post<CrgDocument>(await getDocLibrariesRecordsUrl(libraryId), this.prepareFormData(data));
+    const record = await http.post<CrgDocument>(await getDocLibrariesRecordsUrl(libraryId), this.prepareFormData(data));
+    communicationService.libraryItemsUpdated.emit();
+
+    return record;
   }
 
   async deleteRecord(libraryId: string, id: string) {
     await http.delete(await getDocLibrariesRecordUrl(libraryId, id));
+    communicationService.libraryItemsUpdated.emit();
   }
 
   async getRecord(libraryId: string, id: string) {
-    return http.get<LibraryRecord>(
-      await getDocLibrariesRecordUrl(libraryId, id)
-    );
+    return http.get<LibraryRecord>(await getDocLibrariesRecordUrl(libraryId, id));
   }
 
   private prepareFormData(data: LibraryRecordRaw) {

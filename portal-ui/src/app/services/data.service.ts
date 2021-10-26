@@ -1,4 +1,10 @@
-import { getDatasetsUrl, getDatasetTablesUrl, getDatasetTableUrl, getDatasetUrl, getTableConnectionsUrl } from './server-urls.service';
+import {
+  getDatasetsUrl,
+  getDatasetTablesUrl,
+  getDatasetTableUrl,
+  getDatasetUrl,
+  getTableConnectionsUrl
+} from './server-urls.service';
 import { CrgLayer, CrgProject } from './crg/projects.models';
 import { PageableResponse, PageOptions, SortDir } from './models';
 import { Role } from './crg/permissions.models';
@@ -14,12 +20,12 @@ export enum DataEntityType {
 export interface DataEntity {
   title: string;
   identifier: string;
-  permission: Role;
   details?: string;
   type: DataEntityType;
   createdAt?: string;
   itemsCount?: number;
   schemaId?: string;
+  role?: Role;
 }
 
 export interface Dataset extends DataEntity {
@@ -98,6 +104,11 @@ export async function getDataTable(datasetId: string, dataTableId: string): Prom
 export async function deleteDataTable(datasetId: string, dataTableId: string): Promise<void> {
   await http.delete(await getDatasetTableUrl(datasetId, dataTableId));
   communicationService.dataTablesUpdated.emit();
+}
+
+export async function deleteDataset(identifier: string): Promise<void> {
+  await http.delete(await getDatasetUrl(identifier));
+  communicationService.datasetsUpdated.emit();
 }
 
 export async function getDataTableConnections(dataTableId: string): Promise<DataTableConnection[]> {

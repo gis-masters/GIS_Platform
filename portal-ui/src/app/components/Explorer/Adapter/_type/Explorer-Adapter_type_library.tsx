@@ -90,7 +90,7 @@ export class ExplorerAdapterTypeLibrary {
   ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
     const result: ExplorerItemData<LibraryRecord>[] = [];
 
-    const [libraryRecords, pagesCount] = await docLibraryService.getAllRecords(
+    const [libraryRecords, pagesCount] = await docLibraryService.getRecords(
       explorerItem.payload.identifier,
       explorerItem.payload.schemaId,
       pageOptions

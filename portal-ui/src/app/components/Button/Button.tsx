@@ -1,6 +1,5 @@
 import React, { Component, RefObject } from 'react';
-import { Button as BaseButton } from '@mui/material';
-import { ButtonProps as BaseButtonProps } from '@mui/material/Button/Button';
+import { LoadingButton, LoadingButtonProps } from '@mui/lab';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -10,7 +9,7 @@ import '!style-loader!css-loader!sass-loader!./Button.scss';
 
 const cnButton = cn('Button');
 
-export interface ButtonProps extends BaseButtonProps {
+export interface ButtonProps extends LoadingButtonProps {
   routerLink?: string;
   btnRef?: RefObject<HTMLButtonElement>;
 }
@@ -28,7 +27,7 @@ export class Button extends Component<ButtonProps> {
       onClick: this.onClickHandler
     };
 
-    return <BaseButton {...extendedProps} />;
+    return <LoadingButton {...extendedProps} />;
   }
 
   @boundMethod

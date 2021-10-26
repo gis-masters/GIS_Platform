@@ -6,8 +6,9 @@ import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { Loading } from '../Loading/Loading';
 import { Emitter } from '../../services/common/Emitter';
+
+import { Loading } from '../Loading/Loading';
 
 import { ExplorerStore } from './Explorer.store';
 import { emptyItem, ExplorerItemData, ExplorerItemType, KeyAction, keyActions } from './Explorer.models';

@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { ButtonProps } from '@mui/material';
 
 import { PageOptions, SortDir } from '../../services/models';
 import { Emitter } from '../../services/common/Emitter';
@@ -87,6 +88,7 @@ export interface Adapter {
   getRefreshEmitters?: (item: ExplorerItemData) => Emitter[];
   getAllowedActions?: (item: ExplorerItemData) => Promise<AllowedActions>;
   deleteItem?: (item: ExplorerItemData) => Promise<void>;
+  isDeleteAllowed?: (item: ExplorerItemData) => Promise<AllowedDetails>;
 }
 
 enum ActionType {
@@ -101,7 +103,16 @@ export interface ActionDetails {
   disabled?: boolean;
   needConfirmation?: boolean;
   confirmationText?: string;
+  text?: string;
+  title?: string;
+  itemTitle?: string;
   confirmationMood?: 'normal' | 'warning';
   url?: string;
   fileName?: string;
+  btnProps?: Omit<Partial<ButtonProps>, 'ref'>;
+}
+
+export interface AllowedDetails {
+  ok: boolean;
+  errorMessage?: string;
 }

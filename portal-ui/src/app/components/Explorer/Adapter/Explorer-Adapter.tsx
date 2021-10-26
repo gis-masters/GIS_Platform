@@ -7,7 +7,14 @@ import { Emitter } from '../../../services/common/Emitter';
 import { Toast } from '../../Toast/Toast';
 
 import { ExplorerStore } from '../Explorer.store';
-import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemType, SortItem } from '../Explorer.models';
+import {
+  Adapter,
+  AllowedActions,
+  AllowedDetails,
+  ExplorerItemData,
+  ExplorerItemType,
+  SortItem
+} from '../Explorer.models';
 import { ExplorerAdapterTypeDatasetRoot } from './_type/Explorer-Adapter_type_datasetRoot';
 import { ExplorerAdapterTypeDataset } from './_type/Explorer-Adapter_type_dataset';
 import { ExplorerAdapterTypeDocument } from './_type/Explorer-Adapter_type_document';
@@ -130,5 +137,11 @@ export async function getAllowedActions(item: ExplorerItemData): Promise<Allowed
 export async function deleteItem(item: ExplorerItemData): Promise<void> {
   if (adapters[item.type].deleteItem) {
     await adapters[item.type].deleteItem(item);
+  }
+}
+
+export async function isDeleteAllowed(item: ExplorerItemData): Promise<AllowedDetails> {
+  if (adapters[item.type].isDeleteAllowed) {
+    return await adapters[item.type].isDeleteAllowed(item);
   }
 }

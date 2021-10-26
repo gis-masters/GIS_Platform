@@ -86,7 +86,7 @@ export class ExplorerAdapterTypeTable {
   }
 
   static async getAllowedActions(item: ExplorerItemData<DataTable>): Promise<AllowedActions> {
-    const { dataset, identifier } = item.payload;
+    const { dataset, identifier, title } = item.payload;
     const deletionAllowed = await isTableDeletionAllowed(dataset, identifier);
     const count = (await getDataTableConnections(identifier)).length;
     const textProjects = pluralize(count, 'проекте', 'проектах', 'проектах');
@@ -97,6 +97,7 @@ export class ExplorerAdapterTypeTable {
       delete: {
         visible: true,
         disabled: !deletionAllowed,
+        itemTitle: title,
         needConfirmation: true,
         confirmationText: count ? textUsed : textNotUsed
       }

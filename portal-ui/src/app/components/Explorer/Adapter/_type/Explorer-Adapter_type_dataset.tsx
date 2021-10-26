@@ -2,15 +2,25 @@ import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { Storage } from '@mui/icons-material';
 
-import { Dataset, DataTable, getDataset, getDatasetTables } from '../../../../services/data.service';
+import { Dataset, DataTable, deleteDataset, getDataset, getDatasetTables } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { PageOptions, SortDir } from '../../../../services/models';
 import { getDatasetRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-import { currentUser } from '../../../../stores/CurrentUser.store';
 import { Role } from '../../../../services/crg/permissions.models';
+import { currentUser } from '../../../../stores/CurrentUser.store';
+import { Emitter } from '../../../../services/common/Emitter';
+import { communicationService } from '../../../../services/communication.service';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
-import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
+import {
+  Adapter,
+  AllowedActions,
+  AllowedDetails,
+  ExplorerItemData,
+  ExplorerItemEntityType,
+  ExplorerItemType,
+  SortItem
+} from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 
 declare module '../../Explorer.models' {
@@ -78,6 +88,19 @@ export class ExplorerAdapterTypeDataset {
     return true;
   }
 
+  static async getAllowedActions(item: ExplorerItemData<Dataset>): Promise<AllowedActions> {
+    const currentItem = await getDataset(item.payload.identifier);
+
+    return {
+      delete: {
+        visible: true,
+        disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER),
+        itemTitle: item.payload.title,
+        needConfirmation: true
+      }
+    };
+  }
+
   static async getChildren(
     item: ExplorerItemData<Dataset>,
     { page, pageSize, sort, sortDir, filter }: PageOptions
@@ -114,5 +137,24 @@ export class ExplorerAdapterTypeDataset {
 
   static getChildrenFilterLabel(): string {
     return 'Поиск по названию';
+  }
+
+  static async deleteItem(item: ExplorerItemData<Dataset>): Promise<void> {
+    await deleteDataset(item.payload.identifier);
+  }
+
+  static async isDeleteAllowed(item: ExplorerItemData<Dataset>): Promise<AllowedDetails> {
+    const [tables] = await getDatasetTables(item.payload, { page: 0, pageSize: 1 });
+
+    return {
+      ok: !tables.length,
+      errorMessage: tables.length
+        ? 'Набор данных не является пустым. Для его удаления необходимо сперва удалить все таблицы внутри.'
+        : undefined
+    };
+  }
+
+  static getRefreshEmitters(): Emitter[] {
+    return [communicationService.datasetsUpdated];
   }
 }

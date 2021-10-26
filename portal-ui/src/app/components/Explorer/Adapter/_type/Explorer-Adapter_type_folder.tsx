@@ -16,7 +16,15 @@ import { Role } from '../../../../services/crg/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 
 import { ExplorerStore } from '../../Explorer.store';
-import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemType,
+  ExplorerItemEntityType,
+  SortItem,
+  AllowedActions,
+  AllowedDetails
+} from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 
 declare module '../../Explorer.models' {
@@ -79,13 +87,26 @@ export class ExplorerAdapterTypeFolder {
     return true;
   }
 
+  static async getAllowedActions(item: ExplorerItemData<LibraryRecord>): Promise<AllowedActions> {
+    const currentItem = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
+
+    return {
+      delete: {
+        visible: true,
+        disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER),
+        itemTitle: item.payload.title,
+        needConfirmation: true
+      }
+    };
+  }
+
   static async getChildren(
     explorerItem: ExplorerItemData<LibraryRecord>,
     { page, pageSize, sort, sortDir, filter }: PageOptions
   ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
     const result: ExplorerItemData<LibraryRecord>[] = [];
 
-    const [libraryRecords, pagesCount] = await docLibraryService.getAllRecords(
+    const [libraryRecords, pagesCount] = await docLibraryService.getRecords(
       explorerItem.payload.libraryId,
       explorerItem.payload.schemaId,
       { page, pageSize, sort, sortDir, filter: { ...filter, parent: explorerItem.payload.id } }
@@ -154,5 +175,20 @@ export class ExplorerAdapterTypeFolder {
 
   static getRefreshEmitters(): Emitter[] {
     return [communicationService.libraryItemsUpdated];
+  }
+
+  static async deleteItem(item: ExplorerItemData<LibraryRecord>): Promise<void> {
+    await docLibraryService.deleteRecord(item.payload.libraryId, item.payload.id);
+  }
+
+  static async isDeleteAllowed(item: ExplorerItemData<LibraryRecord>): Promise<AllowedDetails> {
+    const record = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
+
+    return {
+      ok: !record.length,
+      errorMessage: record.length
+        ? 'Папка не является пустой. Для её удаления необходимо сперва удалить все элементы внутри.'
+        : undefined
+    };
   }
 }

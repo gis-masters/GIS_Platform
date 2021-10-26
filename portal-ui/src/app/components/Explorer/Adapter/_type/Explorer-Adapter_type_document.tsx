@@ -98,8 +98,8 @@ export class ExplorerAdapterTypeDocument {
       delete: {
         visible: true,
         disabled: !deletionAllowed,
-        needConfirmation: true,
-        confirmationText: 'Вы действительно хотите удалить файл?'
+        itemTitle: item.payload.title,
+        needConfirmation: true
       },
       download: {
         url: `${recordsUrl}/${document.id}/${field}/download`,
