@@ -37,7 +37,7 @@ public class ResourcesController {
                                                   PagedResourcesAssembler<IResource> pageAssembler) {
         IResourceQueryService resourceQueryService = queryServices.get(resourceType);
         if (resourceQueryService == null) {
-            throw new NotFoundException("No such query service");
+            throw new NotFoundException("Не найден query service для ресурса: " + resourceType);
         }
 
         final Page<IResource> resources = resourceQueryService.getResources(pageable);

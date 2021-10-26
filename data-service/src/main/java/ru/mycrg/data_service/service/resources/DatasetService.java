@@ -70,18 +70,18 @@ public class DatasetService extends SchemasAndTablesBase {
     }
 
     public IResourceModel getInfo(String datasetIdentifier) {
-        final SchemasAndTables dataset = schemasAndTablesRepository
+        SchemasAndTables dataset = schemasAndTablesRepository
                 .findByIdentifier(datasetIdentifier)
                 .orElseThrow(() -> new NotFoundException(datasetIdentifier));
 
-        final Optional<Role> oRole = permissionsService.getBestDatasetRole(schemasAndTablesQualifier, dataset.getId());
+        Optional<Role> oRole = permissionsService.getBestDatasetRole(schemasAndTablesQualifier, dataset.getId());
         if (oRole.isPresent()) { // There is permission directly for the schema
             return new DatasetModel(dataset, oRole.get().getName());
         } else { // Check if schema allowed for view by permissions from children
             if (permissionsRepository.isViewAllowed(schemasAndTablesQualifier, dataset.pathTo())) {
                 return new DatasetModel(dataset, Roles.VIEWER.name());
             } else {
-                throw new ForbiddenException("You don't have permission to resource: " + datasetIdentifier);
+                throw new ForbiddenException("Недостаточно прав для просмотра набора: " + datasetIdentifier);
             }
         }
     }
@@ -117,12 +117,12 @@ public class DatasetService extends SchemasAndTablesBase {
 
     @Transactional
     public void delete(ResourceQualifier datasetQualifier) {
-        final SchemasAndTables dataset = schemasAndTablesRepository
+        SchemasAndTables dataset = schemasAndTablesRepository
                 .findByIdentifier(datasetQualifier.toString())
                 .orElseThrow(() -> new NotFoundException(datasetQualifier));
 
         if (!resourceProtector.isOwner(datasetQualifier)) {
-            throw new ForbiddenException();
+            throw new ForbiddenException("Недостаточно прав для удаления набора: " + datasetQualifier.getQualifier());
         }
 
         // Delete from DB

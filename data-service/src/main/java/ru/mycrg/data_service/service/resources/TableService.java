@@ -93,7 +93,7 @@ public class TableService extends SchemasAndTablesBase {
 
             return new TableModel(table, oRole.get());
         } else {
-            throw new ForbiddenException("You don't have permission to resource: " + tQualifier);
+            throw new ForbiddenException("Недостаточно прав для просмотра таблицы: " + tQualifier.getQualifier());
         }
     }
 

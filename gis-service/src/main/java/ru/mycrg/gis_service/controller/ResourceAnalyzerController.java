@@ -39,7 +39,7 @@ public class ResourceAnalyzerController {
     public ResponseEntity<IResourceAnalyzer> getAnalyzerInfo(@PathVariable String analyzerId) {
         IResourceAnalyzer resourceAnalyzer = resourceAnalyzerService
                 .getById(analyzerId)
-                .orElseThrow(() -> new NotFoundException("Not found analyzer by id: " + analyzerId));
+                .orElseThrow(() -> new NotFoundException("Не найден анализатор: " + analyzerId));
 
         return ResponseEntity.ok(resourceAnalyzer);
     }
@@ -52,7 +52,7 @@ public class ResourceAnalyzerController {
 
         List<IResourceAnalyzerResult> analyzeResults = resourceAnalyzerService
                 .getById(analyzerId)
-                .orElseThrow(() -> new NotFoundException("Not found analyzer by id: " + analyzerId))
+                .orElseThrow(() -> new NotFoundException("Не найден анализатор: " + analyzerId))
                 .analyze(resources);
 
         return ResponseEntity.ok(analyzeResults);

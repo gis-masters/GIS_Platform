@@ -57,7 +57,7 @@ public class BasemapReferencesDeletionEventHandler implements IEventHandler {
 
             final Layer geoserverLayer = new VectorLayer(event.getAuthToken())
                     .getByName(layerName)
-                    .orElseThrow(() -> new NotFoundException("Not found layer: '" + layerName + "' on geoserver"));
+                    .orElseThrow(() -> new NotFoundException("На геосервере не найден слой: " + layerName));
 
             final String coverageName = getCoverageName(geoserverLayer);
             new VectorLayer(event.getAuthToken())

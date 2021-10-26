@@ -88,7 +88,7 @@ public class LayerService {
         Layer foundLayer = layers.stream()
                                  .filter(layer -> layer.getTableName().equals(tableName))
                                  .findFirst()
-                                 .orElseThrow(() -> new NotFoundException(tableName));
+                                 .orElseThrow(() -> new NotFoundException("Не найден слой: " + tableName));
 
         return new LayerProjection(foundLayer, getOrgWorkspaceName());
     }

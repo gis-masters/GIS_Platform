@@ -92,7 +92,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
 
             return userDetails;
         } catch (Exception e) {
-            throw new ForbiddenException("Incorrect group claims");
+            throw new ForbiddenException("Не удалось аутентифицировать пользователя: Incorrect group claims");
         }
     }
 

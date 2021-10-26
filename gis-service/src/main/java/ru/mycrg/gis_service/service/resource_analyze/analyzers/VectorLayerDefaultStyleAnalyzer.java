@@ -119,7 +119,7 @@ public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
             if (isLayerExistOnGeoserver) {
                 Layer layerFromGeoserver = geoserverLayerService
                         .getByName(vectorLayer.getId())
-                        .orElseThrow(() -> new NotFoundException(vectorLayer.getId()));
+                        .orElseThrow(() -> new NotFoundException("Не найден слой: " + vectorLayer.getId()));
                 LayerProjection layerFromGisService = layerService.findByTableName(vectorLayer.getId());
 
                 if (isLayersHaveSameStyle(layerFromGeoserver, layerFromGisService)) {

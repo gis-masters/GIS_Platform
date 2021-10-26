@@ -61,7 +61,7 @@ public class DataStoreService {
             ResponseModel<Object> responseModel = new VectorStorage(token).delete(orgWorkspace, dataStoreId);
             if (!responseModel.isSuccessful()) {
                 if (responseModel.getCode() == NOT_FOUND.value()) {
-                    throw new NotFoundException(dataStoreId);
+                    throw new NotFoundException("На геосервере не найдено хранилище: " + dataStoreId);
                 } else {
                     throw new ThirdPartyServiceException("Не удалось удалить хранилище на геосервере", responseModel);
                 }

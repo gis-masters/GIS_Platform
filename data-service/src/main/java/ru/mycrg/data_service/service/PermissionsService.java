@@ -140,7 +140,7 @@ public class PermissionsService {
      */
     public PermissionProjection create(ResourceQualifier tableQualifier, Long resourceId, PermissionCreateDto dto) {
         if (!resourceProtector.isOwner(tableQualifier)) {
-            throw new ForbiddenException("Not allowed create permission for this resource");
+            throw new ForbiddenException("Недостаточно прав для создания правил");
         }
 
         try {
@@ -169,7 +169,7 @@ public class PermissionsService {
 
     public void deleteById(ResourceQualifier tQualifier, Long permissionId) {
         if (!resourceProtector.isOwner(tQualifier)) {
-            throw new ForbiddenException("Not allowed delete permission for this resource");
+            throw new ForbiddenException("Недостаточно прав для удаления разрешения: " + permissionId);
         }
 
         permissionRepository.deleteById(permissionId);

@@ -54,7 +54,7 @@ public class DatabaseService {
             if (calcName.equalsIgnoreCase(dbName)) {
                 databaseDDL.delete(dbName);
             } else {
-                throw new ForbiddenException("Not allowed");
+                throw new ForbiddenException("Недостаточно прав для удаления бд: " + dbName);
             }
         }
     }
@@ -70,7 +70,7 @@ public class DatabaseService {
         if (Objects.equals(dbId, authenticationFacade.getOrganizationId())) {
             return databaseDDL.isDatabaseExist(dbName);
         } else {
-            throw new ForbiddenException("Not allowed");
+            throw new ForbiddenException("Недостаточно прав для просмотра");
         }
     }
 }

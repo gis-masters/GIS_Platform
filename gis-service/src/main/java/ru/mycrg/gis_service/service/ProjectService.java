@@ -120,7 +120,7 @@ public class ProjectService {
         if (!filteredProjects.isEmpty()) {
             return project;
         } else {
-            throw new ForbiddenException("Not allowed");
+            throw new ForbiddenException("Недостаточно прав для просмотра проекта: " + id);
         }
     }
 
@@ -152,7 +152,7 @@ public class ProjectService {
         } else {
             project = getById(projectId);
             if (!isOwner(project)) {
-                throw new ForbiddenException("Not Allowed");
+                throw new ForbiddenException("Недостаточно прав для редактирования проекта: " + projectId);
             }
         }
 
@@ -203,7 +203,7 @@ public class ProjectService {
                                                  PROJECT,
                                                  projectId));
         } else {
-            throw new ForbiddenException("Not Allowed");
+            throw new ForbiddenException("Недостаточно прав для удаления проекта: " + projectId);
         }
     }
 
