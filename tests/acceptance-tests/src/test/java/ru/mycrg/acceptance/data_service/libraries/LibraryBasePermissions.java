@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class LibraryBasePermissions extends BaseStepsDefinitions {
 
-    public static Integer currentPermission;
+    public static Integer currentPermissionId;
 
     @Override
     public RequestSpecification getBaseRequest() {

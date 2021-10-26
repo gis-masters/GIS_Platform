@@ -54,7 +54,7 @@ public class ResourceProtector {
     }
 
     private boolean isUserHasOwnPermission(ResourceQualifier rQualifier) {
-        Optional<String> oRole = basePermissionsRepository.bestRole(rQualifier, ROOT_FOLDER_PATH);
+        Optional<String> oRole = basePermissionsRepository.bestRoleByPath(rQualifier, ROOT_FOLDER_PATH);
         if (oRole.isEmpty()) {
             return false;
         }

@@ -15,7 +15,7 @@ public class Record {
         return content;
     }
 
-    public void put(String key, String value) {
+    public void put(String key, Object value) {
         this.content.put(key, value);
     }
 }

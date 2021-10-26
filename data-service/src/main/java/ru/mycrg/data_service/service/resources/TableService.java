@@ -81,7 +81,7 @@ public class TableService extends SchemasAndTablesBase {
     }
 
     public IResourceModel getInfo(ResourceQualifier tQualifier) {
-        Optional<String> oRole = permissionsRepository.bestRole(tQualifier);
+        Optional<String> oRole = permissionsRepository.bestRoleForTable(tQualifier);
         if (oRole.isPresent()) {
             SchemasAndTables table = schemasAndTablesRepository
                     .findByIdentifier(tQualifier.getTable())

@@ -61,11 +61,11 @@ public class DocumentLibraryRecordsController {
                                          @RequestParam(required = false, defaultValue = "") String title,
                                          Pageable pageable,
                                          PagedResourcesAssembler<Record> pageAssembler) {
-        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
+        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
 
         checkSortedFields(docLibId, pageable);
 
-        var result = recordsService.getPaged(rQualifier, fetchFoldersFirst(pageable), parent, title);
+        var result = recordsService.getPaged(lQualifier, fetchFoldersFirst(pageable), parent, title);
 
         var pagedResources = pageAssembler.toResource(
                 result,
@@ -89,9 +89,10 @@ public class DocumentLibraryRecordsController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/document-libraries/{docLibId}/records")
-    public Object createObject(@PathVariable String docLibId,
-                               @RequestParam(value = "file", required = false) MultipartFile file,
-                               @RequestParam(value = "body") String jsonBody) {
+    public ResponseEntity<Map<String, Object>> createObject(
+            @PathVariable String docLibId,
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "body") String jsonBody) {
         ResourceQualifier libraryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
 
         Map<String, Object> body = deserializeBody(jsonBody);
@@ -100,7 +101,7 @@ public class DocumentLibraryRecordsController {
 
         IRecord record = recordsService.createRecord(libraryQualifier, new RecordImpl(body), file);
 
-        return new ResponseEntity<>(record, CREATED);
+        return new ResponseEntity<>(record.getContent(), CREATED);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

@@ -14,6 +14,7 @@ public enum SystemLibraryAttributes {
     CONTENT_TYPE_ID("content_type_id"),
     OKTMO("oktmo"),
     INTENTS("intents"),
+    ROLE("role"),
     IS_FOLDER("is_folder");
 
     private final String name;

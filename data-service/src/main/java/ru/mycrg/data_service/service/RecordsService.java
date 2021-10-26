@@ -16,6 +16,7 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordImpl;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentIntentHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -59,7 +60,7 @@ public class RecordsService {
         this.simpleIntentHandler = simpleIntentHandler;
     }
 
-    public Page<Record> getPaged(ResourceQualifier libraryTable,
+    public Page<Record> getPaged(ResourceQualifier lQualifier,
                                  Pageable pageable,
                                  Long parentId,
                                  String title) {
@@ -69,32 +70,100 @@ public class RecordsService {
         String path = ROOT_FOLDER_PATH;
         if (parentId != null) {
             final Map<String, Object> parent = tablesDao
-                    .findById(libraryTable, parentId)
+                    .findById(lQualifier, parentId)
                     .orElseThrow(() -> new NotFoundException("Not found record by id: " + parentId));
 
-            path = parent.get("path") + "/" + parentId;
+            path = String.format("%s/%d", parent.get("path"), parentId);
 
             Set<String> ids = extractFolderIdsFromPath(path);
 
-            boolean allowedByParentPermissions = permissionsRepository.isAllowedByParentsPermissions(libraryTable, ids);
+            boolean allowedByParentPermissions = permissionsRepository.isAllowedByParentsPermissions(lQualifier, ids);
             if (allowedByParentPermissions) {
-                allowedResources = tablesDao.findAllByPath(libraryTable, path, title, pageable);
-                total = tablesDao.getTotalByPath(libraryTable, path, title);
+                allowedResources = tablesDao.findAllByPath(lQualifier, path, title, pageable);
+                total = tablesDao.getTotalByPath(lQualifier, path, title);
             } else {
-                allowedResources = permissionsRepository.findAllowedByParent(libraryTable, path, title, pageable);
-                total = permissionsRepository.getTotalByParent(libraryTable, path, title);
+                allowedResources = permissionsRepository.findAllowedByParent(lQualifier, path, title, pageable);
+                total = permissionsRepository.getTotalByParent(lQualifier, path, title);
             }
         } else {
-            allowedResources = permissionsRepository.findAllowedByParent(libraryTable, path, title, pageable);
-            total = permissionsRepository.getTotalByParent(libraryTable, path, title);
+            allowedResources = permissionsRepository.findAllowedByParent(lQualifier, path, title, pageable);
+            total = permissionsRepository.getTotalByParent(lQualifier, path, title);
         }
 
         return new PageImpl<>(allowedResources, pageable, total);
     }
 
-    public Map<String, Object> getById(ResourceQualifier resourceQualifier, Long recordId) {
-        return tablesDao.findById(resourceQualifier, recordId)
-                        .orElseThrow(() -> new NotFoundException(resourceQualifier, recordId));
+    /**
+     * Возвращает запись из библиотеки при наличии к ней доступа.
+     *
+     * @param lQualifier Квалификатор библиотеки
+     * @param recordId   Идентификатор записи
+     */
+    public Map<String, Object> getById(ResourceQualifier lQualifier, Long recordId) {
+        String definedRole = null;
+
+        Map<String, Object> record = tablesDao.findById(lQualifier, recordId)
+                                              .orElseThrow(() -> new NotFoundException(recordId));
+
+        // Если запись имеет родителей - получим роль наследуемую от них
+        String path = String.valueOf(record.get(PATH.getName()));
+        if (path != null && !path.equals(ROOT_FOLDER_PATH)) {
+            Set<String> ids = extractFolderIdsFromPath(path);
+
+            Optional<String> oRole = permissionsRepository.bestRoleInheritedFromParent(lQualifier, ids);
+            if (oRole.isPresent()) {
+                definedRole = oRole.get();
+            }
+        }
+
+        // Если роль на данном этапе максимальная, то дальше ничего делать не нужно.
+        String ownerRole = "OWNER";
+        if (ownerRole.equals(definedRole)) {
+            record.put(ROLE.getName(), ownerRole);
+
+            return record;
+        }
+
+        // Проверим роль выданную непосредственно на запись
+        Optional<String> oRole = permissionsRepository.getRoleForRecord(lQualifier, recordId);
+        if (oRole.isPresent()) {
+            record.put(ROLE.getName(), oRole.get());
+            definedRole = oRole.get();
+        }
+
+        // Если роль на данном этапе максимальная, то дальше ничего делать не нужно.
+        if (ownerRole.equals(definedRole)) {
+            record.put(ROLE.getName(), ownerRole);
+
+            return record;
+        }
+
+        // Проверим доступна ли запись как "проходная папка", т.е. из-за наличия в ней элементов к которым есть доступ
+        boolean isFolder = Boolean.parseBoolean(String.valueOf(record.get(IS_FOLDER.getName())));
+        if (isFolder) {
+            boolean isPassThroughFolder = permissionsRepository.isPassThroughFolder(lQualifier, path + "/" + recordId);
+            if (isPassThroughFolder) {
+                record.put(ROLE.getName(), "VIEWER");
+
+                return record;
+            }
+
+            if (definedRole == null) {
+                throw new ForbiddenException("Недостаточно прав для просмотра записи: " + recordId);
+            } else {
+                record.put(ROLE.getName(), definedRole);
+
+                return record;
+            }
+        }
+
+        if (definedRole == null) {
+            throw new ForbiddenException("Недостаточно прав для просмотра записи: " + recordId);
+        } else {
+            record.put(ROLE.getName(), definedRole);
+
+            return record;
+        }
     }
 
     @Transactional

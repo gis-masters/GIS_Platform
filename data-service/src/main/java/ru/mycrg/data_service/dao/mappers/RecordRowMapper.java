@@ -16,7 +16,14 @@ public class RecordRowMapper implements RowMapper<Record> {
         final ResultSetMetaData metaData = rs.getMetaData();
         int i = 1;
         while (i <= metaData.getColumnCount()) {
-            record.put(metaData.getColumnName(i), rs.getString(i));
+            if (metaData.getColumnClassName(i).contains("Boolean")) {
+                record.put(metaData.getColumnName(i), rs.getBoolean(i));
+            } else if (metaData.getColumnClassName(i).contains("Long")) {
+                record.put(metaData.getColumnName(i), rs.getLong(i));
+            } else {
+                record.put(metaData.getColumnName(i), rs.getString(i));
+            }
+
             i++;
         }
 

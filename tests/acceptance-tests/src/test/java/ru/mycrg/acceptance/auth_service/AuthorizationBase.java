@@ -19,7 +19,32 @@ public class AuthorizationBase extends BaseStepsDefinitions {
     public static final String AUTH_COOKIE = "crgAuthCookie";
     public static final String AUTH_COOKIE_VALUE_SEPARATOR = "---crg---";
 
-    public Response authorizeUser(String login, String password, String user) {
+    public Response loginAsRoot() {
+        return authorizeUser(rootUserName, rootPassword, "root");
+    }
+
+    public void loginAsOwner() {
+        Response response = authorizeUser(orgDto.getOwner().getEmail(), orgDto.getOwner().getPassword(), "owner");
+
+        checkCookieAndWriteAsCurrent(response);
+    }
+
+    public void loginAsCurrentUser() {
+        Response response = authorizeUser(userDto.getEmail(), userDto.getPassword(), "current_user");
+
+        checkCookieAndWriteAsCurrent(response);
+    }
+
+    public void checkCookieAndWriteAsCurrent(Response response) {
+        cookie = response.getDetailedCookie(AUTH_COOKIE);
+        String accessToken = response.getBody().toString();
+
+        assertNotNull(cookie);
+        assertNotNull(accessToken);
+        assertTrue(cookie.getValue().contains(AUTH_COOKIE_VALUE_SEPARATOR));
+    }
+
+    private Response authorizeUser(String login, String password, String user) {
         try {
             Response authResponse;
 
@@ -51,26 +76,5 @@ public class AuthorizationBase extends BaseStepsDefinitions {
         } catch (InterruptedException e) {
             throw new RuntimeException("Failed to authorize by user: " + login);
         }
-    }
-
-    public void loginAsOwner() {
-        final Response response = authorizeUser(orgDto.getOwner().getEmail(), orgDto.getOwner().getPassword(), "onwer");
-
-        checkCookieAndWriteAsCurrent(response);
-    }
-
-    public void loginAsCurrentUser() {
-        final Response response = authorizeUser(userDto.getEmail(), userDto.getPassword(), "current_user");
-
-        checkCookieAndWriteAsCurrent(response);
-    }
-
-    public void checkCookieAndWriteAsCurrent(Response response) {
-        cookie = response.getDetailedCookie(AUTH_COOKIE);
-        String accessToken = response.getBody().toString();
-
-        assertNotNull(cookie);
-        assertNotNull(accessToken);
-        assertTrue(cookie.getValue().contains(AUTH_COOKIE_VALUE_SEPARATOR));
     }
 }

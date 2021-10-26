@@ -237,15 +237,21 @@ public class TablesDao {
 
     @NotNull
     private Map<String, Object> getRecordAsObjectMap(ResultSet rs) throws SQLException {
-        final Map<String, Object> selectedRow = new LinkedHashMap<>();
+        Map<String, Object> row = new LinkedHashMap<>();
 
-        final ResultSetMetaData metaData = rs.getMetaData();
-        final int columnCount = metaData.getColumnCount();
+        ResultSetMetaData metaData = rs.getMetaData();
+        int columnCount = metaData.getColumnCount();
         for (int i = 1; i <= columnCount; i++) {
-            selectedRow.put(metaData.getColumnLabel(i), rs.getString(i));
+            if (metaData.getColumnClassName(i).contains("Boolean")) {
+                row.put(metaData.getColumnLabel(i), rs.getBoolean(i));
+            } else if (metaData.getColumnClassName(i).contains("Long")) {
+                row.put(metaData.getColumnLabel(i), rs.getLong(i));
+            } else {
+                row.put(metaData.getColumnLabel(i), rs.getString(i));
+            }
         }
 
-        return selectedRow;
+        return row;
     }
 
     private DbTable getSimpleDbTable(@NotNull ResourceQualifier rQualifier) {
