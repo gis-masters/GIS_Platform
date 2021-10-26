@@ -42,8 +42,10 @@ public class XmlParser {
 
     public XmlParser(TransformationGeometryUtils transformationGeometryUtils,
                      CrsHandler crsHandler) throws ParserConfigurationException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
         this.transformationGeometryUtils = transformationGeometryUtils;
-        this.documentBuilder = DocumentBuilderFactory.newDefaultInstance().newDocumentBuilder();
+        this.documentBuilder = factory.newDocumentBuilder();
         this.crsHandler = crsHandler;
     }
 
@@ -53,7 +55,8 @@ public class XmlParser {
         Map<String, Object> result = new HashMap<>();
 
         List<String> schemaProperties = simpleProperties.stream()
-                                                        .map(simplePropertyDto -> simplePropertyDto.getName().toLowerCase())
+                                                        .map(simplePropertyDto -> simplePropertyDto.getName()
+                                                                                                   .toLowerCase())
                                                         .collect(Collectors.toList());
 
         try (InputStream inputStream = xmlFile.getInputStream()) {

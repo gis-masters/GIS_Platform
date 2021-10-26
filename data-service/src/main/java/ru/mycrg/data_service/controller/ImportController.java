@@ -1,8 +1,8 @@
 package ru.mycrg.data_service.controller;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +16,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -50,13 +51,16 @@ public class ImportController extends BaseController {
                                      .filter(importer -> importType.equalsIgnoreCase(importer.getType()))
                                      .findFirst()
                                      .orElseThrow(() -> new BadRequestException("this importer is not exist"));
+
+        String filename = file.getOriginalFilename();
+        String fileExtension = FilenameUtils.getExtension(filename);
+
         if (file.isEmpty()) {
             String msg = "Загружаемый файл пустой";
             log.warn(msg);
 
             throw new BadRequestException(msg);
-        } else if (!MediaType.APPLICATION_XML_VALUE.equals(file.getContentType())
-                && !MediaType.TEXT_XML_VALUE.equals(file.getContentType())) {
+        } else if (isEmpty(fileExtension) || !"xml".equalsIgnoreCase(fileExtension)) {
             String msg = "Тип файла не XML";
             log.warn(msg);
 

@@ -1,0 +1,25 @@
+Feature: Проверка xml импорта
+
+  Background: Проверка организации
+    Given Существует организация
+      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
+    When Авторизируемся владельцем организации
+
+  Scenario Outline: Осуществляется импорт корректного xml файла : "<additional>"
+    Given Существует набор
+    Given Существует таблица
+    When Пользователь делает запрос на импорт xml файла "<importType>" "<fileName>"
+    Then Сервер отвечает со статус-кодом 200
+    Examples:
+      | importType | fileName           | additional                  |
+      | mp         | gpzu.xml           |                             |
+      | mp         | namespace_test.xml | файл имеет разные namespace |
+
+  Scenario Outline: Импорт некорректного файла отклоняется сервером: "<reason>"
+    When Пользователь делает запрос на импорт xml файла "<importType>" "<fileName>"
+    Then Сервер отвечает со статус-кодом 400
+    And В ответе пункт "message" имеет значение "<responseMessage>"
+    Examples:
+      | importType | fileName  | responseMessage         | reason                  |
+      | mp         | test.txt  | Тип файла не XML        | некорректное расширение |
+      | mp         | empty.xml | Загружаемый файл пустой | файл пустой             |

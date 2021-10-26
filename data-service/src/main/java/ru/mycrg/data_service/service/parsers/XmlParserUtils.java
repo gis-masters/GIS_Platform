@@ -21,10 +21,10 @@ public class XmlParserUtils {
     }
 
     public static List<Element> getElementsByTag(Element rootElement, String tag) {
-        int length = rootElement.getElementsByTagName(tag).getLength();
+        int length = rootElement.getElementsByTagNameNS("*", tag).getLength();
 
         return IntStream.range(0, length)
-                        .mapToObj(i -> (Element) rootElement.getElementsByTagName(tag).item(i))
+                        .mapToObj(i -> (Element) rootElement.getElementsByTagNameNS("*", tag).item(i))
                         .collect(Collectors.toList());
     }
 
