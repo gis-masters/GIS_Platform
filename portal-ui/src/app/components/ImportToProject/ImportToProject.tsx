@@ -16,7 +16,7 @@ import { allProjects } from '../../stores/AllProjects.store';
 import { CrgProject } from '../../services/crg/projects.models';
 import { projectsService } from '../../services/crg/projects.service';
 import { LibraryRecord } from '../../services/crg/doc-library.service';
-import { initImportGmlProcess } from '../../services/crg/processes.service';
+import { initImportProcess } from '../../services/crg/processes.service';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 
 const cnImportToProject = cn('ImportToProject');
@@ -161,7 +161,7 @@ export class ImportToProject extends Component<ImportToProjectProps> {
     this.setFormBusy(true);
 
     try {
-      await initImportGmlProcess(libraryId, objectId, projectId, projectName, projectIsNew);
+      await initImportProcess(libraryId, objectId, projectId, projectName, projectIsNew);
 
       this.closeDialog();
       sidebars.openInfo();

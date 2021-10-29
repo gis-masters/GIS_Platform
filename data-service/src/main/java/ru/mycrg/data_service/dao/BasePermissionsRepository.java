@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
-import ru.mycrg.data_service.dto.Record;
+import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.service.PrincipalService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
@@ -36,10 +36,10 @@ public class BasePermissionsRepository {
         this.pJdbcTemplate = pJdbcTemplate;
     }
 
-    public List<Record> findAllowedByParent(ResourceQualifier targetTable,
-                                            String parent,
-                                            String title,
-                                            Pageable pageable) {
+    public List<RecordDto> findAllowedByParent(ResourceQualifier targetTable,
+                                               String parent,
+                                               String title,
+                                               Pageable pageable) {
         final String tableQualifier = targetTable.getQualifier();
         final String tableName = targetTable.getTable();
 

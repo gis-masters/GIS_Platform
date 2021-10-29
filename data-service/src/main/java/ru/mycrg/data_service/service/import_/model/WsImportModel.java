@@ -5,7 +5,7 @@ import ru.mycrg.data_service_contract.enums.ProcessStatus;
 
 import java.util.UUID;
 
-public class WsImportGmlModel {
+public class WsImportModel {
 
     private final UUID id;
     private final ProcessStatus status;
@@ -13,7 +13,7 @@ public class WsImportGmlModel {
     private final String description;
     private final Integer progress;
 
-    public WsImportGmlModel(UUID id, ProcessStatus status, ImportReport payload, String description) {
+    public WsImportModel(UUID id, ProcessStatus status, ImportReport payload, String description) {
         this.id = id;
         this.status = status;
         this.payload = payload;

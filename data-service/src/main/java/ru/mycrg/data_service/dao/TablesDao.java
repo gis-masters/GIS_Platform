@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
-import ru.mycrg.data_service.dto.Record;
+import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
@@ -128,7 +128,7 @@ public class TablesDao {
         }
     }
 
-    public List<Record> customListQuery(String sqlRequest) {
+    public List<RecordDto> customListQuery(String sqlRequest) {
         log.debug("Custom query: [{}]", sqlRequest);
 
         return pJdbcTemplate.getJdbcTemplate()
@@ -138,10 +138,10 @@ public class TablesDao {
                                    ));
     }
 
-    public List<Record> findAllByPath(ResourceQualifier tableQualifier,
-                                      String path,
-                                      String title,
-                                      Pageable pageable) {
+    public List<RecordDto> findAllByPath(ResourceQualifier tableQualifier,
+                                         String path,
+                                         String title,
+                                         Pageable pageable) {
         final MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("path", path)
                 .addValue("offset", pageable.getOffset())
@@ -162,7 +162,7 @@ public class TablesDao {
                                    ));
     }
 
-    public List<Record> findAll(ResourceQualifier tableQualifier) {
+    public List<RecordDto> findAll(ResourceQualifier tableQualifier) {
         final MapSqlParameterSource params = new MapSqlParameterSource();
 
         String sqlTemplate = String.format("SELECT * FROM %s.%s ", tableQualifier.getSchema(),
@@ -170,18 +170,18 @@ public class TablesDao {
 
         log.debug("Request find all: [{}]", sqlTemplate);
 
-        List<Record> records = new ArrayList<>();
+        List<RecordDto> recordDtos = new ArrayList<>();
         try {
-            records = pJdbcTemplate.query(sqlTemplate,
-                                          params,
-                                          new RowMapperResultSetExtractor<>(
+            recordDtos = pJdbcTemplate.query(sqlTemplate,
+                                             params,
+                                             new RowMapperResultSetExtractor<>(
                                                   new RecordRowMapper()
                                           ));
         } catch (BadSqlGrammarException e) {
             log.warn("Не удалось получить данные из {}, ошибка: {}", tableQualifier, e.getMessage());
         }
 
-        return records;
+        return recordDtos;
     }
 
     public long getTotalByPath(ResourceQualifier tableQualifier, String path, String title) {

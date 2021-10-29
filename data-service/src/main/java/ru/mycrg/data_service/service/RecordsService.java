@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -7,13 +8,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.TablesDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.dto.Record;
+import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordImpl;
+import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
@@ -60,12 +62,12 @@ public class RecordsService {
         this.simpleIntentHandler = simpleIntentHandler;
     }
 
-    public Page<Record> getPaged(ResourceQualifier lQualifier,
-                                 Pageable pageable,
-                                 Long parentId,
-                                 String title) {
+    public Page<RecordDto> getPaged(ResourceQualifier lQualifier,
+                                    Pageable pageable,
+                                    Long parentId,
+                                    String title) {
         final long total;
-        final List<Record> allowedResources;
+        final List<RecordDto> allowedResources;
 
         String path = ROOT_FOLDER_PATH;
         if (parentId != null) {
@@ -168,14 +170,12 @@ public class RecordsService {
 
     @Transactional
     public IRecord createRecord(ResourceQualifier tableQualifier,
-                                RecordImpl record,
+                                RecordEntity record,
                                 MultipartFile file) {
         try {
             log.debug("try create record: {}", record);
 
-            String innerFileName = UUID.randomUUID().toString();
-
-            final SchemaDto schema = librariesService.getSchema(tableQualifier.getTable());
+            SchemaDto schema = librariesService.getSchema(tableQualifier.getTable());
 
             systemAttributeHandler.initSchema(schema)
                                   .fillByContentType(record.getContent())
@@ -188,6 +188,7 @@ public class RecordsService {
                     throw new BadRequestException("File is empty");
                 }
 
+                String innerFileName = generateFileName(file);
                 systemAttributeHandler.initSchema(schema)
                                       .fillFileInfo(record.getContent(), file)
                                       .fillFileInnerName(record.getContent(), innerFileName);
@@ -258,5 +259,12 @@ public class RecordsService {
 
         return Arrays.stream(splited[1].split("/"))
                      .collect(Collectors.toSet());
+    }
+
+    @NotNull
+    private String generateFileName(MultipartFile file) {
+        return String.format("%s.%s",
+                             UUID.randomUUID().toString().substring(0, 13),
+                             StringUtils.getFilenameExtension(file.getOriginalFilename()));
     }
 }

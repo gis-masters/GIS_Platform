@@ -24,39 +24,33 @@ public class GmlParsingStepDefinitions extends BaseStepsDefinitions {
         return super.getBaseRequestWithCurrentCookie().basePath("/api/data");
     }
 
-    @When("Пытаемся инициализировать импорт GML файла {string} {string} {string} {string} {string} {string} {string}")
-    public void tryImportGmlProcess(String type,
-                                    String wsUiIdKey,
+    @When("Пытаемся инициализировать импорт GML файла {string} {string} {string} {string} {string} {string}")
+    public void tryImportGmlProcess(String wsUiIdKey,
                                     String libraryIdKey,
                                     String objectIdKey,
                                     String projectIdKey,
                                     String projectNameKey,
                                     String projectIsNew) {
-        ImportGmlRequestModel payload = new ImportGmlRequestModel();
+        ImportInitializingModel payload = new ImportInitializingModel();
         payload.setWsUiId(generateString(wsUiIdKey));
-        payload.setLibraryId(generateString(libraryIdKey));
-        payload.setProjectName(generateString(projectNameKey));
-        payload.setProjectIsNew(Boolean.parseBoolean(projectIsNew));
-        payload.setObjectId(Long.parseLong(generateString(objectIdKey)));
+        payload.setSource(new ImportSource(generateString(libraryIdKey), Long.parseLong(generateString(objectIdKey))));
+        payload.setTarget(new ImportTarget(generateString(projectNameKey), Boolean.parseBoolean(projectIsNew)));
 
         if (!projectIdKey.equals("NULL")) {
             payload.setProjectId(Long.parseLong(generateString(projectIdKey)));
         }
 
-        initProcess(type, payload);
+        initProcess(payload);
     }
 
     @When("Пользователь инициализирует импорт GML файла со случайными параметрами")
     public void initImportGmlProcess() {
-        final ImportGmlRequestModel payload = new ImportGmlRequestModel();
+        ImportInitializingModel payload = new ImportInitializingModel();
         payload.setWsUiId("someWsId");
-        payload.setLibraryId("notExistLibrary");
-        payload.setProjectId(314L);
-        payload.setObjectId(314L);
-        payload.setProjectName("SomeProjectName");
-        payload.setProjectIsNew(true);
+        payload.setSource(new ImportSource("notExistLibrary", 314L));
+        payload.setTarget(new ImportTarget(314L, "SomeProjectName", true));
 
-        initProcess("IMPORT_GML", payload);
+        initProcess(payload);
 
         currentProcessId = extractId(response.jsonPath().get("_links.self.href"));
     }
@@ -81,10 +75,10 @@ public class GmlParsingStepDefinitions extends BaseStepsDefinitions {
                            .contains("Не удалось выполнить импорт GML файла"));
     }
 
-    private void initProcess(String type, ImportGmlRequestModel payload) {
+    private void initProcess(ImportInitializingModel payload) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        body(gson.toJson(new ProcessDto(type, payload))).
+                        body(gson.toJson(payload)).
                         contentType(ContentType.JSON)
                 .when().
                         log().all().

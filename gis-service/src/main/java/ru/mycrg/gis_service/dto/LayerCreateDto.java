@@ -133,8 +133,7 @@ public class LayerCreateDto {
         return this.position;
     }
 
-    public void setPosition(
-            int position) {
+    public void setPosition(int position) {
         this.position = position;
     }
 
@@ -150,8 +149,7 @@ public class LayerCreateDto {
         return this.minZoom;
     }
 
-    public void setMinZoom(
-            int minZoom) {
+    public void setMinZoom(int minZoom) {
         this.minZoom = minZoom;
     }
 
@@ -159,8 +157,7 @@ public class LayerCreateDto {
         return this.maxZoom;
     }
 
-    public void setMaxZoom(
-            int maxZoom) {
+    public void setMaxZoom(int maxZoom) {
         this.maxZoom = maxZoom;
     }
 
@@ -190,22 +187,22 @@ public class LayerCreateDto {
 
     @Override
     public String toString() {
-        return "LayerCreateDto{" +
-                "type='" + type + '\'' +
-                ", title='" + title + '\'' +
-                ", dataset='" + dataset + '\'' +
-                ", tableName='" + tableName + '\'' +
-                ", enabled='" + enabled + '\'' +
-                ", position=" + position +
-                ", transparency=" + transparency +
-                ", minZoom=" + minZoom +
-                ", maxZoom=" + maxZoom +
-                ", parentId=" + parentId +
-                ", styleName='" + styleName + '\'' +
-                ", schemaId='" + schemaId + '\'' +
-                ", dataStoreName='" + dataStoreName + '\'' +
-                ", nativeCRS='" + nativeCRS + '\'' +
-                ", dataSourceUri='" + dataSourceUri + '\'' +
-                '}';
+        return "{" +
+                "\"type\":" + (type == null ? "null" : "\"" + type + "\"") + ", " +
+                "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
+                "\"tableName\":" + (tableName == null ? "null" : "\"" + tableName + "\"") + ", " +
+                "\"dataset\":" + (dataset == null ? "null" : "\"" + dataset + "\"") + ", " +
+                "\"enabled\":" + (enabled == null ? "null" : "\"" + enabled + "\"") + ", " +
+                "\"position\":\"" + position + "\"" + ", " +
+                "\"transparency\":\"" + transparency + "\"" + ", " +
+                "\"minZoom\":\"" + minZoom + "\"" + ", " +
+                "\"maxZoom\":\"" + maxZoom + "\"" + ", " +
+                "\"parentId\":" + (parentId == null ? "null" : "\"" + parentId + "\"") + ", " +
+                "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") + ", " +
+                "\"schemaId\":" + (schemaId == null ? "null" : "\"" + schemaId + "\"") + ", " +
+                "\"dataStoreName\":" + (dataStoreName == null ? "null" : "\"" + dataStoreName + "\"") + ", " +
+                "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
+                "\"dataSourceUri\":" + (dataSourceUri == null ? "null" : "\"" + dataSourceUri + "\"") +
+                "}";
     }
 }

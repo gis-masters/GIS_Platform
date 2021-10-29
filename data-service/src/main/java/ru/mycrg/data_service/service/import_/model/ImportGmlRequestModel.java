@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.service.import_.model;
 
+import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
+
 import java.util.UUID;
 
 public class ImportGmlRequestModel {
@@ -14,6 +16,18 @@ public class ImportGmlRequestModel {
 
     public ImportGmlRequestModel() {
         // Required
+    }
+
+    public ImportGmlRequestModel(ImportInitializingModel payload, UUID wsMsgId) {
+        this.wsUiId = payload.getWsUiId();
+        this.wsMsgId = wsMsgId;
+
+        this.libraryId = payload.getSource().getLibraryId();
+        this.objectId = payload.getSource().getObjectId();
+
+        this.projectId = payload.getTarget().getProjectId();
+        this.projectName = payload.getTarget().getProjectName();
+        this.projectIsNew = payload.getTarget().isProjectIsNew();
     }
 
     public Long getObjectId() {

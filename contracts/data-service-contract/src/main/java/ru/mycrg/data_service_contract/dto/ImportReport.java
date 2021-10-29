@@ -38,6 +38,10 @@ public class ImportReport {
         this.importLayerReports = importLayerReports;
     }
 
+    public void addImportLayerReport(ImportLayerReport importLayerReport) {
+        this.importLayerReports.add(importLayerReport);
+    }
+
     public Long getProjectId() {
         return projectId;
     }

@@ -1,10 +1,12 @@
 package ru.mycrg.data_service.service.storage;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
@@ -23,8 +25,6 @@ public class FileStorageService {
 
     private final Path fileStoragePath;
 
-    private static final String FILE_EXTENSION = ".blob";
-
     @Autowired
     public FileStorageService(Environment environment) {
         String path = environment.getRequiredProperty("crg-options.fileStoragePath");
@@ -42,7 +42,7 @@ public class FileStorageService {
         Path targetLocation = null;
         try {
             // Copy file to the target location (Replacing existing file with the same name)
-            targetLocation = fileStoragePath.resolve(fileName + FILE_EXTENSION);
+            targetLocation = fileStoragePath.resolve(fileName);
 
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
@@ -54,7 +54,7 @@ public class FileStorageService {
 
     public Resource loadAsResource(String fileName) throws MalformedURLStorageException, NoSuchFileStorageException {
         try {
-            Path filePath = fileStoragePath.resolve(fileName + FILE_EXTENSION).normalize();
+            Path filePath = fileStoragePath.resolve(addDefaultExtension(fileName)).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {
                 return resource;
@@ -68,11 +68,23 @@ public class FileStorageService {
 
     public boolean deleteIfExists(String fileName) throws StorageException {
         try {
-            Path filePath = fileStoragePath.resolve(fileName + FILE_EXTENSION).normalize();
+            Path filePath = fileStoragePath.resolve(addDefaultExtension(fileName)).normalize();
 
             return Files.deleteIfExists(filePath);
         } catch (IOException e) {
             throw new StorageException("Cant delete file: " + fileName, e);
         }
+    }
+
+    @NotNull
+    private String addDefaultExtension(String fileName) {
+        // если имя файла без расширения то добавить .blob
+        // как временный кастыль со времен когда в БД хранилось имя файла без расширения
+        String filenameExtension = StringUtils.getFilenameExtension(fileName);
+        if (filenameExtension == null) {
+            fileName = fileName + ".blob";
+        }
+
+        return fileName;
     }
 }

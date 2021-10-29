@@ -1,6 +1,6 @@
 import { http } from '../http.service';
 import { wsService } from '../ws.service';
-import { Process, ProcessType } from '../models';
+import { Process } from '../models';
 import { getProcessesUrl } from '../server-urls.service';
 
 export interface ImportLayerReport {
@@ -14,7 +14,7 @@ export interface ImportLayerReport {
   crs?: string;
 }
 
-export interface WsImportGmlModel {
+export interface WsImportModel {
   id: string;
   description: string;
   payload: ImportResult;
@@ -33,30 +33,39 @@ export interface ImportResult {
 }
 
 interface ProcessDataModel {
-  type: ProcessType;
-  payload: {};
+  wsUiId: string;
+  source: {
+    libraryId: string;
+    objectId: number;
+  };
+  target: {
+    projectId: number;
+    projectName: string;
+    projectIsNew: boolean;
+  };
 }
 
-export async function initImportGmlProcess(
+export async function initImportProcess(
   libraryId: string,
   objectId: string,
   projectId: number | undefined,
   projectName: string,
   projectIsNew: boolean
 ): Promise<Process> {
-  const data: ProcessDataModel = {
-    type: ProcessType.IMPORT_GML,
-    payload: {
-      wsUiId: wsService.getId(),
+  const payload: ProcessDataModel = {
+    wsUiId: wsService.getId(),
+    source: {
       libraryId: libraryId,
-      objectId: Number(objectId),
+      objectId: Number(objectId)
+    },
+    target: {
       projectId: projectId,
       projectName: projectName,
       projectIsNew: projectIsNew
     }
   };
 
-  return http.post<Process>(await getProcessesUrl(), JSON.stringify(data), {
+  return http.post<Process>(await getProcessesUrl(), JSON.stringify(payload), {
     headers: { 'Content-Type': 'application/json' }
   });
 }

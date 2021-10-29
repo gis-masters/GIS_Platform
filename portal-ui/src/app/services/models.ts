@@ -64,6 +64,7 @@ export interface ProcessTasks {
 export enum ProcessType {
   IMPORT = 'IMPORT',
   IMPORT_GML = 'IMPORT_GML',
+  IMPORT_RASTER = 'IMPORT_RASTER',
   VALIDATION = 'VALIDATION',
   VALIDATION_REPORT = 'VALIDATION_REPORT',
   EXPORT = 'EXPORT'

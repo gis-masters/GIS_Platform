@@ -3,7 +3,7 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { createElement } from 'react';
 
 import { IWsMessage } from '../../services/ws.service';
-import { WsImportGmlModel } from '../../services/crg/processes.service';
+import { WsImportModel } from '../../services/crg/processes.service';
 import { ImportGmlResultsLink } from '../ImportGmlResultLink/ImportGmlResultsLink';
 
 @Component({
@@ -29,7 +29,7 @@ export class ImportGmlResultButtonComponent implements OnInit, OnChanges, OnDest
   }
 
   private renderReactElement() {
-    let payload = this.event.payload as WsImportGmlModel;
+    let payload = this.event.payload as WsImportModel;
     const reactElement = createElement(ImportGmlResultsLink, { reports: payload.payload });
 
     render(reactElement, this.ref.nativeElement);

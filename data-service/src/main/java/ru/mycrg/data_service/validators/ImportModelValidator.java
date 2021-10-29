@@ -2,34 +2,47 @@ package ru.mycrg.data_service.validators;
 
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
-import ru.mycrg.data_service.service.import_.model.ImportGmlRequestModel;
+import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
+import ru.mycrg.data_service.service.processes.dto.ImportSource;
+import ru.mycrg.data_service.service.processes.dto.ImportTarget;
 
 import java.util.regex.Pattern;
 
-public class ImportGmlValidator {
+public class ImportModelValidator {
 
-    private ImportGmlValidator() {
+    private ImportModelValidator() {
         throw new IllegalStateException("Utility class");
     }
 
-    public static void throwIfNotValid(ImportGmlRequestModel dto) {
+    public static void throwIfNotValid(ImportInitializingModel dto) {
         String required = "Обязательно для заполнения";
         String common = "Не корректно заданное поле";
         String size = "Не менее 3 и не более 250 символов";
         String negativeValue = "Не должно быть отрицательным";
         String patternMsg = "Должно начинаться с буквы. Затем может содержать: буквы, цифры и символы .-_";
 
-        if (dto.isProjectIsNew()) {
-            if (dto.getProjectName() == null) {
+        ImportTarget target = dto.getTarget();
+        ImportSource source = dto.getSource();
+
+        if (target == null) {
+            throw new BadRequestException(required, new ErrorInfo("target", required));
+        }
+
+        if (source == null) {
+            throw new BadRequestException(required, new ErrorInfo("source", required));
+        }
+
+        if (target.isProjectIsNew()) {
+            if (target.getProjectName() == null) {
                 throw new BadRequestException(common, new ErrorInfo("projectName", required));
             }
         } else {
-            if (dto.getProjectId() == null) {
+            if (target.getProjectId() == null) {
                 throw new BadRequestException(common, new ErrorInfo("projectId", required));
             }
         }
 
-        final String projectName = dto.getProjectName();
+        final String projectName = target.getProjectName();
         if (projectName != null) {
             if (projectName.length() < 3 || projectName.length() > 250) {
                 throw new BadRequestException(common, new ErrorInfo("projectName", size));
@@ -41,19 +54,19 @@ public class ImportGmlValidator {
             }
         }
 
-        if (dto.getProjectId() != null && dto.getProjectId() < 1) {
+        if (target.getProjectId() != null && target.getProjectId() < 1) {
             throw new BadRequestException(common, new ErrorInfo("projectId", negativeValue));
         }
 
-        if (dto.getObjectId() == null) {
+        if (source.getObjectId() == null) {
             throw new BadRequestException(common, new ErrorInfo("objectId", required));
         }
 
-        if (dto.getObjectId() < 1) {
+        if (source.getObjectId() < 1) {
             throw new BadRequestException(common, new ErrorInfo("objectId", negativeValue));
         }
 
-        if (dto.getLibraryId() != null && dto.getLibraryId().isBlank()) {
+        if (source.getLibraryId() != null && source.getLibraryId().isBlank()) {
             throw new BadRequestException(common, new ErrorInfo("libraryId", required));
         }
 

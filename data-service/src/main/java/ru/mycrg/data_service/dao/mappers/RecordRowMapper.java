@@ -1,32 +1,32 @@
 package ru.mycrg.data_service.dao.mappers;
 
 import org.springframework.jdbc.core.RowMapper;
-import ru.mycrg.data_service.dto.Record;
+import ru.mycrg.data_service.dto.RecordDto;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-public class RecordRowMapper implements RowMapper<Record> {
+public class RecordRowMapper implements RowMapper<RecordDto> {
 
     @Override
-    public Record mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final Record record = new Record();
+    public RecordDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+        final RecordDto recordDto = new RecordDto();
 
         final ResultSetMetaData metaData = rs.getMetaData();
         int i = 1;
         while (i <= metaData.getColumnCount()) {
             if (metaData.getColumnClassName(i).contains("Boolean")) {
-                record.put(metaData.getColumnName(i), rs.getBoolean(i));
+                recordDto.put(metaData.getColumnName(i), rs.getBoolean(i));
             } else if (metaData.getColumnClassName(i).contains("Long")) {
-                record.put(metaData.getColumnName(i), rs.getLong(i));
+                recordDto.put(metaData.getColumnName(i), rs.getLong(i));
             } else {
-                record.put(metaData.getColumnName(i), rs.getString(i));
+                recordDto.put(metaData.getColumnName(i), rs.getString(i));
             }
 
             i++;
         }
 
-        return record;
+        return recordDto;
     }
 }

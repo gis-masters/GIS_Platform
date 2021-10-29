@@ -1,32 +1,24 @@
 package ru.mycrg.acceptance.data_service.processes;
 
-public class ImportGmlRequestModel {
+public class ImportTarget {
 
-    private String libraryId;
-    private Long objectId;
     private Long projectId;
     private String projectName;
     private boolean projectIsNew;
-    private String wsUiId;
 
-    public ImportGmlRequestModel() {
+    public ImportTarget() {
         // Required
     }
 
-    public Long getObjectId() {
-        return objectId;
+    public ImportTarget(String projectName, boolean projectIsNew) {
+        this.projectName = projectName;
+        this.projectIsNew = projectIsNew;
     }
 
-    public void setObjectId(Long objectId) {
-        this.objectId = objectId;
-    }
-
-    public String getLibraryId() {
-        return libraryId;
-    }
-
-    public void setLibraryId(String libraryId) {
-        this.libraryId = libraryId;
+    public ImportTarget(Long projectId, String projectName, boolean projectIsNew) {
+        this.projectId = projectId;
+        this.projectName = projectName;
+        this.projectIsNew = projectIsNew;
     }
 
     public Long getProjectId() {
@@ -35,14 +27,6 @@ public class ImportGmlRequestModel {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
-    }
-
-    public String getWsUiId() {
-        return wsUiId;
-    }
-
-    public void setWsUiId(String wsUiId) {
-        this.wsUiId = wsUiId;
     }
 
     public String getProjectName() {

@@ -14,8 +14,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dto.WsMessageDto;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.Process;
-import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.JsonConverter;
 import ru.mycrg.data_service.service.RecordsService;
@@ -23,10 +23,10 @@ import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.import_.ImportGml;
 import ru.mycrg.data_service.service.import_.model.ImportGmlModel;
 import ru.mycrg.data_service.service.import_.model.ImportGmlRequestModel;
-import ru.mycrg.data_service.service.import_.model.WsImportGmlModel;
+import ru.mycrg.data_service.service.import_.model.WsImportModel;
+import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
-import ru.mycrg.data_service.validators.ImportGmlValidator;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
 import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
@@ -47,7 +47,6 @@ import java.util.UUID;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
-import static ru.mycrg.data_service.DataServiceApplication.gson;
 import static ru.mycrg.data_service.dao.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
@@ -105,13 +104,13 @@ public class ImportGmlProcessHandler implements IProcessHandler {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         DelegatingSecurityContextRunnable wrappedRunnable = new DelegatingSecurityContextRunnable(() -> {
             try {
-                final ImportGmlModel importGmlModel = fetchDataNeededForImport();
-                final Resource resource = fileStorageService.loadAsResource(importGmlModel.getFileName());
+                ImportGmlModel importGmlModel = fetchDataNeededForImport();
+                Resource resource = fileStorageService.loadAsResource(importGmlModel.getFileName());
 
                 sendWsMsg(PENDING, null, "Импорт данных...");
                 ImportReport importReport = importGml.doImport(resource, importGmlModel);
 
-                final String projectName = this.importGmlRequestModel.getProjectName();
+                String projectName = this.importGmlRequestModel.getProjectName();
                 if (this.importGmlRequestModel.isProjectIsNew()) {
                     sendWsMsg(PENDING, null, "Создание проекта...");
 
@@ -152,7 +151,7 @@ public class ImportGmlProcessHandler implements IProcessHandler {
                 }
             } catch (Exception e) {
                 String msg = "Не удалось выполнить импорт GML файла. Причина: " + e.getMessage();
-                final ImportReport importReport = new ImportReport(msg);
+                ImportReport importReport = new ImportReport(msg);
 
                 log.error(msg, e.getCause());
                 processService.error(databaseName, process.getId(), JsonConverter.toJsonNode(importReport));
@@ -166,23 +165,18 @@ public class ImportGmlProcessHandler implements IProcessHandler {
 
     @Override
     public IProcessHandler validate() {
-        ImportGmlValidator.throwIfNotValid(this.importGmlRequestModel);
+        // Nothing to validate
 
         return this;
     }
 
     @Override
-    public IProcessHandler setPayload(Object data) {
-        try {
-            this.importGmlRequestModel = gson.fromJson(gson.toJson(data), ImportGmlRequestModel.class);
-            this.wsUiId = this.importGmlRequestModel.getWsUiId();
-            this.wsMsgId = UUID.randomUUID();
-            this.importGmlRequestModel.setWsMsgId(wsMsgId);
+    public IProcessHandler setPayload(ImportInitializingModel payload, IRecord record) {
+        this.wsUiId = payload.getWsUiId();
+        this.wsMsgId = UUID.randomUUID();
+        this.importGmlRequestModel = new ImportGmlRequestModel(payload, this.wsMsgId);
 
-            return this;
-        } catch (Exception e) {
-            throw new BadRequestException("No readable data: " + data.toString());
-        }
+        return this;
     }
 
     @Override
@@ -193,7 +187,7 @@ public class ImportGmlProcessHandler implements IProcessHandler {
     private void sendWsMsg(ProcessStatus status, ImportReport payload, String msg) {
         wsNotificationService.send(
                 new WsMessageDto<>(IMPORT_GML,
-                                   new WsImportGmlModel(wsMsgId, status, payload, msg)),
+                                   new WsImportModel(wsMsgId, status, payload, msg)),
                 wsUiId
         );
     }
@@ -277,7 +271,7 @@ public class ImportGmlProcessHandler implements IProcessHandler {
         }
     }
 
-    private class ProjectModel {
+    public class ProjectModel {
 
         private Long id;
         private Long organizationId;

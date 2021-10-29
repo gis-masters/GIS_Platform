@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.DatasourceFactory;
 import ru.mycrg.data_service.dao.ValidationResultRepository;
 import ru.mycrg.data_service.dto.ExportResourceModel;
-import ru.mycrg.data_service.dto.Record;
+import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
@@ -210,8 +210,8 @@ public class LayerValidationReportService {
         }
     }
 
-    private JsonNode extractViolations(Record record) {
-        return JsonConverter.toJsonNodeFromString((String) record.getContent().get("violations"));
+    private JsonNode extractViolations(RecordDto recordDto) {
+        return JsonConverter.toJsonNodeFromString((String) recordDto.getContent().get("violations"));
     }
 
     private String prepareValue(String value) {

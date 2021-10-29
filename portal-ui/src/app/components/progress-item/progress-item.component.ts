@@ -40,7 +40,8 @@ export class ProgressItemComponent implements OnDestroy {
         if (
           this.event.payload.type === ProcessType.EXPORT ||
           this.event.payload.type === ProcessType.VALIDATION_REPORT ||
-          this.event.payload.type === ProcessType.IMPORT_GML
+          this.event.payload.type === ProcessType.IMPORT_GML ||
+          this.event.payload.type === ProcessType.IMPORT_RASTER
         ) {
           const layerName = this.event.payload.payload.description;
 
@@ -99,6 +100,10 @@ export class ProgressItemComponent implements OnDestroy {
   isShowDownloadLink(): boolean {
     const { type, payload } = this.event;
 
-    return type !== ProcessType.IMPORT_GML && payload.payload.status === ProcessStatus.DONE;
+    return (
+      type !== ProcessType.IMPORT_GML &&
+      type !== ProcessType.IMPORT_RASTER &&
+      payload.payload.status === ProcessStatus.DONE
+    );
   }
 }

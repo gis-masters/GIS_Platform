@@ -3,6 +3,7 @@ import moment from 'moment';
 import { InsertDriveFile } from '@mui/icons-material';
 
 import { Toast } from '../../../Toast/Toast';
+import { FileTiff } from '../../../Icons/FileTiff';
 import { services } from '../../../../services/services';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { staticImplements } from '../../../../services/util/staticImplements';
@@ -63,8 +64,8 @@ export class ExplorerAdapterTypeDocument {
     return String(item.payload.id);
   }
 
-  static getIcon(): ReactNode {
-    return <InsertDriveFile color='primary' />;
+  static getIcon(item: ExplorerItemData<LibraryRecord>): ReactNode {
+    return item.payload.type === 'tif' ? <FileTiff color='primary' /> : <InsertDriveFile color='primary' />;
   }
 
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {

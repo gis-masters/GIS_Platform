@@ -15,6 +15,11 @@ public class ImportLayerReport {
         // Required
     }
 
+    public ImportLayerReport(String tableTitle) {
+        this.success = true;
+        this.tableTitle = tableTitle;
+    }
+
     public ImportLayerReport(String schemaId, boolean isSuccess, String reason) {
         this.schemaId = schemaId;
         this.success = isSuccess;

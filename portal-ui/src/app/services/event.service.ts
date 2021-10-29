@@ -5,7 +5,7 @@ import { remove } from 'lodash';
 import { ProcessType } from './models';
 import { generateRandomId } from './util/randomId';
 import { IWsMessage, wsService } from './ws.service';
-import { WsImportGmlModel } from './crg/processes.service';
+import { WsImportModel } from './crg/processes.service';
 import { communicationService } from './communication.service';
 
 // Пока события будут завязаны на IWsMessage
@@ -50,14 +50,14 @@ class EventService {
       .subscribe((wsMessage: IWsMessage) => this.handleMessage(wsMessage));
   }
 
-  // Пока только EXPORT и VALIDATION_REPORT
-  private isAllowedMessageType(msg: IWsMessage) {
-    if (msg.type === 'EXPORT') {
-      return msg.type === ProcessType.EXPORT;
-    } else if (msg.type === 'VALIDATION_REPORT') {
-      return msg.type === ProcessType.VALIDATION_REPORT;
-    } else if (msg.type === 'IMPORT_GML') {
-      return msg.type === ProcessType.IMPORT_GML;
+  private isAllowedMessageType(msg: IWsMessage): boolean {
+    if (
+      msg.type === 'EXPORT' ||
+      msg.type === 'VALIDATION_REPORT' ||
+      msg.type === 'IMPORT_GML' ||
+      msg.type === 'IMPORT_RASTER'
+    ) {
+      return true;
     }
   }
 
@@ -118,8 +118,11 @@ class EventService {
   private analyzeEvents(events: IEvent[]) {
     events.forEach(event => {
       const { type, payload } = event.payload;
-      if (type === 'IMPORT_GML' && (payload.status === 'DONE' || payload.status === 'ERROR')) {
-        const importGml = payload as WsImportGmlModel;
+      if (
+        (type === 'IMPORT_GML' || type === 'IMPORT_RASTER') &&
+        (payload.status === 'DONE' || payload.status === 'ERROR')
+      ) {
+        const importGml = payload as WsImportModel;
         if (importGml.payload.projectIsNew) {
           communicationService.projectsUpdated.emit();
         }

@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
-import ru.mycrg.data_service.dto.Record;
+import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service.util.filter.FilterCondition;
@@ -36,9 +36,9 @@ public class ValidationResultRepository {
         this.jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(dbName));
     }
 
-    public List<Record> findPagedByFilter(ResourceQualifier rQualifier,
-                                          Pageable pageable,
-                                          CrgFilter filter) {
+    public List<RecordDto> findPagedByFilter(ResourceQualifier rQualifier,
+                                             Pageable pageable,
+                                             CrgFilter filter) {
         final DbTable table = getDbTable(rQualifier);
 
         final SelectQuery selectQuery = new SelectQuery().addAllTableColumns(table);

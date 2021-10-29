@@ -1,13 +1,16 @@
 package ru.mycrg.data_service.dto;
 
+import org.springframework.hateoas.core.Relation;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class Record {
+@Relation(collectionRelation = "records")
+public class RecordDto {
 
     private final Map<String, Object> content = new HashMap<>();
 
-    public Record() {
+    public RecordDto() {
         // Required
     }
 

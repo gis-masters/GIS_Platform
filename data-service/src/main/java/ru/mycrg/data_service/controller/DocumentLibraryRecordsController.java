@@ -9,9 +9,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.dto.Record;
+import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordImpl;
+import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
@@ -60,7 +60,7 @@ public class DocumentLibraryRecordsController {
                                          @RequestParam(required = false) Long parent,
                                          @RequestParam(required = false, defaultValue = "") String title,
                                          Pageable pageable,
-                                         PagedResourcesAssembler<Record> pageAssembler) {
+                                         PagedResourcesAssembler<RecordDto> pageAssembler) {
         ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
 
         checkSortedFields(docLibId, pageable);
@@ -99,7 +99,7 @@ public class DocumentLibraryRecordsController {
         String schemaId = libraryService.getByTableName(docLibId).getSchemaId();
         schemaService.throwIfNotMathSchema(schemaId, body);
 
-        IRecord record = recordsService.createRecord(libraryQualifier, new RecordImpl(body), file);
+        IRecord record = recordsService.createRecord(libraryQualifier, new RecordEntity(body), file);
 
         return new ResponseEntity<>(record.getContent(), CREATED);
     }

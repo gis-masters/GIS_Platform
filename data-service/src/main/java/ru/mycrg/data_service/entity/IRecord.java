@@ -9,4 +9,12 @@ public interface IRecord {
     Long getId();
 
     void setValue(String key, Object value);
+
+    String getFileType();
+
+    String getTitle();
+
+    String getInnerPath();
+
+    String getAsString(String field);
 }

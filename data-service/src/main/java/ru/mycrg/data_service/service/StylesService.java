@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.TablesDao;
-import ru.mycrg.data_service.dto.Record;
+import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.dto.styles.*;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
@@ -50,8 +50,8 @@ public class StylesService {
             // Правило без фильтра подразумевает выборку без условий
             if (ruleFilters.contains(null) || ruleFilters.isEmpty()) {
                 final String sqlQuery = buildSelectOneQueryWithBbox(tQualifier, bboxFilter);
-                final List<Record> records = tablesDao.customListQuery(sqlQuery);
-                if (!records.isEmpty()) {
+                final List<RecordDto> recordDtos = tablesDao.customListQuery(sqlQuery);
+                if (!recordDtos.isEmpty()) {
                     styleRules.stream()
                               .filter(styleRule -> styleRule.getFilter() == null)
                               .findFirst()
@@ -59,9 +59,9 @@ public class StylesService {
                 }
             } else {
                 final String sqlQuery = buildSelectQueryWithBbox(tQualifier, ruleFilters, bboxFilter);
-                final List<Record> records = tablesDao.customListQuery(sqlQuery);
+                final List<RecordDto> recordDtos = tablesDao.customListQuery(sqlQuery);
 
-                analyzeComparisonRule(styleRules, records, response);
+                analyzeComparisonRule(styleRules, recordDtos, response);
 
                 styleRules.stream()
                           .filter(styleRule -> styleRule.getFilter() instanceof ElseRuleFilter)
@@ -94,9 +94,9 @@ public class StylesService {
     }
 
     private void analyzeComparisonRule(List<StyleRule> rules,
-                                       List<Record> records,
+                                       List<RecordDto> recordDtos,
                                        ActualStylesResponseModel response) {
-        records.forEach(record -> {
+        recordDtos.forEach(record -> {
             final Map<String, Object> recordContent = record.getContent();
 
             rules.stream()

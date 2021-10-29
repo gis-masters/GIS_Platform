@@ -8,20 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.entity.Process;
-import ru.mycrg.data_service.service.import_.model.ImportGmlRequestModel;
-import ru.mycrg.data_service.service.processes.DefaultProcessHandler;
-import ru.mycrg.data_service.service.processes.IProcessHandler;
+import ru.mycrg.data_service.service.processes.ProcessHandlersFactory;
 import ru.mycrg.data_service.service.processes.ProcessService;
-import ru.mycrg.data_service.service.processes.dto.ProcessDataModel;
-import ru.mycrg.data_service_contract.enums.ProcessType;
+import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
-import static java.util.stream.Collectors.toMap;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
@@ -30,31 +23,23 @@ public class ProcessesController {
 
     private final EntityLinks links;
     private final ProcessService processService;
-    private final IProcessHandler defaultProcessHandler;
+    private final ProcessHandlersFactory processHandlersFactory;
     private final PagedResourcesAssembler<Process> assembler;
-    private final Map<ProcessType, IProcessHandler> processHandlers;
 
     public ProcessesController(ProcessService processService,
+                               ProcessHandlersFactory processHandlersFactory,
                                PagedResourcesAssembler<Process> assembler,
-                               List<IProcessHandler> processHandlers,
-                               EntityLinks links,
-                               DefaultProcessHandler defaultProcessHandler) {
+                               EntityLinks links) {
         this.processService = processService;
         this.assembler = assembler;
         this.links = links;
-
-        this.defaultProcessHandler = defaultProcessHandler;
-        this.processHandlers = processHandlers.stream()
-                                              .collect(toMap(IProcessHandler::getType, Function.identity()));
+        this.processHandlersFactory = processHandlersFactory;
     }
 
     @PostMapping()
-    public ResponseEntity<Resource<Process>> initProcess(
-            @Valid @RequestBody ProcessDataModel<ImportGmlRequestModel> data) {
-        Process process = processHandlers.getOrDefault(ProcessType.valueOf(data.getType()), defaultProcessHandler)
-                                         .setPayload(data.getPayload())
-                                         .validate()
-                                         .handle();
+    public ResponseEntity<Resource<Process>> initProcess(@RequestBody ImportInitializingModel payload) {
+        Process process = processHandlersFactory.getHandler(payload)
+                                                .handle();
 
         Resource<Process> resource = new Resource<>(process);
         resource.add(linkTo(ProcessesController.class).slash(process.getId()).withSelfRel());

@@ -1,6 +1,8 @@
 package ru.mycrg.data_service.service.processes;
 
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.Process;
+import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 public interface IProcessHandler {
@@ -11,5 +13,5 @@ public interface IProcessHandler {
 
     ProcessType getType();
 
-    IProcessHandler setPayload(Object data);
+    IProcessHandler setPayload(ImportInitializingModel payload, IRecord record);
 }
