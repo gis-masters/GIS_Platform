@@ -11,6 +11,7 @@ export enum ValueType {
   TEXT = 'TEXT',
   DOUBLE = 'DOUBLE',
   CHOICE = 'CHOICE',
+  BOOLEAN = 'BOOLEAN',
   GEOMETRY = 'GEOMETRY',
   URL = 'URL',
   DATETIME = 'DATETIME',
@@ -108,6 +109,11 @@ export interface OldPropertySchemaChoice<T extends Record<string, unknown> = Rec
   foreignKeyType?: string;
 }
 
+export interface OldPropertySchemaBoolean<T extends Record<string, unknown> = Record<string, unknown>>
+  extends OldBasePropertySchema<T> {
+  valueType: ValueType.BOOLEAN;
+}
+
 export interface OldPropertySchemaSet<T extends Record<string, unknown> = Record<string, unknown>>
   extends OldBasePropertySchema<T> {
   valueType: ValueType.SET;
@@ -136,6 +142,7 @@ export type OldPropertySchema<T extends Record<string, unknown> = Record<string,
   | OldPropertySchemaInt<T>
   | OldPropertySchemaDouble<T>
   | OldPropertySchemaDatetime<T>
+  | OldPropertySchemaBoolean<T>
   | OldPropertySchemaSet<T>
   | OldPropertySchemaChoice<T>
   | OldPropertySchemaOther<T>

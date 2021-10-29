@@ -82,10 +82,6 @@ export class ExplorerAdapterTypeDatasetRoot {
       {
         label: 'Дате создания',
         value: 'created_at'
-      },
-      {
-        label: 'Количеству таблиц',
-        value: 'items_сount'
       }
     ];
   }

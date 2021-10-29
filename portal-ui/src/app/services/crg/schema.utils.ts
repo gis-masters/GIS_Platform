@@ -55,6 +55,10 @@ export function convertSchema<T extends Record<string, unknown>>(
       field.fieldType = FieldType.BOOL;
     }
 
+    if (oldField.valueType === ValueType.BOOLEAN) {
+      field.fieldType = FieldType.BOOL;
+    }
+
     if (oldField.valueType === ValueType.DATETIME) {
       field.fieldType = FieldType.DATETIME;
 
