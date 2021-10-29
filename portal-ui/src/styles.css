@@ -89,3 +89,7 @@ button:focus {
 body.global-crosshair-cursor * {
   cursor: crosshair;
 }
+
+:root {
+  --blue: #1976d2;
+}

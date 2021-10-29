@@ -41,7 +41,7 @@
 }
 
 .info {
-  color: #3f51b5;
+  color: var(--blue);
 }
 
 .error {

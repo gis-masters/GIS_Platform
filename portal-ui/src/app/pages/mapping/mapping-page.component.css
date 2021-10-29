@@ -43,7 +43,7 @@
 }
 
 .selected-element {
-  color: #3f51b5;
+  color: var(--blue);
   background-color: gainsboro;
 
   font-size: large !important;
@@ -56,7 +56,7 @@
   width: 3px;
   height: 100%;
 
-  background-color: #3f51b5;
+  background-color: var(--blue);
 }
 
 .content-separator {

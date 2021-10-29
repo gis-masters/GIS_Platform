@@ -8,8 +8,6 @@ import { GetApp, GetAppOutlined } from '@mui/icons-material';
 import { ExportValidationReportDialog } from '../ExportValidationReportDialog/ExportValidationReportDialog';
 import { CrgLayer } from '../../services/crg/projects.models';
 
-import '!style-loader!css-loader!sass-loader!./ExportValidationReportButton.scss';
-
 const cnExportValidationReportButton = cn('ExportValidationReportButton');
 
 interface ExportValidationReportButtonProps {
@@ -30,7 +28,7 @@ export class ExportValidationReportButton extends Component<ExportValidationRepo
             className={cnExportValidationReportButton()}
             disabled={!layers.length}
             onClick={this.openDialog}
-            color='inherit'
+            color='primary'
           >
             {this.open ? <GetApp /> : <GetAppOutlined />}
           </IconButton>
