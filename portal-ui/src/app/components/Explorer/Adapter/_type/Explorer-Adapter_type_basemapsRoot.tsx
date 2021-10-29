@@ -3,12 +3,13 @@ import React, { ReactNode } from 'react';
 import { Emitter } from '../../../../services/common/Emitter';
 import { PageOptions, SortDir } from '../../../../services/models';
 import { Basemap } from '../../../../services/crg/basemaps.models';
-import { getBasemaps } from '../../../../services/crg/basemaps.service';
+import { getBasemap, getBasemaps, getBasemapsWithParticularOne } from '../../../../services/crg/basemaps.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { ExplorerUrlItem } from '../../Explorer';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -40,15 +41,31 @@ export class ExplorerAdapterTypeBasemapsRoot {
 
   static async getChildren(
     item: ExplorerItemData,
-    { page, pageSize, sort, sortDir, filter }: PageOptions
+    pageOptions: PageOptions
   ): Promise<[ExplorerItemData<Basemap>[], number]> {
-    const [basemaps, totalPages] = await getBasemaps(page, pageSize, sort, sortDir, filter);
+    const [basemaps, totalPages] = await getBasemaps(pageOptions);
     const items: ExplorerItemData<Basemap>[] = basemaps.map(basemap => ({
       type: ExplorerItemType.BASEMAP,
       payload: basemap
     }));
 
     return [items, totalPages];
+  }
+
+  static async getChildrenWithParticularOne(
+    item: ExplorerItemData,
+    pageOptions: PageOptions,
+    [, id, page]: ExplorerUrlItem
+  ): Promise<[ExplorerItemData<Basemap>[], number, number]> | undefined {
+    const response = await getBasemapsWithParticularOne(Number(id), { ...pageOptions, page });
+
+    if (!response) {
+      return;
+    }
+
+    const [tables, totalPages, pageNumber] = response;
+
+    return [tables.map(payload => ({ type: ExplorerItemType.BASEMAP, payload })), totalPages, pageNumber];
   }
 
   static getChildrenSortItems(): SortItem[] {
@@ -58,6 +75,15 @@ export class ExplorerAdapterTypeBasemapsRoot {
         value: 'title'
       }
     ];
+  }
+
+  static async getChilById(item: ExplorerItemData, id: string): Promise<ExplorerItemData<Basemap>> {
+    const basemap = await getBasemap(id);
+
+    return {
+      type: ExplorerItemType.BASEMAP,
+      payload: basemap
+    };
   }
 
   static getChildrenSortDefaultValue(): string {

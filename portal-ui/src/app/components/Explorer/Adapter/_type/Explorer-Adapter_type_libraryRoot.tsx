@@ -4,9 +4,10 @@ import { Library } from '../../../Icons/Library';
 import { PageOptions, SortDir } from '../../../../services/models';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { docLibraryService, DocumentLibrary } from '../../../../services/crg/doc-library.service';
+import { docLibraryService, DocumentLibrary, LibraryRecord } from '../../../../services/crg/doc-library.service';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { ExplorerUrlItem } from '../../Explorer';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -40,9 +41,28 @@ export class ExplorerAdapterTypeLibraryRoot {
     item: ExplorerItemData,
     { page, pageSize, sort, sortDir, filter }: PageOptions
   ): Promise<[ExplorerItemData<DocumentLibrary>[], number]> {
-    const [libraries, pagesCount] = await docLibraryService.getAllLibraries(page, pageSize, sort, sortDir, filter);
+    const [libraries, pagesCount] = await docLibraryService.getLibraries(page, pageSize, sort, sortDir, filter);
 
     return [libraries.map(payload => ({ type: ExplorerItemType.LIBRARY, payload })), pagesCount];
+  }
+
+  static async getChildrenWithParticularOne(
+    item: ExplorerItemData,
+    options: PageOptions,
+    [, identifier, page]: ExplorerUrlItem
+  ): Promise<[ExplorerItemData<DocumentLibrary>[], number, number]> | undefined {
+    const response = await docLibraryService.getLibrariesWithParticularOne(identifier, {
+      ...options,
+      page
+    });
+
+    if (!response) {
+      return;
+    }
+
+    const [libraries, totalPages, pageNumber] = response;
+
+    return [libraries.map(payload => ({ type: ExplorerItemType.LIBRARY, payload })), totalPages, pageNumber];
   }
 
   static getChildrenSortItems(): SortItem[] {
@@ -56,6 +76,18 @@ export class ExplorerAdapterTypeLibraryRoot {
         value: 'created_at'
       }
     ];
+  }
+
+  static async getChildById(
+    item: ExplorerItemData<LibraryRecord>,
+    id: string
+  ): Promise<ExplorerItemData<DocumentLibrary>> {
+    const payload = await docLibraryService.getLibrary(id);
+
+    return {
+      type: ExplorerItemType.LIBRARY,
+      payload
+    };
   }
 
   static getChildrenSortDefaultValue(): string {

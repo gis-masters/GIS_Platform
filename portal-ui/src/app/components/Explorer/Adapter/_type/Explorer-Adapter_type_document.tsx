@@ -35,7 +35,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeDocument {
   static getId(item: ExplorerItemData<LibraryRecord>): string {
-    return `${item.type}:${item.payload.id}`;
+    return `${item.payload.libraryId}:${item.payload.id}`;
   }
 
   static getTitle(item: ExplorerItemData<LibraryRecord>): string {
@@ -92,7 +92,7 @@ export class ExplorerAdapterTypeDocument {
   static async getAllowedActions(item: ExplorerItemData<LibraryRecord>): Promise<AllowedActions> {
     const deletionAllowed = currentUser.isAdmin;
     const field = 'inner_path'; // temporary binary fieldName of default document library schema
-    const recordsUrl = await getDocLibrariesRecordsUrl(item.payload.schemaId);
+    const recordsUrl = await getDocLibrariesRecordsUrl(item.payload.libraryId);
     const document = item.payload;
 
     return {

@@ -7,13 +7,12 @@ import { deleteBasemap, getBasemapConnections } from '../../../../services/crg/b
 import { communicationService } from '../../../../services/communication.service';
 import { Basemap } from '../../../../services/crg/basemaps.models';
 import { Emitter } from '../../../../services/common/Emitter';
+import { sleep } from '../../../../services/util/sleep';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 import { BasemapDetails } from '../../../BasemapDetails/BasemapDetails';
 import { ConnectionsBasemapToProjectsWidget } from '../../../ConnectionsBasemapToProjectsWidget/ConnectionsBasemapToProjectsWidget';
-import { sleep } from '../../../../services/util/sleep';
-
-import { Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';
 import { ExplorerProps } from '../../Explorer';
+import { Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -24,7 +23,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeBasemap {
   static getId(item: ExplorerItemData<Basemap>): string {
-    return `${item.type}:${item.payload.id}`;
+    return String(item.payload.id);
   }
 
   static getTitle(item: ExplorerItemData<Basemap>): string {

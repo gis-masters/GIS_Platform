@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { communicationService } from '../communication.service';
-import { PageableResponse, SortDir } from '../models';
+import { PageableResponse, PageOptions } from '../models';
 import { CrgProject } from './projects.models';
 import { Basemap } from './basemaps.models';
 import { services } from '../services';
@@ -16,6 +16,7 @@ import {
   getBasemapUrl
 } from '../server-urls.service';
 import { Toast } from '../../components/Toast/Toast';
+import { preparePageOptions } from '../http.utils';
 
 interface ProjectBasemap {
   id: number;
@@ -24,17 +25,26 @@ interface ProjectBasemap {
   baseMapId: number;
 }
 
-export async function getBasemaps(
-  page: number,
-  pageSize: number,
-  sort?: string,
-  sortDir?: SortDir,
-  filter?: { [key: string]: string }
-): Promise<[Basemap[], number]> {
-  const params = { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) };
-  const response = await http.get<PageableResponse<{ basemaps: Basemap[] }>>(await getBasemapsUrl(), { params });
+export async function getBasemaps(pageOptions: PageOptions): Promise<[Basemap[], number]> {
+  const params = preparePageOptions(pageOptions);
+  const response = await http.get<PageableResponse<Basemap>>(await getBasemapsUrl(), { params });
 
   return [(response._embedded && response._embedded.basemaps) || [], response.page.totalPages];
+}
+
+export async function getBasemapsWithParticularOne(
+  id: number,
+  pageOptions: PageOptions
+): Promise<[Basemap[], number, number] | undefined> {
+  return await http.getPageWithObject<Basemap>(
+    await getBasemapsUrl(),
+    pageOptions,
+    (item: Basemap) => item.id === id
+  );
+}
+
+export async function getBasemap(basemapId: string): Promise<Basemap> {
+  return await http.get(await getBasemapUrl(Number(basemapId)));
 }
 
 export async function deleteBasemap(basemapId: number): Promise<void> {
@@ -59,7 +69,7 @@ export async function fetchBasemaps(): Promise<void> {
     const params = { ids: projectBasemaps.map(item => String(item.baseMapId)).join(', ') };
     const url = await getBasemapsByIdsUrl();
 
-    const response = await http.get<PageableResponse<{ basemaps: Basemap[] }>>(url, { params });
+    const response = await http.get<PageableResponse<Basemap>>(url, { params });
     if (response._embedded) {
       const crgBaseMaps = handleBasemaps(projectBasemaps, response._embedded.basemaps);
       basemapsStore.initBaseMaps(crgBaseMaps);

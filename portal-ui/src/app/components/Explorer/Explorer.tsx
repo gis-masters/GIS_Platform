@@ -1,23 +1,31 @@
 import React, { Component, CSSProperties } from 'react';
-import { action, IReactionDisposer, observable, reaction } from 'mobx';
+import { action, IReactionDisposer, observable, reaction, when } from 'mobx';
 import { observer } from 'mobx-react';
-import { isEqual } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
+import { NavigationStart, RouterEvent } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
-import { Emitter } from '../../services/common/Emitter';
-
+import { route } from '../../stores/Route.store';
 import { Loading } from '../Loading/Loading';
+import { Emitter } from '../../services/common/Emitter';
+import { services } from '../../services/services';
+import { SortDir } from '../../services/models';
+import { Toast } from '../Toast/Toast';
 
 import { ExplorerStore } from './Explorer.store';
 import { emptyItem, ExplorerItemData, ExplorerItemType, KeyAction, keyActions } from './Explorer.models';
 import {
   getChildren,
+  getChildById,
   getChildrenSortDefaultDirection,
   getChildrenSortDefaultValue,
   getChildrenSortItems,
   getId,
+  getChildrenWithParticularOne,
   getRefreshEmitters,
   isFolder
 } from './Adapter/Explorer-Adapter';
@@ -28,6 +36,10 @@ import { ExplorerList } from './List/Explorer-List';
 import { ExplorerInfo } from './Info/Explorer-Info';
 
 import '!style-loader!css-loader!sass-loader!./Explorer.scss';
+
+export type ExplorerUrlItem = [ExplorerItemType, string, number?];
+// pageSize, sort, sortDir, filter
+export type ExplorerUrlOptions = [number, string, SortDir, Record<string, string>];
 
 const cnExplorer = cn('Explorer');
 
@@ -42,12 +54,13 @@ const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData }> = {
 export interface ExplorerProps extends IClassNameProps {
   appRole: string;
   title?: string;
-  items?: ExplorerItemData[];
+  items?: ExplorerItemData[]; // [0] - root
   preset?: keyof typeof presets;
   disabledItems?: ExplorerItemData[];
   withInfoPanel?: boolean;
   withoutTitle?: boolean;
   fixedHeight?: boolean;
+  urlChangeEnabled?: boolean;
   onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   onOpen?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
 }
@@ -56,19 +69,32 @@ export interface ExplorerProps extends IClassNameProps {
 export class Explorer extends Component<ExplorerProps> {
   @observable private busy = false;
 
+  private urlChangeEnabled = false;
   private gettingChildrenToken: symbol;
   private onSelectReactionDispose: IReactionDisposer;
+  private onPathReactionDispose: IReactionDisposer;
+  private onOptionsReactionDispose: IReactionDisposer;
   private store: ExplorerStore;
   private subscribedRefreshEmitterTypes: ExplorerItemType[] = [];
 
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
   constructor(props: ExplorerProps) {
     super(props);
-
     this.store = new ExplorerStore(props.appRole);
     this.init(props);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    // кнопка вернуться назад
+    services.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe(async (event: RouterEvent) => {
+      if (event instanceof NavigationStart && event.navigationTrigger === 'popstate') {
+        const url = new URL(location.origin + event.url);
+        const explorerPath = url.searchParams.get(`explorerPath_${this.props.appRole}`);
+        await this.restoreState(explorerPath);
+      }
+    });
+
     this.onSelectReactionDispose = reaction(
       () => this.store.selectedItem,
       selectedItem => {
@@ -77,10 +103,36 @@ export class Explorer extends Component<ExplorerProps> {
         }
       }
     );
+
+    this.onPathReactionDispose = reaction(
+      () => [cloneDeep(this.store.path), this.store.page],
+      async () => {
+        await this.setPathToUrl();
+        await this.setOptionsToUrl();
+      }
+    );
+
+    this.onOptionsReactionDispose = reaction(
+      () => [this.store.pageSize, this.store.sort, this.store.sortDir, cloneDeep(this.store.filter)],
+      async () => {
+        await this.setOptionsToUrl();
+      }
+    );
+
+    if (route.queryParams[`explorerPath_${this.props.appRole}`]) {
+      await this.restoreState(route.queryParams['explorerPath_' + this.props.appRole]);
+    }
+
+    await when(() => !this.busy);
+    this.urlChangeEnabled = true;
   }
 
   componentWillUnmount() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
     this.onSelectReactionDispose();
+    this.onPathReactionDispose();
+    this.onOptionsReactionDispose();
     Emitter.scopeOff(this);
   }
 
@@ -126,7 +178,11 @@ export class Explorer extends Component<ExplorerProps> {
   }
 
   @boundMethod
-  private async openItem(item: ExplorerItemData, page: number, depth?: number) {
+  private async openItem(item: ExplorerItemData, page: number, depth?: number, updateFilters?: boolean) {
+    if (item.type === ExplorerItemType.EMPTY) {
+      return;
+    }
+
     if (this.props.onOpen) {
       this.props.onOpen(item, this.store.path);
     }
@@ -136,41 +192,39 @@ export class Explorer extends Component<ExplorerProps> {
     }
 
     if (depth !== this.store.path.length - 2) {
-      this.store.setSortItems(getChildrenSortItems(item));
       this.store.setSort(getChildrenSortDefaultValue(item));
-      this.store.setSortDir(getChildrenSortDefaultDirection(item));
-      this.store.setFilter({});
-    }
-
-    try {
-      this.store.selectItem(item);
-      this.setBusy(true);
-      const { pageSize, sort, sortDir, filter } = this.store;
-
-      const gettingChildrenToken = Symbol();
-      this.gettingChildrenToken = gettingChildrenToken;
-
-      const [children, pagesCount] = await getChildren(item, { page, pageSize, sort, sortDir, filter });
-
-      if (gettingChildrenToken === this.gettingChildrenToken) {
-        children.forEach(child => {
-          if (!this.subscribedRefreshEmitterTypes.includes(child.type)) {
-            this.subscribedRefreshEmitterTypes.push(child.type);
-
-            getRefreshEmitters(child).forEach(emitter => {
-              emitter.on(this.refresh);
-            });
-          }
-        });
-
-        this.store.setPage(page);
-        this.setChildren(item, children, pagesCount, depth);
+      this.store.setSortItems(getChildrenSortItems(item));
+      if (updateFilters) {
+        this.store.setSortDir(getChildrenSortDefaultDirection(item));
+        this.store.setFilter({});
       }
-    } catch (error) {
-      throw new Error('Ошибка при получении элементов' + String(error));
-    } finally {
-      this.setBusy(false);
     }
+
+    this.store.selectItem(item);
+    this.setBusy(true);
+
+    const { pageSize, sort, sortDir, filter } = this.store;
+    const gettingChildrenToken = Symbol();
+    this.gettingChildrenToken = gettingChildrenToken;
+
+    const [children, pagesCount] = await getChildren(item, { page, pageSize, sort, sortDir, filter });
+
+    if (gettingChildrenToken === this.gettingChildrenToken) {
+      children.forEach(child => {
+        if (!this.subscribedRefreshEmitterTypes.includes(child.type)) {
+          this.subscribedRefreshEmitterTypes.push(child.type);
+
+          getRefreshEmitters(child).forEach(emitter => {
+            emitter.on(this.refresh);
+          });
+        }
+      });
+
+      this.store.setPage(page);
+      this.setChildren(item, children, pagesCount, depth);
+    }
+
+    this.setBusy(false);
   }
 
   @boundMethod
@@ -241,7 +295,149 @@ export class Explorer extends Component<ExplorerProps> {
   @boundMethod
   private refresh() {
     const { store } = this;
-
     void this.openItem(store.openedItem, 0, store.path.length - 2);
+  }
+
+  private async setPathToUrl() {
+    if (!this.urlChangeEnabled || !this.props.urlChangeEnabled) {
+      return;
+    }
+
+    if (this.store.path[this.store.path.length - 1] === this.store.path[this.store.path.length - 2]) {
+      return;
+    }
+
+    await services.provided;
+
+    const explorerItems: ExplorerUrlItem[] = this.store.path?.map((path, i) => {
+      const id = getId(path);
+
+      const res: ExplorerUrlItem = [path.type, id];
+
+      if (i === this.store.path.length - 1) {
+        res[2] = this.store.page;
+      }
+
+      return res;
+    });
+
+    const encodedURIPath = JSON.stringify(explorerItems);
+
+    const { appRole } = this.props;
+
+    await services.router.navigate([location.pathname], {
+      queryParams: {
+        ['explorerPath_' + appRole]: encodedURIPath
+      },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  private async setOptionsToUrl() {
+    if (!this.urlChangeEnabled || !this.props.urlChangeEnabled) {
+      return;
+    }
+    await services.provided;
+
+    const { pageSize, sort, sortDir, filter } = this.store;
+    const explorerOptions: ExplorerUrlOptions = [pageSize, sort, sortDir, filter];
+    const encodedURIOptions = JSON.stringify(explorerOptions);
+
+    const { appRole } = this.props;
+
+    await services.router.navigate([location.pathname], {
+      queryParams: {
+        ['explorerOptions_' + appRole]: encodedURIOptions
+      },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  private async restoreState(urlExplorersPath: string) {
+    this.urlChangeEnabled = false;
+
+    this.restoreOptions();
+
+    const explorersPath = JSON.parse(urlExplorersPath) as ExplorerUrlItem[];
+
+    for (let i = 1; i < explorersPath.length; i++) {
+      await (i === explorersPath.length - 1
+        ? this.restoreLastItem(explorersPath[i], i)
+        : this.restoreItem(explorersPath[i], i));
+    }
+
+    this.urlChangeEnabled = true;
+  }
+
+  private async restoreItem(urlItem: ExplorerUrlItem, i: number) {
+    const [type, id] = urlItem;
+    const childrenItem = await getChildById(this.store.path[i - 1], id, type);
+
+    if (!childrenItem) {
+      await this.openItem(this.store.path[i - 1], 0, i - 1, false);
+    } else {
+      this.store.setPathItem(childrenItem, i);
+    }
+  }
+
+  private async restoreLastItem(urlItem: ExplorerUrlItem, i: number) {
+    const [type, id, page] = urlItem;
+    const { pageSize, sort, sortDir, filter, path } = this.store;
+
+    if (!path[i - 1]) {
+      await this.openItem(path[path.length - 1], 0, path.length - 1, false);
+    } else if (type !== ExplorerItemType.EMPTY) {
+      const response = await getChildrenWithParticularOne(
+        path[i - 1],
+        { page, pageSize, sort, sortDir, filter },
+        urlItem
+      );
+
+      if (response) {
+        const [children, pagesCount, childrenPage] = response;
+
+        const selectedItem: ExplorerItemData = children.find(item => item.type === type && getId(item) === id);
+        this.showRestoredItem(selectedItem, children, pagesCount, i, childrenPage ? childrenPage : page);
+      } else {
+        if (i > 1) {
+          Toast.warn({ message: 'Объект не найден' });
+        }
+
+        await this.openItem(path[i - 1], 0, i - 1, false);
+      }
+    } else {
+      await this.openItem(path[i - 1], 0, i - 1, false);
+    }
+    this.store.setSortItems(getChildrenSortItems(path[path.length - 2]));
+  }
+
+  @action
+  private showRestoredItem(
+    selectedItem: ExplorerItemData,
+    children: ExplorerItemData[],
+    pagesCount: number,
+    i: number,
+    page: number
+  ) {
+    const { path } = this.store;
+    path.splice(i === 1 ? i : i + 1, path.length);
+    path[i - 1].children = children;
+    if (i + 1 !== path.length) {
+      path.push(selectedItem ? selectedItem : children[0]);
+    }
+    this.store.totalPages = pagesCount;
+    this.store.selectItem(selectedItem ? selectedItem : children[0]);
+    this.store.setPage(page ? page : 0);
+  }
+
+  private restoreOptions() {
+    const [pageSize, sort, sortDir, filter] = JSON.parse(
+      route.queryParams['explorerOptions_' + this.props.appRole]
+    ) as ExplorerUrlOptions;
+
+    this.store.setPageSize(pageSize);
+    this.store.setSort(sort);
+    this.store.setSortDir(sortDir);
+    this.store.setFilter(filter);
   }
 }

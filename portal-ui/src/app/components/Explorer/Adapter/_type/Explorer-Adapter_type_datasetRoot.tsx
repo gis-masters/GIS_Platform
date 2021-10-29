@@ -1,13 +1,14 @@
 import React, { ReactNode } from 'react';
 
-import { Database } from '../../../Icons/Database';
 import { PageOptions, SortDir } from '../../../../services/models';
-import { Dataset, getDatasets } from '../../../../services/data.service';
+import { Dataset, getDataset, getDatasets, getDatasetsWithParticularOne } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { Database } from '../../../Icons/Database';
 import { CreateDatasetElement } from '../../../CreateDatasetElement/CreateDatasetElement';
 
-import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { ExplorerUrlItem } from '../../Explorer';
 import { ExplorerStore } from '../../Explorer.store';
+import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -48,6 +49,28 @@ export class ExplorerAdapterTypeDatasetRoot {
     const [dataSets, pagesCount] = await getDatasets(page, pageSize, sort, sortDir, filter);
 
     return [dataSets.map(payload => ({ type: ExplorerItemType.DATASET, payload })), pagesCount];
+  }
+
+  static async getChildrenWithParticularOne(
+    item: ExplorerItemData,
+    options: PageOptions,
+    [, identifier, page]: ExplorerUrlItem
+  ): Promise<[ExplorerItemData<Dataset>[], number, number]> | undefined {
+    const response = await getDatasetsWithParticularOne(identifier, { ...options, page });
+
+    if (!response) {
+      return;
+    }
+
+    const [datasets, totalPages, pageNumber] = response;
+
+    return [datasets.map(payload => ({ type: ExplorerItemType.DATASET, payload })), totalPages, pageNumber];
+  }
+
+  static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData<Dataset>> {
+    const payload = await getDataset(id);
+
+    return { type: ExplorerItemType.DATASET, payload };
   }
 
   static getChildrenSortItems(): SortItem[] {

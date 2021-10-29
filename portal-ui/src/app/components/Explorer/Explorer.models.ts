@@ -5,7 +5,7 @@ import { PageOptions, SortDir } from '../../services/models';
 import { Emitter } from '../../services/common/Emitter';
 
 import { ExplorerStore } from './Explorer.store';
-import { ExplorerProps } from './Explorer';
+import { ExplorerProps, ExplorerUrlItem } from './Explorer';
 
 export enum ExplorerItemType {
   EMPTY = 'empty',
@@ -77,8 +77,14 @@ export interface Adapter {
   getDescription?: (item: ExplorerItemData) => ReactNode;
   getIcon?: (item: ExplorerItemData) => ReactNode;
   isFolder: (item: ExplorerItemData) => boolean;
-  getChildren?: (item: ExplorerItemData, options: PageOptions) => Promise<[ExplorerItemData[], number]>;
+  getChildren?: (item: ExplorerItemData, pageOptions: PageOptions) => Promise<[ExplorerItemData[], number]>;
+  getChildrenWithParticularOne?: (
+    item: ExplorerItemData,
+    pageOptions: PageOptions,
+    urlItem: ExplorerUrlItem
+  ) => Promise<[ExplorerItemData[], number, number]> | undefined;
   getChildrenSortItems?: (item: ExplorerItemData) => SortItem[];
+  getChildById?: (item: ExplorerItemData, id: string, type: ExplorerItemType) => Promise<ExplorerItemData>;
   getChildrenSortDefaultValue?: (item: ExplorerItemData) => string;
   getChildrenSortDefaultDirection?: (item: ExplorerItemData) => SortDir;
   getChildrenFilterField?: (item: ExplorerItemData) => string;

@@ -20,6 +20,7 @@ import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget'
 import { Role } from '../../../../services/crg/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 
+import { ExplorerUrlItem } from '../../Explorer';
 import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -33,7 +34,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeLibrary {
   static getId(item: ExplorerItemData<LibraryRecord>): string {
-    return `${item.type}:${item.payload.identifier}`;
+    return item.payload.identifier;
   }
 
   static getTitle(item: ExplorerItemData<LibraryRecord>): string {
@@ -123,6 +124,60 @@ export class ExplorerAdapterTypeLibrary {
         label: 'Дате создания',
         value: 'created_at'
       }
+    ];
+  }
+
+  static async getChildById(
+    item: ExplorerItemData<LibraryRecord>,
+    id: string
+  ): Promise<ExplorerItemData<LibraryRecord>> {
+    const [libraryId, identifier] = id.split(':');
+    const payload = await docLibraryService.getDocLibrariesRecord(libraryId, identifier, item.payload.schemaId);
+    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
+    const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
+
+    return {
+      type:
+        contentType && contentType.type === ContentTypeTypes.FOLDER
+          ? ExplorerItemType.FOLDER
+          : ExplorerItemType.DOCUMENT,
+      payload
+    };
+  }
+
+  static async getChildrenWithParticularOne(
+    item: ExplorerItemData<LibraryRecord>,
+    options: PageOptions,
+    [, id, page]: ExplorerUrlItem
+  ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
+    const [libraryId, identifier] = id.split(':');
+
+    const response = await docLibraryService.getRecordsWithParticularOne(libraryId, item.payload.schemaId, identifier, {
+      ...options,
+      page
+    });
+
+    if (!response) {
+      return;
+    }
+
+    const [records, totalPages, pageNumber] = response;
+    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
+
+    return [
+      records.map(payload => {
+        const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
+
+        return {
+          type:
+            contentType && contentType.type === ContentTypeTypes.FOLDER
+              ? ExplorerItemType.FOLDER
+              : ExplorerItemType.DOCUMENT,
+          payload
+        };
+      }),
+      totalPages,
+      pageNumber
     ];
   }
 

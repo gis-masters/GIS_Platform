@@ -2,7 +2,15 @@ import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { Storage } from '@mui/icons-material';
 
-import { Dataset, DataTable, deleteDataset, getDataset, getDatasetTables } from '../../../../services/data.service';
+import {
+  Dataset,
+  DataTable,
+  deleteDataset,
+  getDataset,
+  getDatasetTables,
+  getDatasetTablesWithParticularOne,
+  getDataTable
+} from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { PageOptions, SortDir } from '../../../../services/models';
 import { getDatasetRoleAssignmentUrl } from '../../../../services/server-urls.service';
@@ -23,6 +31,8 @@ import {
 } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 
+import { ExplorerUrlItem } from '../../Explorer';
+
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
     [ExplorerItemType.DATASET]: Dataset;
@@ -32,7 +42,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeDataset {
   static getId(item: ExplorerItemData<Dataset>): string {
-    return `${item.type}:${item.payload.identifier}`;
+    return item.payload.identifier;
   }
 
   static getTitle(item: ExplorerItemData<Dataset>): string {
@@ -105,9 +115,33 @@ export class ExplorerAdapterTypeDataset {
     item: ExplorerItemData<Dataset>,
     { page, pageSize, sort, sortDir, filter }: PageOptions
   ): Promise<[ExplorerItemData<DataTable>[], number]> {
-    const [tables, pagesCount] = await getDatasetTables(item.payload, { page, pageSize, sort, sortDir, filter });
+    const [tables, totalPages] = await getDatasetTables(item.payload.identifier, {
+      page,
+      pageSize,
+      sort,
+      sortDir,
+      filter
+    });
 
-    return [tables.map(payload => ({ type: ExplorerItemType.TABLE, payload })), pagesCount];
+    return [tables.map(payload => ({ type: ExplorerItemType.TABLE, payload })), totalPages];
+  }
+
+  static async getChildrenWithParticularOne(
+    item: ExplorerItemData,
+    options: PageOptions,
+    [, id, page]: ExplorerUrlItem
+  ): Promise<[ExplorerItemData<DataTable>[], number, number]> | undefined {
+    const [datasetId, identifier] = id.split(':');
+
+    const response = await getDatasetTablesWithParticularOne(datasetId, identifier, { ...options, page });
+
+    if (!response) {
+      return;
+    }
+
+    const [tables, totalPages, pageNumber] = response;
+
+    return [tables.map(payload => ({ type: ExplorerItemType.TABLE, payload })), totalPages, pageNumber];
   }
 
   static getChildrenSortItems(): SortItem[] {
@@ -121,6 +155,13 @@ export class ExplorerAdapterTypeDataset {
         value: 'created_at'
       }
     ];
+  }
+
+  static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData<DataTable>> {
+    const [datasetId, identifier] = id.split(':');
+    const payload = await getDataTable(datasetId, identifier);
+
+    return { type: ExplorerItemType.TABLE, payload };
   }
 
   static getChildrenSortDefaultValue(): string {
@@ -144,7 +185,7 @@ export class ExplorerAdapterTypeDataset {
   }
 
   static async isDeleteAllowed(item: ExplorerItemData<Dataset>): Promise<AllowedDetails> {
-    const [tables] = await getDatasetTables(item.payload, { page: 0, pageSize: 1 });
+    const [tables] = await getDatasetTables(item.payload.identifier, { page: 0, pageSize: 1 });
 
     return {
       ok: !tables.length,

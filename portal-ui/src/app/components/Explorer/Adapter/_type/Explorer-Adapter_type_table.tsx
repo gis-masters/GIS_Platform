@@ -16,6 +16,7 @@ import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToPro
 import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+
 import { ExplorerProps } from '../../Explorer';
 
 declare module '../../Explorer.models' {
@@ -27,7 +28,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeTable {
   static getId(item: ExplorerItemData<DataTable>): string {
-    return `${item.type}:${item.payload.dataset}:${item.payload.identifier}`;
+    return `${item.payload.dataset}:${item.payload.identifier}`;
   }
 
   static getTitle(item: ExplorerItemData<DataTable>): string {

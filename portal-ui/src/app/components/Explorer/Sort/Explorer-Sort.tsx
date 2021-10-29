@@ -33,7 +33,6 @@ export class ExplorerSort extends Component<ExplorerSortProps> {
             </MenuItem>
           ))}
         </TextField>
-
         <SortOrderButton asc={sortDir === SortDir.ASC} onClick={this.handleSortOrderClick} />
       </div>
     ) : null;

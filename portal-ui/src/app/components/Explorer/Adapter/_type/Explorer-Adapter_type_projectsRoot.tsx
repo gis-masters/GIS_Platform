@@ -7,6 +7,7 @@ import { projectsService } from '../../../../services/crg/projects.service';
 import { CrgProject } from '../../../../services/crg/projects.models';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { ExplorerUrlItem } from '../../Explorer';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -17,7 +18,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeProjectsRoot {
   static getId(): string {
-    return 'datasetRoot';
+    return 'projectsRoot';
   }
 
   static getTitle(): string {
@@ -43,6 +44,25 @@ export class ExplorerAdapterTypeProjectsRoot {
     const [projects, pagesCount] = await projectsService.getProjects(page, pageSize, sort, sortDir, filter);
 
     return [projects.map(payload => ({ type: ExplorerItemType.PROJECT, payload })), pagesCount];
+  }
+
+  static async getChildrenWithParticularOne(
+    item: ExplorerItemData,
+    options: PageOptions,
+    [, id, page]: ExplorerUrlItem
+  ): Promise<[ExplorerItemData<CrgProject>[], number, number]> | undefined {
+    const response = await projectsService.getProjectsWithParticularOne(id, {
+      ...options,
+      page
+    });
+
+    if (!response) {
+      return;
+    }
+
+    const [libraries, totalPages, pageNumber] = response;
+
+    return [libraries.map(payload => ({ type: ExplorerItemType.PROJECT, payload })), totalPages, pageNumber];
   }
 
   static getChildrenSortItems(): SortItem[] {

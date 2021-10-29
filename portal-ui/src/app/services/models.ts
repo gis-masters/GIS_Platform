@@ -14,7 +14,7 @@ export interface PageablePage {
 }
 
 export interface PageableResponse<T> {
-  _embedded?: T;
+  _embedded?: Record<string, T[]>;
   _links: PageableLink[] | { [key: string]: PageableLink };
   page: PageablePage;
 }
@@ -132,4 +132,11 @@ export interface GeoserverException {
   code: string;
   locator: string;
   text: string;
+}
+
+export interface PageQueryParams {
+  [key: string]: string | number;
+  page: number;
+  size: number;
+  sort?: string;
 }

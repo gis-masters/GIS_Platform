@@ -79,7 +79,7 @@ class UsersService {
   async getAll(): Promise<CrgUser[]> {
     const params = { size: '10000' };
 
-    return (await http.get<PageableResponse<{ users: CrgUser[] }>>(await getUsersUrl(), { params }))._embedded.users;
+    return (await http.get<PageableResponse<CrgUser>>(await getUsersUrl(), { params }))._embedded.users;
   }
 
   async create(userData: NewUserData) {

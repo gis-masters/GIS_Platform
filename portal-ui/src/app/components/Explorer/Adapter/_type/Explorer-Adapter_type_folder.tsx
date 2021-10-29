@@ -15,6 +15,7 @@ import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/
 import { Role } from '../../../../services/crg/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 
+import { ExplorerUrlItem } from '../../Explorer';
 import { ExplorerStore } from '../../Explorer.store';
 import {
   Adapter,
@@ -36,7 +37,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeFolder {
   static getId(item: ExplorerItemData<LibraryRecord>): string {
-    return `${item.type}:${item.payload.id}`;
+    return `${item.payload.libraryId}:${item.payload.id}`;
   }
 
   static getTitle(item: ExplorerItemData<LibraryRecord>): string {
@@ -105,14 +106,17 @@ export class ExplorerAdapterTypeFolder {
     { page, pageSize, sort, sortDir, filter }: PageOptions
   ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
     const result: ExplorerItemData<LibraryRecord>[] = [];
+    const { libraryId, schemaId, id } = explorerItem.payload;
 
-    const [libraryRecords, pagesCount] = await docLibraryService.getRecords(
-      explorerItem.payload.libraryId,
-      explorerItem.payload.schemaId,
-      { page, pageSize, sort, sortDir, filter: { ...filter, parent: explorerItem.payload.id } }
-    );
+    const [libraryRecords, pagesCount] = await docLibraryService.getRecords(libraryId, schemaId, {
+      page,
+      pageSize,
+      sort,
+      sortDir,
+      filter: { ...filter, parent: id }
+    });
 
-    const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schemaId);
+    const { contentTypes } = await schemaService.getSchema(schemaId);
 
     libraryRecords.forEach(record => {
       const contentType = contentTypes.find(cType => cType.id === record.content_type_id);
@@ -129,6 +133,49 @@ export class ExplorerAdapterTypeFolder {
     return [result, pagesCount];
   }
 
+  static async getChildrenWithParticularOne(
+    item: ExplorerItemData<LibraryRecord>,
+    options: PageOptions,
+    [, id, page]: ExplorerUrlItem
+  ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
+    const [libraryId, identifier] = id.split(':');
+
+    const response = await docLibraryService.getRecordsWithParticularOne(
+      libraryId,
+      item.payload.schemaId,
+      identifier,
+      {
+        ...options,
+        page
+      },
+      item.payload.id
+    );
+
+    if (!response) {
+      return;
+    }
+
+    const [records, totalPages, pageNumber] = response;
+
+    const { contentTypes } = await schemaService.getSchema(libraryId);
+
+    return [
+      records.map(payload => {
+        const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
+
+        return {
+          type:
+            contentType && contentType.type === ContentTypeTypes.FOLDER
+              ? ExplorerItemType.FOLDER
+              : ExplorerItemType.DOCUMENT,
+          payload
+        };
+      }),
+      totalPages,
+      pageNumber
+    ];
+  }
+
   static getChildrenSortItems(): SortItem[] {
     return [
       {
@@ -140,6 +187,24 @@ export class ExplorerAdapterTypeFolder {
         value: 'created_at'
       }
     ];
+  }
+
+  static async getChildById(
+    item: ExplorerItemData<LibraryRecord>,
+    id: string
+  ): Promise<ExplorerItemData<LibraryRecord>> {
+    const [libraryId, identifier] = id.split(':');
+    const payload = await docLibraryService.getDocLibrariesRecord(libraryId, identifier, item.payload.schemaId);
+    const { contentTypes } = await schemaService.getSchema(libraryId);
+    const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
+
+    return {
+      type:
+        contentType && contentType.type === ContentTypeTypes.FOLDER
+          ? ExplorerItemType.FOLDER
+          : ExplorerItemType.DOCUMENT,
+      payload
+    };
   }
 
   static getChildrenSortDefaultValue(): string {

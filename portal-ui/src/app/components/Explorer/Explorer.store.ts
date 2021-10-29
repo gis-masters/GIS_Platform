@@ -15,7 +15,7 @@ export class ExplorerStore {
   @observable sortItems: SortItem[] = [];
   @observable sort = '';
   @observable sortDir: SortDir = SortDir.ASC;
-  @observable filter: { [key: string]: string } = {};
+  @observable filter: Record<string, string> = {};
 
   constructor(id: string) {
     this.id = id;
@@ -43,6 +43,11 @@ export class ExplorerStore {
   @action
   setPath(path: ExplorerItemData[]): void {
     this.path = path;
+  }
+
+  @action
+  setPathItem(item: ExplorerItemData, i: number): void {
+    this.path[i] = item;
   }
 
   @action

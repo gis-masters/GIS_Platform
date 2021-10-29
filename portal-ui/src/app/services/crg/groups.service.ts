@@ -41,7 +41,7 @@ class GroupsService {
   async getAll(): Promise<CrgGroup[]> {
     const url = await getGroupsUrl();
     const params = { size: '10000' };
-    const response = await http.get<PageableResponse<{ groups: CrgGroup[] }>>(url, { params });
+    const response = await http.get<PageableResponse<CrgGroup>>(url, { params });
 
     return response._embedded ? response._embedded.groups : [];
   }

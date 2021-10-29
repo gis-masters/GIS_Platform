@@ -6,7 +6,7 @@ import { route } from '../../stores/Route.store';
 import { allProjects } from '../../stores/AllProjects.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgProject } from './projects.models';
-import { PageableResponse, Process, SortDir } from '../models';
+import { PageableResponse, PageOptions, Process, SortDir } from '../models';
 import { isFeaturesReadAllowed } from './permissions.service';
 import { TaskImport } from '../geoserver/import/taskImport';
 import { wsService } from '../ws.service';
@@ -249,11 +249,22 @@ class ProjectsService {
     sortDir?: SortDir,
     filter?: { [key: string]: string }
   ): Promise<[CrgProject[], number]> {
-    const response = await http.get<PageableResponse<{ projects: CrgProject[] }>>(await getProjectsUrl(), {
+    const response = await http.get<PageableResponse<CrgProject>>(await getProjectsUrl(), {
       params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) }
     });
 
     return [response._embedded?.projects || [], response.page.totalPages];
+  }
+
+  async getProjectsWithParticularOne(
+    id: string,
+    pageOptions: PageOptions
+  ): Promise<[CrgProject[], number, number] | undefined> {
+    return await http.getPageWithObject<CrgProject>(
+      await getProjectsUrl(),
+      pageOptions,
+      (item: CrgProject) => item.id === Number(id)
+    );
   }
 
   async delete(id: number) {

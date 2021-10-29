@@ -2,6 +2,7 @@ import { http } from '../http.service';
 import { PageableResponse, PageOptions, SortDir } from '../models';
 import { DataEntity, DataEntityType } from '../data.service';
 import {
+  getDocLibrariesRecordRecordsUrl,
   getDocLibrariesRecordsUrl,
   getDocLibrariesRecordUrl,
   getDocLibrariesUrl,
@@ -9,6 +10,7 @@ import {
 } from '../server-urls.service';
 import { Role } from './permissions.models';
 import { communicationService } from '../communication.service';
+import { preparePageOptions } from '../http.utils';
 
 export enum ContentTypeTypes {
   FOLDER = 'FOLDER'
@@ -56,35 +58,52 @@ class DocLibraryService {
 
   private constructor() {}
 
-  async getAllLibraries(
+  async getLibraries(
     page: number,
     pageSize: number,
     sort?: string,
     sortDir?: SortDir,
     filter?: { [key: string]: string }
   ): Promise<[DocumentLibrary[], number]> {
-    const response = await http.get<PageableResponse<{ libraries: DocumentLibrary[] }>>(await getDocLibrariesUrl(), {
+    const response = await http.get<PageableResponse<DocumentLibrary>>(await getDocLibrariesUrl(), {
       params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) }
     });
 
     return [(response._embedded && response._embedded.libraries) || [], response.page.totalPages];
   }
 
-  async getLibrary(identifier: string): Promise<DocumentLibrary> {
-    return await http.get<DocumentLibrary>(await getDocLibraryUrl(identifier));
+  async getLibrariesWithParticularOne(
+    identifier: string,
+    pageOptions: PageOptions
+  ): Promise<[DocumentLibrary[], number, number] | undefined> {
+    return await http.getPageWithObject<DocumentLibrary>(
+      await getDocLibrariesUrl(),
+      pageOptions,
+      (item: DocumentLibrary) => item.identifier === identifier
+    );
   }
 
-  async getRecords(
-    libraryId: string,
-    schemaId: string,
-    { page, pageSize, sort, sortDir, filter }: PageOptions
-  ): Promise<[LibraryRecord[], number]> {
-    const url = await getDocLibrariesRecordsUrl(libraryId);
-    const params = {
-      params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) }
-    };
+  async getLibrary(identifier: string): Promise<DocumentLibrary> {
+    const response = await http.get<DocumentLibrary>(await getDocLibraryUrl(identifier));
+    response.identifier = identifier;
 
-    const response = await http.get<PageableResponse<{ records: { content: LibraryRecordRaw }[] }>>(url, params);
+    return response;
+  }
+
+  async getDocLibrariesRecord(libraryId: string, id: string, schemaId: string): Promise<LibraryRecord> {
+    const response = await http.get<LibraryRecord>(await getDocLibrariesRecordUrl(libraryId, id));
+
+    response.libraryId = libraryId;
+    response.schemaId = schemaId;
+
+    return response;
+  }
+
+  async getRecords(libraryId: string, schemaId: string, pageOptions: PageOptions): Promise<[LibraryRecord[], number]> {
+    const url = await getDocLibrariesRecordsUrl(libraryId);
+    const requestOptions = { params: preparePageOptions(pageOptions) };
+
+    const response = await http.get<PageableResponse<{ content: LibraryRecordRaw }>>(url, requestOptions);
 
     const libraryRecords = (response._embedded?.records || []).map(linkedHashMap => ({
       ...(linkedHashMap.content || []),
@@ -93,6 +112,39 @@ class DocLibraryService {
     }));
 
     return [libraryRecords, response.page.totalPages];
+  }
+
+  async getRecordsWithParticularOne(
+    libraryId: string,
+    schemaId: string,
+    id: string,
+    pageOptions: PageOptions,
+    parentId?: string
+  ): Promise<[LibraryRecord[], number, number] | undefined> {
+    const objectRecognizer = (item: { content: LibraryRecord }) => Number(item.content.id) === Number(id);
+
+    const response = await http.getPageWithObject<{ content: LibraryRecord }>(
+      parentId
+        ? await getDocLibrariesRecordRecordsUrl(libraryId, parentId)
+        : await getDocLibrariesRecordsUrl(libraryId),
+      pageOptions,
+      objectRecognizer
+    );
+
+    if (response) {
+      const [content, totalPages, page] = response;
+
+      const records = content.map(item => {
+        return item.content;
+      });
+
+      records.forEach(record => {
+        record.libraryId = libraryId;
+        record.schemaId = schemaId;
+      });
+
+      return [records, totalPages, page];
+    }
   }
 
   async createRecord(libraryId: string, data: LibraryRecordRaw): Promise<CrgDocument> {

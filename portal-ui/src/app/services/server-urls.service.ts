@@ -207,8 +207,8 @@ export async function getDocLibrariesUrl(): Promise<string> {
   return `${await getDataUrl()}/document-libraries`;
 }
 
-export async function getDocLibraryUrl(libraryName: string): Promise<string> {
-  return `${await getDataUrl()}/document-libraries/${libraryName}`;
+export async function getDocLibraryUrl(id: string): Promise<string> {
+  return `${await getDocLibrariesUrl()}/${id}`;
 }
 
 export async function getDocLibrariesRecordsUrl(libraryName: string): Promise<string> {
@@ -217,6 +217,10 @@ export async function getDocLibrariesRecordsUrl(libraryName: string): Promise<st
 
 export async function getDocLibrariesRecordUrl(libraryName: string, id: string): Promise<string> {
   return `${await getDataUrl()}/document-libraries/${libraryName}/records/${id}`;
+}
+
+export async function getDocLibrariesRecordRecordsUrl(libraryName: string, id: string): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${libraryName}/records?parent=${id}`;
 }
 
 export async function getDocumentLibraryRoleAssignmentUrl(id: string): Promise<string> {

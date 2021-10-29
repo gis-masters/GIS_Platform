@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { InsertDriveFileOutlined } from '@mui/icons-material';
+import { AxiosError } from 'axios';
 
 import { services } from '../../../services/services';
 import { PageOptions, SortDir } from '../../../services/models';
@@ -28,7 +29,7 @@ import { ExplorerAdapterTypeProject } from './_type/Explorer-Adapter_type_projec
 import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_projectsRoot';
 import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basemap';
 import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_basemapsRoot';
-import { ExplorerProps } from '../Explorer';
+import { ExplorerProps, ExplorerUrlItem } from '../Explorer';
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.EMPTY]: ExplorerAdapterTypeEmpty,
@@ -45,6 +46,9 @@ const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.BASEMAP]: ExplorerAdapterTypeBasemap,
   [ExplorerItemType.BASEMAPS_ROOT]: ExplorerAdapterTypeBasemapsRoot
 };
+
+const lackOfRightMessage = 'Недостаточно прав';
+const objectNotFound = 'Объект не найден';
 
 export function getId(item: ExplorerItemData): string {
   return adapters[item.type].getId(item);
@@ -81,23 +85,100 @@ export function isFolder(item: ExplorerItemData): boolean {
 
 export async function getChildren(
   item: ExplorerItemData,
-  options: PageOptions
+  pageOptions: PageOptions
 ): Promise<[ExplorerItemData[], number] | undefined> {
   if (isFolder(item) && adapters[item.type].getChildren) {
     try {
-      return await adapters[item.type].getChildren(item, options);
+      return await adapters[item.type].getChildren(item, pageOptions);
     } catch (error) {
-      const message = `Ошибка получения списка элементов для "${String(getTitle(item))}"`;
+      const err = error as AxiosError;
+
+      let message: ReactNode = 'Элементы не найдены';
+      let details: ReactNode = (
+        <>
+          Не найдены элементы для {getTitle(item)}. {(error as Error).message}
+        </>
+      );
+
+      if (err?.response?.status === 403) {
+        message = lackOfRightMessage;
+        details = <>Недостаточно прав для просмотра элементов {getTitle(item)}</>;
+      }
+
       services.logger.error(message, error);
-      Toast.error({ message, details: (error as Error).message });
+      Toast.warn({ message, details });
 
       return [[], 1];
     }
   }
 }
 
+export async function getChildrenWithParticularOne(
+  item: ExplorerItemData,
+  pageOptions: PageOptions,
+  urlItem: ExplorerUrlItem
+): Promise<[ExplorerItemData[], number, number]> | undefined {
+  if (adapters[item.type].getChildrenWithParticularOne) {
+    try {
+      return await adapters[item.type].getChildrenWithParticularOne(item, pageOptions, urlItem);
+    } catch (error) {
+      const err = error as AxiosError;
+
+      let message: ReactNode = objectNotFound;
+      let details: ReactNode = (
+        <>
+          Не найден объект для {getTitle(item)}. {(error as Error).message}
+        </>
+      );
+
+      if (err?.response?.status === 403) {
+        message = lackOfRightMessage;
+        details = <>Недостаточно прав для просмотра элементов {getTitle(item)}</>;
+      }
+
+      services.logger.error(message, error);
+      Toast.warn({ message, details });
+
+      return [[], 1, 0];
+    }
+  }
+}
+
 export function getChildrenSortItems(item: ExplorerItemData): SortItem[] | undefined {
   return adapters[item.type].getChildrenSortItems && adapters[item.type].getChildrenSortItems(item);
+}
+
+export async function getChildById(
+  item: ExplorerItemData,
+  id: string,
+  type: ExplorerItemType
+): Promise<ExplorerItemData | undefined> {
+  if (adapters[item.type].getChildById) {
+    try {
+      return await adapters[item.type].getChildById(item, id, type);
+    } catch (error) {
+      const err = error as AxiosError;
+
+      let message: ReactNode = objectNotFound;
+      let details: ReactNode = (
+        <>
+          Объект [${id}] не найден в {getTitle(item)}. {(error as Error).message}
+        </>
+      );
+
+      if (err?.response?.status === 403) {
+        message = lackOfRightMessage;
+        details = (
+          <>
+            Недостаточно прав для просмотра [${id}] в {getTitle(item)}
+          </>
+        );
+      }
+
+      services.logger.error(message, error);
+      Toast.warn({ message, details });
+    }
+  }
 }
 
 export function getChildrenSortDefaultValue(item: ExplorerItemData): string | undefined {
