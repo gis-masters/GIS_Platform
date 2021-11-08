@@ -1,0 +1,13 @@
+.Form-View_type_bool {
+  margin-left: -7px;
+
+  white-space: nowrap;
+
+  font-size: 14px;
+
+  &.Form-View_inSet {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+}

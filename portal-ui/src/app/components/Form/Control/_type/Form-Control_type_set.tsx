@@ -3,7 +3,7 @@ import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertySchemaSet, FieldType } from '../../../../services/crg/schema.models';
+import { PropertySchemaSet, PropertyType } from '../../../../services/crg/schema.models';
 
 import { FormHiddenField } from '../../HiddenField/Form-HiddenField';
 import { cnFormControl, FormControlProps } from '../Form-Control';
@@ -29,7 +29,7 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
                 htmlId={!i ? htmlId : undefined}
                 key={subProperty.name}
                 property={subProperty}
-                type={subProperty.fieldType}
+                type={subProperty.propertyType}
                 onChange={this.fieldChanged}
                 fieldValue={valueTyped[subProperty.name]}
                 FormControl={FormControl}
@@ -61,6 +61,6 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
 
 export const withTypeSet = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
-  { type: FieldType.SET },
+  { type: PropertyType.SET },
   () => FormControlTypeSet
 );

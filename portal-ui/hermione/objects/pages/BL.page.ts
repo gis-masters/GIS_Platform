@@ -6,6 +6,6 @@ export class BLPage extends Page {
   url = '/bl/';
 
   async openExample(blockName: string, storyName: string): Promise<void> {
-    await this.browser.url(`${this.url}/iframe.html?id=example-${blockName}--${storyName}&viewMode=story`);
+    await this.browser.url(`${this.url}iframe.html?id=example-${blockName}--${storyName}&viewMode=story`);
   }
 }

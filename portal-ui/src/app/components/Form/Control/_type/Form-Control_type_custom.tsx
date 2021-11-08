@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchemaCustom, FieldType } from '../../../../services/crg/schema.models';
+import { PropertySchemaCustom, PropertyType } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormErrors } from '../../Errors/Form-Errors';
@@ -35,6 +35,6 @@ class FormControlTypeCustom extends Component<FormControlProps> {
 
 export const withTypeCustom = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
-  { type: FieldType.CUSTOM },
+  { type: PropertyType.CUSTOM },
   () => FormControlTypeCustom
 );

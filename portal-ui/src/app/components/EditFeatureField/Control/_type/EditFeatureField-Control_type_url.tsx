@@ -19,7 +19,7 @@ import '!style-loader!css-loader!sass-loader!./EditFeatureField-Control_type_url
 
 const cnEditFeatureField = cn('EditFeatureField');
 
-interface FieldTypeUrlValue {
+interface PropertyTypeUrlValue {
   url?: string;
   text: string;
   disabled?: boolean;
@@ -30,13 +30,13 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
   @observable private isOpen = false;
   @observable private content = '';
   @observable private fetching = false;
-  value: FieldTypeUrlValue;
+  value: PropertyTypeUrlValue;
 
   constructor(props: EditFeaturesControlProps) {
     super(props);
 
     try {
-      this.value = JSON.parse(props.field.value) as FieldTypeUrlValue;
+      this.value = JSON.parse(props.field.value) as PropertyTypeUrlValue;
     } catch {
       services.logger.warn('Incorrect url value: ', props.field.value);
     }

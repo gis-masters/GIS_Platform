@@ -20,10 +20,11 @@ import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget'
 import { Role } from '../../../../services/crg/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 
-import { ExplorerUrlItem } from '../../Explorer';
 import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { ExplorerUrlItem } from '../../Explorer';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -50,10 +51,10 @@ export class ExplorerAdapterTypeLibrary {
         {details && <p>{details}</p>}
 
         {createdAt && (
-          <p>
+          <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
             {moment(createdAt).format('LL')}
-          </p>
+          </ExplorerInfoDescItem>
         )}
       </>
     );

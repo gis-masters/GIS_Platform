@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { InputAdornment, TextField } from '@mui/material';
 
-import { FieldType, PropertySchemaInt } from '../../../../services/crg/schema.models';
+import { PropertyType, PropertySchemaInt } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
@@ -67,6 +67,6 @@ class FormControlTypeInt extends Component<FormControlProps> {
 
 export const withTypeInt = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
-  { type: FieldType.INT },
+  { type: PropertyType.INT },
   () => FormControlTypeInt
 );

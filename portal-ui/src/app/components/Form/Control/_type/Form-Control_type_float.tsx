@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { InputAdornment, TextField } from '@mui/material';
 
-import { FieldType, PropertySchemaFloat } from '../../../../services/crg/schema.models';
+import { PropertyType, PropertySchemaFloat } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
@@ -67,6 +67,6 @@ class FormControlTypeFloat extends Component<FormControlProps> {
 
 export const withTypeFloat = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
-  { type: FieldType.FLOAT },
+  { type: PropertyType.FLOAT },
   () => FormControlTypeFloat
 );

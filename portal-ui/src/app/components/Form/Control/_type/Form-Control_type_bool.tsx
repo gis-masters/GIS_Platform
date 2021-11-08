@@ -4,7 +4,7 @@ import { withBemMod } from '@bem-react/core';
 import { Checkbox } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { FieldType } from '../../../../services/crg/schema.models';
+import { PropertyType } from '../../../../services/crg/schema.models';
 import { generateRandomId } from '../../../../services/util/randomId';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
@@ -53,6 +53,6 @@ class FormControlTypeBool extends Component<FormControlProps> {
 
 export const withTypeBool = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
-  { type: FieldType.BOOL },
+  { type: PropertyType.BOOL },
   () => FormControlTypeBool
 );

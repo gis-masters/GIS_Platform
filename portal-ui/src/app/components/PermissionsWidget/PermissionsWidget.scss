@@ -1,8 +1,6 @@
 body .PermissionsWidget {
   position: relative;
 
-  padding: 10px 0 6px;
-
   &-Edit {
     margin-left: 10px;
 
@@ -10,7 +8,7 @@ body .PermissionsWidget {
   }
 
   &-Header {
-    margin-left: -8px;
+    margin-left: -6px;
 
     color: #666;
   }
@@ -47,7 +45,7 @@ body .PermissionsWidget {
     font-size: 14px;
 
     &::after {
-      content: ',';
+      content: ",";
     }
 
     &:last-child::after {

@@ -13,7 +13,7 @@ export class Form extends Block {
     await $container.waitForDisplayed({ timeout: 2000, timeoutMsg: 'Не появляется форма' });
   }
 
-  async assertSelfie(): Promise<void> {
+  async assertSelfie(state: string): Promise<void> {
     const { container } = this.selectors;
 
     return await this.browser.assertView('plain', container);

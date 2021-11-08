@@ -1,0 +1,20 @@
+import { compose } from '@bem-react/core';
+
+import { withTypeBool } from './_type/Form-View_type_bool';
+import { withTypeBinary } from './_type/Form-View_type_binary';
+import { withTypeChoice } from './_type/Form-View_type_choice';
+import { withTypeCustom } from './_type/Form-View_type_custom';
+import { withTypeDatetime } from './_type/Form-View_type_datetime';
+import { withTypeFloat } from './_type/Form-View_type_float';
+import { withTypeSet } from './_type/Form-View_type_set';
+import { FormView as Presenter } from './Form-View';
+
+export const FormView = compose(
+  withTypeBool,
+  withTypeBinary,
+  withTypeChoice,
+  withTypeCustom,
+  withTypeDatetime,
+  withTypeFloat,
+  withTypeSet
+)(Presenter);

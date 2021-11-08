@@ -3,7 +3,7 @@ import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { FieldType, PropertySchemaBinary } from '../../../../services/crg/schema.models';
+import { PropertyType, PropertySchemaBinary } from '../../../../services/crg/schema.models';
 import { FileInput } from '../../../FileInput/FileInput';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
@@ -45,6 +45,6 @@ class FormControlTypeBinary extends Component<FormControlProps> {
 
 export const withTypeBinary = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
-  { type: FieldType.BINARY },
+  { type: PropertyType.BINARY },
   () => FormControlTypeBinary
 );

@@ -2,20 +2,21 @@ import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { FolderOutlined } from '@mui/icons-material';
 
-import { PageOptions, SortDir } from '../../../../services/models';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 import { Emitter } from '../../../../services/common/Emitter';
-import { EmptyListView } from '../../../EmptyListView/EmptyListView';
+import { PageOptions, SortDir } from '../../../../services/models';
+import { Role } from '../../../../services/crg/permissions.models';
 import { schemaService } from '../../../../services/crg/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
-import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
-import { ContentTypeTypes, docLibraryService, LibraryRecord } from '../../../../services/crg/doc-library.service';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { Role } from '../../../../services/crg/permissions.models';
-import { currentUser } from '../../../../stores/CurrentUser.store';
+import { convertSchema, getSchemaWithAppliedContentType } from '../../../../services/crg/schema.utils';
+import { ContentTypeTypes, docLibraryService, LibraryRecord } from '../../../../services/crg/doc-library.service';
+import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
+import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 
-import { ExplorerUrlItem } from '../../Explorer';
 import { ExplorerStore } from '../../Explorer.store';
 import {
   Adapter,
@@ -27,6 +28,8 @@ import {
   AllowedDetails
 } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { ExplorerUrlItem } from '../../Explorer';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -53,10 +56,10 @@ export class ExplorerAdapterTypeFolder {
         {details && <p>{details}</p>}
 
         {createdAt && (
-          <p>
+          <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
             {moment(createdAt).format('LL')}
-          </p>
+          </ExplorerInfoDescItem>
         )}
       </>
     );
@@ -73,14 +76,26 @@ export class ExplorerAdapterTypeFolder {
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
     const currentItem = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
+    const oldSchema = getSchemaWithAppliedContentType(
+      await schemaService.getSchema(item.payload.schemaId),
+      item.payload.content_type_id
+    );
+    const fields = convertSchema(oldSchema.properties);
 
     return (
-      <PermissionsWidget
-        url={url}
-        title={item.payload.title}
-        itemEntityType={ExplorerItemEntityType.FOLDER}
-        disabled={!(currentUser.isAdmin || currentItem.role === Role.OWNER)}
-      />
+      <>
+        <ExplorerInfoDescItem multiline>
+          <ExplorerInfoDescTitle>Карточка документа:</ExplorerInfoDescTitle>
+          <ViewContentWidget fields={fields} data={item.payload} />
+        </ExplorerInfoDescItem>
+
+        <PermissionsWidget
+          url={url}
+          title={item.payload.title}
+          itemEntityType={ExplorerItemEntityType.FOLDER}
+          disabled={!(currentUser.isAdmin || currentItem.role === Role.OWNER)}
+        />
+      </>
     );
   }
 

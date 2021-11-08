@@ -4,7 +4,7 @@ import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { TextField } from '@mui/material';
 
-import { FieldType, PropertySchemaDatetime } from '../../../../services/crg/schema.models';
+import { PropertyType, PropertySchemaDatetime } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormErrors } from '../../Errors/Form-Errors';
@@ -57,6 +57,6 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
 
 export const withTypeDatetime = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
-  { type: FieldType.DATETIME },
+  { type: PropertyType.DATETIME },
   () => FormControlTypeDatetime
 );

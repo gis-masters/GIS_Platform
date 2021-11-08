@@ -7,12 +7,12 @@ import { PropertySchema } from '../../services/crg/schema.models';
 import { FieldErrors } from '../../services/crg/formValidation.service';
 
 export { FormField } from './Field/Form-Field';
-import { FormContent } from './Content/Form-Content';
 export { FormLabel } from './Label/Form-Label';
+import { FormContent } from './Content/Form-Content';
+import { FormActions } from './Actions/Form-Actions';
 export { FormControl } from './Control/Form-Control.composed';
 
 import '!style-loader!css-loader!sass-loader!./Form.scss';
-import { FormActions } from './Actions/Form-Actions';
 
 export const cnForm = cn('Form');
 
@@ -26,6 +26,7 @@ interface FormProps<T extends Record<string, unknown>>
   onFieldChange?(value: T[keyof T], propertyName: string): void;
   onFieldNeedValidate?(value: T[keyof T], propertyName: keyof T): void;
   actions?: ReactNode;
+  readonly?: boolean;
 }
 
 @observer
@@ -42,11 +43,12 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
       onFieldChange,
       onFieldNeedValidate,
       actions,
+      readonly,
       ...otherProps
     } = this.props;
 
     return (
-      <form action='#' onSubmit={this.submitHandler} {...otherProps} className={cnForm(null, [className])}>
+      <form action='#' onSubmit={this.submitHandler} {...otherProps} className={cnForm({ readonly }, [className])}>
         {children}
         {!!fields && (
           <FormContent<T>
@@ -56,6 +58,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
             onFieldChange={onFieldChange}
             onFieldNeedValidate={onFieldNeedValidate}
             errors={errors}
+            readonly={readonly}
           />
         )}
         {actions && <FormActions>{actions}</FormActions>}

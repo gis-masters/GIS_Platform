@@ -14,7 +14,7 @@ import {
 } from '../../../stores/PrintSettings.store';
 import { getPatch } from '../../../services/util/patch';
 import { SelectLegend } from '../../SelectLegend/SelectLegend';
-import { FieldType, PropertySchema } from '../../../services/crg/schema.models';
+import { PropertyType, PropertySchema } from '../../../services/crg/schema.models';
 import { FormContent } from '../../Form/Content/Form-Content';
 import { Form } from '../../Form/Form';
 
@@ -80,38 +80,38 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
         name: 'pageFormatId',
         title: 'Формат',
         display: 'select',
-        fieldType: FieldType.CHOICE,
+        propertyType: PropertyType.CHOICE,
         options: pageFormats.map(({ id, name }) => ({ title: name, value: id }))
       },
       {
         name: 'scale',
         title: 'Масштаб',
         display: 'select',
-        fieldType: FieldType.CHOICE,
+        propertyType: PropertyType.CHOICE,
         options: scales.map(scale => ({ title: `1 : ${scale}`, value: scale }))
       },
       {
         name: 'orientation',
         title: 'Ориентация',
         display: 'select',
-        fieldType: FieldType.CHOICE,
+        propertyType: PropertyType.CHOICE,
         options: orientations
       },
       {
         name: 'legend',
         title: 'Легенда',
-        fieldType: FieldType.SET,
+        propertyType: PropertyType.SET,
         fieldsSet: [
           {
             name: 'enabled',
             title: '',
             display: 'checkbox',
-            fieldType: FieldType.BOOL
+            propertyType: PropertyType.BOOL
           },
           {
             name: 'items',
             title: 'Знаки легенды',
-            fieldType: FieldType.CUSTOM,
+            propertyType: PropertyType.CUSTOM,
             hidden: !printSettings.legend.enabled,
             ControlComponent: SelectLegend
           },
@@ -120,7 +120,7 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
             title: 'авто',
             hidden: !printSettings.legend.enabled,
             display: 'checkbox',
-            fieldType: FieldType.BOOL
+            propertyType: PropertyType.BOOL
           }
         ]
       }
@@ -133,39 +133,39 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
         name: 'resolution',
         title: 'Разрешение',
         display: 'select',
-        fieldType: FieldType.CHOICE,
+        propertyType: PropertyType.CHOICE,
         options: resolutions.map(resolution => ({ title: `${resolution} dpi`, value: resolution }))
       },
       {
         name: 'margin',
         title: 'Поля (мм)',
-        fieldType: FieldType.SET,
+        propertyType: PropertyType.SET,
         fieldsSet: [
           {
             name: 'left',
             title: 'слева',
-            fieldType: FieldType.INT,
+            propertyType: PropertyType.INT,
             minValue: 0,
             maxValue: 50
           },
           {
             name: 'right',
             title: 'справа',
-            fieldType: FieldType.INT,
+            propertyType: PropertyType.INT,
             minValue: 0,
             maxValue: 50
           },
           {
             name: 'top',
             title: 'сверху',
-            fieldType: FieldType.INT,
+            propertyType: PropertyType.INT,
             minValue: 0,
             maxValue: 50
           },
           {
             name: 'bottom',
             title: 'снизу',
-            fieldType: FieldType.INT,
+            propertyType: PropertyType.INT,
             minValue: 0,
             maxValue: 50
           }
@@ -175,13 +175,13 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
         name: 'windRose',
         title: 'Роза ветров',
         display: 'checkbox',
-        fieldType: FieldType.BOOL
+        propertyType: PropertyType.BOOL
       },
       {
         name: 'date',
         title: 'Дата',
         display: 'checkbox',
-        fieldType: FieldType.BOOL
+        propertyType: PropertyType.BOOL
       }
     ];
   }

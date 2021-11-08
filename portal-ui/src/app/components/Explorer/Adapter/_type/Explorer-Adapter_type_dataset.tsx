@@ -30,7 +30,7 @@ import {
   SortItem
 } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerUrlItem } from '../../Explorer';
 
 declare module '../../Explorer.models' {
@@ -58,10 +58,10 @@ export class ExplorerAdapterTypeDataset {
         {details && <p>{details}</p>}
 
         {createdAt ? (
-          <p>
+          <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
             {moment(createdAt).format('LL')}
-          </p>
+          </ExplorerInfoDescItem>
         ) : null}
 
         <p>

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { TextField } from '@mui/material';
 
-import { FieldType, PropertySchemaString } from '../../../../services/crg/schema.models';
+import { PropertyType, PropertySchemaString } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
@@ -59,6 +59,6 @@ class FormControlTypeString extends Component<FormControlProps> {
 
 export const withTypeString = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),
-  { type: FieldType.STRING },
+  { type: PropertyType.STRING },
   () => FormControlTypeString
 );

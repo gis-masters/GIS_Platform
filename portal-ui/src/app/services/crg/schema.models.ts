@@ -3,7 +3,7 @@ import { ComponentType } from 'react';
 import { SupportedGeometryType } from '../geoserver/wfs.models';
 import { FormControlProps } from '../../components/Form/Control/Form-Control';
 
-export enum FieldType {
+export enum PropertyType {
   STRING = 'string',
   INT = 'integer',
   FLOAT = 'float',
@@ -47,7 +47,7 @@ export interface ContentType {
 
 interface BasePropertySchema<T extends Record<string, unknown> = Record<string, unknown>> {
   name: keyof T;
-  fieldType: FieldType;
+  propertyType: PropertyType;
   title: string;
   description?: string;
   category?: string;
@@ -62,7 +62,7 @@ interface BasePropertySchema<T extends Record<string, unknown> = Record<string, 
 
 export interface PropertySchemaString<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.STRING;
+  propertyType: PropertyType.STRING;
   display?: 'singleline' | 'multiline' | 'reachtext';
   mask?: string;
   minLength?: number;
@@ -85,21 +85,21 @@ interface PropertySchemaBaseNumber {
 export interface PropertySchemaInt<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T>,
     PropertySchemaBaseNumber {
-  fieldType: FieldType.INT;
+  propertyType: PropertyType.INT;
   defaultValue?: number;
 }
 
 export interface PropertySchemaFloat<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T>,
     PropertySchemaBaseNumber {
-  fieldType: FieldType.FLOAT;
+  propertyType: PropertyType.FLOAT;
   precision?: number;
   defaultValue?: number;
 }
 
 export interface PropertySchemaBool<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.BOOL;
+  propertyType: PropertyType.BOOL;
   display?: 'checkbox' | 'switch';
   trueLabel?: string;
   falseLabel?: string;
@@ -108,7 +108,7 @@ export interface PropertySchemaBool<T extends Record<string, unknown> = Record<s
 
 export interface PropertySchemaDatetime<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.DATETIME;
+  propertyType: PropertyType.DATETIME;
   display?: 'date' | 'datetime';
   format?: string;
   maxValue?: string;
@@ -118,7 +118,7 @@ export interface PropertySchemaDatetime<T extends Record<string, unknown> = Reco
 
 export interface PropertySchemaTime<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.TIME;
+  propertyType: PropertyType.TIME;
   maxValue?: string;
   minValue?: string;
   defaultValue?: string;
@@ -126,7 +126,7 @@ export interface PropertySchemaTime<T extends Record<string, unknown> = Record<s
 
 export interface PropertySchemaDuration<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.DURATION;
+  propertyType: PropertyType.DURATION;
   maxValue?: string;
   minValue?: string;
   defaultValue?: number;
@@ -136,7 +136,7 @@ export type PropertyOption = { title: string; value: string | number };
 
 export interface PropertySchemaChoice<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.CHOICE;
+  propertyType: PropertyType.CHOICE;
   display?: 'select' | 'radiogroup';
   multiple?: boolean;
   allowMultipleValues?: boolean;
@@ -147,7 +147,7 @@ export interface PropertySchemaChoice<T extends Record<string, unknown> = Record
 
 export interface PropertySchemaUrl<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.URL;
+  propertyType: PropertyType.URL;
   display?: 'popup' | 'newtab' | 'img';
   enablePreview?: boolean;
   regex?: string;
@@ -156,33 +156,34 @@ export interface PropertySchemaUrl<T extends Record<string, unknown> = Record<st
 
 export interface PropertySchemaCalculated<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.CALCULATED | FieldType.URL | FieldType.GEOMETRY | FieldType.LOOKUP;
+  propertyType: PropertyType.CALCULATED | PropertyType.URL | PropertyType.GEOMETRY | PropertyType.LOOKUP;
   wellKnownFormula?: string;
   formula?: string;
 }
 
 export interface PropertySchemaLookup<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.LOOKUP;
+  propertyType: PropertyType.LOOKUP;
 }
 
 export interface PropertySchemaSet<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.SET;
+  propertyType: PropertyType.SET;
   fieldsSet: PropertySchema[];
   defaultValue?: Record<string, unknown>;
 }
 
 export interface PropertySchemaCustom<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.CUSTOM;
+  propertyType: PropertyType.CUSTOM;
   ControlComponent: ComponentType<FormControlProps>;
+  ViewComponent?: ComponentType<FormControlProps>;
   defaultValue?: unknown;
 }
 
 export interface PropertySchemaIdentities<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.IDENTITIES;
+  propertyType: PropertyType.IDENTITIES;
   allowMultipleValues?: boolean;
   tableName?: string;
   lookupFieldName?: string;
@@ -191,7 +192,7 @@ export interface PropertySchemaIdentities<T extends Record<string, unknown> = Re
 
 export interface PropertySchemaBinary<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {
-  fieldType: FieldType.BINARY;
+  propertyType: PropertyType.BINARY;
   accept?: string;
   maxSize?: number;
   isDefault?: string[];

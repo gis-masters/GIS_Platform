@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { knownRegex } from '../regexp.service';
 import {
-  FieldType,
+  PropertyType,
   PropertySchema,
   PropertySchemaChoice,
   PropertySchemaDatetime,
@@ -34,18 +34,20 @@ type FieldValidator = (
   formValue: Record<string, unknown>
 ) => string[] | undefined;
 
-const fieldValidators: Partial<Record<FieldType, FieldValidator[]>> = {
+const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
   string: [simpleRequired, stringLength, stringRegex, stringWellKnownRegex],
   integer: [numberRequired, numberMinMax, numberInteger],
   float: [numberRequired, numberMinMax],
   bool: [simpleRequired],
   binary: [simpleRequired],
   dateTime: [simpleRequired, datetimeValid, datetimeMinMax],
-  choice: [choiceRequired, choiceValueInOptions]
+  choice: [choiceRequired, choiceValueInOptions],
+  set: [],
+  custom: []
 };
 
 function validateField(value: unknown, property: PropertySchema, formValue: Record<string, unknown>): string[] {
-  return fieldValidators[property.fieldType]
+  return fieldValidators[property.propertyType]
     ?.flatMap(validator => validator(value, property, formValue))
     .filter(err => err);
 }

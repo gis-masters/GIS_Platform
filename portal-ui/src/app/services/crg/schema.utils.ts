@@ -1,7 +1,7 @@
 import { cloneDeep } from 'lodash';
 import { OldFeatureDescription, OldPropertySchema, ValueType } from './schemaOld.models';
 import {
-  FieldType,
+  PropertyType,
   PropertySchema,
   PropertySchemaChoice,
   PropertySchemaDatetime,
@@ -36,37 +36,37 @@ export function convertSchema<T extends Record<string, unknown>>(
     const field: Partial<PropertySchema<T>> = { ...oldField };
 
     if (oldField.valueType === ValueType.STRING || oldField.valueType === ValueType.TEXT) {
-      field.fieldType = FieldType.STRING;
+      field.propertyType = PropertyType.STRING;
     }
 
     field.asTitle = oldField.objectIdentityOnUi;
 
     if (oldField.valueType === ValueType.DOUBLE) {
-      field.fieldType = FieldType.FLOAT;
+      field.propertyType = PropertyType.FLOAT;
 
       (field as Partial<PropertySchemaFloat>).precision = oldField.fractionDigits;
     }
 
     if (oldField.valueType === ValueType.INT) {
-      field.fieldType = FieldType.INT;
+      field.propertyType = PropertyType.INT;
     }
 
     if (oldField.valueType === ValueType.CHECKBOX) {
-      field.fieldType = FieldType.BOOL;
+      field.propertyType = PropertyType.BOOL;
     }
 
     if (oldField.valueType === ValueType.BOOLEAN) {
-      field.fieldType = FieldType.BOOL;
+      field.propertyType = PropertyType.BOOL;
     }
 
     if (oldField.valueType === ValueType.DATETIME) {
-      field.fieldType = FieldType.DATETIME;
+      field.propertyType = PropertyType.DATETIME;
 
       (field as Partial<PropertySchemaDatetime>).format = oldField.dateFormat;
     }
 
     if (oldField.valueType === ValueType.CHOICE) {
-      field.fieldType = FieldType.CHOICE;
+      field.propertyType = PropertyType.CHOICE;
 
       (field as Partial<PropertySchemaChoice>).multiple = oldField.isMultiple;
 
@@ -74,26 +74,26 @@ export function convertSchema<T extends Record<string, unknown>>(
     }
 
     if (oldField.valueType === ValueType.URL) {
-      field.fieldType = FieldType.URL;
+      field.propertyType = PropertyType.URL;
 
       (field as Partial<PropertySchemaUrl>).display =
         oldField.displayMode === 'in_popup' ? 'popup' : oldField.displayMode;
     }
 
     if (oldField.valueType === ValueType.GEOMETRY) {
-      field.fieldType = FieldType.GEOMETRY;
+      field.propertyType = PropertyType.GEOMETRY;
     }
 
     if (oldField.valueType === ValueType.LOOKUP) {
-      field.fieldType = FieldType.LOOKUP;
+      field.propertyType = PropertyType.LOOKUP;
     }
 
     if (oldField.valueType === ValueType.BINARY) {
-      field.fieldType = FieldType.BINARY;
+      field.propertyType = PropertyType.BINARY;
     }
 
     if (oldField.valueType === ValueType.SET) {
-      field.fieldType = FieldType.SET;
+      field.propertyType = PropertyType.SET;
     }
 
     delete (field as Partial<OldPropertySchema>).valueType;

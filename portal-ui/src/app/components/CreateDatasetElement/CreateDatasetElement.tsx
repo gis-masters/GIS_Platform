@@ -11,7 +11,7 @@ import {
   validateFormValue
 } from '../../services/crg/formValidation.service';
 import { communicationService } from '../../services/communication.service';
-import { FieldType, PropertySchema } from '../../services/crg/schema.models';
+import { PropertyType, PropertySchema } from '../../services/crg/schema.models';
 import { createDataset, NewDataset } from '../../services/data.service';
 
 import { ExplorerStore } from '../Explorer/Explorer.store';
@@ -33,13 +33,13 @@ export class CreateDatasetElement extends Component<CreateDatasetElementProps> {
   @observable private formValue: Partial<NewDataset> = {};
   @observable private fields: PropertySchema<NewDataset>[] = [
     {
-      fieldType: FieldType.STRING,
+      propertyType: PropertyType.STRING,
       title: 'Название набора данных',
       name: 'title',
       required: true
     },
     {
-      fieldType: FieldType.STRING,
+      propertyType: PropertyType.STRING,
       title: 'Описание набора данных',
       name: 'details'
     }

@@ -5,8 +5,9 @@ import { TextField } from '@mui/material';
 import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutline } from '@mui/icons-material';
 
 import '../../../styles.css';
-import { FieldType, PropertySchema } from '../../services/crg/schema.models';
+import { PropertyType, PropertySchema } from '../../services/crg/schema.models';
 import { getDefaultValues, validateFormValue } from '../../services/crg/formValidation.service';
+import { Mime } from '../../services/util/Mime';
 import { Button } from '../Button/Button';
 
 import { Form, FormControl, FormField, FormLabel } from './Form';
@@ -25,58 +26,65 @@ interface TestData extends Record<string, unknown> {
   free: boolean;
   birthDate: string;
   color: string;
-  photo: Blob;
+  photo: File;
   addr: {
-    service1: boolean;
-    service2: boolean;
-    service3: boolean;
-    service4: boolean;
+    street?: string;
+    num?: string;
+    type?: string;
   };
-  custom: true;
+  services: {
+    service1?: boolean;
+    service2?: boolean;
+    service3?: boolean;
+    service4?: boolean;
+  };
+  custom: boolean;
 }
 
 const fields: PropertySchema<TestData>[] = [
   {
-    fieldType: FieldType.STRING,
+    propertyType: PropertyType.STRING,
     name: 'name',
     title: 'Имя',
     required: true
   },
   {
-    fieldType: FieldType.STRING,
+    propertyType: PropertyType.STRING,
     name: 'email',
     title: 'Email',
     wellKnownRegex: 'email'
   },
   {
-    fieldType: FieldType.INT,
+    propertyType: PropertyType.INT,
     name: 'age',
     title: 'Возраст',
     minValue: 18,
     maxValue: 30
   },
   {
-    fieldType: FieldType.FLOAT,
+    propertyType: PropertyType.FLOAT,
     name: 'weight',
     title: 'Вес',
     minValue: 40,
-    maxValue: 65
+    maxValue: 65,
+    precision: 1
   },
   {
-    fieldType: FieldType.BOOL,
+    propertyType: PropertyType.BOOL,
     name: 'free',
     title: 'Доступн.',
     defaultValue: true,
     required: true
   },
   {
-    fieldType: FieldType.DATETIME,
+    propertyType: PropertyType.DATETIME,
     name: 'birthDate',
     title: 'Дата рождения',
-    required: true
+    required: true,
+    minValue: '2000-01-01'
   },
   {
-    fieldType: FieldType.CHOICE,
+    propertyType: PropertyType.CHOICE,
     name: 'color',
     title: 'Цвет',
     defaultValue: 'white',
@@ -87,28 +95,28 @@ const fields: PropertySchema<TestData>[] = [
     ]
   },
   {
-    fieldType: FieldType.BINARY,
+    propertyType: PropertyType.BINARY,
     name: 'photo',
     title: 'Фото'
   },
   {
-    fieldType: FieldType.SET,
+    propertyType: PropertyType.SET,
     name: 'addr',
     title: 'Адрес',
     defaultValue: { type: 'private' },
     fieldsSet: [
       {
-        fieldType: FieldType.STRING,
+        propertyType: PropertyType.STRING,
         name: 'street',
         title: 'Улица'
       },
       {
-        fieldType: FieldType.INT,
+        propertyType: PropertyType.INT,
         name: 'num',
         title: 'Номер дома'
       },
       {
-        fieldType: FieldType.CHOICE,
+        propertyType: PropertyType.CHOICE,
         name: 'type',
         title: 'Тип строения',
         options: [
@@ -125,38 +133,39 @@ const fields: PropertySchema<TestData>[] = [
     ]
   },
   {
-    fieldType: FieldType.SET,
+    propertyType: PropertyType.SET,
     name: 'services',
     title: 'Услуги',
     fieldsSet: [
       {
-        fieldType: FieldType.BOOL,
+        propertyType: PropertyType.BOOL,
         name: 'service1',
         title: 'Услуга 1'
       },
       {
-        fieldType: FieldType.BOOL,
+        propertyType: PropertyType.BOOL,
         name: 'service2',
         title: 'Услуга 2'
       },
       {
-        fieldType: FieldType.BOOL,
+        propertyType: PropertyType.BOOL,
         name: 'service3',
         title: 'Услуга 3'
       },
       {
-        fieldType: FieldType.BOOL,
+        propertyType: PropertyType.BOOL,
         name: 'service4',
         title: 'Услуга 4'
       }
     ]
   },
   {
-    fieldType: FieldType.CUSTOM,
+    propertyType: PropertyType.CUSTOM,
     name: 'custom',
     title: 'Custom',
     defaultValue: true,
-    ControlComponent: () => <Agriculture color='error' />
+    ControlComponent: () => <Agriculture color='error' />,
+    ViewComponent: () => <Agriculture color='info' />
   }
 ];
 
@@ -172,18 +181,42 @@ const validValue: TestData = {
   name: 'Susan',
   email: 'mail@mail',
   age: 18,
-  weight: 50,
+  weight: 50.6,
   free: true,
   birthDate: '2002-01-01',
   color: 'white',
-  photo: new Blob(['Hello, world!'], { type: 'text/plain' }),
+  photo: new File(['Hello, world!'], 'filename.txt', { type: Mime.TEXT }),
   addr: {
+    num: '3',
+    street: 'Zzzz',
+    type: 'private'
+  },
+  services: {
     service1: true,
     service2: true,
     service3: true,
     service4: true
   },
   custom: true
+};
+
+const errorValue: TestData = {
+  name: '',
+  email: 'zzz',
+  age: 18.8,
+  weight: 10.88,
+  free: false,
+  birthDate: '1002-01-01',
+  color: 'brown',
+  photo: new File(['Hello, world!'], 'filename.txt', { type: Mime.TEXT }),
+  addr: {},
+  services: {
+    service1: false,
+    service2: false,
+    service3: false,
+    service4: false
+  },
+  custom: false
 };
 
 const setFormValue = action((changedValue: Partial<TestData> = {}) => {
@@ -202,14 +235,38 @@ function setValidData() {
   setFormValue(validValue);
 }
 
+function setErrorData() {
+  setFormValue(errorValue);
+}
+
 const validate = action(() => {
   errors.splice(0, errors.length, ...validateFormValue<TestData>(value, fields));
 });
 
+const storyActions = (
+  <>
+    <Button color='primary' startIcon={<Biotech />} id='validateData' onClick={validate}>
+      Validate
+    </Button>
+    <Button color='success' startIcon={<CheckCircleOutline />} id='setValidData' onClick={setValidData}>
+      Set Valid Data
+    </Button>
+    <Button color='error' startIcon={<ErrorOutline />} id='setErrorData' onClick={setErrorData}>
+      Set Error Data
+    </Button>
+    <Button color='secondary' startIcon={<DataUsage />} id='setDefaultData' onClick={setDefaults}>
+      Set Defaults
+    </Button>
+    <Button color='warning' startIcon={<Clear />} id='clearData' onClick={clearForm}>
+      Clear
+    </Button>
+  </>
+);
+
 const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
-export const ViewContentOnly = Template.bind({}) as ComponentStory<typeof Form>;
-ViewContentOnly.args = {
+export const ContentOnly = Template.bind({}) as ComponentStory<typeof Form>;
+ContentOnly.args = {
   children: (
     <>
       <FormField>
@@ -237,23 +294,14 @@ OutsideControl.args = {
   value,
   onFormChange: setFormValue,
   errors,
-  actions: (
-    <>
-      <Button color='primary' startIcon={<Biotech />} id='validateData' onClick={validate}>
-        Validate
-      </Button>
-      <Button color='success' startIcon={<CheckCircleOutline />} id='setValidData' onClick={setValidData}>
-        Set Valid Data
-      </Button>
-      <Button color='error' startIcon={<ErrorOutline />} id='setErrorData'>
-        Set Error Data
-      </Button>
-      <Button color='secondary' startIcon={<DataUsage />} id='setDefaultData' onClick={setDefaults}>
-        Set Defaults
-      </Button>
-      <Button color='warning' startIcon={<Clear />} id='clearData' onClick={clearForm}>
-        Clear
-      </Button>
-    </>
-  )
+  actions: storyActions
+};
+
+export const ReadOnly = Template.bind({}) as ComponentStory<typeof Form>;
+ReadOnly.args = {
+  fields: fields as PropertySchema[],
+  value,
+  errors,
+  readonly: true,
+  actions: storyActions
 };

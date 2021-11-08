@@ -13,6 +13,7 @@ import { FormField } from '../Field/Form-Field';
 import { FormLabel } from '../Label/Form-Label';
 import { FormControl } from '../Control/Form-Control.composed';
 import { FormHiddenField } from '../HiddenField/Form-HiddenField';
+import { FormView } from '../View/Form-View.composed';
 
 const cnFormContent = cn('Form', 'Content');
 
@@ -23,6 +24,7 @@ interface FormContentProps<T extends Record<string, unknown>> extends IClassName
   onFormChange?: (changedValue: T) => void;
   onFieldChange?: (value: T[keyof T], propertyName: keyof T) => void;
   onFieldNeedValidate?: (value: T[keyof T], propertyName: keyof T) => void;
+  readonly?: boolean;
 }
 
 @observer
@@ -30,31 +32,49 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   FormContentProps<T>
 > {
   render() {
-    const { fields, formValue, className, errors = [] } = this.props;
+    const { fields, formValue, className, errors = [], readonly } = this.props;
 
     return (
       <div className={cnFormContent(null, [className])}>
         {fields.map((propertySchema: PropertySchema, i) => {
           const htmlId = 'formField_' + generateRandomId();
 
-          return !propertySchema.hidden ? (
+          if (propertySchema.hidden) {
+            return (
+              <FormHiddenField key={i} name={String(propertySchema.name)} value={formValue[propertySchema.name]} />
+            );
+          }
+
+          return (
             <FormField key={i}>
               <FormLabel htmlFor={htmlId}>{propertySchema.title}</FormLabel>
-              <FormControl
-                htmlId={htmlId}
-                property={propertySchema}
-                type={propertySchema.fieldType}
-                onChange={this.fieldChangeHandler}
-                onNeedValidate={this.fieldNeedValidateHandler}
-                fieldValue={formValue[propertySchema.name]}
-                FormControl={FormControl}
-                errors={errors.filter(({ field }) => field === propertySchema.name).flatMap(({ messages }) => messages)}
-              >
-                {formValue[propertySchema.name]}
-              </FormControl>
+              {readonly ? (
+                <FormView
+                  property={propertySchema}
+                  type={propertySchema.propertyType}
+                  fieldValue={formValue[propertySchema.name]}
+                  errors={errors
+                    .filter(({ field }) => field === propertySchema.name)
+                    .flatMap(({ messages }) => messages)}
+                  FormView={FormView}
+                />
+              ) : (
+                <FormControl
+                  htmlId={htmlId}
+                  property={propertySchema}
+                  type={propertySchema.propertyType}
+                  onChange={this.fieldChangeHandler}
+                  onNeedValidate={this.fieldNeedValidateHandler}
+                  fieldValue={formValue[propertySchema.name]}
+                  FormControl={FormControl}
+                  errors={errors
+                    .filter(({ field }) => field === propertySchema.name)
+                    .flatMap(({ messages }) => messages)}
+                >
+                  {formValue[propertySchema.name]}
+                </FormControl>
+              )}
             </FormField>
-          ) : (
-            <FormHiddenField key={i} name={String(propertySchema.name)} value={formValue[propertySchema.name]} />
           );
         })}
       </div>

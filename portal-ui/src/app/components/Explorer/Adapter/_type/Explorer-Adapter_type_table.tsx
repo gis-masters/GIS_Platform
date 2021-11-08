@@ -12,11 +12,11 @@ import { getTableRoleAssignmentUrl } from '../../../../services/server-urls.serv
 import { Role } from '../../../../services/crg/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerProps } from '../../Explorer';
 
 declare module '../../Explorer.models' {
@@ -44,10 +44,10 @@ export class ExplorerAdapterTypeTable {
         {details && <p>{details}</p>}
 
         {createdAt ? (
-          <p>
+          <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
             {moment(createdAt).format('LL')}
-          </p>
+          </ExplorerInfoDescItem>
         ) : null}
       </>
     );

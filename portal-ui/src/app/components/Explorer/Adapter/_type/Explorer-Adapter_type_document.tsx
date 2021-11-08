@@ -2,7 +2,6 @@ import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { InsertDriveFile } from '@mui/icons-material';
 
-import { Toast } from '../../../Toast/Toast';
 import { FileTiff } from '../../../Icons/FileTiff';
 import { services } from '../../../../services/services';
 import { currentUser } from '../../../../stores/CurrentUser.store';
@@ -12,19 +11,18 @@ import {
   getDocLibrariesRecordsUrl,
   getDocumentLibraryRecordRoleAssignmentUrl
 } from '../../../../services/server-urls.service';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { Role } from '../../../../services/crg/permissions.models';
-import { DocumentActionsWidget } from '../../../DocumentActionsWidget/DocumentActionsWidget';
+import { schemaService } from '../../../../services/crg/schema.service';
 import { docLibraryService, LibraryRecord } from '../../../../services/crg/doc-library.service';
+import { convertSchema, getSchemaWithAppliedContentType } from '../../../../services/crg/schema.utils';
+import { DocumentActionsWidget } from '../../../DocumentActionsWidget/DocumentActionsWidget';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
+import { Toast } from '../../../Toast/Toast';
 
-import {
-  Adapter,
-  AllowedActions,
-  ExplorerItemData,
-  ExplorerItemEntityType,
-  ExplorerItemType
-} from '../../Explorer.models';
+import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -51,10 +49,10 @@ export class ExplorerAdapterTypeDocument {
         {details && <p>{details}</p>}
 
         {createdAt && (
-          <p>
+          <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
             {moment(createdAt).format('LL')}
-          </p>
+          </ExplorerInfoDescItem>
         )}
       </>
     );
@@ -71,10 +69,21 @@ export class ExplorerAdapterTypeDocument {
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
     const currentItem = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
+    const oldSchema = getSchemaWithAppliedContentType(
+      await schemaService.getSchema(item.payload.schemaId),
+      item.payload.content_type_id
+    );
+    const fields = convertSchema(oldSchema.properties);
 
     return (
       <>
+        <ExplorerInfoDescItem multiline>
+          <ExplorerInfoDescTitle>Карточка документа:</ExplorerInfoDescTitle>
+          <ViewContentWidget fields={fields} data={item.payload} />
+        </ExplorerInfoDescItem>
+
         <DocumentActionsWidget document={item.payload} />
+
         <PermissionsWidget
           url={url}
           title={item.payload.title}
