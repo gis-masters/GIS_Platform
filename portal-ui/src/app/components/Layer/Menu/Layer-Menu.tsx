@@ -200,6 +200,12 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
     const { dataset, tableName, schemaId, type } = entity as CrgLayer;
 
+    if (type === CrgLayerType.RASTER) {
+      this.setLayersDeleteAllowed(isLayersManagementAllowed());
+
+      return;
+    }
+
     if (type !== CrgLayerType.VECTOR) {
       return;
     }
@@ -217,7 +223,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   private setPermissions(featuresCreateAllowed: boolean, layerExportAllowed: boolean, layersDeleteAllowed: boolean) {
     this.featuresCreateAllowed = featuresCreateAllowed;
     this.layerExportAllowed = layerExportAllowed;
-    this.layersDeleteAllowed = layersDeleteAllowed;
+    this.setLayersDeleteAllowed(layersDeleteAllowed);
   }
 
   @boundMethod
@@ -347,6 +353,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @action
   private setGeometryType(geometryType: GeometryType) {
     this.geometryType = geometryType;
+  }
+
+  @action
+  private setLayersDeleteAllowed(layersDeleteAllowed: boolean) {
+    this.layersDeleteAllowed = layersDeleteAllowed;
   }
 
   @action.bound
