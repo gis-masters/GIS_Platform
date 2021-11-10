@@ -92,6 +92,7 @@ body.global-crosshair-cursor * {
 
 :root {
   --blue: #1976d2;
+  --error: #f44336;
   --gray: #6c757d;
   --gray-dark: #343a40;
   --primary: var(--blue);

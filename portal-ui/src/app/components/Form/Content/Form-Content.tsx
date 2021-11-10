@@ -47,7 +47,9 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
 
           return (
             <FormField key={i}>
-              <FormLabel htmlFor={htmlId}>{propertySchema.title}</FormLabel>
+              <FormLabel htmlFor={htmlId} required={propertySchema.required}>
+                {propertySchema.title}
+              </FormLabel>
               {readonly ? (
                 <FormView
                   property={propertySchema}
