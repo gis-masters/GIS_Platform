@@ -23,6 +23,7 @@ interface TestData extends Record<string, unknown> {
   email: string;
   age: number;
   weight: number;
+  size: number;
   free: boolean;
   birthDate: string;
   color: string;
@@ -68,6 +69,16 @@ const fields: PropertySchema<TestData>[] = [
     minValue: 40,
     maxValue: 65,
     precision: 1
+  },
+  {
+    propertyType: PropertyType.INT,
+    display: 'slider',
+    name: 'size',
+    title: 'Размер',
+    minValue: 0,
+    maxValue: 7,
+    defaultValue: 3,
+    required: true
   },
   {
     propertyType: PropertyType.BOOL,
@@ -182,6 +193,7 @@ const validValue: TestData = {
   email: 'mail@mail',
   age: 18,
   weight: 50.6,
+  size: 5,
   free: true,
   birthDate: '2002-01-01',
   color: 'white',
@@ -205,6 +217,7 @@ const errorValue: TestData = {
   email: 'zzz',
   age: 18.8,
   weight: 10.88,
+  size: 8,
   free: false,
   birthDate: '1002-01-01',
   color: 'brown',

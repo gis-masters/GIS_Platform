@@ -71,6 +71,7 @@ export interface PrintSettings {
   border: boolean;
   date: boolean;
   legend: LegendOptions;
+  legendSize: number;
 }
 
 const defaultPrintSettings: PrintSettings = {
@@ -88,6 +89,7 @@ const defaultPrintSettings: PrintSettings = {
   windRose: true,
   border: true,
   date: true,
+  legendSize: 1,
   legend: {
     enabled: true,
     auto: true,
@@ -112,6 +114,7 @@ class PrintSettingsStore implements PrintSettings {
   @observable border: boolean;
   @observable date: boolean;
   @observable legend: LegendOptions;
+  @observable legendSize: number;
   @observable rotation = 0;
   @observable allLegend: StyleRuleExtended[] = [];
 

@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { printSettings } from '../../../stores/PrintSettings.store';
@@ -8,8 +9,8 @@ import '!style-loader!css-loader!sass-loader!./PrintDialog-Legend.scss';
 
 const cnPrintDialogLegend = cn('PrintDialog', 'Legend');
 
-export const PrintDialogLegend: FC = () => {
-  const { legend, resolution, pageFormatId } = printSettings;
+export const PrintDialogLegend: FC = observer(() => {
+  const { legend, resolution, pageFormatId, legendSize } = printSettings;
   const formatsResizes: Record<string, number> = { a5: 0.41, a4: 0.304, a3: 0.22 };
   const resizeForPageFormat = formatsResizes[pageFormatId];
 
@@ -19,7 +20,7 @@ export const PrintDialogLegend: FC = () => {
       rules={legend.items}
       forPrint
       resolution={resolution}
-      resize={resizeForPageFormat}
+      resize={resizeForPageFormat * legendSize * 1.3}
     />
   );
-};
+});

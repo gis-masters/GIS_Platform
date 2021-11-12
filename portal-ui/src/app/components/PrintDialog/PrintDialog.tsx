@@ -16,7 +16,7 @@ const cnPrintDialog = cn('PrintDialog');
 
 interface PrintDialogProps {
   open: boolean;
-  onClose: () => void;
+  onClose(): void;
 }
 
 export class PrintDialog extends Component<PrintDialogProps> {

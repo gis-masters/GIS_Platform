@@ -339,7 +339,8 @@ export async function getLegendImageSrc(resolution?: number): Promise<string> {
   const reactElement = createElement(Legend, {
     rules: printSettings.legend.items,
     forPrint: true,
-    resolution: resolution || printSettings.resolution
+    resolution: resolution || printSettings.resolution,
+    resize: printSettings.legendSize * 1.3
   });
   render(reactElement, el);
   const src = await domToImage.toPng(el.childNodes[0]);

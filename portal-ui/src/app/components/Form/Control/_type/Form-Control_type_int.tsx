@@ -1,69 +1,13 @@
-import React, { Component } from 'react';
-import { boundMethod } from 'autobind-decorator';
+import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import { InputAdornment, TextField } from '@mui/material';
 
-import { PropertyType, PropertySchemaInt } from '../../../../services/crg/schema.models';
+import { PropertyType } from '../../../../services/crg/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
+import { FormControlTypeNumber } from './Form-Control_type_number';
 
-@observer
-class FormControlTypeInt extends Component<FormControlProps> {
-  render() {
-    const { htmlId, className, fieldValue = '', property, inSet, errors } = this.props;
-    const { measureUnit, title, defaultValue } = property as PropertySchemaInt;
-
-    return (
-      <div className={cnFormControl({ inSet }, [className])}>
-        <TextField
-          id={htmlId}
-          fullWidth={!inSet}
-          type='number'
-          InputProps={{
-            endAdornment: measureUnit ? <InputAdornment position='end'>{measureUnit}</InputAdornment> : undefined
-          }}
-          value={fieldValue === undefined ? defaultValue : fieldValue}
-          label={inSet ? title : undefined}
-          onChange={this.handleChange}
-          error={!!errors?.length}
-          helperText={errors}
-          onBlur={this.handleBlur}
-          variant='standard'
-        />
-      </div>
-    );
-  }
-
-  @boundMethod
-  private handleChange(event: React.ChangeEvent<{ value: unknown }>) {
-    const { onChange, property } = this.props;
-    const { maxValue } = property as PropertySchemaInt;
-    const targetValue = event.target.value;
-
-    let value = targetValue ? Number(targetValue) : targetValue;
-
-    if (typeof maxValue === 'number' && value > maxValue) {
-      value = maxValue;
-    }
-
-    if (onChange) {
-      onChange({ value, propertyName: property.name });
-    }
-  }
-
-  @boundMethod
-  private handleBlur() {
-    const { onNeedValidate, fieldValue, property } = this.props;
-
-    if (onNeedValidate) {
-      onNeedValidate({
-        value: fieldValue,
-        propertyName: property.name
-      });
-    }
-  }
-}
+const FormControlTypeInt: FC<FormControlProps> = observer(props => <FormControlTypeNumber {...props} />);
 
 export const withTypeInt = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),

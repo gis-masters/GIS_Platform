@@ -74,7 +74,7 @@ export interface PropertySchemaString<T extends Record<string, unknown> = Record
 }
 
 interface PropertySchemaBaseNumber {
-  display?: 'text' | 'number' | 'slider';
+  display?: 'number' | 'slider';
   maxValue?: number;
   minValue?: number;
   measureUnit?: string;
@@ -96,6 +96,8 @@ export interface PropertySchemaFloat<T extends Record<string, unknown> = Record<
   precision?: number;
   defaultValue?: number;
 }
+
+export type PropertySchemaNumber = PropertySchemaInt | PropertySchemaFloat;
 
 export interface PropertySchemaBool<T extends Record<string, unknown> = Record<string, unknown>>
   extends BasePropertySchema<T> {

@@ -30,14 +30,15 @@ interface PrintDialogFormProps {
 }
 
 type MainFormValues = Pick<PrintSettings, 'pageFormatId' | 'scale' | 'orientation' | 'legend'>;
-type ExtraFormValues = Pick<PrintSettings, 'resolution' | 'margin' | 'windRose' | 'border' | 'date'>;
+type ExtraFormValues = Pick<PrintSettings, 'resolution' | 'legendSize' | 'margin' | 'windRose' | 'border' | 'date'>;
 
 @observer
 export class PrintDialogForm extends Component<PrintDialogFormProps> {
   @observable private extraOpen = false;
 
   render() {
-    const { pageFormatId, scale, resolution, orientation, margin, windRose, border, date, legend } = printSettings;
+    const { pageFormatId, scale, resolution, orientation, margin, windRose, border, date, legend, legendSize } =
+      printSettings;
     const mainFormValues: MainFormValues = {
       pageFormatId,
       scale,
@@ -46,6 +47,7 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
     };
     const extraFormValues: ExtraFormValues = {
       resolution,
+      legendSize,
       margin,
       windRose,
       border,
@@ -79,21 +81,18 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
       {
         name: 'pageFormatId',
         title: 'Формат',
-        display: 'select',
         propertyType: PropertyType.CHOICE,
         options: pageFormats.map(({ id, name }) => ({ title: name, value: id }))
       },
       {
         name: 'scale',
         title: 'Масштаб',
-        display: 'select',
         propertyType: PropertyType.CHOICE,
         options: scales.map(scale => ({ title: `1 : ${scale}`, value: scale }))
       },
       {
         name: 'orientation',
         title: 'Ориентация',
-        display: 'select',
         propertyType: PropertyType.CHOICE,
         options: orientations
       },
@@ -105,7 +104,6 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
           {
             name: 'enabled',
             title: '',
-            display: 'checkbox',
             propertyType: PropertyType.BOOL
           },
           {
@@ -119,7 +117,6 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
             name: 'auto',
             title: 'авто',
             hidden: !printSettings.legend.enabled,
-            display: 'checkbox',
             propertyType: PropertyType.BOOL
           }
         ]
@@ -135,6 +132,15 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
         display: 'select',
         propertyType: PropertyType.CHOICE,
         options: resolutions.map(resolution => ({ title: `${resolution} dpi`, value: resolution }))
+      },
+      {
+        name: 'legendSize',
+        title: 'Размер легенды',
+        propertyType: PropertyType.FLOAT,
+        display: 'slider',
+        step: 0.1,
+        minValue: 0.8,
+        maxValue: 1.8
       },
       {
         name: 'margin',
