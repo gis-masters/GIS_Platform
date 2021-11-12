@@ -1,6 +1,6 @@
 {
   "name": "gis-portal",
-  "version": "0.0.58",
+  "version": "0.0.61",
   "scripts": {
     "postinstall": "cd .. && husky install portal-ui/.husky",
     "ng": "ng",

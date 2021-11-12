@@ -41,6 +41,7 @@ public class TablesDao {
     private final NamedParameterJdbcTemplate pJdbcTemplate;
 
     public TablesDao(NamedParameterJdbcTemplate parameterJdbcTemplate) {
+        System.setProperty("com.healthmarketscience.sqlbuilder.useBooleanLiterals", "true");
         this.pJdbcTemplate = parameterJdbcTemplate;
     }
 

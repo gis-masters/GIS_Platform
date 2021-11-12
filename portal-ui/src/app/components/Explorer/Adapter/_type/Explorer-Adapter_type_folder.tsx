@@ -172,7 +172,7 @@ export class ExplorerAdapterTypeFolder {
 
     const [records, totalPages, pageNumber] = response;
 
-    const { contentTypes } = await schemaService.getSchema(libraryId);
+    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
 
     return [
       records.map(payload => {
@@ -210,7 +210,7 @@ export class ExplorerAdapterTypeFolder {
   ): Promise<ExplorerItemData<LibraryRecord>> {
     const [libraryId, identifier] = id.split(':');
     const payload = await docLibraryService.getDocLibrariesRecord(libraryId, identifier, item.payload.schemaId);
-    const { contentTypes } = await schemaService.getSchema(libraryId);
+    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 
     return {
