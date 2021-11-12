@@ -99,15 +99,15 @@ export class ExplorerAdapterTypeDocument {
   }
 
   static async getAllowedActions(item: ExplorerItemData<LibraryRecord>): Promise<AllowedActions> {
-    const deletionAllowed = currentUser.isAdmin;
     const field = 'inner_path'; // temporary binary fieldName of default document library schema
     const recordsUrl = await getDocLibrariesRecordsUrl(item.payload.libraryId);
     const document = item.payload;
+    const currentItem = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
 
     return {
       delete: {
         visible: true,
-        disabled: !deletionAllowed,
+        disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER),
         itemTitle: item.payload.title,
         needConfirmation: true
       },
