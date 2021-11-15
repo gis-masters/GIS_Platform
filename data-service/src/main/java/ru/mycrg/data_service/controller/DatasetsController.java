@@ -46,9 +46,9 @@ public class DatasetsController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/datasets/{datasetId}")
     public ResponseEntity<IResourceModel> getDataset(@PathVariable String datasetId) {
-        final IResourceModel dto = datasetService.getInfo(datasetId);
+        IResourceModel dataset = datasetService.getInfo(datasetId);
 
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(dataset);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

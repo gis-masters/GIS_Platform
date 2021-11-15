@@ -43,7 +43,7 @@ public class TablesController {
                                             @RequestParam(required = false, defaultValue = "") String title,
                                             Pageable pageable,
                                             PagedResourcesAssembler<IResourceModel> pageAssembler) {
-        final Page<IResourceModel> tables = tableService.getPaged(datasetId, title, pageable);
+        Page<IResourceModel> tables = tableService.getPaged(datasetId, title, pageable);
 
         var pagedResources = pageAssembler.toResource(
                 tables,
@@ -58,11 +58,9 @@ public class TablesController {
     @GetMapping("/datasets/{datasetId}/tables/{tableId}")
     public ResponseEntity<Object> getTable(@PathVariable String datasetId,
                                            @PathVariable String tableId) {
-        ResourceQualifier tQualifier = new ResourceQualifier(datasetId, tableId);
+        IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
 
-        final IResourceModel dto = tableService.getInfo(tQualifier);
-
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(table);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

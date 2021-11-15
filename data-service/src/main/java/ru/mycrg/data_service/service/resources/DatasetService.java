@@ -8,19 +8,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
-import ru.mycrg.data_service.dao.SchemasManager;
+import ru.mycrg.data_service.dao.ddl.DdlSchemas;
 import ru.mycrg.data_service.dto.DatasetModel;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
-import ru.mycrg.data_service.dto.Roles;
 import ru.mycrg.data_service.entity.Permission;
-import ru.mycrg.data_service.entity.Role;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.PermissionsService;
+import ru.mycrg.data_service.service.resources.protectors.DatasetProtector;
+import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
 import ru.mycrg.http_client.ResponseModel;
 
 import java.util.List;
@@ -29,57 +29,69 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.generateDatasetName;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.DATASET;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 
 @Service
-public class DatasetService extends SchemasAndTablesBase {
+public class DatasetService {
+
+    public static final ResourceQualifier SCHEMAS_AND_TABLES_QUALIFIER =
+            new ResourceQualifier(SYSTEM_SCHEMA_NAME, "schemas_and_tables");
 
     private static final Logger log = LoggerFactory.getLogger(DatasetService.class);
 
     private final BasePermissionsRepository permissionsRepository;
-    private final SchemasManager schemasManager;
+    private final DdlSchemas ddlSchemas;
     private final DataStoreClient dataStoreClient;
-    private final ResourceProtector resourceProtector;
+    private final IResourceProtector datasetProtector;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final PermissionsService permissionsService;
 
     public DatasetService(BasePermissionsRepository permissionsRepository,
-                          ResourceProtector resourceProtector,
-                          SchemasManager schemasManager,
+                          DatasetProtector datasetProtector,
+                          DdlSchemas ddlSchemas,
                           DataStoreClient dataStoreClient,
                           SchemasAndTablesRepository schemasAndTablesRepository,
                           PermissionsService permissionsService) {
         this.permissionsRepository = permissionsRepository;
-        this.schemasManager = schemasManager;
+        this.ddlSchemas = ddlSchemas;
         this.dataStoreClient = dataStoreClient;
-        this.resourceProtector = resourceProtector;
+        this.datasetProtector = datasetProtector;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
     }
 
     public Page<IResourceModel> getPaged(String title, Pageable pageable) {
-        final List<IResourceModel> allowedResources = permissionsRepository
-                .findAllowedByParent(schemasAndTablesQualifier, ROOT_FOLDER_PATH, title, pageable).stream()
+        List<IResourceModel> allowedResources = permissionsRepository
+                .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, title, pageable).stream()
                 .map(record -> new DatasetModel(record.getContent()))
                 .collect(Collectors.toList());
 
-        final long total = permissionsRepository.getTotalByParent(schemasAndTablesQualifier, ROOT_FOLDER_PATH, title);
+        long total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, title);
 
         return new PageImpl<>(allowedResources, pageable, total);
     }
 
     public IResourceModel getInfo(String datasetIdentifier) {
+        ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, datasetIdentifier);
+
         SchemasAndTables dataset = schemasAndTablesRepository
                 .findByIdentifier(datasetIdentifier)
                 .orElseThrow(() -> new NotFoundException(datasetIdentifier));
 
-        Optional<Role> oRole = permissionsService.getBestDatasetRole(schemasAndTablesQualifier, dataset.getId());
-        if (oRole.isPresent()) { // There is permission directly for the schema
-            return new DatasetModel(dataset, oRole.get().getName());
-        } else { // Check if schema allowed for view by permissions from children
-            if (permissionsRepository.isViewAllowed(schemasAndTablesQualifier, dataset.pathTo())) {
-                return new DatasetModel(dataset, Roles.VIEWER.name());
+        if (datasetProtector.isOwner(dQualifier)) {
+            return new DatasetModel(dataset, "OWNER");
+        } else {
+            Optional<String> oRole = permissionsRepository.getRoleForDataset(dQualifier);
+            if (oRole.isPresent()) {
+                return new DatasetModel(dataset, oRole.get());
+            }
+
+            boolean canBeViewed = permissionsRepository.isPassThroughFolder(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                                            dataset.getPath() + "/" + dataset.getId());
+            if (canBeViewed) {
+                return new DatasetModel(dataset, "VIEWER");
             } else {
                 throw new ForbiddenException("Недостаточно прав для просмотра набора: " + datasetIdentifier);
             }
@@ -89,24 +101,24 @@ public class DatasetService extends SchemasAndTablesBase {
     public DatasetModel create(ResourceCreateDto dto) {
         String datasetName = generateDatasetName();
 
-        ResourceQualifier rDataset = new ResourceQualifier(datasetName);
-        resourceProtector.throwIfExists(rDataset);
+        ResourceQualifier dQualifier = new ResourceQualifier(datasetName);
+        datasetProtector.throwIfExists(dQualifier);
 
         // Create schema
-        schemasManager.create(rDataset);
+        ddlSchemas.create(dQualifier);
 
         // Add record to schemasAndTables table
-        final SchemasAndTables dataset = new SchemasAndTables(DATASET, dto, datasetName, ROOT_FOLDER_PATH);
-        final SchemasAndTables newEntity = schemasAndTablesRepository.save(dataset);
+        SchemasAndTables dataset = new SchemasAndTables(DATASET, dto, datasetName, ROOT_FOLDER_PATH);
+        SchemasAndTables newEntity = schemasAndTablesRepository.save(dataset);
 
         // Create OWNER permission
-        final Permission ownerPermission = permissionsService.addOwnerPermission(schemasAndTablesQualifier,
-                                                                                 newEntity.getId());
+        Permission ownerPermission = permissionsService.addOwnerPermission(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                                           newEntity.getId());
 
         ResponseModel<Object> responseModel = dataStoreClient.create(datasetName);
         if (!responseModel.isSuccessful()) {
             schemasAndTablesRepository.delete(newEntity);
-            schemasManager.delete(rDataset);
+            ddlSchemas.drop(dQualifier);
             permissionsService.delete(ownerPermission);
 
             throw new DataServiceException("Не удалось создать хранилище на gis-service", responseModel);
@@ -121,12 +133,12 @@ public class DatasetService extends SchemasAndTablesBase {
                 .findByIdentifier(datasetQualifier.toString())
                 .orElseThrow(() -> new NotFoundException(datasetQualifier));
 
-        if (!resourceProtector.isOwner(datasetQualifier)) {
+        if (!datasetProtector.isOwner(datasetQualifier)) {
             throw new ForbiddenException("Недостаточно прав для удаления набора: " + datasetQualifier.getQualifier());
         }
 
         // Delete from DB
-        schemasManager.delete(datasetQualifier);
+        ddlSchemas.drop(datasetQualifier);
 
         // Delete from information table
         schemasAndTablesRepository.deleteByIdentifier(datasetQualifier.toString());
@@ -138,6 +150,6 @@ public class DatasetService extends SchemasAndTablesBase {
         }
 
         // Delete assigned rule
-        permissionsService.deleteAssigned(schemasAndTablesQualifier, dataset.getId());
+        permissionsService.deleteAssigned(datasetQualifier, dataset.getId());
     }
 }

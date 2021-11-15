@@ -12,7 +12,6 @@ import ru.mycrg.data_service.service.processes.ProcessHandlersFactory;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
 
-import javax.validation.Valid;
 import java.security.Principal;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;

@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao;
+package ru.mycrg.data_service.dao.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ public class DatasourceFactory {
 
     private static final int HIKARI_POOL_SIZE = 2;
 
-    final Map<String, HikariDataSource> dataSources = new HashMap<>();
+    private final Map<String, HikariDataSource> dataSources = new HashMap<>();
 
     @Autowired
     Environment environment;

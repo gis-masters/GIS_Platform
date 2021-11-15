@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.entity;
 
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
@@ -51,6 +52,7 @@ public class DocumentLibrary {
         this.id = id;
     }
 
+    @Nullable
     public String getTitle() {
         return title;
     }
@@ -59,6 +61,7 @@ public class DocumentLibrary {
         this.title = title;
     }
 
+    @Nullable
     public String getDetails() {
         return details;
     }
@@ -75,6 +78,7 @@ public class DocumentLibrary {
         this.tableName = tableName;
     }
 
+    @Nullable
     public String getSchemaId() {
         return schemaId;
     }
@@ -83,6 +87,7 @@ public class DocumentLibrary {
         this.schemaId = schemaId;
     }
 
+    @Nullable
     public String getCreatedBy() {
         return createdBy;
     }
@@ -91,6 +96,7 @@ public class DocumentLibrary {
         this.createdBy = createdBy;
     }
 
+    @Nullable
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -99,6 +105,7 @@ public class DocumentLibrary {
         this.createdAt = createdAt;
     }
 
+    @Nullable
     public LocalDateTime getLastModified() {
         return lastModified;
     }
@@ -107,6 +114,7 @@ public class DocumentLibrary {
         this.lastModified = lastModified;
     }
 
+    @Nullable
     public String getPath() {
         return path;
     }

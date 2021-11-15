@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.dto.Resource;
+import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Principal;
 import ru.mycrg.data_service.entity.Role;
@@ -23,14 +24,16 @@ import ru.mycrg.data_service.repository.PrincipalRepository;
 import ru.mycrg.data_service.repository.RoleRepository;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.security.AuthenticationFacade;
-import ru.mycrg.data_service.service.resources.ResourceProtector;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.data_service.util.RoleHandler.defineIdByRole;
 
 @Service
@@ -39,22 +42,21 @@ public class PermissionsService {
 
     private final ProjectionFactory projectionFactory;
     private final RoleRepository roleRepository;
-    private final ResourceProtector resourceProtector;
     private final PrincipalService principalService;
     private final AuthenticationFacade authenticationFacade;
     private final PrincipalRepository principalRepository;
     private final PermissionRepository permissionRepository;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
+    private final Map<ResourceType, IResourceProtector> protectors;
 
-    public PermissionsService(ResourceProtector resourceProtector,
-                              PrincipalService principalService,
+    public PermissionsService(PrincipalService principalService,
                               PermissionRepository permissionRepository,
                               PrincipalRepository principalRepository,
                               RoleRepository roleRepository,
                               AuthenticationFacade authenticationFacade,
                               ProjectionFactory projectionFactory,
-                              SchemasAndTablesRepository schemasAndTablesRepository) {
-        this.resourceProtector = resourceProtector;
+                              SchemasAndTablesRepository schemasAndTablesRepository,
+                              List<IResourceProtector> protectors) {
         this.principalService = principalService;
         this.permissionRepository = permissionRepository;
         this.principalRepository = principalRepository;
@@ -62,6 +64,9 @@ public class PermissionsService {
         this.authenticationFacade = authenticationFacade;
         this.projectionFactory = projectionFactory;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
+
+        this.protectors = protectors.stream()
+                                    .collect(toMap(IResourceProtector::getType, Function.identity()));
     }
 
     /**
@@ -72,26 +77,39 @@ public class PermissionsService {
      * <p>
      * Если у пользователя нет особых прав, возвращаются только его собственные разрешения выданные на данный ресурс.
      *
-     * @param rQualifier Ресурс
+     * @param rQualifier Квалификатор ресурса
      * @param pageable   Pagination information
      */
     public Page<PermissionProjection> getAllByResourceId(ResourceQualifier rQualifier, Long resId, Pageable pageable) {
-        final String tableName = rQualifier.toString();
+        String tableName = rQualifier.getResourceTable();
 
-        if (resourceProtector.isOwner(rQualifier)) {
+        if (protectors.get(rQualifier.getType()).isOwner(rQualifier)) {
             return permissionRepository.findAllByResourceTableAndResourceId(tableName, resId, pageable);
         } else {
-            final List<Principal> principals = principalService.getAll();
+            List<Principal> principals = principalService.getAll();
 
             return permissionRepository
                     .findAllByResourceTableAndResourceIdAndPrincipalIn(tableName, resId, principals, pageable);
         }
     }
 
-    public Page<Resource> getAll(Pageable pageable) {
-        final Page<SchemasAndTables> schemasAndTables = schemasAndTablesRepository.findAll(pageable);
+    public Page<PermissionProjection> getAllByResourceId(ResourceQualifier rQualifier, Pageable pageable) {
+        if (protectors.get(rQualifier.getType()).isOwner(rQualifier)) {
+            return permissionRepository.findAllByResourceTableAndResourceId(rQualifier.getResourceTable(),
+                                                                            rQualifier.getRecord(),
+                                                                            pageable);
+        } else {
+            return permissionRepository.findAllByResourceTableAndResourceIdAndPrincipalIn(rQualifier.getResourceTable(),
+                                                                                          rQualifier.getRecord(),
+                                                                                          principalService.getAll(),
+                                                                                          pageable);
+        }
+    }
 
-        final List<Resource> result = schemasAndTables
+    public Page<Resource> getAll(Pageable pageable) {
+        Page<SchemasAndTables> schemasAndTables = schemasAndTablesRepository.findAll(pageable);
+
+        List<Resource> result = schemasAndTables
                 .stream()
                 .map(item -> {
                     final Resource resource = new Resource();
@@ -131,33 +149,33 @@ public class PermissionsService {
     /**
      * Создание правила.
      *
-     * @param tableQualifier Определяет таблицу для которой создаётся правило
-     * @param resourceId     Идентификатор объекта
-     * @param dto            Модель правила
+     * @param rQualifier Определяет таблицу для которой создаётся правило
+     * @param resourceId Идентификатор объекта
+     * @param dto        Модель правила
      *
      * @throws ForbiddenException если у пользователя нет прав на создание.
      * @throws ConflictException  если такое правило уже существует.
      */
-    public PermissionProjection create(ResourceQualifier tableQualifier, Long resourceId, PermissionCreateDto dto) {
-        if (!resourceProtector.isOwner(tableQualifier)) {
+    public PermissionProjection create(ResourceQualifier rQualifier, Long resourceId, PermissionCreateDto dto) {
+        if (!protectors.get(rQualifier.getType()).isOwner(rQualifier)) {
             throw new ForbiddenException("Недостаточно прав для создания правил");
         }
 
         try {
-            final Role role = roleRepository.findById(defineIdByRole(dto.getRole()))
-                                            .orElseThrow(() -> new NotFoundException("Not found role"));
+            Role role = roleRepository.findById(defineIdByRole(dto.getRole()))
+                                      .orElseThrow(() -> new NotFoundException("Not found role"));
 
-            final Principal principal = principalService.getOrCreate(dto.getPrincipalId(),
-                                                                     dto.getPrincipalType());
+            Principal principal = principalService.getOrCreate(dto.getPrincipalId(),
+                                                               dto.getPrincipalType());
 
-            final Permission permission = new Permission();
+            Permission permission = new Permission();
             permission.setRole(role);
             permission.setPrincipal(principal);
-            permission.setResourceTable(tableQualifier.toString());
+            permission.setResourceTable(rQualifier.getResourceTable());
             permission.setResourceId(resourceId);
             permission.setCreatedBy(authenticationFacade.getLogin());
 
-            final Permission newPermission = permissionRepository.save(permission);
+            Permission newPermission = permissionRepository.save(permission);
 
             return projectionFactory.createProjection(PermissionProjection.class, newPermission);
         } catch (DataIntegrityViolationException e) {
@@ -167,8 +185,8 @@ public class PermissionsService {
         }
     }
 
-    public void deleteById(ResourceQualifier tQualifier, Long permissionId) {
-        if (!resourceProtector.isOwner(tQualifier)) {
+    public void deleteById(ResourceQualifier rQualifier, Long permissionId) {
+        if (!protectors.get(rQualifier.getType()).isOwner(rQualifier)) {
             throw new ForbiddenException("Недостаточно прав для удаления разрешения: " + permissionId);
         }
 
@@ -176,16 +194,16 @@ public class PermissionsService {
     }
 
     public Permission addOwnerPermission(ResourceQualifier targetTable, long id) {
-        final Long userId = authenticationFacade.getUserDetails().getUserId();
+        Long userId = authenticationFacade.getUserDetails().getUserId();
 
-        final Role role = roleRepository.findById(30L)
-                                        .orElseThrow(() -> new NotFoundException("Not found role"));
+        Role role = roleRepository.findById(30L)
+                                  .orElseThrow(() -> new NotFoundException("Not found role"));
 
         Principal principal = principalRepository
                 .findByIdentifierAndType(userId, "user")
                 .orElseGet(() -> principalRepository.save(new Principal(userId, "user")));
 
-        final Permission permission = new Permission();
+        Permission permission = new Permission();
         permission.setRole(role);
         permission.setPrincipal(principal);
         permission.setCreatedAt(LocalDateTime.now());
@@ -203,12 +221,5 @@ public class PermissionsService {
 
     public void deleteAssigned(ResourceQualifier targetTable, Long resourceId) {
         permissionRepository.deleteByResourceTableAndResourceId(targetTable.getTable(), resourceId);
-    }
-
-    public Optional<Role> getBestDatasetRole(ResourceQualifier qualifier, Long resourceId) {
-        final List<Principal> principals = principalService.getAll();
-
-        return permissionRepository.bestRoleNonHierarchy(qualifier.getTable(), resourceId, principals)
-                                   .flatMap(roleRepository::findById);
     }
 }

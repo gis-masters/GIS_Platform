@@ -7,19 +7,21 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.data_service.dto.PermissionProjection;
+import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
-import ru.mycrg.data_service.entity.DocumentLibrary;
+import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
-import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.DocumentLibraryService;
+import ru.mycrg.data_service.service.PermissionsService;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import javax.validation.Valid;
 import java.net.URI;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.service.DocumentLibraryService.docLibrariesQualifier;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 
 @RestController
 public class DocumentLibraryPermissionController {
@@ -38,11 +40,12 @@ public class DocumentLibraryPermissionController {
     public ResponseEntity<Object> getLibraryPermissions(@PathVariable String docLibId,
                                                         Pageable pageable,
                                                         PagedResourcesAssembler<PermissionProjection> pageAssembler) {
-        final DocumentLibrary library = librariesService.getByTableName(docLibId);
+        IResourceModel dl = librariesService.getInfo(docLibId);
 
-        final var permissions = permissionsService.getAllByResourceId(docLibrariesQualifier, library.getId(), pageable);
+        ResourceQualifier dlQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
+        var permissions = permissionsService.getAllByResourceId(dlQualifier, dl.getId(), pageable);
 
-        final var pagedResources = pageAssembler.toResource(
+        var pagedResources = pageAssembler.toResource(
                 permissions,
                 linkTo(DatasetPermissionsController.class)
                         .slash("/api/data/document-libraries/" + docLibId)
@@ -60,10 +63,12 @@ public class DocumentLibraryPermissionController {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        final DocumentLibrary library = librariesService.getByTableName(docLibId);
-        final PermissionProjection permission = permissionsService.create(docLibrariesQualifier, library.getId(), dto);
+        IResourceModel dl = librariesService.getInfo(docLibId);
 
-        final URI location = ServletUriComponentsBuilder
+        ResourceQualifier dlQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
+        PermissionProjection permission = permissionsService.create(dlQualifier, dl.getId(), dto);
+
+        URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/document-libraries/{docLibId}/roleAssignment/{id}")
                 .buildAndExpand(docLibId, permission.getId())
@@ -76,7 +81,7 @@ public class DocumentLibraryPermissionController {
     @DeleteMapping("/document-libraries/{docLibId}/roleAssignment/{permissionId}")
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
                                          @PathVariable Long permissionId) {
-        permissionsService.deleteById(docLibrariesQualifier, permissionId);
+        permissionsService.deleteById(new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY), permissionId);
 
         return ResponseEntity.noContent().build();
     }

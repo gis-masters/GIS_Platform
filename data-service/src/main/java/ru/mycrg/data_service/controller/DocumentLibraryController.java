@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.dto.IResourceModel;
-import ru.mycrg.data_service.entity.DocumentLibrary;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -30,7 +29,7 @@ public class DocumentLibraryController {
     public ResponseEntity<Object> getPagedWithFilter(@RequestParam(required = false, defaultValue = "") String title,
                                                      Pageable pageable,
                                                      PagedResourcesAssembler<IResourceModel> pageAssembler) {
-        final Page<IResourceModel> libraries = librariesService.getPaged(title, pageable);
+        Page<IResourceModel> libraries = librariesService.getPaged(title, pageable);
 
         var pagedResources = pageAssembler.toResource(
                 libraries,
@@ -43,9 +42,10 @@ public class DocumentLibraryController {
 
     @GetMapping("/document-libraries/{docLibId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public Object getLibrary(@PathVariable String docLibId) {
-        DocumentLibrary documentLibrary = librariesService.getByTableName(docLibId);
-        return ResponseEntity.ok(documentLibrary);
+    public ResponseEntity<IResourceModel> getLibrary(@PathVariable String docLibId) {
+        IResourceModel dl = librariesService.getInfo(docLibId);
+
+        return ResponseEntity.ok(dl);
     }
 
     @GetMapping("/document-libraries/{docLibId}/schema")

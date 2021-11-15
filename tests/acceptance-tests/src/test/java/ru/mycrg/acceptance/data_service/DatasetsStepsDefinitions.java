@@ -7,6 +7,7 @@ import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 
 import java.util.Map;
@@ -21,6 +22,8 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
     public static String currentDatasetName;
     public static DatasetCreateDto currentDatasetDto;
+
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     private final ImportStepsDefinitions importSteps = new ImportStepsDefinitions();
     private final ValidationReportStepDefinition validationSteps = new ValidationReportStepDefinition();
@@ -183,6 +186,13 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         importSteps.waitImportToCurrentProject();
         importSteps.checkLayersAvailabilityInProject();
         checkDataset();
+    }
+
+    @When("Пользователь делает запрос на текущий набор данных")
+    public void currentUserGetCurrentDataset() {
+        authorizationBase.loginAsCurrentUser();
+
+        getDatasetByName(currentDatasetName);
     }
 
     private void createDataset(DatasetCreateDto dto) {

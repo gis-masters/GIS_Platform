@@ -6,6 +6,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 
 import java.io.File;
 
@@ -21,6 +22,8 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
     public static Integer documentId;
     public static String fileName;
     public static File file;
+
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -152,6 +155,15 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
         String newTitle = response.jsonPath().get("title");
 
         assertEquals("new title", newTitle);
+    }
+
+    @When("Администратор запрашивает текущую запись")
+    public void gelCurrentRecordFromDefaultLibraryAsOwner() {
+        authorizationBase.loginAsOwner();
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(String.format("/%s/records/%d", DEFAULT_LIBRARY, currentRecordId));
     }
 
     private void makeExactDocumentAsCurrent(String fName) {

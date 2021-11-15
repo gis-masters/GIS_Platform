@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.dto.RecordDto;
@@ -23,16 +24,16 @@ import ru.mycrg.data_service.util.filter.FilterItem;
 
 import java.util.List;
 
-import static ru.mycrg.data_service.dao.SqlBuilder.fillWhereSectionByFilter;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.fillWhereSectionByFilter;
 
 @Transactional
-public class ValidationResultRepository {
+public class ValidationResultDao {
 
-    private static final Logger log = LoggerFactory.getLogger(ValidationResultRepository.class);
+    private static final Logger log = LoggerFactory.getLogger(ValidationResultDao.class);
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ValidationResultRepository(DatasourceFactory datasourceFactory, String dbName) {
+    public ValidationResultDao(DatasourceFactory datasourceFactory, String dbName) {
         this.jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(dbName));
     }
 

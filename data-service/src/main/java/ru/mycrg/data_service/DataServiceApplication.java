@@ -8,8 +8,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import ru.mycrg.data_service.dao.CrgMigrationHandler;
-import ru.mycrg.data_service.dao.GeoserverMigrationHandler;
+import ru.mycrg.data_service.dao.migrations.CrgMigrationHandler;
+import ru.mycrg.data_service.dao.migrations.GeoserverMigrationHandler;
 
 @SpringBootApplication
 @EnableTransactionManagement

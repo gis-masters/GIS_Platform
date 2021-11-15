@@ -21,7 +21,7 @@ public class DefaultProcessHandler implements IProcessHandler {
     }
 
     @Override
-    public IProcessHandler setPayload(ImportInitializingModel payload, IRecord record) {
+    public IProcessHandler setPayload(ImportInitializingModel importInitialData, IRecord record) {
         return this;
     }
 

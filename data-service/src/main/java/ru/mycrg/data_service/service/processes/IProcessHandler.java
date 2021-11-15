@@ -13,5 +13,5 @@ public interface IProcessHandler {
 
     ProcessType getType();
 
-    IProcessHandler setPayload(ImportInitializingModel payload, IRecord record);
+    IProcessHandler setPayload(ImportInitializingModel importInitialData, IRecord record);
 }

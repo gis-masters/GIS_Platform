@@ -7,15 +7,18 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dao.DatasourceFactory;
-import ru.mycrg.data_service.dao.ValidationResultRepository;
+import ru.mycrg.data_service.dao.ValidationResultDao;
+import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.security.AuthenticationFacade;
-import ru.mycrg.data_service.service.*;
+import ru.mycrg.data_service.service.CsvHandler;
+import ru.mycrg.data_service.service.JsonConverter;
+import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.filter.CrgFilter;
@@ -31,10 +34,10 @@ import java.util.concurrent.CompletableFuture;
 
 import static java.util.Objects.nonNull;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
-import static ru.mycrg.data_service.dao.TablesManager.EXTENSION_POSTFIX;
-import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
+import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
 import static ru.mycrg.data_service.util.SchemaUtil.getEnumerationTitleByValue;
 import static ru.mycrg.data_service.util.SchemaUtil.getPropertyByName;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.data_service_contract.enums.ProcessType.VALIDATION_REPORT;
 
 @Service
@@ -49,7 +52,7 @@ public class LayerValidationReportService {
     private final String[] header;
 
     private CsvHandler csvHandler;
-    private ValidationResultRepository validationResultRepository;
+    private ValidationResultDao validationResultDao;
 
     private final DatasourceFactory datasourceFactory;
     private final SchemaService schemaService;
@@ -85,7 +88,7 @@ public class LayerValidationReportService {
                                                       VALIDATION_REPORT,
                                                       request);
 
-        validationResultRepository = new ValidationResultRepository(datasourceFactory, dbName);
+        validationResultDao = new ValidationResultDao(datasourceFactory, dbName);
 
         CompletableFuture
                 .runAsync(() -> {
@@ -149,12 +152,12 @@ public class LayerValidationReportService {
                                                                  resource.getTable() + EXTENSION_POSTFIX);
             CrgFilter crgFilter = new CrgFilter();
             crgFilter.addFilter("valid", "false", FilterCondition.EQUAL_TO);
-            long countPage = (validationResultRepository.getTotal(rQualifier, crgFilter) + PAGE_SIZE - 1) / PAGE_SIZE;
+            long countPage = (validationResultDao.getTotal(rQualifier, crgFilter) + PAGE_SIZE - 1) / PAGE_SIZE;
 
             for (int i = 0; i < countPage; i++) {
                 Pageable pageable = PageRequest.of(i, PAGE_SIZE);
 
-                validationResultRepository
+                validationResultDao
                         .findPagedByFilter(rQualifier, pageable, crgFilter).stream()
                         .map(this::extractViolations)
                         .forEach(violations -> writeViolations(violations, schemaDto));

@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao;
+package ru.mycrg.data_service.dao.ddl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,32 +7,30 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.resources.ResourceManager;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.util.List;
 
-import static ru.mycrg.data_service.dao.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 
 @Service
-public class SchemasManager implements ResourceManager {
+public class DdlSchemas {
 
-    private static final Logger log = LoggerFactory.getLogger(SchemasManager.class);
+    private final Logger log = LoggerFactory.getLogger(DdlSchemas.class);
 
     private final List<String> systemSchemas = List.of(SYSTEM_SCHEMA_NAME);
 
     private final Environment environment;
     private final JdbcTemplate jdbcTemplate;
 
-    public SchemasManager(JdbcTemplate jdbcTemplate,
-                          Environment environment) {
+    public DdlSchemas(JdbcTemplate jdbcTemplate,
+                      Environment environment) {
         this.environment = environment;
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
     public void create(ResourceQualifier schemaQualifier) {
-        final String dbOwner = environment.getRequiredProperty("spring.datasource.username");
+        String dbOwner = environment.getRequiredProperty("spring.datasource.username");
         try {
             log.debug("Создание схемы {}", schemaQualifier);
 
@@ -47,7 +45,6 @@ public class SchemasManager implements ResourceManager {
         }
     }
 
-    @Override
     public boolean isExist(ResourceQualifier schemaQualifier) {
         try {
             if (systemSchemas.contains(schemaQualifier.getQualifier())) {
@@ -58,7 +55,7 @@ public class SchemasManager implements ResourceManager {
 
             String sql = "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '" + schemaQualifier + "')";
 
-            final Boolean result = jdbcTemplate.queryForObject(sql, Boolean.class);
+            Boolean result = jdbcTemplate.queryForObject(sql, Boolean.class);
 
             return Boolean.TRUE.equals(result);
         } catch (DataAccessException e) {
@@ -69,8 +66,7 @@ public class SchemasManager implements ResourceManager {
         }
     }
 
-    @Override
-    public void delete(ResourceQualifier schemaQualifier) {
+    public void drop(ResourceQualifier schemaQualifier) {
         try {
             log.debug("Удаление схемы {}", schemaQualifier);
 

@@ -18,13 +18,14 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.JsonConverter;
-import ru.mycrg.data_service.service.RecordsService;
+import ru.mycrg.data_service.service.records.UserRecordsService;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.import_.ImportGml;
 import ru.mycrg.data_service.service.import_.model.ImportGmlModel;
-import ru.mycrg.data_service.service.import_.model.ImportGmlRequestModel;
 import ru.mycrg.data_service.service.import_.model.WsImportModel;
 import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
+import ru.mycrg.data_service.service.processes.dto.ImportSource;
+import ru.mycrg.data_service.service.processes.dto.ImportTarget;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
@@ -47,7 +48,7 @@ import java.util.UUID;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
-import static ru.mycrg.data_service.dao.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT_GML;
@@ -59,7 +60,7 @@ public class ImportGmlProcessHandler implements IProcessHandler {
 
     private final ImportGml importGml;
     private final ProcessService processService;
-    private final RecordsService recordsService;
+    private final UserRecordsService recordsService;
     private final FileStorageService fileStorageService;
     private final IAuthenticationFacade authenticationFacade;
     private final WsNotificationService wsNotificationService;
@@ -67,14 +68,14 @@ public class ImportGmlProcessHandler implements IProcessHandler {
     private final URL gisServiceUrl;
     private final HttpClient httpClient;
 
-    private ImportGmlRequestModel importGmlRequestModel;
     private UUID wsMsgId;
-    private String wsUiId;
+    private IRecord record;
+    private ImportInitializingModel importInitialData;
 
     public ImportGmlProcessHandler(ProcessService processService,
                                    ImportGml importGml,
                                    Environment environment,
-                                   RecordsService recordsService,
+                                   UserRecordsService recordsService,
                                    FileStorageService fileStorageService,
                                    IAuthenticationFacade authenticationFacade,
                                    WsNotificationService wsNotificationService) throws MalformedURLException {
@@ -91,27 +92,29 @@ public class ImportGmlProcessHandler implements IProcessHandler {
 
     @Override
     public Process handle() {
-        log.debug("Handle importGmlProcess: {}", this.importGmlRequestModel);
+        log.debug("Handle importGmlProcess: {}", this.importInitialData);
 
         final String databaseName = getDefaultDatabaseName(authenticationFacade.getOrganizationId());
         Process process = processService.create(authenticationFacade.getLogin(),
                                                 "Import gml",
                                                 getType(),
-                                                importGmlRequestModel);
+                                                importInitialData);
 
         sendWsMsg(PENDING, null, "Инициализация...");
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
         DelegatingSecurityContextRunnable wrappedRunnable = new DelegatingSecurityContextRunnable(() -> {
             try {
+                ImportTarget importTarget = this.importInitialData.getTarget();
+
                 ImportGmlModel importGmlModel = fetchDataNeededForImport();
                 Resource resource = fileStorageService.loadAsResource(importGmlModel.getFileName());
 
                 sendWsMsg(PENDING, null, "Импорт данных...");
                 ImportReport importReport = importGml.doImport(resource, importGmlModel);
 
-                String projectName = this.importGmlRequestModel.getProjectName();
-                if (this.importGmlRequestModel.isProjectIsNew()) {
+                String projectName = importTarget.getProjectName();
+                if (importTarget.isProjectIsNew()) {
                     sendWsMsg(PENDING, null, "Создание проекта...");
 
                     createProject(projectName).ifPresentOrElse(projectId -> {
@@ -142,10 +145,10 @@ public class ImportGmlProcessHandler implements IProcessHandler {
                 } else {
                     sendWsMsg(PENDING, null, "Подключение слоёв к проекту...");
 
-                    joinLayers(this.importGmlRequestModel.getProjectId(), importReport);
+                    joinLayers(importTarget.getProjectId(), importReport);
 
                     importReport.setProjectName(projectName);
-                    importReport.setProjectId(this.importGmlRequestModel.getProjectId());
+                    importReport.setProjectId(importTarget.getProjectId());
 
                     sendWsMsg(DONE, importReport, "Импорт GML завершен");
                 }
@@ -171,10 +174,10 @@ public class ImportGmlProcessHandler implements IProcessHandler {
     }
 
     @Override
-    public IProcessHandler setPayload(ImportInitializingModel payload, IRecord record) {
-        this.wsUiId = payload.getWsUiId();
+    public IProcessHandler setPayload(ImportInitializingModel importInitialData, IRecord record) {
         this.wsMsgId = UUID.randomUUID();
-        this.importGmlRequestModel = new ImportGmlRequestModel(payload, this.wsMsgId);
+        this.record = record;
+        this.importInitialData = importInitialData;
 
         return this;
     }
@@ -188,26 +191,28 @@ public class ImportGmlProcessHandler implements IProcessHandler {
         wsNotificationService.send(
                 new WsMessageDto<>(IMPORT_GML,
                                    new WsImportModel(wsMsgId, status, payload, msg)),
-                wsUiId
+                importInitialData.getWsUiId()
         );
     }
 
     @NotNull
     private ImportGmlModel fetchDataNeededForImport() {
-        final String libraryId = this.importGmlRequestModel.getLibraryId();
-        final Long objectId = this.importGmlRequestModel.getObjectId();
-        final ResourceQualifier tableQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId);
+        ImportSource source = this.importInitialData.getSource();
 
-        final Map<String, Object> data = recordsService.getById(tableQualifier, objectId);
+        String libraryId = source.getLibraryId();
+        Long objectId = source.getObjectId();
+        ResourceQualifier tableQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId);
 
-        final String title = (String) data.get(TITLE.getName());
-        final String documentType = (String) data.get("document_type");
-        final String details = (String) data.get("details");
-        final LocalDateTime approveDate = LocalDateTime.parse(data.get("approve_date").toString(),
-                                                              DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        final int scale = Integer.parseInt(String.valueOf(data.get("scale")));
-        final String oktmo = (String) data.get(OKTMO.getName());
-        final String fileName = (String) data.get(INNER_PATH.getName());
+        Map<String, Object> data = recordsService.getById(tableQualifier, objectId);
+
+        String title = (String) data.get(TITLE.getName());
+        String documentType = (String) data.get("document_type");
+        String details = (String) data.get("details");
+        LocalDateTime approveDate = LocalDateTime.parse(data.get("approve_date").toString(),
+                                                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        int scale = Integer.parseInt(String.valueOf(data.get("scale")));
+        String oktmo = (String) data.get(OKTMO.getName());
+        String fileName = (String) data.get(INNER_PATH.getName());
 
         return new ImportGmlModel(title, documentType, details, approveDate, scale, oktmo, fileName, false);
     }

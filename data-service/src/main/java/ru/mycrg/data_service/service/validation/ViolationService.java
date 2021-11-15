@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
@@ -26,12 +27,10 @@ import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 @Service
 public class ViolationService {
 
-    private static final Logger log = LoggerFactory.getLogger(ViolationService.class);
+    private final Logger log = LoggerFactory.getLogger(ViolationService.class);
 
     private final JdbcTemplate jdbcTemplate;
     private final SchemaService schemaService;
-
-    public static final String EXTENSION_POSTFIX = "_extension";
 
     public ViolationService(SchemaService schemaService, JdbcTemplate jdbcTemplate) {
         this.schemaService = schemaService;

@@ -13,12 +13,14 @@ import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.resources.DatasetService;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import javax.validation.Valid;
 import java.net.URI;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.service.resources.SchemasAndTablesBase.schemasAndTablesQualifier;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dto.ResourceType.DATASET;
 
 @RestController
 public class DatasetPermissionsController {
@@ -37,11 +39,15 @@ public class DatasetPermissionsController {
     public ResponseEntity<Object> getDatasetPermissions(@PathVariable String datasetId,
                                                         Pageable pageable,
                                                         PagedResourcesAssembler<PermissionProjection> pageAssembler) {
-        final IResourceModel dataset = datasetService.getInfo(datasetId);
+        IResourceModel dataset = datasetService.getInfo(datasetId);
+        ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
+                                                             datasetId,
+                                                             dataset.getId(),
+                                                             DATASET);
 
-        final var permissions = permissionsService.getAllByResourceId(schemasAndTablesQualifier, dataset.getId(), pageable);
+        var permissions = permissionsService.getAllByResourceId(dQualifier, pageable);
 
-        final var pagedResources = pageAssembler.toResource(permissions);
+        var pagedResources = pageAssembler.toResource(permissions);
 
         return ResponseEntity.ok(pagedResources);
     }
@@ -55,10 +61,13 @@ public class DatasetPermissionsController {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        final IResourceModel dataset = datasetService.getInfo(datasetId);
+        IResourceModel dataset = datasetService.getInfo(datasetId);
+        ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
+                                                             datasetId,
+                                                             dataset.getId(),
+                                                             DATASET);
 
-        PermissionProjection permission = permissionsService
-                .create(schemasAndTablesQualifier, dataset.getId(), dto);
+        PermissionProjection permission = permissionsService.create(dQualifier, dataset.getId(), dto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -73,7 +82,10 @@ public class DatasetPermissionsController {
     @DeleteMapping("/datasets/{datasetId}/roleAssignment/{permissionId}")
     public ResponseEntity<Object> deleteDatasetPermission(@PathVariable String datasetId,
                                                           @PathVariable Long permissionId) {
-        permissionsService.deleteById(schemasAndTablesQualifier, permissionId);
+        ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
+                                                             datasetId,
+                                                             DATASET);
+        permissionsService.deleteById(dQualifier, permissionId);
 
         return ResponseEntity.noContent().build();
     }

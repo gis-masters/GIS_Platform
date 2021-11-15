@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static ru.mycrg.data_service.dao.SqlBuilder.buildInSection;
-import static ru.mycrg.data_service.dao.SqlBuilder.buildOrderBySection;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildInSection;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
 import static ru.mycrg.data_service.util.RoleHandler.defineRoleById;
 
 @Repository
@@ -36,14 +36,14 @@ public class BasePermissionsRepository {
         this.pJdbcTemplate = pJdbcTemplate;
     }
 
-    public List<RecordDto> findAllowedByParent(ResourceQualifier targetTable,
+    public List<RecordDto> findAllowedByParent(ResourceQualifier rQualifier,
                                                String parent,
                                                String title,
                                                Pageable pageable) {
-        final String tableQualifier = targetTable.getQualifier();
-        final String tableName = targetTable.getTable();
+        String tableQualifier = rQualifier.getTableQualifier();
+        String tableName = rQualifier.getTable();
 
-        final List<String> allPrincipalIds = principalService.getAllIds();
+        List<String> allPrincipalIds = principalService.getAllIds();
 
         String requestTemplate = "" +
                 "SELECT n2.* FROM " +
@@ -89,10 +89,10 @@ public class BasePermissionsRepository {
     }
 
     public boolean isAllowedByParentsPermissions(ResourceQualifier targetTable, Set<String> parentFolderIds) {
-        final String tableQualifier = targetTable.getQualifier();
-        final String tableName = targetTable.getTable();
+        String tableQualifier = targetTable.getTableQualifier();
+        String tableName = targetTable.getTable();
 
-        final List<String> allPrincipalIds = principalService.getAllIds();
+        List<String> allPrincipalIds = principalService.getAllIds();
 
         String requestTemplate = "" +
                 "SELECT exists (" +
@@ -112,10 +112,10 @@ public class BasePermissionsRepository {
     }
 
     public Long getTotalByParent(ResourceQualifier targetTable, String path, String title) {
-        final String tableQualifier = targetTable.getQualifier();
-        final String tableName = targetTable.getTable();
+        String tableQualifier = targetTable.getTableQualifier();
+        String tableName = targetTable.getTable();
 
-        final List<String> allPrincipalIds = principalService.getAllIds();
+        List<String> allPrincipalIds = principalService.getAllIds();
 
         String requestTemplate = "" +
                 "SELECT " +
@@ -154,40 +154,11 @@ public class BasePermissionsRepository {
         return pJdbcTemplate.getJdbcTemplate().queryForObject(requestTemplate, Long.class);
     }
 
-    public boolean isViewAllowed(ResourceQualifier targetTable, String parent) {
-        final String tableQualifier = targetTable.getQualifier();
-        final String tableName = targetTable.getTable();
+    public boolean isDatasetAllowed(ResourceQualifier dQualifier, Long datasetId) {
+        String tableQualifier = dQualifier.getTableQualifier();
+        String tableName = dQualifier.getTable();
 
-        final List<String> allPrincipalIds = principalService.getAllIds();
-
-        String requestTemplate = "" +
-                "SELECT exists(" +
-                "  SELECT " +
-                "    SPLIT_PART(" +
-                "      regexp_replace(path, '/root/', '')," +
-                "      '/'," +
-                "      1" +
-                "    ):: bigint as allowed_res_id" +
-                "  FROM " + tableQualifier + " AS res" +
-                "  JOIN data.acl_permissions AS p ON p.resource_id = res.id" +
-                "    AND p.resource_table = '" + tableName + "'" +
-                "    AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ")" +
-                "    AND path LIKE '" + parent + "%'" +
-                "  GROUP BY allowed_res_id" +
-                ")";
-
-        log.debug("Request isViewAllowed: [{}]", requestTemplate);
-
-        Boolean result = pJdbcTemplate.getJdbcTemplate().queryForObject(requestTemplate, Boolean.class);
-
-        return Boolean.TRUE.equals(result);
-    }
-
-    public boolean isDatasetAllowed(ResourceQualifier targetTable, Long datasetId) {
-        final String tableQualifier = targetTable.getQualifier();
-        final String tableName = targetTable.getTable();
-
-        final List<String> allPrincipalIds = principalService.getAllIds();
+        List<String> allPrincipalIds = principalService.getAllIds();
 
         String requestTemplate = "" +
                 "SELECT exists (" +
@@ -230,33 +201,12 @@ public class BasePermissionsRepository {
         return defineRoleById(roleId);
     }
 
-    public Optional<String> bestRoleByPath(ResourceQualifier targetTable, String path) {
-        final String tableQualifier = targetTable.getQualifier();
-        final String tableName = targetTable.getTable();
-
-        final List<String> allPrincipalIds = principalService.getAllIds();
-
-        String requestTemplate = "" +
-                "SELECT max(p.role_id) FROM " + tableQualifier + " AS res " +
-                "JOIN data.acl_permissions AS p " +
-                "ON p.resource_id = res.id " +
-                "AND p.resource_table = '" + tableName + "' " +
-                "AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
-                "AND (res.path = '" + path + "' OR res.path = '/root')";
-
-        log.debug("Request bestRoleByPath: [{}]", requestTemplate);
-
-        Long roleId = pJdbcTemplate.getJdbcTemplate().queryForObject(requestTemplate, Long.class);
-
-        return defineRoleById(roleId);
-    }
-
     /**
      * Проверка наличия доступа к "сквозной папке" - доступная для чтения папка по причине наличия в ней записей к
      * которым есть доступ.
      */
     public boolean isPassThroughFolder(ResourceQualifier tableQualifier, String path) {
-        String qualifier = tableQualifier.getQualifier();
+        String qualifier = tableQualifier.getTableQualifier();
         String tableName = tableQualifier.getTable();
 
         List<String> allPrincipalIds = principalService.getAllIds();
@@ -286,7 +236,7 @@ public class BasePermissionsRepository {
      */
     public Optional<String> bestRoleInheritedFromParent(ResourceQualifier tableQualifier,
                                                         Set<String> parentFolderIds) {
-        String qualifier = tableQualifier.getQualifier();
+        String qualifier = tableQualifier.getTableQualifier();
         String tableName = tableQualifier.getTable();
 
         List<String> allPrincipalIds = principalService.getAllIds();
@@ -311,12 +261,71 @@ public class BasePermissionsRepository {
         }
     }
 
+    public Optional<String> getRoleForLibrary(String tableName) {
+        List<String> allPrincipalIds = principalService.getAllIds();
+
+        String queryTemplate = "" +
+                "SELECT " +
+                "  p.role_id " +
+                "FROM " +
+                "  data.doc_libraries AS res " +
+                "  JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
+                "  AND p.resource_table = 'doc_libraries' " +
+                "  AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
+                "  AND res.table_name = '" + tableName + "'";
+
+        log.debug("Request getRoleForLibrary: [{}]", queryTemplate);
+
+        List<Long> results = pJdbcTemplate.getJdbcTemplate().query(queryTemplate, new SingleColumnRowMapper<>());
+        if (results.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return defineRoleById(results.get(0));
+        }
+    }
+
+    public Optional<String> getRoleForDataset(ResourceQualifier dQualifier) {
+        List<String> allPrincipalIds = principalService.getAllIds();
+
+        String queryTemplate = "" +
+                "SELECT " +
+                "  p.role_id " +
+                "FROM " +
+                "  data.schemas_and_tables AS res " +
+                "  JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
+                "  AND p.resource_table = 'schemas_and_tables' " +
+                "  AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
+                "  AND res.identifier = '" + dQualifier.getTable() + "'";
+
+        log.debug("Request getRoleForDataset: [{}]", queryTemplate);
+
+        List<Long> results = pJdbcTemplate.getJdbcTemplate().query(queryTemplate, new SingleColumnRowMapper<>());
+        if (results.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return defineRoleById(results.get(0));
+        }
+    }
+
     /**
      * Возвращает роль выданную на конкретную запись.
+     *
+     * @param rQualifier Квалификатор ресурса.
+     *
+     * @throws IllegalStateException если квалификатор не содержит record
      */
-    public Optional<String> getRoleForRecord(ResourceQualifier tableQualifier, Long recordId) {
-        String qualifier = tableQualifier.getQualifier();
-        String tableName = tableQualifier.getTable();
+    public Optional<String> getRoleForRecord(ResourceQualifier rQualifier) {
+        if (rQualifier.getTable() == null) {
+            throw new IllegalStateException("Qualifier must contain table");
+        }
+
+        if (rQualifier.getRecord() == null) {
+            throw new IllegalStateException("Qualifier must contain record");
+        }
+
+        String tableQualifier = rQualifier.getTableQualifier();
+        String tableName = rQualifier.getTable();
+        Long recordId = rQualifier.getRecord();
 
         List<String> allPrincipalIds = principalService.getAllIds();
 
@@ -324,7 +333,7 @@ public class BasePermissionsRepository {
                 "SELECT " +
                 "  p.role_id " +
                 "FROM " +
-                "  " + qualifier + " AS res " +
+                "  " + tableQualifier + " AS res " +
                 "  JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
                 "  AND p.resource_table = '" + tableName + "' " +
                 "  AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +

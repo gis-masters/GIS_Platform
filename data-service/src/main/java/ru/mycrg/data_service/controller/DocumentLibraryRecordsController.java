@@ -15,8 +15,8 @@ import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
-import ru.mycrg.data_service.service.RecordsService;
 import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.storage.exceptions.StorageException;
@@ -30,8 +30,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
-import static ru.mycrg.data_service.dao.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.dto.ResourceType.RECORD;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.PagingAndSortingUtil.fetchFoldersFirst;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.INNER_PATH;
@@ -40,17 +41,17 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.INNER_PATH;
 public class DocumentLibraryRecordsController {
 
     private final SchemaService schemaService;
-    private final RecordsService recordsService;
     private final FileStorageService fileStorageService;
     private final DocumentLibraryService libraryService;
+    private final RecordServiceFactory recordServiceFactory;
 
     public DocumentLibraryRecordsController(SchemaService schemaService,
-                                            RecordsService recordsService,
                                             FileStorageService fileStorageService,
-                                            DocumentLibraryService libraryService) {
+                                            DocumentLibraryService libraryService,
+                                            RecordServiceFactory recordServiceFactory) {
         this.schemaService = schemaService;
         this.libraryService = libraryService;
-        this.recordsService = recordsService;
+        this.recordServiceFactory = recordServiceFactory;
         this.fileStorageService = fileStorageService;
     }
 
@@ -61,11 +62,12 @@ public class DocumentLibraryRecordsController {
                                          @RequestParam(required = false, defaultValue = "") String title,
                                          Pageable pageable,
                                          PagedResourcesAssembler<RecordDto> pageAssembler) {
-        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
+        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
 
         checkSortedFields(docLibId, pageable);
 
-        var result = recordsService.getPaged(lQualifier, fetchFoldersFirst(pageable), parent, title);
+        var result = recordServiceFactory.get()
+                                         .getPaged(lQualifier, fetchFoldersFirst(pageable), parent, title);
 
         var pagedResources = pageAssembler.toResource(
                 result,
@@ -80,9 +82,9 @@ public class DocumentLibraryRecordsController {
     @GetMapping("/document-libraries/{docLibId}/records/{recId}")
     public ResponseEntity<Map<String, Object>> getById(@PathVariable String docLibId,
                                                        @PathVariable Long recId) {
-        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
+        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
 
-        Map<String, Object> entity = recordsService.getById(rIdentifier, recId);
+        Map<String, Object> entity = recordServiceFactory.get().getById(rIdentifier, recId);
 
         return ResponseEntity.ok(entity);
     }
@@ -93,13 +95,13 @@ public class DocumentLibraryRecordsController {
             @PathVariable String docLibId,
             @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "body") String jsonBody) {
-        ResourceQualifier libraryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
+        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
 
         Map<String, Object> body = deserializeBody(jsonBody);
-        String schemaId = libraryService.getByTableName(docLibId).getSchemaId();
+        String schemaId = libraryService.getInfo(docLibId).getSchemaId();
         schemaService.throwIfNotMathSchema(schemaId, body);
 
-        IRecord record = recordsService.createRecord(libraryQualifier, new RecordEntity(body), file);
+        IRecord record = recordServiceFactory.get().createRecord(lQualifier, new RecordEntity(body), file);
 
         return new ResponseEntity<>(record.getContent(), CREATED);
     }
@@ -109,10 +111,11 @@ public class DocumentLibraryRecordsController {
     public ResponseEntity<Object> updateRecord(@PathVariable String docLibId,
                                                @PathVariable Long recId,
                                                @RequestBody Map<String, Object> payload) {
-        String schemaId = libraryService.getByTableName(docLibId).getSchemaId();
+        String schemaId = libraryService.getInfo(docLibId).getSchemaId();
         schemaService.throwIfNotMathSchema(schemaId, payload);
 
-        recordsService.update(new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY), payload);
+        recordServiceFactory.get()
+                            .updateRecord(new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD), payload);
 
         return ResponseEntity.noContent().build();
     }
@@ -121,13 +124,13 @@ public class DocumentLibraryRecordsController {
     @DeleteMapping("/document-libraries/{docLibId}/records/{recId}")
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
                                          @PathVariable Long recId) {
-        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
-        final Map<String, Object> record = recordsService.getById(rIdentifier, recId);
-        final String innerFileName = (String) record.get(INNER_PATH.getName());
+        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
+        Map<String, Object> record = recordServiceFactory.get().getById(lQualifier, recId);
+        String innerFileName = (String) record.get(INNER_PATH.getName());
 
         try {
             fileStorageService.deleteIfExists(innerFileName);
-            recordsService.deleteRecord(rIdentifier, recId);
+            recordServiceFactory.get().deleteRecord(lQualifier, recId);
         } catch (StorageException e) {
             throw new DataServiceException("Не удалось удалить файл: " + innerFileName, e.getCause());
         } catch (CrgDaoException e) {
@@ -138,10 +141,10 @@ public class DocumentLibraryRecordsController {
     }
 
     private void checkSortedFields(String docLibId, Pageable pageable) {
-        final HashMap<String, Object> body = new HashMap<>();
+        HashMap<String, Object> body = new HashMap<>();
         pageable.getSort().forEach(order -> body.put(order.getProperty(), ""));
 
-        String schemaId = libraryService.getByTableName(docLibId).getSchemaId();
+        String schemaId = libraryService.getInfo(docLibId).getSchemaId();
         schemaService.throwIfNotMathSchema(schemaId, body);
     }
 

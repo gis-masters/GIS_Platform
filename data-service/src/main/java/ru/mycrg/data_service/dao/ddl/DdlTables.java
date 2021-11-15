@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao;
+package ru.mycrg.data_service.dao.ddl;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
-import ru.mycrg.data_service.service.resources.ResourceManager;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.CrsHandler;
 import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
@@ -20,27 +19,27 @@ import ru.mycrg.data_service_contract.enums.ValueType;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
+import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
+
 @Service
-public class TablesManager implements ResourceManager {
+public class DdlTables {
 
-    private static final Logger log = LoggerFactory.getLogger(TablesManager.class);
-    private static final String PRIMARY_KEY = "objectid";
-
-    public static final String EXTENSION_POSTFIX = "_extension";
+    private static final Logger log = LoggerFactory.getLogger(DdlTables.class);
 
     private final JdbcTemplate jdbcTemplate;
     private final CrsHandler crsHandler;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
 
-    public TablesManager(JdbcTemplate jdbcTemplate,
-                         CrsHandler crsHandler,
-                         SchemasAndTablesRepository schemasAndTablesRepository) {
+    public DdlTables(JdbcTemplate jdbcTemplate,
+                     CrsHandler crsHandler,
+                     SchemasAndTablesRepository schemasAndTablesRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.crsHandler = crsHandler;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
 
-    public void createTable(String targetSchema, TableCreateDto dto, List<SimplePropertyDto> schemaProperties) {
+    public void create(String targetSchema, TableCreateDto dto, List<SimplePropertyDto> schemaProperties) {
         String targetTable = dto.getName();
         Integer crsCode = crsHandler.extractCrsNumber(dto.getCrs());
         String target = targetSchema + "." + targetTable;
@@ -83,24 +82,20 @@ public class TablesManager implements ResourceManager {
         jdbcTemplate.execute(getExtensionTableRequest(targetSchema, extensionTable));
     }
 
-    @Override
-    public void create(ResourceQualifier rIdentifier) {
-    //Not implemented yet
-    }
-
     /**
      * Вернёт true если существуют и схема и таблица.
      *
      * @param rQualifier Объект описывающий ресурс
      */
-    @Override
     public boolean isExist(ResourceQualifier rQualifier) {
-        String sql = "SELECT EXISTS (SELECT 1 FROM information_schema.tables " +
+        String query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables " +
                 "WHERE table_schema = '" + rQualifier.getSchema() + "' " +
                 "AND table_name = '" + rQualifier.getTable() + "')";
 
         try {
-            final Boolean result = jdbcTemplate.queryForObject(sql, Boolean.class);
+            log.debug("SQL is schema and table exist: [{}]", query);
+
+            Boolean result = jdbcTemplate.queryForObject(query, Boolean.class);
 
             return Boolean.TRUE.equals(result);
         } catch (DataAccessException e) {
@@ -110,9 +105,8 @@ public class TablesManager implements ResourceManager {
         }
     }
 
-    @Override
     @Transactional
-    public void delete(ResourceQualifier rQualifier) {
+    public void drop(ResourceQualifier rQualifier) {
         log.debug("Try delete: {}", rQualifier);
         String extensionTable = rQualifier.getTable() + EXTENSION_POSTFIX;
 
@@ -132,6 +126,7 @@ public class TablesManager implements ResourceManager {
         ForeignKeyType foreignKeyType = attrDescription.getForeignKeyType();
         if (foreignKeyType == null) {
             log.warn("ForeignKeyType not set. Will be used string type");
+
             return attrDescription.getName() + " character varying(255)";
         }
 

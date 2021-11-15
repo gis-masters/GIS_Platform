@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
-import ru.mycrg.data_service.dao.TablesManager;
+import ru.mycrg.data_service.dao.ddl.DdlTables;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.TableModel;
@@ -27,14 +27,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
-import static ru.mycrg.data_service.dao.TablesManager.EXTENSION_POSTFIX;
+import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
+import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 
 @Service
-public class TableService extends SchemasAndTablesBase {
+public class TableService {
 
-    private final TablesManager tablesManager;
+    private final DdlTables ddlTables;
     private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
@@ -42,7 +43,7 @@ public class TableService extends SchemasAndTablesBase {
     private final BasePermissionsRepository permissionsRepository;
     private final SchemaService schemaService;
 
-    public TableService(TablesManager tablesManager,
+    public TableService(DdlTables ddlTables,
                         IMessageBusProducer messageBus,
                         IAuthenticationFacade authenticationFacade,
                         SchemasAndTablesRepository schemasAndTablesRepository,
@@ -50,7 +51,7 @@ public class TableService extends SchemasAndTablesBase {
                         BasePermissionsRepository permissionsRepository,
                         SchemaService schemaService) {
         this.messageBus = messageBus;
-        this.tablesManager = tablesManager;
+        this.ddlTables = ddlTables;
         this.authenticationFacade = authenticationFacade;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
@@ -63,18 +64,16 @@ public class TableService extends SchemasAndTablesBase {
                 .findByIdentifier(datasetIdentifier)
                 .orElseThrow(() -> new NotFoundException(datasetIdentifier));
 
-        if (permissionsRepository.isDatasetAllowed(schemasAndTablesQualifier, dataset.getId())) {
+        if (permissionsRepository.isDatasetAllowed(SCHEMAS_AND_TABLES_QUALIFIER, dataset.getId())) {
             return schemasAndTablesRepository.findByPath(dataset.pathTo(), title, pageable)
                                              .map(TableModel::new);
         } else {
-            final List<IResourceModel> allowedResources = permissionsRepository
-                    .findAllowedByParent(schemasAndTablesQualifier, dataset.pathTo(), title, pageable).stream()
+            List<IResourceModel> allowedResources = permissionsRepository
+                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), title, pageable).stream()
                     .map(record -> new TableModel(record.getContent()))
                     .collect(Collectors.toList());
 
-            final long total = permissionsRepository.getTotalByParent(schemasAndTablesQualifier,
-                                                                      dataset.pathTo(),
-                                                                      title);
+            long total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), title);
 
             return new PageImpl<>(allowedResources, pageable, total);
         }
@@ -94,26 +93,26 @@ public class TableService extends SchemasAndTablesBase {
     }
 
     @Transactional
-    public IResourceModel create(ResourceQualifier tableIdentifier, TableCreateDto dto) {
-        final String datasetId = tableIdentifier.getSchema();
-        final SchemasAndTables dataset = schemasAndTablesRepository
+    public IResourceModel create(ResourceQualifier tQualifier, TableCreateDto dto) {
+        String datasetId = tQualifier.getSchema();
+        SchemasAndTables dataset = schemasAndTablesRepository
                 .findByIdentifier(datasetId)
                 .orElseThrow(() -> new NotFoundException("Not found dataset: " + datasetId));
 
         Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(dto.getSchemaId());
         if (schemaByName.isPresent()) {
-            tablesManager.createTable(datasetId, dto, schemaByName.get().getProperties());
+            ddlTables.create(datasetId, dto, schemaByName.get().getProperties());
 
             // Add record to schemasAndTables table
             String path = dataset.getPath() + "/" + dataset.getId();
-            final SchemasAndTables table = new SchemasAndTables(TABLE, dto, tableIdentifier.getTable(), path);
+            SchemasAndTables table = new SchemasAndTables(TABLE, dto, tQualifier.getTable(), path);
             table.setCrs(dto.getCrs());
             table.setSchemaId(dto.getSchemaId());
 
-            final SchemasAndTables newEntity = schemasAndTablesRepository.save(table);
+            SchemasAndTables newEntity = schemasAndTablesRepository.save(table);
 
             // Create OWNER permission
-            permissionsService.addOwnerPermission(schemasAndTablesQualifier, newEntity.getId());
+            permissionsService.addOwnerPermission(SCHEMAS_AND_TABLES_QUALIFIER, newEntity.getId());
 
             return new TableModel(newEntity, OWNER.name());
         } else {
@@ -122,28 +121,28 @@ public class TableService extends SchemasAndTablesBase {
     }
 
     @Transactional
-    public void delete(ResourceQualifier tableIdentifier) {
-        final SchemasAndTables table = schemasAndTablesRepository
-                .findByIdentifier(tableIdentifier.getTable())
-                .orElseThrow(() -> new NotFoundException(tableIdentifier));
+    public void delete(ResourceQualifier tQualifier) {
+        SchemasAndTables table = schemasAndTablesRepository
+                .findByIdentifier(tQualifier.getTable())
+                .orElseThrow(() -> new NotFoundException(tQualifier));
 
         // resourceProtector.throwIfDeletionNotAllowed(targetTable, table.getId());
 
         schemasAndTablesRepository.deleteByIdentifier(table.getIdentifier());
 
         // Delete assigned rule
-        permissionsService.deleteAssigned(schemasAndTablesQualifier, table.getId());
+        permissionsService.deleteAssigned(tQualifier, table.getId());
 
-        String extTableName = tableIdentifier.getTable() + EXTENSION_POSTFIX;
-        ResourceQualifier extTable = new ResourceQualifier(tableIdentifier.getSchema(), extTableName);
+        String extTableName = tQualifier.getTable() + EXTENSION_POSTFIX;
+        ResourceQualifier extTable = new ResourceQualifier(tQualifier.getSchema(), extTableName);
 
-        tablesManager.delete(tableIdentifier);
-        tablesManager.delete(extTable);
+        ddlTables.drop(tQualifier);
+        ddlTables.drop(extTable);
 
         messageBus.produce(
                 new LayerReferencesDeletionEvent(getScratchWorkspaceName(authenticationFacade.getOrganizationId()),
-                                                 tableIdentifier.getSchema(),
-                                                 tableIdentifier.getTable(),
+                                                 tQualifier.getSchema(),
+                                                 tQualifier.getTable(),
                                                  authenticationFacade.getAccessToken()));
     }
 }

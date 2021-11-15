@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dao.TablesDao;
+import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -40,7 +40,7 @@ public class ReglamentsExistenceAnalyzer implements IResourceAnalyzer {
 
     private final Logger log = LoggerFactory.getLogger(ReglamentsExistenceAnalyzer.class);
 
-    private final TablesDao tablesDao;
+    private final RecordsDao recordsDao;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
 
     private final HttpClient httpClient;
@@ -48,10 +48,10 @@ public class ReglamentsExistenceAnalyzer implements IResourceAnalyzer {
     private final URL uiServiceUrl;
 
     public ReglamentsExistenceAnalyzer(Environment environment,
-                                       TablesDao tablesDao,
+                                       RecordsDao recordsDao,
                                        SchemasAndTablesRepository schemasAndTablesRepository)
             throws MalformedURLException {
-        this.tablesDao = tablesDao;
+        this.recordsDao = recordsDao;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
 
         this.httpClient = new HttpClient(new BaseRequestHandler(new OkHttpClient()));
@@ -104,7 +104,7 @@ public class ReglamentsExistenceAnalyzer implements IResourceAnalyzer {
         String tableName = layer.getResourceProperties().get("tableName").toString();
         ResourceQualifier tableQualifier = new ResourceQualifier(dataset, tableName);
 
-        List<RecordDto> recordDtos = tablesDao.findAll(tableQualifier);
+        List<RecordDto> recordDtos = recordsDao.findAll(tableQualifier);
         Map<String, String> objectsInfo = getUrls(recordDtos);
 
         for (Map.Entry<String, String> info: objectsInfo.entrySet()) {

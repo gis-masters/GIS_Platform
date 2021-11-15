@@ -2,6 +2,7 @@ package ru.mycrg.data_service.exceptions;
 
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -245,6 +246,13 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         final CrgValidationException vEx = (CrgValidationException) ex;
 
         final ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, vEx.getMessage(), vEx.getErrors());
+
+        return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public ResponseEntity<Object> emptyResultDataExceptionsHandler(final EmptyResultDataAccessException ex) {
+        ApiErrorModel errorModel = new ApiErrorModel(NO_CONTENT, "No Content");
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
-import ru.mycrg.data_service.service.RecordsService;
+import ru.mycrg.data_service.service.records.UserRecordsService;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
@@ -30,19 +30,19 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.dao.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 
 @RestController
 public class DocumentLibraryRecordDownloadController {
 
     private final Logger log = LoggerFactory.getLogger(DocumentLibraryRecordDownloadController.class);
 
-    private final RecordsService recordsService;
+    private final UserRecordsService recordsService;
     private final FileStorageService fileStorageService;
     private final DocumentLibraryService libraryService;
     private final SystemAttributeHandler systemAttributeHandler;
 
-    public DocumentLibraryRecordDownloadController(RecordsService recordsService,
+    public DocumentLibraryRecordDownloadController(UserRecordsService recordsService,
                                                    FileStorageService fileStorageService,
                                                    SystemAttributeHandler systemAttributeHandler,
                                                    DocumentLibraryService libraryService) {

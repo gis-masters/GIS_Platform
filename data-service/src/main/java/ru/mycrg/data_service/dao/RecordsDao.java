@@ -29,18 +29,18 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
 
-import static ru.mycrg.data_service.dao.SqlBuilder.buildOrderBySection;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
 @Service
 @Transactional
-public class TablesDao {
+public class RecordsDao {
 
-    private final Logger log = LoggerFactory.getLogger(TablesDao.class);
+    private final Logger log = LoggerFactory.getLogger(RecordsDao.class);
 
     private final NamedParameterJdbcTemplate pJdbcTemplate;
 
-    public TablesDao(NamedParameterJdbcTemplate parameterJdbcTemplate) {
+    public RecordsDao(NamedParameterJdbcTemplate parameterJdbcTemplate) {
         System.setProperty("com.healthmarketscience.sqlbuilder.useBooleanLiterals", "true");
         this.pJdbcTemplate = parameterJdbcTemplate;
     }
@@ -116,11 +116,11 @@ public class TablesDao {
         }
     }
 
-    public Optional<Map<String, Object>> findById(ResourceQualifier tableQualifier, Long id) {
+    public Optional<Map<String, Object>> findById(ResourceQualifier recordQualifier) {
         try {
-            final var object = pJdbcTemplate.queryForObject(
-                    String.format("SELECT * FROM %s WHERE id = :id", tableQualifier),
-                    new MapSqlParameterSource("id", id),
+            var object = pJdbcTemplate.queryForObject(
+                    String.format("SELECT * FROM %s WHERE id = :id", recordQualifier.getResourceTable()),
+                    new MapSqlParameterSource("id", recordQualifier.getRecord()),
                     (rs, rowNum) -> getRecordAsObjectMap(rs));
 
             return Optional.ofNullable(object);
@@ -176,8 +176,8 @@ public class TablesDao {
             recordDtos = pJdbcTemplate.query(sqlTemplate,
                                              params,
                                              new RowMapperResultSetExtractor<>(
-                                                  new RecordRowMapper()
-                                          ));
+                                                     new RecordRowMapper()
+                                             ));
         } catch (BadSqlGrammarException e) {
             log.warn("Не удалось получить данные из {}, ошибка: {}", tableQualifier, e.getMessage());
         }

@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao;
+package ru.mycrg.data_service.dao.utils;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -66,9 +66,17 @@ public class SqlBuilder {
         }
 
         final List<String> orderItems = sort.stream()
-                                            .map(order -> order.getProperty() + " " + order.getDirection())
+                                            .map(order -> getProperty(order.getProperty()) + " " + order.getDirection())
                                             .collect(Collectors.toList());
 
         return " ORDER BY " + String.join(",", orderItems) + " ";
+    }
+
+    private static String getProperty(String property) {
+        if (property.equalsIgnoreCase("createdAt")) {
+            return "created_at";
+        }
+
+        return property;
     }
 }

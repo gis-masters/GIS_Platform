@@ -73,7 +73,7 @@ export class ExplorerAdapterTypeLibraryRoot {
       },
       {
         label: 'Дате создания',
-        value: 'created_at'
+        value: 'createdAt'
       }
     ];
   }
@@ -91,7 +91,7 @@ export class ExplorerAdapterTypeLibraryRoot {
   }
 
   static getChildrenSortDefaultValue(): string {
-    return 'created_at';
+    return 'createdAt';
   }
 
   static getChildrenSortDefaultDirection(): SortDir {

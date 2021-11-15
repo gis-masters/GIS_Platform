@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dao.GeometryHelper;
-import ru.mycrg.data_service.dao.TablesDao;
+import ru.mycrg.data_service.dao.utils.GeometryHelper;
+import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.*;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -40,7 +40,7 @@ public class ImportGml {
 
     private static final Logger log = LoggerFactory.getLogger(ImportGml.class);
 
-    private final TablesDao tablesDao;
+    private final RecordsDao recordsDao;
     private final SchemaService schemaService;
     private final GeometryHelper geometryHelper;
     private final GmlParser gmlParser;
@@ -49,14 +49,14 @@ public class ImportGml {
     private final CrgScriptEngine scriptEngine;
     private final TableService tableService;
 
-    public ImportGml(TablesDao tablesDao,
+    public ImportGml(RecordsDao recordsDao,
                      SchemaService schemaService,
                      GeometryHelper geometryHelper, GmlParser gmlParser,
                      DatasetService datasetService,
                      ValidationService validationService,
                      CrgScriptEngine scriptEngine,
                      TableService tableService) {
-        this.tablesDao = tablesDao;
+        this.recordsDao = recordsDao;
         this.schemaService = schemaService;
         this.geometryHelper = geometryHelper;
         this.gmlParser = gmlParser;
@@ -232,7 +232,7 @@ public class ImportGml {
         Map<String, Object>[] objectList = preparePropsToDB(objects);
 
         try {
-            tablesDao.addRecordsAsBatch(tableQualifier, objectList);
+            recordsDao.addRecordsAsBatch(tableQualifier, objectList);
 
             return objectList.length;
         } catch (CrgDaoException e) {

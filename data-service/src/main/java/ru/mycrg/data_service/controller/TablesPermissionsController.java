@@ -9,9 +9,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
+import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.service.PermissionsService;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.service.resources.SchemasAndTablesBase.schemasAndTablesQualifier;
+import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 
 @RestController
 public class TablesPermissionsController {
@@ -49,12 +49,13 @@ public class TablesPermissionsController {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        final IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
+        ResourceQualifier tQualifier = new ResourceQualifier(datasetId, tableId);
 
-        final PermissionProjection permission = permissionsService
-                .create(schemasAndTablesQualifier, table.getId(), dto);
+        IResourceModel table = tableService.getInfo(tQualifier);
 
-        final URI location = ServletUriComponentsBuilder
+        PermissionProjection permission = permissionsService.create(tQualifier, table.getId(), dto);
+
+        URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/datasets/{datasetId}/tables/{tableId}/roleAssignment/{id}")
                 .buildAndExpand(datasetId, tableId, permission.getId())
@@ -71,14 +72,16 @@ public class TablesPermissionsController {
                                                       PagedResourcesAssembler<PermissionProjection> pageAssembler) {
         Page<PermissionProjection> permissions;
         try {
-            final IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
+            ResourceQualifier tQualifier = new ResourceQualifier(datasetId, tableId);
 
-            permissions = permissionsService.getAllByResourceId(schemasAndTablesQualifier, table.getId(), pageable);
+            IResourceModel table = tableService.getInfo(tQualifier);
+
+            permissions = permissionsService.getAllByResourceId(tQualifier, table.getId(), pageable);
         } catch (ForbiddenException e) {
             permissions = new PageImpl<>(new ArrayList<>());
         }
 
-        final var pagedResources = pageAssembler.toResource(
+        var pagedResources = pageAssembler.toResource(
                 permissions,
                 linkTo(TablesPermissionsController.class)
                         .slash("/api/data/datasets/" + datasetId + "/tables/" + tableId + "/roleAssignment")
@@ -92,7 +95,11 @@ public class TablesPermissionsController {
     public ResponseEntity<Object> deleteTablePermission(@PathVariable String datasetId,
                                                         @PathVariable String tableId,
                                                         @PathVariable Long permissionId) {
-        permissionsService.deleteById(schemasAndTablesQualifier, permissionId);
+        ResourceQualifier tQualifier = new ResourceQualifier(datasetId,
+                                                             tableId,
+                                                             TABLE);
+
+        permissionsService.deleteById(tQualifier, permissionId);
 
         return ResponseEntity.noContent().build();
     }

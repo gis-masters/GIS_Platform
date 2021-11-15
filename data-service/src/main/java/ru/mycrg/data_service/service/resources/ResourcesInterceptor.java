@@ -3,7 +3,10 @@ package ru.mycrg.data_service.service.resources;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.service.resources.protectors.DatasetProtector;
+import ru.mycrg.data_service.service.resources.protectors.TableProtector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,10 +18,13 @@ import static org.springframework.web.servlet.HandlerMapping.URI_TEMPLATE_VARIAB
 @Component
 public class ResourcesInterceptor implements HandlerInterceptor {
 
-    private final ResourceProtector resourceProtector;
+    private final TableProtector tableProtector;
+    private final DatasetProtector datasetProtector;
 
-    public ResourcesInterceptor(ResourceProtector resourceProtector) {
-        this.resourceProtector = resourceProtector;
+    public ResourcesInterceptor(DatasetProtector datasetProtector,
+                                TableProtector tableProtector) {
+        this.tableProtector = tableProtector;
+        this.datasetProtector = datasetProtector;
     }
 
     @Override
@@ -27,16 +33,16 @@ public class ResourcesInterceptor implements HandlerInterceptor {
                              @NotNull Object handler) {
         if (isRequestToTables(request)) {
             String datasetId = getAttribute(request, "datasetId")
-                    .orElseThrow(() -> new NotFoundException("Not found attribute 'datasetId'"));
+                    .orElseThrow(() -> new BadRequestException("Not found attribute 'datasetId'"));
             String tableId = getAttribute(request, "tableId")
-                    .orElseThrow(() -> new NotFoundException("Not found attribute 'tableId'"));
+                    .orElseThrow(() -> new BadRequestException("Not found attribute 'tableId'"));
 
             ResourceQualifier tableResource = new ResourceQualifier(datasetId, tableId);
 
-            resourceProtector.throwIfNotExist(tableResource);
+            tableProtector.throwIfNotExist(tableResource);
         } else if (isRequestToDatasets(request)) {
             getAttribute(request, "datasetId").ifPresent(datasetId -> {
-                resourceProtector.throwIfNotExist(new ResourceQualifier(datasetId));
+                datasetProtector.throwIfNotExist(new ResourceQualifier(datasetId));
             });
         }
 

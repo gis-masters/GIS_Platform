@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.data_service.dao.TablesDao;
+import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.entity.RecordEntity;
@@ -34,15 +34,15 @@ public class ImportMp implements Importer {
     private static final Logger log = LoggerFactory.getLogger(ImportMp.class);
     private static final String SCHEMA_NAME = "mp";
 
-    private final TablesDao tablesDao;
+    private final RecordsDao recordsDao;
     private final XmlParser xmlParser;
     private final SchemaService schemaService;
     private final TableService tableService;
     private final CrsHandler crsHandler;
 
-    public ImportMp(TablesDao tablesDao, XmlParser xmlParser, SchemaService schemaService,
+    public ImportMp(RecordsDao recordsDao, XmlParser xmlParser, SchemaService schemaService,
                     TableService tableService, CrsHandler crsHandler) {
-        this.tablesDao = tablesDao;
+        this.recordsDao = recordsDao;
         this.xmlParser = xmlParser;
         this.schemaService = schemaService;
         this.tableService = tableService;
@@ -86,7 +86,7 @@ public class ImportMp implements Importer {
             Map<String, Object> dataForSavingToDBValid = ImportValidationHandler
                     .removeNonMatchingBySchemaProperties(dataForSavingToDB, crossedProperties);
 
-            return tablesDao.addRecord(table, new RecordEntity(dataForSavingToDBValid)).getId();
+            return recordsDao.addRecord(table, new RecordEntity(dataForSavingToDBValid)).getId();
         } catch (CrgDaoException e) {
             log.error(e.getMessage());
 

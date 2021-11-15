@@ -1,11 +1,9 @@
 package ru.mycrg.data_service.service.processes;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
-import ru.mycrg.data_service.service.RecordsService;
+import ru.mycrg.data_service.service.records.UserRecordsService;
 import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
 import ru.mycrg.data_service.service.processes.dto.ImportSource;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -17,19 +15,17 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
-import static ru.mycrg.data_service.dao.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 
 @Component
 public class ProcessHandlersFactory {
 
-    private final Logger log = LoggerFactory.getLogger(ProcessHandlersFactory.class);
-
-    private final RecordsService recordsService;
+    private final UserRecordsService recordsService;
     private final IProcessHandler defaultProcessHandler;
     private final Map<ProcessType, IProcessHandler> processHandlers;
 
-    public ProcessHandlersFactory(RecordsService recordsService,
-                                  IProcessHandler defaultProcessHandler,
+    public ProcessHandlersFactory(UserRecordsService recordsService,
+                                  DefaultProcessHandler defaultProcessHandler,
                                   List<IProcessHandler> processHandlers) {
         this.recordsService = recordsService;
 

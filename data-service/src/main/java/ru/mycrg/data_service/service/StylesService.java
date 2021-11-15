@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dao.TablesDao;
+import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.dto.styles.*;
 import ru.mycrg.data_service.exceptions.DataServiceException;
@@ -23,10 +23,10 @@ public class StylesService {
 
     private final Logger log = LoggerFactory.getLogger(StylesService.class);
 
-    private final TablesDao tablesDao;
+    private final RecordsDao recordsDao;
 
-    public StylesService(TablesDao tablesDao) {
-        this.tablesDao = tablesDao;
+    public StylesService(RecordsDao recordsDao) {
+        this.recordsDao = recordsDao;
     }
 
     public List<ActualStylesResponseModel> defineActualStyles(List<ActualStylesRequestModel> request) {
@@ -50,7 +50,7 @@ public class StylesService {
             // Правило без фильтра подразумевает выборку без условий
             if (ruleFilters.contains(null) || ruleFilters.isEmpty()) {
                 final String sqlQuery = buildSelectOneQueryWithBbox(tQualifier, bboxFilter);
-                final List<RecordDto> recordDtos = tablesDao.customListQuery(sqlQuery);
+                final List<RecordDto> recordDtos = recordsDao.customListQuery(sqlQuery);
                 if (!recordDtos.isEmpty()) {
                     styleRules.stream()
                               .filter(styleRule -> styleRule.getFilter() == null)
@@ -59,7 +59,7 @@ public class StylesService {
                 }
             } else {
                 final String sqlQuery = buildSelectQueryWithBbox(tQualifier, ruleFilters, bboxFilter);
-                final List<RecordDto> recordDtos = tablesDao.customListQuery(sqlQuery);
+                final List<RecordDto> recordDtos = recordsDao.customListQuery(sqlQuery);
 
                 analyzeComparisonRule(styleRules, recordDtos, response);
 
@@ -69,7 +69,7 @@ public class StylesService {
                           .ifPresent(elseRule -> {
                               final String elseQuery = buildSelectNotQueryWithBbox(tQualifier, ruleFilters, bboxFilter);
 
-                              boolean isSomeByElseRuleExist = !tablesDao.customListQuery(elseQuery).isEmpty();
+                              boolean isSomeByElseRuleExist = !recordsDao.customListQuery(elseQuery).isEmpty();
                               if (isSomeByElseRuleExist) {
                                   response.addRule(elseRule.getName());
                               }

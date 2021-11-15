@@ -21,7 +21,6 @@ import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.import_.model.WsImportModel;
 import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
 import ru.mycrg.data_service.service.processes.dto.ImportTarget;
-import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
 import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
@@ -47,7 +46,6 @@ public class ImportRasterProcessHandler implements IProcessHandler {
     private final Logger log = LoggerFactory.getLogger(ImportRasterProcessHandler.class);
 
     private final ProcessService processService;
-    private final FileStorageService fileStorageService;
     private final IAuthenticationFacade authenticationFacade;
     private final WsNotificationService wsNotificationService;
 
@@ -58,13 +56,11 @@ public class ImportRasterProcessHandler implements IProcessHandler {
     private IRecord record;
     private ImportInitializingModel importInitialData;
 
-    public ImportRasterProcessHandler(ProcessService processService,
-                                      Environment environment,
-                                      FileStorageService fileStorageService,
+    public ImportRasterProcessHandler(Environment environment,
+                                      ProcessService processService,
                                       IAuthenticationFacade authenticationFacade,
                                       WsNotificationService wsNotificationService) throws MalformedURLException {
         this.processService = processService;
-        this.fileStorageService = fileStorageService;
         this.authenticationFacade = authenticationFacade;
         this.wsNotificationService = wsNotificationService;
 

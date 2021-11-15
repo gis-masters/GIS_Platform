@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao;
+package ru.mycrg.data_service.dao.ddl;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -8,24 +8,25 @@ import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.util.EpsgCodes;
 import ru.mycrg.data_service.util.GeometryProjection;
 
-import static ru.mycrg.data_service.dao.DatasourceFactory.INITIAL_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.INITIAL_SCHEMA_NAME;
 
 @Service
-public class DatabaseDDL {
+public class DdlDatabase {
 
-    private final Logger log = LoggerFactory.getLogger(DatabaseDDL.class);
+    private final Logger log = LoggerFactory.getLogger(DdlDatabase.class);
 
     private final JdbcTemplate jdbcTemplate;
     private final DatasourceFactory datasourceFactory;
     private final NamedParameterJdbcTemplate parameterJdbcTemplate;
     private final EpsgCodes epsgCodes;
 
-    public DatabaseDDL(JdbcTemplate jdbcTemplate,
+    public DdlDatabase(JdbcTemplate jdbcTemplate,
                        DatasourceFactory datasourceFactory,
                        NamedParameterJdbcTemplate parameterJdbcTemplate,
                        EpsgCodes epsgCodes) {
@@ -40,7 +41,7 @@ public class DatabaseDDL {
      *
      * @param dbName Название БД
      */
-    public void create(final String dbName) {
+    public void create(String dbName) {
         HikariDataSource newDataSource = null;
         try {
             log.debug("Try create db: {}", dbName);
@@ -82,7 +83,7 @@ public class DatabaseDDL {
         }
     }
 
-    public void delete(String dbName) {
+    public void drop(String dbName) {
         final MapSqlParameterSource source = new MapSqlParameterSource().addValue("dbName", dbName);
 
         // Предотвращаем возможность новых подключений
@@ -100,7 +101,7 @@ public class DatabaseDDL {
         jdbcTemplate.update("DROP DATABASE " + dbName);
     }
 
-    public boolean isDatabaseExist(String dbName) {
+    public boolean isExist(String dbName) {
         try {
             return parameterJdbcTemplate.queryForObject(
                     "SELECT EXISTS (SELECT 1 FROM pg_database WHERE datname = :dbName)",

@@ -11,7 +11,7 @@ import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.service.PermissionsService;
-import ru.mycrg.data_service.service.RecordsService;
+import ru.mycrg.data_service.service.records.UserRecordsService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import javax.validation.Valid;
@@ -20,16 +20,17 @@ import java.util.Map;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.dao.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dto.ResourceType.RECORD;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
 @RestController
 public class DocumentLibraryRecordPermissionController {
 
-    private final RecordsService recordsService;
+    private final UserRecordsService recordsService;
     private final PermissionsService permissionsService;
 
-    public DocumentLibraryRecordPermissionController(RecordsService recordsService,
+    public DocumentLibraryRecordPermissionController(UserRecordsService recordsService,
                                                      PermissionsService permissionsService) {
         this.recordsService = recordsService;
         this.permissionsService = permissionsService;
@@ -41,14 +42,11 @@ public class DocumentLibraryRecordPermissionController {
                                                         Pageable pageable,
                                                         @PathVariable Long recId,
                                                         PagedResourcesAssembler<PermissionProjection> pageAssembler) {
-        ResourceQualifier libraryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
+        ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
 
-        final Map<String, Object> record = recordsService.getById(libraryQualifier, recId);
-        final Long recordId = Long.valueOf(record.get(ID.getName()).toString());
+        var permissions = permissionsService.getAllByResourceId(recordQualifier, pageable);
 
-        final var permissions = permissionsService.getAllByResourceId(libraryQualifier, recordId, pageable);
-
-        final var pagedResources = pageAssembler.toResource(
+        var pagedResources = pageAssembler.toResource(
                 permissions,
                 linkTo(DatasetPermissionsController.class)
                         .slash("/api/data/document-libraries/" + docLibId)
@@ -67,14 +65,14 @@ public class DocumentLibraryRecordPermissionController {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        ResourceQualifier libraryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
+        ResourceQualifier libraryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
 
-        final Map<String, Object> record = recordsService.getById(libraryQualifier, recId);
-        final Long recordId = Long.valueOf(record.get(ID.getName()).toString());
+        Map<String, Object> record = recordsService.getById(libraryQualifier, recId);
+        Long recordId = Long.valueOf(record.get(ID.getName()).toString());
 
-        final PermissionProjection permission = permissionsService.create(libraryQualifier, recordId, dto);
+        PermissionProjection permission = permissionsService.create(libraryQualifier, recordId, dto);
 
-        final URI location = ServletUriComponentsBuilder
+        URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/document-libraries/{docLibId}/roleAssignment/{id}")
                 .buildAndExpand(docLibId, permission.getId())
