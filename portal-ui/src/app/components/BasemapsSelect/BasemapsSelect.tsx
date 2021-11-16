@@ -6,11 +6,15 @@ import { Menu, Paper, Tooltip, ButtonBase } from '@mui/material';
 
 import { sleep } from '../../services/util/sleep';
 import { basemapsStore } from '../../stores/Basemaps.store';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { Basemap } from '../../services/crg/basemaps.models';
+import { Role } from '../../services/crg/permissions.models';
 
 import { BasemapsSelectItem } from './Item/BasemapsSelect-Item';
 import { BasemapsSelectThumbnail } from './Thumbnail/BasemapsSelect-Thumbnail';
 import { BasemapsSelectTooltipAnchor } from './TooltipAnchor/BasemapsSelect-TooltipAnchor';
+import { BasemapsSelectAddButton } from './AddButton/BasemapsSelect-AddButton';
 
 import '!style-loader!css-loader!sass-loader!./BasemapsSelect.scss';
 import '!style-loader!css-loader!sass-loader!./MenuList/BasemapsSelect-MenuList.scss';
@@ -50,6 +54,9 @@ export class BasemapsSelect extends Component {
             anchorEl={this.ref.current}
             onClose={this.close}
           >
+            {(currentUser.isAdmin || currentProject.role === Role.OWNER) && (
+              <BasemapsSelectAddButton disabledItems={this.basemaps} />
+            )}
             {this.basemaps.map(basemap => (
               <Tooltip
                 disableInteractive

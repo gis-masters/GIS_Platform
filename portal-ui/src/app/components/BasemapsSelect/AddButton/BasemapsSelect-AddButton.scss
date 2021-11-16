@@ -1,0 +1,13 @@
+body .BasemapsSelect {
+  &-AddButton {
+    justify-content: center;
+
+    margin-bottom: 10px;
+    padding: 0;
+
+    &:hover,
+    &.Mui-focusVisible {
+      background-color: transparent;
+    }
+  }
+}
