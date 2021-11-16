@@ -87,14 +87,14 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   private fieldChangeHandler({ value, propertyName }: { value: T[keyof T]; propertyName: keyof T }) {
     const { formValue, onFormChange, onFieldChange } = this.props;
 
-    if (onFieldChange) {
-      onFieldChange(value, propertyName);
-    }
-
     if (onFormChange) {
       const newFormValue = cloneDeep(formValue);
       newFormValue[propertyName] = value;
       onFormChange(newFormValue);
+    }
+
+    if (onFieldChange) {
+      onFieldChange(value, propertyName);
     }
   }
 

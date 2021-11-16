@@ -200,6 +200,10 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
 
   @boundMethod
   private formFieldChanged(value: unknown, fieldName: string) {
+    if (value && value instanceof File && !this.formValue.title) {
+      this.formValue.title = value.name.slice(0, Math.max(0, value.name.lastIndexOf('.')));
+    }
+
     this.filterFieldErrors(fieldName);
   }
 
