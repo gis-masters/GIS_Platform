@@ -87,6 +87,12 @@ public class ImportGml {
             getExistingSchemas(features, importLayerReports).forEach(schema -> {
                 Optional<String> oEpsg = getEpsg(features, schema);
                 if (oEpsg.isEmpty()) {
+                    ImportLayerReport importLayerReport = new ImportLayerReport();
+                    importLayerReport.setSchemaId(schema.getName());
+                    importLayerReport.setTableTitle(schema.getTableName());
+                    importLayerReport.setReason("Не удалось выполнить импорт. Неверно указана система координат");
+                    importLayerReports.add(importLayerReport);
+
                     return;
                 }
 

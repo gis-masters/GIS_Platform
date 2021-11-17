@@ -13,12 +13,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.service.parsers.exceptions.EpsgParserException;
 import ru.mycrg.data_service.service.parsers.exceptions.GmlParserException;
 import ru.mycrg.data_service.service.parsers.model.FeatureData;
 import ru.mycrg.data_service.service.parsers.model.FeatureObject;
@@ -32,7 +32,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.nonNull;
 import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
@@ -151,6 +153,8 @@ public class GmlParser {
 
                 featureObject.setProperties(objectProperties);
             }
+        } catch (EpsgParserException epsgParserException) {
+            throw new DataServiceException(epsgParserException.getMessage());
         } catch (Exception ex) {
             String msg = String.format("Error while getting attribute in %s. %s", schemaDto.getName(), ex.getMessage());
             log.debug(msg);
@@ -392,10 +396,10 @@ public class GmlParser {
         if (epsg.length >= 2) {
             return Integer.parseInt(epsg[1]);
         } else {
-            String errorMsg = "Error while getting EPSG code (srid).";
+            String errorMsg = "Ошибка при получении EPSG кода. Некорректно указан формат системы координат";
             log.error(errorMsg);
 
-            throw new DataServiceException(errorMsg);
+            throw new EpsgParserException(errorMsg);
         }
     }
 }
