@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
+import ru.mycrg.gis_service.dao.ProjectsDao;
 import ru.mycrg.gis_service.dto.PermissionCreateDto;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
@@ -47,39 +48,35 @@ public class ProjectService {
     private final PermissionRepository permissionRepository;
     private final IAuthenticationFacade authenticationFacade;
     private final MessageBusProducer messageBus;
+    private final ProjectsDao projectsDao;
 
     public ProjectService(ProjectProjectionFactory projectionFactory,
                           ProjectRepository projectRepository,
                           PermissionRepository permissionRepository,
                           IAuthenticationFacade authenticationFacade,
-                          MessageBusProducer messageBus) {
+                          MessageBusProducer messageBus,
+                          ProjectsDao projectsDao) {
         this.projectionFactory = projectionFactory;
         this.projectRepository = projectRepository;
         this.permissionRepository = permissionRepository;
         this.authenticationFacade = authenticationFacade;
         this.messageBus = messageBus;
+        this.projectsDao = projectsDao;
     }
 
     public Page<ProjectProjection> getPaged(String name, Pageable pageable) {
-        Page<Project> projects;
-        if (authenticationFacade.isRoot()) {
-            projects = projectRepository.findAllByNameContainingIgnoreCase(name, pageable);
-        } else {
-            final UserDetails userDetails = authenticationFacade.getUserDetails();
+        if (authenticationFacade.isOrganizationAdmin()) {
             Long orgId = authenticationFacade.getOrganizationId();
-            if (authenticationFacade.isOrganizationAdmin()) {
-                projects = projectRepository.findAllByOrganizationIdAndNameContainingIgnoreCase(orgId, name, pageable);
-            } else {
-                final List<Project> organizationProjects = projectRepository
-                        .findAllByOrganizationIdAndNameContainingIgnoreCase(orgId, name, pageable).stream()
-                        .collect(Collectors.toList());
-                final List<Project> filteredProjects = filterByPermissions(organizationProjects, userDetails);
 
-                projects = new PageImpl<>(filteredProjects, pageable, filteredProjects.size());
-            }
+            return projectRepository
+                    .findAllByOrganizationIdAndNameContainingIgnoreCase(orgId, name, pageable)
+                    .map(projectionFactory::setRoleAndCreateProjection);
+        } else {
+            List<ProjectProjection> projects = projectsDao.allowedProjects(name, pageable);
+            Long totalAllowed = projectsDao.totalAllowedProjects(name);
+
+            return new PageImpl<>(projects, pageable, totalAllowed);
         }
-
-        return projects.map(projectionFactory::createProjection);
     }
 
     public List<Project> getAll() {
@@ -125,7 +122,7 @@ public class ProjectService {
     }
 
     public ProjectProjection getProjectionById(Long id) {
-        return projectionFactory.createProjection(getById(id));
+        return projectionFactory.setRoleAndCreateProjection(getById(id));
     }
 
     public ProjectProjection getProjectionByIdUnsafe(Long id) {
@@ -133,7 +130,7 @@ public class ProjectService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException(Project.class, id));
 
-        return projectionFactory.createProjection(project);
+        return projectionFactory.setRoleAndCreateProjection(project);
     }
 
     /**
@@ -190,7 +187,7 @@ public class ProjectService {
                                              savedProject.getId(),
                                              objectMapper.convertValue(savedProject, JsonNode.class)));
 
-        return projectionFactory.createProjection(savedProject);
+        return projectionFactory.setRoleAndCreateProjection(savedProject);
     }
 
     public void delete(Long projectId) {

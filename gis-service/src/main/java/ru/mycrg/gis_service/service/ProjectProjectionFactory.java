@@ -18,7 +18,7 @@ public class ProjectProjectionFactory {
         this.authenticationFacade = authenticationFacade;
     }
 
-    public ProjectProjectionImpl createProjection(Project project) {
+    public ProjectProjectionImpl setRoleAndCreateProjection(Project project) {
         final ProjectProjectionImpl projection = new ProjectProjectionImpl(project);
 
         if (authenticationFacade.isOrganizationAdmin()) {

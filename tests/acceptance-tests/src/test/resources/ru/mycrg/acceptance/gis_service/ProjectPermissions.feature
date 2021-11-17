@@ -5,7 +5,7 @@ Feature: Права на проекты
       | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
     Given Авторизируемся владельцем организации
 
-  Scenario Outline: Проверка видимости проекта пользователями
+  Scenario Outline: При отсутствии данных "_embedded" не передается
     Given Существует проект "<projectName>"
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | testtestQ1 |
