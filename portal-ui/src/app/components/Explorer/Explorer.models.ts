@@ -99,7 +99,8 @@ export interface Adapter {
 
 enum ActionType {
   DELETE = 'delete',
-  DOWNLOAD = 'download'
+  DOWNLOAD = 'download',
+  INTEGRATION_SED = 'integration_sed'
 }
 
 export type AllowedActions = { [key in ActionType]?: ActionDetails };

@@ -60,3 +60,5 @@ crg-options:
   client_secret: geoserver
   root-user-name: admin@mail.ru
   root-user-password: geoserver
+  integration:
+    sed-url: https://httpbin.org/anything

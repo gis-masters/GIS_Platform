@@ -9,6 +9,7 @@ import { AllowedActions } from '../Explorer.models';
 import { getAllowedActions, getId } from '../Adapter/Explorer-Adapter';
 import { ExplorerActionDelete } from '../ActionDelete/Explorer-ActionDelete';
 import { ExplorerActionDownload } from '../ActionDownload/Explorer-ActionDownload';
+import { ExplorerActionIntegrationSed } from '../ActionIntegrationSed/Explorer-ActionIntegrationSed';
 
 import { communicationService } from '../../../services/communication.service';
 
@@ -46,6 +47,7 @@ export class ExplorerActions extends Component<ExplorerActionsProps> {
     const { store } = this.props;
     const { selectedItem } = store;
     const hasActions = Object.values(this.allowedActions).some(({ visible }) => visible);
+    const isSedAction = !!this.allowedActions.integration_sed;
     const isDeleteAction = !!this.allowedActions.delete;
     const isDownloadAction = !!this.allowedActions.download;
 
@@ -53,6 +55,12 @@ export class ExplorerActions extends Component<ExplorerActionsProps> {
       selectedItem &&
       hasActions && (
         <CardActions className={cnExplorer('Actions')}>
+          {isSedAction && (
+            <ExplorerActionIntegrationSed
+              selectedItem={selectedItem}
+              actionDetails={this.allowedActions.integration_sed}
+            />
+          )}
           {isDeleteAction && <ExplorerActionDelete store={store} actionDetails={this.allowedActions.delete} />}
           {isDownloadAction && <ExplorerActionDownload store={store} actionDetails={this.allowedActions.download} />}
         </CardActions>

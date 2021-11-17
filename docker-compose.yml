@@ -144,6 +144,7 @@ services:
       CRG_OPTIONS_CLIENT_SECRET: geoserver
       CRG_OPTIONS_ROOT_USER_NAME: $GEOSERVER_USER
       CRG_OPTIONS_ROOT_USER_PASSWORD: $GEOSERVER_PASSWORD
+      CRG_OPTIONS_INTEGRATION_SED_URL: https://sed-server/docker-config-endpoint
     volumes:
       - /opt/logs:/opt/logs
       - /opt/file_storage:/opt/file_storage

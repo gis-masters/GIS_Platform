@@ -105,6 +105,11 @@ export class ExplorerAdapterTypeDocument {
     const currentItem = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
 
     return {
+      integration_sed: {
+        visible: true,
+        itemTitle: 'some title',
+        needConfirmation: true
+      },
       delete: {
         visible: true,
         disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER),
