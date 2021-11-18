@@ -94,7 +94,7 @@ SELECT 'dl_default_schema',
       "name": "inner_path",
       "title": "Где лежит",
       "required": true,
-      "hidden": true,
+      "hidden": false,
       "valueType": "STRING",
       "sequenceNumber": 0
     },
@@ -168,10 +168,18 @@ SELECT 'dl_default_schema',
       "name": "oktmo",
       "title": "ОКТМО",
       "required": true,
-      "hidden": true,
+      "hidden": false,
       "valueType": "STRING",
       "sequenceNumber": 0,
       "maxLength": 11
+    },
+    {
+      "name": "intents",
+      "title": "System intents",
+      "required": false,
+      "hidden": true,
+      "valueType": "STRING",
+      "maxLength": 500
     }
   ],
   "contentTypes": [
@@ -264,7 +272,6 @@ SELECT 'dl_default_schema',
           "name": "oktmo",
           "title": "ОКТМО",
           "required": true,
-          "hidden": true,
           "valueType": "STRING",
           "sequenceNumber": 1,
           "maxLength": 11

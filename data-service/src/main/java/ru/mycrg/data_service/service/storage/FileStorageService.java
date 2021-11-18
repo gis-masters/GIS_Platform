@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Service
 public class FileStorageService {
@@ -38,6 +39,16 @@ public class FileStorageService {
         }
     }
 
+    /**
+     * Сохранить файл.
+     *
+     * @param file     Файл
+     * @param fileName Имя файла под которым хотим сохранить файл
+     *
+     * @return Путь к файлу
+     *
+     * @throws DataServiceException в случае если не удается сохранить файл
+     */
     public String storeFile(MultipartFile file, String fileName) {
         Path targetLocation = null;
         try {
@@ -47,44 +58,51 @@ public class FileStorageService {
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             return targetLocation.normalize().toString();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new DataServiceException("Could not store file: " + targetLocation, e);
         }
     }
 
-    public Resource loadAsResource(String fileName) throws MalformedURLStorageException, NoSuchFileStorageException {
+    public Resource loadAsResource(String path) throws MalformedURLStorageException, NoSuchFileStorageException {
         try {
-            Path filePath = fileStoragePath.resolve(addDefaultExtension(fileName)).normalize();
+            Path filePath = fileStoragePath.resolve(addDefaultExtension(path)).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {
                 return resource;
             } else {
-                throw new NoSuchFileStorageException(fileName);
+                throw new NoSuchFileStorageException(path);
             }
         } catch (MalformedURLException e) {
-            throw new MalformedURLStorageException(fileName, e);
+            throw new MalformedURLStorageException(path, e);
         }
     }
 
-    public boolean deleteIfExists(String fileName) throws StorageException {
+    public boolean deleteIfExists(String path) throws StorageException {
         try {
-            Path filePath = fileStoragePath.resolve(addDefaultExtension(fileName)).normalize();
+            Path filePath = fileStoragePath.resolve(addDefaultExtension(path)).normalize();
 
             return Files.deleteIfExists(filePath);
         } catch (IOException e) {
-            throw new StorageException("Cant delete file: " + fileName, e);
+            throw new StorageException("Cant delete file: " + path, e);
         }
     }
 
     @NotNull
-    private String addDefaultExtension(String fileName) {
+    public String generateFileName(MultipartFile file) {
+        return String.format("%s.%s",
+                             UUID.randomUUID().toString().substring(0, 13),
+                             StringUtils.getFilenameExtension(file.getOriginalFilename()));
+    }
+
+    @NotNull
+    private String addDefaultExtension(String path) {
         // если имя файла без расширения то добавить .blob
         // как временный кастыль со времен когда в БД хранилось имя файла без расширения
-        String filenameExtension = StringUtils.getFilenameExtension(fileName);
+        String filenameExtension = StringUtils.getFilenameExtension(path);
         if (filenameExtension == null) {
-            fileName = fileName + ".blob";
+            path = path + ".blob";
         }
 
-        return fileName;
+        return path;
     }
 }

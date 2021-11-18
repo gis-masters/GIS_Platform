@@ -11,7 +11,7 @@ import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.service.PermissionsService;
-import ru.mycrg.data_service.service.records.UserRecordsService;
+import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import javax.validation.Valid;
@@ -27,12 +27,12 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 @RestController
 public class DocumentLibraryRecordPermissionController {
 
-    private final UserRecordsService recordsService;
+    private final RecordServiceFactory recordServiceFactory;
     private final PermissionsService permissionsService;
 
-    public DocumentLibraryRecordPermissionController(UserRecordsService recordsService,
+    public DocumentLibraryRecordPermissionController(RecordServiceFactory recordServiceFactory,
                                                      PermissionsService permissionsService) {
-        this.recordsService = recordsService;
+        this.recordServiceFactory = recordServiceFactory;
         this.permissionsService = permissionsService;
     }
 
@@ -67,7 +67,7 @@ public class DocumentLibraryRecordPermissionController {
 
         ResourceQualifier libraryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
 
-        Map<String, Object> record = recordsService.getById(libraryQualifier, recId);
+        Map<String, Object> record = recordServiceFactory.get().getById(libraryQualifier, recId);
         Long recordId = Long.valueOf(record.get(ID.getName()).toString());
 
         PermissionProjection permission = permissionsService.create(libraryQualifier, recordId, dto);

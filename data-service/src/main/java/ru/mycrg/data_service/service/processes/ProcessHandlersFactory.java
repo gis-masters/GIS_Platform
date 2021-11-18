@@ -3,7 +3,7 @@ package ru.mycrg.data_service.service.processes;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
-import ru.mycrg.data_service.service.records.UserRecordsService;
+import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
 import ru.mycrg.data_service.service.processes.dto.ImportSource;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -20,14 +20,14 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_N
 @Component
 public class ProcessHandlersFactory {
 
-    private final UserRecordsService recordsService;
     private final IProcessHandler defaultProcessHandler;
+    private final RecordServiceFactory recordServiceFactory;
     private final Map<ProcessType, IProcessHandler> processHandlers;
 
-    public ProcessHandlersFactory(UserRecordsService recordsService,
-                                  DefaultProcessHandler defaultProcessHandler,
+    public ProcessHandlersFactory(DefaultProcessHandler defaultProcessHandler,
+                                  RecordServiceFactory recordServiceFactory,
                                   List<IProcessHandler> processHandlers) {
-        this.recordsService = recordsService;
+        this.recordServiceFactory = recordServiceFactory;
 
         this.defaultProcessHandler = defaultProcessHandler;
         this.processHandlers = processHandlers.stream()
@@ -49,7 +49,7 @@ public class ProcessHandlersFactory {
         Long objectId = source.getObjectId();
         ResourceQualifier tableQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId);
 
-        Map<String, Object> recordData = recordsService.getById(tableQualifier, objectId);
+        Map<String, Object> recordData = recordServiceFactory.get().getById(tableQualifier, objectId);
         IRecord record = new RecordEntity(recordData);
 
         ProcessType processType = ProcessType.IMPORT;

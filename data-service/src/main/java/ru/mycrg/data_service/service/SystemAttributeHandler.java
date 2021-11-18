@@ -78,9 +78,9 @@ public class SystemAttributeHandler {
         return this;
     }
 
-    public SystemAttributeHandler fillFileInnerName(@NotNull Map<String, Object> body, String innerFileName) {
+    public SystemAttributeHandler fillFileInnerPath(@NotNull Map<String, Object> body, String innerPath) {
         if (attributeDefined(INNER_PATH)) {
-            body.put(INNER_PATH.getName(), innerFileName);
+            body.put(INNER_PATH.getName(), innerPath);
         }
 
         return this;

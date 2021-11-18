@@ -18,7 +18,7 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.JsonConverter;
-import ru.mycrg.data_service.service.records.UserRecordsService;
+import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.import_.ImportGml;
 import ru.mycrg.data_service.service.import_.model.ImportGmlModel;
@@ -60,8 +60,8 @@ public class ImportGmlProcessHandler implements IProcessHandler {
 
     private final ImportGml importGml;
     private final ProcessService processService;
-    private final UserRecordsService recordsService;
     private final FileStorageService fileStorageService;
+    private final RecordServiceFactory recordServiceFactory;
     private final IAuthenticationFacade authenticationFacade;
     private final WsNotificationService wsNotificationService;
 
@@ -75,14 +75,14 @@ public class ImportGmlProcessHandler implements IProcessHandler {
     public ImportGmlProcessHandler(ProcessService processService,
                                    ImportGml importGml,
                                    Environment environment,
-                                   UserRecordsService recordsService,
                                    FileStorageService fileStorageService,
+                                   RecordServiceFactory recordServiceFactory,
                                    IAuthenticationFacade authenticationFacade,
                                    WsNotificationService wsNotificationService) throws MalformedURLException {
         this.processService = processService;
         this.importGml = importGml;
-        this.recordsService = recordsService;
         this.fileStorageService = fileStorageService;
+        this.recordServiceFactory = recordServiceFactory;
         this.authenticationFacade = authenticationFacade;
         this.wsNotificationService = wsNotificationService;
 
@@ -94,7 +94,7 @@ public class ImportGmlProcessHandler implements IProcessHandler {
     public Process handle() {
         log.debug("Handle importGmlProcess: {}", this.importInitialData);
 
-        final String databaseName = getDefaultDatabaseName(authenticationFacade.getOrganizationId());
+        String databaseName = getDefaultDatabaseName(authenticationFacade.getOrganizationId());
         Process process = processService.create(authenticationFacade.getLogin(),
                                                 "Import gml",
                                                 getType(),
@@ -108,7 +108,7 @@ public class ImportGmlProcessHandler implements IProcessHandler {
                 ImportTarget importTarget = this.importInitialData.getTarget();
 
                 ImportGmlModel importGmlModel = fetchDataNeededForImport();
-                Resource resource = fileStorageService.loadAsResource(importGmlModel.getFileName());
+                Resource resource = fileStorageService.loadAsResource(importGmlModel.getPath());
 
                 sendWsMsg(PENDING, null, "Импорт данных...");
                 ImportReport importReport = importGml.doImport(resource, importGmlModel);
@@ -197,24 +197,40 @@ public class ImportGmlProcessHandler implements IProcessHandler {
 
     @NotNull
     private ImportGmlModel fetchDataNeededForImport() {
-        ImportSource source = this.importInitialData.getSource();
+        try {
+            ImportSource source = this.importInitialData.getSource();
 
-        String libraryId = source.getLibraryId();
-        Long objectId = source.getObjectId();
-        ResourceQualifier tableQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId);
+            String libraryId = source.getLibraryId();
+            Long objectId = source.getObjectId();
+            ResourceQualifier tableQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId);
 
-        Map<String, Object> data = recordsService.getById(tableQualifier, objectId);
+            Map<String, Object> data = recordServiceFactory.get().getById(tableQualifier, objectId);
 
-        String title = (String) data.get(TITLE.getName());
-        String documentType = (String) data.get("document_type");
-        String details = (String) data.get("details");
-        LocalDateTime approveDate = LocalDateTime.parse(data.get("approve_date").toString(),
-                                                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        int scale = Integer.parseInt(String.valueOf(data.get("scale")));
-        String oktmo = (String) data.get(OKTMO.getName());
-        String fileName = (String) data.get(INNER_PATH.getName());
+            String title = (String) data.get(TITLE.getName());
+            String documentType = (String) data.get("document_type");
+            String details = (String) data.get("details");
+            LocalDateTime aDate = LocalDateTime.parse(data.get("approve_date").toString(),
+                                                      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            Integer scale = Integer.parseInt(String.valueOf(data.get("scale")));
+            boolean coordinateInverted = Boolean.parseBoolean(String.valueOf(data.get("coordinate_inverted")));
+            String oktmo = (String) data.get(OKTMO.getName());
+            String path = (String) data.get(INNER_PATH.getName());
 
-        return new ImportGmlModel(title, documentType, details, approveDate, scale, oktmo, fileName, false);
+            if (title == null || documentType == null || oktmo == null || path == null) {
+                throw new IllegalStateException("Отсутствует один из обязательных атрибутов для импорта GML");
+            }
+
+            return new ImportGmlModel(title, documentType, details, aDate, scale, oktmo, path, coordinateInverted);
+        } catch (Exception e) {
+            String msg;
+            if (e.getMessage() != null) {
+                msg = "Документ не содержит необходимых атрибутов: " + e.getMessage();
+            } else {
+                msg = "Документ не содержит необходимых атрибутов";
+            }
+
+            throw new IllegalStateException(msg);
+        }
     }
 
     private Optional<Long> createProject(String projectName) {

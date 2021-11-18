@@ -11,17 +11,17 @@ public class ImportGmlModel {
     private Integer scale;
     private String oktmo;
     private boolean invertCoordinates;
-    private String fileName;
+    private String path;
 
     public ImportGmlModel(String title, String documentType, String details, LocalDateTime docDateApprove,
-                          Integer scale, String oktmo, String fileName, boolean invertCoordinates) {
+                          Integer scale, String oktmo, String path, boolean invertCoordinates) {
         this.title = title;
         this.documentType = documentType;
         this.details = details;
         this.docDateApprove = docDateApprove;
         this.scale = scale;
         this.oktmo = oktmo;
-        this.fileName = fileName;
+        this.path = path;
         this.invertCoordinates = invertCoordinates;
     }
 
@@ -81,11 +81,11 @@ public class ImportGmlModel {
         this.invertCoordinates = invertCoordinates;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getPath() {
+        return path;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setPath(String path) {
+        this.path = path;
     }
 }

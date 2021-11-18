@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
-import ru.mycrg.data_service.service.records.UserRecordsService;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
+import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
@@ -37,19 +37,19 @@ public class DocumentLibraryRecordDownloadController {
 
     private final Logger log = LoggerFactory.getLogger(DocumentLibraryRecordDownloadController.class);
 
-    private final UserRecordsService recordsService;
     private final FileStorageService fileStorageService;
     private final DocumentLibraryService libraryService;
+    private final RecordServiceFactory recordServiceFactory;
     private final SystemAttributeHandler systemAttributeHandler;
 
-    public DocumentLibraryRecordDownloadController(UserRecordsService recordsService,
-                                                   FileStorageService fileStorageService,
+    public DocumentLibraryRecordDownloadController(FileStorageService fileStorageService,
                                                    SystemAttributeHandler systemAttributeHandler,
-                                                   DocumentLibraryService libraryService) {
+                                                   DocumentLibraryService libraryService,
+                                                   RecordServiceFactory recordServiceFactory) {
         this.libraryService = libraryService;
-        this.recordsService = recordsService;
         this.fileStorageService = fileStorageService;
         this.systemAttributeHandler = systemAttributeHandler;
+        this.recordServiceFactory = recordServiceFactory;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -59,15 +59,15 @@ public class DocumentLibraryRecordDownloadController {
                                                    @PathVariable Long recId,
                                                    HttpServletRequest request) {
         ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
-        final Map<String, Object> record = recordsService.getById(rIdentifier, recId);
-        final String innerFileName = (String) record.get(field);
+        Map<String, Object> record = recordServiceFactory.get().getById(rIdentifier, recId);
+        String path = (String) record.get(field);
 
         try {
-            Resource resource = fileStorageService.loadAsResource(innerFileName);
+            Resource resource = fileStorageService.loadAsResource(path);
 
-            final SchemaDto schema = libraryService.getSchema(docLibId);
-            final SystemAttributeHandler attributeHandler = this.systemAttributeHandler.initSchema(schema);
-            final String contentLength = attributeHandler.getFileSize(record);
+            SchemaDto schema = libraryService.getSchema(docLibId);
+            SystemAttributeHandler attributeHandler = this.systemAttributeHandler.initSchema(schema);
+            String contentLength = attributeHandler.getFileSize(record);
 
             ContentDisposition contentDisposition = ContentDisposition
                     .builder("attachment")
@@ -80,7 +80,7 @@ public class DocumentLibraryRecordDownloadController {
                                  .header(CONTENT_LENGTH, contentLength)
                                  .body(resource);
         } catch (NoSuchFileStorageException e) {
-            final String msg = String.format("Ресурс не найден. Для записи: '%s', по атрибуту: '%s'",
+            String msg = String.format("Ресурс не найден. Для записи: '%s', по атрибуту: '%s'",
                                              recId, field);
 
             throw new NotFoundException(msg, e.getCause());
@@ -102,6 +102,7 @@ public class DocumentLibraryRecordDownloadController {
         if (contentType == null) {
             contentType = "application/octet-stream";
         }
+
         return contentType;
     }
 }

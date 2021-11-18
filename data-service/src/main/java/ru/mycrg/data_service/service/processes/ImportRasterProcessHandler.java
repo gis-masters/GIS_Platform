@@ -171,9 +171,10 @@ public class ImportRasterProcessHandler implements IProcessHandler {
 
     private boolean createLayer(Long projectId, ImportReport importReport) {
         try {
-            String layerName = "layer_" + StringUtils.stripFilenameExtension(record.getInnerPath());
+            String path = StringUtils.stripFilenameExtension(record.getInnerPath());
+            String layerName = StringUtils.getFilename(path);
             String dataStoreName = "store_" + layerName;
-            String dataSourceUri = "file:///opt/file_storage/" + record.getInnerPath();
+            String dataSourceUri = "file://" + record.getInnerPath();
 
             RequestBody payload = RequestBody.create(
                     MediaType.parse("application/json"),
