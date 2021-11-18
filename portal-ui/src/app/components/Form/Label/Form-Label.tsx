@@ -3,18 +3,19 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 import { FormRequired } from '../Required/Form-Required';
 
-const cnForm = cn('Form');
+const cnFormLabel = cn('Form', 'Label');
 
 import '!style-loader!css-loader!sass-loader!./Form-Label.scss';
 
 interface FormLabelProps extends IClassNameProps {
   htmlFor?: string;
   required?: boolean;
+  readonly?: boolean;
 }
 
-export const FormLabel: FC<FormLabelProps> = ({ className, children, htmlFor, required }) => (
-  <label className={cnForm('Label', [className])} htmlFor={htmlFor}>
+export const FormLabel: FC<FormLabelProps> = ({ className, children, htmlFor, required, readonly }) => (
+  <label className={cnFormLabel({ readonly }, [className])} htmlFor={htmlFor}>
     {children}
-    {required && <FormRequired />}
+    {!readonly && required && <FormRequired />}
   </label>
 );

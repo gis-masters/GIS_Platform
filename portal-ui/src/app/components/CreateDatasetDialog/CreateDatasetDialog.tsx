@@ -86,7 +86,7 @@ export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
 
     this.setBusy(true);
     try {
-      await createDataset(this.newDatasetTitle, this.newDatasetDesc);
+      await createDataset({ title: this.newDatasetTitle, details: this.newDatasetDesc });
 
       Toast.info(`Успешно создан набор данных: \n"${this.newDatasetTitle}"`);
       this.props.onCreated();

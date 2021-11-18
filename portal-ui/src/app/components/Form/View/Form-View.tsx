@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
+import nl2br from 'react-nl2br';
 
 import { FormViewErrors } from '../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../ViewValue/Form-ViewValue';
@@ -18,7 +19,7 @@ export const FormView: FC<FormControlProps> = ({ children, className, property, 
   return (
     <div className={cnFormView({ inSet, empty: fieldValue === '—', type: property.propertyType }, [className])}>
       {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
-      <FormViewValue>{children || fieldValue}</FormViewValue>
+      <FormViewValue>{children || nl2br(fieldValue)}</FormViewValue>
       <FormViewErrors errors={errors} />
     </div>
   );

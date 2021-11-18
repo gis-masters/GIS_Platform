@@ -45,7 +45,7 @@ export interface ContentType {
   attributes: PropertySchema[];
 }
 
-interface BasePropertySchema<T extends Record<string, unknown> = Record<string, unknown>> {
+interface BasePropertySchema<T = Record<string, unknown>> {
   name: keyof T;
   propertyType: PropertyType;
   title: string;
@@ -60,8 +60,7 @@ interface BasePropertySchema<T extends Record<string, unknown> = Record<string, 
   defaultValue?: unknown;
 }
 
-export interface PropertySchemaString<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaString<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.STRING;
   display?: 'singleline' | 'multiline' | 'reachtext';
   mask?: string;
@@ -82,14 +81,14 @@ interface PropertySchemaBaseNumber {
   step?: number;
 }
 
-export interface PropertySchemaInt<T extends Record<string, unknown> = Record<string, unknown>>
+export interface PropertySchemaInt<T = Record<string, unknown>>
   extends BasePropertySchema<T>,
     PropertySchemaBaseNumber {
   propertyType: PropertyType.INT;
   defaultValue?: number;
 }
 
-export interface PropertySchemaFloat<T extends Record<string, unknown> = Record<string, unknown>>
+export interface PropertySchemaFloat<T = Record<string, unknown>>
   extends BasePropertySchema<T>,
     PropertySchemaBaseNumber {
   propertyType: PropertyType.FLOAT;
@@ -99,8 +98,7 @@ export interface PropertySchemaFloat<T extends Record<string, unknown> = Record<
 
 export type PropertySchemaNumber = PropertySchemaInt | PropertySchemaFloat;
 
-export interface PropertySchemaBool<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaBool<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.BOOL;
   display?: 'checkbox' | 'switch';
   trueLabel?: string;
@@ -108,8 +106,7 @@ export interface PropertySchemaBool<T extends Record<string, unknown> = Record<s
   defaultValue?: boolean;
 }
 
-export interface PropertySchemaDatetime<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaDatetime<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.DATETIME;
   display?: 'date' | 'datetime';
   format?: string;
@@ -118,16 +115,14 @@ export interface PropertySchemaDatetime<T extends Record<string, unknown> = Reco
   defaultValue?: string;
 }
 
-export interface PropertySchemaTime<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaTime<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.TIME;
   maxValue?: string;
   minValue?: string;
   defaultValue?: string;
 }
 
-export interface PropertySchemaDuration<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaDuration<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.DURATION;
   maxValue?: string;
   minValue?: string;
@@ -136,8 +131,7 @@ export interface PropertySchemaDuration<T extends Record<string, unknown> = Reco
 
 export type PropertyOption = { title: string; value: string | number };
 
-export interface PropertySchemaChoice<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaChoice<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.CHOICE;
   display?: 'select' | 'radiogroup';
   multiple?: boolean;
@@ -147,8 +141,7 @@ export interface PropertySchemaChoice<T extends Record<string, unknown> = Record
   options: PropertyOption[];
 }
 
-export interface PropertySchemaUrl<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaUrl<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.URL;
   display?: 'popup' | 'newtab' | 'img';
   enablePreview?: boolean;
@@ -156,35 +149,30 @@ export interface PropertySchemaUrl<T extends Record<string, unknown> = Record<st
   defaultValue?: string;
 }
 
-export interface PropertySchemaCalculated<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaCalculated<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.CALCULATED | PropertyType.URL | PropertyType.GEOMETRY | PropertyType.LOOKUP;
   wellKnownFormula?: string;
   formula?: string;
 }
 
-export interface PropertySchemaLookup<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaLookup<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.LOOKUP;
 }
 
-export interface PropertySchemaSet<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaSet<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.SET;
   fieldsSet: PropertySchema[];
   defaultValue?: Record<string, unknown>;
 }
 
-export interface PropertySchemaCustom<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaCustom<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.CUSTOM;
   ControlComponent: ComponentType<FormControlProps>;
   ViewComponent?: ComponentType<FormControlProps>;
   defaultValue?: unknown;
 }
 
-export interface PropertySchemaIdentities<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaIdentities<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.IDENTITIES;
   allowMultipleValues?: boolean;
   tableName?: string;
@@ -192,8 +180,7 @@ export interface PropertySchemaIdentities<T extends Record<string, unknown> = Re
   additionalFields?: string;
 }
 
-export interface PropertySchemaBinary<T extends Record<string, unknown> = Record<string, unknown>>
-  extends BasePropertySchema<T> {
+export interface PropertySchemaBinary<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.BINARY;
   accept?: string;
   maxSize?: number;
@@ -201,7 +188,7 @@ export interface PropertySchemaBinary<T extends Record<string, unknown> = Record
   isEmbedded?: boolean;
 }
 
-export type PropertySchema<T extends Record<string, unknown> = Record<string, unknown>> =
+export type PropertySchema<T = Record<string, unknown>> =
   | PropertySchemaString<T>
   | PropertySchemaInt<T>
   | PropertySchemaFloat<T>

@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { TextField } from '@mui/material';
+import moment from 'moment';
 
 import { PropertyType, PropertySchemaDatetime } from '../../../../services/crg/schema.models';
 
@@ -12,16 +13,18 @@ import { FormErrors } from '../../Errors/Form-Errors';
 @observer
 class FormControlTypeDatetime extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue = '', inSet, property, errors } = this.props;
-    const { defaultValue } = property as PropertySchemaDatetime;
+    const { htmlId, className, fieldValue, inSet, property, errors } = this.props;
+    const { name } = property as PropertySchemaDatetime;
+    const date = fieldValue && moment(fieldValue);
 
     return (
       <div className={cnFormControl({ inSet }, [className])}>
         <TextField
           type='date'
           id={htmlId}
+          name={name}
           fullWidth={!inSet}
-          value={fieldValue ? (fieldValue as string) : defaultValue || ''}
+          value={date?.isValid() ? date.format('YYYY-MM-DD') : ''}
           onChange={this.handleChange}
           label={inSet ? property.title : undefined}
           InputLabelProps={{

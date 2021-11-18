@@ -227,12 +227,12 @@ export async function getDocumentLibraryRoleAssignmentUrl(id: string): Promise<s
   return `${await getDocLibrariesUrl()}/${id}/roleAssignment`;
 }
 
-export async function getDocumentLibraryRecordRoleAssignmentUrl(lidraryid: string, id: string): Promise<string> {
-  return `${await getDocLibrariesUrl()}/${lidraryid}/records/${id}/roleAssignment`;
+export async function getDocumentLibraryRecordRoleAssignmentUrl(libraryId: string, id: string): Promise<string> {
+  return `${await getDocLibrariesUrl()}/${libraryId}/records/${id}/roleAssignment`;
 }
 
-export async function getDocumentLibraryIntegrationUrl(lidraryid: string, id: string): Promise<string> {
-  return `${await getDocLibrariesUrl()}/${lidraryid}/records/${id}/integration`;
+export async function getDocumentLibraryIntegrationUrl(libraryId: string, id: string): Promise<string> {
+  return `${await getDocLibrariesUrl()}/${libraryId}/records/${id}/integration`;
 }
 
 export async function getDocLibrariesRecordChildrenUrl(libraryName: string, id: string): Promise<string> {

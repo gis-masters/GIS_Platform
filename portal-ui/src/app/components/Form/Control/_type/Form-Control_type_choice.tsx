@@ -14,8 +14,12 @@ const EMPTY = '~~~empty_value~~~';
 @observer
 class FormControlTypeChoice extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue = EMPTY, property, errors } = this.props;
-    const { options } = property as PropertySchemaChoice;
+    const { htmlId, className, property, errors } = this.props;
+    let { fieldValue } = this.props;
+    if (fieldValue === undefined || fieldValue === null) {
+      fieldValue = EMPTY;
+    }
+    const { options, name } = property as PropertySchemaChoice;
     const valueIsAllowed = options.some(({ value }) => String(value) === String(fieldValue));
     const valueCanBeDisplayed =
       fieldValue !== EMPTY && (typeof fieldValue === 'number' || typeof fieldValue === 'string');
@@ -26,6 +30,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
           <>
             <Select
               id={htmlId}
+              name={name}
               fullWidth
               value={fieldValue}
               onChange={this.handleChange}

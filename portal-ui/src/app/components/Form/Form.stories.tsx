@@ -2,13 +2,14 @@ import React from 'react';
 import { action, observable } from 'mobx';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { TextField } from '@mui/material';
-import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutline } from '@mui/icons-material';
+import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutline, Send } from '@mui/icons-material';
 
-import '../../../styles.css';
+import { sleep } from '../../services/util/sleep';
 import { PropertyType, PropertySchema } from '../../services/crg/schema.models';
 import { getDefaultValues, validateFormValue } from '../../services/crg/formValidation.service';
 import { Mime } from '../../services/util/Mime';
 import { Button } from '../Button/Button';
+import { Toast } from '../Toast/Toast';
 
 import { Form, FormControl, FormField, FormLabel } from './Form';
 import { FormActions } from './Actions/Form-Actions';
@@ -26,6 +27,7 @@ interface TestData extends Record<string, unknown> {
   size: number;
   free: boolean;
   birthDate: string;
+  about: string;
   color: string;
   photo: File;
   addr: {
@@ -42,7 +44,7 @@ interface TestData extends Record<string, unknown> {
   custom: boolean;
 }
 
-const fields: PropertySchema<TestData>[] = [
+const testFields: PropertySchema<TestData>[] = [
   {
     propertyType: PropertyType.STRING,
     name: 'name',
@@ -93,6 +95,13 @@ const fields: PropertySchema<TestData>[] = [
     title: 'Дата рождения',
     required: true,
     minValue: '2000-01-01'
+  },
+  {
+    propertyType: PropertyType.STRING,
+    display: 'multiline',
+    name: 'about',
+    title: 'О себе',
+    minLength: 120
   },
   {
     propertyType: PropertyType.CHOICE,
@@ -180,11 +189,11 @@ const fields: PropertySchema<TestData>[] = [
   }
 ];
 
-const value = observable(getDefaultValues(fields));
+const value = observable(getDefaultValues(testFields));
 const errors = observable([]);
 
 const emptyValue: Partial<TestData> = {};
-for (const field of fields) {
+for (const field of testFields) {
   emptyValue[field.name] = undefined;
 }
 
@@ -196,6 +205,9 @@ const validValue: TestData = {
   size: 5,
   free: true,
   birthDate: '2002-01-01',
+  about:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ',
+
   color: 'white',
   photo: new File(['Hello, world!'], 'filename.txt', { type: Mime.TEXT }),
   addr: {
@@ -220,6 +232,7 @@ const errorValue: TestData = {
   size: 8,
   free: false,
   birthDate: '1002-01-01',
+  about: 'ыц',
   color: 'brown',
   photo: new File(['Hello, world!'], 'filename.txt', { type: Mime.TEXT }),
   addr: {},
@@ -237,7 +250,7 @@ const setFormValue = action((changedValue: Partial<TestData> = {}) => {
 });
 
 function setDefaults() {
-  setFormValue(getDefaultValues(fields));
+  setFormValue(getDefaultValues(testFields));
 }
 
 function clearForm() {
@@ -253,12 +266,21 @@ function setErrorData() {
 }
 
 const validate = action(() => {
-  errors.splice(0, errors.length, ...validateFormValue<TestData>(value, fields));
+  errors.splice(0, errors.length, ...validateFormValue(value, testFields as PropertySchema[]));
 });
+
+const actionFunction = async (formValue: TestData) => {
+  await sleep(2000 * Math.random());
+  const errors = validateFormValue(formValue, testFields as PropertySchema[]);
+
+  if (errors.length) {
+    throw { errors };
+  }
+};
 
 const storyActions = (
   <>
-    <Button color='primary' startIcon={<Biotech />} id='validateData' onClick={validate}>
+    <Button startIcon={<Biotech />} id='validateData' onClick={validate}>
       Validate
     </Button>
     <Button color='success' startIcon={<CheckCircleOutline />} id='setValidData' onClick={setValidData}>
@@ -303,7 +325,7 @@ ContentOnly.args = {
 
 export const OutsideControl = Template.bind({}) as ComponentStory<typeof Form>;
 OutsideControl.args = {
-  fields: fields as PropertySchema[],
+  fields: testFields as PropertySchema[],
   value,
   onFormChange: setFormValue,
   errors,
@@ -312,9 +334,32 @@ OutsideControl.args = {
 
 export const ReadOnly = Template.bind({}) as ComponentStory<typeof Form>;
 ReadOnly.args = {
-  fields: fields as PropertySchema[],
+  fields: testFields as PropertySchema[],
   value,
   errors,
   readonly: true,
   actions: storyActions
+};
+
+export const Auto = Template.bind({}) as ComponentStory<typeof Form>;
+Auto.args = {
+  id: 'autoForm',
+  auto: true,
+  fields: testFields as PropertySchema[],
+  value,
+  actionFunction,
+  onActionSuccess: () => {
+    Toast.success('Success!');
+  },
+  onActionError: () => {
+    Toast.warn('Error!');
+  },
+  actions: (
+    <>
+      <Button form='autoForm' type='submit' startIcon={<Send />} color='primary'>
+        Send
+      </Button>
+      {storyActions}
+    </>
+  )
 };

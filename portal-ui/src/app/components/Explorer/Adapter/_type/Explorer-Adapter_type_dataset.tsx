@@ -1,26 +1,31 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { Storage } from '@mui/icons-material';
+import { SaveOutlined, Storage } from '@mui/icons-material';
 
 import {
   Dataset,
+  dataEntitySchema,
   DataTable,
   deleteDataset,
   getDataset,
   getDatasetTables,
   getDatasetTablesWithParticularOne,
-  getDataTable
+  getDataTable,
+  updateDataset
 } from '../../../../services/data.service';
-import { staticImplements } from '../../../../services/util/staticImplements';
+import { getPatch } from '../../../../services/util/patch';
+import { Emitter } from '../../../../services/common/Emitter';
 import { PageOptions, SortDir } from '../../../../services/models';
-import { getDatasetRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { Role } from '../../../../services/crg/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { Emitter } from '../../../../services/common/Emitter';
+import { staticImplements } from '../../../../services/util/staticImplements';
+import { getDatasetRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { communicationService } from '../../../../services/communication.service';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { TextBadge } from '../../../TextBadge/TextBadge';
 
 import {
+  ActionType,
   Adapter,
   AllowedActions,
   AllowedDetails,
@@ -102,7 +107,24 @@ export class ExplorerAdapterTypeDataset {
     const currentItem = await getDataset(item.payload.identifier);
 
     return {
-      delete: {
+      [ActionType.EDIT]: {
+        visible: false, // не работает на стороне сервера
+        disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER || currentItem.role === Role.CONTRIBUTOR),
+        fields: dataEntitySchema,
+        payload: item.payload as unknown as Record<string, Dataset[keyof Dataset]>,
+        actionFunction: async (value: Dataset) => {
+          await updateDataset(item.payload.identifier, getPatch(value, item.payload));
+        },
+        dialogTitle: (
+          <>
+            Редактирование набора данных
+            <TextBadge id={item.payload.identifier} />
+          </>
+        ),
+        actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' }
+      },
+
+      [ActionType.DELETE]: {
         visible: true,
         disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER),
         itemTitle: item.payload.title,
@@ -196,6 +218,6 @@ export class ExplorerAdapterTypeDataset {
   }
 
   static getRefreshEmitters(): Emitter[] {
-    return [communicationService.datasetsUpdated];
+    return [communicationService.dataTablesUpdated];
   }
 }

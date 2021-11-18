@@ -1,20 +1,28 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
+import { SaveOutlined } from '@mui/icons-material';
 import { pluralize } from 'numeralize-ru';
 
 import { isTableDeletionAllowed } from '../../../../services/crg/permissions.service';
-import { DataTable, deleteDataTable, getDataTable, getDataTableConnections } from '../../../../services/data.service';
-import { communicationService } from '../../../../services/communication.service';
+import {
+  dataEntitySchema,
+  DataTable,
+  deleteDataTable,
+  getDataTable,
+  getDataTableConnections,
+  updateDataTable
+} from '../../../../services/data.service';
+import { getPatch } from '../../../../services/util/patch';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { LayerIcon } from '../../../LayerIcon/LayerIcon.composed';
-import { Emitter } from '../../../../services/common/Emitter';
 import { getTableRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { Role } from '../../../../services/crg/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { TextBadge } from '../../../TextBadge/TextBadge';
 
-import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
+import { ActionType, Adapter, AllowedActions, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerProps } from '../../Explorer';
@@ -93,9 +101,27 @@ export class ExplorerAdapterTypeTable {
     const textProjects = pluralize(count, 'проекте', 'проектах', 'проектах');
     const textUsed = `В ${count} ${textProjects} есть слои, которые используют этот источник данных. Эти слои также будут удалены.`;
     const textNotUsed = 'Не используется в проектах.';
+    const currentItem = await getDataTable(dataset, identifier);
 
     return {
-      delete: {
+      [ActionType.EDIT]: {
+        visible: false, // не работает на стороне сервера
+        disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER || currentItem.role === Role.CONTRIBUTOR),
+        fields: dataEntitySchema,
+        payload: item.payload as unknown as Record<string, DataTable[keyof DataTable]>,
+        actionFunction: async (value: DataTable) => {
+          await updateDataTable(dataset, identifier, getPatch(value, item.payload));
+        },
+        dialogTitle: (
+          <>
+            Редактирование таблицы векторного слоя
+            <TextBadge id={identifier} />
+          </>
+        ),
+        actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' }
+      },
+
+      [ActionType.DELETE]: {
         visible: true,
         disabled: !deletionAllowed,
         itemTitle: title,
@@ -107,9 +133,5 @@ export class ExplorerAdapterTypeTable {
 
   static async deleteItem(item: ExplorerItemData<DataTable>): Promise<void> {
     await deleteDataTable(item.payload.dataset, item.payload.identifier);
-  }
-
-  static getRefreshEmitters(): Emitter[] {
-    return [communicationService.dataTablesUpdated];
   }
 }

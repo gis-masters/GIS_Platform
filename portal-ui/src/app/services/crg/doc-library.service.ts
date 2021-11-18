@@ -106,9 +106,9 @@ class DocLibraryService {
     const response = await http.get<PageableResponse<{ content: LibraryRecordRaw }>>(url, requestOptions);
 
     const libraryRecords = (response._embedded?.records || []).map(linkedHashMap => ({
-      ...(linkedHashMap.content || []),
-      libraryId: libraryId,
-      schemaId: schemaId
+      ...(linkedHashMap.content || {}),
+      libraryId,
+      schemaId
     }));
 
     return [libraryRecords, response.page.totalPages];
@@ -156,6 +156,11 @@ class DocLibraryService {
 
   async deleteRecord(libraryId: string, id: string) {
     await http.delete(await getDocLibrariesRecordUrl(libraryId, id));
+    communicationService.libraryItemsUpdated.emit();
+  }
+
+  async updateRecord(libraryId: string, id: string, patch: Partial<LibraryRecord>) {
+    await http.patch(await getDocLibrariesRecordUrl(libraryId, id), patch);
     communicationService.libraryItemsUpdated.emit();
   }
 

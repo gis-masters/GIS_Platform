@@ -238,8 +238,11 @@ class ProjectsService {
   async create(name: string): Promise<CrgProject> {
     const url = await getProjectsUrl();
     const payload = { projectName: name };
+    const result = await http.post<CrgProject>(url, payload);
 
-    return http.post<CrgProject>(url, payload);
+    communicationService.projectsUpdated.emit();
+
+    return result;
   }
 
   async getProjects(
@@ -267,9 +270,14 @@ class ProjectsService {
     );
   }
 
-  async delete(id: number) {
+  async update(id: number, patch: Partial<CrgProject>) {
     const url = await getProjectUrl(id);
-    await http.delete(url);
+    await http.patch(url, patch);
+    allProjects.update(id, patch);
+  }
+
+  async delete(id: number) {
+    await http.delete(await getProjectUrl(id));
     allProjects.delete(id);
   }
 

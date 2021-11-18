@@ -13,7 +13,7 @@ import '!style-loader!css-loader!sass-loader!./ImportGmlResultsLink.scss';
 const cnImportGmlResultsLink = cn('ImportGmlResultsLink');
 
 interface ImportGmlResultsLinkProps {
-  reports: ImportResult;
+  reports?: ImportResult;
 }
 
 @observer
@@ -21,7 +21,8 @@ export class ImportGmlResultsLink extends Component<ImportGmlResultsLinkProps> {
   @observable private open = false;
 
   render() {
-    const { importLayerReports, projectId } = this.props.reports;
+    const { reports = {} as Partial<ImportResult> } = this.props;
+    const { importLayerReports, projectId } = reports;
 
     return importLayerReports?.length ? (
       <div className={cnImportGmlResultsLink()}>

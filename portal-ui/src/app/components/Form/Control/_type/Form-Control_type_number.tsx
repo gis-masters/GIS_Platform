@@ -13,29 +13,22 @@ import '!style-loader!css-loader!sass-loader!./Form-Control_type_number.scss';
 @observer
 export class FormControlTypeNumber extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue = '', property, inSet, errors } = this.props;
-    const {
-      measureUnit,
-      title,
-      defaultValue,
-      minValue,
-      maxValue,
-      step,
-      display = 'number'
-    } = property as PropertySchemaNumber;
+    const { htmlId, className, fieldValue, property, inSet, errors } = this.props;
+    const { measureUnit, title, minValue, maxValue, step, display = 'number', name } = property as PropertySchemaNumber;
 
     return (
       <div className={cnFormControl({ inSet, type: 'number', display }, [className])}>
         {display === 'number' && (
           <TextField
             id={htmlId}
+            name={name}
             fullWidth={!inSet}
             type='number'
             InputProps={{
               endAdornment: measureUnit ? <InputAdornment position='end'>{measureUnit}</InputAdornment> : undefined,
               inputProps: { step, min: minValue, max: maxValue }
             }}
-            value={fieldValue === undefined ? defaultValue : fieldValue}
+            value={fieldValue === undefined || fieldValue === null ? '' : fieldValue}
             label={inSet ? title : undefined}
             onChange={this.handleNumberChange}
             error={!!errors?.length}
@@ -48,7 +41,7 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
         {display === 'slider' && (
           <>
             <Slider
-              value={Number(fieldValue === undefined ? defaultValue : fieldValue) || minValue}
+              value={Number(fieldValue === undefined || fieldValue === null ? '' : fieldValue) || minValue}
               valueLabelDisplay='auto'
               min={minValue}
               max={maxValue}

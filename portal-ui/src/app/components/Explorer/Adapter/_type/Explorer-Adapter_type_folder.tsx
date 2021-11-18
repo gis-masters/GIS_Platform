@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { FolderOutlined } from '@mui/icons-material';
+import { FolderOutlined, SaveOutlined } from '@mui/icons-material';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { Emitter } from '../../../../services/common/Emitter';
@@ -25,11 +25,15 @@ import {
   ExplorerItemEntityType,
   SortItem,
   AllowedActions,
-  AllowedDetails
+  AllowedDetails,
+  ActionType
 } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerUrlItem } from '../../Explorer';
+import { PropertyType } from '../../../../services/crg/schema.models';
+import { getPatch } from '../../../../services/util/patch';
+import { TextBadge } from '../../../TextBadge/TextBadge';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -105,9 +109,33 @@ export class ExplorerAdapterTypeFolder {
 
   static async getAllowedActions(item: ExplorerItemData<LibraryRecord>): Promise<AllowedActions> {
     const currentItem = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
+    const oldSchema = getSchemaWithAppliedContentType(
+      await schemaService.getSchema(item.payload.schemaId),
+      item.payload.content_type_id
+    );
+    const fields = convertSchema(oldSchema.properties).filter(
+      ({ propertyType }) => propertyType !== PropertyType.BINARY
+    );
 
     return {
-      delete: {
+      [ActionType.EDIT]: {
+        visible: true,
+        disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER || currentItem.role === Role.CONTRIBUTOR),
+        fields,
+        payload: item.payload,
+        actionFunction: async (value: LibraryRecord) => {
+          await docLibraryService.updateRecord(item.payload.libraryId, item.payload.id, getPatch(value, item.payload));
+        },
+        dialogTitle: (
+          <>
+            Редактирование папки
+            <TextBadge id={item.payload.id} />
+          </>
+        ),
+        actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' }
+      },
+
+      [ActionType.DELETE]: {
         visible: true,
         disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER),
         itemTitle: item.payload.title,

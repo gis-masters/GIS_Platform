@@ -104,17 +104,17 @@ export class ImportToProject extends Component<ImportToProjectProps> {
   }
 
   @action.bound
-  private onProjectSelected([project]: CrgProject[]) {
+  private async onProjectSelected([project]: CrgProject[]) {
     const { id, libraryId } = this.props.document;
 
-    this.doJob(libraryId, id, project.id, project.name, false);
+    await this.doJob(libraryId, id, project.id, project.name, false);
   }
 
   @action.bound
-  private onProjectAddSubmit(projectName: string) {
+  private async onProjectAddSubmit(projectName: string) {
     const { id, libraryId } = this.props.document;
 
-    this.doJob(libraryId, id, undefined, projectName, true);
+    await this.doJob(libraryId, id, undefined, projectName, true);
   }
 
   private getItemId({ id }: CrgProject): string {

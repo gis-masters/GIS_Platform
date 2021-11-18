@@ -10,9 +10,7 @@ import {
   normalizeServerErrors,
   validateFormValue
 } from '../../services/crg/formValidation.service';
-import { communicationService } from '../../services/communication.service';
-import { PropertyType, PropertySchema } from '../../services/crg/schema.models';
-import { createDataset, NewDataset } from '../../services/data.service';
+import { createDataset, dataEntitySchema, NewDataset } from '../../services/data.service';
 
 import { ExplorerStore } from '../Explorer/Explorer.store';
 
@@ -31,19 +29,6 @@ export class CreateDatasetElement extends Component<CreateDatasetElementProps> {
   @observable private formErrors?: FieldErrors[];
   @observable private serverFormErrors?: FieldErrors[];
   @observable private formValue: Partial<NewDataset> = {};
-  @observable private fields: PropertySchema<NewDataset>[] = [
-    {
-      propertyType: PropertyType.STRING,
-      title: 'Название набора данных',
-      name: 'title',
-      required: true
-    },
-    {
-      propertyType: PropertyType.STRING,
-      title: 'Описание набора данных',
-      name: 'details'
-    }
-  ];
 
   render() {
     return (
@@ -54,7 +39,7 @@ export class CreateDatasetElement extends Component<CreateDatasetElementProps> {
           open={this.dialogOpen}
           formValue={this.formValue}
           loading={this.dialogLoading}
-          fields={this.fields}
+          fields={dataEntitySchema}
           onClose={this.closeDialog}
           onCreate={this.create}
           onChange={this.setFormValue}
@@ -77,7 +62,7 @@ export class CreateDatasetElement extends Component<CreateDatasetElementProps> {
     this.setDialogLoading(false);
     this.setErrors([]);
     this.setServerErrors([]);
-    this.setFormValue(getDefaultValues(this.fields));
+    this.setFormValue(getDefaultValues(dataEntitySchema));
   }
 
   @action
@@ -92,9 +77,7 @@ export class CreateDatasetElement extends Component<CreateDatasetElementProps> {
     }
 
     try {
-      await createDataset(formValue.title, formValue.details);
-
-      communicationService.libraryItemsUpdated.emit();
+      await createDataset(formValue);
       this.closeDialog();
     } catch (error) {
       const err = error as AxiosError<{ errors?: FieldErrors[] }>;
@@ -113,7 +96,7 @@ export class CreateDatasetElement extends Component<CreateDatasetElementProps> {
   @boundMethod
   private formFieldValidateHandler(value: unknown, fieldName: string) {
     this.filterFieldErrors(fieldName);
-    this.setErrors(validateFormValue(this.formValue, this.fields));
+    this.setErrors(validateFormValue(this.formValue, dataEntitySchema));
   }
 
   @action

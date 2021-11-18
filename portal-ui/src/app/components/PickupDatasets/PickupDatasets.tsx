@@ -8,7 +8,6 @@ import { boundMethod } from 'autobind-decorator';
 
 import { Button } from '../Button/Button';
 import { Dataset } from '../../services/data.service';
-import { communicationService } from '../../services/communication.service';
 import { CreateDatasetDialog } from '../CreateDatasetDialog/CreateDatasetDialog';
 
 import { PickupDatasetsList } from './List/PickupDatasets-List';
@@ -103,7 +102,6 @@ export class PickupDatasets extends Component<PickupDatasetsProps> {
   @action.bound
   private onDatasetCreated() {
     this.creationDialogOpen = false;
-    communicationService.datasetsUpdated.emit();
   }
 
   @action

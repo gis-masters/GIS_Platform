@@ -31,35 +31,40 @@ export interface ServerFieldError {
 type FieldValidator = (
   value: unknown,
   property: PropertySchema,
-  formValue: Record<string, unknown>
+  formValue: unknown,
+  allProperties: PropertySchema[]
 ) => string[] | undefined;
 
 const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
-  string: [simpleRequired, stringLength, stringRegex, stringWellKnownRegex],
-  integer: [numberRequired, numberMinMax, numberInteger],
-  float: [numberRequired, numberMinMax],
-  bool: [simpleRequired],
-  binary: [simpleRequired],
-  dateTime: [simpleRequired, datetimeValid, datetimeMinMax],
-  choice: [choiceRequired, choiceValueInOptions],
-  set: [],
-  custom: []
+  [PropertyType.STRING]: [simpleRequired, stringLength, stringRegex, stringWellKnownRegex],
+  [PropertyType.INT]: [numberRequired, numberMinMax, numberInteger],
+  [PropertyType.FLOAT]: [numberRequired, numberMinMax],
+  [PropertyType.BOOL]: [simpleRequired],
+  [PropertyType.BINARY]: [simpleRequired],
+  [PropertyType.DATETIME]: [simpleRequired, datetimeValid, datetimeMinMax],
+  [PropertyType.CHOICE]: [choiceRequired, choiceValueInOptions],
+  [PropertyType.SET]: [],
+  [PropertyType.CUSTOM]: []
 };
 
-function validateField(value: unknown, property: PropertySchema, formValue: Record<string, unknown>): string[] {
-  return fieldValidators[property.propertyType]
-    ?.flatMap(validator => validator(value, property, formValue))
-    .filter(err => err);
+export function validateFieldValue(
+  value: unknown,
+  property: PropertySchema,
+  formValue: unknown,
+  allProperties: PropertySchema[]
+): FieldErrors {
+  return {
+    field: property.name,
+    messages: fieldValidators[property.propertyType]
+      ?.flatMap(validator => validator(value, property, formValue, allProperties))
+      .filter(err => err)
+  };
 }
 
-export function validateFormValue<T extends Record<string, unknown> = Record<string, unknown>>(
-  formValue: Partial<T>,
-  fields: PropertySchema<T>[]
-): FieldErrors[] {
-  return fields.map(field => ({
-    field: field.name,
-    messages: validateField(formValue[field.name], field as PropertySchema, formValue)
-  })) as FieldErrors[];
+export function validateFormValue(formValue: unknown, fields: PropertySchema[]): FieldErrors[] {
+  return fields
+    .map(field => validateFieldValue(formValue[field.name], field, formValue, fields))
+    .filter(({ messages }) => messages?.length);
 }
 
 // common
@@ -79,7 +84,7 @@ function choiceRequired(value: unknown, { required }: PropertySchema): string[] 
 }
 
 function choiceValueInOptions(value: unknown, { options }: PropertySchemaChoice): string[] | undefined {
-  if (value && !options.some(option => option.value === value)) {
+  if (value && !options.some(option => String(option.value) === String(value))) {
     return [messages.required];
   }
 }

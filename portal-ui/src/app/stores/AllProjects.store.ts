@@ -2,6 +2,7 @@ import { observable, computed, action } from 'mobx';
 
 import { CrgProject } from '../services/crg/projects.models';
 import { filterObjects } from '../services/util/filterObjects';
+import { patch } from '../services/util/patch';
 import { sortObjects } from '../services/util/sortObjects';
 
 class AllProjects {
@@ -41,10 +42,19 @@ class AllProjects {
   }
 
   @action
-  delete(id: number) {
-    const index = this._list.findIndex(project => project.id === id);
+  update(id: number, patchData: Partial<CrgProject>) {
+    if (this._list) {
+      const project = this._list.find(project => project.id === id);
+      patch(project, patchData);
+    }
+  }
 
-    this._list.splice(index, 1);
+  @action
+  delete(id: number) {
+    if (this._list) {
+      const index = this._list.findIndex(project => project.id === id);
+      this._list.splice(index, 1);
+    }
   }
 
   @action

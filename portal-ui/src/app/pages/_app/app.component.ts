@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy, OnChanges, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, OnChanges } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
@@ -9,15 +9,13 @@ import { Toast } from '../../components/Toast/Toast';
 
 @Component({
   selector: 'crg-root',
-  templateUrl: './app.component.html',
-  encapsulation: ViewEncapsulation.None,
-  styleUrls: ['../../../../node_modules/react-toastify/dist/ReactToastify.css']
+  templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('reactToastContainer', { read: ElementRef, static: true }) refToastContainer: ElementRef;
 
   constructor(private logger: NGXLogger) {
-    this.getEnv();
+    void this.getEnv();
   }
 
   ngOnInit() {
@@ -36,7 +34,7 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
 
   private addOnErrorWindowHandler() {
     const oldOnError = window.onerror;
-
+    // eslint-disable-next-line unicorn/prefer-add-event-listener
     window.onerror = function (
       event: Event | string,
       source?: string,
@@ -44,7 +42,8 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
       columnNumber?: number,
       error?: Error
     ) {
-      if (oldOnError) oldOnError.apply(this, arguments);
+      // eslint-disable-next-line prefer-rest-params
+      if (oldOnError) Reflect.apply(oldOnError, this, arguments);
 
       Toast.error({
         source,

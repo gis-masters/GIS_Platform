@@ -123,7 +123,6 @@ export class Projects extends Component {
 
     try {
       const newProject = await projectsService.create(name);
-      communicationService.projectsUpdated.emit();
       communicationService.allProjectsFetched.once(() => {
         communicationService.projectCreated.emit(newProject);
       });

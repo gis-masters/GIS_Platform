@@ -13,11 +13,11 @@ import { FormErrors } from '../../Errors/Form-Errors';
 class FormControlTypeBinary extends Component<FormControlProps> {
   render() {
     const { htmlId, className, errors, property, fieldValue } = this.props;
-    const { accept } = property as PropertySchemaBinary;
+    const { accept, name } = property as PropertySchemaBinary;
 
     return (
       <div className={cnFormControl(null, [className])}>
-        <FileInput accept={accept} id={htmlId} onChange={this.handleChange} value={fieldValue as string} />
+        <FileInput accept={accept} id={htmlId} onChange={this.handleChange} value={fieldValue as string} name={name} />
         <FormErrors errors={errors} />
       </div>
     );

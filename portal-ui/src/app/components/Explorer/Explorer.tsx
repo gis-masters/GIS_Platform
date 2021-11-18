@@ -215,7 +215,7 @@ export class Explorer extends Component<ExplorerProps> {
           this.subscribedRefreshEmitterTypes.push(child.type);
 
           getRefreshEmitters(child).forEach(emitter => {
-            emitter.on(this.refresh);
+            emitter.on(this.refresh, this);
           });
         }
       });

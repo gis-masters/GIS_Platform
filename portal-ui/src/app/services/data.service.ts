@@ -6,11 +6,12 @@ import {
   getTableConnectionsUrl
 } from './server-urls.service';
 import { CrgLayer, CrgProject } from './crg/projects.models';
+import { PropertySchema, PropertyType } from './crg/schema.models';
 import { PageableResponse, PageOptions, SortDir } from './models';
-import { Role } from './crg/permissions.models';
-import { http } from './http.service';
 import { communicationService } from './communication.service';
 import { preparePageOptions } from './http.utils';
+import { Role } from './crg/permissions.models';
+import { http } from './http.service';
 
 export enum DataEntityType {
   DATASET = 'SCHEMA',
@@ -35,6 +36,20 @@ export interface Dataset extends DataEntity {
 }
 
 export type NewDataset = Pick<Dataset, 'title' | 'details'>;
+
+export const dataEntitySchema: PropertySchema<NewDataset>[] = [
+  {
+    propertyType: PropertyType.STRING,
+    title: 'Название набора данных',
+    name: 'title',
+    required: true
+  },
+  {
+    propertyType: PropertyType.STRING,
+    title: 'Описание набора данных',
+    name: 'details'
+  }
+];
 
 export interface DataTable extends DataEntity {
   type: DataEntityType.TABLE;
@@ -132,6 +147,15 @@ export async function getDataTable(datasetId: string, identifier: string): Promi
   return { ...response, dataset: datasetId };
 }
 
+export async function updateDataTable(
+  datasetId: string,
+  dataTableId: string,
+  patch: Partial<DataTable>
+): Promise<void> {
+  await http.patch(await getDatasetTableUrl(datasetId, dataTableId), patch);
+  communicationService.dataTablesUpdated.emit();
+}
+
 export async function deleteDataTable(datasetId: string, dataTableId: string): Promise<void> {
   await http.delete(await getDatasetTableUrl(datasetId, dataTableId));
   communicationService.dataTablesUpdated.emit();
@@ -139,6 +163,11 @@ export async function deleteDataTable(datasetId: string, dataTableId: string): P
 
 export async function deleteDataset(identifier: string): Promise<void> {
   await http.delete(await getDatasetUrl(identifier));
+  communicationService.datasetsUpdated.emit();
+}
+
+export async function updateDataset(identifier: string, patch: Partial<Dataset>): Promise<void> {
+  await http.patch(await getDatasetUrl(identifier), patch);
   communicationService.datasetsUpdated.emit();
 }
 
@@ -151,8 +180,9 @@ export async function getDataTableConnections(dataTableId: string): Promise<Data
   return await http.get<DataTableConnection[]>(await getTableConnectionsUrl(), { params });
 }
 
-export async function createDataset(title: string, details: string): Promise<void> {
-  await http.post(await getDatasetsUrl(), { title, details });
+export async function createDataset(newDataset: NewDataset): Promise<void> {
+  await http.post(await getDatasetsUrl(), newDataset);
+  communicationService.datasetsUpdated.emit();
 }
 
 export function tablesEqual(firstTable: DataTable, ...otherTables: DataTable[]): boolean {

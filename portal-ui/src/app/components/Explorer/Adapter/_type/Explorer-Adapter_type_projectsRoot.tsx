@@ -1,10 +1,12 @@
 import React, { ReactNode } from 'react';
 import { MapOutlined } from '@mui/icons-material';
 
-import { PageOptions, SortDir } from '../../../../services/models';
+import { communicationService } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { projectsService } from '../../../../services/crg/projects.service';
 import { CrgProject } from '../../../../services/crg/projects.models';
+import { PageOptions, SortDir } from '../../../../services/models';
+import { Emitter } from '../../../../services/common/Emitter';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerUrlItem } from '../../Explorer';
@@ -92,5 +94,9 @@ export class ExplorerAdapterTypeProjectsRoot {
 
   static getChildrenFilterLabel(): string {
     return 'Поиск по названию';
+  }
+
+  static getRefreshEmitters(): Emitter[] {
+    return [communicationService.projectsUpdated, communicationService.projectCreated as Emitter];
   }
 }

@@ -12,7 +12,7 @@ import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 import { BasemapDetails } from '../../../BasemapDetails/BasemapDetails';
 import { ConnectionsBasemapToProjectsWidget } from '../../../ConnectionsBasemapToProjectsWidget/ConnectionsBasemapToProjectsWidget';
 import { ExplorerProps } from '../../Explorer';
-import { Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';
+import { ActionType, Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -66,7 +66,7 @@ export class ExplorerAdapterTypeBasemap {
     const textProjects = pluralize(count, 'проекте', 'проектах', 'проектах');
 
     return {
-      delete: {
+      [ActionType.DELETE]: {
         visible: true,
         disabled: !deletionAllowed,
         itemTitle: item.payload.title,

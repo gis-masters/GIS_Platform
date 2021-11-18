@@ -20,6 +20,7 @@ class FormControlTypeBool extends Component<FormControlProps> {
     return (
       <div className={cnFormControl({ inSet }, [className])}>
         <Checkbox
+          name={property.name}
           checked={Boolean(fieldValue)}
           onChange={this.handleChange}
           inputProps={{ id: htmlId }}

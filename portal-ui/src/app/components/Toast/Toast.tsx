@@ -7,6 +7,7 @@ import nl2br from 'react-nl2br';
 import { IconButton } from '@mui/material';
 import { CheckCircle, Error, Info, Warning, Close } from '@mui/icons-material';
 import { SvgIconProps } from '@mui/material/SvgIcon/';
+import '!style-loader!css-loader!sass-loader!../../../../node_modules/react-toastify/dist/ReactToastify.css';
 
 import { env } from '../../stores/Env.store';
 import { sendTelegramError } from '../../services/telegram.service';

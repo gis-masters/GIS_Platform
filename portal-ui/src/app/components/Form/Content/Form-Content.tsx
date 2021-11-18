@@ -19,9 +19,9 @@ const cnFormContent = cn('Form', 'Content');
 
 interface FormContentProps<T extends Record<string, unknown>> extends IClassNameProps {
   fields?: PropertySchema<T>[];
-  formValue: T;
+  formValue: Partial<T>;
   errors?: FieldErrors[];
-  onFormChange?: (changedValue: T) => void;
+  onFormChange?: (changedValue: Partial<T>) => void;
   onFieldChange?: (value: T[keyof T], propertyName: keyof T) => void;
   onFieldNeedValidate?: (value: T[keyof T], propertyName: keyof T) => void;
   readonly?: boolean;
@@ -47,7 +47,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
 
           return (
             <FormField key={i}>
-              <FormLabel htmlFor={htmlId} required={propertySchema.required}>
+              <FormLabel htmlFor={htmlId} required={propertySchema.required} readonly={readonly}>
                 {propertySchema.title}
               </FormLabel>
               {readonly ? (

@@ -1,0 +1,115 @@
+import React, { Component, ReactNode } from 'react';
+import { action, observable } from 'mobx';
+import { observer } from 'mobx-react';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { boundMethod } from 'autobind-decorator';
+import { cn } from '@bem-react/classname';
+
+import { generateRandomId } from '../../services/util/randomId';
+import { PropertySchema } from '../../services/crg/schema.models';
+import { getDefaultValues } from '../../services/crg/formValidation.service';
+import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
+import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
+import { Button, ButtonProps } from '../Button/Button';
+import { Form } from '../Form/Form';
+
+const cnFormDialog = cn('FormDialog');
+
+interface FormDialogProps<T extends Record<string, unknown>> {
+  title?: ReactNode;
+  fields: PropertySchema<T>[];
+  value?: T;
+  open: boolean;
+  onClose(): void;
+  onSuccess?(): void;
+  onError?(): void;
+  additionalAction?: ReactNode;
+  actionButtonProps?: Omit<ButtonProps, 'ref'>;
+  actionFunction: (value: T) => Promise<void>;
+}
+
+@observer
+export class FormDialog<T extends Record<string, unknown> = Record<string, unknown>> extends Component<
+  FormDialogProps<T>
+> {
+  @observable private busy = false;
+  private formInvoke: { reset?(): void } = {};
+
+  render() {
+    const {
+      title,
+      open,
+      fields,
+      value = getDefaultValues(fields),
+      additionalAction,
+      actionButtonProps = {},
+      actionFunction
+    } = this.props;
+    const htmlId = generateRandomId();
+
+    return (
+      <Dialog PaperProps={{ className: cnFormDialog() }} open={open} onClose={this.close}>
+        {title && <DialogTitle>{title}</DialogTitle>}
+        <DialogContent className='scroll'>
+          <Form
+            id={htmlId}
+            className={cnFormDialog()}
+            fields={fields}
+            value={value}
+            auto
+            onFormSubmit={this.submitHandler}
+            onActionSuccess={this.successHandler}
+            onActionError={this.errorHandler}
+            actionFunction={actionFunction}
+            invoke={this.formInvoke}
+          />
+        </DialogContent>
+        <DialogActions>
+          <DialogActionsLeft>{additionalAction}</DialogActionsLeft>
+          <DialogActionsRight>
+            <Button form={htmlId} color='primary' loading={this.busy} type='submit' {...actionButtonProps}>
+              {actionButtonProps.children || 'Отправить'}
+            </Button>
+            <Button onClick={this.close}>Отмена</Button>
+          </DialogActionsRight>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+
+  @boundMethod
+  private submitHandler() {
+    this.setBusy(true);
+  }
+
+  @boundMethod
+  private errorHandler() {
+    const { onError } = this.props;
+    this.setBusy(false);
+    if (onError) {
+      onError();
+    }
+  }
+
+  @boundMethod
+  private successHandler() {
+    const { onSuccess } = this.props;
+    this.setBusy(false);
+    if (onSuccess) {
+      onSuccess();
+    }
+    this.close();
+  }
+
+  @action
+  private setBusy(busy: boolean) {
+    this.busy = busy;
+  }
+
+  @boundMethod
+  private close() {
+    const { onClose } = this.props;
+    this.formInvoke?.reset();
+    onClose();
+  }
+}

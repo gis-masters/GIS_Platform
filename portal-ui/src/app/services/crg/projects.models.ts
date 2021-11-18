@@ -1,4 +1,5 @@
 import { Role } from './permissions.models';
+import { PropertySchema, PropertyType } from './schema.models';
 
 export enum CrgLayerType {
   VECTOR = 'vector',
@@ -85,3 +86,14 @@ export interface CrgProject {
   createdAt: string;
   role: Role;
 }
+
+export const crgProjectSchema: PropertySchema<CrgProject>[] = [
+  {
+    propertyType: PropertyType.STRING,
+    title: 'Название',
+    name: 'name',
+    required: true,
+    minLength: 3,
+    maxLength: 250
+  }
+];

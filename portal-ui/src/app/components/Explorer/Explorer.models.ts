@@ -1,8 +1,9 @@
 import React, { ReactNode } from 'react';
-import { ButtonProps } from '@mui/material';
 
+import { PropertySchema } from '../../services/crg/schema.models';
 import { PageOptions, SortDir } from '../../services/models';
 import { Emitter } from '../../services/common/Emitter';
+import { ButtonProps } from '../Button/Button';
 
 import { ExplorerStore } from './Explorer.store';
 import { ExplorerProps, ExplorerUrlItem } from './Explorer';
@@ -29,7 +30,7 @@ export enum ExplorerItemType {
 
 export enum ExplorerItemEntityType {
   DATASET = 'набора данных',
-  TABLE = 'табилцы',
+  TABLE = 'таблицы',
 
   LIBRARY = 'библиотеки',
   FOLDER = 'папки',
@@ -97,27 +98,45 @@ export interface Adapter {
   isDeleteAllowed?: (item: ExplorerItemData) => Promise<AllowedDetails>;
 }
 
-enum ActionType {
+export enum ActionType {
+  EDIT = 'edit',
   DELETE = 'delete',
   DOWNLOAD = 'download',
   INTEGRATION_SED = 'integration_sed'
 }
 
-export type AllowedActions = { [key in ActionType]?: ActionDetails };
+export type AllowedActions = {
+  [ActionType.EDIT]?: ActionDetailsEdit;
+  [ActionType.DOWNLOAD]?: ActionDetailsDownload;
+  [ActionType.DELETE]?: ActionDetailsDelete;
+  [ActionType.INTEGRATION_SED]?: ActionDetailsIntegrationSed;
+};
 
-export interface ActionDetails {
+interface ActionDetailsCommon {
   visible?: boolean;
   disabled?: boolean;
+}
+
+export interface ActionDetailsEdit extends ActionDetailsCommon {
+  fields: PropertySchema[];
+  payload: unknown;
+  actionFunction(data: unknown): Promise<void>;
+  actionButtonProps?: Omit<ButtonProps, 'ref'>;
+  dialogTitle?: ReactNode;
+}
+
+export interface ActionDetailsDownload extends ActionDetailsCommon {
+  url: string;
+  fileName: string;
+}
+
+export interface ActionDetailsDelete extends ActionDetailsCommon {
+  itemTitle: string;
   needConfirmation?: boolean;
   confirmationText?: string;
-  text?: string;
-  title?: string;
-  itemTitle?: string;
-  confirmationMood?: 'normal' | 'warning';
-  url?: string;
-  fileName?: string;
-  btnProps?: Omit<Partial<ButtonProps>, 'ref'>;
 }
+
+export type ActionDetailsIntegrationSed = ActionDetailsCommon;
 
 export interface AllowedDetails {
   ok: boolean;

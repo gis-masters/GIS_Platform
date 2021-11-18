@@ -1,21 +1,33 @@
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Tooltip
+} from '@mui/material';
+import { SendAndArchive, SendAndArchiveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { sendToSed } from '../../../services/crg/integration.service';
+import { boundMethod } from 'autobind-decorator';
+import { AxiosError } from 'axios';
 
+import { LibraryRecord } from '../../../services/crg/doc-library.service';
+import { sendToSed } from '../../../services/crg/integration.service';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
-import { ActionDetails, ExplorerItemData } from '../Explorer.models';
-import { LibraryRecord } from '../../../services/crg/doc-library.service';
 
-const cnExplorerActionDelete = cn('Explorer', 'ActionDelete');
+import { ActionDetailsIntegrationSed } from '../Explorer.models';
+import { ExplorerStore } from '../Explorer.store';
+
+const cnExplorerActionIntegrationSed = cn('Explorer', 'ActionIntegrationSed');
 
 interface ExplorerActionIntegrationSedProps {
-  selectedItem: ExplorerItemData;
-  actionDetails: ActionDetails;
+  store: ExplorerStore;
+  actionDetails: ActionDetailsIntegrationSed;
 }
 
 @observer
@@ -25,21 +37,24 @@ export class ExplorerActionIntegrationSed extends Component<ExplorerActionIntegr
 
   render() {
     const { actionDetails } = this.props;
-    const { visible, disabled, needConfirmation, confirmationText } = actionDetails;
+    const { visible, disabled } = actionDetails;
 
     return (
       visible && (
         <>
-          <Button className={cnExplorerActionDelete()} onClick={this.openDialog} disabled={disabled}>
-            Отправить в СЕД
-          </Button>
+          <Tooltip title='Отправить в СЭД "Диалог"'>
+            <span>
+              <IconButton className={cnExplorerActionIntegrationSed()} onClick={this.openDialog} disabled={disabled}>
+                {this.dialogOpen ? <SendAndArchive /> : <SendAndArchiveOutlined />}
+              </IconButton>
+            </span>
+          </Tooltip>
 
-          <Dialog open={this.dialogOpen && needConfirmation} onClose={this.closeDialog}>
+          <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
             <DialogTitle>Подтверждение отправки</DialogTitle>
             <DialogContent>
-              <DialogContentText>{confirmationText}</DialogContentText>
               <DialogContentText>
-                Вы действительно хотите отправить документ в систему электронного документооборота СЕД "Диалог"?
+                Вы действительно хотите отправить документ в систему электронного документооборота СЭД "Диалог"?
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -57,18 +72,17 @@ export class ExplorerActionIntegrationSed extends Component<ExplorerActionIntegr
   @boundMethod
   private async send() {
     this.setBtnLoading(true);
-    const { selectedItem } = this.props;
+    const { selectedItem } = this.props.store;
     const record = selectedItem.payload as LibraryRecord;
 
     try {
       await sendToSed(record.libraryId, record.id);
-    } catch (e) {
-      const { status } = e.response;
+    } catch (error) {
+      const { status } = (error as AxiosError)?.response;
 
       Toast.error({
-        message: 'Система электронного документооборота СЕД "Диалог" недоступна',
-        canBeSuppressed: true,
-        details: `\n Status: ${status}`
+        message: 'Система электронного документооборота СЭД "Диалог" недоступна',
+        details: `Status: ${status}`
       });
     } finally {
       this.setBtnLoading(false);
