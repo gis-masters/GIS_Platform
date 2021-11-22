@@ -59,6 +59,12 @@ public class Layer implements Identifiable<Long> {
     @Column
     private String dataSourceUri;
 
+    @Column
+    private String libraryId;
+
+    @Column
+    private Long recordId;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -86,6 +92,8 @@ public class Layer implements Identifiable<Long> {
         dataStoreName = dto.getDataStoreName();
         nativeCRS = dto.getNativeCRS();
         dataSourceUri = dto.getDataSourceUri();
+        libraryId = dto.getLibraryId();
+        recordId = dto.getRecordId();
 
         enabled = Boolean.parseBoolean(dto.getEnabled());
         position = dto.getPosition();
@@ -256,36 +264,38 @@ public class Layer implements Identifiable<Long> {
         this.dataset = datasets;
     }
 
+    public String getLibraryId() {
+        return libraryId;
+    }
+
+    public void setLibraryId(String libraryId) {
+        this.libraryId = libraryId;
+    }
+
+    public Long getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Long recordId) {
+        this.recordId = recordId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Layer)) {
             return false;
         }
         Layer layer = (Layer) o;
-        return getId() == layer.getId() &&
-                isEnabled() == layer.isEnabled() &&
-                getPosition() == layer.getPosition() &&
-                getTransparency() == layer.getTransparency() &&
-                getMaxZoom() == layer.getMaxZoom() &&
-                getMinZoom() == layer.getMinZoom() &&
-                Objects.equals(getTitle(), layer.getTitle()) &&
-                Objects.equals(getDataset(), layer.getDataset()) &&
-                getTableName().equals(layer.getTableName()) &&
-                getType().equals(layer.getType()) &&
-                Objects.equals(getStyleName(), layer.getStyleName()) &&
-                Objects.equals(getNativeCRS(), layer.getNativeCRS()) &&
-                Objects.equals(getDataStoreName(), layer.getDataStoreName()) &&
-                getSchemaId().equals(layer.getSchemaId()) &&
-                Objects.equals(getDataSourceUri(), layer.getDataSourceUri());
+
+        return getId() == layer.getId() && getTitle().equals(layer.getTitle()) && getTableName().equals(
+                layer.getTableName()) && getType().equals(layer.getType());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTitle(), getDataset(), getTableName(), getType(), isEnabled(), getPosition(),
-                            getTransparency(), getMaxZoom(), getMinZoom(), getStyleName(), getNativeCRS(),
-                            getDataStoreName(), getSchemaId(), getDataSourceUri());
+        return Objects.hash(getId(), getTitle(), getTableName(), getType());
     }
 }

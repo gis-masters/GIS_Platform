@@ -36,7 +36,7 @@ public class RasterLayerHandler implements ILayerHandler {
         log.debug("Try create raster layer");
 
         if (layerRepository.findByTableNameAndProjectAndType(dto.getTableName(), project, dto.getType()).isPresent()) {
-            throw new ConflictException("Raster layer with same tableName already exist");
+            throw new ConflictException("Уже существует растровый слой указывающий на таблицу: " + dto.getTableName());
         }
 
         String workspaceName = getScratchWorkspaceName(authenticationFacade.getOrganizationId());

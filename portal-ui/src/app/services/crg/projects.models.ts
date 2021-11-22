@@ -28,6 +28,8 @@ export interface CrgLayer extends CrgEntity {
   complexName: string;
   dataSourceUri?: string;
   parentId?: number;
+  libraryId?: string;
+  recordId?: number;
 }
 
 export type NewCrgLayer = Pick<

@@ -20,6 +20,8 @@ public class LayerProjection {
     private final String dataSourceUri;
     private final Long parentId;
     private final String complexName;
+    private final String libraryId;
+    private final Long recordId;
 
     public LayerProjection(Layer layer, String orgWorkspaceName) {
         this.id = layer.getId();
@@ -37,6 +39,8 @@ public class LayerProjection {
         this.schemaId = layer.getSchemaId();
         this.dataSourceUri = layer.getDataSourceUri();
         this.parentId = layer.getParent() != null ? layer.getParent().getId(): null;
+        this.libraryId = layer.getLibraryId();
+        this.recordId = layer.getRecordId();
         this.complexName = orgWorkspaceName + ":" + tableName;
     }
 
@@ -102,5 +106,13 @@ public class LayerProjection {
 
     public String getComplexName() {
         return complexName;
+    }
+
+    public String getLibraryId() {
+        return libraryId;
+    }
+
+    public Long getRecordId() {
+        return recordId;
     }
 }

@@ -91,6 +91,14 @@ public class CrgLayerValidator implements Validator {
         if (dto.getDataSourceUri() == null) {
             errors.rejectValue("dataSourceUri", REQUIRED, DEFAULT_R_MESSAGE);
         }
+
+        if (dto.getLibraryId() == null) {
+            errors.rejectValue("libraryId", REQUIRED, DEFAULT_R_MESSAGE);
+        }
+
+        if (dto.getRecordId() == null) {
+            errors.rejectValue("recordId", REQUIRED, DEFAULT_R_MESSAGE);
+        }
     }
 
     private void validateAsExternal(@NotNull Errors errors, LayerCreateDto dto) {

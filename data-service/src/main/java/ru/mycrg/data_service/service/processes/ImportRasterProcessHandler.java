@@ -175,6 +175,7 @@ public class ImportRasterProcessHandler implements IProcessHandler {
             String layerName = StringUtils.getFilename(path);
             String dataStoreName = "store_" + layerName;
             String dataSourceUri = "file://" + record.getInnerPath();
+            String libraryId = importInitialData.getSource().getLibraryId();
 
             RequestBody payload = RequestBody.create(
                     MediaType.parse("application/json"),
@@ -184,7 +185,9 @@ public class ImportRasterProcessHandler implements IProcessHandler {
                             "    \"nativeCRS\": \"" + record.getAsString("native_crs") + "\"," +
                             "    \"tableName\": \"" + layerName + "\"," +
                             "    \"dataStoreName\": \"" + dataStoreName + "\"," +
-                            "    \"dataSourceUri\": \"" + dataSourceUri + "\"" +
+                            "    \"dataSourceUri\": \"" + dataSourceUri + "\"," +
+                            "    \"libraryId\": \"" + libraryId + "\"," +
+                            "    \"recordId\": \"" + record.getId() + "\"" +
                             "}");
 
             Request request = new Request.Builder()

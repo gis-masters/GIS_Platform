@@ -61,6 +61,11 @@ public class LayerCreateDto {
     @Length(min = 6, max = 255)
     private String dataSourceUri;
 
+    @Length(min = 3, max = 255)
+    private String libraryId;
+
+    private Long recordId;
+
     public LayerCreateDto() {
         //Required by framework
     }
@@ -185,6 +190,22 @@ public class LayerCreateDto {
         this.dataSourceUri = dataSourceUri;
     }
 
+    public String getLibraryId() {
+        return libraryId;
+    }
+
+    public void setLibraryId(String libraryId) {
+        this.libraryId = libraryId;
+    }
+
+    public Long getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Long recordId) {
+        this.recordId = recordId;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -202,7 +223,9 @@ public class LayerCreateDto {
                 "\"schemaId\":" + (schemaId == null ? "null" : "\"" + schemaId + "\"") + ", " +
                 "\"dataStoreName\":" + (dataStoreName == null ? "null" : "\"" + dataStoreName + "\"") + ", " +
                 "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
-                "\"dataSourceUri\":" + (dataSourceUri == null ? "null" : "\"" + dataSourceUri + "\"") +
+                "\"dataSourceUri\":" + (dataSourceUri == null ? "null" : "\"" + dataSourceUri + "\"") + ", " +
+                "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
+                "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") +
                 "}";
     }
 }
