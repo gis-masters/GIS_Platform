@@ -12,18 +12,11 @@ import {
 } from '../../services/crg/formValidation.service';
 import { createDataset, dataEntitySchema, NewDataset } from '../../services/data.service';
 
-import { ExplorerStore } from '../Explorer/Explorer.store';
-
 import { CreateDatasetElementDialog } from './Dialog/CreateDatasetElement-Dialog';
 import { CreateDatasetElementButton } from './Button/CreateDatasetElement-Button';
 
-export interface CreateDatasetElementProps {
-  store: ExplorerStore;
-  path?: string;
-}
-
 @observer
-export class CreateDatasetElement extends Component<CreateDatasetElementProps> {
+export class CreateDatasetElement extends Component {
   @observable private dialogOpen = false;
   @observable private dialogLoading = false;
   @observable private formErrors?: FieldErrors[];

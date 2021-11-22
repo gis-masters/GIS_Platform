@@ -21,10 +21,6 @@ export interface DocumentLibrary extends DataEntity {
   role: Role;
 }
 
-export interface CrgDocument {
-  id: string;
-}
-
 export interface LibraryRecord {
   [key: string]: unknown;
 
@@ -147,9 +143,15 @@ class DocLibraryService {
     }
   }
 
-  async createRecord(libraryId: string, data: LibraryRecordRaw): Promise<CrgDocument> {
-    const record = await http.post<CrgDocument>(await getDocLibrariesRecordsUrl(libraryId), this.prepareFormData(data));
-    communicationService.libraryItemsUpdated.emit();
+  async createRecord(libraryId: string, data: LibraryRecordRaw, update = true): Promise<LibraryRecord> {
+    const record = await http.post<LibraryRecord>(
+      await getDocLibrariesRecordsUrl(libraryId),
+      this.prepareFormData(data)
+    );
+
+    if (update) {
+      communicationService.libraryItemsUpdated.emit();
+    }
 
     return record;
   }

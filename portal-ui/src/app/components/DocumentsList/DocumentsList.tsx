@@ -10,7 +10,7 @@ import { services } from '../../services/services';
 import { EditedField } from '../../services/crg/schemaOld.models';
 import { EditFeatureInfo } from '../EditFeatureField/EditFeatureField';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { CrgDocument, docLibraryService } from '../../services/crg/doc-library.service';
+import { docLibraryService, LibraryRecord } from '../../services/crg/doc-library.service';
 
 import { DocumentsListItem } from './Item/DocumentsList-Item';
 
@@ -142,7 +142,7 @@ export class DocumentsList extends Component<DocumentsListProps> {
     }
   }
 
-  private preparePayload(loadedDocument: CrgDocument, title: string): string {
+  private preparePayload(loadedDocument: LibraryRecord, title: string): string {
     return JSON.stringify([...(this.props.documents || []), { id: loadedDocument.id, title }]);
   }
 }

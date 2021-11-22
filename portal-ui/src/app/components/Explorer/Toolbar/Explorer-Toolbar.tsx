@@ -7,6 +7,7 @@ import { ExplorerToolbarDivider } from '../ToolbarDivider/Explorer-ToolbarDivide
 import { ExplorerPageSize } from '../PageSize/Explorer-PageSize';
 import { ExplorerFilter } from '../Filter/Explorer-Filter';
 import { ExplorerSort } from '../Sort/Explorer-Sort';
+import { ExplorerService } from '../Explorer.service';
 
 import '!style-loader!css-loader!sass-loader!./Explorer-Toolbar.scss';
 
@@ -14,17 +15,18 @@ const cnExplorerToolbar = cn('Explorer', 'Toolbar');
 
 interface ExplorerToolbarProps {
   store: ExplorerStore;
+  service: ExplorerService;
   onChange: () => void;
 }
 
-export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({ store, onChange }) => {
+export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({ store, service, onChange }) => {
   return (
     <div className={cnExplorerToolbar()}>
       <ExplorerFilter store={store} onChange={onChange} />
       <ExplorerSort store={store} onChange={onChange} />
       <ExplorerPageSize store={store} onChange={onChange} />
       <ExplorerToolbarDivider />
-      <ExplorerToolbarActions store={store} />
+      <ExplorerToolbarActions service={service} store={store} />
     </div>
   );
 };

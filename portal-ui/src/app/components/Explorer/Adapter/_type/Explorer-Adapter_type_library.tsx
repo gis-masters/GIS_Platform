@@ -25,6 +25,7 @@ import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, So
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerUrlItem } from '../../Explorer';
+import { ExplorerService } from '../../Explorer.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -199,8 +200,12 @@ export class ExplorerAdapterTypeLibrary {
     return 'Поиск по названию';
   }
 
-  static getToolbarActions(item: ExplorerItemData<DocumentLibrary>, store: ExplorerStore): ReactNode {
-    return <CreateLibraryElement schemaId={item.payload.schemaId} store={store} />;
+  static getToolbarActions(
+    item: ExplorerItemData<DocumentLibrary>,
+    store: ExplorerStore,
+    service: ExplorerService
+  ): ReactNode {
+    return <CreateLibraryElement schemaId={item.payload.schemaId} onCreate={service.createHandler} store={store} />;
   }
 
   static getEmptyListView(): ReactNode {

@@ -13,12 +13,11 @@ import {
   normalizeServerErrors,
   validateFormValue
 } from '../../services/crg/formValidation.service';
-import { communicationService } from '../../services/communication.service';
 import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
 import { ContentType, OldFeatureDescription } from '../../services/crg/schemaOld.models';
 import { docLibraryService, LibraryRecord, LibraryRecordRaw } from '../../services/crg/doc-library.service';
 import { PropertySchema } from '../../services/crg/schema.models';
-import { ExplorerItemType } from '../Explorer/Explorer.models';
+import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { ExplorerStore } from '../Explorer/Explorer.store';
 
 import { CreateLibraryElementDialog } from './Dialog/CreateLibraryElement-Dialog';
@@ -28,6 +27,7 @@ import { CreateLibraryElementFolderButton } from './FolderButton/CreateLibraryEl
 export interface CreateLibraryElementsProps {
   schemaId: string;
   store: ExplorerStore;
+  onCreate: (explorerItem: ExplorerItemData) => void;
   path?: string;
 }
 
@@ -88,7 +88,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   }
 
   @computed
-  private get folderContentType(): ContentType {
+  private get folderContentType(): ContentType | undefined {
     const contentTypes = this.schema?.contentTypes || [];
 
     return contentTypes.find(({ type }) => type === 'FOLDER');
@@ -101,6 +101,15 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     }
 
     return getSchemaWithAppliedContentType(this.schema, this.contentTypeId);
+  }
+
+  @computed
+  private get isEditingElementFolder(): boolean | null {
+    if (!this.schema) {
+      return null;
+    }
+
+    return this.contentTypeId && this.folderContentType?.id === this.contentTypeId;
   }
 
   @computed
@@ -163,9 +172,19 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     }
 
     try {
-      await docLibraryService.createRecord(this.schema.tableName, formData);
+      const record = await docLibraryService.createRecord(this.schema.tableName, formData, false);
 
-      communicationService.libraryItemsUpdated.emit();
+      if (!record.libraryId) {
+        record.libraryId = this.schema.tableName;
+      }
+
+      const explorerItem = {
+        payload: record,
+        type: this.isEditingElementFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT
+      };
+
+      this.props.onCreate(explorerItem);
+
       this.closeDialog();
     } catch (error) {
       const err = error as AxiosError<{ errors?: FieldErrors[] }>;

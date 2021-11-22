@@ -34,6 +34,7 @@ import { ExplorerUrlItem } from '../../Explorer';
 import { PropertyType } from '../../../../services/crg/schema.models';
 import { getPatch } from '../../../../services/util/patch';
 import { TextBadge } from '../../../TextBadge/TextBadge';
+import { ExplorerService } from '../../Explorer.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -266,10 +267,21 @@ export class ExplorerAdapterTypeFolder {
     return 'Поиск по названию';
   }
 
-  static getToolbarActions(item: ExplorerItemData<LibraryRecord>, store: ExplorerStore): ReactNode {
+  static getToolbarActions(
+    item: ExplorerItemData<LibraryRecord>,
+    store: ExplorerStore,
+    service: ExplorerService
+  ): ReactNode {
     const path = item.payload.path + '/' + item.payload.id;
 
-    return <CreateLibraryElement schemaId={item.payload.schemaId} path={path} store={store} />;
+    return (
+      <CreateLibraryElement
+        schemaId={item.payload.schemaId}
+        path={path}
+        onCreate={service.createHandler}
+        store={store}
+      />
+    );
   }
 
   static getEmptyListView(): ReactNode | undefined {

@@ -9,7 +9,6 @@ import { CreateDatasetElement } from '../../../CreateDatasetElement/CreateDatase
 import { Database } from '../../../Icons/Database';
 
 import { ExplorerUrlItem } from '../../Explorer';
-import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
@@ -104,8 +103,8 @@ export class ExplorerAdapterTypeDatasetRoot {
     return 'Поиск по названию';
   }
 
-  static getToolbarActions(item: ExplorerItemData<Dataset>, store: ExplorerStore): ReactNode {
-    return <CreateDatasetElement store={store} />;
+  static getToolbarActions(): ReactNode {
+    return <CreateDatasetElement />;
   }
 
   static getRefreshEmitters(): Emitter[] {

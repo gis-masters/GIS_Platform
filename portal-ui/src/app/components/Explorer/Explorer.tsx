@@ -34,6 +34,7 @@ import { ExplorerToolbar } from './Toolbar/Explorer-Toolbar';
 import { ExplorerTitle } from './Title/Explorer-Title';
 import { ExplorerList } from './List/Explorer-List';
 import { ExplorerInfo } from './Info/Explorer-Info';
+import { ExplorerService } from './Explorer.service';
 
 import '!style-loader!css-loader!sass-loader!./Explorer.scss';
 
@@ -75,6 +76,7 @@ export class Explorer extends Component<ExplorerProps> {
   private onPathReactionDispose: IReactionDisposer;
   private onOptionsReactionDispose: IReactionDisposer;
   private store: ExplorerStore;
+  private service: ExplorerService;
   private subscribedRefreshEmitterTypes: ExplorerItemType[] = [];
 
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -82,6 +84,7 @@ export class Explorer extends Component<ExplorerProps> {
   constructor(props: ExplorerProps) {
     super(props);
     this.store = new ExplorerStore(props.appRole);
+    this.service = new ExplorerService(this.store);
     this.init(props);
   }
 
@@ -154,7 +157,7 @@ export class Explorer extends Component<ExplorerProps> {
       >
         {!withoutTitle && <ExplorerTitle store={this.store} onOpen={this.openItem} />}
         <ExplorerList store={this.store} onOpen={this.openItem} />
-        <ExplorerToolbar store={this.store} onChange={this.handleQueryChange} />
+        <ExplorerToolbar service={this.service} store={this.store} onChange={this.handleQueryChange} />
         {withInfoPanel && <ExplorerInfo store={this.store} Explorer={Explorer} />}
         <ExplorerPagination store={this.store} onChange={this.paginate} />
         <Loading visible={this.busy} noBackdrop />
@@ -397,7 +400,7 @@ export class Explorer extends Component<ExplorerProps> {
         const [children, pagesCount, childrenPage] = response;
 
         const selectedItem: ExplorerItemData = children.find(item => item.type === type && getId(item) === id);
-        this.showRestoredItem(selectedItem, children, pagesCount, i, childrenPage ? childrenPage : page);
+        this.service.showRestoredItem(selectedItem, children, pagesCount, i, childrenPage ? childrenPage : page);
       } else {
         if (i > 1) {
           Toast.warn({ message: 'Объект не найден' });
@@ -409,25 +412,6 @@ export class Explorer extends Component<ExplorerProps> {
       await this.openItem(path[i - 1], 0, i - 1, false);
     }
     this.store.setSortItems(getChildrenSortItems(path[path.length - 2]));
-  }
-
-  @action
-  private showRestoredItem(
-    selectedItem: ExplorerItemData,
-    children: ExplorerItemData[],
-    pagesCount: number,
-    i: number,
-    page: number
-  ) {
-    const { path } = this.store;
-    path.splice(i === 1 ? i : i + 1, path.length);
-    path[i - 1].children = children;
-    if (i + 1 !== path.length) {
-      path.push(selectedItem ? selectedItem : children[0]);
-    }
-    this.store.totalPages = pagesCount;
-    this.store.selectItem(selectedItem ? selectedItem : children[0]);
-    this.store.setPage(page ? page : 0);
   }
 
   private restoreOptions() {

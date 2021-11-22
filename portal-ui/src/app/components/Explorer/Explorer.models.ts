@@ -6,6 +6,7 @@ import { Emitter } from '../../services/common/Emitter';
 import { ButtonProps } from '../Button/Button';
 
 import { ExplorerStore } from './Explorer.store';
+import { ExplorerService } from './Explorer.service';
 import { ExplorerProps, ExplorerUrlItem } from './Explorer';
 
 export enum ExplorerItemType {
@@ -90,7 +91,7 @@ export interface Adapter {
   getChildrenSortDefaultDirection?: (item: ExplorerItemData) => SortDir;
   getChildrenFilterField?: (item: ExplorerItemData) => string;
   getChildrenFilterLabel?: (item: ExplorerItemData) => string;
-  getToolbarActions?: (item: ExplorerItemData, store: ExplorerStore) => ReactNode;
+  getToolbarActions?: (item: ExplorerItemData, store: ExplorerStore, service: ExplorerService) => ReactNode;
   getEmptyListView?: (item: ExplorerItemData) => ReactNode;
   getRefreshEmitters?: (item: ExplorerItemData) => Emitter[];
   getAllowedActions?: (item: ExplorerItemData) => Promise<AllowedActions>;

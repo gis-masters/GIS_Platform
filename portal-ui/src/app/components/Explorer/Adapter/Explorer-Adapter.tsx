@@ -30,6 +30,7 @@ import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_p
 import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basemap';
 import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_basemapsRoot';
 import { ExplorerProps, ExplorerUrlItem } from '../Explorer';
+import { ExplorerService } from '../Explorer.service';
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.EMPTY]: ExplorerAdapterTypeEmpty,
@@ -199,8 +200,12 @@ export function getChildrenFilterLabel(item: ExplorerItemData): string | undefin
   return adapters[item.type].getChildrenFilterLabel && adapters[item.type].getChildrenFilterLabel(item);
 }
 
-export function getToolbarActions(item: ExplorerItemData, store: ExplorerStore): ReactNode | undefined {
-  return adapters[item.type].getToolbarActions && adapters[item.type].getToolbarActions(item, store);
+export function getToolbarActions(
+  item: ExplorerItemData,
+  store: ExplorerStore,
+  service: ExplorerService
+): ReactNode | undefined {
+  return adapters[item.type].getToolbarActions && adapters[item.type].getToolbarActions(item, store, service);
 }
 
 export function getEmptyListView(item: ExplorerItemData): ReactNode | undefined {
