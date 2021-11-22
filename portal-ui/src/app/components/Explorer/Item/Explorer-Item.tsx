@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, ReactNode, RefObject } from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
@@ -20,13 +20,14 @@ export interface ExplorerItemProps {
   selected: boolean;
   isFolder: boolean;
   store: ExplorerStore;
+  itemRef?: RefObject<HTMLDivElement>;
   onOpen: (item: ExplorerItemData, page: number) => void;
 }
 
 @observer
 export class ExplorerItem extends Component<ExplorerItemProps> {
   render() {
-    const { title, meta, selected, isFolder, icon } = this.props;
+    const { title, meta, selected, isFolder, icon, itemRef } = this.props;
 
     return (
       <ListItem
@@ -36,6 +37,7 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
         onClick={this.selectHandler}
         onDoubleClick={this.openHandler}
         disabled={this.disabled}
+        ref={itemRef}
       >
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={title} secondary={meta} />
