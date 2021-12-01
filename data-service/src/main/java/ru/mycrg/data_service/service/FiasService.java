@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isNumeric;
+
 @Service
 public class FiasService {
 
@@ -174,11 +176,20 @@ public class FiasService {
         String params = "";
 
         for (int i = 0; i < partsOfAddress.length; i++) {
-            params += i == 0
-                    ? " fulladdress like '%" + partsOfAddress[i] + "%'"
-                    : " and fulladdress like '%" + partsOfAddress[i] + "%'";
+            if (i == 0) {
+                params += " lower(fulladdress) like lower('%" + partsOfAddress[i] + "%')";
+            } else if (i == partsOfAddress.length - 1) {
+                String lastPart = partsOfAddress[i];
+                if (isNumeric(lastPart)) {
+                    params += " and lower(fulladdress) like lower('%д." + partsOfAddress[i] + "%')";
+                } else {
+                    params += " and lower(fulladdress) like lower('%" + partsOfAddress[i] + "%')";
+                }
+            } else {
+                params += " and lower(fulladdress) like lower('%" + partsOfAddress[i] + "%')";
+            }
         }
-        params += " limit 10";
+        params += " order by fulladdress limit 10";
 
         String query = " SELECT * " +
                 "from fiaz.full_address " +
@@ -224,8 +235,8 @@ public class FiasService {
 
         for (int i = 0; i < partsOfAddress.length; i++) {
             params += i == 0
-                    ? " locality like '%" + partsOfAddress[i] + "%'"
-                    : " and locality like '%" + partsOfAddress[i] + "%'";
+                    ? " lower(locality) like lower('%" + partsOfAddress[i] + "%')"
+                    : " and lower(locality) like lower('%" + partsOfAddress[i] + "%')";
         }
 
         String query = " SELECT * " +
