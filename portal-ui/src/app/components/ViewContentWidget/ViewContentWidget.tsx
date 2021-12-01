@@ -15,7 +15,10 @@ interface ViewContentWidgetProps {
 }
 
 export const ViewContentWidget: FC<ViewContentWidgetProps> = ({ data, fields }) => (
-  <Paper className={cnViewContentWidget(null, ['scroll'])} variant='outlined' square>
-    <Form fields={fields} value={data} readonly />
-  </Paper>
+  <>
+    <span className={cnViewContentWidget('Title')}>Карточка документа:</span>
+    <Paper className={cnViewContentWidget(null, ['scroll'])} variant='outlined' square>
+      <Form fields={fields} value={data} readonly />
+    </Paper>
+  </>
 );

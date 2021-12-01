@@ -3,15 +3,16 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, observable } from 'mobx';
 
+import { ActionIntegrationSed } from '../../ActionIntegrationSed/ActionIntegrationSed';
 import { communicationService } from '../../../services/communication.service';
-
-import { ExplorerStore } from '../Explorer.store';
-import { ActionType, AllowedActions } from '../Explorer.models';
+import { ExplorerActionShare } from '../ActionShare/Explorer-ActionShare';
+import { LibraryRecord } from '../../../services/crg/doc-library.service';
 import { getAllowedActions, getId } from '../Adapter/Explorer-Adapter';
 import { ExplorerActionEdit } from '../ActionEdit/Explorer-ActionEdit';
-import { ExplorerActionDelete } from '../ActionDelete/Explorer-ActionDelete';
-import { ExplorerActionDownload } from '../ActionDownload/Explorer-ActionDownload';
-import { ExplorerActionIntegrationSed } from '../ActionIntegrationSed/Explorer-ActionIntegrationSed';
+import { ActionDownload } from '../../ActionDownload/ActionDownload';
+import { ActionType, AllowedActions } from '../Explorer.models';
+import { ActionDelete } from '../../ActionDelete/ActionDelete';
+import { ExplorerStore } from '../Explorer.store';
 
 import '!style-loader!css-loader!sass-loader!./Explorer-Actions.scss';
 
@@ -51,17 +52,25 @@ export class ExplorerActions extends Component<ExplorerActionsProps> {
       [ActionType.EDIT]: editAction,
       [ActionType.DOWNLOAD]: downloadAction,
       [ActionType.INTEGRATION_SED]: integrationSedAction,
-      [ActionType.DELETE]: deleteAction
+      [ActionType.DELETE]: deleteAction,
+      [ActionType.SHARE]: shareAction
     } = this.allowedActions;
 
     return (
       selectedItem &&
       hasActions && (
         <div className={cnExplorer('Actions')}>
+          {shareAction && <ExplorerActionShare actionDetails={shareAction} />}
           {editAction && <ExplorerActionEdit store={store} actionDetails={editAction} />}
-          {downloadAction && <ExplorerActionDownload store={store} actionDetails={downloadAction} />}
-          {integrationSedAction && <ExplorerActionIntegrationSed store={store} actionDetails={integrationSedAction} />}
-          {deleteAction && <ExplorerActionDelete store={store} actionDetails={deleteAction} />}
+          {downloadAction && <ActionDownload actionDetails={downloadAction} iconButton />}
+          {integrationSedAction && (
+            <ActionIntegrationSed
+              item={selectedItem.payload as LibraryRecord}
+              actionDetails={integrationSedAction}
+              iconButton
+            />
+          )}
+          {deleteAction && <ActionDelete item={selectedItem} actionDetails={deleteAction} iconButton />}
         </div>
       )
     );

@@ -12,6 +12,7 @@ import { ImportPageComponent } from './pages/import/import-page.component';
 import { MappingPageComponent } from './pages/mapping/mapping-page.component';
 import { OrgAdminPageComponent } from './pages/org-admin/org-admin-page.component';
 import { DataManagementPageComponent } from './pages/data-management/data-management-page.component';
+import { LibraryDocumentPageComponent } from './pages/library-document/library-document-page.component';
 
 import { AuthGuardService } from './services/auth-guard.service';
 import { OrgAdminGuardService } from './services/org-admin-guard.service';
@@ -29,7 +30,8 @@ export enum Pages {
   IMPORT = 'import',
   MAP = 'map',
   ORG_ADMIN = 'org-admin',
-  DATA_MANAGEMENT = 'data-management'
+  DATA_MANAGEMENT = 'data-management',
+  DOCUMENT = 'document'
 }
 
 export interface AppRouteData extends Data {
@@ -164,6 +166,15 @@ const routes: AppRoutes = [
     data: { page: Pages.DATA_MANAGEMENT, isAuthRequired: true }
   },
   {
+    path: 'data-management/library/:libraryId/document/:documentId',
+    component: LibraryDocumentPageComponent,
+    canActivate: [AuthGuardService],
+    resolve: {
+      user: CurrentUserResolver
+    },
+    data: { page: Pages.DOCUMENT, isAuthRequired: true }
+  },
+  {
     path: '**',
     redirectTo: ''
   }
@@ -187,5 +198,6 @@ export const routingComponents = [
   MappingPageComponent,
   ProjectsPageComponent,
   OrgAdminPageComponent,
-  DataManagementPageComponent
+  DataManagementPageComponent,
+  LibraryDocumentPageComponent
 ];

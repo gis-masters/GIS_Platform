@@ -24,6 +24,7 @@ export class EmptyListView extends Component<EmptyListProps> {
         </div>
         <div className={cnEmptyListView('PrimaryText')}>{this.props.text}</div>
         <div className={cnEmptyListView('SecondaryText')}>{this.props.secondaryText}</div>
+        <div className={cnEmptyListView('Children')}>{this.props.children}</div>
       </div>
     );
   }

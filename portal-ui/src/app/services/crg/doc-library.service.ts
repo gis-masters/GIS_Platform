@@ -181,6 +181,10 @@ class DocLibraryService {
 
     return formData;
   }
+
+  async getDocLibrariesRecordRecords(libraryId: string, id: string) {
+    return await http.get<PageableResponse<LibraryRecord>>(await getDocLibrariesRecordRecordsUrl(libraryId, id));
+  }
 }
 
 export const docLibraryService = DocLibraryService.instance;

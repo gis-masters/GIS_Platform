@@ -3,7 +3,10 @@
 
   text-align: center;
 
-  color: darkgray;
-
   justify-items: center;
+
+  &-PrimaryText,
+  &-SecondaryText {
+    color: var(--gray-dark);
+  }
 }

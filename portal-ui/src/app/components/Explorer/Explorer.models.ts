@@ -103,7 +103,8 @@ export enum ActionType {
   EDIT = 'edit',
   DELETE = 'delete',
   DOWNLOAD = 'download',
-  INTEGRATION_SED = 'integration_sed'
+  INTEGRATION_SED = 'integration_sed',
+  SHARE = 'share'
 }
 
 export type AllowedActions = {
@@ -111,6 +112,7 @@ export type AllowedActions = {
   [ActionType.DOWNLOAD]?: ActionDetailsDownload;
   [ActionType.DELETE]?: ActionDetailsDelete;
   [ActionType.INTEGRATION_SED]?: ActionDetailsIntegrationSed;
+  [ActionType.SHARE]?: ActionDetailsShare;
 };
 
 interface ActionDetailsCommon {
@@ -129,6 +131,10 @@ export interface ActionDetailsEdit extends ActionDetailsCommon {
 export interface ActionDetailsDownload extends ActionDetailsCommon {
   url: string;
   fileName: string;
+}
+
+export interface ActionDetailsShare extends ActionDetailsCommon {
+  url: string;
 }
 
 export interface ActionDetailsDelete extends ActionDetailsCommon {

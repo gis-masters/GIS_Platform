@@ -25,8 +25,8 @@ import {
   ExplorerItemEntityType,
   SortItem,
   AllowedActions,
-  AllowedDetails,
-  ActionType
+  ActionType,
+  AllowedDetails
 } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
@@ -90,7 +90,6 @@ export class ExplorerAdapterTypeFolder {
     return (
       <>
         <ExplorerInfoDescItem multiline>
-          <ExplorerInfoDescTitle>Карточка документа:</ExplorerInfoDescTitle>
           <ViewContentWidget fields={fields} data={item.payload} />
         </ExplorerInfoDescItem>
 
@@ -135,7 +134,10 @@ export class ExplorerAdapterTypeFolder {
         ),
         actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' }
       },
-
+      [ActionType.SHARE]: {
+        visible: true,
+        url: `${location.protocol}//${location.host}/data-management/library/${item.payload.libraryId}/document/${item.payload.id}`
+      },
       [ActionType.DELETE]: {
         visible: true,
         disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER),
@@ -302,11 +304,11 @@ export class ExplorerAdapterTypeFolder {
   }
 
   static async isDeleteAllowed(item: ExplorerItemData<LibraryRecord>): Promise<AllowedDetails> {
-    const record = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
+    const records = await docLibraryService.getDocLibrariesRecordRecords(item.payload.libraryId, item.payload.id);
 
     return {
-      ok: !record.length,
-      errorMessage: record.length
+      ok: !records._embedded?.records.length,
+      errorMessage: records._embedded?.records.length
         ? 'Папка не является пустой. Для её удаления необходимо сперва удалить все элементы внутри.'
         : undefined
     };

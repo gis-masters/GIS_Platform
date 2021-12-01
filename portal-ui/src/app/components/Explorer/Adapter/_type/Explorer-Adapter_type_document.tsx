@@ -83,7 +83,6 @@ export class ExplorerAdapterTypeDocument {
     return (
       <>
         <ExplorerInfoDescItem multiline>
-          <ExplorerInfoDescTitle>Карточка документа:</ExplorerInfoDescTitle>
           <ViewContentWidget fields={fields} data={item.payload} />
         </ExplorerInfoDescItem>
 
@@ -119,6 +118,10 @@ export class ExplorerAdapterTypeDocument {
     return {
       [ActionType.INTEGRATION_SED]: {
         visible: true
+      },
+      [ActionType.SHARE]: {
+        visible: true,
+        url: `${location.protocol}//${location.host}/data-management/library/${item.payload.libraryId}/document/${item.payload.id}`
       },
       [ActionType.EDIT]: {
         visible: true,

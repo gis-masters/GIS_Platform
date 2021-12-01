@@ -1,0 +1,40 @@
+body .LibraryDocument {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  height: 100%;
+  padding: 20px 30px;
+
+  &-DocumentCardForm {
+    overflow: auto;
+  }
+
+  &-DocumentCard {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    flex-shrink: 1;
+
+    max-width: 50%;
+  }
+
+  &-Actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  &-Title {
+    word-break: break-all;
+
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  &-DocumentCardTitle,
+  &-DateTitle {
+    margin-right: 0.4em;
+
+    color: var(--gray);
+  }
+}

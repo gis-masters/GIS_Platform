@@ -14,21 +14,22 @@ import { Delete, DeleteOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { Button } from '../../Button/Button';
+import { ActionDetailsDelete, AllowedDetails, ExplorerItemData } from '../Explorer/Explorer.models';
+import { deleteItem, isDeleteAllowed } from '../Explorer/Adapter/Explorer-Adapter';
+import { Button } from '../Button/Button';
 
-import { ExplorerStore } from '../Explorer.store';
-import { ActionDetailsDelete } from '../Explorer.models';
-import { deleteItem, isDeleteAllowed } from '../Adapter/Explorer-Adapter';
+const cnActionDelete = cn('ActionDelete');
 
-const cnExplorerActionDelete = cn('Explorer', 'ActionDelete');
-
-interface ExplorerActionDeleteProps {
-  store: ExplorerStore;
+interface ActionDeleteProps {
+  fullSizeButton?: boolean;
+  iconButton?: boolean;
+  item: ExplorerItemData;
   actionDetails: ActionDetailsDelete;
+  isDeleteAllowed?: AllowedDetails;
 }
 
 @observer
-export class ExplorerActionDelete extends Component<ExplorerActionDeleteProps> {
+export class ActionDelete extends Component<ActionDeleteProps> {
   @observable private dialogOpen = false;
   @observable private deleteAllowed: boolean;
   @observable private busy = false;
@@ -36,24 +37,32 @@ export class ExplorerActionDelete extends Component<ExplorerActionDeleteProps> {
   @observable private errorMessage: string;
 
   render() {
-    const { actionDetails } = this.props;
-    const { visible, disabled, needConfirmation, confirmationText, itemTitle } = actionDetails;
+    const { actionDetails, fullSizeButton, iconButton } = this.props;
+    const { visible, needConfirmation, disabled, confirmationText, itemTitle } = actionDetails;
 
     return (
       visible && (
         <>
-          <Tooltip title='Удалить'>
-            <span>
-              <IconButton
-                className={cnExplorerActionDelete()}
-                onClick={this.buttonHandler}
-                disabled={disabled || this.busy}
-                color='error'
-              >
-                {this.dialogOpen ? <Delete /> : <DeleteOutline />}
-              </IconButton>
-            </span>
-          </Tooltip>
+          {fullSizeButton && (
+            <Button className={cnActionDelete()} onClick={this.buttonHandler} disabled={disabled} color='error'>
+              Удалить
+            </Button>
+          )}
+
+          {iconButton && (
+            <Tooltip title='Удалить'>
+              <span>
+                <IconButton
+                  className={cnActionDelete()}
+                  onClick={this.buttonHandler}
+                  disabled={disabled || this.busy}
+                  color='error'
+                >
+                  {this.dialogOpen ? <Delete /> : <DeleteOutline />}
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
 
           <Dialog open={this.dialogOpen && this.deleteAllowed && needConfirmation} onClose={this.closeDialog}>
             <DialogTitle>Подтверждение удаления</DialogTitle>
@@ -99,7 +108,9 @@ export class ExplorerActionDelete extends Component<ExplorerActionDeleteProps> {
   @boundMethod
   private async buttonHandler() {
     this.setBusy(true);
-    const { ok, errorMessage } = (await isDeleteAllowed(this.props.store.selectedItem)) || { ok: true };
+    const { ok, errorMessage } = this.props.isDeleteAllowed
+      ? this.props.isDeleteAllowed
+      : (await isDeleteAllowed(this.props.item)) || { ok: true };
     this.setDeleteAllowed(ok);
     this.setErrorMessage(errorMessage);
     this.setBusy(false);
@@ -114,7 +125,7 @@ export class ExplorerActionDelete extends Component<ExplorerActionDeleteProps> {
   @boundMethod
   private async doDeletion() {
     this.setBtnLoading(true);
-    await deleteItem(this.props.store.selectedItem);
+    await deleteItem(this.props.item);
     this.setErrorMessage('');
     this.setDeleteAllowed(false);
     this.setBtnLoading(false);
