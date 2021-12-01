@@ -113,14 +113,17 @@ public class XmlParser {
 
         IntStream.range(0, nodeList.getLength())
                  .mapToObj(i -> (Element) nodeList.item(i))
-                 .map(rootEntitySpatialElement -> getElementsByTag(rootEntitySpatialElement, "SpatialElement"))
+                 .map(rootEntitySpatialElement -> getElementsByTag(rootEntitySpatialElement,
+                                                                   Collections.singletonList("SpatialElement")))
                  .forEach(spatialElements -> {
                      List<Coordinate> coordinateList = new ArrayList<>();
 
                      Element rootSpatialElement = spatialElements.get(0);
-                     getElementsByTag(rootSpatialElement, "SpelementUnit")
+                     getElementsByTag(rootSpatialElement, Collections.singletonList("SpelementUnit"))
                              .stream()
-                             .map(rootSpelementUnit -> getElementsByTag(rootSpelementUnit, "Ordinate"))
+                             .map(rootSpelementUnit -> getElementsByTag(rootSpelementUnit, Arrays.asList("Ordinate",
+                                                                                                         "NewOrdinate",
+                                                                                                         "OldOrdinate")))
                              .forEach(ordinates -> ordinates
                                      .forEach(rootOrdinate -> {
                                          Coordinate coordinate = new Coordinate(

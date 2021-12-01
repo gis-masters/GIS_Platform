@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.parsers;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,14 +21,17 @@ public class XmlParserUtils {
                 : Optional.empty();
     }
 
-    public static List<Element> getElementsByTag(Element rootElement, String tag) {
-        int length = rootElement.getElementsByTagNameNS("*", tag).getLength();
+    public static List<Element> getElementsByTag(Element rootElement, List<String> tags) {
+        return tags.stream()
+                   .flatMap(tag -> {
+                       int length = rootElement.getElementsByTagNameNS("*", tag).getLength();
 
-        return IntStream.range(0, length)
-                        .mapToObj(i -> (Element) rootElement.getElementsByTagNameNS("*", tag).item(i))
-                        .collect(Collectors.toList());
+                       return IntStream
+                               .range(0, length)
+                               .mapToObj(i -> (Element) rootElement.getElementsByTagNameNS("*", tag).item(i));
+                   })
+                   .collect(Collectors.toList());
     }
-
     public static Optional<String> getAttributeByTag(Element rootElement, String elementTag, String attributeTag) {
         Optional<NodeList> nodeList = rootElement.getElementsByTagName(elementTag).getLength() > 0
                 ? Optional.ofNullable(rootElement.getElementsByTagName(elementTag))

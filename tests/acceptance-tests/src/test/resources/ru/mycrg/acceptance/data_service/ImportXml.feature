@@ -11,9 +11,10 @@ Feature: Проверка xml импорта
     When Пользователь делает запрос на импорт xml файла "<importType>" "<fileName>"
     Then Сервер отвечает со статус-кодом 200
     Examples:
-      | importType | fileName           | additional                  |
-      | mp         | gpzu.xml           |                             |
-      | mp         | namespace_test.xml | файл имеет разные namespace |
+      | importType | fileName                  | additional                           |
+      | mp         | gpzu.xml                  |                                      |
+      | mp         | namespace_test.xml        | файл имеет разные namespace          |
+      | mp         | another_geometry_tags.xml | файл имеет разные теги для геометрии |
 
   Scenario Outline: Импорт некорректного файла отклоняется сервером: "<reason>"
     When Пользователь делает запрос на импорт xml файла "<importType>" "<fileName>"
