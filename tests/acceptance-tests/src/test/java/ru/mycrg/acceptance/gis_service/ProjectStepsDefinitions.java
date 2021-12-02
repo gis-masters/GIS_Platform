@@ -266,7 +266,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает запрос на выборку проектов с фильтрацией по полю {string} и значению {string}")
     public void getProjectsByFilter(String field, String value) {
-        super.getCurrentEntityByFilter(field, value);
+        super.getProjectsByTitle(field, value);
     }
 
     @And("Количество страниц проектов {string} пропорционально {string}")

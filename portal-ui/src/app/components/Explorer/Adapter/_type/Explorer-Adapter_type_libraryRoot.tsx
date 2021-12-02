@@ -103,7 +103,7 @@ export class ExplorerAdapterTypeLibraryRoot {
   }
 
   static getChildrenFilterLabel(): string {
-    return 'Поиск по названию';
+    return 'Фильтр по названию';
   }
 
   static getEmptyListView(): ReactNode | undefined {

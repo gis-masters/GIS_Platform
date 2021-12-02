@@ -16,7 +16,11 @@ public interface IRecordsService {
     Page<RecordDto> getPaged(ResourceQualifier lQualifier,
                              Pageable pageable,
                              Long parentId,
-                             String title);
+                             String ecqlFilter);
+
+    Page<RecordDto> getAsRegistry(ResourceQualifier lQualifier,
+                                  Pageable newPageable,
+                                  String ecqlFilter);
 
     /**
      * Возвращает запись из библиотеки при наличии к ней доступа.

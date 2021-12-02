@@ -29,7 +29,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
 
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
 @Service
@@ -139,30 +139,6 @@ public class RecordsDao {
                                    ));
     }
 
-    public List<RecordDto> findAllByPath(ResourceQualifier tableQualifier,
-                                         String path,
-                                         String title,
-                                         Pageable pageable) {
-        final MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("path", path)
-                .addValue("offset", pageable.getOffset())
-                .addValue("limit", pageable.getPageSize());
-
-        String sqlTemplate = "SELECT * FROM " + tableQualifier +
-                "  WHERE path = :path" +
-                "    AND LOWER(title) LIKE LOWER('%" + title + "%')" +
-                "  " + buildOrderBySection(pageable.getSort()) +
-                "  LIMIT :limit OFFSET :offset";
-
-        log.debug("Request find all by path: [{}]", sqlTemplate);
-
-        return pJdbcTemplate.query(sqlTemplate,
-                                   params,
-                                   new RowMapperResultSetExtractor<>(
-                                           new RecordRowMapper()
-                                   ));
-    }
-
     public List<RecordDto> findAll(ResourceQualifier tableQualifier) {
         final MapSqlParameterSource params = new MapSqlParameterSource();
 
@@ -185,14 +161,70 @@ public class RecordsDao {
         return recordDtos;
     }
 
-    public long getTotalByPath(ResourceQualifier tableQualifier, String path, String title) {
-        String sqlTemplate = "SELECT count(*) FROM " + tableQualifier +
-                "  WHERE path = '" + path + "'" +
-                "  AND LOWER(title) LIKE LOWER('%" + title + "%')";
+    public List<RecordDto> findAll(ResourceQualifier tableQualifier,
+                                   String ecqlFilter,
+                                   Pageable pageable) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("offset", pageable.getOffset())
+                .addValue("limit", pageable.getPageSize());
 
-        log.debug("Request find total by path: [{}]", sqlTemplate);
+        String query = "SELECT * FROM " + tableQualifier +
+                "  " + buildWhereSection(ecqlFilter) +
+                "  " + buildOrderBySection(pageable.getSort()) +
+                "  LIMIT :limit OFFSET :offset";
 
-        return pJdbcTemplate.getJdbcTemplate().queryForObject(sqlTemplate, Long.class);
+        log.debug("Request find all with filter: [{}]", query);
+
+        return pJdbcTemplate.query(query,
+                                   params,
+                                   new RowMapperResultSetExtractor<>(
+                                           new RecordRowMapper()
+                                   ));
+    }
+
+    public List<RecordDto> findAllowed(ResourceQualifier tableQualifier,
+                                       Set<String> ids,
+                                       Set<String> paths,
+                                       String ecqlFilter,
+                                       Pageable pageable) {
+        String ecqlFiltersSection = buildWhereSection(ecqlFilter);
+        if (!ecqlFiltersSection.isBlank()) {
+            ecqlFiltersSection = "AND " + ecqlFiltersSection.replace("WHERE", "");
+        }
+
+        String query = "" +
+                " SELECT " +
+                "   * " +
+                " FROM " +
+                " " + tableQualifier.getTableQualifier() +
+                " WHERE " +
+                "   (" +
+                "     (" +
+                "       id IN (" + buildInSection(ids) + ") " +
+                "       OR path LIKE ANY (array[ " + buildInSection(paths) + " ])" +
+                "     )" +
+                " " + ecqlFiltersSection +
+                "   )" +
+                " LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset();
+
+        log.debug("Request findAllowed: [{}]", query);
+
+        return pJdbcTemplate.query(query,
+                                   new RowMapperResultSetExtractor<>(
+                                           new RecordRowMapper()
+                                   ));
+    }
+
+    public long getTotalAllowed(ResourceQualifier lQualifier, Set<String> ids, Set<String> paths) {
+        return 0;
+    }
+
+    public Long getTotal(ResourceQualifier tableQualifier, String ecqlFilter) {
+        String query = String.format("SELECT count(*) FROM %s %s", tableQualifier, buildWhereSection(ecqlFilter));
+
+        log.debug("Request find total by path: [{}]", query);
+
+        return pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
     }
 
     public void updateRecordById(ResourceQualifier recordQualifier, Map<String, Object> data) throws CrgDaoException {

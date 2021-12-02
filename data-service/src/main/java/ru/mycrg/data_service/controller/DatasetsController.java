@@ -29,10 +29,10 @@ public class DatasetsController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/datasets")
-    public ResponseEntity<Object> getDatasets(@RequestParam(required = false, defaultValue = "") String title,
+    public ResponseEntity<Object> getDatasets(@RequestParam(name = "filter", required = false) String ecqlFilter,
                                               Pageable pageable,
                                               PagedResourcesAssembler<IResourceModel> pageAssembler) {
-        final Page<IResourceModel> datasets = datasetService.getPaged(title, pageable);
+        final Page<IResourceModel> datasets = datasetService.getPaged(ecqlFilter, pageable);
 
         var pagedResources = pageAssembler.toResource(
                 datasets,

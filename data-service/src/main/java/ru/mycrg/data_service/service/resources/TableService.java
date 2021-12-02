@@ -59,24 +59,21 @@ public class TableService {
         this.schemaService = schemaService;
     }
 
-    public Page<IResourceModel> getPaged(String datasetIdentifier, String title, Pageable pageable) {
+    public Page<IResourceModel> getPaged(String datasetIdentifier, String ecqlFilter, Pageable pageable) {
         SchemasAndTables dataset = schemasAndTablesRepository
                 .findByIdentifier(datasetIdentifier)
                 .orElseThrow(() -> new NotFoundException(datasetIdentifier));
 
-        if (permissionsRepository.isDatasetAllowed(SCHEMAS_AND_TABLES_QUALIFIER, dataset.getId())) {
-            return schemasAndTablesRepository.findByPath(dataset.pathTo(), title, pageable)
-                                             .map(TableModel::new);
-        } else {
-            List<IResourceModel> allowedResources = permissionsRepository
-                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), title, pageable).stream()
-                    .map(record -> new TableModel(record.getContent()))
-                    .collect(Collectors.toList());
+        List<IResourceModel> allowedResources = permissionsRepository
+                .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), ecqlFilter, pageable).stream()
+                .map(record -> new TableModel(record.getContent()))
+                .collect(Collectors.toList());
 
-            long total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), title);
+        long total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                            dataset.pathTo(),
+                                                            ecqlFilter);
 
-            return new PageImpl<>(allowedResources, pageable, total);
-        }
+        return new PageImpl<>(allowedResources, pageable, total);
     }
 
     public IResourceModel getInfo(ResourceQualifier tQualifier) {

@@ -19,11 +19,14 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.service.records.RecordUtil.clearSystemAttributes;
+import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.LAST_MODIFIED;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 @Service
 public class OwnerRecordsService implements IRecordsService {
@@ -40,7 +43,7 @@ public class OwnerRecordsService implements IRecordsService {
     }
 
     @Override
-    public Page<RecordDto> getPaged(ResourceQualifier lQualifier, Pageable pageable, Long parentId, String title) {
+    public Page<RecordDto> getPaged(ResourceQualifier lQualifier, Pageable pageable, Long parentId, String ecqlFilter) {
         String path = ROOT_FOLDER_PATH;
         if (parentId != null) {
             ResourceQualifier recordQualifier = new ResourceQualifier(lQualifier, parentId);
@@ -48,11 +51,23 @@ public class OwnerRecordsService implements IRecordsService {
                     .findById(recordQualifier)
                     .orElseThrow(() -> new NotFoundException("Not found record by id: " + parentId));
 
-            path = String.format("%s/%d", parent.get("path"), parentId);
+            path = String.format("%s/%d", parent.get(PATH.getName()), parentId);
         }
 
-        List<RecordDto> records = recordsDao.findAllByPath(lQualifier, path, title, pageable);
-        long total = recordsDao.getTotalByPath(lQualifier, path, title);
+        ecqlFilter = addAsEqual(ecqlFilter, PATH.getName(), path);
+
+        List<RecordDto> records = recordsDao.findAll(lQualifier, ecqlFilter, pageable);
+        long total = recordsDao.getTotal(lQualifier, ecqlFilter);
+
+        return new PageImpl<>(records, pageable, total);
+    }
+
+    @Override
+    public Page<RecordDto> getAsRegistry(ResourceQualifier lQualifier, Pageable pageable, String ecqlFilter) {
+        List<RecordDto> records = recordsDao.findAll(lQualifier, ecqlFilter, pageable).stream()
+                                            .filter(record -> record.getContent().get(PATH.getName()) != null)
+                                            .collect(Collectors.toList());
+        long total = recordsDao.getTotal(lQualifier, ecqlFilter);
 
         return new PageImpl<>(records, pageable, total);
     }

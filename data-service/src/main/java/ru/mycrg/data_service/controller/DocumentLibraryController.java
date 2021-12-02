@@ -26,10 +26,11 @@ public class DocumentLibraryController {
 
     @GetMapping("/document-libraries")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> getPagedWithFilter(@RequestParam(required = false, defaultValue = "") String title,
+    public ResponseEntity<Object> getPagedWithFilter(@RequestParam(name = "filter", required = false) String ecqlFilter,
                                                      Pageable pageable,
                                                      PagedResourcesAssembler<IResourceModel> pageAssembler) {
-        Page<IResourceModel> libraries = librariesService.getPaged(title, pageable);
+        // TODO: проанализировать параметры фильтра на соответствие схеме. Кидать 400.
+        Page<IResourceModel> libraries = librariesService.getPaged(ecqlFilter, pageable);
 
         var pagedResources = pageAssembler.toResource(
                 libraries,

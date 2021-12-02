@@ -199,7 +199,7 @@ export class ExplorerAdapterTypeDataset {
   }
 
   static getChildrenFilterLabel(): string {
-    return 'Поиск по названию';
+    return 'Фильтр по названию';
   }
 
   static async deleteItem(item: ExplorerItemData<Dataset>): Promise<void> {

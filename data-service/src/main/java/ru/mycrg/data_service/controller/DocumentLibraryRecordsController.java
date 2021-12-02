@@ -57,17 +57,43 @@ public class DocumentLibraryRecordsController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/document-libraries/{docLibId}/records")
-    public ResponseEntity<Object> getAll(@PathVariable String docLibId,
-                                         @RequestParam(required = false) Long parent,
-                                         @RequestParam(required = false, defaultValue = "") String title,
-                                         Pageable pageable,
-                                         PagedResourcesAssembler<RecordDto> pageAssembler) {
+    public ResponseEntity<Object> getAll(
+            @PathVariable String docLibId,
+            @RequestParam(required = false) Long parent,
+            @RequestParam(name = "filter", required = false) String ecqlFilter,
+            Pageable pageable,
+            PagedResourcesAssembler<RecordDto> pageAssembler) {
         ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
 
         checkSortedFields(docLibId, pageable);
+        Pageable newPageable = fetchFoldersFirst(pageable);
 
         var result = recordServiceFactory.get()
-                                         .getPaged(lQualifier, fetchFoldersFirst(pageable), parent, title);
+                                         .getPaged(lQualifier, newPageable, parent, ecqlFilter);
+
+        var pagedResources = pageAssembler.toResource(
+                result,
+                linkTo(DocumentLibraryRecordsController.class)
+                        .slash("/api/data/document-libraries/" + docLibId + "/records")
+                        .withSelfRel());
+
+        return ResponseEntity.ok(pagedResources);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/document-libraries/{docLibId}/records/as_registry")
+    public ResponseEntity<Object> getAll(
+            @PathVariable String docLibId,
+            @RequestParam(name = "filter", required = false) String ecqlFilter,
+            Pageable pageable,
+            PagedResourcesAssembler<RecordDto> pageAssembler) {
+        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
+
+        checkSortedFields(docLibId, pageable);
+        Pageable newPageable = fetchFoldersFirst(pageable);
+
+        var result = recordServiceFactory.get()
+                                         .getAsRegistry(lQualifier, newPageable, ecqlFilter);
 
         var pagedResources = pageAssembler.toResource(
                 result,

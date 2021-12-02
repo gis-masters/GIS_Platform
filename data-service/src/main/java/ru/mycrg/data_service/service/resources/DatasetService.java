@@ -62,13 +62,13 @@ public class DatasetService {
         this.permissionsService = permissionsService;
     }
 
-    public Page<IResourceModel> getPaged(String title, Pageable pageable) {
+    public Page<IResourceModel> getPaged(String ecqlFilter, Pageable pageable) {
         List<IResourceModel> allowedResources = permissionsRepository
-                .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, title, pageable).stream()
+                .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter, pageable).stream()
                 .map(record -> new DatasetModel(record.getContent()))
                 .collect(Collectors.toList());
 
-        long total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, title);
+        long total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter);
 
         return new PageImpl<>(allowedResources, pageable, total);
     }

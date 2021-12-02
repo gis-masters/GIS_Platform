@@ -338,6 +338,11 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         super.checkErrorResponseMessage("Недостаточно прав для просмотра записи: " + integer);
     }
 
+    @When("Текущий пользователь запрашивает библиотеки с фильтрацией {string}")
+    public void getLibrariesByFilter(String filter) {
+        super.getCurrentEntityByFilter(filter);
+    }
+
     private void addPermissionToRecordForCurrentUser(Integer recordId, String role) {
         String urlToRecord = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, recordId);
 

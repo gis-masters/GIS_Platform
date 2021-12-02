@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildInSection;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
 import static ru.mycrg.data_service.util.RoleHandler.defineRoleById;
 
 @Repository
@@ -36,9 +35,33 @@ public class BasePermissionsRepository {
         this.pJdbcTemplate = pJdbcTemplate;
     }
 
+    public List<RecordDto> findAllowedDirectly(ResourceQualifier rQualifier) {
+        String tableQualifier = rQualifier.getTableQualifier();
+        String tableName = rQualifier.getTable();
+
+        List<String> allPrincipalIds = principalService.getAllIds();
+
+        String query = "" +
+                " SELECT " +
+                "   res.*" +
+                " FROM " +
+                "   " + tableQualifier + " AS res " +
+                "   JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
+                "   AND p.resource_table = '" + tableName + "' " +
+                "   AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ")";
+
+        log.debug("Query to find allowed directly: [{}]", query);
+
+        return pJdbcTemplate.getJdbcTemplate()
+                            .query(query,
+                                   new RowMapperResultSetExtractor<>(
+                                           new RecordRowMapper()
+                                   ));
+    }
+
     public List<RecordDto> findAllowedByParent(ResourceQualifier rQualifier,
                                                String parent,
-                                               String title,
+                                               String ecqlFilter,
                                                Pageable pageable) {
         String tableQualifier = rQualifier.getTableQualifier();
         String tableName = rQualifier.getTable();
@@ -75,7 +98,7 @@ public class BasePermissionsRepository {
                 "      allowed_res_id" +
                 "  ) AS n1 " +
                 "  JOIN " + tableQualifier + " AS n2 ON n1.allowed_res_id = n2.id " +
-                "WHERE LOWER(n2.title) LIKE LOWER('%" + title + "%') " +
+                " " + buildWhereSection(ecqlFilter) +
                 " " + buildOrderBySection(pageable.getSort()) +
                 "LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset();
 
@@ -111,7 +134,7 @@ public class BasePermissionsRepository {
         return Boolean.TRUE.equals(result);
     }
 
-    public Long getTotalByParent(ResourceQualifier targetTable, String path, String title) {
+    public Long getTotalByParent(ResourceQualifier targetTable, String path, String ecqlFilter) {
         String tableQualifier = targetTable.getTableQualifier();
         String tableName = targetTable.getTable();
 
@@ -147,7 +170,7 @@ public class BasePermissionsRepository {
                 "      allowed_res_id" +
                 "  ) AS n1 " +
                 "  JOIN " + tableQualifier + " AS n2 ON n1.allowed_res_id = n2.id " +
-                "WHERE LOWER(n2.title) LIKE LOWER('%" + title + "%')";
+                " " + buildWhereSection(ecqlFilter);
 
         log.debug("Request to total allowed resources by path: [{}]", requestTemplate);
 

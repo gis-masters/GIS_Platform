@@ -27,15 +27,13 @@ import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.service.records.RecordUtil.clearSystemAttributes;
 import static ru.mycrg.data_service.service.records.RecordUtil.extractFolderIdsFromPath;
+import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Service
@@ -71,7 +69,7 @@ public class UserRecordsService implements IRecordsService {
     public Page<RecordDto> getPaged(ResourceQualifier lQualifier,
                                     Pageable pageable,
                                     Long parentId,
-                                    String title) {
+                                    String ecqlFilter) {
         long total;
         List<RecordDto> allowedResources;
 
@@ -83,23 +81,45 @@ public class UserRecordsService implements IRecordsService {
                     .orElseThrow(() -> new NotFoundException("Not found record by id: " + parentId));
 
             path = String.format("%s/%d", parent.get("path"), parentId);
+            ecqlFilter = addAsEqual(ecqlFilter, PATH.getName(), path);
 
             Set<String> ids = extractFolderIdsFromPath(path);
 
             boolean allowedByParentPermissions = permissionsRepository.isAllowedByParentsPermissions(lQualifier, ids);
             if (allowedByParentPermissions) {
-                allowedResources = recordsDao.findAllByPath(lQualifier, path, title, pageable);
-                total = recordsDao.getTotalByPath(lQualifier, path, title);
+                allowedResources = recordsDao.findAll(lQualifier, ecqlFilter, pageable);
+                total = recordsDao.getTotal(lQualifier, ecqlFilter);
             } else {
-                allowedResources = permissionsRepository.findAllowedByParent(lQualifier, path, title, pageable);
-                total = permissionsRepository.getTotalByParent(lQualifier, path, title);
+                allowedResources = permissionsRepository.findAllowedByParent(lQualifier, path, ecqlFilter, pageable);
+                total = permissionsRepository.getTotalByParent(lQualifier, path, ecqlFilter);
             }
         } else {
-            allowedResources = permissionsRepository.findAllowedByParent(lQualifier, path, title, pageable);
-            total = permissionsRepository.getTotalByParent(lQualifier, path, title);
+            ecqlFilter = addAsEqual(ecqlFilter, PATH.getName(), path);
+
+            allowedResources = permissionsRepository.findAllowedByParent(lQualifier, path, ecqlFilter, pageable);
+            total = permissionsRepository.getTotalByParent(lQualifier, path, ecqlFilter);
         }
 
         return new PageImpl<>(allowedResources, pageable, total);
+    }
+
+    @Override
+    public Page<RecordDto> getAsRegistry(ResourceQualifier lQualifier, Pageable pageable, String ecqlFilter) {
+        List<RecordDto> allowedDirectly = permissionsRepository.findAllowedDirectly(lQualifier);
+        Set<String> ids = new HashSet<>();
+        Set<String> paths = new HashSet<>();
+        allowedDirectly.forEach(record -> {
+            String id = String.valueOf(record.getContent().get(ID.getName()));
+            ids.add(id);
+
+            String pathToMe = record.getContent().get(PATH.getName()) + "/" + id;
+            paths.add(pathToMe);
+        });
+
+        List<RecordDto> allAllowedRecords = recordsDao.findAllowed(lQualifier, ids, paths, ecqlFilter, pageable);
+        long total = recordsDao.getTotalAllowed(lQualifier, ids, paths);
+
+        return new PageImpl<>(allAllowedRecords, pageable, total);
     }
 
     @Override

@@ -285,6 +285,20 @@ public class BaseStepsDefinitions {
     public void getCurrentEntityByFilter(String field, String value) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
+                        get("?filter=" + field + " iLike '%" + value + "%'");
+    }
+
+    public void getCurrentEntityByFilter(String filter) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        log().all().
+                        get("?" + filter);
+    }
+
+    // TODO: Временно дублирую метод: getCurrentEntityByFilter пока проекты не работают с полным фильтром
+    public void getProjectsByTitle(String field, String value) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
                         get(String.format("?%s=%s", field, value));
     }
 

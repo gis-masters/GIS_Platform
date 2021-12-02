@@ -40,10 +40,10 @@ public class TablesController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/datasets/{datasetId}/tables")
     public ResponseEntity<Object> getTables(@PathVariable String datasetId,
-                                            @RequestParam(required = false, defaultValue = "") String title,
+                                            @RequestParam(name = "filter", required = false) String ecqlFilter,
                                             Pageable pageable,
                                             PagedResourcesAssembler<IResourceModel> pageAssembler) {
-        Page<IResourceModel> tables = tableService.getPaged(datasetId, title, pageable);
+        Page<IResourceModel> tables = tableService.getPaged(datasetId, ecqlFilter, pageable);
 
         var pagedResources = pageAssembler.toResource(
                 tables,

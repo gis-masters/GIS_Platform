@@ -61,8 +61,10 @@ class DocLibraryService {
     sortDir?: SortDir,
     filter?: { [key: string]: string }
   ): Promise<[DocumentLibrary[], number]> {
+    const tempFilter = filter && filter.title ? `title ilike '%${filter.title}%'` : '';
+
     const response = await http.get<PageableResponse<DocumentLibrary>>(await getDocLibrariesUrl(), {
-      params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) }
+      params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, filter: tempFilter }
     });
 
     return [(response._embedded && response._embedded.libraries) || [], response.page.totalPages];
@@ -98,6 +100,11 @@ class DocLibraryService {
   async getRecords(libraryId: string, schemaId: string, pageOptions: PageOptions): Promise<[LibraryRecord[], number]> {
     const url = await getDocLibrariesRecordsUrl(libraryId);
     const requestOptions = { params: preparePageOptions(pageOptions) };
+
+    const title = requestOptions.params.title;
+    if (title) {
+      requestOptions.params.filter = `title ilike '%${title}%'`;
+    }
 
     const response = await http.get<PageableResponse<{ content: LibraryRecordRaw }>>(url, requestOptions);
 

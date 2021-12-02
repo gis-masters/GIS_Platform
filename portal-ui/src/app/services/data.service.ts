@@ -71,7 +71,9 @@ export async function getDatasets(
   sortDir?: SortDir,
   filter?: { [key: string]: string }
 ): Promise<[Dataset[], number]> {
-  const params = { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) };
+  const tempFilter = filter && filter.title ? `title ilike '%${filter.title}%'` : '';
+
+  const params = { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, filter: tempFilter };
   const response = await http.get<PageableResponse<Dataset>>(await getDatasetsUrl(), { params });
 
   return [(response._embedded && response._embedded.datasets) || [], response.page.totalPages];
@@ -97,9 +99,15 @@ export async function getDataset(datasetId: string): Promise<Dataset> {
 }
 
 export async function getDatasetTables(datasetId: string, pageOptions: PageOptions): Promise<[DataTable[], number]> {
-  const response = await http.get<PageableResponse<Omit<DataTable, 'dataset'>>>(await getDatasetTablesUrl(datasetId), {
-    params: preparePageOptions(pageOptions)
-  });
+  const url = await getDatasetTablesUrl(datasetId);
+  const requestOptions = { params: preparePageOptions(pageOptions) };
+
+  const title = requestOptions.params.title;
+  if (title) {
+    requestOptions.params.filter = `title ilike '%${title}%'`;
+  }
+
+  const response = await http.get<PageableResponse<Omit<DataTable, 'dataset'>>>(url, requestOptions);
 
   const dataTables: DataTable[] = (response._embedded?.tables || []).map(table => ({
     ...table,

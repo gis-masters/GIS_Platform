@@ -18,7 +18,7 @@ export class ProjectsFilter extends Component {
   render() {
     return (
       <TextField
-        label='Поиск по названию'
+        label='Фильтр по названию'
         variant='standard'
         value={allProjects.nameFilter}
         className={cnProjectsFilter()}
