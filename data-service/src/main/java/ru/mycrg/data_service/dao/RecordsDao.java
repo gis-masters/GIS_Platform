@@ -207,7 +207,7 @@ public class RecordsDao {
                 "   )" +
                 " LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset();
 
-        log.debug("Request findAllowed: [{}]", query);
+        log.debug("Request find allowed records: [{}]", query);
 
         return pJdbcTemplate.query(query,
                                    new RowMapperResultSetExtractor<>(
@@ -215,8 +215,32 @@ public class RecordsDao {
                                    ));
     }
 
-    public long getTotalAllowed(ResourceQualifier lQualifier, Set<String> ids, Set<String> paths) {
-        return 0;
+    public Long getTotalAllowed(ResourceQualifier tableQualifier,
+                                Set<String> ids,
+                                Set<String> paths,
+                                String ecqlFilter) {
+        String ecqlFiltersSection = buildWhereSection(ecqlFilter);
+        if (!ecqlFiltersSection.isBlank()) {
+            ecqlFiltersSection = "AND " + ecqlFiltersSection.replace("WHERE", "");
+        }
+
+        String query = "" +
+                " SELECT " +
+                "   count(*) " +
+                " FROM " +
+                " " + tableQualifier.getTableQualifier() +
+                " WHERE " +
+                "   (" +
+                "     (" +
+                "       id IN (" + buildInSection(ids) + ") " +
+                "       OR path LIKE ANY (array[ " + buildInSection(paths) + " ])" +
+                "     )" +
+                " " + ecqlFiltersSection +
+                "   )";
+
+        log.debug("Request find total allowed records: [{}]", query);
+
+        return pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
     }
 
     public Long getTotal(ResourceQualifier tableQualifier, String ecqlFilter) {

@@ -26,6 +26,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -112,12 +113,12 @@ public class UserRecordsService implements IRecordsService {
             String id = String.valueOf(record.getContent().get(ID.getName()));
             ids.add(id);
 
-            String pathToMe = record.getContent().get(PATH.getName()) + "/" + id;
-            paths.add(pathToMe);
+            String pathToMeAndChildren = MessageFormat.format("{0}/{1}%", record.getContent().get(PATH.getName()), id);
+            paths.add(pathToMeAndChildren);
         });
 
         List<RecordDto> allAllowedRecords = recordsDao.findAllowed(lQualifier, ids, paths, ecqlFilter, pageable);
-        long total = recordsDao.getTotalAllowed(lQualifier, ids, paths);
+        long total = recordsDao.getTotalAllowed(lQualifier, ids, paths, ecqlFilter);
 
         return new PageImpl<>(allAllowedRecords, pageable, total);
     }
