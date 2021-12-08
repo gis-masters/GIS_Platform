@@ -116,26 +116,26 @@ public class XmlParser {
                  .map(rootEntitySpatialElement -> getElementsByTag(rootEntitySpatialElement,
                                                                    Collections.singletonList("SpatialElement")))
                  .forEach(spatialElements -> {
-                     List<Coordinate> coordinateList = new ArrayList<>();
+                     for (Element rootSpatialElement: spatialElements) {
+                         List<Coordinate> coordinateList = new ArrayList<>();
+                         getElementsByTag(rootSpatialElement, Collections.singletonList("SpelementUnit"))
+                                 .stream()
+                                 .map(rootSpelementUnit -> getElementsByTag(rootSpelementUnit, Arrays.asList("Ordinate",
+                                                                                                             "NewOrdinate",
+                                                                                                             "OldOrdinate")))
+                                 .forEach(ordinates -> ordinates
+                                         .forEach(rootOrdinate -> {
+                                             Coordinate coordinate = new Coordinate(
+                                                     Double.parseDouble(rootOrdinate.getAttribute("Y")),
+                                                     Double.parseDouble(rootOrdinate.getAttribute("X"))
+                                             );
+                                             coordinateList.add(coordinate);
+                                         }));
 
-                     Element rootSpatialElement = spatialElements.get(0);
-                     getElementsByTag(rootSpatialElement, Collections.singletonList("SpelementUnit"))
-                             .stream()
-                             .map(rootSpelementUnit -> getElementsByTag(rootSpelementUnit, Arrays.asList("Ordinate",
-                                                                                                         "NewOrdinate",
-                                                                                                         "OldOrdinate")))
-                             .forEach(ordinates -> ordinates
-                                     .forEach(rootOrdinate -> {
-                                         Coordinate coordinate = new Coordinate(
-                                                 Double.parseDouble(rootOrdinate.getAttribute("Y")),
-                                                 Double.parseDouble(rootOrdinate.getAttribute("X"))
-                                         );
-                                         coordinateList.add(coordinate);
-                                     }));
-
-                     org.locationtech.jts.geom.Polygon polygon =
-                             geometryFactory.createPolygon(coordinateList.toArray(Coordinate[]::new));
-                     polygons.add(polygon);
+                         org.locationtech.jts.geom.Polygon polygon =
+                                 geometryFactory.createPolygon(coordinateList.toArray(Coordinate[]::new));
+                         polygons.add(polygon);
+                     }
                  });
 
         if (!polygons.isEmpty()) {
