@@ -169,6 +169,9 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
 
   private isItemsCanBeViewed(prevProps: ChooseXTableDialogProps<T>) {
     const { open, items, getRowId } = this.props;
+    if (!items?.length || !prevProps.items?.length) {
+      return;
+    }
 
     return (
       (open && prevProps.items.length !== items.length) ||
