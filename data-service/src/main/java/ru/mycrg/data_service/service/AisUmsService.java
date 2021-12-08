@@ -2,15 +2,19 @@ package ru.mycrg.data_service.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service.dao.AisUmsDao;
+import ru.mycrg.data_service.dto.AisUmsDto;
 import ru.mycrg.data_service.dto.AisUmsModel;
 import ru.mycrg.data_service.entity.AisUms;
 import ru.mycrg.data_service.entity.IntegrationTokens;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.repository.AisUmsRepository;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -23,11 +27,14 @@ public class AisUmsService {
 
     private final AisUmsRepository aisUmsRepository;
     private final IntegrationTokensService integrationTokensService;
+    private final AisUmsDao aisUmsDao;
 
     public AisUmsService(AisUmsRepository aisUmsRepository,
-                         IntegrationTokensService integrationTokensService) {
+                         IntegrationTokensService integrationTokensService,
+                         AisUmsDao aisUmsDao) {
         this.aisUmsRepository = aisUmsRepository;
         this.integrationTokensService = integrationTokensService;
+        this.aisUmsDao = aisUmsDao;
     }
 
     public Page<AisUms> getAll(Pageable pageable) {
@@ -41,6 +48,28 @@ public class AisUmsService {
                                          .map(AisUms::new)
                                          .collect(Collectors.toList());
         aisUmsRepository.saveAll(aisUms);
+    }
+
+    // Обновляем данные в таблицах конкретного датасета - "СТП Крыма" - workspace_789
+    // Слои из "СТП Крыма" подключены в  остальные проекты
+    public void updateAisUmsColumnsInStpDataset(List<AisUmsDto> aisUmsData) {
+        String datasetName = "workspace_789";
+        List<String> schemasName = Arrays.asList("oks_building",
+                                                 "oks_constructions",
+                                                 "oks_constructions_polyline",
+                                                 "oks_unfinished",
+                                                 "zu2");
+        try {
+            aisUmsDao.getAllTablesNameBySchemas(datasetName, schemasName).stream()
+                     .map(tableName -> new ResourceQualifier(datasetName, tableName))
+                     .forEach(tQualifier -> aisUmsDao.updateTable(tQualifier, aisUmsData));
+        } catch (DataAccessException ex) {
+            String msg = String.format("Не удалось выполнить обновление данных из АИС УМС. Причина: %s",
+                                       ex.getMessage());
+            log.debug(msg);
+
+            throw new DataServiceException(msg);
+        }
     }
 
     @Transactional

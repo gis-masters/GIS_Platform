@@ -34,6 +34,7 @@ public class AisUmsController {
         }
 
         aisUmsService.saveAisUms(aisUmsModel);
+        aisUmsService.updateAisUmsColumnsInStpDataset(aisUmsModel.getContent());
 
         return ResponseEntity.status(CREATED).build();
     }

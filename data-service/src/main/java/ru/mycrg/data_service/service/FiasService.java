@@ -43,6 +43,8 @@ public class FiasService {
         } catch (SQLException e) {
             String msg = "Не удалось подключиться к базе данных crg_data_service";
             log.error(msg);
+
+            throw new DataServiceException(msg);
         }
     }
 
