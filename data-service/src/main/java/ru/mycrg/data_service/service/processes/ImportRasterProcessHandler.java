@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.Process;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.JsonConverter;
 import ru.mycrg.data_service.service.WsNotificationService;
@@ -33,6 +34,7 @@ import ru.mycrg.http_client.handlers.BaseRequestHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -144,6 +146,11 @@ public class ImportRasterProcessHandler implements IProcessHandler {
         // Проверить физическое наличие файла
         // Проверить наличие и адекватность данных у записи
 
+        ImportTarget target = this.importInitialData.getTarget();
+        if (!target.isProjectIsNew() && isProjectNotAllowed(target.getProjectId())) {
+            throw new BadRequestException("Проект '" + target.getProjectName() + "' не доступен для записи");
+        }
+
         return this;
     }
 
@@ -167,6 +174,25 @@ public class ImportRasterProcessHandler implements IProcessHandler {
                                    new WsImportModel(wsMsgId, status, report, msg)),
                 importInitialData.getWsUiId()
         );
+    }
+
+    private boolean isProjectNotAllowed(Long projectId) {
+        try {
+            Request request = new Request.Builder()
+                    .addHeader("Authorization", "Bearer " + authenticationFacade.getAccessToken())
+                    .url(new URL(gisServiceUrl, "/projects/" + projectId))
+                    .get()
+                    .build();
+
+            ResponseModel<Map> responseModel = httpClient.handleRequest(request, Map.class);
+            if (responseModel.isSuccessful()) {
+                return responseModel.getBody().get("role").equals("VIEWER");
+            } else {
+                return true;
+            }
+        } catch (HttpClientException | MalformedURLException e) {
+            return true;
+        }
     }
 
     private boolean createLayer(Long projectId, ImportReport importReport) {

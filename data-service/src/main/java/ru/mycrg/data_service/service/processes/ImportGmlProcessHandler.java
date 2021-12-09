@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.Process;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.JsonConverter;
-import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.import_.ImportGml;
 import ru.mycrg.data_service.service.import_.model.ImportGmlModel;
@@ -26,6 +26,7 @@ import ru.mycrg.data_service.service.import_.model.WsImportModel;
 import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
 import ru.mycrg.data_service.service.processes.dto.ImportSource;
 import ru.mycrg.data_service.service.processes.dto.ImportTarget;
+import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
@@ -168,7 +169,10 @@ public class ImportGmlProcessHandler implements IProcessHandler {
 
     @Override
     public IProcessHandler validate() {
-        // Nothing to validate
+        ImportTarget target = this.importInitialData.getTarget();
+        if (!target.isProjectIsNew() && isProjectNotAllowed(target.getProjectId())) {
+            throw new BadRequestException("Проект '" + target.getProjectName() + "' не доступен для записи");
+        }
 
         return this;
     }
@@ -235,15 +239,15 @@ public class ImportGmlProcessHandler implements IProcessHandler {
 
     private Optional<Long> createProject(String projectName) {
         try {
-            final RequestBody payload = RequestBody.create(MediaType.parse("application/json"),
-                                                           "{\"projectName\":\"" + projectName + "\"}");
+            RequestBody payload = RequestBody.create(MediaType.parse("application/json"),
+                                                     "{\"projectName\":\"" + projectName + "\"}");
             Request request = new Request.Builder()
                     .addHeader("Authorization", "Bearer " + authenticationFacade.getAccessToken())
                     .url(new URL(gisServiceUrl, "/projects"))
                     .post(payload)
                     .build();
 
-            final ResponseModel<ProjectModel> response = httpClient.handleRequest(request, ProjectModel.class);
+            ResponseModel<ProjectModel> response = httpClient.handleRequest(request, ProjectModel.class);
             if (response.isSuccessful()) {
                 return Optional.of(response.getBody().getId());
             } else {
@@ -256,8 +260,28 @@ public class ImportGmlProcessHandler implements IProcessHandler {
         }
     }
 
+    // TODO: Extract to gis-service client
+    private boolean isProjectNotAllowed(Long projectId) {
+        try {
+            Request request = new Request.Builder()
+                    .addHeader("Authorization", "Bearer " + authenticationFacade.getAccessToken())
+                    .url(new URL(gisServiceUrl, "/projects/" + projectId))
+                    .get()
+                    .build();
+
+            ResponseModel<Map> responseModel = httpClient.handleRequest(request, Map.class);
+            if (responseModel.isSuccessful()) {
+                return responseModel.getBody().get("role").equals("VIEWER");
+            } else {
+                return true;
+            }
+        } catch (HttpClientException | MalformedURLException e) {
+            return true;
+        }
+    }
+
     private void joinLayers(Long projectId, ImportReport importReport) {
-        final String dataStoreName = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
+        String dataStoreName = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
         importReport.getImportLayerReports().stream()
                     .filter(ImportLayerReport::isSuccess)
                     .forEach(importLayerReport -> {

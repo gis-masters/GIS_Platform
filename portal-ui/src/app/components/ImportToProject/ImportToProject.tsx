@@ -167,9 +167,13 @@ export class ImportToProject extends Component<ImportToProjectProps> {
       sidebars.openInfo();
     } catch (error) {
       const err = error as AxiosError<{ errors: Record<string, unknown>[] }>;
-      if (err.response?.status === 409) {
+      if (err.response?.status === 400) {
+        const message = err.response?.data['message'];
+        services.logger.error(message, error);
+        Toast.error({ message: message, details: (error as Error).message });
+      } else if (err.response?.status === 409) {
         this.setFormErrors([err?.message]);
-      } else {
+      } else if (err.response?.data?.errors) {
         const errors = [];
         err.response?.data?.errors?.forEach(({ message, type }) => {
           if (message) {
@@ -187,6 +191,8 @@ export class ImportToProject extends Component<ImportToProjectProps> {
         }
 
         this.setFormErrors(errors);
+      } else {
+        throw error;
       }
     } finally {
       this.setFormBusy(false);
