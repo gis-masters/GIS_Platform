@@ -1,5 +1,5 @@
 .Button {
-  color: rgba(0, 0, 0, 0.87);
+  color: rgb(0 0 0 / 87%);
 }
 
 .Button:not(.MuiButton-containedPrimary) {
@@ -7,7 +7,7 @@
     text-transform: none;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.04);
+      background-color: rgb(0 0 0 / 4%);
     }
 
     &:focus {
@@ -16,14 +16,14 @@
   }
 
   &.MuiButton-outlined {
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    border: 1px solid rgb(0 0 0 / 12%);
   }
 
   &.MuiButton-contained {
     background-color: white;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.04);
+      background-color: rgb(0 0 0 / 4%);
     }
   }
 }

@@ -1,31 +1,24 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { InsertDriveFile, SaveOutlined } from '@mui/icons-material';
+import { InsertDriveFile } from '@mui/icons-material';
 
 import { FileTiff } from '../../../Icons/FileTiff';
-import { services } from '../../../../services/services';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { communicationService } from '../../../../services/communication.service';
-import {
-  getDocLibrariesRecordsUrl,
-  getDocumentLibraryRecordRoleAssignmentUrl
-} from '../../../../services/server-urls.service';
+import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { Role } from '../../../../services/crg/permissions.models';
 import { PropertyType } from '../../../../services/crg/schema.models';
 import { schemaService } from '../../../../services/crg/schema.service';
-import { docLibraryService, LibraryRecord } from '../../../../services/crg/doc-library.service';
+import { getLibraryRecord, LibraryRecord } from '../../../../services/crg/doc-library.service';
 import { convertSchema, getSchemaWithAppliedContentType } from '../../../../services/crg/schema.utils';
 import { DocumentActionsWidget } from '../../../DocumentActionsWidget/DocumentActionsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
-import { Toast } from '../../../Toast/Toast';
 
-import { ActionType, Adapter, AllowedActions, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { getPatch } from '../../../../services/util/patch';
-import { TextBadge } from '../../../TextBadge/TextBadge';
+import { LibraryDocumentActions } from '../../../LibraryDocumentActions/LibraryDocumentActions.composed';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -71,7 +64,7 @@ export class ExplorerAdapterTypeDocument {
 
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
-    const currentItem = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
+    const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id, item.payload.schemaId);
     const oldSchema = getSchemaWithAppliedContentType(
       await schemaService.getSchema(item.payload.schemaId),
       item.payload.content_type_id
@@ -102,69 +95,7 @@ export class ExplorerAdapterTypeDocument {
     return false;
   }
 
-  static async getAllowedActions(item: ExplorerItemData<LibraryRecord>): Promise<AllowedActions> {
-    const binaryField = 'inner_path'; // temporary binary fieldName of default document library schema
-    const recordsUrl = await getDocLibrariesRecordsUrl(item.payload.libraryId);
-    const document = item.payload;
-    const currentItem = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
-    const oldSchema = getSchemaWithAppliedContentType(
-      await schemaService.getSchema(item.payload.schemaId),
-      item.payload.content_type_id
-    );
-    const fields = convertSchema(oldSchema.properties).filter(
-      ({ propertyType }) => propertyType !== PropertyType.BINARY
-    );
-
-    return {
-      [ActionType.INTEGRATION_SED]: {
-        visible: true
-      },
-      [ActionType.SHARE]: {
-        visible: true,
-        url: `${location.protocol}//${location.host}/data-management/library/${item.payload.libraryId}/document/${item.payload.id}`
-      },
-      [ActionType.EDIT]: {
-        visible: true,
-        disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER || currentItem.role === Role.CONTRIBUTOR),
-        fields,
-        payload: item.payload,
-        actionFunction: async (value: LibraryRecord) => {
-          await docLibraryService.updateRecord(item.payload.libraryId, item.payload.id, getPatch(value, item.payload));
-        },
-        dialogTitle: (
-          <>
-            Редактирование документа
-            <TextBadge id={item.payload.id} />
-          </>
-        ),
-        actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' }
-      },
-
-      [ActionType.DOWNLOAD]: {
-        url: `${recordsUrl}/${document.id}/${binaryField}/download`,
-        fileName: `${document.title}.${document.type}`,
-        visible: true
-      },
-
-      [ActionType.DELETE]: {
-        visible: true,
-        disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER),
-        itemTitle: item.payload.title,
-        needConfirmation: true
-      }
-    };
-  }
-
-  static async deleteItem(item: ExplorerItemData<LibraryRecord>): Promise<void> {
-    const { id, libraryId } = item.payload;
-
-    try {
-      await docLibraryService.deleteRecord(libraryId, id);
-
-      communicationService.libraryItemsUpdated.emit();
-    } catch (error) {
-      Toast.error('Не удалось удалить файл');
-      services.logger.error('Не удалось удалить файл: ', error);
-    }
+  static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
+    return <LibraryDocumentActions as='iconButton' hideOpen document={item.payload} />;
   }
 }

@@ -1,8 +1,10 @@
 import React, { Component, ComponentType, createRef, ReactNode, RefObject } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
+import { debounce } from 'lodash';
 import {
   Table,
   TableBody,
@@ -16,46 +18,61 @@ import {
 
 import { filterObjects, FilterParams } from '../../services/util/filterObjects';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
-import { FilterButton } from '../FilterButton/FilterButton';
+import { PageOptions, SortDir } from '../../services/models';
 import { Highlight } from '../Highlight/Highlight';
 import { TextBadge } from '../TextBadge/TextBadge';
+import { Loading } from '../Loading/Loading';
 
-import { TableHeadCell } from './TableHeadCell/TableHeadCell';
 import { XTableEmpty } from './Empty/XTable-Empty';
 import { XTableTitle } from './Title/XTable-Title';
 import { XTableHeader } from './Header/XTable-Header';
-import { XTableHeaderActions } from './HeaderActions/XTable-HeaderActions';
-import { XTableContainer } from './Container/XTable-Container';
 import { XTableFooter } from './Footer/XTable-Footer';
+import { TableHeadCell } from './TableHeadCell/TableHeadCell';
+import { XTableContainer } from './Container/XTable-Container';
+import { XTableHeaderActions } from './HeaderActions/XTable-HeaderActions';
 
 import '!style-loader!css-loader!sass-loader!./XTable.scss';
+import { Toast } from '../Toast/Toast';
 
 const cnXTable = cn('XTable');
 
 export interface XTableColumn<T> {
   title?: ReactNode;
   field?: keyof T;
-  filtering?: boolean;
-  sorting?: boolean;
-  CellContent?: ComponentType<{ rowData: T; filterActive?: boolean; filterParams?: FilterParams<T> }>;
+  filterable?: boolean;
+  sortable?: boolean;
+  CellContent?: ComponentType<{ rowData: T; field: keyof T; filterActive: boolean; filterParams: FilterParams<T> }>;
   getIdBadge?: (rowData: T) => string | number;
   cellProps?: TableCellProps;
   headerCellProps?: TableCellProps;
   align?: TableCellProps['align'];
 }
 
-export interface XTableProps<T> extends IClassNameProps {
+interface XTablePropsBase<T> extends IClassNameProps {
   title?: ReactNode;
   headerActions?: ReactNode;
   headless?: boolean;
-  data: T[];
   cols: XTableColumn<T>[];
   defaultSort: SortParams<T>;
   secondarySortField: keyof T;
   filterable?: boolean;
+  filtersAlwaysEnabled?: boolean;
   onFilter?: (filtered: T[]) => void;
   getRowId?: (rowData: T) => string | number;
+  invoke?: {
+    reload?(): void;
+  };
 }
+
+interface XTablePropsSync<T> extends XTablePropsBase<T> {
+  data: T[];
+}
+
+interface XTablePropsAsync<T> extends XTablePropsBase<T> {
+  getData(pageOptions: PageOptions): Promise<[T[], number]>;
+}
+
+export type XTableProps<T> = XTablePropsSync<T> | XTablePropsAsync<T>;
 
 @observer
 export class XTable<T> extends Component<XTableProps<T>> {
@@ -63,99 +80,139 @@ export class XTable<T> extends Component<XTableProps<T>> {
   @observable private filterParams: FilterParams<T> = {};
   @observable private filterActive = false;
   @observable private _page = 1;
+  @observable private _asyncData: T[] = [];
+  @observable private _asyncTotalPages = 0;
   @observable private tableMinHeight = 0;
+  @observable private pageSize = 20;
+  @observable private busy = false;
+
+  private fetchingOperationId: symbol;
   private tableRef: RefObject<HTMLDivElement> = createRef();
-  private rowsPerPage = 20;
+  private reactionDisposer: IReactionDisposer;
 
   constructor(props: XTableProps<T>) {
     super(props);
     this.sortParams = props.defaultSort;
+    if (props.filtersAlwaysEnabled) {
+      this.filterActive = true;
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.invoke) {
+      this.props.invoke.reload = this.fetchAsyncData;
+    }
+
+    this.reactionDisposer = reaction(
+      () => [{ ...this.sortParams }, { ...this.filterParams }, this.filterActive, this.pageSize, this.page],
+      debounce(this.fetchAsyncData, 200),
+      { fireImmediately: true }
+    );
+  }
+
+  componentWillUnmount() {
+    this.reactionDisposer();
   }
 
   render() {
-    const { cols, filterable, title, headerActions, headless, className, getRowId } = this.props;
+    const { cols, filterable, filtersAlwaysEnabled, title, headerActions, headless, className, getRowId } = this.props;
 
     return (
       <div className={cnXTable(null, [className, 'scroll'])}>
         <XTableHeader>
           <XTableTitle>{title}</XTableTitle>
-          <XTableHeaderActions>
+          <XTableHeaderActions
+            filterActive={this.filterActive || filtersAlwaysEnabled}
+            filterable={filterable && !filtersAlwaysEnabled}
+            onToggleFilter={this.toggleFilter}
+            onChangePageSize={this.pageSizeChangeHandler}
+            pageSize={this.pageSize}
+          >
             {headerActions}
-            {filterable && <FilterButton filterActive={this.filterActive} onClick={this.toggleFilter} />}
           </XTableHeaderActions>
         </XTableHeader>
-        <>
-          <TableContainer minHeight={this.tableMinHeight} containerRef={this.tableRef} component={XTableContainer}>
-            <Table stickyHeader>
-              {!headless && (
-                <TableHead>
-                  <TableRow>
-                    {cols.map(({ field, title, sorting, filtering, align, headerCellProps }, i) => (
-                      <TableHeadCell
-                        key={i}
-                        field={field}
-                        sorting={sorting}
-                        sortParams={this.sortParams}
-                        filterParams={this.filterParams}
-                        filtering={filterable && this.filterActive && filtering}
-                        align={align}
-                        headerCellProps={headerCellProps}
-                        onBeforeFilterChange={this.beforeFilterChange}
-                        onFilterChange={this.afterFilterChange}
-                      >
-                        {title}
-                      </TableHeadCell>
+        <TableContainer minHeight={this.tableMinHeight} containerRef={this.tableRef} component={XTableContainer}>
+          <Table stickyHeader>
+            {!headless && (
+              <TableHead>
+                <TableRow>
+                  {cols.map(({ field, title, sortable, filterable, align, headerCellProps }, i) => (
+                    <TableHeadCell
+                      key={i}
+                      field={field}
+                      sortable={sortable}
+                      sortParams={this.sortParams}
+                      filterParams={this.filterParams}
+                      filterable={filterable && this.filterActive && filterable}
+                      align={align}
+                      headerCellProps={headerCellProps}
+                      onBeforeFilterChange={this.beforeFilterChange}
+                      onFilterChange={this.afterFilterChange}
+                    >
+                      {title}
+                    </TableHeadCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+            )}
+            <TableBody>
+              {this.empty ? (
+                <XTableEmpty colsCount={cols.length} busy={this.busy} />
+              ) : (
+                this.dataPaged.map((rowData, i) => (
+                  <TableRow key={getRowId ? getRowId(rowData) : i} hover>
+                    {cols.map(({ field, CellContent, getIdBadge, cellProps, align }, i) => (
+                      <TableCell key={i} align={align} {...(cellProps || {})}>
+                        {CellContent ? (
+                          <CellContent
+                            rowData={rowData}
+                            field={field}
+                            filterActive={this.filterActive}
+                            filterParams={this.filterParams}
+                          />
+                        ) : (
+                          <>
+                            <Highlight
+                              word={this.filterParams[field]}
+                              enabled={(filterable && this.filterActive) || filtersAlwaysEnabled}
+                            >
+                              {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
+                            </Highlight>
+                            {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}
+                          </>
+                        )}
+                      </TableCell>
                     ))}
                   </TableRow>
-                </TableHead>
+                ))
               )}
-              <TableBody>
-                {!this.data.length ? (
-                  <XTableEmpty colsCount={cols.length} />
-                ) : (
-                  this.dataPaged.map((rowData, i) => (
-                    <TableRow key={getRowId ? getRowId(rowData) : i} hover>
-                      {cols.map(({ field, CellContent, getIdBadge, cellProps, align }, i) => (
-                        <TableCell key={i} align={align} {...(cellProps || {})}>
-                          {CellContent ? (
-                            <CellContent
-                              rowData={rowData}
-                              filterActive={this.filterActive}
-                              filterParams={this.filterParams}
-                            />
-                          ) : (
-                            <>
-                              <Highlight word={this.filterParams[field]} enabled={filterable && this.filterActive}>
-                                {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
-                              </Highlight>
-                              {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}
-                            </>
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          {this.paginationEnabled && (
-            <XTableFooter>
-              <Pagination count={this.pagesCount} page={this.page} onChange={this.handlePagination} />
-            </XTableFooter>
-          )}
-        </>
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {this.paginationEnabled && (
+          <XTableFooter>
+            <Pagination count={this.totalPages} page={this.page} onChange={this.handlePagination} />
+          </XTableFooter>
+        )}
+        <Loading noBackdrop visible={this.busy} />
       </div>
     );
   }
 
   @computed
-  private get data(): T[] {
-    const { field, asc } = this.sortParams;
-    const { filterable, secondarySortField } = this.props;
-    let { data } = this.props;
+  private get isAsync(): boolean {
+    const { getData } = this.props as XTablePropsAsync<T>;
 
-    if (filterable && this.filterActive) {
+    return Boolean(getData);
+  }
+
+  @computed
+  private get syncData(): T[] {
+    const { field, asc } = this.sortParams;
+    const { filterable, secondarySortField, filtersAlwaysEnabled } = this.props;
+    let { data } = this.props as XTablePropsSync<T>;
+
+    if ((filterable && this.filterActive) || filtersAlwaysEnabled) {
       data = filterObjects(data, this.filterParams);
     }
 
@@ -164,22 +221,31 @@ export class XTable<T> extends Component<XTableProps<T>> {
 
   @computed
   private get dataPaged(): T[] {
-    return this.data.slice((this.page - 1) * this.rowsPerPage, (this.page - 1) * this.rowsPerPage + this.rowsPerPage);
+    if (this.isAsync) {
+      return this._asyncData;
+    }
+
+    return this.syncData.slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
+  }
+
+  @computed
+  private get empty(): boolean {
+    return this.isAsync ? !this._asyncData.length : !this.syncData.length;
   }
 
   @computed
   private get page(): number {
-    return Math.min(this._page, this.pagesCount);
+    return Math.min(this._page, this.totalPages || 1);
   }
 
   @computed
-  private get pagesCount(): number {
-    return Math.ceil(this.data.length / this.rowsPerPage);
+  private get totalPages(): number {
+    return this.isAsync ? this._asyncTotalPages : Math.ceil(this.syncData.length / this.pageSize);
   }
 
   @computed
   private get paginationEnabled(): boolean {
-    return Math.ceil(this.props.data.length / this.rowsPerPage) > 1;
+    return this.totalPages > 1;
   }
 
   @action.bound
@@ -194,21 +260,69 @@ export class XTable<T> extends Component<XTableProps<T>> {
 
   @action.bound
   private beforeFilterChange() {
-    if (this.dataPaged.length === this.rowsPerPage || !this.tableMinHeight) {
+    if (this.dataPaged.length === this.pageSize || !this.tableMinHeight) {
       this.tableMinHeight = this.tableRef?.current?.offsetHeight;
     }
   }
 
   @action.bound
   private afterFilterChange() {
-    const { data, onFilter } = this.props;
+    if (!this.isAsync) {
+      const { data } = this.props as XTablePropsSync<T>;
 
-    if (this.dataPaged.length === this.rowsPerPage || this.data === data) {
-      this.tableMinHeight = 0;
+      if (this.dataPaged.length === this.pageSize || this.syncData === data) {
+        this.tableMinHeight = 0;
+      }
+
+      const { onFilter } = this.props;
+      if (onFilter) {
+        onFilter(this.syncData);
+      }
     }
+  }
 
-    if (onFilter) {
-      onFilter(this.data);
+  @action
+  private setAsyncData(data: T[], totalPages: number) {
+    this._asyncData = data;
+    this._asyncTotalPages = totalPages;
+  }
+
+  @action.bound
+  private pageSizeChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    this.pageSize = Number(e.target.value);
+  }
+
+  @action
+  private setBusy(busy: boolean) {
+    this.busy = busy;
+  }
+
+  @boundMethod
+  private async fetchAsyncData() {
+    if (!this.isAsync) {
+      return;
+    }
+    this.setBusy(true);
+    const { getData, filterable, filtersAlwaysEnabled } = this.props as XTablePropsAsync<T>;
+    const operationId = Symbol();
+    this.fetchingOperationId = operationId;
+
+    try {
+      const [data, totalPages] = await getData({
+        page: this.page - 1,
+        pageSize: this.pageSize,
+        sort: this.sortParams.field as string,
+        sortDir: this.sortParams.asc ? SortDir.ASC : SortDir.DESC,
+        filter: (filterable && this.filterActive) || filtersAlwaysEnabled ? this.filterParams : {}
+      });
+
+      if (this.fetchingOperationId === operationId) {
+        this.setAsyncData(data, totalPages);
+      }
+    } catch {
+      Toast.error('Ошибка получения данных');
+    } finally {
+      this.setBusy(false);
     }
   }
 }

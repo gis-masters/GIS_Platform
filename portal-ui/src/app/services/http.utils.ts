@@ -1,7 +1,15 @@
 import { PageableResponse, PageOptions, PageQueryParams } from './models';
+import { buildCqlFilter } from './util/cql';
 
-export function preparePageOptions({ page, sort, sortDir, filter, pageSize }: PageOptions): PageQueryParams {
-  return { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) };
+export function preparePageOptions(
+  { page, sort, sortDir, filter, pageSize, queryParams = {} }: PageOptions,
+  useCQL = false
+): PageQueryParams {
+  if (useCQL && filter) {
+    filter = { filter: buildCqlFilter(filter) };
+  }
+
+  return { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}), ...queryParams };
 }
 
 export function getPayloadFromPageableResponse<T>(response: PageableResponse<T>): T[] {

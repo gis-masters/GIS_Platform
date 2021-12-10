@@ -38,7 +38,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private logger: NGXLogger) {
     this.layers = currentProject.vectorLayers;
     void this.updateBrieflyInfo(this.layers);
-    this.layersWithErrors = this.layers.filter(layer => this.commonInfo.get(layer.tableName)?.totalViolations)
+    this.layersWithErrors = this.layers.filter(layer => this.commonInfo.get(layer.tableName)?.totalViolations);
 
     communicationService.validationInitiated.on(value => {
       this.isValidationInited = value;
@@ -152,7 +152,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
             this.commonInfo.set(brieflyInfo.featureName, brieflyInfo);
           }
         });
-        this.layersWithErrors = this.layers.filter(layer => this.commonInfo.get(layer.tableName)?.totalViolations)
+        this.layersWithErrors = this.layers.filter(layer => this.commonInfo.get(layer.tableName)?.totalViolations);
       }
     } catch (error) {
       this.isValidationInited = false;

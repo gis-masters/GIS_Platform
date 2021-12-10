@@ -6,10 +6,11 @@ const cnXTableEmpty = cn('XTable', 'Empty');
 
 interface XTableEmptyProps {
   colsCount: number;
+  busy: boolean;
 }
 
-export const XTableEmpty: FC<XTableEmptyProps> = ({ colsCount }) => (
+export const XTableEmpty: FC<XTableEmptyProps> = ({ colsCount, busy }) => (
   <TableRow className={cnXTableEmpty()}>
-    <TableCell colSpan={colsCount}>Нет записей.</TableCell>
+    <TableCell colSpan={colsCount}>{busy ? 'Загрузка...' : 'Нет записей.'}</TableCell>
   </TableRow>
 );

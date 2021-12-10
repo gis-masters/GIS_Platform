@@ -13,7 +13,7 @@ interface ConnectionsToProjectsWidgetItemProps {
 }
 
 export const TableManagementWidgetItem: FC<ConnectionsToProjectsWidgetItemProps> = ({ project }) => (
-  <Link className={cnConnectionsToProjectsWidgetItem()} url={`/projects/${project.id}/map`}>
+  <Link className={cnConnectionsToProjectsWidgetItem()} href={`/projects/${project.id}/map`}>
     {project.name}
   </Link>
 );

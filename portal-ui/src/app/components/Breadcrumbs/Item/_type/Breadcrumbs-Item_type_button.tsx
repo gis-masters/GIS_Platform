@@ -3,11 +3,11 @@ import { IClassNameProps, withBemMod } from '@bem-react/core';
 import { ButtonBase } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { BreadcrumbItemData, BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item';
+import { BreadcrumbsItemData, BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item';
 
 interface BreadcrumbsItemTypeButtonProps extends IClassNameProps {
   type: 'button';
-  onClick?: (itemData: BreadcrumbItemData['payload']) => void;
+  onClick?: (itemData: BreadcrumbsItemData['payload']) => void;
 }
 
 class ContainerComponent extends Component<BreadcrumbsItemProps> {

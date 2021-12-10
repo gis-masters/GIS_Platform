@@ -1,17 +1,12 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { MapOutlined, SaveOutlined } from '@mui/icons-material';
+import { MapOutlined } from '@mui/icons-material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { CrgProject, crgProjectSchema } from '../../../../services/crg/projects.models';
+import { ProjectsActions } from '../../../ProjectsActions/ProjectsActions';
+import { CrgProject } from '../../../../services/crg/projects.models';
 
-import { ActionType, Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';
-import { communicationService } from '../../../../services/communication.service';
-import { projectsService } from '../../../../services/crg/projects.service';
-import { currentUser } from '../../../../stores/CurrentUser.store';
-import { Role } from '../../../../services/crg/permissions.models';
-import { getPatch } from '../../../../services/util/patch';
-import { TextBadge } from '../../../TextBadge/TextBadge';
+import { Adapter, ExplorerItemData } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -45,37 +40,7 @@ export class ExplorerAdapterTypeProject {
     return false;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
-  static async getAllowedActions({ payload }: ExplorerItemData<CrgProject>): Promise<AllowedActions> {
-    return {
-      [ActionType.EDIT]: {
-        visible: false, // не работает на стороне сервера
-        disabled: !(currentUser.isAdmin || payload.role === Role.OWNER),
-        fields: crgProjectSchema,
-        payload: payload,
-        actionFunction: async (value: CrgProject) => {
-          await projectsService.update(payload.id, getPatch(value, payload));
-        },
-        dialogTitle: (
-          <>
-            Редактирование таблицы векторного слоя
-            <TextBadge id={payload.id} />
-          </>
-        ),
-        actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' }
-      },
-
-      [ActionType.DELETE]: {
-        visible: true,
-        disabled: !(currentUser.isAdmin || payload.role === Role.OWNER),
-        itemTitle: payload.name,
-        needConfirmation: true
-      }
-    };
-  }
-
-  static async deleteItem(item: ExplorerItemData<CrgProject>): Promise<void> {
-    await projectsService.delete(item.payload.id);
-    communicationService.projectsUpdated.emit();
+  static getActions({ payload }: ExplorerItemData<CrgProject>): ReactNode {
+    return <ProjectsActions project={payload} />;
   }
 }

@@ -44,9 +44,9 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
   @observable private changedPermissions?: RoleAssignmentBody[];
 
   private usersCols: XTableColumn<CrgUser>[] = [
-    { title: 'Фамилия', field: 'surname', filtering: true, sorting: true },
-    { title: 'Имя', field: 'name', filtering: true, sorting: true },
-    { title: 'e-mail', field: 'email', filtering: true, sorting: true, getIdBadge: ({ id }) => id },
+    { title: 'Фамилия', field: 'surname', filterable: true, sortable: true },
+    { title: 'Имя', field: 'name', filterable: true, sortable: true },
+    { title: 'e-mail', field: 'email', filterable: true, sortable: true, getIdBadge: ({ id }) => id },
     {
       title: 'Разрешения',
       cellProps: { padding: 'checkbox' },
@@ -65,15 +65,15 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
     {
       title: 'Название',
       field: 'name',
-      filtering: true,
-      sorting: true,
+      filterable: true,
+      sortable: true,
       getIdBadge: ({ id }) => id
     },
     {
       title: 'Описание',
       field: 'description',
-      filtering: true,
-      sorting: true,
+      filterable: true,
+      sortable: true,
       align: 'right'
     },
     {

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { FolderOutlined, SaveOutlined } from '@mui/icons-material';
+import { FolderOutlined } from '@mui/icons-material';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { Emitter } from '../../../../services/common/Emitter';
@@ -11,30 +11,26 @@ import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { convertSchema, getSchemaWithAppliedContentType } from '../../../../services/crg/schema.utils';
-import { ContentTypeTypes, docLibraryService, LibraryRecord } from '../../../../services/crg/doc-library.service';
+import {
+  ContentTypeTypes,
+  deleteLibraryRecord,
+  getLibraryRecord,
+  getLibraryRecords,
+  getLibraryRecordsWithParticularOne,
+  LibraryRecord
+} from '../../../../services/crg/doc-library.service';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 
 import { ExplorerStore } from '../../Explorer.store';
-import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemType,
-  ExplorerItemEntityType,
-  SortItem,
-  AllowedActions,
-  ActionType,
-  AllowedDetails
-} from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerUrlItem } from '../../Explorer';
-import { PropertyType } from '../../../../services/crg/schema.models';
-import { getPatch } from '../../../../services/util/patch';
-import { TextBadge } from '../../../TextBadge/TextBadge';
 import { ExplorerService } from '../../Explorer.service';
+import { LibraryDocumentActions } from '../../../LibraryDocumentActions/LibraryDocumentActions.composed';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -80,7 +76,7 @@ export class ExplorerAdapterTypeFolder {
 
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
-    const currentItem = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
+    const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id, item.payload.schemaId);
     const oldSchema = getSchemaWithAppliedContentType(
       await schemaService.getSchema(item.payload.schemaId),
       item.payload.content_type_id
@@ -107,44 +103,8 @@ export class ExplorerAdapterTypeFolder {
     return true;
   }
 
-  static async getAllowedActions(item: ExplorerItemData<LibraryRecord>): Promise<AllowedActions> {
-    const currentItem = await docLibraryService.getRecord(item.payload.libraryId, item.payload.id);
-    const oldSchema = getSchemaWithAppliedContentType(
-      await schemaService.getSchema(item.payload.schemaId),
-      item.payload.content_type_id
-    );
-    const fields = convertSchema(oldSchema.properties).filter(
-      ({ propertyType }) => propertyType !== PropertyType.BINARY
-    );
-
-    return {
-      [ActionType.EDIT]: {
-        visible: true,
-        disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER || currentItem.role === Role.CONTRIBUTOR),
-        fields,
-        payload: item.payload,
-        actionFunction: async (value: LibraryRecord) => {
-          await docLibraryService.updateRecord(item.payload.libraryId, item.payload.id, getPatch(value, item.payload));
-        },
-        dialogTitle: (
-          <>
-            Редактирование папки
-            <TextBadge id={item.payload.id} />
-          </>
-        ),
-        actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' }
-      },
-      [ActionType.SHARE]: {
-        visible: true,
-        url: `${location.protocol}//${location.host}/data-management/library/${item.payload.libraryId}/document/${item.payload.id}`
-      },
-      [ActionType.DELETE]: {
-        visible: true,
-        disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER),
-        itemTitle: item.payload.title,
-        needConfirmation: true
-      }
-    };
+  static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
+    return <LibraryDocumentActions document={item.payload} as='iconButton' hideOpen />;
   }
 
   static async getChildren(
@@ -154,12 +114,13 @@ export class ExplorerAdapterTypeFolder {
     const result: ExplorerItemData<LibraryRecord>[] = [];
     const { libraryId, schemaId, id } = explorerItem.payload;
 
-    const [libraryRecords, pagesCount] = await docLibraryService.getRecords(libraryId, schemaId, {
+    const [libraryRecords, pagesCount] = await getLibraryRecords(libraryId, schemaId, {
       page,
       pageSize,
       sort,
       sortDir,
-      filter: { ...filter, parent: id }
+      filter: { ...filter },
+      queryParams: { parent: id }
     });
 
     const { contentTypes } = await schemaService.getSchema(schemaId);
@@ -186,16 +147,11 @@ export class ExplorerAdapterTypeFolder {
   ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
     const [libraryId, identifier] = id.split(':');
 
-    const response = await docLibraryService.getRecordsWithParticularOne(
-      libraryId,
-      item.payload.schemaId,
-      identifier,
-      {
-        ...options,
-        page
-      },
-      item.payload.id
-    );
+    const response = await getLibraryRecordsWithParticularOne(libraryId, item.payload.schemaId, identifier, {
+      ...options,
+      page,
+      queryParams: { parent: item.payload.id }
+    });
 
     if (!response) {
       return;
@@ -240,7 +196,7 @@ export class ExplorerAdapterTypeFolder {
     id: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
     const [libraryId, identifier] = id.split(':');
-    const payload = await docLibraryService.getDocLibrariesRecord(libraryId, identifier, item.payload.schemaId);
+    const payload = await getLibraryRecord(libraryId, identifier, item.payload.schemaId);
     const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 
@@ -300,17 +256,6 @@ export class ExplorerAdapterTypeFolder {
   }
 
   static async deleteItem(item: ExplorerItemData<LibraryRecord>): Promise<void> {
-    await docLibraryService.deleteRecord(item.payload.libraryId, item.payload.id);
-  }
-
-  static async isDeleteAllowed(item: ExplorerItemData<LibraryRecord>): Promise<AllowedDetails> {
-    const records = await docLibraryService.getDocLibrariesRecordRecords(item.payload.libraryId, item.payload.id);
-
-    return {
-      ok: !records._embedded?.records.length,
-      errorMessage: records._embedded?.records.length
-        ? 'Папка не является пустой. Для её удаления необходимо сперва удалить все элементы внутри.'
-        : undefined
-    };
+    await deleteLibraryRecord(item.payload.libraryId, item.payload.id);
   }
 }

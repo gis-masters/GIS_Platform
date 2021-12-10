@@ -33,8 +33,8 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
     {
       field: 'name',
       title: 'Название проекта',
-      filtering: true,
-      sorting: true
+      filterable: true,
+      sortable: true
     }
   ];
 

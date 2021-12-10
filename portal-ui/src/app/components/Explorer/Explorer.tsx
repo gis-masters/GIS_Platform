@@ -45,11 +45,11 @@ export type ExplorerUrlOptions = [number, string, SortDir, Record<string, string
 const cnExplorer = cn('Explorer');
 
 const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData }> = {
-  [ExplorerItemType.ROOT]: { type: ExplorerItemType.ROOT },
-  [ExplorerItemType.DATASET_ROOT]: { type: ExplorerItemType.DATASET_ROOT },
-  [ExplorerItemType.LIBRARY_ROOT]: { type: ExplorerItemType.LIBRARY_ROOT },
-  [ExplorerItemType.PROJECTS_ROOT]: { type: ExplorerItemType.PROJECTS_ROOT },
-  [ExplorerItemType.BASEMAPS_ROOT]: { type: ExplorerItemType.BASEMAPS_ROOT }
+  [ExplorerItemType.ROOT]: { type: ExplorerItemType.ROOT, payload: null },
+  [ExplorerItemType.DATASET_ROOT]: { type: ExplorerItemType.DATASET_ROOT, payload: null },
+  [ExplorerItemType.LIBRARY_ROOT]: { type: ExplorerItemType.LIBRARY_ROOT, payload: null },
+  [ExplorerItemType.PROJECTS_ROOT]: { type: ExplorerItemType.PROJECTS_ROOT, payload: null },
+  [ExplorerItemType.BASEMAPS_ROOT]: { type: ExplorerItemType.BASEMAPS_ROOT, payload: null }
 };
 
 export interface ExplorerProps extends IClassNameProps {
@@ -390,11 +390,10 @@ export class Explorer extends Component<ExplorerProps> {
     if (!path[i - 1]) {
       await this.openItem(path[path.length - 1], 0, path.length - 1, false);
     } else if (type !== ExplorerItemType.EMPTY) {
-      const response = await getChildrenWithParticularOne(
-        path[i - 1],
-        { page, pageSize, sort, sortDir, filter },
-        urlItem
-      );
+      const response =
+        type && id
+          ? await getChildrenWithParticularOne(path[i - 1], { page, pageSize, sort, sortDir, filter }, urlItem)
+          : await getChildren(path[i - 1], { page, pageSize, sort, sortDir, filter });
 
       if (response) {
         const [children, pagesCount, childrenPage] = response;
@@ -402,7 +401,7 @@ export class Explorer extends Component<ExplorerProps> {
         const selectedItem: ExplorerItemData = children.find(item => item.type === type && getId(item) === id);
         this.service.showRestoredItem(selectedItem, children, pagesCount, i, childrenPage ? childrenPage : page);
       } else {
-        if (i > 1) {
+        if (i > 1 && id) {
           Toast.warn({ message: 'Объект не найден' });
         }
 
@@ -415,6 +414,11 @@ export class Explorer extends Component<ExplorerProps> {
   }
 
   private restoreOptions() {
+    const queryParam = route.queryParams['explorerOptions_' + this.props.appRole];
+    if (!queryParam) {
+      return;
+    }
+
     const [pageSize, sort, sortDir, filter] = JSON.parse(
       route.queryParams['explorerOptions_' + this.props.appRole]
     ) as ExplorerUrlOptions;

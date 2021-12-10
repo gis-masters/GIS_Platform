@@ -1,11 +1,21 @@
 export function copyToClipboard(value: string): void {
-  const body = document.body;
+  if (navigator.clipboard?.writeText) {
+    void navigator.clipboard.writeText(value);
+
+    return;
+  }
+
+  const parent = document.querySelector('.MuiModal-root :focus')?.parentNode || document.body;
   const area = document.createElement('textarea');
-  body.append(area);
+  parent.append(area);
 
   area.value = value;
   area.select();
-  document.execCommand('copy');
+  try {
+    document.execCommand('copy');
+  } catch {
+    throw new Error('Не копируется :(');
+  }
 
   area.remove();
 }

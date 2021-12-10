@@ -4,7 +4,13 @@ import { Library } from '../../../Icons/Library';
 import { PageOptions, SortDir } from '../../../../services/models';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { docLibraryService, DocumentLibrary, LibraryRecord } from '../../../../services/crg/doc-library.service';
+import {
+  DocumentLibrary,
+  getLibraries,
+  getLibrariesWithParticularOne,
+  getLibrary,
+  LibraryRecord
+} from '../../../../services/crg/doc-library.service';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerUrlItem } from '../../Explorer';
@@ -39,9 +45,9 @@ export class ExplorerAdapterTypeLibraryRoot {
 
   static async getChildren(
     item: ExplorerItemData,
-    { page, pageSize, sort, sortDir, filter }: PageOptions
+    pageOptions: PageOptions
   ): Promise<[ExplorerItemData<DocumentLibrary>[], number]> {
-    const [libraries, pagesCount] = await docLibraryService.getLibraries(page, pageSize, sort, sortDir, filter);
+    const [libraries, pagesCount] = await getLibraries(pageOptions);
 
     return [libraries.map(payload => ({ type: ExplorerItemType.LIBRARY, payload })), pagesCount];
   }
@@ -51,7 +57,7 @@ export class ExplorerAdapterTypeLibraryRoot {
     options: PageOptions,
     [, identifier, page]: ExplorerUrlItem
   ): Promise<[ExplorerItemData<DocumentLibrary>[], number, number]> | undefined {
-    const response = await docLibraryService.getLibrariesWithParticularOne(identifier, {
+    const response = await getLibrariesWithParticularOne(identifier, {
       ...options,
       page
     });
@@ -82,7 +88,7 @@ export class ExplorerAdapterTypeLibraryRoot {
     item: ExplorerItemData<LibraryRecord>,
     id: string
   ): Promise<ExplorerItemData<DocumentLibrary>> {
-    const payload = await docLibraryService.getLibrary(id);
+    const payload = await getLibrary(id);
 
     return {
       type: ExplorerItemType.LIBRARY,
@@ -91,11 +97,11 @@ export class ExplorerAdapterTypeLibraryRoot {
   }
 
   static getChildrenSortDefaultValue(): string {
-    return 'createdAt';
+    return 'title';
   }
 
   static getChildrenSortDefaultDirection(): SortDir {
-    return SortDir.DESC;
+    return SortDir.ASC;
   }
 
   static getChildrenFilterField(): string {

@@ -21,8 +21,8 @@ export const baseXTablePropsSet: PermissionsXTablePropsSet = {
       {
         title: 'Название',
         field: 'name',
-        filtering: true,
-        sorting: true,
+        filterable: true,
+        sortable: true,
         getIdBadge: ({ id }) => id
       }
     ],
@@ -35,26 +35,26 @@ export const baseXTablePropsSet: PermissionsXTablePropsSet = {
       {
         title: 'Название',
         field: 'title',
-        filtering: true,
-        sorting: true
+        filterable: true,
+        sortable: true
       },
       {
         title: 'Идентификатор',
         field: 'identifier',
-        filtering: true,
-        sorting: true
+        filterable: true,
+        sortable: true
       },
       {
         title: 'Набор данных',
         field: 'dataset',
-        filtering: true,
-        sorting: true
+        filterable: true,
+        sortable: true
       },
       {
         title: 'Схема',
         field: 'schemaId',
-        filtering: true,
-        sorting: true
+        filterable: true,
+        sortable: true
       }
     ],
     defaultSort: { field: 'createdAt', asc: false },
@@ -66,20 +66,20 @@ export const baseXTablePropsSet: PermissionsXTablePropsSet = {
       {
         title: 'Название',
         field: 'title',
-        filtering: true,
-        sorting: true
+        filterable: true,
+        sortable: true
       },
       {
         title: 'Идентификатор',
         field: 'identifier',
-        filtering: true,
-        sorting: true
+        filterable: true,
+        sortable: true
       },
       {
         title: 'Таблиц',
         field: 'itemsCount',
-        filtering: true,
-        sorting: true
+        filterable: true,
+        sortable: true
       }
     ],
     defaultSort: { field: 'createdAt', asc: false },

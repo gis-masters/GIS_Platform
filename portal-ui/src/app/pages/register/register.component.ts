@@ -38,25 +38,22 @@ export class RegisterComponent implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  onSubmit() {
+  async onSubmit(): Promise<void> {
     this.errorMsg = '';
 
     if (this.registrationForm.valid) {
-      authService.registration(this.registrationForm.getRawValue()).then(
-        () => {
-          this.registrationForm.getRawValue();
-
-          Toast.success('Регистрация прошла успешно');
-          this.router.navigateByUrl('/login');
-        },
-        errorResponse => {
-          if (errorResponse.error.message) {
-            this.errorMsg = errorResponse.error.message;
-          } else {
-            this.logger.error(errorResponse);
-          }
+      try {
+        await authService.registration(this.registrationForm.getRawValue());
+        this.registrationForm.getRawValue();
+        Toast.success('Регистрация прошла успешно');
+        void this.router.navigateByUrl('/login');
+      } catch (error) {
+        if ((error as Error)?.message) {
+          this.errorMsg = (error as Error).message;
+        } else {
+          this.logger.error(error);
         }
-      );
+      }
     } else {
       alert('Not valid!');
     }

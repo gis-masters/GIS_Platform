@@ -27,22 +27,22 @@ export class OrgGroups extends Component {
     {
       title: 'Название',
       field: 'name',
-      filtering: true,
-      sorting: true,
+      filterable: true,
+      sortable: true,
       getIdBadge: ({ id }) => id
     },
     {
       title: 'Описание',
       field: 'description',
-      filtering: true,
-      sorting: true,
+      filterable: true,
+      sortable: true,
       align: 'right'
     },
     {
       title: 'Пользователей',
       field: 'usersCount',
-      filtering: true,
-      sorting: true,
+      filterable: true,
+      sortable: true,
       align: 'right'
     },
     {

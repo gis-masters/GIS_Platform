@@ -74,7 +74,7 @@ export class ProjectForm extends Component<ProjectFormProps> {
   }
 
   @boundMethod
-  private async handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  private handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     this.props.onSubmit(this.newProjectName);

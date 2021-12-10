@@ -1,4 +1,5 @@
 import { compose } from '@bem-react/core';
+
 import { withTypeBinary } from './_type/Form-Control_type_binary';
 import { withTypeBool } from './_type/Form-Control_type_bool';
 import { withTypeChoice } from './_type/Form-Control_type_choice';

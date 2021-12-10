@@ -30,9 +30,7 @@ export interface FeatureDescription<T extends Record<string, unknown> = Record<s
   properties?: PropertySchema<T>[];
   tableName?: string;
   geometryType?: SupportedGeometryType;
-  customRuleFunction?: string;
   matchingCounter?: number;
-  calcFiledFunction?: string;
   readOnly?: boolean;
   contentTypes?: ContentType[];
 }

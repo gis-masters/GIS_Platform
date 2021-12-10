@@ -1,9 +1,7 @@
 import React, { ReactNode } from 'react';
-import { pluralize } from 'numeralize-ru';
 
-import { currentUser } from '../../../../stores/CurrentUser.store';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { deleteBasemap, getBasemapConnections } from '../../../../services/crg/basemaps.service';
+import { deleteBasemap } from '../../../../services/crg/basemaps.service';
 import { communicationService } from '../../../../services/communication.service';
 import { Basemap } from '../../../../services/crg/basemaps.models';
 import { Emitter } from '../../../../services/common/Emitter';
@@ -12,7 +10,8 @@ import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 import { BasemapDetails } from '../../../BasemapDetails/BasemapDetails';
 import { ConnectionsBasemapToProjectsWidget } from '../../../ConnectionsBasemapToProjectsWidget/ConnectionsBasemapToProjectsWidget';
 import { ExplorerProps } from '../../Explorer';
-import { ActionType, Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';
+import { Adapter, ExplorerItemData } from '../../Explorer.models';
+import { BasemapActions } from '../../../BasemapActions/BasemapActions';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -60,20 +59,8 @@ export class ExplorerAdapterTypeBasemap {
     return false;
   }
 
-  static async getAllowedActions(item: ExplorerItemData<Basemap>): Promise<AllowedActions> {
-    const deletionAllowed = currentUser.isAdmin;
-    const count = (await getBasemapConnections(item.payload.id)).length;
-    const textProjects = pluralize(count, 'проекте', 'проектах', 'проектах');
-
-    return {
-      [ActionType.DELETE]: {
-        visible: true,
-        disabled: !deletionAllowed,
-        itemTitle: item.payload.title,
-        needConfirmation: true,
-        confirmationText: count ? `Используется в ${count} ${textProjects}.` : 'Не используется в проектах.'
-      }
-    };
+  static getActions(item: ExplorerItemData<Basemap>): ReactNode {
+    return <BasemapActions basemap={item.payload} />;
   }
 
   static async deleteItem(item: ExplorerItemData<Basemap>): Promise<void> {

@@ -77,7 +77,7 @@ export class ExplorerAdapterTypeBasemapsRoot {
     ];
   }
 
-  static async getChilById(item: ExplorerItemData, id: string): Promise<ExplorerItemData<Basemap>> {
+  static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData<Basemap>> {
     const basemap = await getBasemap(id);
 
     return {

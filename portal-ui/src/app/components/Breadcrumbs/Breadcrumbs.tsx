@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
-import { BreadcrumbItemData, BreadcrumbsItemsType } from './Item/Breadcrumbs-Item';
+import { BreadcrumbsItemData, BreadcrumbsItemsType } from './Item/Breadcrumbs-Item';
 import { BreadcrumbsItem } from './Item/Breadcrumbs-Item.composed';
 import { BreadcrumbsDivider } from './Divider/Breadcrumbs-Divider';
 
@@ -12,7 +12,7 @@ const cnBreadcrumbs = cn('Breadcrumbs');
 
 interface BreadcrumbsProps<T> extends IClassNameProps {
   itemsType: BreadcrumbsItemsType;
-  items: BreadcrumbItemData<T>[];
+  items: BreadcrumbsItemData<T>[];
 }
 
 export class Breadcrumbs<T> extends Component<BreadcrumbsProps<T>> {

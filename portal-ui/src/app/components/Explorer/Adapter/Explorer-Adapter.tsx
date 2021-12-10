@@ -8,14 +8,7 @@ import { Emitter } from '../../../services/common/Emitter';
 import { Toast } from '../../Toast/Toast';
 
 import { ExplorerStore } from '../Explorer.store';
-import {
-  Adapter,
-  AllowedActions,
-  AllowedDetails,
-  ExplorerItemData,
-  ExplorerItemType,
-  SortItem
-} from '../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../Explorer.models';
 import { ExplorerAdapterTypeDatasetRoot } from './_type/Explorer-Adapter_type_datasetRoot';
 import { ExplorerAdapterTypeDataset } from './_type/Explorer-Adapter_type_dataset';
 import { ExplorerAdapterTypeDocument } from './_type/Explorer-Adapter_type_document';
@@ -216,18 +209,6 @@ export function getRefreshEmitters(item: ExplorerItemData): Emitter[] {
   return (adapters[item.type].getRefreshEmitters && adapters[item.type].getRefreshEmitters(item)) || [];
 }
 
-export async function getAllowedActions(item: ExplorerItemData): Promise<AllowedActions> {
-  return (adapters[item.type].getAllowedActions && (await adapters[item.type].getAllowedActions(item))) || {};
-}
-
-export async function deleteItem(item: ExplorerItemData): Promise<void> {
-  if (adapters[item.type].deleteItem) {
-    await adapters[item.type].deleteItem(item);
-  }
-}
-
-export async function isDeleteAllowed(item: ExplorerItemData): Promise<AllowedDetails> {
-  if (adapters[item.type].isDeleteAllowed) {
-    return await adapters[item.type].isDeleteAllowed(item);
-  }
+export function getActions(item: ExplorerItemData): ReactNode | undefined {
+  return adapters[item.type].getActions && adapters[item.type].getActions(item);
 }

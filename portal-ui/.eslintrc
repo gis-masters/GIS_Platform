@@ -142,7 +142,7 @@
       2,
       {
         "asyncArrow": "always",
-        "anonymous": "never",
+        "anonymous": "always",
         "named": "never"
       }
     ],
@@ -235,7 +235,8 @@
     "unicorn/no-array-reduce": "off",
     "unicorn/no-array-for-each": "off",
     "unicorn/explicit-length-check": "off",
-    "unicorn/no-array-callback-reference": "off"
+    "unicorn/no-array-callback-reference": "off",
+    "unicorn/number-literal-case": "off"
   },
   "overrides": [
     {

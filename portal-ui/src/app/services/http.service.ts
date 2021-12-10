@@ -65,7 +65,7 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      if (err.response?.status === 401 && route.data.isAuthRequired) {
+      if (err.response?.status === 401 && route.data.authRequired) {
         await this.waitForAuth();
 
         return this.get<T>(url, configWithCache);
@@ -188,7 +188,7 @@ export class Http {
         throw error;
       }
 
-      if (err.response.status === 401 && route.data.isAuthRequired) {
+      if (err.response.status === 401 && route.data.authRequired) {
         await this.waitForAuth();
 
         return this.post<T>(url, data, config);
@@ -206,7 +206,7 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      if (err.response.status === 401 && route.data.isAuthRequired) {
+      if (err.response.status === 401 && route.data.authRequired) {
         await this.waitForAuth();
 
         return this.put<T>(url, data, config);
@@ -230,7 +230,7 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      if (err.response.status === 401 && route.data.isAuthRequired) {
+      if (err.response.status === 401 && route.data.authRequired) {
         await this.waitForAuth();
 
         return this.patch<T>(url, data, config);
@@ -248,7 +248,7 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      if (err.response.status === 401 && route.data.isAuthRequired) {
+      if (err.response.status === 401 && route.data.authRequired) {
         await this.waitForAuth();
 
         return this.delete<T>(url, config);

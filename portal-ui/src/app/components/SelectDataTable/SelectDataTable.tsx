@@ -7,7 +7,7 @@ import { IClassNameProps } from '@bem-react/core';
 
 import { Dataset, DataTable } from '../../services/data.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { BreadcrumbItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
+import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
@@ -69,7 +69,7 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
   }
 
   @computed
-  private get breadcrumbsItems(): BreadcrumbItemData[] {
+  private get breadcrumbsItems(): BreadcrumbsItemData[] {
     const { dataset, dataTable } = this.props;
 
     return [

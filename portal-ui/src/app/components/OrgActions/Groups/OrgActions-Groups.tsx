@@ -40,8 +40,8 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
       title: 'Название',
       field: 'name',
       getIdBadge: ({ id }) => id,
-      filtering: true,
-      sorting: true
+      filterable: true,
+      sortable: true
     }
   ];
 

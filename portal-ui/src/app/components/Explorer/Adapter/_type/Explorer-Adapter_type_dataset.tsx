@@ -1,19 +1,15 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { SaveOutlined, Storage } from '@mui/icons-material';
+import { Storage } from '@mui/icons-material';
 
 import {
   Dataset,
-  dataEntitySchema,
   DataTable,
-  deleteDataset,
   getDataset,
   getDatasetTables,
   getDatasetTablesWithParticularOne,
-  getDataTable,
-  updateDataset
+  getDataTable
 } from '../../../../services/data.service';
-import { getPatch } from '../../../../services/util/patch';
 import { Emitter } from '../../../../services/common/Emitter';
 import { PageOptions, SortDir } from '../../../../services/models';
 import { Role } from '../../../../services/crg/permissions.models';
@@ -22,21 +18,12 @@ import { staticImplements } from '../../../../services/util/staticImplements';
 import { getDatasetRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { communicationService } from '../../../../services/communication.service';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-import { TextBadge } from '../../../TextBadge/TextBadge';
 
-import {
-  ActionType,
-  Adapter,
-  AllowedActions,
-  AllowedDetails,
-  ExplorerItemData,
-  ExplorerItemEntityType,
-  ExplorerItemType,
-  SortItem
-} from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemEntityType, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerUrlItem } from '../../Explorer';
+import { DatasetActions } from '../../../DatasetActions/DatasetActions';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -103,34 +90,8 @@ export class ExplorerAdapterTypeDataset {
     return true;
   }
 
-  static async getAllowedActions(item: ExplorerItemData<Dataset>): Promise<AllowedActions> {
-    const currentItem = await getDataset(item.payload.identifier);
-
-    return {
-      [ActionType.EDIT]: {
-        visible: false, // не работает на стороне сервера
-        disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER || currentItem.role === Role.CONTRIBUTOR),
-        fields: dataEntitySchema,
-        payload: item.payload as unknown as Record<string, Dataset[keyof Dataset]>,
-        actionFunction: async (value: Dataset) => {
-          await updateDataset(item.payload.identifier, getPatch(value, item.payload));
-        },
-        dialogTitle: (
-          <>
-            Редактирование набора данных
-            <TextBadge id={item.payload.identifier} />
-          </>
-        ),
-        actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' }
-      },
-
-      [ActionType.DELETE]: {
-        visible: true,
-        disabled: !(currentUser.isAdmin || currentItem.role === Role.OWNER),
-        itemTitle: item.payload.title,
-        needConfirmation: true
-      }
-    };
+  static getActions(item: ExplorerItemData<Dataset>): ReactNode {
+    return <DatasetActions dataset={item.payload} />;
   }
 
   static async getChildren(
@@ -200,21 +161,6 @@ export class ExplorerAdapterTypeDataset {
 
   static getChildrenFilterLabel(): string {
     return 'Фильтр по названию';
-  }
-
-  static async deleteItem(item: ExplorerItemData<Dataset>): Promise<void> {
-    await deleteDataset(item.payload.identifier);
-  }
-
-  static async isDeleteAllowed(item: ExplorerItemData<Dataset>): Promise<AllowedDetails> {
-    const [tables] = await getDatasetTables(item.payload.identifier, { page: 0, pageSize: 1 });
-
-    return {
-      ok: !tables.length,
-      errorMessage: tables.length
-        ? 'Набор данных не является пустым. Для его удаления необходимо сперва удалить все таблицы внутри.'
-        : undefined
-    };
   }
 
   static getRefreshEmitters(): Emitter[] {

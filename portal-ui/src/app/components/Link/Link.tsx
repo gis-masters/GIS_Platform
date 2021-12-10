@@ -11,23 +11,23 @@ import '!style-loader!css-loader!sass-loader!./Link.scss';
 const cnLink = cn('Link');
 
 interface LinkProps {
-  url: string;
-  theme?: 'normal' | 'none';
+  href: string;
+  theme?: 'normal' | 'none' | 'contents';
   className?: string;
   children?: ReactNode;
   target?: string;
-  download?: string;
+  download?: string | boolean;
   disabled?: boolean;
   delay?: number;
 }
 
 export class Link extends Component<LinkProps> {
   render() {
-    const { children, className, url, target, theme, download } = this.props;
+    const { children, className, href, target, theme, download } = this.props;
 
     return (
       <a
-        href={url}
+        href={href}
         target={download ? '_blank' : target}
         onClick={this.navigate}
         className={cnLink({ theme: theme || 'normal' }, [className])}
@@ -46,7 +46,7 @@ export class Link extends Component<LinkProps> {
 
   @boundMethod
   private async navigate(e: React.MouseEvent<HTMLAnchorElement>) {
-    const { url, target, download, disabled, delay } = this.props;
+    const { href, target, download, disabled, delay } = this.props;
 
     if (!target || disabled || delay) {
       if (disabled) {
@@ -63,7 +63,7 @@ export class Link extends Component<LinkProps> {
         }
 
         services.ngZone.run(() => {
-          void services.router.navigateByUrl(url);
+          void services.router.navigateByUrl(href);
         });
       }
     }

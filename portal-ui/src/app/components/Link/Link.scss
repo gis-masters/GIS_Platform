@@ -5,6 +5,11 @@ body .Link {
     font-size: 0.875em;
   }
 
+  &_theme_contents {
+    display: contents;
+  }
+
+  &_theme_contents,
   &_theme_none {
     text-decoration: none;
 

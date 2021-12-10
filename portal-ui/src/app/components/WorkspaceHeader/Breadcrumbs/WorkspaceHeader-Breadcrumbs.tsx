@@ -22,15 +22,12 @@ export const WorkspaceHeaderBreadcrumbs: FC = observer(() => {
 
   let root: { url: string; title: string };
 
-  switch (page) {
-    case Pages.ORG_ADMIN:
-      root = { url: '/org-admin', title: 'Управление организацией' };
-      break;
-    case Pages.DATA_MANAGEMENT:
-      root = { url: '/data-management', title: 'Управление данными' };
-      break;
-    default:
-      root = { url: '/projects', title: 'Проекты' };
+  if (page === Pages.ORG_ADMIN) {
+    root = { url: '/org-admin', title: 'Управление организацией' };
+  } else if ([Pages.DATA_MANAGEMENT, Pages.REGISTRY, Pages.DOCUMENT].includes(page)) {
+    root = { url: '/data-management', title: 'Управление данными' };
+  } else {
+    root = { url: '/projects', title: 'Проекты' };
   }
 
   return (

@@ -13,7 +13,7 @@ interface WorkspaceHeaderBreadcrumbsItemProps {
 
 export const WorkspaceHeaderBreadcrumbsItem: FC<WorkspaceHeaderBreadcrumbsItemProps> = ({ url, children }) =>
   url ? (
-    <Link className={cnWorkspaceHeaderBreadcrumbsItem()} url={url}>
+    <Link className={cnWorkspaceHeaderBreadcrumbsItem()} href={url}>
       {children}
     </Link>
   ) : (

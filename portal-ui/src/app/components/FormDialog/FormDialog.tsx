@@ -48,7 +48,7 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
     const htmlId = generateRandomId();
 
     return (
-      <Dialog PaperProps={{ className: cnFormDialog() }} open={open} onClose={this.close}>
+      <Dialog PaperProps={{ className: cnFormDialog() }} open={open} onClose={this.close} fullWidth maxWidth='md'>
         {title && <DialogTitle>{title}</DialogTitle>}
         <DialogContent className='scroll'>
           <Form

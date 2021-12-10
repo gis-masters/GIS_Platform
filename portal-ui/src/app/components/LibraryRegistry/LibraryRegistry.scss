@@ -1,0 +1,22 @@
+.LibraryRegistry {
+  position: relative;
+
+  overflow: hidden;
+
+  height: 100%;
+  padding: 20px 30px 44px;
+
+  &-Table {
+    height: 100%;
+  }
+
+  &-Actions {
+    opacity: 0%;
+  }
+
+  &-Actions:focus,
+  &-Actions.LibraryDocumentActions_open,
+  .MuiTableRow-hover:hover .LibraryRegistry-Actions {
+    opacity: 100%;
+  }
+}

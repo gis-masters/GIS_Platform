@@ -73,6 +73,7 @@ import { LoginFormDialogComponent } from './components/login-form-dialog/login-f
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { OpenInAnotherProjectComponent } from './components/open-in-another-project/open-in-another-project.component';
 import { ImportGmlResultButtonComponent } from './components/import-gml-results-button/import-gml-result-button';
+import { LibraryRegistryComponent } from './components/library-registry/library-registry.component';
 import { LibraryDocumentComponent } from './components/library-document/library-document.component';
 
 @NgModule({
@@ -130,6 +131,7 @@ import { LibraryDocumentComponent } from './components/library-document/library-
     OpenInAnotherProjectComponent,
     LoginFormComponent,
     ImportGmlResultButtonComponent,
+    LibraryRegistryComponent,
     LibraryDocumentComponent
   ],
   imports: [

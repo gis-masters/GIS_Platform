@@ -11,7 +11,7 @@ export const cnBreadcrumbsItem = cn('Breadcrumbs', 'Item');
 
 export type BreadcrumbsItemsType = 'button' | 'link' | 'none';
 
-export interface BreadcrumbItemData<T = unknown> {
+export interface BreadcrumbsItemData<T = unknown> {
   title: ReactNode;
   subtitle?: ReactNode;
   url?: string;
@@ -19,7 +19,7 @@ export interface BreadcrumbItemData<T = unknown> {
   payload?: T;
 }
 
-export interface BreadcrumbsItemProps<T = unknown> extends BreadcrumbItemData<T>, IClassNameProps {
+export interface BreadcrumbsItemProps<T = unknown> extends BreadcrumbsItemData<T>, IClassNameProps {
   type: BreadcrumbsItemsType;
   ContainerComponent?: ComponentType<BreadcrumbsItemProps>;
 }

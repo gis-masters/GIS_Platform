@@ -7,48 +7,38 @@ import { AxiosError } from 'axios';
 import moment from 'moment';
 
 import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
-import { docLibraryService, LibraryRecord } from '../../services/crg/doc-library.service';
+import { getLibrary, getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
 import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { schemaService } from '../../services/crg/schema.service';
 import { route } from '../../stores/Route.store';
-import {
-  getDocLibrariesRecordsUrl,
-  getDocumentLibraryRecordRoleAssignmentUrl
-} from '../../services/server-urls.service';
+import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../services/server-urls.service';
 import { communicationService } from '../../services/communication.service';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Role } from '../../services/crg/permissions.models';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
-import {
-  AllowedDetails,
-  ExplorerItemData,
-  ExplorerItemEntityType,
-  ExplorerItemType
-} from '../Explorer/Explorer.models';
-import { ActionIntegrationSed } from '../ActionIntegrationSed/ActionIntegrationSed';
-import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
-import { ActionDownload } from '../ActionDownload/ActionDownload';
-import { EmptyListView } from '../EmptyListView/EmptyListView';
-import { ActionDelete } from '../ActionDelete/ActionDelete';
+import { ExplorerItemEntityType } from '../Explorer/Explorer.models';
 import { services } from '../../services/services';
+import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
+import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
+import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { Loading } from '../Loading/Loading';
-import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
-
-import { LibraryDocumentActionEdit } from './ActionEdit/LibraryDocument-ActionEdit';
+import { Link } from '../Link/Link';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocument.scss';
 
 const cnLibraryDocument = cn('LibraryDocument');
 
+export interface LibraryDocumentProps {
+  document?: LibraryRecord;
+  contentOnly?: boolean;
+}
+
 @observer
-export class LibraryDocument extends Component {
+export class LibraryDocument extends Component<LibraryDocumentProps> {
   @observable private document: LibraryRecord;
-  @observable private explorerItem: ExplorerItemData<LibraryRecord>;
   @observable private fields: PropertySchema<LibraryRecord>[];
   @observable private documentRoleAssignmentUrl: string;
-  @observable private isDeleteAllowed: AllowedDetails;
-  @observable private documentUrl: string;
   @observable private error: boolean;
   @observable private busy = false;
   private operationId?: symbol;
@@ -64,28 +54,13 @@ export class LibraryDocument extends Component {
 
   render() {
     moment.locale('ru');
-    const actionDetailsDelete = {
-      visible: true,
-      itemTitle: this.document?.title,
-      disabled: !(currentUser.isAdmin || this.document?.role === Role.OWNER),
-      isDeleteAllowed: this.isDeleteAllowed,
-      needConfirmation: true
-    };
-    const ActionDetailsIntegrationSed = {
-      visible: true,
-      disabled: !(currentUser.isAdmin || this.document?.role === Role.OWNER || this.document?.role === Role.CONTRIBUTOR)
-    };
-    const downloadAction = {
-      url: `${this.documentUrl}/${this.document?.id}/inner_path/download`,
-      fileName: `${this.document?.title}.${this.document?.type}`,
-      visible: true
-    };
+    const { contentOnly } = this.props;
 
     return (
       <div className={cnLibraryDocument()}>
         {!this.error && this.document && (
           <>
-            <h1 className={cnLibraryDocument('Title')}>{this.document.title}</h1>
+            {!contentOnly && <h1 className={cnLibraryDocument('Title')}>{this.document.title}</h1>}
 
             <div className={cnLibraryDocument('Date')}>
               <span className={cnLibraryDocument('DateTitle')}>Дата создания:</span>
@@ -110,23 +85,20 @@ export class LibraryDocument extends Component {
               />
             )}
 
-            <div className={cnLibraryDocument('Actions')}>
-              <LibraryDocumentActionEdit document={this.document} fields={this.fields} />
-              <ActionDownload actionDetails={downloadAction} fullSizeButton />
-              <ActionIntegrationSed item={this.document} actionDetails={ActionDetailsIntegrationSed} fullSizeButton />
-              <ActionDelete
-                item={this.explorerItem}
-                actionDetails={actionDetailsDelete}
-                isDeleteAllowed={this.isDeleteAllowed}
-                fullSizeButton
+            {!contentOnly && (
+              <LibraryDocumentActions
+                className={cnLibraryDocument('Actions')}
+                document={this.document}
+                as='button'
+                hideOpen
               />
-            </div>
+            )}
           </>
         )}
 
         {this.error && (
           <EmptyListView text='Документ не найден'>
-            <Button routerLink={'/data-management'}>Перейти на страницу управления данными</Button>
+            <Link href={'/data-management'}>На страницу управления данными</Link>
           </EmptyListView>
         )}
 
@@ -141,23 +113,27 @@ export class LibraryDocument extends Component {
     await this.fetchDocument();
     if (!this.error) {
       await this.getSchema();
-      await this.getDocumentUrl();
       await this.getDocumentPermissionUrl();
-      await this.getDeleteAllowed();
     }
 
     this.setBusy(false);
   }
 
   private async fetchDocument() {
+    if (this.props.document) {
+      this.setLibraryItem(this.props.document);
+
+      return;
+    }
+
     const { libraryId, documentId } = route.params;
 
     const operationId = Symbol();
     this.operationId = operationId;
 
     try {
-      const library = await docLibraryService.getLibrary(libraryId);
-      const document = await docLibraryService.getDocLibrariesRecord(libraryId, documentId, library.schemaId);
+      const library = await getLibrary(libraryId);
+      const document = await getLibraryRecord(libraryId, documentId, library.schemaId);
 
       if (this.operationId !== operationId) {
         return;
@@ -187,35 +163,13 @@ export class LibraryDocument extends Component {
     );
   }
 
-  private async getDocumentUrl(): Promise<void> {
-    const documentUrl = await getDocLibrariesRecordsUrl(this.document.libraryId);
-    this.setDocumentUrl(documentUrl);
-  }
-
   private async getDocumentPermissionUrl(): Promise<void> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(this.document.libraryId, this.document.id);
     this.setDocumentRoleAssignmentUrl(url);
   }
 
-  private async getDeleteAllowed(): Promise<void> {
-    const records = await docLibraryService.getDocLibrariesRecordRecords(this.document.libraryId, this.document.id);
-    const deleteAllowed = {
-      ok: !records._embedded?.records.length,
-      errorMessage: records._embedded?.records.length
-        ? 'Папка не является пустой. Для её удаления необходимо сперва удалить все элементы внутри.'
-        : undefined
-    };
-
-    this.setIsDeleteAllowed(deleteAllowed);
-  }
-
   @action.bound
   private setLibraryItem(item: LibraryRecord) {
-    this.explorerItem = {
-      payload: item,
-      type: item.isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT
-    };
-
     this.document = item;
   }
 
@@ -230,11 +184,6 @@ export class LibraryDocument extends Component {
   }
 
   @action.bound
-  private setDocumentUrl(url: string) {
-    this.documentUrl = url;
-  }
-
-  @action.bound
   private setError() {
     this.error = true;
   }
@@ -242,10 +191,5 @@ export class LibraryDocument extends Component {
   @action.bound
   private setBusy(busy: boolean) {
     this.busy = busy;
-  }
-
-  @action.bound
-  private setIsDeleteAllowed(isDeleteAllowed: AllowedDetails) {
-    this.isDeleteAllowed = isDeleteAllowed;
   }
 }

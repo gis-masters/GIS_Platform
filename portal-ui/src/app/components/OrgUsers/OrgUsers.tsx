@@ -30,34 +30,34 @@ export class OrgUsers extends Component {
     {
       title: 'Фамилия',
       field: 'surname',
-      filtering: true,
-      sorting: true
+      filterable: true,
+      sortable: true
     },
     {
       title: 'Имя',
       field: 'name',
-      filtering: true,
-      sorting: true
+      filterable: true,
+      sortable: true
     },
     {
       title: 'Активен',
       field: 'enabled',
-      sorting: true,
+      sortable: true,
       align: 'right',
       CellContent: OrgUsersEnabled
     },
     {
       title: 'e-mail / login',
       field: 'email',
-      filtering: true,
-      sorting: true,
+      filterable: true,
+      sortable: true,
       align: 'right',
       CellContent: OrgUsersUserEmail
     },
     {
       title: 'Группы',
       field: 'groupsString',
-      filtering: true,
+      filterable: true,
       align: 'right'
     },
     {

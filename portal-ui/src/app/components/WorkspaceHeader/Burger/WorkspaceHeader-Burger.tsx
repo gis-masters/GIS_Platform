@@ -29,7 +29,7 @@ export class WorkspaceHeaderBurger extends Component {
 
         <Menu open={Boolean(this.anchorEl)} onClose={this.close} anchorEl={this.anchorEl}>
           {route.data.page === Pages.MAP && currentUser.isAdmin && (
-            <Link url={`/projects/${currentProject.id}/import`} theme='none' delay={300}>
+            <Link href={`/projects/${currentProject.id}/import`} theme='none' delay={300}>
               <MenuItem onClick={this.close}>
                 <ListItemIcon>
                   <CloudDownload />
@@ -40,7 +40,7 @@ export class WorkspaceHeaderBurger extends Component {
           )}
 
           {route.data.page === Pages.IMPORT && (
-            <Link url={`/projects/${currentProject.id}/map`} theme='none' delay={300}>
+            <Link href={`/projects/${currentProject.id}/map`} theme='none' delay={300}>
               <MenuItem onClick={this.close}>
                 <ListItemIcon>
                   <Map />
@@ -50,7 +50,7 @@ export class WorkspaceHeaderBurger extends Component {
             </Link>
           )}
 
-          <Link url='/projects' theme='none' delay={300}>
+          <Link href='/projects' theme='none' delay={300}>
             <MenuItem onClick={this.close}>
               <ListItemIcon>
                 <ViewModule />
@@ -60,7 +60,7 @@ export class WorkspaceHeaderBurger extends Component {
           </Link>
 
           {flags.dataManagement && (
-            <Link url='/data-management' theme='none' delay={300}>
+            <Link href='/data-management' theme='none' delay={300}>
               <MenuItem onClick={this.close}>
                 <ListItemIcon>
                   <Storage />
@@ -71,7 +71,7 @@ export class WorkspaceHeaderBurger extends Component {
           )}
 
           {currentUser.isAdmin && (
-            <Link url='/org-admin' theme='none' delay={300}>
+            <Link href='/org-admin' theme='none' delay={300}>
               <MenuItem onClick={this.close}>
                 <ListItemIcon>
                   <Business />

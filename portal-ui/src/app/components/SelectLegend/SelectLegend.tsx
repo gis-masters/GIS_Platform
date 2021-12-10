@@ -32,14 +32,14 @@ export class SelectLegend extends Component<FormControlProps> {
     {
       field: 'title',
       title: 'Название',
-      filtering: true,
-      sorting: true
+      filterable: true,
+      sortable: true
     },
     {
       field: 'layerTitle',
       title: 'Слой',
-      filtering: true,
-      sorting: true
+      filterable: true,
+      sortable: true
     }
   ];
 

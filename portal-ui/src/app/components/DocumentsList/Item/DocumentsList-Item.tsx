@@ -57,7 +57,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
         <div className={cnDocumentsList('Item')}>
           <AssignmentOutlined className={cnDocumentsList('Icon')} color='action' fontSize='small' />
 
-          <Link className={cnDocumentsList('Content')} url={this.downloadUrl} download={document.title}>
+          <Link className={cnDocumentsList('Content')} href={this.downloadUrl} download={document.title}>
             {document.title}
           </Link>
 

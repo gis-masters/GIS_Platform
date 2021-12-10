@@ -58,7 +58,7 @@ class UsersService {
   }
 
   async fetchCurrentUser(autoLogin?: boolean) {
-    if (route.data.isAuthRequired) {
+    if (route.data.authRequired) {
       try {
         const userInfo = await http.get<OrgInfo>(await getUserUrl('current'));
         if (userInfo.id !== currentUser.id) currentUser.setOrgInfo(userInfo);

@@ -166,9 +166,9 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
 
   private getUserColumns(): XTableColumn<CrgUser>[] {
     return [
-      { title: 'Фамилия', field: 'surname', filtering: true, sorting: true },
-      { title: 'Имя', field: 'name', filtering: true, sorting: true },
-      { title: 'e-mail', field: 'email', filtering: true, sorting: true, getIdBadge: ({ id }) => id }
+      { title: 'Фамилия', field: 'surname', filterable: true, sortable: true },
+      { title: 'Имя', field: 'name', filterable: true, sortable: true },
+      { title: 'e-mail', field: 'email', filterable: true, sortable: true, getIdBadge: ({ id }) => id }
     ];
   }
 
@@ -177,15 +177,15 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
       {
         title: 'Название',
         field: 'name',
-        filtering: true,
-        sorting: true,
+        filterable: true,
+        sortable: true,
         getIdBadge: ({ id }) => id
       },
       {
         title: 'Описание',
         field: 'description',
-        filtering: true,
-        sorting: true,
+        filterable: true,
+        sortable: true,
         align: 'right'
       },
       {

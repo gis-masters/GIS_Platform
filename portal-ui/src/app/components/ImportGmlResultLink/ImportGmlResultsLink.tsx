@@ -29,7 +29,7 @@ export class ImportGmlResultsLink extends Component<ImportGmlResultsLinkProps> {
         <PseudoLink className={cnImportGmlResultsLink('Info')} onClick={this.openDialog}>
           Отчет
         </PseudoLink>
-        <Link url={`/projects/${projectId}/map`}>Перейти в проект</Link>
+        <Link href={`/projects/${projectId}/map`}>Перейти в проект</Link>
         <ImportGmlResultDialog open={this.open} onClose={this.onClose} reports={this.props.reports} />
       </div>
     ) : null;

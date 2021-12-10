@@ -46,7 +46,7 @@ export class ImportGmlResultDialog extends Component<ImportGmlResultDialogProps>
           <DialogContentText>Данные загружены в {projectIsNew && 'новый'} проект:</DialogContentText>
           {projectId && (
             <DialogContentText>
-              <Link url={`/projects/${projectId}/map`}>{projectName}</Link>
+              <Link href={`/projects/${projectId}/map`}>{projectName}</Link>
             </DialogContentText>
           )}
           <Accordion>

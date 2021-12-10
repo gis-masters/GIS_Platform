@@ -23,7 +23,7 @@ export class ProjectCardCard extends Component<ProjectCardCardProps> {
     const { project } = this.props;
 
     return (
-      <Link className={cnProjectCard('Card')} url={this.url}>
+      <Link className={cnProjectCard('Card')} href={this.url}>
         <ProjectCardName>{project.name}</ProjectCardName>
         <ProjectCardFooter />
       </Link>

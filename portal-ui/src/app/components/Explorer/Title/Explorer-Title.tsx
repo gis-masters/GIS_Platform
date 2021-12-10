@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { Breadcrumbs } from '../../Breadcrumbs/Breadcrumbs';
-import { BreadcrumbItemData } from '../../Breadcrumbs/Item/Breadcrumbs-Item';
+import { BreadcrumbsItemData } from '../../Breadcrumbs/Item/Breadcrumbs-Item';
 
 import { getTitle } from '../Adapter/Explorer-Adapter';
 import { ExplorerItemData } from '../Explorer.models';
@@ -29,7 +29,7 @@ const handleClick = ({ item, depth, onOpen }: ExplorerBreadcrumbItemData) => {
 };
 
 export const ExplorerTitle: FC<ExplorerTitleProps> = observer(({ store, onOpen }) => {
-  const items: BreadcrumbItemData<ExplorerBreadcrumbItemData>[] = store.path.slice(0, -1).map((pathItem, i) => ({
+  const items: BreadcrumbsItemData<ExplorerBreadcrumbItemData>[] = store.path.slice(0, -1).map((pathItem, i) => ({
     title: getTitle(pathItem),
     payload: {
       item: pathItem,

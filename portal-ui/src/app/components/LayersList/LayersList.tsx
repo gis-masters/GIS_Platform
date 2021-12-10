@@ -55,8 +55,8 @@ export class LayersList extends Component<LayersListProps> {
             title: 'Название',
             field: 'title',
             getIdBadge: ({ id }) => id,
-            filtering: true,
-            sorting: true,
+            filterable: true,
+            sortable: true,
             headerCellProps: { width: '100%' }
           }
         ]}

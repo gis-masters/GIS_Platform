@@ -1,8 +1,8 @@
 import { http } from '../http.service';
-import { PageableResponse, PageOptions, SortDir } from '../models';
+import { PageableResponse, PageOptions } from '../models';
 import { DataEntity, DataEntityType } from '../data.service';
 import {
-  getDocLibrariesRecordRecordsUrl,
+  getDocLibrariesRecords2Url,
   getDocLibrariesRecordsUrl,
   getDocLibrariesRecordUrl,
   getDocLibrariesUrl,
@@ -45,153 +45,143 @@ export interface LibraryRecord {
 
 export type LibraryRecordRaw = Omit<LibraryRecord, 'library' | 'schemaId'>;
 
-class DocLibraryService {
-  private static _instance: DocLibraryService;
+export async function getLibraries(pageOptions: PageOptions): Promise<[DocumentLibrary[], number]> {
+  const params = preparePageOptions(pageOptions, true);
 
-  static get instance() {
-    return this._instance || (this._instance = new this());
-  }
+  const response = await http.get<PageableResponse<DocumentLibrary>>(await getDocLibrariesUrl(), { params });
 
-  private constructor() {}
+  return [(response._embedded && response._embedded.libraries) || [], response.page.totalPages];
+}
 
-  async getLibraries(
-    page: number,
-    pageSize: number,
-    sort?: string,
-    sortDir?: SortDir,
-    filter?: { [key: string]: string }
-  ): Promise<[DocumentLibrary[], number]> {
-    const tempFilter = filter && filter.title ? `title ilike '%${filter.title}%'` : '';
+export async function getLibrariesWithParticularOne(
+  identifier: string,
+  pageOptions: PageOptions
+): Promise<[DocumentLibrary[], number, number] | undefined> {
+  return await http.getPageWithObject<DocumentLibrary>(
+    await getDocLibrariesUrl(),
+    pageOptions,
+    (item: DocumentLibrary) => item.identifier === identifier
+  );
+}
 
-    const response = await http.get<PageableResponse<DocumentLibrary>>(await getDocLibrariesUrl(), {
-      params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, filter: tempFilter }
+export async function getLibrary(identifier: string): Promise<DocumentLibrary> {
+  const response = await http.get<DocumentLibrary>(await getDocLibraryUrl(identifier));
+  response.identifier = identifier;
+
+  return response;
+}
+
+export async function getLibraryRecord(libraryId: string, id: string, schemaId: string): Promise<LibraryRecord> {
+  const response = await http.get<LibraryRecord>(await getDocLibrariesRecordUrl(libraryId, id));
+
+  response.libraryId = libraryId;
+  response.schemaId = schemaId;
+
+  return response;
+}
+
+export async function getLibraryRecords(
+  libraryId: string,
+  schemaId: string,
+  pageOptions: PageOptions
+): Promise<[LibraryRecord[], number]> {
+  const url = await getDocLibrariesRecordsUrl(libraryId);
+  const requestOptions = { params: preparePageOptions(pageOptions, true) };
+
+  const response = await http.get<PageableResponse<{ content: LibraryRecordRaw }>>(url, requestOptions);
+
+  const libraryRecords = (response._embedded?.records || []).map(linkedHashMap => ({
+    ...(linkedHashMap.content || {}),
+    libraryId,
+    schemaId
+  }));
+
+  return [libraryRecords, response.page.totalPages];
+}
+
+// eslint-disable-next-line sonarjs/no-identical-functions
+export async function getLibraryRecords2(
+  libraryId: string,
+  schemaId: string,
+  pageOptions: PageOptions
+): Promise<[LibraryRecord[], number]> {
+  const url = await getDocLibrariesRecords2Url(libraryId);
+  const requestOptions = { params: preparePageOptions(pageOptions, true) };
+
+  const response = await http.get<PageableResponse<{ content: LibraryRecordRaw }>>(url, requestOptions);
+
+  // eslint-disable-next-line sonarjs/no-identical-functions
+  const libraryRecords = (response._embedded?.records || []).map(linkedHashMap => ({
+    ...(linkedHashMap.content || {}),
+    libraryId,
+    schemaId
+  }));
+
+  return [libraryRecords, response.page.totalPages];
+}
+
+export async function getLibraryRecordsWithParticularOne(
+  libraryId: string,
+  schemaId: string,
+  id: string,
+  pageOptions: PageOptions
+): Promise<[LibraryRecord[], number, number] | undefined> {
+  const objectRecognizer = (item: { content: LibraryRecord }) => Number(item.content.id) === Number(id);
+
+  const response = await http.getPageWithObject<{ content: LibraryRecord }>(
+    await getDocLibrariesRecordsUrl(libraryId),
+    pageOptions,
+    objectRecognizer
+  );
+
+  if (response) {
+    const [content, totalPages, page] = response;
+
+    const records = content.map(item => {
+      return item.content;
     });
 
-    return [(response._embedded && response._embedded.libraries) || [], response.page.totalPages];
-  }
+    records.forEach(record => {
+      record.libraryId = libraryId;
+      record.schemaId = schemaId;
+    });
 
-  async getLibrariesWithParticularOne(
-    identifier: string,
-    pageOptions: PageOptions
-  ): Promise<[DocumentLibrary[], number, number] | undefined> {
-    return await http.getPageWithObject<DocumentLibrary>(
-      await getDocLibrariesUrl(),
-      pageOptions,
-      (item: DocumentLibrary) => item.identifier === identifier
-    );
-  }
-
-  async getLibrary(identifier: string): Promise<DocumentLibrary> {
-    const response = await http.get<DocumentLibrary>(await getDocLibraryUrl(identifier));
-    response.identifier = identifier;
-
-    return response;
-  }
-
-  async getDocLibrariesRecord(libraryId: string, id: string, schemaId: string): Promise<LibraryRecord> {
-    const response = await http.get<LibraryRecord>(await getDocLibrariesRecordUrl(libraryId, id));
-
-    response.libraryId = libraryId;
-    response.schemaId = schemaId;
-
-    return response;
-  }
-
-  async getRecords(libraryId: string, schemaId: string, pageOptions: PageOptions): Promise<[LibraryRecord[], number]> {
-    const url = await getDocLibrariesRecordsUrl(libraryId);
-    const requestOptions = { params: preparePageOptions(pageOptions) };
-
-    const title = requestOptions.params.title;
-    if (title) {
-      requestOptions.params.filter = `title ilike '%${title}%'`;
-    }
-
-    const response = await http.get<PageableResponse<{ content: LibraryRecordRaw }>>(url, requestOptions);
-
-    const libraryRecords = (response._embedded?.records || []).map(linkedHashMap => ({
-      ...(linkedHashMap.content || {}),
-      libraryId,
-      schemaId
-    }));
-
-    return [libraryRecords, response.page.totalPages];
-  }
-
-  async getRecordsWithParticularOne(
-    libraryId: string,
-    schemaId: string,
-    id: string,
-    pageOptions: PageOptions,
-    parentId?: string
-  ): Promise<[LibraryRecord[], number, number] | undefined> {
-    const objectRecognizer = (item: { content: LibraryRecord }) => Number(item.content.id) === Number(id);
-
-    const response = await http.getPageWithObject<{ content: LibraryRecord }>(
-      parentId
-        ? await getDocLibrariesRecordRecordsUrl(libraryId, parentId)
-        : await getDocLibrariesRecordsUrl(libraryId),
-      pageOptions,
-      objectRecognizer
-    );
-
-    if (response) {
-      const [content, totalPages, page] = response;
-
-      const records = content.map(item => {
-        return item.content;
-      });
-
-      records.forEach(record => {
-        record.libraryId = libraryId;
-        record.schemaId = schemaId;
-      });
-
-      return [records, totalPages, page];
-    }
-  }
-
-  async createRecord(libraryId: string, data: LibraryRecordRaw, update = true): Promise<LibraryRecord> {
-    const record = await http.post<LibraryRecord>(
-      await getDocLibrariesRecordsUrl(libraryId),
-      this.prepareFormData(data)
-    );
-
-    if (update) {
-      communicationService.libraryItemsUpdated.emit();
-    }
-
-    return record;
-  }
-
-  async deleteRecord(libraryId: string, id: string) {
-    await http.delete(await getDocLibrariesRecordUrl(libraryId, id));
-    communicationService.libraryItemsUpdated.emit();
-  }
-
-  async updateRecord(libraryId: string, id: string, patch: Partial<LibraryRecord>) {
-    await http.patch(await getDocLibrariesRecordUrl(libraryId, id), patch);
-    communicationService.libraryItemsUpdated.emit();
-  }
-
-  async getRecord(libraryId: string, id: string) {
-    return http.get<LibraryRecord>(await getDocLibrariesRecordUrl(libraryId, id));
-  }
-
-  private prepareFormData(data: LibraryRecordRaw) {
-    const formData = new FormData();
-    if (data.binary) {
-      formData.append('file', data.binary as File);
-      delete data.binary;
-    }
-
-    formData.append('body', JSON.stringify(data));
-
-    return formData;
-  }
-
-  async getDocLibrariesRecordRecords(libraryId: string, id: string) {
-    return await http.get<PageableResponse<LibraryRecord>>(await getDocLibrariesRecordRecordsUrl(libraryId, id));
+    return [records, totalPages, page];
   }
 }
 
-export const docLibraryService = DocLibraryService.instance;
+export async function createLibraryRecord(
+  libraryId: string,
+  data: LibraryRecordRaw,
+  update = true
+): Promise<LibraryRecord> {
+  const record = await http.post<LibraryRecord>(await getDocLibrariesRecordsUrl(libraryId), prepareFormData(data));
+
+  if (update) {
+    communicationService.libraryItemsUpdated.emit();
+  }
+
+  return record;
+}
+
+export async function deleteLibraryRecord(libraryId: string, id: string): Promise<void> {
+  await http.delete(await getDocLibrariesRecordUrl(libraryId, id));
+  communicationService.libraryItemsUpdated.emit();
+}
+
+export async function updateLibraryRecord(libraryId: string, id: string, patch: Partial<LibraryRecord>): Promise<void> {
+  await http.patch(await getDocLibrariesRecordUrl(libraryId, id), patch);
+  communicationService.libraryItemsUpdated.emit();
+}
+
+function prepareFormData(data: LibraryRecordRaw): FormData {
+  const formData = new FormData();
+  if (data.binary) {
+    formData.append('file', data.binary as File);
+    delete data.binary;
+  }
+
+  formData.append('body', JSON.stringify(data));
+
+  return formData;
+}

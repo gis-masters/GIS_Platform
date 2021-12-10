@@ -10,7 +10,7 @@ import { services } from '../../services/services';
 import { EditedField } from '../../services/crg/schemaOld.models';
 import { EditFeatureInfo } from '../EditFeatureField/EditFeatureField';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { docLibraryService, LibraryRecord } from '../../services/crg/doc-library.service';
+import { createLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
 
 import { DocumentsListItem } from './Item/DocumentsList-Item';
 
@@ -121,7 +121,7 @@ export class DocumentsList extends Component<DocumentsListProps> {
       this.setLoading(true);
 
       const { editedField, featureInfo } = this.props;
-      const crgDocument = await docLibraryService.createRecord('dl_default', {
+      const crgDocument = await createLibraryRecord('dl_default', {
         content_type_id: 'doc_v2',
         binary: selectedFile,
         title: selectedFile.name,

@@ -126,6 +126,7 @@ export interface PageOptions {
   sort?: string;
   sortDir?: SortDir;
   filter?: { [key: string]: string };
+  queryParams?: { [key: string]: string };
 }
 
 export interface GeoserverException {

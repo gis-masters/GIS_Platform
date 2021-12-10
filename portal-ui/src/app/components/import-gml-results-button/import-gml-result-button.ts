@@ -29,7 +29,7 @@ export class ImportGmlResultButtonComponent implements OnInit, OnChanges, OnDest
   }
 
   private renderReactElement() {
-    let payload = this.event.payload as WsImportModel;
+    const payload = this.event.payload as WsImportModel;
     const reactElement = createElement(ImportGmlResultsLink, { reports: payload.payload });
 
     render(reactElement, this.ref.nativeElement);

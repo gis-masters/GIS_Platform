@@ -15,7 +15,7 @@ import {
 } from '../../services/crg/formValidation.service';
 import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
 import { ContentType, OldFeatureDescription } from '../../services/crg/schemaOld.models';
-import { docLibraryService, LibraryRecord, LibraryRecordRaw } from '../../services/crg/doc-library.service';
+import { createLibraryRecord, LibraryRecord, LibraryRecordRaw } from '../../services/crg/doc-library.service';
 import { PropertySchema } from '../../services/crg/schema.models';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { ExplorerStore } from '../Explorer/Explorer.store';
@@ -51,12 +51,8 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     return (
       <>
         <MenuIconButton Icon={NoteAddOutlined}>
-          {this.contentTypesWithoutFolder.map(contentType => (
-            <CreateLibraryElementMenuItem
-              contentType={contentType}
-              onClick={this.itemClickHandler}
-              key={contentType.id}
-            />
+          {this.contentTypesWithoutFolder.map((contentType, i) => (
+            <CreateLibraryElementMenuItem contentType={contentType} onClick={this.itemClickHandler} key={i} />
           ))}
         </MenuIconButton>
 
@@ -172,7 +168,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     }
 
     try {
-      const record = await docLibraryService.createRecord(this.schema.tableName, formData, false);
+      const record = await createLibraryRecord(this.schema.tableName, formData, false);
 
       if (!record.libraryId) {
         record.libraryId = this.schema.tableName;

@@ -43,7 +43,7 @@ const testFields: PropertySchema<TestData>[] = [
 
 const actionFunction = async (formValue: TestData) => {
   await sleep(2000 * Math.random());
-  const errors = validateFormValue(formValue, testFields);
+  const errors = validateFormValue(formValue, testFields as PropertySchema[]);
 
   if (errors.length) {
     throw { errors };

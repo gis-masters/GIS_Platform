@@ -74,7 +74,7 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
             </Dialog>
           </>
         ) : (
-          <Link url={url} target='_blank'>
+          <Link href={url} target='_blank'>
             {text}
           </Link>
         )}

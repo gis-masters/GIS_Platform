@@ -35,19 +35,23 @@ export class ExplorerAdapterTypeRoot {
       [
         {
           id: 'dataSetRoot',
-          type: ExplorerItemType.DATASET_ROOT
+          type: ExplorerItemType.DATASET_ROOT,
+          payload: null
         },
         {
           id: 'libraryRoot',
-          type: ExplorerItemType.LIBRARY_ROOT
+          type: ExplorerItemType.LIBRARY_ROOT,
+          payload: null
         },
         {
           id: 'basemapsRoot',
-          type: ExplorerItemType.BASEMAPS_ROOT
+          type: ExplorerItemType.BASEMAPS_ROOT,
+          payload: null
         },
         {
           id: 'projectsRoot',
-          type: ExplorerItemType.PROJECTS_ROOT
+          type: ExplorerItemType.PROJECTS_ROOT,
+          payload: null
         }
       ],
       0
@@ -57,22 +61,30 @@ export class ExplorerAdapterTypeRoot {
   static getChildById(item: ExplorerItemData<Dataset>, id: string): Promise<ExplorerItemData<Dataset>> {
     if (id === 'dataSetRoot') {
       return Promise.resolve({
-        type: ExplorerItemType.DATASET_ROOT
+        id: 'dataSetRoot',
+        type: ExplorerItemType.DATASET_ROOT,
+        payload: null
       });
     }
     if (id === 'libraryRoot') {
       return Promise.resolve({
-        type: ExplorerItemType.LIBRARY_ROOT
+        id: 'libraryRoot',
+        type: ExplorerItemType.LIBRARY_ROOT,
+        payload: null
       });
     }
     if (id === 'basemapsRoot') {
       return Promise.resolve({
-        type: ExplorerItemType.BASEMAPS_ROOT
+        id: 'basemapsRoot',
+        type: ExplorerItemType.BASEMAPS_ROOT,
+        payload: null
       });
     }
     if (id === 'projectsRoot') {
       return Promise.resolve({
-        type: ExplorerItemType.PROJECTS_ROOT
+        id: 'projectsRoot',
+        type: ExplorerItemType.PROJECTS_ROOT,
+        payload: null
       });
     }
   }

@@ -1,24 +1,24 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Route, Data } from '@angular/router';
 
-import { LoginPageComponent } from './pages/login/login-page.component';
-import { AboutComponent } from './pages/about/about.component';
-import { MapPageComponent } from './pages/map/map-page.component';
-import { HomePageComponent } from './pages/home/home-page.component';
-import { RegisterComponent } from './pages/register/register.component';
-import { RecoveryComponent } from './pages/recovery/recovery.component';
-import { ProjectsPageComponent } from './pages/projects/projects-page.component';
-import { ImportPageComponent } from './pages/import/import-page.component';
-import { MappingPageComponent } from './pages/mapping/mapping-page.component';
-import { OrgAdminPageComponent } from './pages/org-admin/org-admin-page.component';
-import { DataManagementPageComponent } from './pages/data-management/data-management-page.component';
-import { LibraryDocumentPageComponent } from './pages/library-document/library-document-page.component';
-
-import { AuthGuardService } from './services/auth-guard.service';
+import { CurrentUserResolver } from './services/resolvers/current-user-resolver.service';
 import { OrgAdminGuardService } from './services/org-admin-guard.service';
 import { WorkflowGuardService } from './services/workflow-guard.service';
 import { ProjectsGuardService } from './services/projects-guard.service';
-import { CurrentUserResolver } from './services/resolvers/current-user-resolver.service';
+import { AuthGuardService } from './services/auth-guard.service';
+import { AboutComponent } from './pages/about/about.component';
+import { MapPageComponent } from './pages/map/map-page.component';
+import { HomePageComponent } from './pages/home/home-page.component';
+import { LoginPageComponent } from './pages/login/login-page.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { RecoveryComponent } from './pages/recovery/recovery.component';
+import { ImportPageComponent } from './pages/import/import-page.component';
+import { MappingPageComponent } from './pages/mapping/mapping-page.component';
+import { ProjectsPageComponent } from './pages/projects/projects-page.component';
+import { OrgAdminPageComponent } from './pages/org-admin/org-admin-page.component';
+import { DataManagementPageComponent } from './pages/data-management/data-management-page.component';
+import { LibraryDocumentPageComponent } from './pages/library-document/library-document-page.component';
+import { LibraryRegistryPageComponent } from './pages/library-registry/library-registry-page.component';
 
 export enum Pages {
   HOME = 'home',
@@ -31,12 +31,13 @@ export enum Pages {
   MAP = 'map',
   ORG_ADMIN = 'org-admin',
   DATA_MANAGEMENT = 'data-management',
+  REGISTRY = 'registry',
   DOCUMENT = 'document'
 }
 
 export interface AppRouteData extends Data {
   page: Pages;
-  isAuthRequired: boolean;
+  authRequired: boolean;
 }
 
 interface AppRoute extends Route {
@@ -58,7 +59,7 @@ const routes: AppRoutes = [
   {
     path: '',
     component: HomePageComponent,
-    data: { page: Pages.HOME, isAuthRequired: false }
+    data: { page: Pages.HOME, authRequired: false }
   },
   {
     path: 'login',
@@ -66,22 +67,22 @@ const routes: AppRoutes = [
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.LOGIN, isAuthRequired: false }
+    data: { page: Pages.LOGIN, authRequired: false }
   },
   {
     path: 'register',
     component: RegisterComponent,
-    data: { page: Pages.REGISTER, isAuthRequired: false }
+    data: { page: Pages.REGISTER, authRequired: false }
   },
   {
     path: 'recovery',
     component: RecoveryComponent,
-    data: { page: Pages.RECOVERY, isAuthRequired: false }
+    data: { page: Pages.RECOVERY, authRequired: false }
   },
   {
     path: 'about',
     component: AboutComponent,
-    data: { page: Pages.ABOUT, isAuthRequired: false }
+    data: { page: Pages.ABOUT, authRequired: false }
   },
   {
     path: 'projects/default',
@@ -90,7 +91,7 @@ const routes: AppRoutes = [
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.PROJECTS, isAuthRequired: true }
+    data: { page: Pages.PROJECTS, authRequired: true }
   },
   {
     path: 'projects',
@@ -99,7 +100,7 @@ const routes: AppRoutes = [
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.PROJECTS, isAuthRequired: true }
+    data: { page: Pages.PROJECTS, authRequired: true }
   },
   {
     path: 'projects/:projectId',
@@ -112,7 +113,7 @@ const routes: AppRoutes = [
         resolve: {
           user: CurrentUserResolver
         },
-        data: { page: Pages.IMPORT, isAuthRequired: true }
+        data: { page: Pages.IMPORT, authRequired: true }
       },
       {
         path: 'import/:importId',
@@ -121,7 +122,7 @@ const routes: AppRoutes = [
         resolve: {
           user: CurrentUserResolver
         },
-        data: { page: Pages.IMPORT, isAuthRequired: true }
+        data: { page: Pages.IMPORT, authRequired: true }
       },
       {
         path: 'import/:importId/mapping',
@@ -130,7 +131,7 @@ const routes: AppRoutes = [
         resolve: {
           user: CurrentUserResolver
         },
-        data: { page: Pages.IMPORT, isAuthRequired: true }
+        data: { page: Pages.IMPORT, authRequired: true }
       },
       {
         path: 'map',
@@ -139,7 +140,7 @@ const routes: AppRoutes = [
         resolve: {
           user: CurrentUserResolver
         },
-        data: { page: Pages.MAP, isAuthRequired: true }
+        data: { page: Pages.MAP, authRequired: true }
       },
       {
         path: '**',
@@ -154,7 +155,7 @@ const routes: AppRoutes = [
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.ORG_ADMIN, isAuthRequired: true }
+    data: { page: Pages.ORG_ADMIN, authRequired: true }
   },
   {
     path: 'data-management',
@@ -163,7 +164,16 @@ const routes: AppRoutes = [
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.DATA_MANAGEMENT, isAuthRequired: true }
+    data: { page: Pages.DATA_MANAGEMENT, authRequired: true }
+  },
+  {
+    path: 'data-management/library/:libraryId/registry',
+    component: LibraryRegistryPageComponent,
+    canActivate: [AuthGuardService],
+    resolve: {
+      user: CurrentUserResolver
+    },
+    data: { page: Pages.REGISTRY, authRequired: true }
   },
   {
     path: 'data-management/library/:libraryId/document/:documentId',
@@ -172,7 +182,7 @@ const routes: AppRoutes = [
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.DOCUMENT, isAuthRequired: true }
+    data: { page: Pages.DOCUMENT, authRequired: true }
   },
   {
     path: '**',
@@ -199,5 +209,6 @@ export const routingComponents = [
   ProjectsPageComponent,
   OrgAdminPageComponent,
   DataManagementPageComponent,
+  LibraryRegistryPageComponent,
   LibraryDocumentPageComponent
 ];

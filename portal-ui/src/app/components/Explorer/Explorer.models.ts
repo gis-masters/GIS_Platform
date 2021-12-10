@@ -1,9 +1,7 @@
 import React, { ReactNode } from 'react';
 
-import { PropertySchema } from '../../services/crg/schema.models';
 import { PageOptions, SortDir } from '../../services/models';
 import { Emitter } from '../../services/common/Emitter';
-import { ButtonProps } from '../Button/Button';
 
 import { ExplorerStore } from './Explorer.store';
 import { ExplorerService } from './Explorer.service';
@@ -40,7 +38,7 @@ export enum ExplorerItemEntityType {
 
 export interface ExplorerItemData<T = ExplorerItemPayloads[ExplorerItemType]> {
   type: ExplorerItemType;
-  payload?: T;
+  payload: T;
   children?: ExplorerItemData[];
 }
 
@@ -94,58 +92,5 @@ export interface Adapter {
   getToolbarActions?: (item: ExplorerItemData, store: ExplorerStore, service: ExplorerService) => ReactNode;
   getEmptyListView?: (item: ExplorerItemData) => ReactNode;
   getRefreshEmitters?: (item: ExplorerItemData) => Emitter[];
-  getAllowedActions?: (item: ExplorerItemData) => Promise<AllowedActions>;
-  deleteItem?: (item: ExplorerItemData) => Promise<void>;
-  isDeleteAllowed?: (item: ExplorerItemData) => Promise<AllowedDetails>;
-}
-
-export enum ActionType {
-  EDIT = 'edit',
-  DELETE = 'delete',
-  DOWNLOAD = 'download',
-  INTEGRATION_SED = 'integration_sed',
-  SHARE = 'share'
-}
-
-export type AllowedActions = {
-  [ActionType.EDIT]?: ActionDetailsEdit;
-  [ActionType.DOWNLOAD]?: ActionDetailsDownload;
-  [ActionType.DELETE]?: ActionDetailsDelete;
-  [ActionType.INTEGRATION_SED]?: ActionDetailsIntegrationSed;
-  [ActionType.SHARE]?: ActionDetailsShare;
-};
-
-interface ActionDetailsCommon {
-  visible?: boolean;
-  disabled?: boolean;
-}
-
-export interface ActionDetailsEdit extends ActionDetailsCommon {
-  fields: PropertySchema[];
-  payload: unknown;
-  actionFunction(data: unknown): Promise<void>;
-  actionButtonProps?: Omit<ButtonProps, 'ref'>;
-  dialogTitle?: ReactNode;
-}
-
-export interface ActionDetailsDownload extends ActionDetailsCommon {
-  url: string;
-  fileName: string;
-}
-
-export interface ActionDetailsShare extends ActionDetailsCommon {
-  url: string;
-}
-
-export interface ActionDetailsDelete extends ActionDetailsCommon {
-  itemTitle: string;
-  needConfirmation?: boolean;
-  confirmationText?: string;
-}
-
-export type ActionDetailsIntegrationSed = ActionDetailsCommon;
-
-export interface AllowedDetails {
-  ok: boolean;
-  errorMessage?: string;
+  getActions?: (item: ExplorerItemData) => ReactNode;
 }

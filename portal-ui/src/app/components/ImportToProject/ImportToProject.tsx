@@ -36,8 +36,8 @@ export class ImportToProject extends Component<ImportToProjectProps> {
     {
       field: 'name',
       title: 'Название проекта',
-      filtering: true,
-      sorting: true
+      filterable: true,
+      sortable: true
     }
   ];
 

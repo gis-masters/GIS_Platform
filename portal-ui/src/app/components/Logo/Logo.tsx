@@ -14,7 +14,7 @@ export const Logo: FC = observer(() => (
   <>
     <Favicon />
     {env.loaded && (
-      <Link url='/' className={cnLogo()}>
+      <Link href='/' className={cnLogo()}>
         <img src={env.logo || defaultLogo} alt='logo' />
       </Link>
     )}

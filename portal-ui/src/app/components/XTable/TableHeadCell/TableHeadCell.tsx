@@ -13,9 +13,9 @@ const cnTableHeadCell = cn('TableHeadCell');
 
 interface TableHeadCellProps<T> extends TableCellProps {
   field?: keyof T;
-  sorting?: boolean;
+  sortable?: boolean;
   sortParams?: SortParams<T>;
-  filtering?: boolean;
+  filterable?: boolean;
   filterParams?: FilterParams<T>;
   headerCellProps?: TableCellProps;
   onBeforeFilterChange: () => void;
@@ -25,17 +25,17 @@ interface TableHeadCellProps<T> extends TableCellProps {
 @observer
 export class TableHeadCell<T> extends Component<TableHeadCellProps<T>> {
   render() {
-    const { field, sorting, sortParams, filtering, filterParams, children, headerCellProps, className } = this.props;
+    const { field, sortable, sortParams, filterable, filterParams, children, headerCellProps, className } = this.props;
 
     const cellProps = {
       ...headerCellProps,
       ...this.props,
-      className: cnTableHeadCell({ sorting, filtering }, [className])
+      className: cnTableHeadCell({ sortable, filterable }, [className])
     };
 
     delete cellProps.field;
-    delete cellProps.sorting;
-    delete cellProps.filtering;
+    delete cellProps.sortable;
+    delete cellProps.filterable;
     delete cellProps.sortParams;
     delete cellProps.filterParams;
     delete cellProps.headerCellProps;
@@ -44,7 +44,7 @@ export class TableHeadCell<T> extends Component<TableHeadCellProps<T>> {
 
     return (
       <TableCell {...cellProps}>
-        {sorting ? (
+        {sortable ? (
           <TableSortLabel
             active={sortParams.field === field}
             direction={sortParams.asc || sortParams.field !== field ? 'asc' : 'desc'}
@@ -55,7 +55,7 @@ export class TableHeadCell<T> extends Component<TableHeadCellProps<T>> {
         ) : (
           children
         )}
-        {filtering && (
+        {filterable && (
           <TextField
             variant='filled'
             size='small'
@@ -84,7 +84,11 @@ export class TableHeadCell<T> extends Component<TableHeadCellProps<T>> {
   private handleFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { field, filterParams, onBeforeFilterChange, onFilterChange } = this.props;
     onBeforeFilterChange();
-    filterParams[field] = e.target.value;
+    if (e.target.value) {
+      filterParams[field] = e.target.value;
+    } else {
+      delete filterParams[field];
+    }
     onFilterChange();
   }
 }

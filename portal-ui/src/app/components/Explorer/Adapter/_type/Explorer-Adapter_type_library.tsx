@@ -1,24 +1,29 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { LocalLibrary } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
+import { LocalLibrary, PlaylistAddCheck } from '@mui/icons-material';
 
-import { PageOptions, SortDir } from '../../../../services/models';
+import { currentUser } from '../../../../stores/CurrentUser.store';
+import {
+  ContentTypeTypes,
+  DocumentLibrary,
+  getLibrary,
+  getLibraryRecord,
+  getLibraryRecords,
+  getLibraryRecordsWithParticularOne,
+  LibraryRecord
+} from '../../../../services/crg/doc-library.service';
 import { Emitter } from '../../../../services/common/Emitter';
+import { Role } from '../../../../services/crg/permissions.models';
+import { PageOptions, SortDir } from '../../../../services/models';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 import { schemaService } from '../../../../services/crg/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
-import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
-import {
-  ContentTypeTypes,
-  docLibraryService,
-  DocumentLibrary,
-  LibraryRecord
-} from '../../../../services/crg/doc-library.service';
 import { getDocumentLibraryRoleAssignmentUrl } from '../../../../services/server-urls.service';
+import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-import { Role } from '../../../../services/crg/permissions.models';
-import { currentUser } from '../../../../stores/CurrentUser.store';
+import { Link } from '../../../Link/Link';
 
 import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
@@ -67,7 +72,7 @@ export class ExplorerAdapterTypeLibrary {
 
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRoleAssignmentUrl(item.payload.identifier);
-    const currentItem = await docLibraryService.getLibrary(item.payload.identifier);
+    const currentItem = await getLibrary(item.payload.identifier);
 
     return (
       <PermissionsWidget
@@ -93,7 +98,7 @@ export class ExplorerAdapterTypeLibrary {
   ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
     const result: ExplorerItemData<LibraryRecord>[] = [];
 
-    const [libraryRecords, pagesCount] = await docLibraryService.getRecords(
+    const [libraryRecords, pagesCount] = await getLibraryRecords(
       explorerItem.payload.identifier,
       explorerItem.payload.schemaId,
       pageOptions
@@ -134,7 +139,7 @@ export class ExplorerAdapterTypeLibrary {
     id: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
     const [libraryId, identifier] = id.split(':');
-    const payload = await docLibraryService.getDocLibrariesRecord(libraryId, identifier, item.payload.schemaId);
+    const payload = await getLibraryRecord(libraryId, identifier, item.payload.schemaId);
     const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 
@@ -154,7 +159,7 @@ export class ExplorerAdapterTypeLibrary {
   ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
     const [libraryId, identifier] = id.split(':');
 
-    const response = await docLibraryService.getRecordsWithParticularOne(libraryId, item.payload.schemaId, identifier, {
+    const response = await getLibraryRecordsWithParticularOne(libraryId, item.payload.schemaId, identifier, {
       ...options,
       page
     });
@@ -205,7 +210,18 @@ export class ExplorerAdapterTypeLibrary {
     store: ExplorerStore,
     service: ExplorerService
   ): ReactNode {
-    return <CreateLibraryElement schemaId={item.payload.schemaId} onCreate={service.createHandler} store={store} />;
+    return (
+      <>
+        <Link href={`/data-management/library/${item.payload.identifier}/registry`} theme='contents'>
+          <Tooltip title='Открыть реестр'>
+            <IconButton>
+              <PlaylistAddCheck />
+            </IconButton>
+          </Tooltip>
+        </Link>
+        <CreateLibraryElement schemaId={item.payload.schemaId} onCreate={service.createHandler} store={store} />
+      </>
+    );
   }
 
   static getEmptyListView(): ReactNode {
