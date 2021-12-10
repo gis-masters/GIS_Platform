@@ -121,6 +121,14 @@ public class DdlTables {
         return createTableSql.contains("shape public.geometry");
     }
 
+    public List<String> getAllColumnNames(String tableName) {
+        String query = "SELECT column_name " +
+                "FROM INFORMATION_SCHEMA.COLUMNS " +
+                "WHERE TABLE_NAME = '" + tableName + "'";
+
+        return jdbcTemplate.queryForList(query, String.class);
+    }
+
     @NotNull
     private static String handleChoice(@NotNull SimplePropertyDto attrDescription) {
         ForeignKeyType foreignKeyType = attrDescription.getForeignKeyType();

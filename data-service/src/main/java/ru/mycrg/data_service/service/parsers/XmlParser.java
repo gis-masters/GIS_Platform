@@ -95,7 +95,7 @@ public class XmlParser {
                 }
             }
         } catch (IOException | SAXException e) {
-            String msg = "Something went wrong while xml parsing of file" + e.getMessage();
+            String msg = "Что-то пошло не так во время парсинга xml файла " + e.getMessage();
             log.error(msg);
             throw new XmlParserException(msg);
         }

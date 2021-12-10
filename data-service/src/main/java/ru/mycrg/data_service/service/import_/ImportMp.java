@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.RecordsDao;
+import ru.mycrg.data_service.dao.ddl.DdlTables;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.entity.RecordEntity;
@@ -22,10 +23,7 @@ import ru.mycrg.data_service.util.ImportValidationHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,14 +37,16 @@ public class ImportMp implements Importer {
     private final SchemaService schemaService;
     private final TableService tableService;
     private final CrsHandler crsHandler;
+    private final DdlTables ddlTables;
 
     public ImportMp(RecordsDao recordsDao, XmlParser xmlParser, SchemaService schemaService,
-                    TableService tableService, CrsHandler crsHandler) {
+                    TableService tableService, CrsHandler crsHandler, DdlTables ddlTables) {
         this.recordsDao = recordsDao;
         this.xmlParser = xmlParser;
         this.schemaService = schemaService;
         this.tableService = tableService;
         this.crsHandler = crsHandler;
+        this.ddlTables = ddlTables;
     }
 
     @Override
@@ -86,7 +86,11 @@ public class ImportMp implements Importer {
             Map<String, Object> dataForSavingToDBValid = ImportValidationHandler
                     .removeNonMatchingBySchemaProperties(dataForSavingToDB, crossedProperties);
 
-            return recordsDao.addRecord(table, new RecordEntity(dataForSavingToDBValid)).getId();
+            List<String> columnNamesInTable = ddlTables.getAllColumnNames(table.getTable());
+            Map<String, Object> propertiesMatchingToDBColumns = getAllPropertiesMatchingToDBColumns(
+                    dataForSavingToDBValid, columnNamesInTable);
+
+            return recordsDao.addRecord(table, new RecordEntity(propertiesMatchingToDBColumns)).getId();
         } catch (CrgDaoException e) {
             log.error(e.getMessage());
 
@@ -111,5 +115,17 @@ public class ImportMp implements Importer {
         }
 
         return crossedProperties;
+    }
+
+    private Map<String, Object> getAllPropertiesMatchingToDBColumns(Map<String, Object> dataForSavingToDB,
+                                                                    List<String> columnNames) {
+        Map<String, Object> matchingByColumnsProperties = new HashMap<>();
+        for (String columnName: columnNames) {
+            if (dataForSavingToDB.containsKey(columnName)) {
+                matchingByColumnsProperties.put(columnName, dataForSavingToDB.get(columnName));
+            }
+        }
+
+        return matchingByColumnsProperties;
     }
 }

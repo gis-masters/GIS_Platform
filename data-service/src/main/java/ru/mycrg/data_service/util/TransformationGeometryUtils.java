@@ -67,7 +67,7 @@ public class TransformationGeometryUtils {
                 return Arrays.asList(geometry.getCoordinates());
             }
         } catch (FactoryException | TransformException e) {
-            String msg = "Something went wrong while geometry transformation" + e.getMessage();
+            String msg = "Что-то пошло не так во время трансформации геометрии " + e.getMessage();
             log.error(msg);
             throw new TransformationException(msg);
         }

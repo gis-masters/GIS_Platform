@@ -53,7 +53,7 @@ public class CrsHandler {
                 throw new TransformationException(msg);
             }
         } catch (FactoryException e) {
-            String msg = "Something went wrong while geometry transformation" + e.getMessage();
+            String msg = "Что-то пошло не так во время трансформации геометрии " + e.getMessage();
             log.error(msg);
             throw new TransformationException(msg);
         }
@@ -69,7 +69,7 @@ public class CrsHandler {
                 return CRS.decode("EPSG:" + srid);
             }
         } catch (FactoryException e) {
-            String msg = "Something went wrong while geometry transformation" + e.getMessage();
+            String msg = "Что-то пошло не так во время трансформации геометрии " + e.getMessage();
             log.error(msg);
             throw new TransformationException(msg);
         }
