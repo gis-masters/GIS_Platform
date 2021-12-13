@@ -57,8 +57,9 @@ interface XTablePropsBase<T> extends IClassNameProps {
   secondarySortField: keyof T;
   filterable?: boolean;
   filtersAlwaysEnabled?: boolean;
-  onFilter?: (filtered: T[]) => void;
-  getRowId?: (rowData: T) => string | number;
+  onFilter?(filtered: T[]): void;
+  onPageOptionsChange?(pageOptions: PageOptions): void;
+  getRowId?(rowData: T): string | number;
   invoke?: {
     reload?(): void;
   };
@@ -99,13 +100,20 @@ export class XTable<T> extends Component<XTableProps<T>> {
   }
 
   componentDidMount() {
-    if (this.props.invoke) {
-      this.props.invoke.reload = this.fetchAsyncData;
+    const { onPageOptionsChange, invoke } = this.props;
+
+    if (invoke) {
+      invoke.reload = this.fetchAsyncData;
     }
 
     this.reactionDisposer = reaction(
       () => [{ ...this.sortParams }, { ...this.filterParams }, this.filterActive, this.pageSize, this.page],
-      debounce(this.fetchAsyncData, 200),
+      debounce(() => {
+        void this.fetchAsyncData();
+        if (onPageOptionsChange) {
+          onPageOptionsChange(this.pageOptions);
+        }
+      }, 200),
       { fireImmediately: true }
     );
   }
@@ -248,6 +256,19 @@ export class XTable<T> extends Component<XTableProps<T>> {
     return this.totalPages > 1;
   }
 
+  @computed
+  private get pageOptions(): PageOptions {
+    const { filterable, filtersAlwaysEnabled } = this.props;
+
+    return {
+      page: this.page - 1,
+      pageSize: this.pageSize,
+      sort: this.sortParams.field as string,
+      sortDir: this.sortParams.asc ? SortDir.ASC : SortDir.DESC,
+      filter: (filterable && this.filterActive) || filtersAlwaysEnabled ? this.filterParams : {}
+    };
+  }
+
   @action.bound
   private toggleFilter() {
     this.filterActive = !this.filterActive;
@@ -303,18 +324,12 @@ export class XTable<T> extends Component<XTableProps<T>> {
       return;
     }
     this.setBusy(true);
-    const { getData, filterable, filtersAlwaysEnabled } = this.props as XTablePropsAsync<T>;
+    const { getData } = this.props as XTablePropsAsync<T>;
     const operationId = Symbol();
     this.fetchingOperationId = operationId;
 
     try {
-      const [data, totalPages] = await getData({
-        page: this.page - 1,
-        pageSize: this.pageSize,
-        sort: this.sortParams.field as string,
-        sortDir: this.sortParams.asc ? SortDir.ASC : SortDir.DESC,
-        filter: (filterable && this.filterActive) || filtersAlwaysEnabled ? this.filterParams : {}
-      });
+      const [data, totalPages] = await getData(this.pageOptions);
 
       if (this.fetchingOperationId === operationId) {
         this.setAsyncData(data, totalPages);

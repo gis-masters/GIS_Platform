@@ -90,11 +90,7 @@ export async function getLibraryRecords(
 
   const response = await http.get<PageableResponse<{ content: LibraryRecordRaw }>>(url, requestOptions);
 
-  const libraryRecords = (response._embedded?.records || []).map(linkedHashMap => ({
-    ...(linkedHashMap.content || {}),
-    libraryId,
-    schemaId
-  }));
+  const libraryRecords = enrichLibraryRecordsResponse(response._embedded?.records || [], libraryId, schemaId);
 
   return [libraryRecords, response.page.totalPages];
 }
@@ -110,14 +106,33 @@ export async function getLibraryRecords2(
 
   const response = await http.get<PageableResponse<{ content: LibraryRecordRaw }>>(url, requestOptions);
 
-  // eslint-disable-next-line sonarjs/no-identical-functions
-  const libraryRecords = (response._embedded?.records || []).map(linkedHashMap => ({
+  const libraryRecords = enrichLibraryRecordsResponse(response._embedded?.records || [], libraryId, schemaId);
+
+  return [libraryRecords, response.page.totalPages];
+}
+
+export async function getAllLibraryRecords(
+  libraryId: string,
+  schemaId: string,
+  pageOptions: PageOptions
+): Promise<LibraryRecord[]> {
+  const url = await getDocLibrariesRecords2Url(libraryId);
+  const requestOptions = { params: preparePageOptions({ ...pageOptions, pageSize: null }, true) };
+  const response = await http.getPaged<{ content: LibraryRecordRaw }>(url, requestOptions);
+
+  return enrichLibraryRecordsResponse(response, libraryId, schemaId);
+}
+
+function enrichLibraryRecordsResponse(
+  responseItems: { content: LibraryRecordRaw }[],
+  libraryId: string,
+  schemaId: string
+): LibraryRecord[] {
+  return responseItems.map(linkedHashMap => ({
     ...(linkedHashMap.content || {}),
     libraryId,
     schemaId
   }));
-
-  return [libraryRecords, response.page.totalPages];
 }
 
 export async function getLibraryRecordsWithParticularOne(

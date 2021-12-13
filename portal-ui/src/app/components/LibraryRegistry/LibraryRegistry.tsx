@@ -1,12 +1,20 @@
 import React, { Component, ReactElement } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Check, Close, HomeOutlined } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
+import { Check, Close, HomeOutlined, UnarchiveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { unparse } from 'papaparse';
 
 import { route } from '../../stores/Route.store';
-import { DocumentLibrary, getLibrary, getLibraryRecords2, LibraryRecord } from '../../services/crg/doc-library.service';
+import {
+  DocumentLibrary,
+  getAllLibraryRecords,
+  getLibrary,
+  getLibraryRecords2,
+  LibraryRecord
+} from '../../services/crg/doc-library.service';
 import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { OldFeatureDescription } from '../../services/crg/schemaOld.models';
 import { communicationService } from '../../services/communication.service';
@@ -17,8 +25,10 @@ import { PageOptions } from '../../services/models';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
 import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
+import { saveAsCsv } from '../../services/util/FileSaver';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { XTable, XTableColumn } from '../XTable/XTable';
+import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./LibraryRegistry.scss';
@@ -29,6 +39,9 @@ const cnLibraryRegistry = cn('LibraryRegistry');
 export class LibraryRegistry extends Component {
   @observable private library?: DocumentLibrary;
   @observable private schema?: OldFeatureDescription;
+  @observable private exportCSVLoading = false;
+
+  private tablePageOptions?: PageOptions;
 
   private tableInvoke: { reload?(): void } = {};
 
@@ -61,7 +74,22 @@ export class LibraryRegistry extends Component {
               defaultSort={{ field: 'title', asc: true }}
               secondarySortField='id'
               filtersAlwaysEnabled
+              headerActions={
+                <Tooltip title='Экспортировать реестр в CSV'>
+                  <span>
+                    <IconButton
+                      className={cnLibraryRegistry('CSV')}
+                      onClick={this.exportCSV}
+                      loading={this.exportCSVLoading}
+                      disabled={this.exportCSVLoading}
+                    >
+                      <UnarchiveOutlined />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              }
               invoke={this.tableInvoke}
+              onPageOptionsChange={this.handleTablePageOptionsChange}
             />
           </>
         ) : (
@@ -181,5 +209,49 @@ export class LibraryRegistry extends Component {
     }
 
     return await getLibraryRecords2(this.library.identifier, this.schema.name, pageOptions);
+  }
+
+  @boundMethod
+  private async exportCSV() {
+    if (!this.library || !this.schema || this.exportCSVLoading) {
+      return;
+    }
+
+    this.setExportCSVLoading(true);
+
+    const transformCellContent: Partial<Record<PropertyType, (content: unknown) => string>> = {
+      [PropertyType.BOOL]: (content: unknown) => (['true', '1'].includes(String(content).toLowerCase()) ? 'да' : 'нет')
+    };
+
+    const records = await getAllLibraryRecords(this.library.identifier, this.schema.name, this.tablePageOptions);
+    const cols = this.cols.filter(({ field }) => field);
+    const result: unknown[][] = [cols.map(({ title }) => title)];
+
+    for (const record of records) {
+      result.push(
+        cols.map(({ field }) => {
+          const property = this.properties.find(({ name }) => name === field);
+          if (transformCellContent[property.propertyType]) {
+            return transformCellContent[property.propertyType](record[field]);
+          }
+
+          return record[field];
+        })
+      );
+    }
+
+    saveAsCsv('documents.csv', unparse(result, { delimiter: ';' }));
+
+    this.setExportCSVLoading(false);
+  }
+
+  @boundMethod
+  private handleTablePageOptionsChange(pageOptions: PageOptions) {
+    this.tablePageOptions = pageOptions;
+  }
+
+  @action.bound
+  private setExportCSVLoading(loading: boolean) {
+    this.exportCSVLoading = loading;
   }
 }

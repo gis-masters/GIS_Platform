@@ -1,4 +1,4 @@
-.LibraryRegistry {
+body .LibraryRegistry {
   position: relative;
 
   overflow: hidden;
@@ -8,6 +8,10 @@
 
   &-Table {
     height: 100%;
+  }
+
+  &-CSV {
+    margin-right: 10px;
   }
 
   &-Actions {
