@@ -71,6 +71,13 @@
       *ngIf="mode === 'single' && !isNew && features"
       [features]="features"
     ></crg-open-in-another-project>
+
+    <crg-xml-download
+      *ngIf="mode === 'single' && !isNew && features"
+      [feature]="features[0]"
+      [layer]="layer"
+    ></crg-xml-download>
+
   </div>
 </div>
 

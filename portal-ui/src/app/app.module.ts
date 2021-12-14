@@ -75,6 +75,7 @@ import { OpenInAnotherProjectComponent } from './components/open-in-another-proj
 import { ImportGmlResultButtonComponent } from './components/import-gml-results-button/import-gml-result-button';
 import { LibraryRegistryComponent } from './components/library-registry/library-registry.component';
 import { LibraryDocumentComponent } from './components/library-document/library-document.component';
+import { XmlDownloadComponent } from './components/xml-download/xml-download.component';
 
 @NgModule({
   declarations: [
@@ -132,7 +133,8 @@ import { LibraryDocumentComponent } from './components/library-document/library-
     LoginFormComponent,
     ImportGmlResultButtonComponent,
     LibraryRegistryComponent,
-    LibraryDocumentComponent
+    LibraryDocumentComponent,
+    XmlDownloadComponent
   ],
   imports: [
     HttpClientModule,
