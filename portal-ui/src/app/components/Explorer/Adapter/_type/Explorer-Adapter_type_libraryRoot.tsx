@@ -74,12 +74,12 @@ export class ExplorerAdapterTypeLibraryRoot {
   static getChildrenSortItems(): SortItem[] {
     return [
       {
-        label: 'Названию',
-        value: 'title'
-      },
-      {
         label: 'Дате создания',
         value: 'createdAt'
+      },
+      {
+        label: 'Названию',
+        value: 'title'
       }
     ];
   }

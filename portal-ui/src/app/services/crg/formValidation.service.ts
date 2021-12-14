@@ -92,8 +92,8 @@ function choiceValueInOptions(value: unknown, { options }: PropertySchemaChoice)
 // datetime
 
 function datetimeValid(value: unknown): string[] | undefined {
-  if (!moment(value).isValid()) {
-    return ['`Некорректная дата'];
+  if (!moment(value).isValid() && value !== null) {
+    return ['Некорректная дата'];
   }
 }
 
