@@ -205,6 +205,11 @@
             "id": "libraryDocs",
             "title": "Библиотека документов",
             "contentUrl": "/assets/help/map/dataManagement/02libraryDocs.html"
+          },
+          {
+            "id": "substrate",
+            "title": "Картографическая подоснова",
+            "contentUrl": "/assets/help/map/dataManagement/03substrate.html"
           }
         ]
       },

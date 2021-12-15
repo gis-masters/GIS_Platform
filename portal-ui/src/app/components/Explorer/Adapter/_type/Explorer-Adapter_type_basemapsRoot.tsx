@@ -24,7 +24,7 @@ export class ExplorerAdapterTypeBasemapsRoot {
   }
 
   static getTitle(): string {
-    return 'Подложки';
+    return 'Картографические подосновы';
   }
 
   static getMeta(): string {

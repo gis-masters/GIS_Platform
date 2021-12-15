@@ -28,7 +28,7 @@ export class ExplorerAdapterTypeLibraryRoot {
   }
 
   static getTitle(): string {
-    return 'Библиотеки';
+    return 'Библиотеки документов';
   }
 
   static getMeta(): string {
