@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { LibraryRecord, updateLibraryRecord } from '../../../services/crg/doc-library.service';
-import { PropertySchema } from '../../../services/crg/schema.models';
+import { PropertySchema, PropertyType } from '../../../services/crg/schema.models';
 import { getPatch } from '../../../services/util/patch';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { TextBadge } from '../../TextBadge/TextBadge';
@@ -27,7 +27,7 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
   @observable private dialogOpen = false;
 
   render() {
-    const { as, fields, document } = this.props;
+    const { as, document } = this.props;
 
     return (
       <>
@@ -41,7 +41,7 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
 
         <FormDialog
           open={this.dialogOpen}
-          fields={fields}
+          fields={this.fieldsWithoutBinary}
           value={document}
           actionFunction={this.updateDocumentPage}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}
@@ -55,6 +55,13 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
         />
       </>
     );
+  }
+
+  @computed
+  private get fieldsWithoutBinary(): PropertySchema<LibraryRecord>[] {
+    const { fields = [] } = this.props;
+
+    return fields.filter(({ propertyType }) => propertyType !== PropertyType.BINARY);
   }
 
   @action.bound
