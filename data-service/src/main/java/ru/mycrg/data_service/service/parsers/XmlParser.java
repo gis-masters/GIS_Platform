@@ -51,7 +51,8 @@ public class XmlParser {
 
     public Map<String, Object> parseByScheme(MultipartFile xmlFile,
                                              List<SimplePropertyDto> simpleProperties,
-                                             Integer srid) {
+                                             Integer srid,
+                                             boolean isSchemaZu2) {
         Map<String, Object> result = new HashMap<>();
 
         List<String> schemaProperties = simpleProperties.stream()
@@ -59,6 +60,15 @@ public class XmlParser {
                                                                                                    .toLowerCase())
                                                         .collect(Collectors.toList());
 
+        Map<String, String> mapFieldsForZuSchema = new HashMap<>();
+        mapFieldsForZuSchema.put("address", "raddress");
+        mapFieldsForZuSchema.put("cadastralnumber", "cad_num");
+        mapFieldsForZuSchema.put("area", "area_doc");
+        mapFieldsForZuSchema.put("category", "ccode");
+        mapFieldsForZuSchema.put("utilization", "category");
+        if (isSchemaZu2) {
+            schemaProperties.addAll(mapFieldsForZuSchema.keySet());
+        }
         try (InputStream inputStream = xmlFile.getInputStream()) {
             // read from a project's resources folder
             Document doc = documentBuilder.parse(inputStream);
@@ -98,6 +108,9 @@ public class XmlParser {
             String msg = "Что-то пошло не так во время парсинга xml файла " + e.getMessage();
             log.error(msg);
             throw new XmlParserException(msg);
+        }
+        if (isSchemaZu2) {
+            mapResultForZuSchema(result, mapFieldsForZuSchema);
         }
 
         return result;
@@ -177,6 +190,10 @@ public class XmlParser {
                     dbValue = addressProcessing(rootAreaElement);
                 }
             }
+            if (tagElementName.equalsIgnoreCase("utilization")) {
+                Element rootAreaElement = (Element) nodeList.item(0);
+                dbValue = rootAreaElement.getAttribute("ByDoc");
+            }
         }
 
         if (!dbValue.isBlank()) {
@@ -222,5 +239,25 @@ public class XmlParser {
         } else {
             return otherAddress;
         }
+    }
+
+    //TODO: Исправить такой способ мапинга в схему ZU2 (костыль)
+    private void mapResultForZuSchema(Map<String, Object> resultForCheck,
+                                      Map<String, String> mapFieldsForZuSchema) {
+        Object category = resultForCheck.get("category");
+
+        for (Map.Entry<String, String> entry: mapFieldsForZuSchema.entrySet()) {
+            String key = entry.getKey();
+            if (key.equalsIgnoreCase("utilization")) {
+                resultForCheck.put(mapFieldsForZuSchema.get(key), resultForCheck.get(key));
+            }
+            if (key.equalsIgnoreCase("category")) {
+                resultForCheck.put(mapFieldsForZuSchema.get(key), category);
+            } else if (resultForCheck.containsKey(key)) {
+                resultForCheck.put(mapFieldsForZuSchema.get(key), resultForCheck.get(key));
+                resultForCheck.remove(key, resultForCheck.get(key));
+            }
+        }
+        while (resultForCheck.values().remove(null)) ;
     }
 }

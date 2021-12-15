@@ -81,8 +81,11 @@ public class ImportMp implements Importer {
                                                                                        schemaOfMp.get());
 
         try {
-            Map<String, Object> dataForSavingToDB = xmlParser
-                    .parseByScheme(file, crossedProperties, crsHandler.extractCrsNumber(tableModel.getCrs()));
+            Map<String, Object> dataForSavingToDB = xmlParser.parseByScheme(
+                    file,
+                    crossedProperties,
+                    crsHandler.extractCrsNumber(tableModel.getCrs()),
+                    schemaOfCurrentLayer.get().getName().equalsIgnoreCase("zu2"));
             Map<String, Object> dataForSavingToDBValid = ImportValidationHandler
                     .removeNonMatchingBySchemaProperties(dataForSavingToDB, crossedProperties);
 
