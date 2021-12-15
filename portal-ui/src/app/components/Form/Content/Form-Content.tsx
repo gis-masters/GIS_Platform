@@ -14,6 +14,7 @@ import { FormLabel } from '../Label/Form-Label';
 import { FormControl } from '../Control/Form-Control.composed';
 import { FormHiddenField } from '../HiddenField/Form-HiddenField';
 import { FormView } from '../View/Form-View.composed';
+import { applyFieldValue, convertToComplexField } from '../Form.utils';
 
 const cnFormContent = cn('Form', 'Content');
 
@@ -54,7 +55,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
                 <FormView
                   property={propertySchema}
                   type={propertySchema.propertyType}
-                  fieldValue={formValue[propertySchema.name]}
+                  fieldValue={convertToComplexField(propertySchema, formValue) as Record<string, unknown>}
                   errors={errors
                     .filter(({ field }) => field === propertySchema.name)
                     .flatMap(({ messages }) => messages)}
@@ -67,7 +68,8 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
                   type={propertySchema.propertyType}
                   onChange={this.fieldChangeHandler}
                   onNeedValidate={this.fieldNeedValidateHandler}
-                  fieldValue={formValue[propertySchema.name]}
+                  fieldValue={convertToComplexField(propertySchema, formValue)}
+                  formValue={convertToComplexField(propertySchema, formValue)}
                   FormControl={FormControl}
                   errors={errors
                     .filter(({ field }) => field === propertySchema.name)
@@ -85,11 +87,12 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
 
   @boundMethod
   private fieldChangeHandler({ value, propertyName }: { value: T[keyof T]; propertyName: keyof T }) {
-    const { formValue, onFormChange, onFieldChange } = this.props;
+    const { formValue, onFormChange, onFieldChange, fields } = this.props;
+
+    const propertySchema: PropertySchema<T> = fields.find(({ name }) => name === propertyName);
 
     if (onFormChange) {
-      const newFormValue = cloneDeep(formValue);
-      newFormValue[propertyName] = value;
+      const newFormValue = cloneDeep(applyFieldValue<T>(propertySchema, formValue, value));
       onFormChange(newFormValue);
     }
 

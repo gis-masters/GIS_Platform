@@ -9,6 +9,7 @@ import { withTypeInt } from './_type/Form-Control_type_int';
 import { withTypeSet } from './_type/Form-Control_type_set';
 import { withTypeString } from './_type/Form-Control_type_string';
 import { withTypeFloat } from './_type/Form-Control_type_float';
+import { withTypeFias } from './_type/Form-Control_type_fias';
 
 import { FormControl as Presenter } from './Form-Control';
 
@@ -21,5 +22,6 @@ export const FormControl = compose(
   withTypeBool,
   withTypeCustom,
   withTypeSet,
+  withTypeFias,
   withTypeDatetime
 )(Presenter);

@@ -16,7 +16,7 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
   FormControlProps<T>
 > {
   render() {
-    const { htmlId, className, property, FormControl, fieldValue = '', errors } = this.props;
+    const { htmlId, className, property, FormControl, fieldValue = '', errors, variant = 'standard' } = this.props;
     const { fieldsSet } = property as PropertySchemaSet;
     const valueTyped = fieldValue as unknown as Record<string, unknown>;
 
@@ -33,6 +33,7 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
                 onChange={this.fieldChanged}
                 fieldValue={valueTyped[subProperty.name]}
                 FormControl={FormControl}
+                variant={variant}
                 inSet
               >
                 {fieldValue}

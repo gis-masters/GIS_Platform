@@ -1,0 +1,71 @@
+import { action } from 'mobx';
+import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { Fias } from '../../services/fias.service';
+
+const fromComplex: Partial<
+  Record<
+    PropertyType,
+    <T extends Record<string, unknown>>(
+      propertySchema: PropertySchema<T>,
+      formValue: Partial<T>,
+      fieldValue: unknown
+    ) => Partial<T>
+  >
+> = {
+  [PropertyType.FIAS]: <T extends Record<string, unknown>>(
+    field: PropertySchema<T>,
+    formValue: Partial<T>,
+    fieldValue: unknown = {}
+  ): Partial<T> => {
+    const fias = fieldValue as Fias;
+    const name = String(field.name);
+
+    return {
+      ...formValue,
+      [name + '__address']: fias.fullAddress,
+      [name + '__id']: fias.objectId,
+      [name + '__oktmo']: fias.oktmo
+    };
+  }
+};
+
+const toComplex: Partial<
+  Record<PropertyType, <T extends Record<string, unknown>>(field: PropertySchema<T>, formValue: Partial<T>) => unknown>
+> = {
+  [PropertyType.FIAS]: <T extends Record<string, unknown>>(field: PropertySchema<T>, formValue: Partial<T>) => {
+    const name = String(field.name);
+
+    return {
+      fullAddress: formValue[name + '__address'],
+      objectId: formValue[name + '__id'],
+      oktmo: formValue[name + '__oktmo']
+    } as unknown;
+  }
+};
+
+export const applyFieldValue = action(
+  <T extends Record<string, unknown>>(
+    propertySchema: PropertySchema<T>,
+    formValue: Partial<T>,
+    fieldValue: T[keyof T]
+  ): Partial<T> => {
+    if (fromComplex[propertySchema.propertyType]) {
+      return fromComplex[propertySchema.propertyType]<T>(propertySchema, formValue, fieldValue);
+    }
+
+    formValue[propertySchema.name] = fieldValue;
+
+    return formValue;
+  }
+);
+
+export function convertToComplexField<T extends Record<string, unknown>>(
+  field: PropertySchema<T>,
+  formValue: Partial<T>
+): unknown {
+  if (toComplex[field.propertyType]) {
+    return toComplex[field.propertyType]<T>(field, formValue);
+  }
+
+  return formValue[field.name];
+}

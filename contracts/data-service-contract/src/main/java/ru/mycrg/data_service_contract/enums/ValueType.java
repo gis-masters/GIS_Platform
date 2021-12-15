@@ -12,5 +12,6 @@ public enum ValueType {
     DATETIME,
     LOOKUP,
     UUID,
-    BINARY
+    BINARY,
+    FIAS
 }

@@ -14,7 +14,7 @@ const EMPTY = '~~~empty_value~~~';
 @observer
 class FormControlTypeChoice extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, property, errors } = this.props;
+    const { htmlId, className, property, errors, variant = 'standard' } = this.props;
     let { fieldValue } = this.props;
     if (fieldValue === undefined || fieldValue === null) {
       fieldValue = EMPTY;
@@ -35,7 +35,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               value={fieldValue}
               onChange={this.handleChange}
               error={!!errors?.length}
-              variant='standard'
+              variant={variant}
             >
               {!valueIsAllowed && (
                 <MenuItem value={fieldValue as string | number} color='#666'>

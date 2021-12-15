@@ -76,6 +76,7 @@ import { ImportGmlResultButtonComponent } from './components/import-gml-results-
 import { LibraryRegistryComponent } from './components/library-registry/library-registry.component';
 import { LibraryDocumentComponent } from './components/library-document/library-document.component';
 import { XmlDownloadComponent } from './components/xml-download/xml-download.component';
+import { FormControlTypeFiasComponent } from './components/form-control-type-fias/form-control-type-fias.component';
 
 @NgModule({
   declarations: [
@@ -134,7 +135,8 @@ import { XmlDownloadComponent } from './components/xml-download/xml-download.com
     ImportGmlResultButtonComponent,
     LibraryRegistryComponent,
     LibraryDocumentComponent,
-    XmlDownloadComponent
+    XmlDownloadComponent,
+    FormControlTypeFiasComponent
   ],
   imports: [
     HttpClientModule,

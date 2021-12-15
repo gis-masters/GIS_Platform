@@ -65,7 +65,7 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      if (err.response?.status === 401 && route.data.authRequired) {
+      if ((err.response?.status === 401 && route.data?.isAuthRequired) || !route.data) {
         await this.waitForAuth();
 
         return this.get<T>(url, configWithCache);

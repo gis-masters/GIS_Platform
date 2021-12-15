@@ -20,6 +20,7 @@ export enum PropertyType {
   BINARY = 'binary',
   IDENTITIES = 'identities',
   SET = 'set',
+  FIAS = 'fias',
   CUSTOM = 'custom' // frontend only
 }
 
@@ -178,6 +179,11 @@ export interface PropertySchemaIdentities<T = Record<string, unknown>> extends B
   additionalFields?: string;
 }
 
+export interface PropertySchemaFias<T = Record<string, unknown>> extends BasePropertySchema<T> {
+  propertyType: PropertyType.FIAS;
+  searchMode?: 'address' | 'oktmo';
+}
+
 export interface PropertySchemaBinary<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.BINARY;
   accept?: string;
@@ -200,4 +206,5 @@ export type PropertySchema<T = Record<string, unknown>> =
   | PropertySchemaLookup<T>
   | PropertySchemaSet<T>
   | PropertySchemaBinary<T>
+  | PropertySchemaFias<T>
   | PropertySchemaCustom<T>;

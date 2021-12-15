@@ -35,6 +35,8 @@ public class SimplePropertyDto {
 
     private String dateFormat;
     private String displayMode;
+    
+    private String searchMode;
 
     private int sequenceNumber;
 
@@ -246,6 +248,14 @@ public class SimplePropertyDto {
 
     public void setDisplayMode(String displayMode) {
         this.displayMode = displayMode;
+    }
+
+    public String getSearchMode() {
+        return searchMode;
+    }
+
+    public void setSearchMode(String searchMode) {
+        this.searchMode = searchMode;
     }
 
     public ForeignKeyType getForeignKeyType() {

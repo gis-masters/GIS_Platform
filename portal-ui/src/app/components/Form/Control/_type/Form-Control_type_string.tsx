@@ -11,7 +11,7 @@ import { cnFormControl, FormControlProps } from '../Form-Control';
 @observer
 class FormControlTypeString extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue, inSet, property, errors } = this.props;
+    const { htmlId, className, fieldValue, inSet, property, errors, variant = 'standard' } = this.props;
     const { display, name } = property as PropertySchemaString;
 
     return (
@@ -29,7 +29,7 @@ class FormControlTypeString extends Component<FormControlProps> {
           multiline={display === 'multiline'}
           minRows={2}
           maxRows={10}
-          variant='standard'
+          variant={variant}
         />
       </div>
     );

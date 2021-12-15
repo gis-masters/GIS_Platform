@@ -10,7 +10,7 @@
     "lint": "eslint ./src/",
     "e2e": "ng e2e",
     "hermione": "TS_NODE_PROJECT=./hermione/tsconfig.json hermione --require ts-node/register",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -s ./src -p 6006",
     "build-storybook": "build-storybook -o ./bl"
   },
   "private": true,

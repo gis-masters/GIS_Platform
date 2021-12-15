@@ -18,6 +18,7 @@ export enum ValueType {
   LOOKUP = 'LOOKUP',
   UUID = 'UUID',
   BINARY = 'BINARY',
+  FIAS = 'FIAS',
   SET = 'SET', // пока что frontend only
   CHECKBOX = 'CHECKBOX', // пока что frontend only
   CUSTOM = 'CUSTOM' // frontend only
@@ -126,6 +127,12 @@ export interface OldPropertySchemaUrl<T extends Record<string, unknown> = Record
   displayMode?: 'in_popup';
 }
 
+export interface OldPropertyFiasSchema<T extends Record<string, unknown> = Record<string, unknown>>
+  extends OldBasePropertySchema<T> {
+  valueType: ValueType.FIAS;
+  searchMode?: 'address' | 'oktmo';
+}
+
 export interface OldPropertySchemaCustom<T extends Record<string, unknown> = Record<string, unknown>>
   extends OldBasePropertySchema<T> {
   valueType: ValueType.CUSTOM;
@@ -147,7 +154,8 @@ export type OldPropertySchema<T extends Record<string, unknown> = Record<string,
   | OldPropertySchemaChoice<T>
   | OldPropertySchemaOther<T>
   | OldPropertySchemaUrl<T>
-  | OldPropertySchemaCustom<T>;
+  | OldPropertySchemaCustom<T>
+  | OldPropertyFiasSchema<T>;
 
 export enum Updateability {
   CREATE_ONLY = 'CREATE_ONLY',

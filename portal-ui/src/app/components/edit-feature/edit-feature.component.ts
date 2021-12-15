@@ -30,6 +30,10 @@ import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store
 import { getEmptyGeometry } from '../../services/geoserver/wfs.util';
 import { sleep } from '../../services/util/sleep';
 import { services } from '../../services/services';
+import { generateRandomId } from '../../services/util/randomId';
+import { convertSchema } from '../../services/crg/schema.utils';
+import { applyFieldValue, convertToComplexField } from '../Form/Form.utils';
+import { PropertySchema } from '../../services/crg/schema.models';
 
 export interface Properties {
   [key: string]: unknown;
@@ -59,6 +63,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   isGeometryChanged = false;
   editGeometryStore = new EditFeatureGeometryStore();
   private unsubscribeFromMobx$: Subject<void> = new Subject<void>();
+  private randomId = generateRandomId();
 
   constructor(private formBuilder: FormBuilder, private dialog: MatDialog) {
     super();
@@ -91,10 +96,19 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.featureDescription = await schemaService.getSchema(this.layer.schemaId);
 
         this.editFeatureData = [];
+
+        this.featureDescription.properties.forEach(({ name, valueType }) => {
+          if (!Object.keys(this.features[0].properties).includes(name) && valueType !== ValueType.GEOMETRY) {
+            this.features[0].properties[name] = null;
+          }
+        });
+
         Object.keys(this.features[0].properties)
           .filter(key => key !== 'bbox')
           .forEach(key => {
-            let currentValue = this.features[0].properties[key];
+            let currentValue = this.getFieldByKey(key)
+              ? convertToComplexField(this.getFieldByKey(key), this.features[0].properties)
+              : this.features[0].properties[key];
 
             let property: OldPropertySchema;
             if (this.featureDescription) {
@@ -234,7 +248,16 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     this.isSaveInProgress = true;
 
-    const newProperties = this.getActualValuesFromForm();
+    let newProperties = this.getActualValuesFromForm();
+
+    for (const key of Object.keys(newProperties)) {
+      const field = this.getFieldByKey(key as string);
+      if (field) {
+        const { [key]: value, ...rests } = newProperties;
+        newProperties = applyFieldValue(field, rests, value) as Record<string, string>;
+      }
+    }
+
     let ids = this.features.map(({ id }) => id);
 
     if (this.isNew) {
@@ -269,6 +292,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       properties: this.properties,
       isNew: false
     });
+  }
+
+  private getFieldByKey(key: string): PropertySchema {
+    const fields = convertSchema(this.featureDescription.properties);
+
+    return fields.find(({ name }) => name === key);
   }
 
   deleteFeature(): void {

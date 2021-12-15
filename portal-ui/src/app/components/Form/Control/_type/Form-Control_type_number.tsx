@@ -13,7 +13,7 @@ import '!style-loader!css-loader!sass-loader!./Form-Control_type_number.scss';
 @observer
 export class FormControlTypeNumber extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue, property, inSet, errors } = this.props;
+    const { htmlId, className, fieldValue, property, inSet, errors, variant = 'standard' } = this.props;
     const { measureUnit, title, minValue, maxValue, step, display = 'number', name } = property as PropertySchemaNumber;
 
     return (
@@ -34,7 +34,7 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
             error={!!errors?.length}
             helperText={errors}
             onBlur={this.handleNeedValidate}
-            variant='standard'
+            variant={variant}
           />
         )}
 

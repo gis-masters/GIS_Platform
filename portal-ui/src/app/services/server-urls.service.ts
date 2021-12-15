@@ -176,6 +176,14 @@ async function getDataUrl(): Promise<string> {
   return (await getBaseUrl()) + '/api/data';
 }
 
+export async function getFiasAddresses(): Promise<string> {
+  return (await getDataUrl()) + '/integration/fias/fulladdress';
+}
+
+export async function getFiasOktmo(): Promise<string> {
+  return (await getDataUrl()) + '/integration/fias/oktmo';
+}
+
 export async function getProcessUrl(processId: number): Promise<string> {
   return `${await getDataUrl()}/processes/${processId}`;
 }

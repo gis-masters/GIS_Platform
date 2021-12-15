@@ -13,7 +13,7 @@ import { FormErrors } from '../../Errors/Form-Errors';
 @observer
 class FormControlTypeDatetime extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue, inSet, property, errors } = this.props;
+    const { htmlId, className, fieldValue, inSet, property, errors, variant = 'standard' } = this.props;
     const { name } = property as PropertySchemaDatetime;
     const date = fieldValue && moment(fieldValue);
 
@@ -30,7 +30,7 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
           InputLabelProps={{
             shrink: true
           }}
-          variant='standard'
+          variant={variant}
         />
         <FormErrors errors={errors} />
       </div>

@@ -13,12 +13,14 @@ export interface FormControlProps<T extends Record<string, unknown> = Record<str
   type?: PropertyType;
   property?: PropertySchema<T>;
   fieldValue?: T[keyof T];
+  formValue?: T;
   onChange?: ({ value: T, propertyName: string }) => void;
   onNeedValidate?: ({ value: T, propertyName: string }) => void;
   inSet?: boolean;
   errors?: string[];
   FormControl?: ComponentType<FormControlProps>;
   FormView?: ComponentType<FormControlProps>;
+  variant?: 'standard' | 'outlined';
 }
 
 export const FormControl: FC<FormControlProps> = ({ children, className }) => (
