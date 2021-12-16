@@ -51,7 +51,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
               <FormLabel htmlFor={htmlId} required={propertySchema.required} readonly={readonly}>
                 {propertySchema.title}
               </FormLabel>
-              {readonly ? (
+              {readonly || propertySchema.readOnly ? (
                 <FormView
                   property={propertySchema}
                   type={propertySchema.propertyType}

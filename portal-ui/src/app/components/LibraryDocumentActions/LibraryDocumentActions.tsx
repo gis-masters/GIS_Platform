@@ -21,6 +21,7 @@ import { LibraryDocumentActionsShare } from './Share/LibraryDocumentActions-Shar
 import { LibraryDocumentActionsClose } from './Close/LibraryDocumentActions-Close';
 import { LibraryDocumentActionsDelete } from './Delete/LibraryDocumentActions-Delete';
 import { LibraryDocumentActionsDownload } from './Download/LibraryDocumentActions-Download';
+import { LibraryDocumentActionsRegister } from './Register/LibraryDocumentActions-Register';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocumentActions.scss';
 
@@ -79,6 +80,7 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
         )}
         {canEdit && <LibraryDocumentActionsEdit document={this.document || document} fields={this.fields} as={as} />}
         <LibraryDocumentActionsShare document={this.document || document} as={as} />
+        <LibraryDocumentActionsRegister document={this.document || document} as={as} />
         {hasBinary && <LibraryDocumentActionsDownload document={this.document || document} as={as} />}
         {hasBinary && <LibraryDocumentActionsSed document={this.document || document} as={as} />}
         {canDelete && (

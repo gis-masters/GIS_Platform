@@ -22,6 +22,8 @@ public class SimplePropertyDto {
 
     private boolean objectIdentityOnUi;
 
+    private boolean readOnly;
+
     private Updateability updateability;
     private boolean multiple;
     private ChoiceType choice;
@@ -88,6 +90,14 @@ public class SimplePropertyDto {
 
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 
     public Updateability getUpdateability() {

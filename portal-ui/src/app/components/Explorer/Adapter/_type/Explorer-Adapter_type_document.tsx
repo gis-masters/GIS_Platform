@@ -10,6 +10,7 @@ import { Role } from '../../../../services/crg/permissions.models';
 import { PropertyType } from '../../../../services/crg/schema.models';
 import { schemaService } from '../../../../services/crg/schema.service';
 import { getLibraryRecord, LibraryRecord } from '../../../../services/crg/doc-library.service';
+import { LibraryDocumentActions } from '../../../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { convertSchema, getSchemaWithAppliedContentType } from '../../../../services/crg/schema.utils';
 import { DocumentActionsWidget } from '../../../DocumentActionsWidget/DocumentActionsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
@@ -18,7 +19,6 @@ import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget'
 import { Adapter, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { LibraryDocumentActions } from '../../../LibraryDocumentActions/LibraryDocumentActions.composed';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {

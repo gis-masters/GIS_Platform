@@ -56,6 +56,7 @@ interface BasePropertySchema<T = Record<string, unknown>> {
   required?: boolean;
   asTitle?: boolean;
   isIndexed?: boolean;
+  readOnly?: boolean;
   defaultValue?: unknown;
 }
 
