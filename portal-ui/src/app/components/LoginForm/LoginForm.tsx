@@ -16,6 +16,8 @@ import { route } from '../../stores/Route.store';
 import { Pages } from '../../app-routing.module';
 import { Loading } from '../Loading/Loading';
 import { knownRegex } from '../../services/regexp.service';
+import { getEsiaUrl } from '../../services/server-urls.service';
+import { http } from '../../services/http.service';
 
 import '!style-loader!css-loader!sass-loader!./LoginForm.scss';
 
@@ -43,6 +45,7 @@ export class LoginForm extends Component<LoginFormProps> {
   @observable private isWrongPassword: boolean;
   @observable private userData: AuthUserData = cloneDeep(defaultData);
   @observable private loading: boolean;
+  @observable private esiaLoading: boolean;
 
   async componentDidMount() {
     if (route.data.page === Pages.LOGIN) {
@@ -91,12 +94,25 @@ export class LoginForm extends Component<LoginFormProps> {
             {this.isUserDisabled && (
               <div className={cnLoginForm('Error')}>Запрос на создание принят и обрабатывается. Попробуйте позже.</div>
             )}
-            {this.passwordRecovery ? <div className={cnLoginForm('Recovery')}>{this.passwordRecovery}</div> : null}
+            {this.passwordRecovery && <div className={cnLoginForm('Recovery')}>{this.passwordRecovery}</div>}
             <div className={cnLoginForm('Actions')}>
-              <Button form='LoginForm' type='submit' color='primary'>
-                Войти
+              <span className={cnLoginForm('ActionsLeft')}>
+                <Button
+                  className={cnLoginForm('ActionsLogin')}
+                  form='LoginForm'
+                  type='submit'
+                  color='primary'
+                  disabled={this.esiaLoading}
+                >
+                  Войти
+                </Button>
+                <Button onClick={this.authWithEsia} loading={this.esiaLoading}>
+                  Войти с помощью ГОСУСЛУГ
+                </Button>
+              </span>
+              <Button onClick={this.handlePasswordRecovery} disabled={this.esiaLoading}>
+                Забыли пароль?
               </Button>
-              <Button onClick={this.handlePasswordRecovery}>Забыли пароль?</Button>
             </div>
           </Form>
         ) : (
@@ -134,6 +150,13 @@ export class LoginForm extends Component<LoginFormProps> {
   private handlePasswordRecovery() {
     this.passwordRecovery =
       'Отправьте заявку на восстановление пароля администратору ГИСОГД на почтовый адрес middel.erde@gmail.com';
+  }
+
+  @action.bound
+  private async authWithEsia() {
+    this.esiaLoading = true;
+
+    window.location.href = await http.get<string>(await getEsiaUrl(), { cache: { disabled: true } });
   }
 
   @action.bound

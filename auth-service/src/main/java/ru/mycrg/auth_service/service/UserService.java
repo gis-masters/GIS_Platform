@@ -60,17 +60,17 @@ public class UserService {
     }
 
     @NotNull
-    public UserInfoModel getCurrent(String userName) {
-        User user = userRepository.findByLogin(userName)
-                                  .orElseThrow(() -> new NotFoundException(userName));
+    public UserInfoModel getByLogin(String login) {
+        User user = userRepository.findByLogin(login)
+                                  .orElseThrow(() -> new NotFoundException(login));
 
         Set<Organization> organizations = user.getOrganizations();
         if (!organizations.isEmpty()) {
             Organization organization = organizations.iterator().next();
 
-            final Set<String> authorities = user.getAuthorities().stream()
-                                                .map(Authorities::getAuthority)
-                                                .collect(Collectors.toSet());
+            Set<String> authorities = user.getAuthorities().stream()
+                                          .map(Authorities::getAuthority)
+                                          .collect(Collectors.toSet());
 
             return UserInfoModel.builder()
                                 .id(user.getId())
@@ -89,10 +89,14 @@ public class UserService {
                                 .build();
         }
 
-        return new UserInfoModel(userName);
+        return new UserInfoModel(login);
     }
 
-    public UserProjection create(UserCreateDto dto, Long orgId) {
+    public boolean isExist(String login) {
+        return userRepository.findByLogin(login).isPresent();
+    }
+
+    public UserProjection create(UserCreateDto dto, Long orgId, String accessToken) {
         log.debug("Try create user: {} in organization: {}", dto.getEmail(), orgId);
 
         Optional<User> userByEmail = userRepository.findByEmail(dto.getEmail());
@@ -100,9 +104,8 @@ public class UserService {
             throw new ConflictException("Данный email уже занят");
         }
 
-        Organization organization = orgRepository
-                .findById(orgId)
-                .orElseThrow(() -> new NotFoundException(orgId));
+        Organization organization = orgRepository.findById(orgId)
+                                                 .orElseThrow(() -> new NotFoundException(orgId));
 
         User newUser = new User(bCrypt.encode(dto.getPassword()),
                                 dto.getName(),
@@ -122,7 +125,7 @@ public class UserService {
 
         messageBus.produce(
                 new UserCreatedEvent(savedUser.getLogin(),
-                                     authenticationFacade.getAccessToken(),
+                                     accessToken,
                                      dto.getPassword(),
                                      true,
                                      "admin_" + orgId)
@@ -138,8 +141,8 @@ public class UserService {
      */
     @NotNull
     public Page<UserProjection> findAll(Pageable pageable) {
-        final Long orgId = authenticationFacade.getOrganizationId();
-        final Organization organization = orgRepository
+        Long orgId = authenticationFacade.getOrganizationId();
+        Organization organization = orgRepository
                 .findById(orgId)
                 .orElseThrow(() -> new NotFoundException(Organization.class, orgId));
 
@@ -235,9 +238,8 @@ public class UserService {
     }
 
     private boolean isUserHasAuthority(UserProjection userProjection, String authority) {
-        return userProjection
-                .getAuthorities().stream()
-                .anyMatch(aProjection -> authority.equalsIgnoreCase(aProjection.getAuthority()));
+        return userProjection.getAuthorities().stream()
+                             .anyMatch(aProjection -> authority.equalsIgnoreCase(aProjection.getAuthority()));
     }
 
     private Optional<User> findById(Long id) {

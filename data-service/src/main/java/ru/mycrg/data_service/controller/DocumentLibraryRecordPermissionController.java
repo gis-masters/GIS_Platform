@@ -39,8 +39,8 @@ public class DocumentLibraryRecordPermissionController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/document-libraries/{docLibId}/records/{recId}/roleAssignment")
     public ResponseEntity<Object> getLibraryPermissions(@PathVariable String docLibId,
-                                                        Pageable pageable,
                                                         @PathVariable Long recId,
+                                                        Pageable pageable,
                                                         PagedResourcesAssembler<PermissionProjection> pageAssembler) {
         ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
 
@@ -58,19 +58,19 @@ public class DocumentLibraryRecordPermissionController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/document-libraries/{docLibId}/records/{recId}/roleAssignment")
     public ResponseEntity<PermissionProjection> addPermissionToLibrary(@PathVariable String docLibId,
-                                                                       @Valid @RequestBody PermissionCreateDto dto,
                                                                        @PathVariable Long recId,
+                                                                       @Valid @RequestBody PermissionCreateDto dto,
                                                                        BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        ResourceQualifier libraryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
+        ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
 
-        Map<String, Object> record = recordServiceFactory.get().getById(libraryQualifier, recId);
+        Map<String, Object> record = recordServiceFactory.get().getById(recordQualifier, recId);
         Long recordId = Long.valueOf(record.get(ID.getName()).toString());
 
-        PermissionProjection permission = permissionsService.create(libraryQualifier, recordId, dto);
+        PermissionProjection permission = permissionsService.create(recordQualifier, recordId, dto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -84,11 +84,11 @@ public class DocumentLibraryRecordPermissionController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @DeleteMapping("/document-libraries/{docLibId}/records/{recId}/roleAssignment/{permissionId}")
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
-                                         @PathVariable String recId,
+                                         @PathVariable Long recId,
                                          @PathVariable Long permissionId) {
-        ResourceQualifier libraryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
+        ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
 
-        permissionsService.deleteById(libraryQualifier, permissionId);
+        permissionsService.deleteById(recordQualifier, permissionId);
 
         return ResponseEntity.noContent().build();
     }

@@ -44,6 +44,11 @@ zuul:
       path: /organizations/**
       url: http://auth-service:9000/organizations/
 
+    crg-auth-service-esia:
+      path: /esia/**
+      url: http://auth-service:9000/esia/
+      sensitive-headers:
+
     # GIS SERVICE
     crg-gis-service-projects:
       path: /projects/**

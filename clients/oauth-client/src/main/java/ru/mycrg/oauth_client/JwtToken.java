@@ -48,11 +48,14 @@ public class JwtToken {
         this.scope = scope;
     }
 
+    @Override
     public String toString() {
-        return "JwtToken(access_token=" + this.getAccess_token() +
-                ", token_type=" + this.getToken_type() +
-                ", refresh_token=" + this.getRefresh_token() +
-                ", expires_in=" + this.getExpires_in() +
-                ", scope=" + this.getScope() + ")";
+        return "{" +
+                "\"access_token\":" + (access_token == null ? "null" : "\"" + access_token + "\"") + ", " +
+                "\"token_type\":" + (token_type == null ? "null" : "\"" + token_type + "\"") + ", " +
+                "\"refresh_token\":" + (refresh_token == null ? "null" : "\"" + refresh_token + "\"") + ", " +
+                "\"expires_in\":" + (expires_in == null ? "null" : "\"" + expires_in + "\"") + ", " +
+                "\"scope\":" + (scope == null ? "null" : "\"" + scope + "\"") +
+                "}";
     }
 }

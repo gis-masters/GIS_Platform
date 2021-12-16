@@ -96,18 +96,16 @@ public class GroupService {
         return groupRepository.findByOrganizationId(orgId, pageable);
     }
 
-    public void addUser(Long groupId, Long userId) {
+    public void addUser(Long orgId, Long groupId, Long userId) {
         log.debug("Try add user: {} to group: {}", userId, groupId);
 
-        Long orgId = authenticationFacade.getOrganizationId();
-        Group group = groupRepository
-                .findByIdAndOrganizationId(groupId, orgId)
-                .orElseThrow(() -> new NotFoundException(GROUP, groupId));
+        Group group = groupRepository.findByIdAndOrganizationId(groupId, orgId)
+                                     .orElseThrow(() -> new NotFoundException(GROUP, groupId));
 
-        Organization organization = orgRepository
-                .findById(orgId)
-                .orElseThrow(() -> new NotFoundException(ORGANIZATION, orgId));
+        Organization organization = orgRepository.findById(orgId)
+                                                 .orElseThrow(() -> new NotFoundException(ORGANIZATION, orgId));
 
+        log.debug("Group exist: {}", group);
         User user = organization.getUsers().stream()
                                 .filter(u -> u.getId().equals(userId))
                                 .findFirst()

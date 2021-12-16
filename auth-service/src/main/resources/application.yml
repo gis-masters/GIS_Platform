@@ -36,9 +36,21 @@ security:
     client_secret: geoserver
     access_token_validity_seconds: 86400
     refresh_token_validity_seconds: 1209600
+
 crg-options:
   root-user-name: admin@mail.ru
   root-user-password: geoserver
+
+esia:
+  url: https://esia-portal1.test.gosuslugi.ru
+  client_id: GISOGD_CRIMEA
+  org_id: 1
+  group_id: 314314
+  key-store:
+    path: /opt/key_storage/esia_store.pfx
+    pass: 314314
+    alias: fpy
+    sign_alg: GOST3411-2012-256WITHECGOST3410-2012-256
 
 server:
   port: 9000

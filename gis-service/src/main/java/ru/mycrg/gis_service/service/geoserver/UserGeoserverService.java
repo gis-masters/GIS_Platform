@@ -7,8 +7,6 @@ import ru.mycrg.gis_service.exceptions.GisServiceException;
 import ru.mycrg.gis_service.security.AuthenticationFacade;
 import ru.mycrg.http_client.ResponseModel;
 
-import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
-
 @Service
 public class UserGeoserverService {
 
@@ -20,12 +18,11 @@ public class UserGeoserverService {
 
     public void create(UserGeoserverDto dto) {
         String token = authenticationFacade.getAccessToken();
-        Long orgId = authenticationFacade.getOrganizationId();
+
         UsersAndRolesService usersAndRolesService = new UsersAndRolesService(token);
         try {
-            chekGeoserverResponse(usersAndRolesService.createUser(dto.getUserName(), dto.getPassword()));
-            chekGeoserverResponse(usersAndRolesService.associateUserWithRole(dto.getUserName(),
-                                                                             getDefaultRoleName(orgId)));
+            checkGeoserverResponse(usersAndRolesService.createUser(dto.getUserName(), dto.getPassword()));
+            checkGeoserverResponse(usersAndRolesService.associateUserWithRole(dto.getUserName(), dto.getRole()));
         } catch (Exception e) {
             throw new GisServiceException("Не удалось создать пользователя на геосервере: " + e.getMessage());
         }
@@ -33,14 +30,15 @@ public class UserGeoserverService {
 
     public void delete(UserGeoserverDto dto) {
         try {
-            chekGeoserverResponse(new UsersAndRolesService(authenticationFacade.getAccessToken())
-                                          .deleteUser(dto.getUserName()));
+            UsersAndRolesService usersAndRolesService = new UsersAndRolesService(authenticationFacade.getAccessToken());
+
+            checkGeoserverResponse(usersAndRolesService.deleteUser(dto.getUserName()));
         } catch (Exception e) {
             throw new GisServiceException("Не удалось удалить пользователя на геосервере: " + e.getMessage());
         }
     }
 
-    private void chekGeoserverResponse(ResponseModel<Object> response) {
+    private void checkGeoserverResponse(ResponseModel<Object> response) {
         if (!response.isSuccessful()) {
             throw new GisServiceException("Ответ геосервера: " + response);
         }

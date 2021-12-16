@@ -1,4 +1,4 @@
-.LoginForm {
+body .LoginForm {
   &-Error {
     text-align: center;
 
@@ -14,5 +14,9 @@
     justify-content: space-between;
 
     padding-top: 20px;
+  }
+
+  &-ActionsLogin {
+    margin-right: 10px;
   }
 }

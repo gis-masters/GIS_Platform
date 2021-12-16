@@ -44,13 +44,13 @@ public class UserCreatedEventHandler implements IEventHandler {
     @Override
     public void handle(IMessageBusEvent mqEvent) {
         UserCreatedEvent event = (UserCreatedEvent) mqEvent;
-        UserGeoserverDto userDto = new UserGeoserverDto(event.getLogin(), event.getPassword());
-        final String token = event.getToken();
+        UserGeoserverDto userDto = new UserGeoserverDto(event.getLogin(), event.getPassword(), event.getRole());
+        String token = event.getToken();
 
         try {
-            log.debug("userCreatedEvent: {}", event.getLogin());
+            log.debug("userCreatedEvent: {}", event);
 
-            final RequestBody body = RequestBody.create(
+            RequestBody body = RequestBody.create(
                     MediaType.parse("application/json; charset=utf-8"),
                     objectMapper.writeValueAsString(userDto));
             Request req = new Request.Builder()
@@ -66,12 +66,12 @@ public class UserCreatedEventHandler implements IEventHandler {
                 messageBus.produce(new UserProvisioningSucceedEvent(event));
             } else {
                 String responseBody = Objects.requireNonNull(response.body()).string();
-                log.error("Не удалось создать пользователя на геосервере: {} ", responseBody);
+                log.error("Не удалось создать пользователя на геосервере. Ответ геосервера: {} ", responseBody);
 
                 messageBus.produce(new UserProvisioningFailedEvent(event));
             }
         } catch (Exception e) {
-            log.error("Не удалось создать пользователя на геосервере: {} ", e.getMessage());
+            log.error("Что-то пошло не так. Не удалось создать пользователя на геосервере: {} ", e.getMessage());
 
             messageBus.produce(new UserProvisioningFailedEvent(event));
         }

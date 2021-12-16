@@ -53,7 +53,7 @@ public class UserController {
     public ResponseEntity<UserInfoModel> getUserInfo(Principal principal) {
         String userName = principal.getName();
 
-        return ResponseEntity.ok(userService.getCurrent(userName));
+        return ResponseEntity.ok(userService.getByLogin(userName));
     }
 
     @GetMapping("/users")
@@ -79,7 +79,7 @@ public class UserController {
             organizationId = authenticationFacade.getOrganizationId();
         }
 
-        UserProjection user = userService.create(userCreateDto, organizationId);
+        UserProjection user = userService.create(userCreateDto, organizationId, authenticationFacade.getAccessToken());
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()

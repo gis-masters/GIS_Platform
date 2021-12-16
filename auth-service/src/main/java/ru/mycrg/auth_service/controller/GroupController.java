@@ -10,6 +10,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.auth_service.dto.GroupProjection;
+import ru.mycrg.auth_service.security.IAuthenticationFacade;
 import ru.mycrg.auth_service.service.GroupService;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 
@@ -33,12 +34,15 @@ public class GroupController {
     }
 
     private final GroupService groupService;
+    private final IAuthenticationFacade authenticationFacade;
     private final PagedResourcesAssembler<GroupProjection> assembler;
 
     public GroupController(PagedResourcesAssembler<GroupProjection> assembler,
+                           IAuthenticationFacade authenticationFacade,
                            GroupService groupService) {
         this.assembler = assembler;
         this.groupService = groupService;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @PostMapping("/groups")
@@ -69,7 +73,8 @@ public class GroupController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> addAuthority(@PathVariable Long id,
                                                @PathVariable Long userId) {
-        groupService.addUser(id, userId);
+        Long orgId = authenticationFacade.getOrganizationId();
+        groupService.addUser(orgId, id, userId);
 
         return new ResponseEntity<>(NO_CONTENT);
     }

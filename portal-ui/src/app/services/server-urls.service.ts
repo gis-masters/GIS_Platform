@@ -92,6 +92,14 @@ export async function getLogoutUrl(): Promise<string> {
   return (await getBaseUrl()) + '/perform_logout';
 }
 
+export async function getEsiaUrl(): Promise<string> {
+  const url = await getBaseUrl();
+  const redirect = window.location.protocol + '//' + window.location.host + '/projects';
+  const redirectFromEsia = `${url}/esia/ok?redirect=${redirect}`;
+
+  return `${url}/esia?redirect=${redirectFromEsia}`;
+}
+
 export async function getValidationUrl(): Promise<string> {
   return (await getDataUrl()) + '/validation';
 }
@@ -241,10 +249,6 @@ export async function getDocumentLibraryRecordRoleAssignmentUrl(libraryId: strin
 
 export async function getDocumentLibraryIntegrationUrl(libraryId: string, id: string): Promise<string> {
   return `${await getDocLibrariesUrl()}/${libraryId}/records/${id}/integration`;
-}
-
-export async function getDocLibrariesRecordChildrenUrl(libraryName: string, id: string): Promise<string> {
-  return `${await getDataUrl()}/document-libraries/${libraryName}/records?parent=${id}`;
 }
 
 export async function getDatasetUrl(datasetId: string): Promise<string> {

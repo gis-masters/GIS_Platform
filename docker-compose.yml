@@ -81,10 +81,20 @@ services:
       CRG_OPTIONS_ROOT_USER_NAME: $GEOSERVER_USER
       CRG_OPTIONS_ROOT_USER_PASSWORD: $GEOSERVER_PASSWORD
 
+      ESIA_URL: https://esia-portal1.test.gosuslugi.ru
+      ESIA_CLIENT_ID: GISOGD_CRIMEA
+      ESIA_ORG_ID: 1
+      ESIA_GROUP_ID: ${ESIA_GROUP_ID:-314314}
+      ESIA_KEY_STORE_PATH: /opt/key_storage/esia_store.pfx
+      ESIA_KEY_STORE_PASS: ${ESIA_KEY_STORE_PASS:-314314}
+      ESIA_KEY_STORE_ALIAS: ${ESIA_KEY_STORE_ALIAS:-fpy}
+      ESIA_KEY_STORE_SIGN_ALG: GOST3411-2012-256WITHECGOST3410-2012-256
+
       SECURITY_JWT_ACCESS_TOKEN_VALIDITY_SECONDS: ${JWT_ACCESS_TOKEN_VALIDITY_SECONDS:-}
       SECURITY_JWT_REFRESH_TOKEN_VALIDITY_SECONDS: ${JWT_REFRESH_TOKEN_VALIDITY_SECONDS:-}
     volumes:
       - /opt/logs:/opt/logs
+      - /opt/key_storage:/opt/key_storage
     logging:
       options:
         max-size: "10m"

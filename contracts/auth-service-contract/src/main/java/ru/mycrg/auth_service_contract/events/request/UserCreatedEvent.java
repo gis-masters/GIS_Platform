@@ -41,4 +41,13 @@ public class UserCreatedEvent extends UserBaseRequestEvent {
     public void setRole(String role) {
         this.role = role;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"password\": \"*** ***\"," +
+                "\"isEnabled\":\"" + isEnabled + "\"" + ", " +
+                "\"role\":" + (role == null ? "null" : "\"" + role + "\"") +
+                "}";
+    }
 }

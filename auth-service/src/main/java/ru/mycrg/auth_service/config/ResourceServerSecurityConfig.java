@@ -25,9 +25,9 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/organizations/init").permitAll()
+                .antMatchers(HttpMethod.GET, "/esia/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                 .antMatchers(SWAGGER_WHITELIST).permitAll()
                 .anyRequest().authenticated();
     }
-
 }

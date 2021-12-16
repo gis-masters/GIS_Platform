@@ -16,25 +16,29 @@ public class UserGeoserverDto {
              message = "Пароль должен состоять только из цифр, заглавных и строчных букв латинского алфавита")
     String password;
 
+    private String role;
     private boolean enabled;
 
     public UserGeoserverDto() {
-        // Framework required
+        // Required
     }
 
     public UserGeoserverDto(String userName) {
-        this.userName = userName;
+        this(userName, null, null, true);
     }
 
-    public UserGeoserverDto(String userName, String password) {
-        this(userName);
-
-        this.password = password;
+    public UserGeoserverDto(String userName, String password, String role) {
+        this(userName, password, role, true);
     }
 
     public UserGeoserverDto(String userName, String password, boolean enabled) {
-        this(userName, password);
+        this(userName, password, null, enabled);
+    }
 
+    public UserGeoserverDto(String userName, String password, String role, boolean enabled) {
+        this.userName = userName;
+        this.password = password;
+        this.role = role;
         this.enabled = enabled;
     }
 
@@ -60,5 +64,13 @@ public class UserGeoserverDto {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

@@ -61,15 +61,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 // handle an authorized attempts
                 .exceptionHandling().authenticationEntryPoint(
-                (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                        (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 .and()
                 // Add a filter to validate the tokens with every request
                 .addFilterAfter(new MainAuthFilter(cookieProducer, authenticator, messageBus, tokenHandler),
                                 UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests() // authorization requests config
-                .antMatchers(POST, "/oauth/token", "/organizations/init", "/perform_logout").permitAll()
-                .antMatchers(POST, "/integration/ais_ums/import").permitAll()
-                .antMatchers(GET, "/actuator/health").permitAll()
+                .antMatchers(POST,
+                             "/oauth/token",
+                             "/organizations/init",
+                             "/perform_logout",
+                             "/integration/ais_ums/import").permitAll()
+                .antMatchers(GET,
+                             "/actuator/health",
+                             "/esia/**").permitAll()
                 .anyRequest().authenticated(); // Any other request must be authenticated
     }
 }
