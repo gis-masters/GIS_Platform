@@ -44,6 +44,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -213,14 +214,18 @@ public class ImportGmlProcessHandler implements IProcessHandler {
             String title = (String) data.get(TITLE.getName());
             String documentType = (String) data.get("document_type");
             String details = (String) data.get("details");
-            LocalDateTime aDate = LocalDateTime.parse(data.get("approve_date").toString(),
-                                                      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+            LocalDateTime aDate = null;
+            if (Objects.nonNull(data.get("approve_date"))) {
+                aDate = LocalDateTime.parse(data.get("approve_date").toString(),
+                                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            }
             Integer scale = Integer.parseInt(String.valueOf(data.get("scale")));
             boolean coordinateInverted = Boolean.parseBoolean(String.valueOf(data.get("coordinate_inverted")));
             String oktmo = (String) data.get(OKTMO.getName());
             String path = (String) data.get(INNER_PATH.getName());
 
-            if (title == null || documentType == null || oktmo == null || path == null) {
+            if (title == null || path == null) {
                 throw new IllegalStateException("Отсутствует один из обязательных атрибутов для импорта GML");
             }
 
