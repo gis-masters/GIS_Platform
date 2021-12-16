@@ -62,7 +62,7 @@ export async function getLibrariesWithParticularOne(
 ): Promise<[DocumentLibrary[], number, number] | undefined> {
   return await http.getPageWithObject<DocumentLibrary>(
     await getDocLibrariesUrl(),
-    pageOptions,
+    preparePageOptions(pageOptions, true),
     (item: DocumentLibrary) => item.identifier === identifier
   );
 }
@@ -148,7 +148,7 @@ export async function getLibraryRecordsWithParticularOne(
 
   const response = await http.getPageWithObject<{ content: LibraryRecord }>(
     await getDocLibrariesRecordsUrl(libraryId),
-    pageOptions,
+    preparePageOptions(pageOptions, true),
     objectRecognizer
   );
 

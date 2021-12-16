@@ -26,7 +26,7 @@ class AllProjects {
 
   @computed
   get displayedList(): CrgProject[] {
-    const filtered = filterObjects(this.list, { name: this.nameFilter });
+    const filtered = filterObjects(this.list, { name: { $ilike: `%${this.nameFilter}%` } });
 
     return sortObjects(filtered, this.sortBy, this.sortAsc, 'id');
   }

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { FilterParams } from '../../../services/util/filterObjects';
+import { FilterQuery } from '../../../services/util/filterObjects';
 import { Highlight } from '../../Highlight/Highlight';
 import { TextBadge } from '../../TextBadge/TextBadge';
 
@@ -12,7 +12,7 @@ const cnOrgUsersUserEmail = cn('OrgUsers', 'UserEmail');
 interface OrgUsersUserEmailProps {
   rowData: CrgUserExtended;
   filterActive: boolean;
-  filterParams: FilterParams<CrgUserExtended>;
+  filterParams: FilterQuery;
 }
 
 export const OrgUsersUserEmail: FC<OrgUsersUserEmailProps> = ({ rowData, filterActive, filterParams }) => (

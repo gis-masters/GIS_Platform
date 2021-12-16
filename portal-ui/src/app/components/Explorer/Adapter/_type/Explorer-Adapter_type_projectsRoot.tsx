@@ -41,9 +41,9 @@ export class ExplorerAdapterTypeProjectsRoot {
 
   static async getChildren(
     item: ExplorerItemData,
-    { page, pageSize, sort, sortDir, filter }: PageOptions
+    options: PageOptions
   ): Promise<[ExplorerItemData<CrgProject>[], number]> {
-    const [projects, pagesCount] = await projectsService.getProjects(page, pageSize, sort, sortDir, filter);
+    const [projects, pagesCount] = await projectsService.getProjects(options);
 
     return [projects.map(payload => ({ type: ExplorerItemType.PROJECT, payload })), pagesCount];
   }

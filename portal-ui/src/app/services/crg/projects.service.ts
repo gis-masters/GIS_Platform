@@ -6,7 +6,7 @@ import { route } from '../../stores/Route.store';
 import { allProjects } from '../../stores/AllProjects.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgProject } from './projects.models';
-import { PageableResponse, PageOptions, Process, SortDir } from '../models';
+import { PageableResponse, PageOptions, Process } from '../models';
 import { isFeaturesReadAllowed } from './permissions.service';
 import { TaskImport } from '../geoserver/import/taskImport';
 import { wsService } from '../ws.service';
@@ -24,6 +24,7 @@ import {
 import { Toast } from '../../components/Toast/Toast';
 import { communicationService } from '../communication.service';
 import { MAP_QUERY_PARAMS_DELIMITER } from '../map/map-link-following.service';
+import { preparePageOptions } from '../http.utils';
 import { Mime } from '../util/Mime';
 
 class ProjectsService {
@@ -245,15 +246,9 @@ class ProjectsService {
     return result;
   }
 
-  async getProjects(
-    page: number,
-    pageSize: number,
-    sort?: string,
-    sortDir?: SortDir,
-    filter?: { [key: string]: string }
-  ): Promise<[CrgProject[], number]> {
+  async getProjects(pageOptions: PageOptions): Promise<[CrgProject[], number]> {
     const response = await http.get<PageableResponse<CrgProject>>(await getProjectsUrl(), {
-      params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) }
+      params: preparePageOptions(pageOptions)
     });
 
     return [response._embedded?.projects || [], response.page.totalPages];
@@ -265,7 +260,7 @@ class ProjectsService {
   ): Promise<[CrgProject[], number, number] | undefined> {
     return await http.getPageWithObject<CrgProject>(
       await getProjectsUrl(),
-      pageOptions,
+      preparePageOptions(pageOptions),
       (item: CrgProject) => item.id === Number(id)
     );
   }

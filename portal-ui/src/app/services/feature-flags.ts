@@ -1,10 +1,10 @@
 import { getEnvironment } from './environment';
 
 export interface FlagsList {
-  dataManagement: boolean;
+  sample: boolean;
 }
 
-const keys: (keyof FlagsList)[] = ['dataManagement'];
+const keys: (keyof FlagsList)[] = ['sample'];
 
 function lsKey(key: string) {
   return `crg-flag-${key}`;
@@ -16,7 +16,7 @@ class Flags implements FlagsList {
     return this._instance || (this._instance = new this());
   }
 
-  dataManagement = false;
+  sample = false;
 
   private constructor() {
     void this.init();
@@ -61,5 +61,4 @@ class Flags implements FlagsList {
 
 export const flags = Flags.instance;
 
-// eslint-disable-next-line dot-notation
-window['flags'] = flags;
+Object.assign(window, { flags });

@@ -45,20 +45,24 @@ export class ExplorerAdapterTypeLibraryRoot {
 
   static async getChildren(
     item: ExplorerItemData,
-    pageOptions: PageOptions
+    { filter, ...options }: PageOptions
   ): Promise<[ExplorerItemData<DocumentLibrary>[], number]> {
-    const [libraries, pagesCount] = await getLibraries(pageOptions);
+    const [libraries, pagesCount] = await getLibraries({
+      ...options,
+      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined
+    });
 
     return [libraries.map(payload => ({ type: ExplorerItemType.LIBRARY, payload })), pagesCount];
   }
 
   static async getChildrenWithParticularOne(
     item: ExplorerItemData,
-    options: PageOptions,
+    { filter, ...options }: PageOptions,
     [, identifier, page]: ExplorerUrlItem
   ): Promise<[ExplorerItemData<DocumentLibrary>[], number, number]> | undefined {
     const response = await getLibrariesWithParticularOne(identifier, {
       ...options,
+      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
       page
     });
 

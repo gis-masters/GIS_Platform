@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { flags } from '../../services/feature-flags';
 import { ExplorerItemType } from '../Explorer/Explorer.models';
 import { Explorer } from '../Explorer/Explorer';
 
@@ -14,17 +13,9 @@ const cnDataManagement = cn('DataManagement');
 export class DataManagement extends Component {
   render() {
     return (
-      flags.dataManagement && (
-        <div className={cnDataManagement()}>
-          <Explorer
-            preset={ExplorerItemType.ROOT}
-            urlChangeEnabled
-            withInfoPanel
-            fixedHeight
-            appRole='DataManagement'
-          />
-        </div>
-      )
+      <div className={cnDataManagement()}>
+        <Explorer preset={ExplorerItemType.ROOT} urlChangeEnabled withInfoPanel fixedHeight appRole='DataManagement' />
+      </div>
     );
   }
 }

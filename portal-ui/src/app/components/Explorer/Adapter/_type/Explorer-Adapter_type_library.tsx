@@ -94,14 +94,17 @@ export class ExplorerAdapterTypeLibrary {
 
   static async getChildren(
     explorerItem: ExplorerItemData<DocumentLibrary>,
-    pageOptions: PageOptions
+    { filter, ...options }: PageOptions
   ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
     const result: ExplorerItemData<LibraryRecord>[] = [];
 
     const [libraryRecords, pagesCount] = await getLibraryRecords(
       explorerItem.payload.identifier,
       explorerItem.payload.schemaId,
-      pageOptions
+      {
+        ...options,
+        filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined
+      }
     );
 
     const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schemaId);
@@ -154,13 +157,14 @@ export class ExplorerAdapterTypeLibrary {
 
   static async getChildrenWithParticularOne(
     item: ExplorerItemData<LibraryRecord>,
-    options: PageOptions,
+    { filter, ...options }: PageOptions,
     [, id, page]: ExplorerUrlItem
   ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
     const [libraryId, identifier] = id.split(':');
 
     const response = await getLibraryRecordsWithParticularOne(libraryId, item.payload.schemaId, identifier, {
       ...options,
+      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
       page
     });
 

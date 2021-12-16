@@ -2,12 +2,12 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } f
 
 import { CustomCache, CustomCacheConfig } from './common/CustomCache';
 import { communicationService } from './communication.service';
-import { PageableResponse, PageOptions } from './models';
+import { PageableResponse, PageQueryParams } from './models';
 import { replaceUrl } from './server-urls.service';
 import { Mime } from './util/Mime';
 import { route } from '../stores/Route.store';
 import { Emitter } from './common/Emitter';
-import { getPayloadFromPageableResponse, preparePageOptions } from './http.utils';
+import { getPayloadFromPageableResponse } from './http.utils';
 
 const ITEMS_PER_PAGE = 300;
 
@@ -99,12 +99,10 @@ export class Http {
 
   async getPageWithObject<T>(
     url: string,
-    pageOptions: PageOptions,
+    pageParams: PageQueryParams,
     objectRecognizer: (o: T) => boolean,
     config: RequestConfigWithCache = {}
   ): Promise<[T[], number /* totalPages */, number /* pageNumber */]> | undefined {
-    const pageParams = preparePageOptions(pageOptions);
-
     // поначалу попытаемся найти объект на указанной странице
     const optimisticResponse = await this.get<PageableResponse<T>>(url, {
       ...config,

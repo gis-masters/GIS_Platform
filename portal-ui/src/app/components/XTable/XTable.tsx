@@ -16,23 +16,25 @@ import {
   Pagination
 } from '@mui/material';
 
-import { filterObjects, FilterParams } from '../../services/util/filterObjects';
+import { filterObjects, FilterQuery } from '../../services/util/filterObjects';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
+import { PropertyOption } from '../../services/crg/schema.models';
 import { PageOptions, SortDir } from '../../services/models';
 import { Highlight } from '../Highlight/Highlight';
 import { TextBadge } from '../TextBadge/TextBadge';
 import { Loading } from '../Loading/Loading';
+import { Toast } from '../Toast/Toast';
 
 import { XTableEmpty } from './Empty/XTable-Empty';
 import { XTableTitle } from './Title/XTable-Title';
+import { FilterType } from './Filter/XTable-Filter';
+import { XTableHeadCell } from './HeadCell/XTable-HeadCell';
 import { XTableHeader } from './Header/XTable-Header';
 import { XTableFooter } from './Footer/XTable-Footer';
-import { TableHeadCell } from './TableHeadCell/TableHeadCell';
 import { XTableContainer } from './Container/XTable-Container';
 import { XTableHeaderActions } from './HeaderActions/XTable-HeaderActions';
 
 import '!style-loader!css-loader!sass-loader!./XTable.scss';
-import { Toast } from '../Toast/Toast';
 
 const cnXTable = cn('XTable');
 
@@ -40,8 +42,10 @@ export interface XTableColumn<T> {
   title?: ReactNode;
   field?: keyof T;
   filterable?: boolean;
+  filterType?: FilterType;
+  filterOptions?: PropertyOption[];
   sortable?: boolean;
-  CellContent?: ComponentType<{ rowData: T; field: keyof T; filterActive: boolean; filterParams: FilterParams<T> }>;
+  CellContent?: ComponentType<{ rowData: T; field: keyof T; filterActive: boolean; filterParams: FilterQuery }>;
   getIdBadge?: (rowData: T) => string | number;
   cellProps?: TableCellProps;
   headerCellProps?: TableCellProps;
@@ -78,7 +82,7 @@ export type XTableProps<T> = XTablePropsSync<T> | XTablePropsAsync<T>;
 @observer
 export class XTable<T> extends Component<XTableProps<T>> {
   @observable private sortParams: SortParams<T>;
-  @observable private filterParams: FilterParams<T> = {};
+  @observable private filterParams: FilterQuery = {};
   @observable private filterActive = false;
   @observable private _page = 1;
   @observable private _asyncData: T[] = [];
@@ -144,22 +148,38 @@ export class XTable<T> extends Component<XTableProps<T>> {
             {!headless && (
               <TableHead>
                 <TableRow>
-                  {cols.map(({ field, title, sortable, filterable, align, headerCellProps }, i) => (
-                    <TableHeadCell
-                      key={i}
-                      field={field}
-                      sortable={sortable}
-                      sortParams={this.sortParams}
-                      filterParams={this.filterParams}
-                      filterable={filterable && this.filterActive && filterable}
-                      align={align}
-                      headerCellProps={headerCellProps}
-                      onBeforeFilterChange={this.beforeFilterChange}
-                      onFilterChange={this.afterFilterChange}
-                    >
-                      {title}
-                    </TableHeadCell>
-                  ))}
+                  {cols.map(
+                    (
+                      {
+                        field,
+                        title,
+                        sortable,
+                        filterable,
+                        filterType = FilterType.STRING,
+                        filterOptions,
+                        align,
+                        headerCellProps
+                      },
+                      i
+                    ) => (
+                      <XTableHeadCell
+                        key={`${i}_${String(field)}`}
+                        field={field}
+                        sortable={sortable}
+                        sortParams={this.sortParams}
+                        filterQuery={this.filterParams}
+                        filterable={filterable && this.filterActive && filterable}
+                        filterType={filterType}
+                        filterOptions={filterOptions}
+                        align={align}
+                        headerCellProps={headerCellProps}
+                        onBeforeFilterChange={this.beforeFilterChange}
+                        onFilterChange={this.afterFilterChange}
+                      >
+                        {title}
+                      </XTableHeadCell>
+                    )
+                  )}
                 </TableRow>
               </TableHead>
             )}
@@ -170,7 +190,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
                 this.dataPaged.map((rowData, i) => (
                   <TableRow key={getRowId ? getRowId(rowData) : i} hover>
                     {cols.map(({ field, CellContent, getIdBadge, cellProps, align }, i) => (
-                      <TableCell key={i} align={align} {...(cellProps || {})}>
+                      <TableCell key={`${i}_${String(field)}`} align={align} {...(cellProps || {})}>
                         {CellContent ? (
                           <CellContent
                             rowData={rowData}
@@ -181,7 +201,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
                         ) : (
                           <>
                             <Highlight
-                              word={this.filterParams[field]}
+                              word={this.filterParams[field as string]}
                               enabled={(filterable && this.filterActive) || filtersAlwaysEnabled}
                             >
                               {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}

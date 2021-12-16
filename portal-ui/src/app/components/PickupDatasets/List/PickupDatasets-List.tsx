@@ -107,15 +107,13 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
 
   private async _fetchDatasets() {
     this.setBusy(true);
-    const [datasets, totalPages] = await getDatasets(
-      this.currentPage - 1,
-      this.pageSize,
-      this.sortField,
-      this.sortDir,
-      {
-        title: this.filterValue
-      }
-    );
+    const [datasets, totalPages] = await getDatasets({
+      page: this.currentPage - 1,
+      pageSize: this.pageSize,
+      sort: this.sortField,
+      sortDir: this.sortDir,
+      filter: { title: { $ilike: this.filterValue } }
+    });
 
     this.setTotalPages(totalPages);
     this.setDatasets(datasets);

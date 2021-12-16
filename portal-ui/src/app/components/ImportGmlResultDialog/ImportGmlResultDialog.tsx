@@ -19,9 +19,10 @@ import {
   Typography
 } from '@mui/material';
 import { KeyboardArrowDown, Warning } from '@mui/icons-material';
-import { Link } from '../Link/Link';
-import { Button } from '../Button/Button';
+
 import { ImportResult } from '../../services/crg/processes.service';
+import { Button } from '../Button/Button';
+import { Link } from '../Link/Link';
 
 import '!style-loader!css-loader!sass-loader!./ImportGmlResultDialog.scss';
 
@@ -65,7 +66,6 @@ export class ImportGmlResultDialog extends Component<ImportGmlResultDialogProps>
                         </ListItemSecondaryAction>
                       </ListItem>
                     );
-                    // eslint-disable-next-line eqeqeq
                   } else if (!reportItem.success && reportItem.successCount === 0 && reportItem.reason) {
                     return (
                       <ListItem key={reportItem.schemaId}>

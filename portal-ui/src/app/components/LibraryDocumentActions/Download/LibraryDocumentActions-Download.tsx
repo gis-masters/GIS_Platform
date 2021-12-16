@@ -23,9 +23,13 @@ export class LibraryDocumentActionsDownload extends Component<LibraryDocumentAct
   @observable private url: string;
 
   async componentDidMount() {
-    const { document } = this.props;
+    await this.buildUrl();
+  }
 
-    this.setUrl(`${await getDocLibrariesRecordsUrl(document.libraryId)}/${document.id}/inner_path/download`);
+  async componentDidUpdate(prevProps: Readonly<LibraryDocumentActionsDownloadProps>) {
+    if (prevProps.document.id !== this.props.document.id) {
+      await this.buildUrl();
+    }
   }
 
   render() {
@@ -41,6 +45,12 @@ export class LibraryDocumentActionsDownload extends Component<LibraryDocumentAct
         icon={<DownloadOutlined />}
       />
     );
+  }
+
+  private async buildUrl() {
+    const { document } = this.props;
+
+    this.setUrl(`${await getDocLibrariesRecordsUrl(document.libraryId)}/${document.id}/inner_path/download`);
   }
 
   @action

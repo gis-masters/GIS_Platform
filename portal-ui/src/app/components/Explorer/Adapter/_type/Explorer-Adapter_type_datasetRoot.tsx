@@ -45,19 +45,26 @@ export class ExplorerAdapterTypeDatasetRoot {
 
   static async getChildren(
     item: ExplorerItemData,
-    { page, pageSize, sort, sortDir, filter }: PageOptions
+    { filter, ...options }: PageOptions
   ): Promise<[ExplorerItemData<Dataset>[], number]> {
-    const [dataSets, pagesCount] = await getDatasets(page, pageSize, sort, sortDir, filter);
+    const [dataSets, pagesCount] = await getDatasets({
+      ...options,
+      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined
+    });
 
     return [dataSets.map(payload => ({ type: ExplorerItemType.DATASET, payload })), pagesCount];
   }
 
   static async getChildrenWithParticularOne(
     item: ExplorerItemData,
-    options: PageOptions,
+    { filter, ...options }: PageOptions,
     [, identifier, page]: ExplorerUrlItem
   ): Promise<[ExplorerItemData<Dataset>[], number, number]> | undefined {
-    const response = await getDatasetsWithParticularOne(identifier, { ...options, page });
+    const response = await getDatasetsWithParticularOne(identifier, {
+      ...options,
+      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
+      page
+    });
 
     if (!response) {
       return;

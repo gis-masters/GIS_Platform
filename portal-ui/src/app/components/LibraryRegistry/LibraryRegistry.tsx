@@ -15,11 +15,11 @@ import {
   getLibraryRecords2,
   LibraryRecord
 } from '../../services/crg/doc-library.service';
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { PropertySchema, PropertySchemaChoice, PropertyType } from '../../services/crg/schema.models';
 import { OldFeatureDescription } from '../../services/crg/schemaOld.models';
 import { communicationService } from '../../services/communication.service';
 import { schemaService } from '../../services/crg/schema.service';
-import { FilterParams } from '../../services/util/filterObjects';
+import { FilterQuery } from '../../services/util/filterObjects';
 import { convertSchema } from '../../services/crg/schema.utils';
 import { PageOptions } from '../../services/models';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
@@ -32,6 +32,7 @@ import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./LibraryRegistry.scss';
+import { FilterType } from '../XTable/Filter/XTable-Filter';
 
 const cnLibraryRegistry = cn('LibraryRegistry');
 
@@ -71,6 +72,7 @@ export class LibraryRegistry extends Component {
               className={cnLibraryRegistry('Table')}
               cols={this.cols}
               getData={this.getData}
+              getRowId={this.getRowId}
               defaultSort={{ field: 'title', asc: true }}
               secondarySortField='id'
               filtersAlwaysEnabled
@@ -140,24 +142,48 @@ export class LibraryRegistry extends Component {
       PropertyType.TIME
     ]);
 
-    const filterableTypes = new Set([PropertyType.STRING, PropertyType.CHOICE]);
+    const filterableTypes = new Set([
+      PropertyType.CHOICE,
+      PropertyType.DATETIME,
+      PropertyType.FLOAT,
+      PropertyType.INT,
+      PropertyType.STRING
+    ]);
 
     const typesCols: Partial<Record<PropertyType, Partial<XTableColumn<LibraryRecord>>>> = {
       [PropertyType.BOOL]: { align: 'center', CellContent: this.renderBool },
-      [PropertyType.INT]: { align: 'right' },
-      [PropertyType.FLOAT]: { align: 'right' }
+      [PropertyType.CHOICE]: {
+        filterType: FilterType.CHOICE,
+        CellContent: ({ rowData, field }) => (
+          <>
+            {(
+              this.properties.find(
+                ({ name, propertyType }) => name === field && propertyType === PropertyType.CHOICE
+              ) as PropertySchemaChoice
+            )?.options.find(({ value }) => value === rowData[field])?.title || rowData[field]}
+          </>
+        )
+      },
+      [PropertyType.DATETIME]: { filterType: FilterType.DATETIME },
+      [PropertyType.INT]: { align: 'right', filterType: FilterType.FLOAT },
+      [PropertyType.FLOAT]: { align: 'right', filterType: FilterType.FLOAT },
+      [PropertyType.STRING]: { filterType: FilterType.STRING }
     };
 
     return [
       { CellContent: this.renderActions, align: 'center', cellProps: { padding: 'checkbox' } },
       ...this.properties
-        .filter(({ hidden, propertyType }) => !hidden && propertyType !== PropertyType.BINARY)
-        .map(({ name, title, propertyType }) => ({
-          field: name,
-          title,
-          sortable: sortableTypes.has(propertyType),
-          filterable: filterableTypes.has(propertyType),
-          ...(typesCols[propertyType] || {})
+        .filter(
+          ({ hidden, propertyType }) =>
+            !hidden && propertyType !== PropertyType.BINARY && propertyType !== PropertyType.FIAS
+        )
+        .map(property => ({
+          field: property.name,
+          title: property.title,
+          sortable: sortableTypes.has(property.propertyType),
+          filterable: filterableTypes.has(property.propertyType) && property.name !== 'id',
+          ...(typesCols[property.propertyType] || {}),
+          filterOptions: property.propertyType === PropertyType.CHOICE ? property.options : undefined
         }))
     ];
   }
@@ -174,7 +200,7 @@ export class LibraryRegistry extends Component {
     rowData: LibraryRecord;
     field: keyof LibraryRecord;
     filterActive: boolean;
-    filterParams: FilterParams<LibraryRecord>;
+    filterParams: FilterQuery;
   }): ReactElement {
     const value = ['true', '1'].includes(String(rowData[field]).toLowerCase());
 
@@ -253,5 +279,9 @@ export class LibraryRegistry extends Component {
   @action.bound
   private setExportCSVLoading(loading: boolean) {
     this.exportCSVLoading = loading;
+  }
+
+  private getRowId(rowData: LibraryRecord) {
+    return rowData.id;
   }
 }

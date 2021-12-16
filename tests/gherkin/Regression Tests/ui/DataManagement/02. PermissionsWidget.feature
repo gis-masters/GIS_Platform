@@ -3,7 +3,6 @@ Feature: Permissions Widget
   Background:
     Given пользователь зарегистрирован
     Given осуществлен вход в систему
-    Given установлен флаг 'dataManagement' //в консоли написать: flags.set('dataManagement',true)
     Given пользователь перешёл на страницу 'Управление данными'
     Given пользователь перешёл в набор данных, содержащий таблицы
 

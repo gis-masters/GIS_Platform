@@ -7,7 +7,7 @@ import {
 } from './server-urls.service';
 import { CrgLayer, CrgProject } from './crg/projects.models';
 import { PropertySchema, PropertyType } from './crg/schema.models';
-import { PageableResponse, PageOptions, SortDir } from './models';
+import { PageableResponse, PageOptions } from './models';
 import { communicationService } from './communication.service';
 import { preparePageOptions } from './http.utils';
 import { Role } from './crg/permissions.models';
@@ -64,16 +64,8 @@ export interface DataTableConnection {
   project: CrgProject;
 }
 
-export async function getDatasets(
-  page: number,
-  pageSize: number,
-  sort?: string,
-  sortDir?: SortDir,
-  filter?: { [key: string]: string }
-): Promise<[Dataset[], number]> {
-  const tempFilter = filter && filter.title ? `title ilike '%${filter.title}%'` : '';
-
-  const params = { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, filter: tempFilter };
+export async function getDatasets(pageOptions: PageOptions): Promise<[Dataset[], number]> {
+  const params = preparePageOptions(pageOptions, true);
   const response = await http.get<PageableResponse<Dataset>>(await getDatasetsUrl(), { params });
 
   return [(response._embedded && response._embedded.datasets) || [], response.page.totalPages];
@@ -85,7 +77,7 @@ export async function getDatasetsWithParticularOne(
 ): Promise<[Dataset[], number, number] | undefined> {
   return await http.getPageWithObject<Dataset>(
     await getDatasetsUrl(),
-    pageOptions,
+    preparePageOptions(pageOptions, true),
     (item: Dataset) => item.identifier === identifier
   );
 }
@@ -100,14 +92,9 @@ export async function getDataset(datasetId: string): Promise<Dataset> {
 
 export async function getDatasetTables(datasetId: string, pageOptions: PageOptions): Promise<[DataTable[], number]> {
   const url = await getDatasetTablesUrl(datasetId);
-  const requestOptions = { params: preparePageOptions(pageOptions) };
+  const params = preparePageOptions(pageOptions, true);
 
-  const title = requestOptions.params.title;
-  if (title) {
-    requestOptions.params.filter = `title ilike '%${title}%'`;
-  }
-
-  const response = await http.get<PageableResponse<Omit<DataTable, 'dataset'>>>(url, requestOptions);
+  const response = await http.get<PageableResponse<Omit<DataTable, 'dataset'>>>(url, { params });
 
   const dataTables: DataTable[] = (response._embedded?.tables || []).map(table => ({
     ...table,
@@ -124,7 +111,7 @@ export async function getDatasetTablesWithParticularOne(
 ): Promise<[DataTable[], number, number] | undefined> {
   const response = await http.getPageWithObject<DataTable>(
     await getDatasetTablesUrl(datasetId),
-    pageOptions,
+    preparePageOptions(pageOptions, true),
     (item: DataTable) => item.identifier === identifier
   );
 

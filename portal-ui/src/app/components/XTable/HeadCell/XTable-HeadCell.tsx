@@ -1,43 +1,64 @@
 import React, { Component } from 'react';
 import { action } from 'mobx';
 import { observer } from 'mobx-react';
+import { TableCell, TableSortLabel, TableCellProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { TableCell, TableSortLabel, TableCellProps, TextField } from '@mui/material';
 
+import { PropertyOption } from '../../../services/crg/schema.models';
+import { FilterQuery } from '../../../services/util/filterObjects';
 import { SortParams } from '../../../services/util/sortObjects';
-import { FilterParams } from '../../../services/util/filterObjects';
 
-import '!style-loader!css-loader!sass-loader!./TableHeadCell.scss';
+import { FilterType } from '../Filter/XTable-Filter';
+import { XTableFilter } from '../Filter/XTable-Filter.composed';
 
-const cnTableHeadCell = cn('TableHeadCell');
+import '!style-loader!css-loader!sass-loader!./XTable-HeadCell.scss';
 
-interface TableHeadCellProps<T> extends TableCellProps {
+const cnXTableHeadCell = cn('XTable', 'HeadCell');
+
+interface XTableHeadCellProps<T> extends TableCellProps {
   field?: keyof T;
   sortable?: boolean;
   sortParams?: SortParams<T>;
   filterable?: boolean;
-  filterParams?: FilterParams<T>;
+  filterQuery?: FilterQuery;
+  filterType: FilterType;
+  filterOptions?: PropertyOption[];
   headerCellProps?: TableCellProps;
   onBeforeFilterChange: () => void;
   onFilterChange: () => void;
 }
 
 @observer
-export class TableHeadCell<T> extends Component<TableHeadCellProps<T>> {
+export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
   render() {
-    const { field, sortable, sortParams, filterable, filterParams, children, headerCellProps, className } = this.props;
+    const {
+      field,
+      sortable,
+      sortParams,
+      filterable,
+      filterType,
+      filterQuery,
+      filterOptions,
+      children,
+      headerCellProps,
+      className,
+      onBeforeFilterChange,
+      onFilterChange
+    } = this.props;
 
     const cellProps = {
       ...headerCellProps,
       ...this.props,
-      className: cnTableHeadCell({ sortable, filterable }, [className])
+      className: cnXTableHeadCell({ sortable, filterable, filterType }, [className])
     };
 
     delete cellProps.field;
     delete cellProps.sortable;
     delete cellProps.filterable;
     delete cellProps.sortParams;
-    delete cellProps.filterParams;
+    delete cellProps.filterQuery;
+    delete cellProps.filterType;
+    delete cellProps.filterOptions;
     delete cellProps.headerCellProps;
     delete cellProps.onFilterChange;
     delete cellProps.onBeforeFilterChange;
@@ -56,12 +77,13 @@ export class TableHeadCell<T> extends Component<TableHeadCellProps<T>> {
           children
         )}
         {filterable && (
-          <TextField
-            variant='filled'
-            size='small'
-            className={cnTableHeadCell('Filter')}
-            onChange={this.handleFilterChange}
-            value={filterParams[field] || ''}
+          <XTableFilter
+            field={field as string}
+            type={filterType}
+            filterOptions={filterOptions}
+            filterQuery={filterQuery}
+            onBeforeFilterChange={onBeforeFilterChange}
+            onFilterChange={onFilterChange}
           />
         )}
       </TableCell>
@@ -78,17 +100,5 @@ export class TableHeadCell<T> extends Component<TableHeadCellProps<T>> {
     } else {
       sortParams.asc = !sortParams.asc;
     }
-  }
-
-  @action.bound
-  private handleFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { field, filterParams, onBeforeFilterChange, onFilterChange } = this.props;
-    onBeforeFilterChange();
-    if (e.target.value) {
-      filterParams[field] = e.target.value;
-    } else {
-      delete filterParams[field];
-    }
-    onFilterChange();
   }
 }

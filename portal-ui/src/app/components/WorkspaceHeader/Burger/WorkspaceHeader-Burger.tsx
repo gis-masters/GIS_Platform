@@ -7,7 +7,6 @@ import { cn } from '@bem-react/classname';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { flags } from '../../../services/feature-flags';
 import { route } from '../../../stores/Route.store';
 import { Pages } from '../../../app-routing.module';
 import { Link } from '../../Link/Link';
@@ -59,16 +58,14 @@ export class WorkspaceHeaderBurger extends Component {
             </MenuItem>
           </Link>
 
-          {flags.dataManagement && (
-            <Link href='/data-management' theme='none' delay={300}>
-              <MenuItem onClick={this.close}>
-                <ListItemIcon>
-                  <Storage />
-                </ListItemIcon>
-                Управление данными
-              </MenuItem>
-            </Link>
-          )}
+          <Link href='/data-management' theme='none' delay={300}>
+            <MenuItem onClick={this.close}>
+              <ListItemIcon>
+                <Storage />
+              </ListItemIcon>
+              Управление данными
+            </MenuItem>
+          </Link>
 
           {currentUser.isAdmin && (
             <Link href='/org-admin' theme='none' delay={300}>

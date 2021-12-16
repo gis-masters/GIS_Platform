@@ -8,6 +8,7 @@ import { CrgProject } from './projects.models';
 import { Basemap } from './basemaps.models';
 import { services } from '../services';
 import { http } from '../http.service';
+import { preparePageOptions } from '../http.utils';
 import {
   getBasemapsByIdsUrl,
   getBasemapsUrl,
@@ -16,7 +17,6 @@ import {
   getBasemapUrl
 } from '../server-urls.service';
 import { Toast } from '../../components/Toast/Toast';
-import { preparePageOptions } from '../http.utils';
 
 interface ProjectBasemap {
   id: number;
@@ -38,7 +38,7 @@ export async function getBasemapsWithParticularOne(
 ): Promise<[Basemap[], number, number] | undefined> {
   return await http.getPageWithObject<Basemap>(
     await getBasemapsUrl(),
-    pageOptions,
+    preparePageOptions(pageOptions),
     (item: Basemap) => item.id === id
   );
 }

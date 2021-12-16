@@ -1,0 +1,9 @@
+body .XTable-HeadCell {
+  &_filterable {
+    padding-bottom: 30px;
+  }
+
+  &_filterType_dateTime.XTable-HeadCell_filterable {
+    min-width: 250px;
+  }
+}

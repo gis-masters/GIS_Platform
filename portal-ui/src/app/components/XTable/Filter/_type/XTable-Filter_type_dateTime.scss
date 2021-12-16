@@ -1,0 +1,19 @@
+.XTable-Filter_type_dateTime {
+  display: flex;
+  gap: 2px;
+
+  .MuiInputBase-input {
+    padding-top: 6px;
+
+    font-size: 14px;
+
+    &::-webkit-calendar-picker-indicator {
+      margin: 0 -5px 0 0;
+    }
+
+    &[value=""]::-webkit-datetime-edit {
+      opacity: 70%;
+      color: var(--gray);
+    }
+  }
+}

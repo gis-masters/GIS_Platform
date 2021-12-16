@@ -96,14 +96,11 @@ export class ExplorerAdapterTypeDataset {
 
   static async getChildren(
     item: ExplorerItemData<Dataset>,
-    { page, pageSize, sort, sortDir, filter }: PageOptions
+    { filter, ...options }: PageOptions
   ): Promise<[ExplorerItemData<DataTable>[], number]> {
     const [tables, totalPages] = await getDatasetTables(item.payload.identifier, {
-      page,
-      pageSize,
-      sort,
-      sortDir,
-      filter
+      ...options,
+      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined
     });
 
     return [tables.map(payload => ({ type: ExplorerItemType.TABLE, payload })), totalPages];
@@ -111,12 +108,16 @@ export class ExplorerAdapterTypeDataset {
 
   static async getChildrenWithParticularOne(
     item: ExplorerItemData,
-    options: PageOptions,
+    { filter, ...options }: PageOptions,
     [, id, page]: ExplorerUrlItem
   ): Promise<[ExplorerItemData<DataTable>[], number, number]> | undefined {
     const [datasetId, identifier] = id.split(':');
 
-    const response = await getDatasetTablesWithParticularOne(datasetId, identifier, { ...options, page });
+    const response = await getDatasetTablesWithParticularOne(datasetId, identifier, {
+      ...options,
+      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
+      page
+    });
 
     if (!response) {
       return;

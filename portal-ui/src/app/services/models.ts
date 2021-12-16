@@ -1,5 +1,6 @@
 import { OldFeatureDescription, OldPropertySchema } from './crg/schemaOld.models';
 import { GeometryType } from './geoserver/wfs.models';
+import { FilterQuery } from './util/filterObjects';
 
 interface PageableLink {
   href: string;
@@ -125,7 +126,7 @@ export interface PageOptions {
   pageSize: number;
   sort?: string;
   sortDir?: SortDir;
-  filter?: { [key: string]: string };
+  filter?: FilterQuery;
   queryParams?: { [key: string]: string };
 }
 

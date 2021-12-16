@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { getActions } from '../Adapter/Explorer-Adapter';
@@ -12,8 +13,8 @@ interface ExplorerActionsProps {
   store: ExplorerStore;
 }
 
-export const ExplorerActions: FC<ExplorerActionsProps> = ({ store }) => {
+export const ExplorerActions: FC<ExplorerActionsProps> = observer(({ store }) => {
   const actions = getActions(store.selectedItem);
 
   return (store.selectedItem && actions && <div className={cnExplorer('Actions')}>{actions}</div>) || null;
-};
+});

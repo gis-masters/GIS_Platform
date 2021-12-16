@@ -1,21 +1,33 @@
-export type FilterParams<T> = { [key in keyof T]?: string };
+import escapeStringRegexp from 'escape-string-regexp';
+import sift from 'sift';
+
+export type FilterQueryValue = string | number | boolean | string[] | number | RegExp;
+
+export interface FilterQuery {
+  [key: string]: FilterQueryValue | FilterQuery | FilterQuery[];
+}
 
 type CustomFieldsPrep<T, F extends keyof T> = (a: T[F], item?: T) => string | number;
 export type CustomFilterFieldsPrep<T> = { [key in keyof T]?: CustomFieldsPrep<T, key> };
 
-export function filterObjects<T>(arr: T[], params: FilterParams<T>, customFieldsPrep?: CustomFilterFieldsPrep<T>): T[] {
-  return arr.filter(item =>
-    Object.entries(item).every(([key, value]) => {
-      const k = key as keyof T;
-      if (!params[k]) {
-        return true;
-      }
+export function filterObjects<T>(arr: T[], query: FilterQuery): T[] {
+  return arr.filter(sift(prepareLike(query)));
+}
 
-      if (customFieldsPrep && customFieldsPrep[k]) {
-        value = customFieldsPrep[k](value, item);
-      }
+export function prepareLike(query: FilterQuery): FilterQuery {
+  const newQuery: FilterQuery = {};
 
-      return String(value).toLowerCase().includes(params[k].toLowerCase());
-    })
-  );
+  for (const [key, value] of Object.entries(query)) {
+    if (key === '$like' && typeof value === 'string') {
+      newQuery.$regex = new RegExp(escapeStringRegexp(value).replace(/%/g, '.*').replace(/_/g, '.'));
+    } else if (key === '$ilike' && typeof value === 'string') {
+      newQuery.$regex = new RegExp(escapeStringRegexp(value).replace(/%/g, '.*').replace(/_/g, '.'), 'i');
+    } else if (typeof value === 'object' && key !== '$regex' && !Array.isArray(value)) {
+      newQuery[key] = prepareLike(value as FilterQuery);
+    } else {
+      newQuery[key] = value;
+    }
+  }
+
+  return newQuery;
 }
