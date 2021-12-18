@@ -197,9 +197,9 @@ export class Explorer extends Component<ExplorerProps> {
     if (depth !== this.store.path.length - 2) {
       this.store.setSort(getChildrenSortDefaultValue(item));
       this.store.setSortItems(getChildrenSortItems(item));
+      this.store.setFilter({});
       if (updateFilters) {
         this.store.setSortDir(getChildrenSortDefaultDirection(item));
-        this.store.setFilter({});
       }
     }
 
