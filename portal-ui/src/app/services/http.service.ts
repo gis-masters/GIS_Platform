@@ -16,6 +16,12 @@ interface RequestConfig extends AxiosRequestConfig {
   headers?: Record<string, string>;
 }
 
+export interface ServerError {
+  status: string;
+  message: string;
+  errors: unknown[];
+}
+
 interface RequestConfigWithCache extends RequestConfig {
   cache?: CustomCacheConfig;
   isAuthenticate?: boolean;

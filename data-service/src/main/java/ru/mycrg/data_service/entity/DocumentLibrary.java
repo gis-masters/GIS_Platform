@@ -30,6 +30,9 @@ public class DocumentLibrary {
     @Column(length = 50)
     private String schemaId;
 
+    @Column
+    private Long registryCounter;
+
     @Column(name = "created_by")
     private String createdBy;
 
@@ -121,5 +124,13 @@ public class DocumentLibrary {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Long getRegistryCounter() {
+        return registryCounter;
+    }
+
+    public void setRegistryCounter(Long registryCounter) {
+        this.registryCounter = registryCounter;
     }
 }

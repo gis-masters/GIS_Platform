@@ -7,6 +7,7 @@ import {
   getDocLibrariesRecordUrl,
   getDocLibrariesUrl,
   getDocLibraryUrl,
+  getDocRegisterUrl,
   getDocumentLibraryRecordRoleAssignmentUrl
 } from '../server-urls.service';
 import { Role, RoleAssignmentBody } from './permissions.models';
@@ -180,6 +181,10 @@ export async function createLibraryRecord(
   }
 
   return record;
+}
+
+export async function registerDocument(libraryId: string, recordId: string): Promise<void> {
+  await http.post<void>(await getDocRegisterUrl(libraryId, recordId));
 }
 
 export async function deleteLibraryRecord(libraryId: string, id: string): Promise<void> {

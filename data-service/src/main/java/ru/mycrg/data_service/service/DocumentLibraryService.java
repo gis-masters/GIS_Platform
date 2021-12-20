@@ -16,6 +16,7 @@ import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,6 +72,27 @@ public class DocumentLibraryService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(allowedLibraries, pageable, totalLibraries);
+    }
+
+    /**
+     * Increment registry number.
+     *
+     * @param libraryId Library identifier
+     *
+     * @return Old registry number.
+     */
+    public Long incrementRegistryNumber(String libraryId) {
+        DocumentLibrary library = libraryRepository
+                .findByTableName(libraryId)
+                .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: " + libraryId));
+
+        Long oldRegistryNumber = library.getRegistryCounter();
+        library.setRegistryCounter(oldRegistryNumber + 1);
+        library.setLastModified(LocalDateTime.now());
+
+        libraryRepository.save(library);
+
+        return oldRegistryNumber;
     }
 
     public IResourceModel getInfo(String tableName) {

@@ -177,27 +177,21 @@ public class BasePermissionsRepository {
         return pJdbcTemplate.getJdbcTemplate().queryForObject(requestTemplate, Long.class);
     }
 
-    public boolean isDatasetAllowed(ResourceQualifier dQualifier, Long datasetId) {
-        String tableQualifier = dQualifier.getTableQualifier();
-        String tableName = dQualifier.getTable();
+    public void decreasePermissionsToViewerForAll(ResourceQualifier rQualifier) {
+        checkQualifier(rQualifier);
 
-        List<String> allPrincipalIds = principalService.getAllIds();
+        String query = "" +
+                "UPDATE " +
+                "  data.acl_permissions " +
+                "SET " +
+                "  role_id = 10 " +
+                "WHERE " +
+                "  resource_table = '" + rQualifier.getTable() + "' " +
+                "  AND resource_id = " + rQualifier.getRecord();
 
-        String requestTemplate = "" +
-                "SELECT exists (" +
-                "   SELECT * " +
-                "   FROM " + tableQualifier + " AS res " +
-                "   JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
-                "   AND p.resource_table = '" + tableName + "' " +
-                "   AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
-                "   AND res.id = " + datasetId +
-                ")";
+        log.debug("Query decrease permissions to viewer for all: [{}]", query);
 
-        log.debug("Request isDatasetAllowed: [{}]", requestTemplate);
-
-        Boolean result = pJdbcTemplate.getJdbcTemplate().queryForObject(requestTemplate, Boolean.class);
-
-        return Boolean.TRUE.equals(result);
+        pJdbcTemplate.getJdbcTemplate().execute(query);
     }
 
     public Optional<String> bestRoleForTable(ResourceQualifier tableQualifier) {
@@ -338,13 +332,7 @@ public class BasePermissionsRepository {
      * @throws IllegalStateException если квалификатор не содержит record
      */
     public Optional<String> getRoleForRecord(ResourceQualifier rQualifier) {
-        if (rQualifier.getTable() == null) {
-            throw new IllegalStateException("Qualifier must contain table");
-        }
-
-        if (rQualifier.getRecord() == null) {
-            throw new IllegalStateException("Qualifier must contain record");
-        }
+        checkQualifier(rQualifier);
 
         String tableQualifier = rQualifier.getTableQualifier();
         String tableName = rQualifier.getTable();
@@ -369,6 +357,16 @@ public class BasePermissionsRepository {
             return Optional.empty();
         } else {
             return defineRoleById(results.get(0));
+        }
+    }
+
+    private void checkQualifier(ResourceQualifier rQualifier) {
+        if (rQualifier.getTable() == null) {
+            throw new IllegalStateException("Qualifier must contain table");
+        }
+
+        if (rQualifier.getRecord() == null) {
+            throw new IllegalStateException("Qualifier must contain record");
         }
     }
 }

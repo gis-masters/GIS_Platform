@@ -1,24 +1,23 @@
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import moment from 'moment';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { AssignmentTurnedInOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { AxiosError } from 'axios';
 
-import {
-  getDocumentPermissions,
-  LibraryRecord,
-  setDocumentPermission,
-  updateLibraryRecord
-} from '../../../services/crg/doc-library.service';
-import { currentUser } from '../../../stores/CurrentUser.store';
-import { PrincipalType, Role, RoleAssignmentBody } from '../../../services/crg/permissions.models';
+import { LibraryRecord, registerDocument } from '../../../services/crg/doc-library.service';
+import { services } from '../../../services/services';
+import { communicationService } from '../../../services/communication.service';
+import { Toast } from '../../Toast/Toast';
 import { Button } from '../../Button/Button';
+import { currentUser } from '../../../stores/CurrentUser.store';
+import { Role } from '../../../services/crg/permissions.models';
+import { ServerError } from '../../../services/http.service';
 
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
 import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
+import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
 
 const cnLibraryDocumentActionsRegister = cn('LibraryDocumentActions', 'Register');
 
@@ -37,7 +36,7 @@ export class LibraryDocumentActionsRegister extends Component<LibraryDocumentAct
 
     return (
       <>
-        {this.isRegisterAllowed() && (
+        {this.canBeRegistered() && (
           <LibraryDocumentActionsItem
             className={cnLibraryDocumentActionsRegister()}
             title=' Зарегистрировать документ'
@@ -55,7 +54,7 @@ export class LibraryDocumentActionsRegister extends Component<LibraryDocumentAct
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button loading={this.busy} onClick={this.clickHandler} color='primary'>
+            <Button loading={this.busy} onClick={this.registerDocument} color='primary'>
               Зарегистрировать
             </Button>
             <Button disabled={this.busy} onClick={this.closeDialog}>
@@ -68,35 +67,23 @@ export class LibraryDocumentActionsRegister extends Component<LibraryDocumentAct
   }
 
   @boundMethod
-  private async clickHandler() {
+  private async registerDocument() {
     this.setBtnLoading(true);
-    await this.updateDocument();
 
-    const principals: Pick<RoleAssignmentBody, 'principalId' | 'principalType'>[] = [];
-    const permissions = await getDocumentPermissions(this.props.document);
+    const { libraryId, id } = this.props.document;
+    try {
+      await registerDocument(libraryId, id);
+      communicationService.libraryItemsUpdated.emit();
+    } catch (error) {
+      const err = error as AxiosError<ServerError>;
+      const msg = `Не удалось зарегистрировать документ по причине: ${err?.response?.data?.message}`;
 
-    for (const permission of permissions) {
-      if (
-        !principals.some(
-          ({ principalId, principalType }) =>
-            permission.principalId === principalId &&
-            permission.principalType === principalType &&
-            !(principalId === currentUser.id && principalType === PrincipalType.USER)
-        )
-      ) {
-        principals.push(permission);
-      }
+      Toast.error(msg);
+      services.logger.error(msg, error);
+    } finally {
+      this.closeDialog();
+      this.setBtnLoading(false);
     }
-
-    for (const principal of principals) {
-      await setDocumentPermission(this.props.document, {
-        principalId: principal.principalId,
-        principalType: principal.principalType,
-        role: Role.VIEWER
-      });
-    } // TODO: научиться обновлять роль овнеру документа, переделать после правок на бэке (задача #3872)
-
-    this.closeDialog();
   }
 
   @action.bound
@@ -120,24 +107,10 @@ export class LibraryDocumentActionsRegister extends Component<LibraryDocumentAct
   }
 
   @boundMethod
-  private async updateDocument() {
-    const { document } = this.props;
-    const { libraryId, id, oktmo } = document;
+  private canBeRegistered(): boolean {
+    const { gisogd_regnum, role } = this.props.document;
 
-    const date = moment(new Date());
-
-    await updateLibraryRecord(libraryId, id, {
-      gisogd_regdate: date,
-      gisogd_regnum: `${oktmo}-${libraryId.split('section')[1]}-${date.year()}-${id}`
-    });
-  }
-
-  @boundMethod
-  private isRegisterAllowed() {
-    return (
-      !this.props.document.is_folder &&
-      'gisogd_regdate' in this.props.document &&
-      (this.props.document.role === Role.OWNER || currentUser.isAdmin)
-    );
+    // eslint-disable-next-line camelcase
+    return gisogd_regnum === null && (role !== Role.VIEWER || currentUser.isAdmin);
   }
 }

@@ -58,8 +58,8 @@ public class UserRecordsService implements IRecordsService {
                               PermissionsService permissionsService,
                               SimpleIntentIntentHandler simpleIntentHandler) {
         this.recordsDao = recordsDao;
-        this.fileStorageService = fileStorageService;
         this.librariesService = librariesService;
+        this.fileStorageService = fileStorageService;
         this.systemAttributeHandler = systemAttributeHandler;
         this.permissionsRepository = permissionsRepository;
         this.permissionsService = permissionsService;
