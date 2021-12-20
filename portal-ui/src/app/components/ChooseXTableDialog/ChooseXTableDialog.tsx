@@ -24,12 +24,12 @@ interface ChooseXTableDialogProps<T> {
   title: string;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   open: boolean;
-  items: T[];
+  data: T[];
   selectedItems?: T[];
   disabledItems?: T[];
   cols: XTableColumn<T>[];
-  defaultSort: SortParams<T>;
-  secondarySortField: keyof T;
+  defaultSort?: SortParams<T>;
+  secondarySortField?: keyof T;
   onClose(): void;
   onSelect(items: T[]): void;
   getRowId: (rowData: T) => string | number;
@@ -45,12 +45,12 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
   constructor(props: ChooseXTableDialogProps<T>) {
     super(props);
 
-    this.setViewed([...props.items]);
+    this.setViewed([...props.data]);
     this.setSelected([...(props.selectedItems || [])]);
   }
 
   componentDidUpdate(prevProps: ChooseXTableDialogProps<T>) {
-    const { open, items, selectedItems = [] } = this.props;
+    const { open, data: items, selectedItems = [] } = this.props;
 
     if (this.isItemsCanBeViewed(prevProps)) {
       this.setViewed([...items]);
@@ -65,7 +65,7 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
     const {
       title,
       open,
-      items,
+      data,
       defaultSort,
       secondarySortField,
       onClose,
@@ -79,10 +79,8 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
         <DialogContent>
           <XTable<T>
             className={cnChooseXTableDialog('Table')}
-            title={
-              <ChooseXTableDialogTitle title={title} items={items} selectedItems={this.selected} single={single} />
-            }
-            data={items}
+            title={<ChooseXTableDialogTitle title={title} items={data} selectedItems={this.selected} single={single} />}
+            data={data}
             cols={this.cols}
             defaultSort={defaultSort}
             secondarySortField={secondarySortField}
@@ -168,14 +166,14 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
   }
 
   private isItemsCanBeViewed(prevProps: ChooseXTableDialogProps<T>) {
-    const { open, items, getRowId } = this.props;
-    if (!items?.length || !prevProps.items?.length) {
+    const { open, data, getRowId } = this.props;
+    if (!data?.length || !prevProps.data?.length) {
       return;
     }
 
     return (
-      (open && prevProps.items.length !== items.length) ||
-      prevProps.items.every((item, i) => getRowId(item) === getRowId(items[i]))
+      (open && prevProps.data.length !== data.length) ||
+      prevProps.data.every((item, i) => getRowId(item) === getRowId(data[i]))
     );
   }
 }

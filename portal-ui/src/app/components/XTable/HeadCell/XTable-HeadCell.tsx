@@ -67,8 +67,8 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
       <TableCell {...cellProps}>
         {sortable ? (
           <TableSortLabel
-            active={sortParams.field === field}
-            direction={sortParams.asc || sortParams.field !== field ? 'asc' : 'desc'}
+            active={sortParams?.field === field}
+            direction={sortParams?.asc || sortParams?.field !== field ? 'asc' : 'desc'}
             onClick={this.handleSort}
           >
             {children}

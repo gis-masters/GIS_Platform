@@ -1,7 +1,7 @@
 import escapeStringRegexp from 'escape-string-regexp';
 import sift from 'sift';
 
-export type FilterQueryValue = string | number | boolean | string[] | number | RegExp;
+export type FilterQueryValue = string | number | boolean | (string | number | boolean)[] | RegExp;
 
 export interface FilterQuery {
   [key: string]: FilterQueryValue | FilterQuery | FilterQuery[];
@@ -22,7 +22,7 @@ export function prepareLike(query: FilterQuery): FilterQuery {
       newQuery.$regex = new RegExp(escapeStringRegexp(value).replace(/%/g, '.*').replace(/_/g, '.'));
     } else if (key === '$ilike' && typeof value === 'string') {
       newQuery.$regex = new RegExp(escapeStringRegexp(value).replace(/%/g, '.*').replace(/_/g, '.'), 'i');
-    } else if (typeof value === 'object' && key !== '$regex' && !Array.isArray(value)) {
+    } else if (typeof value === 'object' && key !== '$regex' && !Array.isArray(value) && value !== null) {
       newQuery[key] = prepareLike(value as FilterQuery);
     } else {
       newQuery[key] = value;

@@ -67,7 +67,7 @@ export class SelectLegend extends Component<FormControlProps> {
         </div>
         <ChooseXTableDialog<StyleRuleExtended>
           title='Выбор знаков легенды'
-          items={printSettings.allLegend}
+          data={printSettings.allLegend}
           selectedItems={printSettings.legend.items}
           cols={this.cols}
           defaultSort={this.sortParams}

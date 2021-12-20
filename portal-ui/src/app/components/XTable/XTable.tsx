@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
-import { debounce } from 'lodash';
+import { cloneDeep, debounce } from 'lodash';
 import {
   Table,
   TableBody,
@@ -57,9 +57,10 @@ interface XTablePropsBase<T> extends IClassNameProps {
   headerActions?: ReactNode;
   headless?: boolean;
   cols: XTableColumn<T>[];
-  defaultSort: SortParams<T>;
-  secondarySortField: keyof T;
+  defaultSort?: SortParams<T>;
+  secondarySortField?: keyof T;
   filterable?: boolean;
+  defaultFilter?: FilterQuery;
   filtersAlwaysEnabled?: boolean;
   onFilter?(filtered: T[]): void;
   onPageOptionsChange?(pageOptions: PageOptions): void;
@@ -82,7 +83,7 @@ export type XTableProps<T> = XTablePropsSync<T> | XTablePropsAsync<T>;
 @observer
 export class XTable<T> extends Component<XTableProps<T>> {
   @observable private sortParams: SortParams<T>;
-  @observable private filterParams: FilterQuery = {};
+  @observable private filterQuery: FilterQuery;
   @observable private filterActive = false;
   @observable private _page = 1;
   @observable private _asyncData: T[] = [];
@@ -93,14 +94,16 @@ export class XTable<T> extends Component<XTableProps<T>> {
 
   private fetchingOperationId: symbol;
   private tableRef: RefObject<HTMLDivElement> = createRef();
-  private reactionDisposer: IReactionDisposer;
+  private pageOptionsReactionDisposer: IReactionDisposer;
+  private pagedDataReactionDisposer: IReactionDisposer;
 
   constructor(props: XTableProps<T>) {
     super(props);
-    this.sortParams = props.defaultSort;
+    this.sortParams = props.defaultSort || { field: null, asc: true };
     if (props.filtersAlwaysEnabled) {
       this.filterActive = true;
     }
+    this.filterQuery = props.defaultFilter || {};
   }
 
   componentDidMount() {
@@ -110,8 +113,8 @@ export class XTable<T> extends Component<XTableProps<T>> {
       invoke.reload = this.fetchAsyncData;
     }
 
-    this.reactionDisposer = reaction(
-      () => [{ ...this.sortParams }, { ...this.filterParams }, this.filterActive, this.pageSize, this.page],
+    this.pageOptionsReactionDisposer = reaction(
+      () => [{ ...this.sortParams }, { ...this.filterQuery }, this.filterActive, this.pageSize, this.page],
       debounce(() => {
         void this.fetchAsyncData();
         if (onPageOptionsChange) {
@@ -120,10 +123,18 @@ export class XTable<T> extends Component<XTableProps<T>> {
       }, 200),
       { fireImmediately: true }
     );
+
+    this.pagedDataReactionDisposer = reaction(
+      () => cloneDeep(this.dataPaged),
+      debounce(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 100)
+    );
   }
 
   componentWillUnmount() {
-    this.reactionDisposer();
+    this.pageOptionsReactionDisposer();
+    this.pagedDataReactionDisposer();
   }
 
   render() {
@@ -167,7 +178,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
                         field={field}
                         sortable={sortable}
                         sortParams={this.sortParams}
-                        filterQuery={this.filterParams}
+                        filterQuery={this.filterQuery}
                         filterable={filterable && this.filterActive && filterable}
                         filterType={filterType}
                         filterOptions={filterOptions}
@@ -196,12 +207,12 @@ export class XTable<T> extends Component<XTableProps<T>> {
                             rowData={rowData}
                             field={field}
                             filterActive={this.filterActive}
-                            filterParams={this.filterParams}
+                            filterParams={this.filterQuery}
                           />
                         ) : (
                           <>
                             <Highlight
-                              word={this.filterParams[field as string]}
+                              word={this.filterQuery[field as string]}
                               enabled={(filterable && this.filterActive) || filtersAlwaysEnabled}
                             >
                               {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
@@ -241,10 +252,10 @@ export class XTable<T> extends Component<XTableProps<T>> {
     let { data } = this.props as XTablePropsSync<T>;
 
     if ((filterable && this.filterActive) || filtersAlwaysEnabled) {
-      data = filterObjects(data, this.filterParams);
+      data = filterObjects(data, this.filterQuery);
     }
 
-    return sortObjects(data, field, asc, secondarySortField);
+    return field ? sortObjects(data, field, asc, secondarySortField) : data;
   }
 
   @computed
@@ -285,7 +296,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
       pageSize: this.pageSize,
       sort: this.sortParams.field as string,
       sortDir: this.sortParams.asc ? SortDir.ASC : SortDir.DESC,
-      filter: (filterable && this.filterActive) || filtersAlwaysEnabled ? this.filterParams : {}
+      filter: (filterable && this.filterActive) || filtersAlwaysEnabled ? this.filterQuery : {}
     };
   }
 
@@ -319,6 +330,8 @@ export class XTable<T> extends Component<XTableProps<T>> {
       if (onFilter) {
         onFilter(this.syncData);
       }
+    } else {
+      this.tableMinHeight = 0;
     }
   }
 
@@ -354,7 +367,8 @@ export class XTable<T> extends Component<XTableProps<T>> {
       if (this.fetchingOperationId === operationId) {
         this.setAsyncData(data, totalPages);
       }
-    } catch {
+    } catch (error) {
+      console.error(error);
       Toast.error('Ошибка получения данных');
     } finally {
       this.setBusy(false);

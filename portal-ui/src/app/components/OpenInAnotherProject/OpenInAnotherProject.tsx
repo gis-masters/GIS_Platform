@@ -72,7 +72,7 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
           actionButtonProps={{
             children: 'Открыть'
           }}
-          items={this.projects}
+          data={this.projects}
           cols={this.cols}
           defaultSort={this.sortParams}
           secondarySortField='createdAt'

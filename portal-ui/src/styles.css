@@ -32,12 +32,13 @@ body {
 }
 
 .scroll::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
 }
 
 .scroll::-webkit-scrollbar-thumb {
-  background: grey;
+  border-radius: 2px;
+  background: var(--gray);
 }
 
 .cut-text {

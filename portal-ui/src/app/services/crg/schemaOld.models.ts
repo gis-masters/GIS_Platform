@@ -59,6 +59,7 @@ interface OldBasePropertySchema<T extends Record<string, unknown> = Record<strin
   updateability?: Updateability;
   objectIdentityOnUi?: boolean;
   sequenceNumber?: number;
+  minWidth?: number;
 
   // хз
   choice?: unknown;

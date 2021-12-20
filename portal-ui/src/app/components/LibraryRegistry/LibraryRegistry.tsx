@@ -1,38 +1,37 @@
 import React, { Component, ReactElement } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, when } from 'mobx';
 import { observer } from 'mobx-react';
-import { Tooltip } from '@mui/material';
-import { Check, Close, HomeOutlined, UnarchiveOutlined } from '@mui/icons-material';
+import { Check, Close, HomeOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
-import { unparse } from 'papaparse';
+import moment from 'moment';
 
 import { route } from '../../stores/Route.store';
+import { currentUser } from '../../stores/CurrentUser.store';
 import {
-  DocumentLibrary,
-  getAllLibraryRecords,
-  getLibrary,
-  getLibraryRecords2,
-  LibraryRecord
-} from '../../services/crg/doc-library.service';
-import { PropertySchema, PropertySchemaChoice, PropertyType } from '../../services/crg/schema.models';
+  PropertySchema,
+  PropertySchemaChoice,
+  PropertySchemaDatetime,
+  PropertyType
+} from '../../services/crg/schema.models';
+import { DocumentLibrary, getLibrary, getLibraryRecords2, LibraryRecord } from '../../services/crg/doc-library.service';
 import { OldFeatureDescription } from '../../services/crg/schemaOld.models';
 import { communicationService } from '../../services/communication.service';
 import { schemaService } from '../../services/crg/schema.service';
-import { FilterQuery } from '../../services/util/filterObjects';
 import { convertSchema } from '../../services/crg/schema.utils';
 import { PageOptions } from '../../services/models';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
 import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
-import { saveAsCsv } from '../../services/util/FileSaver';
+import { FilterType } from '../XTable/Filter/XTable-Filter';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { XTable, XTableColumn } from '../XTable/XTable';
-import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
 
+import { LibraryRegistrySettings } from './Settings/LibraryRegistry-Settings';
+import { LibraryRegistryCSV } from './CSV/LibraryRegistry-CSV';
+
 import '!style-loader!css-loader!sass-loader!./LibraryRegistry.scss';
-import { FilterType } from '../XTable/Filter/XTable-Filter';
 
 const cnLibraryRegistry = cn('LibraryRegistry');
 
@@ -40,7 +39,7 @@ const cnLibraryRegistry = cn('LibraryRegistry');
 export class LibraryRegistry extends Component {
   @observable private library?: DocumentLibrary;
   @observable private schema?: OldFeatureDescription;
-  @observable private exportCSVLoading = false;
+  @observable private hiddenFields: string[] = [];
 
   private tablePageOptions?: PageOptions;
 
@@ -56,6 +55,8 @@ export class LibraryRegistry extends Component {
         this.tableInvoke.reload();
       }
     });
+
+    await this.restoreSettings();
   }
 
   componentWillUnmount() {
@@ -70,25 +71,28 @@ export class LibraryRegistry extends Component {
             <Breadcrumbs itemsType='link' items={this.breadcrumbsItems} />
             <XTable<LibraryRecord>
               className={cnLibraryRegistry('Table')}
-              cols={this.cols}
+              cols={this.cols.filter(({ field }) => !this.hiddenFields.includes(String(field)))}
               getData={this.getData}
               getRowId={this.getRowId}
               defaultSort={{ field: 'title', asc: true }}
               secondarySortField='id'
               filtersAlwaysEnabled
+              defaultFilter={{ is_folder: { $in: [null, false] } }}
               headerActions={
-                <Tooltip title='Экспортировать реестр в CSV'>
-                  <span>
-                    <IconButton
-                      className={cnLibraryRegistry('CSV')}
-                      onClick={this.exportCSV}
-                      loading={this.exportCSVLoading}
-                      disabled={this.exportCSVLoading}
-                    >
-                      <UnarchiveOutlined />
-                    </IconButton>
-                  </span>
-                </Tooltip>
+                <>
+                  <LibraryRegistryCSV
+                    tablePageOptions={this.tablePageOptions}
+                    properties={this.properties}
+                    library={this.library}
+                    schema={this.schema}
+                    cols={this.cols}
+                  />
+                  <LibraryRegistrySettings
+                    properties={this.properties}
+                    hiddenFields={this.hiddenFields}
+                    onChangeHiddenFields={this.setHiddenFields}
+                  />
+                </>
               }
               invoke={this.tableInvoke}
               onPageOptionsChange={this.handleTablePageOptionsChange}
@@ -103,7 +107,10 @@ export class LibraryRegistry extends Component {
 
   @computed
   private get properties(): PropertySchema[] {
-    return convertSchema(this.schema?.properties || []);
+    return convertSchema(this.schema?.properties || []).filter(
+      ({ hidden, propertyType }) =>
+        !hidden && propertyType !== PropertyType.BINARY && propertyType !== PropertyType.FIAS
+    );
   }
 
   @computed
@@ -143,6 +150,7 @@ export class LibraryRegistry extends Component {
     ]);
 
     const filterableTypes = new Set([
+      PropertyType.BOOL,
       PropertyType.CHOICE,
       PropertyType.DATETIME,
       PropertyType.FLOAT,
@@ -151,7 +159,7 @@ export class LibraryRegistry extends Component {
     ]);
 
     const typesCols: Partial<Record<PropertyType, Partial<XTableColumn<LibraryRecord>>>> = {
-      [PropertyType.BOOL]: { align: 'center', CellContent: this.renderBool },
+      [PropertyType.BOOL]: { align: 'center', CellContent: this.renderBool, filterType: FilterType.BOOL },
       [PropertyType.CHOICE]: {
         filterType: FilterType.CHOICE,
         CellContent: ({ rowData, field }) => (
@@ -164,7 +172,7 @@ export class LibraryRegistry extends Component {
           </>
         )
       },
-      [PropertyType.DATETIME]: { filterType: FilterType.DATETIME },
+      [PropertyType.DATETIME]: { filterType: FilterType.DATETIME, CellContent: this.renderDate, align: 'center' },
       [PropertyType.INT]: { align: 'right', filterType: FilterType.FLOAT },
       [PropertyType.FLOAT]: { align: 'right', filterType: FilterType.FLOAT },
       [PropertyType.STRING]: { filterType: FilterType.STRING }
@@ -172,19 +180,15 @@ export class LibraryRegistry extends Component {
 
     return [
       { CellContent: this.renderActions, align: 'center', cellProps: { padding: 'checkbox' } },
-      ...this.properties
-        .filter(
-          ({ hidden, propertyType }) =>
-            !hidden && propertyType !== PropertyType.BINARY && propertyType !== PropertyType.FIAS
-        )
-        .map(property => ({
-          field: property.name,
-          title: property.title,
-          sortable: sortableTypes.has(property.propertyType),
-          filterable: filterableTypes.has(property.propertyType) && property.name !== 'id',
-          ...(typesCols[property.propertyType] || {}),
-          filterOptions: property.propertyType === PropertyType.CHOICE ? property.options : undefined
-        }))
+      ...this.properties.map(property => ({
+        field: property.name,
+        title: property.title,
+        sortable: sortableTypes.has(property.propertyType),
+        filterable: filterableTypes.has(property.propertyType) && property.name !== 'id',
+        ...(typesCols[property.propertyType] || {}),
+        filterOptions: property.propertyType === PropertyType.CHOICE ? property.options : undefined,
+        headerCellProps: { style: { minWidth: String(property.minWidth || 0) + 'px' } }
+      }))
     ];
   }
 
@@ -193,15 +197,7 @@ export class LibraryRegistry extends Component {
     return Boolean(this.library && this.schema);
   }
 
-  private renderBool({
-    rowData,
-    field
-  }: {
-    rowData: LibraryRecord;
-    field: keyof LibraryRecord;
-    filterActive: boolean;
-    filterParams: FilterQuery;
-  }): ReactElement {
+  private renderBool({ rowData, field }: { rowData: LibraryRecord; field: keyof LibraryRecord }): ReactElement {
     const value = ['true', '1'].includes(String(rowData[field]).toLowerCase());
 
     return value ? <Check color='primary' fontSize='small' /> : <Close color='disabled' fontSize='small' />;
@@ -216,6 +212,15 @@ export class LibraryRegistry extends Component {
         LibraryDocument={LibraryDocument}
       />
     );
+  }
+
+  @boundMethod
+  private renderDate({ rowData, field }: { rowData: LibraryRecord; field: keyof LibraryRecord }): ReactElement {
+    const property = this.properties.find(({ name }) => name === field) as PropertySchemaDatetime;
+    const { format = 'DD.MM.YYYY' } = property;
+    const date = moment(rowData[field]);
+
+    return <>{date.isValid() ? date.format(format) : rowData[field]}</>;
   }
 
   @action
@@ -238,50 +243,33 @@ export class LibraryRegistry extends Component {
   }
 
   @boundMethod
-  private async exportCSV() {
-    if (!this.library || !this.schema || this.exportCSVLoading) {
-      return;
-    }
-
-    this.setExportCSVLoading(true);
-
-    const transformCellContent: Partial<Record<PropertyType, (content: unknown) => string>> = {
-      [PropertyType.BOOL]: (content: unknown) => (['true', '1'].includes(String(content).toLowerCase()) ? 'да' : 'нет')
-    };
-
-    const records = await getAllLibraryRecords(this.library.identifier, this.schema.name, this.tablePageOptions);
-    const cols = this.cols.filter(({ field }) => field);
-    const result: unknown[][] = [cols.map(({ title }) => title)];
-
-    for (const record of records) {
-      result.push(
-        cols.map(({ field }) => {
-          const property = this.properties.find(({ name }) => name === field);
-          if (transformCellContent[property.propertyType]) {
-            return transformCellContent[property.propertyType](record[field]);
-          }
-
-          return record[field];
-        })
-      );
-    }
-
-    saveAsCsv('documents.csv', unparse(result, { delimiter: ';' }));
-
-    this.setExportCSVLoading(false);
-  }
-
-  @boundMethod
   private handleTablePageOptionsChange(pageOptions: PageOptions) {
     this.tablePageOptions = pageOptions;
   }
 
-  @action.bound
-  private setExportCSVLoading(loading: boolean) {
-    this.exportCSVLoading = loading;
-  }
-
   private getRowId(rowData: LibraryRecord) {
     return rowData.id;
+  }
+
+  private getStorageKey(): string {
+    return `registrySettings_${currentUser.id}_${this.library.identifier}`;
+  }
+
+  private storeSettings() {
+    localStorage.setItem(this.getStorageKey(), JSON.stringify({ hiddenFields: this.hiddenFields || [] }));
+  }
+
+  private async restoreSettings() {
+    await when(() => Boolean(this.library));
+    const settings = JSON.parse(localStorage.getItem(this.getStorageKey()) || '{}') as { hiddenFields?: string[] };
+    if (settings.hiddenFields) {
+      this.setHiddenFields(settings.hiddenFields);
+    }
+  }
+
+  @action.bound
+  private setHiddenFields(hiddenFields: string[]) {
+    this.hiddenFields = hiddenFields;
+    this.storeSettings();
   }
 }

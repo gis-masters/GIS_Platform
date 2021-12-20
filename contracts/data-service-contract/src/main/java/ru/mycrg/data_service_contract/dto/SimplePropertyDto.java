@@ -49,6 +49,7 @@ public class SimplePropertyDto {
     private Integer maxInclusive = -1;
     private Integer totalDigits = -1;
     private Integer fractionDigits = -1;
+    private Integer minWidth = 0;
     private List<ValueTitleProjection> enumerations = new ArrayList<>();
     private List<String> allowedValues = new ArrayList<>();
 
@@ -282,6 +283,14 @@ public class SimplePropertyDto {
 
     public void setResourcePath(String resourcePath) {
         this.resourcePath = resourcePath;
+    }
+
+    public Integer getMinWidth() {
+        return minWidth;
+    }
+
+    public void setMinWidth(Integer minWidth) {
+        this.minWidth = minWidth;
     }
 
     @JsonIgnore

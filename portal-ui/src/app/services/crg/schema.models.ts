@@ -58,6 +58,7 @@ interface BasePropertySchema<T = Record<string, unknown>> {
   isIndexed?: boolean;
   readOnly?: boolean;
   defaultValue?: unknown;
+  minWidth?: number;
 }
 
 export interface PropertySchemaString<T = Record<string, unknown>> extends BasePropertySchema<T> {

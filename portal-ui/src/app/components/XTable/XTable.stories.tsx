@@ -20,10 +20,11 @@ const Template: ComponentStory<typeof XTable> = args => <XTable {...args} />;
 interface TestData {
   id: number;
   title: string;
-  material: string;
+  material?: string;
   weight: number;
   amount: number;
   date: string;
+  conclusive?: boolean;
 }
 
 const materialOptions: PropertyOption[] = [
@@ -48,7 +49,8 @@ const smallData: TestData[] = [
     material: 'wood',
     weight: 14,
     amount: 1,
-    date: '2021-12-16 15:30'
+    date: '2021-12-16 15:30',
+    conclusive: false
   },
   {
     id: 2,
@@ -56,7 +58,8 @@ const smallData: TestData[] = [
     material: 'wood',
     weight: 4,
     amount: 6,
-    date: '2001-10-10 12:00'
+    date: '2001-10-10 12:00',
+    conclusive: false
   },
   {
     id: 3,
@@ -64,7 +67,8 @@ const smallData: TestData[] = [
     material: 'wood',
     weight: 3,
     amount: 2,
-    date: '1976-01-14 17:00'
+    date: '1976-01-14 17:00',
+    conclusive: false
   }
 ];
 
@@ -76,7 +80,8 @@ const data: TestData[] = [
     material: 'wood',
     amount: 1,
     weight: 20,
-    date: '1993-02-18 11:30'
+    date: '1993-02-18 11:30',
+    conclusive: false
   },
   {
     id: 5,
@@ -84,7 +89,8 @@ const data: TestData[] = [
     material: 'iron',
     amount: 1,
     weight: 420,
-    date: '1021-12-12 12:00'
+    date: '1021-12-12 12:00',
+    conclusive: false
   },
   {
     id: 6,
@@ -92,7 +98,8 @@ const data: TestData[] = [
     material: 'wood',
     amount: 2,
     weight: 16,
-    date: '2016-06-13 13:13'
+    date: '2016-06-13 13:13',
+    conclusive: false
   },
   {
     id: 7,
@@ -100,7 +107,8 @@ const data: TestData[] = [
     material: 'iron',
     amount: 1,
     weight: 80,
-    date: '2013-08-02 14:00'
+    date: '2013-08-02 14:00',
+    conclusive: false
   },
   {
     id: 8,
@@ -108,7 +116,8 @@ const data: TestData[] = [
     material: 'glass',
     amount: 2,
     weight: 10,
-    date: '2002-03-16 11:15'
+    date: '2002-03-16 11:15',
+    conclusive: false
   },
   {
     id: 9,
@@ -116,7 +125,8 @@ const data: TestData[] = [
     material: 'wood',
     amount: 3,
     weight: 30,
-    date: '2017-08-05 5:30'
+    date: '2017-08-05 5:30',
+    conclusive: false
   },
   {
     id: 10,
@@ -124,7 +134,8 @@ const data: TestData[] = [
     material: 'wood',
     amount: 1,
     weight: 6,
-    date: '2020-10-10 10:00'
+    date: '2020-10-10 10:00',
+    conclusive: false
   },
   {
     id: 11,
@@ -132,7 +143,8 @@ const data: TestData[] = [
     material: 'iron',
     amount: 1,
     weight: 8,
-    date: '2016-07-17 17:20'
+    date: '2016-07-17 17:20',
+    conclusive: false
   },
   {
     id: 12,
@@ -140,7 +152,8 @@ const data: TestData[] = [
     material: 'wood',
     amount: 2,
     weight: 60,
-    date: '2017-06-16 16:15'
+    date: '2017-06-16 16:15',
+    conclusive: false
   },
   {
     id: 13,
@@ -148,7 +161,8 @@ const data: TestData[] = [
     material: 'glass',
     amount: 1,
     weight: 110,
-    date: '1981-11-11 11:11'
+    date: '1981-11-11 11:11',
+    conclusive: false
   },
   {
     id: 14,
@@ -156,7 +170,8 @@ const data: TestData[] = [
     material: 'wood',
     amount: 3,
     weight: 210,
-    date: '2015-10-15 15:15'
+    date: '2015-10-15 15:15',
+    conclusive: false
   },
   {
     id: 15,
@@ -164,7 +179,8 @@ const data: TestData[] = [
     material: 'wood',
     amount: 2,
     weight: 110,
-    date: '2022-12-13 23:30'
+    date: '2022-12-13 23:30',
+    conclusive: false
   },
   {
     id: 16,
@@ -172,7 +188,8 @@ const data: TestData[] = [
     material: 'wood',
     amount: 1,
     weight: 130,
-    date: '2021-12-18 18:30'
+    date: '2021-12-18 18:30',
+    conclusive: false
   },
   {
     id: 17,
@@ -180,7 +197,8 @@ const data: TestData[] = [
     material: 'textile',
     amount: 10,
     weight: 4,
-    date: '2019-05-19 19:10'
+    date: '2019-05-19 19:10',
+    conclusive: false
   },
   {
     id: 18,
@@ -188,7 +206,8 @@ const data: TestData[] = [
     material: 'wood',
     amount: 1,
     weight: 80,
-    date: '2005-10-10 10:30'
+    date: '2005-10-10 10:30',
+    conclusive: false
   },
   {
     id: 19,
@@ -196,7 +215,23 @@ const data: TestData[] = [
     material: 'wood',
     amount: 1,
     weight: 320,
-    date: '1321-03-16 6:45'
+    date: '1321-03-16 6:45',
+    conclusive: true
+  },
+  {
+    id: 20,
+    title: 'Идея стула',
+    amount: 1,
+    weight: 0,
+    date: '321-03-16 6:45'
+  },
+  {
+    id: 21,
+    title: 'Скатерть',
+    amount: 1,
+    weight: 0.2,
+    date: '2021-03-16 12:45',
+    conclusive: null
   }
 ];
 
@@ -239,6 +274,14 @@ const cols: XTableColumn<TestData>[] = [
     filterType: FilterType.DATETIME,
     align: 'center',
     field: 'date',
+    sortable: true
+  },
+  {
+    title: 'Решает',
+    filterable: true,
+    filterType: FilterType.BOOL,
+    align: 'center',
+    field: 'conclusive',
     sortable: true
   }
 ];

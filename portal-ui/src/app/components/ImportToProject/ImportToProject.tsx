@@ -60,7 +60,7 @@ export class ImportToProject extends Component<ImportToProjectProps> {
 
         <ChooseXTableDialog<CrgProject>
           title='Выбор проекта'
-          items={allProjects.list}
+          data={allProjects.list}
           cols={this.cols}
           defaultSort={this.sortParams}
           secondarySortField='createdAt'
@@ -166,9 +166,9 @@ export class ImportToProject extends Component<ImportToProjectProps> {
       this.closeDialog();
       sidebars.openInfo();
     } catch (error) {
-      const err = error as AxiosError<{ errors: Record<string, unknown>[] }>;
+      const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
       if (err.response?.status === 400) {
-        const message = err.response?.data['message'];
+        const message = err.response?.data?.message;
         services.logger.error(message, error);
         Toast.error({ message: message, details: (error as Error).message });
       } else if (err.response?.status === 409) {

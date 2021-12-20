@@ -13,6 +13,7 @@ import '!style-loader!css-loader!sass-loader!./XTable-Filter.scss';
 export const cnXTableFilter = cn('XTable', 'Filter');
 
 export enum FilterType {
+  BOOL = PropertyType.BOOL,
   CHOICE = PropertyType.CHOICE,
   DATETIME = PropertyType.DATETIME,
   FLOAT = PropertyType.FLOAT,
