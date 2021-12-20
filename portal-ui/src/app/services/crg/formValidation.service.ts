@@ -110,10 +110,10 @@ function datetimeMinMax(value: unknown, { maxValue, minValue }: PropertySchemaDa
 
 function stringLength(value: unknown, { maxLength, minLength }: PropertySchemaString): string[] {
   const errors: string[] = [];
-  if (maxLength && String(value).length > maxLength) {
+  if (maxLength && String(value).length > maxLength && maxLength > 0) {
     errors.push(`Максимальное количество символов ${maxLength} `);
   }
-  if (minLength && String(value).length < minLength && String(value).length !== 0) {
+  if (minLength && String(value).length < minLength && String(value).length !== 0 && minLength > 0) {
     errors.push(`Минимальное количество символов ${minLength} `);
   }
 
