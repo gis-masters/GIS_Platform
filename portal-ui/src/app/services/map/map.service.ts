@@ -257,6 +257,53 @@ class MapService {
     });
   }
 
+  addExternalGeoserverLayers(layers: CrgLayer[], zIndex: number) {
+    layers.forEach(layer => {
+      const { tableName, transparency, dataSourceUri } = layer;
+
+      const layerOnMap = this.getLayerByName(tableName);
+      if (layerOnMap) {
+        layerOnMap.setVisible(true);
+        layerOnMap.setOpacity(transparency / 100);
+        layerOnMap.setZIndex(zIndex);
+      } else {
+        const params: CrgWmsParams = {
+          LAYERS: tableName,
+          FORMAT: imageFormat
+        };
+
+        const { layerComplexName, filter } = currentProject.attributeTableFilter;
+        if (tableName === layerComplexName && filter) {
+          params.CQL_FILTER = filter;
+        }
+
+        const commonLayerParams = {
+          visible: true,
+          opacity: transparency / 100,
+          zIndex
+        };
+
+        const commonWMSParams = {
+          url: dataSourceUri,
+          params,
+          serverType: 'geoserver',
+          crossOrigin: 'anonymous'
+        };
+
+        const layer: ImageLayer<ImageSource> = new ImageLayer({
+          source: new ImageWMS({ imageLoadFunction: this.arcGisMapServerLoadFunction, ...commonWMSParams, ratio: 1 }),
+          ...commonLayerParams
+        });
+
+        const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
+
+        layer.setProperties(props);
+
+        this.map.addLayer(layer);
+      }
+    });
+  }
+
   addExternalLayers(layers: CrgLayer[], zIndex: number) {
     layers.forEach(layer => {
       const layerOnMap = this.getLayerByName(layer.tableName);

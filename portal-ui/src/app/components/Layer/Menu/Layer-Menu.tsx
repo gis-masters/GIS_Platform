@@ -61,6 +61,8 @@ export class LayerMenu extends Component<LayerMenuProps> {
   async componentDidMount() {
     await this.fetchGeometryType();
     await this.fetchPermissions();
+
+    this.setLayersDeleteAllowed(isLayersManagementAllowed());
   }
 
   render() {
@@ -192,31 +194,16 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   private async fetchPermissions() {
-    const { entity, isGroup } = this.props;
+    if (this.isVectorLayer) {
+      const { dataset, tableName, schemaId } = this.props.entity as CrgLayer;
+      const allowed = await Promise.all([
+        isFeaturesCreateAllowed(dataset, tableName, schemaId),
+        isTableExportAllowed(dataset, tableName),
+        isLayersManagementAllowed()
+      ]);
 
-    if (isGroup) {
-      return;
+      this.setPermissions(...allowed);
     }
-
-    const { dataset, tableName, schemaId, type } = entity as CrgLayer;
-
-    if (type === CrgLayerType.RASTER) {
-      this.setLayersDeleteAllowed(isLayersManagementAllowed());
-
-      return;
-    }
-
-    if (type !== CrgLayerType.VECTOR) {
-      return;
-    }
-
-    const allowed = await Promise.all([
-      isFeaturesCreateAllowed(dataset, tableName, schemaId),
-      isTableExportAllowed(dataset, tableName),
-      isLayersManagementAllowed()
-    ]);
-
-    this.setPermissions(...allowed);
   }
 
   @action
@@ -320,10 +307,10 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   private async fetchGeometryType() {
-    const { entity } = this.props;
     if (this.isVectorLayer) {
-      const { schemaId } = entity as CrgLayer;
+      const { schemaId } = this.props.entity as CrgLayer;
       const schema = await schemaService.getSchema(schemaId);
+
       this.setGeometryType(schema.geometryType);
     }
   }

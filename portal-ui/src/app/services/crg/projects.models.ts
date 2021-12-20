@@ -4,7 +4,8 @@ import { PropertySchema, PropertyType } from './schema.models';
 export enum CrgLayerType {
   VECTOR = 'vector',
   RASTER = 'raster',
-  EXTERNAL = 'external'
+  EXTERNAL = 'external',
+  EXTERNAL_GEOSERVER = 'external_geoserver'
 }
 
 interface CrgEntity {

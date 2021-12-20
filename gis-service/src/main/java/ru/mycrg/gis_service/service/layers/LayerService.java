@@ -111,8 +111,12 @@ public class LayerService {
         Project project = projectService.getById(projectId);
 
         try {
-            Layer layer = layerHandlers.get(layerDto.getType())
-                                       .create(project, layerDto);
+            ILayerHandler layerHandler = layerHandlers.get(layerDto.getType());
+            if (layerHandler == null) {
+                throw new IllegalStateException("No handlers exist for layer type: " + layerDto.getType());
+            }
+
+            Layer layer = layerHandler.create(project, layerDto);
 
             updateGroup(layer, layerDto.getParentId(), project.getGroups());
 

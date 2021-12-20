@@ -10,19 +10,19 @@ import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.repository.LayerRepository;
 
 @Component
-public class ExternalLayerHandler implements ILayerHandler {
+public class ExternalGeoserverLayerHandler implements ILayerHandler {
 
-    private final Logger log = LoggerFactory.getLogger(ExternalLayerHandler.class);
+    private final Logger log = LoggerFactory.getLogger(ExternalGeoserverLayerHandler.class);
 
     private final LayerRepository layerRepository;
 
-    public ExternalLayerHandler(LayerRepository layerRepository) {
+    public ExternalGeoserverLayerHandler(LayerRepository layerRepository) {
         this.layerRepository = layerRepository;
     }
 
     @Override
     public Layer create(Project project, LayerCreateDto dto) {
-        log.debug("ExternalLayerHandler create");
+        log.debug("ExternalGeoserverLayerHandler creator");
 
         if (layerRepository.findByTableNameAndProjectAndType(dto.getTableName(), project, dto.getType()).isPresent()) {
             throw new ConflictException("Внешний слой с таким названием уже существует");
@@ -33,6 +33,6 @@ public class ExternalLayerHandler implements ILayerHandler {
 
     @Override
     public String getType() {
-        return "external";
+        return "external_geoserver";
     }
 }
