@@ -22,7 +22,7 @@ import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
-    [ExplorerItemType.DOCUMENT]: { title: string };
+    [ExplorerItemType.DOCUMENT]: LibraryRecord;
   }
 }
 
@@ -93,6 +93,15 @@ export class ExplorerAdapterTypeDocument {
 
   static isFolder(): boolean {
     return false;
+  }
+
+  static findSelectedChildren(
+    children: ExplorerItemData[],
+    selectedItem: ExplorerItemData<LibraryRecord>
+  ): ExplorerItemData {
+    return children.find(
+      item => item.type === selectedItem.type && (item.payload as LibraryRecord).id === selectedItem.payload.id
+    );
   }
 
   static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {

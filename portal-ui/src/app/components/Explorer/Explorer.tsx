@@ -27,7 +27,8 @@ import {
   getId,
   getChildrenWithParticularOne,
   getRefreshEmitters,
-  isFolder
+  isFolder,
+  findSelectedChildren
 } from './Adapter/Explorer-Adapter';
 import { ExplorerPagination } from './Pagination/Explorer-Pagination';
 import { ExplorerToolbar } from './Toolbar/Explorer-Toolbar';
@@ -77,7 +78,7 @@ export class Explorer extends Component<ExplorerProps> {
   private onOptionsReactionDispose: IReactionDisposer;
   private store: ExplorerStore;
   private service: ExplorerService;
-  private subscribedRefreshEmitterTypes: ExplorerItemType[] = [];
+  private channels: Emitter[] = [];
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -203,6 +204,7 @@ export class Explorer extends Component<ExplorerProps> {
       }
     }
 
+    const selectedItem = this.store.path[this.store.path.length - 1];
     this.store.selectItem(item);
     this.setBusy(true);
 
@@ -214,17 +216,16 @@ export class Explorer extends Component<ExplorerProps> {
 
     if (gettingChildrenToken === this.gettingChildrenToken) {
       children.forEach(child => {
-        if (!this.subscribedRefreshEmitterTypes.includes(child.type)) {
-          this.subscribedRefreshEmitterTypes.push(child.type);
-
-          getRefreshEmitters(child).forEach(emitter => {
+        getRefreshEmitters(child).forEach(emitter => {
+          if (!this.channels.includes(emitter)) {
+            this.channels.push(emitter);
             emitter.on(this.refresh, this);
-          });
-        }
+          }
+        });
       });
 
       this.store.setPage(page);
-      this.setChildren(item, children, pagesCount, depth);
+      this.setChildren(item, children, pagesCount, selectedItem, depth);
     }
 
     this.setBusy(false);
@@ -280,13 +281,22 @@ export class Explorer extends Component<ExplorerProps> {
   }
 
   @action
-  private setChildren(item: ExplorerItemData, children: ExplorerItemData[], pagesCount: number, depth?: number) {
+  private setChildren(
+    item: ExplorerItemData,
+    children: ExplorerItemData[],
+    pagesCount: number,
+    selectedItem: ExplorerItemData,
+    depth?: number
+  ) {
     if (typeof depth === 'number') {
       this.store.path.splice(depth + 1, this.store.path.length);
     }
 
     item.children = children;
-    this.store.path.push(children[0] || emptyItem);
+
+    const selectedChildren = findSelectedChildren(children, selectedItem);
+
+    this.store.path.push(selectedChildren || emptyItem);
     this.store.totalPages = pagesCount;
   }
 
@@ -298,7 +308,7 @@ export class Explorer extends Component<ExplorerProps> {
   @boundMethod
   private refresh() {
     const { store } = this;
-    void this.openItem(store.openedItem, 0, store.path.length - 2);
+    void this.openItem(store.openedItem, store.page, store.path.length - 2);
   }
 
   private async setPathToUrl() {

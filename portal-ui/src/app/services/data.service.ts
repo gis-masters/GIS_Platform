@@ -33,6 +33,7 @@ export interface DataEntity {
 export interface Dataset extends DataEntity {
   type: DataEntityType.DATASET;
   role: Role;
+  id?: number;
 }
 
 export type NewDataset = Pick<Dataset, 'title' | 'details'>;
@@ -57,6 +58,7 @@ export interface DataTable extends DataEntity {
   schemaId: string;
   dataset: string;
   role: Role;
+  id?: number;
 }
 
 export interface DataTableConnection {

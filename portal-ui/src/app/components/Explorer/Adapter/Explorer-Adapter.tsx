@@ -77,6 +77,12 @@ export function isFolder(item: ExplorerItemData): boolean {
   return adapters[item.type].isFolder(item);
 }
 
+export function findSelectedChildren(children: ExplorerItemData[], selectedItem: ExplorerItemData): ExplorerItemData {
+  return adapters[selectedItem.type].findSelectedChildren
+    ? adapters[selectedItem.type].findSelectedChildren(children, selectedItem)
+    : children[0];
+}
+
 export async function getChildren(
   item: ExplorerItemData,
   pageOptions: PageOptions

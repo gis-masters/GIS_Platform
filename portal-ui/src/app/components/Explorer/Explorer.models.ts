@@ -77,6 +77,7 @@ export interface Adapter {
   getDescription?: (item: ExplorerItemData) => ReactNode;
   getIcon?: (item: ExplorerItemData) => ReactNode;
   isFolder: (item: ExplorerItemData) => boolean;
+  findSelectedChildren?: (children: ExplorerItemData[], selectedItem: ExplorerItemData) => ExplorerItemData;
   getChildren?: (item: ExplorerItemData, pageOptions: PageOptions) => Promise<[ExplorerItemData[], number]>;
   getChildrenWithParticularOne?: (
     item: ExplorerItemData,

@@ -34,7 +34,7 @@ import { LibraryDocumentActions } from '../../../LibraryDocumentActions/LibraryD
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
-    [ExplorerItemType.FOLDER]: { title: string };
+    [ExplorerItemType.FOLDER]: LibraryRecord;
   }
 }
 
@@ -101,6 +101,15 @@ export class ExplorerAdapterTypeFolder {
 
   static isFolder(): boolean {
     return true;
+  }
+
+  static findSelectedChildren(
+    children: ExplorerItemData[],
+    selectedItem: ExplorerItemData<LibraryRecord>
+  ): ExplorerItemData {
+    return children.find(
+      item => item.type === selectedItem.type && (item.payload as LibraryRecord).id === selectedItem.payload.id
+    );
   }
 
   static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {

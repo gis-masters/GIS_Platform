@@ -92,6 +92,15 @@ export class ExplorerAdapterTypeLibrary {
     return true;
   }
 
+  static findSelectedChildren(
+    children: ExplorerItemData[],
+    selectedItem: ExplorerItemData<LibraryRecord>
+  ): ExplorerItemData {
+    return children.find(
+      item => item.type === selectedItem.type && (item.payload as LibraryRecord).id === selectedItem.payload.id
+    );
+  }
+
   static async getChildren(
     explorerItem: ExplorerItemData<DocumentLibrary>,
     { filter, ...options }: PageOptions
