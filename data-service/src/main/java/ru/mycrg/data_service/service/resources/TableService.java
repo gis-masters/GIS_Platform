@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
+import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.ddl.DdlTables;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.TableCreateDto;
@@ -22,6 +23,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.queue.request.LayerReferencesDeletionEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,6 +44,7 @@ public class TableService {
     private final PermissionsService permissionsService;
     private final BasePermissionsRepository permissionsRepository;
     private final SchemaService schemaService;
+    private final RecordsDao recordsDao;
 
     public TableService(DdlTables ddlTables,
                         IMessageBusProducer messageBus,
@@ -49,7 +52,8 @@ public class TableService {
                         SchemasAndTablesRepository schemasAndTablesRepository,
                         PermissionsService permissionsService,
                         BasePermissionsRepository permissionsRepository,
-                        SchemaService schemaService) {
+                        SchemaService schemaService,
+                        RecordsDao recordsDao) {
         this.messageBus = messageBus;
         this.ddlTables = ddlTables;
         this.authenticationFacade = authenticationFacade;
@@ -57,6 +61,7 @@ public class TableService {
         this.permissionsService = permissionsService;
         this.permissionsRepository = permissionsRepository;
         this.schemaService = schemaService;
+        this.recordsDao = recordsDao;
     }
 
     public Page<IResourceModel> getPaged(String datasetIdentifier, String ecqlFilter, Pageable pageable) {
@@ -64,28 +69,56 @@ public class TableService {
                 .findByIdentifier(datasetIdentifier)
                 .orElseThrow(() -> new NotFoundException(datasetIdentifier));
 
-        List<IResourceModel> allowedResources = permissionsRepository
-                .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), ecqlFilter, pageable).stream()
-                .map(record -> new TableModel(record.getContent()))
-                .collect(Collectors.toList());
+        if (authenticationFacade.isOrganizationAdmin()) {
+            if (ecqlFilter == null) {
+                ecqlFilter = "path = '" + dataset.pathTo() + "'";
+            } else {
+                ecqlFilter = ecqlFilter + " AND path = '" + dataset.pathTo() + "'";
+            }
 
-        long total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER,
-                                                            dataset.pathTo(),
-                                                            ecqlFilter);
+            List<TableModel> tables = recordsDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                         ecqlFilter,
+                                                         pageable,
+                                                         TableModel.class);
+            Long total = recordsDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
 
-        return new PageImpl<>(allowedResources, pageable, total);
+            return new PageImpl<>(Collections.unmodifiableList(tables), pageable, total);
+        } else {
+            List<IResourceModel> allowedResources = permissionsRepository
+                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), ecqlFilter, pageable).stream()
+                    .map(record -> new TableModel(record.getContent()))
+                    .collect(Collectors.toList());
+
+            long total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                                dataset.pathTo(),
+                                                                ecqlFilter);
+
+            return new PageImpl<>(allowedResources, pageable, total);
+        }
     }
 
     public IResourceModel getInfo(ResourceQualifier tQualifier) {
-        Optional<String> oRole = permissionsRepository.bestRoleForTable(tQualifier);
-        if (oRole.isPresent()) {
-            SchemasAndTables table = schemasAndTablesRepository
-                    .findByIdentifier(tQualifier.getTable())
-                    .orElseThrow(() -> new NotFoundException(tQualifier.getQualifier()));
+        if (authenticationFacade.isOrganizationAdmin()) {
+            String ecqlFilter = "identifier = '" + tQualifier.getTable() + "'";
 
-            return new TableModel(table, oRole.get());
+            TableModel table = recordsDao
+                    .findByFilter(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter, TableModel.class)
+                    .orElseThrow(() -> new NotFoundException("Не найдена таблица: " + tQualifier.getTable()));
+
+            table.setRole(OWNER.name());
+
+            return table;
         } else {
-            throw new ForbiddenException("Недостаточно прав для просмотра таблицы: " + tQualifier.getQualifier());
+            Optional<String> oRole = permissionsRepository.bestRoleForTable(tQualifier);
+            if (oRole.isPresent()) {
+                SchemasAndTables table = schemasAndTablesRepository
+                        .findByIdentifier(tQualifier.getTable())
+                        .orElseThrow(() -> new NotFoundException(tQualifier.getQualifier()));
+
+                return new TableModel(table, oRole.get());
+            } else {
+                throw new ForbiddenException("Недостаточно прав для просмотра таблицы: " + tQualifier.getQualifier());
+            }
         }
     }
 

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -129,6 +130,24 @@ public class RecordsDao {
         }
     }
 
+    public <T> Optional<T> findByFilter(ResourceQualifier tQualifier, String ecqlFilter, Class<T> clazz) {
+        try {
+            String query = String.format("SELECT * FROM %s %s",
+                                         tQualifier.getTableQualifier(),
+                                         buildWhereSection(ecqlFilter));
+            log.debug("Find by filter: [{}]", query);
+
+            T obj = pJdbcTemplate.getJdbcTemplate()
+                                 .queryForObject(query, new BeanPropertyRowMapper<>(clazz));
+
+            return Optional.ofNullable(obj);
+        } catch (DataAccessException e) {
+            log.error("Failed to find object: Reason: {}", e.getMessage(), e.getCause());
+
+            return Optional.empty();
+        }
+    }
+
     public List<RecordDto> customListQuery(String sqlRequest) {
         log.debug("Custom query: [{}]", sqlRequest);
 
@@ -180,6 +199,24 @@ public class RecordsDao {
                                    new RowMapperResultSetExtractor<>(
                                            new RecordRowMapper()
                                    ));
+    }
+
+    public <T> List<T> findAll(ResourceQualifier tableQualifier,
+                               String ecqlFilter,
+                               Pageable pageable,
+                               Class<T> clazz) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("offset", pageable.getOffset())
+                .addValue("limit", pageable.getPageSize());
+
+        String query = "SELECT * FROM " + tableQualifier +
+                "  " + buildWhereSection(ecqlFilter) +
+                "  " + buildOrderBySection(pageable.getSort()) +
+                "  LIMIT :limit OFFSET :offset";
+
+        log.debug("Request find all with filter: [{}]", query);
+
+        return pJdbcTemplate.query(query, params, new BeanPropertyRowMapper<>(clazz));
     }
 
     public List<RecordDto> findAllowed(ResourceQualifier tableQualifier,

@@ -32,7 +32,7 @@ public class DatasetsController {
     public ResponseEntity<Object> getDatasets(@RequestParam(name = "filter", required = false) String ecqlFilter,
                                               Pageable pageable,
                                               PagedResourcesAssembler<IResourceModel> pageAssembler) {
-        final Page<IResourceModel> datasets = datasetService.getPaged(ecqlFilter, pageable);
+        Page<IResourceModel> datasets = datasetService.getPaged(ecqlFilter, pageable);
 
         var pagedResources = pageAssembler.toResource(
                 datasets,

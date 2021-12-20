@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
+import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.ddl.DdlSchemas;
 import ru.mycrg.data_service.dto.DatasetModel;
 import ru.mycrg.data_service.dto.IResourceModel;
@@ -18,11 +19,13 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.resources.protectors.DatasetProtector;
 import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
 import ru.mycrg.http_client.ResponseModel;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,30 +50,53 @@ public class DatasetService {
     private final IResourceProtector datasetProtector;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final PermissionsService permissionsService;
+    private final IAuthenticationFacade authenticationFacade;
+    private final RecordsDao recordsDao;
 
     public DatasetService(BasePermissionsRepository permissionsRepository,
                           DatasetProtector datasetProtector,
                           DdlSchemas ddlSchemas,
                           DataStoreClient dataStoreClient,
                           SchemasAndTablesRepository schemasAndTablesRepository,
-                          PermissionsService permissionsService) {
+                          PermissionsService permissionsService,
+                          IAuthenticationFacade authenticationFacade, RecordsDao recordsDao) {
         this.permissionsRepository = permissionsRepository;
         this.ddlSchemas = ddlSchemas;
         this.dataStoreClient = dataStoreClient;
         this.datasetProtector = datasetProtector;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
+        this.authenticationFacade = authenticationFacade;
+        this.recordsDao = recordsDao;
     }
 
     public Page<IResourceModel> getPaged(String ecqlFilter, Pageable pageable) {
-        List<IResourceModel> allowedResources = permissionsRepository
-                .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter, pageable).stream()
-                .map(record -> new DatasetModel(record.getContent()))
-                .collect(Collectors.toList());
+        if (authenticationFacade.isOrganizationAdmin()) {
+            if (ecqlFilter == null) {
+                ecqlFilter = "is_folder = true";
+            } else {
+                ecqlFilter = ecqlFilter + " AND is_folder = true";
+            }
 
-        long total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter);
+            List<DatasetModel> datasets = recordsDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                             ecqlFilter,
+                                                             pageable,
+                                                             DatasetModel.class);
 
-        return new PageImpl<>(allowedResources, pageable, total);
+            Long total = recordsDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
+
+            return new PageImpl<>(Collections.unmodifiableList(datasets), pageable, total);
+        } else {
+            List<IResourceModel> allowedResources = permissionsRepository
+                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter, pageable).stream()
+                    .map(record -> new DatasetModel(record.getContent()))
+                    .collect(Collectors.toList());
+
+            long total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH,
+                                                                ecqlFilter);
+
+            return new PageImpl<>(allowedResources, pageable, total);
+        }
     }
 
     public IResourceModel getInfo(String datasetIdentifier) {
