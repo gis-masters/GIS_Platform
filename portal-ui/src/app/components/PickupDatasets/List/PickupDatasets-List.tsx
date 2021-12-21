@@ -112,7 +112,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
       pageSize: this.pageSize,
       sort: this.sortField,
       sortDir: this.sortDir,
-      filter: { title: { $ilike: this.filterValue } }
+      filter: { title: { $ilike: `%${String(this.filterValue)}%` } }
     });
 
     this.setTotalPages(totalPages);

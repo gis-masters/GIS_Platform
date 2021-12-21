@@ -82,7 +82,6 @@ export class LibraryDocumentActionsRegister extends Component<LibraryDocumentAct
       services.logger.error(msg, error);
     } finally {
       this.closeDialog();
-      this.setBtnLoading(false);
     }
   }
 
@@ -93,10 +92,6 @@ export class LibraryDocumentActionsRegister extends Component<LibraryDocumentAct
 
   @action.bound
   private closeDialog() {
-    if (this.busy) {
-      return;
-    }
-
     this.dialogOpen = false;
     this.setBtnLoading(false);
   }
@@ -111,6 +106,6 @@ export class LibraryDocumentActionsRegister extends Component<LibraryDocumentAct
     const { gisogd_regnum, role } = this.props.document;
 
     // eslint-disable-next-line camelcase
-    return gisogd_regnum === null && (role !== Role.VIEWER || currentUser.isAdmin);
+    return !gisogd_regnum && (role !== Role.VIEWER || currentUser.isAdmin);
   }
 }
