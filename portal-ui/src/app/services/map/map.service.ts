@@ -269,7 +269,7 @@ class MapService {
       } else {
         const params: CrgWmsParams = {
           LAYERS: tableName,
-          FORMAT: imageFormat
+          FORMAT: 'image/png8' // TODO: Вынести в настройки слоя
         };
 
         const { layerComplexName, filter } = currentProject.attributeTableFilter;
