@@ -40,8 +40,7 @@ export class LibraryRegistry extends Component {
   @observable private library?: DocumentLibrary;
   @observable private schema?: OldFeatureDescription;
   @observable private hiddenFields: string[] = [];
-
-  private tablePageOptions?: PageOptions;
+  @observable private tablePageOptions?: PageOptions;
 
   private tableInvoke: { reload?(): void } = {};
 
@@ -242,7 +241,7 @@ export class LibraryRegistry extends Component {
     return await getLibraryRecords2(this.library.identifier, this.schema.name, pageOptions);
   }
 
-  @boundMethod
+  @action.bound
   private handleTablePageOptionsChange(pageOptions: PageOptions) {
     this.tablePageOptions = pageOptions;
   }
