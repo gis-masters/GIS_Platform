@@ -22,7 +22,8 @@ public class BaseMapCreateDto {
     private String thumbnailUrn;
 
     @NotBlank
-    @ValidateEnum(targetClassType = SourceType.class, message = "Please provide correct ENUM value: OSM, XYZ, WMTS")
+    @ValidateEnum(targetClassType = SourceType.class,
+                  message = "Please provide correct ENUM value: OSM, XYZ, WMTS, WMTS_P")
     private String type;
 
     @Length(max = 255)

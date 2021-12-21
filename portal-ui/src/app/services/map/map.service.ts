@@ -291,7 +291,11 @@ class MapService {
         };
 
         const layer: ImageLayer<ImageSource> = new ImageLayer({
-          source: new ImageWMS({ imageLoadFunction: this.arcGisMapServerLoadFunction, ...commonWMSParams, ratio: 1 }),
+          source: new ImageWMS({
+            imageLoadFunction: this.externalGisMapServerLoadFunction,
+            ...commonWMSParams,
+            ratio: 1
+          }),
           ...commonLayerParams
         });
 
@@ -318,7 +322,7 @@ class MapService {
             params: {
               LAYERS: layer.tableName
             },
-            tileLoadFunction: this.arcGisMapServerLoadFunction
+            tileLoadFunction: this.externalGisMapServerLoadFunction
           }),
           visible: true,
           opacity: layer.transparency / 100,
@@ -635,7 +639,7 @@ class MapService {
     currentMap.enrollLoadingFinish();
   }
 
-  private async arcGisMapServerLoadFunction(tile: Tile | ImageWrapper, url: string) {
+  private async externalGisMapServerLoadFunction(tile: Tile | ImageWrapper, url: string) {
     currentMap.enrollLoadingStart();
     let data: Blob;
 
@@ -680,8 +684,44 @@ class MapService {
         return new OSM();
       case SourceType.WMTS:
         return this.prepareWMTS(basemap);
+      case SourceType.WMTS_P:
+        return this.prepareWMTSPanorama(basemap);
       case SourceType.XYZ:
         return new XYZ({ crossOrigin: 'Anonymous', url: basemap.url || undefined });
+    }
+  }
+
+  private prepareWMTSPanorama(basemap: Basemap): WMTS {
+    try {
+      const projection = getProjection(basemap.projection);
+      const projectionExtent = projection.getExtent();
+      const size = getWidth(projectionExtent) / basemap.size;
+      const resolutions = [];
+      const matrixIds = [];
+      for (let i = 0; i < basemap.resolution; ++i) {
+        // generate resolutions and matrixIds arrays for this WMTS
+        resolutions[i] = size / Math.pow(2, i);
+        matrixIds[i] = i;
+      }
+
+      return new WMTS({
+        tileLoadFunction: this.externalGisMapServerLoadFunction,
+        url: basemap.url,
+        tileGrid: new WMTSTileGrid({
+          origin: getTopLeft(projectionExtent),
+          resolutions,
+          matrixIds
+        }),
+        style: basemap.style,
+        layer: basemap.layerName,
+        matrixSet: 'GoogleMapsCompatible',
+        format: basemap.format,
+        projection,
+        wrapX: true,
+        crossOrigin: 'Anonymous'
+      });
+    } catch {
+      return undefined;
     }
   }
 

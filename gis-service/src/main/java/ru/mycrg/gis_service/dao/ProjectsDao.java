@@ -116,7 +116,7 @@ public class ProjectsDao {
         }
 
         final List<String> orderItems = sort.stream()
-                                            .map(order -> order.getProperty() + " " + order.getDirection())
+                                            .map(order -> getProperty(order.getProperty()) + " " + order.getDirection())
                                             .collect(Collectors.toList());
 
         return " ORDER BY " + String.join(",", orderItems) + " ";
@@ -128,5 +128,13 @@ public class ProjectsDao {
                                          .collect(Collectors.toList());
 
         return String.join(",", asString);
+    }
+
+    private static String getProperty(String property) {
+        if (property.equalsIgnoreCase("createdAt")) {
+            return "created_at";
+        }
+
+        return property;
     }
 }

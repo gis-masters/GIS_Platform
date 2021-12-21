@@ -1,7 +1,8 @@
 export enum SourceType {
   OSM = 'OSM',
   XYZ = 'XYZ',
-  WMTS = 'WMTS'
+  WMTS = 'WMTS',
+  WMTS_P = 'WMTS_P'
 }
 
 export interface Basemap {
