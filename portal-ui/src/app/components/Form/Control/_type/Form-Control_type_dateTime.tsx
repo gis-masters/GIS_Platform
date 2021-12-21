@@ -24,7 +24,7 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
           id={htmlId}
           name={name}
           fullWidth={!inSet}
-          value={date?.isValid() ? date.format('YYYY-MM-DD') : ''}
+          value={date?.isValid && date.isValid() ? date.format('YYYY-MM-DD') : ''}
           onChange={this.handleChange}
           label={inSet ? property.title : undefined}
           InputLabelProps={{
@@ -44,7 +44,7 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
 
     if (onChange) {
       onChange({
-        value: date,
+        value: date || null,
         propertyName: property.name
       });
     }
