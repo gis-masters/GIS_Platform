@@ -14,6 +14,15 @@ fi
 echo Generate enviroment.json
 echo -e "{\
 \"platform\":\"$UI_PLATFORM\",\
+\"title\":\"$UI_TITLE\",\
+\"owner\":\"$UI_OWNER\",\
+\"contactsPhone\":\"$UI_CONTACTS_PHONE\",\
+\"contactsEmail\":\"$UI_CONTACTS_EMAIL\",\
+\"description\":\"$UI_DESCRIPTION\",\
+\"passwordRestore\":\"$UI_PASSWORD_RESTORE\",\
+\"esia\":\"$UI_ESIA\",\
+\"registration\":\"$UI_REGISTRATION\",\
+\"background\":\"$UI_BACKGROUND\",\
 \"production\":$UI_PROD,\
 \"server\":{\
   \"host\":\"$UI_SERVER_HOST\",\

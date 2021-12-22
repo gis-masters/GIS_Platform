@@ -34,6 +34,15 @@ export class Env implements Environment {
   @observable loaded = false;
   @observable suppressToastErrors: ProtocolsBoolean;
   @observable sendErrorsToTG: ProtocolsBoolean;
+  @observable title?: string;
+  @observable owner?: string;
+  @observable description?: string;
+  @observable contactsPhone?: string;
+  @observable contactsEmail?: string;
+  @observable passwordRestore?: string;
+  @observable esia?: string;
+  @observable registration?: string;
+  @observable background?: string;
 
   public static get instance(): Env {
     return this._instance || (this._instance = new this());

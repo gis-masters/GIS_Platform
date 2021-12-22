@@ -2,7 +2,6 @@ import { Test, TestDefinitionCallback } from 'hermione';
 
 import { HomePage } from '../../../objects/pages/Home.page';
 import { RegisterPage } from '../../../objects/pages/Register.page';
-import { LoginPage } from '../../../objects/pages/Login.page';
 import { Header } from '../../../objects/blocks/Header/Header';
 
 declare const beforeEach: (callback?: TestDefinitionCallback) => Test;
@@ -16,7 +15,7 @@ describe('Начальная страница', () => {
   });
 
   /**
-   * Scenario: Переход на страницу регистрации
+   * Scenario: Внешний
    *   When пользователь заходит на главную страницу
    *   Then главная страница выглядит как положено
    */
@@ -40,20 +39,5 @@ describe('Начальная страница', () => {
     await header.clickRegButton();
     await registerPage.waitForVisible();
     await registerPage.testUrl();
-  });
-
-  /**
-   * Scenario: Переход на страницу входа
-   *   When пользователь заходит на главную страницу
-   *   And  нажимает кнопку "Войти"
-   *   Then открывается страница авторизации
-   */
-  it('Переход на страницу входа', async function () {
-    const header = new Header(this.browser);
-    const loginPage = new LoginPage(this.browser);
-
-    await header.clickLoginButton();
-    await loginPage.waitForVisible();
-    await loginPage.testUrl();
   });
 });

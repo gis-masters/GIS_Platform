@@ -2,8 +2,8 @@
   position: relative;
 
   display: grid;
-  grid-template: auto auto / 45px auto 100px;
-  grid-template-areas: 'id title buttons' 'id layer buttons';
+  grid-template: auto auto / 50px auto 100px;
+  grid-template-areas: "id title buttons" "id layer buttons";
 
   padding: 7px 5px;
 
@@ -17,25 +17,25 @@
     bottom: 0;
     left: 0;
 
-    content: '';
+    content: "";
     transition: background-color 0.15s;
 
-    background: rgba(0, 0, 0, 0);
+    background: rgb(0 0 0 / 0%);
   }
 
   &:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgb(0 0 0 / 5%);
   }
 
   &:active {
     &::before {
-      background: rgba(0, 0, 0, 0.05);
+      background: rgb(0 0 0 / 5%);
     }
   }
 
   &_highlighted,
   &_highlighted:hover {
-    background: rgba(100, 0, 100, 0.1);
+    background: rgb(100 0 100 / 10%);
   }
 
   &-Id {
@@ -43,7 +43,7 @@
 
     align-self: center;
 
-    width: 45px;
+    width: 50px;
 
     text-align: center;
 
@@ -61,7 +61,7 @@
       bottom: 0;
       left: 0;
 
-      content: '';
+      content: "";
     }
 
     &_disabled {
@@ -97,7 +97,7 @@
 
     transition: opacity 0.15s;
 
-    opacity: 0.2;
+    opacity: 20%;
 
     justify-self: end;
   }
@@ -105,6 +105,6 @@
   &_highlighted &-Buttons,
   &:hover &-Buttons,
   & &-Buttons:focus {
-    opacity: 1;
+    opacity: 100%;
   }
 }

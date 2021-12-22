@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { WfsMultiPolygonGeometry, CoordinateEdited, GeometryType } from '../../../../services/geoserver/wfs.models';
-import { env } from '../../../../stores/Env.store';
 
 import {
   EditFeatureGeometryFormProps,
@@ -34,9 +33,7 @@ class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
           />
         ))}
 
-        {env.platform !== 'simf' ? (
-          <EditFeatureGeometryAddButton onClick={this.addPolygonHandler}>Добавить полигон</EditFeatureGeometryAddButton>
-        ) : null}
+        <EditFeatureGeometryAddButton onClick={this.addPolygonHandler}>Добавить полигон</EditFeatureGeometryAddButton>
       </div>
     );
   }

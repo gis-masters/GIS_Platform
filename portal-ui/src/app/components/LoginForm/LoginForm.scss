@@ -1,4 +1,11 @@
 body .LoginForm {
+  width: 100%;
+  max-width: 600px;
+
+  border: 1px solid rgb(0 0 0 / 12%);
+  border-radius: 5px;
+  background: var(--white);
+
   &-Error {
     text-align: center;
 

@@ -18,6 +18,7 @@ import { Loading } from '../Loading/Loading';
 import { knownRegex } from '../../services/regexp.service';
 import { getEsiaUrl } from '../../services/server-urls.service';
 import { http } from '../../services/http.service';
+import { env } from '../../stores/Env.store';
 
 import '!style-loader!css-loader!sass-loader!./LoginForm.scss';
 
@@ -106,9 +107,11 @@ export class LoginForm extends Component<LoginFormProps> {
                 >
                   Войти
                 </Button>
-                <Button onClick={this.authWithEsia} loading={this.esiaLoading}>
-                  Войти с помощью ГОСУСЛУГ
-                </Button>
+                {!!env.esia?.length && (
+                  <Button onClick={this.authWithEsia} loading={this.esiaLoading}>
+                    Войти с помощью ГОСУСЛУГ
+                  </Button>
+                )}
               </span>
               <Button onClick={this.handlePasswordRecovery} disabled={this.esiaLoading}>
                 Забыли пароль?
@@ -149,6 +152,7 @@ export class LoginForm extends Component<LoginFormProps> {
   @action.bound
   private handlePasswordRecovery() {
     this.passwordRecovery =
+      env.passwordRestore ||
       'Отправьте заявку на восстановление пароля администратору ГИСОГД на почтовый адрес middel.erde@gmail.com';
   }
 

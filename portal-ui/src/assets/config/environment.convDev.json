@@ -20,5 +20,14 @@
   "sendErrorsToTG": {
     "http": false,
     "https": false
-  }
+  },
+  "title": "ГИСОГД РК (Публичный портал)",
+  "owner": "2022 Министерство строительства и архитектуры Республики Крым",
+  "description": "Публичная часть государственной информационной системы обеспечения градостроительной деятельности Республики Крым",
+  "contactsPhone": "+7 (978) 000-00-93",
+  "contactsEmail": "minstroy@mstroy.rk.gov.ru",
+  "passwordRestore": "Отправьте заявку на восстановление пароля администратору ГИСОГД на почтовый адрес middel.erde@gmail.com",
+  "esia": "1",
+  "registration": "1",
+  "background": "/assets/background/crimea.jpg"
 }

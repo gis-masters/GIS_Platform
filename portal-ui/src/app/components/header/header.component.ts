@@ -10,11 +10,14 @@ import { getEnvironment, Platform } from '../../services/environment';
 })
 export class HeaderComponent {
   envPlatform: Platform = 'simf';
+  envRegistration: boolean;
 
   constructor(private router: Router) {}
 
   async ngOnInit() {
-    this.envPlatform = (await getEnvironment()).platform;
+    const env = await getEnvironment();
+    this.envPlatform = env.platform;
+    this.envRegistration = !!env.registration.length;
   }
 
   how(): void {

@@ -77,6 +77,7 @@ import { LibraryRegistryComponent } from './components/library-registry/library-
 import { LibraryDocumentComponent } from './components/library-document/library-document.component';
 import { XmlDownloadComponent } from './components/xml-download/xml-download.component';
 import { FormControlTypeFiasComponent } from './components/form-control-type-fias/form-control-type-fias.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -131,7 +132,7 @@ import { FormControlTypeFiasComponent } from './components/form-control-type-fia
     ExportValidationReportButtonComponent,
     LoginFormComponent,
     OpenInAnotherProjectComponent,
-    LoginFormComponent,
+    FooterComponent,
     ImportGmlResultButtonComponent,
     LibraryRegistryComponent,
     LibraryDocumentComponent,

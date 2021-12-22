@@ -1,7 +1,7 @@
 import { env } from '../stores/Env.store';
 import { FlagsList } from './feature-flags';
 
-export type Platform = 'conv' | 'simf';
+export type Platform = 'conv' | 'simf' | 'gisogd_public' | 'gisogd_private'; //
 
 export interface EnvironmentServer {
   host?: string;
@@ -23,6 +23,15 @@ export interface Environment {
   scratchWorkspaceName: string;
   flags?: FlagsList;
   logo?: string;
+  title?: string;
+  owner?: string;
+  contactsPhone?: string;
+  contactsEmail?: string;
+  description?: string;
+  passwordRestore?: string;
+  esia?: string;
+  registration?: string;
+  background?: string;
   favicon?: string;
   suppressToastErrors: ProtocolsBoolean;
   sendErrorsToTG: ProtocolsBoolean;
