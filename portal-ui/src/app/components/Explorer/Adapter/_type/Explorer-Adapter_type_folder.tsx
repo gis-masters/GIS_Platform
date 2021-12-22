@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { FolderOutlined } from '@mui/icons-material';
+import { FolderOutlined, PlaylistAddCheck } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { Emitter } from '../../../../services/common/Emitter';
@@ -19,10 +20,12 @@ import {
   getLibraryRecordsWithParticularOne,
   LibraryRecord
 } from '../../../../services/crg/doc-library.service';
+import { LibraryDocumentActions } from '../../../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
+import { Link } from '../../../Link/Link';
 
 import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
@@ -30,7 +33,6 @@ import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitl
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerUrlItem } from '../../Explorer';
 import { ExplorerService } from '../../Explorer.service';
-import { LibraryDocumentActions } from '../../../LibraryDocumentActions/LibraryDocumentActions.composed';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -240,12 +242,21 @@ export class ExplorerAdapterTypeFolder {
     const path = item.payload.path + '/' + item.payload.id;
 
     return (
-      <CreateLibraryElement
-        schemaId={item.payload.schemaId}
-        path={path}
-        onCreate={service.createHandler}
-        store={store}
-      />
+      <>
+        <Link href={`/data-management/library/${item.payload.libraryId}/registry`} theme='contents'>
+          <Tooltip title='Открыть реестр'>
+            <IconButton>
+              <PlaylistAddCheck />
+            </IconButton>
+          </Tooltip>
+        </Link>
+        <CreateLibraryElement
+          schemaId={item.payload.schemaId}
+          path={path}
+          onCreate={service.createHandler}
+          store={store}
+        />
+      </>
     );
   }
 

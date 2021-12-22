@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { getEnvironment } from '../../services/environment';
 
@@ -8,7 +8,6 @@ import { getEnvironment } from '../../services/environment';
   styleUrls: ['./home-page.component.scss']
 })
 export class HomePageComponent {
-  @Input('background-image')
   backgroundImage: string;
 
   async ngOnInit() {
@@ -16,8 +15,10 @@ export class HomePageComponent {
   }
 
   setStyle(): Record<string, string> {
-    return {
-      backgroundImage: `url("${this.backgroundImage}")`
-    };
+    return this.backgroundImage
+      ? {
+          backgroundImage: `url("${this.backgroundImage}")`
+        }
+      : {};
   }
 }

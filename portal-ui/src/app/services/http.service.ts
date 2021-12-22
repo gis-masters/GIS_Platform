@@ -4,9 +4,9 @@ import { CustomCache, CustomCacheConfig } from './common/CustomCache';
 import { communicationService } from './communication.service';
 import { PageableResponse, PageQueryParams } from './models';
 import { replaceUrl } from './server-urls.service';
-import { Mime } from './util/Mime';
-import { route } from '../stores/Route.store';
 import { Emitter } from './common/Emitter';
+import { Mime } from './util/Mime';
+
 import { getPayloadFromPageableResponse } from './http.utils';
 
 const ITEMS_PER_PAGE = 300;
@@ -71,7 +71,7 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      if ((err.response?.status === 401 && route.data?.isAuthRequired) || !route.data) {
+      if (err.response?.status === 401) {
         await this.waitForAuth();
 
         return this.get<T>(url, configWithCache);
@@ -192,7 +192,7 @@ export class Http {
         throw error;
       }
 
-      if (err.response.status === 401 && route.data.authRequired) {
+      if (err.response.status === 401) {
         await this.waitForAuth();
 
         return this.post<T>(url, data, config);
@@ -210,7 +210,7 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      if (err.response.status === 401 && route.data.authRequired) {
+      if (err.response.status === 401) {
         await this.waitForAuth();
 
         return this.put<T>(url, data, config);
@@ -234,7 +234,7 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      if (err.response.status === 401 && route.data.authRequired) {
+      if (err.response.status === 401) {
         await this.waitForAuth();
 
         return this.patch<T>(url, data, config);
@@ -252,7 +252,7 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      if (err.response.status === 401 && route.data.authRequired) {
+      if (err.response.status === 401) {
         await this.waitForAuth();
 
         return this.delete<T>(url, config);

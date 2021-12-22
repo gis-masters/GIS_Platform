@@ -5,11 +5,9 @@ import { CurrentUserResolver } from './services/resolvers/current-user-resolver.
 import { OrgAdminGuardService } from './services/org-admin-guard.service';
 import { WorkflowGuardService } from './services/workflow-guard.service';
 import { ProjectsGuardService } from './services/projects-guard.service';
-import { AuthGuardService } from './services/auth-guard.service';
 import { AboutComponent } from './pages/about/about.component';
 import { MapPageComponent } from './pages/map/map-page.component';
 import { HomePageComponent } from './pages/home/home-page.component';
-import { LoginPageComponent } from './pages/login/login-page.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { RecoveryComponent } from './pages/recovery/recovery.component';
 import { ImportPageComponent } from './pages/import/import-page.component';
@@ -37,7 +35,6 @@ export enum Pages {
 
 export interface AppRouteData extends Data {
   page: Pages;
-  authRequired: boolean;
 }
 
 interface AppRoute extends Route {
@@ -62,14 +59,6 @@ const routes: AppRoutes = [
     data: { page: Pages.HOME, authRequired: false }
   },
   {
-    path: 'login',
-    component: LoginPageComponent,
-    resolve: {
-      user: CurrentUserResolver
-    },
-    data: { page: Pages.LOGIN, authRequired: false }
-  },
-  {
     path: 'register',
     component: RegisterComponent,
     data: { page: Pages.REGISTER, authRequired: false }
@@ -87,60 +76,59 @@ const routes: AppRoutes = [
   {
     path: 'projects/default',
     component: ProjectsPageComponent,
-    canActivate: [AuthGuardService, ProjectsGuardService],
+    canActivate: [ProjectsGuardService],
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.PROJECTS, authRequired: true }
+    data: { page: Pages.PROJECTS }
   },
   {
     path: 'projects',
     component: ProjectsPageComponent,
-    canActivate: [AuthGuardService],
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.PROJECTS, authRequired: true }
+    data: { page: Pages.PROJECTS }
   },
   {
     path: 'projects/:projectId',
-    canActivate: [AuthGuardService, WorkflowGuardService],
+    canActivate: [WorkflowGuardService],
     children: [
       {
         path: 'import',
         component: ImportPageComponent,
-        canActivate: [AuthGuardService, WorkflowGuardService],
+        canActivate: [WorkflowGuardService],
         resolve: {
           user: CurrentUserResolver
         },
-        data: { page: Pages.IMPORT, authRequired: true }
+        data: { page: Pages.IMPORT }
       },
       {
         path: 'import/:importId',
         component: ImportPageComponent,
-        canActivate: [AuthGuardService, WorkflowGuardService],
+        canActivate: [WorkflowGuardService],
         resolve: {
           user: CurrentUserResolver
         },
-        data: { page: Pages.IMPORT, authRequired: true }
+        data: { page: Pages.IMPORT }
       },
       {
         path: 'import/:importId/mapping',
         component: MappingPageComponent,
-        canActivate: [AuthGuardService, WorkflowGuardService],
+        canActivate: [WorkflowGuardService],
         resolve: {
           user: CurrentUserResolver
         },
-        data: { page: Pages.IMPORT, authRequired: true }
+        data: { page: Pages.IMPORT }
       },
       {
         path: 'map',
         component: MapPageComponent,
-        canActivate: [AuthGuardService, WorkflowGuardService],
+        canActivate: [WorkflowGuardService],
         resolve: {
           user: CurrentUserResolver
         },
-        data: { page: Pages.MAP, authRequired: true }
+        data: { page: Pages.MAP }
       },
       {
         path: '**',
@@ -155,34 +143,31 @@ const routes: AppRoutes = [
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.ORG_ADMIN, authRequired: true }
+    data: { page: Pages.ORG_ADMIN }
   },
   {
     path: 'data-management',
     component: DataManagementPageComponent,
-    canActivate: [AuthGuardService],
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.DATA_MANAGEMENT, authRequired: true }
+    data: { page: Pages.DATA_MANAGEMENT }
   },
   {
     path: 'data-management/library/:libraryId/registry',
     component: LibraryRegistryPageComponent,
-    canActivate: [AuthGuardService],
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.REGISTRY, authRequired: true }
+    data: { page: Pages.REGISTRY }
   },
   {
     path: 'data-management/library/:libraryId/document/:documentId',
     component: LibraryDocumentPageComponent,
-    canActivate: [AuthGuardService],
     resolve: {
       user: CurrentUserResolver
     },
-    data: { page: Pages.DOCUMENT, authRequired: true }
+    data: { page: Pages.DOCUMENT }
   },
   {
     path: '**',
@@ -193,14 +178,13 @@ const routes: AppRoutes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [AuthGuardService, WorkflowGuardService, ProjectsGuardService, OrgAdminGuardService]
+  providers: [WorkflowGuardService, ProjectsGuardService, OrgAdminGuardService]
 })
 export class AppRoutingModule {}
 
 export const routingComponents = [
   HomePageComponent,
   MapPageComponent,
-  LoginPageComponent,
   AboutComponent,
   RegisterComponent,
   RecoveryComponent,

@@ -58,10 +58,12 @@ export class LoginForm extends Component<LoginFormProps> {
   }
 
   render() {
+    const { inDialog } = this.props;
+
     return (
       <>
         {!this.loading ? (
-          <Form className={cnLoginForm()} id='LoginForm' onSubmit={this.submitHandler}>
+          <Form className={cnLoginForm({ inDialog })} id='LoginForm' onSubmit={this.submitHandler}>
             <FormField>
               <FormControl fullWidth>
                 <TextField

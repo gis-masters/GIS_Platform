@@ -24,12 +24,14 @@ export const Footer: FC = observer(() => (
             <h2 className={cnFooter('Title')}>Контакты:</h2>
             <b>Телефон приемной:</b> {env.contactsPhone}
             <br />
-            <b>e-mail:</b> {env.contactsEmail}
+            <b>E-mail:</b> {env.contactsEmail}
           </Grid>
         )}
       </Grid>
     </Container>
-    <Divider />
+
+    <Divider color='#49a6ff' />
+
     <Grid className={cnFooter('Copyright')} container alignItems='center' justifyContent='center'>
       © {env.owner}
     </Grid>

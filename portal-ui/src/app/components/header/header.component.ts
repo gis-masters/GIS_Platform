@@ -25,7 +25,7 @@ export class HeaderComponent {
   }
 
   login(): void {
-    void this.router.navigate(['/login']);
+    void this.router.navigate(['/']);
   }
 
   register(): void {

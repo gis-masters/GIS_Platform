@@ -46,7 +46,7 @@ export class RegisterComponent implements OnDestroy {
         await authService.registration(this.registrationForm.getRawValue());
         this.registrationForm.getRawValue();
         Toast.success('Регистрация прошла успешно');
-        void this.router.navigateByUrl('/login');
+        void this.router.navigateByUrl('/');
       } catch (error) {
         if ((error as Error)?.message) {
           this.errorMsg = (error as Error).message;

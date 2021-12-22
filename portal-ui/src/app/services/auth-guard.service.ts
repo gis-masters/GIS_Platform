@@ -14,7 +14,7 @@ export class AuthGuardService implements CanActivate {
     await usersService.fetchCurrentUser();
 
     if (!currentUser.login) {
-      void this.router.navigate(['login']);
+      void this.router.navigate(['/']);
 
       return false;
     }

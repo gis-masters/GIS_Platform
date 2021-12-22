@@ -1,6 +1,6 @@
 import { Test, TestDefinition, TestDefinitionCallback } from 'hermione';
 
-import { LoginPage } from '../../../objects/pages/Login.page';
+import { HomePage } from '../../../objects/pages/Home.page';
 import { ProjectsPage } from '../../../objects/pages/Projects.page';
 import { LoginForm } from '../../../objects/blocks/LoginForm/LoginForm';
 import { mockOauthToken } from '../_mock/oauthToken';
@@ -23,10 +23,10 @@ describe('Авторизация', () => {
    *   Given пользователь зашёл на страницу авторизации
    */
   beforeEach(async function () {
-    const loginPage = new LoginPage(this.browser);
+    const homePage = new HomePage(this.browser);
 
-    await loginPage.open();
-    await loginPage.waitForVisible();
+    await homePage.open();
+    await homePage.waitForVisible();
   });
 
   /**

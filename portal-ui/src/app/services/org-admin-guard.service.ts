@@ -14,7 +14,7 @@ export class OrgAdminGuardService implements CanActivate {
     await usersService.fetchCurrentUser();
 
     if (!currentUser.login) {
-      void this.router.navigate(['login']);
+      void this.router.navigate(['/']);
 
       return false;
     }
@@ -22,7 +22,7 @@ export class OrgAdminGuardService implements CanActivate {
     if (currentUser.isAdmin) {
       return true;
     }
-    void this.router.navigate(['login']);
+    void this.router.navigate(['/']);
 
     return false;
   }
