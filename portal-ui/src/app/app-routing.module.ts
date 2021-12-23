@@ -56,22 +56,22 @@ const routes: AppRoutes = [
   {
     path: '',
     component: HomePageComponent,
-    data: { page: Pages.HOME, authRequired: false }
+    data: { page: Pages.HOME }
   },
   {
     path: 'register',
     component: RegisterComponent,
-    data: { page: Pages.REGISTER, authRequired: false }
+    data: { page: Pages.REGISTER }
   },
   {
     path: 'recovery',
     component: RecoveryComponent,
-    data: { page: Pages.RECOVERY, authRequired: false }
+    data: { page: Pages.RECOVERY }
   },
   {
     path: 'about',
     component: AboutComponent,
-    data: { page: Pages.ABOUT, authRequired: false }
+    data: { page: Pages.ABOUT }
   },
   {
     path: 'projects/default',

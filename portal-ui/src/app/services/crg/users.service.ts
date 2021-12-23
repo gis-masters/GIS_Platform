@@ -8,7 +8,6 @@ import { communicationService } from '../communication.service';
 import { BuildInRole } from './permissions.models';
 import { PageableResponse } from '../models';
 import { http } from '../http.service';
-import { route } from '../../stores/Route.store';
 import { services } from '../services';
 
 export interface ApiLink {
@@ -58,13 +57,11 @@ class UsersService {
   }
 
   async fetchCurrentUser(autoLogin?: boolean) {
-    if (route.data.authRequired) {
-      try {
-        const userInfo = await http.get<OrgInfo>(await getUserUrl('current'));
-        if (userInfo.id !== currentUser.id) currentUser.setOrgInfo(userInfo);
-      } catch {
-        currentUser.setOrgInfo();
-      }
+    try {
+      const userInfo = await http.get<OrgInfo>(await getUserUrl('current'));
+      if (userInfo.id !== currentUser.id) currentUser.setOrgInfo(userInfo);
+    } catch {
+      currentUser.setOrgInfo();
     }
 
     if (autoLogin) {
