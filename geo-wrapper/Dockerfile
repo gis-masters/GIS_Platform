@@ -16,9 +16,9 @@ RUN apk update && apk add zip && apk add \
 
 ENV XMX_SIZE=1G
 
-ENTRYPOINT exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
-                                     -Delastic.apm.service_name=crg-geo-wrapper \
-                                     -Delastic.apm.server_url=${APM_URL} \
-                                     -Delastic.apm.enable_log_correlation=true \
-                                     -Delastic.apm.application_packages=ru.mycrg.wrapper \
-                                     -jar geo-wrapper.jar
+ENTRYPOINT sleep 1m && exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
+                                                 -Delastic.apm.service_name=crg-geo-wrapper \
+                                                 -Delastic.apm.server_url=${APM_URL} \
+                                                 -Delastic.apm.enable_log_correlation=true \
+                                                 -Delastic.apm.application_packages=ru.mycrg.wrapper \
+                                                 -jar geo-wrapper.jar

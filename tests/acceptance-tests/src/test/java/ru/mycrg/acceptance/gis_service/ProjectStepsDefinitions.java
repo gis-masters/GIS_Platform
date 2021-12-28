@@ -63,7 +63,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует проект {string}")
     public void initializeProject(String projectNameKey) {
-        final String projectName = generateString(projectNameKey);
+        String projectName = generateString(projectNameKey);
         if (isProjectExistInPool(projectName)) {
             makeExactProjectAsCurrent(projectName);
         } else if (!projectPool.isEmpty()) {
@@ -115,14 +115,14 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     public void updateCurrentProject(String projectName) {
         authorizationBase.loginAsCurrentUser();
 
-        createProject(projectName);
+        updateProject(projectName);
     }
 
     @When("Администратор делает запрос на обновление полей проекта {string}")
     public void updateCurrentProjectAsAdmin(String projectName) {
         authorizationBase.loginAsOwner();
 
-        createProject(projectName);
+        updateProject(projectName);
     }
 
     @When("Администратор даёт доступ: {string} для текущего пользователя на текущий проект")
@@ -349,7 +349,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                         post(String.format("/%d/permissions", projectId));
     }
 
-    private void createProject(String projectName) {
+    private void updateProject(String projectName) {
         projectDto = mapToProjectDto(projectName);
 
         String payload = gson.toJson(projectDto);

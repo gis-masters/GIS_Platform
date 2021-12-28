@@ -5,11 +5,11 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.TransformationException;
 
-@Service
+@Component
 public class CrsHandler {
 
     private final Logger log = LoggerFactory.getLogger(CrsHandler.class);

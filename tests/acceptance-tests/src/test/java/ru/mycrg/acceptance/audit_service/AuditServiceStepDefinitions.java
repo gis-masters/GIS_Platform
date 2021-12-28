@@ -149,57 +149,57 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @Then("Создан аудит лог о входе пользователя в систему")
     public void checkAuditEventSignIn() {
-        assertTrue(chekAuditEvents(ACTION_TYPE_PATH, SIGN_IN.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, SIGN_IN.name()));
     }
 
     @Then("Создан аудит лог о выходе пользователя из системы")
     public void checkAuditEventSignOut() {
-        assertTrue(chekAuditEvents(ACTION_TYPE_PATH, SIGN_OUT.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, SIGN_OUT.name()));
     }
 
     @Then("Аудит лог о разлогинивании не создается")
     public void checkSignOutWithoutToken() {
-        assertThrows(RuntimeException.class, () -> chekAuditEvents(ACTION_TYPE_PATH, SIGN_OUT.name()));
+        assertThrows(RuntimeException.class, () -> checkAuditEvents(ACTION_TYPE_PATH, SIGN_OUT.name()));
     }
 
     @Then("Создан аудит лог о создании проекта")
     public void checkProjectCreate() {
-        assertTrue(chekAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
-        assertTrue(chekAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
     }
 
     @Then("Создан аудит лог о создании слоя")
     public void checkLayerCreate() {
-        assertTrue(chekAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
-        assertTrue(chekAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
     }
 
     @Then("Создан аудит лог об удалении проекта")
     public void checkProjectDelete() {
-        assertTrue(chekAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
-        assertTrue(chekAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
     }
 
     @Then("Создан аудит лог об удалении слоя")
     public void checkLayerDelete() {
-        assertTrue(chekAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
-        assertTrue(chekAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
     }
 
     @And("Создан аудит лог об изменении проекта")
     public void checkProjectUpdate() {
-        assertTrue(chekAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
-        assertTrue(chekAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
     }
 
     @And("Создан аудит лог об изменении слоя")
     public void checkLayerUpdate() {
-        assertTrue(chekAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
-        assertTrue(chekAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
     }
 
     @And("Записано корректное тело проекта")
-    public void chekProjectEntityStateAfter() {
+    public void checkProjectEntityStateAfter() {
         String projectName = projectDto.getProjectName();
         String errMsg = String.format("Запись о данном проекте %s не найдена", projectName);
 
@@ -208,7 +208,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Записано корректное тело слоя")
-    public void chekLayerEntityStateAfter() {
+    public void checkLayerEntityStateAfter() {
         String errMsg = String.format("Запись о данном слое %s не найдена", gson.toJson(layerCreateDto));
         getAllAuditEntity();
 
@@ -225,7 +225,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
                 .orElseThrow(() -> new IllegalArgumentException(errMsg));
     }
 
-    private boolean chekAuditEvents(String path, String key) {
+    private boolean checkAuditEvents(String path, String key) {
         try {
             int currentAttempt = 0;
             do {

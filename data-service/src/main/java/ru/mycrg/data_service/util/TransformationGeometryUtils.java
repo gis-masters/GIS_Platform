@@ -4,11 +4,13 @@ import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 import org.postgis.LinearRing;
+import org.postgis.MultiPolygon;
 import org.postgis.Point;
 import org.postgis.Polygon;
 import org.slf4j.Logger;
@@ -27,9 +29,12 @@ public class TransformationGeometryUtils {
     private static final Logger log = LoggerFactory.getLogger(TransformationGeometryUtils.class);
 
     private final EpsgCodes epsgCodes;
+    private final CrsHandler crsHandler;
 
-    public TransformationGeometryUtils(EpsgCodes epsgCodes) {
+    public TransformationGeometryUtils(EpsgCodes epsgCodes,
+                                       CrsHandler crsHandler) {
         this.epsgCodes = epsgCodes;
+        this.crsHandler = crsHandler;
     }
 
     /**
@@ -94,5 +99,21 @@ public class TransformationGeometryUtils {
         }
 
         return transformedPolygonList;
+    }
+
+    public MultiPolygon makeMultiPolygon(List<org.locationtech.jts.geom.Polygon> polygons, Integer srid) {
+        Geometry geometry = new GeometryFactory()
+                .createMultiPolygon(polygons.toArray(org.locationtech.jts.geom.Polygon[]::new));
+
+        List<Coordinate> transformedCoordinates = transform(geometry,
+                                                            crsHandler.defineCrsByX(polygons.get(0).getCoordinate().x),
+                                                            crsHandler.defineCrsBySrid(srid));
+
+        List<Polygon> convertGeometryOfPolygons = convertPolygonListToCorrectGeometryType(polygons,
+                                                                                          transformedCoordinates);
+        MultiPolygon multiPolygon = new MultiPolygon(convertGeometryOfPolygons.toArray(Polygon[]::new));
+        multiPolygon.setSrid(srid);
+
+        return multiPolygon;
     }
 }
