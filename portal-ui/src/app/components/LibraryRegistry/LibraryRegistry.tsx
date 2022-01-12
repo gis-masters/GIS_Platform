@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 import { Check, Close, HomeOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
-import moment from 'moment';
 
 import { route } from '../../stores/Route.store';
 import { currentUser } from '../../stores/CurrentUser.store';
@@ -19,6 +18,7 @@ import { OldFeatureDescription } from '../../services/crg/schemaOld.models';
 import { communicationService } from '../../services/communication.service';
 import { schemaService } from '../../services/crg/schema.service';
 import { convertSchema } from '../../services/crg/schema.utils';
+import { formatDate } from '../../services/util/date.util';
 import { PageOptions } from '../../services/models';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
@@ -29,7 +29,7 @@ import { XTable, XTableColumn } from '../XTable/XTable';
 import { Loading } from '../Loading/Loading';
 
 import { LibraryRegistrySettings } from './Settings/LibraryRegistry-Settings';
-import { LibraryRegistryCSV } from './CSV/LibraryRegistry-CSV';
+import { LibraryRegistryExport } from './Export/LibraryRegistry-Export';
 
 import '!style-loader!css-loader!sass-loader!./LibraryRegistry.scss';
 
@@ -79,7 +79,7 @@ export class LibraryRegistry extends Component {
               defaultFilter={{ is_folder: { $in: [null, false] } }}
               headerActions={
                 <>
-                  <LibraryRegistryCSV
+                  <LibraryRegistryExport
                     tablePageOptions={this.tablePageOptions}
                     properties={this.properties}
                     library={this.library}
@@ -186,7 +186,7 @@ export class LibraryRegistry extends Component {
         filterable: filterableTypes.has(property.propertyType) && property.name !== 'id',
         ...(typesCols[property.propertyType] || {}),
         filterOptions: property.propertyType === PropertyType.CHOICE ? property.options : undefined,
-        headerCellProps: { style: { minWidth: String(property.minWidth || 0) + 'px' } }
+        headerCellProps: { style: property.minWidth ? { minWidth: String(property.minWidth) + 'px' } : null }
       }))
     ];
   }
@@ -216,10 +216,9 @@ export class LibraryRegistry extends Component {
   @boundMethod
   private renderDate({ rowData, field }: { rowData: LibraryRecord; field: keyof LibraryRecord }): ReactElement {
     const property = this.properties.find(({ name }) => name === field) as PropertySchemaDatetime;
-    const { format = 'DD.MM.YYYY' } = property;
-    const date = moment(rowData[field]);
+    const date = formatDate(rowData[field], property.format);
 
-    return <>{date.isValid() ? date.format(format) : rowData[field]}</>;
+    return <>{date}</>;
   }
 
   @action

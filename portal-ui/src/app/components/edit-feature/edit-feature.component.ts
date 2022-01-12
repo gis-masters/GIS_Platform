@@ -34,6 +34,7 @@ import { generateRandomId } from '../../services/util/randomId';
 import { convertSchema } from '../../services/crg/schema.utils';
 import { applyFieldValue, convertToComplexField } from '../Form/Form.utils';
 import { PropertySchema } from '../../services/crg/schema.models';
+import { formatDate } from '../../services/util/date.util';
 
 export interface Properties {
   [key: string]: unknown;
@@ -364,7 +365,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   getDateTime(value: string | number): string {
-    return moment(value).format('DD.MM.YYYY');
+    return formatDate(value);
   }
 
   private async checkPermissions() {

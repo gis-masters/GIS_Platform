@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import moment from 'moment';
 
 import { PropertySchemaDatetime, PropertyType } from '../../../../services/crg/schema.models';
+import { formatDate } from '../../../../services/util/date.util';
 
 import { cnFormView } from '../Form-View';
 import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
@@ -15,13 +15,12 @@ import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 class FormViewTypeDatetime extends Component<FormControlProps> {
   render() {
     const { className, errors, inSet, fieldValue = '—', property } = this.props;
-    const { format = 'DD.MM.YYYY' } = property as PropertySchemaDatetime;
-    const date = moment(fieldValue);
+    const date = formatDate(fieldValue, (property as PropertySchemaDatetime).format);
 
     return (
       <div className={cnFormView({ inSet, empty: fieldValue === '—', type: property.propertyType }, [className])}>
         {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
-        <FormViewValue>{date.isValid() ? date.format(format) : fieldValue}</FormViewValue>
+        <FormViewValue>{date}</FormViewValue>
         <FormViewErrors errors={errors} />
       </div>
     );

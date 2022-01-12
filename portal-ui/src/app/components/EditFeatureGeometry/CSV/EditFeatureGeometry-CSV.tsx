@@ -3,16 +3,16 @@ import { action } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@mui/material';
 import { ArchiveOutlined, UnarchiveOutlined } from '@mui/icons-material';
-import { parse, unparse } from 'papaparse';
-import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
+import { isEqual, clone } from 'lodash';
+import { parse } from 'papaparse';
 
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
 import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs.models';
-import { saveAsCsv } from '../../../services/util/FileSaver';
 import { communicationService } from '../../../services/communication.service';
 
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
+import { exportAsCSV } from '../../../services/util/export';
 
 const cnEditFeatureGeometryCSV = cn('EditFeatureGeometry', 'CSV');
 
@@ -73,16 +73,14 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
 
   @boundMethod
   private exportClickHandler() {
-    saveAsCsv(
-      'coordinates.csv',
-      unparse(
-        this.props.coordinates.map(coord => {
-          const newCoords = clone(coord);
-          newCoords.reverse();
+    exportAsCSV(
+      this.props.coordinates.map(coord => {
+        const newCoords = clone(coord);
+        newCoords.reverse();
 
-          return newCoords;
-        })
-      )
+        return newCoords;
+      }),
+      'coordinates'
     );
 
     communicationService.drawOff.emit();
