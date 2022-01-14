@@ -75,6 +75,10 @@ public class Pkcs7Util {
         }
 
         Key key = keystore.getKey(KEY_ALIAS, KEYSTORE_PASSWORD.toCharArray());
+        if (key == null) {
+            throw new IllegalStateException("Failed to get the secret key by alias: " + KEY_ALIAS);
+        }
+
         ContentSigner signer = new JcaContentSignerBuilder(SIGNATURE_ALG)
                 .setProvider("BC")
                 .build((PrivateKey) key);
