@@ -2,6 +2,7 @@ package ru.mycrg.data_service.util;
 
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
+import org.jetbrains.annotations.NotNull;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Component
 public class TransformationGeometryUtils {
@@ -30,11 +33,12 @@ public class TransformationGeometryUtils {
 
     private final EpsgCodes epsgCodes;
     private final CrsHandler crsHandler;
+    private final GeometryFactory geometryFactory;
 
-    public TransformationGeometryUtils(EpsgCodes epsgCodes,
-                                       CrsHandler crsHandler) {
+    public TransformationGeometryUtils(EpsgCodes epsgCodes, CrsHandler crsHandler) {
         this.epsgCodes = epsgCodes;
         this.crsHandler = crsHandler;
+        geometryFactory = new GeometryFactory();
     }
 
     /**
@@ -48,28 +52,22 @@ public class TransformationGeometryUtils {
      *
      * @throws TransformationException if transformation to geometry impossible
      */
-    public List<Coordinate> transform(Geometry geometry,
-                                      CoordinateReferenceSystem sourceCRS,
-                                      CoordinateReferenceSystem targetCRS) {
+    public Coordinate[] transform(Geometry geometry,
+                                  CoordinateReferenceSystem sourceCRS,
+                                  CoordinateReferenceSystem targetCRS) {
         try {
             if (!targetCRS.equals(sourceCRS)) {
-                List<Coordinate> transformedCoordinates;
-
                 MathTransform mathTransform = CRS.findMathTransform(sourceCRS, targetCRS);
                 geometry = JTS.transform(geometry, mathTransform);
-                boolean targetCrsIsZone4OrZone5 = targetCRS.equals(
-                        epsgCodes.getCrsBySrid(314315))
-                        || targetCRS.equals(epsgCodes.getCrsBySrid(314314));
 
-                transformedCoordinates = Arrays.stream(geometry.getCoordinates())
-                                               .map(coordinate -> targetCrsIsZone4OrZone5
-                                                       ? new Coordinate(coordinate.x, coordinate.y)
-                                                       : new Coordinate(coordinate.y, coordinate.x))
-                                               .collect(Collectors.toList());
-
-                return transformedCoordinates;
+                return Arrays.stream(geometry.getCoordinates())
+                             .map(coordinate -> isTargetCrsIsZone4OrZone5(targetCRS)
+                                     ? new Coordinate(coordinate.x, coordinate.y)
+                                     : new Coordinate(coordinate.y, coordinate.x))
+                             .collect(Collectors.toList())
+                             .toArray(Coordinate[]::new);
             } else {
-                return Arrays.asList(geometry.getCoordinates());
+                return geometry.getCoordinates();
             }
         } catch (FactoryException | TransformException e) {
             String msg = "Что-то пошло не так во время трансформации геометрии " + e.getMessage();
@@ -78,42 +76,80 @@ public class TransformationGeometryUtils {
         }
     }
 
-    public List<Polygon> convertPolygonListToCorrectGeometryType(List<org.locationtech.jts.geom.Polygon> polygons,
-                                                                 List<Coordinate> transformCoordinates) {
-        List<Polygon> transformedPolygonList = new ArrayList<>();
-        int countOfCoordinates = 0;
+    public List<Polygon> convertPolygonListToCorrectGeometryType(List<org.locationtech.jts.geom.Polygon> polygons) {
+        return polygons.stream()
+                       .map(polygon -> {
+                           List<LinearRing> shellWithHoles = new ArrayList<>();
+                           Point[] shellPoints = getPoints(Arrays.stream(polygon.getExteriorRing().getCoordinates()));
+                           LinearRing shellLinearRing = new LinearRing(shellPoints);
+                           shellWithHoles.add(shellLinearRing);
+                           IntStream.range(0, polygon.getNumInteriorRing())
+                                    .mapToObj(i -> Arrays.stream(polygon.getInteriorRingN(i).getCoordinates()))
+                                    .map(this::getPoints)
+                                    .map(LinearRing::new)
+                                    .forEach(shellWithHoles::add);
 
-        for (org.locationtech.jts.geom.Polygon polygon: polygons) {
-            int size = polygon.getCoordinates().length;
-
-            List<Coordinate> subList = transformCoordinates.subList(countOfCoordinates, countOfCoordinates + size);
-
-            List<Point> pointsForPolygon = subList.stream()
-                                                  .map(coordinate -> new Point(coordinate.x, coordinate.y))
-                                                  .collect(Collectors.toList());
-
-            LinearRing linearRing = new LinearRing(pointsForPolygon.toArray(Point[]::new));
-            Polygon polygonCreated = new Polygon(new LinearRing[]{linearRing});
-            transformedPolygonList.add(polygonCreated);
-            countOfCoordinates = countOfCoordinates + size;
-        }
-
-        return transformedPolygonList;
+                           return new Polygon(shellWithHoles.toArray(LinearRing[]::new));
+                       })
+                       .collect(Collectors.toList());
     }
 
     public MultiPolygon makeMultiPolygon(List<org.locationtech.jts.geom.Polygon> polygons, Integer srid) {
-        Geometry geometry = new GeometryFactory()
-                .createMultiPolygon(polygons.toArray(org.locationtech.jts.geom.Polygon[]::new));
+        List<org.locationtech.jts.geom.Polygon> transformedPolygons = transformationOfPolygons(polygons, srid);
 
-        List<Coordinate> transformedCoordinates = transform(geometry,
-                                                            crsHandler.defineCrsByX(polygons.get(0).getCoordinate().x),
-                                                            crsHandler.defineCrsBySrid(srid));
+        List<Polygon> convertGeometryOfPolygons = convertPolygonListToCorrectGeometryType(transformedPolygons);
 
-        List<Polygon> convertGeometryOfPolygons = convertPolygonListToCorrectGeometryType(polygons,
-                                                                                          transformedCoordinates);
         MultiPolygon multiPolygon = new MultiPolygon(convertGeometryOfPolygons.toArray(Polygon[]::new));
         multiPolygon.setSrid(srid);
 
         return multiPolygon;
+    }
+
+    @NotNull
+    private Point[] getPoints(Stream<Coordinate> holesCoordinates) {
+        return holesCoordinates.map(coordinate -> new Point(coordinate.x, coordinate.y))
+                               .collect(Collectors.toList())
+                               .toArray(Point[]::new);
+    }
+
+    private List<org.locationtech.jts.geom.Polygon> transformationOfPolygons(
+            List<org.locationtech.jts.geom.Polygon> polygons, int srid) {
+        return polygons.stream()
+                       .map(polygon -> {
+                           Coordinate[] transformExterRingCoord = transform(polygon.getExteriorRing(),
+                                                                            crsHandler.defineCrsByX(
+                                                                                    polygon.getCoordinate().x),
+                                                                            crsHandler.defineCrsBySrid(srid));
+                           org.locationtech.jts.geom.LinearRing transformedShellRing =
+                                   geometryFactory.createLinearRing(transformExterRingCoord);
+
+                           org.locationtech.jts.geom.LinearRing[] transformedHoleRings = getTransformedHoleRings(srid,
+                                                                                                                 polygon);
+
+                           return geometryFactory.createPolygon(transformedShellRing, transformedHoleRings);
+                       })
+                       .collect(Collectors.toList());
+    }
+
+    private org.locationtech.jts.geom.LinearRing[] getTransformedHoleRings(int srid,
+                                                                           org.locationtech.jts.geom.Polygon polygon) {
+        return IntStream.range(0, polygon.getNumInteriorRing())
+                        .mapToObj(i -> transform(polygon.getInteriorRingN(i),
+                                                 crsHandler.defineCrsByX(polygon.getCoordinate().x),
+                                                 crsHandler.defineCrsBySrid(srid)))
+                        .map(geometryFactory::createLinearRing)
+                        .collect(Collectors.toList())
+                        .toArray(org.locationtech.jts.geom.LinearRing[]::new);
+    }
+
+    private boolean isTargetCrsIsZone4OrZone5(CoordinateReferenceSystem targetCRS) {
+        try {
+            return targetCRS.equals(epsgCodes.getCrsBySrid(314315))
+                    || targetCRS.equals(epsgCodes.getCrsBySrid(314314));
+        } catch (FactoryException e) {
+            String msg = "Не удалось вычислить CRS. " + e.getMessage();
+            log.debug(msg);
+            throw new TransformationException(msg);
+        }
     }
 }

@@ -2,6 +2,7 @@ package ru.mycrg.data_service.service.parsers;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LinearRing;
 import org.locationtech.jts.geom.Polygon;
 import org.postgis.MultiPolygon;
 import org.slf4j.Logger;
@@ -121,7 +122,7 @@ public class XmlParser {
     private MultiPolygon parseGeometry(NodeList allEntitySpatialNodes, Integer srid) {
         List<Polygon> polygons = new ArrayList<>();
         for (int i = 0; i < allEntitySpatialNodes.getLength(); i++) {
-            polygons.addAll(parseEntitySpacial(allEntitySpatialNodes.item(i)));
+            polygons.add(parseEntitySpacial(allEntitySpatialNodes.item(i)));
         }
 
         if (!polygons.isEmpty()) {
@@ -131,18 +132,33 @@ public class XmlParser {
         }
     }
 
-    private List<Polygon> parseEntitySpacial(Node entitySpatial) {
-        return getSpatialElements(entitySpatial)
-                .map(this::parseSpatialElement)
-                .collect(Collectors.toList());
+    private Polygon parseEntitySpacial(Node entitySpatial) {
+        Stream<Node> spatialElements = getSpatialElements(entitySpatial);
+        List<Node> spatialElementsList = spatialElements.collect(Collectors.toList());
+        if (!spatialElementsList.isEmpty()) {
+            return parseSpatialElements(spatialElementsList);
+        } else {
+            throw new XmlParserException("Файл не содержит подходящую геометрию");
+        }
     }
 
-    private Polygon parseSpatialElement(Node spatialElement) {
-        List<Coordinate> coordinates = getSpelementUnits(spatialElement)
+    private Polygon parseSpatialElements(List<Node> spatialElements) {
+        List<LinearRing> holes = new ArrayList<>();
+        List<Coordinate> coordinatesOfShells = getSpelementUnits(spatialElements.get(0))
                 .map(this::parseSpelementUnit)
                 .collect(Collectors.toList());
 
-        return geometryFactory.createPolygon(coordinates.toArray(Coordinate[]::new));
+        LinearRing shell = geometryFactory.createLinearRing(coordinatesOfShells.toArray(Coordinate[]::new));
+
+        for (int i = 1; i < spatialElements.size(); i++) {
+            List<Coordinate> coordinatesOfHole = getSpelementUnits(spatialElements.get(i))
+                    .map(this::parseSpelementUnit)
+                    .collect(Collectors.toList());
+            LinearRing hole = geometryFactory.createLinearRing(coordinatesOfHole.toArray(Coordinate[]::new));
+            holes.add(hole);
+        }
+
+        return geometryFactory.createPolygon(shell, holes.toArray(LinearRing[]::new));
     }
 
     private Coordinate parseSpelementUnit(Node spelementUnit) {

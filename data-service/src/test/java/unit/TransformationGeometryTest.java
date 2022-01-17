@@ -76,7 +76,8 @@ public class TransformationGeometryTest {
     public void transformationGeometryFrom5ZoneTo6Zone() {
         // Act
         // check transformation to 6 zone
-        List<Coordinate> coordinatesSixZone = transformationGeometryUtils.transform(geometry, crs5Zone, crs6Zone);
+        List<Coordinate> coordinatesSixZone = List.of(
+                transformationGeometryUtils.transform(geometry, crs5Zone, crs6Zone));
 
         // Assert
         //check that all coordinates is presents
@@ -89,7 +90,8 @@ public class TransformationGeometryTest {
     @Test
     public void transformationGeometryFrom5ZoneTo4Zone() {
         // Act
-        List<Coordinate> coordinatesFourZone = transformationGeometryUtils.transform(geometry, crs5Zone, crs4Zone);
+        List<Coordinate> coordinatesFourZone = List.of(
+                transformationGeometryUtils.transform(geometry, crs5Zone, crs4Zone));
 
         // Assert
         //check that all coordinates is presents
@@ -103,7 +105,8 @@ public class TransformationGeometryTest {
     @Test
     public void transformationGeometryWhenZoneIsSameWithLayerZone() {
         // Act
-        List<Coordinate> coordinatesFiveZone = transformationGeometryUtils.transform(geometry, crs5Zone, crs5Zone);
+        List<Coordinate> coordinatesFiveZone = List.of(
+                transformationGeometryUtils.transform(geometry, crs5Zone, crs5Zone));
 
         // Assert
         //check that all coordinates is presents
@@ -118,12 +121,9 @@ public class TransformationGeometryTest {
 
     @Test
     public void convertCoordinatesToCorrectGeometryType() {
-        //Arrange
-        List<Coordinate> coordinatesFiveZone = transformationGeometryUtils.transform(geometry, crs5Zone, crs5Zone);
-
         // Act
         List<org.postgis.Polygon> preparedPolygons =
-                transformationGeometryUtils.convertPolygonListToCorrectGeometryType(polygons, coordinatesFiveZone);
+                transformationGeometryUtils.convertPolygonListToCorrectGeometryType(polygons);
 
         // Assert
         //check that all coordinates is presents
