@@ -2,22 +2,23 @@ import React, { Component } from 'react';
 import { AxiosError } from 'axios';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { action, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 
-import { Button } from '../Button/Button';
-import { Basemap } from '../Icons/Basemap';
-import { Toast } from '../Toast/Toast';
-import { XTableColumn } from '../XTable/XTable';
-import { services } from '../../services/services';
 import { sidebars } from '../../stores/Sidebars.store';
-import { ProjectsAdd } from '../ProjectAdd/ProjectsAdd';
-import { SortParams } from '../../services/util/sortObjects';
 import { allProjects } from '../../stores/AllProjects.store';
+import { services } from '../../services/services';
+import { SortParams } from '../../services/util/sortObjects';
+import { Role } from '../../services/crg/permissions.models';
 import { CrgProject } from '../../services/crg/projects.models';
 import { projectsService } from '../../services/crg/projects.service';
 import { LibraryRecord } from '../../services/crg/doc-library.service';
 import { initImportProcess } from '../../services/crg/processes.service';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
+import { ProjectsAdd } from '../ProjectAdd/ProjectsAdd';
+import { XTableColumn } from '../XTable/XTable';
+import { Basemap } from '../Icons/Basemap';
+import { Button } from '../Button/Button';
+import { Toast } from '../Toast/Toast';
 
 const cnImportToProject = cn('ImportToProject');
 
@@ -60,7 +61,7 @@ export class ImportToProject extends Component<ImportToProjectProps> {
 
         <ChooseXTableDialog<CrgProject>
           title='Выбор проекта'
-          data={allProjects.list}
+          data={this.projects}
           cols={this.cols}
           defaultSort={this.sortParams}
           secondarySortField='createdAt'
@@ -91,6 +92,11 @@ export class ImportToProject extends Component<ImportToProjectProps> {
         />
       </>
     );
+  }
+
+  @computed
+  private get projects(): CrgProject[] {
+    return allProjects.list.filter(({ role }) => role === Role.OWNER);
   }
 
   @action.bound

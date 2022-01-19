@@ -3,6 +3,7 @@ import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { MenuItem, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
+import { boundMethod } from 'autobind-decorator';
 
 import { connectBasemapToProject, fetchBasemaps } from '../../../services/crg/basemaps.service';
 import { currentProject } from '../../../stores/CurrentProject.store';
@@ -28,8 +29,6 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
   @observable private basemap: Basemap;
 
   render() {
-    const { disabledItems } = this.props;
-
     return (
       <>
         <Tooltip disableInteractive title={'Подключить подложку'} placement='left' arrow>
@@ -49,10 +48,8 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
               preset={ExplorerItemType.BASEMAPS_ROOT}
               onSelect={this.setSelectedProject}
               onOpen={this.handleOpen}
-              disabledItems={
-                disabledItems && disabledItems.map(table => ({ type: ExplorerItemType.BASEMAP, payload: table }))
-              }
               withoutTitle
+              disabledTester={this.testForDisabled}
             />
           </DialogContent>
           <DialogActions>
@@ -94,5 +91,10 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
     await connectBasemapToProject(currentProject, this.basemap);
     this.closeSelectBasemapDialog();
     await fetchBasemaps();
+  }
+
+  @boundMethod
+  private testForDisabled({ payload }: ExplorerItemData<Basemap>): boolean {
+    return this.props.disabledItems.some(basemap => basemap.id === payload.id);
   }
 }

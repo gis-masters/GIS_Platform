@@ -8,7 +8,6 @@ export class ExplorerStore {
   readonly id: string;
   readonly pageSizeStorageKey: string;
   @observable path: ExplorerItemData[] = [];
-  @observable disabledItems: ExplorerItemData[] = [];
   @observable pageSize = 10;
   @observable page = 0;
   @observable totalPages = 0;
@@ -83,10 +82,5 @@ export class ExplorerStore {
   @action
   setPageSize(size: number): void {
     this.pageSize = size;
-  }
-
-  @action
-  setDisabledItems(disabledItems: ExplorerItemData[]): void {
-    this.disabledItems = disabledItems;
   }
 }

@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { IClassNameProps } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 
 import { Dataset, DataTable } from '../../services/data.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
@@ -31,7 +32,7 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
   @observable private selectedDataTable?: DataTable;
 
   render() {
-    const { className, dataTable, id, disabledTables } = this.props;
+    const { className, dataTable, id } = this.props;
 
     return (
       <>
@@ -52,9 +53,7 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
               preset={ExplorerItemType.DATASET_ROOT}
               onSelect={this.handleSelect}
               onOpen={this.handleOpen}
-              disabledItems={
-                disabledTables && disabledTables.map(table => ({ type: ExplorerItemType.TABLE, payload: table }))
-              }
+              disabledTester={this.testForDisabled}
             />
           </DialogContent>
           <DialogActions>
@@ -119,5 +118,10 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
     return !(this.props.disabledTables || []).some(
       ({ dataset, identifier }) => dataTable.dataset === dataset && dataTable.identifier === identifier
     );
+  }
+
+  @boundMethod
+  private testForDisabled({ payload }: ExplorerItemData<DataTable>) {
+    return this.props.disabledTables.some(table => table.id === payload.id);
   }
 }

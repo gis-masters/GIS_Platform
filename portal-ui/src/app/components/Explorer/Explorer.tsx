@@ -58,13 +58,13 @@ export interface ExplorerProps extends IClassNameProps {
   title?: string;
   items?: ExplorerItemData[]; // [0] - root
   preset?: keyof typeof presets;
-  disabledItems?: ExplorerItemData[];
   withInfoPanel?: boolean;
   withoutTitle?: boolean;
   fixedHeight?: boolean;
   urlChangeEnabled?: boolean;
   onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   onOpen?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
+  disabledTester?(item: ExplorerItemData): boolean;
 }
 
 @observer
@@ -147,7 +147,7 @@ export class Explorer extends Component<ExplorerProps> {
   }
 
   render() {
-    const { withInfoPanel, fixedHeight, withoutTitle, className } = this.props;
+    const { withInfoPanel, fixedHeight, withoutTitle, className, disabledTester } = this.props;
 
     return (
       <div
@@ -157,7 +157,7 @@ export class Explorer extends Component<ExplorerProps> {
         style={{ '--ExplorerPageSize': fixedHeight ? this.store.pageSize : 0 } as CSSProperties}
       >
         {!withoutTitle && <ExplorerTitle store={this.store} onOpen={this.openItem} />}
-        <ExplorerList store={this.store} onOpen={this.openItem} />
+        <ExplorerList store={this.store} onOpen={this.openItem} disabledTester={disabledTester} />
         <ExplorerToolbar service={this.service} store={this.store} onChange={this.handleQueryChange} />
         {withInfoPanel && <ExplorerInfo store={this.store} Explorer={Explorer} />}
         <ExplorerPagination store={this.store} onChange={this.paginate} />
@@ -167,7 +167,7 @@ export class Explorer extends Component<ExplorerProps> {
   }
 
   private init(props: ExplorerProps) {
-    const { items, title, preset, disabledItems } = props;
+    const { items, title, preset } = props;
 
     if (preset) {
       this.store.setPath([presets[preset]]);
@@ -177,8 +177,6 @@ export class Explorer extends Component<ExplorerProps> {
         items.length ? items[0] : emptyItem
       ]);
     }
-
-    this.store.setDisabledItems(disabledItems || []);
   }
 
   @boundMethod

@@ -8,10 +8,11 @@ import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 import { cn } from '@bem-react/classname';
 
+import { Role } from '../../services/crg/permissions.models';
 import { CrgProject } from '../../services/crg/projects.models';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { ExplorerProps } from '../Explorer/Explorer';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
+import { ExplorerProps } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
 
 import { TableManagementWidgetItem } from './Item/ConnectionsToProjectsWidget-Item';
@@ -76,13 +77,8 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
                     preset={ExplorerItemType.PROJECTS_ROOT}
                     onSelect={this.handleSelect}
                     onOpen={this.handleOpen}
-                    disabledItems={
-                      connectedProjects?.map(project => ({
-                        type: ExplorerItemType.PROJECT,
-                        payload: project
-                      })) || []
-                    }
                     withoutTitle
+                    disabledTester={this.testForDisabled}
                   />
                 </DialogContent>
                 <DialogActions>
@@ -151,5 +147,10 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
     this.closeSelectProjectDialog();
     onConnect(this.selectedProject);
     this.setSelectedProject(null);
+  }
+
+  @boundMethod
+  private testForDisabled({ payload }: ExplorerItemData<CrgProject>): boolean {
+    return payload.role !== Role.OWNER || this.props.connectedProjects.some(project => project.id === payload.id);
   }
 }

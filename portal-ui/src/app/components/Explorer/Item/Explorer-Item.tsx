@@ -8,7 +8,6 @@ import { IconButton, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemTe
 
 import { ExplorerItemData } from '../Explorer.models';
 import { ExplorerStore } from '../Explorer.store';
-import { getId } from '../Adapter/Explorer-Adapter';
 
 const cnExplorerItem = cn('Explorer', 'Item');
 
@@ -22,6 +21,7 @@ export interface ExplorerItemProps {
   store: ExplorerStore;
   itemRef?: RefObject<HTMLDivElement>;
   onOpen: (item: ExplorerItemData, page: number) => void;
+  disabledTester?(item: ExplorerItemData): boolean;
 }
 
 @observer
@@ -54,11 +54,9 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
 
   @computed
   private get disabled(): boolean {
-    const { store, item } = this.props;
+    const { item, disabledTester } = this.props;
 
-    return store.disabledItems.some(
-      disabledItem => disabledItem.type === item.type && getId(disabledItem) === getId(item)
-    );
+    return disabledTester ? disabledTester(item) : false;
   }
 
   @boundMethod

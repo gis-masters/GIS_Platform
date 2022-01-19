@@ -20,6 +20,7 @@ const cnExplorerList = cn('Explorer', 'List');
 interface ExplorerListProps {
   store: ExplorerStore;
   onOpen: (item: ExplorerItemData, page: number) => void;
+  disabledTester?(item: ExplorerItemData): boolean;
 }
 
 @observer
@@ -69,7 +70,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
 
   @boundMethod
   private getItemProps(item: ExplorerItemData): ExplorerItemProps {
-    const { onOpen, store } = this.props;
+    const { onOpen, store, disabledTester } = this.props;
 
     return {
       item,
@@ -80,7 +81,8 @@ export class ExplorerList extends Component<ExplorerListProps> {
       isFolder: isFolder(item),
       itemRef: this.isSelected(item) ? this.explorerItemRef : undefined,
       onOpen,
-      store
+      store,
+      disabledTester
     };
   }
 
