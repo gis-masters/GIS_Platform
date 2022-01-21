@@ -182,6 +182,7 @@ export class LibraryRegistry extends Component {
       ...this.properties.map(property => ({
         field: property.name,
         title: property.title,
+        description: property.description,
         sortable: sortableTypes.has(property.propertyType),
         filterable: filterableTypes.has(property.propertyType) && property.name !== 'id',
         ...(typesCols[property.propertyType] || {}),

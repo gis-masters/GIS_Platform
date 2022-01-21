@@ -53,6 +53,7 @@ const testFields: PropertySchema<TestData>[] = [
   },
   {
     propertyType: PropertyType.STRING,
+    description: 'Там точно должна быть собака',
     name: 'email',
     title: 'Email',
     wellKnownRegex: 'email'
@@ -182,7 +183,9 @@ const testFields: PropertySchema<TestData>[] = [
   {
     propertyType: PropertyType.CUSTOM,
     name: 'custom',
-    title: 'Custom',
+    title: 'Custom field with very long title to see how the label looks with a linebreak and description together',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
     defaultValue: true,
     ControlComponent: () => <Agriculture color='error' />,
     ViewComponent: () => <Agriculture color='info' />
@@ -206,7 +209,7 @@ const validValue: TestData = {
   free: true,
   birthDate: '2002-01-01',
   about:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ',
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
 
   color: 'white',
   photo: new File(['Hello, world!'], 'filename.txt', { type: Mime.TEXT }),

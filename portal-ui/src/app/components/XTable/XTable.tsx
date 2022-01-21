@@ -13,13 +13,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Pagination
+  Pagination,
+  Tooltip
 } from '@mui/material';
 
 import { filterObjects, FilterQuery } from '../../services/util/filterObjects';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
 import { PropertyOption } from '../../services/crg/schema.models';
 import { PageOptions, SortDir } from '../../services/models';
+import { DescriptionMark } from '../DescriptionMark/DescriptionMark';
 import { Highlight } from '../Highlight/Highlight';
 import { TextBadge } from '../TextBadge/TextBadge';
 import { Loading } from '../Loading/Loading';
@@ -28,9 +30,9 @@ import { Toast } from '../Toast/Toast';
 import { XTableEmpty } from './Empty/XTable-Empty';
 import { XTableTitle } from './Title/XTable-Title';
 import { FilterType } from './Filter/XTable-Filter';
-import { XTableHeadCell } from './HeadCell/XTable-HeadCell';
 import { XTableHeader } from './Header/XTable-Header';
 import { XTableFooter } from './Footer/XTable-Footer';
+import { XTableHeadCell } from './HeadCell/XTable-HeadCell';
 import { XTableContainer } from './Container/XTable-Container';
 import { XTableHeaderActions } from './HeaderActions/XTable-HeaderActions';
 
@@ -40,6 +42,7 @@ const cnXTable = cn('XTable');
 
 export interface XTableColumn<T> {
   title?: ReactNode;
+  description?: ReactNode;
   field?: keyof T;
   filterable?: boolean;
   filterType?: FilterType;
@@ -164,6 +167,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
                       {
                         field,
                         title,
+                        description,
                         sortable,
                         filterable,
                         filterType = FilterType.STRING,
@@ -187,7 +191,14 @@ export class XTable<T> extends Component<XTableProps<T>> {
                         onBeforeFilterChange={this.beforeFilterChange}
                         onFilterChange={this.afterFilterChange}
                       >
-                        {title}
+                        <Tooltip title={description} open={!!description && undefined} enterDelay={700}>
+                          <span>{title}</span>
+                        </Tooltip>
+                        {description && (
+                          <>
+                            &nbsp;<DescriptionMark>{description}</DescriptionMark>
+                          </>
+                        )}
                       </XTableHeadCell>
                     )
                   )}

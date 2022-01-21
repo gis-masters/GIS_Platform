@@ -256,6 +256,7 @@ const cols: XTableColumn<TestData>[] = [
   },
   {
     title: 'Вес',
+    description: 'в килограммах',
     filterable: true,
     filterType: FilterType.FLOAT,
     align: 'center',
@@ -283,6 +284,12 @@ const cols: XTableColumn<TestData>[] = [
     align: 'center',
     field: 'conclusive',
     sortable: true
+  },
+  {
+    title:
+      'Просто ещё одна бесполезная колонка с длинным-предлинным многострочным названием и бессмысленным шаблонным описанием',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
   }
 ];
 
