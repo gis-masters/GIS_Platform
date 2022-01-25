@@ -5,12 +5,15 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { SearchOutlined } from '@mui/icons-material';
 import { IconButton, InputBase, Popover, Paper, CircularProgress } from '@mui/material';
+import { AxiosError } from 'axios';
 
 import { mapService } from '../../services/map/map.service';
 import { geocodeService, YaGeoObjectCollection } from '../../services/yandex-geocode.service';
 import { getRosreestrMultipleAreaData, getRosreestrMultipleOksData } from '../../services/rosreestr-data.service';
 import { KadObject } from '../../services/kad-search.models';
+import { services } from '../../services/services';
 import { SearchResultList } from './ResultList/Search-ResultList';
+import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./Search.scss';
 
@@ -116,15 +119,24 @@ export class Search extends Component {
 
   @action
   private async getKadItems(kadNum: string) {
-    const [areas, oks] = await Promise.all([getRosreestrMultipleAreaData(kadNum), getRosreestrMultipleOksData(kadNum)]);
+    try {
+      const [areas, oks] = await Promise.all([
+        getRosreestrMultipleAreaData(kadNum),
+        getRosreestrMultipleOksData(kadNum)
+      ]);
 
-    if (areas || oks) {
-      this.setKadItems(areas as KadObject[], oks as KadObject[]);
-    } else {
-      this.clearKadItems();
+      if (areas || oks) {
+        this.setKadItems(areas as KadObject[], oks as KadObject[]);
+      } else {
+        this.clearKadItems();
+      }
+      this.setLoading(false);
+      this.openResultList();
+    } catch (error) {
+      const err = error as AxiosError;
+      Toast.warn(`Ошибка ответа росреестра ${kadNum}`);
+      services.logger.error(`Ошибка ответа росреестра: ${kadNum}`, err.message);
     }
-    this.setLoading(false);
-    this.openResultList();
   }
 
   @action

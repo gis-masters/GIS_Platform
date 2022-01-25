@@ -10,11 +10,14 @@ import { Icon, Style } from 'ol/style';
 import { Extent } from 'ol/extent';
 import Point from 'ol/geom/Point';
 import { Feature } from 'ol';
+import { AxiosError } from 'axios';
 import { cn } from '@bem-react/classname';
 
 import { mapService } from '../../../services/map/map.service';
 import { getRosreestrSingleAreaData, getRosreestrSingleOksData } from '../../../services/rosreestr-data.service';
 import { KadItem, KadObject } from '../../../services/kad-search.models';
+import { services } from '../../../services/services';
+import { Toast } from '../../Toast/Toast';
 
 const cnSearch = cn('Search');
 
@@ -47,23 +50,27 @@ export class SearchResultKadListItem extends Component<SearchResultKadListItemPr
 
   @boundMethod
   private async clickHandler() {
-    mapService.clearMarkers();
+    const kadNum = this.props.kadObject.value;
+    try {
+      mapService.clearMarkers();
 
-    const value = await Promise.all([
-      getRosreestrSingleAreaData(this.props.kadObject.value),
-      getRosreestrSingleOksData(this.props.kadObject.value)
-    ]);
+      const value = await Promise.all([getRosreestrSingleAreaData(kadNum), getRosreestrSingleOksData(kadNum)]);
 
-    const item = value.flat(2)[0] as KadItem | undefined;
+      const item = value.flat(2)[0] as KadItem | undefined;
 
-    if (item?.center) {
-      const center = item.center;
+      if (item?.center) {
+        const center = item.center;
 
-      this.drawMarker([center.x, center.y]);
+        this.drawMarker([center.x, center.y]);
 
-      this.fitToBbox([center.x, center.x, center.y, center.y], [0, 0, 0, 0], 0.85);
-    } else {
-      this.pointNotExist();
+        this.fitToBbox([center.x, center.x, center.y, center.y], [0, 0, 0, 0], 0.85);
+      } else {
+        this.pointNotExist();
+      }
+    } catch (error) {
+      const err = error as AxiosError;
+      Toast.warn(`Ошибка ответа росреестра ${kadNum}`);
+      services.logger.error(`Ошибка ответа росреестра: ${kadNum}`, err.message);
     }
   }
 
