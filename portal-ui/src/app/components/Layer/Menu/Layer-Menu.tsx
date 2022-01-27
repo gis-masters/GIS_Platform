@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { ListItemIcon, Menu, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, Menu, MenuItem } from '@mui/material';
 import {
   AddCircleOutline,
   CropFree,
+  FileOpenOutlined,
   Delete,
   DeleteOutline,
   Edit,
@@ -13,18 +14,21 @@ import {
 } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { BBOX } from '@fiz/geoserver-types/BBOX';
+import { AxiosError } from 'axios';
 import { isEqual } from 'lodash';
 
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgLayerType, TreeItemPayload } from '../../../services/crg/projects.models';
 import { getProjection, olProjection, transform } from '../../../services/geoserver/projections.service';
+import { getLibrary, getLibraryRecord, LibraryRecord } from '../../../services/crg/doc-library.service';
 import { getFeatureType } from '../../../services/geoserver/featuretypes.service';
 import { getLayerCoverage } from '../../../services/geoserver/layers.service';
 import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs.models';
 import { schemaService } from '../../../services/crg/schema.service';
 import { exportService } from '../../../services/crg/export.service';
 import { mapService } from '../../../services/map/map.service';
+import { services } from '../../../services/services';
 import {
   isFeaturesCreateAllowed,
   isTableExportAllowed,
@@ -36,6 +40,8 @@ import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEd
 import { Toast } from '../../Toast/Toast';
 
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
+import { LibraryDocument } from '../../LibraryDocument/LibraryDocument';
+import { Button } from '../../Button/Button';
 
 interface LayerMenuProps {
   entity: TreeItemPayload;
@@ -57,6 +63,8 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @observable private layersDeleteAllowed = false;
   @observable private geometryType?: GeometryType;
   @observable private importXmlDialogOpen = false;
+  @observable private rasterDocument: LibraryRecord;
+  @observable private dialogOpen = false;
 
   async componentDidMount() {
     await this.fetchGeometryType();
@@ -105,6 +113,15 @@ export class LayerMenu extends Component<LayerMenuProps> {
                 <CropFree />
               </ListItemIcon>
               Перейти к слою
+            </MenuItem>
+          )}
+
+          {!editMode && this.isRasterLayer && this.isDocumentInfoEnabled && (
+            <MenuItem onClick={this.getLayerDocument}>
+              <ListItemIcon>
+                <FileOpenOutlined />
+              </ListItemIcon>
+              Информация
             </MenuItem>
           )}
 
@@ -175,6 +192,18 @@ export class LayerMenu extends Component<LayerMenuProps> {
               complexName={(entity as CrgLayer).complexName}
             />
           )}
+
+        {this.rasterDocument && (
+          <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='md'>
+            <DialogTitle>{entity.title}</DialogTitle>
+            <DialogContent>
+              <LibraryDocument document={this.rasterDocument} contentOnly />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.closeDialog}>Закрыть</Button>
+            </DialogActions>
+          </Dialog>
+        )}
       </>
     );
   }
@@ -191,6 +220,13 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const { entity, isGroup } = this.props;
 
     return !isGroup && (entity as CrgLayer).type === CrgLayerType.RASTER;
+  }
+
+  @computed
+  private get isDocumentInfoEnabled(): boolean {
+    const { libraryId, recordId } = this.props.entity as CrgLayer;
+
+    return !!(libraryId && recordId);
   }
 
   private async fetchPermissions() {
@@ -315,6 +351,21 @@ export class LayerMenu extends Component<LayerMenuProps> {
     }
   }
 
+  @boundMethod
+  private async getLayerDocument() {
+    const { libraryId, recordId } = this.props.entity as CrgLayer;
+    try {
+      const library = await getLibrary(libraryId);
+      const document = await getLibraryRecord(libraryId, String(recordId), library.schemaId);
+      this.setRasterDocument(document);
+      this.openDialog();
+    } catch (error) {
+      const err = error as AxiosError;
+      Toast.warn(`Ошибка получения документа. ${err.message}`);
+      services.logger.warn(`Ошибка получения документа. ${err.message}`);
+    }
+  }
+
   @action.bound
   private openEditGroupDialog() {
     this.editGroupDialogOpen = true;
@@ -365,6 +416,20 @@ export class LayerMenu extends Component<LayerMenuProps> {
     this.testAttributesBar();
   }
 
+  @action.bound
+  private setRasterDocument(document?: LibraryRecord) {
+    this.rasterDocument = document;
+  }
+
+  @action.bound
+  private openDialog() {
+    this.dialogOpen = true;
+  }
+
+  @action.bound
+  private closeDialog() {
+    this.dialogOpen = false;
+  }
   private testAttributesBar() {
     if (sidebars.attributesOpen && !currentProject.layers.some(({ id }) => sidebars.layerForAttributes.id === id)) {
       sidebars.closeAttributes();

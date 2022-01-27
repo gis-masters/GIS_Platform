@@ -76,7 +76,7 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
               )}
             </div>
 
-            {this.documentRoleAssignmentUrl && (
+            {!contentOnly && this.documentRoleAssignmentUrl && (
               <PermissionsWidget
                 url={this.documentRoleAssignmentUrl}
                 title={this.document.title}
