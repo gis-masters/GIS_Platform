@@ -97,6 +97,43 @@
     ]
   },
   {
+    "id": "org-admin",
+    "title": "Управление организацией",
+    "children": [
+      {
+        "id": "org-admin-control",
+        "title": "Управление организацией",
+        "contentUrl": "/assets/help/map/orgManagement/00orgManagement.html"
+      }
+    ]
+  },
+  {
+    "id": "data-management",
+    "title": "Управление данными",
+    "children": [
+      {
+        "id": "dataManagement",
+        "title": "Управление данными",
+        "contentUrl": "/assets/help/map/dataManagement/00dataManagement.html"
+      },
+      {
+        "id": "dataSets",
+        "title": "Наборы данных",
+        "contentUrl": "/assets/help/map/dataManagement/01dataSets.html"
+      },
+      {
+        "id": "libraryDocs",
+        "title": "Библиотека документов",
+        "contentUrl": "/assets/help/map/dataManagement/02libraryDocs.html"
+      },
+      {
+        "id": "substrate",
+        "title": "Картографическая подоснова",
+        "contentUrl": "/assets/help/map/dataManagement/03substrate.html"
+      }
+    ]
+  },
+  {
     "id": "map",
     "title": "Карта",
     "children": [
@@ -173,43 +210,6 @@
             "id": "addressSearch",
             "title": "Адресный поиск",
             "contentUrl": "/assets/help/map/02addressSearch.html"
-          }
-        ]
-      },
-      {
-        "id": "org-admin",
-        "title": "Управление организацией",
-        "children": [
-          {
-            "id": "org-admin-control",
-            "title": "Управление организацией",
-            "contentUrl": "/assets/help/map/orgManagement/00orgManagement.html"
-          }
-        ]
-      },
-      {
-        "id": "data-admin",
-        "title": "Управление данными",
-        "children": [
-          {
-            "id": "dataManagement",
-            "title": "Управление данными",
-            "contentUrl": "/assets/help/map/dataManagement/00dataManagement.html"
-          },
-          {
-            "id": "dataSets",
-            "title": "Наборы данных",
-            "contentUrl": "/assets/help/map/dataManagement/01dataSets.html"
-          },
-          {
-            "id": "libraryDocs",
-            "title": "Библиотека документов",
-            "contentUrl": "/assets/help/map/dataManagement/02libraryDocs.html"
-          },
-          {
-            "id": "substrate",
-            "title": "Картографическая подоснова",
-            "contentUrl": "/assets/help/map/dataManagement/03substrate.html"
           }
         ]
       },
