@@ -204,8 +204,8 @@ export class ExplorerAdapterTypeFolder {
     item: ExplorerItemData<LibraryRecord>,
     id: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
-    const [libraryId, identifier] = id.split(':');
-    const payload = await getLibraryRecord(libraryId, identifier, item.payload.schemaId);
+    const [libraryId, recordId] = id.split(':');
+    const payload = await getLibraryRecord(libraryId, Number(recordId), item.payload.schemaId);
     const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 
@@ -239,7 +239,7 @@ export class ExplorerAdapterTypeFolder {
     store: ExplorerStore,
     service: ExplorerService
   ): ReactNode {
-    const path = item.payload.path + '/' + item.payload.id;
+    const path = `${item.payload.path}/${item.payload.id}`;
 
     return (
       <>

@@ -227,32 +227,32 @@ export async function getDocLibraryUrl(id: string): Promise<string> {
   return `${await getDocLibrariesUrl()}/${id}`;
 }
 
-export async function getDocLibrariesRecordsUrl(libraryName: string): Promise<string> {
-  return `${await getDataUrl()}/document-libraries/${libraryName}/records`;
+export async function getDocLibrariesRecordsUrl(libraryIdentifier: string): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records`;
 }
 
-export async function getDocLibrariesRecords2Url(libraryName: string): Promise<string> {
-  return `${await getDataUrl()}/document-libraries/${libraryName}/records/as_registry`;
+export async function getDocLibrariesRecords2Url(libraryIdentifier: string): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records/as_registry`;
 }
 
-export async function getDocLibrariesRecordUrl(libraryName: string, id: string): Promise<string> {
-  return `${await getDataUrl()}/document-libraries/${libraryName}/records/${id}`;
+export async function getDocLibrariesRecordUrl(libraryIdentifier: string, recordId: number): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records/${recordId}`;
 }
 
-export async function getDocRegisterUrl(libraryName: string, id: string): Promise<string> {
-  return `${await getDataUrl()}/document-libraries/${libraryName}/records/${id}/register`;
+export async function getDocRegisterUrl(libraryIdentifier: string, recordId: number): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records/${recordId}/register`;
 }
 
 export async function getDocumentLibraryRoleAssignmentUrl(id: string): Promise<string> {
   return `${await getDocLibrariesUrl()}/${id}/roleAssignment`;
 }
 
-export async function getDocumentLibraryRecordRoleAssignmentUrl(libraryId: string, id: string): Promise<string> {
-  return `${await getDocLibrariesUrl()}/${libraryId}/records/${id}/roleAssignment`;
+export async function getDocumentLibraryRecordRoleAssignmentUrl(libraryId: string, recordId: number): Promise<string> {
+  return `${await getDocLibrariesUrl()}/${libraryId}/records/${recordId}/roleAssignment`;
 }
 
-export async function getDocumentLibraryIntegrationUrl(libraryId: string, id: string): Promise<string> {
-  return `${await getDocLibrariesUrl()}/${libraryId}/records/${id}/integration`;
+export async function getDocumentLibraryIntegrationUrl(libraryId: string, recordId: number): Promise<string> {
+  return `${await getDocLibrariesUrl()}/${libraryId}/records/${recordId}/integration`;
 }
 
 export async function getDatasetUrl(datasetId: string): Promise<string> {

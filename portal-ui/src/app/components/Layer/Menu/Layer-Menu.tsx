@@ -299,7 +299,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const { libraryId, recordId } = this.props.entity as CrgLayer;
     try {
       const library = await getLibrary(libraryId);
-      const document = await getLibraryRecord(libraryId, String(recordId), library.schemaId);
+      const document = await getLibraryRecord(libraryId, recordId, library.schemaId);
       this.setRasterDocument(document);
       this.openDialog();
     } catch (error) {

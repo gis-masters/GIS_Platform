@@ -7,7 +7,7 @@ import { allProjects } from '../../stores/AllProjects.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgProject } from './projects.models';
 import { PageableResponse, PageOptions, Process } from '../models';
-import { isFeaturesReadAllowed } from './permissions.service';
+import { isRasterReadAllowed, isFeaturesReadAllowed } from './permissions.service';
 import { TaskImport } from '../geoserver/import/taskImport';
 import { wsService } from '../ws.service';
 import { services } from '../services';
@@ -24,8 +24,10 @@ import {
 import { Toast } from '../../components/Toast/Toast';
 import { communicationService } from '../communication.service';
 import { MAP_QUERY_PARAMS_DELIMITER } from '../map/map-link-following.service';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { preparePageOptions } from '../http.utils';
 import { Mime } from '../util/Mime';
+import { usersService } from './users.service';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -138,19 +140,21 @@ class ProjectsService {
       return;
     }
 
+    await usersService.fetchCurrentUser();
     const layers = await this.getProjectLayers(project.id);
     const layersErrors: Record<string, string[]> = {};
-
     const layersPermissions = await Promise.all(
-      layers.map(async ({ dataset, tableName, type, complexName }) => {
-        try {
-          return type !== CrgLayerType.VECTOR || (await isFeaturesReadAllowed(dataset, tableName));
-        } catch {
-          const message = `Ошибка получения прав для таблицы ${tableName} в наборе ${dataset}`;
-          layersErrors[complexName] = [message];
-          Toast.error({ message, suppress: true });
-
+      layers.map(async ({ dataset, tableName, type, libraryId, recordId, schemaId }) => {
+        if (currentUser.isAdmin || type === CrgLayerType.EXTERNAL) {
           return true;
+        }
+
+        if (type === CrgLayerType.VECTOR) {
+          return await isFeaturesReadAllowed(dataset, tableName);
+        }
+
+        if (type === CrgLayerType.RASTER) {
+          return await isRasterReadAllowed(libraryId, recordId, schemaId);
         }
       })
     );

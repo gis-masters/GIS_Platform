@@ -154,7 +154,7 @@ export class ImportToProject extends Component<ImportToProjectProps> {
 
   private async doJob(
     libraryId: string,
-    objectId: string,
+    objectId: number,
     projectId: number,
     projectName: string,
     projectIsNew: boolean

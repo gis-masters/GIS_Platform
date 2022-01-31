@@ -83,7 +83,7 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
   private async testEmptiness() {
     const { document } = this.props;
 
-    const [records] = await getLibraryRecords(document.libraryId, document.id, {
+    const [records] = await getLibraryRecords(document.libraryId, document.schemaId, {
       page: 0,
       pageSize: 1,
       queryParams: { parent: document.id }

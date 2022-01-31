@@ -47,7 +47,7 @@ interface ProcessDataModel {
 
 export async function initImportProcess(
   libraryId: string,
-  objectId: string,
+  objectId: number,
   projectId: number | undefined,
   projectName: string,
   projectIsNew: boolean

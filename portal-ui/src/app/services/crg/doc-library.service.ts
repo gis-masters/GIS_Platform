@@ -28,7 +28,7 @@ export interface DocumentLibrary extends DataEntity {
 export interface LibraryRecord {
   [key: string]: unknown;
 
-  id?: string;
+  id?: number;
   type?: string;
   title?: string;
   // eslint-disable-next-line camelcase
@@ -75,8 +75,8 @@ export async function getLibrary(identifier: string): Promise<DocumentLibrary> {
   return response;
 }
 
-export async function getLibraryRecord(libraryId: string, id: string, schemaId: string): Promise<LibraryRecord> {
-  const response = await http.get<LibraryRecord>(await getDocLibrariesRecordUrl(libraryId, id));
+export async function getLibraryRecord(libraryId: string, recordId: number, schemaId: string): Promise<LibraryRecord> {
+  const response = await http.get<LibraryRecord>(await getDocLibrariesRecordUrl(libraryId, recordId));
 
   response.libraryId = libraryId;
   response.schemaId = schemaId;
@@ -183,17 +183,21 @@ export async function createLibraryRecord(
   return record;
 }
 
-export async function registerDocument(libraryId: string, recordId: string): Promise<void> {
+export async function registerDocument(libraryId: string, recordId: number): Promise<void> {
   await http.post<void>(await getDocRegisterUrl(libraryId, recordId));
 }
 
-export async function deleteLibraryRecord(libraryId: string, id: string): Promise<void> {
-  await http.delete(await getDocLibrariesRecordUrl(libraryId, id));
+export async function deleteLibraryRecord(libraryId: string, recordId: number): Promise<void> {
+  await http.delete(await getDocLibrariesRecordUrl(libraryId, recordId));
   communicationService.libraryItemsUpdated.emit();
 }
 
-export async function updateLibraryRecord(libraryId: string, id: string, patch: Partial<LibraryRecord>): Promise<void> {
-  await http.patch(await getDocLibrariesRecordUrl(libraryId, id), patch);
+export async function updateLibraryRecord(
+  libraryId: string,
+  recordId: number,
+  patch: Partial<LibraryRecord>
+): Promise<void> {
+  await http.patch(await getDocLibrariesRecordUrl(libraryId, recordId), patch);
   communicationService.libraryItemsUpdated.emit();
 }
 

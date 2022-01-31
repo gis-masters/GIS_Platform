@@ -6,6 +6,7 @@ import { PrincipalType, Role, RoleAssignmentBody, roles } from './permissions.mo
 import { CrgProject } from './projects.models';
 import { schemaService } from './schema.service';
 import { DataTable, getDataTable } from '../data.service';
+import { getLibraryRecord } from './doc-library.service';
 
 export enum BuildInRole {
   GLOBAL_ADMIN = 'GLOBAL_ADMIN',
@@ -106,6 +107,16 @@ function isAllowedWithProject(project: CrgProject, targetPoint: ProjectPermissio
 
 export function isFeaturesReadAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
   return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.READ_FEATURES);
+}
+
+export async function isRasterReadAllowed(libraryId: string, recordId: number, schemaId: string): Promise<boolean> {
+  try {
+    const raster = await getLibraryRecord(libraryId, recordId, schemaId);
+
+    return Boolean(raster.role);
+  } catch {
+    return false;
+  }
 }
 
 export function isFeaturesCreateAllowed(

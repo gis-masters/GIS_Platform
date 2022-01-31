@@ -133,7 +133,7 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
 
     try {
       const library = await getLibrary(libraryId);
-      const document = await getLibraryRecord(libraryId, documentId, library.schemaId);
+      const document = await getLibraryRecord(libraryId, Number(documentId), library.schemaId);
 
       if (this.operationId !== operationId) {
         return;
