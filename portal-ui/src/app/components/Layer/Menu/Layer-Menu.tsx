@@ -13,21 +13,16 @@ import {
   UnarchiveOutlined
 } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
-import { BBOX } from '@fiz/geoserver-types/BBOX';
 import { AxiosError } from 'axios';
-import { isEqual } from 'lodash';
 
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgLayerType, TreeItemPayload } from '../../../services/crg/projects.models';
-import { getProjection, olProjection, transform } from '../../../services/geoserver/projections.service';
 import { getLibrary, getLibraryRecord, LibraryRecord } from '../../../services/crg/doc-library.service';
-import { getFeatureType } from '../../../services/geoserver/featuretypes.service';
-import { getLayerCoverage } from '../../../services/geoserver/layers.service';
 import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs.models';
+import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { schemaService } from '../../../services/crg/schema.service';
 import { exportService } from '../../../services/crg/export.service';
-import { mapService } from '../../../services/map/map.service';
 import { services } from '../../../services/services';
 import {
   isFeaturesCreateAllowed,
@@ -37,11 +32,10 @@ import {
 import { ImportOutlined } from '../../Icons/ImportOutlined';
 import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
-import { Toast } from '../../Toast/Toast';
-
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
 import { LibraryDocument } from '../../LibraryDocument/LibraryDocument';
 import { Button } from '../../Button/Button';
+import { Toast } from '../../Toast/Toast';
 
 interface LayerMenuProps {
   entity: TreeItemPayload;
@@ -274,61 +268,10 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   @boundMethod
   private async goToLayer() {
-    if (this.isVectorLayer) {
-      await this.goToVectorLayer();
-    }
-    if (this.isRasterLayer) {
-      await this.goToRasterLayer();
-    }
+    const layer = this.props.entity as CrgLayer;
+
+    await focusToLayer(layer);
     this.props.onClose();
-  }
-
-  private async goToVectorLayer() {
-    const { entity } = this.props;
-    try {
-      const { nativeBoundingBox } = await getFeatureType(entity as CrgLayer);
-      this.goToBoundingBox(nativeBoundingBox);
-    } catch {
-      this.showGoToBoundingBoxError();
-    }
-  }
-
-  private async goToRasterLayer() {
-    const { entity } = this.props;
-    try {
-      const { nativeBoundingBox } = await getLayerCoverage(entity as CrgLayer);
-      this.goToBoundingBox(nativeBoundingBox);
-    } catch {
-      this.showGoToBoundingBoxError();
-    }
-  }
-
-  private goToBoundingBox({ maxx, maxy, minx, miny, crs }: BBOX) {
-    const crsStr = typeof crs === 'string' ? crs : crs.$;
-    const projection = getProjection(crsStr);
-
-    if (isEqual([maxx, maxy, minx, miny], [-1, -1, 0, 0])) {
-      this.showGoToBoundingBoxError();
-
-      return;
-    }
-
-    const [x1, y1] = transform(projection, olProjection, [minx, miny]);
-    const [x2, y2] = transform(projection, olProjection, [maxx, maxy]);
-
-    if (Number.isNaN(x1) || Number.isNaN(x2) || Number.isNaN(y1) || Number.isNaN(y2)) {
-      this.showGoToBoundingBoxError();
-
-      return;
-    }
-
-    mapService.fitToBbox([x1, y1, x2, y2], [50, 50, 50, 50]);
-  }
-
-  private showGoToBoundingBoxError() {
-    const message = 'Не удалось перейти к слою';
-    Toast.warn(message);
-    Toast.error({ message, suppress: true });
   }
 
   @boundMethod

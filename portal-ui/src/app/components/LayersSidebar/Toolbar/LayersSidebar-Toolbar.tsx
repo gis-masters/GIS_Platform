@@ -11,6 +11,7 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { NewCrgLayer, NewCrgLayersGroup } from '../../../services/crg/projects.models';
 import { generateNextGroupId } from '../../../services/geoserver/layers.service';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
+import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
 import { AddLayerDialog } from '../../AddLayerDialog/AddLayerDialog';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
@@ -121,8 +122,10 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
   }
 
   @action.bound
-  private addLayer(layer: NewCrgLayer) {
+  private async addLayer(layer: NewCrgLayer) {
     currentProject.layers.splice(0, 0, layer);
+
+    await focusToLayer(layer);
   }
 
   @action.bound
