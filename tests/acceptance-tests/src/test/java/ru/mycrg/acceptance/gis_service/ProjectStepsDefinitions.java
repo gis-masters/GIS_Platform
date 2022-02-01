@@ -249,6 +249,8 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на все проекты организации")
     public void getAllProjects() {
+        authorizationBase.loginAsCurrentUser();
+
         super.getAllEntities();
     }
 

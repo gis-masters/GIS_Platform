@@ -32,8 +32,11 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     @When("Отправляется запрос на создание организации")
     public void sendCreateOrganizationRequest(DataTable dataTable) {
         List<String> data = dataTable.asList();
+        String ownerEmail = generateString(data.get(4));
         UserCreateDto owner = new UserCreateDto(generateString(data.get(2)), generateString(data.get(3)),
-                                                generateString(data.get(4)), generateString(data.get(5)));
+                                                ownerEmail, generateString(data.get(5)));
+
+        System.out.println("Org. Owner: " + ownerEmail);
 
         userPool.put(-1, owner);
         orgDto = new OrganizationCreateDto(generateString(data.get(0)), generateString(data.get(1)), owner);
@@ -101,8 +104,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     public void initOrg(DataTable dataTable) throws InterruptedException {
         boolean isPassedEmailRandom = dataTable.asList().get(4).split("_")[0].equals("EMAIL");
         String eMail = generateString(dataTable.asList().get(4));
-
-        System.out.println("User: " + eMail);
 
         deleteAllEntitiesInOrg();
 

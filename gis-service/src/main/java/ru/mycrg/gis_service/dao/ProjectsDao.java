@@ -41,6 +41,7 @@ public class ProjectsDao {
 
         String queryTemplate = "" +
                 "SELECT " +
+                "  DISTINCT ON (proj.name) " +
                 "  proj.*, " +
                 "  per.role " +
                 "FROM " +
