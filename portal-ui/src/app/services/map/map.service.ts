@@ -1,6 +1,6 @@
 import { chunk, debounce } from 'lodash';
 import { reaction } from 'mobx';
-import { Map, MapBrowserEvent, View } from 'ol';
+import { Map, View } from 'ol';
 import { defaults as defaultControls } from 'ol/control';
 import { Coordinate } from 'ol/coordinate';
 import { Extent, getTopLeft, getWidth } from 'ol/extent';
@@ -105,7 +105,6 @@ class MapService {
   private drawHandler: (e: DrawEvent) => void;
 
   private isModifying = false;
-  private pickHandler: (e: MapBrowserEvent<UIEvent>) => void;
 
   // Кол-во десятичных в координатах
   private PRECISION = 4;
@@ -219,12 +218,6 @@ class MapService {
     });
 
     this.map.on('singleclick', e => {
-      if (this.pickHandler) {
-        this.pickHandler(e);
-        delete this.pickHandler;
-
-        return;
-      }
       const originalEvent = e.originalEvent as MouseEvent;
       if (!originalEvent.shiftKey && !originalEvent.ctrlKey) {
         if (e.coordinate) {
@@ -245,7 +238,6 @@ class MapService {
   destroyMap() {
     communicationService.beforeMapDestroy.emit();
     this.drawOff();
-    this.pickingOff();
     this.map.unset('target');
     delete this.map;
     delete this.view;
@@ -575,14 +567,6 @@ class MapService {
       this.map.removeInteraction(this.draftSourceDraw);
       delete this.draftSourceDraw;
     }
-  }
-
-  pickPoint(handler: (e: MapBrowserEvent<UIEvent>) => void) {
-    this.pickHandler = handler;
-  }
-
-  pickingOff() {
-    delete this.pickHandler;
   }
 
   positionToFeature(wfsFeature: WfsFeature, projection?: CrgProjection) {

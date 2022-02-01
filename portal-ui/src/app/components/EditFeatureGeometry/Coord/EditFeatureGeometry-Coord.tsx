@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { Coordinate } from 'ol/coordinate';
 import TextField from '@mui/material/TextField';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -11,7 +10,6 @@ import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 import { isDimensionValid } from '../../../services/geoserver/wfs.service';
 
 import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-CoordDel';
-import { EditFeatureGeometryCoordPick } from '../CoordPick/EditFeatureGeometry-CoordPick';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Coord.scss';
 import '!style-loader!css-loader!sass-loader!../CoordInput/EditFeatureGeometry-CoordInput.scss';
@@ -36,7 +34,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   @observable active = false;
 
   render() {
-    const { val, withControls, index, canBeDeleted, disabled, store, active } = this.props;
+    const { val, withControls, index, canBeDeleted, disabled, active } = this.props;
 
     // у росреестра своё понимание X и Y
     return (
@@ -59,15 +57,6 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
           onChange={this.changeXHandler}
           variant='outlined'
           disabled={disabled}
-        />
-
-        <EditFeatureGeometryCoordPick
-          onPick={this.pickHandler}
-          store={store}
-          disabled={disabled}
-          onPickStart={this.enableActive}
-          onPickEnd={this.disableActive}
-          size='small'
         />
 
         {withControls ? (
@@ -97,21 +86,5 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     if (onDelete) {
       onDelete(index);
     }
-  }
-
-  @action.bound
-  private pickHandler(val: Coordinate) {
-    const { onChange, index } = this.props;
-    onChange(val, index);
-  }
-
-  @action.bound
-  private enableActive() {
-    this.active = true;
-  }
-
-  @action.bound
-  private disableActive() {
-    this.active = false;
   }
 }
