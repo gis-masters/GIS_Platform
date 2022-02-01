@@ -203,7 +203,11 @@ public class LayerService {
     }
 
     public Page<Layer> findLayers(String layerType, List<Project> projects, Pageable pageable) {
-        return layerRepository.findByTypeAndProjectIn(layerType, projects, pageable);
+        Set<Long> projectIds = projects.stream()
+                                       .map(Project::getId)
+                                       .collect(Collectors.toSet());
+
+        return layerRepository.findUniqueLayers(layerType, projectIds, pageable);
     }
 
     public Page<Layer> findLayers(String layerType, String schemaId, Pageable pageable) {

@@ -16,6 +16,8 @@ import ru.mycrg.integration_service.dto.ResourcesModel;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,21 +38,23 @@ public class TaskExecutorDelegate implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         extractVariables(execution);
+        Instant startOfTask = Instant.now();
 
         log.debug("Task in progress: {} / Current page: {}", currentTask.getId(), currentPage);
+        log.debug("Starting time {} ", startOfTask);
 
         final Optional<PageModel<ResourcesModel>> oPage = fetchResources(execution, currentTask);
         if (oPage.isPresent()) {
             final PageModel<ResourcesModel> page = oPage.get();
             if (page.getEmbedded() == null) {
-                completeTask(execution, currentTask);
+                completeTask(execution, currentTask, startOfTask);
             } else {
                 execution.setVariable(RESOURCES.name(), page.getEmbedded());
                 execution.setVariable(IS_TASK_COMPLETE.name(), false);
             }
         } else {
             log.warn("Failed fetch resources. End task: {}", currentTask.getId());
-            completeTask(execution, currentTask);
+            completeTask(execution, currentTask, startOfTask);
         }
     }
 
@@ -66,10 +70,13 @@ public class TaskExecutorDelegate implements JavaDelegate {
                     .get()
                     .build();
 
+            log.debug("request url {}", url);
+
             response = crgHttpClient.handleRequest(request,
                                                    new TypeToken<PageModel<ResourcesModel>>() {
                                                    }.getType());
             if (response.isSuccessful()) {
+                log.debug("Analyze time fetch resources {}", response.getBody());
                 return Optional.of(response.getBody());
             } else {
                 log.error("Failed fetch analyzers. Response code: {}", response.getCode());
@@ -97,10 +104,11 @@ public class TaskExecutorDelegate implements JavaDelegate {
         return new URL(serviceRoot, resourcePath);
     }
 
-    private void completeTask(DelegateExecution execution, ResourceAnalyzeTask currentTask) {
+    private void completeTask(DelegateExecution execution, ResourceAnalyzeTask currentTask, Instant start) {
         tasks.forEach(task -> {
             if (currentTask.getId().equals(task.getId())) {
-                log.debug("Task: {} COMPLETED", task.getId());
+                long durationOfTask = Duration.between(start, Instant.now()).getSeconds();
+                log.debug("Task: {} COMPLETED. Duration time in seconds {} ", task.getId(), durationOfTask);
 
                 task.complete(true);
 

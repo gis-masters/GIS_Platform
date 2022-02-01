@@ -22,6 +22,7 @@ import ru.mycrg.resource_analyzer_contract.IResourceDefinition;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,7 +69,8 @@ public class ResourceAnalyzerService {
                                                .putValue(RESOURCE_ANALYZE_BASE_PATH.name(),
                                                          resourceAnalyzersBasePath)
                                                .putValue(ACCESS_TOKEN.name(),
-                                                         authenticationFacade.getAccessToken());
+                                                         authenticationFacade.getAccessToken())
+                                               .putValue("START_TIME", Instant.now());
 
         final ProcessInstance processInstance = bpmnRuntimeService
                 .startProcessInstanceByKey(RESOURCE_ANALYZE_PROCESS.getValue(),

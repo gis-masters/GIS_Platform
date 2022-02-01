@@ -10,7 +10,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -18,13 +17,37 @@ import java.util.Set;
 @RepositoryRestResource(collectionResourceRel = "layers", path = "layers", exported = false)
 public interface LayerRepository extends PagingAndSortingRepository<Layer, Long> {
 
-    Optional<Layer> findByTableNameAndProject(String tableName, Project project);
-
     Optional<Layer> findByTableNameAndProjectAndType(String tableName, Project project, String type);
 
-    Page<Layer> findByTypeAndProjectIn(String type, Collection<Project> projects, Pageable pageable);
-
     Page<Layer> findByTypeAndSchemaId(String type, String schemaId, Pageable pageable);
+
+    @Query(value = "SELECT DISTINCT ON (table_name) id," +
+            "    title," +
+            "    table_name," +
+            "    enabled," +
+            "    position," +
+            "    transparency," +
+            "    max_zoom," +
+            "    min_zoom," +
+            "    style_name," +
+            "    native_crs," +
+            "    data_store_name," +
+            "    schema_id," +
+            "    created_at," +
+            "    last_modified," +
+            "    project_id," +
+            "    parent_id," +
+            "    data_source_uri," +
+            "    type," +
+            "    dataset," +
+            "    library_id," +
+            "    record_id" +
+            "  FROM layers" +
+            "  WHERE type = :type" +
+            "    AND project_id IN :projectIds",
+           countQuery = "SELECT count(DISTINCT table_name) FROM layers",
+           nativeQuery = true)
+    Page<Layer> findUniqueLayers(String type, Set<Long> projectIds, Pageable pageable);
 
     @Query("FROM Layer l WHERE l.tableName = :tableName AND l.project.id IN :projectIds")
     List<Layer> findRelatedByTableName(@Param("tableName") String tableName, Set<Long> projectIds);

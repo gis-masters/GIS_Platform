@@ -36,12 +36,10 @@ public class RasterLayerQuery implements IResourceQueryService {
     }
 
     public Page<IResource> getResources(Pageable pageable) {
-        final List<Project> projects = projectService.getAll();
-        final List<IResource> result = layerService.findLayers(layerType, projects, pageable).stream()
-                                                   .map(this::mapLayerToResource)
-                                                   .collect(Collectors.toList());
+        List<Project> projects = projectService.getAll();
 
-        return new PageImpl<>(result, pageable, result.size());
+        return layerService.findLayers(layerType, projects, pageable)
+                           .map(this::mapLayerToResource);
     }
 
     @Override
