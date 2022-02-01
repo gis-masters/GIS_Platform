@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
@@ -13,7 +13,7 @@ interface FormLabelProps extends IClassNameProps {
   htmlFor?: string;
   required?: boolean;
   readonly?: boolean;
-  description?: string;
+  description?: ReactNode;
 }
 
 export const FormLabel: FC<FormLabelProps> = ({ className, children, htmlFor, required, readonly, description }) => (

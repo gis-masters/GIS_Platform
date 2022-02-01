@@ -3,12 +3,12 @@ import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { Dataset, DataTable } from '../../services/data.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
+import { FormControlProps } from '../Form/Control/Form-Control';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
@@ -17,12 +17,13 @@ import '!style-loader!css-loader!sass-loader!./SelectDataTable.scss';
 
 const cnSelectDataTable = cn('SelectDataTable');
 
-interface SelectDataTableProps extends IClassNameProps {
-  id: string;
-  dataset?: Dataset;
-  dataTable?: DataTable;
-  disabledTables?: DataTable[];
-  onChange: (dataset?: Dataset, dataTable?: DataTable) => void;
+interface Datasource {
+  dataset: Dataset;
+  dataTable: DataTable;
+}
+
+interface SelectDataTableProps extends FormControlProps {
+  usedDataTables: DataTable[];
 }
 
 @observer
@@ -32,14 +33,15 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
   @observable private selectedDataTable?: DataTable;
 
   render() {
-    const { className, dataTable, id } = this.props;
+    const { className, htmlId, fieldValue = {} } = this.props;
+    const { dataTable } = fieldValue as Datasource;
 
     return (
       <>
         <ButtonBase
           focusRipple
           className={cnSelectDataTable({ empty: !dataTable }, [className])}
-          id={id}
+          id={htmlId}
           onClick={this.openDialog}
         >
           {dataTable ? <Breadcrumbs items={this.breadcrumbsItems} itemsType='none' /> : 'Не выбрано'}
@@ -69,7 +71,8 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
 
   @computed
   private get breadcrumbsItems(): BreadcrumbsItemData[] {
-    const { dataset, dataTable } = this.props;
+    const { fieldValue = {} } = this.props;
+    const { dataset, dataTable } = fieldValue as Datasource;
 
     return [
       { title: dataset.title, subtitle: dataset.identifier },
@@ -108,20 +111,26 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
 
   @action.bound
   private submitDialog() {
+    const { property } = this.props;
+
     this.closeDialog();
-    this.props.onChange(this.selectedDataset, this.selectedDataTable);
+    this.props.onChange({
+      value: { dataset: this.selectedDataset, dataTable: this.selectedDataTable },
+      propertyName: property.name
+    });
+
     this.selectedDataset = null;
     this.selectedDataTable = null;
   }
 
   private isDisabled(dataTable: DataTable) {
-    return !(this.props.disabledTables || []).some(
+    return !(this.props.usedDataTables || []).some(
       ({ dataset, identifier }) => dataTable.dataset === dataset && dataTable.identifier === identifier
     );
   }
 
   @boundMethod
   private testForDisabled({ payload }: ExplorerItemData<DataTable>) {
-    return this.props.disabledTables.some(table => table.id === payload.id);
+    return this.props.usedDataTables.some(table => table.id === payload.id);
   }
 }

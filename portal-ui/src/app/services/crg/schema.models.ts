@@ -1,7 +1,8 @@
-import { ComponentType } from 'react';
+import { ComponentType, ReactNode } from 'react';
 
 import { SupportedGeometryType } from '../geoserver/wfs.models';
 import { FormControlProps } from '../../components/Form/Control/Form-Control';
+import { FieldValidator } from './formValidation.service';
 
 export enum PropertyType {
   STRING = 'string',
@@ -48,7 +49,7 @@ interface BasePropertySchema<T = Record<string, unknown>> {
   name: keyof T;
   propertyType: PropertyType;
   title: string;
-  description?: string;
+  description?: ReactNode;
   category?: string;
   isSystemManaged?: string;
   hidden?: boolean;
@@ -59,6 +60,7 @@ interface BasePropertySchema<T = Record<string, unknown>> {
   readOnly?: boolean;
   defaultValue?: unknown;
   minWidth?: number;
+  customValidationFunction?: FieldValidator;
 }
 
 export interface PropertySchemaString<T = Record<string, unknown>> extends BasePropertySchema<T> {

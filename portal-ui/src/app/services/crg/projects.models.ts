@@ -17,16 +17,16 @@ interface CrgEntity {
 }
 
 export interface CrgLayer extends CrgEntity {
-  dataset: string;
+  dataset?: string;
   dataStoreName?: string;
-  tableName: string;
+  tableName?: string;
   type: CrgLayerType;
   minZoom?: number;
   maxZoom?: number;
-  styleName: string;
+  styleName?: string;
   nativeCRS: string;
-  schemaId: string;
-  complexName: string;
+  schemaId?: string;
+  complexName?: string;
   dataSourceUri?: string;
   parentId?: number;
   libraryId?: string;
@@ -47,6 +47,7 @@ export type NewCrgLayer = Pick<
   | 'maxZoom'
   | 'nativeCRS'
   | 'transparency'
+  | 'dataSourceUri'
   | 'styleName'
   | 'position'
   | 'schemaId'

@@ -28,7 +28,7 @@ export interface ServerFieldError {
   defaultMessage?: string;
 }
 
-type FieldValidator = (
+export type FieldValidator = (
   value: unknown,
   property: PropertySchema,
   formValue: unknown,
@@ -53,9 +53,14 @@ export function validateFieldValue(
   formValue: unknown,
   allProperties: PropertySchema[]
 ): FieldErrors {
+  const validatorsList = [...fieldValidators[property.propertyType]];
+  if (property.customValidationFunction) {
+    validatorsList.push(property.customValidationFunction);
+  }
+
   return {
     field: property.name,
-    messages: fieldValidators[property.propertyType]
+    messages: validatorsList
       ?.flatMap(validator => validator(value, property, formValue, allProperties))
       .filter(err => err)
   };
@@ -127,6 +132,10 @@ function stringRegex(value: unknown, { regex, regexErrorMessage }: PropertySchem
 }
 
 function stringWellKnownRegex(value: unknown, { wellKnownRegex, regexErrorMessage }: PropertySchemaString): string[] {
+  if (knownRegex[wellKnownRegex]) {
+    knownRegex[wellKnownRegex].lastIndex = 0;
+  }
+
   if (wellKnownRegex && !knownRegex[wellKnownRegex]?.test(String(value))) {
     return [regexErrorMessage || messages.regexp];
   }

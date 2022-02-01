@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { cloneDeep } from 'lodash';
 
 import { currentUser } from '../../stores/CurrentUser.store';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { FieldErrors, validateFormValue } from '../../services/crg/formValidation.service';
+import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { CrgLayerType, NewCrgLayer } from '../../services/crg/projects.models';
-import { generateNextLayerId } from '../../services/geoserver/layers.service';
 import { Dataset, DataTable, getDataTable } from '../../services/data.service';
-import { Form, FormControl, FormField, FormLabel } from '../Form/Form';
+import { generateNextLayerId } from '../../services/geoserver/layers.service';
 import { SelectDataTable } from '../SelectDataTable/SelectDataTable';
 import { Button } from '../Button/Button';
+import { Form } from '../Form/Form';
 
 import '!style-loader!css-loader!sass-loader!./AddLayerDialog.scss';
 
@@ -24,13 +27,34 @@ interface AddLayerDialogProps {
   onAdd: (layer: NewCrgLayer) => void;
 }
 
+const defaultValue: NewCrgLayer = {
+  title: '',
+  tableName: '',
+  dataSourceUri: '',
+  position: -42,
+  transparency: 75,
+  minZoom: 10,
+  enabled: true,
+  nativeCRS: 'EPSG:3857',
+  type: CrgLayerType.VECTOR
+};
+
+interface FormValue extends NewCrgLayer {
+  datasource?: Datasource;
+}
+
+interface Datasource {
+  dataset: Dataset;
+  dataTable: DataTable;
+}
+
 @observer
 export class AddLayerDialog extends Component<AddLayerDialogProps> {
-  @observable private title = '';
-  @observable private dataset?: Dataset;
-  @observable private dataTable?: DataTable;
   @observable private usedDataTables: DataTable[] = [];
   @observable private usedDataTablesRequest?: Promise<DataTable[]>;
+  @observable private formValue?: FormValue = cloneDeep(defaultValue);
+  @observable private layerType?: CrgLayerType = CrgLayerType.VECTOR;
+  @observable private formErrors?: FieldErrors[];
 
   async componentDidMount() {
     await this.checkUsedTables();
@@ -47,35 +71,33 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
       <Dialog open={open} onClose={onClose} maxWidth='xl' PaperProps={{ className: cnAddLayerDialog() }}>
         <DialogTitle>Добавить слой</DialogTitle>
         <DialogContent>
-          <Form id='addLayerForm' onSubmit={this.add}>
-            <FormField>
-              <FormLabel htmlFor='addLayerDataTable'>Источник данных</FormLabel>
-              <FormControl>
-                <SelectDataTable
-                  id='addLayerDataTable'
-                  dataset={this.dataset}
-                  dataTable={this.dataTable}
-                  onChange={this.handleDataTableChange}
-                  disabledTables={this.usedDataTables}
-                />
-              </FormControl>
-            </FormField>
-            <FormField>
-              <FormLabel htmlFor='addLayerTitle'>Название</FormLabel>
-              <FormControl>
-                <TextField
-                  id='addLayerTitle'
-                  value={this.title}
-                  onChange={this.handleTitleChange}
-                  fullWidth
-                  variant='standard'
-                />
-              </FormControl>
-            </FormField>
-          </Form>
+          <ToggleButtonGroup
+            size='small'
+            color='primary'
+            value={this.layerType}
+            exclusive
+            onChange={this.handleLayerType}
+          >
+            <ToggleButton size='small' value='vector' className={cnAddLayerDialog('ToggleButton')}>
+              Векторный слой
+            </ToggleButton>
+            <ToggleButton size='small' value='external' className={cnAddLayerDialog('ToggleButton')}>
+              Внешний слой (веб-сервис ArcGis)
+            </ToggleButton>
+          </ToggleButtonGroup>
+          <Form
+            id='addLayerForm'
+            onSubmit={this.add}
+            fields={this.fields}
+            value={this.formValue}
+            onFormChange={this.handleFormChange}
+            onFieldChange={this.formFieldChanged}
+            errors={[...(this.formErrors || [])]}
+            onFieldNeedValidate={this.formFieldValidateHandler}
+          />
         </DialogContent>
         <DialogActions>
-          <Button form='addLayerForm' type='submit' color='primary' disabled={!this.valid}>
+          <Button form='addLayerForm' type='submit' color='primary'>
             Добавить
           </Button>
           <Button onClick={this.close}>Отмена</Button>
@@ -86,29 +108,18 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
 
   @computed
   private get valid(): boolean {
-    return Boolean(this.dataTable && this.title);
+    return !validateFormValue(this.formValue, this.fields).length;
   }
 
   @action.bound
   private close() {
-    this.dataset = null;
-    this.dataTable = null;
-    this.title = '';
     this.props.onClose();
+    this.clearForm();
   }
 
   @action.bound
-  private handleDataTableChange(dataset: Dataset, dataTable: DataTable) {
-    this.dataset = dataset;
-    this.dataTable = dataTable;
-    if (this.dataTable) {
-      this.title = dataTable.title;
-    }
-  }
-
-  @action.bound
-  private handleTitleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    this.title = e.target.value;
+  private handleLayerType(event: React.MouseEvent<HTMLElement>, newAlignment: CrgLayerType) {
+    this.layerType = newAlignment;
   }
 
   @action
@@ -116,29 +127,162 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     this.usedDataTables = dataTables;
   }
 
+  @action.bound
+  private handleFormChange(layerInfo: NewCrgLayer) {
+    this.formValue = layerInfo;
+
+    if (!this.formValue.title) {
+      this.formValue.title = (layerInfo as FormValue).datasource.dataTable.title;
+      this.formFieldChanged(this.formValue, 'title');
+    }
+  }
+
+  @action.bound
+  private clearForm() {
+    this.formValue = cloneDeep(defaultValue);
+    this.layerType = CrgLayerType.VECTOR;
+    this.setErrors();
+  }
+
+  private validate() {
+    this.setErrors(validateFormValue(this.formValue, this.fields));
+  }
+
+  private getDescription() {
+    return (
+      <>
+        Скрывает слой для при отдалении карты, начиная указанного уровня:
+        <br />
+        10 - 1:250 000
+        <br />
+        12 - 1:100 000
+        <br />
+        15 - 1:10 000
+        <br />
+        20 - 1:500
+        <br />
+        25 - 1:10
+      </>
+    );
+  }
+
+  @computed
+  private get fields(): PropertySchema<FormValue>[] {
+    return this.layerType === CrgLayerType.VECTOR
+      ? [
+          {
+            name: 'title',
+            title: 'Имя слоя',
+            required: true,
+            minLength: 2,
+            propertyType: PropertyType.STRING
+          },
+          {
+            name: 'minZoom',
+            title: 'Уровень масштабной детализации',
+            propertyType: PropertyType.FLOAT,
+            display: 'slider',
+            description: this.getDescription(),
+            step: 1,
+            minValue: 0,
+            maxValue: 25
+          },
+          {
+            propertyType: PropertyType.CUSTOM,
+            name: 'datasource',
+            title: 'Источник данных',
+            defaultValue: true,
+            ControlComponent: props => <SelectDataTable {...props} usedDataTables={this.usedDataTables} />,
+            customValidationFunction: value => {
+              if (!value) {
+                return ['Некорректное значение'];
+              }
+            }
+          }
+        ]
+      : [
+          {
+            name: 'title',
+            title: 'Имя слоя',
+            required: true,
+            minLength: 2,
+            propertyType: PropertyType.STRING
+          },
+          {
+            name: 'tableName',
+            title: 'Системное название слоя',
+            required: true,
+            propertyType: PropertyType.STRING
+          },
+          {
+            name: 'minZoom',
+            title: 'Уровень масштабной детализации',
+            propertyType: PropertyType.FLOAT,
+            display: 'slider',
+            description: this.getDescription(),
+            step: 1,
+            minValue: 0,
+            maxValue: 25
+          },
+          {
+            name: 'dataSourceUri',
+            title: 'URL-адрес',
+            required: true,
+            wellKnownRegex: 'url',
+            propertyType: PropertyType.STRING
+          }
+        ];
+  }
+
   @boundMethod
   private add(e: React.FormEvent<HTMLFormElement>) {
+    this.validate();
+    const { datasource = {}, title, minZoom, dataSourceUri, tableName } = this.formValue;
+    const { dataset, dataTable } = datasource as Datasource;
+
     e.preventDefault();
 
     const dataStoreName = `scratch_database_${currentUser.orgId}`;
-
-    if (this.valid) {
+    if (this.valid && this.layerType === CrgLayerType.VECTOR) {
       this.props.onAdd({
         id: generateNextLayerId(),
         dataStoreName,
-        dataset: this.dataset.identifier,
-        tableName: this.dataTable.identifier,
-        complexName: `${dataStoreName}:${this.dataTable.identifier}`,
-        title: this.title,
+        dataset: dataset?.identifier,
+        tableName: dataTable?.identifier,
+        complexName: `${dataStoreName}:${dataTable?.identifier}`,
+        title,
         enabled: true,
-        nativeCRS: this.dataTable.crs,
-        schemaId: this.dataTable.schemaId,
+        nativeCRS: dataTable.crs,
+        schemaId: dataTable.schemaId,
         position: -42,
         transparency: 75,
-        styleName: this.dataTable.schemaId,
+        minZoom,
+        maxZoom: 40,
+        styleName: dataTable.schemaId,
         type: CrgLayerType.VECTOR
       });
       this.close();
+
+      this.clearForm();
+    }
+
+    if (this.valid && this.layerType === CrgLayerType.EXTERNAL) {
+      this.props.onAdd({
+        id: generateNextLayerId(),
+        title,
+        dataSourceUri: dataSourceUri,
+        enabled: true,
+        nativeCRS: 'EPSG:3857',
+        position: -42,
+        transparency: 75,
+        minZoom,
+        maxZoom: 40,
+        tableName,
+        type: CrgLayerType.EXTERNAL
+      });
+      this.close();
+
+      this.clearForm();
     }
   }
 
@@ -182,5 +326,25 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     if (alreadyUsedDataTables.length !== this.usedDataTables.length || newUsedDataTables.length > 0) {
       this.setUsedDataTables([...alreadyUsedDataTables, ...newUsedDataTables]);
     }
+  }
+
+  @boundMethod
+  private formFieldChanged(value: unknown, fieldName: string) {
+    this.filterFieldErrors(fieldName);
+  }
+
+  @boundMethod
+  private formFieldValidateHandler(value: unknown, fieldName: string) {
+    this.filterFieldErrors(fieldName);
+    this.setErrors(validateFormValue(this.formValue, this.fields));
+  }
+
+  @action
+  private setErrors(errors: FieldErrors[] = []) {
+    this.formErrors = errors.filter(({ messages }) => messages?.length);
+  }
+
+  private filterFieldErrors(fieldName: string) {
+    this.setErrors(this.formErrors?.filter(({ field }) => field !== fieldName));
   }
 }

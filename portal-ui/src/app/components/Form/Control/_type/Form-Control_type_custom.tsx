@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import { boundMethod } from 'autobind-decorator';
 
 import { PropertySchemaCustom, PropertyType } from '../../../../services/crg/schema.models';
 
@@ -16,20 +15,10 @@ class FormControlTypeCustom extends Component<FormControlProps> {
 
     return (
       <div className={cnFormControl(null, [className])}>
-        <ControlComponent {...this.props} onChange={this.handleChange} />
+        <ControlComponent {...this.props} />
         <FormErrors errors={errors} />
       </div>
     );
-  }
-
-  @boundMethod
-  private handleChange({ value }: { value: unknown; propertyName: string }) {
-    const { onChange, property } = this.props;
-
-    onChange({
-      value,
-      propertyName: property.name
-    });
   }
 }
 

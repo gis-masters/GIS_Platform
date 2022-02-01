@@ -153,7 +153,12 @@ export class LayersSidebar extends Component {
     this.toolbarAbove = Boolean(e.currentTarget.scrollTop);
   }
 
-  private alertError(e: AxiosError, payload: Record<string, unknown>, actionText: string, actionName: string) {
+  private alertError(
+    e: AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+    payload: Record<string, unknown>,
+    actionText: string,
+    actionName: string
+  ) {
     const payloadDetails = JSON.stringify(payload, null, 2);
     let responseDetails = '-';
     if (e.response) {
@@ -172,7 +177,11 @@ export class LayersSidebar extends Component {
 
     const message = `Не удалось ${actionText} "${actionName}"`;
 
-    Toast.error({ message, details: `Запрос: \n${responseDetails} \n\nДанные: \n${payloadDetails}` });
+    const details = e.response?.data?.message
+      ? e.response.data.message
+      : `Запрос: \n${responseDetails} \n\nДанные: \n${payloadDetails}`;
+
+    Toast.error({ message, details });
     services.logger.error(message, e);
   }
 }

@@ -17,7 +17,7 @@ export class HeaderComponent {
   async ngOnInit() {
     const env = await getEnvironment();
     this.envPlatform = env.platform;
-    this.envRegistration = !!env.registration.length;
+    this.envRegistration = !!env.registration?.length;
   }
 
   how(): void {
