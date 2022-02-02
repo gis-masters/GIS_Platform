@@ -18,10 +18,10 @@
     width: 6px;
     height: 6px;
 
-    content: '';
+    content: "";
     transition: opacity 0.3s;
 
-    opacity: 0;
+    opacity: 0%;
     border-radius: 50%;
     background: var(--blue);
   }
@@ -30,7 +30,7 @@
     background: var(--light);
 
     &::before {
-      opacity: 0.8;
+      opacity: 80%;
     }
   }
 }

@@ -99,7 +99,7 @@ class MapService {
   private center: number[];
 
   private draftStyle: Style;
-  private draftSource: VectorSource<SimpleGeometry>;
+  draftSource: VectorSource<SimpleGeometry>;
   private draftSourceModify?: Modify;
   private draftSourceDraw?: Draw;
   private drawHandler: (e: DrawEvent) => void;
@@ -462,7 +462,7 @@ class MapService {
       type: 'Feature',
       geometry: {
         type: GeometryType.MULTI_POLYGON,
-        coordinates: coordinates
+        coordinates
       },
       id: '',
       geometry_name: '',

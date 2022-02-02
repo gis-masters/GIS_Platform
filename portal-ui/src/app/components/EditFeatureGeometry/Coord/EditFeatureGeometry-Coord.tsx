@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { action } from 'mobx';
 import { observer } from 'mobx-react';
+import { SimpleGeometry } from 'ol/geom';
+import { Feature } from 'ol';
 import TextField from '@mui/material/TextField';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
-import { isDimensionValid } from '../../../services/geoserver/wfs.service';
+import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs.models';
+import { olProjection, transformGeometry } from '../../../services/geoserver/projections.service';
+import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs.service';
+import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
+import { mapService } from '../../../services/map/map.service';
 
 import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-CoordDel';
 
@@ -31,14 +36,14 @@ interface EditFeatureGeometryCoordProps {
 
 @observer
 export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoordProps> {
-  @observable active = false;
+  private focusedPointMarker: Feature<SimpleGeometry>;
 
   render() {
     const { val, withControls, index, canBeDeleted, disabled, active } = this.props;
 
     // у росреестра своё понимание X и Y
     return (
-      <div className={cnEditFeatureGeometry('Coord', { withControls, active: active || this.active })}>
+      <div className={cnEditFeatureGeometry('Coord', { withControls, active })}>
         {withControls ? <div className={cnEditFeatureGeometry('CoordNumber')}>{index + 1}</div> : null}
 
         <TextField
@@ -46,8 +51,10 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
           value={val[1]}
           error={!isDimensionValid(val[1])}
           onChange={this.changeYHandler}
-          variant='outlined'
+          onFocus={this.handleInputFocus}
+          onBlur={this.handleInputBlur}
           disabled={disabled}
+          variant='outlined'
         />
 
         <TextField
@@ -55,8 +62,10 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
           value={val[0]}
           error={!isDimensionValid(val[0])}
           onChange={this.changeXHandler}
-          variant='outlined'
+          onFocus={this.handleInputFocus}
+          onBlur={this.handleInputBlur}
           disabled={disabled}
+          variant='outlined'
         />
 
         {withControls ? (
@@ -71,6 +80,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     const { val, onChange, index } = this.props;
     val[0] = e.target.value;
     onChange(val, index);
+    this.drawFocusedPointMarker();
   }
 
   @action.bound
@@ -78,6 +88,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     const { val, onChange, index } = this.props;
     val[1] = e.target.value;
     onChange(val, index);
+    this.drawFocusedPointMarker();
   }
 
   @boundMethod
@@ -85,6 +96,56 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     const { onDelete, index } = this.props;
     if (onDelete) {
       onDelete(index);
+    }
+  }
+
+  @boundMethod
+  private handleInputFocus() {
+    this.drawFocusedPointMarker();
+  }
+
+  @boundMethod
+  private handleInputBlur() {
+    this.clearFocusedPointMarker();
+  }
+
+  private drawFocusedPointMarker() {
+    const { store, val } = this.props;
+
+    if (store.geometryType === GeometryType.POINT) {
+      return;
+    }
+
+    const markerGeometry: WfsGeometry = {
+      type: GeometryType.POINT,
+      coordinates: val
+    };
+
+    if (isGeometryValid(markerGeometry)) {
+      const feature: WfsFeature = {
+        type: 'Feature',
+        geometry: transformGeometry(markerGeometry, store.currentProjection, olProjection),
+        id: '',
+        geometry_name: '',
+        properties: {}
+      };
+
+      this.focusedPointMarker = wfsFeatureToFeature(feature);
+
+      if (this.focusedPointMarker) {
+        mapService.draftSource.addFeature(this.focusedPointMarker);
+      }
+    } else {
+      this.clearFocusedPointMarker();
+    }
+  }
+
+  private clearFocusedPointMarker() {
+    try {
+      mapService.draftSource.removeFeature(this.focusedPointMarker);
+    } catch {
+      // мы ожидаем exception в случае, если указанной фичи нет в слое либо если переменная не содержит фичи
+      // в обоих этих случаях нам ничего не нужно предпринимать
     }
   }
 }
