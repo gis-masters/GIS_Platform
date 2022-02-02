@@ -45,7 +45,7 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
             "  FROM layers" +
             "  WHERE type = :type" +
             "    AND project_id IN :projectIds",
-           countQuery = "SELECT count(DISTINCT table_name) FROM layers",
+           countQuery = "SELECT count(DISTINCT table_name) FROM layers WHERE type = :type AND project_id IN :projectIds",
            nativeQuery = true)
     Page<Layer> findUniqueLayers(String type, Set<Long> projectIds, Pageable pageable);
 
