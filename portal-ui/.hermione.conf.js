@@ -1,10 +1,9 @@
 const config = {
   sets: {
-    simf: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/simf'] },
-    staging: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/staging'] },
-    test: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/test'] },
-    zakaratcha: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/zakaratcha'] },
-    ui: { files: ['hermione/tests/ui'] }
+    ui: { files: ['hermione/tests/ui'] },
+    stage58: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/stage58'] },
+    stage98: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/stage98'] },
+    stage172: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/stage172'] }
   },
 
   baseUrl: 'http://localhost:4200/',
