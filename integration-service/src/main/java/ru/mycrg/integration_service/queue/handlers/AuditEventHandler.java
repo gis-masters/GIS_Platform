@@ -14,6 +14,7 @@ import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -46,10 +47,10 @@ public class AuditEventHandler implements IEventHandler {
 
             String entityType = isNull(event.getEntityType())
                                 ? null
-                                : event.getEntityType().name();
+                                : event.getEntityType();
 
-            AuditEventDto auditEventDto = new AuditEventDto(event.getEventDateTime(),
-                                                            event.getActionType().name(),
+            AuditEventDto auditEventDto = new AuditEventDto(LocalDateTime.parse(event.getDateTime()),
+                                                            event.getActionType(),
                                                             event.getEntityName(),
                                                             entityType,
                                                             event.getEntityId(),

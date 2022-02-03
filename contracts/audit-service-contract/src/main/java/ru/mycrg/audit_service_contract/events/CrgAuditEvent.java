@@ -1,8 +1,6 @@
 package ru.mycrg.audit_service_contract.events;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import ru.mycrg.audit_service_contract.dto.AuditEventActionsType;
-import ru.mycrg.audit_service_contract.dto.AuditEventEntityType;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
 import java.time.LocalDateTime;
@@ -15,51 +13,53 @@ import static ru.mycrg.messagebus_contract.MessageBusProperties.AUDIT_REQUEST_KE
 public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
 
     private String token;
-
-    private LocalDateTime eventDateTime;
-
-    private AuditEventActionsType actionType;
-
+    private String dateTime;
+    private String actionType;
     private String entityName;
-
-    private AuditEventEntityType entityType;
-
+    private String entityType;
     private Long entityId;
-
     private JsonNode entityStateAfter;
 
     public CrgAuditEvent() {
-        super(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY);
+        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, null, null, null, null, null, null);
     }
 
-    public CrgAuditEvent(String token, AuditEventActionsType actionType) {
-        super(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY);
+    public CrgAuditEvent(String token, String actionType) {
+        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, token, actionType, null, null, null, null);
+    }
 
-        this.token = token;
-        this.eventDateTime = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
-        this.actionType = actionType;
+    public CrgAuditEvent(String token, String actionType, String entityName, String entityType, Long entityId) {
+        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, token, actionType, entityName, entityType,
+             entityId, null);
     }
 
     public CrgAuditEvent(String token,
-                         AuditEventActionsType actionType,
+                         String actionType,
                          String entityName,
-                         AuditEventEntityType entityType,
-                         Long entityId) {
-        this(token, actionType);
+                         String entityType,
+                         Long entityId,
+                         JsonNode entityStateAfter) {
+        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, token, actionType, entityName, entityType,
+             entityId, entityStateAfter);
+    }
 
+    private CrgAuditEvent(UUID id,
+                          String exchange,
+                          String routingKey,
+                          String token,
+                          String actionType,
+                          String entityName,
+                          String entityType,
+                          Long entityId,
+                          JsonNode entityStateAfter) {
+        super(id, exchange, routingKey);
+
+        this.token = token;
+        this.dateTime = LocalDateTime.now(ZoneId.of("Europe/Moscow")).toString();
+        this.actionType = actionType;
         this.entityName = entityName;
         this.entityType = entityType;
         this.entityId = entityId;
-    }
-
-    public CrgAuditEvent(String token,
-                         AuditEventActionsType actionType,
-                         String entityName,
-                         AuditEventEntityType entityType,
-                         Long entityId,
-                         JsonNode entityStateAfter) {
-        this(token, actionType, entityName, entityType, entityId);
-
         this.entityStateAfter = entityStateAfter;
     }
 
@@ -71,19 +71,19 @@ public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
         this.token = token;
     }
 
-    public LocalDateTime getEventDateTime() {
-        return eventDateTime;
+    public String getDateTime() {
+        return dateTime;
     }
 
-    public void setEventDateTime(LocalDateTime eventDateTime) {
-        this.eventDateTime = eventDateTime;
+    public void setDateTime(String eventDateTime) {
+        this.dateTime = eventDateTime;
     }
 
-    public AuditEventActionsType getActionType() {
+    public String getActionType() {
         return actionType;
     }
 
-    public void setActionType(AuditEventActionsType actionType) {
+    public void setActionType(String actionType) {
         this.actionType = actionType;
     }
 
@@ -95,11 +95,11 @@ public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
         this.entityName = entityName;
     }
 
-    public AuditEventEntityType getEntityType() {
+    public String getEntityType() {
         return entityType;
     }
 
-    public void setEntityType(AuditEventEntityType entityType) {
+    public void setEntityType(String entityType) {
         this.entityType = entityType;
     }
 

@@ -7,9 +7,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mycrg.data_service.service.records.DocumentRegistrar;
-import ru.mycrg.data_service.service.records.IDocumentRegistrar;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
+import ru.mycrg.data_service.service.cqrs.records.requests.RegisterDocumentRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.mediator.Mediator;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
@@ -20,10 +21,13 @@ public class DocumentLibraryRecordRegistrationController {
 
     private final Logger log = LoggerFactory.getLogger(DocumentLibraryRecordRegistrationController.class);
 
-    private final IDocumentRegistrar registrar;
+    private final Mediator mediator;
+    private final IAuthenticationFacade authenticationFacade;
 
-    public DocumentLibraryRecordRegistrationController(DocumentRegistrar registrar) {
-        this.registrar = registrar;
+    public DocumentLibraryRecordRegistrationController(Mediator mediator,
+                                                       IAuthenticationFacade authenticationFacade) {
+        this.mediator = mediator;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -32,7 +36,9 @@ public class DocumentLibraryRecordRegistrationController {
                                                  @PathVariable Long recId) {
         log.debug("Request to registration document with id: {}", recId);
 
-        String regNumber = registrar.register(new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD));
+        ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
+        String accessToken = authenticationFacade.getAccessToken();
+        String regNumber = mediator.execute(new RegisterDocumentRequest(qualifier, accessToken));
 
         return ResponseEntity.ok(regNumber);
     }

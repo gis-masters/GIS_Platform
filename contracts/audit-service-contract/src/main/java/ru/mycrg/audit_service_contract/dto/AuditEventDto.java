@@ -1,7 +1,6 @@
 package ru.mycrg.audit_service_contract.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import ru.mycrg.audit_service_contract.dto.validator.ValidateEnum;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -15,17 +14,13 @@ public class AuditEventDto {
     private LocalDateTime eventDateTime;
 
     @NotBlank
-    @Size(max = 20)
-    @ValidateEnum(targetClassType = AuditEventActionsType.class,
-                  message = "Укажите одно из значений: CREATE, UPDATE, DELETE, SIGN_IN, SIGN_OUT")
+    @Size(min = 3, max = 20)
     private String actionType;
 
     @Size(max = 700)
     private String entityName;
 
-    @Size(max = 50)
-    @ValidateEnum(targetClassType = AuditEventEntityType.class,
-                  message = "Укажите одно из значений:  PROJECT, LAYER")
+    @Size(min = 3, max = 50)
     private String entityType;
 
     @Min(value = 1)
@@ -106,13 +101,15 @@ public class AuditEventDto {
 
     @Override
     public String toString() {
+        Object stateAfter = entityStateAfter == null ? "null" : entityStateAfter;
+
         return "{" +
-                "eventDateTime=" + eventDateTime +
-                ", actionType='" + actionType + '\'' +
-                ", entityName='" + entityName + '\'' +
-                ", entityType='" + entityType + '\'' +
-                ", entityId=" + entityId +
-                ", entityStateAfter=" + entityStateAfter +
-                '}';
+                "\"eventDateTime\":" + (eventDateTime == null ? "null" : "\"" + eventDateTime + "\"") + ", " +
+                "\"actionType\":" + (actionType == null ? "null" : "\"" + actionType + "\"") + ", " +
+                "\"entityName\":" + (entityName == null ? "null" : "\"" + entityName + "\"") + ", " +
+                "\"entityType\":" + (entityType == null ? "null" : "\"" + entityType + "\"") + ", " +
+                "\"entityId\":" + (entityId == null ? "null" : "\"" + entityId + "\"") + ", " +
+                "\"entityStateAfter\":" + stateAfter +
+                "}";
     }
 }

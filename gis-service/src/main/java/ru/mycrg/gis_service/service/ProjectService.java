@@ -31,8 +31,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.audit_service_contract.dto.AuditEventActionsType.*;
-import static ru.mycrg.audit_service_contract.dto.AuditEventEntityType.PROJECT;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultProjectName;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 import static ru.mycrg.gis_service.security.Roles.OWNER;
@@ -159,9 +157,9 @@ public class ProjectService {
         projectRepository.save(project);
 
         messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                             UPDATE,
+                                             "UPDATE",
                                              projectName,
-                                             PROJECT,
+                                             "PROJECT",
                                              project.getId(),
                                              objectMapper.convertValue(project, JsonNode.class)));
     }
@@ -181,9 +179,9 @@ public class ProjectService {
         permissionRepository.save(new Permission(new PermissionCreateDto(userId, "user", OWNER.name()), savedProject));
 
         messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                             CREATE,
+                                             "CREATE",
                                              savedProject.getName(),
-                                             PROJECT,
+                                             "PROJECT",
                                              savedProject.getId(),
                                              objectMapper.convertValue(savedProject, JsonNode.class)));
 
@@ -195,9 +193,9 @@ public class ProjectService {
         if (isOwner(project)) {
             projectRepository.delete(project);
             messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                                 DELETE,
+                                                 "DELETE",
                                                  project.getName(),
-                                                 PROJECT,
+                                                 "PROJECT",
                                                  projectId));
         } else {
             throw new ForbiddenException("Недостаточно прав для удаления проекта: " + projectId);

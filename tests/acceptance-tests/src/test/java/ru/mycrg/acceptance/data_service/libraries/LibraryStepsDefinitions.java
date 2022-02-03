@@ -109,6 +109,15 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
         currentRecordId = extractEntityIdFromResponse(response);
     }
 
+    @Given("Пользователь создает документ")
+    public void currentUserCreateRecordInDefaultLibrary() {
+        createRecord(generateString("STRING_8"));
+
+        assertEquals(201, response.getStatusCode());
+
+        currentRecordId = extractEntityIdFromResponse(response);
+    }
+
     @When("Отправляется PUT запрос на обновление текущей записи")
     public void tryUpdateRecordViaPut() {
         response = getBaseRequestWithCurrentCookie()

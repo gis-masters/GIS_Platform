@@ -32,8 +32,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
-import static ru.mycrg.audit_service_contract.dto.AuditEventActionsType.*;
-import static ru.mycrg.audit_service_contract.dto.AuditEventEntityType.LAYER;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;
@@ -104,7 +102,7 @@ public class LayerService {
     /**
      * Создание векторных, растровых и внешних слоёв. В нашем проекте и на геосервере при необходимости.
      *
-     * @param projectId Идентфикатор проекта
+     * @param projectId Идентификатор проекта
      * @param layerDto  Модель слоя
      */
     public LayerProjection create(long projectId, LayerCreateDto layerDto) {
@@ -121,9 +119,9 @@ public class LayerService {
             updateGroup(layer, layerDto.getParentId(), project.getGroups());
 
             messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                                 CREATE,
+                                                 "CREATE",
                                                  buildLayerInfo(project, layer),
-                                                 LAYER,
+                                                 "LAYER",
                                                  layer.getId(),
                                                  objectMapper.convertValue(layerDto, JsonNode.class)));
 
@@ -156,9 +154,9 @@ public class LayerService {
 
         messageBus.produce(
                 new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                  UPDATE,
+                                  "UPDATE",
                                   buildLayerInfo(project, layerForUpdate),
-                                  LAYER,
+                                  "LAYER",
                                   layerForUpdate.getId(),
                                   objectMapper.convertValue(layerDto, JsonNode.class)));
     }
@@ -167,9 +165,9 @@ public class LayerService {
         layerRepository.deleteLayerById(layer.getId());
 
         messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                             DELETE,
+                                             "DELETE",
                                              buildLayerInfo(layer.getProject(), layer),
-                                             LAYER,
+                                             "LAYER",
                                              layer.getId()));
     }
 

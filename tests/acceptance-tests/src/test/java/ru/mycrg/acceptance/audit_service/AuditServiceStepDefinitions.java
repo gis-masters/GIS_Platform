@@ -17,8 +17,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.audit_service.dto.AuditEventActionsType.*;
-import static ru.mycrg.acceptance.audit_service.dto.AuditEventEntityType.LAYER;
-import static ru.mycrg.acceptance.audit_service.dto.AuditEventEntityType.PROJECT;
+import static ru.mycrg.acceptance.audit_service.dto.AuditEventEntityType.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
 import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerCreateDto;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
@@ -165,6 +164,12 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     @Then("Создан аудит лог о создании проекта")
     public void checkProjectCreate() {
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
+    }
+
+    @Then("Создана запись в журнале аудита о создании документа")
+    public void checkDocumentCreate() {
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LIBRARY_RECORD.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
     }
 

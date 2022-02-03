@@ -8,18 +8,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.cqrs.records.requests.CreateLibraryRecordRequest;
+import ru.mycrg.data_service.service.cqrs.records.requests.DeleteLibraryRecordRequest;
+import ru.mycrg.data_service.service.cqrs.records.requests.UpdateLibraryRecordRequest;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.storage.FileStorageService;
-import ru.mycrg.data_service.service.storage.exceptions.StorageException;
+import ru.mycrg.mediator.Mediator;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -35,34 +36,35 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.dto.ResourceType.RECORD;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.PagingAndSortingUtil.fetchFoldersFirst;
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.INNER_PATH;
 
 @RestController
 public class DocumentLibraryRecordsController {
 
+    private final Mediator mediator;
     private final SchemaService schemaService;
-    private final FileStorageService fileStorageService;
     private final DocumentLibraryService libraryService;
     private final RecordServiceFactory recordServiceFactory;
+    private final IAuthenticationFacade authenticationFacade;
 
     public DocumentLibraryRecordsController(SchemaService schemaService,
-                                            FileStorageService fileStorageService,
                                             DocumentLibraryService libraryService,
-                                            RecordServiceFactory recordServiceFactory) {
+                                            RecordServiceFactory recordServiceFactory,
+                                            Mediator mediator,
+                                            IAuthenticationFacade authenticationFacade) {
+        this.mediator = mediator;
         this.schemaService = schemaService;
         this.libraryService = libraryService;
         this.recordServiceFactory = recordServiceFactory;
-        this.fileStorageService = fileStorageService;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/document-libraries/{docLibId}/records")
-    public ResponseEntity<Object> getAll(
-            @PathVariable String docLibId,
-            @RequestParam(required = false) Long parent,
-            @RequestParam(name = "filter", required = false) String ecqlFilter,
-            Pageable pageable,
-            PagedResourcesAssembler<RecordDto> pageAssembler) {
+    public ResponseEntity<Object> getAll(@PathVariable String docLibId,
+                                         @RequestParam(required = false) Long parent,
+                                         @RequestParam(name = "filter", required = false) String ecqlFilter,
+                                         Pageable pageable,
+                                         PagedResourcesAssembler<RecordDto> pageAssembler) {
         ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
 
         checkSortedFields(docLibId, pageable);
@@ -127,7 +129,9 @@ public class DocumentLibraryRecordsController {
         String schemaId = libraryService.getInfo(docLibId).getSchemaId();
         schemaService.throwIfNotMathSchema(schemaId, body);
 
-        IRecord record = recordServiceFactory.get().createRecord(lQualifier, new RecordEntity(body), file);
+        String token = authenticationFacade.getAccessToken();
+        IRecord record = mediator.execute(
+                new CreateLibraryRecordRequest(lQualifier, new RecordEntity(body), file, token));
 
         return new ResponseEntity<>(record.getContent(), CREATED);
     }
@@ -140,8 +144,10 @@ public class DocumentLibraryRecordsController {
         String schemaId = libraryService.getInfo(docLibId).getSchemaId();
         schemaService.throwIfNotMathSchema(schemaId, payload);
 
-        recordServiceFactory.get()
-                            .updateRecord(new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD), payload);
+        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
+
+        String accessToken = authenticationFacade.getAccessToken();
+        mediator.execute(new UpdateLibraryRecordRequest(rQualifier, new RecordEntity(payload), accessToken));
 
         return ResponseEntity.noContent().build();
     }
@@ -151,17 +157,8 @@ public class DocumentLibraryRecordsController {
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
                                          @PathVariable Long recId) {
         ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
-        Map<String, Object> record = recordServiceFactory.get().getById(lQualifier, recId);
-        String innerFileName = (String) record.get(INNER_PATH.getName());
 
-        try {
-            fileStorageService.deleteIfExists(innerFileName);
-            recordServiceFactory.get().deleteRecord(lQualifier, recId);
-        } catch (StorageException e) {
-            throw new DataServiceException("Не удалось удалить файл: " + innerFileName, e.getCause());
-        } catch (CrgDaoException e) {
-            throw new DataServiceException("Не удалось удалить упоминание о файле", e.getCause());
-        }
+        mediator.execute(new DeleteLibraryRecordRequest(lQualifier, recId, authenticationFacade.getAccessToken()));
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -1,6 +1,5 @@
 package ru.mycrg.data_service;
 
-import com.google.gson.Gson;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -18,8 +17,6 @@ public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
 
     private final CrgMigrationHandler migrationHandler;
     private final GeoserverMigrationHandler geoserverMigrationHandler;
-
-    public static Gson gson = new Gson();
 
     public DataServiceApplication(CrgMigrationHandler migrationHandler,
                                   GeoserverMigrationHandler geoserverMigrationHandler) {

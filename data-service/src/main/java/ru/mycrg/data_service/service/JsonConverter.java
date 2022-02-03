@@ -3,12 +3,14 @@ package ru.mycrg.data_service.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 public class JsonConverter {
 
@@ -18,7 +20,9 @@ public class JsonConverter {
 
     private static final Logger log = LoggerFactory.getLogger(JsonConverter.class);
 
-    public static final ObjectMapper mapper = new ObjectMapper();
+    public static final ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .setDateFormat(new SimpleDateFormat("dd-MM-yyyy HH:mm"));
 
     public static JsonNode toJsonNode(Object object) {
         try {

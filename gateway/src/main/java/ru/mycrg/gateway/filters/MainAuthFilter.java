@@ -17,9 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static ru.mycrg.audit_service_contract.dto.AuditEventActionsType.SIGN_IN;
-import static ru.mycrg.audit_service_contract.dto.AuditEventActionsType.SIGN_OUT;
-
 @Log4j2
 public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
 
@@ -43,7 +40,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                                     @NotNull HttpServletResponse response,
                                     @NotNull FilterChain chain) {
         if (isLogoutRequest(request)) {
-            messageBus.produce(new CrgAuditEvent(getToken(request), SIGN_OUT));
+            messageBus.produce(new CrgAuditEvent(getToken(request), "SIGN_OUT"));
             response.addCookie(cookieProducer.makeDeletionCookie());
         } else if (isGetTokenRequest(request)) {
             log.debug("isGetTokenRequest");
@@ -56,7 +53,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                 authenticator.requestToken(username, password)
                              .ifPresentOrElse(token -> {
                                  prepareResponse(response, token);
-                                 messageBus.produce(new CrgAuditEvent(token.getAccess_token(), SIGN_IN));
+                                 messageBus.produce(new CrgAuditEvent(token.getAccess_token(), "SIGN_IN"));
                              }, () -> {
                                  sendUnauthorized(response);
                              });

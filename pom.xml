@@ -69,6 +69,8 @@
 
         <module>geo-wrapper</module>
 
+        <module>_libs/mediator</module>
+
         <module>clients/http-client</module>
         <module>clients/oauth-client</module>
         <module>clients/geoserver-client</module>

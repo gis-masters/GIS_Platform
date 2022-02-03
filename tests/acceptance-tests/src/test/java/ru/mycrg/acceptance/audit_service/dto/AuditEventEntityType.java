@@ -2,7 +2,8 @@ package ru.mycrg.acceptance.audit_service.dto;
 
 public enum AuditEventEntityType {
     PROJECT("PROJECT"),
-    LAYER("LAYER");
+    LAYER("LAYER"),
+    LIBRARY_RECORD("LIBRARY_RECORD");
 
     String value;
 
