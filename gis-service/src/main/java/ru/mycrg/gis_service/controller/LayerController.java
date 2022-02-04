@@ -16,9 +16,9 @@ import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BindingErrorsException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
-import ru.mycrg.gis_service.service.layers.LayerService;
 import ru.mycrg.gis_service.service.ProjectService;
 import ru.mycrg.gis_service.service.ResourceProtector;
+import ru.mycrg.gis_service.service.layers.LayerService;
 import ru.mycrg.gis_service.validators.CrgLayerValidator;
 
 import javax.json.JsonMergePatch;
@@ -73,9 +73,9 @@ public class LayerController {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        LayerProjection layerProjection = layerService.create(projectId, dto);
-
-        return new ResponseEntity<>(layerProjection, HttpStatus.CREATED);
+        return layerService.create(projectId, dto)
+                           .map(layerProjection -> new ResponseEntity<>(layerProjection, HttpStatus.CREATED))
+                           .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.CREATED));
     }
 
     @GetMapping("/layers/{layer_id}")

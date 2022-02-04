@@ -67,6 +67,8 @@ public class LayerCreateDto {
 
     private Long recordId;
 
+    private boolean dummy;
+
     public LayerCreateDto() {
         //Required by framework
     }
@@ -207,6 +209,14 @@ public class LayerCreateDto {
         this.recordId = recordId;
     }
 
+    public boolean isDummy() {
+        return dummy;
+    }
+
+    public void setDummy(boolean dummy) {
+        this.dummy = dummy;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -226,7 +236,8 @@ public class LayerCreateDto {
                 "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
                 "\"dataSourceUri\":" + (dataSourceUri == null ? "null" : "\"" + dataSourceUri + "\"") + ", " +
                 "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
-                "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") +
+                "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") + ", " +
+                "\"dummy\":\"" + dummy + "\"" +
                 "}";
     }
 }

@@ -5,6 +5,7 @@ public class ImportTarget {
     private Long projectId;
     private String projectName;
     private boolean projectIsNew;
+    private boolean isDummy;
 
     public ImportTarget() {
         // Required
@@ -32,5 +33,13 @@ public class ImportTarget {
 
     public void setProjectIsNew(boolean projectIsNew) {
         this.projectIsNew = projectIsNew;
+    }
+
+    public boolean isDummy() {
+        return isDummy;
+    }
+
+    public void setDummy(boolean dummy) {
+        isDummy = dummy;
     }
 }

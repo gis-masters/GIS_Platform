@@ -24,10 +24,7 @@ import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -105,7 +102,7 @@ public class LayerService {
      * @param projectId Идентификатор проекта
      * @param layerDto  Модель слоя
      */
-    public LayerProjection create(long projectId, LayerCreateDto layerDto) {
+    public Optional<LayerProjection> create(long projectId, LayerCreateDto layerDto) {
         Project project = projectService.getById(projectId);
 
         try {
@@ -114,18 +111,26 @@ public class LayerService {
                 throw new IllegalStateException("No handlers exist for layer type: " + layerDto.getType());
             }
 
-            Layer layer = layerHandler.create(project, layerDto);
+            Optional<Layer> oLayer = layerHandler.create(project, layerDto);
+            if (oLayer.isPresent()) {
+                Layer layer = oLayer.get();
+                updateGroup(layer, layerDto.getParentId(), project.getGroups());
 
-            updateGroup(layer, layerDto.getParentId(), project.getGroups());
+                messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                                     "CREATE",
+                                                     buildLayerInfo(project, layer),
+                                                     "LAYER",
+                                                     layer.getId(),
+                                                     objectMapper.convertValue(layerDto, JsonNode.class)));
 
-            messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                                 "CREATE",
-                                                 buildLayerInfo(project, layer),
-                                                 "LAYER",
-                                                 layer.getId(),
-                                                 objectMapper.convertValue(layerDto, JsonNode.class)));
+                LayerProjection newLayer = new LayerProjection(layer, getOrgWorkspaceName());
 
-            return new LayerProjection(layer, getOrgWorkspaceName());
+                return Optional.of(newLayer);
+            } else {
+                log.debug("Raster layer was created only on geoserver");
+
+                return Optional.empty();
+            }
         } catch (HttpClientException e) {
             String msg = String.format("Не удалось создать слой: '%s'", layerDto.getTitle());
 

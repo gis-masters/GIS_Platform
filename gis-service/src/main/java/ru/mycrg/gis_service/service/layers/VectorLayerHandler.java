@@ -16,6 +16,7 @@ import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import static ru.mycrg.gis_service.service.layers.LayerService.DATA_SERVICE_API_PREFIX;
 
@@ -37,7 +38,7 @@ public class VectorLayerHandler implements ILayerHandler {
     }
 
     @Override
-    public Layer create(Project project, LayerCreateDto dto) {
+    public Optional<Layer> create(Project project, LayerCreateDto dto) {
         log.debug("VectorLayerHandler create");
 
         if (layerRepository.findByTableNameAndProjectAndType(dto.getTableName(), project, dto.getType()).isPresent()) {
@@ -49,7 +50,7 @@ public class VectorLayerHandler implements ILayerHandler {
         newLayer.setDataSourceUri(String.format("%s/datasets/%s/tables/%s",
                                                 DATA_SERVICE_API_PREFIX, dto.getDataset(), dto.getTableName()));
 
-        final Layer savedLayer = layerRepository.save(newLayer);
+        Layer savedLayer = layerRepository.save(newLayer);
 
         try {
             boolean existOnGeoserver = layerGeoserverService.isLayerExist(savedLayer.getDataStoreName(),
@@ -75,7 +76,7 @@ public class VectorLayerHandler implements ILayerHandler {
             throw new BadRequestException(msg);
         }
 
-        return savedLayer;
+        return Optional.of(savedLayer);
     }
 
     @Override

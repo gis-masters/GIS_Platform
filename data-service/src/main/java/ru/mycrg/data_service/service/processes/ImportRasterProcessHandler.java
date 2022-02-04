@@ -93,7 +93,7 @@ public class ImportRasterProcessHandler implements IProcessHandler {
                     sendWsMsg(PENDING, importReport, "Создание проекта...");
 
                     createProject(projectName).ifPresentOrElse(projectId -> {
-                        createLayer(projectId, importReport);
+                        createLayer(projectId, importReport, false);
 
                         importReport.setProjectId(projectId);
                         importReport.setProjectName(projectName);
@@ -120,7 +120,7 @@ public class ImportRasterProcessHandler implements IProcessHandler {
                 } else {
                     sendWsMsg(PENDING, null, "Подключение слоёв к проекту...");
 
-                    createLayer(importTarget.getProjectId(), importReport);
+                    createLayer(importTarget.getProjectId(), importReport, importTarget.isDummy());
 
                     importReport.setProjectName(projectName);
                     importReport.setProjectId(importTarget.getProjectId());
@@ -195,7 +195,7 @@ public class ImportRasterProcessHandler implements IProcessHandler {
         }
     }
 
-    private boolean createLayer(Long projectId, ImportReport importReport) {
+    private boolean createLayer(Long projectId, ImportReport importReport, boolean isDummy) {
         try {
             String path = StringUtils.stripFilenameExtension(record.getInnerPath());
             String layerName = StringUtils.getFilename(path);
@@ -213,7 +213,8 @@ public class ImportRasterProcessHandler implements IProcessHandler {
                             "    \"dataStoreName\": \"" + dataStoreName + "\"," +
                             "    \"dataSourceUri\": \"" + dataSourceUri + "\"," +
                             "    \"libraryId\": \"" + libraryId + "\"," +
-                            "    \"recordId\": \"" + record.getId() + "\"" +
+                            "    \"recordId\": \"" + record.getId() + "\"," +
+                            "    \"dummy\": " + isDummy +
                             "}");
 
             Request request = new Request.Builder()

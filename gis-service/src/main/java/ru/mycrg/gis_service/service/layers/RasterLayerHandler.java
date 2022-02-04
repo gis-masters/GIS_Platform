@@ -15,6 +15,8 @@ import ru.mycrg.gis_service.security.AuthenticationFacade;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
+import java.util.Optional;
+
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 
 @Component
@@ -32,11 +34,14 @@ public class RasterLayerHandler implements ILayerHandler {
     }
 
     @Override
-    public Layer create(Project project, LayerCreateDto dto) throws HttpClientException {
+    public Optional<Layer> create(Project project, LayerCreateDto dto) throws HttpClientException {
         log.debug("Try create raster layer");
 
-        if (layerRepository.findByTableNameAndProjectAndType(dto.getTableName(), project, dto.getType()).isPresent()) {
-            throw new ConflictException("Уже существует растровый слой указывающий на таблицу: " + dto.getTableName());
+        String tableName = dto.getTableName();
+        String type = dto.getType();
+
+        if (!dto.isDummy() && layerRepository.findByTableNameAndProjectAndType(tableName, project, type).isPresent()) {
+            throw new ConflictException("Уже существует растровый слой указывающий на таблицу: " + tableName);
         }
 
         String workspaceName = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
@@ -45,7 +50,13 @@ public class RasterLayerHandler implements ILayerHandler {
         createRasterStore(workspaceName, dto, accessToken);
         createRasterLayer(workspaceName, dto, accessToken);
 
-        return layerRepository.save(new Layer(dto, project));
+        if (dto.isDummy()) {
+            return Optional.empty();
+        } else {
+            Layer newLayer = layerRepository.save(new Layer(dto, project));
+
+            return Optional.of(newLayer);
+        }
     }
 
     private void createRasterStore(String workspaceName, LayerCreateDto dto, String accessToken)

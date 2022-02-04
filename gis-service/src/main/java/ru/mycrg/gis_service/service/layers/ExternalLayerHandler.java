@@ -9,6 +9,8 @@ import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.repository.LayerRepository;
 
+import java.util.Optional;
+
 @Component
 public class ExternalLayerHandler implements ILayerHandler {
 
@@ -21,14 +23,16 @@ public class ExternalLayerHandler implements ILayerHandler {
     }
 
     @Override
-    public Layer create(Project project, LayerCreateDto dto) {
+    public Optional<Layer> create(Project project, LayerCreateDto dto) {
         log.debug("ExternalLayerHandler create");
 
         if (layerRepository.findByTableNameAndProjectAndType(dto.getTableName(), project, dto.getType()).isPresent()) {
             throw new ConflictException("Внешний слой с таким названием уже существует");
         }
 
-        return layerRepository.save(new Layer(dto, project));
+        Layer newLayer = layerRepository.save(new Layer(dto, project));
+
+        return Optional.of(newLayer);
     }
 
     @Override
