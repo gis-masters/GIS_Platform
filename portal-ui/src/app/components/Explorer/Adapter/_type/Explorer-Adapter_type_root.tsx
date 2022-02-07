@@ -12,6 +12,29 @@ declare module '../../Explorer.models' {
   }
 }
 
+const children = [
+  {
+    id: 'datasetRoot',
+    type: ExplorerItemType.DATASET_ROOT,
+    payload: null
+  },
+  {
+    id: 'libraryRoot',
+    type: ExplorerItemType.LIBRARY_ROOT,
+    payload: null
+  },
+  {
+    id: 'basemapsRoot',
+    type: ExplorerItemType.BASEMAPS_ROOT,
+    payload: null
+  },
+  {
+    id: 'projectsRoot',
+    type: ExplorerItemType.PROJECTS_ROOT,
+    payload: null
+  }
+];
+
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeRoot {
   static getId(): string {
@@ -31,37 +54,18 @@ export class ExplorerAdapterTypeRoot {
   }
 
   static getChildren(): Promise<[ExplorerItemData<Dataset>[], number]> {
-    return Promise.resolve([
-      [
-        {
-          id: 'dataSetRoot',
-          type: ExplorerItemType.DATASET_ROOT,
-          payload: null
-        },
-        {
-          id: 'libraryRoot',
-          type: ExplorerItemType.LIBRARY_ROOT,
-          payload: null
-        },
-        {
-          id: 'basemapsRoot',
-          type: ExplorerItemType.BASEMAPS_ROOT,
-          payload: null
-        },
-        {
-          id: 'projectsRoot',
-          type: ExplorerItemType.PROJECTS_ROOT,
-          payload: null
-        }
-      ],
-      0
-    ]);
+    return Promise.resolve([children, 1]);
+  }
+
+  // eslint-disable-next-line sonarjs/no-identical-functions
+  static getChildrenWithParticularOne(): Promise<[ExplorerItemData<Dataset>[], number, number]> {
+    return Promise.resolve([children, 1, 0]);
   }
 
   static getChildById(item: ExplorerItemData<Dataset>, id: string): Promise<ExplorerItemData<Dataset>> {
-    if (id === 'dataSetRoot') {
+    if (id === 'datasetRoot') {
       return Promise.resolve({
-        id: 'dataSetRoot',
+        id: 'datasetRoot',
         type: ExplorerItemType.DATASET_ROOT,
         payload: null
       });

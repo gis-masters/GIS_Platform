@@ -3,4 +3,4 @@ import { cn } from '@bem-react/classname';
 
 const cnExplorerEmpty = cn('Explorer', 'Empty');
 
-export const ExplorerEmpty: FC = ({ children }) => <div className={cnExplorerEmpty()}>{children}</div>;
+export const ExplorerEmpty: FC = () => <div className={cnExplorerEmpty()}>пусто</div>;

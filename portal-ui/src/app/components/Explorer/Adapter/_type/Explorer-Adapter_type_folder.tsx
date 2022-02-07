@@ -24,15 +24,12 @@ import { LibraryDocumentActions } from '../../../LibraryDocumentActions/LibraryD
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
-import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 import { Link } from '../../../Link/Link';
 
 import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { ExplorerUrlItem } from '../../Explorer';
-import { ExplorerService } from '../../Explorer.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -43,7 +40,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeFolder {
   static getId(item: ExplorerItemData<LibraryRecord>): string {
-    return `${item.payload.libraryId}:${item.payload.id}`;
+    return String(item.payload.id);
   }
 
   static getTitle(item: ExplorerItemData<LibraryRecord>): string {
@@ -105,15 +102,6 @@ export class ExplorerAdapterTypeFolder {
     return true;
   }
 
-  static findSelectedChildren(
-    children: ExplorerItemData[],
-    selectedItem: ExplorerItemData<LibraryRecord>
-  ): ExplorerItemData {
-    return children.find(
-      item => item.type === selectedItem.type && (item.payload as LibraryRecord).id === selectedItem.payload.id
-    );
-  }
-
   static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
     return <LibraryDocumentActions document={item.payload} as='iconButton' hideOpen />;
   }
@@ -150,12 +138,10 @@ export class ExplorerAdapterTypeFolder {
 
   static async getChildrenWithParticularOne(
     item: ExplorerItemData<LibraryRecord>,
-    { filter, ...options }: PageOptions,
-    [, id, page]: ExplorerUrlItem
+    { filter, page, ...options }: PageOptions,
+    id: string
   ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
-    const [libraryId, identifier] = id.split(':');
-
-    const response = await getLibraryRecordsWithParticularOne(libraryId, item.payload.schemaId, identifier, {
+    const response = await getLibraryRecordsWithParticularOne(item.payload.libraryId, item.payload.schemaId, id, {
       ...options,
       filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
       page,
@@ -202,10 +188,9 @@ export class ExplorerAdapterTypeFolder {
 
   static async getChildById(
     item: ExplorerItemData<LibraryRecord>,
-    id: string
+    recordId: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
-    const [libraryId, recordId] = id.split(':');
-    const payload = await getLibraryRecord(libraryId, Number(recordId), item.payload.schemaId);
+    const payload = await getLibraryRecord(item.payload.libraryId, Number(recordId), item.payload.schemaId);
     const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 
@@ -234,11 +219,7 @@ export class ExplorerAdapterTypeFolder {
     return 'Фильтр по названию';
   }
 
-  static getToolbarActions(
-    item: ExplorerItemData<LibraryRecord>,
-    store: ExplorerStore,
-    service: ExplorerService
-  ): ReactNode {
+  static getToolbarActions(item: ExplorerItemData<LibraryRecord>, store: ExplorerStore): ReactNode {
     const path = `${item.payload.path}/${item.payload.id}`;
 
     return (
@@ -251,21 +232,12 @@ export class ExplorerAdapterTypeFolder {
           </Tooltip>
         </Link>
         <CreateLibraryElement
+          libraryIdentifier={item.payload.libraryId}
           schemaId={item.payload.schemaId}
           path={path}
-          onCreate={service.createHandler}
           store={store}
         />
       </>
-    );
-  }
-
-  static getEmptyListView(): ReactNode | undefined {
-    return (
-      <EmptyListView
-        text='Отсутствуют элементы для отображения'
-        secondaryText='Начните работу с создания новых разделов или файлов'
-      />
     );
   }
 

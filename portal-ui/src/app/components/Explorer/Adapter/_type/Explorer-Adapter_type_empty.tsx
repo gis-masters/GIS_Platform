@@ -4,22 +4,20 @@ import { Adapter, ExplorerItemData } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
-    [ExplorerItemType.EMPTY]: { title: string };
+    [ExplorerItemType.EMPTY]: {
+      loading?: boolean;
+    };
   }
-}
-
-interface RootType {
-  title: string;
 }
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeEmpty {
-  static getId(item: ExplorerItemData<RootType>): string {
-    return item.type + item.payload.title;
+  static getId(item: ExplorerItemData<{ loading: boolean }>): string {
+    return item.type;
   }
 
-  static getTitle(item: ExplorerItemData<RootType>): string {
-    return item.payload.title;
+  static getTitle(): string {
+    return '';
   }
 
   static getMeta(): string {
@@ -27,6 +25,6 @@ export class ExplorerAdapterTypeEmpty {
   }
 
   static isFolder(): boolean {
-    return true;
+    return false;
   }
 }

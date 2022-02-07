@@ -68,10 +68,18 @@ export async function mockApi(
     (method, urlRexExpSource, params, status, response) => {
       switch (method.toLocaleLowerCase()) {
         case 'get':
-          mock.onGet(new RegExp(urlRexExpSource)).reply(status, response);
+          if (params) {
+            mock.onGet(new RegExp(urlRexExpSource), { params }).reply(status, response);
+          } else {
+            mock.onGet(new RegExp(urlRexExpSource)).reply(status, response);
+          }
           break;
         case 'post':
-          mock.onPost(new RegExp(urlRexExpSource)).reply(status, response);
+          if (params) {
+            mock.onPost(new RegExp(urlRexExpSource), { params }).reply(status, response);
+          } else {
+            mock.onPost(new RegExp(urlRexExpSource)).reply(status, response);
+          }
           break;
       }
     },

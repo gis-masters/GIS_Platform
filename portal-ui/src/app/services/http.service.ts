@@ -7,7 +7,7 @@ import { replaceUrl } from './server-urls.service';
 import { Emitter } from './common/Emitter';
 import { Mime } from './util/Mime';
 
-import { getPayloadFromPageableResponse } from './http.utils';
+import { getPayloadFromPageableResponse, stringifyParams } from './http.utils';
 
 const ITEMS_PER_PAGE = 300;
 
@@ -54,10 +54,14 @@ export class Http {
 
   async get<T>(url: string, configWithCache: RequestConfigWithCache = {}): Promise<T> {
     const { cache: cacheConfig, ...config } = configWithCache;
+
+    if (config.params) {
+      config.params = stringifyParams(config.params);
+    }
+
     const cacheKey = 'GET:' + this.axios.getUri({ url, ...config });
     const fromCache = this.cache.match(cacheKey, cacheConfig);
     let promise: Promise<AxiosResponse<T>>;
-
     if (fromCache) {
       promise = fromCache as Promise<AxiosResponse<T>>;
     } else {
@@ -132,7 +136,7 @@ export class Http {
     let previousScanPage: T[] = [];
 
     for (let i = 0; i < scanTotalPages; i++) {
-      scanPageParams.page = i;
+      scanPageParams.page = String(i);
       const scanResponse = await this.get<PageableResponse<T>>(url, {
         ...config,
         params: { ...(config.params || {}), ...scanPageParams }
@@ -148,10 +152,10 @@ export class Http {
 
       // и так, нашли, теперь нужно вернуть содержащую объект страницу
       const globalFoundIndex = ITEMS_PER_PAGE * i + foundIndex;
-      const positionOnPage = globalFoundIndex % pageParams.size;
+      const positionOnPage = globalFoundIndex % Number(pageParams.size);
       const nextPage: T[] = [];
-      if (ITEMS_PER_PAGE - foundIndex < pageParams.size - positionOnPage && i < scanTotalPages - 1) {
-        scanPageParams.page = i + 1;
+      if (ITEMS_PER_PAGE - foundIndex < Number(pageParams.size) - positionOnPage && i < scanTotalPages - 1) {
+        scanPageParams.page = String(i + 1);
         const nextScanPageResponse = await this.get<PageableResponse<T>>(url, {
           ...config,
           params: { ...(config.params || {}), ...scanPageParams }
@@ -160,15 +164,20 @@ export class Http {
       }
       const resultPage = [...previousScanPage, ...currentScanPage, ...nextPage].slice(
         previousScanPage.length + foundIndex - positionOnPage,
-        previousScanPage.length + foundIndex - positionOnPage + pageParams.size
+        previousScanPage.length + foundIndex - positionOnPage + Number(pageParams.size)
       );
 
-      return [resultPage, totalPages, Math.floor(globalFoundIndex / pageParams.size)];
+      return [resultPage, totalPages, Math.floor(globalFoundIndex / Number(pageParams.size))];
     }
   }
 
   async post<T>(url: string, data?: unknown, configWithCache: RequestConfigWithCache = {}): Promise<T> {
     const { cache: requestCacheConfig = {}, isAuthenticate, ...config } = configWithCache;
+
+    if (config.params) {
+      config.params = stringifyParams(config.params);
+    }
+
     const cacheConfig = { disabled: true, clear: true, ...requestCacheConfig };
     const cacheKey = 'POST:' + this.axios.getUri({ url, ...config }) + ' DATA:' + JSON.stringify(data);
     const fromCache = this.cache.match(cacheKey, { disabled: true, clear: true, ...cacheConfig });

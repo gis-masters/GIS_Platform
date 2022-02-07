@@ -14,10 +14,10 @@ import {
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
+import { communicationService } from '../../../services/communication.service';
+import { projectsService } from '../../../services/crg/projects.service';
 import { CrgProject } from '../../../services/crg/projects.models';
 import { Button } from '../../Button/Button';
-import { projectsService } from '../../../services/crg/projects.service';
-import { communicationService } from '../../../services/communication.service';
 
 const cnProjectActionsDelete = cn('ProjectActions', 'Delete');
 
@@ -28,6 +28,12 @@ interface ProjectActionsDeleteProps {
 @observer
 export class ProjectActionsDelete extends Component<ProjectActionsDeleteProps> {
   @observable private dialogOpen = false;
+
+  componentDidUpdate(prevProps: ProjectActionsDeleteProps) {
+    if (prevProps.project.id !== this.props.project.id) {
+      this.closeDialog();
+    }
+  }
 
   render() {
     const { project } = this.props;

@@ -9,7 +9,6 @@ import { PageOptions, SortDir } from '../../../../services/models';
 import { Emitter } from '../../../../services/common/Emitter';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
-import { ExplorerUrlItem } from '../../Explorer';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -51,12 +50,9 @@ export class ExplorerAdapterTypeProjectsRoot {
   static async getChildrenWithParticularOne(
     item: ExplorerItemData,
     options: PageOptions,
-    [, id, page]: ExplorerUrlItem
+    id: string
   ): Promise<[ExplorerItemData<CrgProject>[], number, number]> | undefined {
-    const response = await projectsService.getProjectsWithParticularOne(id, {
-      ...options,
-      page
-    });
+    const response = await projectsService.getProjectsWithParticularOne(id, options);
 
     if (!response) {
       return;
@@ -65,6 +61,15 @@ export class ExplorerAdapterTypeProjectsRoot {
     const [libraries, totalPages, pageNumber] = response;
 
     return [libraries.map(payload => ({ type: ExplorerItemType.PROJECT, payload })), totalPages, pageNumber];
+  }
+
+  static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData<CrgProject>> {
+    const project = await projectsService.getById(Number(id));
+
+    return {
+      type: ExplorerItemType.PROJECT,
+      payload: project
+    };
   }
 
   static getChildrenSortItems(): SortItem[] {

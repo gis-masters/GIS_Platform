@@ -1,34 +1,30 @@
 import React, { Component, CSSProperties } from 'react';
-import { action, IReactionDisposer, observable, reaction, when } from 'mobx';
+import { IReactionDisposer, reaction, when } from 'mobx';
 import { observer } from 'mobx-react';
-import { cloneDeep, isEqual } from 'lodash';
-import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
-import { boundMethod } from 'autobind-decorator';
-import { NavigationStart, RouterEvent } from '@angular/router';
-import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { NavigationStart, RouterEvent } from '@angular/router';
+import { IClassNameProps } from '@bem-react/core';
+import { cn } from '@bem-react/classname';
+import { chunk, cloneDeep, isEqual } from 'lodash';
+import { boundMethod } from 'autobind-decorator';
 
-import { route } from '../../stores/Route.store';
-import { Loading } from '../Loading/Loading';
 import { Emitter } from '../../services/common/Emitter';
 import { services } from '../../services/services';
+import { sleep } from '../../services/util/sleep';
 import { SortDir } from '../../services/models';
-import { Toast } from '../Toast/Toast';
+import { Loading } from '../Loading/Loading';
 
 import { ExplorerStore } from './Explorer.store';
-import { emptyItem, ExplorerItemData, ExplorerItemType, KeyAction, keyActions } from './Explorer.models';
+import { emptyItem, ExplorerItemData, ExplorerItemType, KeyAction, keyActions, loadingItem } from './Explorer.models';
 import {
-  getChildren,
   getChildById,
   getChildrenSortDefaultDirection,
   getChildrenSortDefaultValue,
   getChildrenSortItems,
   getId,
-  getChildrenWithParticularOne,
   getRefreshEmitters,
-  isFolder,
-  findSelectedChildren
+  isFolder
 } from './Adapter/Explorer-Adapter';
 import { ExplorerPagination } from './Pagination/Explorer-Pagination';
 import { ExplorerToolbar } from './Toolbar/Explorer-Toolbar';
@@ -39,22 +35,22 @@ import { ExplorerService } from './Explorer.service';
 
 import '!style-loader!css-loader!sass-loader!./Explorer.scss';
 
-export type ExplorerUrlItem = [ExplorerItemType, string, number?];
-// pageSize, sort, sortDir, filter
-export type ExplorerUrlOptions = [number, string, SortDir, Record<string, string>];
+export type ExplorerUrlItem = [ExplorerItemType, string];
+// page, pageSize, sort, sortDir, filter
+export type ExplorerUrlOptions = [number, number, string, SortDir, Record<string, string>];
 
 const cnExplorer = cn('Explorer');
 
-const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData }> = {
-  [ExplorerItemType.ROOT]: { type: ExplorerItemType.ROOT, payload: null },
-  [ExplorerItemType.DATASET_ROOT]: { type: ExplorerItemType.DATASET_ROOT, payload: null },
-  [ExplorerItemType.LIBRARY_ROOT]: { type: ExplorerItemType.LIBRARY_ROOT, payload: null },
-  [ExplorerItemType.PROJECTS_ROOT]: { type: ExplorerItemType.PROJECTS_ROOT, payload: null },
-  [ExplorerItemType.BASEMAPS_ROOT]: { type: ExplorerItemType.BASEMAPS_ROOT, payload: null }
+const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData[] }> = {
+  [ExplorerItemType.ROOT]: [{ type: ExplorerItemType.ROOT, payload: null }, emptyItem],
+  [ExplorerItemType.DATASET_ROOT]: [{ type: ExplorerItemType.DATASET_ROOT, payload: null }, emptyItem],
+  [ExplorerItemType.LIBRARY_ROOT]: [{ type: ExplorerItemType.LIBRARY_ROOT, payload: null }, emptyItem],
+  [ExplorerItemType.PROJECTS_ROOT]: [{ type: ExplorerItemType.PROJECTS_ROOT, payload: null }, emptyItem],
+  [ExplorerItemType.BASEMAPS_ROOT]: [{ type: ExplorerItemType.BASEMAPS_ROOT, payload: null }, emptyItem]
 };
 
 export interface ExplorerProps extends IClassNameProps {
-  appRole: string;
+  id: string;
   title?: string;
   items?: ExplorerItemData[]; // [0] - root
   preset?: keyof typeof presets;
@@ -69,74 +65,143 @@ export interface ExplorerProps extends IClassNameProps {
 
 @observer
 export class Explorer extends Component<ExplorerProps> {
-  @observable private busy = false;
-
   private urlChangeEnabled = false;
-  private gettingChildrenToken: symbol;
-  private onSelectReactionDispose: IReactionDisposer;
-  private onPathReactionDispose: IReactionDisposer;
-  private onOptionsReactionDispose: IReactionDisposer;
+  private reactionDisposers: IReactionDisposer[] = [];
   private store: ExplorerStore;
   private service: ExplorerService;
   private channels: Emitter[] = [];
+  private savingToUrl = false;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(props: ExplorerProps) {
     super(props);
-    this.store = new ExplorerStore(props.appRole);
+    this.store = new ExplorerStore(props.id);
     this.service = new ExplorerService(this.store);
     this.init(props);
   }
 
   async componentDidMount() {
-    // кнопка вернуться назад
+    const { onSelect, urlChangeEnabled } = this.props;
+
+    // назад и вперёд по истории браузера
     services.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe(async (event: RouterEvent) => {
-      if (event instanceof NavigationStart && event.navigationTrigger === 'popstate') {
+      if (event instanceof NavigationStart && !this.store.restoringFromUrl && !this.savingToUrl) {
         const url = new URL(location.origin + event.url);
-        const explorerPath = url.searchParams.get(`explorerPath_${this.props.appRole}`);
-        await this.restoreState(explorerPath);
+        await this.restoreStateFromUrl(url);
       }
     });
 
-    this.onSelectReactionDispose = reaction(
-      () => this.store.selectedItem,
-      selectedItem => {
-        if (this.props.onSelect) {
-          this.props.onSelect(selectedItem, this.store.path);
+    let prevOpenedItem: ExplorerItemData;
+    let prevPath: ExplorerItemData[] = [];
+    let prevPage = 0;
+    let prevPageSize = 0;
+    let prevSort: string;
+    let prevSortDir: SortDir;
+    let prevFilter: Record<string, string>;
+
+    this.reactionDisposers.push(
+      // emit события onSelect
+      reaction(
+        () => this.store.selectedItem,
+        selectedItem => {
+          if (onSelect) {
+            onSelect(selectedItem, this.store.path);
+          }
         }
-      }
+      ),
+
+      // сброс options
+      reaction(
+        () => this.store.openedItem,
+        openedItem => {
+          this.store.setFilter({});
+          this.store.setSort(getChildrenSortDefaultValue(openedItem));
+          this.store.setSortDir(getChildrenSortDefaultDirection(openedItem));
+          this.store.setSortItems(getChildrenSortItems(openedItem));
+        }
+      ),
+
+      reaction(
+        () => [
+          cloneDeep(this.store.path),
+          this.store.page,
+          this.store.pageSize,
+          this.store.sort,
+          this.store.sortDir,
+          cloneDeep(this.store.filter)
+        ],
+        async ([path, page, pageSize, sortDir, sort, filter]: [
+          ExplorerItemData[],
+          number,
+          number,
+          SortDir,
+          string,
+          Record<string, string>
+        ]) => {
+          if (!isEqual(path, prevPath)) {
+            // подписка на обновление
+            for (const item of path) {
+              for (const channel of getRefreshEmitters(item)) {
+                if (!this.channels.includes(channel)) {
+                  this.channels.push(channel);
+                  channel.on(this.service.refreshItems, this);
+                }
+              }
+            }
+          }
+
+          // обновление списка
+          if (
+            !isEqual(path.slice(0, -1), prevPath.slice(0, -1)) ||
+            prevPage !== page ||
+            prevPageSize !== pageSize ||
+            prevSortDir !== sortDir ||
+            prevSort !== sort ||
+            !isEqual(prevFilter, filter)
+          ) {
+            await this.service.refreshItems();
+          }
+
+          // сохранение path в url
+          if (
+            !isEqual(path, prevPath) ||
+            prevPage !== page ||
+            prevPageSize !== pageSize ||
+            prevSortDir !== sortDir ||
+            prevSort !== sort ||
+            !isEqual(prevFilter, filter)
+          ) {
+            await this.setStateToUrl(this.service.itemsEqual(this.store.openedItem, prevOpenedItem));
+
+            prevOpenedItem = this.store.openedItem;
+            prevPath = path;
+            prevPage = page;
+            prevPageSize = pageSize;
+            prevSort = sort;
+            prevSortDir = sortDir;
+            prevFilter = filter;
+          }
+        },
+        { fireImmediately: true }
+      )
     );
 
-    this.onPathReactionDispose = reaction(
-      () => [cloneDeep(this.store.path), this.store.page],
-      async () => {
-        await this.setPathToUrl();
-        await this.setOptionsToUrl();
-      }
-    );
-
-    this.onOptionsReactionDispose = reaction(
-      () => [this.store.pageSize, this.store.sort, this.store.sortDir, cloneDeep(this.store.filter)],
-      async () => {
-        await this.setOptionsToUrl();
-      }
-    );
-
-    if (route.queryParams[`explorerPath_${this.props.appRole}`]) {
-      await this.restoreState(route.queryParams['explorerPath_' + this.props.appRole]);
+    if (urlChangeEnabled) {
+      await this.restoreStateFromUrl();
     }
 
-    await when(() => !this.busy);
+    await when(() => !this.store.loading);
+    await sleep(100);
     this.urlChangeEnabled = true;
   }
 
   componentWillUnmount() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    this.onSelectReactionDispose();
-    this.onPathReactionDispose();
-    this.onOptionsReactionDispose();
+    for (const disposer of this.reactionDisposers) {
+      disposer();
+    }
     Emitter.scopeOff(this);
   }
 
@@ -158,33 +223,27 @@ export class Explorer extends Component<ExplorerProps> {
       >
         {!withoutTitle && <ExplorerTitle store={this.store} onOpen={this.openItem} />}
         <ExplorerList store={this.store} onOpen={this.openItem} disabledTester={disabledTester} />
-        <ExplorerToolbar service={this.service} store={this.store} onChange={this.handleQueryChange} />
+        <ExplorerToolbar service={this.service} store={this.store} onChange={this.service.refreshItems} />
         {withInfoPanel && <ExplorerInfo store={this.store} Explorer={Explorer} />}
-        <ExplorerPagination store={this.store} onChange={this.paginate} />
-        <Loading visible={this.busy} noBackdrop />
+        <ExplorerPagination store={this.store} onChange={this.service.paginate} />
+        <Loading visible={this.store.loading || this.store.restoringFromUrl} noBackdrop />
       </div>
     );
   }
 
   private init(props: ExplorerProps) {
-    const { items, title, preset } = props;
+    const { items, preset } = props;
 
     if (preset) {
-      this.store.setPath([presets[preset]]);
+      this.store.setPath(presets[preset]);
     } else {
-      this.store.setPath([
-        { type: ExplorerItemType.EMPTY, payload: { title }, children: items },
-        items.length ? items[0] : emptyItem
-      ]);
+      this.store.setPath([items.length ? items[0] : emptyItem]);
+      this.store.setItems(items);
     }
   }
 
   @boundMethod
-  private async openItem(item: ExplorerItemData, page: number, depth?: number, updateFilters?: boolean) {
-    if (item.type === ExplorerItemType.EMPTY) {
-      return;
-    }
-
+  openItem(item: ExplorerItemData, depth: number = this.store.path.length - 1): void {
     if (this.props.onOpen) {
       this.props.onOpen(item, this.store.path);
     }
@@ -193,40 +252,7 @@ export class Explorer extends Component<ExplorerProps> {
       return;
     }
 
-    if (depth !== this.store.path.length - 2) {
-      this.store.setSort(getChildrenSortDefaultValue(item));
-      this.store.setSortItems(getChildrenSortItems(item));
-      this.store.setFilter({});
-      if (updateFilters) {
-        this.store.setSortDir(getChildrenSortDefaultDirection(item));
-      }
-    }
-
-    const selectedItem = this.store.path[this.store.path.length - 1];
-    this.store.selectItem(item);
-    this.setBusy(true);
-
-    const { pageSize, sort, sortDir, filter } = this.store;
-    const gettingChildrenToken = Symbol();
-    this.gettingChildrenToken = gettingChildrenToken;
-
-    const [children, pagesCount] = await getChildren(item, { page, pageSize, sort, sortDir, filter });
-
-    if (gettingChildrenToken === this.gettingChildrenToken) {
-      children.forEach(child => {
-        getRefreshEmitters(child).forEach(emitter => {
-          if (!this.channels.includes(emitter)) {
-            this.channels.push(emitter);
-            emitter.on(this.refresh, this);
-          }
-        });
-      });
-
-      this.store.setPage(page);
-      this.setChildren(item, children, pagesCount, selectedItem, depth);
-    }
-
-    this.setBusy(false);
+    this.store.setPath([...this.store.path.slice(0, depth), item, loadingItem]);
   }
 
   @boundMethod
@@ -235,82 +261,37 @@ export class Explorer extends Component<ExplorerProps> {
       return;
     }
 
-    const { path, selectedItem, openedItem: currentItem, page, totalPages } = this.store;
+    const { path, selectedItem, items, page, totalPages } = this.store;
     const action = Object.keys(keyActions).find(key => keyActions[key].includes(e.key));
 
     if (action === KeyAction.BACK && path.length >= 3) {
-      void this.openItem(path[path.length - 3], 0, path.length - 3);
+      void this.openItem(path[path.length - 3], path.length - 3);
     }
 
     if (action === KeyAction.PAGE_PREV && page > 0) {
-      this.paginate(page - 1);
+      this.service.paginate(page - 1);
     }
 
     if (action === KeyAction.PAGE_NEXT && page < totalPages - 1) {
-      this.paginate(page + 1);
+      this.service.paginate(page + 1);
     }
 
     if (action === KeyAction.PREV || action === KeyAction.NEXT) {
       const currentSelectionId = getId(selectedItem);
-      const currentSelectionIndex = currentItem.children.findIndex(item => getId(item) === currentSelectionId);
-
+      const currentSelectionIndex = items.findIndex(item => getId(item) === currentSelectionId);
       const newSelectionIndex = action === KeyAction.NEXT ? currentSelectionIndex + 1 : currentSelectionIndex - 1;
-
-      if (newSelectionIndex >= 0 && newSelectionIndex < currentItem.children.length) {
-        this.store.selectItem(currentItem.children[newSelectionIndex]);
+      if (newSelectionIndex >= 0 && newSelectionIndex < items.length) {
+        this.store.selectItem(items[newSelectionIndex]);
       }
     }
 
     if (action === KeyAction.OPEN) {
-      void this.openItem(selectedItem, 0);
+      void this.openItem(selectedItem);
     }
   }
 
-  @boundMethod
-  private paginate(page: number) {
-    const { path, openedItem: currentItem } = this.store;
-    void this.openItem(currentItem, page, path.length - 2);
-  }
-
-  @boundMethod
-  private handleQueryChange() {
-    const { path, openedItem: currentItem } = this.store;
-    void this.openItem(currentItem, 0, path.length - 2);
-  }
-
-  @action
-  private setChildren(
-    item: ExplorerItemData,
-    children: ExplorerItemData[],
-    pagesCount: number,
-    selectedItem: ExplorerItemData,
-    depth?: number
-  ) {
-    if (typeof depth === 'number') {
-      this.store.path.splice(depth + 1, this.store.path.length);
-    }
-
-    item.children = children;
-
-    const selectedChildren = findSelectedChildren(children, selectedItem);
-
-    this.store.path.push(selectedChildren || emptyItem);
-    this.store.totalPages = pagesCount;
-  }
-
-  @action
-  private setBusy(busy: boolean) {
-    this.busy = busy;
-  }
-
-  @boundMethod
-  private refresh() {
-    const { store } = this;
-    void this.openItem(store.openedItem, store.page, store.path.length - 2);
-  }
-
-  private async setPathToUrl() {
-    if (!this.urlChangeEnabled || !this.props.urlChangeEnabled) {
+  private async setStateToUrl(replaceUrl?: boolean) {
+    if (!this.urlChangeEnabled || this.store.restoringFromUrl || !this.props.urlChangeEnabled) {
       return;
     }
 
@@ -318,119 +299,72 @@ export class Explorer extends Component<ExplorerProps> {
       return;
     }
 
+    this.savingToUrl = true;
+
     await services.provided;
+    const { path, page, pageSize, sort, sortDir, filter } = this.store;
 
-    const explorerItems: ExplorerUrlItem[] = this.store.path?.map((path, i) => {
-      const id = getId(path);
-
-      const res: ExplorerUrlItem = [path.type, id];
-
-      if (i === this.store.path.length - 1) {
-        res[2] = this.store.page;
-      }
-
-      return res;
-    });
-
+    const explorerItems = path.flatMap(item => [item.type, getId(item)]);
     const encodedURIPath = JSON.stringify(explorerItems);
 
-    const { appRole } = this.props;
-
-    await services.router.navigate([location.pathname], {
-      queryParams: {
-        ['explorerPath_' + appRole]: encodedURIPath
-      },
-      queryParamsHandling: 'merge'
-    });
-  }
-
-  private async setOptionsToUrl() {
-    if (!this.urlChangeEnabled || !this.props.urlChangeEnabled) {
-      return;
-    }
-    await services.provided;
-
-    const { pageSize, sort, sortDir, filter } = this.store;
-    const explorerOptions: ExplorerUrlOptions = [pageSize, sort, sortDir, filter];
+    const explorerOptions: ExplorerUrlOptions = [page, pageSize, sort, sortDir, filter];
     const encodedURIOptions = JSON.stringify(explorerOptions);
 
-    const { appRole } = this.props;
+    const { id } = this.props;
 
     await services.router.navigate([location.pathname], {
       queryParams: {
-        ['explorerOptions_' + appRole]: encodedURIOptions
+        ['path_' + id]: encodedURIPath,
+        ['opts_' + id]: encodedURIOptions
       },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
+      replaceUrl
     });
+    await sleep(0);
+    this.savingToUrl = false;
   }
 
-  private async restoreState(urlExplorersPath: string) {
-    this.urlChangeEnabled = false;
+  private async restoreStateFromUrl(url: URL = new URL(window.location.href)) {
+    this.store.setRestoringFromUrl(true);
 
-    this.restoreOptions();
+    const { id } = this.props;
 
-    const explorersPath = JSON.parse(urlExplorersPath) as ExplorerUrlItem[];
+    if (url.searchParams.get(`path_${id}`)) {
+      const urlExplorerPath = url.searchParams.get(`path_${id}`);
+      const pathUrlItems = chunk(JSON.parse(urlExplorerPath), 2) as ExplorerUrlItem[];
+      const path = this.store.path.slice(0, 1);
 
-    for (let i = 1; i < explorersPath.length; i++) {
-      await (i === explorersPath.length - 1
-        ? this.restoreLastItem(explorersPath[i], i)
-        : this.restoreItem(explorersPath[i], i));
-    }
-
-    this.urlChangeEnabled = true;
-  }
-
-  private async restoreItem(urlItem: ExplorerUrlItem, i: number) {
-    const [type, id] = urlItem;
-    const childrenItem = await getChildById(this.store.path[i - 1], id, type);
-
-    if (!childrenItem) {
-      await this.openItem(this.store.path[i - 1], 0, i - 1, false);
-    } else {
-      this.store.setPathItem(childrenItem, i);
-    }
-  }
-
-  private async restoreLastItem(urlItem: ExplorerUrlItem, i: number) {
-    const [type, id, page] = urlItem;
-    const { pageSize, sort, sortDir, filter, path } = this.store;
-
-    if (!path[i - 1]) {
-      await this.openItem(path[path.length - 1], 0, path.length - 1, false);
-    } else if (type !== ExplorerItemType.EMPTY) {
-      const response =
-        type && id
-          ? await getChildrenWithParticularOne(path[i - 1], { page, pageSize, sort, sortDir, filter }, urlItem)
-          : await getChildren(path[i - 1], { page, pageSize, sort, sortDir, filter });
-
-      if (response) {
-        const [children, pagesCount, childrenPage] = response;
-
-        const selectedItem: ExplorerItemData = children.find(item => item.type === type && getId(item) === id);
-        this.service.showRestoredItem(selectedItem, children, pagesCount, i, childrenPage ? childrenPage : page);
-      } else {
-        if (i > 1 && id) {
-          Toast.warn({ message: 'Объект не найден' });
+      for (let i = 1; i < pathUrlItems.length; i++) {
+        const [type, id] = pathUrlItems[i];
+        const child = type !== ExplorerItemType.EMPTY ? await getChildById(path[i - 1], id, type) : emptyItem;
+        if (child) {
+          path[i] = child;
+        } else {
+          break;
         }
-
-        await this.openItem(path[i - 1], 0, i - 1, false);
       }
+
+      this.store.setPath(path);
+      this.restoreOptions(url);
     } else {
-      await this.openItem(path[i - 1], 0, i - 1, false);
+      this.init(this.props);
     }
-    this.store.setSortItems(getChildrenSortItems(path[path.length - 2]));
+
+    await sleep(100);
+
+    this.store.setRestoringFromUrl(false);
   }
 
-  private restoreOptions() {
-    const queryParam = route.queryParams['explorerOptions_' + this.props.appRole];
-    if (!queryParam) {
+  private restoreOptions(url: URL) {
+    const urlExplorerOptions = url.searchParams.get(`opts_${this.props.id}`);
+
+    if (!urlExplorerOptions) {
       return;
     }
 
-    const [pageSize, sort, sortDir, filter] = JSON.parse(
-      route.queryParams['explorerOptions_' + this.props.appRole]
-    ) as ExplorerUrlOptions;
+    const [page, pageSize, sort, sortDir, filter] = JSON.parse(urlExplorerOptions) as ExplorerUrlOptions;
 
+    this.store.setPage(page);
     this.store.setPageSize(pageSize);
     this.store.setSort(sort);
     this.store.setSortDir(sortDir);

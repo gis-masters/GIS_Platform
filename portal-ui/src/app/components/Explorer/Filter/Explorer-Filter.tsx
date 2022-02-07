@@ -17,14 +17,14 @@ interface ExplorerFilterProps {
 @observer
 export class ExplorerFilter extends Component<ExplorerFilterProps> {
   render() {
-    const { filter, openedItem: currentItem } = this.props.store;
-    const filterField = getChildrenFilterField(currentItem) || null;
+    const { filter, openedItem } = this.props.store;
+    const filterField = getChildrenFilterField(openedItem) || null;
 
     return (
       filterField && (
         <TextField
           className={cnExplorerFilter()}
-          label={getChildrenFilterLabel(currentItem) || 'Поиск'}
+          label={getChildrenFilterLabel(openedItem) || 'Поиск'}
           value={filter[filterField] || ''}
           onChange={this.handleFilterChange}
           InputProps={{

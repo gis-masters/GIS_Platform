@@ -14,7 +14,7 @@ export class DataManagement extends Component {
   render() {
     return (
       <div className={cnDataManagement()}>
-        <Explorer preset={ExplorerItemType.ROOT} urlChangeEnabled withInfoPanel fixedHeight appRole='DataManagement' />
+        <Explorer preset={ExplorerItemType.ROOT} urlChangeEnabled withInfoPanel fixedHeight id='dm' />
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { computed, IReactionDisposer, reaction } from 'mobx';
+import { computed, IReactionDisposer, reaction, when } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { List } from '@mui/material';
@@ -7,7 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { sleep } from '../../../services/util/sleep';
 
-import { getEmptyListView, getIcon, getId, getMeta, getTitle, isFolder } from '../Adapter/Explorer-Adapter';
+import { getIcon, getId, getMeta, getTitle, isFolder } from '../Adapter/Explorer-Adapter';
 import { ExplorerItem, ExplorerItemProps } from '../Item/Explorer-Item';
 import { ExplorerEmpty } from '../Empty/Explorer-Empty';
 import { ExplorerItemData } from '../Explorer.models';
@@ -19,53 +19,54 @@ const cnExplorerList = cn('Explorer', 'List');
 
 interface ExplorerListProps {
   store: ExplorerStore;
-  onOpen: (item: ExplorerItemData, page: number) => void;
+  onOpen: (item: ExplorerItemData) => void;
   disabledTester?(item: ExplorerItemData): boolean;
 }
 
 @observer
 export class ExplorerList extends Component<ExplorerListProps> {
   private thisRef = createRef<HTMLUListElement>();
-  private explorerItemRef = createRef<HTMLDivElement>();
+  private selectedItemRef = createRef<HTMLDivElement>();
   private selectedItemReactionDisposer: IReactionDisposer;
 
-  componentDidMount() {
+  async componentDidMount() {
     const { store, onOpen } = this.props;
 
     if (store.path.length === 1) {
-      onOpen(store.path[0], 0);
+      onOpen(store.path[0]);
     }
 
+    await sleep(100);
+    await when(() => !store.restoringFromUrl);
+
     this.selectedItemReactionDisposer = reaction(
-      () => getId(store.selectedItem),
-      () => void this.scrollTo()
+      () => [getId(store.selectedItem), store.selectedItem.type],
+      async () => await this.scrollToSelectedItem(),
+      { fireImmediately: true }
     );
   }
 
   componentWillUnmount() {
     this.selectedItemReactionDisposer();
   }
-  render() {
-    const { path } = this.props.store;
-    const emptyListView = path.length > 1 ? getEmptyListView(path[path.length - 2]) : null;
 
+  render() {
     return (
       <List className={cnExplorerList(null, ['scroll'])} disablePadding ref={this.thisRef}>
         {Boolean(this.currentList?.length) &&
-          this.currentList.map(this.getItemProps).map(props => <ExplorerItem {...props} key={getId(props.item)} />)}
-
-        {!this.currentList?.length ? (
-          <>{emptyListView ? <ExplorerEmpty>{emptyListView}</ExplorerEmpty> : null}</>
-        ) : null}
+          this.currentList
+            .map(this.getItemProps)
+            .map((props, i) => <ExplorerItem {...props} key={String(i) + getId(props.item)} />)}
+        {!this.currentList?.length && <ExplorerEmpty />}
       </List>
     );
   }
 
   @computed
   private get currentList(): ExplorerItemData[] {
-    const { path, openedItem } = this.props.store;
+    const { items } = this.props.store;
 
-    return path.length >= 2 && openedItem.children ? openedItem.children : [];
+    return items || [];
   }
 
   @boundMethod
@@ -79,7 +80,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
       icon: getIcon(item),
       selected: this.isSelected(item),
       isFolder: isFolder(item),
-      itemRef: this.isSelected(item) ? this.explorerItemRef : undefined,
+      itemRef: this.isSelected(item) ? this.selectedItemRef : undefined,
       onOpen,
       store,
       disabledTester
@@ -98,22 +99,19 @@ export class ExplorerList extends Component<ExplorerListProps> {
   }
 
   @boundMethod
-  private async scrollTo() {
+  private async scrollToSelectedItem() {
     await sleep(200);
 
-    const containerElem = this.thisRef.current;
-    const explorerElem = this.explorerItemRef.current;
+    const container = this.thisRef.current;
+    const selected = this.selectedItemRef.current;
 
-    if (explorerElem && containerElem.scrollTop > explorerElem.offsetTop) {
-      containerElem.scrollTo({ top: explorerElem.offsetTop, behavior: 'smooth' });
-    } else if (
-      explorerElem &&
-      containerElem.scrollTop + containerElem.offsetHeight < explorerElem.offsetTop + explorerElem.offsetHeight
-    ) {
-      containerElem.scrollTo({
+    if (selected && container.scrollTop > selected.offsetTop) {
+      container.scrollTo({ top: selected.offsetTop, behavior: 'smooth' });
+    } else if (selected && container.scrollTop + container.offsetHeight < selected.offsetTop + selected.offsetHeight) {
+      container.scrollTo({
         top:
-          containerElem.scrollTop +
-          (explorerElem.offsetTop + explorerElem.offsetHeight - (containerElem.scrollTop + containerElem.offsetHeight)),
+          container.scrollTop +
+          (selected.offsetTop + selected.offsetHeight - (container.scrollTop + container.offsetHeight)),
         behavior: 'smooth'
       });
     }

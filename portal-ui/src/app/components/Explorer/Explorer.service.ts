@@ -1,49 +1,67 @@
 import { boundMethod } from 'autobind-decorator';
-import { action } from 'mobx';
+import { debounce } from 'lodash';
 
-import { getChildrenWithParticularOne, getId } from './Adapter/Explorer-Adapter';
-import { ExplorerItemData } from './Explorer.models';
+import { getChildren, getChildrenWithParticularOne, getId } from './Adapter/Explorer-Adapter';
+import { emptyItem, ExplorerItemData, ExplorerItemType } from './Explorer.models';
 import { ExplorerStore } from './Explorer.store';
 
 export class ExplorerService {
   private store: ExplorerStore;
+  private gettingChildrenOperationId: symbol;
 
   constructor(store: ExplorerStore) {
     this.store = store;
+
+    this.refreshItems = debounce(this.refreshItems.bind(this), 50);
   }
 
-  @action
-  showRestoredItem(
-    selectedItem: ExplorerItemData,
-    children: ExplorerItemData[],
-    pagesCount: number,
-    i: number,
-    page: number
-  ): void {
-    const { path } = this.store;
-    path.splice(i === 1 ? i : i + 1, path.length);
-    path[i - 1].children = children;
-    if (i + 1 !== path.length) {
-      path.push(selectedItem ? selectedItem : children[0]);
+  async refreshItems(): Promise<void> {
+    const { selectedItem, openedItem, pageSize, sort, sortDir, filter } = this.store;
+    let { page } = this.store;
+    let children: ExplorerItemData[];
+    let totalPages: number;
+
+    this.store.setLoading(true);
+
+    const gettingChildrenToken = Symbol();
+    this.gettingChildrenOperationId = gettingChildrenToken;
+
+    if (selectedItem.type === ExplorerItemType.EMPTY) {
+      [children = [], totalPages = 0] = await getChildren(openedItem, { page, pageSize, sort, sortDir, filter });
+    } else {
+      const response = await getChildrenWithParticularOne(
+        openedItem,
+        { page, pageSize, sort, sortDir, filter },
+        getId(selectedItem)
+      );
+      if (response) {
+        [children = [], totalPages = 0, page = 0] = response;
+      } else {
+        [children = [], totalPages = 0] = await getChildren(openedItem, { page, pageSize, sort, sortDir, filter });
+      }
     }
-    this.store.totalPages = pagesCount;
-    this.store.selectItem(selectedItem ? selectedItem : children[0]);
-    this.store.setPage(page ? page : 0);
+
+    if (this.gettingChildrenOperationId === gettingChildrenToken) {
+      this.store.setItems(children);
+      this.store.setTotalPages(totalPages);
+      if (selectedItem.type === ExplorerItemType.EMPTY || !children.some(item => this.itemsEqual(item, selectedItem))) {
+        this.store.selectItem(children[0] || emptyItem);
+      } else {
+        this.store.setPage(page);
+      }
+      this.store.setLoading(false);
+    }
   }
 
   @boundMethod
-  async createHandler(itemData: ExplorerItemData): Promise<void> {
-    const { page, pageSize, sort, sortDir, filter, path } = this.store;
-    const response = await getChildrenWithParticularOne(
-      path[path.length - 2],
-      { page, pageSize, sort, sortDir, filter },
-      [itemData.type, getId(itemData)]
-    );
+  paginate(page: number): void {
+    if (this.store.page !== page) {
+      this.store.selectItem(emptyItem);
+      this.store.setPage(page);
+    }
+  }
 
-    const [children, pagesCount, childrenPage] = response;
-
-    const selectedItem: ExplorerItemData = children.find(child => getId(child) === getId(itemData));
-
-    this.showRestoredItem(selectedItem, children, pagesCount, path.length - 1, childrenPage ? childrenPage : page);
+  itemsEqual(a: ExplorerItemData, b: ExplorerItemData): boolean {
+    return a && b && getId(a) === getId(b) && a.type === b.type;
   }
 }

@@ -73,7 +73,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
                 <DialogContent>
                   <Explorer
                     className={cnConnectionsToProjectsWidget('Explorer')}
-                    appRole='ConnectionsToProjectsWidget'
+                    id='ConnectionsToProjectsWidget'
                     preset={ExplorerItemType.PROJECTS_ROOT}
                     onSelect={this.handleSelect}
                     onOpen={this.handleOpen}

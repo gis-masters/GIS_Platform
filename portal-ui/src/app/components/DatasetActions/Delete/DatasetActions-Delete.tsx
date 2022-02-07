@@ -32,6 +32,8 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
   @observable private errorMessage: string;
 
   render() {
+    const { dataset } = this.props;
+
     return (
       <>
         <Tooltip title='Удалить'>
@@ -44,7 +46,7 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
           <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
             <DialogTitle>Подтверждение удаления</DialogTitle>
             <DialogContent>
-              <DialogContentText>Вы действительно хотите удалить "{this.props.dataset.title}"?</DialogContentText>
+              <DialogContentText>Вы действительно хотите удалить "{dataset.title}"?</DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button loading={this.btnLoading} onClick={this.doDeletion} color='primary'>

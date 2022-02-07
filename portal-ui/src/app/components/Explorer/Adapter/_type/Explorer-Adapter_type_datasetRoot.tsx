@@ -8,7 +8,6 @@ import { Emitter } from '../../../../services/common/Emitter';
 import { CreateDatasetElement } from '../../../CreateDatasetElement/CreateDatasetElement';
 import { Database } from '../../../Icons/Database';
 
-import { ExplorerUrlItem } from '../../Explorer';
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
@@ -20,7 +19,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeDatasetRoot {
   static getId(): string {
-    return 'dataSetRoot';
+    return 'datasetRoot';
   }
 
   static getTitle(): string {
@@ -57,8 +56,8 @@ export class ExplorerAdapterTypeDatasetRoot {
 
   static async getChildrenWithParticularOne(
     item: ExplorerItemData,
-    { filter, ...options }: PageOptions,
-    [, identifier, page]: ExplorerUrlItem
+    { filter, page, ...options }: PageOptions,
+    identifier: string
   ): Promise<[ExplorerItemData<Dataset>[], number, number]> | undefined {
     const response = await getDatasetsWithParticularOne(identifier, {
       ...options,
@@ -75,8 +74,8 @@ export class ExplorerAdapterTypeDatasetRoot {
     return [datasets.map(payload => ({ type: ExplorerItemType.DATASET, payload })), totalPages, pageNumber];
   }
 
-  static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData<Dataset>> {
-    const payload = await getDataset(id);
+  static async getChildById(item: ExplorerItemData, identifier: string): Promise<ExplorerItemData<Dataset>> {
+    const payload = await getDataset(identifier);
 
     return { type: ExplorerItemType.DATASET, payload };
   }

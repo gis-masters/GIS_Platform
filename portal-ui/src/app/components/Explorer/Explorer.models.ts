@@ -5,7 +5,7 @@ import { Emitter } from '../../services/common/Emitter';
 
 import { ExplorerStore } from './Explorer.store';
 import { ExplorerService } from './Explorer.service';
-import { ExplorerProps, ExplorerUrlItem } from './Explorer';
+import { ExplorerProps } from './Explorer';
 
 export enum ExplorerItemType {
   EMPTY = 'empty',
@@ -14,17 +14,17 @@ export enum ExplorerItemType {
   TABLE = 'table',
   PROJECT = 'project',
 
-  LIBRARY = 'library',
+  LIBRARY = 'lib',
   FOLDER = 'folder',
-  DOCUMENT = 'document',
+  DOCUMENT = 'doc',
 
   BASEMAP = 'basemap',
 
-  DATASET_ROOT = 'datasetRoot',
-  LIBRARY_ROOT = 'libraryRoot',
-  PROJECTS_ROOT = 'projectsRoot',
-  BASEMAPS_ROOT = 'basemapsRoot',
-  ROOT = 'root'
+  DATASET_ROOT = 'dr',
+  LIBRARY_ROOT = 'lr',
+  PROJECTS_ROOT = 'pr',
+  BASEMAPS_ROOT = 'br',
+  ROOT = 'r'
 }
 
 export enum ExplorerItemEntityType {
@@ -39,10 +39,10 @@ export enum ExplorerItemEntityType {
 export interface ExplorerItemData<T = ExplorerItemPayloads[ExplorerItemType]> {
   type: ExplorerItemType;
   payload: T;
-  children?: ExplorerItemData[];
 }
 
-export const emptyItem: ExplorerItemData = { type: ExplorerItemType.EMPTY, payload: { title: '' } };
+export const emptyItem: ExplorerItemData = { type: ExplorerItemType.EMPTY, payload: {} };
+export const loadingItem: ExplorerItemData = { type: ExplorerItemType.EMPTY, payload: { loading: true } };
 
 export interface SortItem {
   label: string;
@@ -77,12 +77,11 @@ export interface Adapter {
   getDescription?: (item: ExplorerItemData) => ReactNode;
   getIcon?: (item: ExplorerItemData) => ReactNode;
   isFolder: (item: ExplorerItemData) => boolean;
-  findSelectedChildren?: (children: ExplorerItemData[], selectedItem: ExplorerItemData) => ExplorerItemData;
   getChildren?: (item: ExplorerItemData, pageOptions: PageOptions) => Promise<[ExplorerItemData[], number]>;
   getChildrenWithParticularOne?: (
     item: ExplorerItemData,
     pageOptions: PageOptions,
-    urlItem: ExplorerUrlItem
+    id: string
   ) => Promise<[ExplorerItemData[], number, number]> | undefined;
   getChildrenSortItems?: (item: ExplorerItemData) => SortItem[];
   getChildById?: (item: ExplorerItemData, id: string, type: ExplorerItemType) => Promise<ExplorerItemData>;
@@ -91,7 +90,6 @@ export interface Adapter {
   getChildrenFilterField?: (item: ExplorerItemData) => string;
   getChildrenFilterLabel?: (item: ExplorerItemData) => string;
   getToolbarActions?: (item: ExplorerItemData, store: ExplorerStore, service: ExplorerService) => ReactNode;
-  getEmptyListView?: (item: ExplorerItemData) => ReactNode;
   getRefreshEmitters?: (item: ExplorerItemData) => Emitter[];
   getActions?: (item: ExplorerItemData) => ReactNode;
 }

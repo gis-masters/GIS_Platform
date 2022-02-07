@@ -8,13 +8,16 @@ export class ExplorerStore {
   readonly id: string;
   readonly pageSizeStorageKey: string;
   @observable path: ExplorerItemData[] = [];
+  @observable items: ExplorerItemData[] = [];
   @observable pageSize = 10;
-  @observable page = 0;
+  @observable private _page = 0;
   @observable totalPages = 0;
   @observable sortItems: SortItem[] = [];
   @observable sort = '';
   @observable sortDir: SortDir = SortDir.ASC;
   @observable filter: Record<string, string> = {};
+  @observable loading = false;
+  @observable restoringFromUrl = false;
 
   constructor(id: string) {
     this.id = id;
@@ -39,19 +42,31 @@ export class ExplorerStore {
     return path.length > 1 ? path[path.length - 2] : path[0];
   }
 
+  @computed
+  get page(): number {
+    if (this._page < 0) {
+      return 0;
+    }
+    if (this._page > this.totalPages) {
+      return this.totalPages;
+    }
+
+    return this._page;
+  }
+
   @action
   setPath(path: ExplorerItemData[]): void {
     this.path = path;
   }
 
   @action
-  setPathItem(item: ExplorerItemData, i: number): void {
-    this.path[i] = item;
+  selectItem(item: ExplorerItemData): void {
+    this.path[this.path.length - 1] = item;
   }
 
   @action
-  selectItem(item: ExplorerItemData): void {
-    this.path[this.path.length - 1] = item;
+  setItems(items: ExplorerItemData[]): void {
+    this.items = items;
   }
 
   @action
@@ -71,7 +86,7 @@ export class ExplorerStore {
 
   @action
   setPage(page: number): void {
-    this.page = page;
+    this._page = page;
   }
 
   @action
@@ -82,5 +97,20 @@ export class ExplorerStore {
   @action
   setPageSize(size: number): void {
     this.pageSize = size;
+  }
+
+  @action
+  setTotalPages(totalPages: number): void {
+    this.totalPages = totalPages;
+  }
+
+  @action
+  setLoading(loading: boolean): void {
+    this.loading = loading;
+  }
+
+  @action
+  setRestoringFromUrl(status: boolean): void {
+    this.restoringFromUrl = status;
   }
 }

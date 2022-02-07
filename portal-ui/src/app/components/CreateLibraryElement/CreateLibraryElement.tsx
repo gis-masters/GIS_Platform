@@ -5,29 +5,29 @@ import { NoteAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
+import { ExplorerStore } from '../Explorer/Explorer.store';
+import { createLibraryRecord, LibraryRecord, LibraryRecordRaw } from '../../services/crg/doc-library.service';
+import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
+import { ContentType, OldFeatureDescription } from '../../services/crg/schemaOld.models';
+import { PropertySchema } from '../../services/crg/schema.models';
 import { schemaService } from '../../services/crg/schema.service';
+import { ExplorerItemType } from '../Explorer/Explorer.models';
 import {
   FieldErrors,
   getDefaultValues,
   normalizeServerErrors,
   validateFormValue
 } from '../../services/crg/formValidation.service';
-import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
-import { ContentType, OldFeatureDescription } from '../../services/crg/schemaOld.models';
-import { createLibraryRecord, LibraryRecord, LibraryRecordRaw } from '../../services/crg/doc-library.service';
-import { PropertySchema } from '../../services/crg/schema.models';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { ExplorerStore } from '../Explorer/Explorer.store';
+import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
 
 import { CreateLibraryElementDialog } from './Dialog/CreateLibraryElement-Dialog';
 import { CreateLibraryElementMenuItem } from './MenuItem/CreateLibraryElement-MenuItem';
 import { CreateLibraryElementFolderButton } from './FolderButton/CreateLibraryElement-FolderButton';
 
 export interface CreateLibraryElementsProps {
+  libraryIdentifier: string;
   schemaId: string;
   store: ExplorerStore;
-  onCreate: (explorerItem: ExplorerItemData) => void;
   path?: string;
 }
 
@@ -154,6 +154,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
 
   @boundMethod
   private async create(formValue: LibraryRecord) {
+    const { libraryIdentifier, schemaId, store } = this.props;
     const formData = this.fillSystemAttributes(formValue);
     for (const propName in formData) {
       // Удаляем пустые строки и нули? Наркомания...
@@ -168,18 +169,13 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     }
 
     try {
-      const record = await createLibraryRecord(this.schema.tableName, formData, false);
-
-      if (!record.libraryId) {
-        record.libraryId = this.schema.tableName;
-      }
-
+      const record = await createLibraryRecord(formData, libraryIdentifier, schemaId);
       const explorerItem = {
         payload: record,
         type: this.isEditingElementFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT
       };
 
-      this.props.onCreate(explorerItem);
+      store.selectItem(explorerItem);
 
       this.closeDialog();
     } catch (error) {

@@ -22,7 +22,7 @@ import { ExplorerAdapterTypeProject } from './_type/Explorer-Adapter_type_projec
 import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_projectsRoot';
 import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basemap';
 import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_basemapsRoot';
-import { ExplorerProps, ExplorerUrlItem } from '../Explorer';
+import { ExplorerProps } from '../Explorer';
 import { ExplorerService } from '../Explorer.service';
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
@@ -77,12 +77,6 @@ export function isFolder(item: ExplorerItemData): boolean {
   return adapters[item.type].isFolder(item);
 }
 
-export function findSelectedChildren(children: ExplorerItemData[], selectedItem: ExplorerItemData): ExplorerItemData {
-  return adapters[selectedItem.type].findSelectedChildren
-    ? adapters[selectedItem.type].findSelectedChildren(children, selectedItem)
-    : children[0];
-}
-
 export async function getChildren(
   item: ExplorerItemData,
   pageOptions: PageOptions
@@ -116,11 +110,11 @@ export async function getChildren(
 export async function getChildrenWithParticularOne(
   item: ExplorerItemData,
   pageOptions: PageOptions,
-  urlItem: ExplorerUrlItem
+  id: string
 ): Promise<[ExplorerItemData[], number, number]> | undefined {
   if (adapters[item.type].getChildrenWithParticularOne) {
     try {
-      return await adapters[item.type].getChildrenWithParticularOne(item, pageOptions, urlItem);
+      return await adapters[item.type].getChildrenWithParticularOne(item, pageOptions, id);
     } catch (error) {
       const err = error as AxiosError;
 
@@ -138,8 +132,6 @@ export async function getChildrenWithParticularOne(
 
       services.logger.error(message, error);
       Toast.warn({ message, details });
-
-      return [[], 1, 0];
     }
   }
 }
@@ -205,10 +197,6 @@ export function getToolbarActions(
   service: ExplorerService
 ): ReactNode | undefined {
   return adapters[item.type].getToolbarActions && adapters[item.type].getToolbarActions(item, store, service);
-}
-
-export function getEmptyListView(item: ExplorerItemData): ReactNode | undefined {
-  return adapters[item.type].getEmptyListView && adapters[item.type].getEmptyListView(item);
 }
 
 export function getRefreshEmitters(item: ExplorerItemData): Emitter[] {

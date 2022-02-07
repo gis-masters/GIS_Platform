@@ -114,22 +114,19 @@ export class LibraryRegistry extends Component {
 
   @computed
   private get breadcrumbsItems(): BreadcrumbsItemData[] {
-    const libraryRootUrlItems = [
-      ['root', 'root'],
-      ['libraryRoot', 'libraryRoot']
-    ];
-    const libraryRootPath = JSON.stringify([...libraryRootUrlItems, ['', '', 0]]);
-    const libraryPath = JSON.stringify([...libraryRootUrlItems, ['library', this.library?.identifier, 0], ['', '', 0]]);
+    const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];
+    const libraryRootPath = JSON.stringify([...libraryRootUrlItems, 'empty', 'empty']);
+    const libraryPath = JSON.stringify([...libraryRootUrlItems, 'library', this.library?.identifier, 'empty', 'empty']);
 
     return [
       { title: <HomeOutlined />, url: '/data-management' },
       {
-        title: 'Библиотеки',
-        url: `/data-management?explorerPath_DataManagement=${libraryRootPath}`
+        title: 'Библиотеки документов',
+        url: `/data-management?path_dm=${libraryRootPath}`
       },
       {
         title: this.library?.title,
-        url: `/data-management?explorerPath_DataManagement=${libraryPath}`
+        url: `/data-management?path_dm=${libraryPath}`
       }
     ];
   }

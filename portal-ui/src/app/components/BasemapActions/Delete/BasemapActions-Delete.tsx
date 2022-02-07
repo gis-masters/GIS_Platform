@@ -39,6 +39,7 @@ export class BasemapActionsDelete extends Component<BasemapActionsDeleteProps> {
   async componentDidUpdate(prevProps: BasemapActionsDeleteProps) {
     const { basemap } = this.props;
     if (!isEqual(prevProps.basemap, basemap)) {
+      this.closeDialog();
       await this.fetchProjectsCount();
     }
   }

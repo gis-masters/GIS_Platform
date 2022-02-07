@@ -122,13 +122,17 @@ export class DocumentsList extends Component<DocumentsListProps> {
 
       const { editedField, featureInfo } = this.props;
       const path = editedField.property.folderId ? `/root/${editedField.property.folderId}` : undefined;
-      const crgDocument = await createLibraryRecord('dl_default', {
-        content_type_id: 'doc_v2',
-        binary: selectedFile,
-        title: selectedFile.name,
-        category: 'loaded by old way',
-        path: path
-      });
+      const crgDocument = await createLibraryRecord(
+        {
+          content_type_id: 'doc_v2',
+          binary: selectedFile,
+          title: selectedFile.name,
+          category: 'loaded by old way',
+          path
+        },
+        'dl_default',
+        'dl_default_schema'
+      );
 
       if (crgDocument) {
         const payload = this.preparePayload(crgDocument, selectedFile.name);

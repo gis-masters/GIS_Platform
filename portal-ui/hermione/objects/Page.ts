@@ -18,4 +18,11 @@ export class Page extends Block {
   open(): Promise<string> {
     return this.browser.url(this.url);
   }
+
+  navigate(urlExtras: string = ''): Promise<void> {
+    return this.browser.execute(url => {
+      // @ts-ignore
+      window.navigate(url);
+    }, this.url + urlExtras);
+  }
 }

@@ -2,7 +2,6 @@ import React, { ReactNode } from 'react';
 
 import { Library } from '../../../Icons/Library';
 import { PageOptions, SortDir } from '../../../../services/models';
-import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import {
   DocumentLibrary,
@@ -13,7 +12,6 @@ import {
 } from '../../../../services/crg/doc-library.service';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
-import { ExplorerUrlItem } from '../../Explorer';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -57,8 +55,8 @@ export class ExplorerAdapterTypeLibraryRoot {
 
   static async getChildrenWithParticularOne(
     item: ExplorerItemData,
-    { filter, ...options }: PageOptions,
-    [, identifier, page]: ExplorerUrlItem
+    { filter, page, ...options }: PageOptions,
+    identifier: string
   ): Promise<[ExplorerItemData<DocumentLibrary>[], number, number]> | undefined {
     const response = await getLibrariesWithParticularOne(identifier, {
       ...options,
@@ -114,9 +112,5 @@ export class ExplorerAdapterTypeLibraryRoot {
 
   static getChildrenFilterLabel(): string {
     return 'Фильтр по названию';
-  }
-
-  static getEmptyListView(): ReactNode | undefined {
-    return <EmptyListView text='Библиотеки отсутствуют' />;
   }
 }

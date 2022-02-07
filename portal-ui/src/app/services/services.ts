@@ -32,6 +32,14 @@ class Services implements ServicesList {
     this.logger = servicesList.logger;
 
     this.onFulfilled();
+
+    // для автотестов
+    // eslint-disable-next-line dot-notation
+    window['navigate'] = (url: string) => {
+      void services.ngZone.run(async () => {
+        await services.router.navigateByUrl(url);
+      });
+    };
   }
 }
 

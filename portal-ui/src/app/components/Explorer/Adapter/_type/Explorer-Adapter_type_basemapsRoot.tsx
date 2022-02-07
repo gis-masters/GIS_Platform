@@ -9,7 +9,6 @@ import { communicationService } from '../../../../services/communication.service
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
-import { ExplorerUrlItem } from '../../Explorer';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -55,9 +54,9 @@ export class ExplorerAdapterTypeBasemapsRoot {
   static async getChildrenWithParticularOne(
     item: ExplorerItemData,
     pageOptions: PageOptions,
-    [, id, page]: ExplorerUrlItem
+    id: string
   ): Promise<[ExplorerItemData<Basemap>[], number, number]> | undefined {
-    const response = await getBasemapsWithParticularOne(Number(id), { ...pageOptions, page });
+    const response = await getBasemapsWithParticularOne(Number(id), pageOptions);
 
     if (!response) {
       return;
@@ -82,7 +81,7 @@ export class ExplorerAdapterTypeBasemapsRoot {
 
     return {
       type: ExplorerItemType.BASEMAP,
-      payload: basemap
+      payload: { id: Number(id), ...basemap }
     };
   }
 

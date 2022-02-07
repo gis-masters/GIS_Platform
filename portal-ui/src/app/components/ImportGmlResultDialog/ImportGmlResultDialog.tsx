@@ -37,8 +37,8 @@ interface ImportGmlResultDialogProps {
 @observer
 export class ImportGmlResultDialog extends Component<ImportGmlResultDialogProps> {
   render() {
-    const { open, reports, onClose } = this.props;
-    const { projectIsNew, projectId, projectName, importLayerReports } = reports;
+    const { open, reports = {} as Partial<ImportResult>, onClose } = this.props;
+    const { projectIsNew, projectId, projectName, importLayerReports = [] } = reports;
 
     return (
       <Dialog open={open} onClose={onClose} PaperProps={{ className: cnImportGmlResultDialog() }}>

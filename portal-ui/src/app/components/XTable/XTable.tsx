@@ -167,7 +167,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
                       {
                         field,
                         title,
-                        description,
+                        description = '',
                         sortable,
                         filterable,
                         filterType = FilterType.STRING,

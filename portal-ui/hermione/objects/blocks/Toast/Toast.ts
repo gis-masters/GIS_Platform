@@ -59,6 +59,12 @@ export class Toast extends Block {
     await this.browser.pause(1000); // animation
   }
 
+  async isVisible(): Promise<boolean> {
+    const $container = await this.getElement('container');
+
+    return await $container.isDisplayed();
+  }
+
   async waitForHidden(): Promise<void> {
     const $container = await this.getElement('container');
 

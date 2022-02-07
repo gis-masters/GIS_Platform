@@ -170,17 +170,18 @@ export async function getLibraryRecordsWithParticularOne(
 }
 
 export async function createLibraryRecord(
-  libraryId: string,
   data: LibraryRecordRaw,
-  update = true
+  libraryIdentifier: string,
+  schemaId: string
 ): Promise<LibraryRecord> {
-  const record = await http.post<LibraryRecord>(await getDocLibrariesRecordsUrl(libraryId), prepareFormData(data));
+  const record = await http.post<LibraryRecord>(
+    await getDocLibrariesRecordsUrl(libraryIdentifier),
+    prepareFormData(data)
+  );
 
-  if (update) {
-    communicationService.libraryItemsUpdated.emit();
-  }
+  communicationService.libraryItemsUpdated.emit();
 
-  return record;
+  return { schemaId, libraryId: libraryIdentifier, ...record };
 }
 
 export async function registerDocument(libraryId: string, recordId: number): Promise<void> {

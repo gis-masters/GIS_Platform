@@ -55,7 +55,7 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
     this.setLoading(true);
     this.currentDataTableId = dataTable.identifier;
     const dataTableConnections = await getDataTableConnections(dataTable.identifier);
-    if (this.currentDataTableId === dataTable.identifier) {
+    if (dataTableConnections.length && this.currentDataTableId === dataTable.identifier) {
       this.setConnections(dataTableConnections.map(({ project }) => project));
     }
     this.setLoading(false);

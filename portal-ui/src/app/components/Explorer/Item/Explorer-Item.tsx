@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { ChevronRight } from '@mui/icons-material';
-import { IconButton, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@mui/material';
+import { IconButton, ListItemIcon, ListItemButton, ListItemSecondaryAction, ListItemText } from '@mui/material';
 
 import { ExplorerItemData } from '../Explorer.models';
 import { ExplorerStore } from '../Explorer.store';
@@ -20,7 +20,7 @@ export interface ExplorerItemProps {
   isFolder: boolean;
   store: ExplorerStore;
   itemRef?: RefObject<HTMLDivElement>;
-  onOpen: (item: ExplorerItemData, page: number) => void;
+  onOpen: (item: ExplorerItemData) => void;
   disabledTester?(item: ExplorerItemData): boolean;
 }
 
@@ -30,12 +30,11 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
     const { title, meta, selected, isFolder, icon, itemRef } = this.props;
 
     return (
-      <ListItem
+      <ListItemButton
         className={cnExplorerItem({ selected })}
         selected={selected}
-        button
         onClick={this.selectHandler}
-        onDoubleClick={this.openHandler}
+        onDoubleClickCapture={this.openHandler}
         disabled={this.disabled}
         ref={itemRef}
       >
@@ -48,7 +47,7 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
             </IconButton>
           </ListItemSecondaryAction>
         )}
-      </ListItem>
+      </ListItemButton>
     );
   }
 
@@ -61,11 +60,12 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
 
   @boundMethod
   private openHandler() {
-    this.props.onOpen(this.props.item, 0);
+    this.props.onOpen(this.props.item);
   }
 
   @boundMethod
   private selectHandler() {
-    this.props.store.selectItem(this.props.item);
+    const { store, item } = this.props;
+    store.selectItem(item);
   }
 }

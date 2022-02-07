@@ -137,8 +137,8 @@ export interface GeoserverException {
 }
 
 export interface PageQueryParams {
-  [key: string]: string | number;
-  page: number;
-  size: number;
+  [key: string]: string;
+  page: string;
+  size: string;
   sort?: string;
 }

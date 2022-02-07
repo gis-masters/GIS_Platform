@@ -50,7 +50,7 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
           <DialogTitle>Выберите источник данных</DialogTitle>
           <DialogContent>
             <Explorer
-              appRole='SelectDataTable'
+              id='SelectDataTable'
               className={cnSelectDataTable('Explorer')}
               preset={ExplorerItemType.DATASET_ROOT}
               onSelect={this.handleSelect}

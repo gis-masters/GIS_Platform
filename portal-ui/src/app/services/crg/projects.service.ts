@@ -259,7 +259,7 @@ class ProjectsService {
   }
 
   async getProjectsWithParticularOne(
-    id: string,
+    id: string | number,
     pageOptions: PageOptions
   ): Promise<[CrgProject[], number, number] | undefined> {
     return await http.getPageWithObject<CrgProject>(
@@ -304,13 +304,7 @@ class ProjectsService {
     return await http.get<CrgLayersGroup[]>(await getProjectGroupsUrl(projectId));
   }
 
-  async createDataset(title: string, details: string) {
-    const url = `${await getProjectsUrl()}/datasets`;
-
-    await http.post(url, { title, details });
-  }
-
-  private async getById(id: number): Promise<CrgProject | void> {
+  async getById(id: number): Promise<CrgProject> {
     try {
       return await http.get<CrgProject>(await getProjectUrl(id));
     } catch (error) {

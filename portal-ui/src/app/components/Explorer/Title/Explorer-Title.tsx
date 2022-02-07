@@ -15,17 +15,17 @@ const cnExplorerTitle = cn('Explorer', 'Title');
 
 interface ExplorerTitleProps {
   store: ExplorerStore;
-  onOpen: (item: ExplorerItemData, page: number, depth: number) => void;
+  onOpen: (item: ExplorerItemData, depth: number) => void;
 }
 
 interface ExplorerBreadcrumbItemData {
   item: ExplorerItemData;
   depth: number;
-  onOpen: (item: ExplorerItemData, page: number, depth: number) => void;
+  onOpen: (item: ExplorerItemData, depth: number) => void;
 }
 
 const handleClick = ({ item, depth, onOpen }: ExplorerBreadcrumbItemData) => {
-  onOpen(item, 0, depth);
+  onOpen(item, depth);
 };
 
 export const ExplorerTitle: FC<ExplorerTitleProps> = observer(({ store, onOpen }) => {

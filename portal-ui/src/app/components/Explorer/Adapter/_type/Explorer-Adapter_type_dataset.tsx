@@ -22,7 +22,6 @@ import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget'
 import { Adapter, ExplorerItemData, ExplorerItemEntityType, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { ExplorerUrlItem } from '../../Explorer';
 import { DatasetActions } from '../../../DatasetActions/DatasetActions';
 
 declare module '../../Explorer.models' {
@@ -107,13 +106,11 @@ export class ExplorerAdapterTypeDataset {
   }
 
   static async getChildrenWithParticularOne(
-    item: ExplorerItemData,
-    { filter, ...options }: PageOptions,
-    [, id, page]: ExplorerUrlItem
+    item: ExplorerItemData<Dataset>,
+    { filter, page, ...options }: PageOptions,
+    identifier: string
   ): Promise<[ExplorerItemData<DataTable>[], number, number]> | undefined {
-    const [datasetId, identifier] = id.split(':');
-
-    const response = await getDatasetTablesWithParticularOne(datasetId, identifier, {
+    const response = await getDatasetTablesWithParticularOne(item.payload.identifier, identifier, {
       ...options,
       filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
       page
@@ -141,9 +138,8 @@ export class ExplorerAdapterTypeDataset {
     ];
   }
 
-  static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData<DataTable>> {
-    const [datasetId, identifier] = id.split(':');
-    const payload = await getDataTable(datasetId, identifier);
+  static async getChildById(item: ExplorerItemData<Dataset>, identifier: string): Promise<ExplorerItemData<DataTable>> {
+    const payload = await getDataTable(item.payload.identifier, identifier);
 
     return { type: ExplorerItemType.TABLE, payload };
   }

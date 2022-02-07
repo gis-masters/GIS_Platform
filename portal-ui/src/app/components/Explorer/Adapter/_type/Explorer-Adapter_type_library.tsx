@@ -16,7 +16,6 @@ import {
 import { Emitter } from '../../../../services/common/Emitter';
 import { Role } from '../../../../services/crg/permissions.models';
 import { PageOptions, SortDir } from '../../../../services/models';
-import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 import { schemaService } from '../../../../services/crg/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
@@ -29,26 +28,24 @@ import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { ExplorerUrlItem } from '../../Explorer';
-import { ExplorerService } from '../../Explorer.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
-    [ExplorerItemType.LIBRARY]: LibraryRecord;
+    [ExplorerItemType.LIBRARY]: DocumentLibrary;
   }
 }
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeLibrary {
-  static getId(item: ExplorerItemData<LibraryRecord>): string {
+  static getId(item: ExplorerItemData<DocumentLibrary>): string {
     return item.payload.identifier;
   }
 
-  static getTitle(item: ExplorerItemData<LibraryRecord>): string {
+  static getTitle(item: ExplorerItemData<DocumentLibrary>): string {
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<LibraryRecord>): ReactNode {
+  static getDescription(item: ExplorerItemData<DocumentLibrary>): ReactNode {
     const { details, createdAt } = item.payload;
     moment.locale('ru');
 
@@ -66,11 +63,11 @@ export class ExplorerAdapterTypeLibrary {
     );
   }
 
-  static getMeta(item: ExplorerItemData<LibraryRecord>): string {
+  static getMeta(item: ExplorerItemData<DocumentLibrary>): string {
     return String(item.payload.identifier);
   }
 
-  static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
+  static async getWidgets(item: ExplorerItemData<DocumentLibrary>): Promise<ReactNode> {
     const url = await getDocumentLibraryRoleAssignmentUrl(item.payload.identifier);
     const currentItem = await getLibrary(item.payload.identifier);
 
@@ -90,15 +87,6 @@ export class ExplorerAdapterTypeLibrary {
 
   static isFolder(): boolean {
     return true;
-  }
-
-  static findSelectedChildren(
-    children: ExplorerItemData[],
-    selectedItem: ExplorerItemData<LibraryRecord>
-  ): ExplorerItemData {
-    return children.find(
-      item => item.type === selectedItem.type && (item.payload as LibraryRecord).id === selectedItem.payload.id
-    );
   }
 
   static async getChildren(
@@ -147,11 +135,10 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static async getChildById(
-    item: ExplorerItemData<LibraryRecord>,
-    id: string
+    item: ExplorerItemData<DocumentLibrary>,
+    recordId: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
-    const [libraryId, recordId] = id.split(':');
-    const payload = await getLibraryRecord(libraryId, Number(recordId), item.payload.schemaId);
+    const payload = await getLibraryRecord(item.payload.identifier, Number(recordId), item.payload.schemaId);
     const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 
@@ -165,13 +152,11 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static async getChildrenWithParticularOne(
-    item: ExplorerItemData<LibraryRecord>,
-    { filter, ...options }: PageOptions,
-    [, id, page]: ExplorerUrlItem
+    item: ExplorerItemData<DocumentLibrary>,
+    { filter, page, ...options }: PageOptions,
+    id: string
   ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
-    const [libraryId, identifier] = id.split(':');
-
-    const response = await getLibraryRecordsWithParticularOne(libraryId, item.payload.schemaId, identifier, {
+    const response = await getLibraryRecordsWithParticularOne(item.payload.identifier, item.payload.schemaId, id, {
       ...options,
       filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
       page
@@ -218,11 +203,7 @@ export class ExplorerAdapterTypeLibrary {
     return 'Фильтр по названию';
   }
 
-  static getToolbarActions(
-    item: ExplorerItemData<DocumentLibrary>,
-    store: ExplorerStore,
-    service: ExplorerService
-  ): ReactNode {
+  static getToolbarActions(item: ExplorerItemData<DocumentLibrary>, store: ExplorerStore): ReactNode {
     return (
       <>
         <Link href={`/data-management/library/${item.payload.identifier}/registry`} theme='contents'>
@@ -232,17 +213,12 @@ export class ExplorerAdapterTypeLibrary {
             </IconButton>
           </Tooltip>
         </Link>
-        <CreateLibraryElement schemaId={item.payload.schemaId} onCreate={service.createHandler} store={store} />
+        <CreateLibraryElement
+          libraryIdentifier={item.payload.identifier}
+          schemaId={item.payload.schemaId}
+          store={store}
+        />
       </>
-    );
-  }
-
-  static getEmptyListView(): ReactNode {
-    return (
-      <EmptyListView
-        text='Отсутствуют элементы для отображения'
-        secondaryText='Начните работу с создания новых разделов или файлов'
-      />
     );
   }
 

@@ -29,7 +29,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeDocument {
   static getId(item: ExplorerItemData<LibraryRecord>): string {
-    return `${item.payload.libraryId}:${item.payload.id}`;
+    return String(item.payload.id);
   }
 
   static getTitle(item: ExplorerItemData<LibraryRecord>): string {
@@ -93,15 +93,6 @@ export class ExplorerAdapterTypeDocument {
 
   static isFolder(): boolean {
     return false;
-  }
-
-  static findSelectedChildren(
-    children: ExplorerItemData[],
-    selectedItem: ExplorerItemData<LibraryRecord>
-  ): ExplorerItemData {
-    return children.find(
-      item => item.type === selectedItem.type && (item.payload as LibraryRecord).id === selectedItem.payload.id
-    );
   }
 
   static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
