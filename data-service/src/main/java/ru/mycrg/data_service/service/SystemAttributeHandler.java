@@ -13,7 +13,6 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import static org.apache.commons.io.FilenameUtils.EXTENSION_SEPARATOR;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
@@ -109,16 +108,11 @@ public class SystemAttributeHandler {
 
     @NotNull
     public String getFileName(@NotNull Map<String, Object> body) {
-        String filename = "unknown";
-        if (body.containsKey(TITLE.getName())) {
-            filename = body.get(TITLE.getName()).toString();
+        if (attributeDefined(TITLE)) {
+            return body.get(TITLE.getName()).toString();
         }
 
-        if (body.containsKey(FILE_TYPE.getName())) {
-            filename = filename + EXTENSION_SEPARATOR + body.get(FILE_TYPE.getName());
-        }
-
-        return filename;
+        return "";
     }
 
     @NotNull

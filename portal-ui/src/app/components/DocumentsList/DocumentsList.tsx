@@ -55,12 +55,12 @@ export class DocumentsList extends Component<DocumentsListProps> {
           type='file'
           onChange={this.onFileChangeHandler}
         />
-        {featureInfo.isReadOnly ? (
+        {!featureInfo.isNew && featureInfo.isReadOnly && (
           <label className={cnDocumentsList('Label')} htmlFor={htmlId}>
             Добавить файл
             <AddBoxOutlined className={cnDocumentsList('AddIcon')} color='primary' fontSize='small' />
           </label>
-        ) : null}
+        )}
 
         <div className={cnDocumentsList('List', ['scroll'])}>
           {documents &&
@@ -121,11 +121,13 @@ export class DocumentsList extends Component<DocumentsListProps> {
       this.setLoading(true);
 
       const { editedField, featureInfo } = this.props;
+      const path = editedField.property.folderId ? `/root/${editedField.property.folderId}` : undefined;
       const crgDocument = await createLibraryRecord('dl_default', {
         content_type_id: 'doc_v2',
         binary: selectedFile,
         title: selectedFile.name,
-        category: 'loaded by old way'
+        category: 'loaded by old way',
+        path: path
       });
 
       if (crgDocument) {

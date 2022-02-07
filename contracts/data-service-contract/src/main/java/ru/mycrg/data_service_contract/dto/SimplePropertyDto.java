@@ -31,6 +31,7 @@ public class SimplePropertyDto {
     private ForeignKeyType foreignKeyType;
 
     private String resourcePath;
+    private String folderId;
     private String whiteSpace;
     private String pattern;
     private String patternDescription = "";
@@ -291,6 +292,14 @@ public class SimplePropertyDto {
 
     public void setMinWidth(Integer minWidth) {
         this.minWidth = minWidth;
+    }
+
+    public String getFolderId() {
+        return folderId;
+    }
+
+    public void setFolderId(String folderId) {
+        this.folderId = folderId;
     }
 
     @JsonIgnore

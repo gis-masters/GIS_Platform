@@ -65,6 +65,7 @@ interface OldBasePropertySchema<T extends Record<string, unknown> = Record<strin
   choice?: unknown;
   allowedValues?: string[];
   resourcePath?: string;
+  folderId?: string;
 }
 
 export interface OldPropertySchemaStringText<T extends Record<string, unknown> = Record<string, unknown>>
