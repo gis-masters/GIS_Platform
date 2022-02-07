@@ -155,7 +155,7 @@ export async function updateDataTable(
 
 export async function deleteDataTable(datasetId: string, dataTableId: string): Promise<void> {
   await http.delete(await getDatasetTableUrl(datasetId, dataTableId));
-  communicationService.dataTablesUpdated.emit();
+  communicationService.datasetsUpdated.emit();
 }
 
 export async function deleteDataset(identifier: string): Promise<void> {

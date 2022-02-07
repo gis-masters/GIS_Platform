@@ -13,38 +13,36 @@ import {
 } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { AxiosError } from 'axios';
 
-import { Dataset, deleteDataset, getDatasetTables } from '../../../services/data.service';
+import { DataTable, deleteDataTable } from '../../../services/data.service';
 import { Button } from '../../Button/Button';
 
-const cnDatasetActionsDelete = cn('DatasetActions', 'Delete');
+const cnDataTableActionsDelete = cn('DataTableActions', 'Delete');
 
-interface DatasetActionsDeleteProps {
-  dataset: Dataset;
+interface DataTableActionsDeleteProps {
+  dataTable: DataTable;
 }
 
 @observer
-export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
+export class DataTableActionsDelete extends Component<DataTableActionsDeleteProps> {
   @observable private dialogOpen = false;
-  @observable private busy = false;
-  @observable private deleteAllowed: boolean;
   @observable private btnLoading: boolean;
   @observable private errorMessage: string;
-
   render() {
     return (
       <>
         <Tooltip title='Удалить'>
-          <IconButton className={cnDatasetActionsDelete()} onClick={this.openDialog}>
+          <IconButton className={cnDataTableActionsDelete()} onClick={this.openDialog}>
             {this.dialogOpen ? <Delete /> : <DeleteOutline />}
           </IconButton>
         </Tooltip>
 
-        {this.busy || Boolean(this.deleteAllowed) ? (
+        {!this.errorMessage ? (
           <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
             <DialogTitle>Подтверждение удаления</DialogTitle>
             <DialogContent>
-              <DialogContentText>Вы действительно хотите удалить "{this.props.dataset.title}"?</DialogContentText>
+              <DialogContentText>Вы действительно хотите удалить "{this.props.dataTable?.title}"?</DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button loading={this.btnLoading} onClick={this.doDeletion} color='primary'>
@@ -71,40 +69,28 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
   @action.bound
   private openDialog() {
     this.dialogOpen = true;
-    void this.testEmptiness();
-  }
-
-  @boundMethod
-  private async testEmptiness() {
-    const { dataset } = this.props;
-
-    const [records] = await getDatasetTables(dataset.identifier, { page: 0, pageSize: 1 });
-
-    this.setDeleteAllowed(!records.length);
-    this.setErrorMessage(
-      records.length
-        ? 'Набор данных не пустой. Для его удаления необходимо сперва удалить все таблицы внутри.'
-        : undefined
-    );
   }
 
   @boundMethod
   private async doDeletion() {
-    const { dataset } = this.props;
-
+    const { dataTable } = this.props;
     this.setBtnLoading(true);
-    await deleteDataset(dataset.identifier);
-    this.setErrorMessage('');
-    this.setDeleteAllowed(false);
+
+    try {
+      await deleteDataTable(dataTable.dataset, dataTable.identifier);
+    } catch (error) {
+      const err = error as AxiosError;
+      this.setErrorMessage(err.message);
+    }
+
     this.setBtnLoading(false);
-    this.closeDialog();
   }
 
   @action.bound
   private closeDialog() {
     this.dialogOpen = false;
 
-    this.setBusy(false);
+    this.setErrorMessage('');
     this.setBtnLoading(false);
   }
 
@@ -114,17 +100,7 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
   }
 
   @action.bound
-  private setBusy(busy: boolean) {
-    this.busy = busy;
-  }
-
-  @action.bound
   private setErrorMessage(message: string) {
     this.errorMessage = message;
-  }
-
-  @action.bound
-  private setDeleteAllowed(allowed: boolean) {
-    this.deleteAllowed = allowed;
   }
 }

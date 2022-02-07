@@ -13,6 +13,7 @@ import { Adapter, ExplorerItemData, ExplorerItemEntityType } from '../../Explore
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerProps } from '../../Explorer';
+import { DataTableActions } from '../../../DataTableActions/DataTableActions';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -79,5 +80,9 @@ export class ExplorerAdapterTypeTable {
 
   static isFolder(): boolean {
     return false;
+  }
+
+  static getActions(item: ExplorerItemData<DataTable>): ReactNode {
+    return <DataTableActions dataTable={item.payload} />;
   }
 }
