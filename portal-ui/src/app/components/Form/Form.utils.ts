@@ -1,6 +1,7 @@
 import { action } from 'mobx';
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { PropertySchema, PropertySchemaUrl, PropertyType } from '../../services/crg/schema.models';
 import { Fias } from '../../services/fias.service';
+import { UrlInfo } from './Control/_type/Form-Control_type_url';
 
 const fromComplex: Partial<
   Record<
@@ -68,4 +69,38 @@ export function convertToComplexField<T extends Record<string, unknown>>(
   }
 
   return formValue[field.name];
+}
+
+export function parseUrlValue(value: string, multiple: boolean, editable?: boolean): UrlInfo[] {
+  if (value) {
+    let info = JSON.parse(value) as UrlInfo[];
+    if (!Array.isArray(info)) {
+      info = [info];
+    }
+
+    return info;
+  }
+
+  if (!editable) {
+    return [];
+  }
+
+  return multiple ? [] : [{ url: '', text: '' }];
+}
+
+export function getEditUrlFormSchema(field: PropertySchemaUrl): PropertySchema<UrlInfo>[] {
+  return [
+    {
+      name: 'url',
+      title: 'Адрес ссылки',
+      propertyType: PropertyType.STRING,
+      regex: field.regex,
+      wellKnownRegex: (!field.regex && field.wellKnownRegex) || 'url'
+    },
+    {
+      name: 'text',
+      title: 'Название',
+      propertyType: PropertyType.STRING
+    }
+  ];
 }

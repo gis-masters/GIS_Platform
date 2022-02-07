@@ -14,6 +14,7 @@ import {
   validateFieldValue,
   validateFormValue
 } from '../../services/crg/formValidation.service';
+import { FormDialog } from '../FormDialog/FormDialog';
 
 export { FormField } from './Field/Form-Field';
 export { FormLabel } from './Label/Form-Label';
@@ -25,7 +26,7 @@ import '!style-loader!css-loader!sass-loader!./Form.scss';
 
 export const cnForm = cn('Form');
 
-interface FormProps<T extends Record<string, unknown>>
+export interface FormProps<T extends Record<string, unknown>>
   extends Omit<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'ref'> {
   fields?: PropertySchema<T>[];
   value?: T;
@@ -39,7 +40,7 @@ interface FormProps<T extends Record<string, unknown>>
   actions?: ReactNode;
   readonly?: boolean;
   auto?: boolean;
-  actionFunction?: (value: T) => Promise<void>;
+  actionFunction?: (value: T) => Promise<void> | void;
   invoke?: {
     setValue?(value: T): void;
     validate?(): void;
@@ -119,6 +120,8 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
           <FormContent<T>
             fields={fields}
             formValue={this.value}
+            Form={Form}
+            FormDialog={FormDialog}
             onFormChange={this.changeHandler}
             onFieldChange={this.fieldChanged}
             onFieldNeedValidate={this.fieldValidate}
@@ -147,6 +150,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
   @boundMethod
   private async submitHandler(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
+    e.stopPropagation();
 
     const { onFormSubmit, value, auto, actionFunction, onActionError } = this.props;
     if (onFormSubmit) {

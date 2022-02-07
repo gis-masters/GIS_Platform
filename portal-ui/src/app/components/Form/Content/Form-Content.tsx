@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, ComponentType } from 'react';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { IClassNameProps } from '@bem-react/core';
@@ -15,6 +15,8 @@ import { FormControl } from '../Control/Form-Control.composed';
 import { FormHiddenField } from '../HiddenField/Form-HiddenField';
 import { FormView } from '../View/Form-View.composed';
 import { applyFieldValue, convertToComplexField } from '../Form.utils';
+import { FormProps } from '../Form';
+import { FormDialogProps } from '../../FormDialog/FormDialog';
 
 const cnFormContent = cn('Form', 'Content');
 
@@ -25,6 +27,8 @@ interface FormContentProps<T extends Record<string, unknown>> extends IClassName
   onFormChange?: (changedValue: Partial<T>) => void;
   onFieldChange?: (value: T[keyof T], propertyName: keyof T) => void;
   onFieldNeedValidate?: (value: T[keyof T], propertyName: keyof T) => void;
+  Form?: ComponentType<FormProps<T>>;
+  FormDialog?: ComponentType<FormDialogProps<T>>;
   readonly?: boolean;
 }
 
@@ -33,7 +37,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   FormContentProps<T>
 > {
   render() {
-    const { fields, formValue, className, errors = [], readonly } = this.props;
+    const { fields, formValue, className, errors = [], readonly, Form, FormDialog } = this.props;
 
     return (
       <div className={cnFormContent(null, [className])}>
@@ -76,6 +80,8 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
                   fieldValue={convertToComplexField(propertySchema, formValue)}
                   formValue={convertToComplexField(propertySchema, formValue)}
                   FormControl={FormControl}
+                  Form={Form}
+                  FormDialog={FormDialog}
                   errors={errors
                     .filter(({ field }) => field === propertySchema.name)
                     .flatMap(({ messages }) => messages)}

@@ -1,8 +1,24 @@
 body .Link {
   color: var(--blue);
 
+  &-Icon-Container {
+    position: relative;
+
+    display: inline-block;
+
+    width: 5px;
+    height: 0.6em;
+    margin-right: 7px;
+
+    vertical-align: middle;
+  }
+
   &-Icon {
-    font-size: 0.875em;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    font-size: 0.65em;
   }
 
   &_theme_contents {

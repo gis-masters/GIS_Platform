@@ -10,6 +10,7 @@ import { PropertySchema, PropertyType } from '../../../services/crg/schema.model
 import { getPatch } from '../../../services/util/patch';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { TextBadge } from '../../TextBadge/TextBadge';
+import { Form } from '../../Form/Form';
 
 import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
 import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
@@ -40,6 +41,7 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
         />
 
         <FormDialog
+          Form={Form}
           open={this.dialogOpen}
           fields={this.fieldsWithoutBinary}
           value={document}

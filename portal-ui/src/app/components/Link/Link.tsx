@@ -34,10 +34,9 @@ export class Link extends Component<LinkProps> {
         download={download}
       >
         {target === '_blank' && (
-          <>
+          <span className={cnLink('Icon-Container')}>
             <OpenInNew className={cnLink('Icon')} />
-            &nbsp;
-          </>
+          </span>
         )}
         {children}
       </a>

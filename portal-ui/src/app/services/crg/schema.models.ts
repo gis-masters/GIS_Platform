@@ -146,9 +146,11 @@ export interface PropertySchemaChoice<T = Record<string, unknown>> extends BaseP
 
 export interface PropertySchemaUrl<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.URL;
-  display?: 'popup' | 'newtab' | 'img';
+  openIn: 'popup' | 'newTab';
+  multiple: boolean;
   enablePreview?: boolean;
   regex?: string;
+  wellKnownRegex?: string;
   defaultValue?: string;
 }
 

@@ -3,6 +3,9 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
 import { PropertyType, PropertySchema } from '../../../services/crg/schema.models';
+import { FormDialogProps } from '../../FormDialog/FormDialog';
+
+import { FormProps } from '../Form';
 
 import '!style-loader!css-loader!sass-loader!./Form-Control.scss';
 
@@ -20,6 +23,8 @@ export interface FormControlProps<T extends Record<string, unknown> = Record<str
   errors?: string[];
   FormControl?: ComponentType<FormControlProps>;
   FormView?: ComponentType<FormControlProps>;
+  Form?: ComponentType<FormProps<Record<string, unknown>>>;
+  FormDialog?: ComponentType<FormDialogProps<Record<string, unknown>>>;
   variant?: 'standard' | 'outlined';
 }
 

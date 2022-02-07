@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { getEditUrlFormSchema, parseUrlValue } from '../../components/Form/Form.utils';
 import { knownRegex } from '../regexp.service';
 import {
   PropertyType,
@@ -7,7 +8,8 @@ import {
   PropertySchemaDatetime,
   PropertySchemaFloat,
   PropertySchemaInt,
-  PropertySchemaString
+  PropertySchemaString,
+  PropertySchemaUrl
 } from './schema.models';
 
 const messages = {
@@ -43,6 +45,7 @@ const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
   [PropertyType.BINARY]: [simpleRequired],
   [PropertyType.DATETIME]: [simpleRequired, datetimeValid, datetimeMinMax],
   [PropertyType.CHOICE]: [choiceRequired, choiceValueInOptions],
+  [PropertyType.URL]: [urlRequired, urlRegex],
   [PropertyType.SET]: [],
   [PropertyType.CUSTOM]: []
 };
@@ -139,6 +142,34 @@ function stringWellKnownRegex(value: unknown, { wellKnownRegex, regexErrorMessag
   if (wellKnownRegex && !knownRegex[wellKnownRegex]?.test(String(value))) {
     return [regexErrorMessage || messages.regexp];
   }
+}
+
+// url
+
+function urlRequired(value: string, { required, multiple }: PropertySchemaUrl): string[] | undefined {
+  const info = parseUrlValue(value, multiple);
+
+  if (required && !info[0]?.url) {
+    return [messages.required];
+  }
+}
+
+function urlRegex(value: string, property: PropertySchemaUrl): string[] {
+  const urlValue = parseUrlValue(value, property.multiple);
+
+  const fields = getEditUrlFormSchema(property);
+
+  const errors = urlValue.flatMap(item => {
+    const fieldsErrors = validateFormValue(item, fields as PropertySchemaString<Record<string, unknown>>[]);
+
+    return fieldsErrors.flatMap(({ messages }) => messages);
+  });
+
+  if (!property.multiple && !property.required) {
+    return [];
+  }
+
+  return errors.length ? [errors[0]] : [];
 }
 
 // number

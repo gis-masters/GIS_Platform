@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, ComponentType, ReactNode } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
@@ -11,11 +11,11 @@ import { getDefaultValues } from '../../services/crg/formValidation.service';
 import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
 import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
 import { Button, ButtonProps } from '../Button/Button';
-import { Form } from '../Form/Form';
+import { FormProps } from '../Form/Form';
 
 const cnFormDialog = cn('FormDialog');
 
-interface FormDialogProps<T extends Record<string, unknown>> {
+export interface FormDialogProps<T extends Record<string, unknown>> {
   title?: ReactNode;
   fields: PropertySchema<T>[];
   value?: T;
@@ -23,9 +23,10 @@ interface FormDialogProps<T extends Record<string, unknown>> {
   onClose(): void;
   onSuccess?(): void;
   onError?(): void;
+  Form: ComponentType<FormProps<Partial<T>>>;
   additionalAction?: ReactNode;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
-  actionFunction: (value: T) => Promise<void>;
+  actionFunction: (value: T) => Promise<void> | void;
 }
 
 @observer
@@ -43,6 +44,7 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
       value = getDefaultValues(fields),
       additionalAction,
       actionButtonProps = {},
+      Form,
       actionFunction
     } = this.props;
     const htmlId = generateRandomId();
