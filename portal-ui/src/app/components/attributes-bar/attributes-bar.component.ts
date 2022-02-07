@@ -26,7 +26,15 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { getProjection } from '../../services/geoserver/projections.service';
 import { fromMobx } from '../../services/util/fromMobx';
 import { generateFilter } from '../../services/geoserver/wfs.util';
-import { csvExporter } from '../../services/csvExporter';
+import { exportAsCSV } from '../../services/util/export';
+import { services } from '../../services/services';
+
+const BATCH_SIZE = 500;
+
+interface DocumentAttachment {
+  id: string;
+  title: string;
+}
 
 export interface WfsFeatureView extends WfsFeature {
   aliases?: Record<string, unknown>;
@@ -221,19 +229,19 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   async exportAll(): Promise<void> {
     this.loading = true;
-    await csvExporter.exportLayer(this.layer);
+    await this.exportLayerAsCSV(this.layer);
     this.loading = false;
   }
 
   async exportSelected(): Promise<void> {
     this.loading = true;
-    await csvExporter.exportFeatures(this.layer.schemaId, this.attributeTable.selected);
+    await this.exportFeaturesAsCSV(this.layer.schemaId, this.attributeTable.selected);
     this.loading = false;
   }
 
   async exportByFilter(): Promise<void> {
     this.loading = true;
-    await csvExporter.exportLayer(this.layer, this.lastRequestAttribute?.filter);
+    await this.exportLayerAsCSV(this.layer, this.lastRequestAttribute?.filter);
     this.loading = false;
   }
 
@@ -639,5 +647,92 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     const simpleProperty = this.getSchemaProperty(property);
 
     return simpleProperty ? simpleProperty.title : result;
+  }
+
+  private async exportLayerAsCSV(layer: CrgLayer, filter?: FilterEvent[]): Promise<void> {
+    try {
+      const schema = await schemaService.getById(layer.schemaId);
+
+      const allFeatures: WfsFeature[] = await this.fetchPaged(layer, filter);
+
+      exportAsCSV(this.unparseFeatures(schema, allFeatures), `${schema.tableName}.csv`);
+    } catch (error) {
+      const msg = `Не удалось выполнить экспорт слоя: ${layer.title}`;
+      Toast.error(msg);
+      services.logger.error(msg, error);
+    }
+  }
+
+  private async exportFeaturesAsCSV(schemaId: string, features: WfsFeature[]): Promise<void> {
+    try {
+      const schema = await schemaService.getById(schemaId);
+
+      exportAsCSV(this.unparseFeatures(schema, features), `${schema.tableName}.csv`);
+    } catch (error) {
+      const msg = 'Не удалось выполнить экспорт объектов';
+      Toast.error(msg);
+      services.logger.error(msg, error);
+    }
+  }
+
+  private unparseFeatures(schema: OldFeatureDescription, allFeatures: WfsFeature[]): unknown[][] {
+    const header = schema.properties.map(prop => prop.title);
+    const body = allFeatures.map(feature => this.unparseFeature(schema, feature));
+
+    return [header, ...body];
+  }
+
+  private unparseFeature(schema: OldFeatureDescription, feature: WfsFeature): unknown[] {
+    const aliasedFeature = schemaService.replaceRowDataToAliases(schema, feature.properties);
+
+    return schema.properties.map(prop => {
+      let value = aliasedFeature[prop.name.toLowerCase()];
+      if (value && prop.valueType === ValueType.DOUBLE) {
+        value = String(value).replace('.', ',');
+      }
+
+      if (prop.name.toLowerCase() === 'documents' && value) {
+        const documents = JSON.parse(value as string) as DocumentAttachment[];
+        let documentsTitle = '';
+
+        documents.forEach(document => {
+          documentsTitle += `${document.title}; `;
+        });
+
+        return documentsTitle;
+      }
+
+      return value ? value : '';
+    });
+  }
+
+  private async fetchPaged(layer: CrgLayer, filter?: FilterEvent[]): Promise<WfsFeature[]> {
+    const { complexName, nativeCRS } = layer;
+
+    let result: WfsFeature[] = [];
+    let totalPages = 0;
+    let currentPage = 0;
+
+    do {
+      const requestAttribute: RequestAttribute = {
+        filter,
+        page: {
+          pageSize: BATCH_SIZE,
+          offset: currentPage
+        }
+      };
+
+      const response: WfsFeatureCollection = await getFeatures(complexName, nativeCRS, requestAttribute);
+      if (response.features) {
+        totalPages = Math.ceil(response.totalFeatures / BATCH_SIZE);
+        if (response.features.length) {
+          result = [...result, ...response.features];
+        }
+      }
+
+      currentPage++;
+    } while (currentPage < totalPages);
+
+    return result;
   }
 }

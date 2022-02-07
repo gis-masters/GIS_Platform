@@ -4,7 +4,7 @@ import XLSX from 'xlsx';
 import { saveAsCsv } from './FileSaver';
 
 export function exportAsCSV(data: unknown[][], filename: string): void {
-  saveAsCsv(filename + '.csv', unparse(data, { delimiter: ';' }));
+  saveAsCsv(filename + '.csv', unparse(data, { delimiter: ';', quotes: true, escapeChar: ',' }));
 }
 
 export function exportAsXLSX(data: unknown[][], filename: string, sheetName = 'Лист 1'): void {
