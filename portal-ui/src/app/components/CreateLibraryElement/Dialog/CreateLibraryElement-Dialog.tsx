@@ -6,7 +6,6 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 
 import { LibraryRecordRaw } from '../../../services/crg/doc-library.service';
 import { FieldErrors } from '../../../services/crg/formValidation.service';
-import { Loading } from '../../Loading/Loading';
 import { Button } from '../../Button/Button';
 import { Form } from '../../Form/Form';
 import { PropertySchema } from '../../../services/crg/schema.models';
@@ -48,11 +47,10 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
                 onFieldNeedValidate={onFieldNeedValidate}
                 errors={formErrors}
               />
-              <Loading visible={loading} />
             </DialogContent>
 
             <DialogActions>
-              <Button form='createLibraryElementForm' type='submit' color='primary' disabled={false}>
+              <Button loading={loading} form='createLibraryElementForm' type='submit' color='primary' disabled={false}>
                 Создать
               </Button>
               <Button onClick={this.closeDialog}>Отмена</Button>

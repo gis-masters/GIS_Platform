@@ -156,6 +156,8 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   private async create(formValue: LibraryRecord) {
     const { libraryIdentifier, schemaId, store } = this.props;
     const formData = this.fillSystemAttributes(formValue);
+
+    this.setDialogLoading(true);
     for (const propName in formData) {
       // Удаляем пустые строки и нули? Наркомания...
       if (!formData[propName]) {
@@ -185,6 +187,8 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
         this.setServerErrors(normalizeServerErrors(err.response.data.errors));
       }
     }
+
+    this.setDialogLoading(false);
   }
 
   private fillSystemAttributes(formData: LibraryRecord) {

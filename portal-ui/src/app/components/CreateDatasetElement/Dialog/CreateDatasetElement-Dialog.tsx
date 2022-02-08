@@ -6,7 +6,6 @@ import { PropertySchema } from '../../../services/crg/schema.models';
 import { NewDataset } from '../../../services/data.service';
 import { FieldErrors } from '../../../services/crg/formValidation.service';
 
-import { Loading } from '../../Loading/Loading';
 import { Button } from '../../Button/Button';
 import { Form } from '../../Form/Form';
 
@@ -50,10 +49,9 @@ export const CreateDatasetElementDialog: FC<CreateDatasetElementDialogProps> = o
             onFieldNeedValidate={onFieldNeedValidate}
             errors={formErrors}
           />
-          <Loading visible={loading} />
         </DialogContent>
         <DialogActions>
-          <Button form='createDatasetForm' type='submit' color='primary'>
+          <Button loading={loading} form='createDatasetForm' type='submit' color='primary'>
             Создать
           </Button>
           <Button onClick={onClose}>Отмена</Button>

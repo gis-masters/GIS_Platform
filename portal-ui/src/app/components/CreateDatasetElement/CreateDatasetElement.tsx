@@ -65,6 +65,7 @@ export class CreateDatasetElement extends Component {
 
   @boundMethod
   private async create(formValue: NewDataset) {
+    this.setDialogLoading(true);
     if (this.formErrors?.length) {
       return;
     }
@@ -79,6 +80,8 @@ export class CreateDatasetElement extends Component {
         this.setServerErrors(normalizeServerErrors(err.response.data.errors));
       }
     }
+
+    this.setDialogLoading(false);
   }
 
   @boundMethod
