@@ -5,8 +5,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
-import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.ddl.DdlTables;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.TableCreateDto;
@@ -44,7 +44,7 @@ public class TableService {
     private final PermissionsService permissionsService;
     private final BasePermissionsRepository permissionsRepository;
     private final SchemaService schemaService;
-    private final RecordsDao recordsDao;
+    private final BaseDao baseDao;
 
     public TableService(DdlTables ddlTables,
                         IMessageBusProducer messageBus,
@@ -53,7 +53,7 @@ public class TableService {
                         PermissionsService permissionsService,
                         BasePermissionsRepository permissionsRepository,
                         SchemaService schemaService,
-                        RecordsDao recordsDao) {
+                        BaseDao baseDao) {
         this.messageBus = messageBus;
         this.ddlTables = ddlTables;
         this.authenticationFacade = authenticationFacade;
@@ -61,7 +61,7 @@ public class TableService {
         this.permissionsService = permissionsService;
         this.permissionsRepository = permissionsRepository;
         this.schemaService = schemaService;
-        this.recordsDao = recordsDao;
+        this.baseDao = baseDao;
     }
 
     public Page<IResourceModel> getPaged(String datasetIdentifier, String ecqlFilter, Pageable pageable) {
@@ -76,11 +76,11 @@ public class TableService {
                 ecqlFilter = ecqlFilter + " AND path = '" + dataset.pathTo() + "'";
             }
 
-            List<TableModel> tables = recordsDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
-                                                         ecqlFilter,
-                                                         pageable,
-                                                         TableModel.class);
-            Long total = recordsDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
+            List<TableModel> tables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                      ecqlFilter,
+                                                      pageable,
+                                                      TableModel.class);
+            Long total = baseDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
 
             return new PageImpl<>(Collections.unmodifiableList(tables), pageable, total);
         } else {
@@ -101,7 +101,7 @@ public class TableService {
         if (authenticationFacade.isOrganizationAdmin()) {
             String ecqlFilter = "identifier = '" + tQualifier.getTable() + "'";
 
-            TableModel table = recordsDao
+            TableModel table = baseDao
                     .findByFilter(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter, TableModel.class)
                     .orElseThrow(() -> new NotFoundException("Не найдена таблица: " + tQualifier.getTable()));
 

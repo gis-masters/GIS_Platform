@@ -104,7 +104,7 @@ public class ReglamentsExistenceAnalyzer implements IResourceAnalyzer {
         String tableName = layer.getResourceProperties().get("tableName").toString();
         ResourceQualifier tableQualifier = new ResourceQualifier(dataset, tableName);
 
-        List<RecordDto> recordDtos = recordsDao.findAll(tableQualifier);
+        List<RecordDto> recordDtos = recordsDao.findAll(tableQualifier, null);
         Map<String, String> objectsInfo = getUrls(recordDtos);
 
         for (Map.Entry<String, String> info: objectsInfo.entrySet()) {

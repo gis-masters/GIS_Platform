@@ -7,8 +7,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
-import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.ddl.DdlSchemas;
 import ru.mycrg.data_service.dto.DatasetModel;
 import ru.mycrg.data_service.dto.IResourceModel;
@@ -51,7 +51,7 @@ public class DatasetService {
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final PermissionsService permissionsService;
     private final IAuthenticationFacade authenticationFacade;
-    private final RecordsDao recordsDao;
+    private final BaseDao baseDao;
 
     public DatasetService(BasePermissionsRepository permissionsRepository,
                           DatasetProtector datasetProtector,
@@ -59,7 +59,8 @@ public class DatasetService {
                           DataStoreClient dataStoreClient,
                           SchemasAndTablesRepository schemasAndTablesRepository,
                           PermissionsService permissionsService,
-                          IAuthenticationFacade authenticationFacade, RecordsDao recordsDao) {
+                          IAuthenticationFacade authenticationFacade,
+                          BaseDao baseDao) {
         this.permissionsRepository = permissionsRepository;
         this.ddlSchemas = ddlSchemas;
         this.dataStoreClient = dataStoreClient;
@@ -67,7 +68,7 @@ public class DatasetService {
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
         this.authenticationFacade = authenticationFacade;
-        this.recordsDao = recordsDao;
+        this.baseDao = baseDao;
     }
 
     public Page<IResourceModel> getPaged(String ecqlFilter, Pageable pageable) {
@@ -78,12 +79,12 @@ public class DatasetService {
                 ecqlFilter = ecqlFilter + " AND is_folder = true";
             }
 
-            List<DatasetModel> datasets = recordsDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
-                                                             ecqlFilter,
-                                                             pageable,
-                                                             DatasetModel.class);
+            List<DatasetModel> datasets = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                          ecqlFilter,
+                                                          pageable,
+                                                          DatasetModel.class);
 
-            Long total = recordsDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
+            Long total = baseDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
 
             return new PageImpl<>(Collections.unmodifiableList(datasets), pageable, total);
         } else {

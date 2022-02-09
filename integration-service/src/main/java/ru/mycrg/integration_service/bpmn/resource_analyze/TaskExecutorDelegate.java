@@ -43,7 +43,7 @@ public class TaskExecutorDelegate implements JavaDelegate {
         log.debug("Task in progress: {} / Current page: {}", currentTask.getId(), currentPage);
         log.debug("Starting time {} ", startOfTask);
 
-        final Optional<PageModel<ResourcesModel>> oPage = fetchResources(execution, currentTask);
+        final Optional<PageModel<ResourcesModel>> oPage = fetchResources(currentTask);
         if (oPage.isPresent()) {
             final PageModel<ResourcesModel> page = oPage.get();
             if (page.getEmbedded() == null) {
@@ -58,12 +58,11 @@ public class TaskExecutorDelegate implements JavaDelegate {
         }
     }
 
-    private Optional<PageModel<ResourcesModel>> fetchResources(DelegateExecution execution,
-                                                               ResourceAnalyzeTask currentTask) {
+    private Optional<PageModel<ResourcesModel>> fetchResources(ResourceAnalyzeTask currentTask) {
         ResponseModel<PageModel<ResourcesModel>> response;
         URL url = null;
         try {
-            url = buildUrl(execution, currentTask);
+            url = buildUrl(currentTask);
             Request request = new Request.Builder()
                     .url(url)
                     .addHeader("Authorization", "Bearer " + accessToken)
@@ -91,7 +90,7 @@ public class TaskExecutorDelegate implements JavaDelegate {
     }
 
     @NotNull
-    private URL buildUrl(DelegateExecution execution, ResourceAnalyzeTask task) throws MalformedURLException {
+    private URL buildUrl(ResourceAnalyzeTask task) throws MalformedURLException {
         URL serviceRoot = task.getAnalyzer().getReceiveDataUrl();
 
         final Integer batchSize = task.getAnalyzer().getBatchSize();
