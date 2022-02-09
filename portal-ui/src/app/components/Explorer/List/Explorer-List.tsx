@@ -20,7 +20,7 @@ const cnExplorerList = cn('Explorer', 'List');
 interface ExplorerListProps {
   store: ExplorerStore;
   onOpen: (item: ExplorerItemData) => void;
-  disabledTester?(item: ExplorerItemData): boolean;
+  disabledTester?(item: ExplorerItemData): Promise<boolean>;
 }
 
 @observer

@@ -93,8 +93,9 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
     await fetchBasemaps();
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   @boundMethod
-  private testForDisabled({ payload }: ExplorerItemData<Basemap>): boolean {
+  private async testForDisabled({ payload }: ExplorerItemData<Basemap>): Promise<boolean> {
     return this.props.disabledItems.some(basemap => basemap.id === payload.id);
   }
 }

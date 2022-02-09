@@ -1,5 +1,5 @@
 import React, { Component, ReactNode, RefObject } from 'react';
-import { computed } from 'mobx';
+import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -21,11 +21,20 @@ export interface ExplorerItemProps {
   store: ExplorerStore;
   itemRef?: RefObject<HTMLDivElement>;
   onOpen: (item: ExplorerItemData) => void;
-  disabledTester?(item: ExplorerItemData): boolean;
+  disabledTester?(item: ExplorerItemData): Promise<boolean>;
 }
 
 @observer
 export class ExplorerItem extends Component<ExplorerItemProps> {
+  @observable private disabled = false;
+
+  async componentDidMount() {
+    const { disabledTester, item } = this.props;
+    if (disabledTester) {
+      this.setDisabled(await disabledTester(item));
+    }
+  }
+
   render() {
     const { title, meta, selected, isFolder, icon, itemRef } = this.props;
 
@@ -42,20 +51,13 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
         <ListItemText primary={title} secondary={meta} />
         {isFolder && (
           <ListItemSecondaryAction>
-            <IconButton edge='end' aria-label='delete' onClick={this.openHandler} disabled={this.disabled}>
+            <IconButton edge='end' onClick={this.openHandler} disabled={this.disabled}>
               <ChevronRight />
             </IconButton>
           </ListItemSecondaryAction>
         )}
       </ListItemButton>
     );
-  }
-
-  @computed
-  private get disabled(): boolean {
-    const { item, disabledTester } = this.props;
-
-    return disabledTester ? disabledTester(item) : false;
   }
 
   @boundMethod
@@ -67,5 +69,10 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
   private selectHandler() {
     const { store, item } = this.props;
     store.selectItem(item);
+  }
+
+  @action
+  private setDisabled(disabled: boolean) {
+    this.disabled = disabled;
   }
 }

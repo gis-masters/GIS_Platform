@@ -95,6 +95,7 @@ describe('Управление данными', () => {
      *  When Нажимает кнопку "Вперёд" в браузере
      *  Then Explorer переходит внутрь внутрь раздела "Наборы данных"
      */
+    hermione.skip.in('chrome', 'работает нестабильно');
     it('Навигация по истории браузера', async function () {
       const explorer = new Explorer(this.browser);
       await explorer.waitForVisible();

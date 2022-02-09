@@ -6,6 +6,7 @@ import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@
 import { boundMethod } from 'autobind-decorator';
 
 import { Dataset, DataTable } from '../../services/data.service';
+import { schemaService } from '../../services/crg/schema.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
 import { FormControlProps } from '../Form/Control/Form-Control';
@@ -80,21 +81,25 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
     ];
   }
 
-  @action.bound
-  private handleSelect(item: ExplorerItemData, path: ExplorerItemData[]) {
-    if (item.type === ExplorerItemType.TABLE && this.isDisabled(item.payload as DataTable)) {
-      this.selectedDataset = path[1].payload as Dataset;
-      this.selectedDataTable = item.payload as DataTable;
+  @boundMethod
+  private async handleSelect(item: ExplorerItemData, path: ExplorerItemData[]) {
+    if (item.type === ExplorerItemType.TABLE && !(await this.testForDisabled(item))) {
+      this.select(path[1].payload as Dataset, item.payload as DataTable);
     } else {
-      this.selectedDataset = null;
-      this.selectedDataTable = null;
+      this.select(null, null);
     }
   }
 
-  @action.bound
-  private handleOpen(item: ExplorerItemData, path: ExplorerItemData[]) {
+  @action
+  private select(dataset: Dataset, table: DataTable) {
+    this.selectedDataset = dataset;
+    this.selectedDataTable = table;
+  }
+
+  @boundMethod
+  private async handleOpen(item: ExplorerItemData, path: ExplorerItemData[]) {
     if (item.type === ExplorerItemType.TABLE) {
-      this.handleSelect(item, path);
+      await this.handleSelect(item, path);
       this.submitDialog();
     }
   }
@@ -123,14 +128,27 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
     this.selectedDataTable = null;
   }
 
-  private isDisabled(dataTable: DataTable) {
-    return !(this.props.usedDataTables || []).some(
-      ({ dataset, identifier }) => dataTable.dataset === dataset && dataTable.identifier === identifier
-    );
-  }
-
   @boundMethod
-  private testForDisabled({ payload }: ExplorerItemData<DataTable>) {
-    return this.props.usedDataTables.some(table => table.id === payload.id);
+  private async testForDisabled(item: ExplorerItemData): Promise<boolean> {
+    if (item.type === ExplorerItemType.TABLE) {
+      const table = item.payload as DataTable;
+
+      if (!table.schemaId) {
+        return true;
+      }
+
+      try {
+        const schema = await schemaService.getSchema(table.schemaId);
+        if (!schema) {
+          return true;
+        }
+      } catch {
+        return true;
+      }
+
+      return this.props.usedDataTables.some(({ id, dataset }) => id === table.id && dataset === table.dataset);
+    }
+
+    return false;
   }
 }

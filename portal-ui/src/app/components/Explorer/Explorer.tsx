@@ -60,7 +60,7 @@ export interface ExplorerProps extends IClassNameProps {
   urlChangeEnabled?: boolean;
   onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   onOpen?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
-  disabledTester?(item: ExplorerItemData): boolean;
+  disabledTester?(item: ExplorerItemData): Promise<boolean>;
 }
 
 @observer
@@ -253,6 +253,7 @@ export class Explorer extends Component<ExplorerProps> {
     }
 
     this.store.setPath([...this.store.path.slice(0, depth), item, loadingItem]);
+    this.store.setPage(0);
   }
 
   @boundMethod

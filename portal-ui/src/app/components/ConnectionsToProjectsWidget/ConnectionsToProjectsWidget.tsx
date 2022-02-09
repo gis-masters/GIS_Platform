@@ -149,8 +149,9 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
     this.setSelectedProject(null);
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   @boundMethod
-  private testForDisabled({ payload }: ExplorerItemData<CrgProject>): boolean {
+  private async testForDisabled({ payload }: ExplorerItemData<CrgProject>): Promise<boolean> {
     return payload.role !== Role.OWNER || this.props.connectedProjects.some(project => project.id === payload.id);
   }
 }
