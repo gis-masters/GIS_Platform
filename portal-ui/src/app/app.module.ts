@@ -78,6 +78,7 @@ import { LibraryDocumentComponent } from './components/library-document/library-
 import { XmlDownloadComponent } from './components/xml-download/xml-download.component';
 import { FormControlTypeFiasComponent } from './components/form-control-type-fias/form-control-type-fias.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { FormControlTypeUrlComponent } from './components/form-control-type-url/form-control-type-url.component';
 
 @NgModule({
   declarations: [
@@ -137,7 +138,8 @@ import { FooterComponent } from './components/footer/footer.component';
     LibraryRegistryComponent,
     LibraryDocumentComponent,
     XmlDownloadComponent,
-    FormControlTypeFiasComponent
+    FormControlTypeFiasComponent,
+    FormControlTypeUrlComponent
   ],
   imports: [
     HttpClientModule,

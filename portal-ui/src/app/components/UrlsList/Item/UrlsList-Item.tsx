@@ -44,7 +44,7 @@ export class UrlsListItem extends Component<UrlFieldItemProps> {
 
   render() {
     const { item, FormDialog, property, editable, Form } = this.props;
-    const { openIn, multiple } = property;
+    const { openIn } = property;
     const text = item.text ? item.text : item.url;
 
     return (
@@ -62,23 +62,23 @@ export class UrlsListItem extends Component<UrlFieldItemProps> {
           )}
 
           {editable && (
-            <Tooltip title='Редактировать'>
-              <span>
-                <IconButton className={cnUrlsList('Button')} size='small' onClick={this.openEditDialog}>
-                  <EditOutlined fontSize='inherit' />
-                </IconButton>
-              </span>
-            </Tooltip>
-          )}
+            <>
+              <Tooltip title='Редактировать'>
+                <span>
+                  <IconButton className={cnUrlsList('Button')} size='small' onClick={this.openEditDialog}>
+                    <EditOutlined fontSize='inherit' />
+                  </IconButton>
+                </span>
+              </Tooltip>
 
-          {multiple && editable && (
-            <Tooltip title='Удалить'>
-              <span>
-                <IconButton className={cnUrlsList('Button')} size='small' onClick={this.deleteUrl}>
-                  <DeleteOutlined fontSize='inherit' />
-                </IconButton>
-              </span>
-            </Tooltip>
+              <Tooltip title='Удалить'>
+                <span>
+                  <IconButton className={cnUrlsList('Button')} size='small' onClick={this.deleteUrl}>
+                    <DeleteOutlined fontSize='inherit' />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </>
           )}
         </div>
 

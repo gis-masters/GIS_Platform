@@ -51,7 +51,7 @@ export class UrlsList extends Component<UrlFieldItemProps> {
           />
         ))}
 
-        {property.multiple && editable && (
+        {((!property.multiple && this.value.length < 1) || property.multiple) && editable && (
           <Tooltip title='Добавить URL'>
             <span>
               <IconButton onClick={this.openCreateDialog} className={cnUrlsList('AddUrl')}>

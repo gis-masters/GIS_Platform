@@ -76,8 +76,7 @@ export function convertSchema<T extends Record<string, unknown>>(
     if (oldField.valueType === ValueType.URL) {
       field.propertyType = PropertyType.URL;
 
-      (field as Partial<PropertySchemaUrl>).openIn =
-        oldField.displayMode === 'in_popup' ? 'newTab' : oldField.displayMode;
+      (field as Partial<PropertySchemaUrl>).openIn = oldField.displayMode === 'in_popup' ? 'popup' : 'newTab';
     }
 
     if (oldField.valueType === ValueType.GEOMETRY) {

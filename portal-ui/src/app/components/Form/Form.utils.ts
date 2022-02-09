@@ -73,6 +73,10 @@ export function convertToComplexField<T extends Record<string, unknown>>(
 
 export function parseUrlValue(value: string, multiple: boolean, editable?: boolean): UrlInfo[] {
   if (value) {
+    if (!JSON.parse(value)) {
+      return multiple ? [] : [{ url: '', text: '' }];
+    }
+
     let info = JSON.parse(value) as UrlInfo[];
     if (!Array.isArray(info)) {
       info = [info];
