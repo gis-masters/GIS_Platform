@@ -9,13 +9,12 @@ Feature: При изменении слоя, осуществляется зап
     Given Существует проект "STRING_10"
     Given Существует набор
     Given Существует таблица
-    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>"
+    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>"
     And Создан аудит лог о создании слоя
     And Записано корректное тело слоя
     Examples:
       | title                             | styleName    | type   | schemaId     | nativeCRS  | dataSourceUri |
       | Искусственные дорожные сооружения | transportobj | vector | transportobj | EPSG:28406 | STRING_6      |
-
 
   Scenario Outline: Изменение слоя заносится в аудит лог
     Given Существует проект "STRING_10"
@@ -37,4 +36,3 @@ Feature: При изменении слоя, осуществляется зап
     Given Существует слой проекта
     When Владелец делает запрос на удаление слоя
     And Создан аудит лог об удалении слоя
-

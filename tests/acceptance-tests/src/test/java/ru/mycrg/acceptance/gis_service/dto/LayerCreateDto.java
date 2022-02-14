@@ -12,6 +12,8 @@ public class LayerCreateDto {
     private String dataStoreName;
     private String nativeCRS;
     private String dataSourceUri;
+    private String libraryId;
+    private Long recordId;
     private long minZoom;
     private long maxZoom;
 
@@ -111,5 +113,21 @@ public class LayerCreateDto {
 
     public void setMaxZoom(long maxZoom) {
         this.maxZoom = maxZoom;
+    }
+
+    public String getLibraryId() {
+        return libraryId;
+    }
+
+    public void setLibraryId(String libraryId) {
+        this.libraryId = libraryId;
+    }
+
+    public Long getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Long recordId) {
+        this.recordId = recordId;
     }
 }

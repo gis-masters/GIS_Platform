@@ -55,9 +55,9 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerId = id;
     }
 
-    @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} {string}")
+    @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} {string} {string} {string}")
     public void createLayer(String title, String styleName, String type, String schemaId, String epsg,
-                            String dataSourceUri) {
+                            String dataSourceUri, String libraryId, String recordId) {
 
         String dataStoreName = "scratch_database_" + orgId;
 
@@ -70,6 +70,10 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                                             generateString(dataStoreName),
                                             generateString(epsg),
                                             generateString(dataSourceUri));
+        if (type.equals("raster")) {
+            layerCreateDto.setLibraryId(libraryId);
+            layerCreateDto.setRecordId(Long.getLong(recordId));
+        }
 
         super.createEntity(layerCreateDto);
     }
@@ -77,7 +81,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     @When("Пользователь делает запрос на создание внешнего слоя")
     public void createExternalLayer() {
         layerCreateDto = new LayerCreateDto("Земельные участки", "external");
-        layerCreateDto.setDataSourceUri("https://pkk.rosreestr.ru/arcgis/rest/services/PKK6/CadastreObjects/MapServer/export");
+        layerCreateDto.setDataSourceUri(
+                "https://pkk.rosreestr.ru/arcgis/rest/services/PKK6/CadastreObjects/MapServer/export");
         layerCreateDto.setTableName("show:24");
         layerCreateDto.setMinZoom(15);
         layerCreateDto.setMaxZoom(40);
@@ -148,7 +153,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                         "vector",
                         "transportobj",
                         "EPSG:28406",
-                        generateString("STRING_6"));
+                        generateString("STRING_6"),
+                        "libraryId", "1");
             assertEquals(SC_CREATED, response.getStatusCode());
             extractAndSetLayerIdFromBody();
         }

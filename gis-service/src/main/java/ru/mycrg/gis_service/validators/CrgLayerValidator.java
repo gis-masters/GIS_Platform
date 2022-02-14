@@ -88,10 +88,6 @@ public class CrgLayerValidator implements Validator {
             errors.rejectValue("dataStoreName", REQUIRED, DEFAULT_R_MESSAGE);
         }
 
-        if (dto.getDataSourceUri() == null) {
-            errors.rejectValue("dataSourceUri", REQUIRED, DEFAULT_R_MESSAGE);
-        }
-
         if (dto.getLibraryId() == null) {
             errors.rejectValue("libraryId", REQUIRED, DEFAULT_R_MESSAGE);
         }
