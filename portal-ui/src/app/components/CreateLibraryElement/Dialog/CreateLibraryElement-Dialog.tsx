@@ -21,7 +21,11 @@ export interface ExplorerCreateElementDialogProps {
   onClose(): void;
   onCreate(formValue: LibraryRecordRaw): void;
   onChange(formValue: LibraryRecordRaw): void;
-  onFieldChange: (value: LibraryRecordRaw[keyof LibraryRecordRaw], propertyName: string) => void;
+  onFieldChange: (
+    value: LibraryRecordRaw[keyof LibraryRecordRaw],
+    propertyName: string,
+    prevValue: LibraryRecordRaw[keyof LibraryRecordRaw]
+  ) => void;
   onFieldNeedValidate: (value: LibraryRecordRaw[keyof LibraryRecordRaw], propertyName: string) => void;
 }
 

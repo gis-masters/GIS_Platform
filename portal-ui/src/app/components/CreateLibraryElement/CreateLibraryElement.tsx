@@ -9,7 +9,7 @@ import { ExplorerStore } from '../Explorer/Explorer.store';
 import { createLibraryRecord, LibraryRecord, LibraryRecordRaw } from '../../services/crg/doc-library.service';
 import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
 import { ContentType, OldFeatureDescription } from '../../services/crg/schemaOld.models';
-import { PropertySchema } from '../../services/crg/schema.models';
+import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { schemaService } from '../../services/crg/schema.service';
 import { ExplorerItemType } from '../Explorer/Explorer.models';
 import {
@@ -214,9 +214,19 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   }
 
   @boundMethod
-  private formFieldChanged(value: unknown, fieldName: string) {
-    if (value && value instanceof File && !this.formValue.title) {
-      this.formValue.title = value.name.slice(0, Math.max(0, value.name.lastIndexOf('.')));
+  private formFieldChanged(value: unknown, fieldName: string, prevValue: unknown) {
+    const { propertyType } = this.fields.find(({ name }) => name === fieldName);
+
+    if (propertyType === PropertyType.BINARY) {
+      if (
+        value instanceof File &&
+        (!this.formValue.title || (prevValue instanceof File && this.formValue.title === prevValue.name))
+      ) {
+        this.formValue.title = value.name;
+      }
+      if (!value && prevValue instanceof File && this.formValue.title === prevValue.name) {
+        this.formValue.title = '';
+      }
     }
 
     this.filterFieldErrors(fieldName);

@@ -71,7 +71,7 @@ public class DocumentLibraryRecordDownloadController {
 
             ContentDisposition contentDisposition = ContentDisposition
                     .builder("attachment")
-                    .filename(attributeHandler.getFileName(record), UTF_8)
+                    .filename(attributeHandler.prepareFileName(record), UTF_8)
                     .build();
 
             return ResponseEntity.ok()

@@ -25,7 +25,7 @@ interface FormContentProps<T extends Record<string, unknown>> extends IClassName
   formValue: Partial<T>;
   errors?: FieldErrors[];
   onFormChange?: (changedValue: Partial<T>) => void;
-  onFieldChange?: (value: T[keyof T], propertyName: keyof T) => void;
+  onFieldChange?: (value: T[keyof T], propertyName: keyof T, prevValue: T[keyof T]) => void;
   onFieldNeedValidate?: (value: T[keyof T], propertyName: keyof T) => void;
   Form?: ComponentType<FormProps<T>>;
   FormDialog?: ComponentType<FormDialogProps<T>>;
@@ -99,8 +99,8 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   @boundMethod
   private fieldChangeHandler({ value, propertyName }: { value: T[keyof T]; propertyName: keyof T }) {
     const { formValue, onFormChange, onFieldChange, fields } = this.props;
-
     const propertySchema: PropertySchema<T> = fields.find(({ name }) => name === propertyName);
+    const prevValue = formValue[propertyName];
 
     if (onFormChange) {
       const newFormValue = cloneDeep(applyFieldValue<T>(propertySchema, formValue, value));
@@ -108,7 +108,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
     }
 
     if (onFieldChange) {
-      onFieldChange(value, propertyName);
+      onFieldChange(value, propertyName, prevValue);
     }
   }
 

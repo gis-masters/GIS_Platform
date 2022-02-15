@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.DocumentLibraryDao;
 import ru.mycrg.data_service.dao.RecordsDao;
-import ru.mycrg.data_service.dao.utils.SqlBuilder;
+import ru.mycrg.data_service.dto.FileResourceDto;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.RecordDto;
@@ -137,8 +137,8 @@ public class DocumentLibraryService {
                 .orElseThrow(() -> new NotFoundException("Не найдена схема библиотеки: " + docLibId));
     }
 
-    public Page<String> getAllFilePathForAllLibraries(Pageable pageable) {
-        List<String> filePaths = new ArrayList<>();
+    public Page<FileResourceDto> getAllFilePathForAllLibraries(Pageable pageable) {
+        List<FileResourceDto> filePaths = new ArrayList<>();
 
         List<DocumentLibrary> documentLibrariesWithSchemas =
                 StreamSupport.stream(libraryRepository.findAll().spliterator(), false)
@@ -162,18 +162,19 @@ public class DocumentLibraryService {
             ResourceQualifier tableQualifier = new ResourceQualifier(documentLibrary.getTableName());
 
             List<RecordDto> allRecordsByDocLibrary = recordsDao.findAll(tableQualifier, filter);
-            List<String> filePathsByLibrary = allRecordsByDocLibrary
+            List<FileResourceDto> filePathsByLibrary = allRecordsByDocLibrary
                     .stream()
                     .filter(recordDto -> !recordDto.getContent().isEmpty())
                     .filter(this::checkInnerPathExist)
-                    .map(recordDto -> mapWithDefaultPath((String) recordDto.getContent().get("inner_path")))
+                    .map(recordDto -> mapWithDefaultPath(documentLibrary.getTitle(),
+                                                         (String) recordDto.getContent().get("inner_path")))
                     .collect(Collectors.toList());
 
             filePaths.addAll(filePathsByLibrary);
         }
 
         int limit = (int) (pageable.getOffset() + pageable.getPageSize());
-        List<String> page = filePaths.subList((int) pageable.getOffset(), limit);
+        List<FileResourceDto> page = filePaths.subList((int) pageable.getOffset(), limit);
 
         return new PageImpl<>(page, pageable, filePaths.size());
     }
@@ -187,13 +188,13 @@ public class DocumentLibraryService {
                             .isPresent();
     }
 
-    private String mapWithDefaultPath(String path) {
+    private FileResourceDto mapWithDefaultPath(String libraryName, String path) {
         String[] splitPathBySlash = path.split("/");
         if (splitPathBySlash.length < 2) {
             path = defaultPath + "/" + path;
         }
 
-        return path;
+        return new FileResourceDto(libraryName, path);
     }
 
     private boolean checkInnerPathExist(RecordDto recordDto) {

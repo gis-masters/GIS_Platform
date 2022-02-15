@@ -33,7 +33,7 @@ export interface FormProps<T extends Record<string, unknown>>
   errors?: FieldErrors[];
   onFormChange?(changedValue: T): void;
   onFormSubmit?(changedValue: T): void;
-  onFieldChange?(value: T[keyof T], propertyName: string): void;
+  onFieldChange?(value: T[keyof T], propertyName: string, prevValue: T[keyof T]): void;
   onFieldNeedValidate?(value: T[keyof T], propertyName: keyof T): void;
   onActionSuccess?(changedValue: T): void;
   onActionError?(error: Error | { errors: FieldErrors[] }): void;
@@ -215,7 +215,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
   }
 
   @boundMethod
-  private fieldChanged(value: T[keyof T], fieldName: string) {
+  private fieldChanged(value: T[keyof T], fieldName: string, prevValue: T[keyof T]) {
     const { auto, onFieldChange } = this.props;
 
     if (auto) {
@@ -223,7 +223,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
     }
 
     if (onFieldChange) {
-      onFieldChange(value, fieldName);
+      onFieldChange(value, fieldName, prevValue);
     }
   }
 

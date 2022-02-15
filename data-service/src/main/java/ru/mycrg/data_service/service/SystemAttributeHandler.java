@@ -13,6 +13,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
@@ -107,12 +108,20 @@ public class SystemAttributeHandler {
     }
 
     @NotNull
-    public String getFileName(@NotNull Map<String, Object> body) {
-        if (attributeDefined(TITLE)) {
-            return body.get(TITLE.getName()).toString();
-        }
+    public String prepareFileName(@NotNull Map<String, Object> body) {
+        Object titleObj = body.get(TITLE.getName());
 
-        return "";
+        if (nonNull(titleObj) && !titleObj.toString().isEmpty()) {
+            String title = titleObj.toString();
+
+            return addExtensionType(body, title);
+        } else {
+            Object fileType = body.get(FILE_TYPE.getName());
+
+            return (nonNull(fileType) && !fileType.toString().isEmpty())
+                    ? String.format("%s.%s", "unknown", fileType)
+                    : "unknown";
+        }
     }
 
     @NotNull
@@ -131,5 +140,31 @@ public class SystemAttributeHandler {
 
         return schema.getProperties().stream()
                      .anyMatch(property -> property.getName().equals(attribute.getName()));
+    }
+
+    private String addExtensionType(Map<String, Object> body, String title) {
+        String[] splittedTitle = title.split("\\.");
+        if (nonNull(body.get(FILE_TYPE.getName())) && !body.get(FILE_TYPE.getName()).toString().isEmpty()) {
+            String extension = body.get(FILE_TYPE.getName()).toString();
+            if (splittedTitle.length > 1) {
+                String end = splittedTitle[splittedTitle.length - 1];
+                String preEnd = splittedTitle[splittedTitle.length - 2];
+                if (!extension.equalsIgnoreCase(end)) {
+                    return String.format("%s.%s", title, extension);
+                } else {
+                    if (!end.equalsIgnoreCase(preEnd)) {
+                        return title;
+                    } else {
+                        String doubleExtension = "." + preEnd;
+
+                        return title.replaceFirst(doubleExtension, "");
+                    }
+                }
+            }
+
+            return String.format("%s.%s", title, extension);
+        } else {
+            return title;
+        }
     }
 }

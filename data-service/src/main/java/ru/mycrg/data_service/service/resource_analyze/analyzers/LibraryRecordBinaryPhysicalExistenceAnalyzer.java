@@ -84,9 +84,12 @@ public class LibraryRecordBinaryPhysicalExistenceAnalyzer implements IResourceAn
         boolean isExistOnMachine = true;
         try {
             File file = new File(resource.getResourceProperties().get("innerPath").toString());
+            String libraryName = resource.getResourceProperties().get("libraryName").toString();
             isExistOnMachine = file.exists();
             if (!file.exists()) {
-                log.warn("File doesn't exist on machine: {}", file.getAbsolutePath());
+                log.warn("File doesn't exist on machine in library: {}, path: {} ",
+                         libraryName,
+                         file.getAbsolutePath());
             }
         } catch (Exception e) {
             log.warn("Something went wrong when checking file existence on machine: {}", resource.getId());
