@@ -33,7 +33,6 @@ import ru.mycrg.http_client.handlers.BaseRequestHandler;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -99,14 +98,8 @@ public class ImportRasterProcessHandler implements IProcessHandler {
                         importReport.setProjectName(projectName);
                         importReport.setProjectIsNew(true);
                         importReport.setSuccess(true);
-                        try {
-                            processService.complete(databaseName,
-                                                    process.getId(),
-                                                    JsonConverter.toJsonNode(importReport));
-                        } catch (SQLException e) {
-                            log.error("Failed to complete process: {}", process.getId());
-                        }
 
+                        processService.complete(databaseName, process.getId(), JsonConverter.toJsonNode(importReport));
                         sendWsMsg(DONE, importReport, "Импорт растра завершен");
                     }, () -> {
                         String msg = "Не удалось выполнить импорт растра. Причина: Не удалось создать проект";
@@ -124,7 +117,10 @@ public class ImportRasterProcessHandler implements IProcessHandler {
 
                     importReport.setProjectName(projectName);
                     importReport.setProjectId(importTarget.getProjectId());
+                    importReport.setProjectIsNew(false);
+                    importReport.setSuccess(true);
 
+                    processService.complete(databaseName, process.getId(), JsonConverter.toJsonNode(importReport));
                     sendWsMsg(DONE, importReport, "Импорт растра завершен");
                 }
             } catch (Exception e) {

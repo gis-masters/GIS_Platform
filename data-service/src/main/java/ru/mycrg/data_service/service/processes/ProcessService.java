@@ -74,10 +74,14 @@ public class ProcessService {
         return processRepository.save(newProcess);
     }
 
-    public void complete(String dbName, Long processId, JsonNode details) throws SQLException {
-        processDao.updateDetailsAndStatus(processId, DONE, dbName, details);
+    public void complete(String dbName, Long processId, JsonNode details) {
+        try {
+            processDao.updateDetailsAndStatus(processId, DONE, dbName, details);
 
-        log.info("Successfully complete process with id {}, details: {} ", processId, details);
+            log.info("Successfully complete process with id {}, details: {} ", processId, details);
+        } catch (SQLException e) {
+            log.error("Failed to complete process: {}", processId);
+        }
     }
 
     public void complete(String dbName, Process process) {
