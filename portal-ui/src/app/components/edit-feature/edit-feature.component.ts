@@ -119,8 +119,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
             if (
               property?.valueType === ValueType.DOUBLE &&
               currentValue &&
-              !this.updatingAllowed &&
-              isNumber(property.fractionDigits)
+              isNumber(property.fractionDigits) &&
+              property.fractionDigits !== -1
             ) {
               currentValue = Number(currentValue).toFixed(property.fractionDigits);
             }
