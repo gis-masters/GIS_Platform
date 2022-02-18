@@ -72,15 +72,16 @@ export class ExplorerList extends Component<ExplorerListProps> {
   @boundMethod
   private getItemProps(item: ExplorerItemData): ExplorerItemProps {
     const { onOpen, store, disabledTester } = this.props;
+    const selectedItem = this.isSelected(item);
 
     return {
       item,
       title: getTitle(item),
       meta: getMeta(item),
       icon: getIcon(item),
-      selected: this.isSelected(item),
+      selected: selectedItem,
       isFolder: isFolder(item),
-      itemRef: this.isSelected(item) ? this.selectedItemRef : undefined,
+      itemRef: selectedItem ? this.selectedItemRef : undefined,
       onOpen,
       store,
       disabledTester

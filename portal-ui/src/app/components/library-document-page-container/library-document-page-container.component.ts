@@ -2,14 +2,14 @@ import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '
 import { render, unmountComponentAtNode } from 'react-dom';
 import { createElement } from 'react';
 
-import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
+import { LibraryDocumentPageContainer } from '../LibraryDocumentPageContainer/LibraryDocumentPageContainer';
 
 @Component({
-  selector: 'crg-library-document',
-  template: '<div class="library-document" #react></div>',
-  styleUrls: ['./library-document.component.scss']
+  selector: 'crg-library-document-page-container',
+  template: '<div class="library-document-page-container" #react></div>',
+  styleUrls: ['./library-document-page-container.component.scss']
 })
-export class LibraryDocumentComponent implements OnInit, OnChanges, OnDestroy {
+export class LibraryDocumentPageContainerComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
   ngOnInit() {
@@ -25,7 +25,7 @@ export class LibraryDocumentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(LibraryDocument);
+    const reactElement = createElement(LibraryDocumentPageContainer);
 
     render(reactElement, this.ref.nativeElement);
   }

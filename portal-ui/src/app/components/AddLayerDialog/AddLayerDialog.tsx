@@ -130,9 +130,10 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   @action.bound
   private handleFormChange(layerInfo: NewCrgLayer) {
     this.formValue = layerInfo;
+    const datasource = (layerInfo as FormValue).datasource;
 
-    if (!this.formValue.title) {
-      this.formValue.title = (layerInfo as FormValue).datasource.dataTable.title;
+    if (!this.formValue.title && datasource) {
+      this.formValue.title = datasource.dataTable.title;
       this.formFieldChanged(this.formValue, 'title');
     }
   }

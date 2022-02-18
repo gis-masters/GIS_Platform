@@ -34,6 +34,7 @@ export class ExplorerService {
         { page, pageSize, sort, sortDir, filter },
         getId(selectedItem)
       );
+
       if (response) {
         [children = [], totalPages = 0, page = 0] = response;
       } else {
@@ -48,6 +49,7 @@ export class ExplorerService {
         this.store.selectItem(children[0] || emptyItem);
       } else {
         this.store.setPage(page);
+        this.store.selectItem(children.find(item => this.itemsEqual(item, selectedItem)));
       }
       this.store.setLoading(false);
     }

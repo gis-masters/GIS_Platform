@@ -74,11 +74,11 @@ import { LoginFormComponent } from './components/login-form/login-form.component
 import { OpenInAnotherProjectComponent } from './components/open-in-another-project/open-in-another-project.component';
 import { ImportGmlResultButtonComponent } from './components/import-gml-results-button/import-gml-result-button';
 import { LibraryRegistryComponent } from './components/library-registry/library-registry.component';
-import { LibraryDocumentComponent } from './components/library-document/library-document.component';
 import { XmlDownloadComponent } from './components/xml-download/xml-download.component';
 import { FormControlTypeFiasComponent } from './components/form-control-type-fias/form-control-type-fias.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { FormControlTypeUrlComponent } from './components/form-control-type-url/form-control-type-url.component';
+import { LibraryDocumentPageContainerComponent } from './components/library-document-page-container/library-document-page-container.component';
 
 @NgModule({
   declarations: [
@@ -136,7 +136,7 @@ import { FormControlTypeUrlComponent } from './components/form-control-type-url/
     FooterComponent,
     ImportGmlResultButtonComponent,
     LibraryRegistryComponent,
-    LibraryDocumentComponent,
+    LibraryDocumentPageContainerComponent,
     XmlDownloadComponent,
     FormControlTypeFiasComponent,
     FormControlTypeUrlComponent
