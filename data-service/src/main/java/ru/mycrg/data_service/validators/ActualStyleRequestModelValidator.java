@@ -35,7 +35,7 @@ public class ActualStyleRequestModelValidator {
 
             if (style.getRules().isEmpty()) {
                 throw new BadRequestException(COMMON_MSG,
-                                              new ErrorInfo("rules", "Должно присутствовать хотябы одно правило"));
+                                              new ErrorInfo("rules", "Должно присутствовать хотя бы одно правило"));
             }
         });
     }

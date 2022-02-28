@@ -5,6 +5,7 @@ import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.RecordDto;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 
 public class LibraryBaseRecords extends BaseStepsDefinitions {
 
@@ -30,5 +31,12 @@ public class LibraryBaseRecords extends BaseStepsDefinitions {
                        .log().ifValidationFails()
                        .statusCode(SC_CREATED)
                        .extract().jsonPath().get("id");
+    }
+
+    public void deleteRecord(Integer recordId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        log().all().
+                        delete(String.format("/%s/records/%s", DEFAULT_LIBRARY, recordId));
     }
 }

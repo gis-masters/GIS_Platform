@@ -1,24 +1,27 @@
 package ru.mycrg.data_service.dto;
 
 import org.springframework.hateoas.core.Relation;
+import ru.mycrg.data_service.entity.IRecord;
 
-import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Dto нужна, чтобы обозначить relation как records при возврате сущностей.
+ * <p>
+ * {@code "_embedded": { "records": [] }}
+ * <p>
+ * Чтобы в будущем избавиться от "content" в каждом объекте, необходимо, исходя из схемы, генерить на лету класс.
+ */
 @Relation(collectionRelation = "records")
 public class RecordDto {
 
-    private final Map<String, Object> content = new HashMap<>();
+    private final Map<String, Object> content;
 
-    public RecordDto() {
-        // Required
+    public RecordDto(IRecord record) {
+        this.content = record.getContent();
     }
 
     public Map<String, Object> getContent() {
         return content;
-    }
-
-    public void put(String key, Object value) {
-        this.content.put(key, value);
     }
 }

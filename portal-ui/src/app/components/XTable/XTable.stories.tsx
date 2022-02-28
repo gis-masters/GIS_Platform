@@ -11,7 +11,7 @@ import { XTable, XTableColumn } from './XTable';
 import { FilterType } from './Filter/XTable-Filter';
 
 export default {
-  title: 'Example/XTable',
+  title: 'XTable',
   component: XTable
 } as ComponentMeta<typeof XTable>;
 

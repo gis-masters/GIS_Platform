@@ -20,13 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
-import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.*;
 
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
@@ -50,11 +47,11 @@ public class RecordsDao {
     public IRecord addRecord(@NotNull ResourceQualifier rIdentifier,
                              @NotNull IRecord record) throws CrgDaoException {
         try {
-            final DbTable table = getSimpleDbTable(rIdentifier);
-            final InsertQuery insertQuery = new InsertQuery(table);
+            DbTable table = getSimpleDbTable(rIdentifier);
+            InsertQuery insertQuery = new InsertQuery(table);
 
             record.getContent().forEach((key, value) -> {
-                final DbColumn dbColumn = table.addColumn(key);
+                DbColumn dbColumn = table.addColumn(key);
 
                 insertQuery.addColumn(dbColumn, value);
             });
@@ -63,7 +60,7 @@ public class RecordsDao {
 
             log.debug("INSERT QUERY: [{}]", query);
 
-            final Long id = pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
+            Long id = pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
 
             record.getContent().put(ID.getName(), id);
 
@@ -98,9 +95,8 @@ public class RecordsDao {
                 }
             }
 
-            String query =
-                    "insert into " + complexName + "(" + queryColumns.toString().toLowerCase() + ")" +
-                            " values (" + queryValues.toString().toLowerCase() + ")";
+            String query = "insert into " + complexName + "(" + queryColumns.toString().toLowerCase() + ")" +
+                    " values (" + queryValues.toString().toLowerCase() + ")";
 
             log.debug("BATCH INSERT QUERY: [{}]", query);
 
@@ -118,42 +114,54 @@ public class RecordsDao {
         }
     }
 
-    public Optional<Map<String, Object>> findById(ResourceQualifier recordQualifier) {
+    public Optional<IRecord> findById(ResourceQualifier recordQualifier,
+                                      SchemaDto schema) {
         try {
-            var object = pJdbcTemplate.queryForObject(
-                    String.format("SELECT * FROM %s WHERE id = :id", recordQualifier.getResourceTable()),
-                    new MapSqlParameterSource("id", recordQualifier.getRecord()),
-                    (rs, rowNum) -> getRecordAsObjectMap(rs));
+            String query = String.format("SELECT * FROM %s WHERE id = :id", recordQualifier.getResourceTable());
 
-            return Optional.ofNullable(object);
+            log.debug("find record by id: [{}]", query);
+
+            List<IRecord> records = pJdbcTemplate.query(query,
+                                                        new MapSqlParameterSource("id", recordQualifier.getRecord()),
+                                                        new RowMapperResultSetExtractor<>(
+                                                                new RecordRowMapper(schema)
+                                                        ));
+            if (records == null || records.isEmpty()) {
+                return Optional.empty();
+            }
+
+            return Optional.ofNullable(records.get(0));
         } catch (DataAccessException e) {
             return Optional.empty();
         }
     }
 
-    public List<RecordDto> customListQuery(String sqlRequest) {
+    public List<IRecord> customListQuery(String sqlRequest,
+                                         SchemaDto schema) {
         log.debug("Custom query: [{}]", sqlRequest);
 
         return pJdbcTemplate.getJdbcTemplate()
                             .query(sqlRequest,
                                    new RowMapperResultSetExtractor<>(
-                                           new RecordRowMapper()
+                                           new RecordRowMapper(schema)
                                    ));
     }
 
-    public List<RecordDto> findAll(ResourceQualifier tableQualifier, String ecqlFilter) {
-        final MapSqlParameterSource params = new MapSqlParameterSource();
+    public List<IRecord> findAll(ResourceQualifier tableQualifier,
+                                 String ecqlFilter,
+                                 SchemaDto schema) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
 
         String query = "SELECT * FROM " + tableQualifier + "  " + buildWhereSection(ecqlFilter);
 
         log.debug("Request find all by filter: [{}]", query);
 
-        List<RecordDto> recordDtos = new ArrayList<>();
+        List<IRecord> recordDtos = new ArrayList<>();
         try {
             recordDtos = pJdbcTemplate.query(query,
                                              params,
                                              new RowMapperResultSetExtractor<>(
-                                                     new RecordRowMapper()
+                                                     new RecordRowMapper(schema)
                                              ));
         } catch (BadSqlGrammarException e) {
             log.warn("Не удалось получить данные из {}, ошибка: {}", tableQualifier, e.getMessage());
@@ -162,9 +170,10 @@ public class RecordsDao {
         return recordDtos;
     }
 
-    public List<RecordDto> findAll(ResourceQualifier tableQualifier,
-                                   String ecqlFilter,
-                                   Pageable pageable) {
+    public List<IRecord> findAll(ResourceQualifier tableQualifier,
+                                 String ecqlFilter,
+                                 SchemaDto schema,
+                                 Pageable pageable) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("offset", pageable.getOffset())
                 .addValue("limit", pageable.getPageSize());
@@ -179,15 +188,16 @@ public class RecordsDao {
         return pJdbcTemplate.query(query,
                                    params,
                                    new RowMapperResultSetExtractor<>(
-                                           new RecordRowMapper()
+                                           new RecordRowMapper(schema)
                                    ));
     }
 
-    public List<RecordDto> findAllowed(ResourceQualifier tableQualifier,
-                                       Set<String> ids,
-                                       Set<String> paths,
-                                       String ecqlFilter,
-                                       Pageable pageable) {
+    public List<IRecord> findAllowed(ResourceQualifier tableQualifier,
+                                     Set<String> ids,
+                                     Set<String> paths,
+                                     String ecqlFilter,
+                                     SchemaDto schema,
+                                     Pageable pageable) {
         String ecqlFiltersSection = buildWhereSection(ecqlFilter);
         if (!ecqlFiltersSection.isBlank()) {
             ecqlFiltersSection = "AND " + ecqlFiltersSection.replace("WHERE", "");
@@ -212,7 +222,7 @@ public class RecordsDao {
 
         return pJdbcTemplate.query(query,
                                    new RowMapperResultSetExtractor<>(
-                                           new RecordRowMapper()
+                                           new RecordRowMapper(schema)
                                    ));
     }
 
@@ -276,41 +286,24 @@ public class RecordsDao {
         }
     }
 
-    public void removeRecord(ResourceQualifier tableQualifier, Long id) throws CrgDaoException {
+    public void removeRecord(ResourceQualifier rQualifier, Long id) throws CrgDaoException {
         try {
-            pJdbcTemplate.update(
-                    String.format("DELETE FROM %s WHERE id = :id", tableQualifier),
-                    new MapSqlParameterSource("id", id));
+            String query = String.format("DELETE FROM %s WHERE id = :id", rQualifier.getTableQualifier());
+
+            log.debug("Request to delete record: [{}]", query);
+
+            pJdbcTemplate.update(query, new MapSqlParameterSource("id", id));
         } catch (Exception e) {
-            final String msg = String.format("Не удалось выполнить удаление объекта: '%s' в: '%s'",
-                                             id, tableQualifier);
+            String msg = String.format("Не удалось выполнить удаление объекта: '%s' из: '%s'",
+                                       id, rQualifier.getTableQualifier());
 
             throw new CrgDaoException(msg, e.getCause());
         }
     }
 
-    @NotNull
-    private Map<String, Object> getRecordAsObjectMap(ResultSet rs) throws SQLException {
-        Map<String, Object> row = new LinkedHashMap<>();
-
-        ResultSetMetaData metaData = rs.getMetaData();
-        int columnCount = metaData.getColumnCount();
-        for (int i = 1; i <= columnCount; i++) {
-            if (metaData.getColumnClassName(i).contains("Boolean")) {
-                row.put(metaData.getColumnLabel(i), rs.getBoolean(i));
-            } else if (metaData.getColumnClassName(i).contains("Long")) {
-                row.put(metaData.getColumnLabel(i), rs.getLong(i));
-            } else {
-                row.put(metaData.getColumnLabel(i), rs.getString(i));
-            }
-        }
-
-        return row;
-    }
-
     private DbTable getSimpleDbTable(@NotNull ResourceQualifier rQualifier) {
-        final DbSpec spec = new DbSpec();
-        final DbSchema dbSchema = spec.addSchema(rQualifier.getSchema());
+        DbSpec spec = new DbSpec();
+        DbSchema dbSchema = spec.addSchema(rQualifier.getSchema());
 
         return dbSchema.addTable(rQualifier.getTable());
     }

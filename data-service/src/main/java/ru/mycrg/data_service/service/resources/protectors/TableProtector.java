@@ -53,6 +53,14 @@ public class TableProtector implements IResourceProtector {
     }
 
     @Override
+    public boolean isAllowed(ResourceQualifier tQualifier) {
+        return authenticationFacade.isOrganizationAdmin()
+                || authenticationFacade.isRoot()
+                || basePermissionsRepository.bestRoleForTable(tQualifier)
+                                            .isPresent();
+    }
+
+    @Override
     public ResourceType getType() {
         return TABLE;
     }

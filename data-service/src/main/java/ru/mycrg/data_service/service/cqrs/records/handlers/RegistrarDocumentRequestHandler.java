@@ -2,6 +2,8 @@ package ru.mycrg.data_service.service.cqrs.records.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
+import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.cqrs.records.requests.RegisterDocumentRequest;
@@ -12,7 +14,6 @@ import ru.mycrg.mediator.IRequestHandler;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -54,7 +55,7 @@ public class RegistrarDocumentRequestHandler implements IRequestHandler<Register
         Long registryNumber = librariesService.incrementRegistryNumber(libraryId);
 
         IRecordsService recordsService = recordServiceFactory.get();
-        Map<String, Object> record = recordsService.getById(rQualifier, rQualifier.getRecord());
+        IRecord record = recordsService.getById(rQualifier, rQualifier.getRecord());
         String oktmo = extractOktmo(record).orElseThrow(() -> new BadRequestException("Не заполнено поле oktmo."));
 
         String regNumber = String.format("%s-%s-%d-%d",
@@ -68,7 +69,7 @@ public class RegistrarDocumentRequestHandler implements IRequestHandler<Register
         payload.put("gisogd_regdate", now.toLocalDate());
         payload.put("last_modified", now);
 
-        recordsService.updateRecord(rQualifier, payload);
+        recordsService.updateRecord(rQualifier, new RecordEntity(payload));
 
         permissionsRepository.decreasePermissionsToViewerForAll(rQualifier);
 
@@ -84,13 +85,13 @@ public class RegistrarDocumentRequestHandler implements IRequestHandler<Register
         return "314";
     }
 
-    private Optional<String> extractOktmo(Map<String, Object> record) {
-        Object fiasOktmo = record.get("fias__oktmo");
+    private Optional<String> extractOktmo(IRecord record) {
+        Object fiasOktmo = record.getContent().get("fias__oktmo");
         if (fiasOktmo != null) {
             return Optional.of((String) fiasOktmo);
         }
 
-        Object oktmo = record.get("oktmo");
+        Object oktmo = record.getContent().get("oktmo");
         if (oktmo != null) {
             return Optional.of((String) oktmo);
         }

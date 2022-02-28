@@ -49,19 +49,3 @@ Feature: Корректность выдачи прав на записи в б�
       | file_2   |
       | folder_1 |
       | folder_7 |
-
-# Вариант 2
-#                                                  | Выданные разрешения | Expected role |
-# file_1                                           | OWNER               | OWNER         |
-# file_2                                           | -                   | NOT ALLOWED   |
-# folder_1                                         | -                   | NOT ALLOWED   |
-# folder_2                                         | -                   | VIEWER        |
-#          -> folder_7                             | -                   | NOT ALLOWED   |
-#          -> folder_8                             | VIEWER              | VIEWER        |
-#                      -> folder_9                 | -                   | VIEWER        |
-#                                  -> folder_10    | OWNER               | OWNER         |
-#                      -> file_3                   | -                   | VIEWER        |
-# folder_3                                         | VIEWER              | VIEWER        |
-#          -> folder_4                             | -                   | VIEWER        |
-#                      -> folder_5                 | -                   | VIEWER        |
-#                                  -> folder_6     | -                   | VIEWER        |

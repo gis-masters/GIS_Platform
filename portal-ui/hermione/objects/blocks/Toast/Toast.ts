@@ -84,9 +84,9 @@ export class Toast extends Block {
     await $details.waitForDisplayed({ reverse: true, timeoutMsg: 'Не скрываются детали' });
   }
 
-  async assertSelfie(): Promise<void> {
+  async assertSelfie(state: string = 'plain'): Promise<void> {
     const { container } = this.selectors;
 
-    return await this.browser.assertView('plain', container);
+    return await this.browser.assertView(state, container);
   }
 }

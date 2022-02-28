@@ -15,7 +15,7 @@ import { Form, FormControl, FormField, FormLabel } from './Form';
 import { FormActions } from './Actions/Form-Actions';
 
 export default {
-  title: 'Example/Form',
+  title: 'Form',
   component: Form
 } as ComponentMeta<typeof Form>;
 

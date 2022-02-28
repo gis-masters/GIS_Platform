@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { FileIcon } from './FileIcon';
 
 export default {
-  title: 'Example/FileIcon',
+  title: 'FileIcon',
   component: FileIcon
 } as ComponentMeta<typeof FileIcon>;
 

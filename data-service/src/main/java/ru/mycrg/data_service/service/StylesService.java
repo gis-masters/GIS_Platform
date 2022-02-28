@@ -5,11 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.RecordsDao;
-import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.dto.styles.*;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;
 import java.util.Map;
@@ -24,9 +26,12 @@ public class StylesService {
     private final Logger log = LoggerFactory.getLogger(StylesService.class);
 
     private final RecordsDao recordsDao;
+    private final SchemaService schemaService;
 
-    public StylesService(RecordsDao recordsDao) {
+    public StylesService(RecordsDao recordsDao,
+                         SchemaService schemaService) {
         this.recordsDao = recordsDao;
+        this.schemaService = schemaService;
     }
 
     public List<ActualStylesResponseModel> defineActualStyles(List<ActualStylesRequestModel> request) {
@@ -36,21 +41,25 @@ public class StylesService {
     }
 
     public ActualStylesResponseModel defineActualStyle(ActualStylesRequestModel requestModel) {
-        final ActualStylesResponseModel response = new ActualStylesResponseModel(requestModel);
-        final ResourceQualifier tQualifier = new ResourceQualifier(requestModel.getDataset(),
-                                                                   requestModel.getIdentifier());
+        ActualStylesResponseModel response = new ActualStylesResponseModel(requestModel);
+        String tableName = requestModel.getIdentifier();
+        ResourceQualifier tQualifier = new ResourceQualifier(requestModel.getDataset(), tableName);
 
         try {
-            final List<StyleRule> styleRules = requestModel.getRules();
-            final List<RuleFilter> ruleFilters = styleRules.stream()
-                                                           .map(StyleRule::getFilter)
-                                                           .collect(Collectors.toList());
-            final SpatialRuleFilter bboxFilter = requestModel.getFilter();
+            SchemaDto schema = schemaService
+                    .getSchemaByName(tableName)
+                    .orElseThrow(() -> new NotFoundException("Не удалось найти схему: " + tableName));
+
+            List<StyleRule> styleRules = requestModel.getRules();
+            List<RuleFilter> ruleFilters = styleRules.stream()
+                                                     .map(StyleRule::getFilter)
+                                                     .collect(Collectors.toList());
+            SpatialRuleFilter bboxFilter = requestModel.getFilter();
 
             // Правило без фильтра подразумевает выборку без условий
             if (ruleFilters.contains(null) || ruleFilters.isEmpty()) {
-                final String sqlQuery = buildSelectOneQueryWithBbox(tQualifier, bboxFilter);
-                final List<RecordDto> recordDtos = recordsDao.customListQuery(sqlQuery);
+                String sqlQuery = buildSelectOneQueryWithBbox(tQualifier, bboxFilter);
+                List<IRecord> recordDtos = recordsDao.customListQuery(sqlQuery, schema);
                 if (!recordDtos.isEmpty()) {
                     styleRules.stream()
                               .filter(styleRule -> styleRule.getFilter() == null)
@@ -58,8 +67,8 @@ public class StylesService {
                               .ifPresent(styleRule -> response.addRule(styleRule.getName()));
                 }
             } else {
-                final String sqlQuery = buildSelectQueryWithBbox(tQualifier, ruleFilters, bboxFilter);
-                final List<RecordDto> recordDtos = recordsDao.customListQuery(sqlQuery);
+                String sqlQuery = buildSelectQueryWithBbox(tQualifier, ruleFilters, bboxFilter);
+                List<IRecord> recordDtos = recordsDao.customListQuery(sqlQuery, schema);
 
                 analyzeComparisonRule(styleRules, recordDtos, response);
 
@@ -67,9 +76,9 @@ public class StylesService {
                           .filter(styleRule -> styleRule.getFilter() instanceof ElseRuleFilter)
                           .findFirst()
                           .ifPresent(elseRule -> {
-                              final String elseQuery = buildSelectNotQueryWithBbox(tQualifier, ruleFilters, bboxFilter);
+                              String elseQuery = buildSelectNotQueryWithBbox(tQualifier, ruleFilters, bboxFilter);
 
-                              boolean isSomeByElseRuleExist = !recordsDao.customListQuery(elseQuery).isEmpty();
+                              boolean isSomeByElseRuleExist = !recordsDao.customListQuery(elseQuery, schema).isEmpty();
                               if (isSomeByElseRuleExist) {
                                   response.addRule(elseRule.getName());
                               }
@@ -77,14 +86,14 @@ public class StylesService {
             }
         } catch (BadSqlGrammarException e) {
             String msg = "Failed to define actual styles";
-            final Throwable cause = e.getCause();
+            Throwable cause = e.getCause();
             if (cause != null) {
                 throw new DataServiceException(msg, new ErrorInfo("sqlQuery", cause.getMessage()));
             }
 
             throw new DataServiceException(msg);
         } catch (Exception e) {
-            final String msg = "Failed to define actual styles. Reason: " + e.getMessage();
+            String msg = "Failed to define actual styles. Reason: " + e.getMessage();
             log.error(msg, e.getCause());
 
             throw new DataServiceException(msg);
@@ -94,18 +103,18 @@ public class StylesService {
     }
 
     private void analyzeComparisonRule(List<StyleRule> rules,
-                                       List<RecordDto> recordDtos,
+                                       List<IRecord> recordDtos,
                                        ActualStylesResponseModel response) {
         recordDtos.forEach(record -> {
-            final Map<String, Object> recordContent = record.getContent();
+            Map<String, Object> recordContent = record.getContent();
 
             rules.stream()
                  .filter(styleRule -> styleRule.getFilter() instanceof ComparisonRuleFilter)
                  .forEach(styleRule -> {
-                     final ComparisonRuleFilter filter = (ComparisonRuleFilter) styleRule.getFilter();
-                     final String propertyName = filter.getPropertyName();
+                     ComparisonRuleFilter filter = (ComparisonRuleFilter) styleRule.getFilter();
+                     String propertyName = filter.getPropertyName();
                      if (recordContent.containsKey(propertyName)) {
-                         final String recordValue = (String) recordContent.get(propertyName);
+                         String recordValue = (String) recordContent.get(propertyName);
                          if (validate(filter, recordValue)) {
                              response.addRule(styleRule.getName());
                          }

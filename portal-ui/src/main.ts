@@ -36,8 +36,8 @@ declare global {
   };
 
   interface Clipboard {
-    read?(): Promise<Array<ClipboardItem>>;
-    write?(items: Array<ClipboardItem>): Promise<void>;
+    read(): Promise<Array<ClipboardItem>>;
+    write(items: Array<ClipboardItem>): Promise<void>;
   }
 
   interface NodeListOf<TNode extends Node> extends NodeList {

@@ -15,11 +15,10 @@ import ru.mycrg.data_service.service.storage.exceptions.StorageException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.UUID;
+
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
 @Service
 public class FileStorageService {
@@ -58,8 +57,15 @@ public class FileStorageService {
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             return targetLocation.normalize().toString();
+        } catch (AccessDeniedException e) {
+            String msg = "Нет доступа на сохранение файла, по пути: " + targetLocation;
+            logError(msg, e);
+            throw new DataServiceException(msg, e);
         } catch (Exception e) {
-            throw new DataServiceException("Could not store file: " + targetLocation, e);
+            String msg = "Не удалось сохранить файл, по пути: " + targetLocation;
+            logError(msg, e);
+
+            throw new DataServiceException(msg, e);
         }
     }
 

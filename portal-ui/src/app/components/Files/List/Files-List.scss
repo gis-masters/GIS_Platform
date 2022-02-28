@@ -1,0 +1,11 @@
+.Files-List {
+  &_numerous,
+  &_editable.Files-List_multiple {
+    overflow: auto;
+
+    max-height: 200px;
+    padding: 10px;
+
+    background-color: var(--light-blue);
+  }
+}

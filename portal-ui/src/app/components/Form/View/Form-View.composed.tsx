@@ -7,6 +7,7 @@ import { withTypeCustom } from './_type/Form-View_type_custom';
 import { withTypeDatetime } from './_type/Form-View_type_datetime';
 import { withTypeFloat } from './_type/Form-View_type_float';
 import { withTypeFias } from './_type/Form-View_type_fias';
+import { withTypeFile } from './_type/Form-View_type_file';
 import { withTypeSet } from './_type/Form-View_type_set';
 import { withTypeUrl } from './_type/Form-View_type_url';
 import { FormView as Presenter } from './Form-View';
@@ -19,6 +20,7 @@ export const FormView = compose(
   withTypeDatetime,
   withTypeFloat,
   withTypeFias,
+  withTypeFile,
   withTypeUrl,
   withTypeSet
 )(Presenter);

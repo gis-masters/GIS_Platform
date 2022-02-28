@@ -19,6 +19,7 @@ export enum ValueType {
   UUID = 'UUID',
   BINARY = 'BINARY',
   FIAS = 'FIAS',
+  FILE = 'FILE',
   SET = 'SET', // пока что frontend only
   CHECKBOX = 'CHECKBOX', // пока что frontend only
   CUSTOM = 'CUSTOM' // frontend only
@@ -135,6 +136,15 @@ export interface OldPropertyFiasSchema<T extends Record<string, unknown> = Recor
   searchMode?: 'address' | 'oktmo';
 }
 
+export interface OldPropertyFileSchema<T extends Record<string, unknown> = Record<string, unknown>>
+  extends OldBasePropertySchema<T> {
+  valueType: ValueType.FILE;
+  accept?: string;
+  maxFiles?: number;
+  maxSize?: number;
+  multiple?: boolean;
+}
+
 export interface OldPropertySchemaCustom<T extends Record<string, unknown> = Record<string, unknown>>
   extends OldBasePropertySchema<T> {
   valueType: ValueType.CUSTOM;
@@ -157,7 +167,8 @@ export type OldPropertySchema<T extends Record<string, unknown> = Record<string,
   | OldPropertySchemaOther<T>
   | OldPropertySchemaUrl<T>
   | OldPropertySchemaCustom<T>
-  | OldPropertyFiasSchema<T>;
+  | OldPropertyFiasSchema<T>
+  | OldPropertyFileSchema<T>;
 
 export enum Updateability {
   CREATE_ONLY = 'CREATE_ONLY',

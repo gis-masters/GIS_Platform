@@ -1,13 +1,13 @@
-import React, { Component, createRef, DetailedHTMLProps, InputHTMLAttributes, RefObject } from 'react';
+import React, { Component, createRef, DetailedHTMLProps, InputHTMLAttributes, ReactNode, RefObject } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
+import { AddCircleOutline, Close } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 import { cn } from '@bem-react/classname';
 
-import { Button } from '../Button/Button';
+import { Button, ButtonProps } from '../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./FileInput.scss';
 
@@ -17,6 +17,11 @@ interface FileInputProps
   extends Omit<DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, 'onChange'> {
   onChange?: (selectedFiles: FileList | null) => void;
   fullWidth?: boolean;
+  buttonCaption?: ReactNode;
+  nameHidden?: boolean;
+  iconButton?: boolean;
+  buttonProps?: Omit<ButtonProps, 'ref'>;
+  autoClear?: boolean;
 }
 
 @observer
@@ -27,11 +32,25 @@ export class FileInput extends Component<FileInputProps> {
   @observable private files: FileList | null = null;
 
   render() {
-    const { className, onChange, fullWidth, value, ...otherProps } = this.props;
+    const {
+      className,
+      onChange,
+      fullWidth,
+      value,
+      buttonCaption = 'Выбрать',
+      nameHidden,
+      iconButton,
+      buttonProps,
+      autoClear,
+      ...otherProps
+    } = this.props;
 
     return (
-      <span className={cnFileInput({ fullWidth, empty: this.empty }, [className])}>
-        <span className={cnFileInput('Filename')}>{this.caption}</span>
+      <span
+        className={cnFileInput({ fullWidth, empty: this.empty, btnMode: iconButton ? 'icon' : 'button' }, [className])}
+      >
+        {!nameHidden && <span className={cnFileInput('Filename')}>{this.caption}</span>}
+
         <input
           type='file'
           className={cnFileInput('Input')}
@@ -40,14 +59,33 @@ export class FileInput extends Component<FileInputProps> {
           onChange={this.handleChange}
           tabIndex={-1}
         />
-        {!this.empty && (
+
+        {!this.empty && !nameHidden && !autoClear && (
           <IconButton size='small' onClick={this.clearClickHandler} className={cnFileInput('Clear')}>
             <Close fontSize='small' />
           </IconButton>
         )}
-        <Button btnRef={this.btnRef} onClick={this.browseClickHandler} className={cnFileInput('Browse')}>
-          Выбрать
-        </Button>
+
+        {iconButton ? (
+          <Tooltip title={buttonCaption}>
+            <IconButton
+              color='primary'
+              ref={this.btnRef}
+              onClick={this.browseClickHandler}
+              className={cnFileInput('Browse')}
+            >
+              <AddCircleOutline />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Button
+            btnRef={this.btnRef}
+            onClick={this.browseClickHandler}
+            className={cnFileInput('Browse')}
+            children={buttonCaption}
+            {...buttonProps}
+          />
+        )}
       </span>
     );
   }
@@ -59,10 +97,13 @@ export class FileInput extends Component<FileInputProps> {
 
   @computed
   private get caption(): string {
-    const count = this.files?.length || (this.props.value && 1);
+    const { value, multiple } = this.props;
+    const count = this.files?.length || (value && 1);
 
     if (!count) {
-      return 'Файл не выбран';
+      const bl = multiple ? 'ы' : '';
+
+      return `Файл${bl} не выбран${bl}`;
     }
 
     const name = this.files && this.files[0]?.name;
@@ -74,19 +115,28 @@ export class FileInput extends Component<FileInputProps> {
 
   @action.bound
   private handleChange() {
-    const { onChange } = this.props;
+    const { onChange, autoClear } = this.props;
 
     this.files = this.inputRef.current.files;
     this._empty = !this.files.length;
 
     onChange(this.files);
+
+    if (autoClear) {
+      this.clear();
+    }
+  }
+
+  @boundMethod
+  private clearClickHandler() {
+    this.clear();
+    this.handleChange();
   }
 
   @action.bound
-  private clearClickHandler() {
+  private clear() {
     this.inputRef.current.value = '';
     this.files = null;
-    this.handleChange();
   }
 
   @boundMethod

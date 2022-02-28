@@ -53,6 +53,14 @@ public class DatasetProtector implements IResourceProtector {
     }
 
     @Override
+    public boolean isAllowed(ResourceQualifier dQualifier) {
+        return authenticationFacade.isOrganizationAdmin()
+                || authenticationFacade.isRoot()
+                || basePermissionsRepository.getRoleForDataset(dQualifier)
+                                            .isPresent();
+    }
+
+    @Override
     public ResourceType getType() {
         return DATASET;
     }

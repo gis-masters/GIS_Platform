@@ -99,6 +99,10 @@ export function convertSchema<T extends Record<string, unknown>>(
       field.propertyType = PropertyType.FIAS;
     }
 
+    if (oldField.valueType === ValueType.FILE) {
+      field.propertyType = PropertyType.FILE;
+    }
+
     delete (field as Partial<OldPropertySchema>).valueType;
 
     return field as PropertySchema<T>;

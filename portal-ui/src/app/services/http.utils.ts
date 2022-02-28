@@ -13,7 +13,7 @@ export function preparePageOptions(
     page: String(page),
     size: String(pageSize),
     ...(sort ? { sort: `${sort},${sortDir}` } : {}),
-    ...(filter || {}),
+    ...filter,
     ...queryParams
   };
 }

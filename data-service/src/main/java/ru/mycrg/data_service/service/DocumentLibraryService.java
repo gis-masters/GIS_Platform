@@ -11,8 +11,8 @@ import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dto.FileResourceDto;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.LibraryModel;
-import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.entity.DocumentLibrary;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
@@ -74,7 +74,7 @@ public class DocumentLibraryService {
         } else {
             ResourceQualifier dlQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "doc_libraries", LIBRARY);
             libraries = permissionsRepository
-                    .findAllowedByParent(dlQualifier, ROOT_FOLDER_PATH, ecqlFilter, pageable).stream()
+                    .findAllowedByParent(dlQualifier, ROOT_FOLDER_PATH, ecqlFilter, null, pageable).stream()
                     .map(recordDto -> new LibraryModel(recordDto.getContent()))
                     .collect(Collectors.toList());
 
@@ -128,13 +128,12 @@ public class DocumentLibraryService {
     }
 
     public boolean isExist(ResourceQualifier rIdentifier) {
-        return libraryRepository.existsByTableName(rIdentifier.getQualifier());
+        return libraryRepository.existsByTableName(rIdentifier.getTable());
     }
 
     public SchemaDto getSchema(String docLibId) {
-        return schemaService
-                .getSchemaByName(getInfo(docLibId).getSchemaId())
-                .orElseThrow(() -> new NotFoundException("Не найдена схема библиотеки: " + docLibId));
+        return schemaService.getSchemaByName(getInfo(docLibId).getSchemaId())
+                            .orElseThrow(() -> new NotFoundException("Не найдена схема библиотеки: " + docLibId));
     }
 
     public Page<FileResourceDto> getAllFilePathForAllLibraries(Pageable pageable) {
@@ -149,19 +148,19 @@ public class DocumentLibraryService {
 
         for (DocumentLibrary documentLibrary: documentLibrariesWithSchemas) {
             List<String> contentTypes = new ArrayList<>();
-            Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(documentLibrary.getSchemaId());
-            if (schemaByName.isPresent()) {
-                contentTypes = schemaByName.get()
-                                           .getContentTypes()
-                                           .stream().map(ContentTypes::getId)
-                                           .collect(Collectors.toList());
+            Optional<SchemaDto> schema = schemaService.getSchemaByName(documentLibrary.getSchemaId());
+            if (schema.isPresent()) {
+                contentTypes = schema.get()
+                                     .getContentTypes()
+                                     .stream().map(ContentTypes::getId)
+                                     .collect(Collectors.toList());
             }
 
             String filter = "is_folder = false and content_type_id in (" + buildInSection(contentTypes) + ")";
 
             ResourceQualifier tableQualifier = new ResourceQualifier(documentLibrary.getTableName());
 
-            List<RecordDto> allRecordsByDocLibrary = recordsDao.findAll(tableQualifier, filter);
+            List<IRecord> allRecordsByDocLibrary = recordsDao.findAll(tableQualifier, filter, schema.get());
             List<FileResourceDto> filePathsByLibrary = allRecordsByDocLibrary
                     .stream()
                     .filter(recordDto -> !recordDto.getContent().isEmpty())
@@ -197,7 +196,7 @@ public class DocumentLibraryService {
         return new FileResourceDto(libraryName, path);
     }
 
-    private boolean checkInnerPathExist(RecordDto recordDto) {
+    private boolean checkInnerPathExist(IRecord recordDto) {
         return recordDto.getContent().containsKey("inner_path")
                 && Objects.nonNull(recordDto.getContent().get("inner_path"));
     }

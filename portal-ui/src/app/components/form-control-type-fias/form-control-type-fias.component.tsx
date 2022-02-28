@@ -33,7 +33,7 @@ import { FormControl } from '../Form/Control/Form-Control.composed';
 export class FormControlTypeFiasComponent implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
   @Input() property?: PropertySchema;
   @Output() inputModelChange = new EventEmitter<string>();
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   private onChange: (value: unknown) => void;
 

@@ -1,0 +1,13 @@
+.Files-Item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  min-height: 30px;
+
+  --FilesItemHover: 0;
+
+  &:hover {
+    --FilesItemHover: 1;
+  }
+}

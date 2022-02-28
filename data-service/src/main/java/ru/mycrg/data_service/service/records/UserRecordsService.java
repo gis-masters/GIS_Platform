@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -21,16 +20,14 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
-import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentIntentHandler;
+import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.text.MessageFormat;
-import java.time.LocalDateTime;
 import java.util.*;
 
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.service.records.RecordUtil.clearSystemAttributes;
 import static ru.mycrg.data_service.service.records.RecordUtil.extractFolderIdsFromPath;
@@ -48,7 +45,7 @@ public class UserRecordsService implements IRecordsService {
     private final SystemAttributeHandler systemAttributeHandler;
     private final BasePermissionsRepository permissionsRepository;
     private final PermissionsService permissionsService;
-    private final SimpleIntentIntentHandler simpleIntentHandler;
+    private final SimpleIntentHandler simpleIntentHandler;
 
     public UserRecordsService(RecordsDao recordsDao,
                               FileStorageService fileStorageService,
@@ -56,7 +53,7 @@ public class UserRecordsService implements IRecordsService {
                               SystemAttributeHandler systemAttributeHandler,
                               BasePermissionsRepository permissionsRepository,
                               PermissionsService permissionsService,
-                              SimpleIntentIntentHandler simpleIntentHandler) {
+                              SimpleIntentHandler simpleIntentHandler) {
         this.recordsDao = recordsDao;
         this.librariesService = librariesService;
         this.fileStorageService = fileStorageService;
@@ -67,46 +64,47 @@ public class UserRecordsService implements IRecordsService {
     }
 
     @Override
-    public Page<RecordDto> getPaged(ResourceQualifier lQualifier,
-                                    Pageable pageable,
-                                    Long parentId,
-                                    String ecqlFilter) {
-        long total;
-        List<RecordDto> allowedResources;
-
+    public Page<IRecord> getPaged(ResourceQualifier lQualifier,
+                                  Pageable pageable,
+                                  Long parentId,
+                                  String ecqlFilter) {
         String path = ROOT_FOLDER_PATH;
+        SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
+
+        long total;
+        List<IRecord> records;
         if (parentId != null) {
             ResourceQualifier recordQualifier = new ResourceQualifier(lQualifier, parentId);
-            Map<String, Object> parent = recordsDao
-                    .findById(recordQualifier)
-                    .orElseThrow(() -> new NotFoundException("Not found record by id: " + parentId));
+            IRecord parent = recordsDao.findById(recordQualifier, schema)
+                                       .orElseThrow(() -> new NotFoundException("Запись не найдена: " + parentId));
 
-            path = String.format("%s/%d", parent.get("path"), parentId);
+            path = String.format("%s/%d", parent.getContent().get("path"), parentId);
             ecqlFilter = addAsEqual(ecqlFilter, PATH.getName(), path);
 
             Set<String> ids = extractFolderIdsFromPath(path);
 
             boolean allowedByParentPermissions = permissionsRepository.isAllowedByParentsPermissions(lQualifier, ids);
             if (allowedByParentPermissions) {
-                allowedResources = recordsDao.findAll(lQualifier, ecqlFilter, pageable);
+                records = recordsDao.findAll(lQualifier, ecqlFilter, schema, pageable);
                 total = recordsDao.getTotal(lQualifier, ecqlFilter);
             } else {
-                allowedResources = permissionsRepository.findAllowedByParent(lQualifier, path, ecqlFilter, pageable);
+                records = permissionsRepository.findAllowedByParent(lQualifier, path, ecqlFilter, schema, pageable);
                 total = permissionsRepository.getTotalByParent(lQualifier, path, ecqlFilter);
             }
         } else {
             ecqlFilter = addAsEqual(ecqlFilter, PATH.getName(), path);
 
-            allowedResources = permissionsRepository.findAllowedByParent(lQualifier, path, ecqlFilter, pageable);
+            records = permissionsRepository.findAllowedByParent(lQualifier, path, ecqlFilter, schema, pageable);
             total = permissionsRepository.getTotalByParent(lQualifier, path, ecqlFilter);
         }
 
-        return new PageImpl<>(allowedResources, pageable, total);
+        return new PageImpl<>(records, pageable, total);
     }
 
     @Override
-    public Page<RecordDto> getAsRegistry(ResourceQualifier lQualifier, Pageable pageable, String ecqlFilter) {
-        List<RecordDto> allowedDirectly = permissionsRepository.findAllowedDirectly(lQualifier);
+    public Page<IRecord> getAsRegistry(ResourceQualifier lQualifier, Pageable pageable, String ecqlFilter) {
+        SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
+        List<IRecord> allowedDirectly = permissionsRepository.findAllowedDirectly(lQualifier, schema);
         Set<String> ids = new HashSet<>();
         Set<String> paths = new HashSet<>();
         allowedDirectly.forEach(record -> {
@@ -117,24 +115,26 @@ public class UserRecordsService implements IRecordsService {
             paths.add(pathToMeAndChildren);
         });
 
-        List<RecordDto> allAllowedRecords = recordsDao.findAllowed(lQualifier, ids, paths, ecqlFilter, pageable);
+        List<IRecord> allAllowedRecords = recordsDao.findAllowed(lQualifier, ids, paths, ecqlFilter, schema, pageable);
         long total = recordsDao.getTotalAllowed(lQualifier, ids, paths, ecqlFilter);
 
         return new PageImpl<>(allAllowedRecords, pageable, total);
     }
 
     @Override
-    public Map<String, Object> getById(ResourceQualifier rQualifier, Long recordId) {
+    public IRecord getById(ResourceQualifier rQualifier, Long recordId) {
         String definedRole = null;
 
         // Создаю новый - переходное решение пока некоторые квалификаторы не включают в себя идентификатор записи
         ResourceQualifier recordQualifier = new ResourceQualifier(rQualifier, recordId);
 
-        Map<String, Object> record = recordsDao.findById(recordQualifier)
-                                               .orElseThrow(() -> new NotFoundException(recordId));
+        SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
+        IRecord record = recordsDao.findById(recordQualifier, schema)
+                                   .orElseThrow(() -> new NotFoundException(recordId));
+        Map<String, Object> content = record.getContent();
 
         // Если запись имеет родителей - получим роль наследуемую от них
-        String path = String.valueOf(record.get(PATH.getName()));
+        String path = String.valueOf(content.get(PATH.getName()));
         if (path != null && !path.equals(ROOT_FOLDER_PATH)) {
             Set<String> ids = extractFolderIdsFromPath(path);
 
@@ -147,7 +147,7 @@ public class UserRecordsService implements IRecordsService {
         // Если роль на данном этапе максимальная, то дальше ничего делать не нужно.
         String ownerRole = "OWNER";
         if (ownerRole.equals(definedRole)) {
-            record.put(ROLE.getName(), ownerRole);
+            content.put(ROLE.getName(), ownerRole);
 
             return record;
         }
@@ -155,23 +155,23 @@ public class UserRecordsService implements IRecordsService {
         // Проверим роль выданную непосредственно на запись
         Optional<String> oRole = permissionsRepository.getRoleForRecord(recordQualifier);
         if (oRole.isPresent()) {
-            record.put(ROLE.getName(), oRole.get());
+            content.put(ROLE.getName(), oRole.get());
             definedRole = oRole.get();
         }
 
         // Если роль на данном этапе максимальная, то дальше ничего делать не нужно.
         if (ownerRole.equals(definedRole)) {
-            record.put(ROLE.getName(), ownerRole);
+            content.put(ROLE.getName(), ownerRole);
 
             return record;
         }
 
         // Проверим доступна ли запись как "проходная папка", т.е. из-за наличия в ней элементов к которым есть доступ
-        boolean isFolder = Boolean.parseBoolean(String.valueOf(record.get(IS_FOLDER.getName())));
+        boolean isFolder = Boolean.parseBoolean(String.valueOf(content.get(IS_FOLDER.getName())));
         if (isFolder) {
             boolean isPassThroughFolder = permissionsRepository.isPassThroughFolder(rQualifier, path + "/" + recordId);
             if (isPassThroughFolder) {
-                record.put(ROLE.getName(), "VIEWER");
+                content.put(ROLE.getName(), "VIEWER");
 
                 return record;
             }
@@ -179,7 +179,7 @@ public class UserRecordsService implements IRecordsService {
             if (definedRole == null) {
                 throw new ForbiddenException("Недостаточно прав для просмотра записи: " + recordId);
             } else {
-                record.put(ROLE.getName(), definedRole);
+                content.put(ROLE.getName(), definedRole);
 
                 return record;
             }
@@ -188,7 +188,7 @@ public class UserRecordsService implements IRecordsService {
         if (definedRole == null) {
             throw new ForbiddenException("Недостаточно прав для просмотра записи: " + recordId);
         } else {
-            record.put(ROLE.getName(), definedRole);
+            content.put(ROLE.getName(), definedRole);
 
             return record;
         }
@@ -208,7 +208,8 @@ public class UserRecordsService implements IRecordsService {
                                   .fillByContentType(record.getContent())
                                   .addDefaultPath(record.getContent())
                                   .fillCreator(record.getContent())
-                                  .fillTimes(record.getContent());
+                                  .updateModifiedTime(record)
+                                  .prepareJsonb(record);
 
             if (file != null) {
                 if (file.isEmpty()) {
@@ -232,23 +233,18 @@ public class UserRecordsService implements IRecordsService {
         }
     }
 
+    // Есть некий confusing пока идёт переход от сервисов к cqrs и его обработчикам команд.
+    // По-идее всё должно переехать в обработчики.
     @Override
-    public void updateRecord(ResourceQualifier recordQualifier, Map<String, Object> payload) {
-        ResourceQualifier tQualifier = new ResourceQualifier(recordQualifier.getSchema(),
-                                                             recordQualifier.getTable());
-        Map<String, Object> record = getById(tQualifier, recordQualifier.getRecord());
-
+    public void updateRecord(ResourceQualifier recordQualifier, IRecord record) {
         try {
-            log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), payload);
+            log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), record);
 
-            Map<String, Object> newData = clearSystemAttributes(payload);
-            newData.put(LAST_MODIFIED.getName(), LocalDateTime.now().format(ISO_LOCAL_DATE_TIME).replace("T", " "));
+            Map<String, Object> clearedData = clearSystemAttributes(record);
 
-            newData.forEach((key, value) -> record.put(key, newData.get(key)));
+            recordsDao.updateRecordById(recordQualifier, clearedData);
 
-            recordsDao.updateRecordById(recordQualifier, newData);
-
-            log.debug("successfully patched");
+            log.debug("Record: '{}' successfully patched", recordQualifier.getRecord());
         } catch (Exception e) {
             throw new DataServiceException("Failed to update record: " + recordQualifier.getQualifier(), e.getCause());
         }

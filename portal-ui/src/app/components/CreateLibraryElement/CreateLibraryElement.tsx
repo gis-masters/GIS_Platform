@@ -158,6 +158,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     const formData = this.fillSystemAttributes(formValue);
 
     this.setDialogLoading(true);
+
     for (const propName in formData) {
       // Удаляем пустые строки и нули? Наркомания...
       if (!formData[propName]) {
@@ -167,6 +168,8 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
 
     this.setErrors(validateFormValue(formData, this.fields));
     if (this.formErrors?.length) {
+      this.setDialogLoading(false);
+
       return;
     }
 

@@ -8,6 +8,8 @@ import ru.mycrg.data_service_contract.enums.ValueType;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
+
 public class SchemaUtil {
 
     private SchemaUtil() {
@@ -17,6 +19,10 @@ public class SchemaUtil {
     public static boolean isPropertyExist(SchemaDto schema, String key) {
         return schema.getProperties().stream()
                      .anyMatch(property -> property.getName().equals(key));
+    }
+
+    public static boolean isFilePropertyExist(SchemaDto schema) {
+        return isPropertyExistByType(schema, FILE);
     }
 
     public static String getEnumerationTitleByValue(SimplePropertyDto property, String value) {
@@ -35,10 +41,15 @@ public class SchemaUtil {
                          .findFirst();
     }
 
-    public static Optional<SimplePropertyDto> getPropertyByName(SchemaDto schemaDto, String name) {
-        return schemaDto
+    public static Optional<SimplePropertyDto> getPropertyByName(SchemaDto schema, String name) {
+        return schema
                 .getProperties().stream()
                 .filter(prDto -> prDto.getName().equalsIgnoreCase(name))
                 .findFirst();
+    }
+
+    private static boolean isPropertyExistByType(SchemaDto schema, ValueType type) {
+        return schema.getProperties().stream()
+                     .anyMatch(property -> property.getValueType().equals(type));
     }
 }

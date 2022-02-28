@@ -35,9 +35,9 @@ export class UrlsList extends Block {
     await $button.click();
   }
 
-  async assertSelfie(state: string): Promise<void> {
+  async assertSelfie(state: string = 'plain'): Promise<void> {
     const { formDialog } = this.selectors;
 
-    return await this.browser.assertView('plain', formDialog);
+    return await this.browser.assertView(state, formDialog);
   }
 }

@@ -19,22 +19,23 @@ interface LinkProps {
   download?: string | boolean;
   disabled?: boolean;
   delay?: number;
+  onClick?(e: React.MouseEvent<HTMLAnchorElement>): void;
 }
 
 export class Link extends Component<LinkProps> {
   render() {
-    const { children, className, href, target, theme, download } = this.props;
+    const { children, className, href, target, theme, download, disabled } = this.props;
 
     return (
       <a
         href={href}
         target={download ? '_blank' : target}
         onClick={this.navigate}
-        className={cnLink({ theme: theme || 'normal' }, [className])}
+        className={cnLink({ theme: theme || 'normal', disabled }, [className])}
         download={download}
       >
         {target === '_blank' && (
-          <span className={cnLink('Icon-Container')}>
+          <span className={cnLink('IconContainer')}>
             <OpenInNew className={cnLink('Icon')} />
           </span>
         )}
@@ -45,7 +46,14 @@ export class Link extends Component<LinkProps> {
 
   @boundMethod
   private async navigate(e: React.MouseEvent<HTMLAnchorElement>) {
-    const { href, target, download, disabled, delay } = this.props;
+    const { href, target, download, disabled, delay, onClick } = this.props;
+
+    if (onClick && !disabled) {
+      onClick(e);
+      if (e.defaultPrevented) {
+        return;
+      }
+    }
 
     if (!target || disabled || delay) {
       if (disabled) {

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { IconButton, Tooltip } from '@mui/material';
-import { LocalLibrary, PlaylistAddCheck } from '@mui/icons-material';
+import { LocalLibrary, TableViewOutlined } from '@mui/icons-material';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import {
@@ -206,18 +206,18 @@ export class ExplorerAdapterTypeLibrary {
   static getToolbarActions(item: ExplorerItemData<DocumentLibrary>, store: ExplorerStore): ReactNode {
     return (
       <>
-        <Link href={`/data-management/library/${item.payload.identifier}/registry`} theme='contents'>
-          <Tooltip title='Открыть реестр'>
-            <IconButton>
-              <PlaylistAddCheck />
-            </IconButton>
-          </Tooltip>
-        </Link>
         <CreateLibraryElement
           libraryIdentifier={item.payload.identifier}
           schemaId={item.payload.schemaId}
           store={store}
         />
+        <Link href={`/data-management/library/${item.payload.identifier}/registry`} theme='contents'>
+          <Tooltip title='Открыть реестр'>
+            <IconButton>
+              <TableViewOutlined />
+            </IconButton>
+          </Tooltip>
+        </Link>
       </>
     );
   }

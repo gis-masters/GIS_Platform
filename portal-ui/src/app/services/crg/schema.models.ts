@@ -19,6 +19,7 @@ export enum PropertyType {
   LOOKUP = 'lookup',
   UUID = 'uuid',
   BINARY = 'binary',
+  FILE = 'file',
   IDENTITIES = 'identities',
   SET = 'set',
   FIAS = 'fias',
@@ -198,6 +199,14 @@ export interface PropertySchemaBinary<T = Record<string, unknown>> extends BaseP
   isEmbedded?: boolean;
 }
 
+export interface PropertySchemaFile<T = Record<string, unknown>> extends BasePropertySchema<T> {
+  propertyType: PropertyType.FILE;
+  accept?: string;
+  maxSize?: number;
+  maxFiles?: number;
+  multiple?: boolean;
+}
+
 export type PropertySchema<T = Record<string, unknown>> =
   | PropertySchemaString<T>
   | PropertySchemaInt<T>
@@ -213,4 +222,5 @@ export type PropertySchema<T = Record<string, unknown>> =
   | PropertySchemaSet<T>
   | PropertySchemaBinary<T>
   | PropertySchemaFias<T>
+  | PropertySchemaFile<T>
   | PropertySchemaCustom<T>;

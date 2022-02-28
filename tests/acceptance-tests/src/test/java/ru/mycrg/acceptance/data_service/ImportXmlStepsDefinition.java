@@ -14,7 +14,7 @@ public class ImportXmlStepsDefinition extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на импорт xml файла {string} {string}")
     public void importToProject(String importType, String fileName) {
-        File xmlFile = new File("src/test/resources/ru/mycrg/acceptance/data_service/files/" + fileName);
+        File xmlFile = new File("src/test/resources/ru/mycrg/acceptance/resources/" + fileName);
 
         Map<String, Object> queryParams = new HashMap<>() {{
             put("datasetId", currentDatasetName);

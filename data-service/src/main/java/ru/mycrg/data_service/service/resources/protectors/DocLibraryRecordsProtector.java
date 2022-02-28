@@ -5,11 +5,13 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dto.ResourceType;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,32 +25,36 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 public class DocLibraryRecordsProtector implements IResourceProtector {
 
     private final RecordsDao recordsDao;
+    private final DocumentLibraryService librariesService;
     private final IAuthenticationFacade authenticationFacade;
-    private final DocumentLibraryService documentLibraryService;
     private final BasePermissionsRepository permissionsRepository;
 
     public DocLibraryRecordsProtector(RecordsDao recordsDao,
+                                      DocumentLibraryService librariesService,
                                       IAuthenticationFacade authenticationFacade,
-                                      DocumentLibraryService documentLibraryService,
                                       BasePermissionsRepository permissionsRepository) {
         this.recordsDao = recordsDao;
+        this.librariesService = librariesService;
         this.authenticationFacade = authenticationFacade;
-        this.documentLibraryService = documentLibraryService;
         this.permissionsRepository = permissionsRepository;
     }
 
     @Override
     public void throwIfNotExist(@NotNull ResourceQualifier recordQualifier) {
-        if (!documentLibraryService.isExist(recordQualifier)) {
+        SchemaDto schema = librariesService.getSchema(recordQualifier.getTable());
+        Optional<IRecord> oRecord = recordsDao.findById(recordQualifier, schema);
+        if (oRecord.isEmpty()) {
             throw new NotFoundException(recordQualifier.getQualifier());
         }
     }
 
     @Override
     public void throwIfExists(@NotNull ResourceQualifier recordQualifier) {
-        if (documentLibraryService.isExist(recordQualifier)) {
-            throw new ConflictException("Запись " + recordQualifier + " уже существует");
-        }
+        SchemaDto schema = librariesService.getSchema(recordQualifier.getTable());
+        recordsDao.findById(recordQualifier, schema)
+                  .ifPresent(stringObjectMap -> {
+                      throw new ConflictException("Запись " + recordQualifier + " уже существует");
+                  });
     }
 
     @Override
@@ -59,20 +65,47 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
     }
 
     @Override
+    public boolean isAllowed(ResourceQualifier recordQualifier) {
+        if (authenticationFacade.isOrganizationAdmin() || authenticationFacade.isRoot()) {
+            return true;
+        }
+
+        SchemaDto schema = librariesService.getSchema(recordQualifier.getTable());
+        IRecord record = recordsDao.findById(recordQualifier, schema)
+                                   .orElseThrow(() -> new NotFoundException(recordQualifier.getRecord()));
+
+        // Если запись имеет родителей - получим роль наследуемую от них
+        String path = String.valueOf(record.getContent().get(PATH.getName()));
+        if (path != null && !path.equals(ROOT_FOLDER_PATH)) {
+            Set<String> ids = extractFolderIdsFromPath(path);
+
+            Optional<String> roleFromParent = permissionsRepository.bestRoleInheritedFromParent(recordQualifier, ids);
+            if (roleFromParent.isPresent()) {
+                return true;
+            }
+        }
+
+        // Проверим роль выданную непосредственно на запись
+        return permissionsRepository.getRoleForRecord(recordQualifier)
+                                    .isPresent();
+    }
+
+    @Override
     public ResourceType getType() {
         return RECORD;
     }
 
     /**
-     * Для записи в библиотеке проверим наследование сверху и права на саму запись. Наследование снизу может дать
-     * только права на чтение
+     * Для записи в библиотеке проверим наследование сверху и права на саму запись. Наследование снизу может дать только
+     * права на чтение
      */
     private boolean isUserHasOwnPermission(ResourceQualifier recordQualifier) {
-        Map<String, Object> record = recordsDao.findById(recordQualifier)
-                                               .orElseThrow(() -> new NotFoundException(recordQualifier.getRecord()));
+        SchemaDto schema = librariesService.getSchema(recordQualifier.getTable());
+        IRecord record = recordsDao.findById(recordQualifier, schema)
+                                   .orElseThrow(() -> new NotFoundException(recordQualifier.getRecord()));
 
         // Если запись имеет родителей - получим роль наследуемую от них
-        String path = String.valueOf(record.get(PATH.getName()));
+        String path = String.valueOf(record.getContent().get(PATH.getName()));
         if (path != null && !path.equals(ROOT_FOLDER_PATH)) {
             Set<String> ids = extractFolderIdsFromPath(path);
 

@@ -39,7 +39,7 @@ export class FormControlTypeUrlComponent implements OnInit, OnDestroy, OnChanges
   @Input() property?: OldPropertySchema;
   @Input() field: EditedField;
   @Output() inputModelChange = new EventEmitter<string>();
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   private onChange: (value: unknown) => void;
 

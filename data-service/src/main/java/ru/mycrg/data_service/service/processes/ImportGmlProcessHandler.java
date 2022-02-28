@@ -205,7 +205,7 @@ public class ImportGmlProcessHandler implements IProcessHandler {
             Long objectId = source.getObjectId();
             ResourceQualifier tableQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId);
 
-            Map<String, Object> data = recordServiceFactory.get().getById(tableQualifier, objectId);
+            Map<String, Object> data = recordServiceFactory.get().getById(tableQualifier, objectId).getContent();
 
             String title = (String) data.get(TITLE.getName());
             String documentType = (String) data.get("document_type");

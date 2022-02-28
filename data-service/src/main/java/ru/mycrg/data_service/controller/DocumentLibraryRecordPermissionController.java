@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
@@ -16,7 +17,6 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Map;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
@@ -67,8 +67,8 @@ public class DocumentLibraryRecordPermissionController {
 
         ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
 
-        Map<String, Object> record = recordServiceFactory.get().getById(recordQualifier, recId);
-        Long recordId = Long.valueOf(record.get(ID.getName()).toString());
+        IRecord record = recordServiceFactory.get().getById(recordQualifier, recId);
+        Long recordId = Long.valueOf(record.getContent().get(ID.getName()).toString());
 
         PermissionProjection permission = permissionsService.create(recordQualifier, recordId, dto);
 

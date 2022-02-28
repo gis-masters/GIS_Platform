@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
-import ru.mycrg.data_service.dto.RecordDto;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service.util.filter.FilterCondition;
@@ -37,12 +37,12 @@ public class ValidationResultDao {
         this.jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(dbName));
     }
 
-    public List<RecordDto> findPagedByFilter(ResourceQualifier rQualifier,
-                                             Pageable pageable,
-                                             CrgFilter filter) {
-        final DbTable table = getDbTable(rQualifier);
+    public List<IRecord> findPagedByFilter(ResourceQualifier rQualifier,
+                                           Pageable pageable,
+                                           CrgFilter filter) {
+        DbTable table = getDbTable(rQualifier);
 
-        final SelectQuery selectQuery = new SelectQuery().addAllTableColumns(table);
+        SelectQuery selectQuery = new SelectQuery().addAllTableColumns(table);
 
         if (!filter.getFilters().isEmpty()) {
             fillConditions(table, selectQuery, filter.getFilters());
@@ -58,24 +58,23 @@ public class ValidationResultDao {
         }
 
         pageable.getSort().forEach(order -> {
-            final String property = order.getProperty();
+            String property = order.getProperty();
 
-            final OrderObject.Dir direction = order.getDirection().isAscending()
-                                              ? OrderObject.Dir.ASCENDING
-                                              : OrderObject.Dir.DESCENDING;
+            OrderObject.Dir direction = order.getDirection().isAscending()
+                    ? OrderObject.Dir.ASCENDING
+                    : OrderObject.Dir.DESCENDING;
 
-            final DbColumn column = table.addColumn(property);
+            DbColumn column = table.addColumn(property);
 
             selectQuery.addOrdering(column, direction);
         });
 
         log.info("SELECT QUERY: {}", selectQuery);
 
-        return jdbcTemplate
-                .query(selectQuery.toString(),
-                       new RowMapperResultSetExtractor<>(
-                               new RecordRowMapper()
-                       ));
+        return jdbcTemplate.query(selectQuery.toString(),
+                                  new RowMapperResultSetExtractor<>(
+                                          new RecordRowMapper(null)
+                                  ));
     }
 
     public long getTotal(ResourceQualifier tableQualifier, CrgFilter filter) throws CrgDaoException {
@@ -96,8 +95,8 @@ public class ValidationResultDao {
     }
 
     private DbTable getDbTable(@NotNull ResourceQualifier rQualifier) {
-        final DbSpec spec = new DbSpec();
-        final DbSchema dbSchema = spec.addSchema(rQualifier.getSchema());
+        DbSpec spec = new DbSpec();
+        DbSchema dbSchema = spec.addSchema(rQualifier.getSchema());
 
         DbTable dbTable = dbSchema.addTable(rQualifier.getTable());
         dbTable.addColumn("object_id");
@@ -111,11 +110,11 @@ public class ValidationResultDao {
 
     private void fillConditions(DbTable table, SelectQuery selectQuery, List<FilterItem> filters) {
         filters.forEach(filterItem -> {
-            final FilterCondition condition = filterItem.getCondition();
-            final String value = filterItem.getValue();
-            final String field = filterItem.getField();
+            FilterCondition condition = filterItem.getCondition();
+            String value = filterItem.getValue();
+            String field = filterItem.getField();
 
-            final DbColumn fieldColumn = table.findColumn(field);
+            DbColumn fieldColumn = table.findColumn(field);
             switch (condition) {
                 case IS_NULL:
                     selectQuery.addCondition(UnaryCondition.isNull(fieldColumn));

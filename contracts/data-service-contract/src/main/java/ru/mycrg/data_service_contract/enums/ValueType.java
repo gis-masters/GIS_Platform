@@ -13,5 +13,6 @@ public enum ValueType {
     LOOKUP,
     UUID,
     BINARY,
-    FIAS
+    FIAS,
+    FILE
 }

@@ -24,7 +24,7 @@ export class LoginForm extends Block {
     await this.clickSubmit();
   }
 
-  async assertSelfie(): Promise<void> {
-    return await this.browser.assertView('plain', this.selectors.form);
+  async assertSelfie(state: string = 'plain'): Promise<void> {
+    return await this.browser.assertView(state, this.selectors.form);
   }
 }

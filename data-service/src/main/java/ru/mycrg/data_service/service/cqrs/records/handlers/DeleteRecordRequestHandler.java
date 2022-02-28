@@ -2,6 +2,7 @@ package ru.mycrg.data_service.service.cqrs.records.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.cqrs.records.requests.DeleteLibraryRecordRequest;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
@@ -10,8 +11,6 @@ import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.storage.exceptions.StorageException;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
-
-import java.util.Map;
 
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.INNER_PATH;
 
@@ -29,14 +28,13 @@ public class DeleteRecordRequestHandler implements IRequestHandler<DeleteLibrary
 
     @Override
     public Voidy handle(DeleteLibraryRecordRequest request) {
-        ResourceQualifier lQualifier = request.getQualifier();
-        Long recId = request.getRecordId();
+        ResourceQualifier rQualifier = request.getQualifier();
+        IRecord record = request.getRecord();
+        String innerFileName = record.getInnerPath();
 
-        Map<String, Object> record = recordServiceFactory.get().getById(lQualifier, recId);
-        String innerFileName = (String) record.get(INNER_PATH.getName());
         try {
             fileStorageService.deleteIfExists(innerFileName);
-            recordServiceFactory.get().deleteRecord(lQualifier, recId);
+            recordServiceFactory.get().deleteRecord(rQualifier, record.getId());
         } catch (StorageException e) {
             throw new DataServiceException("Не удалось удалить файл: " + innerFileName, e.getCause());
         } catch (CrgDaoException e) {

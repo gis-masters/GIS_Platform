@@ -189,8 +189,8 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
       }
     } catch (error) {
       if (onActionError) {
-        onActionError(error);
         const err = error as AxiosError<{ errors?: FieldErrors[] }>;
+        onActionError(err);
 
         if (err?.response?.data?.errors) {
           this.setServerErrors(normalizeServerErrors(err.response.data.errors));

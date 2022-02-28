@@ -1,12 +1,13 @@
 package ru.mycrg.data_service.entity;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 public class RecordEntity implements IRecord {
 
-    private Map<String, Object> content;
+    private Map<String, Object> content = new HashMap<>();
 
     public RecordEntity() {
         // Required
@@ -56,5 +57,9 @@ public class RecordEntity implements IRecord {
         return "{" +
                 "\"content\":" + (content == null ? "null" : "\"" + content + "\"") +
                 "}";
+    }
+
+    public void put(String s, Object o) {
+        this.getContent().put(s, o);
     }
 }

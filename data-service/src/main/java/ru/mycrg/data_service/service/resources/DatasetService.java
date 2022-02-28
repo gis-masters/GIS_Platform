@@ -89,12 +89,13 @@ public class DatasetService {
             return new PageImpl<>(Collections.unmodifiableList(datasets), pageable, total);
         } else {
             List<IResourceModel> allowedResources = permissionsRepository
-                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter, pageable).stream()
+                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter, null, pageable)
+                    .stream()
                     .map(record -> new DatasetModel(record.getContent()))
                     .collect(Collectors.toList());
 
-            long total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH,
-                                                                ecqlFilter);
+            long total = permissionsRepository
+                    .getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter);
 
             return new PageImpl<>(allowedResources, pageable, total);
         }

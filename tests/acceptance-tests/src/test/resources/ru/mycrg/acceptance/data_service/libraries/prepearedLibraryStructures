@@ -1,0 +1,28 @@
+# Вариант 1
+# folder_1 -> folder_1_1 -> folder_1_1_1 -> folder_1_1_1_1
+#                                        -> folder_1_1_1_2
+#                                        -> folder_1_1_1_3
+#                                        -> file_1_1_1_1
+#                                        -> file_1_1_1_2
+#                        -> folder_1_1_2
+#                        -> file_1_1_1
+#          -> folder_1_2
+#          -> file_1_1
+#          -> file_1_2
+#          -> file_1_3
+
+# Вариант 2
+#                                                  | Выданные разрешения | Expected role | ID |
+# file_1                                           | OWNER               | OWNER         | 2  |
+# file_2                                           | -                   | NOT ALLOWED   | 3  |
+# folder_1                                         | -                   | NOT ALLOWED   | 4  |
+# folder_2                                         | -                   | VIEWER        | 5  |
+#          -> folder_7                             | -                   | NOT ALLOWED   | 10 |
+#          -> folder_8                             | VIEWER              | VIEWER        | 11 |
+#                      -> folder_9                 | -                   | VIEWER        | 12 |
+#                                  -> folder_10    | OWNER               | OWNER         | 14 |
+#                      -> file_3                   | -                   | VIEWER        | 13 |
+# folder_3                                         | VIEWER              | VIEWER        | 6  |
+#          -> folder_4                             | -                   | VIEWER        | 7  |
+#                      -> folder_5                 | -                   | VIEWER        | 8  |
+#                                  -> folder_6     | -                   | VIEWER        | 9  |

@@ -30,6 +30,7 @@ module.exports = {
       }
     ],
     'comment-whitespace-inside': 'always',
+    'custom-property-pattern': null,
     'declaration-bang-space-after': 'never',
     'declaration-bang-space-before': 'always',
     'declaration-empty-line-before': null,

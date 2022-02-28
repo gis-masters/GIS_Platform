@@ -98,6 +98,10 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         currentPermissionId = super.extractId(response.getHeader("Location"));
     }
 
+    /**
+     * Визуальное представление структуры каталогов и фалов представлены в файле {@code prepearedLibraryStructures}
+     * который расположен тут: {@code ru/mycrg/acceptance/data_service/libraries/prepearedLibraryStructures}
+     */
     @Given("В тестовой библиотеке существует следующая структура каталогов: Вариант {int}")
     public void createSomeCatalogsAndFiles(int option) {
         authorizationBase.loginAsOwner();
@@ -107,7 +111,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
             folder1Id = baseRecords.createRecord(DEFAULT_LIBRARY, new RecordDto("folder_1"));
 
             // In folder_1
-            final String pathToFolder1 = "/root/" + folder1Id;
+            String pathToFolder1 = "/root/" + folder1Id;
             folder11Id = baseRecords.createRecord(DEFAULT_LIBRARY, new RecordDto("folder_1_1", pathToFolder1));
             baseRecords.createRecord(DEFAULT_LIBRARY, new RecordDto("folder_1_2", pathToFolder1));
             baseRecords.createRecord(DEFAULT_LIBRARY, new RecordDto("file_1_1", pathToFolder1, "doc_v3"));
@@ -115,13 +119,13 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
             baseRecords.createRecord(DEFAULT_LIBRARY, new RecordDto("file_1_3", pathToFolder1, "doc_v3"));
 
             // In folder_1_1
-            final String pathToFolder11 = String.format("/root/%d/%d", folder1Id, folder11Id);
+            String pathToFolder11 = String.format("/root/%d/%d", folder1Id, folder11Id);
             folder111Id = baseRecords.createRecord(DEFAULT_LIBRARY, new RecordDto("folder_1_1_1", pathToFolder11));
             baseRecords.createRecord(DEFAULT_LIBRARY, new RecordDto("folder_1_1_2", pathToFolder11));
             baseRecords.createRecord(DEFAULT_LIBRARY, new RecordDto("file_1_1_1", pathToFolder11, "doc_v3"));
 
             // In folder_1_1_1
-            final String pathToFolder111 = String.format("/root/%d/%d/%d", folder1Id, folder11Id, folder111Id);
+            String pathToFolder111 = String.format("/root/%d/%d/%d", folder1Id, folder11Id, folder111Id);
             baseRecords.createRecord(DEFAULT_LIBRARY, new RecordDto("folder_1_1_1_1", pathToFolder111));
             baseRecords.createRecord(DEFAULT_LIBRARY, new RecordDto("folder_1_1_1_2", pathToFolder111));
             baseRecords.createRecord(DEFAULT_LIBRARY, new RecordDto("folder_1_1_1_3", pathToFolder111));
@@ -203,7 +207,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
             String pathToFolder9 = String.format("/root/%d/%d/%d", folder2Id, folder8Id, folder9Id);
             Integer folder10Id = baseRecords.createRecord(DEFAULT_LIBRARY,
-                                                         new RecordDto(folder10, pathToFolder9, folderContentType));
+                                                          new RecordDto(folder10, pathToFolder9, folderContentType));
             libraryCatalog.put(folder10, folder10Id);
             addPermissionToRecordForCurrentUser(folder10Id, "OWNER");
         } else {
@@ -215,7 +219,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void addPermissionForCurrentUserForRootFolder() {
         authorizationBase.loginAsOwner();
 
-        final String urlToFolder = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, folder1Id);
+        String urlToFolder = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, folder1Id);
 
         libraryBasePermissions.addPermission(urlToFolder, userId, "user", "VIEWER");
 
@@ -226,7 +230,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void checkLibraryIsEmptyForCurrentUser() {
         authorizationBase.loginAsCurrentUser();
 
-        final String url = String.format("/%s/records", DEFAULT_LIBRARY);
+        String url = String.format("/%s/records", DEFAULT_LIBRARY);
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
@@ -264,7 +268,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void addPermissionForCurrentUserForFile1112() {
         authorizationBase.loginAsOwner();
 
-        final String urlToFile = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, file1112Id);
+        String urlToFile = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, file1112Id);
 
         libraryBasePermissions.addPermission(urlToFile, userId, "user", "VIEWER");
 
@@ -300,7 +304,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void tryAddPermission(String libraryName) {
         authorizationBase.loginAsCurrentUser();
 
-        final String url = String.format("/%s/roleAssignment", libraryName);
+        String url = String.format("/%s/roleAssignment", libraryName);
 
         libraryBasePermissions.addPermission(url, userId, "user", "VIEWER");
     }

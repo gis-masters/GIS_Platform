@@ -12,11 +12,11 @@ import { Fias } from '../../../../services/fias.service';
 @observer
 class FormViewTypeFias extends Component<FormControlProps> {
   render() {
-    const { className, fieldValue, errors } = this.props;
+    const { className, fieldValue, inSet, errors } = this.props;
     const fiasValue = fieldValue as Fias;
 
     return (
-      <div className={cnFormView(null, [className])}>
+      <div className={cnFormView({ inSet }, [className])}>
         {fiasValue.fullAddress} {fiasValue.oktmo ? `ОКТМО: ${fiasValue.oktmo}` : ''}{' '}
         {fiasValue.objectId ? `Код фиас: ${fiasValue.objectId}` : ''}
         <FormViewErrors errors={errors} />

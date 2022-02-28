@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -15,7 +16,9 @@ import java.util.Map;
 
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
+import static ru.mycrg.data_service.service.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
+import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 
 @Service
 public class SystemAttributeHandler {
@@ -44,19 +47,19 @@ public class SystemAttributeHandler {
         return this;
     }
 
-    public SystemAttributeHandler fillTimes(@NotNull Map<String, Object> body) {
-        if (attributeDefined(CREATED_AT)) {
-            body.put(CREATED_AT.getName(), LocalDateTime.now());
-        }
-
+    public SystemAttributeHandler updateModifiedTime(@NotNull IRecord record) {
         if (attributeDefined(LAST_MODIFIED)) {
-            body.put(LAST_MODIFIED.getName(), LocalDateTime.now());
+            record.getContent().put(LAST_MODIFIED.getName(), LocalDateTime.now());
         }
 
         return this;
     }
 
     public SystemAttributeHandler fillCreator(@NotNull Map<String, Object> body) {
+        if (attributeDefined(CREATED_AT)) {
+            body.put(CREATED_AT.getName(), LocalDateTime.now());
+        }
+
         if (attributeDefined(CREATED_BY)) {
             body.put(CREATED_BY.getName(), authenticationFacade.getLogin());
         }
@@ -88,7 +91,7 @@ public class SystemAttributeHandler {
 
     public SystemAttributeHandler fillByContentType(@NotNull Map<String, Object> content) {
         if (attributeDefined(CONTENT_TYPE_ID)) {
-            final String contentTypeId = String.valueOf(content.get(CONTENT_TYPE_ID.getName()));
+            String contentTypeId = String.valueOf(content.get(CONTENT_TYPE_ID.getName()));
 
             schema.getContentTypes().stream()
                   .filter(contentType -> contentType.getId().equals(contentTypeId))
@@ -107,16 +110,30 @@ public class SystemAttributeHandler {
         return this;
     }
 
+    public SystemAttributeHandler prepareJsonb(@NotNull IRecord record) {
+        schema.getProperties().stream()
+              .filter(property -> FILE.equals(property.getValueType()))
+              .forEach(property -> {
+                  Object value = record.getContent().get(property.getName());
+                  if (value != null) {
+                      record.getContent().put(property.getName(), toJsonNode(value));
+                  }
+              });
+
+        return this;
+    }
+
     @NotNull
-    public String prepareFileName(@NotNull Map<String, Object> body) {
-        Object titleObj = body.get(TITLE.getName());
+    public String prepareFileName(@NotNull IRecord record) {
+        Map<String, Object> content = record.getContent();
+        Object titleObj = content.get(TITLE.getName());
 
         if (nonNull(titleObj) && !titleObj.toString().isEmpty()) {
             String title = titleObj.toString();
 
-            return addExtensionType(body, title);
+            return addExtensionType(content, title);
         } else {
-            Object fileType = body.get(FILE_TYPE.getName());
+            Object fileType = content.get(FILE_TYPE.getName());
 
             return (nonNull(fileType) && !fileType.toString().isEmpty())
                     ? String.format("%s.%s", "unknown", fileType)
@@ -125,9 +142,9 @@ public class SystemAttributeHandler {
     }
 
     @NotNull
-    public String getFileSize(@NotNull Map<String, Object> body) {
+    public String getFileSize(@NotNull IRecord record) {
         if (attributeDefined(SIZE)) {
-            return body.get(SIZE.getName()).toString();
+            return record.getContent().get(SIZE.getName()).toString();
         }
 
         return "0";

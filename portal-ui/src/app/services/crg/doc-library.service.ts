@@ -133,7 +133,7 @@ function enrichLibraryRecordsResponse(
   schemaId: string
 ): LibraryRecord[] {
   return responseItems.map(linkedHashMap => ({
-    ...(linkedHashMap.content || {}),
+    ...linkedHashMap.content,
     libraryId,
     schemaId
   }));

@@ -2,10 +2,9 @@ package ru.mycrg.data_service.service.processes;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
-import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
 import ru.mycrg.data_service.service.processes.dto.ImportSource;
+import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.validators.ImportModelValidator;
 import ru.mycrg.data_service_contract.enums.ProcessType;
@@ -49,8 +48,7 @@ public class ProcessHandlersFactory {
         Long objectId = source.getObjectId();
         ResourceQualifier tableQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId);
 
-        Map<String, Object> recordData = recordServiceFactory.get().getById(tableQualifier, objectId);
-        IRecord record = new RecordEntity(recordData);
+        IRecord record = recordServiceFactory.get().getById(tableQualifier, objectId);
 
         ProcessType processType = ProcessType.IMPORT;
         String fileType = record.getFileType();

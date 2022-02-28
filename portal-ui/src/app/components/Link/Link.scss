@@ -1,7 +1,7 @@
 body .Link {
   color: var(--blue);
 
-  &-Icon-Container {
+  &-IconContainer {
     position: relative;
 
     display: inline-block;
@@ -19,6 +19,12 @@ body .Link {
     left: 0;
 
     font-size: 0.65em;
+  }
+
+  &_disabled {
+    cursor: default;
+
+    color: var(--disabled);
   }
 
   &_theme_contents {

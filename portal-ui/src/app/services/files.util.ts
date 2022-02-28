@@ -1,0 +1,47 @@
+export function getFileExtension(name: string): string {
+  const pos = name.lastIndexOf('.');
+  const ext = name === '' || pos < 1 ? '' : name.slice(pos + 1);
+
+  // если расширение слишком длинное, то считаем, что это не расширение, а просто точка посреди имени
+  return ext.length < 10 ? ext : '';
+}
+
+export function getFileBaseName(name: string): string {
+  const ext = getFileExtension(name);
+
+  return ext ? name.slice(0, name.lastIndexOf(ext) - 1) : name;
+}
+
+const extensionsAliases = {
+  jpg: ['jpeg', 'jpe', 'jfif'],
+  tif: ['tiff']
+};
+
+export function normalizeExtension(ext: string): string {
+  ext = ext.toLocaleLowerCase();
+
+  for (const [key, val] of Object.entries(extensionsAliases)) {
+    if (val.includes(ext)) {
+      return key;
+    }
+  }
+
+  return ext;
+}
+
+export function getReadableFileSize(bytes: number): string {
+  if (Math.abs(bytes) < 1024) {
+    return `${bytes} байт`;
+  }
+
+  const units = ['КБ', 'МБ', 'ГБ', 'ТБ', 'ПБ', 'ЭБ', 'ЗБ', 'ЙБ'];
+  let u = -1;
+  const r = 10 ** 1;
+
+  do {
+    bytes /= 1024;
+    ++u;
+  } while (Math.round(Math.abs(bytes) * r) / r >= 1024 && u < units.length - 1);
+
+  return `${bytes.toFixed(bytes % 1 > 0.1 ? 1 : 0)} ${units[u]}`;
+}

@@ -1,8 +1,12 @@
 package ru.mycrg.data_service.controller;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
+import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +24,7 @@ import ru.mycrg.data_service.service.cqrs.records.requests.DeleteLibraryRecordRe
 import ru.mycrg.data_service.service.cqrs.records.requests.UpdateLibraryRecordRequest;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
 
 import java.io.IOException;
@@ -70,16 +75,11 @@ public class DocumentLibraryRecordsController {
         checkSortedFields(docLibId, pageable);
         Pageable newPageable = fetchFoldersFirst(pageable);
 
-        var result = recordServiceFactory.get()
-                                         .getPaged(lQualifier, newPageable, parent, ecqlFilter);
+        Page<RecordDto> page = recordServiceFactory.get()
+                                                   .getPaged(lQualifier, newPageable, parent, ecqlFilter)
+                                                   .map(RecordDto::new);
 
-        var pagedResources = pageAssembler.toResource(
-                result,
-                linkTo(DocumentLibraryRecordsController.class)
-                        .slash("/api/data/document-libraries/" + docLibId + "/records")
-                        .withSelfRel());
-
-        return ResponseEntity.ok(pagedResources);
+        return ResponseEntity.ok(asPagedResources(docLibId, pageAssembler, page));
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -94,16 +94,11 @@ public class DocumentLibraryRecordsController {
         checkSortedFields(docLibId, pageable);
         Pageable newPageable = fetchFoldersFirst(pageable);
 
-        var result = recordServiceFactory.get()
-                                         .getAsRegistry(lQualifier, newPageable, ecqlFilter);
+        Page<RecordDto> page = recordServiceFactory.get()
+                                                   .getAsRegistry(lQualifier, newPageable, ecqlFilter)
+                                                   .map(RecordDto::new);
 
-        var pagedResources = pageAssembler.toResource(
-                result,
-                linkTo(DocumentLibraryRecordsController.class)
-                        .slash("/api/data/document-libraries/" + docLibId + "/records")
-                        .withSelfRel());
-
-        return ResponseEntity.ok(pagedResources);
+        return ResponseEntity.ok(asPagedResources(docLibId, pageAssembler, page));
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -112,9 +107,9 @@ public class DocumentLibraryRecordsController {
                                                        @PathVariable Long recId) {
         ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
 
-        Map<String, Object> entity = recordServiceFactory.get().getById(rIdentifier, recId);
+        IRecord record = recordServiceFactory.get().getById(rIdentifier, recId);
 
-        return ResponseEntity.ok(entity);
+        return ResponseEntity.ok(record.getContent());
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -126,12 +121,12 @@ public class DocumentLibraryRecordsController {
         ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
 
         Map<String, Object> body = deserializeBody(jsonBody);
-        String schemaId = libraryService.getInfo(docLibId).getSchemaId();
-        schemaService.throwIfNotMathSchema(schemaId, body);
+        SchemaDto schema = libraryService.getSchema(docLibId);
+        schemaService.throwIfNotMathSchema(schema, body);
 
         String token = authenticationFacade.getAccessToken();
         IRecord record = mediator.execute(
-                new CreateLibraryRecordRequest(lQualifier, new RecordEntity(body), file, token));
+                new CreateLibraryRecordRequest(schema, lQualifier, new RecordEntity(body), file, token));
 
         return new ResponseEntity<>(record.getContent(), CREATED);
     }
@@ -141,13 +136,13 @@ public class DocumentLibraryRecordsController {
     public ResponseEntity<Object> updateRecord(@PathVariable String docLibId,
                                                @PathVariable Long recId,
                                                @RequestBody Map<String, Object> payload) {
-        String schemaId = libraryService.getInfo(docLibId).getSchemaId();
-        schemaService.throwIfNotMathSchema(schemaId, payload);
+        SchemaDto schema = libraryService.getSchema(docLibId);
+        schemaService.throwIfNotMathSchema(schema, payload);
 
         ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
 
         String accessToken = authenticationFacade.getAccessToken();
-        mediator.execute(new UpdateLibraryRecordRequest(rQualifier, new RecordEntity(payload), accessToken));
+        mediator.execute(new UpdateLibraryRecordRequest(schema, rQualifier, new RecordEntity(payload), accessToken));
 
         return ResponseEntity.noContent().build();
     }
@@ -156,9 +151,16 @@ public class DocumentLibraryRecordsController {
     @DeleteMapping("/document-libraries/{docLibId}/records/{recId}")
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
                                          @PathVariable Long recId) {
-        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
+        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
 
-        mediator.execute(new DeleteLibraryRecordRequest(lQualifier, recId, authenticationFacade.getAccessToken()));
+        SchemaDto schema = libraryService.getSchema(docLibId);
+        IRecord record = recordServiceFactory.get().getById(rIdentifier, recId);
+
+        mediator.execute(
+                new DeleteLibraryRecordRequest(rIdentifier,
+                                               record,
+                                               authenticationFacade.getAccessToken(),
+                                               schema));
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -181,5 +183,15 @@ public class DocumentLibraryRecordsController {
         } catch (IOException e) {
             throw new BadRequestException("Incorrect body: " + jsonString);
         }
+    }
+
+    @NotNull
+    private PagedResources<Resource<RecordDto>> asPagedResources(String docLibId,
+                                                                 PagedResourcesAssembler<RecordDto> pageAssembler,
+                                                                 Page<RecordDto> result) {
+        return pageAssembler.toResource(result,
+                                        linkTo(DocumentLibraryRecordsController.class)
+                                                .slash("/api/data/document-libraries/" + docLibId + "/records")
+                                                .withSelfRel());
     }
 }

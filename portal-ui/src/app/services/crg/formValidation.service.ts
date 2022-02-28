@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { getEditUrlFormSchema, parseUrlValue } from '../../components/Form/Form.utils';
+import { FileInfo } from '../files.service';
 import { knownRegex } from '../regexp.service';
 import {
   PropertyType,
@@ -46,6 +47,7 @@ const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
   [PropertyType.DATETIME]: [simpleRequired, datetimeValid, datetimeMinMax],
   [PropertyType.CHOICE]: [choiceRequired, choiceValueInOptions],
   [PropertyType.URL]: [urlRequired, urlRegex],
+  [PropertyType.FILE]: [filesRequired, filesLoaded],
   [PropertyType.SET]: [],
   [PropertyType.CUSTOM]: []
 };
@@ -56,7 +58,7 @@ export function validateFieldValue(
   formValue: unknown,
   allProperties: PropertySchema[]
 ): FieldErrors {
-  const validatorsList = [...fieldValidators[property.propertyType]];
+  const validatorsList = [...(fieldValidators[property.propertyType] || [])];
   if (property.customValidationFunction) {
     validatorsList.push(property.customValidationFunction);
   }
@@ -208,6 +210,20 @@ function numberMinMax(
   }
 
   return errors;
+}
+
+// file
+
+function filesRequired(value: unknown, { required }: PropertySchema): string[] | undefined {
+  if (required && (!Array.isArray(value) || !value.length)) {
+    return [messages.required];
+  }
+}
+
+function filesLoaded(value: FileInfo[] = []): string[] | undefined {
+  if (value.some(({ notLoaded }) => notLoaded)) {
+    return ['Загрузка файлов ещё не завершена'];
+  }
 }
 
 export function normalizeServerErrors(errors: ServerFieldError[]): FieldErrors[] {

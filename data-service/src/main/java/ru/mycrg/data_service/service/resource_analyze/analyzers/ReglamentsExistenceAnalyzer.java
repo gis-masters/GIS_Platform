@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.RecordsDao;
-import ru.mycrg.data_service.dto.RecordDto;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
@@ -104,8 +104,8 @@ public class ReglamentsExistenceAnalyzer implements IResourceAnalyzer {
         String tableName = layer.getResourceProperties().get("tableName").toString();
         ResourceQualifier tableQualifier = new ResourceQualifier(dataset, tableName);
 
-        List<RecordDto> recordDtos = recordsDao.findAll(tableQualifier, null);
-        Map<String, String> objectsInfo = getUrls(recordDtos);
+        List<IRecord> records = recordsDao.findAll(tableQualifier, null, null);
+        Map<String, String> objectsInfo = getUrls(records);
 
         for (Map.Entry<String, String> info: objectsInfo.entrySet()) {
             if (!passed) {
@@ -166,7 +166,7 @@ public class ReglamentsExistenceAnalyzer implements IResourceAnalyzer {
      * Берем ссылки только из столбца "link", т.к. не можем из схемы однозначно определить наличие регламентов, на
      * данный момент все ссылки на регламенты лежат в таких столбцах, но это не гарантированно в дальнейшем.
      */
-    private Map<String, String> getUrls(List<RecordDto> recordDtos) {
+    private Map<String, String> getUrls(List<IRecord> recordDtos) {
         Map<String, String> urls = new HashMap<>();
         recordDtos.forEach(r -> {
             if (nonNull(r.getContent().get("link"))) {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.dto.integrations.IntegrationDto;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
@@ -18,7 +19,6 @@ import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.util.List;
-import java.util.Map;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
@@ -43,16 +43,16 @@ public class DocumentLibraryRecordIntegrationController {
     public ResponseEntity<PermissionProjection> addPermissionToLibrary(@PathVariable String docLibId,
                                                                        @PathVariable Long recId,
                                                                        @RequestBody IntegrationDto dto) {
-        Map<String, Object> record = recordServiceFactory
-                .get()
-                .getById(new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD), recId);
+        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
+        IRecord record = recordServiceFactory.get()
+                                             .getById(rQualifier, recId);
 
         try {
             integrationHandlers.stream()
                                .filter(handler -> handler.getType().equals(dto.getType()))
                                .findFirst()
                                .orElseThrow(() -> new BadRequestException("Неверно задан тип: " + dto.getType()))
-                               .execute(new RecordEntity(record));
+                               .execute(new RecordEntity(record.getContent()));
         } catch (Exception e) {
             String msg = "Система электронного документооборота СЕД \"Диалог\" недоступна";
             log.error(msg);

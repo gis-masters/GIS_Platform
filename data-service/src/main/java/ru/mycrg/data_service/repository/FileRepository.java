@@ -1,0 +1,24 @@
+package ru.mycrg.data_service.repository;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
+import ru.mycrg.data_service.entity.File;
+
+import java.util.Set;
+import java.util.UUID;
+
+@RepositoryRestResource(exported = false)
+public interface FileRepository extends PagingAndSortingRepository<File, UUID> {
+
+    @Modifying
+    @Query("UPDATE File f SET f.resourceType = :type, f.resourceQualifier = :qualifier WHERE f.id IN :fileIds")
+    @RestResource(exported = false)
+    void setQualifier(@Param("type") String type,
+                      @Param("qualifier") JsonNode qualifier,
+                      @Param("fileIds") Set<UUID> fileIds);
+}

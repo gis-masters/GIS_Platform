@@ -7,16 +7,20 @@ import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.data_service.dto.DefaultRecordModel;
+import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 
-public class LibraryStepsDefinitions extends BaseStepsDefinitions {
-
-    public static final String DEFAULT_LIBRARY = "dl_default";
+public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     public static Integer currentRecordId;
     public static Integer documentId;
@@ -39,7 +43,7 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
     public void createDocument(DataTable dataTable) {
         fileName = dataTable.asList().get(0);
 
-        file = new File(String.format("src/test/resources/ru/mycrg/acceptance/data_service/files/%s", fileName));
+        file = new File(String.format("src/test/resources/ru/mycrg/acceptance/resources/%s", fileName));
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -92,12 +96,22 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
         assertThat((long) response.getBody().asByteArray().length, equalTo(file.length()));
     }
 
+    @When("Пользователь удаляет запись")
+    public void deleteLibraryDocument() {
+        deleteRecord(currentRecordId);
+    }
+
+    @When("Пользователь обновляет запись - удаляет файл")
+    public void updateLibraryDocument() {
+        DefaultRecordModel recordModel = new DefaultRecordModel("new_title");
+        recordModel.setSome_files(new ArrayList<>());
+
+        updateRecord(currentRecordId, recordModel);
+    }
+
     @When("Пользователь делает запрос на удаление файла")
     public void deleteDocument() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        log().ifValidationFails().
-                        delete(String.format("/%s/records/%s", DEFAULT_LIBRARY, documentId));
+        deleteRecord(documentId);
     }
 
     @Given("В библиотеке по-умолчанию существует запись")
@@ -116,6 +130,16 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(201, response.getStatusCode());
 
         currentRecordId = extractEntityIdFromResponse(response);
+    }
+
+    @When("Пользователь создаёт запись в библиотеке с отсылкой на второй файл")
+    public void currentUserCreateRecordWithFile() {
+        createRecordWithSecondFile();
+    }
+
+    @When("Создана запись в библиотеке с отсылкой на второй файл")
+    public void currentUserCreateRecordWithFile2() {
+        createRecordWithSecondFile();
     }
 
     @When("Отправляется PUT запрос на обновление текущей записи")
@@ -138,13 +162,8 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на обновление текущей записи")
-    public void updateRecord() {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType("application/merge-patch+json").
-                        body("{\"title\": \"new title\"}")
-                .when().
-                        patch(String.format("/%s/records/%d", DEFAULT_LIBRARY, currentRecordId));
+    public void updateCurrentRecord() {
+        updateRecord(currentRecordId, new DefaultRecordModel("new title"));
     }
 
     @When("Пользователь делает запрос на обновление текущей записи передавая несуществующий атрибут")
@@ -182,17 +201,26 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
                  .ifPresent(entry -> {
                      fileName = entry.getKey();
                      documentId = entry.getValue();
-                     file = new File("src/test/resources/ru/mycrg/acceptance/data_service/files/" + fileName);
+                     file = new File("src/test/resources/ru/mycrg/acceptance/resources/" + fileName);
                  });
     }
 
     private void createRecord(String title) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        log().all().
                         contentType("multipart/form-data").
                         multiPart("body",
                                   String.format("{\"title\":\"%s\"}", title))
+                .when().
+                        log().all().
+                        post(String.format("/%s/records", DEFAULT_LIBRARY));
+    }
+
+    private void createRecord(DefaultRecordModel body) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType("multipart/form-data").
+                        multiPart("body", gson.toJson(body))
                 .when().
                         log().ifValidationFails().
                         post(String.format("/%s/records", DEFAULT_LIBRARY));
@@ -202,5 +230,27 @@ public class LibraryStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get(String.format("/%s/records/%d", DEFAULT_LIBRARY, currentRecordId));
+    }
+
+    private void createRecordWithSecondFile() {
+        List<FileDescriptionModel> descriptions = new ArrayList<>();
+        descriptions.add(new FileDescriptionModel(secondFileId, 314L, "Second file"));
+
+        DefaultRecordModel record = new DefaultRecordModel(generateString("STRING_4"));
+        record.setSome_files(descriptions);
+
+        createRecord(record);
+
+        currentRecordId = extractEntityIdFromResponse(response);
+    }
+
+    private void updateRecord(Integer recordId, DefaultRecordModel body) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType("application/merge-patch+json").
+                        body(gson.toJson(body))
+                .when().
+                        log().all().
+                        patch(String.format("/%s/records/%d", DEFAULT_LIBRARY, recordId));
     }
 }

@@ -1,0 +1,204 @@
+package ru.mycrg.acceptance.data_service;
+
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.restassured.specification.RequestSpecification;
+import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.UUID;
+
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
+import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgDto;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
+
+public class FilesStepDefinitions extends BaseStepsDefinitions {
+
+    public static UUID firstFileId;
+    public static UUID secondFileId;
+
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
+
+    private final File firstFile = new File("src/test/resources/ru/mycrg/acceptance/resources/100b.png");
+    private final File secondFile = new File("src/test/resources/ru/mycrg/acceptance/resources/correct.gml");
+    private final File thirdFile = new File("src/test/resources/ru/mycrg/acceptance/resources/gpzu.xml");
+
+    @Override
+    public RequestSpecification getBaseRequest() {
+        return super.getBaseRequest().basePath("/api/data/files");
+    }
+
+    @Override
+    public RequestSpecification getBaseRequestWithCurrentCookie() {
+        return super.getBaseRequestWithCurrentCookie().basePath("/api/data/files");
+    }
+
+    @Given("Загружен произвольный файл")
+    public void загруженПроизвольныйФайл() {
+        List<UUID> ids = createFiles(new File[]{firstFile});
+
+        firstFileId = ids.get(0);
+    }
+
+    @Given("Создано три файла")
+    public void create3Files() {
+        authorizationBase.loginAsCurrentUser();
+
+        List<UUID> ids = createFiles(new File[]{firstFile, secondFile, thirdFile});
+
+        firstFileId = ids.get(0);
+        secondFileId = ids.get(1);
+    }
+
+    @When("Отправляется корректный запрос на создание файла")
+    public void createFilesForAnyRecordInDefaultLibrary() {
+        createFiles(new File[]{firstFile});
+    }
+
+    @When("Отправляется корректный запрос на создание 2-х файлов")
+    public void createTwoFilesForAnyRecordInDefaultLibrary() {
+        createFiles(new File[]{firstFile, secondFile});
+    }
+
+    @And("Сообщение об отсутствии files составлено верно")
+    public void checkBadRequestMessage_files() {
+        super.checkResponseValue("message", "Требуемая часть запроса 'files' отсутствует");
+    }
+
+    @And("Сообщение об отсутствии body составлено верно")
+    public void checkBadRequestMessage_body() {
+        super.checkResponseValue("message", "Требуемая часть запроса 'body' отсутствует");
+    }
+
+    @And("Сообщение о несовпадении соответствует ожидаемому")
+    public void checkBadRequestMessageMismatch() {
+        super.checkResponseValue("message", "Данные не совпадают с переданными файлами");
+    }
+
+    @And("Сообщение о недопустимом типе ресурса соответствует ожидаемому")
+    public void checkBadRequestMessageUnsupportedResourceType() {
+        super.checkResponseValue("message", "Допустимыми типами 'resourceType' являются: TABLE, RECORD");
+    }
+
+    @And("Сервер возвращает тело созданной сущности, поля сущности корректно заполнены")
+    public void checkReturnedFileBody() {
+        List<Object> objects = response.jsonPath().getList("");
+        LinkedHashMap<String, Object> firstObj = (LinkedHashMap<String, Object>) objects.get(0);
+
+        assertEquals("100b.png", firstObj.get("title"));
+        assertNotNull(firstObj.get("createdAt"));
+        assertEquals("png", firstObj.get("extension"));
+        // assertEquals("RECORD", firstObj.get("resourceType"));
+        // assertEquals("dl_default.1", firstObj.get("resourceQualifier"));
+        assertNotNull(firstObj.get("createdBy"));
+        assertNotNull(firstObj.get("id"));
+        assertNotNull(firstObj.get("size"));
+    }
+
+    @And("Количество возвращенных сущностей файлов: {string}")
+    public void checkCountsReturnedFiles(String count) {
+        List<Object> returnedObjects = response.jsonPath().getList("");
+
+        assertEquals(Integer.parseInt(count), returnedObjects.size());
+    }
+
+    @When("Пользователь делает запрос на скачивание загруженного файла")
+    public void downloadCurrentFile() {
+        downloadFile(firstFileId);
+    }
+
+    @When("Пользователь делает запрос на скачивание файла с ID: {string}")
+    public void tryDownloadFileByID(String fileId) {
+        downloadFile(UUID.fromString(fileId));
+    }
+
+    @Then("Квалификатор второго файла записан верно")
+    public void checkQualifierForSecondFile() {
+        getFile(secondFileId);
+
+        int recordId = jsonPath.getInt("resourceQualifier.recordId");
+        String table = jsonPath.getString("resourceQualifier.table");
+        String resourceType = jsonPath.getString("resourceType");
+
+        assertEquals(2, recordId);
+        assertEquals(DEFAULT_LIBRARY, table);
+        assertEquals("RECORD", resourceType);
+    }
+
+    @Then("Квалификаторы у других файлов остались незаполненными")
+    public void checkQualifierEmptiness() {
+        getFile(firstFileId);
+
+        String resourceQualifier = jsonPath.getString("resourceQualifier");
+        String resourceType = jsonPath.getString("resourceType");
+
+        assertNull(resourceQualifier);
+        assertNull(resourceType);
+    }
+
+    @Then("файлы принадлежащие этой записи также удалены")
+    public void checkThenFileAreDeleted() {
+        getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + secondFileId)
+                .then().
+                        statusCode(SC_NOT_FOUND).
+                        body("message",
+                             equalTo("Ресурс не найден по идентификатору: " + secondFileId));
+    }
+
+    private void getFile(UUID firstFileId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + firstFileId);
+
+        jsonPath = response.jsonPath();
+    }
+
+    private void downloadFile(UUID fileId) {
+        String url = String.format("/%s/download", fileId);
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        log().all().
+                        get(url);
+    }
+
+    private List<UUID> createFiles(File[] files) {
+        RequestSpecification requestSpecification = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType("multipart/form-data");
+
+        if (files != null && files.length > 0) {
+            for (File file: files) {
+                requestSpecification.multiPart("files", file);
+            }
+        }
+
+        response = requestSpecification
+                .when().
+                        log().all().
+                        post();
+
+        try {
+            List<UUID> ids = response.jsonPath().getList("id", UUID.class);
+            if (ids != null && !ids.isEmpty()) {
+                return ids;
+            } else {
+                return new ArrayList<>();
+            }
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+}

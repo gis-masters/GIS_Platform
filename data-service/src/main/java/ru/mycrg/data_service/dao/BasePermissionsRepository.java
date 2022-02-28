@@ -9,9 +9,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
-import ru.mycrg.data_service.dto.RecordDto;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.PrincipalService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class BasePermissionsRepository {
         this.pJdbcTemplate = pJdbcTemplate;
     }
 
-    public List<RecordDto> findAllowedDirectly(ResourceQualifier rQualifier) {
+    public List<IRecord> findAllowedDirectly(ResourceQualifier rQualifier, SchemaDto schema) {
         String tableQualifier = rQualifier.getTableQualifier();
         String tableName = rQualifier.getTable();
 
@@ -55,14 +56,15 @@ public class BasePermissionsRepository {
         return pJdbcTemplate.getJdbcTemplate()
                             .query(query,
                                    new RowMapperResultSetExtractor<>(
-                                           new RecordRowMapper()
+                                           new RecordRowMapper(schema)
                                    ));
     }
 
-    public List<RecordDto> findAllowedByParent(ResourceQualifier rQualifier,
-                                               String parent,
-                                               String ecqlFilter,
-                                               Pageable pageable) {
+    public List<IRecord> findAllowedByParent(ResourceQualifier rQualifier,
+                                             String parent,
+                                             String ecqlFilter,
+                                             SchemaDto schema,
+                                             Pageable pageable) {
         String tableQualifier = rQualifier.getTableQualifier();
         String tableName = rQualifier.getTable();
 
@@ -107,7 +109,7 @@ public class BasePermissionsRepository {
         return pJdbcTemplate.getJdbcTemplate()
                             .query(requestTemplate,
                                    new RowMapperResultSetExtractor<>(
-                                           new RecordRowMapper()
+                                           new RecordRowMapper(schema)
                                    ));
     }
 

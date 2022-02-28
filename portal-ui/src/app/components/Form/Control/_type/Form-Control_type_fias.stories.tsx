@@ -7,7 +7,7 @@ import { PropertySchema, PropertyType } from '../../../../services/crg/schema.mo
 import { Form } from '../../Form';
 
 export default {
-  title: 'Example/Form/Field/fias',
+  title: 'Form/Field/fias',
   component: Form
 } as ComponentMeta<typeof Form>;
 

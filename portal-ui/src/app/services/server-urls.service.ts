@@ -1,23 +1,33 @@
 import { getEnvironment } from './environment';
 
 async function getHost(): Promise<string> {
-  return (await getEnvironment()).server.host || location.hostname;
+  const env = await getEnvironment();
+
+  return env.server.host || location.hostname;
 }
 
 async function getPort(): Promise<string> {
-  return (await getEnvironment()).server.port || location.port;
+  const env = await getEnvironment();
+
+  return env.server.port || location.port;
 }
 
 export async function getPath(): Promise<string> {
-  return (await getEnvironment()).server.path || '';
+  const env = await getEnvironment();
+
+  return env.server.path || '';
 }
 
 async function getWsPort(): Promise<string> {
-  return (await getEnvironment()).server.wsPort || location.port;
+  const env = await getEnvironment();
+
+  return env.server.wsPort || location.port;
 }
 
 async function getWsPath(): Promise<string> {
-  return (await getEnvironment()).server.wsPath || '';
+  const env = await getEnvironment();
+
+  return env.server.wsPath || '';
 }
 
 export async function getWsEndpointUrl(): Promise<string> {
@@ -297,6 +307,14 @@ export async function getBasemapsByIdsUrl(): Promise<string> {
 
 export async function getAllPermissionsUrl(): Promise<string> {
   return (await getDataUrl()) + '/all-permissions';
+}
+
+export async function getFilesUrl(): Promise<string> {
+  return (await getDataUrl()) + '/files';
+}
+
+export async function getFileDownloadUrl(id: string): Promise<string> {
+  return (await getFilesUrl()) + `/${id}/download`;
 }
 
 export async function replaceUrl(url: string, addPath?: boolean): Promise<string> {

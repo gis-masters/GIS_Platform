@@ -10,7 +10,6 @@ import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -51,6 +50,14 @@ public class DocLibraryProtector implements IResourceProtector {
         return authenticationFacade.isOrganizationAdmin()
                 || isUserHasOwnPermission(dlQualifier)
                 || authenticationFacade.isRoot();
+    }
+
+    @Override
+    public boolean isAllowed(ResourceQualifier dlQualifier) {
+        return authenticationFacade.isOrganizationAdmin()
+                || authenticationFacade.isRoot()
+                || basePermissionsRepository.getRoleForLibrary(dlQualifier.getTable())
+                                            .isPresent();
     }
 
     @Override

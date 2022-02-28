@@ -10,7 +10,7 @@ import { sleep } from '../../../../services/util/sleep';
 import { Button } from '../../../Button/Button';
 
 export default {
-  title: 'Example/Form/Field/url',
+  title: 'Form/Field/url',
   component: Form
 } as ComponentMeta<typeof Form>;
 

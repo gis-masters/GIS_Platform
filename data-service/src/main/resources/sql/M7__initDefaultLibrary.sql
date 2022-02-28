@@ -13,6 +13,11 @@ CREATE TABLE IF NOT EXISTS data.dl_default
     created_at      timestamp without time zone,
     last_modified   timestamp without time zone,
     created_by      character varying(50),
+    intents         character varying(500),
+    oktmo           character varying(11),
+    native_crs      character varying(50),
+    some_files      jsonb,
+    one_file        jsonb,
     CONSTRAINT dl_default_pkey PRIMARY KEY (id)
 ) TABLESPACE pg_default;
 
@@ -180,6 +185,31 @@ SELECT 'dl_default_schema',
       "hidden": true,
       "valueType": "STRING",
       "maxLength": 500
+    },
+    {
+      "name": "native_crs",
+      "title": "nativeCRS",
+      "required": false,
+      "hidden": false,
+      "valueType": "STRING",
+      "sequenceNumber": 0,
+      "maxLength": 11
+    },
+    {
+      "name": "some_files",
+      "title": "Any user title here",
+      "required": false,
+      "hidden": false,
+      "valueType": "FILE",
+      "multiple": true
+    },
+    {
+      "name": "one_file",
+      "title": "Any user title here",
+      "required": false,
+      "hidden": false,
+      "valueType": "FILE",
+      "multiple": false
     }
   ],
   "contentTypes": [
@@ -194,7 +224,6 @@ SELECT 'dl_default_schema',
           "title": "Название файла",
           "required": true,
           "hidden": false,
-          "valueType": "STRING",
           "sequenceNumber": 0,
           "maxLength": 500
         },
@@ -202,8 +231,12 @@ SELECT 'dl_default_schema',
           "name": "binary",
           "title": "Выбор файла",
           "required": true,
-          "valueType": "BINARY",
           "sequenceNumber": 2
+        },
+        {
+          "name": "native_crs",
+          "required": false,
+          "hidden": false
         }
       ]
     },
@@ -215,10 +248,7 @@ SELECT 'dl_default_schema',
           "name": "title",
           "title": "Название файла",
           "required": true,
-          "hidden": false,
-          "valueType": "STRING",
-          "sequenceNumber": 0,
-          "maxLength": 500
+          "maxLength": 100
         }
       ]
     },
@@ -233,25 +263,26 @@ SELECT 'dl_default_schema',
           "title": "Название файла",
           "required": true,
           "hidden": false,
-          "valueType": "STRING",
-          "sequenceNumber": 0,
-          "maxLength": 500
+          "sequenceNumber": 0
         },
         {
           "name": "category",
           "title": "Теги",
           "required": true,
           "hidden": false,
-          "valueType": "STRING",
-          "sequenceNumber": 0,
-          "maxLength": 254
+          "sequenceNumber": 1
         },
         {
           "name": "binary",
           "title": "Выбор файла",
           "required": true,
-          "valueType": "BINARY",
           "sequenceNumber": 2
+        },
+        {
+          "name": "native_crs",
+          "required": false,
+          "hidden": false,
+          "sequenceNumber": 3
         }
       ]
     },
@@ -260,21 +291,25 @@ SELECT 'dl_default_schema',
       "type": "FOLDER",
       "attributes": [
         {
+          "name": "title"
+        }
+      ]
+    },
+    {
+      "id": "doc_v4",
+      "type": "DOCUMENT",
+      "attributes": [
+        {
           "name": "title",
-          "title": "Название раздела",
-          "required": true,
-          "hidden": false,
-          "valueType": "STRING",
-          "sequenceNumber": 0,
-          "maxLength": 500
+          "title": "Название документа"
         },
         {
-          "name": "oktmo",
-          "title": "ОКТМО",
-          "required": true,
-          "valueType": "STRING",
-          "sequenceNumber": 1,
-          "maxLength": 11
+          "name": "some_files",
+          "title": "Картинки котиков"
+        },
+        {
+          "name": "one_file",
+          "title": "Одинокое фото собаки"
         }
       ]
     }

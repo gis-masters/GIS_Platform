@@ -85,7 +85,8 @@ public class TableService {
             return new PageImpl<>(Collections.unmodifiableList(tables), pageable, total);
         } else {
             List<IResourceModel> allowedResources = permissionsRepository
-                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), ecqlFilter, pageable).stream()
+                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), ecqlFilter, null, pageable)
+                    .stream()
                     .map(record -> new TableModel(record.getContent()))
                     .collect(Collectors.toList());
 

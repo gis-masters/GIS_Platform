@@ -31,4 +31,9 @@ public class RegisterDocumentRequest implements IRequest<String>, Auditable {
     public ResourceQualifier getQualifier() {
         return dQualifier;
     }
+
+    @Override
+    public String getType() {
+        return "RegisterDocumentRequest";
+    }
 }

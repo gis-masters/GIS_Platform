@@ -7,11 +7,12 @@ import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { validateFormValue } from '../../services/crg/formValidation.service';
 import { sleep } from '../../services/util/sleep';
 import { Toast } from '../Toast/Toast';
+import { Form } from '../Form/Form';
 
 import { FormDialog } from './FormDialog';
 
 export default {
-  title: 'Example/FormDialog',
+  title: 'FormDialog',
   component: FormDialog
 } as ComponentMeta<typeof FormDialog>;
 
@@ -60,7 +61,8 @@ Create.args = {
   actionButtonProps: { children: 'Создать штуку' },
   actionFunction,
   onSuccess: () => Toast.success('Создано успешно!'),
-  onError: () => Toast.error('Error!')
+  onError: () => Toast.error('Error!'),
+  Form
 };
 
 export const Edit = Template.bind({}) as ComponentStory<typeof FormDialog>;
@@ -72,5 +74,6 @@ Edit.args = {
   actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' },
   actionFunction,
   onSuccess: () => Toast.success('Сохранено!'),
-  onError: () => Toast.error('Error!')
+  onError: () => Toast.error('Error!'),
+  Form
 };

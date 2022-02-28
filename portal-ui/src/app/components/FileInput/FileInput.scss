@@ -22,7 +22,7 @@ body .FileInput {
     color: #666;
   }
 
-  &_empty {
+  &_empty.FileInput_btnMode_button {
     .FileInput-Filename {
       margin-right: 15px;
     }

@@ -38,7 +38,7 @@ export interface Environment {
 }
 
 const fetchEnv = async (): Promise<Environment> => {
-  const response = await fetch('assets/config/environment.json');
+  const response = await fetch('/assets/config/environment.json');
   const environment: Environment = (await response.json()) as Environment;
 
   env.setEnv(environment);

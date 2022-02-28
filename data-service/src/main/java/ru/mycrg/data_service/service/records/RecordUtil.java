@@ -1,19 +1,22 @@
 package ru.mycrg.data_service.service.records;
 
+import ru.mycrg.data_service.entity.IRecord;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
+// TODO: Перенести в SystemAttributeHandler
 public class RecordUtil {
 
     private RecordUtil() {
         throw new IllegalStateException("Utility class");
     }
 
-    public static Map<String, Object> clearSystemAttributes(Map<String, Object> patchedRecord) {
+    public static Map<String, Object> clearSystemAttributes(IRecord patchedRecord) {
         Map<String, Object> result = new HashMap<>();
-        patchedRecord.forEach((key, value) -> {
+        patchedRecord.getContent().forEach((key, value) -> {
             if (!key.equals(ID.getName()) &&
                     !key.equals(PATH.getName()) &&
                     !key.equals(CREATED_AT.getName()) &&

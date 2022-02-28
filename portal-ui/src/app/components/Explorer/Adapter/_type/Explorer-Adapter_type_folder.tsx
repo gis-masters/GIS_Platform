@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { FolderOutlined, PlaylistAddCheck } from '@mui/icons-material';
+import { FolderOutlined, TableViewOutlined } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
@@ -224,19 +224,19 @@ export class ExplorerAdapterTypeFolder {
 
     return (
       <>
-        <Link href={`/data-management/library/${item.payload.libraryId}/registry`} theme='contents'>
-          <Tooltip title='Открыть реестр'>
-            <IconButton>
-              <PlaylistAddCheck />
-            </IconButton>
-          </Tooltip>
-        </Link>
         <CreateLibraryElement
           libraryIdentifier={item.payload.libraryId}
           schemaId={item.payload.schemaId}
           path={path}
           store={store}
         />
+        <Link href={`/data-management/library/${item.payload.libraryId}/registry`} theme='contents'>
+          <Tooltip title='Открыть реестр'>
+            <IconButton>
+              <TableViewOutlined />
+            </IconButton>
+          </Tooltip>
+        </Link>
       </>
     );
   }

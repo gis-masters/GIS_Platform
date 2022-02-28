@@ -130,7 +130,9 @@ export async function getDatasetTablesWithParticularOne(
 }
 
 export async function getAllDatasetTables(dataset: Dataset): Promise<DataTable[]> {
-  const dataTables = await http.getPaged<Omit<DataTable, 'dataset'>>(await getDatasetTablesUrl(dataset.identifier));
+  const dataTables = await http.getPaged<Omit<DataTable, 'dataset'>>(await getDatasetTablesUrl(dataset.identifier), {
+    params: { sort: 'title,asc' }
+  });
 
   return dataTables.map(table => ({
     ...table,
