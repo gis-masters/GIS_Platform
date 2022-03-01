@@ -4,8 +4,8 @@ server:
 spring:
   servlet:
     multipart:
-      max-file-size: 50MB
-      max-request-size: 60MB
+      max-file-size: 1001MB
+      max-request-size: 1001MB
 
   rabbitmq:
     host: localhost

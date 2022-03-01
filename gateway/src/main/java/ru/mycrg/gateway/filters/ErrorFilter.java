@@ -4,6 +4,8 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.gateway.exceptions.CrgExceptionModel;
 
@@ -16,6 +18,8 @@ import static org.springframework.http.HttpStatus.*;
 
 @Component
 public class ErrorFilter extends ZuulFilter {
+
+    private final Logger log = LoggerFactory.getLogger(ErrorFilter.class);
 
     private static final String THROWABLE_KEY = "throwable";
 
@@ -36,11 +40,11 @@ public class ErrorFilter extends ZuulFilter {
 
     @Override
     public Object run() {
-        final RequestContext context = RequestContext.getCurrentContext();
-        final Object throwable = context.get(THROWABLE_KEY);
+        RequestContext context = RequestContext.getCurrentContext();
+        Object throwable = context.get(THROWABLE_KEY);
 
         if (throwable instanceof ZuulException) {
-            final ZuulException zuulException = (ZuulException) throwable;
+            ZuulException zuulException = (ZuulException) throwable;
             Throwable cause = getDeeperCause(zuulException);
 
             // remove error code to prevent further error handling in follow up filters
@@ -54,8 +58,23 @@ public class ErrorFilter extends ZuulFilter {
                 context.setResponseBody(new CrgExceptionModel(BAD_GATEWAY, makeReadableMsg(context, cause)).toString());
                 context.setResponseStatusCode(502);
             } else {
-                context.setResponseBody(new CrgExceptionModel(INTERNAL_SERVER_ERROR, "Something went wrong").toString());
-                context.setResponseStatusCode(500);
+                if (cause == null) {
+                    log.debug("Something went _wrong_. Reason: {}", zuulException.getMessage(), zuulException);
+
+                    zuulException.printStackTrace();
+
+                    context.setResponseBody(
+                            new CrgExceptionModel(INTERNAL_SERVER_ERROR, "Something went _wrong_").toString());
+                    context.setResponseStatusCode(500);
+                } else {
+                    log.debug("Something went wrong. Reason: {}", makeReadableMsg(context, cause));
+
+                    cause.printStackTrace();
+
+                    context.setResponseBody(
+                            new CrgExceptionModel(INTERNAL_SERVER_ERROR, "Something went wrong").toString());
+                    context.setResponseStatusCode(500);
+                }
             }
         }
 
