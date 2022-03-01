@@ -154,10 +154,25 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                         "transportobj",
                         "EPSG:28406",
                         generateString("STRING_6"),
-                        "libraryId", "1");
+                        "libraryId",
+                        "1");
             assertEquals(SC_CREATED, response.getStatusCode());
             extractAndSetLayerIdFromBody();
         }
+    }
+
+    @Given("Существует другой слой проекта")
+    public void initAnotherLayer() {
+        createLayer(layerTitle,
+                    "transportobj",
+                    "vector",
+                    "transportobj",
+                    "EPSG:28406",
+                    generateString("STRING_6"),
+                    "libraryId",
+                    "1");
+        assertEquals(SC_CREATED, response.getStatusCode());
+        extractAndSetLayerIdFromBody();
     }
 
     @When("Пользователь делает повторный запрос на создание слоя проекта")
@@ -294,6 +309,28 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     @And("Сообщение об отсутствии прав на добавление слоя соответствует заданному формату")
     public void checkResponseMessageWhenAddLayerForbidden() {
         super.checkErrorResponseMessage("Недостаточно прав для редактирования проекта: " + projectDto.getProjectName());
+    }
+
+    @And("Текущая группа слоёв 'не пострадала'")
+    public void checkThatLayerGroupExist() {
+        String url = "/projects/" + projectId + "/groups/" + layerGroupId;
+        response = getBaseRequestWithCurrentCookie()
+                .basePath("")
+                .when().
+                        log().all().
+                        get(url);
+
+        assertEquals(200, response.getStatusCode());
+    }
+
+    @And("Удален слой ссылающийся на эту таблицу")
+    public void checkThatLayerWasDeleted() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        log().all().
+                        get(String.valueOf(layerId));
+
+        assertEquals(404, response.getStatusCode());
     }
 
     private void makeLastAvailableLayerAsCurrent() {

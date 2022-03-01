@@ -17,6 +17,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static ru.mycrg.acceptance.data_service.TablesStepsDefinitions.currentTableName;
 
 public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -193,6 +194,13 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsCurrentUser();
 
         getDatasetByName(currentDatasetName);
+    }
+
+    @When("Пользователь делает запрос на удаление слоя в наборе данных")
+    public void deleteLayerFromDatasets() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().log().all().
+                        delete("/" + currentDatasetName + "/tables/" + currentTableName);
     }
 
     private void createDataset(DatasetCreateDto dto) {

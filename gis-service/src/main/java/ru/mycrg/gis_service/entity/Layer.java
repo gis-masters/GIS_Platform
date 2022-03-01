@@ -75,7 +75,7 @@ public class Layer implements Identifiable<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Group parent;
 
     public Layer() {
