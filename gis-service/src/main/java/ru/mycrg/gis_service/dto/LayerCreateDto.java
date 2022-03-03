@@ -3,10 +3,7 @@ package ru.mycrg.gis_service.dto;
 import org.hibernate.validator.constraints.Length;
 import ru.mycrg.gis_service.validators.CrgParentGroup;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 public class LayerCreateDto {
 
@@ -15,11 +12,9 @@ public class LayerCreateDto {
              message = "Допустимые значения поля type: vector/raster/external/external_geoserver")
     private String type;
 
-    @NotBlank
     @Length(min = 2, max = 255)
     private String title;
 
-    @NotBlank
     @Length(min = 2, max = 255)
     private String tableName;
 
@@ -67,7 +62,8 @@ public class LayerCreateDto {
 
     private Long recordId;
 
-    private boolean dummy;
+    @Pattern(regexp = "^(full|geoserver|gis-service)$", message = "Допустимые значения поля role: full, geoserver, gis-service")
+    private String mode = "full";
 
     public LayerCreateDto() {
         //Required by framework
@@ -209,12 +205,12 @@ public class LayerCreateDto {
         this.recordId = recordId;
     }
 
-    public boolean isDummy() {
-        return dummy;
+    public String getMode() {
+        return mode;
     }
 
-    public void setDummy(boolean dummy) {
-        this.dummy = dummy;
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 
     @Override
@@ -237,7 +233,7 @@ public class LayerCreateDto {
                 "\"dataSourceUri\":" + (dataSourceUri == null ? "null" : "\"" + dataSourceUri + "\"") + ", " +
                 "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
                 "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") + ", " +
-                "\"dummy\":\"" + dummy + "\"" +
+                "\"mode\":\"" + mode + "\"" +
                 "}";
     }
 }

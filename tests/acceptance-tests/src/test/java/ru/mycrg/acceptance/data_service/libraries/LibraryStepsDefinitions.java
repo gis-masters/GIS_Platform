@@ -5,7 +5,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
-import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.DefaultRecordModel;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
@@ -192,6 +191,27 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get(String.format("/%s/records/%d", DEFAULT_LIBRARY, currentRecordId));
+    }
+
+    @When("Отправляется запрос на создание записи в библиотеке {string} {string}")
+    public void createRecordsRequest(String filePath, String body) {
+        File testTif = new File(filePath);
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                         contentType("multipart/form-data")
+                         .multiPart("file", testTif)
+                         .multiPart("body", body)
+                .when().
+                         log().ifValidationFails().
+                         post("/dl_default/records");
+    }
+
+    @When("Существует запись в библиотеке на основе растрового файла {string}")
+    public void initLibraryRecord(String title) {
+        String filePath = "src/test/resources/ru/mycrg/acceptance/resources/zolotopolenskoe_sp.tif";
+        String body = "{\"title\": \"" + title + "\",\"content_type_id\": \"doc_v1\",\"native_crs\": \"EPSG:28406\"}";
+        createRecordsRequest(filePath, body);
+        currentRecordId = extractEntityIdFromResponse(response);
     }
 
     private void makeExactDocumentAsCurrent(String fName) {

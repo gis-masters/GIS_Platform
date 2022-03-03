@@ -5,8 +5,28 @@ Feature: Создание растровых слоёв
       | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
     When Авторизируемся владельцем организации
 
-  Scenario: Режим полного создания слоя
+  Scenario Outline: Создание растрового слоя на гис-сервисе
     Given Существует проект "STRING_10"
-    When Пользователь делает запрос на создание внешнего слоя
-    Then Пользователь делает запрос на текущий слой
-    And Поля внешнего слоя совпадают с переданными
+    Given Существует запись в библиотеке на основе растрового файла "raster test"
+    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>"
+    Then Сервер отвечает со статус-кодом 201
+    And Сервер передаёт ID слоя проекта в ответе
+    When Пользователь делает запрос на текущий слой
+    Then Сервер отвечает со статус-кодом 200
+    Examples:
+      | type   | nativeCRS  | libraryId  | mode        |
+      | raster | EPSG:28406 | dl_default | gis-service |
+
+  Scenario Outline: Создание слоя проекта c невалидными данными ("<reason>")
+    Given Существует проект "STRING_10"
+    Given Существует набор
+    Given Существует таблица
+    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>"
+    Then Сервер отвечает со статус-кодом 400
+    Examples:
+      | type   | nativeCRS  | libraryId  | recordId | mode        | reason                     |
+      | raster | STRING_1   | dl_default | 1        | gis-service | Короткий nativeCRS(vector) |
+      | raster | STRING_52  | dl_default | 1        | gis-service | Длинный nativeCRS(vector)  |
+      | raster | STRING_0   | dl_default | 1        | gis-service | Пустой nativeCRS (raster)  |
+      | raster | EPSG:28406 |            | 1        | gis-service | Пустое поле libraryId      |
+      | raster | EPSG:28406 | dl_default | 1        | gis         | Некорректное поле mode     |

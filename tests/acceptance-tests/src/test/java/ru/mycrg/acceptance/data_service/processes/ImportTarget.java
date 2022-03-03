@@ -5,6 +5,7 @@ public class ImportTarget {
     private Long projectId;
     private String projectName;
     private boolean projectIsNew;
+    private String mode;
 
     public ImportTarget() {
         // Required
@@ -19,6 +20,18 @@ public class ImportTarget {
         this.projectId = projectId;
         this.projectName = projectName;
         this.projectIsNew = projectIsNew;
+    }
+
+    public ImportTarget(String projectName, boolean projectIsNew, String mode) {
+        this.projectName = projectName;
+        this.projectIsNew = projectIsNew;
+        this.mode = mode;
+    }
+
+    public ImportTarget(Long projectId, boolean projectIsNew, String mode) {
+        this.projectId = projectId;
+        this.projectIsNew = projectIsNew;
+        this.mode = mode;
     }
 
     public Long getProjectId() {
@@ -43,5 +56,13 @@ public class ImportTarget {
 
     public void setProjectIsNew(boolean projectIsNew) {
         this.projectIsNew = projectIsNew;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 }

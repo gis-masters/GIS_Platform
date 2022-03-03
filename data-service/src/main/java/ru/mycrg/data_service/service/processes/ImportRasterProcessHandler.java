@@ -92,7 +92,7 @@ public class ImportRasterProcessHandler implements IProcessHandler {
                     sendWsMsg(PENDING, importReport, "Создание проекта...");
 
                     createProject(projectName).ifPresentOrElse(projectId -> {
-                        createLayer(projectId, importReport, false);
+                        createLayer(projectId, importReport, "full");
 
                         importReport.setProjectId(projectId);
                         importReport.setProjectName(projectName);
@@ -113,7 +113,7 @@ public class ImportRasterProcessHandler implements IProcessHandler {
                 } else {
                     sendWsMsg(PENDING, null, "Подключение слоёв к проекту...");
 
-                    createLayer(importTarget.getProjectId(), importReport, importTarget.isDummy());
+                    createLayer(importTarget.getProjectId(), importReport, importTarget.getMode());
 
                     importReport.setProjectName(projectName);
                     importReport.setProjectId(importTarget.getProjectId());
@@ -191,7 +191,7 @@ public class ImportRasterProcessHandler implements IProcessHandler {
         }
     }
 
-    private boolean createLayer(Long projectId, ImportReport importReport, boolean isDummy) {
+    private boolean createLayer(Long projectId, ImportReport importReport, String mode) {
         try {
             String path = StringUtils.stripFilenameExtension(record.getInnerPath());
             String layerName = StringUtils.getFilename(path);
@@ -210,7 +210,7 @@ public class ImportRasterProcessHandler implements IProcessHandler {
                             "    \"dataSourceUri\": \"" + dataSourceUri + "\"," +
                             "    \"libraryId\": \"" + libraryId + "\"," +
                             "    \"recordId\": \"" + record.getId() + "\"," +
-                            "    \"dummy\": " + isDummy +
+                            "    \"mode\": \"" + mode + "\"" +
                             "}");
 
             Request request = new Request.Builder()

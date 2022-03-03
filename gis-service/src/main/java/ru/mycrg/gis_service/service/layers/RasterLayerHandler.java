@@ -22,10 +22,14 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 @Component
 public class RasterLayerHandler implements ILayerHandler {
 
-    public final Logger log = LoggerFactory.getLogger(RasterLayerHandler.class);
+    private final Logger log = LoggerFactory.getLogger(RasterLayerHandler.class);
 
     private final LayerRepository layerRepository;
     private final AuthenticationFacade authenticationFacade;
+
+    private static final String GEOSERVER_MODE = "geoserver";
+    private static final String FULL_MODE = "full";
+    private static final String GISSERVICE_MODE = "gis-service";
 
     public RasterLayerHandler(LayerRepository layerRepository,
                               AuthenticationFacade authenticationFacade) {
@@ -37,20 +41,23 @@ public class RasterLayerHandler implements ILayerHandler {
     public Optional<Layer> create(Project project, LayerCreateDto dto) throws HttpClientException {
         log.debug("Try create raster layer");
 
-        String tableName = dto.getTableName();
-        String type = dto.getType();
+        if (FULL_MODE.equals(dto.getMode()) || GEOSERVER_MODE.equals(dto.getMode())) {
+            String tableName = dto.getTableName();
+            String type = dto.getType();
 
-        if (!dto.isDummy() && layerRepository.findByTableNameAndProjectAndType(tableName, project, type).isPresent()) {
-            throw new ConflictException("Уже существует растровый слой указывающий на таблицу: " + tableName);
+            if (!GEOSERVER_MODE.equals(dto.getMode())
+                    && layerRepository.findByTableNameAndProjectAndType(tableName, project, type).isPresent()) {
+                throw new ConflictException("Уже существует растровый слой указывающий на таблицу: " + tableName);
+            }
+
+            String workspaceName = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
+            String accessToken = authenticationFacade.getRootAccessToken();
+
+            createRasterStore(workspaceName, dto, accessToken);
+            createRasterLayer(workspaceName, dto, accessToken);
         }
 
-        String workspaceName = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
-        String accessToken = authenticationFacade.getRootAccessToken();
-
-        createRasterStore(workspaceName, dto, accessToken);
-        createRasterLayer(workspaceName, dto, accessToken);
-
-        if (dto.isDummy()) {
+        if (GEOSERVER_MODE.equals(dto.getMode())) {
             return Optional.empty();
         } else {
             Layer newLayer = layerRepository.save(new Layer(dto, project));

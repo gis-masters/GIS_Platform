@@ -5,7 +5,7 @@ public class ImportTarget {
     private Long projectId;
     private String projectName;
     private boolean projectIsNew;
-    private boolean isDummy;
+    private String mode;
 
     public ImportTarget() {
         // Required
@@ -35,11 +35,11 @@ public class ImportTarget {
         this.projectIsNew = projectIsNew;
     }
 
-    public boolean isDummy() {
-        return isDummy;
+    public String getMode() {
+        return mode;
     }
 
-    public void setDummy(boolean dummy) {
-        isDummy = dummy;
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 }

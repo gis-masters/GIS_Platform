@@ -8,11 +8,13 @@ import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerUpdateDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -55,9 +57,9 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerId = id;
     }
 
-    @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} {string} {string} {string}")
+    @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} {string} {string} {string} {string}")
     public void createLayer(String title, String styleName, String type, String schemaId, String epsg,
-                            String dataSourceUri, String libraryId, String recordId) {
+                            String dataSourceUri, String libraryId, String recordId, String mode) {
 
         String dataStoreName = "scratch_database_" + orgId;
 
@@ -71,8 +73,12 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                                             generateString(epsg),
                                             generateString(dataSourceUri));
         if (type.equals("raster")) {
+            Long currentRecordId = Objects.nonNull(LibraryStepsDefinitions.currentRecordId)
+                    ? LibraryStepsDefinitions.currentRecordId
+                    : Long.getLong(recordId);
             layerCreateDto.setLibraryId(libraryId);
-            layerCreateDto.setRecordId(Long.getLong(recordId));
+            layerCreateDto.setRecordId(currentRecordId);
+            layerCreateDto.setMode(mode);
         }
 
         super.createEntity(layerCreateDto);
@@ -155,7 +161,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                         "EPSG:28406",
                         generateString("STRING_6"),
                         "libraryId",
-                        "1");
+                        "1",
+                        "full");
             assertEquals(SC_CREATED, response.getStatusCode());
             extractAndSetLayerIdFromBody();
         }
@@ -170,7 +177,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                     "EPSG:28406",
                     generateString("STRING_6"),
                     "libraryId",
-                    "1");
+                    "1",
+                    "");
         assertEquals(SC_CREATED, response.getStatusCode());
         extractAndSetLayerIdFromBody();
     }

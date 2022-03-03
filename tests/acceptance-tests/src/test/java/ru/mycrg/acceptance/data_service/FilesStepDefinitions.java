@@ -129,8 +129,8 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         int recordId = jsonPath.getInt("resourceQualifier.recordId");
         String table = jsonPath.getString("resourceQualifier.table");
         String resourceType = jsonPath.getString("resourceType");
-
-        assertEquals(2, recordId);
+// TODO: дать второй записи уникальный title и по нему искать
+        assertEquals(6, recordId);
         assertEquals(DEFAULT_LIBRARY, table);
         assertEquals("RECORD", resourceType);
     }

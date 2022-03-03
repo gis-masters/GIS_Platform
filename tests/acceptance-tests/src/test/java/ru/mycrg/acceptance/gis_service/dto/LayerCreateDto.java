@@ -16,6 +16,7 @@ public class LayerCreateDto {
     private Long recordId;
     private long minZoom;
     private long maxZoom;
+    private String mode;
 
     public LayerCreateDto(String title, String type) {
         this.title = title;
@@ -129,5 +130,13 @@ public class LayerCreateDto {
 
     public void setRecordId(Long recordId) {
         this.recordId = recordId;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 }

@@ -14,9 +14,9 @@ public class CrgLayerValidator implements Validator {
 
     private final Logger log = LoggerFactory.getLogger(CrgLayerValidator.class);
 
-    public static final String REQUIRED = "required";
-    public static final String DEFAULT_V_MESSAGE = "Для векторного слоя является обязательным";
-    public static final String DEFAULT_R_MESSAGE = "Для растрового слоя является обязательным";
+    static final String REQUIRED = "required";
+    static final String DEFAULT_V_MESSAGE = "Для векторного слоя является обязательным";
+    static final String DEFAULT_R_MESSAGE = "Для растрового слоя является обязательным";
 
     private final SpringValidatorAdapter validator;
 
@@ -58,6 +58,14 @@ public class CrgLayerValidator implements Validator {
     }
 
     private void validateAsVector(@NotNull Errors errors, LayerCreateDto dto) {
+        if (dto.getTitle() == null) {
+            errors.rejectValue("title", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+
+        if (dto.getTableName() == null) {
+            errors.rejectValue("tableName", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+
         if (dto.getNativeCRS() == null) {
             errors.rejectValue("nativeCRS", REQUIRED, DEFAULT_V_MESSAGE);
         }
