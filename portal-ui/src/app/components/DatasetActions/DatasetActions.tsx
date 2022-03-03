@@ -9,6 +9,7 @@ import { Dataset, getDataset } from '../../services/data.service';
 import { Role } from '../../services/crg/permissions.models';
 
 import { DatasetActionsDelete } from './Delete/DatasetActions-Delete';
+import { DatasetActionsAddToProject } from './AddToProject/DatasetActions-AddToProject';
 
 const cnDatasetActions = cn('DatasetActions');
 
@@ -35,7 +36,10 @@ export class DatasetActions extends Component<DatasetActionsProps> {
     const deletionAllowed = currentUser.isAdmin || this.dataset?.role === Role.OWNER;
 
     return (
-      <div className={cnDatasetActions()}>{deletionAllowed && <DatasetActionsDelete dataset={this.dataset} />}</div>
+      <div className={cnDatasetActions()}>
+        <DatasetActionsAddToProject dataset={this.dataset} />
+        {deletionAllowed && <DatasetActionsDelete dataset={this.dataset} />}
+      </div>
     );
   }
 

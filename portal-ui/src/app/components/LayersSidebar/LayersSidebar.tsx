@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { AxiosError } from 'axios';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -9,6 +8,7 @@ import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { projectsService } from '../../services/crg/projects.service';
 import {
+  alertLayerOperationError,
   createLayer,
   createLayersGroup,
   deleteLayer,
@@ -18,10 +18,8 @@ import {
   updateLayer,
   updateLayersGroup
 } from '../../services/geoserver/layers.service';
-import { services } from '../../services/services';
 import { LayersTree } from '../LayersTree/LayersTree';
 import { Loading } from '../Loading/Loading';
-import { Toast } from '../Toast/Toast';
 
 import { LayersSidebarOpen } from './Open/LayersSidebar-Open';
 import { LayersSidebarInner } from './Inner/LayersSidebar-Inner';
@@ -81,13 +79,13 @@ export class LayersSidebar extends Component {
     for (const group of currentProject.queriesQueue.groupsToCreate) {
       const payload = { ...group, id: undefined };
       try {
-        const createdGroup = await createLayersGroup(payload);
+        const createdGroup = await createLayersGroup(payload, currentProject.id);
         if (group.id !== createdGroup.id && currentProject.groups.some(({ id }) => id === createdGroup.id)) {
           currentProject.switchGroupId(createdGroup.id, generateNextGroupId());
         }
         currentProject.switchGroupId(group.id, createdGroup.id);
       } catch (error) {
-        this.alertError(error, payload, 'создать группу', group.title);
+        alertLayerOperationError(error, payload, 'создать группу', group.title);
       }
       this.countQuery();
     }
@@ -96,7 +94,7 @@ export class LayersSidebar extends Component {
       try {
         await updateLayersGroup(groupId, patch);
       } catch (error) {
-        this.alertError(error, patch, 'изменить группу', `id: ${groupId}`);
+        alertLayerOperationError(error, patch, 'изменить группу', `id: ${groupId}`);
       }
       this.countQuery();
     }
@@ -104,12 +102,12 @@ export class LayersSidebar extends Component {
     for (const layer of currentProject.queriesQueue.layersToCreate) {
       const payload = { ...layer, id: undefined, complexName: undefined };
       try {
-        const createdLayer = await createLayer(payload);
+        const createdLayer = await createLayer(payload, currentProject.id);
         if (layer.id !== createdLayer.id && currentProject.layers.some(({ id }) => id === createdLayer.id)) {
           currentProject.switchLayerId(createdLayer.id, generateNextLayerId());
         }
       } catch (error) {
-        this.alertError(error, payload, 'создать слой', layer.title);
+        alertLayerOperationError(error, payload, 'создать слой', layer.title);
       }
       this.countQuery();
     }
@@ -118,7 +116,7 @@ export class LayersSidebar extends Component {
       try {
         await updateLayer(layerId, patch);
       } catch (error) {
-        this.alertError(error, patch, 'изменить слой', `id: ${layerId}`);
+        alertLayerOperationError(error, patch, 'изменить слой', `id: ${layerId}`);
       }
       this.countQuery();
     }
@@ -127,7 +125,7 @@ export class LayersSidebar extends Component {
       try {
         await deleteLayer(layerId);
       } catch (error) {
-        this.alertError(error, { id: layerId }, 'удалить слой', `id: ${layerId}`);
+        alertLayerOperationError(error, { id: layerId }, 'удалить слой', `id: ${layerId}`);
       }
       this.countQuery();
     }
@@ -136,7 +134,7 @@ export class LayersSidebar extends Component {
       try {
         await deleteLayersGroup(groupId);
       } catch (error) {
-        this.alertError(error, { id: groupId }, 'удалить группу', `id: ${groupId}`);
+        alertLayerOperationError(error, { id: groupId }, 'удалить группу', `id: ${groupId}`);
       }
       this.countQuery();
     }
@@ -151,37 +149,5 @@ export class LayersSidebar extends Component {
   @action.bound
   private contentScrollHandler(e: React.UIEvent<HTMLDivElement, UIEvent>) {
     this.toolbarAbove = Boolean(e.currentTarget.scrollTop);
-  }
-
-  private alertError(
-    e: AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
-    payload: Record<string, unknown>,
-    actionText: string,
-    actionName: string
-  ) {
-    const payloadDetails = JSON.stringify(payload, null, 2);
-    let responseDetails = '-';
-    if (e.response) {
-      const responseData = JSON.stringify(
-        {
-          ...e.response,
-          request: undefined,
-          config: undefined,
-          headers: undefined
-        },
-        null,
-        2
-      );
-      responseDetails = `${e.response.config?.url} \n${responseData}`;
-    }
-
-    const message = `Не удалось ${actionText} "${actionName}"`;
-
-    const details = e.response?.data?.message
-      ? e.response.data.message
-      : `Запрос: \n${responseDetails} \n\nДанные: \n${payloadDetails}`;
-
-    Toast.error({ message, details });
-    services.logger.error(message, e);
   }
 }

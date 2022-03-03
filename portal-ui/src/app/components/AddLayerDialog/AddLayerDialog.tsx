@@ -8,6 +8,7 @@ import { cloneDeep } from 'lodash';
 
 import { currentUser } from '../../stores/CurrentUser.store';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { externalLayerDefaults, vectorLayerDefaults } from '../../services/NewLayerDefaults';
 import { FieldErrors, validateFormValue } from '../../services/crg/formValidation.service';
 import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { CrgLayerType, NewCrgLayer } from '../../services/crg/projects.models';
@@ -242,44 +243,37 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     const { dataset, dataTable } = datasource as Datasource;
 
     e.preventDefault();
-
+    const vectorDefaults = vectorLayerDefaults();
     const dataStoreName = `scratch_database_${currentUser.orgId}`;
+
     if (this.valid && this.layerType === CrgLayerType.VECTOR) {
       this.props.onAdd({
+        ...vectorDefaults,
         id: generateNextLayerId(),
-        dataStoreName,
         dataset: dataset?.identifier,
         tableName: dataTable?.identifier,
         complexName: `${dataStoreName}:${dataTable?.identifier}`,
         title,
-        enabled: true,
         nativeCRS: dataTable.crs,
         schemaId: dataTable.schemaId,
-        position: -42,
-        transparency: 75,
         minZoom,
-        maxZoom: 40,
-        styleName: dataTable.schemaId,
-        type: CrgLayerType.VECTOR
+        styleName: dataTable.schemaId
       });
       this.close();
 
       this.clearForm();
     }
 
+    const externalDefaults = externalLayerDefaults();
+
     if (this.valid && this.layerType === CrgLayerType.EXTERNAL) {
       this.props.onAdd({
+        ...externalDefaults,
         id: generateNextLayerId(),
         title,
         dataSourceUri: dataSourceUri,
-        enabled: true,
-        nativeCRS: 'EPSG:3857',
-        position: -42,
-        transparency: 75,
         minZoom,
-        maxZoom: 40,
-        tableName,
-        type: CrgLayerType.EXTERNAL
+        tableName
       });
       this.close();
 

@@ -1,5 +1,6 @@
 import { BBOX } from '@fiz/geoserver-types/BBOX';
 import { Coordinate } from 'ol/coordinate';
+import { AxiosError } from 'axios';
 
 import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
@@ -21,6 +22,8 @@ import {
   getProjectLayerUrl,
   replaceUrl
 } from '../server-urls.service';
+import { Toast } from '../../components/Toast/Toast';
+import { services } from '../services';
 
 interface GeoserverLayerInfo {
   name: string;
@@ -102,8 +105,8 @@ export function generateNextLayerId(): number {
   return Math.max(...currentProject.layers.map(({ id }) => id), 0) + 1;
 }
 
-export async function createLayer(newLayer: NewCrgLayer, project: CrgProject = currentProject): Promise<CrgLayer> {
-  return await http.post<CrgLayer>(await getProjectLayersUrl(project.id), newLayer);
+export async function createLayer(newLayer: NewCrgLayer, projectId: number): Promise<CrgLayer> {
+  return await http.post<CrgLayer>(await getProjectLayersUrl(projectId), newLayer);
 }
 
 export async function updateLayer(
@@ -114,11 +117,8 @@ export async function updateLayer(
   return await http.patch(await getProjectLayerUrl(project.id, layerId), patch);
 }
 
-export async function createLayersGroup(
-  newGroup: NewCrgLayersGroup,
-  project: CrgProject = currentProject
-): Promise<CrgLayersGroup> {
-  return await http.post<CrgLayersGroup>(await getProjectGroupsUrl(project.id), newGroup);
+export async function createLayersGroup(newGroup: NewCrgLayersGroup, projectId: number): Promise<CrgLayersGroup> {
+  return await http.post<CrgLayersGroup>(await getProjectGroupsUrl(projectId), newGroup);
 }
 
 export async function updateLayersGroup(
@@ -149,4 +149,36 @@ export async function getLayerCoverage(layer: CrgLayer): Promise<GeoserverCovera
   const result = await http.get<{ coverage: GeoserverCoverage }>(url);
 
   return result.coverage;
+}
+
+export function alertLayerOperationError(
+  e: AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+  payload: Record<string, unknown>,
+  actionText: string,
+  actionName: string
+): void {
+  const payloadDetails = JSON.stringify(payload, null, 2);
+  let responseDetails = '-';
+  if (e.response) {
+    const responseData = JSON.stringify(
+      {
+        ...e.response,
+        request: undefined,
+        config: undefined,
+        headers: undefined
+      },
+      null,
+      2
+    );
+    responseDetails = `${e.response.config?.url} \n${responseData}`;
+  }
+
+  const message = `Не удалось ${actionText} "${actionName}"`;
+
+  const details = e.response?.data?.message
+    ? e.response.data.message
+    : `Запрос: \n${responseDetails} \n\nДанные: \n${payloadDetails}`;
+
+  Toast.error({ message, details });
+  services.logger.error(message, e);
 }

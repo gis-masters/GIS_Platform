@@ -100,6 +100,6 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
       type: CrgLayerType.VECTOR
     };
 
-    await createLayer(newLayer, project);
+    await createLayer(newLayer, project.id);
   }
 }

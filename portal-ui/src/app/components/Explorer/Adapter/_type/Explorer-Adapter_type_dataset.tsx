@@ -20,6 +20,7 @@ import { communicationService } from '../../../../services/communication.service
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 import { Adapter, ExplorerItemData, ExplorerItemEntityType, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { DatasetActionsAddToProject } from '../../../DatasetActions/AddToProject/DatasetActions-AddToProject';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { DatasetActions } from '../../../DatasetActions/DatasetActions';
@@ -158,6 +159,10 @@ export class ExplorerAdapterTypeDataset {
 
   static getChildrenFilterLabel(): string {
     return 'Фильтр по названию';
+  }
+
+  static getToolbarActions(item: ExplorerItemData<Dataset>): ReactNode {
+    return <DatasetActionsAddToProject dataset={item.payload} />;
   }
 
   static getRefreshEmitters(): Emitter[] {
