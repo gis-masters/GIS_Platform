@@ -30,12 +30,11 @@ class FormControlTypeFias extends Component<FormControlProps> {
   }
 
   render() {
-    const { htmlId, className, fieldValue, inSet } = this.props;
-
+    const { htmlId, className, fieldValue = {}, inSet, fullWidthForOldForm } = this.props;
     const { objectId, oktmo } = (fieldValue as { oktmo: string; objectId: number }) || {};
 
     return (
-      <div className={cnFormControl({ inSet, type: 'fias' }, [className])}>
+      <div className={cnFormControl({ inSet, fullWidthForOldForm }, [className])}>
         <Autocomplete
           id={htmlId}
           fullWidth={!inSet}
@@ -122,7 +121,7 @@ class FormControlTypeFias extends Component<FormControlProps> {
 
   @boundMethod
   private renderInput(params: AutocompleteRenderInputParams) {
-    const { fieldValue, errors, property, variant = 'standard' } = this.props;
+    const { fieldValue = {}, errors, property, variant = 'standard' } = this.props;
     const { name } = property as PropertySchemaFias;
 
     return (

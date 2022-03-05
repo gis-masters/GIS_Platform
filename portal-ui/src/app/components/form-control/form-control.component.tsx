@@ -11,33 +11,37 @@ import {
   EventEmitter,
   Output
 } from '@angular/core';
-import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { OldPropertySchema } from '../../services/crg/schemaOld.models';
 import { FormControl } from '../Form/Control/Form-Control.composed';
+import { convertSchema } from '../../services/crg/schema.utils';
+import { FormView } from '../Form/View/Form-View.composed';
+import { FormDialog } from '../FormDialog/FormDialog';
+import { Form } from '../Form/Form';
 
 @Component({
-  selector: 'crg-form-control-type-fias',
-  template: '<div class="form-control-type-fias" #react></div>',
-  styleUrls: ['./form-control-type-fias.component.scss'],
+  selector: 'crg-form-control',
+  template: '<div class="form-control" #react></div>',
+  styleUrls: ['./form-control.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: forwardRef(() => FormControlTypeFiasComponent)
+      useExisting: forwardRef(() => FormControlComponent)
     }
   ]
 })
-export class FormControlTypeFiasComponent implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
-  @Input() property?: PropertySchema;
+export class FormControlComponent implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
+  @Input() property?: OldPropertySchema;
   @Output() inputModelChange = new EventEmitter<string>();
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   private onChange: (value: unknown) => void;
 
-  private value: unknown = {};
+  private value: unknown;
 
   public editFeatureForm: FormGroup;
 
@@ -54,13 +58,16 @@ export class FormControlTypeFiasComponent implements OnInit, OnDestroy, OnChange
   }
 
   private renderReactElement() {
-    const reactElement = createElement(FormControl, {
-      property: this.property,
-      type: PropertyType.FIAS,
+    const [convertedProperty] = convertSchema([this.property]);
+    const reactElement = createElement(convertedProperty.readOnly ? FormView : FormControl, {
+      property: convertedProperty,
+      type: convertedProperty.propertyType,
       fieldValue: this.value,
+      Form: Form,
+      FormDialog: FormDialog,
       variant: 'outlined',
-      inSet: true,
-      onChange: this.handleChange
+      onChange: this.handleChange,
+      fullWidthForOldForm: true
     });
 
     render(reactElement, this.ref.nativeElement);
@@ -76,7 +83,7 @@ export class FormControlTypeFiasComponent implements OnInit, OnDestroy, OnChange
   }
 
   writeValue(value: unknown): void {
-    this.value = value || {};
+    this.value = value;
     this.renderReactElement();
   }
 

@@ -17,8 +17,14 @@ class FormViewTypeFias extends Component<FormControlProps> {
 
     return (
       <div className={cnFormView({ inSet }, [className])}>
-        {fiasValue.fullAddress} {fiasValue.oktmo ? `ОКТМО: ${fiasValue.oktmo}` : ''}{' '}
-        {fiasValue.objectId ? `Код фиас: ${fiasValue.objectId}` : ''}
+        {fiasValue?.fullAddress ? (
+          <>
+            {fiasValue.fullAddress} {fiasValue.oktmo ? `ОКТМО: ${fiasValue.oktmo}` : ''}{' '}
+            {fiasValue.objectId ? `Код фиас: ${fiasValue.objectId}` : ''}
+          </>
+        ) : (
+          '—'
+        )}
         <FormViewErrors errors={errors} />
       </div>
     );

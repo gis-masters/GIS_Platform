@@ -17,10 +17,10 @@ export interface UrlInfo extends Record<string, unknown> {
 @observer
 class FormControlTypeUrl extends Component<FormControlProps> {
   render() {
-    const { className, inSet, property, errors, FormDialog, fieldValue, Form } = this.props;
+    const { className, inSet, property, errors, FormDialog, fieldValue, Form, fullWidthForOldForm } = this.props;
 
     return (
-      <div className={cnFormControl({ inSet }, [className])}>
+      <div className={cnFormControl({ inSet, fullWidthForOldForm }, [className])}>
         <UrlsList
           Form={Form}
           FormDialog={FormDialog as ComponentType<FormDialogProps<UrlInfo>>}

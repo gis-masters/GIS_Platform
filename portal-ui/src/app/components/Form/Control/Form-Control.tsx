@@ -26,6 +26,7 @@ export interface FormControlProps<T extends Record<string, unknown> = Record<str
   Form?: ComponentType<FormProps<Record<string, unknown>>>;
   FormDialog?: ComponentType<FormDialogProps<Record<string, unknown>>>;
   variant?: 'standard' | 'outlined';
+  fullWidthForOldForm?: boolean;
 }
 
 export const FormControl: FC<FormControlProps> = ({ children, className }) => (

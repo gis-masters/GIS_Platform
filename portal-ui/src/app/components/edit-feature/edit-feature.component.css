@@ -53,6 +53,20 @@
   background-color: #e9ecef;
 }
 
+.new-form-fields {
+  display: flex;
+}
+
+.new-form-fields .multiedit-template {
+  top: 0;
+  left: 0;
+
+  height: 100%;
+
+  border: 1px solid #ced4da;
+  border-right: none;
+}
+
 .template-text {
   position: relative;
   top: 6px;

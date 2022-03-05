@@ -75,9 +75,8 @@ import { OpenInAnotherProjectComponent } from './components/open-in-another-proj
 import { ImportGmlResultButtonComponent } from './components/import-gml-results-button/import-gml-result-button';
 import { LibraryRegistryComponent } from './components/library-registry/library-registry.component';
 import { XmlDownloadComponent } from './components/xml-download/xml-download.component';
-import { FormControlTypeFiasComponent } from './components/form-control-type-fias/form-control-type-fias.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { FormControlTypeUrlComponent } from './components/form-control-type-url/form-control-type-url.component';
+import { FormControlComponent } from './components/form-control/form-control.component';
 import { LibraryDocumentPageContainerComponent } from './components/library-document-page-container/library-document-page-container.component';
 
 @NgModule({
@@ -138,8 +137,7 @@ import { LibraryDocumentPageContainerComponent } from './components/library-docu
     LibraryRegistryComponent,
     LibraryDocumentPageContainerComponent,
     XmlDownloadComponent,
-    FormControlTypeFiasComponent,
-    FormControlTypeUrlComponent
+    FormControlComponent
   ],
   imports: [
     HttpClientModule,
