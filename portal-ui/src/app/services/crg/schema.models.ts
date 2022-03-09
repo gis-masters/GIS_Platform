@@ -137,7 +137,7 @@ export type PropertyOption = { title: string; value: string | number };
 
 export interface PropertySchemaChoice<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.CHOICE;
-  display?: 'select' | 'radiogroup';
+  display?: 'select' | 'radiogroup' | 'buttongroup';
   multiple?: boolean;
   allowMultipleValues?: boolean;
   allowFillIn?: boolean;

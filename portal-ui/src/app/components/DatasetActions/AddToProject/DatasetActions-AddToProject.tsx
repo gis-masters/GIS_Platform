@@ -147,6 +147,7 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
         return {
           ...vectorDefaults,
           parentId: group.id,
+          enabled: false,
           dataset: dataset?.identifier,
           tableName: table?.identifier,
           title: table.title,

@@ -30,6 +30,7 @@ export interface CrgLayer extends CrgEntity {
   dataSourceUri?: string;
   parentId?: number;
   libraryId?: string;
+  mode?: string;
   recordId?: number;
 }
 
@@ -51,6 +52,9 @@ export type NewCrgLayer = Pick<
   | 'styleName'
   | 'position'
   | 'schemaId'
+  | 'libraryId'
+  | 'mode'
+  | 'recordId'
   | 'type'
 >;
 

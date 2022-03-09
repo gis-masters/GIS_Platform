@@ -101,6 +101,7 @@ export class LayersSidebar extends Component {
 
     for (const layer of currentProject.queriesQueue.layersToCreate) {
       const payload = { ...layer, id: undefined, complexName: undefined };
+
       try {
         const createdLayer = await createLayer(payload, currentProject.id);
         if (layer.id !== createdLayer.id && currentProject.layers.some(({ id }) => id === createdLayer.id)) {
