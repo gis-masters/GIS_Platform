@@ -34,9 +34,15 @@ import ru.mycrg.http_client.handlers.BaseRequestHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.util.Objects.isNull;
+import static okhttp3.MediaType.parse;
+import static okhttp3.RequestBody.create;
+import static org.springframework.util.StringUtils.getFilename;
+import static org.springframework.util.StringUtils.stripFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT_RASTER;
@@ -193,14 +199,15 @@ public class ImportRasterProcessHandler implements IProcessHandler {
 
     private boolean createLayer(Long projectId, ImportReport importReport, String mode) {
         try {
-            String path = StringUtils.stripFilenameExtension(record.getInnerPath());
-            String layerName = StringUtils.getFilename(path);
+            String path = stripFilenameExtension(record.getInnerPath());
+            String layerName = getFilename(path);
             String dataStoreName = "store_" + layerName;
             String dataSourceUri = "file://" + record.getInnerPath();
             String libraryId = importInitialData.getSource().getLibraryId();
+            mode = isNull(mode) ? "full" : mode;
 
-            RequestBody payload = RequestBody.create(
-                    MediaType.parse("application/json"),
+            RequestBody payload = create(
+                    parse("application/json"),
                     "{" +
                             "    \"type\": \"raster\"," +
                             "    \"title\": \"" + record.getTitle() + "\"," +
@@ -236,7 +243,7 @@ public class ImportRasterProcessHandler implements IProcessHandler {
 
     private Optional<Long> createProject(String projectName) {
         try {
-            RequestBody payload = RequestBody.create(MediaType.parse("application/json"),
+            RequestBody payload = create(parse("application/json"),
                                                      "{\"projectName\":\"" + projectName + "\"}");
             Request request = new Request.Builder()
                     .addHeader("Authorization", "Bearer " + authenticationFacade.getAccessToken())
