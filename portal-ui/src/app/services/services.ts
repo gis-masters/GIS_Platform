@@ -34,12 +34,13 @@ class Services implements ServicesList {
     this.onFulfilled();
 
     // для автотестов
-    // eslint-disable-next-line dot-notation
-    window['navigate'] = (url: string) => {
-      void services.ngZone.run(async () => {
-        await services.router.navigateByUrl(url);
-      });
-    };
+    Object.assign(window, {
+      navigate: (url: string) => {
+        void services.ngZone.run(async () => {
+          await services.router.navigateByUrl(url);
+        });
+      }
+    });
   }
 }
 

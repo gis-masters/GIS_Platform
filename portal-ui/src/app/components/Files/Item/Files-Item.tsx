@@ -3,24 +3,23 @@ import { cn } from '@bem-react/classname';
 
 import { getFileBaseName, getFileExtension } from '../../../services/files.util';
 import { FileInfo } from '../../../services/files.service';
+import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
+import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
+import { LookupItem } from '../../Lookup/Item/Lookup-Item';
 
-import { FileStatusType } from '../Files';
 import { FilesName } from '../Name/Files-Name';
 import { FilesIcon } from '../Icon/Files-Icon';
-import { FilesDelete } from '../Delete/Files-Delete';
-import { FilesStatus } from '../Status/Files-Status';
-import { FilesNameGap } from '../NameGap/Files-NameGap';
-
-import '!style-loader!css-loader!sass-loader!./Files-Item.scss';
+import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
+import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
 
 const cnFilesItem = cn('Files', 'Item');
 
 interface FilesItemProps {
   item: FileInfo;
   editable: boolean;
-  status: FileStatusType | undefined;
+  status: LookupStatusType | undefined;
   file: File | undefined;
-  error: string | undefined;
+  statusText: string | undefined;
   numerous: boolean;
   multiple: boolean;
   onDelete(item: FileInfo): void;
@@ -31,7 +30,7 @@ export const FilesItem: FC<FilesItemProps> = ({
   editable,
   status,
   file,
-  error,
+  statusText,
   numerous,
   multiple,
   onDelete
@@ -41,12 +40,16 @@ export const FilesItem: FC<FilesItemProps> = ({
   const disabled = ['loading', 'new', 'error'].includes(status);
 
   return (
-    <div className={cnFilesItem({ numerous })}>
+    <LookupItem className={cnFilesItem({ numerous })}>
       <FilesIcon ext={ext} color={status === 'error' ? 'error' : 'action'} />
       <FilesName item={item} baseName={baseName} ext={ext} disabled={disabled} file={file} numerous={numerous} />
-      {editable && (numerous || multiple) && <FilesNameGap />}
-      {!!status && <FilesStatus status={status} error={error} />}
-      {editable && <FilesDelete item={item} onDelete={onDelete} />}
-    </div>
+      {editable && (numerous || multiple) && <LookupNameGap />}
+      {!!status && <LookupStatus status={status} statusText={statusText} />}
+      {editable && (
+        <LookupActions>
+          <LookupDelete item={item} onDelete={onDelete} />
+        </LookupActions>
+      )}
+    </LookupItem>
   );
 };

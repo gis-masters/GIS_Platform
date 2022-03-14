@@ -1,11 +1,10 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 import { PageOptions, SortDir } from '../../services/models';
 import { Emitter } from '../../services/common/Emitter';
 
 import { ExplorerStore } from './Explorer.store';
 import { ExplorerService } from './Explorer.service';
-import { ExplorerProps } from './Explorer';
 
 export enum ExplorerItemType {
   EMPTY = 'empty',
@@ -73,7 +72,7 @@ export interface Adapter {
   getId: (item: ExplorerItemData) => string;
   getTitle: (item: ExplorerItemData) => ReactNode;
   getMeta: (item: ExplorerItemData) => string;
-  getWidgets?: (item: ExplorerItemData, Explorer: React.ComponentType<ExplorerProps>) => Promise<ReactNode>;
+  getWidgets?: (item: ExplorerItemData) => Promise<ReactNode>;
   getDescription?: (item: ExplorerItemData) => ReactNode;
   getIcon?: (item: ExplorerItemData) => ReactNode;
   isFolder: (item: ExplorerItemData) => boolean;
@@ -89,7 +88,12 @@ export interface Adapter {
   getChildrenSortDefaultDirection?: (item: ExplorerItemData) => SortDir;
   getChildrenFilterField?: (item: ExplorerItemData) => string;
   getChildrenFilterLabel?: (item: ExplorerItemData) => string;
-  getToolbarActions?: (item: ExplorerItemData, store: ExplorerStore, service: ExplorerService) => ReactNode;
+  getToolbarActions?: (
+    item: ExplorerItemData,
+    store: ExplorerStore,
+    service: ExplorerService,
+    full: boolean
+  ) => ReactNode;
   getRefreshEmitters?: (item: ExplorerItemData) => Emitter[];
   getActions?: (item: ExplorerItemData) => ReactNode;
 }

@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { RegistryConsumer } from '@bem-react/di';
 
-import { PropertySchema } from '../../../services/crg/schema.models';
 import { NewDataset } from '../../../services/data.service';
+import { PropertySchema } from '../../../services/crg/schema.models';
 import { FieldErrors } from '../../../services/crg/formValidation.service';
 
 import { Button } from '../../Button/Button';
-import { Form } from '../../Form/Form';
 
 export interface CreateDatasetElementDialogProps {
   fields?: PropertySchema[];
@@ -39,16 +39,20 @@ export const CreateDatasetElementDialog: FC<CreateDatasetElementDialogProps> = o
       <Dialog maxWidth={'md'} open={open} onClose={onClose}>
         <DialogTitle>Создание нового набора данных</DialogTitle>
         <DialogContent>
-          <Form<Partial<NewDataset>>
-            id='createDatasetForm'
-            fields={fields}
-            value={formValue}
-            onFormChange={onChange}
-            onFormSubmit={onCreate}
-            onFieldChange={onFieldChange}
-            onFieldNeedValidate={onFieldNeedValidate}
-            errors={formErrors}
-          />
+          <RegistryConsumer id='common'>
+            {({ Form }) => (
+              <Form<Partial<NewDataset>>
+                id='createDatasetForm'
+                fields={fields}
+                value={formValue}
+                onFormChange={onChange}
+                onFormSubmit={onCreate}
+                onFieldChange={onFieldChange}
+                onFieldNeedValidate={onFieldNeedValidate}
+                errors={formErrors}
+              />
+            )}
+          </RegistryConsumer>
         </DialogContent>
         <DialogActions>
           <Button loading={loading} form='createDatasetForm' type='submit' color='primary'>

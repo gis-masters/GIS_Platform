@@ -3,16 +3,16 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Skeleton, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@mui/material';
 import { AddCircle, AddCircleOutlineOutlined } from '@mui/icons-material';
-import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
-import { pluralize } from 'numeralize-ru';
+import { IClassNameProps } from '@bem-react/core';
+import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
+import { pluralize } from 'numeralize-ru';
 
 import { Role } from '../../services/crg/permissions.models';
 import { CrgProject } from '../../services/crg/projects.models';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
-import { ExplorerProps } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
 
 import { TableManagementWidgetItem } from './Item/ConnectionsToProjectsWidget-Item';
@@ -24,7 +24,6 @@ import '!style-loader!css-loader!sass-loader!./Explorer/ConnectionsToProjectsWid
 const cnConnectionsToProjectsWidget = cn('ConnectionsToProjectsWidget');
 
 interface ConnectionsToProjectsWidgetProps extends IClassNameProps {
-  Explorer: React.ComponentType<ExplorerProps>;
   connectedProjects: CrgProject[];
   loading: boolean;
   onConnect: (project: CrgProject) => void;
@@ -37,7 +36,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
   @observable private selectedProject?: CrgProject;
 
   render() {
-    const { Explorer, connectedProjects, loading } = this.props;
+    const { connectedProjects, loading } = this.props;
     const count = connectedProjects?.length || 0;
     const textProjects = `${count} ${pluralize(count, 'проект', 'проекта', 'проектов')}`;
 
@@ -47,7 +46,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
           {!loading ? (
             <>
               Подключено в{' '}
-              {count ? <PseudoLink onClick={this.openCurrentProjectsDialog}>{textProjects}</PseudoLink> : textProjects}{' '}
+              {count ? <PseudoLink onClick={this.openCurrentProjectsDialog}>{textProjects}</PseudoLink> : textProjects}
               <Tooltip title='Подключить в проект'>
                 <IconButton color='primary' size='small' onClick={this.openSelectProjectDialog}>
                   {this.selectProjectDialogOpen ? <AddCircle /> : <AddCircleOutlineOutlined />}
@@ -71,15 +70,19 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
               <Dialog open={this.selectProjectDialogOpen} onClose={this.closeSelectProjectDialog}>
                 <DialogTitle>Выбор проекта</DialogTitle>
                 <DialogContent>
-                  <Explorer
-                    className={cnConnectionsToProjectsWidget('Explorer')}
-                    id='ConnectionsToProjectsWidget'
-                    preset={ExplorerItemType.PROJECTS_ROOT}
-                    onSelect={this.handleSelect}
-                    onOpen={this.handleOpen}
-                    withoutTitle
-                    disabledTester={this.testForDisabled}
-                  />
+                  <RegistryConsumer id='common'>
+                    {({ Explorer }) => (
+                      <Explorer
+                        className={cnConnectionsToProjectsWidget('Explorer')}
+                        id='ConnectionsToProjectsWidget'
+                        preset={ExplorerItemType.PROJECTS_ROOT}
+                        onSelect={this.handleSelect}
+                        onOpen={this.handleOpen}
+                        withoutTitle
+                        disabledTester={this.testForDisabled}
+                      />
+                    )}
+                  </RegistryConsumer>
                 </DialogContent>
                 <DialogActions>
                   <Button color='primary' disabled={!this.selectedProject} onClick={this.submitProjectSelection}>

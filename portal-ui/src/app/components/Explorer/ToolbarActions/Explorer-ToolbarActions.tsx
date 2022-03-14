@@ -13,11 +13,12 @@ const cnExplorerToolbarActions = cn('Explorer', 'ToolbarActions');
 interface ExplorerToolbarActionsProps {
   store: ExplorerStore;
   service: ExplorerService;
+  full: boolean;
 }
 
-export const ExplorerToolbarActions: FC<ExplorerToolbarActionsProps> = observer(({ store, service }) => {
+export const ExplorerToolbarActions: FC<ExplorerToolbarActionsProps> = observer(({ store, service, full }) => {
   const { path } = store;
-  const toolbarActions = path.length > 1 ? getToolbarActions(path[path.length - 2], store, service) : null;
+  const toolbarActions = path.length > 1 ? getToolbarActions(path[path.length - 2], store, service, full) : null;
 
   return toolbarActions ? <div className={cnExplorerToolbarActions()}>{toolbarActions}</div> : null;
 });

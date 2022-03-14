@@ -1,4 +1,5 @@
 import moment from 'moment';
+
 import { getEditUrlFormSchema, parseUrlValue } from '../../components/Form/Form.utils';
 import { FileInfo } from '../files.service';
 import { knownRegex } from '../regexp.service';
@@ -48,6 +49,7 @@ const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
   [PropertyType.CHOICE]: [choiceRequired, choiceValueInOptions],
   [PropertyType.URL]: [urlRequired, urlRegex],
   [PropertyType.FILE]: [filesRequired, filesLoaded],
+  [PropertyType.DOCUMENT]: [jsonArrayRequired],
   [PropertyType.SET]: [],
   [PropertyType.CUSTOM]: []
 };
@@ -82,6 +84,19 @@ export function validateFormValue(formValue: unknown, fields: PropertySchema[]):
 function simpleRequired(value: unknown, { required }: PropertySchema): string[] | undefined {
   if (required && !value) {
     return [messages.required];
+  }
+}
+
+function jsonArrayRequired(value: string, { required }: PropertySchema): string[] | undefined {
+  if (required) {
+    try {
+      const parsed = JSON.parse(value) as unknown[];
+      if (!Array.isArray(parsed) || !parsed.length) {
+        return [messages.required];
+      }
+    } catch {
+      return [messages.required];
+    }
   }
 }
 

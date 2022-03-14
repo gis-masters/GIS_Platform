@@ -12,7 +12,6 @@ import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget'
 import { Adapter, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { ExplorerProps } from '../../Explorer';
 import { DataTableActions } from '../../../DataTableActions/DataTableActions';
 
 declare module '../../Explorer.models' {
@@ -53,17 +52,14 @@ export class ExplorerAdapterTypeTable {
     return item.payload.identifier;
   }
 
-  static async getWidgets(
-    item: ExplorerItemData<DataTable>,
-    Explorer: React.ComponentType<ExplorerProps>
-  ): Promise<ReactNode> {
+  static async getWidgets(item: ExplorerItemData<DataTable>): Promise<ReactNode> {
     const { dataset, identifier, title } = item.payload;
     const url = await getTableRoleAssignmentUrl(dataset, identifier);
     const currentItem = await getDataTable(dataset, identifier);
 
     return (
       <>
-        <ConnectionsTableToProjectsWidget dataTable={item.payload} Explorer={Explorer} />
+        <ConnectionsTableToProjectsWidget dataTable={item.payload} />
         <PermissionsWidget
           url={url}
           title={title}

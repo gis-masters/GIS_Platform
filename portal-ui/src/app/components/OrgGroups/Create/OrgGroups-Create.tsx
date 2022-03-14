@@ -94,7 +94,7 @@ export class OrgGroupsCreate extends Component {
       await groupsService.create(this.groupData);
     } catch (error) {
       this.unlock();
-      this.handleErrors(error);
+      this.handleErrors(error as AxiosError<{ errors: Record<string, string>[] }>);
 
       return;
     }

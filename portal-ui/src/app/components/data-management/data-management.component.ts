@@ -1,7 +1,9 @@
 import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
+import { registry } from '../../services/registry';
 import { DataManagement } from '../DataManagement/DataManagement';
 
 @Component({
@@ -10,7 +12,7 @@ import { DataManagement } from '../DataManagement/DataManagement';
   styleUrls: ['./data-management.component.scss']
 })
 export class DataManagementComponent implements OnInit, OnChanges, OnDestroy {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -25,7 +27,7 @@ export class DataManagementComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(DataManagement);
+    const reactElement = createElement(withRegistry(registry)(DataManagement));
 
     render(reactElement, this.ref.nativeElement);
   }

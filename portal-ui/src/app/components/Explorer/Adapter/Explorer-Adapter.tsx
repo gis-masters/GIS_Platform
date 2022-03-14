@@ -22,7 +22,6 @@ import { ExplorerAdapterTypeProject } from './_type/Explorer-Adapter_type_projec
 import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_projectsRoot';
 import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basemap';
 import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_basemapsRoot';
-import { ExplorerProps } from '../Explorer';
 import { ExplorerService } from '../Explorer.service';
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
@@ -60,12 +59,9 @@ export function getMeta(item: ExplorerItemData): string {
   return adapters[item.type].getMeta(item);
 }
 
-export async function getWidgets(
-  item: ExplorerItemData,
-  Explorer: React.ComponentType<ExplorerProps>
-): Promise<ReactNode> {
+export async function getWidgets(item: ExplorerItemData): Promise<ReactNode> {
   if (adapters[item.type].getWidgets) {
-    return await adapters[item.type].getWidgets(item, Explorer);
+    return await adapters[item.type].getWidgets(item);
   }
 }
 
@@ -194,9 +190,10 @@ export function getChildrenFilterLabel(item: ExplorerItemData): string | undefin
 export function getToolbarActions(
   item: ExplorerItemData,
   store: ExplorerStore,
-  service: ExplorerService
+  service: ExplorerService,
+  full: boolean
 ): ReactNode | undefined {
-  return adapters[item.type].getToolbarActions && adapters[item.type].getToolbarActions(item, store, service);
+  return adapters[item.type].getToolbarActions && adapters[item.type].getToolbarActions(item, store, service, full);
 }
 
 export function getRefreshEmitters(item: ExplorerItemData): Emitter[] {

@@ -23,6 +23,7 @@ export enum PropertyType {
   IDENTITIES = 'identities',
   SET = 'set',
   FIAS = 'fias',
+  DOCUMENT = 'document',
   CUSTOM = 'custom' // frontend only
 }
 
@@ -207,6 +208,13 @@ export interface PropertySchemaFile<T = Record<string, unknown>> extends BasePro
   multiple?: boolean;
 }
 
+export interface PropertySchemaDocument<T = Record<string, unknown>> extends BasePropertySchema<T> {
+  propertyType: PropertyType.DOCUMENT;
+  multiple?: boolean;
+  library?: string;
+  maxDocuments?: number;
+}
+
 export type PropertySchema<T = Record<string, unknown>> =
   | PropertySchemaString<T>
   | PropertySchemaInt<T>
@@ -223,4 +231,5 @@ export type PropertySchema<T = Record<string, unknown>> =
   | PropertySchemaBinary<T>
   | PropertySchemaFias<T>
   | PropertySchemaFile<T>
+  | PropertySchemaDocument<T>
   | PropertySchemaCustom<T>;

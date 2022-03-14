@@ -11,10 +11,12 @@ import {
   EventEmitter,
   Output
 } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { boundMethod } from 'autobind-decorator';
 
+import { registry } from '../../services/registry';
 import { OldPropertySchema } from '../../services/crg/schemaOld.models';
 import { FormControl } from '../Form/Control/Form-Control.composed';
 import { convertSchema } from '../../services/crg/schema.utils';
@@ -59,7 +61,7 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
 
   private renderReactElement() {
     const [convertedProperty] = convertSchema([this.property]);
-    const reactElement = createElement(convertedProperty.readOnly ? FormView : FormControl, {
+    const reactElement = createElement(withRegistry(registry)(convertedProperty.readOnly ? FormView : FormControl), {
       property: convertedProperty,
       type: convertedProperty.propertyType,
       fieldValue: this.value,

@@ -14,8 +14,8 @@ import { Link } from '../../Link/Link';
 import { FilesExt } from '../Ext/Files-Ext';
 import { FilesBaseName } from '../BaseName/Files-BaseName';
 
-import '!style-loader!css-loader!sass-loader!./Files-Name.scss';
 import '!style-loader!css-loader!sass-loader!../NameLink/Files-NameLink.scss';
+import { LookupName } from '../../Lookup/Name/Lookup-Name';
 
 const cnFilesName = cn('Files', 'Name');
 const cnFilesNameLink = cn('Files', 'NameLink');
@@ -49,7 +49,7 @@ export class FilesName extends Component<FilesNameProps> {
         }
         enterDelay={800}
       >
-        <span className={cnFilesName({ numerous })}>
+        <LookupName numerous={numerous} className={cnFilesName()}>
           <Link
             className={cnFilesNameLink()}
             disabled={disabled}
@@ -60,7 +60,7 @@ export class FilesName extends Component<FilesNameProps> {
             <FilesBaseName>{baseName}</FilesBaseName>
             {ext && <FilesExt>.{ext}</FilesExt>}
           </Link>
-        </span>
+        </LookupName>
       </Tooltip>
     );
   }

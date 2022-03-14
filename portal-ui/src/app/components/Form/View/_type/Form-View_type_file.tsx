@@ -7,7 +7,7 @@ import { FileInfo } from '../../../../services/files.service';
 import { Files } from '../../../Files/Files';
 
 import { cnFormView } from '../Form-View';
-import { cnFormControl, FormControlProps } from '../../Control/Form-Control';
+import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 
@@ -18,7 +18,7 @@ class FormViewTypeFile extends Component<FormControlProps> {
     const value = (fieldValue || []) as FileInfo[];
 
     return (
-      <div className={cnFormControl({ inSet }, [className])}>
+      <div className={cnFormView({ inSet }, [className])}>
         {!value.length ? (
           <FormViewValue>—</FormViewValue>
         ) : (

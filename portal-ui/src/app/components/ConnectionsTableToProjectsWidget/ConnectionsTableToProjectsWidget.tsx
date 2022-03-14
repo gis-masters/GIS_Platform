@@ -8,14 +8,12 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { createLayer } from '../../services/geoserver/layers.service';
 import { DataTable, getDataTableConnections } from '../../services/data.service';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
-import { ExplorerProps } from '../Explorer/Explorer';
 import { CrgLayerType, CrgProject } from '../../services/crg/projects.models';
 
 const cnConnectionsTableToProjectsWidget = cn('ConnectionsTableToProjectsWidget');
 
 interface ConnectionsTableToProjectsWidgetProps {
   dataTable: DataTable;
-  Explorer: React.ComponentType<ExplorerProps>;
 }
 
 @observer
@@ -37,12 +35,9 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
   }
 
   render() {
-    const { Explorer } = this.props;
-
     return (
       <ConnectionsToProjectsWidget
         className={cnConnectionsTableToProjectsWidget()}
-        Explorer={Explorer}
         onConnect={this.connectHandler}
         connectedProjects={this.connections}
         loading={this.loading}

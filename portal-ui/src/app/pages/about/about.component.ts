@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
+import { registry } from '../../services/registry';
 import { Help } from '../../components/Help/Help';
 
 @Component({
@@ -9,7 +11,7 @@ import { Help } from '../../components/Help/Help';
   templateUrl: './about.component.html'
 })
 export class AboutComponent implements OnInit, OnDestroy {
-  @ViewChild('helpReact', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('helpReact', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -20,6 +22,6 @@ export class AboutComponent implements OnInit, OnDestroy {
   }
 
   private renderReactElement() {
-    render(createElement(Help), this.ref.nativeElement);
+    render(createElement(withRegistry(registry)(Help)), this.ref.nativeElement);
   }
 }

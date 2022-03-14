@@ -1,0 +1,13 @@
+.Lookup-Item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  min-height: 30px;
+
+  --LookupItemHover: 0;
+
+  &:hover {
+    --LookupItemHover: 1;
+  }
+}

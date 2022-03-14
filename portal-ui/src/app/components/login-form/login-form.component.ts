@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
+import { registry } from '../../services/registry';
 import { LoginForm } from '../LoginForm/LoginForm';
 
 @Component({
@@ -10,7 +12,7 @@ import { LoginForm } from '../LoginForm/LoginForm';
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -25,7 +27,7 @@ export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(LoginForm, {});
+    const reactElement = createElement(withRegistry(registry)(LoginForm));
 
     render(reactElement, this.ref.nativeElement);
   }

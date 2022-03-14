@@ -10,7 +10,6 @@ import { getDescription, getWidgets, getTitle, getId } from '../Adapter/Explorer
 import { ExplorerInfoContent } from '../InfoContent/Explorer-InfoContent';
 import { ExplorerInfoTitle } from '../InfoTitle/Explorer-InfoTitle';
 import { ExplorerActions } from '../Actions/Explorer-Actions';
-import { ExplorerProps } from '../Explorer';
 
 import '!style-loader!css-loader!sass-loader!./Explorer-Info.scss';
 
@@ -18,7 +17,6 @@ export const cnExplorerInfo = cn('Explorer', 'Info');
 
 export interface ExplorerInfoProps extends IClassNameProps {
   store: ExplorerStore;
-  Explorer: React.ComponentType<ExplorerProps>;
 }
 
 @observer
@@ -34,7 +32,7 @@ export class ExplorerInfo extends Component<ExplorerInfoProps> {
         return [selectedItem.type, getId(selectedItem)];
       },
       async () => {
-        this.setWidgets(await getWidgets(this.props.store.selectedItem, this.props.Explorer));
+        this.setWidgets(await getWidgets(this.props.store.selectedItem));
       },
       {
         fireImmediately: true

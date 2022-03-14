@@ -1,0 +1,5 @@
+.Lookup-Actions {
+  transition: opacity 0.3s;
+
+  opacity: calc(0.3 + calc(0.7 * var(--LookupItemHover)));
+}

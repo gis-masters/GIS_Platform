@@ -1,21 +1,20 @@
-import React, { Component, ComponentType } from 'react';
-import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
+import React, { Component } from 'react';
 import { action, observable } from 'mobx';
-import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
+import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, Tooltip } from '@mui/material';
+import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
+import { PropertySchemaUrl } from '../../../services/crg/schema.models';
+import { getEditUrlFormSchema } from '../../Form/Form.utils';
 import { UrlInfo } from '../../Form/Control/_type/Form-Control_type_url';
-import { FormDialogProps } from '../../FormDialog/FormDialog';
-import { Link } from '../../Link/Link';
+import { HtmlContent } from '../../HtmlContent/HtmlContent';
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
 import { IconButton } from '../../IconButton/IconButton';
-import { HtmlContent } from '../../HtmlContent/HtmlContent';
-import { Button } from '../../Button/Button';
+import { FormDialog } from '../../FormDialog/FormDialog';
 import { Loading } from '../../Loading/Loading';
-import { getEditUrlFormSchema } from '../../Form/Form.utils';
-import { PropertySchemaUrl } from '../../../services/crg/schema.models';
-import { FormProps } from '../../Form/Form';
+import { Button } from '../../Button/Button';
+import { Link } from '../../Link/Link';
 
 import '!style-loader!css-loader!sass-loader!../Placeholder/UrlsList-Placeholder.scss';
 import '!style-loader!css-loader!sass-loader!../Button/UrlsList-Button.scss';
@@ -29,8 +28,6 @@ interface UrlFieldItemProps {
   item: UrlInfo;
   editable: boolean;
   property: PropertySchemaUrl;
-  Form: ComponentType<FormProps<Record<string, unknown>>>;
-  FormDialog: ComponentType<FormDialogProps<UrlInfo>>;
 }
 
 const cnUrlsList = cn('UrlsList');
@@ -43,7 +40,7 @@ export class UrlsListItem extends Component<UrlFieldItemProps> {
   @observable private fetching = false;
 
   render() {
-    const { item, FormDialog, property, editable, Form } = this.props;
+    const { item, property, editable } = this.props;
     const { openIn } = property;
     const text = item.text ? item.text : item.url;
 
@@ -84,7 +81,6 @@ export class UrlsListItem extends Component<UrlFieldItemProps> {
 
         {editable && (
           <FormDialog
-            Form={Form}
             open={this.editDialogOpen}
             fields={getEditUrlFormSchema(property)}
             value={item}

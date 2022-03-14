@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { ExplorerProps } from '../Explorer/Explorer';
 import { Basemap } from '../../services/crg/basemaps.models';
 import { CrgProject } from '../../services/crg/projects.models';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
@@ -14,7 +13,6 @@ const cnConnectionsBasemapToProjectsWidget = cn('ConnectionsBasemapToProjectsWid
 
 interface ConnectionsBasemapToProjectsWidgetProps {
   basemap: Basemap;
-  Explorer: React.ComponentType<ExplorerProps>;
 }
 
 @observer
@@ -36,12 +34,9 @@ export class ConnectionsBasemapToProjectsWidget extends Component<ConnectionsBas
   }
 
   render() {
-    const { Explorer } = this.props;
-
     return (
       <ConnectionsToProjectsWidget
         className={cnConnectionsBasemapToProjectsWidget()}
-        Explorer={Explorer}
         onConnect={this.connectHandler}
         connectedProjects={this.connections}
         loading={this.loading}

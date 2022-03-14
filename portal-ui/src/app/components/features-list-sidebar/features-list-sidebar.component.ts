@@ -1,7 +1,9 @@
-import { createElement } from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
+import { registry } from '../../services/registry';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { FeaturesListSidebar } from '../FeaturesListSidebar/FeaturesListSidebar';
 
@@ -13,7 +15,7 @@ import { FeaturesListSidebar } from '../FeaturesListSidebar/FeaturesListSidebar'
 export class FeaturesListSidebarComponent implements OnInit, OnDestroy, OnChanges {
   @Input() features: WfsFeature[];
   @Input() layerTitle: string;
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -28,7 +30,7 @@ export class FeaturesListSidebarComponent implements OnInit, OnDestroy, OnChange
   }
 
   private renderReactElement() {
-    const reactElement = createElement(FeaturesListSidebar);
+    const reactElement = createElement(withRegistry(registry)(FeaturesListSidebar));
 
     render(reactElement, this.ref.nativeElement);
   }

@@ -1,9 +1,11 @@
-import { createElement } from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
-import { ExportValidationReportButton } from '../ExportValidationReportButton/ExportValidationReportButton';
+import { registry } from '../../services/registry';
 import { CrgLayer } from '../../services/crg/projects.models';
+import { ExportValidationReportButton } from '../ExportValidationReportButton/ExportValidationReportButton';
 
 @Component({
   selector: 'crg-export-validation-report-button',
@@ -12,7 +14,7 @@ import { CrgLayer } from '../../services/crg/projects.models';
 })
 export class ExportValidationReportButtonComponent implements OnInit, OnDestroy, OnChanges {
   @Input() layers: CrgLayer[];
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -27,7 +29,7 @@ export class ExportValidationReportButtonComponent implements OnInit, OnDestroy,
   }
 
   private renderReactElement() {
-    const reactElement = createElement(ExportValidationReportButton, { layers: this.layers });
+    const reactElement = createElement(withRegistry(registry)(ExportValidationReportButton), { layers: this.layers });
 
     render(reactElement, this.ref.nativeElement);
   }

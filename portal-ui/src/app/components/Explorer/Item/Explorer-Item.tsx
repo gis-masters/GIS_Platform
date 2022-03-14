@@ -21,7 +21,7 @@ export interface ExplorerItemProps {
   store: ExplorerStore;
   itemRef?: RefObject<HTMLDivElement>;
   onOpen: (item: ExplorerItemData) => void;
-  disabledTester?(item: ExplorerItemData): Promise<boolean>;
+  disabledTester?(item: ExplorerItemData): Promise<boolean> | boolean;
 }
 
 @observer

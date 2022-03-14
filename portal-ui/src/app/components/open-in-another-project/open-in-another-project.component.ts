@@ -1,9 +1,11 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
-import { OpenInAnotherProject } from '../OpenInAnotherProject/OpenInAnotherProject';
+import { registry } from '../../services/registry';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { OpenInAnotherProject } from '../OpenInAnotherProject/OpenInAnotherProject';
 
 @Component({
   selector: 'crg-open-in-another-project',
@@ -12,7 +14,7 @@ import { WfsFeature } from '../../services/geoserver/wfs.models';
 })
 export class OpenInAnotherProjectComponent implements OnInit, OnChanges, OnDestroy {
   @Input() features: [WfsFeature];
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -27,7 +29,7 @@ export class OpenInAnotherProjectComponent implements OnInit, OnChanges, OnDestr
   }
 
   private renderReactElement() {
-    const reactElement = createElement(OpenInAnotherProject, { feature: this.features[0] });
+    const reactElement = createElement(withRegistry(registry)(OpenInAnotherProject), { feature: this.features[0] });
 
     render(reactElement, this.ref.nativeElement);
   }

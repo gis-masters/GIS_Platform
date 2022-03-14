@@ -28,6 +28,7 @@ import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { ExplorerService } from '../../Explorer.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -203,22 +204,29 @@ export class ExplorerAdapterTypeLibrary {
     return 'Фильтр по названию';
   }
 
-  static getToolbarActions(item: ExplorerItemData<DocumentLibrary>, store: ExplorerStore): ReactNode {
+  static getToolbarActions(
+    item: ExplorerItemData<DocumentLibrary>,
+    store: ExplorerStore,
+    service: ExplorerService,
+    full: boolean
+  ): ReactNode {
     return (
-      <>
-        <CreateLibraryElement
-          libraryIdentifier={item.payload.identifier}
-          schemaId={item.payload.schemaId}
-          store={store}
-        />
-        <Link href={`/data-management/library/${item.payload.identifier}/registry`} theme='contents'>
-          <Tooltip title='Открыть реестр'>
-            <IconButton>
-              <TableViewOutlined />
-            </IconButton>
-          </Tooltip>
-        </Link>
-      </>
+      full && (
+        <>
+          <CreateLibraryElement
+            libraryIdentifier={item.payload.identifier}
+            schemaId={item.payload.schemaId}
+            store={store}
+          />
+          <Link href={`/data-management/library/${item.payload.identifier}/registry`} theme='contents'>
+            <Tooltip title='Открыть реестр'>
+              <IconButton>
+                <TableViewOutlined />
+              </IconButton>
+            </Tooltip>
+          </Link>
+        </>
+      )
     );
   }
 

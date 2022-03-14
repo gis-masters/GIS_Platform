@@ -13,12 +13,12 @@ import { FormErrors } from '../../Errors/Form-Errors';
 @observer
 class FormControlTypeFile extends Component<FormControlProps> {
   render() {
-    const { className, inSet, property, errors, fieldValue = [] } = this.props;
+    const { className, inSet, property, errors, fieldValue, fullWidthForOldForm } = this.props;
 
     return (
-      <div className={cnFormControl({ inSet }, [className])}>
+      <div className={cnFormControl({ inSet, fullWidthForOldForm }, [className])}>
         <Files
-          value={fieldValue as FileInfo[]}
+          value={(fieldValue || []) as FileInfo[]}
           property={property as PropertySchemaFile}
           editable
           onChange={this.handleChange}

@@ -14,7 +14,6 @@ import {
   validateFieldValue,
   validateFormValue
 } from '../../services/crg/formValidation.service';
-import { FormDialog } from '../FormDialog/FormDialog';
 
 export { FormField } from './Field/Form-Field';
 export { FormLabel } from './Label/Form-Label';
@@ -24,7 +23,7 @@ export { FormControl } from './Control/Form-Control.composed';
 
 import '!style-loader!css-loader!sass-loader!./Form.scss';
 
-export const cnForm = cn('Form');
+const cnForm = cn('Form');
 
 export interface FormProps<T extends Record<string, unknown>>
   extends Omit<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'ref'> {
@@ -120,8 +119,6 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
           <FormContent<T>
             fields={fields}
             formValue={this.value}
-            Form={Form}
-            FormDialog={FormDialog}
             onFormChange={this.changeHandler}
             onFieldChange={this.fieldChanged}
             onFieldNeedValidate={this.fieldValidate}

@@ -9,6 +9,7 @@ import { allGroups } from '../../stores/AllGroups.store';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { allDataEntitiesService } from '../../services/allDataEntities.service';
 import { allPermissionsService } from '../../services/crg/allPermissions.service';
+import { OrgSchemas } from '../OrgSchemas/OrgSchemas';
 import { OrgGroups } from '../OrgGroups/OrgGroups';
 import { OrgUsers } from '../OrgUsers/OrgUsers';
 import { Loading } from '../Loading/Loading';
@@ -18,6 +19,7 @@ import '!style-loader!css-loader!sass-loader!./OrgAdmin.scss';
 const cnOrgAdmin = cn('OrgAdmin');
 
 const tabs = [
+  [OrgSchemas, 'Схемы данных'],
   [OrgUsers, 'Пользователи'],
   [OrgGroups, 'Группы']
 ];

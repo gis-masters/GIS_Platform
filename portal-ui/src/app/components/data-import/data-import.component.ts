@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
 import { DataImport } from '../DataImport/DataImport';
+import { registry } from '../../services/registry';
 
 @Component({
   selector: 'crg-data-import',
@@ -10,7 +12,7 @@ import { DataImport } from '../DataImport/DataImport';
   styleUrls: ['./data-import.component.scss']
 })
 export class DataImportComponent implements OnInit, OnDestroy, OnChanges {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -25,7 +27,7 @@ export class DataImportComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(DataImport);
+    const reactElement = createElement(withRegistry(registry)(DataImport));
 
     render(reactElement, this.ref.nativeElement);
   }

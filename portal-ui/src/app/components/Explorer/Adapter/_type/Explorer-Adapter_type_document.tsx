@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
-import moment from 'moment';
 import { InsertDriveFile } from '@mui/icons-material';
+import { RegistryConsumer } from '@bem-react/di';
+import moment from 'moment';
 
 import { FileTiff } from '../../../Icons/FileTiff';
 import { currentUser } from '../../../../stores/CurrentUser.store';
@@ -10,7 +11,6 @@ import { Role } from '../../../../services/crg/permissions.models';
 import { PropertyType } from '../../../../services/crg/schema.models';
 import { schemaService } from '../../../../services/crg/schema.service';
 import { getLibraryRecord, LibraryRecord } from '../../../../services/crg/doc-library.service';
-import { LibraryDocumentActions } from '../../../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { convertSchema, getSchemaWithAppliedContentType } from '../../../../services/crg/schema.utils';
 import { DocumentActionsWidget } from '../../../DocumentActionsWidget/DocumentActionsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
@@ -96,6 +96,10 @@ export class ExplorerAdapterTypeDocument {
   }
 
   static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
-    return <LibraryDocumentActions as='iconButton' hideOpen document={item.payload} />;
+    return (
+      <RegistryConsumer id='common'>
+        {({ LibraryDocumentActions }) => <LibraryDocumentActions as='iconButton' hideOpen document={item.payload} />}
+      </RegistryConsumer>
+    );
   }
 }

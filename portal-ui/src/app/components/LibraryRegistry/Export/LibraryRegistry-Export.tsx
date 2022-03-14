@@ -19,7 +19,7 @@ import { formatDate } from '../../../services/util/date.util';
 import { PageOptions } from '../../../services/models';
 import { MenuIconButton } from '../../MenuIconButton/MenuIconButton';
 import { XTableColumn } from '../../XTable/XTable';
-import { FileIcon } from '../../Icons/FileIcon';
+import { FileIcon } from '../../FileIcon/FileIcon';
 import { sleep } from '../../../services/util/sleep';
 
 const cnLibraryRegistryExport = cn('LibraryRegistry', 'Export');

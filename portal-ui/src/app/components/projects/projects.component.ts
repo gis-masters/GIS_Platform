@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
+import { registry } from '../../services/registry';
 import { Projects } from '../Projects/Projects';
 
 @Component({
@@ -10,7 +12,7 @@ import { Projects } from '../Projects/Projects';
   styleUrls: ['./projects.component.scss']
 })
 export class ProjectsComponent implements OnDestroy, OnInit {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -25,7 +27,7 @@ export class ProjectsComponent implements OnDestroy, OnInit {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(Projects);
+    const reactElement = createElement(withRegistry(registry)(Projects));
 
     render(reactElement, this.ref.nativeElement);
   }

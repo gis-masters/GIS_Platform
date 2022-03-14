@@ -1,15 +1,17 @@
 import { Component, OnInit, OnDestroy, OnChanges, ElementRef, ViewChild } from '@angular/core';
-import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
+import { registry } from '../../services/registry';
 import { Footer } from '../Footer/Footer';
 
 @Component({
   selector: 'crg-footer',
-  template: '<div class="fooret" #react></div>'
+  template: '<div class="footer" #react></div>'
 })
 export class FooterComponent implements OnInit, OnDestroy, OnChanges {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -24,7 +26,7 @@ export class FooterComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(Footer);
+    const reactElement = createElement(withRegistry(registry)(Footer));
 
     render(reactElement, this.ref.nativeElement);
   }

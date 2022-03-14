@@ -22,7 +22,6 @@ import { formatDate } from '../../services/util/date.util';
 import { PageOptions } from '../../services/models';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
-import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
 import { FilterType } from '../XTable/Filter/XTable-Filter';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { XTable, XTableColumn } from '../XTable/XTable';
@@ -182,7 +181,7 @@ export class LibraryRegistry extends Component {
         description: property.description,
         sortable: sortableTypes.has(property.propertyType),
         filterable: filterableTypes.has(property.propertyType) && property.name !== 'id',
-        ...(typesCols[property.propertyType] || {}),
+        ...typesCols[property.propertyType],
         filterOptions: property.propertyType === PropertyType.CHOICE ? property.options : undefined,
         headerCellProps: { style: property.minWidth ? { minWidth: String(property.minWidth) + 'px' } : null }
       }))
@@ -201,14 +200,7 @@ export class LibraryRegistry extends Component {
   }
 
   private renderActions({ rowData }: { rowData: LibraryRecord }): ReactElement {
-    return (
-      <LibraryDocumentActions
-        className={cnLibraryRegistry('Actions')}
-        document={rowData}
-        as='menu'
-        LibraryDocument={LibraryDocument}
-      />
-    );
+    return <LibraryDocumentActions className={cnLibraryRegistry('Actions')} document={rowData} as='menu' />;
   }
 
   @boundMethod

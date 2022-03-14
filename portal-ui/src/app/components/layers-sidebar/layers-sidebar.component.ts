@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
+import { registry } from '../../services/registry';
 import { LayersSidebar } from '../LayersSidebar/LayersSidebar';
 
 @Component({
@@ -10,7 +12,7 @@ import { LayersSidebar } from '../LayersSidebar/LayersSidebar';
   styleUrls: ['./layers-sidebar.component.scss']
 })
 export class LayersSidebarComponent implements OnInit, OnDestroy, OnChanges {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -25,7 +27,7 @@ export class LayersSidebarComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(LayersSidebar, {});
+    const reactElement = createElement(withRegistry(registry)(LayersSidebar));
 
     render(reactElement, this.ref.nativeElement);
   }

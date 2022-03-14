@@ -1,13 +1,13 @@
-import React, { Component, ComponentType } from 'react';
+import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { PropertySchemaUrl, PropertyType } from '../../../../services/crg/schema.models';
+import { UrlsList } from '../../../UrlsList/UrlsList';
+
 import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormErrors } from '../../Errors/Form-Errors';
-import { UrlsList } from '../../../UrlsList/UrlsList';
-import { FormDialogProps } from '../../../FormDialog/FormDialog';
 
 export interface UrlInfo extends Record<string, unknown> {
   url: string;
@@ -17,13 +17,11 @@ export interface UrlInfo extends Record<string, unknown> {
 @observer
 class FormControlTypeUrl extends Component<FormControlProps> {
   render() {
-    const { className, inSet, property, errors, FormDialog, fieldValue, Form, fullWidthForOldForm } = this.props;
+    const { className, inSet, property, errors, fieldValue, fullWidthForOldForm } = this.props;
 
     return (
       <div className={cnFormControl({ inSet, fullWidthForOldForm }, [className])}>
         <UrlsList
-          Form={Form}
-          FormDialog={FormDialog as ComponentType<FormDialogProps<UrlInfo>>}
           value={fieldValue as string}
           property={property as PropertySchemaUrl}
           editable

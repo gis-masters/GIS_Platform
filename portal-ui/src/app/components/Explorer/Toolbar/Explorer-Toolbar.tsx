@@ -17,16 +17,17 @@ interface ExplorerToolbarProps {
   store: ExplorerStore;
   service: ExplorerService;
   onChange: () => void;
+  full: boolean;
 }
 
-export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({ store, service, onChange }) => {
+export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({ store, service, onChange, full }) => {
   return (
     <div className={cnExplorerToolbar()}>
       <ExplorerFilter store={store} onChange={onChange} />
       <ExplorerSort store={store} onChange={onChange} />
       <ExplorerPageSize store={store} onChange={onChange} />
       <ExplorerToolbarDivider />
-      <ExplorerToolbarActions service={service} store={store} />
+      <ExplorerToolbarActions service={service} store={store} full={full} />
     </div>
   );
 };

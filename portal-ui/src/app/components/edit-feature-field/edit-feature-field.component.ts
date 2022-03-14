@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
-import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
 import { EditedField, ValueType } from '../../services/crg/schemaOld.models';
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { CrgLayer } from '../../services/crg/projects.models';
+import { registry } from '../../services/registry';
 
 @Component({
   selector: 'crg-edit-feature-field',
@@ -19,7 +21,7 @@ export class EditFeatureFieldComponent implements OnInit, OnDestroy, OnChanges {
   @Input() isNew: boolean;
   @Input() isReadOnly: CrgLayer;
   @Input() layer?: CrgLayer;
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -34,7 +36,7 @@ export class EditFeatureFieldComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(EditFeatureField, {
+    const reactElement = createElement(withRegistry(registry)(EditFeatureField), {
       type: this.type,
       field: this.field,
       featureInfo: {

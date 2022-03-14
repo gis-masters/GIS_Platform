@@ -1,4 +1,4 @@
-import React, { Component, ComponentType } from 'react';
+import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, computed, observable } from 'mobx';
@@ -11,16 +11,13 @@ import { getEditUrlFormSchema, parseUrlValue } from '../Form/Form.utils';
 import { UrlInfo } from '../Form/Control/_type/Form-Control_type_url';
 import { PropertySchemaUrl } from '../../services/crg/schema.models';
 import { FormViewValue } from '../Form/ViewValue/Form-ViewValue';
-import { FormDialogProps } from '../FormDialog/FormDialog';
-import { FormProps } from '../Form/Form';
+import { FormDialog } from '../FormDialog/FormDialog';
 
 import { UrlsListItem } from './Item/UrlsList-Item';
 
 interface UrlFieldItemProps extends IClassNameProps {
   value: string;
   editable?: boolean;
-  FormDialog?: ComponentType<FormDialogProps<UrlInfo>>;
-  Form?: ComponentType<FormProps<Record<string, unknown>>>;
   property: PropertySchemaUrl;
   onChange?: (value: string) => void;
 }
@@ -32,15 +29,13 @@ export class UrlsList extends Component<UrlFieldItemProps> {
   @observable private createDialogOpen = false;
 
   render() {
-    const { className, property, FormDialog, editable, Form } = this.props;
+    const { className, property, editable } = this.props;
 
     return (
       <div className={cnUrlsList(null, [className])}>
         {!this.value.length && !editable && <FormViewValue>—</FormViewValue>}
         {this.value?.map((item, index) => (
           <UrlsListItem
-            FormDialog={FormDialog}
-            Form={Form}
             key={index}
             item={item}
             index={index}
@@ -63,7 +58,6 @@ export class UrlsList extends Component<UrlFieldItemProps> {
 
         {editable && (
           <FormDialog
-            Form={Form}
             open={this.createDialogOpen}
             fields={getEditUrlFormSchema(property)}
             value={{ url: '', text: '' }}

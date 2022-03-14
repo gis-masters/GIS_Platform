@@ -11,7 +11,6 @@ import { getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.
 import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { schemaService } from '../../services/crg/schema.service';
 import { Role } from '../../services/crg/permissions.models';
-import { LibraryDocumentProps } from '../LibraryDocument/LibraryDocument';
 
 import { ActionsItemVariant } from './Item/LibraryDocumentActions-Item';
 import { LibraryDocumentActionsSed } from './Sed/LibraryDocumentActions-Sed';
@@ -34,7 +33,6 @@ export interface LibraryDocumentActionsProps extends IClassNameProps {
   forDialog?: boolean;
   onDialogClose?(): void;
   ContainerComponent?: ComponentType;
-  LibraryDocument?: ComponentType<LibraryDocumentProps>;
 }
 
 @observer
@@ -54,30 +52,14 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
   }
 
   render() {
-    const {
-      as,
-      ContainerComponent = 'div',
-      document,
-      className,
-      hideOpen,
-      LibraryDocument,
-      forDialog,
-      onDialogClose
-    } = this.props;
+    const { as, ContainerComponent = 'div', document, className, hideOpen, forDialog, onDialogClose } = this.props;
     const canEdit = [Role.CONTRIBUTOR, Role.OWNER].includes(this.document?.role) || currentUser.isAdmin;
     const canDelete = this.document?.role === Role.OWNER || currentUser.isAdmin;
     const hasBinary = this.fields?.some(({ propertyType }) => propertyType === PropertyType.BINARY);
 
     return (
       <ContainerComponent className={cnLibraryDocumentActions({ forDialog }, [className])}>
-        {!hideOpen && (
-          <LibraryDocumentActionsOpen
-            document={this.document || document}
-            as={as}
-            LibraryDocumentActions={LibraryDocumentActions}
-            LibraryDocument={LibraryDocument}
-          />
-        )}
+        {!hideOpen && <LibraryDocumentActionsOpen document={this.document || document} as={as} />}
         {canEdit && <LibraryDocumentActionsEdit document={this.document || document} fields={this.fields} as={as} />}
         <LibraryDocumentActionsShare document={this.document || document} as={as} />
         <LibraryDocumentActionsRegister document={this.document || document} as={as} />

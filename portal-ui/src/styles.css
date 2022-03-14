@@ -99,6 +99,7 @@ body.global-crosshair-cursor * {
   --gray-dark: #343a40;
   --primary: var(--blue);
   --light-blue: rgb(25 118 210 / 8%);
+  --light-gray: rgb(0 0 0 / 4%);
   --disabled: rgb(0 0 0 / 26%);
   --light: #f8f9fa;
 }

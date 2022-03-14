@@ -20,6 +20,7 @@ export enum ValueType {
   BINARY = 'BINARY',
   FIAS = 'FIAS',
   FILE = 'FILE',
+  DOCUMENT = 'DOCUMENT',
   SET = 'SET', // пока что frontend only
   CHECKBOX = 'CHECKBOX', // пока что frontend only
   CUSTOM = 'CUSTOM' // frontend only
@@ -145,6 +146,12 @@ export interface OldPropertyFileSchema<T extends Record<string, unknown> = Recor
   multiple?: boolean;
 }
 
+export interface OldPropertyDocumentSchema<T extends Record<string, unknown> = Record<string, unknown>>
+  extends OldBasePropertySchema<T> {
+  valueType: ValueType.DOCUMENT;
+  multiple?: boolean;
+}
+
 export interface OldPropertySchemaCustom<T extends Record<string, unknown> = Record<string, unknown>>
   extends OldBasePropertySchema<T> {
   valueType: ValueType.CUSTOM;
@@ -168,7 +175,8 @@ export type OldPropertySchema<T extends Record<string, unknown> = Record<string,
   | OldPropertySchemaUrl<T>
   | OldPropertySchemaCustom<T>
   | OldPropertyFiasSchema<T>
-  | OldPropertyFileSchema<T>;
+  | OldPropertyFileSchema<T>
+  | OldPropertyDocumentSchema<T>;
 
 export enum Updateability {
   CREATE_ONLY = 'CREATE_ONLY',

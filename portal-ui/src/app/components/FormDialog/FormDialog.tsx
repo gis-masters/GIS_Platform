@@ -1,7 +1,8 @@
-import React, { Component, ComponentType, ReactNode } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
@@ -11,7 +12,6 @@ import { getDefaultValues } from '../../services/crg/formValidation.service';
 import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
 import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
 import { Button, ButtonProps } from '../Button/Button';
-import { FormProps } from '../Form/Form';
 
 const cnFormDialog = cn('FormDialog');
 
@@ -23,7 +23,6 @@ export interface FormDialogProps<T extends Record<string, unknown>> {
   onClose(): void;
   onSuccess?(): void;
   onError?(): void;
-  Form: ComponentType<FormProps<Partial<T>>>;
   additionalAction?: ReactNode;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   actionFunction: (value: T) => Promise<void> | void;
@@ -44,38 +43,41 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
       value = getDefaultValues(fields),
       additionalAction,
       actionButtonProps = {},
-      Form,
       actionFunction
     } = this.props;
     const htmlId = generateRandomId();
 
     return (
-      <Dialog PaperProps={{ className: cnFormDialog() }} open={open} onClose={this.close} fullWidth maxWidth='md'>
-        {title && <DialogTitle>{title}</DialogTitle>}
-        <DialogContent className='scroll'>
-          <Form
-            id={htmlId}
-            className={cnFormDialog()}
-            fields={fields}
-            value={value}
-            auto
-            onFormSubmit={this.submitHandler}
-            onActionSuccess={this.successHandler}
-            onActionError={this.errorHandler}
-            actionFunction={actionFunction}
-            invoke={this.formInvoke}
-          />
-        </DialogContent>
-        <DialogActions>
-          <DialogActionsLeft>{additionalAction}</DialogActionsLeft>
-          <DialogActionsRight>
-            <Button form={htmlId} color='primary' loading={this.busy} type='submit' {...actionButtonProps}>
-              {actionButtonProps.children || 'Отправить'}
-            </Button>
-            <Button onClick={this.close}>Отмена</Button>
-          </DialogActionsRight>
-        </DialogActions>
-      </Dialog>
+      <RegistryConsumer id='common'>
+        {({ Form }) => (
+          <Dialog PaperProps={{ className: cnFormDialog() }} open={open} onClose={this.close} fullWidth maxWidth='md'>
+            {title && <DialogTitle>{title}</DialogTitle>}
+            <DialogContent className='scroll'>
+              <Form
+                id={htmlId}
+                className={cnFormDialog()}
+                fields={fields}
+                value={value}
+                auto
+                onFormSubmit={this.submitHandler}
+                onActionSuccess={this.successHandler}
+                onActionError={this.errorHandler}
+                actionFunction={actionFunction}
+                invoke={this.formInvoke}
+              />
+            </DialogContent>
+            <DialogActions>
+              <DialogActionsLeft>{additionalAction}</DialogActionsLeft>
+              <DialogActionsRight>
+                <Button form={htmlId} color='primary' loading={this.busy} type='submit' {...actionButtonProps}>
+                  {actionButtonProps.children || 'Отправить'}
+                </Button>
+                <Button onClick={this.close}>Отмена</Button>
+              </DialogActionsRight>
+            </DialogActions>
+          </Dialog>
+        )}
+      </RegistryConsumer>
     );
   }
 

@@ -7,20 +7,20 @@ import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 import { v4 as uuid } from 'uuid';
 
-import { createFile, FileInfo } from '../../services/files.service';
 import { PropertySchemaFile } from '../../services/crg/schema.models';
+import { createFile, FileInfo } from '../../services/files.service';
 import { sleep } from '../../services/util/sleep';
 import { FileInput } from '../FileInput/FileInput';
+import { LookupStatusType } from '../Lookup/Status/Lookup-Status';
+import { LookupList } from '../Lookup/List/Lookup-List';
+import { LookupAdd } from '../Lookup/Add/Lookup-Add';
+import { Lookup } from '../Lookup/Lookup';
 
 import { FilesItem } from './Item/Files-Item';
-import { FilesList } from './List/Files-List';
-import { FilesAction } from './Action/Files-Action';
 
 const cnFiles = cn('Files');
 
-export type FileStatusType = 'loading' | 'success' | 'successFadeOut' | 'error' | 'new' | 'loaded';
-
-interface FileListProps {
+interface FilesProps {
   value: FileInfo[];
   property: PropertySchemaFile;
   editable?: boolean;
@@ -29,15 +29,15 @@ interface FileListProps {
 
 interface NewbieFile {
   id: string;
-  status: FileStatusType;
   file: File;
-  error?: string;
+  status: LookupStatusType;
+  statusText: string;
 }
 
 const defaultMaxFiles = 200;
 
 @observer
-export class Files extends Component<FileListProps> {
+export class Files extends Component<FilesProps> {
   private uploadingNow: FileInfo | null = null;
   private uploadPool: FileInfo[] = [];
   @observable private newbies: NewbieFile[] = [];
@@ -48,9 +48,9 @@ export class Files extends Component<FileListProps> {
     const numerous = value.length > 1;
 
     return (
-      <div className={cnFiles()}>
+      <Lookup className={cnFiles()}>
         {!!value.length && (
-          <FilesList multiple={multiple} numerous={numerous} editable={editable}>
+          <LookupList multiple={multiple} numerous={numerous} editable={editable}>
             {value.map((item, i) => {
               const newbie = this.getNewbie(item.id);
 
@@ -62,16 +62,16 @@ export class Files extends Component<FileListProps> {
                   editable={editable}
                   status={newbie?.status}
                   file={newbie?.file}
-                  error={newbie?.error}
+                  statusText={newbie?.statusText}
                   numerous={numerous}
                   multiple={multiple}
                 />
               );
             })}
-          </FilesList>
+          </LookupList>
         )}
         {editable && value.length < this.max && (
-          <FilesAction filled={Boolean(value.length)}>
+          <LookupAdd filled={Boolean(value.length)}>
             <FileInput
               multiple={multiple}
               onChange={this.addHandler}
@@ -81,9 +81,9 @@ export class Files extends Component<FileListProps> {
               iconButton={!value.length}
               buttonProps={{ variant: 'text', startIcon: <AddCircleOutline />, color: 'primary' }}
             />
-          </FilesAction>
+          </LookupAdd>
         )}
-      </div>
+      </Lookup>
     );
   }
 
@@ -118,7 +118,7 @@ export class Files extends Component<FileListProps> {
       const file = selectedFiles.item(i);
       const newItem: FileInfo = { id: uuid(), title: file.name, size: file.size, notLoaded: true };
       newFileItems.push(newItem);
-      this.addNewbie({ id: newItem.id, status: 'new', file });
+      this.addNewbie({ id: newItem.id, status: 'new', statusText: 'Ожидает загрузки', file });
     }
 
     const newValue = [...value, ...newFileItems];
@@ -134,7 +134,7 @@ export class Files extends Component<FileListProps> {
 
     const fileInfo = this.uploadPool.shift();
     this.uploadingNow = fileInfo;
-    this.editNewbie(fileInfo.id, { status: 'loading' });
+    this.editNewbie(fileInfo.id, { status: 'loading', statusText: 'Загружается' });
 
     try {
       const newFileInfo = await createFile(this.getNewbie(fileInfo.id).file);
@@ -145,7 +145,7 @@ export class Files extends Component<FileListProps> {
       const err = error as AxiosError<{ message: string }>;
       this.editNewbie(fileInfo.id, {
         status: 'error',
-        error: err?.response?.data?.message || err.message || 'Ошибка загрузки'
+        statusText: err?.response?.data?.message || err.message || 'Ошибка загрузки'
       });
     }
 
@@ -156,11 +156,11 @@ export class Files extends Component<FileListProps> {
   }
 
   private async showSuccess(id: string) {
-    this.editNewbie(id, { status: 'success' });
+    this.editNewbie(id, { status: 'success', statusText: 'Загрузка успешно завершена' });
     await sleep(2000);
     this.editNewbie(id, { status: 'successFadeOut' });
     await sleep(1000);
-    this.editNewbie(id, { status: 'loaded' });
+    this.editNewbie(id, { status: 'normal' });
   }
 
   private updateItem(id: string, patch: Partial<FileInfo>) {
@@ -193,7 +193,7 @@ export class Files extends Component<FileListProps> {
   }
 
   @action
-  private editNewbie(newbieId: string, { id, status, file, error }: Partial<NewbieFile>) {
+  private editNewbie(newbieId: string, { id, status, file, statusText: error }: Partial<NewbieFile>) {
     const newbie = this.getNewbie(newbieId);
 
     if (newbie) {
@@ -207,7 +207,7 @@ export class Files extends Component<FileListProps> {
         newbie.file = file;
       }
       if (error) {
-        newbie.error = error;
+        newbie.statusText = error;
       }
     }
   }

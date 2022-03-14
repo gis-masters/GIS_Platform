@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
+import { boundMethod } from 'autobind-decorator';
+import { RegistryConsumer } from '@bem-react/di';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertySchemaSet, PropertyType } from '../../../../services/crg/schema.models';
@@ -16,7 +17,7 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
   FormControlProps<T>
 > {
   render() {
-    const { htmlId, className, property, FormControl, fieldValue = '', errors, variant = 'standard' } = this.props;
+    const { htmlId, className, property, fieldValue = '', errors, variant = 'standard' } = this.props;
     const { fieldsSet } = property as PropertySchemaSet;
     const valueTyped = fieldValue as unknown as Record<string, unknown>;
 
@@ -25,19 +26,22 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
         <div className={className}>
           {fieldsSet.map((subProperty, i) =>
             !subProperty.hidden ? (
-              <FormControl
-                htmlId={!i ? htmlId : undefined}
-                key={subProperty.name}
-                property={subProperty}
-                type={subProperty.propertyType}
-                onChange={this.fieldChanged}
-                fieldValue={valueTyped[subProperty.name]}
-                FormControl={FormControl}
-                variant={variant}
-                inSet
-              >
-                {fieldValue}
-              </FormControl>
+              <RegistryConsumer id='common'>
+                {({ FormControl }) => (
+                  <FormControl
+                    htmlId={!i ? htmlId : undefined}
+                    key={subProperty.name}
+                    property={subProperty}
+                    type={subProperty.propertyType}
+                    onChange={this.fieldChanged}
+                    fieldValue={valueTyped[subProperty.name]}
+                    variant={variant}
+                    inSet
+                  >
+                    {fieldValue}
+                  </FormControl>
+                )}
+              </RegistryConsumer>
             ) : (
               <FormHiddenField key={i} name={String(subProperty.name)} value={valueTyped[subProperty.name]} />
             )
@@ -54,7 +58,7 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
     const valueTyped = fieldValue as unknown as Record<string, unknown>;
 
     onChange({
-      value: { ...valueTyped, ...{ [propertyName]: value } },
+      value: { ...valueTyped, [propertyName]: value },
       propertyName: property.name
     });
   }

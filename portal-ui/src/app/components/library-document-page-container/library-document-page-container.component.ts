@@ -1,7 +1,9 @@
 import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
+import { registry } from '../../services/registry';
 import { LibraryDocumentPageContainer } from '../LibraryDocumentPageContainer/LibraryDocumentPageContainer';
 
 @Component({
@@ -10,7 +12,7 @@ import { LibraryDocumentPageContainer } from '../LibraryDocumentPageContainer/Li
   styleUrls: ['./library-document-page-container.component.scss']
 })
 export class LibraryDocumentPageContainerComponent implements OnInit, OnChanges, OnDestroy {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -25,7 +27,7 @@ export class LibraryDocumentPageContainerComponent implements OnInit, OnChanges,
   }
 
   private renderReactElement() {
-    const reactElement = createElement(LibraryDocumentPageContainer);
+    const reactElement = createElement(withRegistry(registry)(LibraryDocumentPageContainer));
 
     render(reactElement, this.ref.nativeElement);
   }

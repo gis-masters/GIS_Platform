@@ -1,7 +1,9 @@
 import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import { withRegistry } from '@bem-react/di';
 
 import '../src/styles.css';
+import { registry } from '../src/app/services/registry';
 import { Toast } from '../src/app/components/Toast/Toast';
 import { LoginFormDialog } from '../src/app/components/LoginFormDialog/LoginFormDialog';
 
@@ -17,13 +19,16 @@ const toastProps = {
   pauseOnHover: true
 };
 
+const Wrapper = ({ children }) => <div className='Wrapper'>{children}</div>;
+const WrapperWithRegistry = withRegistry(registry)(Wrapper);
+
 export const decorators = [
   Story => (
-    <>
+    <WrapperWithRegistry>
       <Story />
       <LoginFormDialog />
       <ToastContainer {...toastProps} />
-    </>
+    </WrapperWithRegistry>
   )
 ];
 

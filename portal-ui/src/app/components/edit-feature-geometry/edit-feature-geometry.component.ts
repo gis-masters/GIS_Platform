@@ -1,8 +1,10 @@
 import { Component, Input, ElementRef, OnDestroy, OnChanges, OnInit, ViewChild } from '@angular/core';
-import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { registry } from '../../services/registry';
 import { EditFeatureGeometry } from '../EditFeatureGeometry/EditFeatureGeometry';
 
 @Component({
@@ -13,7 +15,7 @@ import { EditFeatureGeometry } from '../EditFeatureGeometry/EditFeatureGeometry'
 export class EditFeatureGeometryComponent implements OnInit, OnDestroy, OnChanges {
   @Input() store: EditFeatureGeometryStore;
   @Input() readOnly: boolean;
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -28,7 +30,10 @@ export class EditFeatureGeometryComponent implements OnInit, OnDestroy, OnChange
   }
 
   private renderReactElement() {
-    const reactElement = createElement(EditFeatureGeometry, { store: this.store, readOnly: this.readOnly });
+    const reactElement = createElement(withRegistry(registry)(EditFeatureGeometry), {
+      store: this.store,
+      readOnly: this.readOnly
+    });
     render(reactElement, this.ref.nativeElement);
   }
 }

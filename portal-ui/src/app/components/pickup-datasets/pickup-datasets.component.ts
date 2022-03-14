@@ -1,8 +1,10 @@
-import { createElement } from 'react';
-import { boundMethod } from 'autobind-decorator';
-import { render, unmountComponentAtNode } from 'react-dom';
 import { Component, ElementRef, EventEmitter, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { render, unmountComponentAtNode } from 'react-dom';
+import { boundMethod } from 'autobind-decorator';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
+import { registry } from '../../services/registry';
 import { Dataset } from '../../services/data.service';
 import { PickupDatasets } from '../PickupDatasets/PickupDatasets';
 
@@ -12,7 +14,7 @@ import { PickupDatasets } from '../PickupDatasets/PickupDatasets';
 })
 export class PickupDatasetsComponent implements OnInit, OnChanges, OnDestroy {
   @Output() datasetSelect = new EventEmitter<Dataset>();
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -27,7 +29,9 @@ export class PickupDatasetsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(PickupDatasets, { onDatasetSelected: this.onDatasetSelected });
+    const reactElement = createElement(withRegistry(registry)(PickupDatasets), {
+      onDatasetSelected: this.onDatasetSelected
+    });
 
     render(reactElement, this.ref.nativeElement);
   }

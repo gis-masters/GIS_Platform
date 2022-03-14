@@ -52,7 +52,7 @@ const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData[] }> = {
 export interface ExplorerProps extends IClassNameProps {
   id: string;
   title?: string;
-  items?: ExplorerItemData[]; // [0] - root
+  path?: ExplorerItemData[]; // [0] - root
   preset?: keyof typeof presets;
   withInfoPanel?: boolean;
   withoutTitle?: boolean;
@@ -60,7 +60,7 @@ export interface ExplorerProps extends IClassNameProps {
   urlChangeEnabled?: boolean;
   onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   onOpen?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
-  disabledTester?(item: ExplorerItemData): Promise<boolean>;
+  disabledTester?(item: ExplorerItemData): Promise<boolean> | boolean;
 }
 
 @observer
@@ -85,12 +85,14 @@ export class Explorer extends Component<ExplorerProps> {
     const { onSelect, urlChangeEnabled } = this.props;
 
     // назад и вперёд по истории браузера
-    services.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe(async (event: RouterEvent) => {
-      if (event instanceof NavigationStart && !this.store.restoringFromUrl && !this.savingToUrl) {
-        const url = new URL(location.origin + event.url);
-        await this.restoreStateFromUrl(url);
-      }
-    });
+    if (urlChangeEnabled) {
+      services.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe(async (event: RouterEvent) => {
+        if (event instanceof NavigationStart && !this.store.restoringFromUrl && !this.savingToUrl) {
+          const url = new URL(location.origin + event.url);
+          await this.restoreStateFromUrl(url);
+        }
+      });
+    }
 
     let prevOpenedItem: ExplorerItemData;
     let prevPath: ExplorerItemData[] = [];
@@ -223,8 +225,13 @@ export class Explorer extends Component<ExplorerProps> {
       >
         {!withoutTitle && <ExplorerTitle store={this.store} onOpen={this.openItem} />}
         <ExplorerList store={this.store} onOpen={this.openItem} disabledTester={disabledTester} />
-        <ExplorerToolbar service={this.service} store={this.store} onChange={this.service.refreshItems} />
-        {withInfoPanel && <ExplorerInfo store={this.store} Explorer={Explorer} />}
+        <ExplorerToolbar
+          service={this.service}
+          store={this.store}
+          onChange={this.service.refreshItems}
+          full={withInfoPanel}
+        />
+        {withInfoPanel && <ExplorerInfo store={this.store} />}
         <ExplorerPagination store={this.store} onChange={this.service.paginate} />
         <Loading visible={this.store.loading || this.store.restoringFromUrl} noBackdrop />
       </div>
@@ -232,13 +239,12 @@ export class Explorer extends Component<ExplorerProps> {
   }
 
   private init(props: ExplorerProps) {
-    const { items, preset } = props;
+    const { path, preset } = props;
 
     if (preset) {
       this.store.setPath(presets[preset]);
     } else {
-      this.store.setPath([items.length ? items[0] : emptyItem]);
-      this.store.setItems(items);
+      this.store.setPath(path.length ? path : [emptyItem]);
     }
   }
 
@@ -332,7 +338,7 @@ export class Explorer extends Component<ExplorerProps> {
 
     if (url.searchParams.get(`path_${id}`)) {
       const urlExplorerPath = url.searchParams.get(`path_${id}`);
-      const pathUrlItems = chunk(JSON.parse(urlExplorerPath), 2) as ExplorerUrlItem[];
+      const pathUrlItems = chunk(JSON.parse(urlExplorerPath) as string[], 2) as ExplorerUrlItem[];
       const path = this.store.path.slice(0, 1);
 
       for (let i = 1; i < pathUrlItems.length; i++) {

@@ -9,7 +9,6 @@ import { CoordinateEdited, WfsFeature } from '../geoserver/wfs.models';
 import { getEmptyGeometry } from '../geoserver/wfs.util';
 import { http } from '../http.service';
 import { getSchemaUrl } from '../server-urls.service';
-import { services } from '../services';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { CrgLayer } from './projects.models';
 import {
@@ -153,11 +152,7 @@ class SchemaService {
     const { tableName, schemaId } = layer;
     const schema = await this.getSchema(schemaId);
 
-    const properties = schema.properties.reduce((acc: { [key: string]: null }, propertySchema) => {
-      acc[propertySchema.name.toLowerCase()] = null;
-
-      return acc;
-    }, {});
+    const properties = Object.fromEntries(schema.properties.map(({ name }) => [name.toLowerCase(), null]));
 
     return {
       type: 'Feature',
@@ -203,7 +198,9 @@ class SchemaService {
 
   async isReadOnly(schemaId: string): Promise<boolean> {
     try {
-      return (await this.getSchema(schemaId)).readOnly;
+      const schema = await this.getSchema(schemaId);
+
+      return schema.readOnly;
     } catch {
       return true;
     }
@@ -266,7 +263,6 @@ class SchemaService {
 
   private async fetch(fetchAll?: boolean): Promise<void> {
     this.fetchingNow++;
-    await services.provided;
     const payload = fetchAll ? [] : this.fetchingPool.splice(0);
     const params = { schemaIds: payload.join(',') };
     const response = await http.get<(OldFeatureDescription | null)[]>(await getSchemaUrl(), { params });
@@ -280,7 +276,6 @@ class SchemaService {
     response.forEach(schema => {
       if (!schema) {
         Toast.error('Возникла ошибка при загрузке схемы');
-        services.logger.error('Failed schema', schema);
 
         return;
       }

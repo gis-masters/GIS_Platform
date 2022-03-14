@@ -35,14 +35,16 @@ public class SimplePropertyDto {
     private String whiteSpace;
     private String pattern;
     private String patternDescription = "";
-
+    private String accept;
+    private String library;
+    
     private String dateFormat;
     private String displayMode;
     
     private String searchMode;
-
+    
     private int sequenceNumber;
-
+    
     private Integer length = -1;
     private Integer minLength = -1;
     private Integer maxLength = -1;
@@ -51,6 +53,9 @@ public class SimplePropertyDto {
     private Integer totalDigits = -1;
     private Integer fractionDigits = -1;
     private Integer minWidth = 0;
+    private Integer maxSize;
+    private Integer maxFiles;
+    private Integer maxDocuments;
     private List<ValueTitleProjection> enumerations = new ArrayList<>();
     private List<String> allowedValues = new ArrayList<>();
 
@@ -301,6 +306,46 @@ public class SimplePropertyDto {
     public void setFolderId(String folderId) {
         this.folderId = folderId;
     }
+
+    public String getAccept() {
+        return accept;
+    }
+
+    public void setAccept(String accept) {
+        this.accept = accept;
+    }
+
+    public String getLibrary() {
+        return library;
+    }
+
+    public void setLibrary(String library) {
+        this.library = library;
+    }
+
+    public Integer getMaxSize() {
+        return maxSize;
+    }
+
+    public void setMaxSize(Integer maxSize) {
+        this.maxSize = maxSize;
+    }
+
+    public Integer getMaxFiles() {
+        return maxFiles;
+    }    
+
+    public void setMaxFiles(Integer maxFiles) {
+        this.maxFiles = maxFiles;
+    }    
+
+    public Integer getMaxDocuments() {
+        return maxDocuments;
+    }    
+
+    public void setMaxDocuments(Integer maxDocuments) {
+        this.maxDocuments = maxDocuments;
+    }    
 
     @JsonIgnore
     public boolean isGeometry() {

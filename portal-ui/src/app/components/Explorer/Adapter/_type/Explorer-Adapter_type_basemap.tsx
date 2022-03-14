@@ -9,7 +9,6 @@ import { sleep } from '../../../../services/util/sleep';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 import { BasemapDetails } from '../../../BasemapDetails/BasemapDetails';
 import { ConnectionsBasemapToProjectsWidget } from '../../../ConnectionsBasemapToProjectsWidget/ConnectionsBasemapToProjectsWidget';
-import { ExplorerProps } from '../../Explorer';
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 import { BasemapActions } from '../../../BasemapActions/BasemapActions';
 
@@ -37,16 +36,13 @@ export class ExplorerAdapterTypeBasemap {
     return item.payload.name;
   }
 
-  static async getWidgets(
-    item: ExplorerItemData<Basemap>,
-    Explorer: React.ComponentType<ExplorerProps>
-  ): Promise<ReactNode> {
+  static async getWidgets(item: ExplorerItemData<Basemap>): Promise<ReactNode> {
     await sleep(0);
 
     return (
       <>
         <BasemapDetails basemap={item.payload} />
-        <ConnectionsBasemapToProjectsWidget Explorer={Explorer} basemap={item.payload} />
+        <ConnectionsBasemapToProjectsWidget basemap={item.payload} />
       </>
     );
   }

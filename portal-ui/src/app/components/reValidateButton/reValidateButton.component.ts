@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
+import { registry } from '../../services/registry';
 import { ReValidateButton } from '../ReValidateButton/ReValidateButton';
 
 @Component({
@@ -9,7 +11,7 @@ import { ReValidateButton } from '../ReValidateButton/ReValidateButton';
   template: '<div #react></div>'
 })
 export class ReValidateButtonComponent implements OnInit, OnDestroy, OnChanges {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -24,7 +26,7 @@ export class ReValidateButtonComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(ReValidateButton);
+    const reactElement = createElement(withRegistry(registry)(ReValidateButton));
 
     render(reactElement, this.ref.nativeElement);
   }

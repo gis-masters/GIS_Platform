@@ -23,7 +23,7 @@ import '!style-loader!css-loader!sass-loader!./LibraryDocument.scss';
 
 const cnLibraryDocument = cn('LibraryDocument');
 
-export interface LibraryDocumentProps {
+interface LibraryDocumentProps {
   document?: LibraryRecord;
   contentOnly?: boolean;
 }
@@ -97,7 +97,6 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
       await this.getSchema();
       await this.getDocumentPermissionUrl();
     }
-
     this.setBusy(false);
   }
 

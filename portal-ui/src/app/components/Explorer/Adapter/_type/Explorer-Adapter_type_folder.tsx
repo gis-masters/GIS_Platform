@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import moment from 'moment';
 import { FolderOutlined, TableViewOutlined } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
+import { RegistryConsumer } from '@bem-react/di';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { Emitter } from '../../../../services/common/Emitter';
@@ -20,7 +21,6 @@ import {
   getLibraryRecordsWithParticularOne,
   LibraryRecord
 } from '../../../../services/crg/doc-library.service';
-import { LibraryDocumentActions } from '../../../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
@@ -30,6 +30,7 @@ import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { ExplorerService } from '../../Explorer.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -103,7 +104,11 @@ export class ExplorerAdapterTypeFolder {
   }
 
   static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
-    return <LibraryDocumentActions document={item.payload} as='iconButton' hideOpen />;
+    return (
+      <RegistryConsumer id='common'>
+        {({ LibraryDocumentActions }) => <LibraryDocumentActions document={item.payload} as='iconButton' hideOpen />}
+      </RegistryConsumer>
+    );
   }
 
   static async getChildren(
@@ -219,25 +224,32 @@ export class ExplorerAdapterTypeFolder {
     return 'Фильтр по названию';
   }
 
-  static getToolbarActions(item: ExplorerItemData<LibraryRecord>, store: ExplorerStore): ReactNode {
+  static getToolbarActions(
+    item: ExplorerItemData<LibraryRecord>,
+    store: ExplorerStore,
+    service: ExplorerService,
+    full: boolean
+  ): ReactNode {
     const path = `${item.payload.path}/${item.payload.id}`;
 
     return (
-      <>
-        <CreateLibraryElement
-          libraryIdentifier={item.payload.libraryId}
-          schemaId={item.payload.schemaId}
-          path={path}
-          store={store}
-        />
-        <Link href={`/data-management/library/${item.payload.libraryId}/registry`} theme='contents'>
-          <Tooltip title='Открыть реестр'>
-            <IconButton>
-              <TableViewOutlined />
-            </IconButton>
-          </Tooltip>
-        </Link>
-      </>
+      full && (
+        <>
+          <CreateLibraryElement
+            libraryIdentifier={item.payload.libraryId}
+            schemaId={item.payload.schemaId}
+            path={path}
+            store={store}
+          />
+          <Link href={`/data-management/library/${item.payload.libraryId}/registry`} theme='contents'>
+            <Tooltip title='Открыть реестр'>
+              <IconButton>
+                <TableViewOutlined />
+              </IconButton>
+            </Tooltip>
+          </Link>
+        </>
+      )
     );
   }
 

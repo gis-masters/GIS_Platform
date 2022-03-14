@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef, Input } from '@angular/core';
-import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
 
+import { registry } from '../../services/registry';
 import { MapToolbar } from '../MapToolbar/MapToolbar';
 
 @Component({
@@ -11,7 +13,7 @@ import { MapToolbar } from '../MapToolbar/MapToolbar';
 })
 export class MapToolbarComponent implements OnInit, OnDestroy, OnChanges {
   @Input() hidden: boolean;
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     this.renderReactElement();
@@ -26,7 +28,7 @@ export class MapToolbarComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(MapToolbar);
+    const reactElement = createElement(withRegistry(registry)(MapToolbar));
 
     render(reactElement, this.ref.nativeElement);
   }

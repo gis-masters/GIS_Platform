@@ -14,5 +14,6 @@ public enum ValueType {
     UUID,
     BINARY,
     FIAS,
-    FILE
+    FILE,
+    DOCUMENT
 }
