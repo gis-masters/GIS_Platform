@@ -1,38 +1,21 @@
 package ru.mycrg.data_service.dao.mappers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
-import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
-import ru.mycrg.data_service_contract.enums.ValueType;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
 
 import static java.sql.Types.*;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
-import static ru.mycrg.data_service.util.DetailedLogger.logError;
-import static ru.mycrg.data_service.util.SchemaUtil.getPropertyByName;
-import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 
-public class RecordRowMapper implements RowMapper<IRecord> {
-
-    private final Logger log = LoggerFactory.getLogger(RecordRowMapper.class);
-
-    private final SchemaDto schema;
+public class RecordRowMapper extends BySchemaRowMapper implements RowMapper<IRecord> {
 
     public RecordRowMapper(@Nullable SchemaDto schema) {
-        this.schema = schema;
+        super(schema);
     }
 
     @Override
@@ -53,7 +36,7 @@ public class RecordRowMapper implements RowMapper<IRecord> {
                     break;
                 case OTHER:
                     if (rs.getObject(i) != null && schema != null) {
-                        handleBySchema(record, columnName, rs.getObject(i), schema);
+                        handleBySchema(record.getContent(), columnName, rs.getObject(i));
                     } else {
                         record.put(columnName, rs.getString(i));
                     }
@@ -67,33 +50,5 @@ public class RecordRowMapper implements RowMapper<IRecord> {
         }
 
         return record;
-    }
-
-    private void handleBySchema(RecordEntity record,
-                                String columnName,
-                                @NotNull Object object,
-                                @NotNull SchemaDto schema) {
-        try {
-            Optional<SimplePropertyDto> oProperty = getPropertyByName(schema, columnName);
-            if (oProperty.isPresent()) {
-                SimplePropertyDto property = oProperty.get();
-                ValueType valueType = property.getValueType();
-                if (valueType.equals(FILE)) {
-                    List<FileDescription> descriptions = mapper.readValue(object.toString(),
-                                                                          new TypeReference<List<FileDescription>>() {
-                                                                          });
-
-                    record.put(columnName, descriptions);
-                } else {
-                    log.warn("Unknown property type: {}", valueType);
-                }
-            } else {
-                record.put(columnName, object.toString());
-            }
-        } catch (Exception e) {
-            logError("Не удалось обработать колонку: '" + columnName + "'", e);
-
-            record.put(columnName, object.toString());
-        }
     }
 }

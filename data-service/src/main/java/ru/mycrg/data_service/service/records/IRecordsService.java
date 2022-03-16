@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 public interface IRecordsService {
@@ -28,7 +27,7 @@ public interface IRecordsService {
     IRecord getById(ResourceQualifier rQualifier, Long recordId);
 
     IRecord createRecord(ResourceQualifier lQualifier,
-                         RecordEntity record,
+                         IRecord record,
                          MultipartFile file);
 
     /**

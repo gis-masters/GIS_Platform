@@ -65,4 +65,14 @@ public class TableCreateDto extends ResourceCreateDto {
     public void setAdditionalFields(List<AdditionalFieldDto> additionalFields) {
         this.additionalFields = additionalFields;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"name\":" + (name == null ? "null" : "\"" + name + "\"") + ", " +
+                "\"crs\":" + (crs == null ? "null" : "\"" + crs + "\"") + ", " +
+                "\"schemaId\":" + (schemaId == null ? "null" : "\"" + schemaId + "\"") + ", " +
+                "\"additionalFields\":" + (additionalFields == null ? "null" : additionalFields) +
+                "}";
+    }
 }

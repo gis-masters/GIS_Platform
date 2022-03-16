@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
+import static ru.mycrg.data_service.dto.ResourceType.*;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
@@ -40,7 +42,7 @@ public class OwnerRecordsService implements IRecordsService {
     public Page<IRecord> getPaged(ResourceQualifier lQualifier, Pageable pageable, Long parentId, String ecqlFilter) {
         String path = ROOT_FOLDER_PATH;
         if (parentId != null) {
-            ResourceQualifier recordQualifier = new ResourceQualifier(lQualifier, parentId);
+            ResourceQualifier recordQualifier = new ResourceQualifier(lQualifier, parentId, LIBRARY_RECORD);
             SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
             IRecord parent = recordsDao
                     .findById(recordQualifier, schema)
@@ -74,12 +76,12 @@ public class OwnerRecordsService implements IRecordsService {
     public IRecord getById(ResourceQualifier rQualifier, Long recordId) {
         SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
 
-        return recordsDao.findById(new ResourceQualifier(rQualifier, recordId), schema)
+        return recordsDao.findById(new ResourceQualifier(rQualifier, recordId, LIBRARY_RECORD), schema)
                          .orElseThrow(() -> new NotFoundException(recordId));
     }
 
     @Override
-    public IRecord createRecord(ResourceQualifier lQualifier, RecordEntity record, MultipartFile file) {
+    public IRecord createRecord(ResourceQualifier lQualifier, IRecord record, MultipartFile file) {
         return userRecordsService.createRecord(lQualifier, record, file);
     }
 

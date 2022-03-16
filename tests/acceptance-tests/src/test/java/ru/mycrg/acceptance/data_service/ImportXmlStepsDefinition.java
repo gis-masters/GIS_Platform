@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
-import static ru.mycrg.acceptance.data_service.TablesStepsDefinitions.currentTableName;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class ImportXmlStepsDefinition extends BaseStepsDefinitions {
 

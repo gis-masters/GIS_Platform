@@ -3,7 +3,8 @@ package ru.mycrg.acceptance.audit_service.dto;
 public enum AuditEventEntityType {
     PROJECT("PROJECT"),
     LAYER("LAYER"),
-    LIBRARY_RECORD("LIBRARY_RECORD");
+    LIBRARY_RECORD("LIBRARY_RECORD"),
+    FEATURE("FEATURE");
 
     String value;
 

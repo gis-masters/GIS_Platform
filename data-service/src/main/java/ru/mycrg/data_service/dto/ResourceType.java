@@ -2,7 +2,8 @@ package ru.mycrg.data_service.dto;
 
 public enum ResourceType {
     LIBRARY,
-    RECORD,
+    LIBRARY_RECORD,
     DATASET,
-    TABLE
+    TABLE,
+    FEATURE
 }

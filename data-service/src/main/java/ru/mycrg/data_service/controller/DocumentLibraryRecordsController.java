@@ -16,12 +16,11 @@ import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.SchemaService;
-import ru.mycrg.data_service.service.cqrs.records.requests.CreateLibraryRecordRequest;
-import ru.mycrg.data_service.service.cqrs.records.requests.DeleteLibraryRecordRequest;
-import ru.mycrg.data_service.service.cqrs.records.requests.UpdateLibraryRecordRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.CreateLibraryRecordRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.DeleteLibraryRecordRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.UpdateLibraryRecordRequest;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -38,7 +37,7 @@ import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
-import static ru.mycrg.data_service.dto.ResourceType.RECORD;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.PagingAndSortingUtil.fetchFoldersFirst;
 
@@ -49,18 +48,15 @@ public class DocumentLibraryRecordsController {
     private final SchemaService schemaService;
     private final DocumentLibraryService libraryService;
     private final RecordServiceFactory recordServiceFactory;
-    private final IAuthenticationFacade authenticationFacade;
 
     public DocumentLibraryRecordsController(SchemaService schemaService,
                                             DocumentLibraryService libraryService,
                                             RecordServiceFactory recordServiceFactory,
-                                            Mediator mediator,
-                                            IAuthenticationFacade authenticationFacade) {
+                                            Mediator mediator) {
         this.mediator = mediator;
         this.schemaService = schemaService;
         this.libraryService = libraryService;
         this.recordServiceFactory = recordServiceFactory;
-        this.authenticationFacade = authenticationFacade;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -105,7 +101,7 @@ public class DocumentLibraryRecordsController {
     @GetMapping("/document-libraries/{docLibId}/records/{recId}")
     public ResponseEntity<Map<String, Object>> getById(@PathVariable String docLibId,
                                                        @PathVariable Long recId) {
-        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
+        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
 
         IRecord record = recordServiceFactory.get().getById(rIdentifier, recId);
 
@@ -114,19 +110,18 @@ public class DocumentLibraryRecordsController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/document-libraries/{docLibId}/records")
-    public ResponseEntity<Map<String, Object>> createObject(
-            @PathVariable String docLibId,
-            @RequestParam(value = "file", required = false) MultipartFile file,
-            @RequestParam(value = "body") String jsonBody) {
-        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
-
+    public ResponseEntity<Map<String, Object>> createObject(@PathVariable String docLibId,
+                                                            @RequestParam(required = false) MultipartFile file,
+                                                            @RequestParam(value = "body") String jsonBody) {
         Map<String, Object> body = deserializeBody(jsonBody);
         SchemaDto schema = libraryService.getSchema(docLibId);
         schemaService.throwIfNotMathSchema(schema, body);
 
-        String token = authenticationFacade.getAccessToken();
         IRecord record = mediator.execute(
-                new CreateLibraryRecordRequest(schema, lQualifier, new RecordEntity(body), file, token));
+                new CreateLibraryRecordRequest(schema,
+                                               new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY),
+                                               new RecordEntity(body),
+                                               file));
 
         return new ResponseEntity<>(record.getContent(), CREATED);
     }
@@ -139,10 +134,11 @@ public class DocumentLibraryRecordsController {
         SchemaDto schema = libraryService.getSchema(docLibId);
         schemaService.throwIfNotMathSchema(schema, payload);
 
-        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
-
-        String accessToken = authenticationFacade.getAccessToken();
-        mediator.execute(new UpdateLibraryRecordRequest(schema, rQualifier, new RecordEntity(payload), accessToken));
+        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
+        mediator.execute(
+                new UpdateLibraryRecordRequest(schema,
+                                               rQualifier,
+                                               new RecordEntity(payload)));
 
         return ResponseEntity.noContent().build();
     }
@@ -151,16 +147,13 @@ public class DocumentLibraryRecordsController {
     @DeleteMapping("/document-libraries/{docLibId}/records/{recId}")
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
                                          @PathVariable Long recId) {
-        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
+        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
 
         SchemaDto schema = libraryService.getSchema(docLibId);
         IRecord record = recordServiceFactory.get().getById(rIdentifier, recId);
 
         mediator.execute(
-                new DeleteLibraryRecordRequest(rIdentifier,
-                                               record,
-                                               authenticationFacade.getAccessToken(),
-                                               schema));
+                new DeleteLibraryRecordRequest(rIdentifier, record, schema));
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -22,7 +22,7 @@ import java.util.List;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.RECORD;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 
 @RestController
 public class DocumentLibraryRecordIntegrationController {
@@ -43,7 +43,7 @@ public class DocumentLibraryRecordIntegrationController {
     public ResponseEntity<PermissionProjection> addPermissionToLibrary(@PathVariable String docLibId,
                                                                        @PathVariable Long recId,
                                                                        @RequestBody IntegrationDto dto) {
-        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
+        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
         IRecord record = recordServiceFactory.get()
                                              .getById(rQualifier, recId);
 

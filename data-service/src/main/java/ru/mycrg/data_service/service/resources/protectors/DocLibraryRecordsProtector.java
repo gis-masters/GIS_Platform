@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
-import static ru.mycrg.data_service.dto.ResourceType.RECORD;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
@@ -92,7 +92,7 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
 
     @Override
     public ResourceType getType() {
-        return RECORD;
+        return LIBRARY_RECORD;
     }
 
     /**

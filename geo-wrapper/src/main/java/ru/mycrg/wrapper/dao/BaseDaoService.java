@@ -19,8 +19,8 @@ import ru.mycrg.wrapper.service.validation.Util;
 import java.util.List;
 import java.util.Map;
 
-import static ru.mycrg.wrapper.dao.DaoProperties.AS_IS;
-import static ru.mycrg.wrapper.dao.DaoProperties.EXTENSION_POSTFIX;
+import static ru.mycrg.wrapper.dao.DaoProperties.*;
+import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
 
 @Service
 public class BaseDaoService {
@@ -129,31 +129,6 @@ public class BaseDaoService {
     }
 
     /**
-     * Создаем таблицу исходя из схемы фичи. Создает также таблицу "*_extension"
-     */
-    public void createTable(JdbcTemplate jdbcTemplate, ImportMqTask importTask) {
-        String targetSchema = importTask.getTargetResource().getSchemaName();
-        String targetTable = importTask.getTargetResource().getTableName();
-        String extensionTable = importTask.getTargetResource().getTableName() + EXTENSION_POSTFIX;
-        String target = targetSchema + "." + targetTable;
-
-        String createExtensionTable = SqlGenerator.getExtensionTableRequest(targetSchema, extensionTable);
-        String createTable = SqlGenerator.prepareCreateTableRequest(importTask);
-        String createSequence = SqlGenerator.getSequenceRequest(target);
-
-        log.debug("SQL create table request: {}", createTable);
-
-        jdbcTemplate.execute(createTable);
-        jdbcTemplate.execute(createExtensionTable);
-        jdbcTemplate.execute(createSequence);
-        jdbcTemplate.execute("ALTER SEQUENCE " + target + "_objectid_seq OWNED BY " + target + ".objectid; ");
-        jdbcTemplate.execute(
-                "ALTER TABLE ONLY " + target + " ALTER COLUMN objectid " +
-                        "SET DEFAULT nextval('" + targetSchema + "." + targetTable + "_objectid_seq'::regclass);");
-        jdbcTemplate.execute("CREATE INDEX " + targetTable + "_shape_indx ON " + target + " USING gist (shape)");
-    }
-
-    /**
      * Получить партию данных. Геометрию в бинарном формате сетим в "crg_b_geometry"
      *
      * @param jdbcTemplate Коннекш к БД
@@ -176,7 +151,7 @@ public class BaseDaoService {
     // TODO: Use batchUpdate (example in saveValidationResults) should be much faster
     public void updateBatch(JdbcTemplate jdbcTemplate, ResourceProjection target, List<Map<String, Object>> nextBatch) {
         nextBatch.forEach(item -> {
-            String sqlUpdate = SqlGenerator.prepareUpdateRequest(target, item);
+            String sqlUpdate = prepareUpdateRequest(target, item);
 
             log.trace("update SQL: {}", sqlUpdate);
 
@@ -241,5 +216,21 @@ public class BaseDaoService {
         } catch(NumberFormatException e) {
             return -1;
         }
+    }
+
+    private String prepareUpdateRequest(ResourceProjection target, Map<String, Object> item) {
+        final String[] sql = {String.format("UPDATE %s.%s SET ", target.getSchemaName(), target.getTableName())};
+
+        item.forEach((key, value) -> {
+            if (!PRIMARY_KEY.equals(key)) {
+                if (DaoProperties.NULL_MARKER.equals(value)) {
+                    sql[0] = sql[0] + key + "=NULL, ";
+                } else {
+                    sql[0] = sql[0] + key + "='" + value + "', ";
+                }
+            }
+        });
+
+        return sql[0].substring(0, sql[0].length() - 2) + " WHERE objectid=" + item.get(PRIMARY_KEY);
     }
 }

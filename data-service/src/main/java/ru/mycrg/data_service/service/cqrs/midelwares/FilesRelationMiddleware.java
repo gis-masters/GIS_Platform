@@ -9,13 +9,12 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.repository.FileRepository;
+import ru.mycrg.data_service.service.ISchemable;
 import ru.mycrg.data_service.service.JsonConverter;
-import ru.mycrg.data_service.service.cqrs.files.IFilesRelation;
-import ru.mycrg.data_service.service.cqrs.records.requests.CreateLibraryRecordRequest;
-import ru.mycrg.data_service.service.cqrs.records.requests.DeleteLibraryRecordRequest;
-import ru.mycrg.data_service.service.cqrs.records.requests.UpdateLibraryRecordRequest;
+import ru.mycrg.data_service.service.cqrs.files.ICreateFilesRelation;
+import ru.mycrg.data_service.service.cqrs.files.IDeleteFilesRelation;
+import ru.mycrg.data_service.service.cqrs.files.IUpdateFilesRelation;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.storage.exceptions.StorageException;
@@ -54,23 +53,33 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
     public <Response, Request extends IRequest<Response>> Response invoke(Request request, Next<Response> next) {
         Response response = next.invoke();
 
-        if (!(request instanceof IFilesRelation)) {
+        if (!(request instanceof ISchemable)) {
             return response;
         }
 
-        IFilesRelation filesRelation = (IFilesRelation) request;
-        if (!isFilePropertyExist(filesRelation.getSchema())) {
+        ISchemable schemable = (ISchemable) request;
+        if (!isFilePropertyExist(schemable.getSchema())) {
             return response;
         }
 
-        if (request instanceof CreateLibraryRecordRequest) {
-            relateFilesByCreation(filesRelation, (RecordEntity) response);
-        } else if (request instanceof UpdateLibraryRecordRequest) {
-            relateFilesByUpdate((UpdateLibraryRecordRequest) request);
-        } else if (request instanceof DeleteLibraryRecordRequest) {
-            IRecord record = ((DeleteLibraryRecordRequest) request).getRecord();
+        if (request instanceof ICreateFilesRelation) {
+            ICreateFilesRelation createFilesRelation = (ICreateFilesRelation) request;
 
-            deleteRelatedFiles(filesRelation, record);
+            relateFilesByCreation(createFilesRelation.getSchema(),
+                                  createFilesRelation.getQualifier(),
+                                  createFilesRelation.getRecord());
+        } else if (request instanceof IUpdateFilesRelation) {
+            IUpdateFilesRelation updateFilesRelation = (IUpdateFilesRelation) request;
+
+            relateFilesByUpdate(updateFilesRelation.getSchema(),
+                                updateFilesRelation.getQualifier(),
+                                updateFilesRelation.getNewRecord(),
+                                updateFilesRelation.getOldRecord());
+        } else if (request instanceof IDeleteFilesRelation) {
+            IDeleteFilesRelation deleteFilesRelation = (IDeleteFilesRelation) request;
+
+            deleteRelatedFiles(deleteFilesRelation.getSchema(),
+                               deleteFilesRelation.getRecord());
         } else {
             log.warn("Unknown request type");
         }
@@ -78,36 +87,35 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
         return response;
     }
 
-    private void relateFilesByCreation(IFilesRelation filesRelation, RecordEntity newRecord) {
+    private void relateFilesByCreation(SchemaDto schema,
+                                       ResourceQualifier rQualifier,
+                                       IRecord newRecord) {
         try {
-            SchemaDto schema = filesRelation.getSchema();
-
             Set<UUID> ids = getFileFieldNames(schema)
                     .stream()
                     .flatMap(fileFieldName -> getFilesIdFromField(newRecord.getContent(), fileFieldName).stream())
                     .collect(Collectors.toSet());
 
             if (!ids.isEmpty()) {
-                ResourceQualifier rQualifier = filesRelation.getQualifier();
                 FileResourceQualifier fileResQualifier = new FileResourceQualifier(rQualifier.getSchema(),
                                                                                    rQualifier.getTable(),
                                                                                    newRecord.getId());
                 JsonNode jsonNode = JsonConverter.toJsonNode(fileResQualifier);
 
-                fileRepository.setQualifier(new ResourceQualifier(rQualifier, newRecord.getId()).getType().name(),
-                                            jsonNode, ids);
+                ResourceQualifier lrQualifier = new ResourceQualifier(rQualifier, newRecord.getId());
+                fileRepository.setQualifier(lrQualifier.getType().name(), jsonNode, ids);
             }
         } catch (Exception e) {
             logError("Не удалось выполнить привязку файлов к сущности при создании", e);
         }
     }
 
-    private void relateFilesByUpdate(UpdateLibraryRecordRequest request) {
+    private void relateFilesByUpdate(SchemaDto schema,
+                                     ResourceQualifier qualifier,
+                                     IRecord newRecord,
+                                     IRecord oldRecord) {
         try {
             log.debug("UPDATE CASE");
-
-            IRecord newRecord = request.getNewRecord();
-            SchemaDto schema = request.getSchema();
 
             List<String> fileFieldNames = getFileFieldNames(schema);
             if (!isChangeNeeded(newRecord, fileFieldNames)) {
@@ -115,7 +123,6 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
             }
 
             log.debug("UPDATE NEEDED");
-            IRecord oldRecord = request.getOldRecord();
             Set<UUID> oldIds = fileFieldNames
                     .stream()
                     .flatMap(fileFieldName -> getFilesIdFromField(oldRecord.getContent(), fileFieldName).stream())
@@ -132,7 +139,7 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
             HashSet<UUID> unionIds = new HashSet<>(oldIds);
             unionIds.addAll(newIds);
 
-            updateFilesInfo(unionIds, request.getQualifier());
+            updateFilesInfo(unionIds, qualifier);
             deleteFiles(oldIds, newIds);
         } catch (Exception e) {
             logError("Не удалось выполнить привязку файлов к сущности при обновлении", e);
@@ -147,7 +154,7 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
     }
 
     private void deleteFile(UUID id) {
-        log.debug("Tr to  delete file by id: '{}'", id);
+        log.debug("Try to delete file by id: '{}'", id);
 
         Optional<File> oFile = fileRepository.findById(id);
         if (oFile.isPresent()) {
@@ -181,11 +188,11 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
         return fileFieldNames.stream().anyMatch(newRecord.getContent()::containsKey);
     }
 
-    private void deleteRelatedFiles(IFilesRelation filesRelation, IRecord record) {
+    private void deleteRelatedFiles(SchemaDto schema, IRecord record) {
         try {
             log.debug("DELETE CASE: {}", record.getId());
 
-            getFileFieldNames(filesRelation.getSchema())
+            getFileFieldNames(schema)
                     .stream()
                     .flatMap(fileFieldName -> getFilesIdFromField(record.getContent(), fileFieldName).stream())
                     .collect(Collectors.toSet())

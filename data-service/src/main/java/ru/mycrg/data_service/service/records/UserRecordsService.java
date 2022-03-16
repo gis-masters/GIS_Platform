@@ -12,7 +12,6 @@ import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
@@ -29,6 +28,7 @@ import java.text.MessageFormat;
 import java.util.*;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.service.records.RecordUtil.clearSystemAttributes;
 import static ru.mycrg.data_service.service.records.RecordUtil.extractFolderIdsFromPath;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
@@ -74,7 +74,7 @@ public class UserRecordsService implements IRecordsService {
         long total;
         List<IRecord> records;
         if (parentId != null) {
-            ResourceQualifier recordQualifier = new ResourceQualifier(lQualifier, parentId);
+            ResourceQualifier recordQualifier = new ResourceQualifier(lQualifier, parentId, LIBRARY_RECORD);
             IRecord parent = recordsDao.findById(recordQualifier, schema)
                                        .orElseThrow(() -> new NotFoundException("Запись не найдена: " + parentId));
 
@@ -126,7 +126,7 @@ public class UserRecordsService implements IRecordsService {
         String definedRole = null;
 
         // Создаю новый - переходное решение пока некоторые квалификаторы не включают в себя идентификатор записи
-        ResourceQualifier recordQualifier = new ResourceQualifier(rQualifier, recordId);
+        ResourceQualifier recordQualifier = new ResourceQualifier(rQualifier, recordId, LIBRARY_RECORD);
 
         SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
         IRecord record = recordsDao.findById(recordQualifier, schema)
@@ -197,7 +197,7 @@ public class UserRecordsService implements IRecordsService {
     @Override
     @Transactional
     public IRecord createRecord(ResourceQualifier lQualifier,
-                                RecordEntity record,
+                                IRecord record,
                                 MultipartFile file) {
         try {
             log.debug("try create record: {}", record);

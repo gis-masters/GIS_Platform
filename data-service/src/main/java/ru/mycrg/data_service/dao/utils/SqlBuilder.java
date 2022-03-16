@@ -1,5 +1,10 @@
 package ru.mycrg.data_service.dao.utils;
 
+import com.healthmarketscience.sqlbuilder.InsertQuery;
+import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
+import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
+import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
+import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 import org.geotools.data.jdbc.FilterToSQL;
 import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.postgis.PostGISDialect;
@@ -12,13 +17,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service.util.filter.FilterCondition;
 import ru.mycrg.data_service.util.filter.FilterItem;
+import ru.mycrg.geo_json.Feature;
+import ru.mycrg.geo_json.GeoJsonObject;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 
 public class SqlBuilder {
 
@@ -101,6 +111,40 @@ public class SqlBuilder {
                                       .collect(Collectors.toList());
 
         return " ORDER BY " + String.join(",", orderItems) + " ";
+    }
+
+    @NotNull
+    public static String generateInsertQuery(ResourceQualifier qualifier, Feature feature) {
+        DbTable table = getSimpleDbTable(qualifier);
+        DbColumn geometryColumn = table.addColumn(DEFAULT_GEOMETRY_COLUMN_NAME);
+
+        InsertQuery insertQuery = new InsertQuery(table);
+        insertQuery.addCustomColumn(geometryColumn, "GEO_VALUE_TEMPLATE");
+        feature.getProperties().forEach((key, value) -> {
+            DbColumn dbColumn = table.addColumn(key);
+
+            insertQuery.addColumn(dbColumn, value);
+        });
+
+        GeoJsonObject geometry = feature.getGeometry();
+        geometry.setSrs(feature.getSrs());
+
+        String transformTemplate = "public.st_transform(" +
+                "  public.st_geomFromGeoJSON('" + geometry + "')," +
+                "  " + feature.getSrs().split(":")[1] +
+                ")";
+
+        String query = insertQuery.validate().toString()
+                                  .replace("'GEO_VALUE_TEMPLATE'", transformTemplate);
+
+        return String.format("%s returning lastval();", query);
+    }
+
+    public static DbTable getSimpleDbTable(@NotNull ResourceQualifier rQualifier) {
+        DbSpec spec = new DbSpec();
+        DbSchema dbSchema = spec.addSchema(rQualifier.getSchema());
+
+        return dbSchema.addTable(rQualifier.getTable());
     }
 
     private static String getProperty(String property) {

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dto.FullAddressDto;
@@ -16,7 +17,7 @@ import java.util.Map;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.INITIAL_DB_NAME;
 
-@Service
+@Repository
 public class FiasDao {
 
     private final Logger log = LoggerFactory.getLogger(FiasDao.class);

@@ -15,12 +15,10 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
-import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgDto;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class FilesStepDefinitions extends BaseStepsDefinitions {
 
@@ -50,10 +48,18 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         firstFileId = ids.get(0);
     }
 
-    @Given("Создано три файла")
-    public void create3Files() {
+    @Given("Пользователем создано три файла")
+    public void create3FilesAsCurrentUser() {
         authorizationBase.loginAsCurrentUser();
 
+        List<UUID> ids = createFiles(new File[]{firstFile, secondFile, thirdFile});
+
+        firstFileId = ids.get(0);
+        secondFileId = ids.get(1);
+    }
+
+    @Given("Создано три файла")
+    public void create3Files() {
         List<UUID> ids = createFiles(new File[]{firstFile, secondFile, thirdFile});
 
         firstFileId = ids.get(0);
@@ -122,17 +128,31 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         downloadFile(UUID.fromString(fileId));
     }
 
-    @Then("Квалификатор второго файла записан верно")
-    public void checkQualifierForSecondFile() {
+    @Then("Квалификатор второго файла корректно ссылается на созданную запись в библиотеке")
+    public void checkQualifierForSecondFileForLibrary() {
         getFile(secondFileId);
 
         int recordId = jsonPath.getInt("resourceQualifier.recordId");
         String table = jsonPath.getString("resourceQualifier.table");
         String resourceType = jsonPath.getString("resourceType");
-// TODO: дать второй записи уникальный title и по нему искать
+        // TODO: дать второй записи уникальный title и по нему искать
         assertEquals(6, recordId);
         assertEquals(DEFAULT_LIBRARY, table);
-        assertEquals("RECORD", resourceType);
+        assertEquals("LIBRARY_RECORD", resourceType);
+    }
+
+    @Then("Квалификатор второго файла корректно ссылается на созданную запись в слое")
+    public void checkQualifierForSecondFileForTable() {
+        getFile(secondFileId);
+
+        int recordId = jsonPath.getInt("resourceQualifier.recordId");
+        String table = jsonPath.getString("resourceQualifier.table");
+        String resourceType = jsonPath.getString("resourceType");
+
+        // TODO: дать второй записи уникальный title и по нему искать
+        assertEquals(1, recordId);
+        assertEquals(currentTableName, table);
+        assertEquals("FEATURE", resourceType);
     }
 
     @Then("Квалификаторы у других файлов остались незаполненными")
@@ -160,6 +180,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     private void getFile(UUID firstFileId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
+                        log().all().
                         get("/" + firstFileId);
 
         jsonPath = response.jsonPath();

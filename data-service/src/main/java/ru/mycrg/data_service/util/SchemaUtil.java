@@ -18,7 +18,7 @@ public class SchemaUtil {
 
     public static boolean isPropertyExist(SchemaDto schema, String key) {
         return schema.getProperties().stream()
-                     .anyMatch(property -> property.getName().equals(key));
+                     .anyMatch(property -> property.getName().equalsIgnoreCase(key));
     }
 
     public static boolean isFilePropertyExist(SchemaDto schema) {

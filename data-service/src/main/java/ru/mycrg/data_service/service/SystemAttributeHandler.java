@@ -10,6 +10,7 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.geo_json.Feature;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -111,14 +112,13 @@ public class SystemAttributeHandler {
     }
 
     public SystemAttributeHandler prepareJsonb(@NotNull IRecord record) {
-        schema.getProperties().stream()
-              .filter(property -> FILE.equals(property.getValueType()))
-              .forEach(property -> {
-                  Object value = record.getContent().get(property.getName());
-                  if (value != null) {
-                      record.getContent().put(property.getName(), toJsonNode(value));
-                  }
-              });
+        prepareJsonb(record.getContent());
+
+        return this;
+    }
+
+    public SystemAttributeHandler prepareJsonb(@NotNull Feature feature) {
+        prepareJsonb(feature.getProperties());
 
         return this;
     }
@@ -183,5 +183,16 @@ public class SystemAttributeHandler {
         } else {
             return title;
         }
+    }
+
+    private void prepareJsonb(Map<String, Object> properties) {
+        schema.getProperties().stream()
+              .filter(property -> FILE.equals(property.getValueType()))
+              .forEach(property -> {
+                  Object value = properties.get(property.getName());
+                  if (value != null) {
+                      properties.put(property.getName(), toJsonNode(value));
+                  }
+              });
     }
 }

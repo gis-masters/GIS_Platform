@@ -33,6 +33,10 @@ public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
              entityId, null);
     }
 
+    public CrgAuditEvent(JsonNode state, String aType, String name, String eType, Long id) {
+        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, null, aType, name, eType, id, state);
+    }
+
     public CrgAuditEvent(String token,
                          String actionType,
                          String entityName,

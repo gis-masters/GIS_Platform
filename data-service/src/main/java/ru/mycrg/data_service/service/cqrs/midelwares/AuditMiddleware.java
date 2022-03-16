@@ -3,7 +3,9 @@ package ru.mycrg.data_service.service.cqrs.midelwares;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import ru.mycrg.audit_service_contract.Auditable;
+import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.data_service.queue.MessageBusProducer;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.IRequestMiddleware;
 
@@ -12,9 +14,12 @@ import ru.mycrg.mediator.IRequestMiddleware;
 public class AuditMiddleware implements IRequestMiddleware {
 
     private final MessageBusProducer messageBus;
+    private final IAuthenticationFacade authenticationFacade;
 
-    public AuditMiddleware(MessageBusProducer messageBus) {
+    public AuditMiddleware(MessageBusProducer messageBus,
+                           IAuthenticationFacade authenticationFacade) {
         this.messageBus = messageBus;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Override
@@ -22,7 +27,10 @@ public class AuditMiddleware implements IRequestMiddleware {
         Response response = next.invoke();
 
         if (request instanceof Auditable) {
-            messageBus.produce(((Auditable) request).getEvent());
+            CrgAuditEvent event = ((Auditable) request).getEvent();
+            event.setToken(authenticationFacade.getAccessToken());
+
+            messageBus.produce(event);
         }
 
         return response;

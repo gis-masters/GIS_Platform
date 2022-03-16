@@ -3,7 +3,7 @@ package ru.mycrg.data_service.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dto.AisUmsDto;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildInSection;
 
-@Service
+@Repository
 public class AisUmsDao {
 
     private final Logger log = LoggerFactory.getLogger(AisUmsDao.class);

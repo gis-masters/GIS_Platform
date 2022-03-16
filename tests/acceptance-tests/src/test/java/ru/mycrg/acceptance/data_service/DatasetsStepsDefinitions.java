@@ -17,7 +17,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static ru.mycrg.acceptance.data_service.TablesStepsDefinitions.currentTableName;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 

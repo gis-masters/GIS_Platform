@@ -173,6 +173,12 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
     }
 
+    @Then("Создана запись в журнале аудита о создании записи в слое")
+    public void checkFeatureCreate() {
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, FEATURE.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
+    }
+
     @Then("Создан аудит лог о создании слоя")
     public void checkLayerCreate() {
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
@@ -194,6 +200,12 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     @And("Создан аудит лог об изменении проекта")
     public void checkProjectUpdate() {
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
+    }
+
+    @And("Создан аудит лог об изменении записи в слое")
+    public void checkFeatureUpdate() {
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, FEATURE.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
     }
 

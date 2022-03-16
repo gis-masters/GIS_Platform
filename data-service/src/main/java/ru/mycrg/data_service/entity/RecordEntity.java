@@ -29,7 +29,12 @@ public class RecordEntity implements IRecord {
 
     @Override
     public Long getId() {
-        return (Long) content.get(ID.getName());
+        Object id = content.get(ID.getName());
+        if (id != null) {
+            return Long.valueOf(id.toString());
+        } else {
+            return -1L;
+        }
     }
 
     @Override

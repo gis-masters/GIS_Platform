@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
@@ -19,10 +19,9 @@ import ru.mycrg.data_service_contract.enums.ValueType;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
-import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
+import static ru.mycrg.data_service.dao.config.DaoProperties.*;
 
-@Service
+@Repository
 public class DdlTables {
 
     private static final Logger log = LoggerFactory.getLogger(DdlTables.class);
@@ -45,16 +44,17 @@ public class DdlTables {
         String target = targetSchema + "." + targetTable;
         String extensionTable = targetTable + EXTENSION_POSTFIX;
 
-        //added additional fields to properties
+        // add additional fields
         addAdditionalFields(schemaProperties, dto.getAdditionalFields());
 
-        Optional<SimplePropertyDto> ruleidOpt = schemaProperties
-                .stream()
-                .filter(simplePropertyDto -> simplePropertyDto.getName().equalsIgnoreCase("ruleid"))
-                .findFirst();
+        StringBuilder propertiesBuilder = new StringBuilder();
 
-        StringBuilder propertiesBuilder = new StringBuilder("");
-        if (ruleidOpt.isEmpty()) {
+        // Добавляем ruleid если его нет в схеме. Типа он обязательно должен быть.
+        Optional<SimplePropertyDto> oRuleId = schemaProperties
+                .stream()
+                .filter(simplePropertyDto -> simplePropertyDto.getName().equalsIgnoreCase(RULE_ID))
+                .findFirst();
+        if (oRuleId.isEmpty()) {
             propertiesBuilder.append(" ,ruleid character varying(255)");
         }
 
@@ -62,24 +62,22 @@ public class DdlTables {
             propertiesBuilder.append(",").append(generatePropertySqlString(property));
         }
 
-        String createTableSql = String.format(
+        String query = String.format(
                 "CREATE TABLE %1$s (%2$s serial NOT NULL %3$s ); ALTER TABLE ONLY %1$s ADD " +
                         "CONSTRAINT %4$s_pkey PRIMARY KEY (%2$s);",
-                target,
-                PRIMARY_KEY,
-                propertiesBuilder,
-                targetTable);
+                target, PRIMARY_KEY, propertiesBuilder, targetTable);
 
         // Add GEOMETRY CONSTRAINT
-        if (isGeometryExist(createTableSql)) {
-            createTableSql = String.format(
-                    "%3$s ALTER TABLE ONLY %1$s ADD CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = " +
-                            "%2$s));", target, crsCode, createTableSql);
+        if (isGeometryExist(query)) {
+            query = String.format(
+                    "%s ALTER TABLE ONLY %s ADD CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = %s));",
+                    query, target, crsCode);
         }
 
-        log.debug("SQL create table request: {}", createTableSql);
-        jdbcTemplate.execute(createTableSql);
-        jdbcTemplate.execute(getExtensionTableRequest(targetSchema, extensionTable));
+        log.debug("Create table query: [{}]", query);
+
+        jdbcTemplate.execute(query);
+        jdbcTemplate.execute(getExtensionTableQuery(targetSchema, extensionTable));
     }
 
     /**
@@ -175,6 +173,8 @@ public class DdlTables {
                 return attrDescription.getName() + " timestamp";
             case LOOKUP:
                 return attrDescription.getName() + " text";
+            case FILE:
+                return attrDescription.getName() + " jsonb";
             default:
                 log.warn("Not supported attribute type: {}", attrDescription.getValueType());
         }
@@ -182,7 +182,7 @@ public class DdlTables {
         return attrDescription.getName() + " character varying";
     }
 
-    static String getExtensionTableRequest(String targetSchema, String extensionTable) {
+    static String getExtensionTableQuery(String targetSchema, String extensionTable) {
         return "CREATE TABLE " + targetSchema + "." + extensionTable + " (" +
                 "   object_id serial NOT NULL, " +
                 "   violations jsonb, " +

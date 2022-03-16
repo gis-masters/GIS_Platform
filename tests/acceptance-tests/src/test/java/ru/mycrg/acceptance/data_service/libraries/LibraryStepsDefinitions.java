@@ -95,12 +95,12 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         assertThat((long) response.getBody().asByteArray().length, equalTo(file.length()));
     }
 
-    @When("Пользователь удаляет запись")
+    @When("Пользователь удаляет запись в библиотеке")
     public void deleteLibraryDocument() {
         deleteRecord(currentRecordId);
     }
 
-    @When("Пользователь обновляет запись - удаляет файл")
+    @When("Пользователь обновляет запись библиотеки - удаляет файл")
     public void updateLibraryDocument() {
         DefaultRecordModel recordModel = new DefaultRecordModel("new_title");
         recordModel.setSome_files(new ArrayList<>());

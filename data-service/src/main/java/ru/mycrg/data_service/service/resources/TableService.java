@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.resources;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.BaseDao;
@@ -13,6 +14,7 @@ import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
@@ -33,6 +35,7 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
 @Service
 public class TableService {
@@ -132,7 +135,14 @@ public class TableService {
 
         Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(dto.getSchemaId());
         if (schemaByName.isPresent()) {
-            ddlTables.create(datasetId, dto, schemaByName.get().getProperties());
+            try {
+                ddlTables.create(datasetId, dto, schemaByName.get().getProperties());
+            } catch (BadSqlGrammarException e) {
+                String msg = "Не удалось создать таблицу: " + dto;
+                logError(msg, e);
+
+                throw new DataServiceException(msg);
+            }
 
             // Add record to schemasAndTables table
             String path = dataset.getPath() + "/" + dataset.getId();

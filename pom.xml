@@ -70,6 +70,7 @@
         <module>geo-wrapper</module>
 
         <module>_libs/mediator</module>
+        <module>_libs/geo-json</module>
 
         <module>clients/http-client</module>
         <module>clients/oauth-client</module>

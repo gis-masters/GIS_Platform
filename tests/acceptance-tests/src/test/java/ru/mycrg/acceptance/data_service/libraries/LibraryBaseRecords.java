@@ -36,7 +36,6 @@ public class LibraryBaseRecords extends BaseStepsDefinitions {
     public void deleteRecord(Integer recordId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         delete(String.format("/%s/records/%s", DEFAULT_LIBRARY, recordId));
     }
 }

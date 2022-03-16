@@ -20,8 +20,15 @@ public class ResourceQualifier {
     private final ResourceType type;
     private final Map<ResourceType, String> resourceTables = new EnumMap<>(ResourceType.class);
 
-    public ResourceQualifier(ResourceQualifier rQualifier, Long recordId) {
-        this(rQualifier.getSchema(), rQualifier.getTable(), recordId, RECORD);
+    public ResourceQualifier(ResourceQualifier rQualifier, Long recordId, ResourceType type) {
+        this(rQualifier.getSchema(), rQualifier.getTable(), recordId, type);
+    }
+
+    public ResourceQualifier(ResourceQualifier qualifier, Long recordId) {
+        this(qualifier.getSchema(),
+             qualifier.getTable(),
+             recordId,
+             qualifier.getType().equals(FEATURE) ? FEATURE : LIBRARY_RECORD);
     }
 
     public ResourceQualifier(String schema) {

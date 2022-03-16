@@ -21,7 +21,7 @@ import java.net.URI;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.RECORD;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
 @RestController
@@ -42,7 +42,7 @@ public class DocumentLibraryRecordPermissionController {
                                                         @PathVariable Long recId,
                                                         Pageable pageable,
                                                         PagedResourcesAssembler<PermissionProjection> pageAssembler) {
-        ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
+        ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
 
         var permissions = permissionsService.getAllByResourceId(recordQualifier, pageable);
 
@@ -65,7 +65,7 @@ public class DocumentLibraryRecordPermissionController {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
+        ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
 
         IRecord record = recordServiceFactory.get().getById(recordQualifier, recId);
         Long recordId = Long.valueOf(record.getContent().get(ID.getName()).toString());
@@ -86,7 +86,7 @@ public class DocumentLibraryRecordPermissionController {
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
                                          @PathVariable Long recId,
                                          @PathVariable Long permissionId) {
-        ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, RECORD);
+        ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
 
         permissionsService.deleteById(recordQualifier, permissionId);
 

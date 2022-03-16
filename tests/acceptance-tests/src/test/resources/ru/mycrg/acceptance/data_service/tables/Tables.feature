@@ -1,0 +1,15 @@
+Feature: Проверка сущности table
+
+  Background:
+    Given Существует организация
+      | ООО НаборыДанных | 1234567890 | Наборов | Набор | EMAIL_13 | testPassword1 |
+    Given Авторизируемся владельцем организации
+
+  Scenario Outline: Проверка граничных значений при создании таблиц: (<reason>)
+    Given Существует набор
+    When Отправляется запрос на создание таблицы "<name>" "<title>" "<details>" "<crs>" "<schemaId>"
+    Then Сервер отвечает со статус-кодом 201
+    Examples:
+      | name      | title      | details     | crs        | schemaId              | reason                     |
+      | STRING_3  | STRING_1   | STRING_1    | EPSG:28406 | schema_for_test_table | Граничные нижние значения  |
+      | STRING_50 | STRING_250 | STRING_1000 | EPSG:28406 | schema_for_test_table | Граничные верхние значения |

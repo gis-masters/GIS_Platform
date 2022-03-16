@@ -4,8 +4,6 @@ import com.healthmarketscience.sqlbuilder.CustomCondition;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.UpdateQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -16,7 +14,7 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
@@ -29,7 +27,7 @@ import java.util.*;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
-@Service
+@Repository
 @Transactional
 public class RecordsDao {
 
@@ -84,7 +82,6 @@ public class RecordsDao {
             Set<String> columnNames = body[0].keySet();
             StringBuilder queryColumns = new StringBuilder();
             StringBuilder queryValues = new StringBuilder();
-            String complexName = rIdentifier.getSchema() + "." + rIdentifier.getTable();
             for (int i = 0; i < columnNames.size(); i++) {
                 if (i == columnNames.size() - 1) {
                     queryColumns.append(columnNames.toArray()[i]);
@@ -95,7 +92,8 @@ public class RecordsDao {
                 }
             }
 
-            String query = "insert into " + complexName + "(" + queryColumns.toString().toLowerCase() + ")" +
+            String query = "insert into " + rIdentifier.getTableQualifier() +
+                    "(" + queryColumns.toString().toLowerCase() + ")" +
                     " values (" + queryValues.toString().toLowerCase() + ")";
 
             log.debug("BATCH INSERT QUERY: [{}]", query);
@@ -117,7 +115,7 @@ public class RecordsDao {
     public Optional<IRecord> findById(ResourceQualifier recordQualifier,
                                       SchemaDto schema) {
         try {
-            String query = String.format("SELECT * FROM %s WHERE id = :id", recordQualifier.getResourceTable());
+            String query = String.format("SELECT * FROM %s WHERE id = :id", recordQualifier.getTableQualifier());
 
             log.debug("find record by id: [{}]", query);
 
@@ -178,7 +176,7 @@ public class RecordsDao {
                 .addValue("offset", pageable.getOffset())
                 .addValue("limit", pageable.getPageSize());
 
-        String query = "SELECT * FROM " + tableQualifier +
+        String query = "SELECT * FROM " + tableQualifier.getTableQualifier() +
                 "  " + buildWhereSection(ecqlFilter) +
                 "  " + buildOrderBySection(pageable.getSort()) +
                 "  LIMIT :limit OFFSET :offset";
@@ -299,12 +297,5 @@ public class RecordsDao {
 
             throw new CrgDaoException(msg, e.getCause());
         }
-    }
-
-    private DbTable getSimpleDbTable(@NotNull ResourceQualifier rQualifier) {
-        DbSpec spec = new DbSpec();
-        DbSchema dbSchema = spec.addSchema(rQualifier.getSchema());
-
-        return dbSchema.addTable(rQualifier.getTable());
     }
 }

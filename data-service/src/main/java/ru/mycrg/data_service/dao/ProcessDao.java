@@ -5,7 +5,7 @@ import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.mappers.ProcessRowMapper;
 import ru.mycrg.data_service.entity.Process;
@@ -15,7 +15,7 @@ import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import java.sql.SQLException;
 import java.util.Optional;
 
-@Service
+@Repository
 public class ProcessDao {
 
     private final DatasourceFactory datasourceFactory;
