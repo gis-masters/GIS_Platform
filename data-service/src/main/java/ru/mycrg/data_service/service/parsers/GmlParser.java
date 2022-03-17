@@ -39,6 +39,7 @@ import java.util.Optional;
 import static java.util.Objects.nonNull;
 import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
 import static javax.xml.XMLConstants.ACCESS_EXTERNAL_SCHEMA;
+import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 
 @Service
 public class GmlParser {
@@ -126,7 +127,7 @@ public class GmlParser {
                 Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
                 AbstractCRS userData = (AbstractCRS) defaultGeometry.getUserData();
                 if (nonNull(userData)) {
-                    final Optional<ReferenceIdentifier> oEpsgIdentifier = userData.getIdentifiers().stream().findFirst();
+                    Optional<ReferenceIdentifier> oEpsgIdentifier = userData.getIdentifiers().stream().findFirst();
                     if (oEpsgIdentifier.isPresent()) {
                         simpleFeatureData.setEpsgCode(oEpsgIdentifier.get().toString());
                     }
@@ -184,6 +185,8 @@ public class GmlParser {
                 return "point";
             } else if (element.getElementsByTagName("gml:Polygon").getLength() > 0) {
                 return "polygon";
+            } else if (element.getElementsByTagName("gml:PolygonPatch").getLength() > 0) {
+                return "polygon";
             } else if (element.getElementsByTagName("gml:LineString").getLength() > 0) {
                 return "line";
             } else if (element.getElementsByTagName("gml:Curve").getLength() > 0) {
@@ -222,116 +225,142 @@ public class GmlParser {
 
     private void parsingGeometry(Element element, List<FeatureProperty> objectProperties,
                                  boolean invertCoordinates) {
-        if ((element.getElementsByTagName("gml:posList").getLength() > 0)
-                || (element.getElementsByTagName("gml:pos").getLength() > 0)
-                || (element.getElementsByTagName("gml:coordinates").getLength() > 0)) {
-            FeatureProperty shape = objectProperties
-                    .stream()
-                    .filter(featureProperty -> "shape".equalsIgnoreCase(featureProperty.getName()))
-                    .findFirst()
-                    .orElseThrow();
+        if ((element.getElementsByTagName("gml:posList").getLength() <= 0)
+                && (element.getElementsByTagName("gml:pos").getLength() <= 0)
+                && (element.getElementsByTagName("gml:coordinates").getLength() <= 0)) {
+            return;
+        }
 
-            if (element.getElementsByTagName("gml:MultiCurve").getLength() > 0) {
+        FeatureProperty shape = objectProperties
+                .stream()
+                .filter(featureProperty -> DEFAULT_GEOMETRY_COLUMN_NAME.equalsIgnoreCase(featureProperty.getName()))
+                .findFirst()
+                .orElseThrow();
 
-                Element attributeElement = (Element) element.getElementsByTagName("gml:MultiCurve").item(0);
-                Integer srid = getCrs(attributeElement);
+        if (element.getElementsByTagName("gml:MultiCurve").getLength() > 0) {
+            Element attributeElement = (Element) element.getElementsByTagName("gml:MultiCurve").item(0);
+            Integer srid = getCrs(attributeElement);
 
-                List<Point> coordinatesFromElement = getCoordinatesFromElement(attributeElement, invertCoordinates);
+            List<Point> coordinatesFromElement = getCoordinatesFromElement(attributeElement, invertCoordinates);
 
-                LineString lineString = new LineString(coordinatesFromElement.toArray(Point[]::new));
-                MultiLineString multiLineString = new MultiLineString(List.of(lineString).toArray(LineString[]::new));
-                multiLineString.setSrid(srid);
+            LineString lineString = new LineString(coordinatesFromElement.toArray(Point[]::new));
+            MultiLineString multiLineString = new MultiLineString(List.of(lineString).toArray(LineString[]::new));
+            multiLineString.setSrid(srid);
 
-                PGgeometry pGgeometry = new PGgeometry(multiLineString);
-                shape.setValue(pGgeometry);
-            } else if (element.getElementsByTagName("gml:MultiSurface").getLength() > 0) {
+            PGgeometry pGgeometry = new PGgeometry(multiLineString);
+            shape.setValue(pGgeometry);
+        } else if (element.getElementsByTagName("gml:MultiSurface").getLength() > 0) {
+            Element multiSurfaceElement = (Element) element.getElementsByTagName("gml:MultiSurface").item(0);
+            Integer srid = getCrs(multiSurfaceElement);
+            NodeList allLineStrings = multiSurfaceElement.getElementsByTagName("gml:LinearRing");
 
-                Element multiSurfaceElement = (Element) element.getElementsByTagName("gml:MultiSurface").item(0);
-                Integer srid = getCrs(multiSurfaceElement);
-                NodeList allLineStrings = multiSurfaceElement.getElementsByTagName("gml:LinearRing");
+            List<LinearRing> linearRingList = new ArrayList<>();
+            for (int i = 0; i < allLineStrings.getLength(); i++) {
+                Element linearRingElement = (Element) allLineStrings.item(i);
 
-                List<LinearRing> linearRingList = new ArrayList<>();
-                for (int i = 0; i < allLineStrings.getLength(); i++) {
-                    Element linearRingElement = (Element) allLineStrings.item(i);
+                List<Point> coordinateList = getCoordinatesFromElement(linearRingElement, invertCoordinates);
 
-                    List<Point> coordinateList = getCoordinatesFromElement(linearRingElement, invertCoordinates);
-
-                    LinearRing linearRing = new LinearRing(coordinateList.toArray(Point[]::new));
-                    linearRingList.add(linearRing);
-                }
-                Polygon polygon = new Polygon(linearRingList.toArray(LinearRing[]::new));
-                MultiPolygon multiPolygon = new MultiPolygon(List.of(polygon).toArray(Polygon[]::new));
-                multiPolygon.setSrid(srid);
-
-                PGgeometry pGgeometry = new PGgeometry(multiPolygon);
-                shape.setValue(pGgeometry);
-            } else if (element.getElementsByTagName("gml:MultiPoint").getLength() > 0) {
-
-                Element multiPointElement = (Element) element.getElementsByTagName("gml:MultiPoint").item(0);
-                Integer srid = getCrs(multiPointElement);
-
-                Point point = getCoordinatesFromElement(multiPointElement, invertCoordinates).get(0);
-                point.setSrid(srid);
-
-                PGgeometry pGgeometry = new PGgeometry(point);
-                shape.setValue(pGgeometry);
-            } else if (element.getElementsByTagName("gml:Point").getLength() > 0) {
-
-                Element attributeElement = (Element) element.getElementsByTagName("gml:Point").item(0);
-                Integer srid = getCrs(attributeElement);
-
-                Point point = getCoordinatesFromElement(attributeElement, invertCoordinates).get(0);
-                point.setSrid(srid);
-
-                PGgeometry pGgeometry = new PGgeometry(point);
-                shape.setValue(pGgeometry);
-            } else if (element.getElementsByTagName("gml:Polygon").getLength() > 0) {
-                Element polygonElement = (Element) element.getElementsByTagName("gml:Polygon").item(0);
-                Integer srid = getCrs(polygonElement);
-                NodeList allLinearRing = polygonElement.getElementsByTagName("gml:LinearRing");
-                List<LinearRing> linearRingList = new ArrayList<>();
-                for (int i = 0; i < allLinearRing.getLength(); i++) {
-                    Element linearRingElement = (Element) allLinearRing.item(i);
-
-                    List<Point> coordinateList = getCoordinatesFromElement(linearRingElement, invertCoordinates);
-
-                    LinearRing linearRing = new LinearRing(coordinateList.toArray(Point[]::new));
-                    linearRingList.add(linearRing);
-                }
-                Polygon polygon = new Polygon(linearRingList.toArray(LinearRing[]::new));
-                MultiPolygon multiPolygon = new MultiPolygon(List.of(polygon).toArray(Polygon[]::new));
-                multiPolygon.setSrid(srid);
-
-                PGgeometry pGgeometry = new PGgeometry(multiPolygon);
-                shape.setValue(pGgeometry);
-            } else if (element.getElementsByTagName("gml:LineString").getLength() > 0) {
-                Element attributeElement = (Element) element.getElementsByTagName("gml:LineString").item(0);
-                Integer srid = getCrs(attributeElement);
-                List<Point> coordinateList = getCoordinatesFromElement(attributeElement, invertCoordinates);
-
-                LineString lineString = new LineString(coordinateList.toArray(Point[]::new));
-                MultiLineString multiLineString = new MultiLineString(List.of(lineString).toArray(LineString[]::new));
-                multiLineString.setSrid(srid);
-
-                PGgeometry pGgeometry = new PGgeometry(multiLineString);
-                shape.setValue(pGgeometry);
-            } else if (element.getElementsByTagName("gml:Curve").getLength() > 0) {
-                Element attributeElement = (Element) element.getElementsByTagName("gml:Curve").item(0);
-                Integer srid = getCrs(attributeElement);
-                int quantityOfPosList = element.getElementsByTagName("gml:posList").getLength();
-                List<LineString> lineStrings = new ArrayList<>();
-                for (int i = 0; i < quantityOfPosList; i++) {
-                    List<Point> coordinateList = getCoordinatesFromPosList(attributeElement, i, invertCoordinates);
-                    LineString lineString = new LineString(coordinateList.toArray(Point[]::new));
-                    lineStrings.add(lineString);
-                }
-
-                MultiLineString multiLineString = new MultiLineString(lineStrings.toArray(LineString[]::new));
-                multiLineString.setSrid(srid);
-
-                PGgeometry pGgeometry = new PGgeometry(multiLineString);
-                shape.setValue(pGgeometry);
+                LinearRing linearRing = new LinearRing(coordinateList.toArray(Point[]::new));
+                linearRingList.add(linearRing);
             }
+            Polygon polygon = new Polygon(linearRingList.toArray(LinearRing[]::new));
+            MultiPolygon multiPolygon = new MultiPolygon(List.of(polygon).toArray(Polygon[]::new));
+            multiPolygon.setSrid(srid);
+
+            PGgeometry pGgeometry = new PGgeometry(multiPolygon);
+            shape.setValue(pGgeometry);
+        } else if (element.getElementsByTagName("gml:MultiPoint").getLength() > 0) {
+            Element multiPointElement = (Element) element.getElementsByTagName("gml:MultiPoint").item(0);
+            Integer srid = getCrs(multiPointElement);
+
+            Point point = getCoordinatesFromElement(multiPointElement, invertCoordinates).get(0);
+            point.setSrid(srid);
+
+            PGgeometry pGgeometry = new PGgeometry(point);
+            shape.setValue(pGgeometry);
+        } else if (element.getElementsByTagName("gml:Point").getLength() > 0) {
+            Element attributeElement = (Element) element.getElementsByTagName("gml:Point").item(0);
+            Integer srid = getCrs(attributeElement);
+
+            Point point = getCoordinatesFromElement(attributeElement, invertCoordinates).get(0);
+            point.setSrid(srid);
+
+            PGgeometry pGgeometry = new PGgeometry(point);
+            shape.setValue(pGgeometry);
+        } else if (element.getElementsByTagName("gml:Polygon").getLength() > 0) {
+            Element polygonElement = (Element) element.getElementsByTagName("gml:Polygon").item(0);
+            Integer srid = getCrs(polygonElement);
+            NodeList allLinearRing = polygonElement.getElementsByTagName("gml:LinearRing");
+            List<LinearRing> linearRingList = new ArrayList<>();
+            for (int i = 0; i < allLinearRing.getLength(); i++) {
+                Element linearRingElement = (Element) allLinearRing.item(i);
+
+                List<Point> coordinateList = getCoordinatesFromElement(linearRingElement, invertCoordinates);
+
+                LinearRing linearRing = new LinearRing(coordinateList.toArray(Point[]::new));
+                linearRingList.add(linearRing);
+            }
+            Polygon polygon = new Polygon(linearRingList.toArray(LinearRing[]::new));
+            MultiPolygon multiPolygon = new MultiPolygon(List.of(polygon).toArray(Polygon[]::new));
+            multiPolygon.setSrid(srid);
+
+            PGgeometry pGgeometry = new PGgeometry(multiPolygon);
+            shape.setValue(pGgeometry);
+        } else if (element.getElementsByTagName("gml:Surface").getLength() > 0) {
+            Element surfaceElement = (Element) element.getElementsByTagName("gml:Surface").item(0);
+            Integer srid = getCrs(surfaceElement);
+
+            NodeList allPolygonPatches = surfaceElement.getElementsByTagName("gml:PolygonPatch");
+            List<Polygon> allPolygons = new ArrayList<>();
+            for (int i = 0; i < allPolygonPatches.getLength(); i++) {
+                Element polygonPatchElement = (Element) allPolygonPatches.item(i);
+
+                NodeList allLinearRings = polygonPatchElement.getElementsByTagName("gml:LinearRing");
+                List<LinearRing> linearRingsByPolygon = new ArrayList<>();
+                for (int j = 0; j < allLinearRings.getLength(); j++) {
+                    Element linearRingElement = (Element) allLinearRings.item(j);
+
+                    List<Point> coordinateList = getCoordinatesFromElement(linearRingElement, invertCoordinates);
+
+                    LinearRing linearRing = new LinearRing(coordinateList.toArray(Point[]::new));
+                    linearRingsByPolygon.add(linearRing);
+                }
+                Polygon polygon = new Polygon(linearRingsByPolygon.toArray(LinearRing[]::new));
+                allPolygons.add(polygon);
+            }
+
+            MultiPolygon multiPolygon = new MultiPolygon(allPolygons.toArray(Polygon[]::new));
+            multiPolygon.setSrid(srid);
+
+            PGgeometry pGgeometry = new PGgeometry(multiPolygon);
+            shape.setValue(pGgeometry);
+        } else if (element.getElementsByTagName("gml:LineString").getLength() > 0) {
+            Element attributeElement = (Element) element.getElementsByTagName("gml:LineString").item(0);
+            Integer srid = getCrs(attributeElement);
+            List<Point> coordinateList = getCoordinatesFromElement(attributeElement, invertCoordinates);
+
+            LineString lineString = new LineString(coordinateList.toArray(Point[]::new));
+            MultiLineString multiLineString = new MultiLineString(List.of(lineString).toArray(LineString[]::new));
+            multiLineString.setSrid(srid);
+
+            PGgeometry pGgeometry = new PGgeometry(multiLineString);
+            shape.setValue(pGgeometry);
+        } else if (element.getElementsByTagName("gml:Curve").getLength() > 0) {
+            Element attributeElement = (Element) element.getElementsByTagName("gml:Curve").item(0);
+            Integer srid = getCrs(attributeElement);
+            int quantityOfPosList = element.getElementsByTagName("gml:posList").getLength();
+            List<LineString> lineStrings = new ArrayList<>();
+            for (int i = 0; i < quantityOfPosList; i++) {
+                List<Point> coordinateList = getCoordinatesFromPosList(attributeElement, i, invertCoordinates);
+                LineString lineString = new LineString(coordinateList.toArray(Point[]::new));
+                lineStrings.add(lineString);
+            }
+
+            MultiLineString multiLineString = new MultiLineString(lineStrings.toArray(LineString[]::new));
+            multiLineString.setSrid(srid);
+
+            PGgeometry pGgeometry = new PGgeometry(multiLineString);
+            shape.setValue(pGgeometry);
         }
     }
 
