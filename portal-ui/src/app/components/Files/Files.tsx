@@ -9,12 +9,14 @@ import { v4 as uuid } from 'uuid';
 
 import { PropertySchemaFile } from '../../services/crg/schema.models';
 import { createFile, FileInfo } from '../../services/files.service';
-import { sleep } from '../../services/util/sleep';
-import { FileInput } from '../FileInput/FileInput';
 import { LookupStatusType } from '../Lookup/Status/Lookup-Status';
 import { LookupList } from '../Lookup/List/Lookup-List';
 import { LookupAdd } from '../Lookup/Add/Lookup-Add';
 import { Lookup } from '../Lookup/Lookup';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { FileInput } from '../FileInput/FileInput';
+import { sleep } from '../../services/util/sleep';
+import { env } from '../../stores/Env.store';
 
 import { FilesItem } from './Item/Files-Item';
 
@@ -133,6 +135,24 @@ export class Files extends Component<FilesProps> {
     }
 
     const fileInfo = this.uploadPool.shift();
+    // ограничения по размеру файла, если админ - 1гб, если юзер но без данных в схеме - 10мб
+    const maxSizeBites = currentUser.isAdmin ? 1_073_741_824 : this.props.property.maxSize || 10_485_760;
+
+    if (maxSizeBites && fileInfo.size > maxSizeBites) {
+      const maxSize = currentUser.isAdmin ? '1 Gb' : `${Number((maxSizeBites / Math.pow(1024, 2)).toFixed(2))} Mb`;
+      this.editNewbie(fileInfo.id, {
+        status: 'error',
+        statusText: `Размер указанного файла превышает максимально допустимый — ${maxSize}.
+                Для загрузки обратитесь к администратору — ${env.contactsEmail}`
+      });
+
+      if (this.uploadPool.length) {
+        void this.upload();
+      }
+
+      return;
+    }
+
     this.uploadingNow = fileInfo;
     this.editNewbie(fileInfo.id, { status: 'loading', statusText: 'Загружается' });
 

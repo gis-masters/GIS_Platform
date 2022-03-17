@@ -43,9 +43,13 @@ export class FilesName extends Component<FilesNameProps> {
     return (
       <Tooltip
         title={
-          <>
-            Скачать <b>{item.title}</b> ({getReadableFileSize(item.size)})
-          </>
+          !disabled ? (
+            <>
+              Скачать <b>{item.title}</b> ({getReadableFileSize(item.size)})
+            </>
+          ) : (
+            <>Невозможно скачать файл</>
+          )
         }
         enterDelay={800}
       >
