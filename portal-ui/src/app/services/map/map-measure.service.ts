@@ -28,7 +28,7 @@ export type MeasureMode = 'area' | 'length';
 
 export interface MeasureItem {
   id: symbol;
-  feature: Feature<SimpleGeometry>;
+  feature: Feature;
   tooltipRoot: HTMLElement;
   tooltipOverlay: Overlay;
 }
@@ -161,7 +161,7 @@ class MapMeasureService {
     delete this.sketchItem;
   }
 
-  private createItem(feature: Feature<SimpleGeometry>): MeasureItem {
+  private createItem(feature: Feature): MeasureItem {
     const tooltipNode = document.createElement('div');
     tooltipNode.className = 'MapMeasureTooltipRoot';
     const tooltipOverlay = new Overlay({
