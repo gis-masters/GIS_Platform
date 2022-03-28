@@ -20,7 +20,7 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 @Service("createAccessRules")
 public class CreateAccessRules implements JavaDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(CreateAccessRules.class);
+    private final Logger log = LoggerFactory.getLogger(CreateAccessRules.class);
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {

@@ -32,7 +32,7 @@ import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 @RequestMapping("/projects/{project_id}")
 public class LayerController {
 
-    private static final Logger log = LoggerFactory.getLogger(LayerController.class);
+    private final Logger log = LoggerFactory.getLogger(LayerController.class);
 
     private final LayerService layerService;
     private final ProjectService projectService;

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
 
-    private static final Logger log = LoggerFactory.getLogger(VectorLayerDefaultStyleAnalyzer.class);
+    private final Logger log = LoggerFactory.getLogger(VectorLayerDefaultStyleAnalyzer.class);
 
     private final LayerService layerService;
     private final IAuthenticationFacade authenticationFacade;

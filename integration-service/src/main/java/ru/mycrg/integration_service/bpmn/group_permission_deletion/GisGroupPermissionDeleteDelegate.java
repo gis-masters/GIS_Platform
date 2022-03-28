@@ -18,7 +18,7 @@ import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.TOKEN_VA
 @Service("gisGroupPermissionDeleteDelegate")
 public class GisGroupPermissionDeleteDelegate implements JavaDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(GisGroupPermissionDeleteDelegate.class);
+    private final Logger log = LoggerFactory.getLogger(GisGroupPermissionDeleteDelegate.class);
 
     private final BaseHttpService baseHttpService;
 

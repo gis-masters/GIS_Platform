@@ -23,7 +23,7 @@ import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.USERS_VA
 @Service("geoserverUserDeleteDelegate")
 public class GeoserverUserDeleteDelegate implements JavaDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(GeoserverUserDeleteDelegate.class);
+    private final Logger log = LoggerFactory.getLogger(GeoserverUserDeleteDelegate.class);
 
     private final BaseHttpService baseHttpService;
 

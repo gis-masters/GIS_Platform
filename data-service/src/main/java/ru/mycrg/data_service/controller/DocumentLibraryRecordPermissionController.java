@@ -12,8 +12,11 @@ import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.service.PermissionsService;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.CreatePermissionRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.DeletePermissionRequest;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.mediator.Mediator;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -29,11 +32,14 @@ public class DocumentLibraryRecordPermissionController {
 
     private final RecordServiceFactory recordServiceFactory;
     private final PermissionsService permissionsService;
+    private final Mediator mediator;
 
     public DocumentLibraryRecordPermissionController(RecordServiceFactory recordServiceFactory,
-                                                     PermissionsService permissionsService) {
+                                                     PermissionsService permissionsService,
+                                                     Mediator mediator) {
         this.recordServiceFactory = recordServiceFactory;
         this.permissionsService = permissionsService;
+        this.mediator = mediator;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -70,7 +76,8 @@ public class DocumentLibraryRecordPermissionController {
         IRecord record = recordServiceFactory.get().getById(recordQualifier, recId);
         Long recordId = Long.valueOf(record.getContent().get(ID.getName()).toString());
 
-        PermissionProjection permission = permissionsService.create(recordQualifier, recordId, dto);
+        PermissionProjection permission = mediator.execute(
+                new CreatePermissionRequest(recordQualifier, recordId, dto));
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -88,7 +95,7 @@ public class DocumentLibraryRecordPermissionController {
                                          @PathVariable Long permissionId) {
         ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
 
-        permissionsService.deleteById(recordQualifier, permissionId);
+        mediator.execute(new DeletePermissionRequest(recordQualifier, permissionId));
 
         return ResponseEntity.noContent().build();
     }

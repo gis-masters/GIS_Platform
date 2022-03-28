@@ -19,7 +19,7 @@ import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 @Component
 public class JsonMergePatchHttpMessageConverter extends AbstractHttpMessageConverter<JsonMergePatch> {
 
-    private static final Logger log = LoggerFactory.getLogger(JsonMergePatchHttpMessageConverter.class);
+    private final Logger log = LoggerFactory.getLogger(JsonMergePatchHttpMessageConverter.class);
 
     public JsonMergePatchHttpMessageConverter() {
         super(MediaType.valueOf(APPLICATION_JSON_MERGE_PATCH));

@@ -12,8 +12,11 @@ import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.service.PermissionsService;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.CreatePermissionRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.DeletePermissionRequest;
 import ru.mycrg.data_service.service.resources.DatasetService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.mediator.Mediator;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -27,11 +30,14 @@ public class DatasetPermissionsController {
 
     private final DatasetService datasetService;
     private final PermissionsService permissionsService;
+    private final Mediator mediator;
 
     public DatasetPermissionsController(DatasetService datasetService,
-                                        PermissionsService permissionsService) {
+                                        PermissionsService permissionsService,
+                                        Mediator mediator) {
         this.datasetService = datasetService;
         this.permissionsService = permissionsService;
+        this.mediator = mediator;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -67,7 +73,8 @@ public class DatasetPermissionsController {
                                                              dataset.getId(),
                                                              DATASET);
 
-        PermissionProjection permission = permissionsService.create(dQualifier, dataset.getId(), dto);
+        PermissionProjection permission = mediator.execute(
+                new CreatePermissionRequest(dQualifier, dataset.getId(), dto));
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -85,7 +92,8 @@ public class DatasetPermissionsController {
         ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
                                                              datasetId,
                                                              DATASET);
-        permissionsService.deleteById(dQualifier, permissionId);
+
+        mediator.execute(new DeletePermissionRequest(dQualifier, permissionId));
 
         return ResponseEntity.noContent().build();
     }

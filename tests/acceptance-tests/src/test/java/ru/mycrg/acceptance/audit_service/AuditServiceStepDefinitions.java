@@ -209,6 +209,30 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
     }
 
+    @Then("Создана запись в журнале аудита о создании датасета")
+    public void checkDatasetCreate() {
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, DATASET.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
+    }
+
+    @Then("Создана запись в журнале аудита об удалении датасета")
+    public void checkDatasetDelete() {
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, DATASET.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
+    }
+
+    @Then("Создана запись в журнале аудита о создании правила")
+    public void checkPermissionCreate() {
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PERMISSION.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
+    }
+
+    @Then("Создана запись в журнале аудита об удалении правила")
+    public void checkPermissionDelete() {
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PERMISSION.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
+    }
+
     @And("Создан аудит лог об изменении слоя")
     public void checkLayerUpdate() {
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));

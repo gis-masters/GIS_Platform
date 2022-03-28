@@ -146,45 +146,6 @@ public class PermissionsService {
         return new PageImpl<>(result, pageable, schemasAndTables.getTotalElements());
     }
 
-    /**
-     * Создание правила.
-     *
-     * @param rQualifier Определяет таблицу для которой создаётся правило
-     * @param resourceId Идентификатор объекта
-     * @param dto        Модель правила
-     *
-     * @throws ForbiddenException если у пользователя нет прав на создание.
-     * @throws ConflictException  если такое правило уже существует.
-     */
-    public PermissionProjection create(ResourceQualifier rQualifier, Long resourceId, PermissionCreateDto dto) {
-        if (!protectors.get(rQualifier.getType()).isOwner(rQualifier)) {
-            throw new ForbiddenException("Недостаточно прав для создания правил");
-        }
-
-        try {
-            Role role = roleRepository.findById(defineIdByRole(dto.getRole()))
-                                      .orElseThrow(() -> new NotFoundException("Not found role"));
-
-            Principal principal = principalService.getOrCreate(dto.getPrincipalId(),
-                                                               dto.getPrincipalType());
-
-            Permission permission = new Permission();
-            permission.setRole(role);
-            permission.setPrincipal(principal);
-            permission.setResourceTable(rQualifier.getResourceTable());
-            permission.setResourceId(resourceId);
-            permission.setCreatedBy(authenticationFacade.getLogin());
-
-            Permission newPermission = permissionRepository.save(permission);
-
-            return projectionFactory.createProjection(PermissionProjection.class, newPermission);
-        } catch (DataIntegrityViolationException e) {
-            throw new ConflictException("Already joined");
-        } catch (Exception e) {
-            throw new DataServiceException("Failed to create permission. Reason: " + e.getMessage());
-        }
-    }
-
     public void deleteById(ResourceQualifier rQualifier, Long permissionId) {
         if (!protectors.get(rQualifier.getType()).isOwner(rQualifier)) {
             throw new ForbiddenException("Недостаточно прав для удаления разрешения: " + permissionId);

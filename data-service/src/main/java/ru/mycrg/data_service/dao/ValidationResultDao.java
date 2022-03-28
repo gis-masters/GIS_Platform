@@ -29,7 +29,7 @@ import static ru.mycrg.data_service.dao.utils.SqlBuilder.fillWhereSectionByFilte
 @Transactional
 public class ValidationResultDao {
 
-    private static final Logger log = LoggerFactory.getLogger(ValidationResultDao.class);
+    private final Logger log = LoggerFactory.getLogger(ValidationResultDao.class);
 
     private final JdbcTemplate jdbcTemplate;
 

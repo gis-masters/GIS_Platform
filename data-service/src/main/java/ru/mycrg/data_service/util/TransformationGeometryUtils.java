@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 @Component
 public class TransformationGeometryUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(TransformationGeometryUtils.class);
+    private final Logger log = LoggerFactory.getLogger(TransformationGeometryUtils.class);
 
     private final EpsgCodes epsgCodes;
     private final CrsHandler crsHandler;

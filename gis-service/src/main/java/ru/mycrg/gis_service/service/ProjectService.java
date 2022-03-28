@@ -39,7 +39,7 @@ import static ru.mycrg.gis_service.security.Roles.OWNER;
 @Transactional
 public class ProjectService {
 
-    private static final Logger log = LoggerFactory.getLogger(ProjectService.class);
+    private final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
     private final ProjectProjectionFactory projectionFactory;
     private final ProjectRepository projectRepository;

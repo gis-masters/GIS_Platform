@@ -24,7 +24,7 @@ import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 @RequestMapping("/projects")
 public class PermissionController {
 
-    private static final Logger log = LoggerFactory.getLogger(PermissionController.class);
+    private final Logger log = LoggerFactory.getLogger(PermissionController.class);
 
     private final PermissionsService permissionsService;
 

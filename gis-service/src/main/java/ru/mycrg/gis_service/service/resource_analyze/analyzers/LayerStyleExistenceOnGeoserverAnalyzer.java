@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class LayerStyleExistenceOnGeoserverAnalyzer implements IResourceAnalyzer {
 
-    private static final Logger log = LoggerFactory.getLogger(LayerStyleExistenceOnGeoserverAnalyzer.class);
+    private final Logger log = LoggerFactory.getLogger(LayerStyleExistenceOnGeoserverAnalyzer.class);
 
     private final IAuthenticationFacade authenticationFacade;
 

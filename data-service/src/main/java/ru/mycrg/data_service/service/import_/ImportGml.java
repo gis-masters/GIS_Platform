@@ -6,12 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dao.utils.GeometryHelper;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.dao.utils.GeometryHelper;
 import ru.mycrg.data_service.dto.*;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.cqrs.datasets.requests.CreateDatasetRequest;
 import ru.mycrg.data_service.service.import_.exceptions.ImportException;
 import ru.mycrg.data_service.service.import_.model.ImportGmlModel;
 import ru.mycrg.data_service.service.parsers.GmlParser;
@@ -19,7 +20,6 @@ import ru.mycrg.data_service.service.parsers.model.FeatureData;
 import ru.mycrg.data_service.service.parsers.model.FeatureObject;
 import ru.mycrg.data_service.service.parsers.model.FeatureProperty;
 import ru.mycrg.data_service.service.parsers.model.SimpleFeatureData;
-import ru.mycrg.data_service.service.resources.DatasetService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service.service.validation.ValidationService;
@@ -28,6 +28,7 @@ import ru.mycrg.data_service_contract.dto.ImportLayerReport;
 import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
+import ru.mycrg.mediator.Mediator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,26 +45,27 @@ public class ImportGml {
     private final SchemaService schemaService;
     private final GeometryHelper geometryHelper;
     private final GmlParser gmlParser;
-    private final DatasetService datasetService;
     private final ValidationService validationService;
     private final CrgScriptEngine scriptEngine;
     private final TableService tableService;
+    private final Mediator mediator;
 
     public ImportGml(RecordsDao recordsDao,
                      SchemaService schemaService,
-                     GeometryHelper geometryHelper, GmlParser gmlParser,
-                     DatasetService datasetService,
+                     GeometryHelper geometryHelper,
+                     GmlParser gmlParser,
                      ValidationService validationService,
                      CrgScriptEngine scriptEngine,
-                     TableService tableService) {
+                     TableService tableService,
+                     Mediator mediator) {
         this.recordsDao = recordsDao;
         this.schemaService = schemaService;
         this.geometryHelper = geometryHelper;
         this.gmlParser = gmlParser;
-        this.datasetService = datasetService;
         this.validationService = validationService;
         this.scriptEngine = scriptEngine;
         this.tableService = tableService;
+        this.mediator = mediator;
     }
 
     public ImportReport doImport(Resource file, ImportGmlModel importGmlModel) {
@@ -77,7 +79,7 @@ public class ImportGml {
                                                               importGmlModel.getDocDateApprove(),
                                                               importGmlModel.getScale());
 
-            DatasetModel createdDataset = datasetService.create(dataset);
+            DatasetModel createdDataset = mediator.execute(new CreateDatasetRequest(dataset));
             final String datasetIdentifier = createdDataset.getIdentifier();
             importResult.setDatasetIdentifier(datasetIdentifier);
 

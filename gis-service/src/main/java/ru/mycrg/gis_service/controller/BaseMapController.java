@@ -21,7 +21,7 @@ import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 @RequestMapping("/projects/{project_id}")
 public class BaseMapController {
 
-    private static final Logger log = LoggerFactory.getLogger(BaseMapController.class);
+    private final Logger log = LoggerFactory.getLogger(BaseMapController.class);
 
     private final BasemapService baseMapService;
 

@@ -18,7 +18,7 @@ import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.TOKEN_VA
 @Service("dataServiceGroupPermissionDeleteDelegate")
 public class DataServiceGroupPermissionDeleteDelegate implements JavaDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(DataServiceGroupPermissionDeleteDelegate.class);
+    private final Logger log = LoggerFactory.getLogger(DataServiceGroupPermissionDeleteDelegate.class);
 
     private final BaseHttpService baseHttpService;
 

@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 @Service
 public class StorageService {
 
-    private static final Logger log = LoggerFactory.getLogger(StorageService.class);
+    private final Logger log = LoggerFactory.getLogger(StorageService.class);
 
     private final Path exportStoragePath;
 

@@ -15,8 +15,11 @@ import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.service.PermissionsService;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.CreatePermissionRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.DeletePermissionRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
+import ru.mycrg.mediator.Mediator;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -31,12 +34,15 @@ public class TablesPermissionsController {
 
     private final TableService tableService;
     private final PermissionsService permissionsService;
+    private final Mediator mediator;
 
     public TablesPermissionsController(TableService tableService,
-                                       PermissionsService permissionsService) {
+                                       PermissionsService permissionsService,
+                                       Mediator mediator) {
         this.tableService = tableService;
 
         this.permissionsService = permissionsService;
+        this.mediator = mediator;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -53,7 +59,8 @@ public class TablesPermissionsController {
 
         IResourceModel table = tableService.getInfo(tQualifier);
 
-        PermissionProjection permission = permissionsService.create(tQualifier, table.getId(), dto);
+        PermissionProjection permission = mediator.execute(
+                new CreatePermissionRequest(tQualifier, table.getId(), dto));
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -99,7 +106,7 @@ public class TablesPermissionsController {
                                                              tableId,
                                                              TABLE);
 
-        permissionsService.deleteById(tQualifier, permissionId);
+        mediator.execute(new DeletePermissionRequest(tQualifier, permissionId));
 
         return ResponseEntity.noContent().build();
     }

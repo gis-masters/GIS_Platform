@@ -32,7 +32,7 @@ import static ru.mycrg.data_service.util.SchemaUtil.getPropertyNameByType;
 @Service
 public class XmlParser {
 
-    private static final Logger log = LoggerFactory.getLogger(XmlParser.class);
+    private final Logger log = LoggerFactory.getLogger(XmlParser.class);
 
     private final DocumentBuilder documentBuilder;
     private final GeometryFactory geometryFactory;

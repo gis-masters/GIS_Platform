@@ -12,6 +12,7 @@ import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 
 import java.util.Map;
 
+import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -104,6 +105,13 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         currentDatasetDto = new DatasetCreateDto(generateString("STRING_10"));
 
         createDataset(currentDatasetDto);
+    }
+
+    @When("Пользователь создает новый набор данных")
+    public void createAndWaitNewDataset() throws InterruptedException {
+        initDataset();
+
+        sleep(500);
     }
 
     @And("Сервер передаёт Location созданного набора")
@@ -200,7 +208,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     public void deleteLayerFromDatasets() {
         response = getBaseRequestWithCurrentCookie()
                 .when().log().all().
-                        delete("/" + currentDatasetName + "/tables/" + currentTableName);
+                       delete("/" + currentDatasetName + "/tables/" + currentTableName);
     }
 
     private void createDataset(DatasetCreateDto dto) {

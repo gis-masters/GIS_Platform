@@ -22,7 +22,7 @@ import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 @RequestMapping("/projects/{project_id}")
 public class GroupController {
 
-    private static final Logger log = LoggerFactory.getLogger(GroupController.class);
+    private final Logger log = LoggerFactory.getLogger(GroupController.class);
 
     private final GroupService groupService;
 

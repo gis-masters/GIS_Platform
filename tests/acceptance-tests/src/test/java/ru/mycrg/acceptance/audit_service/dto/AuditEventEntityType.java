@@ -4,6 +4,8 @@ public enum AuditEventEntityType {
     PROJECT("PROJECT"),
     LAYER("LAYER"),
     LIBRARY_RECORD("LIBRARY_RECORD"),
+    PERMISSION ("PERMISSION"),
+    DATASET ("DATASET"),
     FEATURE("FEATURE");
 
     String value;

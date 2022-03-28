@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryBasePermissions.currentPermissionId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryBasePermissions.makeLibraryPermissionUrl;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentRecordId;
 
 public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -318,6 +319,13 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
                         delete(String.format("%s/roleAssignment/%d", libraryName, currentPermissionId));
     }
 
+    @When("Пользователь удаляет текущее разрешение для библиотеки по-умолчанию")
+    public void removeCurrentPermission() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete(String.format("%s/roleAssignment/%d", DEFAULT_LIBRARY, currentPermissionId));
+    }
+
     @When("Пользователь запрашивает запись {string}")
     public void getRecord(String title) {
         authorizationBase.loginAsCurrentUser();
@@ -345,6 +353,17 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     @When("Текущий пользователь запрашивает библиотеки с фильтрацией {string}")
     public void getLibrariesByFilter(String filter) {
         super.getCurrentEntityByFilter(filter);
+    }
+
+    @When("Владелец организации добавляет разрешение для текущей записи в библиотеке по умолчанию")
+    public void addPermissionForCurrentRecord() {
+        authorizationBase.loginAsOwner();
+
+        String urlToFolder = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, currentRecordId);
+
+        libraryBasePermissions.addPermission(urlToFolder, userId, "user", "VIEWER");
+
+        currentPermissionId = super.extractId(response.getHeader("Location"));
     }
 
     private void addPermissionToRecordForCurrentUser(Integer recordId, String role) {

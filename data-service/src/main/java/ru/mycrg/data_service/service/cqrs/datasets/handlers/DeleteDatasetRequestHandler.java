@@ -1,0 +1,71 @@
+package ru.mycrg.data_service.service.cqrs.datasets.handlers;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import ru.mycrg.data_service.dao.ddl.DdlSchemas;
+import ru.mycrg.data_service.entity.SchemasAndTables;
+import ru.mycrg.data_service.exceptions.ForbiddenException;
+import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
+import ru.mycrg.data_service.service.PermissionsService;
+import ru.mycrg.data_service.service.cqrs.datasets.requests.DeleteDatasetRequest;
+import ru.mycrg.data_service.service.resources.DataStoreClient;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
+import ru.mycrg.http_client.ResponseModel;
+import ru.mycrg.mediator.IRequestHandler;
+import ru.mycrg.mediator.Voidy;
+
+@Component
+public class DeleteDatasetRequestHandler implements IRequestHandler<DeleteDatasetRequest, Voidy> {
+
+    private final Logger log = LoggerFactory.getLogger(DeleteDatasetRequestHandler.class);
+
+    private final DdlSchemas ddlSchemas;
+    private final DataStoreClient dataStoreClient;
+    private final IResourceProtector datasetProtector;
+    private final SchemasAndTablesRepository schemasAndTablesRepository;
+    private final PermissionsService permissionsService;
+
+    public DeleteDatasetRequestHandler(DdlSchemas ddlSchemas,
+                                       DataStoreClient dataStoreClient,
+                                       IResourceProtector datasetProtector,
+                                       SchemasAndTablesRepository schemasAndTablesRepository,
+                                       PermissionsService permissionsService) {
+        this.ddlSchemas = ddlSchemas;
+        this.dataStoreClient = dataStoreClient;
+        this.datasetProtector = datasetProtector;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
+        this.permissionsService = permissionsService;
+    }
+
+    @Override
+    public Voidy handle(DeleteDatasetRequest request) {
+        ResourceQualifier datasetQualifier = request.getDatasetQualifier();
+        SchemasAndTables dataset = schemasAndTablesRepository
+                .findByIdentifier(datasetQualifier.toString())
+                .orElseThrow(() -> new NotFoundException(datasetQualifier));
+
+        if (!datasetProtector.isOwner(datasetQualifier)) {
+            throw new ForbiddenException("Недостаточно прав для удаления набора: " + datasetQualifier.getQualifier());
+        }
+
+        // Delete from DB
+        ddlSchemas.drop(datasetQualifier);
+
+        // Delete from information table
+        schemasAndTablesRepository.deleteByIdentifier(datasetQualifier.toString());
+
+        // Delete from geoserver
+        ResponseModel<Object> responseModel = dataStoreClient.delete(datasetQualifier.toString());
+        if (!responseModel.isSuccessful()) {
+            log.warn("Не удалось удалить хранилище на gis-service: {}", responseModel);
+        }
+
+        // Delete assigned rule
+        permissionsService.deleteAssigned(datasetQualifier, dataset.getId());
+
+        return new Voidy();
+    }
+}

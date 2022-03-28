@@ -16,7 +16,7 @@ import ru.mycrg.oauth_client.OAuthClient;
 @Component
 public class GeoserverHealthIndicator implements HealthIndicator {
 
-    private static final Logger log = LoggerFactory.getLogger(GeoserverHealthIndicator.class);
+    private final Logger log = LoggerFactory.getLogger(GeoserverHealthIndicator.class);
 
     private final AuthenticationFacade authenticationFacade;
 

@@ -13,7 +13,10 @@ import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.PermissionsService;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.CreatePermissionRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.DeletePermissionRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.mediator.Mediator;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -28,11 +31,14 @@ public class DocumentLibraryPermissionController {
 
     private final DocumentLibraryService librariesService;
     private final PermissionsService permissionsService;
+    private final Mediator mediator;
 
     public DocumentLibraryPermissionController(DocumentLibraryService librariesService,
-                                               PermissionsService permissionsService) {
+                                               PermissionsService permissionsService,
+                                               Mediator mediator) {
         this.librariesService = librariesService;
         this.permissionsService = permissionsService;
+        this.mediator = mediator;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -66,7 +72,8 @@ public class DocumentLibraryPermissionController {
         IResourceModel dl = librariesService.getInfo(docLibId);
 
         ResourceQualifier dlQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
-        PermissionProjection permission = permissionsService.create(dlQualifier, dl.getId(), dto);
+        PermissionProjection permission = mediator.execute(
+                new CreatePermissionRequest(dlQualifier, dl.getId(), dto));
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -81,7 +88,9 @@ public class DocumentLibraryPermissionController {
     @DeleteMapping("/document-libraries/{docLibId}/roleAssignment/{permissionId}")
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
                                          @PathVariable Long permissionId) {
-        permissionsService.deleteById(new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY), permissionId);
+        mediator.execute(
+                new DeletePermissionRequest(new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY),
+                                            permissionId));
 
         return ResponseEntity.noContent().build();
     }

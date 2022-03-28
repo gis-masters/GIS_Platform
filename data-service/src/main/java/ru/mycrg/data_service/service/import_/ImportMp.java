@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class ImportMp implements Importer {
 
-    private static final Logger log = LoggerFactory.getLogger(ImportMp.class);
+    private final Logger log = LoggerFactory.getLogger(ImportMp.class);
     private static final String SCHEMA_NAME = "mp";
 
     private final RecordsDao recordsDao;

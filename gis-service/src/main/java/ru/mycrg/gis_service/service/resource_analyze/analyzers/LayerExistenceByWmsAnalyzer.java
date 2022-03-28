@@ -29,7 +29,7 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 @Service
 public class LayerExistenceByWmsAnalyzer implements IResourceAnalyzer {
 
-    private static final Logger log = LoggerFactory.getLogger(LayerExistenceByWmsAnalyzer.class);
+    private final Logger log = LoggerFactory.getLogger(LayerExistenceByWmsAnalyzer.class);
 
     private final Double[] bbox = new Double[]{3778140.58549765, 5300522.190056069, 3778162.97915828, 5300544.5837167};
 
