@@ -1,0 +1,15 @@
+body .ServicesCalculator {
+  &-ServicesList {
+    display: flex;
+    overflow-y: scroll;
+    flex-direction: column;
+
+    width: 100%;
+    height: calc(100vh - 200px);
+    margin-right: 15px;
+
+    .MuiPaper-root {
+      margin-bottom: 10px;
+    }
+  }
+}

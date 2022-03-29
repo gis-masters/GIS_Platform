@@ -78,6 +78,7 @@ import { XmlDownloadComponent } from './components/xml-download/xml-download.com
 import { FooterComponent } from './components/footer/footer.component';
 import { FormControlComponent } from './components/form-control/form-control.component';
 import { LibraryDocumentPageContainerComponent } from './components/library-document-page-container/library-document-page-container.component';
+import { ServicesCalculatorComponent } from './components/services-calculator/services-calculator.component';
 
 @NgModule({
   declarations: [
@@ -137,7 +138,8 @@ import { LibraryDocumentPageContainerComponent } from './components/library-docu
     LibraryRegistryComponent,
     LibraryDocumentPageContainerComponent,
     XmlDownloadComponent,
-    FormControlComponent
+    FormControlComponent,
+    ServicesCalculatorComponent
   ],
   imports: [
     HttpClientModule,

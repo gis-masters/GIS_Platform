@@ -13,6 +13,7 @@ import { PrintButton } from '../../PrintButton/PrintButton';
 import { HelpToggler } from '../../HelpToggler/HelpToggler';
 import { ExportGmlButton } from '../../ExportGmlButton/ExportGmlButton';
 import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
+import { CalculatorButton } from '../../CalculatorButton/CalculatorButton';
 import { CopyUrlButton } from '../../CopyUrlButton/CopyUrlButton';
 
 import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-Buttons.scss';
@@ -24,6 +25,7 @@ export class WorkspaceHeaderButtons extends Component {
   render() {
     return (
       <div className={cnWorkspaceHeaderButtons()}>
+        {route.data.page === Pages.DATA_MANAGEMENT && <CalculatorButton />}
         <CopyUrlButton inHeader />
         {route.data.page === Pages.MAP && <PrintButton />}
         {route.data.page === Pages.MAP && (

@@ -17,6 +17,7 @@ import { OrgAdminPageComponent } from './pages/org-admin/org-admin-page.componen
 import { DataManagementPageComponent } from './pages/data-management/data-management-page.component';
 import { LibraryDocumentPageComponent } from './pages/library-document/library-document-page.component';
 import { LibraryRegistryPageComponent } from './pages/library-registry/library-registry-page.component';
+import { ServicesCalculatorPageComponent } from './pages/services-calculator/services-calculator-page.component';
 
 export enum Pages {
   HOME = 'home',
@@ -30,7 +31,8 @@ export enum Pages {
   ORG_ADMIN = 'org-admin',
   DATA_MANAGEMENT = 'data-management',
   REGISTRY = 'registry',
-  DOCUMENT = 'document'
+  DOCUMENT = 'document',
+  SERVICES_CALCULATOR = 'services-calculator'
 }
 
 export interface AppRouteData extends Data {
@@ -62,6 +64,11 @@ const routes: AppRoutes = [
     path: 'register',
     component: RegisterComponent,
     data: { page: Pages.REGISTER }
+  },
+  {
+    path: 'services-calculator',
+    component: ServicesCalculatorPageComponent,
+    data: { page: Pages.SERVICES_CALCULATOR }
   },
   {
     path: 'recovery',
@@ -194,5 +201,6 @@ export const routingComponents = [
   OrgAdminPageComponent,
   DataManagementPageComponent,
   LibraryRegistryPageComponent,
-  LibraryDocumentPageComponent
+  LibraryDocumentPageComponent,
+  ServicesCalculatorPageComponent
 ];

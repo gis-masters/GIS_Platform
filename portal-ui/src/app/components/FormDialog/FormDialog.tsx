@@ -18,8 +18,9 @@ const cnFormDialog = cn('FormDialog');
 export interface FormDialogProps<T extends Record<string, unknown>> {
   title?: ReactNode;
   fields: PropertySchema<T>[];
-  value?: T;
+  value?: Partial<T>;
   open: boolean;
+  unclosable?: boolean;
   onClose(): void;
   onSuccess?(): void;
   onError?(): void;
@@ -39,6 +40,7 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
     const {
       title,
       open,
+      unclosable = false,
       fields,
       value = getDefaultValues(fields),
       additionalAction,
@@ -48,11 +50,11 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
     const htmlId = generateRandomId();
 
     return (
-      <RegistryConsumer id='common'>
-        {({ Form }) => (
-          <Dialog PaperProps={{ className: cnFormDialog() }} open={open} onClose={this.close} fullWidth maxWidth='md'>
-            {title && <DialogTitle>{title}</DialogTitle>}
-            <DialogContent className='scroll'>
+      <Dialog PaperProps={{ className: cnFormDialog() }} open={open} onClose={this.close} fullWidth maxWidth='md'>
+        {title && <DialogTitle>{title}</DialogTitle>}
+        <DialogContent className='scroll'>
+          <RegistryConsumer id='common'>
+            {({ Form }) => (
               <Form
                 id={htmlId}
                 className={cnFormDialog()}
@@ -65,19 +67,19 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
                 actionFunction={actionFunction}
                 invoke={this.formInvoke}
               />
-            </DialogContent>
-            <DialogActions>
-              <DialogActionsLeft>{additionalAction}</DialogActionsLeft>
-              <DialogActionsRight>
-                <Button form={htmlId} color='primary' loading={this.busy} type='submit' {...actionButtonProps}>
-                  {actionButtonProps.children || 'Отправить'}
-                </Button>
-                <Button onClick={this.close}>Отмена</Button>
-              </DialogActionsRight>
-            </DialogActions>
-          </Dialog>
-        )}
-      </RegistryConsumer>
+            )}
+          </RegistryConsumer>
+        </DialogContent>
+        <DialogActions>
+          <DialogActionsLeft>{additionalAction}</DialogActionsLeft>
+          <DialogActionsRight>
+            <Button form={htmlId} color='primary' loading={this.busy} type='submit' {...actionButtonProps}>
+              {actionButtonProps.children || 'Отправить'}
+            </Button>
+            {!unclosable && <Button onClick={this.close}>Отмена</Button>}
+          </DialogActionsRight>
+        </DialogActions>
+      </Dialog>
     );
   }
 
@@ -112,6 +114,10 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
 
   @boundMethod
   private close() {
+    if (this.props.unclosable) {
+      return;
+    }
+
     const { onClose } = this.props;
     this.formInvoke?.reset();
     onClose();

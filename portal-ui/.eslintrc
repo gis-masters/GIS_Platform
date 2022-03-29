@@ -80,7 +80,7 @@
     "max-params": [2, 5],
     "max-depth": [1, 4],
     "no-eq-null": 0,
-    "no-unused-expressions": 0,
+    "no-unused-expressions": 2,
     "dot-notation": 2,
     "use-isnan": 2,
 

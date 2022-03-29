@@ -1,0 +1,11 @@
+body .ServicesCalculator {
+  &-Service {
+    position: relative;
+
+    padding: 8px;
+
+    .MuiCardContent-root {
+      padding: 0 12px 9px;
+    }
+  }
+}
