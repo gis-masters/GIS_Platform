@@ -5,6 +5,7 @@ public class ImportInitializingModel {
     private String wsUiId;
     private ImportSource source;
     private ImportTarget target;
+    private boolean invertedCoordinates;
 
     public ImportInitializingModel() {
         // Required
@@ -34,12 +35,21 @@ public class ImportInitializingModel {
         this.target = target;
     }
 
+    public Boolean getInvertedCoordinates() {
+        return invertedCoordinates;
+    }
+
+    public void setInvertedCoordinates(Boolean invertedCoordinates) {
+        this.invertedCoordinates = invertedCoordinates;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "\"wsUiId\":" + (wsUiId == null ? "null" : "\"" + wsUiId + "\"") + ", " +
                 "\"source\":" + (source == null ? "null" : source) + ", " +
                 "\"target\":" + (target == null ? "null" : target) +
+                "\"invertedCoordinates\":" + invertedCoordinates +
                 "}";
     }
 }

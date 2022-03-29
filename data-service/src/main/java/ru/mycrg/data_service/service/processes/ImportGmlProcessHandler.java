@@ -216,8 +216,9 @@ public class ImportGmlProcessHandler implements IProcessHandler {
                 aDate = LocalDateTime.parse(data.get("approve_date").toString(),
                                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             }
+
             Integer scale = Integer.parseInt(String.valueOf(data.get("scale")));
-            boolean coordinateInverted = Boolean.parseBoolean(String.valueOf(data.get("coordinate_inverted")));
+            boolean coordinateInverted  = this.importInitialData.getInvertedCoordinates();
             String oktmo = (String) data.get(OKTMO.getName());
             String path = (String) data.get(INNER_PATH.getName());
 
