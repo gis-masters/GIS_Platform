@@ -23,7 +23,7 @@ export enum ImageMime {
   JPG = 'image/jpeg'
 }
 
-export async function printMap(): Promise<void> {
+export async function printMap(directly: boolean): Promise<Blob> {
   const { pageWidth, pageHeight, pageFormat, orientation, margin } = printSettings;
 
   const pdf = new jsPDF(orientation, undefined, pageFormat.id);
@@ -36,7 +36,12 @@ export async function printMap(): Promise<void> {
     pageWidth - margin.left - margin.right,
     pageHeight - margin.top - margin.bottom
   );
-  pdf.save('map.pdf');
+
+  if (directly) {
+    pdf.save('map.pdf');
+  }
+
+  return pdf.output('blob');
 }
 
 export async function exportMap(): Promise<void> {
@@ -402,12 +407,11 @@ function setPrintSize(resolution: number, translateX: number, translateY: number
 
 export async function loadAllLayersStyles(): Promise<void> {
   const extendedRules = await Promise.all(
-    currentProject.visibleLayersWithoutRasters.map(
-      async ({ payload }): Promise<StyleRuleExtended[]> =>
-        (
-          await getLayerStyleRules(payload)
-        ).map((rule): StyleRuleExtended => ({ ...rule, layerId: payload.id, layerTitle: payload.title }))
-    )
+    currentProject.visibleLayersWithoutRasters.map(async ({ payload }): Promise<StyleRuleExtended[]> => {
+      const rules = await getLayerStyleRules(payload);
+
+      return rules.map((rule): StyleRuleExtended => ({ ...rule, layerId: payload.id, layerTitle: payload.title }));
+    })
   );
 
   printSettings.setAllLegend(extendedRules.flat());

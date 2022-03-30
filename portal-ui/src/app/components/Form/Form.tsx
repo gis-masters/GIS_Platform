@@ -185,12 +185,15 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
         onActionSuccess(this.value as T);
       }
     } catch (error) {
-      if (onActionError) {
-        const err = error as AxiosError<{ errors?: FieldErrors[] }>;
-        onActionError(err);
+      const errors: FieldErrors[] = Array.isArray(error)
+        ? (error as FieldErrors[])
+        : (error as AxiosError<{ errors?: FieldErrors[] }>)?.response?.data?.errors;
 
-        if (err?.response?.data?.errors) {
-          this.setServerErrors(normalizeServerErrors(err.response.data.errors));
+      if (onActionError) {
+        onActionError(error as AxiosError<{ errors?: FieldErrors[] }>);
+
+        if (errors) {
+          this.setServerErrors(normalizeServerErrors(errors));
         }
       }
     }

@@ -8,6 +8,8 @@ import { PropertyType, PropertySchemaString } from '../../../../services/crg/sch
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
+import '!style-loader!css-loader!sass-loader!./Form-Control_type_string.scss';
+
 @observer
 class FormControlTypeString extends Component<FormControlProps> {
   render() {
@@ -15,10 +17,11 @@ class FormControlTypeString extends Component<FormControlProps> {
     const { display, name } = property as PropertySchemaString;
 
     return (
-      <div className={cnFormControl({ inSet }, [className])}>
+      <div className={cnFormControl({ inSet, display }, [className])}>
         <TextField
           id={htmlId}
           name={name}
+          inputProps={{ className: 'scroll' }}
           fullWidth={!inSet}
           value={fieldValue || ''}
           error={!!errors?.length}
@@ -26,7 +29,7 @@ class FormControlTypeString extends Component<FormControlProps> {
           label={inSet ? property.title : undefined}
           onChange={this.handleChange}
           onBlur={this.handleBlur}
-          multiline={display === 'multiline'}
+          multiline={display === 'multiline' || display === 'code'}
           minRows={2}
           maxRows={10}
           variant={variant}

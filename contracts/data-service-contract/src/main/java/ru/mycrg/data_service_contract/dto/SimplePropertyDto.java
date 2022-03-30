@@ -40,6 +40,7 @@ public class SimplePropertyDto {
     
     private String dateFormat;
     private String displayMode;
+    private String display;
     
     private String searchMode;
     
@@ -265,6 +266,14 @@ public class SimplePropertyDto {
 
     public void setDisplayMode(String displayMode) {
         this.displayMode = displayMode;
+    }
+
+    public String getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(String display) {
+        this.display = display;
     }
 
     public String getSearchMode() {

@@ -15,14 +15,22 @@ import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 class FormViewTypeFile extends Component<FormControlProps> {
   render() {
     const { className, inSet, property, errors, fieldValue } = this.props;
-    const value = (fieldValue || []) as FileInfo[];
+    let value = (fieldValue || []) as FileInfo[];
+
+    try {
+      if (fieldValue && typeof fieldValue === 'string') {
+        value = JSON.parse(fieldValue) as FileInfo[];
+      }
+    } catch {
+      value = [];
+    }
 
     return (
       <div className={cnFormView({ inSet }, [className])}>
         {!value.length ? (
           <FormViewValue>—</FormViewValue>
         ) : (
-          <Files value={fieldValue as FileInfo[]} property={property as PropertySchemaFile} />
+          <Files value={value} property={property as PropertySchemaFile} />
         )}
         <FormViewErrors errors={errors} />
       </div>

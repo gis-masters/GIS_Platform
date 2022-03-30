@@ -77,6 +77,12 @@
       [feature]="features[0]"
       [layer]="layer"
     ></crg-xml-download>
+
+    <crg-feature-extract
+      *ngIf="mode === 'single' && !isNew && features"
+      [feature]="features[0]"
+      [layer]="layer"
+    ></crg-feature-extract>
   </div>
 </div>
 

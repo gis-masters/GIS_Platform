@@ -17,6 +17,7 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.FileRepository;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.cqrs.files.requests.CreateFileRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
@@ -49,14 +50,17 @@ public class FileController extends BaseController {
     private final FileRepository fileRepository;
     private final FileStorageService fileStorageService;
     private final Map<ResourceType, IResourceProtector> protectors;
+    private final IAuthenticationFacade authenticationFacade;
 
     public FileController(Mediator mediator,
                           FileRepository fileRepository,
                           List<IResourceProtector> protectors,
-                          FileStorageService fileStorageService) {
+                          FileStorageService fileStorageService,
+                          IAuthenticationFacade authenticationFacade) {
         this.mediator = mediator;
         this.fileStorageService = fileStorageService;
         this.fileRepository = fileRepository;
+        this.authenticationFacade = authenticationFacade;
 
         this.protectors = protectors.stream()
                                     .collect(toMap(IResourceProtector::getType, Function.identity()));
@@ -78,7 +82,9 @@ public class FileController extends BaseController {
     public ResponseEntity<Object> getFile(@PathVariable UUID id) {
         File file = fileRepository.findById(id)
                                   .orElseThrow(() -> new NotFoundException(id));
-        checkPermissions(file);
+        if (!authenticationFacade.getLogin().equalsIgnoreCase(file.getCreatedBy())) {
+            throwIfResourceNotAllowed(file);
+        }
 
         return ResponseEntity.status(OK)
                              .body(file);
@@ -91,7 +97,9 @@ public class FileController extends BaseController {
         File file = fileRepository.findById(id)
                                   .orElseThrow(() -> new NotFoundException(id));
 
-        checkPermissions(file);
+        if (!authenticationFacade.getLogin().equalsIgnoreCase(file.getCreatedBy())) {
+            throwIfResourceNotAllowed(file);
+        }
 
         try {
             ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
@@ -137,7 +145,7 @@ public class FileController extends BaseController {
         }
     }
 
-    private void checkPermissions(File file) {
+    private void throwIfResourceNotAllowed(File file) {
         String resourceType = file.getResourceType();
         JsonNode resourceQualifier = file.getResourceQualifier();
         if (resourceType == null || resourceQualifier == null) {

@@ -180,7 +180,7 @@ export class ImportToProject extends Component<ImportToProjectProps> {
       } else if (err.response?.status === 409) {
         this.setFormErrors([err?.message]);
       } else if (err.response?.data?.errors) {
-        const errors = [];
+        const errors: string[] = [];
         err.response?.data?.errors?.forEach(({ message, type }) => {
           if (message) {
             if (type === 'projectName') {

@@ -24,28 +24,30 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
     return (
       <div className={cnFormControl()}>
         <div className={className}>
-          {fieldsSet.map((subProperty, i) =>
-            !subProperty.hidden ? (
-              <RegistryConsumer id='common'>
-                {({ FormControl }) => (
-                  <FormControl
-                    htmlId={!i ? htmlId : undefined}
-                    key={subProperty.name}
-                    property={subProperty}
-                    type={subProperty.propertyType}
-                    onChange={this.fieldChanged}
-                    fieldValue={valueTyped[subProperty.name]}
-                    variant={variant}
-                    inSet
-                  >
-                    {fieldValue}
-                  </FormControl>
+          <RegistryConsumer id='common'>
+            {({ FormControl }) => (
+              <>
+                {fieldsSet.map((subProperty, i) =>
+                  !subProperty.hidden ? (
+                    <FormControl
+                      htmlId={!i ? htmlId : undefined}
+                      key={subProperty.name}
+                      property={subProperty}
+                      type={subProperty.propertyType}
+                      onChange={this.fieldChanged}
+                      fieldValue={valueTyped[subProperty.name]}
+                      variant={variant}
+                      inSet
+                    >
+                      {fieldValue}
+                    </FormControl>
+                  ) : (
+                    <FormHiddenField key={i} name={String(subProperty.name)} value={valueTyped[subProperty.name]} />
+                  )
                 )}
-              </RegistryConsumer>
-            ) : (
-              <FormHiddenField key={i} name={String(subProperty.name)} value={valueTyped[subProperty.name]} />
-            )
-          )}
+              </>
+            )}
+          </RegistryConsumer>
         </div>
         <FormErrors errors={errors} />
       </div>

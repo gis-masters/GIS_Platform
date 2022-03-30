@@ -195,6 +195,7 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
   @boundMethod
   private submitHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    e.stopPropagation();
     this.props.onSubmit();
   }
 

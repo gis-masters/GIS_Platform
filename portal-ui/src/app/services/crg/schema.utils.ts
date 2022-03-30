@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash';
+
 import { OldFeatureDescription, OldPropertySchema, ValueType } from './schemaOld.models';
 import {
   PropertyType,

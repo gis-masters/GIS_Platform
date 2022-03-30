@@ -29,6 +29,7 @@ export interface FieldErrors {
 export interface ServerFieldError {
   field: string;
   message?: string;
+  messages?: string[];
   defaultMessage?: string;
 }
 
@@ -230,21 +231,37 @@ function numberMinMax(
 // file
 
 function filesRequired(value: unknown, { required }: PropertySchema): string[] | undefined {
+  try {
+    if (value && typeof value === 'string') {
+      value = JSON.parse(value) as FileInfo[];
+    }
+  } catch {
+    value = [];
+  }
+
   if (required && (!Array.isArray(value) || !value.length)) {
     return [messages.required];
   }
 }
 
 function filesLoaded(value: FileInfo[] = []): string[] | undefined {
+  try {
+    if (value && typeof value === 'string') {
+      value = JSON.parse(value) as FileInfo[];
+    }
+  } catch {
+    value = [];
+  }
+
   if (value.some(({ notLoaded }) => notLoaded)) {
     return ['Загрузка файлов ещё не завершена'];
   }
 }
 
 export function normalizeServerErrors(errors: ServerFieldError[]): FieldErrors[] {
-  return errors.map(({ field, message, defaultMessage }) => ({
+  return errors.map(({ field, message, defaultMessage, messages }) => ({
     field,
-    messages: [message || defaultMessage]
+    messages: messages || [message || defaultMessage]
   }));
 }
 

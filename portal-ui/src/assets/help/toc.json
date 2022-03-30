@@ -258,6 +258,11 @@
             "contentUrl": "/assets/help/map/fullEditObject/05addDocumentObject.html"
           },
           {
+            "id": "featureExtract",
+            "title": "Создание документа-выписки об объекте",
+            "contentUrl": "/assets/help/map/fullEditObject/12excerpt.html"
+          },
+          {
             "id": "deleteObject",
             "title": "Удаление объекта",
             "contentUrl": "/assets/help/map/fullEditObject/06deleteObject.html"

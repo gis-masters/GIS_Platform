@@ -6,12 +6,9 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
 
-import { currentProject } from '../../stores/CurrentProject.store';
-import { MAP_QUERY_PARAMS_DELIMITER } from '../../services/map/map-link-following.service';
-import { getFeatureLayer } from '../../services/geoserver/layers.service';
+import { getFeatureUrl } from '../../services/map/map-link-following.service';
 import { copyToClipboard } from '../../services/util/clipboard.util';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { services } from '../../services/services';
 import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./CopyUrlButton.scss';
@@ -46,28 +43,11 @@ export class CopyUrlButton extends Component<CopyUrlButtonProps> {
   }
 
   @boundMethod
-  private async clickHandler() {
-    await services.provided;
-
-    let urlForClipboard: string;
-
-    if (this.props.feature) {
-      const complexName = getFeatureLayer(this.props.feature[0]).complexName;
-
-      if (complexName) {
-        const projectMapUrl = `${location.protocol}//${location.host}/projects/${currentProject.id}/map/`;
-        const queryParam = `?features=${this.props.feature[0].id}${MAP_QUERY_PARAMS_DELIMITER}${complexName}`;
-
-        urlForClipboard = `${projectMapUrl}${queryParam}`;
-      } else {
-        const message = 'Ошибка получения слоя объекта';
-        services.logger.error(message);
-      }
-    } else {
-      urlForClipboard = location.href;
-    }
+  private clickHandler() {
+    const urlForClipboard = this.props.feature ? getFeatureUrl(this.props.feature[0]) : location.href;
 
     copyToClipboard(urlForClipboard);
+
     Toast.success('Сохранено в буфер обмена');
   }
 }

@@ -4,13 +4,14 @@ import { route } from '../../stores/Route.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { WfsFeature, WfsFeatureCollection } from '../geoserver/wfs.models';
+import { getFeatureLayer } from '../geoserver/layers.service';
 import { getFeaturesById } from '../geoserver/wfs.service';
 import { getWfsUrl } from '../server-urls.service';
+import { GeoserverException } from '../models';
 import { mapService } from './map.service';
 import { http } from '../http.service';
 import { Mime } from '../util/Mime';
 import { Toast } from '../../components/Toast/Toast';
-import { GeoserverException } from '../models';
 
 export interface FeatureError {
   id: string;
@@ -152,4 +153,16 @@ function showFeatures(features: WfsFeature[], hasErrors?: boolean) {
   } else if ((!features.length && hasErrors) || features.length > 1) {
     sidebars.openFeaturesWithError();
   }
+}
+
+export function getFeatureUrl(feature: WfsFeature, projectId: number = currentProject.id): string {
+  const complexName = getFeatureLayer(feature)?.complexName;
+  const param = `${feature.id}${MAP_QUERY_PARAMS_DELIMITER}${complexName}`;
+
+  if (!complexName) {
+    Toast.warn('Ошибка получения слоя объекта');
+    throw new Error('Ошибка получения слоя объекта');
+  }
+
+  return `${location.origin}/projects/${projectId}/map/?features=${param}`;
 }

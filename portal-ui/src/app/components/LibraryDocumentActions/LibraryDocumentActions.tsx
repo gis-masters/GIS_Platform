@@ -14,6 +14,7 @@ import { Role } from '../../services/crg/permissions.models';
 
 import { ActionsItemVariant } from './Item/LibraryDocumentActions-Item';
 import { LibraryDocumentActionsSed } from './Sed/LibraryDocumentActions-Sed';
+import { LibraryDocumentActionsSave } from './Save/LibraryDocumentActions-Save';
 import { LibraryDocumentActionsOpen } from './Open/LibraryDocumentActions-Open';
 import { LibraryDocumentActionsEdit } from './Edit/LibraryDocumentActions-Edit';
 import { LibraryDocumentActionsShare } from './Share/LibraryDocumentActions-Share';
@@ -32,6 +33,7 @@ export interface LibraryDocumentActionsProps extends IClassNameProps {
   hideOpen?: boolean;
   forDialog?: boolean;
   onDialogClose?(): void;
+  onSave?(created: LibraryRecord): void;
   ContainerComponent?: ComponentType;
 }
 
@@ -52,20 +54,33 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
   }
 
   render() {
-    const { as, ContainerComponent = 'div', document, className, hideOpen, forDialog, onDialogClose } = this.props;
+    const {
+      as,
+      ContainerComponent = 'div',
+      document,
+      className,
+      hideOpen,
+      forDialog,
+      onDialogClose,
+      onSave
+    } = this.props;
     const canEdit = [Role.CONTRIBUTOR, Role.OWNER].includes(this.document?.role) || currentUser.isAdmin;
     const canDelete = this.document?.role === Role.OWNER || currentUser.isAdmin;
     const hasBinary = this.fields?.some(({ propertyType }) => propertyType === PropertyType.BINARY);
+    const isNew = !document.id;
 
     return (
       <ContainerComponent className={cnLibraryDocumentActions({ forDialog }, [className])}>
+        {isNew && <LibraryDocumentActionsSave onSave={onSave} document={this.document || document} as={as} />}
         {!hideOpen && <LibraryDocumentActionsOpen document={this.document || document} as={as} />}
-        {canEdit && <LibraryDocumentActionsEdit document={this.document || document} fields={this.fields} as={as} />}
-        <LibraryDocumentActionsShare document={this.document || document} as={as} />
-        <LibraryDocumentActionsRegister document={this.document || document} as={as} />
-        {hasBinary && <LibraryDocumentActionsDownload document={this.document || document} as={as} />}
-        {hasBinary && <LibraryDocumentActionsSed document={this.document || document} as={as} />}
-        {canDelete && (
+        {!isNew && canEdit && (
+          <LibraryDocumentActionsEdit document={this.document || document} fields={this.fields} as={as} />
+        )}
+        {!isNew && <LibraryDocumentActionsShare document={this.document || document} as={as} />}
+        {!isNew && <LibraryDocumentActionsRegister document={this.document || document} as={as} />}
+        {!isNew && hasBinary && <LibraryDocumentActionsDownload document={this.document || document} as={as} />}
+        <LibraryDocumentActionsSed document={this.document || document} as={as} />
+        {!isNew && canDelete && (
           <LibraryDocumentActionsDelete
             document={this.document || document}
             fields={this.fields}

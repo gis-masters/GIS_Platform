@@ -24,6 +24,7 @@ export interface FormDialogProps<T extends Record<string, unknown>> {
   onClose(): void;
   onSuccess?(): void;
   onError?(): void;
+  onFormChange?(changedValue: T): void;
   additionalAction?: ReactNode;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   actionFunction: (value: T) => Promise<void> | void;
@@ -45,7 +46,8 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
       value = getDefaultValues(fields),
       additionalAction,
       actionButtonProps = {},
-      actionFunction
+      actionFunction,
+      onFormChange
     } = this.props;
     const htmlId = generateRandomId();
 
@@ -62,6 +64,7 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
                 value={value}
                 auto
                 onFormSubmit={this.submitHandler}
+                onFormChange={onFormChange}
                 onActionSuccess={this.successHandler}
                 onActionError={this.errorHandler}
                 actionFunction={actionFunction}

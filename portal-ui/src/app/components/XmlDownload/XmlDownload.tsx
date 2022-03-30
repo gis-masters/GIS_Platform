@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
-import { FileDownload } from '@mui/icons-material';
+import { DownloadOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { Coordinate } from 'ol/coordinate';
 import { cn } from '@bem-react/classname';
@@ -39,7 +39,7 @@ export class XmlDownload extends Component<XmlDownloadProps> {
         <Tooltip title='Скачать XML межевого плана'>
           <span className={cnXmlDownload()}>
             <IconButton onClick={this.download}>
-              <FileDownload />
+              <DownloadOutlined />
             </IconButton>
           </span>
         </Tooltip>

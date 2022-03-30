@@ -79,6 +79,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { FormControlComponent } from './components/form-control/form-control.component';
 import { LibraryDocumentPageContainerComponent } from './components/library-document-page-container/library-document-page-container.component';
 import { ServicesCalculatorComponent } from './components/services-calculator/services-calculator.component';
+import { FeatureExtractComponent } from './components/feature-extract/feature-extract.component';
 
 @NgModule({
   declarations: [
@@ -139,7 +140,8 @@ import { ServicesCalculatorComponent } from './components/services-calculator/se
     LibraryDocumentPageContainerComponent,
     XmlDownloadComponent,
     FormControlComponent,
-    ServicesCalculatorComponent
+    ServicesCalculatorComponent,
+    FeatureExtractComponent
   ],
   imports: [
     HttpClientModule,

@@ -1,0 +1,41 @@
+import { Component, OnInit, OnDestroy, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
+import { render, unmountComponentAtNode } from 'react-dom';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
+
+import { FeatureExtract } from '../FeatureExtract/FeatureExtract';
+import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { CrgLayer } from '../../services/crg/projects.models';
+import { registry } from '../../services/registry';
+
+@Component({
+  selector: 'crg-feature-extract',
+  template: '<div class="feature-extract" #react></div>',
+  styleUrls: ['./feature-extract.component.scss']
+})
+export class FeatureExtractComponent implements OnInit, OnDestroy, OnChanges {
+  @Input() feature: WfsFeature;
+  @Input() layer: CrgLayer;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+
+  ngOnInit() {
+    this.renderReactElement();
+  }
+
+  ngOnDestroy() {
+    unmountComponentAtNode(this.ref.nativeElement);
+  }
+
+  ngOnChanges() {
+    this.renderReactElement();
+  }
+
+  private renderReactElement() {
+    const reactElement = createElement(withRegistry(registry)(FeatureExtract), {
+      feature: this.feature,
+      layer: this.layer
+    });
+
+    render(reactElement, this.ref.nativeElement);
+  }
+}

@@ -26,7 +26,7 @@ export class PrintButton extends Component {
           </IconButton>
         </Tooltip>
 
-        <PrintDialog onClose={this.closeDialog} open={this.dialogOpen} />
+        <PrintDialog onClose={this.closeDialog} open={this.dialogOpen} directlyPrint allowJpg />
 
         <Loading className={cnPrintButton('Loading')} visible={printSettings.printingInProcess} />
       </>

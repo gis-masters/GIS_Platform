@@ -59,7 +59,7 @@ export async function fetchBasemaps(): Promise<void> {
   await services.provided;
 
   const projectBasemaps = await fetchProjectBasemaps(currentProject.id);
-  if (!projectBasemaps.length) {
+  if (!projectBasemaps?.length) {
     basemapsStore.clear();
 
     return;

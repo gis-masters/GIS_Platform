@@ -3,13 +3,11 @@ import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import moment from 'moment';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../services/server-urls.service';
 import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
-import { communicationService } from '../../services/communication.service';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
 import { LibraryRecord } from '../../services/crg/doc-library.service';
@@ -17,7 +15,6 @@ import { ExplorerItemEntityType } from '../Explorer/Explorer.models';
 import { schemaService } from '../../services/crg/schema.service';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Role } from '../../services/crg/permissions.models';
-import { Loading } from '../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocument.scss';
 
@@ -32,16 +29,10 @@ interface LibraryDocumentProps {
 export class LibraryDocument extends Component<LibraryDocumentProps> {
   @observable private fields: PropertySchema<LibraryRecord>[];
   @observable private documentRoleAssignmentUrl: string;
-  @observable private error: boolean;
-  @observable private busy = false;
 
   async componentDidMount() {
-    await this.init();
-    communicationService.libraryItemsUpdated.on(this.init, this);
-  }
-
-  componentWillUnmount() {
-    communicationService.off(this);
+    await this.fetchSchema();
+    await this.fetchDocumentPermissionUrl();
   }
 
   render() {
@@ -50,7 +41,7 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
 
     return (
       <div className={cnLibraryDocument()}>
-        {!this.error && document && (
+        {document && (
           <>
             {!contentOnly && <h1 className={cnLibraryDocument('Title')}>{document.title}</h1>}
 
@@ -84,23 +75,11 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
             )}
           </>
         )}
-
-        <Loading visible={this.busy} />
       </div>
     );
   }
 
-  @boundMethod
-  private async init() {
-    this.setBusy(true);
-    if (!this.error) {
-      await this.getSchema();
-      await this.getDocumentPermissionUrl();
-    }
-    this.setBusy(false);
-  }
-
-  private async getSchema(): Promise<void> {
+  private async fetchSchema(): Promise<void> {
     const oldSchema = getSchemaWithAppliedContentType(
       await schemaService.getSchema(this.props.document.schemaId),
       this.props.document.content_type_id
@@ -111,7 +90,7 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
     );
   }
 
-  private async getDocumentPermissionUrl(): Promise<void> {
+  private async fetchDocumentPermissionUrl(): Promise<void> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(this.props.document.libraryId, this.props.document.id);
     this.setDocumentRoleAssignmentUrl(url);
   }
@@ -124,10 +103,5 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
   @action.bound
   private setDocumentRoleAssignmentUrl(url: string) {
     this.documentRoleAssignmentUrl = url;
-  }
-
-  @action.bound
-  private setBusy(busy: boolean) {
-    this.busy = busy;
   }
 }

@@ -187,7 +187,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   showSelectedFeatures(): void {
     // Подсвечиваем выделенные если есть
     if (this.attributeTable.selected.length > 0) {
-      mapService.highlightFeatures(this.attributeTable.selected, getProjection(this.layer.nativeCRS));
+      mapService.highlightFeatures(this.attributeTable.selected as WfsFeature[], getProjection(this.layer.nativeCRS));
     }
 
     window.dispatchEvent(new Event('resize'));
@@ -235,7 +235,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   async exportSelected(): Promise<void> {
     this.loading = true;
-    await this.exportFeaturesAsCSV(this.layer.schemaId, this.attributeTable.selected);
+    await this.exportFeaturesAsCSV(this.layer.schemaId, this.attributeTable.selected as WfsFeature[]);
     this.loading = false;
   }
 
@@ -360,7 +360,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       this.openEditDialog('Копирование', layers)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((selectedLayer: CrgLayer) => {
-          const batchModel = this.prepareBatchProcess(selected);
+          const batchModel = this.prepareBatchProcess(selected as WfsFeature[]);
           this.batchInsertFeatures(selectedLayer, batchModel);
         });
     } else {
@@ -379,7 +379,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       this.openEditDialog('Перемещение', layers)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((selectedLayer: CrgLayer) => {
-          const batchModel = this.prepareBatchProcess(selected);
+          const batchModel = this.prepareBatchProcess(selected as WfsFeature[]);
           this.batchReplaceFeatures(selectedLayer, batchModel);
         });
     } else {
@@ -403,7 +403,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       .afterClosed()
       .pipe(filter(value => !!value))
       .subscribe(() => {
-        const batchModel = this.prepareBatchProcess(selected);
+        const batchModel = this.prepareBatchProcess(selected as WfsFeature[]);
         this.batchDeleteFeatures(batchModel);
         this.attributeTable.selected = [];
       });
@@ -564,7 +564,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       });
   }
 
-  private handleError(reason: string) {
+  private handleError(reason: unknown) {
     this.loading = false;
     const message = 'Не удалось переместить.';
     Toast.warn(message);
@@ -651,7 +651,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   private async exportLayerAsCSV(layer: CrgLayer, filter?: FilterEvent[]): Promise<void> {
     try {
-      const schema = await schemaService.getById(layer.schemaId);
+      const schema = await schemaService.getSchema(layer.schemaId);
 
       const allFeatures: WfsFeature[] = await this.fetchPaged(layer, filter);
 
@@ -665,7 +665,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   private async exportFeaturesAsCSV(schemaId: string, features: WfsFeature[]): Promise<void> {
     try {
-      const schema = await schemaService.getById(schemaId);
+      const schema = await schemaService.getSchema(schemaId);
 
       exportAsCSV(this.unparseFeatures(schema, features), `${schema.tableName}.csv`);
     } catch (error) {

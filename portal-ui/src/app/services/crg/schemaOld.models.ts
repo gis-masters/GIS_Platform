@@ -29,10 +29,11 @@ export enum ValueType {
 export interface OldFeatureDescription<T extends Record<string, unknown> = Record<string, unknown>> {
   name: string;
   title: string;
-  description: string;
+  description?: string;
   properties: OldPropertySchema<T>[];
   tableName: string;
-  geometryType: SupportedGeometryType;
+  originName?: string;
+  geometryType?: SupportedGeometryType;
   customRuleFunction?: string;
   matchingCounter?: number;
   calcFiledFunction?: string;
@@ -62,6 +63,7 @@ interface OldBasePropertySchema<T extends Record<string, unknown> = Record<strin
   objectIdentityOnUi?: boolean;
   sequenceNumber?: number;
   minWidth?: number;
+  readOnly?: boolean;
 
   // хз
   choice?: unknown;

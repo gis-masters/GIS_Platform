@@ -9,13 +9,13 @@ import { boundMethod } from 'autobind-decorator';
 import { getFileDownloadUrl } from '../../../services/server-urls.service';
 import { getReadableFileSize } from '../../../services/files.util';
 import { FileInfo } from '../../../services/files.service';
+import { LookupName } from '../../Lookup/Name/Lookup-Name';
 import { Link } from '../../Link/Link';
 
-import { FilesExt } from '../Ext/Files-Ext';
 import { FilesBaseName } from '../BaseName/Files-BaseName';
+import { FilesExt } from '../Ext/Files-Ext';
 
 import '!style-loader!css-loader!sass-loader!../NameLink/Files-NameLink.scss';
-import { LookupName } from '../../Lookup/Name/Lookup-Name';
 
 const cnFilesName = cn('Files', 'Name');
 const cnFilesNameLink = cn('Files', 'NameLink');

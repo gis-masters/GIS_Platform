@@ -17,11 +17,14 @@ const cnPrintDialog = cn('PrintDialog');
 interface PrintDialogProps {
   open: boolean;
   onClose(): void;
+  directlyPrint?: boolean;
+  allowJpg?: boolean;
+  onPrint?(pdf: Blob): void;
 }
 
 export class PrintDialog extends Component<PrintDialogProps> {
   render() {
-    const { open, onClose } = this.props;
+    const { open, onClose, directlyPrint, allowJpg } = this.props;
 
     return (
       <Dialog open={open} onClose={onClose} PaperProps={{ className: cnPrintDialog() }}>
@@ -30,11 +33,13 @@ export class PrintDialog extends Component<PrintDialogProps> {
           <PrintDialogForm onSubmit={this.submitHandler} />
         </PrintDialogContent>
         <DialogActions>
-          <Button className={cnPrintDialog('JpegButton')} onClick={this.exportHandler}>
-            Экспорт в JPG
-          </Button>
+          {allowJpg && (
+            <Button className={cnPrintDialog('JpegButton')} onClick={this.exportHandler}>
+              {directlyPrint ? 'Экспорт в JPG' : 'Выбор (JPG)'}
+            </Button>
+          )}
           <Button type='submit' form='printDialogForm' color='primary'>
-            Печать (PDF)
+            {directlyPrint ? 'Печать' : 'Выбор'} (PDF)
           </Button>
           <Button onClick={onClose}>Отмена</Button>
         </DialogActions>
@@ -44,8 +49,12 @@ export class PrintDialog extends Component<PrintDialogProps> {
 
   @boundMethod
   private async submitHandler() {
-    this.props.onClose();
-    await printMap();
+    const { onClose, directlyPrint, onPrint } = this.props;
+    onClose();
+    const pdfBlob = await printMap(directlyPrint);
+    if (onPrint) {
+      onPrint(pdfBlob);
+    }
   }
 
   @boundMethod
