@@ -1,7 +1,6 @@
 package ru.mycrg.acceptance.auth_service;
 
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.Cookie;
@@ -32,6 +31,18 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
     @When("Авторизируемся пользователем")
     public void authorizeAsCurrentUser() {
         authorizationBase.loginAsCurrentUser();
+    }
+
+    @When("Авторизируемся пользователем у которого email прописан в верхнем регистре")
+    public void authorizeAsUserIgnoreUsernameCase() {
+        String email = userDto.getEmail().toUpperCase();
+        authorizationBase.loginAsUserWithEmailAndPassword(email, userDto.getPassword());
+    }
+
+    @When("Авторизируемся пользователем у которого в поле email имеются отступы")
+    public void authorizeAsUserIgnoreWhitespace() {
+        String email = "   " + userDto.getEmail() + "   ";
+        authorizationBase.loginAsUserWithEmailAndPassword(email, userDto.getPassword());
     }
 
     @When("Авторизируемся владельцем организации")

@@ -35,6 +35,12 @@ public class AuthorizationBase extends BaseStepsDefinitions {
         checkCookieAndWriteAsCurrent(response);
     }
 
+    public void loginAsUserWithEmailAndPassword(String email, String password) {
+        response = authorizeUser(email, password, "user");
+
+        checkCookieAndWriteAsCurrent(response);
+    }
+
     public void checkCookieAndWriteAsCurrent(Response response) {
         cookie = response.getDetailedCookie(AUTH_COOKIE);
         String accessToken = response.getBody().toString();
