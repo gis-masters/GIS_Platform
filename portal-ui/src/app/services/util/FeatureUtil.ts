@@ -34,7 +34,7 @@ export class FeatureUtil {
   static getFeatureGeometry(featureDescription: OldFeatureDescription): string[] {
     const geometryProperty = featureDescription.properties.find(property => property.valueType === ValueType.GEOMETRY);
 
-    return geometryProperty ? geometryProperty.allowedValues : [];
+    return geometryProperty?.allowedValues ? geometryProperty.allowedValues : [];
   }
 
   static filterByGeometry(fDescription: OldFeatureDescription[], layer?: ImportLayerItem): OldFeatureDescription[] {
