@@ -11,7 +11,6 @@ import org.locationtech.jts.geom.Polygon;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.postgis.Point;
-import ru.mycrg.data_service.util.CrsHandler;
 import ru.mycrg.data_service.util.EpsgCodes;
 import ru.mycrg.data_service.util.TransformationGeometryUtils;
 
@@ -20,15 +19,11 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static unit.EpsgUtil.defineEpsgCodes;
 
 public class TransformationGeometryTest {
 
-    private final EpsgCodes epsgCodes = defineEpsgCodes();
-    private final CrsHandler crsHandler = new CrsHandler(epsgCodes);
-    private final TransformationGeometryUtils transformationGeometryUtils =
-            new TransformationGeometryUtils(epsgCodes, crsHandler);
-
+    private final EpsgCodes epsgCodes = new EpsgCodes();
+    private final TransformationGeometryUtils transformationGeometryUtils = new TransformationGeometryUtils();
     private final List<Polygon> polygons = new ArrayList<>();
     private final GeometryFactory geometryFactory = new GeometryFactory();
     private Geometry geometry = null;

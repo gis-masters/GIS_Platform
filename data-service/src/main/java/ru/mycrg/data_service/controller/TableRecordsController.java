@@ -76,6 +76,7 @@ public class TableRecordsController {
                                         .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
         schemaService.throwIfNotMathSchema(schema, feature.getProperties());
 
+        feature.setSrs(table.getCrs());
         mediator.execute(
                 new UpdateTableRecordRequest(schema,
                                              new ResourceQualifier(datasetId, tableId, recordId, FEATURE),

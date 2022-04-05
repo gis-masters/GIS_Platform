@@ -18,13 +18,14 @@ import ru.mycrg.data_service.service.parsers.XmlParser;
 import ru.mycrg.data_service.service.parsers.exceptions.XmlParserException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
-import ru.mycrg.data_service.util.CrsHandler;
 import ru.mycrg.data_service.util.ImportValidationHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 
 @Service
 public class ImportMp implements Importer {
@@ -36,16 +37,17 @@ public class ImportMp implements Importer {
     private final XmlParser xmlParser;
     private final SchemaService schemaService;
     private final TableService tableService;
-    private final CrsHandler crsHandler;
     private final DdlTables ddlTables;
 
-    public ImportMp(RecordsDao recordsDao, XmlParser xmlParser, SchemaService schemaService,
-                    TableService tableService, CrsHandler crsHandler, DdlTables ddlTables) {
+    public ImportMp(RecordsDao recordsDao,
+                    XmlParser xmlParser,
+                    SchemaService schemaService,
+                    TableService tableService,
+                    DdlTables ddlTables) {
         this.recordsDao = recordsDao;
         this.xmlParser = xmlParser;
         this.schemaService = schemaService;
         this.tableService = tableService;
-        this.crsHandler = crsHandler;
         this.ddlTables = ddlTables;
     }
 
@@ -84,7 +86,7 @@ public class ImportMp implements Importer {
             Map<String, Object> dataForSavingToDB = xmlParser.parseByScheme(
                     file,
                     crossedProperties,
-                    crsHandler.extractCrsNumber(tableModel.getCrs()),
+                    extractCrsNumber(tableModel.getCrs()),
                     schemaOfCurrentLayer.get().getName().equalsIgnoreCase("zu2"));
             Map<String, Object> dataForSavingToDBValid = ImportValidationHandler
                     .removeNonMatchingBySchemaProperties(dataForSavingToDB, crossedProperties);

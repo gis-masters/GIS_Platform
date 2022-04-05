@@ -26,19 +26,20 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static ru.mycrg.data_service.util.CrsHandler.defineCrsBySrid;
+import static ru.mycrg.data_service.util.CrsHandler.defineCrsByX;
+
 @Component
 public class TransformationGeometryUtils {
 
     private final Logger log = LoggerFactory.getLogger(TransformationGeometryUtils.class);
 
     private final EpsgCodes epsgCodes;
-    private final CrsHandler crsHandler;
     private final GeometryFactory geometryFactory;
 
-    public TransformationGeometryUtils(EpsgCodes epsgCodes, CrsHandler crsHandler) {
-        this.epsgCodes = epsgCodes;
-        this.crsHandler = crsHandler;
-        geometryFactory = new GeometryFactory();
+    public TransformationGeometryUtils() {
+        this.epsgCodes = new EpsgCodes();
+        this.geometryFactory = new GeometryFactory();
     }
 
     /**
@@ -117,9 +118,8 @@ public class TransformationGeometryUtils {
         return polygons.stream()
                        .map(polygon -> {
                            Coordinate[] transformExterRingCoord = transform(polygon.getExteriorRing(),
-                                                                            crsHandler.defineCrsByX(
-                                                                                    polygon.getCoordinate().x),
-                                                                            crsHandler.defineCrsBySrid(srid));
+                                                                            defineCrsByX(polygon.getCoordinate().x),
+                                                                            defineCrsBySrid(srid));
                            org.locationtech.jts.geom.LinearRing transformedShellRing =
                                    geometryFactory.createLinearRing(transformExterRingCoord);
 
@@ -135,8 +135,8 @@ public class TransformationGeometryUtils {
                                                                            org.locationtech.jts.geom.Polygon polygon) {
         return IntStream.range(0, polygon.getNumInteriorRing())
                         .mapToObj(i -> transform(polygon.getInteriorRingN(i),
-                                                 crsHandler.defineCrsByX(polygon.getCoordinate().x),
-                                                 crsHandler.defineCrsBySrid(srid)))
+                                                 defineCrsByX(polygon.getCoordinate().x),
+                                                 defineCrsBySrid(srid)))
                         .map(geometryFactory::createLinearRing)
                         .collect(Collectors.toList())
                         .toArray(org.locationtech.jts.geom.LinearRing[]::new);

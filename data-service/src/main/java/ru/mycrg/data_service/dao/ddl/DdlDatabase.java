@@ -28,12 +28,12 @@ public class DdlDatabase {
 
     public DdlDatabase(JdbcTemplate jdbcTemplate,
                        DatasourceFactory datasourceFactory,
-                       NamedParameterJdbcTemplate parameterJdbcTemplate,
-                       EpsgCodes epsgCodes) {
+                       NamedParameterJdbcTemplate parameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.datasourceFactory = datasourceFactory;
         this.parameterJdbcTemplate = parameterJdbcTemplate;
-        this.epsgCodes = epsgCodes;
+
+        this.epsgCodes = new EpsgCodes();
     }
 
     /**

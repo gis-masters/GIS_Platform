@@ -1,6 +1,8 @@
 package ru.mycrg.data_service.dao.utils;
 
+import com.healthmarketscience.sqlbuilder.CustomCondition;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
+import com.healthmarketscience.sqlbuilder.UpdateQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
@@ -29,6 +31,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
+import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
+import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 
 public class SqlBuilder {
 
@@ -115,6 +119,11 @@ public class SqlBuilder {
 
     @NotNull
     public static String generateInsertQuery(ResourceQualifier qualifier, Feature feature) {
+        String crs = "EPSG:28406";
+        if (feature.getSrs() != null) {
+            crs = feature.getSrs();
+        }
+
         DbTable table = getSimpleDbTable(qualifier);
         DbColumn geometryColumn = table.addColumn(DEFAULT_GEOMETRY_COLUMN_NAME);
 
@@ -131,13 +140,43 @@ public class SqlBuilder {
 
         String transformTemplate = "public.st_transform(" +
                 "  public.st_geomFromGeoJSON('" + geometry + "')," +
-                "  " + feature.getSrs().split(":")[1] +
+                "  " + extractCrsNumber(crs) +
                 ")";
 
         String query = insertQuery.validate().toString()
                                   .replace("'GEO_VALUE_TEMPLATE'", transformTemplate);
 
         return String.format("%s returning lastval();", query);
+    }
+
+    @NotNull
+    public static String generateUpdateQuery(ResourceQualifier qualifier, Feature feature) {
+        String crs = "EPSG:28406";
+        if (feature.getSrs() != null) {
+            crs = feature.getSrs();
+        }
+
+        DbTable table = getSimpleDbTable(qualifier);
+        DbColumn geometryColumn = table.addColumn(DEFAULT_GEOMETRY_COLUMN_NAME);
+
+        UpdateQuery updateQuery = new UpdateQuery(table);
+        updateQuery.addCustomSetClause(geometryColumn, "GEO_VALUE_TEMPLATE");
+        updateQuery.addCondition(new CustomCondition(String.format("%s = %d", PRIMARY_KEY, qualifier.getRecord())));
+
+        feature.getProperties().forEach((key, value) -> {
+            updateQuery.addSetClause(table.addColumn(key), value);
+        });
+
+        GeoJsonObject geometry = feature.getGeometry();
+        geometry.setSrs(feature.getSrs());
+
+        String transformTemplate = "public.st_transform(" +
+                "  public.st_geomFromGeoJSON('" + geometry + "')," +
+                "  " + extractCrsNumber(crs) +
+                ")";
+
+        return updateQuery.validate().toString()
+                          .replace("'GEO_VALUE_TEMPLATE'", transformTemplate);
     }
 
     public static DbTable getSimpleDbTable(@NotNull ResourceQualifier rQualifier) {

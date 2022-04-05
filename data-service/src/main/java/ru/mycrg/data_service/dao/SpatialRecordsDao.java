@@ -1,8 +1,5 @@
 package ru.mycrg.data_service.dao;
 
-import com.healthmarketscience.sqlbuilder.CustomCondition;
-import com.healthmarketscience.sqlbuilder.UpdateQuery;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +20,7 @@ import java.util.Optional;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.generateInsertQuery;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.getSimpleDbTable;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.generateUpdateQuery;
 
 @Repository
 @Transactional
@@ -87,14 +84,7 @@ public class SpatialRecordsDao {
 
     public void updateById(ResourceQualifier qualifier, Feature newFeature) throws CrgDaoException {
         try {
-            DbTable table = getSimpleDbTable(qualifier);
-            UpdateQuery updateQuery = new UpdateQuery(table);
-            updateQuery.addCondition(new CustomCondition(String.format("%s = %d", PRIMARY_KEY, qualifier.getRecord())));
-
-            newFeature.getProperties().forEach((key, value) -> {
-                updateQuery.addSetClause(table.addColumn(key), value);
-            });
-            String query = updateQuery.validate().toString();
+            String query = generateUpdateQuery(qualifier, newFeature);
 
             log.debug("UPDATE QUERY: [{}]", query);
 

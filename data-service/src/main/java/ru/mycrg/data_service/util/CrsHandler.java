@@ -5,22 +5,20 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.TransformationException;
 
-@Component
 public class CrsHandler {
 
-    private final Logger log = LoggerFactory.getLogger(CrsHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(CrsHandler.class);
 
-    private final EpsgCodes epsgCodes;
+    private static final EpsgCodes epsgCodes = new EpsgCodes();
 
-    public CrsHandler(EpsgCodes epsgCodes) {
-        this.epsgCodes = epsgCodes;
+    private CrsHandler() {
+        throw new IllegalStateException("Utility class");
     }
 
-    public Integer extractCrsNumber(String crs) {
+    public static Integer extractCrsNumber(String crs) {
         try {
             String[] splitCrs = crs.split(":");
 
@@ -32,7 +30,7 @@ public class CrsHandler {
         }
     }
 
-    public CoordinateReferenceSystem defineCrsByX(double coordinateXToDefineCRS) {
+    public static CoordinateReferenceSystem defineCrsByX(double coordinateXToDefineCRS) {
         double coordinateX = coordinateXToDefineCRS / 100000;
 
         try {
@@ -59,7 +57,7 @@ public class CrsHandler {
         }
     }
 
-    public CoordinateReferenceSystem defineCrsBySrid(int srid) {
+    public static CoordinateReferenceSystem defineCrsBySrid(int srid) {
         try {
             if (srid == 314314) {
                 return epsgCodes.getCrsBySrid(314314);

@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.util.CrsHandler;
 import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ForeignKeyType;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.*;
+import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 
 @Repository
 public class DdlTables {
@@ -27,20 +27,17 @@ public class DdlTables {
     private static final Logger log = LoggerFactory.getLogger(DdlTables.class);
 
     private final JdbcTemplate jdbcTemplate;
-    private final CrsHandler crsHandler;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
 
     public DdlTables(JdbcTemplate jdbcTemplate,
-                     CrsHandler crsHandler,
                      SchemasAndTablesRepository schemasAndTablesRepository) {
         this.jdbcTemplate = jdbcTemplate;
-        this.crsHandler = crsHandler;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
 
     public void create(String targetSchema, TableCreateDto dto, List<SimplePropertyDto> schemaProperties) {
         String targetTable = dto.getName();
-        Integer crsCode = crsHandler.extractCrsNumber(dto.getCrs());
+        Integer crsCode = extractCrsNumber(dto.getCrs());
         String target = targetSchema + "." + targetTable;
         String extensionTable = targetTable + EXTENSION_POSTFIX;
 
