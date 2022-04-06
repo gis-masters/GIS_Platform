@@ -21,6 +21,7 @@ import java.util.Optional;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.generateInsertQuery;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.generateUpdateQuery;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
 @Repository
 @Transactional
@@ -48,13 +49,13 @@ public class SpatialRecordsDao {
 
             return feature;
         } catch (DataAccessException e) {
-            String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'. %s",
-                                       rIdentifier, e.getCause().getMessage());
+            String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'", rIdentifier);
+            logError(msg, e);
 
             throw new CrgDaoException(msg);
         } catch (Exception e) {
-            String msg = String.format("Что то пошло не так при вставке в таблицу: '%s'. %s",
-                                       rIdentifier, e.getCause().getMessage());
+            String msg = String.format("Что то пошло не так при вставке в таблицу: '%s'", rIdentifier);
+            logError(msg, e);
 
             throw new CrgDaoException(msg);
         }

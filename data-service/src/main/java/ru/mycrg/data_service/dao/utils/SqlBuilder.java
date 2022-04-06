@@ -28,6 +28,7 @@ import ru.mycrg.geo_json.GeoJsonObject;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
@@ -129,14 +130,20 @@ public class SqlBuilder {
 
         InsertQuery insertQuery = new InsertQuery(table);
         insertQuery.addCustomColumn(geometryColumn, "GEO_VALUE_TEMPLATE");
-        feature.getProperties().forEach((key, value) -> {
-            DbColumn dbColumn = table.addColumn(key);
 
-            insertQuery.addColumn(dbColumn, value);
-        });
+        Map<String, Object> properties = feature.getProperties();
+        if (properties != null) {
+            properties.forEach((key, value) -> {
+                DbColumn dbColumn = table.addColumn(key);
+
+                insertQuery.addColumn(dbColumn, value);
+            });
+        }
 
         GeoJsonObject geometry = feature.getGeometry();
-        geometry.setSrs(feature.getSrs());
+        if (geometry != null) {
+            geometry.setSrs(feature.getSrs());
+        }
 
         String transformTemplate = "public.st_transform(" +
                 "  public.st_geomFromGeoJSON('" + geometry + "')," +
