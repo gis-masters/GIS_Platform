@@ -16,12 +16,13 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { boundMethod } from 'autobind-decorator';
 
-import { registry } from '../../services/registry';
 import { OldPropertySchema } from '../../services/crg/schemaOld.models';
 import { FormControl } from '../Form/Control/Form-Control.composed';
 import { convertSchema } from '../../services/crg/schema.utils';
+import { PropertyType } from '../../services/crg/schema.models';
 import { FormView } from '../Form/View/Form-View.composed';
 import { FormDialog } from '../FormDialog/FormDialog';
+import { registry } from '../../services/registry';
 import { Form } from '../Form/Form';
 
 @Component({
@@ -61,10 +62,16 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
 
   private renderReactElement() {
     const [convertedProperty] = convertSchema([this.property]);
+
+    let value = this.value;
+    if (typeof this.value === 'string' && convertedProperty.propertyType === PropertyType.FILE) {
+      value = JSON.parse(this.value);
+    }
+
     const reactElement = createElement(withRegistry(registry)(convertedProperty.readOnly ? FormView : FormControl), {
       property: convertedProperty,
       type: convertedProperty.propertyType,
-      fieldValue: this.value,
+      fieldValue: value,
       Form: Form,
       FormDialog: FormDialog,
       variant: 'outlined',

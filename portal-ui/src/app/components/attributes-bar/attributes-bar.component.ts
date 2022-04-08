@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BehaviorSubject, combineLatest, from, Observable, of, Subject } from 'rxjs';
 import { catchError, concatMap, debounceTime, filter, takeUntil } from 'rxjs/operators';
+import { AxiosError } from 'axios';
 
 import { Toast } from '../Toast/Toast';
 import { schemaService } from '../../services/crg/schema.service';
@@ -482,8 +483,18 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     let i = 0;
     from(batchModel.batches)
       .pipe(
-        concatMap(features => transformFeature.insertFeatures(features, selectedLayer.tableName, this.layer.nativeCRS)),
-        catchError(err => this.handleError(err))
+        concatMap(features =>
+          transformFeature.insertFeatures(features, {
+            tableName: selectedLayer.tableName,
+            dataset: selectedLayer.dataset,
+            nativeCRS: this.layer.nativeCRS
+          })
+        ),
+        catchError(error => {
+          const err = error as AxiosError<{ message: string }>;
+
+          return this.handleError(err.response.data.message);
+        })
       )
       .subscribe(() => {
         i++;
@@ -509,7 +520,11 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
           // eslint-disable-next-line etc/no-deprecated
           return combineLatest(
             of(features),
-            transformFeature.insertFeatures(features, selectedLayer.tableName, this.layer.nativeCRS)
+            transformFeature.insertFeatures(features, {
+              tableName: selectedLayer.tableName,
+              dataset: selectedLayer.dataset,
+              nativeCRS: this.layer.nativeCRS
+            })
           );
         }),
         concatMap(([features]) => {
@@ -517,7 +532,11 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
           return transformFeature.deleteFeatures(featureIds, this.layer.tableName);
         }),
-        catchError(err => this.handleError(err)),
+        catchError(err => {
+          const error = err as AxiosError<{ message: string }>;
+
+          return this.handleError(error.response.data.message);
+        }),
         takeUntil(this.unsubscribe$)
       )
       .subscribe(() => {

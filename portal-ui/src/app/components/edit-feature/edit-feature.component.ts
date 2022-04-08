@@ -8,33 +8,34 @@ import { Coordinate } from 'ol/coordinate';
 import { boundMethod } from 'autobind-decorator';
 import { isNumber } from 'lodash';
 
-import { EditFeatureMode, EditFeaturesData, MapSelectionTypes, sidebars } from '../../stores/Sidebars.store';
-import { fromMobx } from '../../services/util/fromMobx';
-import { BatchModel } from '../../services/crg/batch-model';
-import { getFeaturesById } from '../../services/geoserver/wfs.service';
-import { getFeatureLayer } from '../../services/geoserver/layers.service';
-import { communicationService } from '../../services/communication.service';
-import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
-import { mapService } from '../../services/map/map.service';
-import { schemaService } from '../../services/crg/schema.service';
-import { OldPropertySchema, ValueType } from '../../services/crg/schemaOld.models';
-import { getFeatureProjection } from '../../services/geoserver/projections.service';
-import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
-import { isFeaturesDeleteAllowed, isFeaturesUpdateAllowed } from '../../services/crg/permissions.service';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { CrgVectorLayer } from '../../services/crg/projects.models';
-import { BaseEdit } from '../edit-bug-object/base-edit';
-import { Toast } from '../Toast/Toast';
+import { EditFeatureMode, EditFeaturesData, MapSelectionTypes, sidebars } from '../../stores/Sidebars.store';
+import { isFeaturesDeleteAllowed, isFeaturesUpdateAllowed } from '../../services/crg/permissions.service';
+import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
+import { deleteDataTableRecord, updateDataTableRecord } from '../../services/data.service';
+import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
+import { transformFeature } from '../../services/geoserver/transform-feature.service';
+import { getFeatureProjection } from '../../services/geoserver/projections.service';
+import { OldPropertySchema, ValueType } from '../../services/crg/schemaOld.models';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { applyFieldValue, convertToComplexField } from '../Form/Form.utils';
+import { communicationService } from '../../services/communication.service';
+import { getFeatureLayer } from '../../services/geoserver/layers.service';
+import { getFeaturesById } from '../../services/geoserver/wfs.service';
 import { getEmptyGeometry } from '../../services/geoserver/wfs.util';
-import { sleep } from '../../services/util/sleep';
-import { services } from '../../services/services';
+import { CrgVectorLayer } from '../../services/crg/projects.models';
+import { PropertySchema } from '../../services/crg/schema.models';
+import { schemaService } from '../../services/crg/schema.service';
 import { generateRandomId } from '../../services/util/randomId';
 import { convertSchema } from '../../services/crg/schema.utils';
-import { applyFieldValue, convertToComplexField } from '../Form/Form.utils';
-import { PropertySchema } from '../../services/crg/schema.models';
+import { mapService } from '../../services/map/map.service';
+import { BatchModel } from '../../services/crg/batch-model';
 import { formatDate } from '../../services/util/date.util';
+import { fromMobx } from '../../services/util/fromMobx';
+import { BaseEdit } from '../edit-bug-object/base-edit';
+import { services } from '../../services/services';
+import { sleep } from '../../services/util/sleep';
+import { Toast } from '../Toast/Toast';
 
 export interface Properties {
   [key: string]: unknown;
@@ -264,19 +265,23 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     if (this.isNew) {
       ids = await transformFeature.insertFeatures(
         [{ ...this.features[0], properties: newProperties, geometry: this.changedGeometry }],
-        this.layer.tableName,
-        this.layer.nativeCRS
+        this.layer
       );
 
       mapService.refreshLayers();
       communicationService.featuresUpdated.emit();
     } else {
-      await this.batchUpdateFeatures(
-        this.layer.tableName,
-        this.features,
-        newProperties,
-        this.isGeometryChanged ? this.changedGeometry : undefined
-      );
+      let geometry: WfsGeometry<Coordinate>;
+
+      if (this.features.length === 1) {
+        geometry = this.features[0].geometry as WfsGeometry<Coordinate>;
+      }
+
+      if (this.isGeometryChanged) {
+        geometry = this.changedGeometry;
+      }
+
+      await this.batchUpdateFeatures(this.layer.tableName, this.features, newProperties, geometry);
     }
 
     sidebars.setFeaturesEdited(false);
@@ -306,14 +311,14 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       title: 'Удалить объект?',
       approveBtnName: 'Удалить'
     };
-    const [layerName, newId] = this.features[0].id.split('.');
+    const { dataset, tableName } = this.layer;
 
     this.dialog
       .open(ConfirmDialogComponent, { width: '400px', data })
       .afterClosed()
       .pipe(filter(value => !!value))
       .subscribe(async () => {
-        await transformFeature.deleteFeatures([newId], layerName);
+        await deleteDataTableRecord(dataset, tableName, this.features[0].id);
         mapService.refreshLayers();
         communicationService.featuresUpdated.emit();
         sidebars.setFeaturesEdited(false);
@@ -383,6 +388,18 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   ) {
     const batchModel = new BatchModel(features);
     let percent = 0;
+
+    if (features.length === 1) {
+      const { dataset, tableName } = this.layer;
+
+      await updateDataTableRecord(dataset, tableName, features[0].id.split('.')[1], {
+        type: 'Feature',
+        geometry: geometry,
+        properties: newProperties
+      });
+
+      return;
+    }
 
     for (let i = 0; i < batchModel.totalBatches; i++) {
       await transformFeature.updateFeatures(

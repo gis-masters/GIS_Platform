@@ -1,14 +1,17 @@
 import {
   getDatasetsUrl,
+  getDatasetTableRecordsUrl,
+  getDatasetTableRecordUrl,
   getDatasetTablesUrl,
   getDatasetTableUrl,
   getDatasetUrl,
   getTableConnectionsUrl
 } from './server-urls.service';
-import { CrgLayer, CrgProject } from './crg/projects.models';
 import { PropertySchema, PropertyType } from './crg/schema.models';
-import { PageableResponse, PageOptions } from './models';
+import { WfsFeature } from './geoserver/wfs.models';
 import { communicationService } from './communication.service';
+import { CrgLayer, CrgProject } from './crg/projects.models';
+import { PageableResponse, PageOptions } from './models';
 import { preparePageOptions } from './http.utils';
 import { Role } from './crg/permissions.models';
 import { http } from './http.service';
@@ -146,13 +149,30 @@ export async function getDataTable(datasetId: string, identifier: string): Promi
   return { ...response, dataset: datasetId };
 }
 
-export async function updateDataTable(
+export async function createDataTableRecord(
   datasetId: string,
   dataTableId: string,
-  patch: Partial<DataTable>
+  feature: WfsFeature
+): Promise<WfsFeature> {
+  const response = await http.post<WfsFeature>(await getDatasetTableRecordsUrl(datasetId, dataTableId), feature);
+  communicationService.datasetsUpdated.emit();
+
+  return response;
+}
+
+export async function updateDataTableRecord(
+  datasetId: string,
+  dataTableId: string,
+  recordId: string,
+  patch: Partial<WfsFeature>
 ): Promise<void> {
-  await http.patch(await getDatasetTableUrl(datasetId, dataTableId), patch);
+  await http.patch(await getDatasetTableRecordUrl(datasetId, dataTableId, recordId), patch);
   communicationService.dataTablesUpdated.emit();
+}
+
+export async function deleteDataTableRecord(datasetId: string, dataTableId: string, recordId: string): Promise<void> {
+  await http.delete(await getDatasetTableRecordUrl(datasetId, dataTableId, recordId.split('.')[1]));
+  communicationService.datasetsUpdated.emit();
 }
 
 export async function deleteDataTable(datasetId: string, dataTableId: string): Promise<void> {

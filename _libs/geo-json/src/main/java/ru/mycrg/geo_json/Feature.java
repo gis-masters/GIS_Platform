@@ -1,6 +1,5 @@
 package ru.mycrg.geo_json;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -19,11 +18,6 @@ public class Feature extends GeoJsonObject {
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String key) {
         return (T) properties.get(key);
-    }
-
-    @JsonIgnore
-    public boolean isEmpty() {
-        return properties.isEmpty();
     }
 
     public Map<String, Object> getProperties() {

@@ -3,13 +3,15 @@ import WFS, { WriteTransactionOptions } from 'ol/format/WFS';
 import { Geometry, MultiLineString, MultiPolygon, Point } from 'ol/geom';
 import { Coordinate } from 'ol/coordinate';
 
-import { currentUser } from '../../stores/CurrentUser.store';
-import { wfsGeometryToGeometry } from '../util/open-layers.util';
-import { getFeatureProjection } from './projections.service';
-import { OldFeatureDescription } from '../crg/schemaOld.models';
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from './wfs.models';
+import { wfsGeometryToGeometry } from '../util/open-layers.util';
+import { OldFeatureDescription } from '../crg/schemaOld.models';
+import { getFeatureProjection } from './projections.service';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { createDataTableRecord } from '../data.service';
 import { usersService } from '../crg/users.service';
 import { getWfsUrl } from '../server-urls.service';
+import { CrgLayer } from '../crg/projects.models';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { getEnvironment } from '../environment';
 import { services } from '../services';
@@ -116,18 +118,20 @@ export class TransformFeatureService {
     return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
   }
 
-  async insertFeatures(featuresData: WfsFeature[], layerName: string, srsName: string): Promise<string[]> {
+  async insertFeatures(
+    featuresData: WfsFeature[],
+    { nativeCRS, dataset, tableName }: Partial<CrgLayer>
+  ): Promise<string[]> {
     await usersService.fetchCurrentUser();
-
     const { scratchWorkspaceName } = await getEnvironment();
     const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
 
     const options: WriteTransactionOptions = {
       featureNS: workspace,
-      featureType: layerName,
+      featureType: tableName,
       featurePrefix: '',
       nativeElements: [],
-      gmlOptions: { srsName }
+      gmlOptions: { srsName: nativeCRS }
     };
 
     const featuresToInsert: Feature<Geometry>[] = featuresData.map((featureData: WfsFeature) => {
@@ -142,6 +146,13 @@ export class TransformFeatureService {
     });
 
     const payload = this.xs.serializeToString(this.getNode(TransactionType.INSERT, featuresToInsert, options));
+
+    if (featuresData.length === 1) {
+      const newFeature = { ...featuresData[0], id: undefined, geometry_name: undefined };
+      const record = await createDataTableRecord(dataset, tableName, newFeature);
+
+      return [record.id];
+    }
 
     const responseXML = await http.post<string>(await getWfsUrl(), payload, {
       headers: { 'Content-Type': Mime.XML },

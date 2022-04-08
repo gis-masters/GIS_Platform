@@ -45,10 +45,6 @@ public class TableRecordsController {
     public ResponseEntity<Feature> createTableRecord(@PathVariable String datasetId,
                                                      @PathVariable String tableId,
                                                      @RequestBody Feature feature) {
-        if (feature.isEmpty()) {
-            throw new BadRequestException("Пустое тело");
-        }
-
         IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
         SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
                                         .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
