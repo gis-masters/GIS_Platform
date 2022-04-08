@@ -17,8 +17,15 @@ import { AxiosError } from 'axios';
 
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { CrgLayer, CrgLayersGroup, CrgLayerType, TreeItemPayload } from '../../../services/crg/projects.models';
-import { getLibrary, getLibraryRecord, LibraryRecord } from '../../../services/crg/doc-library.service';
+import {
+  CrgLayer,
+  CrgLayersGroup,
+  CrgLayerType,
+  CrgRasterLayer,
+  CrgVectorLayer,
+  TreeItemPayload
+} from '../../../services/crg/projects.models';
+import { getLibraryRecord, LibraryRecord } from '../../../services/crg/doc-library.service';
 import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs.models';
 import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { schemaService } from '../../../services/crg/schema.service';
@@ -181,7 +188,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             <ImportXmlDialog
               open={this.importXmlDialogOpen}
               onClose={this.closeImportXmlDialog}
-              datasetId={(entity as CrgLayer).dataset}
+              datasetId={(entity as CrgVectorLayer).dataset}
               tableId={(entity as CrgLayer).tableName}
               complexName={(entity as CrgLayer).complexName}
             />
@@ -218,14 +225,14 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   @computed
   private get isDocumentInfoEnabled(): boolean {
-    const { libraryId, recordId } = this.props.entity as CrgLayer;
+    const { libraryId, recordId } = this.props.entity as CrgRasterLayer;
 
     return !!(libraryId && recordId);
   }
 
   private async fetchPermissions() {
     if (this.isVectorLayer) {
-      const { dataset, tableName, schemaId } = this.props.entity as CrgLayer;
+      const { dataset, tableName, schemaId } = this.props.entity as CrgVectorLayer;
       const allowed = await Promise.all([
         isFeaturesCreateAllowed(dataset, tableName, schemaId),
         isTableExportAllowed(dataset, tableName),
@@ -247,7 +254,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   private openAttributeTable() {
     const { entity, onClose } = this.props;
 
-    sidebars.openAttributes(entity as CrgLayer);
+    sidebars.openAttributes(entity as CrgVectorLayer);
 
     onClose();
   }
@@ -255,11 +262,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @boundMethod
   private async addFeature() {
     const { entity, onClose } = this.props;
-    const emptyFeature = (await schemaService.getEmptyFeature(entity as CrgLayer)) as WfsFeature;
+    const emptyFeature = (await schemaService.getEmptyFeature(entity as CrgVectorLayer)) as WfsFeature;
     sidebars.openEdit({
       features: [emptyFeature],
       mode: EditFeatureMode.single,
-      layer: entity as CrgLayer,
+      layer: entity as CrgVectorLayer,
       isNew: true
     });
 
@@ -268,7 +275,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   @boundMethod
   private async goToLayer() {
-    const layer = this.props.entity as CrgLayer;
+    const layer = this.props.entity as CrgVectorLayer;
 
     await focusToLayer(layer);
     this.props.onClose();
@@ -277,7 +284,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @boundMethod
   private async export() {
     const { entity, onClose } = this.props;
-    const { dataset, tableName, schemaId } = entity as CrgLayer;
+    const { dataset, tableName, schemaId } = entity as CrgVectorLayer;
 
     await exportService.exportAsShape([{ dataset, table: tableName, schemaId }]);
     sidebars.openInfo();
@@ -287,7 +294,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   private async fetchGeometryType() {
     if (this.isVectorLayer) {
-      const { schemaId } = this.props.entity as CrgLayer;
+      const { schemaId } = this.props.entity as CrgVectorLayer;
       const schema = await schemaService.getSchema(schemaId);
 
       this.setGeometryType(schema.geometryType);
@@ -296,10 +303,9 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   @boundMethod
   private async getLayerDocument() {
-    const { libraryId, recordId } = this.props.entity as CrgLayer;
+    const { libraryId, recordId } = this.props.entity as CrgRasterLayer;
     try {
-      const library = await getLibrary(libraryId);
-      const document = await getLibraryRecord(libraryId, recordId, library.schemaId);
+      const document = await getLibraryRecord(libraryId, recordId);
       this.setRasterDocument(document);
       this.openDialog();
     } catch (error) {

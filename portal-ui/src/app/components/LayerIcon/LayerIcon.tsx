@@ -10,6 +10,7 @@ export interface LayerIconProps extends IClassNameProps {
   type: LayerIconType;
   schemaId?: string;
   colorized?: boolean;
+  expanded?: boolean;
 }
 
 export const LayerIcon: FC<LayerIconProps> = () => null;

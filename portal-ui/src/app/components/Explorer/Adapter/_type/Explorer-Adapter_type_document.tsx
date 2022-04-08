@@ -12,7 +12,6 @@ import { PropertyType } from '../../../../services/crg/schema.models';
 import { schemaService } from '../../../../services/crg/schema.service';
 import { getLibraryRecord, LibraryRecord } from '../../../../services/crg/doc-library.service';
 import { convertSchema, getSchemaWithAppliedContentType } from '../../../../services/crg/schema.utils';
-import { DocumentActionsWidget } from '../../../DocumentActionsWidget/DocumentActionsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 
@@ -64,7 +63,7 @@ export class ExplorerAdapterTypeDocument {
 
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
-    const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id, item.payload.schemaId);
+    const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id);
     const oldSchema = getSchemaWithAppliedContentType(
       await schemaService.getSchema(item.payload.schemaId),
       item.payload.content_type_id
@@ -78,8 +77,6 @@ export class ExplorerAdapterTypeDocument {
         <ExplorerInfoDescItem multiline>
           <ViewContentWidget fields={fields} data={item.payload} />
         </ExplorerInfoDescItem>
-
-        <DocumentActionsWidget document={item.payload} />
 
         <PermissionsWidget
           url={url}

@@ -3,10 +3,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
+import { Extent } from 'ol/extent';
 import '!style-loader!css-loader!sass-loader!ol/ol.css';
 
 import { cn } from '../../services/util/cn';
-import { CrgLayer, CrgLayerType, TreeItem } from '../../services/crg/projects.models';
+import { CrgExternalLayer, CrgLayer, CrgLayerType, TreeItem } from '../../services/crg/projects.models';
 import { mapService } from '../../services/map/map.service';
 import { fetchBasemaps } from '../../services/crg/basemaps.service';
 import { currentProject } from '../../stores/CurrentProject.store';
@@ -49,7 +50,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     // Позиционируемся по BBOX проекта
     if (currentProject.bbox && !route.queryParams.center) {
-      mapService.fitToBbox(JSON.parse(currentProject.bbox), [0, 0, 0, 0]);
+      mapService.fitToBbox(JSON.parse(currentProject.bbox) as Extent, [0, 0, 0, 0]);
     }
 
     this.reactionDisposer = reaction(
@@ -69,12 +70,12 @@ export class MapComponent implements OnInit, OnDestroy {
           );
 
           mapService.addExternalLayers(
-            layers.filter(l => l.type === CrgLayerType.EXTERNAL),
+            layers.filter(l => l.type === CrgLayerType.EXTERNAL) as CrgExternalLayer[],
             visibleBatches.length - i
           );
 
           mapService.addExternalGeoserverLayers(
-            layers.filter(l => l.type === CrgLayerType.EXTERNAL_GEOSERVER),
+            layers.filter(l => l.type === CrgLayerType.EXTERNAL_GEOSERVER) as CrgExternalLayer[],
             visibleBatches.length - i
           );
         });

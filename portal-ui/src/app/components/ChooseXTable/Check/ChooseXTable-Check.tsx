@@ -4,21 +4,22 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Checkbox, Radio } from '@mui/material';
 
-const cnChooseXTableDialogCheck = cn('ChooseXTableDialog', 'Check');
+const cnChooseXTableCheck = cn('ChooseXTable', 'Check');
 
-interface ChooseXTableDialogCheckProps<T> {
+interface ChooseXTableCheckProps<T> {
   item: T;
   selectedItems: T[];
   getRowId: (rowData: T) => string | number;
   single: boolean;
+  onSelect(items: T[]): void;
 }
 
 @observer
-export class ChooseXTableDialogCheck<T> extends Component<ChooseXTableDialogCheckProps<T>> {
+export class ChooseXTableCheck<T> extends Component<ChooseXTableCheckProps<T>> {
   render() {
     const Check = this.props.single ? Radio : Checkbox;
 
-    return <Check className={cnChooseXTableDialogCheck()} checked={this.selected} onChange={this.changeHandler} />;
+    return <Check className={cnChooseXTableCheck()} checked={this.selected} onChange={this.changeHandler} />;
   }
 
   @computed
@@ -30,7 +31,7 @@ export class ChooseXTableDialogCheck<T> extends Component<ChooseXTableDialogChec
 
   @action.bound
   private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
-    const { item, selectedItems, getRowId, single } = this.props;
+    const { item, selectedItems, getRowId, single, onSelect } = this.props;
     if (single && checked) {
       selectedItems.splice(0, selectedItems.length, item);
     } else if (checked) {
@@ -41,5 +42,7 @@ export class ChooseXTableDialogCheck<T> extends Component<ChooseXTableDialogChec
         1
       );
     }
+
+    onSelect(selectedItems);
   }
 }

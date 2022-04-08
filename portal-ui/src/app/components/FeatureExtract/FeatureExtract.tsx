@@ -14,7 +14,7 @@ import { getFeatureUrl } from '../../services/map/map-link-following.service';
 import { communicationService } from '../../services/communication.service';
 import { schemaService } from '../../services/crg/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { Role } from '../../services/crg/permissions.models';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
@@ -28,7 +28,7 @@ const cnFeatureExtract = cn('FeatureExtract');
 
 interface FeatureExtractProps {
   feature: WfsFeature;
-  layer: CrgLayer;
+  layer: CrgVectorLayer;
 }
 
 const libraryIdentifier = 'dl_feature_extract';
@@ -49,7 +49,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
 
     communicationService.libraryItemsUpdated.on(async () => {
       if (this.document?.id) {
-        this.setDocument(await getLibraryRecord(this.document.libraryId, this.document.id, this.document.schemaId));
+        this.setDocument(await getLibraryRecord(this.document.libraryId, this.document.id));
       }
     }, this);
   }

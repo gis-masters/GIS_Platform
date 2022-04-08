@@ -9,6 +9,9 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 
+import static ru.mycrg.gis_service.service.layers.RasterLayerHandler.FULL_MODE;
+import static ru.mycrg.gis_service.service.layers.RasterLayerHandler.GEOSERVER_MODE;
+
 @Service
 public class CrgLayerValidator implements Validator {
 
@@ -88,12 +91,13 @@ public class CrgLayerValidator implements Validator {
     }
 
     private void validateAsRaster(@NotNull Errors errors, LayerCreateDto dto) {
-        if (dto.getNativeCRS() == null) {
-            errors.rejectValue("nativeCRS", REQUIRED, DEFAULT_R_MESSAGE);
+        // Для растра обязательно указание режима
+        if (dto.getMode() == null) {
+            errors.rejectValue("mode", REQUIRED, DEFAULT_R_MESSAGE);
         }
 
-        if (dto.getDataStoreName() == null) {
-            errors.rejectValue("dataStoreName", REQUIRED, DEFAULT_R_MESSAGE);
+        if (dto.getNativeCRS() == null) {
+            errors.rejectValue("nativeCRS", REQUIRED, DEFAULT_R_MESSAGE);
         }
 
         if (dto.getLibraryId() == null) {
@@ -102,6 +106,21 @@ public class CrgLayerValidator implements Validator {
 
         if (dto.getRecordId() == null) {
             errors.rejectValue("recordId", REQUIRED, DEFAULT_R_MESSAGE);
+        }
+
+        if (dto.getMode().equalsIgnoreCase(FULL_MODE) || dto.getMode().equalsIgnoreCase(GEOSERVER_MODE)) {
+            // Для растра должен быть обязателен
+            // или getDataSourceUri - на основе пути к файлу и gis сервис сам создаст хранилие на геосервере(актуален)
+            // или dataStoreName - но тогда хранилищем gis сервис заниматься не должен.
+            // Иначе мы не можем создать слой на геосервере.
+            if (dto.getDataSourceUri() == null) {
+                errors.rejectValue("dataSourceUri", REQUIRED, DEFAULT_R_MESSAGE);
+            }
+
+            // Используется как раз для формирования имени хранилища
+            if (dto.getTableName() == null) {
+                errors.rejectValue("tableName", REQUIRED, DEFAULT_R_MESSAGE);
+            }
         }
     }
 

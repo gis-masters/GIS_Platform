@@ -2,7 +2,7 @@ import { observable, computed, action } from 'mobx';
 import { cloneDeep } from 'lodash';
 
 import { StyleRule } from '../services/geoserver/styles.service';
-import { CrgLayer } from '../services/crg/projects.models';
+import { CrgVectorLayer } from '../services/crg/projects.models';
 import { currentProject } from './CurrentProject.store';
 
 export interface StyleRuleExtended extends StyleRule {
@@ -158,8 +158,8 @@ class PrintSettingsStore implements PrintSettings {
   }
 
   @computed
-  get layers(): CrgLayer[] {
-    return currentProject.visibleLayersWithoutRasters.flatMap(({ payload }) => payload);
+  get layers(): CrgVectorLayer[] {
+    return currentProject.visibleLayersWithoutRasters.flatMap(({ payload }) => payload as CrgVectorLayer);
   }
 
   @action

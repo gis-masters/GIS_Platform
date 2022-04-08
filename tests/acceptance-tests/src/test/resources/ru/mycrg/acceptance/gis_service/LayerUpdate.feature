@@ -18,7 +18,7 @@ Feature: Обновление слоя проектов
     Then Обновленные поля слоя совпадают с переданными
     Examples:
       | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs |
-      | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   |
+      | newTitle | false   | NUMBER_3 | 20           | 15      | 30      | EPSG:28410   |
 
   Scenario: Добавление слою проекта папки-родителя администратором организации
     Given Существует проект "STRING_10"

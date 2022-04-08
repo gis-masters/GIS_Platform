@@ -21,9 +21,9 @@ public class LayerUpdateDto {
     @Max(Integer.MAX_VALUE)
     private int position = -1;
 
-    @Min(message = "Минимальное значение прозрачности 0", value = -1)
+    @Min(message = "Минимальное значение прозрачности 5", value = 5)
     @Max(message = "Максимальное значение прозрачности 100", value = 100)
-    private int transparency = -1;
+    private int transparency = 75;
 
     @Min(message = "Минимальное значение 0", value = -1)
     @Max(message = "Максимальное значение 40", value = 40)

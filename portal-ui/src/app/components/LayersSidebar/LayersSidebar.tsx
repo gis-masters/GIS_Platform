@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { AxiosError } from 'axios';
 import { observer } from 'mobx-react';
+import { action, observable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -10,13 +11,9 @@ import { projectsService } from '../../services/crg/projects.service';
 import {
   alertLayerOperationError,
   createLayer,
-  createLayersGroup,
   deleteLayer,
-  deleteLayersGroup,
-  generateNextGroupId,
   generateNextLayerId,
-  updateLayer,
-  updateLayersGroup
+  updateLayer
 } from '../../services/geoserver/layers.service';
 import { LayersTree } from '../LayersTree/LayersTree';
 import { Loading } from '../Loading/Loading';
@@ -77,24 +74,33 @@ export class LayersSidebar extends Component {
     this.setBusy(true);
 
     for (const group of currentProject.queriesQueue.groupsToCreate) {
-      const payload = { ...group, id: undefined };
       try {
-        const createdGroup = await createLayersGroup(payload, currentProject.id);
+        const createdGroup = await projectsService.createGroup(group, currentProject.id);
         if (group.id !== createdGroup.id && currentProject.groups.some(({ id }) => id === createdGroup.id)) {
-          currentProject.switchGroupId(createdGroup.id, generateNextGroupId());
+          currentProject.switchGroupId(createdGroup.id, projectsService.generateNextGroupId());
         }
         currentProject.switchGroupId(group.id, createdGroup.id);
       } catch (error) {
-        alertLayerOperationError(error, payload, 'создать группу', group.title);
+        alertLayerOperationError(
+          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+          group,
+          'создать группу',
+          group.title
+        );
       }
       this.countQuery();
     }
 
     for (const [groupId, patch] of currentProject.queriesQueue.groupsToPatch) {
       try {
-        await updateLayersGroup(groupId, patch);
+        await projectsService.updateGroup(groupId, patch);
       } catch (error) {
-        alertLayerOperationError(error, patch, 'изменить группу', `id: ${groupId}`);
+        alertLayerOperationError(
+          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+          patch,
+          'изменить группу',
+          `id: ${groupId}`
+        );
       }
       this.countQuery();
     }
@@ -108,7 +114,12 @@ export class LayersSidebar extends Component {
           currentProject.switchLayerId(createdLayer.id, generateNextLayerId());
         }
       } catch (error) {
-        alertLayerOperationError(error, payload, 'создать слой', layer.title);
+        alertLayerOperationError(
+          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+          payload,
+          'создать слой',
+          layer.title
+        );
       }
       this.countQuery();
     }
@@ -117,7 +128,12 @@ export class LayersSidebar extends Component {
       try {
         await updateLayer(layerId, patch);
       } catch (error) {
-        alertLayerOperationError(error, patch, 'изменить слой', `id: ${layerId}`);
+        alertLayerOperationError(
+          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+          patch,
+          'изменить слой',
+          `id: ${layerId}`
+        );
       }
       this.countQuery();
     }
@@ -126,16 +142,26 @@ export class LayersSidebar extends Component {
       try {
         await deleteLayer(layerId);
       } catch (error) {
-        alertLayerOperationError(error, { id: layerId }, 'удалить слой', `id: ${layerId}`);
+        alertLayerOperationError(
+          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+          { id: layerId },
+          'удалить слой',
+          `id: ${layerId}`
+        );
       }
       this.countQuery();
     }
 
     for (const groupId of currentProject.queriesQueue.groupsToDelete) {
       try {
-        await deleteLayersGroup(groupId);
+        await projectsService.deleteGroup(groupId);
       } catch (error) {
-        alertLayerOperationError(error, { id: groupId }, 'удалить группу', `id: ${groupId}`);
+        alertLayerOperationError(
+          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+          { id: groupId },
+          'удалить группу',
+          `id: ${groupId}`
+        );
       }
       this.countQuery();
     }

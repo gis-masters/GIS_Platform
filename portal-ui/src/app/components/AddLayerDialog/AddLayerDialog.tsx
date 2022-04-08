@@ -7,13 +7,13 @@ import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, isUndefined } from 'lodash';
 import { AxiosError } from 'axios';
 
-import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
+import { DocumentLibrary, getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
 import { awaitProcess, ProcessDataModel, createProcess } from '../../services/crg/processes.service';
 import { externalLayerDefaults, vectorLayerDefaults } from '../../services/NewLayerDefaults';
 import { FieldErrors, validateFormValue } from '../../services/crg/formValidation.service';
 import { SelectLibraryRecord } from '../SelectLibraryRecord/SelectLibraryRecord';
 import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
-import { CrgLayerType, NewCrgLayer } from '../../services/crg/projects.models';
+import { CrgLayerType, CrgLayer } from '../../services/crg/projects.models';
 import { Dataset, DataTable, getDataTable } from '../../services/data.service';
 import { generateNextLayerId } from '../../services/geoserver/layers.service';
 import { SelectDataTable } from '../SelectDataTable/SelectDataTable';
@@ -31,10 +31,10 @@ const cnAddLayerDialog = cn('AddLayerDialog');
 interface AddLayerDialogProps {
   open: boolean;
   onClose: () => void;
-  onAdd: (layer: NewCrgLayer) => void;
+  onAdd: (layer: CrgLayer) => void;
 }
 
-const defaultValue: NewCrgLayer = {
+const defaultValue: FormValue = {
   title: '',
   tableName: '',
   dataSourceUri: '',
@@ -46,7 +46,7 @@ const defaultValue: NewCrgLayer = {
   type: CrgLayerType.VECTOR
 };
 
-interface FormValue extends NewCrgLayer {
+interface FormValue extends CrgLayer, Record<string, unknown> {
   datasource?: Datasource;
   layerType?: string;
 }
@@ -142,11 +142,11 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   }
 
   @action.bound
-  private handleFormChange(layerInfo: NewCrgLayer) {
-    this.formValue = layerInfo;
+  private handleFormChange(formValue: FormValue) {
+    this.formValue = formValue;
 
-    if (!this.formValue.title && (layerInfo as FormValue).datasource) {
-      const datasource = (layerInfo as FormValue).datasource;
+    if (!this.formValue.title && formValue.datasource) {
+      const datasource = formValue.datasource;
 
       this.formValue.title = datasource.dataTable?.title || datasource.libraryRecord?.title;
       this.formFieldChanged(this.formValue, 'title');
@@ -324,7 +324,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         schemaId: dataTable.schemaId,
         minZoom,
         styleName: dataTable.schemaId
-      });
+      } as CrgLayer);
       this.close();
 
       this.clearForm();
@@ -413,7 +413,10 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     }
 
     const alreadyUsedDataTables = this.usedDataTables.filter(table =>
-      currentProject.layers.some(layer => table.dataset === layer.dataset && table.identifier === layer.tableName)
+      currentProject.layers.some(
+        layer =>
+          layer.type === CrgLayerType.VECTOR && table.dataset === layer.dataset && table.identifier === layer.tableName
+      )
     );
 
     this.usedDataTablesRequest = Promise.all(
@@ -455,7 +458,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     }
 
     const alreadyUsedLibraryRecords = this.usedLibraryRecords.filter(libraryRecord =>
-      currentProject.layers.some(
+      currentProject.rasterLayers.some(
         ({ libraryId, recordId }) => libraryRecord.libraryId === libraryId && libraryRecord.id === recordId
       )
     );
@@ -471,9 +474,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         .map(async layer => {
           const { libraryId, recordId } = layer;
           if (libraryId && recordId) {
-            const library = await getLibrary(libraryId);
-
-            return await getLibraryRecord(libraryId, recordId, library.schemaId);
+            return await getLibraryRecord(libraryId, recordId);
           }
         })
     );

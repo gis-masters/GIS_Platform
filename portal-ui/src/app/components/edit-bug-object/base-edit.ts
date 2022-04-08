@@ -23,6 +23,7 @@ export class BaseEdit implements OnDestroy {
   }
 
   getActualValuesFromForm(): Properties {
+    // eslint-disable-next-line unicorn/prefer-object-from-entries
     return this.getDirtyAndValidProperties().reduce((newProperties: Properties, item) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       newProperties[item.name] = this.editFeatureForm.controls[item.name].value;

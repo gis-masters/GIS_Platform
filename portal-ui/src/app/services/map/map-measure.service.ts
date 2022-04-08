@@ -111,6 +111,7 @@ class MapMeasureService {
       if (!Array.isArray(this.featureGeometryChangeListeners)) {
         this.featureGeometryChangeListeners = [this.featureGeometryChangeListeners];
       }
+      // eslint-disable-next-line no-unused-expressions -- @FIXME хз, что тут происходит
       [
         ...this.featureGeometryChangeListeners,
         ...(e.features.getArray() as Feature<SimpleGeometry>[]).map(feature => {

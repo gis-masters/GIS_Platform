@@ -1,5 +1,5 @@
 import { getActualLegendUrl, getGeoServerUrl, getWmsUrl } from '../server-urls.service';
-import { CrgLayer } from '../crg/projects.models';
+import { CrgVectorLayer } from '../crg/projects.models';
 import { mapService } from '../map/map.service';
 import { WfsGeometry } from './wfs.models';
 import { http } from '../http.service';
@@ -66,7 +66,7 @@ interface StyleFilterElse {
 
 const sldStyles: Record<string, Promise<StyleRule[]>> = {};
 
-export async function getLayerStyleRules(layer: CrgLayer): Promise<StyleRule[]> {
+export async function getLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> {
   if (!sldStyles[layer.styleName]) {
     sldStyles[layer.styleName] = _loadLayerStyle(layer);
   }
@@ -74,7 +74,7 @@ export async function getLayerStyleRules(layer: CrgLayer): Promise<StyleRule[]> 
   return await sldStyles[layer.styleName];
 }
 
-async function _loadLayerStyle(layer: CrgLayer): Promise<StyleRule[]> {
+async function _loadLayerStyle(layer: CrgVectorLayer): Promise<StyleRule[]> {
   const sldStyle = await getStyleSld(layer.styleName);
   const xmlDoc = new DOMParser().parseFromString(sldStyle, Mime.XML);
 
@@ -201,7 +201,7 @@ async function getStyleSld(complexStyleName: string): Promise<string> {
   });
 }
 
-export async function filterLegendForCurrentMapView(layers: CrgLayer[]): Promise<FilteredStylesResponse[]> {
+export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): Promise<FilteredStylesResponse[]> {
   const [x1, y1, x2, y2] = mapService.view.calculateExtent();
 
   return http.post<FilteredStylesResponse[]>(

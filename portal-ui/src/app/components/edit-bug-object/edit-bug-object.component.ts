@@ -36,7 +36,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   ngOnInit(): void {
     this.editFeatureForm = this.formBuilder.group({});
-    this.editFeatureForm.valueChanges.pipe(debounceTime(50)).subscribe(featureProperties => {
+    this.editFeatureForm.valueChanges.pipe(debounceTime(50)).subscribe((featureProperties: Record<string, unknown>) => {
       this.validateCustomRules(featureProperties);
     });
   }

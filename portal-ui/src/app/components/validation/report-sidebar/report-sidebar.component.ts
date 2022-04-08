@@ -9,7 +9,7 @@ import { ValidationBrieflyInfo, validationService } from '../../../services/crg/
 import { IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { ProcessStatus, ProcessType } from '../../../services/models';
-import { CrgLayer } from '../../../services/crg/projects.models';
+import { CrgLayer, CrgVectorLayer } from '../../../services/crg/projects.models';
 import { currentProject } from '../../../stores/CurrentProject.store';
 
 @Component({
@@ -20,7 +20,7 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   @Input() isActive: boolean;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
-  layers: CrgLayer[];
+  layers: CrgVectorLayer[];
 
   commonInfo: Map<string, ValidationBrieflyInfo> = new Map<string, ValidationBrieflyInfo>();
 
@@ -132,7 +132,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private async updateBrieflyInfo(layers: CrgLayer[]) {
+  private async updateBrieflyInfo(layers: CrgVectorLayer[]) {
     if (!layers || layers.length === 0) {
       return;
     }

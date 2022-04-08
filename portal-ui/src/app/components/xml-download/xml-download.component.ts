@@ -4,7 +4,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { registry } from '../../services/registry';
 import { XmlDownload } from '../XmlDownload/XmlDownload';
 
@@ -15,7 +15,7 @@ import { XmlDownload } from '../XmlDownload/XmlDownload';
 })
 export class XmlDownloadComponent implements OnInit, OnChanges, OnDestroy {
   @Input() feature: WfsFeature;
-  @Input() layer: CrgLayer;
+  @Input() layer: CrgVectorLayer;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {

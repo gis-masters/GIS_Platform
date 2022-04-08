@@ -109,9 +109,9 @@ export function isFeaturesReadAllowed(datasetIdentifier: string, tableIdentifier
   return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.READ_FEATURES);
 }
 
-export async function isRasterReadAllowed(libraryId: string, recordId: number, schemaId: string): Promise<boolean> {
+export async function isRasterReadAllowed(libraryId: string, recordId: number): Promise<boolean> {
   try {
-    const raster = await getLibraryRecord(libraryId, recordId, schemaId);
+    const raster = await getLibraryRecord(libraryId, recordId);
 
     return Boolean(raster.role);
   } catch {

@@ -1,19 +1,16 @@
-import React, { Component, ReactElement, ReactNode } from 'react';
-import { action, computed, observable } from 'mobx';
-import { observer } from 'mobx-react';
-import { Checkbox, Dialog, DialogActions, DialogContent } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
+import React, { Component, ReactNode } from 'react';
 import { isEqual } from 'lodash';
+import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
+import { action, computed, observable } from 'mobx';
+import { Dialog, DialogActions, DialogContent } from '@mui/material';
 
+import { XTableColumn } from '../XTable/XTable';
+import { Button, ButtonProps } from '../Button/Button';
+import { ChooseXTable } from '../ChooseXTable/ChooseXTable';
 import { SortParams } from '../../services/util/sortObjects';
 import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
 import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
-import { XTable, XTableColumn } from '../XTable/XTable';
-import { Button, ButtonProps } from '../Button/Button';
-
-import { ChooseXTableDialogCheck } from './Check/ChooseXTableDialog-Check';
-import { ChooseXTableDialogTitle } from './Title/ChooseXTableDialog-Title';
 
 import '!style-loader!css-loader!sass-loader!./ChooseXTableDialog.scss';
 import '!style-loader!css-loader!sass-loader!./Table/ChooseXTableDialog-Table.scss';
@@ -30,36 +27,16 @@ interface ChooseXTableDialogProps<T> {
   cols: XTableColumn<T>[];
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
-  onClose(): void;
-  onSelect(items: T[]): void;
   getRowId: (rowData: T) => string | number;
   single?: boolean;
   additionalAction?: ReactNode;
+  onClose(): void;
+  onSelect(items: T[]): void;
 }
 
 @observer
 export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>> {
-  @observable private selected: T[];
-  @observable private viewed: T[];
-
-  constructor(props: ChooseXTableDialogProps<T>) {
-    super(props);
-
-    this.setViewed([...props.data]);
-    this.setSelected([...(props.selectedItems || [])]);
-  }
-
-  componentDidUpdate(prevProps: ChooseXTableDialogProps<T>) {
-    const { open, data: items, selectedItems = [] } = this.props;
-
-    if (this.isItemsCanBeViewed(prevProps)) {
-      this.setViewed([...items]);
-    }
-
-    if (open && !prevProps.open) {
-      this.setSelected([...selectedItems]);
-    }
-  }
+  @observable private selected: T[] = [];
 
   render() {
     const {
@@ -68,24 +45,27 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
       data,
       defaultSort,
       secondarySortField,
-      onClose,
       actionButtonProps = {},
       single,
-      additionalAction
+      additionalAction,
+      cols,
+      onClose,
+      getRowId
     } = this.props;
 
     return (
       <Dialog PaperProps={{ className: cnChooseXTableDialog() }} open={open} onClose={onClose}>
         <DialogContent>
-          <XTable<T>
-            className={cnChooseXTableDialog('Table')}
-            title={<ChooseXTableDialogTitle title={title} items={data} selectedItems={this.selected} single={single} />}
+          <ChooseXTable<T>
+            title={title}
             data={data}
-            cols={this.cols}
+            cols={cols}
             defaultSort={defaultSort}
             secondarySortField={secondarySortField}
-            onFilter={this.setViewed}
             filterable
+            single={single}
+            onSelect={this.onSelected}
+            getRowId={getRowId}
           />
         </DialogContent>
         <DialogActions>
@@ -104,76 +84,17 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
   }
 
   @computed
-  get cols(): XTableColumn<T>[] {
-    return [
-      {
-        title: !this.props.single ? (
-          <Checkbox
-            indeterminate={this.selected.length > 0 && !this.allSelected}
-            checked={this.allSelected}
-            onChange={this.selectAll}
-          />
-        ) : null,
-        cellProps: { padding: 'checkbox' },
-        CellContent: this.renderCheckbox
-      },
-      ...this.props.cols
-    ];
-  }
-
-  @computed
   private get changed(): boolean {
     return !isEqual(this.selected, this.props.selectedItems);
   }
 
-  @computed
-  private get allSelected(): boolean {
-    const { disabledItems = [] } = this.props;
-
-    return this.viewed.length > 0 && this.selected.length === this.viewed.length - disabledItems.length;
-  }
-
-  @action
-  private setSelected(items: T[]): void {
-    this.selected = items;
+  @action.bound
+  private onSelected(selected: T[]) {
+    this.selected = selected;
   }
 
   @action.bound
-  private setViewed(items: T[]): void {
-    this.viewed = items;
-  }
-
-  @boundMethod
   private select() {
     this.props.onSelect(this.selected);
-  }
-
-  @boundMethod
-  private renderCheckbox({ rowData }: { rowData: T }): ReactElement {
-    return (
-      <ChooseXTableDialogCheck
-        single={this.props.single}
-        item={rowData}
-        selectedItems={this.selected}
-        getRowId={this.props.getRowId}
-      />
-    );
-  }
-
-  @boundMethod
-  private selectAll() {
-    this.setSelected(this.allSelected ? [] : [...this.viewed]);
-  }
-
-  private isItemsCanBeViewed(prevProps: ChooseXTableDialogProps<T>) {
-    const { open, data, getRowId } = this.props;
-    if (!data?.length || !prevProps.data?.length) {
-      return;
-    }
-
-    return (
-      (open && prevProps.data.length !== data.length) ||
-      prevProps.data.every((item, i) => getRowId(item) === getRowId(data[i]))
-    );
   }
 }

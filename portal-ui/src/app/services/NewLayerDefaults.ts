@@ -1,5 +1,5 @@
 import { currentUser } from '../stores/CurrentUser.store';
-import { CrgLayerType, NewCrgLayer } from './crg/projects.models';
+import { CrgLayerType, CrgVectorLayer, NewCrgLayer } from './crg/projects.models';
 
 const defaultProps = {
   enabled: true,
@@ -10,7 +10,7 @@ const defaultProps = {
 };
 
 export function vectorLayerDefaults(): Pick<
-  NewCrgLayer,
+  CrgVectorLayer,
   'id' | 'dataStoreName' | 'complexName' | 'enabled' | 'position' | 'transparency' | 'minZoom' | 'maxZoom' | 'type'
 > {
   const dataStoreName = `scratch_database_${currentUser.orgId}`;

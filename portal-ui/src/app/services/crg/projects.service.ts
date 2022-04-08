@@ -16,6 +16,7 @@ import { sleep } from '../util/sleep';
 import {
   getApiImportUrl,
   getProjectGroupsUrl,
+  getProjectGroupUrl,
   getProjectLayersUrl,
   getProjectsUrl,
   getProjectUrl,
@@ -141,20 +142,20 @@ class ProjectsService {
     }
 
     await usersService.fetchCurrentUser();
-    const layers = await this.getProjectLayers(project.id);
+    const layers = await this.getLayers(project.id);
     const layersErrors: Record<string, string[]> = {};
     const layersPermissions = await Promise.all(
-      layers.map(async ({ dataset, tableName, type, libraryId, recordId, schemaId }) => {
-        if (currentUser.isAdmin || type === CrgLayerType.EXTERNAL) {
+      layers.map(async layer => {
+        if (currentUser.isAdmin || layer.type === CrgLayerType.EXTERNAL) {
           return true;
         }
 
-        if (type === CrgLayerType.VECTOR) {
-          return await isFeaturesReadAllowed(dataset, tableName);
+        if (layer.type === CrgLayerType.VECTOR) {
+          return await isFeaturesReadAllowed(layer.dataset, layer.tableName);
         }
 
-        if (type === CrgLayerType.RASTER) {
-          return await isRasterReadAllowed(libraryId, recordId, schemaId);
+        if (layer.type === CrgLayerType.RASTER) {
+          return await isRasterReadAllowed(layer.libraryId, layer.recordId);
         }
       })
     );
@@ -163,7 +164,7 @@ class ProjectsService {
     if (project.id === id) {
       const queryParams = route.queryParams as { [key: string]: string };
 
-      const groups = await this.getProjectGroups(project.id);
+      const groups = await this.getGroups(project.id);
       currentProject.setProject(project, allowedLayers, groups, layersErrors);
 
       let activeLayers: string[] = [];
@@ -296,12 +297,32 @@ class ProjectsService {
     return http.post<Process>(url, payload);
   }
 
-  async getProjectLayers(projectId: number): Promise<CrgLayer[]> {
+  async getLayers(projectId: number): Promise<CrgLayer[]> {
     return await http.get<CrgLayer[]>(await getProjectLayersUrl(projectId));
   }
 
-  async getProjectGroups(projectId: number): Promise<CrgLayersGroup[]> {
+  async getGroups(projectId: number): Promise<CrgLayersGroup[]> {
     return await http.get<CrgLayersGroup[]>(await getProjectGroupsUrl(projectId));
+  }
+
+  async createGroup(group: CrgLayersGroup, projectId: number): Promise<CrgLayersGroup> {
+    return await http.post<CrgLayersGroup>(await getProjectGroupsUrl(projectId), group);
+  }
+
+  async updateGroup(
+    groupId: number,
+    patch: Partial<CrgLayersGroup>,
+    project: CrgProject = currentProject
+  ): Promise<void> {
+    return await http.patch(await getProjectGroupUrl(project.id, groupId), patch);
+  }
+
+  async deleteGroup(groupId: number, project: CrgProject = currentProject): Promise<void> {
+    return await http.delete(await getProjectGroupUrl(project.id, groupId));
+  }
+
+  generateNextGroupId(): number {
+    return Math.max(...currentProject.groups.map(({ id }) => id), 0) + 1;
   }
 
   async getById(id: number): Promise<CrgProject> {

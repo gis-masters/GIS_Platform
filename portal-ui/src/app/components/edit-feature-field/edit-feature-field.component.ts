@@ -6,7 +6,7 @@ import { createElement } from 'react';
 import { EditedField, ValueType } from '../../services/crg/schemaOld.models';
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { registry } from '../../services/registry';
 
 @Component({
@@ -19,8 +19,8 @@ export class EditFeatureFieldComponent implements OnInit, OnDestroy, OnChanges {
   @Input() field: EditedField;
   @Input() feature: WfsFeature;
   @Input() isNew: boolean;
-  @Input() isReadOnly: CrgLayer;
-  @Input() layer?: CrgLayer;
+  @Input() isReadOnly: boolean;
+  @Input() layer?: CrgVectorLayer;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {

@@ -55,6 +55,11 @@ public class CrgGlobalProperties {
     }
 
     @NotNull
+    public static String buildRasterStoreName(String custom) {
+        return DEFAULT_STORE_POSTFIX + SEPARATOR + custom;
+    }
+
+    @NotNull
     public static String getDefaultRoleName(Object orgId) {
         return DEFAULT_ROLE_NAME + SEPARATOR + orgId;
     }

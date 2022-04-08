@@ -1,4 +1,4 @@
-import { CrgLayer, CrgLayerType } from '../crg/projects.models';
+import { CrgVectorLayer, CrgLayerType, CrgLayer } from '../crg/projects.models';
 
 import { getFeatureType } from './featuretypes.service';
 import { getProjection, olProjection, transform } from './projections.service';
@@ -11,7 +11,9 @@ import { getLayerCoverage } from './layers.service';
 export async function focusToLayer(entity: CrgLayer): Promise<void> {
   try {
     const { nativeBoundingBox } =
-      entity.type === CrgLayerType.VECTOR ? await getFeatureType(entity) : await getLayerCoverage(entity);
+      entity.type === CrgLayerType.VECTOR
+        ? await getFeatureType(entity as CrgVectorLayer)
+        : await getLayerCoverage(entity);
 
     const { maxx, maxy, minx, miny, crs } = nativeBoundingBox;
 

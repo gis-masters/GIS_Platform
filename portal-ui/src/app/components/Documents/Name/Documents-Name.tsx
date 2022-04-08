@@ -5,9 +5,9 @@ import { cn } from '@bem-react/classname';
 import { LookupName } from '../../Lookup/Name/Lookup-Name';
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
 
-import '!style-loader!css-loader!sass-loader!./Documents-Name.scss';
-
 import { DocumentInfo } from '../Documents';
+
+import '!style-loader!css-loader!sass-loader!./Documents-Name.scss';
 
 const cnDocumentsName = cn('Documents', 'Name');
 

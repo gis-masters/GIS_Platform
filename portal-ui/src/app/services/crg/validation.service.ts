@@ -2,7 +2,7 @@ import { ValidationError } from '../util/FeaturePropertyValidators';
 import { getValidationUrl } from '../server-urls.service';
 import { ValidationWsMsg, wsService } from '../ws.service';
 import { ExportResourceModel } from './export.service';
-import { CrgLayer } from './projects.models';
+import { CrgVectorLayer } from './projects.models';
 import { ProcessStatus } from '../models';
 import { http } from '../http.service';
 import { Mime } from '../util/Mime';
@@ -47,7 +47,7 @@ class ValidationService {
     return this._instance || (this._instance = new this());
   }
 
-  async initValidation(layers: CrgLayer[]): Promise<ValidationWsMsg> {
+  async initValidation(layers: CrgVectorLayer[]): Promise<ValidationWsMsg> {
     return http.post<ValidationWsMsg>(await getValidationUrl(), this.preparePayload(layers), { headers });
   }
 
@@ -69,16 +69,16 @@ class ValidationService {
     return http.post<ValidationResultsResponse>(url, JSON.stringify(resource), { headers, params });
   }
 
-  async getShortInfo(layers: CrgLayer[]): Promise<ValidationBrieflyInfo[]> {
+  async getShortInfo(layers: CrgVectorLayer[]): Promise<ValidationBrieflyInfo[]> {
     const url = `${await getValidationUrl()}/short`;
 
     return http.post<ValidationBrieflyInfo[]>(url, this.preparePayload(layers), { headers });
   }
 
-  private preparePayload(layers: CrgLayer[]): string {
+  private preparePayload(layers: CrgVectorLayer[]): string {
     return JSON.stringify({
       wsUiId: wsService.getId(),
-      resources: layers.map((layer: CrgLayer) => {
+      resources: layers.map((layer: CrgVectorLayer) => {
         return {
           dataset: layer.dataset,
           table: layer.tableName,

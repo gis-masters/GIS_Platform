@@ -25,7 +25,7 @@ const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 interface EditFeatureGeometryCoordProps {
   store: EditFeatureGeometryStore;
   val: CoordinateEdited;
-  withControls?: true;
+  withControls?: boolean;
   onChange: (val: CoordinateEdited, i: number) => void;
   onDelete?: (index: number) => void;
   canBeDeleted?: boolean;

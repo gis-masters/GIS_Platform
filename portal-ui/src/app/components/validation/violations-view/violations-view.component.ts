@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { BugObject } from '../../../services/crg/validation.service';
 import { schemaService } from '../../../services/crg/schema.service';
-import { CrgLayer } from '../../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../../services/crg/projects.models';
 
 interface ViolationViewItem {
   propertyName: string;
@@ -16,7 +16,7 @@ interface ViolationViewItem {
 })
 export class ViolationsViewComponent implements OnInit {
   @Input() data: BugObject;
-  @Input() layer: CrgLayer;
+  @Input() layer: CrgVectorLayer;
 
   violationItems: ViolationViewItem[] = [];
 

@@ -313,6 +313,10 @@ export async function getFilesUrl(): Promise<string> {
   return (await getDataUrl()) + '/files';
 }
 
+export async function getFileUrl(id: string): Promise<string> {
+  return (await getFilesUrl()) + `/${id}`;
+}
+
 export async function getFileDownloadUrl(id: string): Promise<string> {
   return (await getFilesUrl()) + `/${id}/download`;
 }

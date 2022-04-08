@@ -10,7 +10,7 @@ import { getEmptyGeometry } from '../geoserver/wfs.util';
 import { http } from '../http.service';
 import { getSchemaUrl } from '../server-urls.service';
 import { FeatureUtil } from '../util/FeatureUtil';
-import { CrgLayer } from './projects.models';
+import { CrgVectorLayer } from './projects.models';
 import {
   OldFeatureDescription,
   OldPropertySchema,
@@ -90,7 +90,7 @@ class SchemaService {
     return (await this.getSchema(layerNameWithGeomType)) || (await this.getSchema(layerName));
   }
 
-  async getClassIdAlias(layer: CrgLayer, bugObject: BugObject): Promise<string> {
+  async getClassIdAlias(layer: CrgVectorLayer, bugObject: BugObject): Promise<string> {
     const schema = await this.getSchema(layer.schemaId);
 
     if (!schema) {
@@ -112,7 +112,7 @@ class SchemaService {
    * @param layer Наименование фичи
    * @param propertyName код свойства
    */
-  async getPropertyAlias(layer: CrgLayer, propertyName: string): Promise<string> {
+  async getPropertyAlias(layer: CrgVectorLayer, propertyName: string): Promise<string> {
     const schema = await this.getSchema(layer.schemaId);
 
     if (schema) {
@@ -135,7 +135,7 @@ class SchemaService {
     return propertySchemas.find(({ name }) => name.toLowerCase() === key.toLowerCase());
   }
 
-  async getEmptyFeature(layer: CrgLayer): Promise<WfsFeature<CoordinateEdited>> {
+  async getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature<CoordinateEdited>> {
     const { tableName, schemaId } = layer;
     const schema = await this.getSchema(schemaId);
 

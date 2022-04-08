@@ -8,8 +8,7 @@ import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { NewCrgLayer, NewCrgLayersGroup } from '../../../services/crg/projects.models';
-import { generateNextGroupId } from '../../../services/geoserver/layers.service';
+import { CrgLayer, CrgLayersGroup } from '../../../services/crg/projects.models';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
@@ -22,6 +21,7 @@ import { LayersSidebarToolbarLeft } from '../ToolbarLeft/LayersSidebar-ToolbarLe
 import { LayersSidebarToolbarRight } from '../ToolbarRight/LayersSidebar-ToolbarRight';
 
 import '!style-loader!css-loader!sass-loader!./LayersSidebar-Toolbar.scss';
+import { projectsService } from '../../../services/crg/projects.service';
 
 const cnLayersSidebarToolbar = cn('LayersSidebar', 'Toolbar');
 
@@ -122,17 +122,17 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
   }
 
   @action.bound
-  private async addLayer(layer: NewCrgLayer) {
+  private async addLayer(layer: CrgLayer) {
     currentProject.layers.splice(0, 0, layer);
 
     await focusToLayer(layer);
   }
 
   @action.bound
-  private createGroup(newGroupName: string) {
-    const newGroup: NewCrgLayersGroup = {
-      id: generateNextGroupId(),
-      title: newGroupName,
+  private createGroup(title: string) {
+    const newGroup: CrgLayersGroup = {
+      id: projectsService.generateNextGroupId(),
+      title: title,
       enabled: true,
       expanded: true,
       transparency: 100,

@@ -23,7 +23,7 @@ import { transformFeature } from '../../services/geoserver/transform-feature.ser
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { isFeaturesDeleteAllowed, isFeaturesUpdateAllowed } from '../../services/crg/permissions.service';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { BaseEdit } from '../edit-bug-object/base-edit';
 import { Toast } from '../Toast/Toast';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
@@ -49,7 +49,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   mode: EditFeatureMode;
   features: WfsFeature<Coordinate | CoordinateEdited>[];
   private viewFeatures?: WfsFeature[];
-  layer: CrgLayer;
+  layer: CrgVectorLayer;
   private properties?: Properties;
   isNew: boolean;
   selectTab: number;
@@ -228,7 +228,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
             });
         }
 
-        this.editFeatureForm.valueChanges.subscribe(featureProperties => {
+        this.editFeatureForm.valueChanges.subscribe((featureProperties: Record<string, unknown>) => {
           this.validateCustomRules(featureProperties);
 
           sidebars.setFeaturesEdited(!this.editFeatureForm.pristine);

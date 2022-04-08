@@ -253,7 +253,7 @@ function filesLoaded(value: FileInfo[] = []): string[] | undefined {
     value = [];
   }
 
-  if (value.some(({ notLoaded }) => notLoaded)) {
+  if (value?.some(({ notLoaded }) => notLoaded)) {
     return ['Загрузка файлов ещё не завершена'];
   }
 }

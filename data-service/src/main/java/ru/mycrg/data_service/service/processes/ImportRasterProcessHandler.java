@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.processes;
 
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -11,7 +10,6 @@ import org.springframework.security.concurrent.DelegatingSecurityContextRunnable
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.Process;
@@ -34,7 +32,6 @@ import ru.mycrg.http_client.handlers.BaseRequestHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -43,6 +40,7 @@ import static okhttp3.MediaType.parse;
 import static okhttp3.RequestBody.create;
 import static org.springframework.util.StringUtils.getFilename;
 import static org.springframework.util.StringUtils.stripFilenameExtension;
+import static ru.mycrg.common_utils.CrgGlobalProperties.buildRasterStoreName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT_RASTER;
@@ -201,7 +199,7 @@ public class ImportRasterProcessHandler implements IProcessHandler {
         try {
             String path = stripFilenameExtension(record.getInnerPath());
             String layerName = getFilename(path);
-            String dataStoreName = "store_" + layerName;
+            String dataStoreName = buildRasterStoreName(layerName);
             String dataSourceUri = "file://" + record.getInnerPath();
             String libraryId = importInitialData.getSource().getLibraryId();
             mode = isNull(mode) ? "full" : mode;

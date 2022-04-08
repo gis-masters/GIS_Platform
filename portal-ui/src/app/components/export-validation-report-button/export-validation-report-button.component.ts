@@ -4,7 +4,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { registry } from '../../services/registry';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { ExportValidationReportButton } from '../ExportValidationReportButton/ExportValidationReportButton';
 
 @Component({
@@ -13,7 +13,7 @@ import { ExportValidationReportButton } from '../ExportValidationReportButton/Ex
   styleUrls: ['./export-validation-report-button.component.scss']
 })
 export class ExportValidationReportButtonComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() layers: CrgLayer[];
+  @Input() layers: CrgVectorLayer[];
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {

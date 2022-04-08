@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { CrgLayer, CrgLayersGroup, CrgLayerType } from '../../../services/crg/projects.models';
+import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgVectorLayer } from '../../../services/crg/projects.models';
 import { LayerIcon as Icon } from '../../LayerIcon/LayerIcon.composed';
 import { LayerIconType } from '../../LayerIcon/LayerIcon';
 
@@ -33,7 +33,7 @@ export const LayerIcon: FC<LayerIconProps> = ({ data, isGroup, isError, expanded
   }
 
   if (!isGroup) {
-    schemaId = (data as CrgLayer).schemaId;
+    schemaId = (data as CrgVectorLayer).schemaId;
   }
 
   return <Icon type={iconType} className={cnLayerIcon()} schemaId={schemaId} expanded={expanded} />;

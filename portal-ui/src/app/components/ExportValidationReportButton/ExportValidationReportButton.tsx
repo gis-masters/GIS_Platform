@@ -6,12 +6,12 @@ import { IconButton, Tooltip } from '@mui/material';
 import { GetApp, GetAppOutlined } from '@mui/icons-material';
 
 import { ExportValidationReportDialog } from '../ExportValidationReportDialog/ExportValidationReportDialog';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/crg/projects.models';
 
 const cnExportValidationReportButton = cn('ExportValidationReportButton');
 
 interface ExportValidationReportButtonProps {
-  layers: CrgLayer[];
+  layers: CrgVectorLayer[];
 }
 
 @observer

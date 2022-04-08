@@ -9,7 +9,7 @@ import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { communicationService } from '../../services/communication.service';
 import { validationService } from '../../services/crg/validation.service';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { LayersList } from '../LayersList/LayersList';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
@@ -25,7 +25,7 @@ interface ValidateLayersDialogProps {
 
 @observer
 export class ValidateLayersDialog extends Component<ValidateLayersDialogProps> {
-  @observable private selectedLayers: CrgLayer[] = [];
+  @observable private selectedLayers: CrgVectorLayer[] = [];
 
   render() {
     const { open } = this.props;
@@ -66,7 +66,7 @@ export class ValidateLayersDialog extends Component<ValidateLayersDialogProps> {
   }
 
   @action.bound
-  private onSelect(layers: CrgLayer[]) {
+  private onSelect(layers: CrgVectorLayer[]) {
     this.selectedLayers = layers;
   }
 

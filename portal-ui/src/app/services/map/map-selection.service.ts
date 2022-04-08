@@ -242,21 +242,21 @@ class MapSelectionService {
 
     sidebars.setFeaturesLimit(false);
 
-    const visibleLayersComplexNames: NamesChunks = visibleLayers.reduce((acc: NamesChunks, layer) => {
+    const visibleLayersComplexNamesByCrs: NamesChunks = {};
+
+    for (const layer of visibleLayers) {
       const { nativeCRS, complexName } = layer;
 
-      if (!acc[nativeCRS]) {
-        acc[nativeCRS] = [];
+      if (!visibleLayersComplexNamesByCrs[nativeCRS]) {
+        visibleLayersComplexNamesByCrs[nativeCRS] = [];
       }
 
-      acc[nativeCRS].push(complexName);
-
-      return acc;
-    }, {});
+      visibleLayersComplexNamesByCrs[nativeCRS].push(complexName);
+    }
 
     mapService.showSelectionMarker(buffer.getCoordinates());
     const collections = await Promise.all(
-      Object.entries(visibleLayersComplexNames).map(([srsName, complexNames]) => {
+      Object.entries(visibleLayersComplexNamesByCrs).map(([srsName, complexNames]) => {
         const xml = makeXmlPolygonIntersect(complexNames, buffer, srsName, selectionType);
 
         return getFeaturesByXmlFilter(xml);

@@ -11,17 +11,11 @@ import {
   CrgLayersGroup,
   CrgLayerType,
   CrgProject,
-  NewCrgLayer,
-  NewCrgLayersGroup
+  CrgRasterLayer,
+  CrgVectorLayer,
+  NewCrgLayer
 } from '../crg/projects.models';
-import {
-  getGeoServerUrl,
-  getProjectGroupsUrl,
-  getProjectGroupUrl,
-  getProjectLayersUrl,
-  getProjectLayerUrl,
-  replaceUrl
-} from '../server-urls.service';
+import { getGeoServerUrl, getProjectLayersUrl, getProjectLayerUrl, replaceUrl } from '../server-urls.service';
 import { Toast } from '../../components/Toast/Toast';
 import { services } from '../services';
 
@@ -91,14 +85,10 @@ export async function deleteLayer(layerId: number): Promise<void> {
   }
 }
 
-export function getFeatureLayer(feature: WfsFeature<Coordinate | CoordinateEdited>): CrgLayer {
+export function getFeatureLayer(feature: WfsFeature<Coordinate | CoordinateEdited>): CrgVectorLayer {
   const [layerName] = feature.id.split('.');
 
   return currentProject.vectorLayers.find(l => l.tableName === layerName);
-}
-
-export function generateNextGroupId(): number {
-  return Math.max(...currentProject.groups.map(({ id }) => id), 0) + 1;
 }
 
 export function generateNextLayerId(): number {
@@ -109,28 +99,16 @@ export async function createLayer(newLayer: NewCrgLayer, projectId: number): Pro
   return await http.post<CrgLayer>(await getProjectLayersUrl(projectId), newLayer);
 }
 
+export async function createRasterLayer(layer: CrgRasterLayer, projectId: number): Promise<CrgLayer> {
+  return await http.post<CrgLayer>(await getProjectLayersUrl(projectId), layer);
+}
+
 export async function updateLayer(
   layerId: number,
   patch: Partial<CrgLayer>,
   project: CrgProject = currentProject
 ): Promise<void> {
   return await http.patch(await getProjectLayerUrl(project.id, layerId), patch);
-}
-
-export async function createLayersGroup(newGroup: NewCrgLayersGroup, projectId: number): Promise<CrgLayersGroup> {
-  return await http.post<CrgLayersGroup>(await getProjectGroupsUrl(projectId), newGroup);
-}
-
-export async function updateLayersGroup(
-  groupId: number,
-  patch: Partial<CrgLayersGroup>,
-  project: CrgProject = currentProject
-): Promise<void> {
-  return await http.patch(await getProjectGroupUrl(project.id, groupId), patch);
-}
-
-export async function deleteLayersGroup(groupId: number, project: CrgProject = currentProject): Promise<void> {
-  return await http.delete(await getProjectGroupUrl(project.id, groupId));
 }
 
 async function getGeoserverLayerInfo({ complexName, tableName }: CrgLayer): Promise<GeoserverLayerInfo> {
@@ -153,7 +131,7 @@ export async function getLayerCoverage(layer: CrgLayer): Promise<GeoserverCovera
 
 export function alertLayerOperationError(
   e: AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
-  payload: Record<string, unknown>,
+  payload: Record<string, unknown> | CrgLayersGroup,
   actionText: string,
   actionName: string
 ): void {

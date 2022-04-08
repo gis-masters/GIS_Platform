@@ -7,25 +7,23 @@ import { boundMethod } from 'autobind-decorator';
 
 import { exportValidationReportService } from '../../services/crg/export-validation-report.service';
 import { ExportResourceModel } from '../../services/crg/export.service';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { sidebars } from '../../stores/Sidebars.store';
+import { LayersList } from '../LayersList/LayersList';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
-import { LayersList } from '../LayersList/LayersList';
-
-import '!style-loader!css-loader!sass-loader!./ExportValidationReportlDialog.scss';
 
 const cnExportValidationReportDialog = cn('ExportValidationReportDialog');
 
 interface ExportValidationReportDialogProps {
-  layers: CrgLayer[];
+  layers: CrgVectorLayer[];
   open: boolean;
   onClose: () => void;
 }
 
 @observer
 export class ExportValidationReportDialog extends Component<ExportValidationReportDialogProps> {
-  @observable private selectedLayers: CrgLayer[] = [];
+  @observable private selectedLayers: CrgVectorLayer[] = [];
 
   render() {
     const { open, layers } = this.props;
@@ -81,7 +79,7 @@ export class ExportValidationReportDialog extends Component<ExportValidationRepo
   }
 
   @action.bound
-  private onSelect(layers: CrgLayer[]) {
+  private onSelect(layers: CrgVectorLayer[]) {
     this.selectedLayers = layers;
   }
 

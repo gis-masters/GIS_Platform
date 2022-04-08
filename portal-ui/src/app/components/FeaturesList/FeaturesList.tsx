@@ -8,9 +8,9 @@ import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { mapService } from '../../services/map/map.service';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
 import { FeaturesListEmpty } from './Empty/FeaturesList-Empty';
+import { FeatureError } from '../../services/map/map-link-following.service';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesList.scss';
-import { FeatureError } from '../../services/map/map-link-following.service';
 
 const cnFeaturesList = cn('FeaturesList');
 

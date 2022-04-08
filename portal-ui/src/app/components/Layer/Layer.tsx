@@ -4,7 +4,13 @@ import { observer } from 'mobx-react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { CrgLayersGroup, CrgLayer, CrgLayerType, TreeItemPayload } from '../../services/crg/projects.models';
+import {
+  CrgLayersGroup,
+  CrgLayer,
+  CrgLayerType,
+  TreeItemPayload,
+  CrgVectorLayer
+} from '../../services/crg/projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/crg/schema.service';
 
@@ -95,7 +101,7 @@ export class Layer extends Component<LayerProps> {
 
         <LayerInnards show={this.open && !isGroup} depth={depth}>
           {this.isError && <LayerErrors errors={this.errors} />}
-          <LayerLegend layer={data as CrgLayer} />
+          <LayerLegend layer={data as CrgVectorLayer} />
         </LayerInnards>
 
         <LayerMenu
@@ -140,7 +146,7 @@ export class Layer extends Component<LayerProps> {
       return;
     }
 
-    const { schemaId, type } = data as CrgLayer;
+    const { schemaId, type } = data as CrgVectorLayer;
 
     if (type === CrgLayerType.VECTOR) {
       try {

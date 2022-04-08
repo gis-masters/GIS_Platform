@@ -1,5 +1,4 @@
 import { Role } from './permissions.models';
-import { PropertySchema, PropertyType } from './schema.models';
 
 export enum CrgLayerType {
   VECTOR = 'vector',
@@ -9,66 +8,59 @@ export enum CrgLayerType {
 }
 
 interface CrgEntity {
-  id?: number;
   title: string;
-  enabled: boolean;
-  position: number;
-  transparency: number;
+  id?: number;
+  enabled?: boolean;
+  position?: number;
+  transparency?: number;
 }
-
-export interface CrgLayer extends CrgEntity {
-  dataset?: string;
-  dataStoreName?: string;
-  tableName?: string;
-  type: CrgLayerType;
-  minZoom?: number;
-  maxZoom?: number;
-  styleName?: string;
-  nativeCRS: string;
-  schemaId?: string;
-  complexName?: string;
-  dataSourceUri?: string;
-  parentId?: number;
-  libraryId?: string;
-  mode?: string;
-  recordId?: number;
-}
-
-export type NewCrgLayer = Pick<
-  CrgLayer,
-  | 'id'
-  | 'title'
-  | 'dataStoreName'
-  | 'dataset'
-  | 'complexName'
-  | 'tableName'
-  | 'enabled'
-  | 'parentId'
-  | 'minZoom'
-  | 'maxZoom'
-  | 'nativeCRS'
-  | 'transparency'
-  | 'dataSourceUri'
-  | 'styleName'
-  | 'position'
-  | 'schemaId'
-  | 'libraryId'
-  | 'mode'
-  | 'recordId'
-  | 'type'
->;
 
 export interface CrgLayersGroup extends CrgEntity {
+  expanded?: boolean;
   parentId?: number;
-  expanded: boolean;
 }
 
-export type NewCrgLayersGroup = Pick<
-  CrgLayersGroup,
-  'id' | 'title' | 'enabled' | 'transparency' | 'position' | 'parentId' | 'expanded'
+export interface CrgRasterLayer extends CrgBaseLayer {
+  type: CrgLayerType.RASTER;
+  mode: 'full' | 'geoserver' | 'gis-service';
+  dataStoreName?: string;
+  dataSourceUri?: string;
+  libraryId: string;
+  recordId: number;
+  parentId?: number;
+  enabled?: boolean;
+}
+
+export interface CrgVectorLayer extends CrgBaseLayer {
+  type: CrgLayerType.VECTOR;
+  dataStoreName?: string;
+  schemaId?: string;
+  styleName?: string;
+  dataset?: string;
+}
+
+export interface CrgExternalLayer extends CrgBaseLayer {
+  type: CrgLayerType.EXTERNAL | CrgLayerType.EXTERNAL_GEOSERVER;
+  dataSourceUri: string;
+}
+
+export type CrgLayer = Partial<
+  Omit<CrgRasterLayer, 'type'> & Omit<CrgVectorLayer, 'type'> & Omit<CrgExternalLayer, 'type'> & CrgBaseLayer
 >;
 
-export type TreeItemPayload = CrgLayer | NewCrgLayer | CrgLayersGroup | NewCrgLayersGroup;
+interface CrgBaseLayer extends CrgEntity {
+  type: CrgLayerType;
+  nativeCRS: string;
+  tableName: string;
+  minZoom?: number;
+  maxZoom?: number;
+  complexName?: string;
+  parentId?: number;
+}
+
+export type NewCrgLayer = Partial<CrgLayer>;
+
+export type TreeItemPayload = CrgLayer | CrgLayersGroup;
 
 export interface TreeItem<T = TreeItemPayload> {
   id: number;
@@ -94,14 +86,3 @@ export interface CrgProject {
   createdAt: string;
   role: Role;
 }
-
-export const crgProjectSchema: PropertySchema<CrgProject>[] = [
-  {
-    propertyType: PropertyType.STRING,
-    title: 'Название',
-    name: 'name',
-    required: true,
-    minLength: 3,
-    maxLength: 250
-  }
-];

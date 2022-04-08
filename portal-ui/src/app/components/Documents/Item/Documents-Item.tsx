@@ -6,7 +6,7 @@ import { AssignmentOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { getLibrary, getLibraryRecord, LibraryRecord } from '../../../services/crg/doc-library.service';
+import { getLibraryRecord, LibraryRecord } from '../../../services/crg/doc-library.service';
 import { LibraryDocument } from '../../LibraryDocument/LibraryDocument';
 import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
@@ -93,8 +93,7 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
     this.setLoading(true);
     const { item } = this.props;
     try {
-      const library = await getLibrary(item.libraryId);
-      const document = await getLibraryRecord(item.libraryId, item.id, library.schemaId);
+      const document = await getLibraryRecord(item.libraryId, item.id);
       this.setDocument(document);
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;

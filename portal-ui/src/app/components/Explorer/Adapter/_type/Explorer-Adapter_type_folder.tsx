@@ -76,7 +76,7 @@ export class ExplorerAdapterTypeFolder {
 
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
-    const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id, item.payload.schemaId);
+    const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id);
     const oldSchema = getSchemaWithAppliedContentType(
       await schemaService.getSchema(item.payload.schemaId),
       item.payload.content_type_id
@@ -195,7 +195,7 @@ export class ExplorerAdapterTypeFolder {
     item: ExplorerItemData<LibraryRecord>,
     recordId: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
-    const payload = await getLibraryRecord(item.payload.libraryId, Number(recordId), item.payload.schemaId);
+    const payload = await getLibraryRecord(item.payload.libraryId, Number(recordId));
     const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 

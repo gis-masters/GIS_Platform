@@ -5,7 +5,7 @@ import { createElement } from 'react';
 
 import { FeatureExtract } from '../FeatureExtract/FeatureExtract';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { registry } from '../../services/registry';
 
 @Component({
@@ -15,7 +15,7 @@ import { registry } from '../../services/registry';
 })
 export class FeatureExtractComponent implements OnInit, OnDestroy, OnChanges {
   @Input() feature: WfsFeature;
-  @Input() layer: CrgLayer;
+  @Input() layer: CrgVectorLayer;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   ngOnInit() {

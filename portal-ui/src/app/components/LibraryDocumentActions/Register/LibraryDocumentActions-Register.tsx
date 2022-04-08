@@ -12,8 +12,6 @@ import { services } from '../../../services/services';
 import { communicationService } from '../../../services/communication.service';
 import { Toast } from '../../Toast/Toast';
 import { Button } from '../../Button/Button';
-import { currentUser } from '../../../stores/CurrentUser.store';
-import { Role } from '../../../services/crg/permissions.models';
 import { ServerError } from '../../../services/http.service';
 
 import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
@@ -36,15 +34,13 @@ export class LibraryDocumentActionsRegister extends Component<LibraryDocumentAct
 
     return (
       <>
-        {this.canBeRegistered() && (
-          <LibraryDocumentActionsItem
-            className={cnLibraryDocumentActionsRegister()}
-            title=' Зарегистрировать документ'
-            icon={<AssignmentTurnedInOutlined />}
-            onClick={this.openDialog}
-            as={as}
-          />
-        )}
+        <LibraryDocumentActionsItem
+          className={cnLibraryDocumentActionsRegister()}
+          title=' Зарегистрировать документ'
+          icon={<AssignmentTurnedInOutlined />}
+          onClick={this.openDialog}
+          as={as}
+        />
 
         <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
           <DialogTitle>Подтверждение регистрации</DialogTitle>
@@ -99,13 +95,5 @@ export class LibraryDocumentActionsRegister extends Component<LibraryDocumentAct
   @action.bound
   private setBtnLoading(load: boolean) {
     this.busy = load;
-  }
-
-  @boundMethod
-  private canBeRegistered(): boolean {
-    const { gisogd_regnum, role } = this.props.document;
-
-    // eslint-disable-next-line camelcase
-    return !gisogd_regnum && (role !== Role.VIEWER || currentUser.isAdmin);
   }
 }

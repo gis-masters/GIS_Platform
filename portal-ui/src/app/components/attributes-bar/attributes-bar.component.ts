@@ -9,7 +9,7 @@ import { catchError, concatMap, debounceTime, filter, takeUntil } from 'rxjs/ope
 import { Toast } from '../Toast/Toast';
 import { schemaService } from '../../services/crg/schema.service';
 import { BatchModel } from '../../services/crg/batch-model';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgLayer, CrgVectorLayer } from '../../services/crg/projects.models';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { getFeatures } from '../../services/geoserver/wfs.service';
 import { projectsService } from '../../services/crg/projects.service';
@@ -60,7 +60,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @ViewChild('customSelectAll', { static: true }) customSelectAll: TemplateRef<any>;
 
-  layer?: CrgLayer;
+  layer?: CrgVectorLayer;
   isNeedPrepareColumn = true;
 
   currentPositionFeature: WfsFeature;
@@ -101,7 +101,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   constructor(private dialog: MatDialog, private logger: NGXLogger) {}
 
   ngOnInit() {
-    fromMobx<CrgLayer>(() => sidebars.layerForAttributes, true)
+    fromMobx<CrgVectorLayer>(() => sidebars.layerForAttributes, true)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(async layer => {
         const layerChanged = (this.layer && this.layer.id) !== (layer && layer.id);
@@ -434,7 +434,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     return false;
   }
 
-  private async getSuitableLayers(currentLayer: CrgLayer, layers: CrgLayer[]): Promise<CrgLayer[]> {
+  private async getSuitableLayers(currentLayer: CrgVectorLayer, layers: CrgVectorLayer[]): Promise<CrgLayer[]> {
     const schemas = await Promise.all(layers.map(({ schemaId }) => schemaService.getSchema(schemaId)));
     const currentSchema = await schemaService.getSchema(currentLayer.schemaId);
     const layersUpdatePermissions = await Promise.all(
@@ -649,7 +649,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     return simpleProperty ? simpleProperty.title : result;
   }
 
-  private async exportLayerAsCSV(layer: CrgLayer, filter?: FilterEvent[]): Promise<void> {
+  private async exportLayerAsCSV(layer: CrgVectorLayer, filter?: FilterEvent[]): Promise<void> {
     try {
       const schema = await schemaService.getSchema(layer.schemaId);
 

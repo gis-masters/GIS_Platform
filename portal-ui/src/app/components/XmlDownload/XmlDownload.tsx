@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import xmlbuilder from 'xmlbuilder';
 import FileSaver from 'file-saver';
 
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/crg/projects.models';
 import {
   CoordinateEdited,
   GeometryType,
@@ -26,7 +26,7 @@ const cnXmlDownload = cn('XmlDownload');
 
 interface XmlDownloadProps {
   feature: WfsFeature;
-  layer: CrgLayer;
+  layer: CrgVectorLayer;
 }
 
 @observer

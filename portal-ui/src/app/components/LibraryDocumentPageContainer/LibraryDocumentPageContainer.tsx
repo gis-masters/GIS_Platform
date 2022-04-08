@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { getLibrary, getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
+import { getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
 import { communicationService } from '../../services/communication.service';
 import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
@@ -65,8 +65,7 @@ export class LibraryDocumentPageContainer extends Component {
     this.operationId = operationId;
 
     try {
-      const library = await getLibrary(libraryId);
-      const document = await getLibraryRecord(libraryId, documentId, library.schemaId);
+      const document = await getLibraryRecord(libraryId, documentId);
 
       if (this.operationId !== operationId) {
         return;

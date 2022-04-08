@@ -1,9 +1,9 @@
-import { CrgLayer, CrgProject } from './crg/projects.models';
+import { CrgProject, CrgVectorLayer } from './crg/projects.models';
 import { Emitter } from './common/Emitter';
 
 export interface ObjectDto {
   id: string;
-  crgLayer: CrgLayer;
+  crgLayer: CrgVectorLayer;
 }
 
 class CommunicationService {

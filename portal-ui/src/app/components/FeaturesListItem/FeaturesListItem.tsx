@@ -7,12 +7,13 @@ import { ArrowForward } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
 import { currentProject } from '../../stores/CurrentProject.store';
+import { CrgLayerType, CrgVectorLayer } from '../../services/crg/projects.models';
 import { WFS_FEATURE_ID_DELIMITER } from '../../services/geoserver/wfs.service';
+import { FeatureError } from '../../services/map/map-link-following.service';
 import { schemaService } from '../../services/crg/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { ValueType } from '../../services/crg/schemaOld.models';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
-import { FeatureError } from '../../services/map/map-link-following.service';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 
@@ -71,7 +72,9 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   private async fetchSchema() {
     const { properties, id } = this.props.feature;
     const tableName = this.extractTableName(id);
-    const { schemaId } = currentProject.layers.find(layer => layer.tableName === tableName);
+    const { schemaId } = currentProject.layers.find(
+      layer => layer.type === CrgLayerType.VECTOR && layer.tableName === tableName
+    ) as CrgVectorLayer;
     const schema = await schemaService.getSchema(schemaId);
 
     if (schema) {

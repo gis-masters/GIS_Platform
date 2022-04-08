@@ -13,6 +13,7 @@ import { mapStore } from '../../stores/Map.store';
 import { Legend } from '../../components/Legend/Legend';
 import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles.service';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { CrgLayerType, CrgVectorLayer } from '../crg/projects.models';
 
 const BASE_SCALE_LINE_DPI = 150;
 
@@ -374,7 +375,9 @@ async function autoFilterLegend() {
     printSettings.setLegendItems(
       filteredLegendResponse.flatMap(({ dataset, identifier, rules: rulesNames }) =>
         rulesNames.map(ruleName => {
-          const layer = printSettings.layers.find(l => l.tableName === identifier && l.dataset === dataset);
+          const layer = printSettings.layers.find(
+            l => l.type === CrgLayerType.VECTOR && l.tableName === identifier && l.dataset === dataset
+          );
 
           return printSettings.allLegend.find(
             legendRule => legendRule.layerId === layer.id && legendRule.name === ruleName
@@ -408,7 +411,7 @@ function setPrintSize(resolution: number, translateX: number, translateY: number
 export async function loadAllLayersStyles(): Promise<void> {
   const extendedRules = await Promise.all(
     currentProject.visibleLayersWithoutRasters.map(async ({ payload }): Promise<StyleRuleExtended[]> => {
-      const rules = await getLayerStyleRules(payload);
+      const rules = await getLayerStyleRules(payload as CrgVectorLayer);
 
       return rules.map((rule): StyleRuleExtended => ({ ...rule, layerId: payload.id, layerTitle: payload.title }));
     })

@@ -17,6 +17,7 @@ import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import java.util.Optional;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.buildRasterStoreName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 
 @Component
@@ -27,14 +28,18 @@ public class RasterLayerHandler implements ILayerHandler {
     private final LayerRepository layerRepository;
     private final AuthenticationFacade authenticationFacade;
 
-    private static final String GEOSERVER_MODE = "geoserver";
-    private static final String FULL_MODE = "full";
-    private static final String GISSERVICE_MODE = "gis-service";
+    public static final String FULL_MODE = "full";
+    public static final String GEOSERVER_MODE = "geoserver";
 
     public RasterLayerHandler(LayerRepository layerRepository,
                               AuthenticationFacade authenticationFacade) {
         this.layerRepository = layerRepository;
         this.authenticationFacade = authenticationFacade;
+    }
+
+    @Override
+    public String getType() {
+        return "raster";
     }
 
     @Override
@@ -51,10 +56,11 @@ public class RasterLayerHandler implements ILayerHandler {
             }
 
             String workspaceName = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
-            String accessToken = authenticationFacade.getRootAccessToken();
+            String storeName = buildRasterStoreName(tableName);
+            CoverageModel coverage = new CoverageModel(dto.getTableName(), dto.getTitle(), "28406", dto.getNativeCRS());
 
-            createRasterStore(workspaceName, dto, accessToken);
-            createRasterLayer(workspaceName, dto, accessToken);
+            createRasterStore(workspaceName, storeName, dto.getDataSourceUri());
+            createRasterLayer(workspaceName, storeName, coverage);
         }
 
         if (GEOSERVER_MODE.equals(dto.getMode())) {
@@ -66,28 +72,27 @@ public class RasterLayerHandler implements ILayerHandler {
         }
     }
 
-    private void createRasterStore(String workspaceName, LayerCreateDto dto, String accessToken)
-            throws HttpClientException {
-        ResponseModel<Object> response = new RasterStorage(accessToken)
-                .createGeoTIFF(workspaceName, dto.getDataStoreName(), dto.getDataSourceUri());
+    private void createRasterStore(String workspaceName,
+                                   String store,
+                                   String path) throws HttpClientException {
+        String accessToken = authenticationFacade.getRootAccessToken();
+
+        ResponseModel<Object> response = new RasterStorage(accessToken).createGeoTIFF(workspaceName, store, path);
+
         if (!response.isSuccessful() && !response.getBody().toString().contains("already exists in workspace")) {
             throw new IllegalStateException("Не удалось создать хранилище на геосервере");
         }
     }
 
-    private void createRasterLayer(String workspaceName, LayerCreateDto dto, String accessToken)
+    private void createRasterLayer(String workspaceName, String store, CoverageModel coverage)
             throws HttpClientException {
+        String accessToken = authenticationFacade.getRootAccessToken();
+
         ResponseModel<Object> response = new CoverageHandler(accessToken)
-                .create(workspaceName,
-                        dto.getDataStoreName(),
-                        new CoverageModel(dto.getTableName(), dto.getTitle(), "28406", dto.getNativeCRS()));
+                .create(workspaceName, store, coverage);
+
         if (!response.isSuccessful() && !response.getBody().toString().contains("already exists in store")) {
             throw new IllegalStateException("Не удалось создать растровый слой на геосервере");
         }
-    }
-
-    @Override
-    public String getType() {
-        return "raster";
     }
 }

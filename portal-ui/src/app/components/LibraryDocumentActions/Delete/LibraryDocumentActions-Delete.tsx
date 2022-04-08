@@ -7,7 +7,6 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { deleteLibraryRecord, getLibraryRecords, LibraryRecord } from '../../../services/crg/doc-library.service';
-import { PropertySchema } from '../../../services/crg/schema.models';
 import { Button } from '../../Button/Button';
 
 import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
@@ -17,7 +16,6 @@ const cnLibraryDocumentActionsDelete = cn('LibraryDocumentActions', 'Edit');
 
 interface LibraryDocumentActionsDeleteProps {
   document: LibraryRecord;
-  fields: PropertySchema<LibraryRecord>[];
   as: ActionsItemVariant;
   onDelete?(): void;
 }

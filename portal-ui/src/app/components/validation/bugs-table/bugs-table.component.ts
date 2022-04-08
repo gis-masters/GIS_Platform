@@ -17,7 +17,7 @@ import { WfsFeature } from '../../../services/geoserver/wfs.models';
 import { mapService } from '../../../services/map/map.service';
 import { ValidationResultsResponse, validationService } from '../../../services/crg/validation.service';
 import { ProcessStatus } from '../../../services/models';
-import { CrgLayer } from '../../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../../services/crg/projects.models';
 import { isFeaturesUpdateAllowed } from '../../../services/crg/permissions.service';
 
 @Component({
@@ -36,7 +36,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
   @Input() isActive: boolean;
   @Input() index: number;
   @Input() step: number;
-  @Input() crgLayer: CrgLayer;
+  @Input() crgLayer: CrgVectorLayer;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;

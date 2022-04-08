@@ -1,7 +1,7 @@
 import { observable, action, reaction } from 'mobx';
 
 import { route } from './Route.store';
-import { CrgLayer } from '../services/crg/projects.models';
+import { CrgVectorLayer } from '../services/crg/projects.models';
 import { WfsFeature } from '../services/geoserver/wfs.models';
 import { Properties } from '../components/edit-feature/edit-feature.component';
 import { FeatureError } from '../services/map/map-link-following.service';
@@ -21,7 +21,7 @@ export interface EditFeaturesData {
   features: WfsFeature[];
   mode: EditFeatureMode;
   viewFeatures?: WfsFeature[];
-  layer?: CrgLayer;
+  layer?: CrgVectorLayer;
   properties?: Properties;
   isNew?: boolean;
 }
@@ -50,7 +50,7 @@ class Sidebars {
 
   @observable leftOpen: boolean;
   @observable attributesOpen: boolean;
-  @observable layerForAttributes?: CrgLayer;
+  @observable layerForAttributes?: CrgVectorLayer;
   @observable featuresOpen: boolean;
   @observable editOpen: boolean;
   @observable viewFeatures?: WfsFeature[];
@@ -95,7 +95,7 @@ class Sidebars {
   }
 
   @action
-  openAttributes(layer: CrgLayer) {
+  openAttributes(layer: CrgVectorLayer) {
     this.attributesOpen = true;
     this.layerForAttributes = layer;
   }
@@ -108,7 +108,7 @@ class Sidebars {
 
   @action
   openFeatures(features: WfsFeature[], selectionType?: MapSelectionTypes) {
-    // eslint-disable-next-line unicorn/prefer-prototype-methods
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (this.needEditConfirmation(this.openFeatures.bind(this, features))) {
       return;
     }
@@ -191,7 +191,7 @@ class Sidebars {
 
   @action
   openEdit(data: EditFeaturesData) {
-    // eslint-disable-next-line unicorn/prefer-prototype-methods
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (this.needEditConfirmation(this.openEdit.bind(this, data))) {
       return;
     }

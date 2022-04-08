@@ -15,11 +15,11 @@ import {
 } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { alertLayerOperationError, createLayer, createLayersGroup } from '../../../services/geoserver/layers.service';
+import { alertLayerOperationError, createLayer } from '../../../services/geoserver/layers.service';
 import { Dataset, DataTable, getAllDatasetTables } from '../../../services/data.service';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
 import { DialogActionsRight } from '../../DialogActionsRight/DialogActionsRight';
-import { CrgProject, NewCrgLayer } from '../../../services/crg/projects.models';
+import { CrgProject, CrgVectorLayer, NewCrgLayer } from '../../../services/crg/projects.models';
 import { projectsService } from '../../../services/crg/projects.service';
 import { vectorLayerDefaults } from '../../../services/NewLayerDefaults';
 import { SortParams } from '../../../services/util/sortObjects';
@@ -119,11 +119,10 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
     this.setProjectId(project.id);
     this.setBusy(true);
     const { dataset } = this.props;
-    const group = await createLayersGroup(
+    const group = await projectsService.createGroup(
       {
         enabled: true,
         expanded: true,
-        id: undefined,
         position: -1,
         title: dataset.title,
         transparency: 100
@@ -214,7 +213,7 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
   }
 
   @action
-  private setDataTablesLayers(dataTablesLayers: NewCrgLayer[]) {
+  private setDataTablesLayers(dataTablesLayers: CrgVectorLayer[]) {
     this.dataTablesLayers = dataTablesLayers;
   }
 

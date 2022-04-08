@@ -9,7 +9,7 @@ public class LayerUpdateDto {
     private int maxZoom;
     private String nativeCRS;
     private int position = 1;
-    private int transparency = 1;
+    private int transparency = 10;
     private Long parentId;
 
     public LayerUpdateDto() {

@@ -7,8 +7,9 @@ import {
   CrgLayersGroup,
   CrgLayerType,
   CrgProject,
+  CrgRasterLayer,
+  CrgVectorLayer,
   NewCrgLayer,
-  NewCrgLayersGroup,
   TreeItem
 } from '../services/crg/projects.models';
 import { getPatch } from '../services/util/patch';
@@ -19,7 +20,7 @@ const MAX_LAYERS_IN_BATCH = 5;
 
 interface CrgProjectData extends CrgProject {
   layers: (CrgLayer | NewCrgLayer)[];
-  groups: (CrgLayersGroup | NewCrgLayersGroup)[];
+  groups: CrgLayersGroup[];
   layersErrors: { [key: string]: string[] };
 }
 
@@ -49,11 +50,11 @@ class CurrentProject implements CrgProjectData {
   @observable order: number;
   @observable organizationId: number;
   @observable default: boolean;
-  @observable layers: (CrgLayer | NewCrgLayer)[];
+  @observable layers: CrgLayer[];
   @observable allLayers: Record<string, string>[];
-  @observable groups: (CrgLayersGroup | NewCrgLayersGroup)[];
+  @observable groups: CrgLayersGroup[];
   @observable primalLayers: CrgLayer[];
-  @observable primalGroups: (CrgLayersGroup | NewCrgLayersGroup)[];
+  @observable primalGroups: CrgLayersGroup[];
   @observable layersErrors: Record<string, string[]>;
   @observable attributeTableFilter: AttributeTableFilter = {};
   @observable role: Role;
@@ -191,13 +192,13 @@ class CurrentProject implements CrgProjectData {
   }
 
   @computed
-  get vectorLayers() {
-    return this.layers?.filter(l => l.type === CrgLayerType.VECTOR) || [];
+  get vectorLayers(): CrgVectorLayer[] {
+    return (this.layers?.filter(l => l.type === CrgLayerType.VECTOR) || []) as CrgVectorLayer[];
   }
 
   @computed
-  get rasterLayers() {
-    return this.layers?.filter(l => l.type === CrgLayerType.RASTER) || [];
+  get rasterLayers(): CrgRasterLayer[] {
+    return (this.layers?.filter(l => l.type === CrgLayerType.RASTER) || []) as CrgRasterLayer[];
   }
 
   @computed
@@ -214,7 +215,7 @@ class CurrentProject implements CrgProjectData {
 
   @computed
   get queriesQueue(): {
-    groupsToCreate: NewCrgLayersGroup[];
+    groupsToCreate: CrgLayersGroup[];
     groupsToPatch: [number, Partial<CrgLayersGroup>][];
     layersToCreate: NewCrgLayer[];
     layersToPatch: [number, Partial<CrgLayer>][];
@@ -235,7 +236,7 @@ class CurrentProject implements CrgProjectData {
     return {
       groupsToCreate: this.tree
         .filter(({ isGroup, payload }) => isGroup && this.primalGroups.every(({ id }) => id !== payload.id))
-        .map(({ payload }) => payload as NewCrgLayersGroup),
+        .map(({ payload }) => payload as CrgLayersGroup),
 
       groupsToPatch: this.groups
         .map(group => [group, this.primalGroups.find(primalGroup => primalGroup.id === group.id)])
@@ -310,11 +311,8 @@ class CurrentProject implements CrgProjectData {
   }
 
   @action
-  patchLayer(layerId: number, patch: Partial<CrgLayer>): CrgLayer {
-    return Object.assign(
-      this.layers.find(({ id }) => id === layerId),
-      patch
-    );
+  patchLayer<T extends CrgLayer = CrgLayer>(layerId: number, patch: Partial<T>): T {
+    return Object.assign(this.layers.find(({ id }) => id === layerId) as T, patch);
   }
 
   @action

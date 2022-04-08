@@ -18,7 +18,7 @@ import { Form } from '../Form/Form';
 import { Button } from '../Button/Button';
 import { LayersList } from '../LayersList/LayersList';
 import { sidebars } from '../../stores/Sidebars.store';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { ExportResourceModel, exportService } from '../../services/crg/export.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 
@@ -80,7 +80,7 @@ interface ExportGmlDialogProps {
 @observer
 export class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   @observable private dialogOpen = false;
-  @observable private selectedLayers: CrgLayer[] = [];
+  @observable private selectedLayers: CrgVectorLayer[] = [];
   @observable private selectedSchema = '';
 
   render() {
@@ -148,7 +148,7 @@ export class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   }
 
   @action.bound
-  private onSelect(layers: CrgLayer[]) {
+  private onSelect(layers: CrgVectorLayer[]) {
     this.selectedLayers = layers;
   }
 

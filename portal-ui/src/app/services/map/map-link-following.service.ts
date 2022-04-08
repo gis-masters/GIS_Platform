@@ -106,7 +106,7 @@ async function restoreRecentOpenedFeatures() {
 
       features.push(...layerFeatures);
     } else {
-      const layerInProject = currentProject.layers.find(layer => layer.tableName === key.split(':')[1]);
+      const layerInProject = currentProject.vectorLayers.find(layer => layer.tableName === key.split(':')[1]);
 
       if (layerInProject) {
         featuresInLayers[key].forEach(feature => {

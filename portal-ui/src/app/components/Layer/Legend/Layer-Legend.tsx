@@ -9,7 +9,7 @@ import {
   getLayerStyleRules,
   StyleRule
 } from '../../../services/geoserver/styles.service';
-import { CrgLayer } from '../../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../../services/crg/projects.models';
 import { mapService } from '../../../services/map/map.service';
 import { Emitter } from '../../../services/common/Emitter';
 import { Legend } from '../../Legend/Legend';
@@ -21,7 +21,7 @@ import '!style-loader!css-loader!sass-loader!./Layer-Legend.scss';
 const cnLayerLegend = cn('Layer', 'Legend');
 
 interface LayerLegendProps {
-  layer: CrgLayer;
+  layer: CrgVectorLayer;
 }
 
 @observer

@@ -65,12 +65,12 @@ interface XTablePropsBase<T> extends IClassNameProps {
   filterable?: boolean;
   defaultFilter?: FilterQuery;
   filtersAlwaysEnabled?: boolean;
-  onFilter?(filtered: T[]): void;
-  onPageOptionsChange?(pageOptions: PageOptions): void;
-  getRowId?(rowData: T): string | number;
   invoke?: {
     reload?(): void;
   };
+  onFilter?(filtered: T[]): void;
+  onPageOptionsChange?(pageOptions: PageOptions): void;
+  getRowId?(rowData: T): string | number;
 }
 
 interface XTablePropsSync<T> extends XTablePropsBase<T> {

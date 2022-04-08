@@ -139,7 +139,7 @@ export class ExplorerAdapterTypeLibrary {
     item: ExplorerItemData<DocumentLibrary>,
     recordId: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
-    const payload = await getLibraryRecord(item.payload.identifier, Number(recordId), item.payload.schemaId);
+    const payload = await getLibraryRecord(item.payload.identifier, Number(recordId));
     const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 

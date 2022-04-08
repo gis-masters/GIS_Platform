@@ -30,7 +30,7 @@ import { route } from '../../stores/Route.store';
 import { communicationService } from '../communication.service';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
 import { Basemap, SourceType } from '../crg/basemaps.models';
-import { CrgLayer } from '../crg/projects.models';
+import { CrgExternalLayer, CrgLayer } from '../crg/projects.models';
 import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs.models';
 import { getWmsUrl } from '../server-urls.service';
 import { ScaleLine } from '../ol/ScaleLine';
@@ -249,7 +249,7 @@ class MapService {
     });
   }
 
-  addExternalGeoserverLayers(layers: CrgLayer[], zIndex: number) {
+  addExternalGeoserverLayers(layers: CrgExternalLayer[], zIndex: number) {
     layers.forEach(layer => {
       const { tableName, transparency, dataSourceUri } = layer;
 
@@ -300,7 +300,7 @@ class MapService {
     });
   }
 
-  addExternalLayers(layers: CrgLayer[], zIndex: number) {
+  addExternalLayers(layers: CrgExternalLayer[], zIndex: number) {
     layers.forEach(layer => {
       const layerOnMap = this.getLayerByName(layer.tableName);
       if (layerOnMap) {

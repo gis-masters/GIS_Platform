@@ -40,6 +40,7 @@ export interface LibraryRecord {
   oktmo?: string;
   identifier?: string;
   intents?: string;
+  native_crs?: string;
 
   libraryId: string;
   schemaId: string;
@@ -75,7 +76,8 @@ export async function getLibrary(identifier: string): Promise<DocumentLibrary> {
   return response;
 }
 
-export async function getLibraryRecord(libraryId: string, recordId: number, schemaId: string): Promise<LibraryRecord> {
+export async function getLibraryRecord(libraryId: string, recordId: number): Promise<LibraryRecord> {
+  const { schemaId } = await getLibrary(libraryId);
   const response = await http.get<LibraryRecord>(await getDocLibrariesRecordUrl(libraryId, recordId));
 
   response.libraryId = libraryId;

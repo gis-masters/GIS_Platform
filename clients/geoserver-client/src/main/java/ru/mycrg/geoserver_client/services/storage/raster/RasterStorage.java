@@ -27,11 +27,13 @@ public class RasterStorage extends GeoServerBaseService {
      *
      * @param workspace The name of the workspace.
      * @param name      The name of store.
-     * @param url       Path to file.
+     * @param path      Path to file.
      */
-    public ResponseModel<Object> createGeoTIFF(String workspace, String name, String url) throws HttpClientException {
-        final CoverageStoreRequestModel coverageStore =
-                new CoverageStoreRequestModel(name, workspace, true, "GeoTIFF", url);
+    public ResponseModel<Object> createGeoTIFF(String workspace, String name, String path) throws HttpClientException {
+        log.debug("Try create GeoTIFF store with name: '{}' in workspace: '{}', by resource path: '{}'",
+                  name, workspace, path);
+
+        CoverageStoreRequestModel coverageStore = new CoverageStoreRequestModel(name, workspace, true, "GeoTIFF", path);
 
         String payload = gson.toJson(new CoverageStoreRequest(coverageStore));
 
