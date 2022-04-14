@@ -34,6 +34,9 @@ public class UserUpdateDto {
     @Pattern(regexp = "^(true|false)$", message = "Допустимые значения поля enabled: true или false")
     private String enabled;
 
+    @Size(max = 200, message = "No more than 200 characters")
+    private String department;
+
     public UserUpdateDto() {
         //Required by framework
     }
@@ -92,5 +95,17 @@ public class UserUpdateDto {
 
     public void setEnabled(String enabled) {
         this.enabled = enabled;
+    }
+
+    public String getEnabled() {
+        return enabled;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }

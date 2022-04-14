@@ -41,7 +41,7 @@ export type FieldValidator = (
 ) => string[] | undefined;
 
 const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
-  [PropertyType.STRING]: [simpleRequired, stringLength, stringRegex, stringWellKnownRegex],
+  [PropertyType.STRING]: [simpleRequired, stringLength, stringRegex, stringWellKnownRegex, stringPassword],
   [PropertyType.INT]: [numberRequired, numberMinMax, numberInteger],
   [PropertyType.FLOAT]: [numberRequired, numberMinMax],
   [PropertyType.BOOL]: [simpleRequired],
@@ -159,6 +159,12 @@ function stringWellKnownRegex(value: unknown, { wellKnownRegex, regexErrorMessag
 
   if (wellKnownRegex && !knownRegex[wellKnownRegex]?.test(String(value))) {
     return [regexErrorMessage || messages.regexp];
+  }
+}
+
+function stringPassword(value: unknown, { display }: PropertySchemaString): string[] {
+  if (display === 'password' && !new RegExp(knownRegex.password).test(String(value))) {
+    return ['Пароль должен состоять только из цифр, заглавных и строчных букв латинского алфавита '];
   }
 }
 

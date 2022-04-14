@@ -67,7 +67,7 @@ interface BasePropertySchema<T = Record<string, unknown>> {
 
 export interface PropertySchemaString<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.STRING;
-  display?: 'singleline' | 'multiline' | 'reachtext' | 'code';
+  display?: 'singleline' | 'multiline' | 'reachtext' | 'password' | 'phone' | 'code';
   mask?: string;
   minLength?: number;
   maxLength?: number;

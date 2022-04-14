@@ -74,6 +74,24 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         super.createEntity(userDto);
     }
 
+    @When("Администратор создает некого пользователя {string} {string} {string} {string} {string} {string} {string} {string}")
+    public void adminCreateSomeUser(String nameKey, String surnameKey, String emailKey, String passwordKey,
+                                    String middleNameKey, String jobKey, String phoneKey, String departmentKey) {
+        authorizationBase.loginAsOwner();
+
+        userDto = new UserCreateDto(generateString(nameKey),
+                                    generateString(middleNameKey),
+                                    generateString(surnameKey),
+                                    generateString(jobKey),
+                                    generateString(phoneKey),
+                                    generateString(emailKey),
+                                    generateString(passwordKey),
+                                    generateString(departmentKey)
+        );
+
+        super.createEntity(userDto);
+    }
+
     @When("Администратор повторно создает пользователя")
     public void createAgainUser() {
         super.createEntity(userDto);
@@ -324,7 +342,13 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private UserCreateDto mapToDto(List<String> data) {
-        if (data.size() > 4 && data.get(4) != null && data.get(5) != null && data.get(6) != null) {
+        if (data.size() > 6 &&
+                data.get(4) != null && data.get(5) != null && data.get(6) != null && data.get(7) != null) {
+            return new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
+                                     generateString(data.get(2)), generateString(data.get(3)),
+                                     generateString(data.get(4)), generateString(data.get(5)),
+                                     generateString(data.get(6)), generateString(data.get(7)));
+        } else if (data.size() > 4 && data.get(4) != null && data.get(5) != null && data.get(6) != null) {
             return new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
                                      generateString(data.get(2)), generateString(data.get(3)),
                                      generateString(data.get(4)), generateString(data.get(5)),

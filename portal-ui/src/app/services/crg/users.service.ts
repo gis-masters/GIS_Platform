@@ -20,6 +20,10 @@ export interface CrgUser {
   email: string;
   name: string;
   surname: string;
+  middleName?: string;
+  job?: string;
+  department?: string;
+  phone?: string;
   login: string;
   enabled: boolean;
   authorities: BuildInRole[];
@@ -28,7 +32,10 @@ export interface CrgUser {
   _links?: { [key: string]: ApiLink }[];
 }
 
-export type NewUserData = Pick<CrgUser, 'email' | 'name' | 'surname' | 'login' | 'password' | 'enabled'>;
+export type NewUserData = Pick<
+  CrgUser,
+  'email' | 'name' | 'surname' | 'middleName' | 'job' | 'department' | 'phone' | 'password' | 'enabled'
+>;
 
 export interface OrgInfo extends CrgUser {
   orgName: string;
@@ -75,8 +82,9 @@ class UsersService {
 
   async getAll(): Promise<CrgUser[]> {
     const params = { size: '10000' };
+    const response = await http.get<PageableResponse<CrgUser>>(await getUsersUrl(), { params });
 
-    return (await http.get<PageableResponse<CrgUser>>(await getUsersUrl(), { params }))._embedded.users;
+    return response._embedded.users;
   }
 
   async create(userData: NewUserData) {

@@ -6,8 +6,7 @@ Feature: Действия с пользователями
     When Авторизируемся владельцем организации
 
   Scenario Outline: Создание пользователя c валидными данными
-    When Администратор создает пользователя
-      | <userName> | <userSurname> | <userEmail> | <userPassword> | <middleName> | <job> | <phone> |
+    When Администратор создает некого пользователя "<userName>" "<userSurname>" "<userEmail>" "<userPassword>" "<middleName>" "<job>" "<phone>" "<department>"
     Then Сервер отвечает со статус-кодом 202
     And в заголовке Location передает ID созданного пользователя
     When Администратор делает запрос на созданного пользователя
@@ -16,9 +15,9 @@ Feature: Действия с пользователями
     When Авторизируемся пользователем
     Then Сервер отвечает со статус-кодом 200
     Examples:
-      | userName         | userSurname | userEmail | userPassword | middleName | job       | phone     |
-      | BaseUserName     | STRING_10   | EMAIL_20  | testtestQ1   |            |           |           |
-      | ExtendedUserName | STRING_10   | EMAIL_20  | testtestQ1   | STRING_10  | STRING_10 | NUMBER_10 |
+      | userName         | userSurname | userEmail | userPassword | middleName | job       | phone     | department |
+      | BaseUserName     | STRING_10   | EMAIL_20  | testtestQ1   | STRING_10  |           |           |            |
+      | ExtendedUserName | STRING_10   | EMAIL_20  | testtestQ1   | STRING_10  | STRING_10 | NUMBER_10 | STRING_10  |
 
   Scenario Outline: Нельзя создать пользователя c одинаковым email
     Given Существует пользователь
@@ -31,23 +30,24 @@ Feature: Действия с пользователями
 
   Scenario Outline: Создание пользователя c невалидными данными (<reason>)
     When Администратор создает пользователя
-      | <userName> | <userSurname> | <userEmail> | <userPassword> | <middleName> | <job> | <phone> |
+      | <userName> | <userSurname> | <userEmail> | <userPassword> | <middleName> | <job> | <phone> | <department> |
     Then Сервер отвечает со статус-кодом 400
     Examples:
-      | userName     | userSurname     | userEmail              | userPassword | middleName | job        | phone     | reason                        |
-      | testUserName | testUserSurname | invalidUser1           | testtestQ1   |            |            |           | Невалидный email пользователя |
-      | STRING_0     | testUserSurname | invalidUser2@user.com  | testtestQ1   |            |            |           | Пустое имя пользователя       |
-      | STRING_2     | testUserSurname | invalidUser3@user.com  | testtestQ1   |            |            |           | Короткое имя пользователя     |
-      | STRING_61    | testUserSurname | invalidUser4@user.com  | testtestQ1   |            |            |           | Длинное имя пользователя      |
-      | testUserName | STRING_101      | invalidUser5@user.com  | testtestQ1   |            |            |           | Длинная фамилия пользователя  |
-      | testUserName | STRING_0        | invalidUser6@user.com  | testtestQ1   |            |            |           | Пустая фамилия пользователя   |
-      | testUserName | testUserSurname | STRING_0               | testtestQ1   |            |            |           | Нет email пользователя        |
-      | testUserName | testUserSurname | EMAIL_61               | testtestQ1   |            |            |           | Длинный email пользователя    |
-      | testUserName | testUserSurname | invalidUser9@user.com  | STRING_2     |            |            |           | Простой пароль пользователя   |
-      | testUserName | testUserSurname | invalidUser10@user.com | testtestQ1   | STRING_2   | STRING_10  | NUMBER_10 | Короткое отчество             |
-      | testUserName | testUserSurname | invalidUser11@user.com | testtestQ1   | STRING_52  | STRING_10  | NUMBER_10 | Длинное отчество              |
-      | testUserName | testUserSurname | invalidUser12@user.com | testtestQ1   | STRING_10  | STRING_252 | NUMBER_10 | Длинная должность             |
-      | testUserName | testUserSurname | invalidUser13@user.com | testtestQ1   | STRING_10  | STRING_10  | NUMBER_22 | Длинный телефон               |
+      | userName     | userSurname     | userEmail              | userPassword | middleName | job        | phone     | department | reason                        |
+      | testUserName | testUserSurname | invalidUser1           | testtestQ1   |            |            |           |            | Невалидный email пользователя |
+      | STRING_0     | testUserSurname | invalidUser2@user.com  | testtestQ1   |            |            |           |            | Пустое имя пользователя       |
+      | STRING_2     | testUserSurname | invalidUser3@user.com  | testtestQ1   |            |            |           |            | Короткое имя пользователя     |
+      | STRING_61    | testUserSurname | invalidUser4@user.com  | testtestQ1   |            |            |           |            | Длинное имя пользователя      |
+      | testUserName | STRING_101      | invalidUser5@user.com  | testtestQ1   |            |            |           |            | Длинная фамилия пользователя  |
+      | testUserName | STRING_0        | invalidUser6@user.com  | testtestQ1   |            |            |           |            | Пустая фамилия пользователя   |
+      | testUserName | testUserSurname | STRING_0               | testtestQ1   |            |            |           |            | Нет email пользователя        |
+      | testUserName | testUserSurname | EMAIL_61               | testtestQ1   |            |            |           |            | Длинный email пользователя    |
+      | testUserName | testUserSurname | invalidUser9@user.com  | STRING_2     |            |            |           |            | Простой пароль пользователя   |
+      | testUserName | testUserSurname | invalidUser10@user.com | testtestQ1   | STRING_2   | STRING_10  | NUMBER_10 | geoplan    | Короткое отчество             |
+      | testUserName | testUserSurname | invalidUser11@user.com | testtestQ1   | STRING_52  | STRING_10  | NUMBER_10 | geoplan    | Длинное отчество              |
+      | testUserName | testUserSurname | invalidUser12@user.com | testtestQ1   | STRING_10  | STRING_252 | NUMBER_10 | geoplan    | Длинная должность             |
+      | testUserName | testUserSurname | invalidUser13@user.com | testtestQ1   | STRING_10  | STRING_10  | NUMBER_22 | geoplan    | Длинный телефон               |
+      | testUserName | testUserSurname | invalidUser13@user.com | testtestQ1   | STRING_10  | STRING_10  | NUMBER_10 | STRING_201 | Длинное название организации  |
 
   Scenario: Активация/деактивация пользователя
     Given Существует пользователь

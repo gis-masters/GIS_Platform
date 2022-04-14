@@ -1,3 +1,13 @@
-body .Form-Control_type_string.Form-Control_display_code .MuiInput-root {
-  font-family: "Courier New", Courier, monospace;
+body .Form-Control_type_string {
+  &.Form-Control_display_code .MuiInput-root {
+    font-family: "Courier New", Courier, monospace;
+  }
+
+  .MuiInputBase-input {
+    padding: 4px 0 5px;
+  }
+
+  fieldset {
+    border: none;
+  }
 }

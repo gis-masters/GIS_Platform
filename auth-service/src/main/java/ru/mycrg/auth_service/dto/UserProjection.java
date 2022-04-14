@@ -27,6 +27,8 @@ public interface UserProjection {
 
     String getEmail();
 
+    String getDepartment();
+
     boolean isEnabled();
 
     Set<AuthorityProjection> getAuthorities();

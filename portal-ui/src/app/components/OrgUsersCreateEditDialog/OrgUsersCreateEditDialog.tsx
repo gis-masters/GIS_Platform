@@ -1,241 +1,124 @@
-import React, { Component, ChangeEvent } from 'react';
-import { observable, action } from 'mobx';
+import React, { Component } from 'react';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogContent, DialogActions, TextField, Checkbox, FormHelperText } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
-import { cloneDeep } from 'lodash';
 import { AxiosError } from 'axios';
-import { cn } from '@bem-react/classname';
 
-import { usersService, NewUserData, CrgUser } from '../../services/crg/users.service';
-import { Form, FormField, FormLabel, FormControl } from '../Form/Form';
-import { Loading } from '../Loading/Loading';
-import { Button } from '../Button/Button';
+import { Toast } from '../Toast/Toast';
 import { getPatch } from '../../services/util/patch';
-
-type ErrorFields = { [key in keyof NewUserData]: string };
+import { FormDialog } from '../FormDialog/FormDialog';
+import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { usersService, NewUserData, CrgUser } from '../../services/crg/users.service';
 
 import '!style-loader!css-loader!sass-loader!./OrgUsersCreateEditDialog.scss';
-
-const cnOrgUsersCreateEditDialog = cn('OrgUsersCreateEditDialog');
-
-const defaultErrors: ErrorFields = {
-  email: '',
-  name: '',
-  surname: '',
-  login: '',
-  enabled: '',
-  password: ''
-};
-
-const defaultValues: NewUserData = {
-  email: '',
-  name: '',
-  surname: '',
-  login: '',
-  enabled: true,
-  password: ''
-};
 
 interface OrgUsersCreateEditDialogProps {
   open: boolean;
   onClose: () => void;
+  create?: boolean;
   user?: CrgUser;
 }
 
 @observer
 export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialogProps> {
-  @observable private locked = false;
-  @observable private userData: NewUserData | CrgUser;
-  @observable private errorFields: ErrorFields = cloneDeep(defaultErrors);
-
-  constructor(props: OrgUsersCreateEditDialogProps) {
-    super(props);
-
-    this.setInfo();
-  }
-
   render() {
     const { open, onClose, user } = this.props;
-    const { email, name, surname, password, enabled } = this.userData;
 
     return (
-      <>
-        <Dialog open={open} onClose={onClose} PaperProps={{ className: cnOrgUsersCreateEditDialog() }}>
-          <DialogContent>
-            <Form onSubmit={this.create}>
-              <FormField>
-                <FormLabel htmlFor='permissionUserEmail'>E-mail:</FormLabel>
-                <FormControl>
-                  <TextField
-                    disabled={Boolean(user)}
-                    inputMode='email'
-                    id='permissionUserEmail'
-                    onChange={this.handleEmail}
-                    value={email}
-                    error={Boolean(this.errorFields.email)}
-                    helperText={this.errorFields.email}
-                    fullWidth
-                    variant='standard'
-                  />
-                </FormControl>
-              </FormField>
-              <FormField>
-                <FormLabel htmlFor='permissionUserName'>Имя:</FormLabel>
-                <FormControl>
-                  <TextField
-                    id='permissionUserName'
-                    onChange={this.handleName}
-                    value={name}
-                    error={Boolean(this.errorFields.name)}
-                    helperText={this.errorFields.name}
-                    fullWidth
-                    variant='standard'
-                  />
-                </FormControl>
-              </FormField>
-              <FormField>
-                <FormLabel htmlFor='permissionUserSurname'>Фамилия:</FormLabel>
-                <FormControl>
-                  <TextField
-                    id='permissionUserSurname'
-                    onChange={this.handleSurname}
-                    value={surname}
-                    error={Boolean(this.errorFields.surname)}
-                    helperText={this.errorFields.surname}
-                    fullWidth
-                    variant='standard'
-                  />
-                </FormControl>
-              </FormField>
-              <FormField>
-                <FormLabel htmlFor='permissionUserEnabled'>Активен:</FormLabel>
-                <FormControl>
-                  <Checkbox id='permissionUserEnabled' onChange={this.handleEnabled} checked={enabled} />
-                  <FormHelperText error>{this.errorFields.enabled}</FormHelperText>
-                </FormControl>
-              </FormField>
-              {!user && (
-                <FormField>
-                  <FormLabel htmlFor='permissionUserPassword'>Пароль:</FormLabel>
-                  <FormControl>
-                    <TextField
-                      type='password'
-                      id='permissionUserPassword'
-                      onChange={this.handlePassword}
-                      value={password}
-                      error={Boolean(this.errorFields.password)}
-                      helperText={this.errorFields.password}
-                      fullWidth
-                      variant='standard'
-                    />
-                  </FormControl>
-                </FormField>
-              )}
-            </Form>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={!user ? this.create : this.edit} color='primary'>
-              {!user ? 'Создать' : 'Обновить'}
-            </Button>
-            <Button onClick={onClose}>Отмена</Button>
-          </DialogActions>
-        </Dialog>
-        <Loading global visible={this.locked} />
-      </>
+      <FormDialog
+        open={open}
+        fields={this.userInfo}
+        value={user}
+        actionFunction={this.save}
+        actionButtonProps={{ children: !user ? 'Создать' : 'Обновить' }}
+        onClose={onClose}
+      />
     );
   }
 
-  @boundMethod
-  private async create() {
-    this.lock();
-
-    try {
-      await usersService.create(this.userData);
-    } catch (error) {
-      this.unlock();
-      this.handleErrors(error);
-
-      return;
-    }
-    this.props.onClose();
-    this.setInfo();
-    this.unlock();
-  }
-
-  @boundMethod
-  private async edit() {
-    const { user } = this.props;
-    this.lock();
-
-    try {
-      await usersService.edit(getPatch(this.userData, user), user.id);
-    } catch (error) {
-      this.unlock();
-      this.handleErrors(error);
-
-      return;
-    }
-
-    this.props.onClose();
-    this.unlock();
-  }
-
-  @action.bound
-  private handleErrors(err: AxiosError<{ errors: Record<string, string>[] }>) {
-    this.errorFields = cloneDeep(defaultErrors);
-    const errors = err?.response?.data?.errors || [];
-    errors.forEach((fieldError: { [key: string]: string }) => {
-      if (fieldError.field) {
-        this.errorFields[fieldError.field] = fieldError.defaultMessage || 'ошибка';
+  @computed
+  private get userInfo(): PropertySchema<NewUserData>[] {
+    const userInfo = [
+      {
+        name: 'email',
+        title: 'E-mail:',
+        required: true,
+        wellKnownRegex: 'email',
+        propertyType: PropertyType.STRING
+      },
+      {
+        name: 'name',
+        title: 'Имя',
+        minLength: 3,
+        required: true,
+        propertyType: PropertyType.STRING
+      },
+      {
+        name: 'surname',
+        title: 'Фамилия',
+        minLength: 3,
+        required: true,
+        propertyType: PropertyType.STRING
+      },
+      {
+        name: 'middleName',
+        title: 'Отчество',
+        minLength: 3,
+        required: true,
+        propertyType: PropertyType.STRING
+      },
+      {
+        name: 'job',
+        title: 'Должность',
+        required: true,
+        propertyType: PropertyType.STRING
+      },
+      {
+        name: 'department',
+        title: 'Организация',
+        required: true,
+        propertyType: PropertyType.STRING
+      },
+      {
+        name: 'phone',
+        title: 'Контактный номер телефона',
+        required: true,
+        display: 'phone',
+        propertyType: PropertyType.STRING
+      },
+      {
+        name: 'enabled',
+        title: 'Активен',
+        defaultValue: true,
+        propertyType: PropertyType.BOOL
       }
-    });
+    ];
+
+    if (this.props.create) {
+      const password = {
+        name: 'password',
+        title: 'Пароль',
+        display: 'password',
+        required: true,
+        propertyType: PropertyType.STRING
+      };
+
+      userInfo.push(password);
+    }
+
+    return userInfo as PropertySchema<NewUserData>[];
   }
 
-  @action.bound
-  private handleEmail(e: ChangeEvent<HTMLInputElement>) {
-    this.errorFields.email = '';
-    this.userData.email = e.target.value;
-    this.userData.login = e.target.value;
-  }
+  @boundMethod
+  private async save(value: NewUserData) {
+    const { user, create } = this.props;
+    try {
+      await (create ? usersService.create(value) : usersService.edit(getPatch(value, user), user.id));
+    } catch (error) {
+      Toast.error(error as AxiosError);
 
-  @action.bound
-  private handleName(e: ChangeEvent<HTMLInputElement>) {
-    this.errorFields.name = '';
-    this.userData.name = e.target.value;
-  }
-
-  @action.bound
-  private handleSurname(e: ChangeEvent<HTMLInputElement>) {
-    this.errorFields.surname = '';
-    this.userData.surname = e.target.value;
-  }
-
-  @action.bound
-  private handlePassword(e: ChangeEvent<HTMLInputElement>) {
-    this.errorFields.password = '';
-    this.userData.password = e.target.value;
-  }
-
-  @action.bound
-  private handleEnabled(e: ChangeEvent<HTMLInputElement>) {
-    this.errorFields.enabled = '';
-    this.userData.enabled = e.target.checked;
-  }
-
-  @action
-  private lock() {
-    this.locked = true;
-  }
-
-  @action
-  private unlock() {
-    this.locked = false;
-  }
-
-  @action
-  private setInfo() {
-    this.userData = this.props.user ? cloneDeep(this.props.user) : cloneDeep(defaultValues);
-    this.errorFields = cloneDeep(defaultErrors);
+      return;
+    }
+    this.props.onClose();
   }
 }

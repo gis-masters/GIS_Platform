@@ -40,6 +40,30 @@ export class OrgUsers extends Component {
       sortable: true
     },
     {
+      title: 'Отчество',
+      field: 'middleName',
+      filterable: true,
+      sortable: true
+    },
+    {
+      title: 'Должность',
+      field: 'job',
+      filterable: true,
+      sortable: true
+    },
+    {
+      title: 'Организация',
+      field: 'department',
+      filterable: true,
+      sortable: true
+    },
+    {
+      title: 'Контактный номер телефона',
+      field: 'phone',
+      filterable: true,
+      sortable: true
+    },
+    {
       title: 'Активен',
       field: 'enabled',
       sortable: true,

@@ -62,10 +62,8 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь создает новую запись в таблице")
-    public void createAndWaitNewFeatureInCurrentTable() throws InterruptedException {
+    public void createNewFeatureInCurrentTable() {
         createSomeFeatureInCurrentTable();
-
-        sleep(500);
     }
 
     @When("Создана запись в слое с отсылкой на второй файл")
@@ -100,13 +98,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         properties.put("title", "new title");
 
         updateFeature(new GeoJsonModel(properties));
-    }
-
-    @When("Пользователь обновляет запись в таблице")
-    public void updateAndWaitFeatureInCurrentTable() throws InterruptedException {
-        updateFeatureInCurrentTable();
-
-        sleep(500);
     }
 
     @And("Сервер возвращает тело созданной записи таблицы, поля сущности корректно заполнены")

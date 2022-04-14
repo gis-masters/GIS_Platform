@@ -151,6 +151,7 @@
     "key-spacing": [2, { "beforeColon": false, "afterColon": true, "mode": "strict" }],
     "space-infix-ops": 2,
     "newline-before-return": "error",
+    "regexp/no-obscure-range": ["error", { "allowed": "all" }],
 
     // REACT
     // https://github.com/yannickcr/eslint-plugin-react/tree/master/docs/rules

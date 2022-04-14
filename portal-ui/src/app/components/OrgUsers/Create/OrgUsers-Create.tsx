@@ -24,7 +24,7 @@ export class OrgUsersCreate extends Component {
         >
           Создать пользователя
         </Button>
-        <OrgUsersCreateEditDialog open={this.dialogOpen} onClose={this.closeDialog} />
+        <OrgUsersCreateEditDialog open={this.dialogOpen} onClose={this.closeDialog} create />
       </>
     );
   }

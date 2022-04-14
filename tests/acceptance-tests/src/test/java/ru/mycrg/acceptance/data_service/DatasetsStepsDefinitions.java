@@ -108,10 +108,8 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь создает новый набор данных")
-    public void createAndWaitNewDataset() throws InterruptedException {
+    public void createNewDataset() {
         initDataset();
-
-        sleep(500);
     }
 
     @And("Сервер передаёт Location созданного набора")

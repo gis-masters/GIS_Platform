@@ -118,6 +118,7 @@ public class UserService {
         newUser.setLogin(dto.getEmail());
         newUser.addAuthority(USER);
         newUser.setEnabled(false);
+        newUser.setDepartment(dto.getDepartment());
 
         User savedUser = userRepository.save(newUser);
 
@@ -230,6 +231,10 @@ public class UserService {
 
         if (dto.isEnabled() != null) {
             userForUpdate.setEnabled(Boolean.parseBoolean(dto.isEnabled()));
+        }
+
+        if (dto.getDepartment() != null) {
+            userForUpdate.setDepartment(dto.getDepartment());
         }
 
         userForUpdate.setLastModified(LocalDateTime.now());

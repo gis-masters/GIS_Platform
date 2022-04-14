@@ -162,79 +162,105 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("Создан аудит лог о создании проекта")
-    public void checkProjectCreate() {
+    public void checkProjectCreate() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
     }
 
     @Then("Создана запись в журнале аудита о создании документа")
-    public void checkDocumentCreate() {
+    public void checkDocumentCreate() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LIBRARY_RECORD.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
     }
 
     @Then("Создана запись в журнале аудита о создании записи в слое")
-    public void checkFeatureCreate() {
+    public void checkFeatureCreate() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, FEATURE.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
     }
 
     @Then("Создан аудит лог о создании слоя")
-    public void checkLayerCreate() {
+    public void checkLayerCreate() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
     }
 
     @Then("Создан аудит лог об удалении проекта")
-    public void checkProjectDelete() {
+    public void checkProjectDelete() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
     }
 
     @Then("Создан аудит лог об удалении слоя")
-    public void checkLayerDelete() {
+    public void checkLayerDelete() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
     }
 
     @And("Создан аудит лог об изменении проекта")
-    public void checkProjectUpdate() {
+    public void checkProjectUpdate() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
     }
 
     @And("Создан аудит лог об изменении записи в слое")
-    public void checkFeatureUpdate() {
+    public void checkFeatureUpdate() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, FEATURE.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
     }
 
     @Then("Создана запись в журнале аудита о создании датасета")
-    public void checkDatasetCreate() {
+    public void checkDatasetCreate() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, DATASET.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
     }
 
     @Then("Создана запись в журнале аудита об удалении датасета")
-    public void checkDatasetDelete() {
+    public void checkDatasetDelete() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, DATASET.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
     }
 
     @Then("Создана запись в журнале аудита о создании правила")
-    public void checkPermissionCreate() {
+    public void checkPermissionCreate() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PERMISSION.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
     }
 
     @Then("Создана запись в журнале аудита об удалении правила")
-    public void checkPermissionDelete() {
+    public void checkPermissionDelete() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PERMISSION.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
     }
 
     @And("Создан аудит лог об изменении слоя")
-    public void checkLayerUpdate() {
+    public void checkLayerUpdate() throws InterruptedException {
+        sleep(500);
+
         assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
         assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
     }

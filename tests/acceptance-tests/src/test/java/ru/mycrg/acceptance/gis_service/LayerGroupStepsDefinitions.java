@@ -13,6 +13,7 @@ import ru.mycrg.acceptance.gis_service.dto.LayerGroupCreateDto;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -80,7 +81,9 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на текущую группу слоев проекта")
-    public void getCurrentLayerGroupInfoById() {
+    public void getCurrentLayerGroupInfoById() throws InterruptedException {
+        sleep(500);
+
         super.getCurrentEntity();
     }
 

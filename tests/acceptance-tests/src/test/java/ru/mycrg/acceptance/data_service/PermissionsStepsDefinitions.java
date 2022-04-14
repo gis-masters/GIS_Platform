@@ -35,7 +35,9 @@ public class PermissionsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Разрешения на текущий проект, выданные удаленному пользователю, были удалены")
-    public void checkDeletedUsersProjectStepDefinitions() {
+    public void checkDeletedUsersProjectStepDefinitions() throws InterruptedException {
+        sleep(200);
+
         checkDeletedProjectPermission("VIEWER");
     }
 
@@ -45,7 +47,9 @@ public class PermissionsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("Разрешения на наборы данных, выданные удаленному пользователю, были удалены")
-    public void checkDeletedUserStepDefinitions() {
+    public void checkDeletedUserStepDefinitions() throws InterruptedException {
+        sleep(800);
+
         checkDeletedPermission(userId);
     }
 

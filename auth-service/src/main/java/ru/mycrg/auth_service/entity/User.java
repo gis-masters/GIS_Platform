@@ -38,12 +38,17 @@ public class User {
     @Column(name = "sur_name")
     private String surname;
 
+    @Column
     private String job;
 
+    @Column
     private String phone;
 
     @Column
     private String email;
+
+    @Column
+    private String department;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<Authorities> authorities = new HashSet<>();
@@ -234,5 +239,13 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }

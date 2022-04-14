@@ -41,26 +41,32 @@ public class UserCreateDto {
     @NotBlank
     private String password;
 
+    @Size(max = 200, message = "No more than 200 characters")
+    private String department;
+
     public UserCreateDto() {
         // Framework required
     }
 
     public UserCreateDto(String name, String surname, String email, String password) {
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.password = password;
+        this(name, null, surname, null, null, email, password, null);
     }
 
     public UserCreateDto(String name, String surname, String email, String password, String middleName, String job,
                          String phone) {
+        this(name, middleName, surname, job, phone, email, password, null);
+    }
+
+    public UserCreateDto(String name, String middleName, String surname, String job, String phone, String email,
+                         String password, String department) {
         this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.password = password;
         this.middleName = middleName;
+        this.surname = surname;
         this.job = job;
         this.phone = phone;
+        this.email = email;
+        this.password = password;
+        this.department = department;
     }
 
     public String getMiddleName() {
@@ -117,5 +123,13 @@ public class UserCreateDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }
