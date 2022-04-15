@@ -4,6 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { PropertySchema, PropertyType } from '../../../../services/crg/schema.models';
 import { FileInfo } from '../../../../services/files.service';
 import { Form } from '../../Form';
+import { organizationSettings, Settings } from '../../../../stores/OrganizationSettings.store';
 
 export default {
   title: 'Form/Field/file',
@@ -54,6 +55,18 @@ const valueMultiple: TestData = { photos: multipleFilesData };
 const valueMultipleScroll: TestData = { photos: [...multipleFilesData, ...multipleFilesData] };
 
 const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
+
+// заполнение стора настроек, удалить по возможности
+const settings: Settings = {
+  createProjectEnabled: true,
+  dataManagementEnabled: true,
+  editProjectLayersEnabled: true,
+  createLibraryItemsEnabled: true,
+  fileDownloadEnabled: true,
+  downloadXmlGeometryEnabled: true
+};
+
+organizationSettings.setSettings(settings);
 
 export const SingleEditable = Template.bind({}) as ComponentStory<typeof Form>;
 SingleEditable.args = {

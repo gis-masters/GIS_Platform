@@ -6,19 +6,19 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { FormControl, TextField } from '@mui/material';
 
-import { Form, FormField } from '../Form/Form';
-import { Button } from '../Button/Button';
-import { authService } from '../../services/auth.service';
 import { communicationService } from '../../services/communication.service';
 import { usersService } from '../../services/crg/users.service';
+import { getEsiaUrl } from '../../services/server-urls.service';
+import { knownRegex } from '../../services/regexp.service';
+import { authService } from '../../services/auth.service';
 import { services } from '../../services/services';
+import { http } from '../../services/http.service';
 import { route } from '../../stores/Route.store';
 import { Pages } from '../../app-routing.module';
+import { Form, FormField } from '../Form/Form';
 import { Loading } from '../Loading/Loading';
-import { knownRegex } from '../../services/regexp.service';
-import { getEsiaUrl } from '../../services/server-urls.service';
-import { http } from '../../services/http.service';
 import { env } from '../../stores/Env.store';
+import { Button } from '../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./LoginForm.scss';
 

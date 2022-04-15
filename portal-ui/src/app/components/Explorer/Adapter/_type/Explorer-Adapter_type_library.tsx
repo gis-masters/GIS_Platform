@@ -13,16 +13,17 @@ import {
   getLibraryRecordsWithParticularOne,
   LibraryRecord
 } from '../../../../services/crg/doc-library.service';
+import { Link } from '../../../Link/Link';
 import { Emitter } from '../../../../services/common/Emitter';
 import { Role } from '../../../../services/crg/permissions.models';
 import { PageOptions, SortDir } from '../../../../services/models';
 import { schemaService } from '../../../../services/crg/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { communicationService } from '../../../../services/communication.service';
-import { getDocumentLibraryRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-import { Link } from '../../../Link/Link';
+import { communicationService } from '../../../../services/communication.service';
+import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
+import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
+import { getDocumentLibraryRoleAssignmentUrl } from '../../../../services/server-urls.service';
 
 import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
@@ -213,11 +214,14 @@ export class ExplorerAdapterTypeLibrary {
     return (
       full && (
         <>
-          <CreateLibraryElement
-            libraryIdentifier={item.payload.identifier}
-            schemaId={item.payload.schemaId}
-            store={store}
-          />
+          {organizationSettings.createLibraryItemsEnabled && (
+            <CreateLibraryElement
+              libraryIdentifier={item.payload.identifier}
+              schemaId={item.payload.schemaId}
+              store={store}
+            />
+          )}
+
           <Link href={`/data-management/library/${item.payload.identifier}/registry`} theme='contents'>
             <Tooltip title='Открыть реестр'>
               <IconButton>

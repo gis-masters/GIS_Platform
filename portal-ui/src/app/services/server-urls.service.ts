@@ -118,6 +118,10 @@ export async function getOrganizationsUrl(): Promise<string> {
   return (await getBaseUrl()) + '/organizations';
 }
 
+export async function getOrganizationSettingsUrl(): Promise<string> {
+  return `${await getOrganizationsUrl()}/settings`;
+}
+
 export async function getSchemaUrl(): Promise<string> {
   return (await getDataUrl()) + '/schemas';
 }

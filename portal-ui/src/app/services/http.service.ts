@@ -116,7 +116,7 @@ export class Http {
     // поначалу попытаемся найти объект на указанной странице
     const optimisticResponse = await this.get<PageableResponse<T>>(url, {
       ...config,
-      params: { ...(config.params || {}), ...pageParams }
+      params: { ...config.params, ...pageParams }
     });
     const { number: pageNumber, totalElements, totalPages } = optimisticResponse.page;
     const optimisticPage = getPayloadFromPageableResponse(optimisticResponse);
@@ -139,7 +139,7 @@ export class Http {
       scanPageParams.page = String(i);
       const scanResponse = await this.get<PageableResponse<T>>(url, {
         ...config,
-        params: { ...(config.params || {}), ...scanPageParams }
+        params: { ...config.params, ...scanPageParams }
       });
       const currentScanPage = getPayloadFromPageableResponse(scanResponse);
       const foundIndex = currentScanPage.findIndex(objectRecognizer);
@@ -158,7 +158,7 @@ export class Http {
         scanPageParams.page = String(i + 1);
         const nextScanPageResponse = await this.get<PageableResponse<T>>(url, {
           ...config,
-          params: { ...(config.params || {}), ...scanPageParams }
+          params: { ...config.params, ...scanPageParams }
         });
         nextPage.push(...getPayloadFromPageableResponse(nextScanPageResponse));
       }
@@ -234,7 +234,7 @@ export class Http {
       ...config,
       headers: {
         'Content-Type': Mime.JSON_PATCH,
-        ...(config?.headers || {})
+        ...config?.headers
       }
     });
     this.cache.clear();

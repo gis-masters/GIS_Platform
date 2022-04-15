@@ -3,10 +3,11 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { CrgVectorLayer } from '../../services/crg/projects.models';
-import { registry } from '../../services/registry';
 import { XmlDownload } from '../XmlDownload/XmlDownload';
+import { registry } from '../../services/registry';
 
 @Component({
   selector: 'crg-xml-download',
@@ -31,11 +32,13 @@ export class XmlDownloadComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(XmlDownload), {
-      feature: this.feature,
-      layer: this.layer
-    });
+    if (organizationSettings.downloadXmlGeometryEnabled) {
+      const reactElement = createElement(withRegistry(registry)(XmlDownload), {
+        feature: this.feature,
+        layer: this.layer
+      });
 
-    render(reactElement, this.ref.nativeElement);
+      render(reactElement, this.ref.nativeElement);
+    }
   }
 }

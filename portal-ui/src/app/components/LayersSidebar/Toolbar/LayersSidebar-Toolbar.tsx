@@ -11,6 +11,7 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup } from '../../../services/crg/projects.models';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
+import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
 import { AddLayerDialog } from '../../AddLayerDialog/AddLayerDialog';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
@@ -81,11 +82,13 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
               </Tooltip>
             )}
 
-            <Tooltip title='Настроить слои проекта'>
-              <IconButton onClick={this.handleEditModeClick}>
-                {editMode ? <LayersSettings /> : <LayersSettingsOutline />}
-              </IconButton>
-            </Tooltip>
+            {organizationSettings.editProjectLayersEnabled && (
+              <Tooltip title='Настроить слои проекта'>
+                <IconButton onClick={this.handleEditModeClick}>
+                  {editMode ? <LayersSettings /> : <LayersSettingsOutline />}
+                </IconButton>
+              </Tooltip>
+            )}
           </LayersSidebarToolbarRight>
         </div>
 

@@ -1,4 +1,5 @@
 import { mockOauthToken } from '../../tests/ui/_mock/oauthToken';
+import { mockOrganizationSettings } from '../../tests/ui/_mock/organizationSettings';
 import { mockProjects } from '../../tests/ui/_mock/projects';
 import { mockUsersCurrent } from '../../tests/ui/_mock/usersCurrent';
 import { LoginForm } from '../blocks/LoginForm/LoginForm';
@@ -14,6 +15,7 @@ export async function login(browser: WebdriverIO.Browser): Promise<void> {
   await mockOauthToken(browser);
   await mockUsersCurrent(browser);
   await mockProjects(browser);
+  await mockOrganizationSettings(browser);
 
   const loginForm = new LoginForm(browser);
   await loginForm.login('hermione@test', 'Avadakedavra1');

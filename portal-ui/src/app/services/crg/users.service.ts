@@ -9,6 +9,7 @@ import { BuildInRole } from './permissions.models';
 import { PageableResponse } from '../models';
 import { http } from '../http.service';
 import { services } from '../services';
+import { organizationSettingsService } from '../organization-settings';
 
 export interface ApiLink {
   href: string;
@@ -78,6 +79,8 @@ class UsersService {
         services.logger.error((error as AxiosError).message);
       }
     }
+
+    await organizationSettingsService.fetch();
   }
 
   async getAll(): Promise<CrgUser[]> {

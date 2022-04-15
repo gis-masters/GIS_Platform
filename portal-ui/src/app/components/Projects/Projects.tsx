@@ -6,12 +6,13 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AddBoxOutlined } from '@mui/icons-material';
 
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { communicationService } from '../../services/communication.service';
 import { projectsService } from '../../services/crg/projects.service';
 import { CrgProject } from '../../services/crg/projects.models';
 import { allProjects } from '../../stores/AllProjects.store';
-import { ProjectsAdd } from '../ProjectAdd/ProjectsAdd';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
+import { ProjectsAdd } from '../ProjectAdd/ProjectsAdd';
 import { sleep } from '../../services/util/sleep';
 import { Toast } from '../Toast/Toast';
 
@@ -58,21 +59,23 @@ export class Projects extends Component {
               <ProjectsFilter />
               <ProjectsSortBy />
               <ProjectsSortOrder />
-              <ProjectsAdd
-                className={cnProjects('Add')}
-                busy={this.addFormBusy}
-                onSubmit={this.handleProjectCreation}
-                onChange={this.setErrors}
-                onClose={this.closeAddForm}
-                onOpen={this.openAddForm}
-                open={this.addFormOpen}
-                errors={this.addFormErrors}
-                buttonProps={{
-                  variant: 'contained',
-                  color: 'primary',
-                  startIcon: <AddBoxOutlined />
-                }}
-              />
+              {organizationSettings.createProjectEnabled && (
+                <ProjectsAdd
+                  className={cnProjects('Add')}
+                  busy={this.addFormBusy}
+                  onSubmit={this.handleProjectCreation}
+                  onChange={this.setErrors}
+                  onClose={this.closeAddForm}
+                  onOpen={this.openAddForm}
+                  open={this.addFormOpen}
+                  errors={this.addFormErrors}
+                  buttonProps={{
+                    variant: 'contained',
+                    color: 'primary',
+                    startIcon: <AddBoxOutlined />
+                  }}
+                />
+              )}
             </ProjectsHeader>
             <ProjectsList>
               {allProjects.displayedList.map((project, i) => (
@@ -134,7 +137,7 @@ export class Projects extends Component {
       if (err.response?.status === 409) {
         this.setErrors([err?.message]);
       } else {
-        const errors = [];
+        const errors: string[] = [];
         err.response?.data?.errors?.forEach(({ message }) => {
           if (message) {
             errors.push(message as string);

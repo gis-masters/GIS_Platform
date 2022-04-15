@@ -11,6 +11,7 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
 import { getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
 import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { schemaService } from '../../services/crg/schema.service';
 import { Role } from '../../services/crg/permissions.models';
 
@@ -83,7 +84,9 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
         )}
         <LibraryDocumentActionsShare document={this.document || document} as={as} />
         {this.canBeRegistered() && <LibraryDocumentActionsRegister document={this.document || document} as={as} />}
-        {!isNew && <LibraryDocumentActionsDownload document={this.document || document} as={as} />}
+        {!isNew && organizationSettings.fileDownloadEnabled && (
+          <LibraryDocumentActionsDownload document={this.document || document} as={as} />
+        )}
         {!isNew && <LibraryDocumentActionsSed document={this.document || document} as={as} />}
         {!isNew && canDelete && (
           <LibraryDocumentActionsDelete document={this.document || document} as={as} onDelete={onDialogClose} />

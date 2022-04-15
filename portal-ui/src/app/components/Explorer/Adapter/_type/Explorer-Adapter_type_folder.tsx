@@ -21,16 +21,17 @@ import {
   getLibraryRecordsWithParticularOne,
   LibraryRecord
 } from '../../../../services/crg/doc-library.service';
-import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
+import { Link } from '../../../Link/Link';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
-import { Link } from '../../../Link/Link';
+import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
+import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 
-import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerService } from '../../Explorer.service';
+import { ExplorerStore } from '../../Explorer.store';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -235,12 +236,15 @@ export class ExplorerAdapterTypeFolder {
     return (
       full && (
         <>
-          <CreateLibraryElement
-            libraryIdentifier={item.payload.libraryId}
-            schemaId={item.payload.schemaId}
-            path={path}
-            store={store}
-          />
+          {organizationSettings.createLibraryItemsEnabled && (
+            <CreateLibraryElement
+              libraryIdentifier={item.payload.libraryId}
+              schemaId={item.payload.schemaId}
+              path={path}
+              store={store}
+            />
+          )}
+
           <Link href={`/data-management/library/${item.payload.libraryId}/registry`} theme='contents'>
             <Tooltip title='Открыть реестр'>
               <IconButton>

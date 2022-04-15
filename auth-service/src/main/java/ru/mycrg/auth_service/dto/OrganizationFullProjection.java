@@ -1,5 +1,6 @@
 package ru.mycrg.auth_service.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.rest.core.config.Projection;
 import ru.mycrg.auth_service.entity.Organization;
 
@@ -8,7 +9,7 @@ import java.util.Set;
 
 @Projection(
         name = "fullOrganization",
-        types = { Organization.class })
+        types = {Organization.class})
 public interface OrganizationFullProjection {
 
     Long getId();
@@ -23,6 +24,7 @@ public interface OrganizationFullProjection {
 
     Set<GroupProjection> getGroups();
 
-    LocalDateTime getCreatedAt();
+    JsonNode getSettings();
 
+    LocalDateTime getCreatedAt();
 }

@@ -1,5 +1,9 @@
 package ru.mycrg.auth_service.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
@@ -11,6 +15,10 @@ import static ru.mycrg.auth_service.service.OrganizationStatus.PROVISIONING;
 
 @Entity
 @Table(name = "organizations")
+@TypeDef(
+        name = "jsonb-node",
+        typeClass = JsonNodeBinaryType.class
+)
 public class Organization {
 
     @Id
@@ -26,6 +34,10 @@ public class Organization {
 
     @Column
     private String status = PROVISIONING.toString();
+
+    @Type(type = "jsonb-node")
+    @Column(columnDefinition = "json")
+    private JsonNode settings;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -121,5 +133,13 @@ public class Organization {
 
     public void setGroups(Set<Group> groups) {
         this.groups = groups;
+    }
+
+    public JsonNode getSettings() {
+        return settings;
+    }
+
+    public void setSettings(JsonNode settings) {
+        this.settings = settings;
     }
 }

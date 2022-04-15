@@ -5,6 +5,7 @@ import { IconButton, Menu, MenuItem, ListItemIcon } from '@mui/material';
 import { Menu as MenuIcon, Map, ViewModule, Business, CloudDownload, Storage } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { route } from '../../../stores/Route.store';
@@ -58,14 +59,16 @@ export class WorkspaceHeaderBurger extends Component {
             </MenuItem>
           </Link>
 
-          <Link href='/data-management' theme='none' delay={300}>
-            <MenuItem onClick={this.close}>
-              <ListItemIcon>
-                <Storage />
-              </ListItemIcon>
-              Управление данными
-            </MenuItem>
-          </Link>
+          {organizationSettings.dataManagementEnabled && (
+            <Link href='/data-management' theme='none' delay={300}>
+              <MenuItem onClick={this.close}>
+                <ListItemIcon>
+                  <Storage />
+                </ListItemIcon>
+                Управление данными
+              </MenuItem>
+            </Link>
+          )}
 
           {currentUser.isAdmin && (
             <Link href='/org-admin' theme='none' delay={300}>

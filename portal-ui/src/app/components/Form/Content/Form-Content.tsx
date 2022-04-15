@@ -5,15 +5,16 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
+import { PropertySchema, PropertyType } from '../../../services/crg/schema.models';
+import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { FieldErrors } from '../../../services/crg/formValidation.service';
-import { PropertySchema } from '../../../services/crg/schema.models';
 import { generateRandomId } from '../../../services/util/randomId';
 
 import { FormField } from '../Field/Form-Field';
 import { FormLabel } from '../Label/Form-Label';
+import { FormView } from '../View/Form-View.composed';
 import { FormControl } from '../Control/Form-Control.composed';
 import { FormHiddenField } from '../HiddenField/Form-HiddenField';
-import { FormView } from '../View/Form-View.composed';
 import { applyFieldValue, convertToComplexField } from '../Form.utils';
 
 const cnFormContent = cn('Form', 'Content');
@@ -44,6 +45,10 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
             return (
               <FormHiddenField key={i} name={String(propertySchema.name)} value={formValue[propertySchema.name]} />
             );
+          }
+
+          if (propertySchema.propertyType === PropertyType.FILE && !organizationSettings.fileDownloadEnabled) {
+            return;
           }
 
           return (
