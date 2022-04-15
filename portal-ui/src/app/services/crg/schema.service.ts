@@ -69,6 +69,19 @@ class SchemaService {
     return Promise.all(Object.values(this.schemas));
   }
 
+  async getById(schemaId: string, global?: boolean): Promise<OldFeatureDescription | undefined> {
+    if (!schemaId) {
+      return;
+    }
+
+    const schemas = global ? await this.getAllSchemas() : await this.getCurrentProjectSchemas();
+
+    return (
+      schemas.find(schema => schema.name.toLowerCase() === schemaId.toLowerCase()) ||
+      schemas.find(schema => schema.name.toLowerCase().includes(schemaId.toLowerCase()))
+    );
+  }
+
   /**
    * Возвращает, наиболее подходящую для слоя, схему.
    * Метод опирается на название и геометрию слоя.
@@ -87,7 +100,7 @@ class SchemaService {
       layerNameWithGeomType = layerName + '_point';
     }
 
-    return (await this.getSchema(layerNameWithGeomType)) || (await this.getSchema(layerName));
+    return (await this.getById(layerNameWithGeomType, true)) || (await this.getById(layerName, true));
   }
 
   async getClassIdAlias(layer: CrgVectorLayer, bugObject: BugObject): Promise<string> {
