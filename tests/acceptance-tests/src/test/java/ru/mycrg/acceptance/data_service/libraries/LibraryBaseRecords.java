@@ -19,7 +19,7 @@ public class LibraryBaseRecords extends BaseStepsDefinitions {
         return super.getBaseRequestWithCurrentCookie().basePath("/api/data/document-libraries");
     }
 
-    public Integer createRecord(String library, RecordDto record) {
+    public Integer createRecordWithCheck(String library, RecordDto record) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         contentType("multipart/form-data").
@@ -31,6 +31,27 @@ public class LibraryBaseRecords extends BaseStepsDefinitions {
                        .log().ifValidationFails()
                        .statusCode(SC_CREATED)
                        .extract().jsonPath().get("id");
+    }
+
+    public void createRecord(String library, RecordDto record) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType("multipart/form-data").
+                        multiPart("body", gson.toJson(record))
+                .when().
+                        post("/" + library + "/records");
+    }
+
+    public void updateRecord(String library, Integer recordId, RecordDto newBody) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType("application/merge-patch+json").
+                        body(gson.toJson(newBody))
+                .when().
+                        log().all().
+                        patch(String.format("/%s/records/%d", library, recordId));
+
+        response.prettyPrint();
     }
 
     public void deleteRecord(Integer recordId) {

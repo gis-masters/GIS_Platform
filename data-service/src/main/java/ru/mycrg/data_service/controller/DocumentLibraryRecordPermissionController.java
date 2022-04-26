@@ -71,13 +71,13 @@ public class DocumentLibraryRecordPermissionController {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
+        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
 
-        IRecord record = recordServiceFactory.get().getById(recordQualifier, recId);
+        IRecord record = recordServiceFactory.get().getById(rQualifier, recId);
         Long recordId = Long.valueOf(record.getContent().get(ID.getName()).toString());
 
         PermissionProjection permission = mediator.execute(
-                new CreatePermissionRequest(recordQualifier, recordId, dto));
+                new CreatePermissionRequest(rQualifier, recordId, dto));
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()

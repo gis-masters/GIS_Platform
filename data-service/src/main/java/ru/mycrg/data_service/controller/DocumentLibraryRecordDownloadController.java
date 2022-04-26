@@ -52,8 +52,8 @@ public class DocumentLibraryRecordDownloadController extends BaseController {
                                                    @PathVariable String field,
                                                    @PathVariable Long recId,
                                                    HttpServletRequest request) {
-        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
-        IRecord record = recordServiceFactory.get().getById(rIdentifier, recId);
+        ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
+        IRecord record = recordServiceFactory.get().getById(qualifier, recId);
         String path = (String) record.getContent().get(field);
 
         try {

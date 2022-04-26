@@ -5,7 +5,6 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
-import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Principal;
 import ru.mycrg.data_service.entity.Role;
@@ -19,14 +18,10 @@ import ru.mycrg.data_service.security.AuthenticationFacade;
 import ru.mycrg.data_service.service.PrincipalService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.CreatePermissionRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
+import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
+import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
 import ru.mycrg.mediator.IRequestHandler;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
-import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.data_service.util.RoleHandler.defineIdByRole;
 
 @Component
@@ -37,22 +32,20 @@ public class CreatePermissionRequestHandler implements IRequestHandler<CreatePer
     private final PrincipalService principalService;
     private final AuthenticationFacade authenticationFacade;
     private final PermissionRepository permissionRepository;
-    private final Map<ResourceType, IResourceProtector> protectors;
+    private final IMasterResourceProtector resourceProtector;
 
     public CreatePermissionRequestHandler(ProjectionFactory projectionFactory,
                                           RoleRepository roleRepository,
                                           PrincipalService principalService,
                                           AuthenticationFacade authenticationFacade,
                                           PermissionRepository permissionRepository,
-                                          List<IResourceProtector> protectors) {
+                                          MasterResourceProtector resourceProtector) {
         this.projectionFactory = projectionFactory;
         this.roleRepository = roleRepository;
         this.principalService = principalService;
         this.authenticationFacade = authenticationFacade;
         this.permissionRepository = permissionRepository;
-
-        this.protectors = protectors.stream()
-                                    .collect(toMap(IResourceProtector::getType, Function.identity()));
+        this.resourceProtector = resourceProtector;
     }
 
     @Override
@@ -61,7 +54,7 @@ public class CreatePermissionRequestHandler implements IRequestHandler<CreatePer
         ResourceQualifier rQualifier = request.getrQualifier();
         PermissionCreateDto dto = request.getDto();
 
-        if (!protectors.get(rQualifier.getType()).isOwner(rQualifier)) {
+        if (!resourceProtector.isOwner(rQualifier)) {
             throw new ForbiddenException("Недостаточно прав для создания правил");
         }
 

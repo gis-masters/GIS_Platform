@@ -54,7 +54,12 @@ public class RecordEntity implements IRecord {
 
     @Override
     public String getAsString(String field) {
-        return String.valueOf(content.get(field));
+        Object o = content.get(field);
+        if (o == null) {
+            return null;
+        }
+
+        return String.valueOf(o);
     }
 
     @Override

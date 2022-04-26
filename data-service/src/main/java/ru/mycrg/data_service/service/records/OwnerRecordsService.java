@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.service.records;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -7,35 +9,52 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
+import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
+import ru.mycrg.data_service.service.PermissionsService;
+import ru.mycrg.data_service.service.SystemAttributeHandler;
+import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
-import static ru.mycrg.data_service.dto.ResourceType.*;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.service.records.RecordUtil.clearSystemAttributes;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 @Service
 public class OwnerRecordsService implements IRecordsService {
 
+    private final Logger log = LoggerFactory.getLogger(OwnerRecordsService.class);
+
     private final RecordsDao recordsDao;
-    private final UserRecordsService userRecordsService;
+    private final FileStorageService fileStorageService;
+    private final PermissionsService permissionsService;
+    private final SimpleIntentHandler simpleIntentHandler;
     private final DocumentLibraryService librariesService;
+    private final SystemAttributeHandler systemAttributeHandler;
 
     public OwnerRecordsService(RecordsDao recordsDao,
-                               UserRecordsService userRecordsService,
-                               DocumentLibraryService librariesService) {
+                               FileStorageService fileStorageService,
+                               PermissionsService permissionsService,
+                               SimpleIntentHandler simpleIntentHandler,
+                               DocumentLibraryService librariesService,
+                               SystemAttributeHandler systemAttributeHandler) {
         this.recordsDao = recordsDao;
-        this.userRecordsService = userRecordsService;
+        this.fileStorageService = fileStorageService;
+        this.permissionsService = permissionsService;
+        this.simpleIntentHandler = simpleIntentHandler;
         this.librariesService = librariesService;
+        this.systemAttributeHandler = systemAttributeHandler;
     }
 
     @Override
@@ -82,16 +101,59 @@ public class OwnerRecordsService implements IRecordsService {
 
     @Override
     public IRecord createRecord(ResourceQualifier lQualifier, IRecord record, MultipartFile file) {
-        return userRecordsService.createRecord(lQualifier, record, file);
+        try {
+            log.debug("try create record: {}", record);
+
+            SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
+
+            systemAttributeHandler.initSchema(schema)
+                                  .fillByContentType(record.getContent())
+                                  .addDefaultPath(record.getContent())
+                                  .fillCreator(record.getContent())
+                                  .updateModifiedTime(record)
+                                  .prepareJsonb(record);
+
+            if (file != null) {
+                if (file.isEmpty()) {
+                    throw new BadRequestException("File is empty");
+                }
+
+                String path = fileStorageService.storeFile(file, fileStorageService.generateFileName(file));
+
+                systemAttributeHandler.initSchema(schema)
+                                      .fillFileInfo(record.getContent(), file)
+                                      .fillFileInnerPath(record.getContent(), path);
+            }
+
+            simpleIntentHandler.updateIntents(record);
+            IRecord newRecord = recordsDao.addRecord(lQualifier, record);
+            permissionsService.addOwnerPermission(lQualifier, record.getId());
+
+            return newRecord;
+        } catch (CrgDaoException e) {
+            throw new DataServiceException(e.getMessage(), e.getCause());
+        }
     }
 
+    // Есть некий confusing пока идёт переход от сервисов к cqrs и его обработчикам команд.
+    // По-идее всё должно переехать в обработчики.
     @Override
     public void updateRecord(ResourceQualifier recordQualifier, IRecord record) {
-        userRecordsService.updateRecord(recordQualifier, record);
+        try {
+            log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), record);
+
+            Map<String, Object> clearedData = clearSystemAttributes(record);
+
+            recordsDao.updateRecordById(recordQualifier, clearedData);
+
+            log.debug("Record: '{}' successfully patched", recordQualifier.getRecord());
+        } catch (Exception e) {
+            throw new DataServiceException("Failed to update record: " + recordQualifier.getQualifier(), e.getCause());
+        }
     }
 
     @Override
     public void deleteRecord(ResourceQualifier resourceQualifier, Long id) throws CrgDaoException {
-        userRecordsService.deleteRecord(resourceQualifier, id);
+        recordsDao.removeRecord(resourceQualifier, id);
     }
 }

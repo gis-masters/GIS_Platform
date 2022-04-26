@@ -38,4 +38,15 @@ public class RecordUtil {
         return Arrays.stream(splited[1].split("/"))
                      .collect(Collectors.toSet());
     }
+
+    public static Optional<Long> getLastIdFromPath(String path) {
+        String[] splited = path.split("/root/");
+        if (splited.length < 2) {
+            return Optional.empty();
+        }
+
+        Long lastId = Long.valueOf(splited[splited.length - 1]);
+
+        return Optional.of(lastId);
+    }
 }

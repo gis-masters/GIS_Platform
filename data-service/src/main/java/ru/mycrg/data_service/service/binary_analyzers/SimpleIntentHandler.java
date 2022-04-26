@@ -14,11 +14,11 @@ public class SimpleIntentHandler implements IBinaryIntentHandler {
     @Contract(mutates = "this")
     public void updateIntents(IRecord record) {
         String fileType = record.getFileType();
-        if (fileType.equals("gml")) {
+        if ("gml".equals(fileType)) {
             record.setValue(INTENTS.getName(), "PROJECT");
         }
 
-        if (fileType.equals("tif")) {
+        if ("tif".equals(fileType)) {
             record.setValue(INTENTS.getName(), "PROJECT");
         }
     }

@@ -20,7 +20,8 @@ import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.cqrs.files.requests.CreateFileRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
+import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
+import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
 import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageException;
@@ -29,12 +30,9 @@ import ru.mycrg.mediator.Mediator;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -49,21 +47,19 @@ public class FileController extends BaseController {
     private final Mediator mediator;
     private final FileRepository fileRepository;
     private final FileStorageService fileStorageService;
-    private final Map<ResourceType, IResourceProtector> protectors;
     private final IAuthenticationFacade authenticationFacade;
+    private final IMasterResourceProtector resourceProtector;
 
     public FileController(Mediator mediator,
                           FileRepository fileRepository,
-                          List<IResourceProtector> protectors,
                           FileStorageService fileStorageService,
-                          IAuthenticationFacade authenticationFacade) {
+                          IAuthenticationFacade authenticationFacade,
+                          MasterResourceProtector resourceProtector) {
         this.mediator = mediator;
         this.fileStorageService = fileStorageService;
         this.fileRepository = fileRepository;
         this.authenticationFacade = authenticationFacade;
-
-        this.protectors = protectors.stream()
-                                    .collect(toMap(IResourceProtector::getType, Function.identity()));
+        this.resourceProtector = resourceProtector;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -166,7 +162,6 @@ public class FileController extends BaseController {
                                                              frQualifier.getTable(),
                                                              frQualifier.getRecordId(),
                                                              ResourceType.valueOf(resourceType));
-        IResourceProtector resourceProtector = protectors.get(ResourceType.valueOf(resourceType));
         resourceProtector.throwIfNotExist(rQualifier);
         if (!resourceProtector.isAllowed(rQualifier)) {
             throw new ForbiddenException("Файл недоступен");

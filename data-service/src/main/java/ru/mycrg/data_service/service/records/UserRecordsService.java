@@ -1,7 +1,5 @@
 package ru.mycrg.data_service.service.records;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -13,15 +11,12 @@ import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
-import ru.mycrg.data_service.service.PermissionsService;
-import ru.mycrg.data_service.service.SystemAttributeHandler;
-import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.storage.FileStorageService;
+import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
+import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.text.MessageFormat;
@@ -29,38 +24,31 @@ import java.util.*;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.service.records.RecordUtil.clearSystemAttributes;
+import static ru.mycrg.data_service.dto.Roles.VIEWER;
 import static ru.mycrg.data_service.service.records.RecordUtil.extractFolderIdsFromPath;
+import static ru.mycrg.data_service.service.records.RecordUtil.getLastIdFromPath;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Service
 public class UserRecordsService implements IRecordsService {
 
-    private final Logger log = LoggerFactory.getLogger(UserRecordsService.class);
-
     private final RecordsDao recordsDao;
-    private final FileStorageService fileStorageService;
+    private final OwnerRecordsService ownerRecordsService;
     private final DocumentLibraryService librariesService;
-    private final SystemAttributeHandler systemAttributeHandler;
     private final BasePermissionsRepository permissionsRepository;
-    private final PermissionsService permissionsService;
-    private final SimpleIntentHandler simpleIntentHandler;
+    private final IMasterResourceProtector resourceProtector;
 
     public UserRecordsService(RecordsDao recordsDao,
-                              FileStorageService fileStorageService,
+                              OwnerRecordsService ownerRecordsService,
                               DocumentLibraryService librariesService,
-                              SystemAttributeHandler systemAttributeHandler,
                               BasePermissionsRepository permissionsRepository,
-                              PermissionsService permissionsService,
-                              SimpleIntentHandler simpleIntentHandler) {
+                              MasterResourceProtector resourceProtector) {
         this.recordsDao = recordsDao;
+        this.ownerRecordsService = ownerRecordsService;
         this.librariesService = librariesService;
-        this.fileStorageService = fileStorageService;
-        this.systemAttributeHandler = systemAttributeHandler;
         this.permissionsRepository = permissionsRepository;
-        this.permissionsService = permissionsService;
-        this.simpleIntentHandler = simpleIntentHandler;
+        this.resourceProtector = resourceProtector;
     }
 
     @Override
@@ -146,6 +134,7 @@ public class UserRecordsService implements IRecordsService {
 
         // Если роль на данном этапе максимальная, то дальше ничего делать не нужно.
         String ownerRole = "OWNER";
+        String editorRole = "CONTRIBUTOR";
         if (ownerRole.equals(definedRole)) {
             content.put(ROLE.getName(), ownerRole);
 
@@ -162,6 +151,14 @@ public class UserRecordsService implements IRecordsService {
         // Если роль на данном этапе максимальная, то дальше ничего делать не нужно.
         if (ownerRole.equals(definedRole)) {
             content.put(ROLE.getName(), ownerRole);
+
+            return record;
+        }
+
+        // Если роль на данном этапе CONTRIBUTOR, то нет смысла копать дальше поскольку роль как для проходной папки
+        // может быть только VIEWER что "слабее" CONTRIBUTOR
+        if (editorRole.equals(definedRole)) {
+            content.put(ROLE.getName(), editorRole);
 
             return record;
         }
@@ -199,59 +196,104 @@ public class UserRecordsService implements IRecordsService {
     public IRecord createRecord(ResourceQualifier lQualifier,
                                 IRecord record,
                                 MultipartFile file) {
-        try {
-            log.debug("try create record: {}", record);
+        throwIfCreateNotAllowed(lQualifier, record);
 
-            SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
+        return ownerRecordsService.createRecord(lQualifier, record, file);
+    }
 
-            systemAttributeHandler.initSchema(schema)
-                                  .fillByContentType(record.getContent())
-                                  .addDefaultPath(record.getContent())
-                                  .fillCreator(record.getContent())
-                                  .updateModifiedTime(record)
-                                  .prepareJsonb(record);
+    @Override
+    public void updateRecord(ResourceQualifier rQualifier, IRecord record) {
+        throwIfUpdateNotAllowed(rQualifier, record); // возможно стоит перенести на уровень handler-а
 
-            if (file != null) {
-                if (file.isEmpty()) {
-                    throw new BadRequestException("File is empty");
+        ownerRecordsService.updateRecord(rQualifier, record);
+    }
+
+    @Override
+    public void deleteRecord(ResourceQualifier rQualifier, Long id) throws CrgDaoException {
+        throwIfDeleteNotAllowed(rQualifier, id);
+
+        ownerRecordsService.deleteRecord(rQualifier, id);
+    }
+
+    private void throwIfCreateNotAllowed(ResourceQualifier lQualifier, IRecord record) {
+        boolean libraryEditAllowed = true;
+        boolean folderEditAllowed = true;
+        boolean inFolder = false;
+        Long lastFolderId = null;
+
+        if (!resourceProtector.isEditAllowed(lQualifier)) {
+            libraryEditAllowed = false;
+        }
+
+        String path = record.getAsString(PATH.getName());
+        if (path != null && !ROOT_FOLDER_PATH.equals(path)) {
+            Optional<Long> oLastFolderId = getLastIdFromPath(path);
+            if (oLastFolderId.isEmpty()) {
+                throw new BadRequestException("Задан некорректный путь: " + path);
+            } else {
+                lastFolderId = oLastFolderId.get();
+                inFolder = true;
+
+                IRecord parentRecord = this.getById(lQualifier, lastFolderId);
+                String role = parentRecord.getAsString(ROLE.getName());
+                if (VIEWER.name().equals(role)) {
+                    folderEditAllowed = false;
                 }
-
-                String path = fileStorageService.storeFile(file, fileStorageService.generateFileName(file));
-
-                systemAttributeHandler.initSchema(schema)
-                                      .fillFileInfo(record.getContent(), file)
-                                      .fillFileInnerPath(record.getContent(), path);
             }
+        }
 
-            simpleIntentHandler.updateIntents(record);
-            IRecord newRecord = recordsDao.addRecord(lQualifier, record);
-            permissionsService.addOwnerPermission(lQualifier, record.getId());
-
-            return newRecord;
-        } catch (CrgDaoException e) {
-            throw new DataServiceException(e.getMessage(), e.getCause());
+        if (!libraryEditAllowed) { // Библиотека НЕ доступна для редактирования
+            if (inFolder) {  // Создаём в папке
+                if (!folderEditAllowed) { // Папка недоступна
+                    throw new ForbiddenException("Папка: " + lastFolderId + " не доступна для записи.");
+                } else {
+                    // Разрешено в доступной на редактирование папке в недоступной для редактирования библиотеке
+                }
+            } else { // Запрещено создавать в корне
+                throw new ForbiddenException("Библиотека: '" + lQualifier + "' не доступна для записи.");
+            }
+        } else { // Библиотека доступна для редактирования
+            if (inFolder) { // Создаём в папке
+                if (folderEditAllowed) {
+                    // Разрешено создавать в доступной папке
+                } else { // Запрещено создавать в папках недоступных на редактирование
+                    throw new ForbiddenException("Папка: " + lastFolderId + " не доступна для записи.");
+                }
+            } else {
+                // Разрешено создавать в корне
+            }
         }
     }
 
-    // Есть некий confusing пока идёт переход от сервисов к cqrs и его обработчикам команд.
-    // По-идее всё должно переехать в обработчики.
-    @Override
-    public void updateRecord(ResourceQualifier recordQualifier, IRecord record) {
-        try {
-            log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), record);
+    private void throwIfUpdateNotAllowed(ResourceQualifier lQualifier, IRecord record) {
+        if (!resourceProtector.isEditAllowed(lQualifier)) {
+            throw new ForbiddenException("Библиотека: '" + lQualifier + "' не доступна для обновления.");
+        }
 
-            Map<String, Object> clearedData = clearSystemAttributes(record);
+        String path = record.getAsString(PATH.getName());
+        if (path != null && !ROOT_FOLDER_PATH.equals(path)) {
+            Optional<Long> oLastFolderId = getLastIdFromPath(path);
+            if (oLastFolderId.isEmpty()) {
+                throw new BadRequestException("Задан некорректный путь: " + path);
+            } else {
+                Long lastFolderId = oLastFolderId.get();
 
-            recordsDao.updateRecordById(recordQualifier, clearedData);
+                IRecord parentRecord = this.getById(lQualifier, lastFolderId);
+                String role = parentRecord.getAsString(ROLE.getName());
+                if (VIEWER.name().equals(role)) {
+                    String msg = "Папка: " + lastFolderId + " не доступна для обновления.";
 
-            log.debug("Record: '{}' successfully patched", recordQualifier.getRecord());
-        } catch (Exception e) {
-            throw new DataServiceException("Failed to update record: " + recordQualifier.getQualifier(), e.getCause());
+                    throw new ForbiddenException(msg);
+                }
+            }
         }
     }
 
-    @Override
-    public void deleteRecord(ResourceQualifier resourceQualifier, Long id) throws CrgDaoException {
-        recordsDao.removeRecord(resourceQualifier, id);
+    private void throwIfDeleteNotAllowed(ResourceQualifier rQualifier, Long id) {
+        if (!resourceProtector.isEditAllowed(rQualifier)) {
+            String msg = "Библиотека: '" + rQualifier.getQualifier() + "' не доступна для удаления.";
+
+            throw new ForbiddenException(msg);
+        }
     }
 }

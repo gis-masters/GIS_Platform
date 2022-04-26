@@ -203,9 +203,9 @@ public class ImportGmlProcessHandler implements IProcessHandler {
 
             String libraryId = source.getLibraryId();
             Long objectId = source.getObjectId();
-            ResourceQualifier tableQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId);
+            ResourceQualifier tQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId);
 
-            Map<String, Object> data = recordServiceFactory.get().getById(tableQualifier, objectId).getContent();
+            Map<String, Object> data = recordServiceFactory.get().getById(tQualifier, objectId).getContent();
 
             String title = (String) data.get(TITLE.getName());
             String documentType = (String) data.get("document_type");
@@ -218,7 +218,7 @@ public class ImportGmlProcessHandler implements IProcessHandler {
             }
 
             Integer scale = Integer.parseInt(String.valueOf(data.get("scale")));
-            boolean coordinateInverted  = this.importInitialData.getInvertedCoordinates();
+            boolean coordinateInverted = this.importInitialData.getInvertedCoordinates();
             String oktmo = (String) data.get(OKTMO.getName());
             String path = (String) data.get(INNER_PATH.getName());
 

@@ -47,6 +47,11 @@ public class FeatureProtector implements IResourceProtector {
     }
 
     @Override
+    public boolean isEditAllowed(ResourceQualifier qualifier) {
+        return tableProtector.isEditAllowed(qualifier);
+    }
+
+    @Override
     public ResourceType getType() {
         return FEATURE;
     }

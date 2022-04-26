@@ -101,9 +101,9 @@ public class DocumentLibraryRecordsController {
     @GetMapping("/document-libraries/{docLibId}/records/{recId}")
     public ResponseEntity<Map<String, Object>> getById(@PathVariable String docLibId,
                                                        @PathVariable Long recId) {
-        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
+        ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
 
-        IRecord record = recordServiceFactory.get().getById(rIdentifier, recId);
+        IRecord record = recordServiceFactory.get().getById(qualifier, recId);
 
         return ResponseEntity.ok(record.getContent());
     }
@@ -147,13 +147,13 @@ public class DocumentLibraryRecordsController {
     @DeleteMapping("/document-libraries/{docLibId}/records/{recId}")
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
                                          @PathVariable Long recId) {
-        ResourceQualifier rIdentifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
+        ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
 
         SchemaDto schema = libraryService.getSchema(docLibId);
-        IRecord record = recordServiceFactory.get().getById(rIdentifier, recId);
+        IRecord record = recordServiceFactory.get().getById(qualifier, recId);
 
         mediator.execute(
-                new DeleteLibraryRecordRequest(rIdentifier, record, schema));
+                new DeleteLibraryRecordRequest(qualifier, record, schema));
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

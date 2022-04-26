@@ -13,11 +13,15 @@ import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.dto.Roles.CONTRIBUTOR;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
@@ -91,6 +95,13 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
     }
 
     @Override
+    public boolean isEditAllowed(ResourceQualifier qualifier) {
+        return authenticationFacade.isOrganizationAdmin()
+                || isUserHasEditPermission(qualifier)
+                || authenticationFacade.isRoot();
+    }
+
+    @Override
     public ResourceType getType() {
         return LIBRARY_RECORD;
     }
@@ -99,25 +110,51 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
      * Для записи в библиотеке проверим наследование сверху и права на саму запись. Наследование снизу может дать только
      * права на чтение
      */
-    private boolean isUserHasOwnPermission(ResourceQualifier recordQualifier) {
-        SchemaDto schema = librariesService.getSchema(recordQualifier.getTable());
-        IRecord record = recordsDao.findById(recordQualifier, schema)
-                                   .orElseThrow(() -> new NotFoundException(recordQualifier.getRecord()));
+    private boolean isUserHasOwnPermission(ResourceQualifier rQualifier) {
+        SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
+        IRecord record = recordsDao.findById(rQualifier, schema)
+                                   .orElseThrow(() -> new NotFoundException(rQualifier.getRecord()));
 
         // Если запись имеет родителей - получим роль наследуемую от них
         String path = String.valueOf(record.getContent().get(PATH.getName()));
         if (path != null && !path.equals(ROOT_FOLDER_PATH)) {
             Set<String> ids = extractFolderIdsFromPath(path);
 
-            Optional<String> oRole = permissionsRepository.bestRoleInheritedFromParent(recordQualifier, ids);
-            if (oRole.isPresent() && Objects.equals(OWNER.name(), oRole.get())) {
+            Optional<String> oRole = permissionsRepository.bestRoleInheritedFromParent(rQualifier, ids);
+            if (oRole.isPresent() && OWNER.name().equals(oRole.get())) {
                 return true;
             }
         }
 
         // Проверим роль выданную непосредственно на запись
-        Optional<String> oRole = permissionsRepository.getRoleForRecord(recordQualifier);
-        if (oRole.isPresent() && Objects.equals(OWNER.name(), oRole.get())) {
+        Optional<String> oRole = permissionsRepository.getRoleForRecord(rQualifier);
+        if (oRole.isPresent() && OWNER.name().equals(oRole.get())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isUserHasEditPermission(ResourceQualifier rQualifier) {
+        SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
+        IRecord record = recordsDao.findById(rQualifier, schema)
+                                   .orElseThrow(() -> new NotFoundException(rQualifier.getRecord()));
+
+        // Если запись имеет родителей - получим роль наследуемую от них
+        String path = String.valueOf(record.getContent().get(PATH.getName()));
+        if (path != null && !path.equals(ROOT_FOLDER_PATH)) {
+            Set<String> ids = extractFolderIdsFromPath(path);
+
+            Optional<String> oRole = permissionsRepository.bestRoleInheritedFromParent(rQualifier, ids);
+            if (oRole.isPresent() && (OWNER.name().equals(oRole.get()) || CONTRIBUTOR.name().equals(oRole.get()))) {
+                return true;
+            }
+        }
+
+        // Проверим роль выданную непосредственно на запись
+        Optional<String> oRole = permissionsRepository.getRoleForRecord(rQualifier);
+        if (oRole.isPresent() &&
+                (OWNER.name().equals(oRole.get()) || CONTRIBUTOR.name().equals(oRole.get()))) {
             return true;
         }
 

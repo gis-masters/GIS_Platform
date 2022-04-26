@@ -10,10 +10,10 @@ import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.dto.Roles.CONTRIBUTOR;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 
 @Component
@@ -61,6 +61,13 @@ public class DocLibraryProtector implements IResourceProtector {
     }
 
     @Override
+    public boolean isEditAllowed(ResourceQualifier qualifier) {
+        return authenticationFacade.isOrganizationAdmin()
+                || isUserHasEditPermission(qualifier)
+                || authenticationFacade.isRoot();
+    }
+
+    @Override
     public ResourceType getType() {
         return LIBRARY;
     }
@@ -74,6 +81,15 @@ public class DocLibraryProtector implements IResourceProtector {
             return false;
         }
 
-        return Objects.equals(OWNER.name(), oRole.get());
+        return OWNER.name().equals(oRole.get());
+    }
+
+    private boolean isUserHasEditPermission(ResourceQualifier dlQualifier) {
+        Optional<String> oRole = basePermissionsRepository.getRoleForLibrary(dlQualifier.getTable());
+        if (oRole.isEmpty()) {
+            return false;
+        }
+
+        return CONTRIBUTOR.name().equals(oRole.get()) || OWNER.name().equals(oRole.get());
     }
 }

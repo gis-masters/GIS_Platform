@@ -1,22 +1,16 @@
 package ru.mycrg.data_service.service;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.dto.Resource;
-import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Principal;
 import ru.mycrg.data_service.entity.Role;
 import ru.mycrg.data_service.entity.SchemasAndTables;
-import ru.mycrg.data_service.exceptions.ConflictException;
-import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.PermissionRepository;
@@ -25,48 +19,39 @@ import ru.mycrg.data_service.repository.RoleRepository;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.security.AuthenticationFacade;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
+import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
+import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toMap;
-import static ru.mycrg.data_service.util.RoleHandler.defineIdByRole;
 
 @Service
 @Transactional
 public class PermissionsService {
 
-    private final ProjectionFactory projectionFactory;
     private final RoleRepository roleRepository;
     private final PrincipalService principalService;
-    private final AuthenticationFacade authenticationFacade;
     private final PrincipalRepository principalRepository;
+    private final AuthenticationFacade authenticationFacade;
     private final PermissionRepository permissionRepository;
+    private final IMasterResourceProtector resourceProtector;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
-    private final Map<ResourceType, IResourceProtector> protectors;
 
     public PermissionsService(PrincipalService principalService,
                               PermissionRepository permissionRepository,
                               PrincipalRepository principalRepository,
                               RoleRepository roleRepository,
                               AuthenticationFacade authenticationFacade,
-                              ProjectionFactory projectionFactory,
                               SchemasAndTablesRepository schemasAndTablesRepository,
-                              List<IResourceProtector> protectors) {
+                              MasterResourceProtector resourceProtector) {
         this.principalService = principalService;
         this.permissionRepository = permissionRepository;
         this.principalRepository = principalRepository;
         this.roleRepository = roleRepository;
         this.authenticationFacade = authenticationFacade;
-        this.projectionFactory = projectionFactory;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
-
-        this.protectors = protectors.stream()
-                                    .collect(toMap(IResourceProtector::getType, Function.identity()));
+        this.resourceProtector = resourceProtector;
     }
 
     /**
@@ -83,7 +68,7 @@ public class PermissionsService {
     public Page<PermissionProjection> getAllByResourceId(ResourceQualifier rQualifier, Long resId, Pageable pageable) {
         String tableName = rQualifier.getResourceTable();
 
-        if (protectors.get(rQualifier.getType()).isOwner(rQualifier)) {
+        if (resourceProtector.isOwner(rQualifier)) {
             return permissionRepository.findAllByResourceTableAndResourceId(tableName, resId, pageable);
         } else {
             List<Principal> principals = principalService.getAll();
@@ -94,7 +79,7 @@ public class PermissionsService {
     }
 
     public Page<PermissionProjection> getAllByResourceId(ResourceQualifier rQualifier, Pageable pageable) {
-        if (protectors.get(rQualifier.getType()).isOwner(rQualifier)) {
+        if (resourceProtector.isOwner(rQualifier)) {
             return permissionRepository.findAllByResourceTableAndResourceId(rQualifier.getResourceTable(),
                                                                             rQualifier.getRecord(),
                                                                             pageable);
@@ -147,7 +132,7 @@ public class PermissionsService {
     }
 
     public void deleteById(ResourceQualifier rQualifier, Long permissionId) {
-        if (!protectors.get(rQualifier.getType()).isOwner(rQualifier)) {
+        if (!resourceProtector.isOwner(rQualifier)) {
             throw new ForbiddenException("Недостаточно прав для удаления разрешения: " + permissionId);
         }
 
