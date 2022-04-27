@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { AxiosError } from 'axios';
 
 import { Dataset, deleteDataset, getDatasetTables } from '../../../services/data.service';
 import { Button } from '../../Button/Button';
@@ -93,13 +94,18 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
   @boundMethod
   private async doDeletion() {
     const { dataset } = this.props;
-
     this.setBtnLoading(true);
-    await deleteDataset(dataset.identifier);
-    this.setErrorMessage('');
+    try {
+      await deleteDataset(dataset.identifier);
+      this.setErrorMessage('');
+      this.closeDialog();
+    } catch (error) {
+      const err = error as AxiosError<{ message: string }>;
+      this.setErrorMessage(err.response.data.message);
+    }
+
     this.setDeleteAllowed(false);
     this.setBtnLoading(false);
-    this.closeDialog();
   }
 
   @action.bound
