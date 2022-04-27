@@ -1,11 +1,15 @@
 package ru.mycrg.acceptance.data_service.tables;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
+import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
 
+import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
 
 public class TablesStepsDefinitions extends BaseStepsDefinitions {
@@ -44,6 +48,23 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                             schemaId);
     }
 
+    @When("Пользователь создает запрос на создание новой таблицы")
+    public void createNewTable() {
+        initTable();
+    }
+
+    @When("Пользователь делает запрос на удаление текущей таблицы")
+    public void deleteTable() {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        delete("/" + currentTableName);
+
+        datasetsPool.remove(currentDatasetName);
+    }
+
     @Given("В текущем наборе данных существует таблица, созданная по тестовой схеме")
     public void createAnyTableInCurrentDatasetAndByTestSchema() {
         currentTableName = generateString("STRING_5");
@@ -54,5 +75,35 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                                              generateString(TEST_TABLE_SCHEMA));
 
         super.createEntity(currentTableDto);
+    }
+
+    @And("Данные о таблице успешно обновлены")
+    public void checkTableInfo() {
+        getCurrentTable();
+
+        String newTitle = response.jsonPath().get("title");
+
+        assertTrue("update title".equals(newTitle));
+    }
+
+    @When("Пользователь делает запрос на обновление информации о текущей таблице")
+    public void updateCurrentTable() {
+        updateTableInfo(currentTableName, new TableUpdateDto("update title"));
+    }
+
+    private void updateTableInfo(String tableName, TableUpdateDto dto) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType(ContentType.JSON).
+                        body(gson.toJson(dto))
+                .when().
+                        log().all().
+                        put(String.format("/%s", tableName));
+    }
+
+    private void getCurrentTable() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + currentTableName);
     }
 }

@@ -47,8 +47,8 @@ public class SchemasAndTables {
     private @LastModifiedDate
     LocalDateTime lastModified = LocalDateTime.now();
 
-    @Column
-    private String oktmo;
+    @Column(name = "fias__oktmo")
+    private String fiasOktmo;
 
     @Column(name = "document_type")
     private String documentType;
@@ -58,6 +58,21 @@ public class SchemasAndTables {
 
     @Column(name = "scale")
     private Integer scale;
+
+    @Column
+    private String status;
+
+    @Column
+    private Boolean isPublic;
+
+    @Column(name = "doc_termination_date")
+    private LocalDateTime docTerminationDate;
+
+    @Column(name = "fias__address")
+    private String fiasAddress;
+
+    @Column(name = "fias__id")
+    private Long fiasId;
 
     public SchemasAndTables() {
         // Required by framework
@@ -69,7 +84,7 @@ public class SchemasAndTables {
         this.details = dto.getDetails();
         this.documentType = dto.getDocType();
         this.docApproveDate = dto.getDocApproveDate();
-        this.oktmo = dto.getOktmo();
+        this.fiasOktmo = dto.getOktmo();
         this.scale = dto.getScale();
         this.isFolder = resourceType.equals(ResourceType.DATASET);
         this.path = path;
@@ -171,12 +186,12 @@ public class SchemasAndTables {
         return getPath() + "/" + getId();
     }
 
-    public String getOktmo() {
-        return oktmo;
+    public String getFiasOktmo() {
+        return fiasOktmo;
     }
 
-    public void setOktmo(String oktmo) {
-        this.oktmo = oktmo;
+    public void setFiasOktmo(String oktmo) {
+        this.fiasOktmo = oktmo;
     }
 
     public String getDocumentType() {
@@ -201,5 +216,45 @@ public class SchemasAndTables {
 
     public void setScale(Integer scale) {
         this.scale = scale;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Boolean getPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(Boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public LocalDateTime getDocTerminationDate() {
+        return docTerminationDate;
+    }
+
+    public void setDocTerminationDate(LocalDateTime docTerminationDate) {
+        this.docTerminationDate = docTerminationDate;
+    }
+
+    public String getFiasAddress() {
+        return fiasAddress;
+    }
+
+    public void setFiasAdress(String fiasAddress) {
+        this.fiasAddress = fiasAddress;
+    }
+
+    public Long getFiasId() {
+        return fiasId;
+    }
+
+    public void setFiasId(Long fiasId) {
+        this.fiasId = fiasId;
     }
 }

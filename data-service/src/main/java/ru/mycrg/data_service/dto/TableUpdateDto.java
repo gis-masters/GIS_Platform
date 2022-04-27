@@ -3,13 +3,11 @@ package ru.mycrg.data_service.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
-public class ResourceCreateDto {
+public class TableUpdateDto {
 
-    @NotBlank
     @Size(max = 250, message = "Не должно превышать 250 символов")
     private String title;
 
@@ -21,29 +19,28 @@ public class ResourceCreateDto {
 
     @Size(max = 100, message = "Не должно превышать 100 символов")
     private String docType;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime docApproveDate;
 
     @Range(min = 500, max = 100000, message = "Номинальный масштаб должен быть в диапазоне от 500 до 100 000")
     private Integer scale;
 
-    public ResourceCreateDto() {
-        // Framework required
-    }
+    @Size(min = 8, max = 20, message = "Ожидается строка вида: 'EPSG:28406'")
+    private String crs;
 
-    public ResourceCreateDto(String title) {
-        this.title = title;
-    }
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime docTerminationDate;
 
-    public ResourceCreateDto(String title, String details, String oktmo, String docType,
-                             LocalDateTime docApproveDate, Integer scale) {
-        this.title = title;
-        this.details = details;
-        this.oktmo = oktmo;
-        this.docType = docType;
-        this.docApproveDate = docApproveDate;
-        this.scale = scale;
-    }
+    @Size(max = 100, message = "Не должно превышать 100 символов")
+    private String status;
+
+    private Boolean isPublic;
+
+    private String fias__address;
+
+    private String fias__oktmo;
+
+    private Long fias__id;
 
     public String getTitle() {
         return title;
@@ -91,5 +88,61 @@ public class ResourceCreateDto {
 
     public void setScale(Integer scale) {
         this.scale = scale;
+    }
+
+    public String getCrs() {
+        return crs;
+    }
+
+    public void setCrs(String crs) {
+        this.crs = crs;
+    }
+
+    public LocalDateTime getDocTerminationDate() {
+        return docTerminationDate;
+    }
+
+    public void setDocTerminationDate(LocalDateTime docTerminationDate) {
+        this.docTerminationDate = docTerminationDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Boolean getPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(Boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public String getFias__address() {
+        return fias__address;
+    }
+
+    public void setFias__address(String fias__address) {
+        this.fias__address = fias__address;
+    }
+
+    public String getFias__oktmo() {
+        return fias__oktmo;
+    }
+
+    public void setFias__oktmo(String fias__oktmo) {
+        this.fias__oktmo = fias__oktmo;
+    }
+
+    public Long getFias__id() {
+        return fias__id;
+    }
+
+    public void setFias__id(Long fias__id) {
+        this.fias__id = fias__id;
     }
 }

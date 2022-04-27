@@ -8,8 +8,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.TableCreateDto;
+import ru.mycrg.data_service.dto.TableUpdateDto;
+import ru.mycrg.data_service.service.cqrs.tables.requests.CreateTableRequest;
+import ru.mycrg.data_service.service.cqrs.tables.requests.DeleteTableRequest;
+import ru.mycrg.data_service.service.cqrs.tables.requests.UpdateTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
+import ru.mycrg.mediator.Mediator;
 
 import javax.validation.Valid;
 
@@ -21,9 +26,11 @@ import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 public class TablesController {
 
     private final TableService tableService;
+    private final Mediator mediator;
 
-    public TablesController(TableService tableService) {
+    public TablesController(TableService tableService, Mediator mediator) {
         this.tableService = tableService;
+        this.mediator = mediator;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -32,9 +39,21 @@ public class TablesController {
                                                       @Valid @RequestBody TableCreateDto dto) {
         ResourceQualifier tQualifier = new ResourceQualifier(datasetId, dto.getName());
 
-        IResourceModel resourceModel = tableService.create(tQualifier, dto);
+        IResourceModel resourceModel = mediator.execute(new CreateTableRequest(dto, tQualifier));
 
         return new ResponseEntity<>(resourceModel, CREATED);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PutMapping("/datasets/{datasetId}/tables/{tableId}")
+    public ResponseEntity<IResourceModel> updateTable(@PathVariable String datasetId,
+                                                      @PathVariable String tableId,
+                                                      @Valid @RequestBody TableUpdateDto dto) {
+        ResourceQualifier tQualifier = new ResourceQualifier(datasetId, tableId);
+
+        mediator.execute(new UpdateTableRequest(tQualifier, dto));
+
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -69,7 +88,7 @@ public class TablesController {
                                               @PathVariable String tableId) {
         ResourceQualifier rQualifier = new ResourceQualifier(datasetId, tableId);
 
-        tableService.delete(rQualifier);
+        mediator.execute(new DeleteTableRequest(rQualifier));
 
         return ResponseEntity.noContent().build();
     }

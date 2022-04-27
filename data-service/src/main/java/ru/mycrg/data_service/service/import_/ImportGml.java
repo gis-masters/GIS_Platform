@@ -13,6 +13,7 @@ import ru.mycrg.data_service.dto.*;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.datasets.requests.CreateDatasetRequest;
+import ru.mycrg.data_service.service.cqrs.tables.requests.CreateTableRequest;
 import ru.mycrg.data_service.service.import_.exceptions.ImportException;
 import ru.mycrg.data_service.service.import_.model.ImportGmlModel;
 import ru.mycrg.data_service.service.parsers.GmlParser;
@@ -145,7 +146,8 @@ public class ImportGml {
 
             if (!featureData.getObjects().isEmpty()) {
                 ResourceQualifier tableQualifier = new ResourceQualifier(datasetIdentifier, tableCreateDto.getName());
-                tableService.create(tableQualifier, tableCreateDto);
+
+                mediator.execute(new CreateTableRequest(tableCreateDto, tableQualifier));
 
                 int countOfAddedRecords = addRecordsToTable(tableQualifier, featureData);
 

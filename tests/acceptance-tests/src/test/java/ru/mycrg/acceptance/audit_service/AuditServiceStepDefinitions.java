@@ -284,6 +284,30 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
         checkAuditEventsEntityStateAfterByKey(layerCreateDto.getNativeCRS(), "nativeCRS", errMsg);
     }
 
+    @Then("Создана запись в журнале аудита о создании таблицы")
+    public void checkTableCreate() throws InterruptedException {
+        sleep(500);
+
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, TABLE.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
+    }
+
+    @Then("Создана запись в журнале аудита об обновлении таблицы")
+    public void checkTableUpdate() throws InterruptedException {
+        sleep(500);
+
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, TABLE.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
+    }
+
+    @Then("Создана запись в журнале аудита об удалении таблицы")
+    public void checkTableDelete() throws InterruptedException {
+        sleep(500);
+
+        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, TABLE.name()));
+        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
+    }
+
     private void checkAuditEventsEntityStateAfterByKey(String verifiedInformation, String key, String errMsg) {
         response.jsonPath().getList("_embedded.events.entityStateAfter")
                 .stream()

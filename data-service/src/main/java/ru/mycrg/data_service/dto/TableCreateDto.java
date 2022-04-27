@@ -1,10 +1,12 @@
 package ru.mycrg.data_service.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,19 @@ public class TableCreateDto extends ResourceCreateDto {
     @NotBlank
     @Size(min = 2, max = 50)
     private String schemaId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime docTerminationDate;
+
+    @Size(max = 100, message = "Не должно превышать 100 символов")
+    private String status;
+
+    private Boolean isPublic;
+
+    private String fias__address;
+
+    private String fias__oktmo;
+
+    private Long fias__id;
 
     private List<AdditionalFieldDto> additionalFields = new ArrayList<>();
 
@@ -58,6 +73,30 @@ public class TableCreateDto extends ResourceCreateDto {
         this.schemaId = schemaId;
     }
 
+    public LocalDateTime getDocTerminationDate() {
+        return docTerminationDate;
+    }
+
+    public void setDocTerminationDate(LocalDateTime docTerminationDate) {
+        this.docTerminationDate = docTerminationDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Boolean getPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(Boolean aPublic) {
+        isPublic = aPublic;
+    }
+
     public List<AdditionalFieldDto> getAdditionalFields() {
         return additionalFields;
     }
@@ -66,12 +105,37 @@ public class TableCreateDto extends ResourceCreateDto {
         this.additionalFields = additionalFields;
     }
 
+    public String getFias__address() {
+        return fias__address;
+    }
+
+    public void setFias__address(String fias__address) {
+        this.fias__address = fias__address;
+    }
+
+    public String getFias__oktmo() {
+        return fias__oktmo;
+    }
+
+    public void setFias__oktmo(String fias__oktmo) {
+        this.fias__oktmo = fias__oktmo;
+    }
+
+    public Long getFias__id() {
+        return fias__id;
+    }
+
+    public void setFias__id(Long fias__id) {
+        this.fias__id = fias__id;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "\"name\":" + (name == null ? "null" : "\"" + name + "\"") + ", " +
                 "\"crs\":" + (crs == null ? "null" : "\"" + crs + "\"") + ", " +
                 "\"schemaId\":" + (schemaId == null ? "null" : "\"" + schemaId + "\"") + ", " +
+                "\"status\":" + (status == null ? "null" : "\"" + status + "\"") + ", " +
                 "\"additionalFields\":" + (additionalFields == null ? "null" : additionalFields) +
                 "}";
     }
