@@ -225,18 +225,22 @@ export class ExplorerAdapterTypeFolder {
     return 'Фильтр по названию';
   }
 
-  static getToolbarActions(
+  static async getToolbarActions(
     item: ExplorerItemData<LibraryRecord>,
     store: ExplorerStore,
     service: ExplorerService,
     full: boolean
-  ): ReactNode {
+  ): Promise<ReactNode> {
     const path = `${item.payload.path}/${item.payload.id}`;
+    const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id);
+    const createEnabled =
+      currentUser.isAdmin ||
+      (organizationSettings.createLibraryItemsEnabled && [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role));
 
     return (
       full && (
         <>
-          {organizationSettings.createLibraryItemsEnabled && (
+          {createEnabled && (
             <CreateLibraryElement
               libraryIdentifier={item.payload.libraryId}
               schemaId={item.payload.schemaId}

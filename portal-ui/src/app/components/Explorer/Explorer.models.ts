@@ -93,7 +93,7 @@ export interface Adapter {
     store: ExplorerStore,
     service: ExplorerService,
     full: boolean
-  ) => ReactNode;
+  ) => Promise<ReactNode> | ReactNode;
   getRefreshEmitters?: (item: ExplorerItemData) => Emitter[];
   getActions?: (item: ExplorerItemData) => ReactNode;
 }

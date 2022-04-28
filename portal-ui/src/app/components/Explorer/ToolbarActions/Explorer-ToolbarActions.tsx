@@ -1,6 +1,7 @@
-import React, { FC } from 'react';
-import { observer } from 'mobx-react';
+import React, { Component, ReactNode } from 'react';
+import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { cn } from '@bem-react/classname';
+import { observer } from 'mobx-react';
 
 import { ExplorerStore } from '../Explorer.store';
 import { ExplorerService } from '../Explorer.service';
@@ -16,9 +17,48 @@ interface ExplorerToolbarActionsProps {
   full: boolean;
 }
 
-export const ExplorerToolbarActions: FC<ExplorerToolbarActionsProps> = observer(({ store, service, full }) => {
-  const { path } = store;
-  const toolbarActions = path.length > 1 ? getToolbarActions(path[path.length - 2], store, service, full) : null;
+@observer
+export class ExplorerToolbarActions extends Component<ExplorerToolbarActionsProps> {
+  @observable private counter = 0;
 
-  return toolbarActions ? <div className={cnExplorerToolbarActions()}>{toolbarActions}</div> : null;
-});
+  private toolbarActions: ReactNode;
+  private reactionDisposer: IReactionDisposer;
+
+  componentDidMount() {
+    this.reactionDisposer = reaction(
+      () => {
+        const { store, full } = this.props;
+
+        return [{ ...store.openedItem }, full];
+      },
+      async () => {
+        const { store, service, full } = this.props;
+        this.setToolbarActions(await getToolbarActions(store.path[store.path.length - 2], store, service, full));
+      },
+      {
+        fireImmediately: true
+      }
+    );
+  }
+
+  componentWillUnmount() {
+    this.reactionDisposer();
+  }
+
+  render() {
+    return this.checkToolbarActions ? (
+      <div className={cnExplorerToolbarActions()}>{this.counter ? this.toolbarActions : ''}</div>
+    ) : null;
+  }
+
+  @action
+  private setToolbarActions(toolbarActions: ReactNode) {
+    this.counter = Math.random();
+
+    this.toolbarActions = toolbarActions;
+  }
+
+  private get checkToolbarActions() {
+    return this.props.store.path.length > 1 ? this.toolbarActions : null;
+  }
+}

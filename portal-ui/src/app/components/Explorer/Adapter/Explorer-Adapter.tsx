@@ -192,7 +192,7 @@ export function getToolbarActions(
   store: ExplorerStore,
   service: ExplorerService,
   full: boolean
-): ReactNode | undefined {
+): Promise<ReactNode> | ReactNode | undefined {
   return adapters[item.type].getToolbarActions && adapters[item.type].getToolbarActions(item, store, service, full);
 }
 

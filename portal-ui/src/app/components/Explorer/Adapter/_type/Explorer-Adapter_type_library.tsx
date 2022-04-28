@@ -205,23 +205,27 @@ export class ExplorerAdapterTypeLibrary {
     return 'Фильтр по названию';
   }
 
-  static getToolbarActions(
+  static async getToolbarActions(
     item: ExplorerItemData<DocumentLibrary>,
     store: ExplorerStore,
     service: ExplorerService,
     full: boolean
-  ): ReactNode {
+  ): Promise<ReactNode> {
+    const currentItem = await getLibrary(item.payload.identifier);
+    const enabled =
+      currentUser.isAdmin ||
+      (organizationSettings.createLibraryItemsEnabled && currentItem.role && currentItem.role !== Role.VIEWER);
+
     return (
       full && (
         <>
-          {organizationSettings.createLibraryItemsEnabled && (
+          {enabled && (
             <CreateLibraryElement
               libraryIdentifier={item.payload.identifier}
               schemaId={item.payload.schemaId}
               store={store}
             />
           )}
-
           <Link href={`/data-management/library/${item.payload.identifier}/registry`} theme='contents'>
             <Tooltip title='Открыть реестр'>
               <IconButton>
