@@ -7,8 +7,8 @@ import { AxiosError } from 'axios';
 
 import { ExplorerStore } from '../Explorer/Explorer.store';
 import { createLibraryRecord, LibraryRecord, LibraryRecordRaw } from '../../services/crg/doc-library.service';
-import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
-import { ContentType, OldFeatureDescription } from '../../services/crg/schemaOld.models';
+import { convertProperties, applyContentTypeOld } from '../../services/crg/schema.utils';
+import { OldContentType, OldSchema } from '../../services/crg/schemaOld.models';
 import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { schemaService } from '../../services/crg/schema.service';
 import { ExplorerItemType } from '../Explorer/Explorer.models';
@@ -33,7 +33,7 @@ export interface CreateLibraryElementsProps {
 
 @observer
 export class CreateLibraryElement extends Component<CreateLibraryElementsProps> {
-  @observable private schema: OldFeatureDescription;
+  @observable private schema: OldSchema;
   @observable private contentTypeId: string;
   @observable private dialogOpen = false;
   @observable private dialogLoading = false;
@@ -42,7 +42,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   @observable private formValue: LibraryRecordRaw = {};
 
   async componentDidMount() {
-    const schema = await schemaService.getSchema(this.props.schemaId);
+    const schema = await schemaService.getOldSchema(this.props.schemaId);
     this.setSchema(schema);
     this.setFormValue(getDefaultValues(this.fields));
   }
@@ -50,7 +50,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   render() {
     return (
       <>
-        <MenuIconButton Icon={NoteAddOutlined}>
+        <MenuIconButton icon={<NoteAddOutlined />}>
           {this.contentTypesWithoutFolder.map((contentType, i) => (
             <CreateLibraryElementMenuItem contentType={contentType} onClick={this.itemClickHandler} key={i} />
           ))}
@@ -77,26 +77,26 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   }
 
   @computed
-  private get contentTypesWithoutFolder(): ContentType[] {
+  private get contentTypesWithoutFolder(): OldContentType[] {
     const contentTypes = this.schema?.contentTypes || [];
 
-    return contentTypes.filter(({ type }) => type !== 'FOLDER');
+    return contentTypes.filter(({ type, childOnly }) => type !== 'FOLDER' && !childOnly);
   }
 
   @computed
-  private get folderContentType(): ContentType | undefined {
+  private get folderContentType(): OldContentType | undefined {
     const contentTypes = this.schema?.contentTypes || [];
 
-    return contentTypes.find(({ type }) => type === 'FOLDER');
+    return contentTypes.find(({ type, childOnly }) => type === 'FOLDER' && !childOnly);
   }
 
   @computed
-  private get preparedSchema(): OldFeatureDescription | null {
+  private get preparedSchema(): OldSchema | null {
     if (!this.schema) {
       return null;
     }
 
-    return getSchemaWithAppliedContentType(this.schema, this.contentTypeId);
+    return applyContentTypeOld(this.schema, this.contentTypeId);
   }
 
   @computed
@@ -114,7 +114,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
       return [];
     }
 
-    return convertSchema(this.preparedSchema.properties);
+    return convertProperties(this.preparedSchema.properties);
   }
 
   @boundMethod
@@ -138,7 +138,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   }
 
   @action
-  private setSchema(schema: OldFeatureDescription) {
+  private setSchema(schema: OldSchema) {
     this.schema = schema;
   }
 

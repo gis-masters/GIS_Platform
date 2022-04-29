@@ -22,7 +22,7 @@ class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
   async componentDidMount() {
     const { schemaId } = this.props;
     if (schemaId) {
-      const schema = await schemaService.getSchema(schemaId);
+      const schema = await schemaService.getOldSchema(schemaId);
       this.setGeometryType(schema.geometryType);
     }
   }

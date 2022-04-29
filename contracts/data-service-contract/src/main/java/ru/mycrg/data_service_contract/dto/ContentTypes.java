@@ -9,6 +9,8 @@ public class ContentTypes {
     private String type;
     private String title;
     private String icon;
+    private Boolean childOnly;
+    private List<Object> children = new ArrayList<>();
     private List<Object> attributes = new ArrayList<>();
 
     public ContentTypes() {
@@ -21,6 +23,14 @@ public class ContentTypes {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Boolean getChildOnly() {
+        return childOnly;
+    }
+
+    public void setChildOnly(Boolean childOnly) {
+        this.childOnly = childOnly;
     }
 
     public String getType() {
@@ -37,6 +47,14 @@ public class ContentTypes {
 
     public void setAttributes(List<Object> attributes) {
         this.attributes = attributes;
+    }
+
+    public List<Object> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Object> children) {
+        this.children = children;
     }
 
     public String getTitle() {

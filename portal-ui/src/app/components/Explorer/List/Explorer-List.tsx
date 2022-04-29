@@ -47,7 +47,9 @@ export class ExplorerList extends Component<ExplorerListProps> {
   }
 
   componentWillUnmount() {
-    this.selectedItemReactionDisposer();
+    if (this.selectedItemReactionDisposer) {
+      this.selectedItemReactionDisposer();
+    }
   }
 
   render() {

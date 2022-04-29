@@ -1,6 +1,8 @@
 .DataImportTasksList {
   &-Table {
     width: 100%;
+
+    border-collapse: collapse;
   }
 
   &-TaskStatus {

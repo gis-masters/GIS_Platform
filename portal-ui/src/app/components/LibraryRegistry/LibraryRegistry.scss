@@ -15,12 +15,12 @@ body .LibraryRegistry {
   }
 
   &-Actions {
-    opacity: 0%;
+    opacity: 0;
   }
 
   &-Actions:focus,
   &-Actions.LibraryDocumentActions_open,
   .MuiTableRow-hover:hover .LibraryRegistry-Actions {
-    opacity: 100%;
+    opacity: 1;
   }
 }

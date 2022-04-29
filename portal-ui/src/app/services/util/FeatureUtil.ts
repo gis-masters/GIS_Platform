@@ -1,6 +1,6 @@
 import { sortBy, cloneDeep } from 'lodash';
 
-import { OldFeatureDescription, OldPropertySchema, ValueType } from '../crg/schemaOld.models';
+import { OldSchema, OldPropertySchema, ValueType } from '../crg/schemaOld.models';
 import { ImportLayerItem, LayerAttribute } from '../geoserver/import/models';
 import { CrgRootGeometry, GeometryItem } from './crg-root-geometry';
 import { AS_IS, NOT_IMPORT } from '../models';
@@ -12,10 +12,7 @@ export class FeatureUtil {
 
   // layer = Point, MultiLineString, MultiPolygon
   // feature = Point, LineString, Polygon, Curve
-  static isFeatureGeometryCompatible(
-    layerGeometryTypeName: string,
-    featureDescription: OldFeatureDescription
-  ): boolean {
+  static isFeatureGeometryCompatible(layerGeometryTypeName: string, featureDescription: OldSchema): boolean {
     const split = layerGeometryTypeName.split('.');
     const layerGeometryName = split[split.length - 1];
 
@@ -31,32 +28,29 @@ export class FeatureUtil {
     return result;
   }
 
-  static getFeatureGeometry(featureDescription: OldFeatureDescription): string[] {
+  static getFeatureGeometry(featureDescription: OldSchema): string[] {
     const geometryProperty = featureDescription.properties.find(property => property.valueType === ValueType.GEOMETRY);
 
     return geometryProperty?.allowedValues ? geometryProperty.allowedValues : [];
   }
 
-  static filterByGeometry(fDescription: OldFeatureDescription[], layer?: ImportLayerItem): OldFeatureDescription[] {
+  static filterByGeometry(fDescription: OldSchema[], layer?: ImportLayerItem): OldSchema[] {
     const geometryName = FeatureUtil.getLayerGeometry(layer);
 
-    return fDescription.filter((featureDescription: OldFeatureDescription) => {
+    return fDescription.filter((featureDescription: OldSchema) => {
       return FeatureUtil.isFeatureGeometryCompatible(geometryName, featureDescription);
     });
   }
 
-  static sortByBestCompatibility(
-    fDescription: OldFeatureDescription[],
-    layer?: ImportLayerItem
-  ): OldFeatureDescription[] {
-    fDescription.forEach((description: OldFeatureDescription) => {
+  static sortByBestCompatibility(fDescription: OldSchema[], layer?: ImportLayerItem): OldSchema[] {
+    fDescription.forEach((description: OldSchema) => {
       this.calculateAttributeCompatibility(layer, description);
     });
 
     return sortBy(fDescription, ['matchingCounter']);
   }
 
-  static preparePropertySchema(targetFeatureType: OldFeatureDescription): OldPropertySchema[] {
+  static preparePropertySchema(targetFeatureType: OldSchema): OldPropertySchema[] {
     const propertySchemas: OldPropertySchema[] = [
       { name: NOT_IMPORT.name, title: NOT_IMPORT.title, valueType: ValueType.STRING },
       { name: AS_IS.name, title: AS_IS.title, valueType: ValueType.STRING }
@@ -115,7 +109,7 @@ export class FeatureUtil {
    * @param feature       Импортированный нам слой
    * @param fDescription  Описание фичи
    */
-  private static calculateAttributeCompatibility(feature: ImportLayerItem, fDescription: OldFeatureDescription) {
+  private static calculateAttributeCompatibility(feature: ImportLayerItem, fDescription: OldSchema) {
     let counter = 0;
     feature.attributes.forEach(sourceAttribute => {
       fDescription.properties.forEach(attribute => {

@@ -1,9 +1,11 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
 const cnDt = cn('Dt');
 
-export const DlDt: FC<IClassNameProps> = ({ children, className }) => (
-  <dt className={cnDt(null, [className])}>{children}</dt>
-);
+interface DlDtProps extends IClassNameProps {
+  children: ReactNode;
+}
+
+export const DlDt: FC<DlDtProps> = ({ children, className }) => <dt className={cnDt(null, [className])}>{children}</dt>;

@@ -21,7 +21,7 @@ const emptyEnv: Environment = {
   }
 };
 
-export class Env implements Environment {
+class Env implements Environment {
   private static _instance: Env;
 
   @observable platform: Platform;

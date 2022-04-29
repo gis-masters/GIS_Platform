@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { cn } from '@bem-react/classname';
 import { Paper } from '@mui/material';
@@ -20,6 +20,7 @@ interface LayersTreeItemContainerProps {
   editMode: boolean;
   index: number;
   id: string;
+  children: ReactNode;
 }
 
 export const LayersTreeItemContainer: FC<LayersTreeItemContainerProps> = ({ editMode, children, index, id }) => (

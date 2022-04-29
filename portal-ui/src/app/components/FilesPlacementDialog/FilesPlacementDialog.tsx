@@ -24,10 +24,11 @@ import { allProjects } from '../../stores/AllProjects.store';
 import { Role } from '../../services/crg/permissions.models';
 import { CrgProject } from '../../services/crg/projects.models';
 import { placeFiles } from '../../services/files-placement.service';
-import { FileInfo, isTifFile } from '../../services/files.service';
+import { FileInfo } from '../../services/files.service';
+import { isTifFile } from '../../services/files.util';
 import { projectsService } from '../../services/crg/projects.service';
 import { LibraryRecord } from '../../services/crg/doc-library.service';
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { PropertyType, Schema } from '../../services/crg/schema.models';
 import { viewedProjections } from '../../services/geoserver/projections.service';
 import { FilesPlacementDialogReport } from '../FilesPlacementDialogReport/FilesPlacementDialogReport';
 
@@ -58,7 +59,7 @@ interface DialogFileInfo extends FileInfo {
 
 interface FilesPlacementDialogProps {
   document: LibraryRecord;
-  properties: PropertySchema<LibraryRecord>[];
+  schema: Schema<LibraryRecord>;
   open: boolean;
   onClose(): void;
 }
@@ -208,13 +209,13 @@ export class FilesPlacementDialog extends Component<FilesPlacementDialogProps> {
 
   @computed
   private get tifFiles(): DialogFileInfo[] {
-    const { properties, document } = this.props;
-    if (!properties) {
+    const { schema, document } = this.props;
+    if (!schema) {
       return [];
     }
 
     const result: DialogFileInfo[] = [];
-    properties
+    schema.properties
       .filter(prop => prop.propertyType === PropertyType.FILE)
       .forEach(prop => {
         const files = document[prop.name] as FileInfo[];

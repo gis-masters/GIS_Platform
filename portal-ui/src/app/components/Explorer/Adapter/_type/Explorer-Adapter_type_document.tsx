@@ -11,7 +11,7 @@ import { Role } from '../../../../services/crg/permissions.models';
 import { PropertyType } from '../../../../services/crg/schema.models';
 import { schemaService } from '../../../../services/crg/schema.service';
 import { getLibraryRecord, LibraryRecord } from '../../../../services/crg/doc-library.service';
-import { convertSchema, getSchemaWithAppliedContentType } from '../../../../services/crg/schema.utils';
+import { convertProperties, applyContentTypeOld } from '../../../../services/crg/schema.utils';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 
@@ -64,11 +64,11 @@ export class ExplorerAdapterTypeDocument {
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
     const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id);
-    const oldSchema = getSchemaWithAppliedContentType(
-      await schemaService.getSchema(item.payload.schemaId),
+    const oldSchema = applyContentTypeOld(
+      await schemaService.getOldSchema(item.payload.schemaId),
       item.payload.content_type_id
     );
-    const fields = convertSchema(oldSchema.properties).filter(
+    const fields = convertProperties(oldSchema.properties).filter(
       ({ propertyType }) => propertyType !== PropertyType.BINARY
     );
 

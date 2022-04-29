@@ -42,7 +42,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
             >
               {!valueIsAllowed && (
                 <MenuItem value={fieldValue as string | number} color='#666'>
-                  <em>{valueCanBeDisplayed ? fieldValue : 'Не выбрано'}</em>
+                  <em>{valueCanBeDisplayed ? (fieldValue as string) : 'Не выбрано'}</em>
                 </MenuItem>
               )}
               {options.map((item, i) => {

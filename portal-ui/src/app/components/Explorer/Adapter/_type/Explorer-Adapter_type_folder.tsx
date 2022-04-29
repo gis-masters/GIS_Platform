@@ -12,7 +12,7 @@ import { schemaService } from '../../../../services/crg/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { convertSchema, getSchemaWithAppliedContentType } from '../../../../services/crg/schema.utils';
+import { convertProperties, applyContentTypeOld } from '../../../../services/crg/schema.utils';
 import {
   ContentTypeTypes,
   deleteLibraryRecord,
@@ -78,11 +78,11 @@ export class ExplorerAdapterTypeFolder {
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
     const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id);
-    const oldSchema = getSchemaWithAppliedContentType(
-      await schemaService.getSchema(item.payload.schemaId),
+    const oldSchema = applyContentTypeOld(
+      await schemaService.getOldSchema(item.payload.schemaId),
       item.payload.content_type_id
     );
-    const fields = convertSchema(oldSchema.properties);
+    const fields = convertProperties(oldSchema.properties);
 
     return (
       <>
@@ -125,7 +125,7 @@ export class ExplorerAdapterTypeFolder {
       queryParams: { parent: id }
     });
 
-    const { contentTypes } = await schemaService.getSchema(schemaId);
+    const { contentTypes } = await schemaService.getOldSchema(schemaId);
 
     libraryRecords.forEach(record => {
       const contentType = contentTypes.find(cType => cType.id === record.content_type_id);
@@ -160,7 +160,7 @@ export class ExplorerAdapterTypeFolder {
 
     const [records, totalPages, pageNumber] = response;
 
-    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
+    const { contentTypes } = await schemaService.getOldSchema(item.payload.schemaId);
 
     return [
       records.map(payload => {
@@ -197,7 +197,7 @@ export class ExplorerAdapterTypeFolder {
     recordId: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
     const payload = await getLibraryRecord(item.payload.libraryId, Number(recordId));
-    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
+    const { contentTypes } = await schemaService.getOldSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 
     return {
@@ -249,7 +249,7 @@ export class ExplorerAdapterTypeFolder {
             />
           )}
 
-          <Link href={`/data-management/library/${item.payload.libraryId}/registry`} theme='contents'>
+          <Link href={`/data-management/library/${item.payload.libraryId}/registry`} variant='contents'>
             <Tooltip title='Открыть реестр'>
               <IconButton>
                 <TableViewOutlined />

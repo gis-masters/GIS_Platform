@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot, Root } from 'react-dom/client';
 import { boundMethod } from 'autobind-decorator';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
@@ -15,13 +15,15 @@ import { PickupDatasets } from '../PickupDatasets/PickupDatasets';
 export class PickupDatasetsComponent implements OnInit, OnChanges, OnDestroy {
   @Output() datasetSelect = new EventEmitter<Dataset>();
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  private root: Root;
 
   ngOnInit() {
+    this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    unmountComponentAtNode(this.ref.nativeElement);
+    this.root.unmount();
   }
 
   ngOnChanges() {
@@ -33,7 +35,7 @@ export class PickupDatasetsComponent implements OnInit, OnChanges, OnDestroy {
       onDatasetSelected: this.onDatasetSelected
     });
 
-    render(reactElement, this.ref.nativeElement);
+    this.root?.render(reactElement);
   }
 
   @boundMethod

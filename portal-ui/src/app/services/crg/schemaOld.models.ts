@@ -26,7 +26,7 @@ export enum ValueType {
   CUSTOM = 'CUSTOM' // frontend only
 }
 
-export interface OldFeatureDescription<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface OldSchema<T extends Record<string, unknown> = Record<string, unknown>> {
   name: string;
   title: string;
   description?: string;
@@ -38,14 +38,18 @@ export interface OldFeatureDescription<T extends Record<string, unknown> = Recor
   matchingCounter?: number;
   calcFiledFunction?: string;
   readOnly?: boolean;
-  contentTypes?: ContentType[];
+  childOnly?: boolean;
+  children?: { library?: string; contentType: string }[];
+  contentTypes?: OldContentType[];
 }
 
-export interface ContentType {
+export interface OldContentType {
   id: string;
   type: string;
   title?: string;
   icon?: string;
+  childOnly?: boolean;
+  children?: { library?: string; contentType: string }[];
   attributes: OldPropertySchema[];
 }
 

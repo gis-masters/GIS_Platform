@@ -2,18 +2,19 @@ import React, { Component, ComponentType } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IClassNameProps } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
-import { boundMethod } from 'autobind-decorator';
 
-import { FileInfo, isTifFile } from '../../services/files.service';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
 import { getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
+import { PropertyType, Schema } from '../../services/crg/schema.models';
+import { applyContentType } from '../../services/crg/schema.utils';
 import { schemaService } from '../../services/crg/schema.service';
 import { Role } from '../../services/crg/permissions.models';
+import { FileInfo } from '../../services/files.service';
+import { isTifFile } from '../../services/files.util';
 
 import { ActionsItemVariant } from './Item/LibraryDocumentActions-Item';
 import { LibraryDocumentActionsSed } from './Sed/LibraryDocumentActions-Sed';
@@ -25,6 +26,7 @@ import { LibraryDocumentActionsClose } from './Close/LibraryDocumentActions-Clos
 import { LibraryDocumentActionsDelete } from './Delete/LibraryDocumentActions-Delete';
 import { LibraryDocumentActionsDownload } from './Download/LibraryDocumentActions-Download';
 import { LibraryDocumentActionsRegister } from './Register/LibraryDocumentActions-Register';
+import { LibraryDocumentActionsCreateChild } from './CreateChild/LibraryDocumentActions-CreateChild';
 import { LibraryDocumentActionsFilesPlacement } from './FilesPlacement/LibraryDocumentActions-FilesPlacement';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocumentActions.scss';
@@ -44,7 +46,7 @@ export interface LibraryDocumentActionsProps extends IClassNameProps {
 @observer
 export class LibraryDocumentActions extends Component<LibraryDocumentActionsProps> {
   @observable private document: LibraryRecord;
-  @observable private fields: PropertySchema<LibraryRecord>[];
+  @observable private schema: Schema<LibraryRecord>;
   private operationId: symbol;
 
   async componentDidMount() {
@@ -69,28 +71,44 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
       onSave
     } = this.props;
     const canEdit = [Role.CONTRIBUTOR, Role.OWNER].includes(this.document?.role) || currentUser.isAdmin;
-    const canDelete = this.document?.role === Role.OWNER || currentUser.isAdmin;
+    const canCreateChildren = Boolean(this.schema?.children?.length);
+    const canDownload = this.schema?.properties.some(({ propertyType }) => propertyType === PropertyType.BINARY);
+    const canDelete =
+      organizationSettings.fileDownloadEnabled && (this.document?.role === Role.OWNER || currentUser.isAdmin);
     const isNew = !document.id;
 
     return (
       <ContainerComponent className={cnLibraryDocumentActions({ forDialog }, [className])}>
         {isNew && <LibraryDocumentActionsSave onSave={onSave} document={this.document || document} as={as} />}
+
         {!hideOpen && <LibraryDocumentActionsOpen document={this.document || document} as={as} />}
+
         {!isNew && canEdit && (
-          <LibraryDocumentActionsEdit document={this.document || document} fields={this.fields} as={as} />
+          <LibraryDocumentActionsEdit document={this.document || document} schema={this.schema} as={as} />
         )}
+
+        {canCreateChildren && (
+          <LibraryDocumentActionsCreateChild document={this.document || document} schema={this.schema} as={as} />
+        )}
+
         {this.canBePlaced && (
-          <LibraryDocumentActionsFilesPlacement properties={this.fields} document={this.document || document} as={as} />
+          <LibraryDocumentActionsFilesPlacement document={this.document || document} schema={this.schema} as={as} />
         )}
-        <LibraryDocumentActionsShare document={this.document || document} as={as} />
-        {this.canBeRegistered() && <LibraryDocumentActionsRegister document={this.document || document} as={as} />}
-        {!isNew && organizationSettings.fileDownloadEnabled && (
-          <LibraryDocumentActionsDownload document={this.document || document} as={as} />
+
+        {!isNew && <LibraryDocumentActionsShare document={this.document || document} as={as} />}
+
+        {!isNew && this.canBeRegistered() && (
+          <LibraryDocumentActionsRegister document={this.document || document} as={as} />
         )}
-        {!isNew && <LibraryDocumentActionsSed document={this.document || document} as={as} />}
+
+        {!isNew && canDownload && <LibraryDocumentActionsDownload document={this.document || document} as={as} />}
+
+        <LibraryDocumentActionsSed document={this.document || document} as={as} />
+
         {!isNew && canDelete && (
           <LibraryDocumentActionsDelete document={this.document || document} as={as} onDelete={onDialogClose} />
         )}
+
         {forDialog && <LibraryDocumentActionsClose onClick={onDialogClose} as={as} />}
       </ContainerComponent>
     );
@@ -103,26 +121,21 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
 
     document = document.role ? document : await getLibraryRecord(document.libraryId, document.id);
 
-    const oldSchema = getSchemaWithAppliedContentType(
-      await schemaService.getSchema(document.schemaId),
-      document.content_type_id
-    );
-
-    const fields = convertSchema(oldSchema.properties);
+    const schema = applyContentType(await schemaService.getSchema(document.schemaId), document.content_type_id);
 
     if (this.operationId === operationId) {
-      this.setData(document, fields);
+      this.setData(document, schema);
     }
   }
 
   @computed
   private get canBePlaced(): boolean {
-    const hasNativeCrs = this.fields?.some(({ name }) => name === 'native_crs');
+    const hasNativeCrs = this.schema?.properties?.some(({ name }) => name === 'native_crs');
     if (!hasNativeCrs) {
       return false;
     }
 
-    const filesFields = this.fields?.filter(field => field.propertyType === PropertyType.FILE);
+    const filesFields = this.schema?.properties?.filter(field => field.propertyType === PropertyType.FILE);
     if (!filesFields || filesFields.length <= 0) {
       return false;
     }
@@ -143,8 +156,8 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
   }
 
   @action
-  private setData(document: LibraryRecord, fields: PropertySchema[]) {
+  private setData(document: LibraryRecord, schema: Schema) {
     this.document = document;
-    this.fields = fields;
+    this.schema = schema;
   }
 }

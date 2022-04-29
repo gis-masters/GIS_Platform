@@ -11,8 +11,7 @@ import { ImportTargetType, NOT_IMPORT, AS_IS } from '../../services/models';
 
 @Component({
   selector: 'crg-mapping-pair',
-  templateUrl: './mapping-pair.component.html',
-  styleUrls: ['./mapping-pair.component.css']
+  templateUrl: './mapping-pair.component.html'
 })
 export class MappingPairComponent implements OnInit, OnChanges {
   @Input() layerName: string;

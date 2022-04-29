@@ -22,13 +22,13 @@
       bottom: 0;
       left: 0;
 
-      content: 'file_upload';
+      content: "file_upload";
       transition: background-color 0.3s, backdrop-filter 0.3s, color 0.3s;
       text-align: center;
 
-      color: rgba(255, 255, 255, 0);
+      color: rgb(255 255 255 / 0%);
 
-      font: 60px/170px 'Material Icons';
+      font: 60px/170px "Material Icons";
     }
 
     &:hover {
@@ -40,7 +40,7 @@
     &_fileOver {
       &::before {
         color: #fff;
-        background-color: rgba(0, 0, 0, 0.15);
+        background-color: rgb(0 0 0 / 15%);
 
         backdrop-filter: blur(1px);
       }

@@ -150,7 +150,7 @@ export class Layer extends Component<LayerProps> {
 
     if (type === CrgLayerType.VECTOR) {
       try {
-        await schemaService.getSchema(schemaId);
+        await schemaService.getOldSchema(schemaId);
       } catch {
         this.addError('Не найдена схема для слоя.');
       }

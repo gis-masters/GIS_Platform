@@ -295,7 +295,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   private async fetchGeometryType() {
     if (this.isVectorLayer) {
       const { schemaId } = this.props.entity as CrgVectorLayer;
-      const schema = await schemaService.getSchema(schemaId);
+      const schema = await schemaService.getOldSchema(schemaId);
 
       this.setGeometryType(schema.geometryType);
     }

@@ -1,5 +1,5 @@
 import { createElement } from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import domToImage from 'dom-to-image';
 import { jsPDF } from 'jspdf';
 import moment from 'moment';
@@ -14,6 +14,7 @@ import { Legend } from '../../components/Legend/Legend';
 import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayerType, CrgVectorLayer } from '../crg/projects.models';
+import { sleep } from '../util/sleep';
 
 const BASE_SCALE_LINE_DPI = 150;
 
@@ -114,7 +115,7 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
           const matrix = /^matrix\(([^(]*)\)$/.exec(canvas.style.transform)[1].split(',').map(Number);
 
           // Apply the transform to the export map context
-          CanvasRenderingContext2D.prototype.setTransform.apply(mapContext, matrix);
+          CanvasRenderingContext2D.prototype.setTransform.apply(mapContext, matrix as unknown as [DOMMatrix2DInit]);
           mapContext.drawImage(canvas, 0, 0);
         }
       });
@@ -267,13 +268,15 @@ export async function getDateImageSrc(resolution?: number): Promise<string> {
   moment.locale('ru');
   const el = document.createElement('div');
   document.body.append(el);
+  const root = createRoot(el);
   const reactElement = createElement(PrintDialogDate, {
     forPrint: true,
     resolution: resolution || printSettings.resolution
   });
-  render(reactElement, el);
+  root.render(reactElement);
+  await sleep(0);
   const src = await domToImage.toPng(el.childNodes[0]);
-  unmountComponentAtNode(el);
+  root.unmount();
   el.remove();
 
   return src;
@@ -290,7 +293,7 @@ async function drawMeasurementsTooltips(mapContext: CanvasRenderingContext2D): P
 
     const [, translateX, translateY] = translateFound.map(Number);
 
-    const src = await domToImage.toPng(item.tooltipRoot.childNodes[0]);
+    const src = await domToImage.toPng(item.tooltipNode.childNodes[0]);
 
     await new Promise<void>(resolve => {
       const img = new Image();
@@ -342,15 +345,17 @@ export async function getLegendImageSrc(resolution?: number): Promise<string> {
   moment.locale('ru');
   const el = document.createElement('div');
   document.body.append(el);
+  const root = createRoot(el);
   const reactElement = createElement(Legend, {
     rules: printSettings.legend.items,
     forPrint: true,
     resolution: resolution || printSettings.resolution,
     resize: printSettings.legendSize * 1.3
   });
-  render(reactElement, el);
+  root.render(reactElement);
+  await sleep(0);
   const src = await domToImage.toPng(el.childNodes[0]);
-  unmountComponentAtNode(el);
+  root.unmount();
   el.remove();
 
   return src;

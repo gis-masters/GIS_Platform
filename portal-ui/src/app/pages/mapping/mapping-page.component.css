@@ -6,7 +6,7 @@
 .crg-header {
   padding-top: 1.25em;
 
-  background: rgba(0, 0, 0, 0.05);
+  background: rgb(0 0 0 / 5%);
 }
 
 .crg-card-content {
@@ -22,7 +22,7 @@
   height: 58px;
   margin: 0;
 
-  background: rgba(0, 0, 0, 0.05);
+  background: rgb(0 0 0 / 5%);
 }
 
 .crg-card-footer-b {

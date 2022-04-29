@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { FilterButton } from '../../FilterButton/FilterButton';
@@ -13,6 +13,7 @@ interface XTableHeaderActionsProps {
   pageSize: number;
   onToggleFilter(): void;
   onChangePageSize(e: React.ChangeEvent<HTMLInputElement>): void;
+  children: ReactNode;
 }
 
 export const XTableHeaderActions: FC<XTableHeaderActionsProps> = ({

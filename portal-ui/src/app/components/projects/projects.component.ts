@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot, Root } from 'react-dom/client';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
@@ -13,13 +13,15 @@ import { Projects } from '../Projects/Projects';
 })
 export class ProjectsComponent implements OnDestroy, OnInit {
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  private root: Root;
 
   ngOnInit() {
+    this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy(): void {
-    unmountComponentAtNode(this.ref.nativeElement);
+    this.root.unmount();
   }
 
   ngOnChanges() {
@@ -29,6 +31,6 @@ export class ProjectsComponent implements OnDestroy, OnInit {
   private renderReactElement() {
     const reactElement = createElement(withRegistry(registry)(Projects));
 
-    render(reactElement, this.ref.nativeElement);
+    this.root?.render(reactElement);
   }
 }

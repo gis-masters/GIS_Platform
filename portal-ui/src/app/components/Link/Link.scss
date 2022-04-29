@@ -1,5 +1,7 @@
 body .Link {
-  color: var(--blue);
+  &_variant_normal {
+    color: var(--blue);
+  }
 
   &-IconContainer {
     position: relative;
@@ -27,20 +29,18 @@ body .Link {
     color: var(--disabled);
   }
 
-  &_theme_contents {
+  &_variant_contents {
     display: contents;
+
+    color: currentcolor;
   }
 
-  &_theme_contents,
-  &_theme_none {
+  &_variant_contents,
+  &_variant_none {
     text-decoration: none;
-
-    color: inherit;
 
     &:hover {
       text-decoration: none;
-
-      color: inherit;
     }
   }
 }

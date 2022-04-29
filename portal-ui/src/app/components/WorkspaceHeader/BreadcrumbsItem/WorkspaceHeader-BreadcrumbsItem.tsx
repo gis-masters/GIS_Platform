@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { Link } from '../../Link/Link';
@@ -9,6 +9,7 @@ const cnWorkspaceHeaderBreadcrumbsItem = cn('WorkspaceHeader', 'BreadcrumbsItem'
 
 interface WorkspaceHeaderBreadcrumbsItemProps {
   url?: string;
+  children: ReactNode;
 }
 
 export const WorkspaceHeaderBreadcrumbsItem: FC<WorkspaceHeaderBreadcrumbsItemProps> = ({ url, children }) =>

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
@@ -14,12 +14,13 @@ export interface FormControlProps<T extends Record<string, unknown> = Record<str
   property?: PropertySchema<T>;
   fieldValue?: T[keyof T];
   formValue?: T;
-  onChange?: ({ value: T, propertyName: string }) => void;
-  onNeedValidate?: ({ value: T, propertyName: string }) => void;
   inSet?: boolean;
   errors?: string[];
   variant?: 'standard' | 'outlined';
   fullWidthForOldForm?: boolean;
+  children?: ReactNode;
+  onChange?: ({ value: T, propertyName: string }) => void;
+  onNeedValidate?: ({ value: T, propertyName: string }) => void;
 }
 
 export const FormControl: FC<FormControlProps> = ({ children, className }) => (

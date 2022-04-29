@@ -19,7 +19,7 @@ import { mapService } from '../../services/map/map.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { RequestAttribute, FilterEvent, Pageable, Sortable } from '../../services/models';
 import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs.models';
-import { OldFeatureDescription, ValueType, OldPropertySchema } from '../../services/crg/schemaOld.models';
+import { OldSchema, ValueType, OldPropertySchema } from '../../services/crg/schemaOld.models';
 import { isFeaturesUpdateAllowed, isFeaturesDeleteAllowed } from '../../services/crg/permissions.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
@@ -91,7 +91,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   lastRequestAttribute: RequestAttribute;
 
-  private schema: OldFeatureDescription;
+  private schema: OldSchema;
   private requestAttribute$: BehaviorSubject<RequestAttribute> = new BehaviorSubject<RequestAttribute>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -110,7 +110,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
         this.layer = layer;
 
         if (layer && layerChanged) {
-          this.schema = await schemaService.getSchema(layer.schemaId);
+          this.schema = await schemaService.getOldSchema(layer.schemaId);
           this.isNeedPrepareColumn = true;
           this.requestAttribute$.next({ page: { pageSize: 25, offset: 0 } });
 
@@ -436,8 +436,8 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   private async getSuitableLayers(currentLayer: CrgVectorLayer, layers: CrgVectorLayer[]): Promise<CrgLayer[]> {
-    const schemas = await Promise.all(layers.map(({ schemaId }) => schemaService.getSchema(schemaId)));
-    const currentSchema = await schemaService.getSchema(currentLayer.schemaId);
+    const schemas = await Promise.all(layers.map(({ schemaId }) => schemaService.getOldSchema(schemaId)));
+    const currentSchema = await schemaService.getOldSchema(currentLayer.schemaId);
     const layersUpdatePermissions = await Promise.all(
       layers.map(({ dataset, tableName, schemaId }) => isFeaturesUpdateAllowed(dataset, tableName, schemaId))
     );
@@ -629,7 +629,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     ];
 
     if (wfsFeature) {
-      const schema = await schemaService.getSchema(this.layer.schemaId);
+      const schema = await schemaService.getOldSchema(this.layer.schemaId);
 
       Object.keys(wfsFeature.properties).forEach(key => {
         const pSchema = schema.properties.find(propertySchema => propertySchema.name === key);
@@ -670,7 +670,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   private async exportLayerAsCSV(layer: CrgVectorLayer, filter?: FilterEvent[]): Promise<void> {
     try {
-      const schema = await schemaService.getSchema(layer.schemaId);
+      const schema = await schemaService.getOldSchema(layer.schemaId);
 
       const allFeatures: WfsFeature[] = await this.fetchPaged(layer, filter);
 
@@ -684,7 +684,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   private async exportFeaturesAsCSV(schemaId: string, features: WfsFeature[]): Promise<void> {
     try {
-      const schema = await schemaService.getSchema(schemaId);
+      const schema = await schemaService.getOldSchema(schemaId);
 
       exportAsCSV(this.unparseFeatures(schema, features), `${schema.tableName}.csv`);
     } catch (error) {
@@ -694,14 +694,14 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  private unparseFeatures(schema: OldFeatureDescription, allFeatures: WfsFeature[]): unknown[][] {
+  private unparseFeatures(schema: OldSchema, allFeatures: WfsFeature[]): unknown[][] {
     const header = schema.properties.map(prop => prop.title);
     const body = allFeatures.map(feature => this.unparseFeature(schema, feature));
 
     return [header, ...body];
   }
 
-  private unparseFeature(schema: OldFeatureDescription, feature: WfsFeature): unknown[] {
+  private unparseFeature(schema: OldSchema, feature: WfsFeature): unknown[] {
     const aliasedFeature = schemaService.replaceRowDataToAliases(schema, feature.properties);
 
     return schema.properties.map(prop => {

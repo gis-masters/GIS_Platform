@@ -18,7 +18,7 @@ body .PseudoLink {
 
   &-Inner {
     color: var(--PseudoLinkColor);
-    border-bottom: 1px currentColor dashed;
+    border-bottom: 1px currentcolor dashed;
   }
 
   &:hover {

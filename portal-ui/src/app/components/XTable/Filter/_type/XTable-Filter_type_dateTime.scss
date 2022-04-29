@@ -12,7 +12,7 @@
     }
 
     &[value=""]::-webkit-datetime-edit {
-      opacity: 70%;
+      opacity: 0.7;
       color: var(--gray);
     }
   }

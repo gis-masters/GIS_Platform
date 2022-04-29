@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot, Root } from 'react-dom/client';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
@@ -13,13 +13,15 @@ import { DataManagement } from '../DataManagement/DataManagement';
 })
 export class DataManagementComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  private root: Root;
 
   ngOnInit() {
+    this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    unmountComponentAtNode(this.ref.nativeElement);
+    this.root.unmount();
   }
 
   ngOnChanges() {
@@ -29,6 +31,6 @@ export class DataManagementComponent implements OnInit, OnChanges, OnDestroy {
   private renderReactElement() {
     const reactElement = createElement(withRegistry(registry)(DataManagement));
 
-    render(reactElement, this.ref.nativeElement);
+    this.root?.render(reactElement);
   }
 }

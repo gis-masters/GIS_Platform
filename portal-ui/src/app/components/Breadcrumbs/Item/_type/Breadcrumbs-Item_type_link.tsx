@@ -12,7 +12,7 @@ interface BreadcrumbsItemTypeLinkProps extends IClassNameProps {
 }
 
 const ContainerComponent: FC<BreadcrumbsItemProps> = ({ className, children, url }) => (
-  <Link href={url} theme='contents'>
+  <Link href={url} variant='contents'>
     <ButtonBase className={className}>{children}</ButtonBase>
   </Link>
 );

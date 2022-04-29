@@ -20,7 +20,7 @@ import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/aler
 import { currentImport } from '../../stores/CurrentImport.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/crg/schema.service';
-import { OldFeatureDescription } from '../../services/crg/schemaOld.models';
+import { OldSchema } from '../../services/crg/schemaOld.models';
 
 @Component({
   selector: 'crg-mapping-page',
@@ -35,7 +35,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   prevLink: string;
   nextLink: string;
 
-  schemas?: OldFeatureDescription[];
+  schemas?: OldSchema[];
 
   private CHECK_STATUS_INTERVAL = 1000;
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -98,7 +98,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
 
     await projectsService.fetchCurrent();
 
-    // TODO: Нельзя чтобы в рпбочем импорте такси ссылались на одну рабочую таблицу!
+    // TODO: Нельзя чтобы в рабочем импорте такси ссылались на одну рабочую таблицу!
     // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
     // eslint-disable-next-line promise/catch-or-return
     projectsService.doWorkImport(workTasks, currentProject.id, this.selectedDataset.identifier).then(

@@ -23,7 +23,7 @@ const FormViewTypeString: FC<FormControlProps> = observer(
     return (
       <div className={cnFormView({ inSet, empty: fieldValue === '—', type: propertyType, display }, [className])}>
         {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
-        <FormViewValue code={code}>{code ? fieldValue : nl2br(fieldValue)}</FormViewValue>
+        <FormViewValue code={code}>{code ? String(fieldValue) : nl2br(String(fieldValue))}</FormViewValue>
         <FormViewErrors errors={errors} />
       </div>
     );

@@ -25,7 +25,7 @@ class FormViewTypeFloat extends Component<FormControlProps> {
     return (
       <div className={cnFormView({ inSet, empty: fieldValue === '—', type: property.propertyType }, [className])}>
         {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
-        <FormViewValue>{fieldValue}</FormViewValue>
+        <FormViewValue>{String(fieldValue)}</FormViewValue>
         <FormViewErrors errors={errors} />
       </div>
     );

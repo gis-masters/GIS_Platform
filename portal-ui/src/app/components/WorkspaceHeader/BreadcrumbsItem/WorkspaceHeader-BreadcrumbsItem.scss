@@ -1,8 +1,10 @@
 body .WorkspaceHeader-BreadcrumbsItem {
-  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+
+  color: rgb(255 255 255 / 80%);
 
   &:hover {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgb(255 255 255 / 80%);
   }
 
   &::after {
@@ -10,7 +12,7 @@ body .WorkspaceHeader-BreadcrumbsItem {
 
     padding: 0 5px;
 
-    content: '>';
+    content: ">";
   }
 
   &:last-child {

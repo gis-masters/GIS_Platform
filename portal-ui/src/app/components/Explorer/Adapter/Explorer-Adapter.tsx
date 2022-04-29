@@ -22,6 +22,8 @@ import { ExplorerAdapterTypeProject } from './_type/Explorer-Adapter_type_projec
 import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_projectsRoot';
 import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basemap';
 import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_basemapsRoot';
+import { ExplorerAdapterTypeSchema } from './_type/Explorer-Adapter_type_schema';
+import { ExplorerAdapterTypeSchemasRoot } from './_type/Explorer-Adapter_type_schemasRoot';
 import { ExplorerService } from '../Explorer.service';
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
@@ -37,7 +39,9 @@ const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.PROJECT]: ExplorerAdapterTypeProject,
   [ExplorerItemType.PROJECTS_ROOT]: ExplorerAdapterTypeProjectsRoot,
   [ExplorerItemType.BASEMAP]: ExplorerAdapterTypeBasemap,
-  [ExplorerItemType.BASEMAPS_ROOT]: ExplorerAdapterTypeBasemapsRoot
+  [ExplorerItemType.BASEMAPS_ROOT]: ExplorerAdapterTypeBasemapsRoot,
+  [ExplorerItemType.SCHEMA]: ExplorerAdapterTypeSchema,
+  [ExplorerItemType.SCHEMAS_ROOT]: ExplorerAdapterTypeSchemasRoot
 };
 
 const lackOfRightMessage = 'Недостаточно прав';

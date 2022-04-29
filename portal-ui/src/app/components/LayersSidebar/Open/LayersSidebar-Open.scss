@@ -14,13 +14,12 @@
   border: none;
   border-radius: 3px;
   background: white;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
+  box-shadow: 0 8px 16px 0 rgb(0 0 0 / 16%);
 
-  font-family: 'Material Icons';
+  font-family: "Material Icons";
   font-size: 24px;
   line-height: 42px;
 
-  -webkit-appearance: none;
   appearance: none;
 
   &::before,
@@ -37,11 +36,11 @@
   }
 
   &::before {
-    content: 'chevron_left';
+    content: "chevron_left";
   }
 
   &::after {
-    content: 'layers';
+    content: "layers";
 
     opacity: 1;
   }

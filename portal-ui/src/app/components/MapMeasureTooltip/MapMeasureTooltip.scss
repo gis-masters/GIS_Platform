@@ -15,7 +15,7 @@ body .MapMeasureTooltip {
   opacity: 0.8;
   color: white;
   border-radius: calc(4px * var(--MapMeasureTooltipResize));
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0 0 0 / 50%);
 
   font-size: calc(12px * var(--MapMeasureTooltipResize));
 
@@ -28,9 +28,9 @@ body .MapMeasureTooltip {
 
     margin-left: calc(-6px * var(--MapMeasureTooltipResize));
 
-    content: '';
+    content: "";
 
-    border-top: calc(6px * var(--MapMeasureTooltipResize)) solid rgba(0, 0, 0, 0.5);
+    border-top: calc(6px * var(--MapMeasureTooltipResize)) solid rgb(0 0 0 / 50%);
     border-right: calc(6px * var(--MapMeasureTooltipResize)) solid transparent;
     border-left: calc(6px * var(--MapMeasureTooltipResize)) solid transparent;
   }

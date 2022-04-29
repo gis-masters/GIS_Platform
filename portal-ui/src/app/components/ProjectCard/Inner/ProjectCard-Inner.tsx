@@ -1,8 +1,14 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Inner.scss';
 
 const cnProjectCardInner = cn('ProjectCard', 'Inner');
 
-export const ProjectCardInner: FC = ({ children }) => <div className={cnProjectCardInner()}>{children}</div>;
+interface ProjectCardInnerProps {
+  children: ReactNode;
+}
+
+export const ProjectCardInner: FC<ProjectCardInnerProps> = ({ children }) => (
+  <div className={cnProjectCardInner()}>{children}</div>
+);

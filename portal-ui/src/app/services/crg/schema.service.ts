@@ -11,20 +11,22 @@ import { http } from '../http.service';
 import { getSchemaUrl } from '../server-urls.service';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { CrgVectorLayer } from './projects.models';
+import { BugObject } from './validation.service';
 import {
-  OldFeatureDescription,
+  OldSchema,
   OldPropertySchema,
   OldPropertySchemaChoice,
   ValueType,
   PropertyEnumeration
 } from './schemaOld.models';
-import { BugObject } from './validation.service';
+import { Schema } from './schema.models';
+import { convertSchema } from './schema.utils';
 
 class SchemaService {
   private static _instance: SchemaService;
 
-  private schemas: { [key: string]: Promise<OldFeatureDescription> } = {};
-  private schemasResolvers: { [key: string]: (value?: OldFeatureDescription) => void } = {};
+  private schemas: { [key: string]: Promise<OldSchema> } = {};
+  private schemasResolvers: { [key: string]: (value?: OldSchema) => void } = {};
   private schemasRejecters: { [key: string]: () => void } = {};
   private fetchingPool: string[] = [];
   private fetchingAllSchemas?: Promise<void>;
@@ -40,7 +42,7 @@ class SchemaService {
   }
 
   @boundMethod
-  async getSchema(name: string): Promise<OldFeatureDescription> {
+  async getOldSchema(name: string): Promise<OldSchema> {
     if (!this.schemas[name]) {
       this.schemas[name] = new Promise((resolve, reject) => {
         this.schemasResolvers[name] = resolve;
@@ -53,13 +55,18 @@ class SchemaService {
     return this.schemas[name];
   }
 
-  async getCurrentProjectSchemas(): Promise<OldFeatureDescription[]> {
-    const names = currentProject.vectorLayers.map(layer => layer.schemaId);
-
-    return Promise.all(names.map(this.getSchema));
+  @boundMethod
+  async getSchema(name: string): Promise<Schema> {
+    return convertSchema(await this.getOldSchema(name));
   }
 
-  async getAllSchemas(): Promise<OldFeatureDescription[]> {
+  async getCurrentProjectSchemas(): Promise<OldSchema[]> {
+    const names = currentProject.vectorLayers.map(layer => layer.schemaId);
+
+    return Promise.all(names.map(this.getOldSchema));
+  }
+
+  async getAllSchemas(): Promise<OldSchema[]> {
     if (!this.fetchingAllSchemas) {
       this.fetchingAllSchemas = this.fetch(true);
     }
@@ -69,12 +76,15 @@ class SchemaService {
     return Promise.all(Object.values(this.schemas));
   }
 
-  async getById(schemaId: string, global?: boolean): Promise<OldFeatureDescription | undefined> {
+  /**
+   * @deprecated legacy, do not use
+   */
+  private async getBySimilarId(schemaId: string): Promise<OldSchema | undefined> {
     if (!schemaId) {
       return;
     }
 
-    const schemas = global ? await this.getAllSchemas() : await this.getCurrentProjectSchemas();
+    const schemas = await this.getAllSchemas();
 
     return (
       schemas.find(schema => schema.name.toLowerCase() === schemaId.toLowerCase()) ||
@@ -83,11 +93,12 @@ class SchemaService {
   }
 
   /**
+   * @deprecated legacy, do not use
    * Возвращает, наиболее подходящую для слоя, схему.
    * Метод опирается на название и геометрию слоя.
    * @param layer Слой
    */
-  async getSchemaByLayer(layer: ImportLayerItem): Promise<OldFeatureDescription | undefined> {
+  async getSchemaByLayer(layer: ImportLayerItem): Promise<OldSchema | undefined> {
     const layerName = layer.originalName.toLowerCase();
     let layerNameWithGeomType: string;
 
@@ -100,11 +111,11 @@ class SchemaService {
       layerNameWithGeomType = layerName + '_point';
     }
 
-    return (await this.getById(layerNameWithGeomType, true)) || (await this.getById(layerName, true));
+    return (await this.getBySimilarId(layerNameWithGeomType)) || (await this.getBySimilarId(layerName));
   }
 
   async getClassIdAlias(layer: CrgVectorLayer, bugObject: BugObject): Promise<string> {
-    const schema = await this.getSchema(layer.schemaId);
+    const schema = await this.getOldSchema(layer.schemaId);
 
     if (!schema) {
       return '';
@@ -126,7 +137,7 @@ class SchemaService {
    * @param propertyName код свойства
    */
   async getPropertyAlias(layer: CrgVectorLayer, propertyName: string): Promise<string> {
-    const schema = await this.getSchema(layer.schemaId);
+    const schema = await this.getOldSchema(layer.schemaId);
 
     if (schema) {
       const property = schema.properties.find(prop => prop.name.toLowerCase() === propertyName.toLowerCase());
@@ -150,7 +161,7 @@ class SchemaService {
 
   async getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature<CoordinateEdited>> {
     const { tableName, schemaId } = layer;
-    const schema = await this.getSchema(schemaId);
+    const schema = await this.getOldSchema(schemaId);
 
     const properties = Object.fromEntries(schema.properties.map(({ name }) => [name.toLowerCase(), null]));
 
@@ -198,7 +209,7 @@ class SchemaService {
 
   async isReadOnly(schemaId: string): Promise<boolean> {
     try {
-      const schema = await this.getSchema(schemaId);
+      const schema = await this.getOldSchema(schemaId);
 
       return schema.readOnly;
     } catch {
@@ -222,10 +233,7 @@ class SchemaService {
    * @param schema
    * @param featureProperties
    */
-  replaceRowDataToAliases(
-    schema: OldFeatureDescription,
-    featureProperties: Record<string, unknown>
-  ): Record<string, unknown> {
+  replaceRowDataToAliases(schema: OldSchema, featureProperties: Record<string, unknown>): Record<string, unknown> {
     const resultObject: Record<string, unknown> = {};
 
     Object.keys(featureProperties).forEach(key => {
@@ -265,7 +273,7 @@ class SchemaService {
     this.fetchingNow++;
     const payload = fetchAll ? [] : this.fetchingPool.splice(0);
     const params = { schemaIds: payload.join(',') };
-    const response = await http.get<(OldFeatureDescription | null)[]>(await getSchemaUrl(), { params });
+    const response = await http.get<(OldSchema | null)[]>(await getSchemaUrl(), { params });
 
     if (!response) {
       this.fetchingNow--;

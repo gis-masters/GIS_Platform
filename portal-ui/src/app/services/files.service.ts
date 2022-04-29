@@ -29,8 +29,6 @@ export interface FileInfo {
   notLoaded?: boolean;
 }
 
-export const isTifFile = (file: FileInfo): boolean => file.title.includes('.tif') || file.title.includes('.tiff');
-
 export async function createFile(file: File): Promise<CrgFile> {
   const formData = new FormData();
   formData.append('files', file);

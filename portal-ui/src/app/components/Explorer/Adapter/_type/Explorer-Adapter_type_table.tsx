@@ -13,6 +13,7 @@ import { Adapter, ExplorerItemData, ExplorerItemEntityType } from '../../Explore
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { DataTableActions } from '../../../DataTableActions/DataTableActions';
+import { Link } from '../../../Link/Link';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -31,19 +32,28 @@ export class ExplorerAdapterTypeTable {
   }
 
   static getDescription(item: ExplorerItemData<DataTable>): ReactNode {
-    const { details, createdAt } = item.payload;
+    const { details, createdAt, schemaId } = item.payload;
     moment.locale('ru');
 
     return (
       <>
         {details && <p>{details}</p>}
 
-        {createdAt ? (
+        {createdAt && (
           <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
             {moment(createdAt).format('LL')}
           </ExplorerInfoDescItem>
-        ) : null}
+        )}
+
+        {currentUser.isAdmin && (
+          <ExplorerInfoDescItem>
+            <ExplorerInfoDescTitle>Схема:</ExplorerInfoDescTitle>
+            <Link href={`/data-management?path_dm=%5B"r","root","sr","schemasRoot","schema","${schemaId}"%5D`}>
+              {schemaId}
+            </Link>
+          </ExplorerInfoDescItem>
+        )}
       </>
     );
   }

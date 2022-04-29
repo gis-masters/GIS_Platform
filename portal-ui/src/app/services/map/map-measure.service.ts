@@ -1,6 +1,6 @@
 import { createElement } from 'react';
+import { createRoot, Root } from 'react-dom/client';
 import { reaction } from 'mobx';
-import { render, unmountComponentAtNode } from 'react-dom';
 import { boundMethod } from 'autobind-decorator';
 import { LineString, Polygon, SimpleGeometry } from 'ol/geom';
 import OverlayPositioning from 'ol/OverlayPositioning';
@@ -29,7 +29,8 @@ export type MeasureMode = 'area' | 'length';
 export interface MeasureItem {
   id: symbol;
   feature: Feature;
-  tooltipRoot: HTMLElement;
+  tooltipRoot: Root;
+  tooltipNode: HTMLElement;
   tooltipOverlay: Overlay;
 }
 
@@ -175,7 +176,8 @@ class MapMeasureService {
     return {
       id: Symbol('id'),
       feature,
-      tooltipRoot: tooltipNode,
+      tooltipRoot: createRoot(tooltipNode),
+      tooltipNode,
       tooltipOverlay
     };
   }
@@ -203,7 +205,7 @@ class MapMeasureService {
     if (this.source.hasFeature(item.feature)) {
       this.source.removeFeature(item.feature);
     }
-    unmountComponentAtNode(item.tooltipRoot);
+    item.tooltipRoot.unmount();
     mapService.map.removeOverlay(item.tooltipOverlay);
     mapStore.removeMeasureItem(item);
   }
@@ -249,7 +251,7 @@ class MapMeasureService {
   private renderTooltip(item: MeasureItem, sketch: boolean) {
     const reactElement = createElement(MapMeasureTooltip, { item: { ...item }, sketch, onClear: this.clearItem });
 
-    render(reactElement, item.tooltipRoot);
+    item.tooltipRoot.render(reactElement);
   }
 
   private initUnitsOfAreaMeasurement() {

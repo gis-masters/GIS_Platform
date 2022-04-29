@@ -12,7 +12,7 @@ import { Button } from '../../Button/Button';
 import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
 import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
 
-const cnLibraryDocumentActionsDelete = cn('LibraryDocumentActions', 'Edit');
+const cnLibraryDocumentActionsDelete = cn('LibraryDocumentActions', 'Delete');
 
 interface LibraryDocumentActionsDeleteProps {
   document: LibraryRecord;

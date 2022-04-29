@@ -30,7 +30,7 @@
     margin-left: 0;
     padding: calc(var(--LegendResizeFactor) * 10px) calc(var(--LegendResizeFactor) * 13px);
 
-    background: rgba(255, 255, 255, 0.8);
+    background: rgb(255 255 255 / 80%);
 
     --LegendResolutionFactor: calc(var(--LegendResolution) / 150);
     --LegendResizeFactor: calc(var(--LegendResize) * var(--LegendResolutionFactor));

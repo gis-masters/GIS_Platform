@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { LayerInnardsInner } from '../InnardsInner/Layer-InnardsInner';
@@ -11,6 +11,7 @@ const cnLayerInnards = cn('Layer', 'Innards');
 interface LayerInnardsProps {
   show: boolean;
   depth: number;
+  children: ReactNode;
 }
 
 export const LayerInnards: FC<LayerInnardsProps> = ({ show, depth, children }) => (
@@ -18,9 +19,7 @@ export const LayerInnards: FC<LayerInnardsProps> = ({ show, depth, children }) =
     {show ? (
       <div className={cnLayerInnards()}>
         <LayerGap gap={depth} />
-        <LayerInnardsInner>
-          {children}
-        </LayerInnardsInner>
+        <LayerInnardsInner>{children}</LayerInnardsInner>
       </div>
     ) : null}
   </>

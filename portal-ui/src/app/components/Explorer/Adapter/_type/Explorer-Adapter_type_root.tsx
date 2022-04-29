@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 import { HomeOutlined } from '@mui/icons-material';
 
-import { Dataset } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 
 import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 
@@ -12,28 +12,38 @@ declare module '../../Explorer.models' {
   }
 }
 
-const children = [
-  {
-    id: 'datasetRoot',
-    type: ExplorerItemType.DATASET_ROOT,
-    payload: null
-  },
-  {
-    id: 'libraryRoot',
-    type: ExplorerItemType.LIBRARY_ROOT,
-    payload: null
-  },
-  {
-    id: 'basemapsRoot',
-    type: ExplorerItemType.BASEMAPS_ROOT,
-    payload: null
-  },
-  {
-    id: 'projectsRoot',
-    type: ExplorerItemType.PROJECTS_ROOT,
-    payload: null
+function getChildren(): ExplorerItemData[] {
+  const baseChildren = [
+    {
+      type: ExplorerItemType.DATASET_ROOT,
+      payload: null
+    },
+    {
+      type: ExplorerItemType.LIBRARY_ROOT,
+      payload: null
+    },
+    {
+      type: ExplorerItemType.BASEMAPS_ROOT,
+      payload: null
+    },
+    {
+      type: ExplorerItemType.PROJECTS_ROOT,
+      payload: null
+    }
+  ];
+
+  if (!currentUser.isAdmin) {
+    return baseChildren;
   }
-];
+
+  return [
+    ...baseChildren,
+    {
+      type: ExplorerItemType.SCHEMAS_ROOT,
+      payload: null
+    }
+  ];
+}
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeRoot {
@@ -53,43 +63,44 @@ export class ExplorerAdapterTypeRoot {
     return true;
   }
 
-  static getChildren(): Promise<[ExplorerItemData<Dataset>[], number]> {
-    return Promise.resolve([children, 1]);
+  static getChildren(): [ExplorerItemData[], number] {
+    return [getChildren(), 1];
   }
 
-  // eslint-disable-next-line sonarjs/no-identical-functions
-  static getChildrenWithParticularOne(): Promise<[ExplorerItemData<Dataset>[], number, number]> {
-    return Promise.resolve([children, 1, 0]);
+  static getChildrenWithParticularOne(): [ExplorerItemData[], number, number] {
+    return [getChildren(), 1, 0];
   }
 
-  static getChildById(item: ExplorerItemData<Dataset>, id: string): Promise<ExplorerItemData<Dataset>> {
+  static getChildById(item: ExplorerItemData, id: string): ExplorerItemData {
     if (id === 'datasetRoot') {
-      return Promise.resolve({
-        id: 'datasetRoot',
+      return {
         type: ExplorerItemType.DATASET_ROOT,
         payload: null
-      });
+      };
     }
     if (id === 'libraryRoot') {
-      return Promise.resolve({
-        id: 'libraryRoot',
+      return {
         type: ExplorerItemType.LIBRARY_ROOT,
         payload: null
-      });
+      };
     }
     if (id === 'basemapsRoot') {
-      return Promise.resolve({
-        id: 'basemapsRoot',
+      return {
         type: ExplorerItemType.BASEMAPS_ROOT,
         payload: null
-      });
+      };
     }
     if (id === 'projectsRoot') {
-      return Promise.resolve({
-        id: 'projectsRoot',
+      return {
         type: ExplorerItemType.PROJECTS_ROOT,
         payload: null
-      });
+      };
+    }
+    if (id === 'schemasRoot') {
+      return {
+        type: ExplorerItemType.SCHEMAS_ROOT,
+        payload: null
+      };
     }
   }
 }

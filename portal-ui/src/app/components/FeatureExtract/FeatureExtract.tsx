@@ -7,7 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
-import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
+import { convertProperties, applyContentTypeOld } from '../../services/crg/schema.utils';
 import { getDefaultValues, validateFormValue } from '../../services/crg/formValidation.service';
 import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { getFeatureUrl } from '../../services/map/map-link-following.service';
@@ -44,8 +44,8 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
   async componentDidMount() {
     const { layer } = this.props;
     this.setLibrary(await getLibrary(libraryIdentifier));
-    const featureSchema = await schemaService.getSchema(layer.schemaId);
-    this.setFields(convertSchema(featureSchema.properties));
+    const featureSchema = await schemaService.getOldSchema(layer.schemaId);
+    this.setFields(convertProperties(featureSchema.properties));
 
     communicationService.libraryItemsUpdated.on(async () => {
       if (this.document?.id) {
@@ -201,8 +201,8 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
 
   @boundMethod
   private async createDocument(value: Omit<LibraryRecord, 'schemaId' | 'libraryId'>) {
-    const librarySchema = await schemaService.getSchema(this.library.schemaId);
-    const libraryFields = convertSchema(getSchemaWithAppliedContentType(librarySchema, 'base_extract').properties);
+    const librarySchema = await schemaService.getOldSchema(this.library.schemaId);
+    const libraryFields = convertProperties(applyContentTypeOld(librarySchema, 'base_extract').properties);
     const errors = validateFormValue(value, libraryFields);
 
     if (errors.length) {

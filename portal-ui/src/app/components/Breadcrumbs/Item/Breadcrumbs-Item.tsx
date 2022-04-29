@@ -15,8 +15,9 @@ export interface BreadcrumbsItemData<T = unknown> {
   title: ReactNode;
   subtitle?: ReactNode;
   url?: string;
-  onClick?: (payload: T) => void;
   payload?: T;
+  children?: ReactNode;
+  onClick?: (payload: T) => void;
 }
 
 export interface BreadcrumbsItemProps<T = unknown> extends BreadcrumbsItemData<T>, IClassNameProps {

@@ -48,7 +48,7 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static getDescription(item: ExplorerItemData<DocumentLibrary>): ReactNode {
-    const { details, createdAt } = item.payload;
+    const { details, createdAt, schemaId } = item.payload;
     moment.locale('ru');
 
     return (
@@ -59,6 +59,15 @@ export class ExplorerAdapterTypeLibrary {
           <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
             {moment(createdAt).format('LL')}
+          </ExplorerInfoDescItem>
+        )}
+
+        {currentUser.isAdmin && (
+          <ExplorerInfoDescItem>
+            <ExplorerInfoDescTitle>Схема:</ExplorerInfoDescTitle>
+            <Link href={`/data-management?path_dm=%5B"r","root","sr","schemasRoot","schema","${schemaId}"%5D`}>
+              {schemaId}
+            </Link>
           </ExplorerInfoDescItem>
         )}
       </>
@@ -106,7 +115,7 @@ export class ExplorerAdapterTypeLibrary {
       }
     );
 
-    const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schemaId);
+    const { contentTypes } = await schemaService.getOldSchema(explorerItem.payload.schemaId);
 
     libraryRecords.forEach(record => {
       const contentType = contentTypes.find(cType => cType.id === record.content_type_id);
@@ -141,7 +150,7 @@ export class ExplorerAdapterTypeLibrary {
     recordId: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
     const payload = await getLibraryRecord(item.payload.identifier, Number(recordId));
-    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
+    const { contentTypes } = await schemaService.getOldSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 
     return {
@@ -169,7 +178,7 @@ export class ExplorerAdapterTypeLibrary {
     }
 
     const [records, totalPages, pageNumber] = response;
-    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
+    const { contentTypes } = await schemaService.getOldSchema(item.payload.schemaId);
 
     return [
       records.map(payload => {
@@ -226,7 +235,8 @@ export class ExplorerAdapterTypeLibrary {
               store={store}
             />
           )}
-          <Link href={`/data-management/library/${item.payload.identifier}/registry`} theme='contents'>
+
+          <Link href={`/data-management/library/${item.payload.identifier}/registry`} variant='contents'>
             <Tooltip title='Открыть реестр'>
               <IconButton>
                 <TableViewOutlined />

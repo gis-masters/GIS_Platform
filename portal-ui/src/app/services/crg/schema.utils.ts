@@ -1,36 +1,87 @@
 import { cloneDeep } from 'lodash';
 
-import { OldFeatureDescription, OldPropertySchema, ValueType } from './schemaOld.models';
+import { OldSchema, OldPropertySchema, OldContentType, ValueType } from './schemaOld.models';
 import {
   PropertyType,
   PropertySchema,
   PropertySchemaChoice,
   PropertySchemaDatetime,
   PropertySchemaFloat,
-  PropertySchemaUrl
+  PropertySchemaUrl,
+  Schema,
+  ContentType,
+  DefaultValueFormula
 } from './schema.models';
+import { LibraryRecord } from './doc-library.service';
+import { DocumentInfo } from '../../components/Documents/Documents';
 
-export function getSchemaWithAppliedContentType(
-  schema: OldFeatureDescription,
-  contentTypeId?: string
-): OldFeatureDescription {
-  const clonedSchema: OldFeatureDescription = cloneDeep(schema);
+export function applyContentTypeOld(schema: OldSchema, contentTypeId?: string): OldSchema {
+  const clonedSchema = cloneDeep(schema);
 
   const contentType = clonedSchema.contentTypes.find(cType => cType.id === contentTypeId);
+
   if (contentType) {
-    const actualProperties: OldPropertySchema[] = contentType.attributes.map(contentTypeDescription => {
+    const { attributes, children, childOnly } = contentType;
+    const actualProperties: OldPropertySchema[] = attributes.map(contentTypeDescription => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeDescription.name);
 
       return { ...schemaProperty, ...contentTypeDescription };
     });
 
-    clonedSchema.properties = [...actualProperties];
+    Object.assign(clonedSchema, { properties: actualProperties, children, childOnly });
   }
 
   return clonedSchema;
 }
 
-export function convertSchema<T extends Record<string, unknown>>(
+export function applyContentType(schema: Schema, contentTypeId: string): Schema {
+  const clonedSchema = cloneDeep(schema);
+
+  const contentType = clonedSchema.contentTypes.find(cType => cType.id === contentTypeId);
+
+  if (contentType) {
+    const { properties, children, childOnly, title } = contentType;
+    const actualProperties: PropertySchema[] = properties.map(contentTypeProperty => {
+      const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeProperty.name);
+
+      return { ...schemaProperty, ...contentTypeProperty } as PropertySchema;
+    });
+
+    Object.assign(clonedSchema, { title, properties: actualProperties, children, childOnly });
+  }
+
+  return clonedSchema;
+}
+
+export function convertSchema<T extends Record<string, unknown>>({
+  name,
+  title,
+  description,
+  geometryType,
+  readOnly,
+  children,
+  childOnly,
+  properties,
+  contentTypes
+}: OldSchema<T>): Schema<T> {
+  return {
+    name,
+    title,
+    description,
+    geometryType,
+    readOnly,
+    children,
+    childOnly,
+    properties: convertProperties(properties),
+    contentTypes: contentTypes.map(convertContentType)
+  };
+}
+
+function convertContentType(contentType: OldContentType): ContentType {
+  return { ...contentType, properties: convertProperties(contentType.attributes) };
+}
+
+export function convertProperties<T extends Record<string, unknown>>(
   oldFields: OldPropertySchema<T>[]
 ): PropertySchema<T>[] {
   return oldFields.map(oldField => {
@@ -113,3 +164,12 @@ export function convertSchema<T extends Record<string, unknown>>(
     return field as PropertySchema<T>;
   });
 }
+
+export const defaultValueWellKnownFormulas: Record<string, DefaultValueFormula> = {
+  inherit: (obj, property, parent) => parent[property.name],
+  parentDocument: (obj, property, parent: LibraryRecord) => {
+    const value: DocumentInfo[] = [{ id: parent.id, libraryId: parent.libraryId, title: parent.title }];
+
+    return JSON.stringify(value);
+  }
+};

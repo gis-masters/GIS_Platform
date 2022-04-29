@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { BaseHTMLAttributes, Component, FC, ReactNode, RefObject } from 'react';
 import { OpenInNew } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -10,29 +10,42 @@ import '!style-loader!css-loader!sass-loader!./Link.scss';
 
 const cnLink = cn('Link');
 
-interface LinkProps {
+export interface LinkProps extends BaseHTMLAttributes<HTMLAnchorElement> {
   href: string;
-  theme?: 'normal' | 'none' | 'contents';
+  variant?: 'normal' | 'none' | 'contents';
   className?: string;
   children?: ReactNode;
   target?: string;
   download?: string | boolean;
   disabled?: boolean;
   delay?: number;
+  innerRef?: RefObject<HTMLAnchorElement>;
   onClick?(e: React.MouseEvent<HTMLAnchorElement>): void;
 }
 
-export class Link extends Component<LinkProps> {
+class LinkComponent extends Component<LinkProps> {
   render() {
-    const { children, className, href, target, theme, download, disabled } = this.props;
+    const {
+      children,
+      className,
+      href,
+      target,
+      variant = 'normal',
+      download,
+      disabled,
+      innerRef,
+      ...otherProps
+    } = this.props;
 
     return (
       <a
         href={href}
         target={download ? '_blank' : target}
         onClick={this.navigate}
-        className={cnLink({ theme: theme || 'normal', disabled }, [className])}
+        className={cnLink({ variant, disabled }, [className])}
         download={download}
+        ref={innerRef}
+        {...otherProps}
       >
         {target === '_blank' && (
           <span className={cnLink('IconContainer')}>
@@ -76,3 +89,7 @@ export class Link extends Component<LinkProps> {
     }
   }
 }
+
+export const Link: FC<Omit<LinkProps, 'innerRef'>> = React.forwardRef((props, ref: RefObject<HTMLAnchorElement>) => (
+  <LinkComponent innerRef={ref} {...props} />
+));

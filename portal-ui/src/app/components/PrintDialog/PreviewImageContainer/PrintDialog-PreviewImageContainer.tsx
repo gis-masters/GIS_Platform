@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
@@ -12,6 +12,7 @@ interface PrintDialogPreviewImageContainerProps {
   onDragStart: (e: React.DragEvent<HTMLDivElement>) => void;
   onDragEnd: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrag: (e: React.DragEvent<HTMLDivElement>) => void;
+  children: ReactNode;
 }
 
 export const PrintDialogPreviewImageContainer: FC<PrintDialogPreviewImageContainerProps> = observer(

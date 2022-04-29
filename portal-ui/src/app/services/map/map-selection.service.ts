@@ -295,20 +295,21 @@ class MapSelectionService {
       }
 
       await services.provided;
-      await services.router.navigate([location.pathname], {
-        queryParams: {
-          features: queryFeatures
-            .map(feature => {
-              return `${feature.id}${MAP_QUERY_PARAMS_DELIMITER}${getFeatureLayer(feature).complexName}`;
-            })
-            .join(','),
-          queryFilter: null,
-          queryLayers: null
-        },
-        queryParamsHandling: 'merge'
+      void services.ngZone.run(async () => {
+        await services.router.navigate([location.pathname], {
+          queryParams: {
+            features: queryFeatures
+              .map(feature => {
+                return `${feature.id}${MAP_QUERY_PARAMS_DELIMITER}${getFeatureLayer(feature).complexName}`;
+              })
+              .join(','),
+            queryFilter: null,
+            queryLayers: null
+          },
+          queryParamsHandling: 'merge'
+        });
+        sidebars.openFeatures(features, selectionType);
       });
-
-      sidebars.openFeatures(features, selectionType);
     } else {
       sidebars.closeFeatures();
       sidebars.closeEdit();

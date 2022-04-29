@@ -7,7 +7,7 @@
 
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, opacity 0.3s;
 
-  opacity: calc(20% + var(--EditFeatureGeometryViewGroupHovered));
+  opacity: calc(0.2 + var(--EditFeatureGeometryViewGroupHovered));
 
   &::before {
     position: absolute;

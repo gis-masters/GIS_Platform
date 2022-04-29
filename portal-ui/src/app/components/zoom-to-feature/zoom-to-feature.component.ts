@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
+import { createRoot, Root } from 'react-dom/client';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
 
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { registry } from '../../services/registry';
@@ -15,13 +15,15 @@ import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 export class ZoomToFeatureComponent implements OnInit, OnDestroy, OnChanges {
   @Input() feature: WfsFeature;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  private root: Root;
 
   ngOnInit() {
+    this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    unmountComponentAtNode(this.ref.nativeElement);
+    this.root.unmount();
   }
 
   ngOnChanges() {
@@ -31,6 +33,6 @@ export class ZoomToFeatureComponent implements OnInit, OnDestroy, OnChanges {
   private renderReactElement() {
     const reactElement = createElement(withRegistry(registry)(ZoomToFeature), { feature: this.feature });
 
-    render(reactElement, this.ref.nativeElement);
+    this.root?.render(reactElement);
   }
 }

@@ -27,7 +27,7 @@ import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { PropertySchema } from '../../services/crg/schema.models';
 import { schemaService } from '../../services/crg/schema.service';
 import { generateRandomId } from '../../services/util/randomId';
-import { convertSchema } from '../../services/crg/schema.utils';
+import { convertProperties } from '../../services/crg/schema.utils';
 import { mapService } from '../../services/map/map.service';
 import { BatchModel } from '../../services/crg/batch-model';
 import { formatDate } from '../../services/util/date.util';
@@ -95,7 +95,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
         this.editFeatureForm = this.formBuilder.group({});
 
-        this.featureDescription = await schemaService.getSchema(this.layer.schemaId);
+        this.featureDescription = await schemaService.getOldSchema(this.layer.schemaId);
 
         this.editFeatureData = [];
 
@@ -301,7 +301,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   private getFieldByKey(key: string): PropertySchema {
-    const fields = convertSchema(this.featureDescription.properties);
+    const fields = convertProperties(this.featureDescription.properties);
 
     return fields.find(({ name }) => name === key);
   }

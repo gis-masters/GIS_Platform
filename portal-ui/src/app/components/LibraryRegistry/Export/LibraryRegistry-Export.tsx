@@ -13,7 +13,7 @@ import {
   PropertySchemaDatetime,
   PropertyType
 } from '../../../services/crg/schema.models';
-import { OldFeatureDescription } from '../../../services/crg/schemaOld.models';
+import { OldSchema } from '../../../services/crg/schemaOld.models';
 import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
 import { formatDate } from '../../../services/util/date.util';
 import { PageOptions } from '../../../services/models';
@@ -26,7 +26,7 @@ const cnLibraryRegistryExport = cn('LibraryRegistry', 'Export');
 
 interface LibraryRegistryExportProps {
   library: DocumentLibrary;
-  schema: OldFeatureDescription;
+  schema: OldSchema;
   tablePageOptions: PageOptions;
   cols: XTableColumn<LibraryRecord>[];
   properties: PropertySchema[];
@@ -52,7 +52,7 @@ export class LibraryRegistryExport extends Component<LibraryRegistryExportProps>
         <span>
           <MenuIconButton
             className={cnLibraryRegistryExport()}
-            Icon={ArchiveOutlined}
+            icon={<ArchiveOutlined />}
             loading={this.loading}
             disabled={this.loading}
           >

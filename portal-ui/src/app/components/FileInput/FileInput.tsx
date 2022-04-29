@@ -79,7 +79,7 @@ export class FileInput extends Component<FileInputProps> {
           </Tooltip>
         ) : (
           <Button
-            btnRef={this.btnRef}
+            ref={this.btnRef}
             onClick={this.browseClickHandler}
             className={cnFileInput('Browse')}
             children={buttonCaption}

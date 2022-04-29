@@ -19,7 +19,7 @@ export const FormView: FC<FormControlProps> = ({ children, className, property, 
   return (
     <div className={cnFormView({ inSet, empty: fieldValue === '—', type: property.propertyType }, [className])}>
       {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
-      <FormViewValue>{children || nl2br(fieldValue)}</FormViewValue>
+      <FormViewValue>{children || nl2br(String(fieldValue))}</FormViewValue>
       <FormViewErrors errors={errors} />
     </div>
   );

@@ -151,7 +151,6 @@
     "key-spacing": [2, { "beforeColon": false, "afterColon": true, "mode": "strict" }],
     "space-infix-ops": 2,
     "newline-before-return": "error",
-    "regexp/no-obscure-range": ["error", { "allowed": "all" }],
 
     // REACT
     // https://github.com/yannickcr/eslint-plugin-react/tree/master/docs/rules
@@ -220,6 +219,14 @@
 
     // https://github.com/SonarSource/eslint-plugin-sonarjs
     "sonarjs/cognitive-complexity": 1,
+
+    // regexp
+    "regexp/no-obscure-range": [
+      "error",
+      {
+        "allowed": ["alphanumeric", "а-я", "А-Я"]
+      }
+    ],
 
     // https://github.com/danielnixon/eslint-plugin-total-functions
     "total-functions/require-strict-mode": "off",

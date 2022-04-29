@@ -5,7 +5,7 @@ import { action, observable } from 'mobx';
 
 import { LayerAdd } from '../../Icons/LayerAdd';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
-import { PropertySchema } from '../../../services/crg/schema.models';
+import { Schema } from '../../../services/crg/schema.models';
 import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
 import { LibraryRecord } from '../../../services/crg/doc-library.service';
 import { FilesPlacementDialog } from '../../FilesPlacementDialog/FilesPlacementDialog';
@@ -15,7 +15,7 @@ const cnLibraryDocumentActionsFilesPlacement = cn('LibraryDocumentActions', 'Fil
 
 interface LibraryDocumentActionsFilesPlacementProps {
   document: LibraryRecord;
-  properties: PropertySchema<LibraryRecord>[];
+  schema: Schema<LibraryRecord>;
   as: ActionsItemVariant;
 }
 
@@ -24,7 +24,7 @@ export class LibraryDocumentActionsFilesPlacement extends Component<LibraryDocum
   @observable private dialogOpen = false;
 
   render() {
-    const { as, document, properties } = this.props;
+    const { as, document, schema } = this.props;
 
     return (
       <>
@@ -36,12 +36,7 @@ export class LibraryDocumentActionsFilesPlacement extends Component<LibraryDocum
           as={as}
         />
 
-        <FilesPlacementDialog
-          document={document}
-          properties={properties}
-          open={this.dialogOpen}
-          onClose={this.closeDialog}
-        />
+        <FilesPlacementDialog document={document} schema={schema} open={this.dialogOpen} onClose={this.closeDialog} />
       </>
     );
   }

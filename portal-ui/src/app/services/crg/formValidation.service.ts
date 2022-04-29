@@ -11,8 +11,10 @@ import {
   PropertySchemaFloat,
   PropertySchemaInt,
   PropertySchemaString,
-  PropertySchemaUrl
+  PropertySchemaUrl,
+  DefaultValueFormula
 } from './schema.models';
+import { defaultValueWellKnownFormulas } from './schema.utils';
 
 const messages = {
   required: 'Обязательное поле ',
@@ -271,12 +273,38 @@ export function normalizeServerErrors(errors: ServerFieldError[]): FieldErrors[]
   }));
 }
 
-export function getDefaultValues<T extends Record<string, unknown>>(fields: PropertySchema<T>[]): Partial<T> {
+export function getDefaultValues<T extends Record<string, unknown>>(
+  fields: PropertySchema<T>[],
+  parent: Record<string, unknown> = {}
+): Partial<T> {
   const values: Partial<T> = {};
 
   for (const field of fields) {
     if (field.defaultValue) {
       values[field.name] = field.defaultValue as T[keyof T];
+    }
+
+    if (field.defaultValueFormula) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-implied-eval
+        const formula = new Function('obj', 'property', 'parent', field.defaultValueFormula) as DefaultValueFormula;
+
+        values[field.name] = formula(values, field as PropertySchema, parent) as T[keyof T];
+      } catch (error) {
+        throw new Error(`Ошибка при попытке вычислить значение по-умолчанию: ${String(error)}`);
+      }
+    }
+
+    if (field.defaultValueWellKnownFormula && defaultValueWellKnownFormulas[field.defaultValueWellKnownFormula]) {
+      try {
+        const formula = defaultValueWellKnownFormulas[field.defaultValueWellKnownFormula];
+
+        values[field.name] = formula(values, field as PropertySchema, parent) as T[keyof T];
+      } catch (error) {
+        throw new Error(
+          `Ошибка при попытке вычислить значение по-умолчанию [${field.defaultValueWellKnownFormula}]: ${String(error)}`
+        );
+      }
     }
   }
 

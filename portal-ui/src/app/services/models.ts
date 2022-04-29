@@ -1,4 +1,4 @@
-import { OldFeatureDescription, OldPropertySchema } from './crg/schemaOld.models';
+import { OldSchema, OldPropertySchema } from './crg/schemaOld.models';
 import { GeometryType } from './geoserver/wfs.models';
 import { FilterQuery } from './util/filterObjects';
 
@@ -98,7 +98,7 @@ export const NOT_IMPORT = {
   name: ImportTargetType.NOT_IMPORT
 };
 
-export const IMPORT_LAYER_AS_IS: OldFeatureDescription = {
+export const IMPORT_LAYER_AS_IS: OldSchema = {
   name: 'IMPORT_LAYER_AS_IS',
   title: 'Импортировать как есть',
   description: '',
@@ -107,7 +107,7 @@ export const IMPORT_LAYER_AS_IS: OldFeatureDescription = {
   properties: []
 };
 
-export const NOT_IMPORT_LAYER: OldFeatureDescription = {
+export const NOT_IMPORT_LAYER: OldSchema = {
   name: 'NOT_IMPORT_LAYER',
   title: 'Не импортировать',
   description: '',

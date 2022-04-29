@@ -1,6 +1,12 @@
 module.exports = {
   extends: 'stylelint-config-standard',
   plugins: ['stylelint-order', 'stylelint-declaration-block-no-ignored-properties'],
+  overrides: [
+    {
+      files: ['*.scss', '**/*.scss'],
+      customSyntax: 'postcss-scss'
+    }
+  ],
   rules: {
     'at-rule-empty-line-before': [
       'always',
@@ -507,7 +513,7 @@ module.exports = {
     'selector-attribute-brackets-space-inside': 'never',
     'selector-attribute-operator-space-after': 'never',
     'selector-attribute-operator-space-before': 'never',
-    'selector-class-pattern': '^[A-Za-z_-]+$',
+    'selector-class-pattern': '^[0-9A-Za-z_-]+$',
     'selector-combinator-space-after': 'always',
     'selector-combinator-space-before': 'always',
     'selector-list-comma-newline-after': 'always',

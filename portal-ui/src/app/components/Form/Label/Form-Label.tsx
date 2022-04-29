@@ -14,6 +14,7 @@ interface FormLabelProps extends IClassNameProps {
   required?: boolean;
   readonly?: boolean;
   description?: ReactNode;
+  children: ReactNode;
 }
 
 export const FormLabel: FC<FormLabelProps> = ({ className, children, htmlFor, required, readonly, description }) => (

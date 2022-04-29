@@ -138,7 +138,7 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
       }
 
       try {
-        const schema = await schemaService.getSchema(table.schemaId);
+        const schema = await schemaService.getOldSchema(table.schemaId);
         if (!schema) {
           return true;
         }

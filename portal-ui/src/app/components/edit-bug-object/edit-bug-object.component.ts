@@ -91,7 +91,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       this.isFeatureTypeLoaded = true;
 
       this.wfsFeature = wfsFeature;
-      this.featureDescription = await schemaService.getSchema(objectDto.crgLayer.schemaId);
+      this.featureDescription = await schemaService.getOldSchema(objectDto.crgLayer.schemaId);
 
       if (this.featureDescription) {
         this.prepareEditForm(this.wfsFeature.properties);

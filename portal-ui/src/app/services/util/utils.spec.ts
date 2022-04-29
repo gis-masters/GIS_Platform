@@ -11,7 +11,7 @@
 
 import { GeoUtil } from './GeoUtil';
 import { ImportTaskResponse } from '../geoserver/import/models';
-import { OldFeatureDescription, ValueType } from '../crg/schemaOld.models';
+import { OldSchema, ValueType } from '../crg/schemaOld.models';
 import { FeatureUtil } from './FeatureUtil';
 import { GeometryType } from '../geoserver/wfs.models';
 
@@ -41,7 +41,7 @@ describe('GeoUtil test', () => {
   });
 
   it('should correct mapping geometry between Layer and EntityType', () => {
-    const entityPoint: OldFeatureDescription = {
+    const entityPoint: OldSchema = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -58,7 +58,7 @@ describe('GeoUtil test', () => {
       readOnly: false
     };
 
-    const entityLineString: OldFeatureDescription = {
+    const entityLineString: OldSchema = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -75,7 +75,7 @@ describe('GeoUtil test', () => {
       readOnly: false
     };
 
-    const entityPolygon: OldFeatureDescription = {
+    const entityPolygon: OldSchema = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -92,7 +92,7 @@ describe('GeoUtil test', () => {
       readOnly: false
     };
 
-    const entityMultiGeometry: OldFeatureDescription = {
+    const entityMultiGeometry: OldSchema = {
       name: 'SomeName',
       title: '',
       description: '',

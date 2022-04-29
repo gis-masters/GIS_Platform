@@ -7,16 +7,10 @@ import '!style-loader!css-loader!sass-loader!./TextBadge.scss';
 
 const cnTextBadge = cn('TextBadge');
 
-interface TextBadgePropsWithId extends IClassNameProps {
-  id: string | number;
-}
-
-interface TextBadgePropsWithChildren extends IClassNameProps {
+interface TextBadgeProps extends IClassNameProps {
   id?: string | number;
-  children: ReactNode;
+  children?: ReactNode;
 }
-
-type TextBadgeProps = TextBadgePropsWithId | TextBadgePropsWithChildren;
 
 export const TextBadge: FC<TextBadgeProps> = ({ id, className, children }) => (
   <Paper className={cnTextBadge(null, [className])}>

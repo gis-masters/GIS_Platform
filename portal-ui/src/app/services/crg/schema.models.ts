@@ -27,7 +27,7 @@ export enum PropertyType {
   CUSTOM = 'custom' // frontend only
 }
 
-export interface FeatureDescription<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface Schema<T extends Record<string, unknown> = Record<string, unknown>> {
   name: string;
   title: string;
   description?: string;
@@ -37,6 +37,8 @@ export interface FeatureDescription<T extends Record<string, unknown> = Record<s
   matchingCounter?: number;
   readOnly?: boolean;
   contentTypes?: ContentType[];
+  childOnly?: boolean;
+  children?: { library?: string; contentType: string }[];
 }
 
 export interface ContentType {
@@ -44,8 +46,16 @@ export interface ContentType {
   type: string;
   title?: string;
   icon?: string;
-  attributes: PropertySchema[];
+  properties: PropertySchema[];
+  childOnly?: boolean;
+  children?: { library?: string; contentType: string }[];
 }
+
+export type DefaultValueFormula = (
+  obj: Record<string, unknown>,
+  property: PropertySchema,
+  parent: Record<string, unknown>
+) => unknown;
 
 interface BasePropertySchema<T = Record<string, unknown>> {
   name: keyof T;
@@ -62,6 +72,8 @@ interface BasePropertySchema<T = Record<string, unknown>> {
   readOnly?: boolean;
   defaultValue?: unknown;
   minWidth?: number;
+  defaultValueFormula?: string;
+  defaultValueWellKnownFormula?: string;
   customValidationFunction?: FieldValidator;
 }
 

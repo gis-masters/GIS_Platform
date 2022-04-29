@@ -141,7 +141,7 @@ export class SelectLibraryRecord extends Component<SelectDataTableProps> {
       }
 
       try {
-        const schema = await schemaService.getSchema(libraryRecord.schemaId);
+        const schema = await schemaService.getOldSchema(libraryRecord.schemaId);
         if (!schema) {
           return true;
         }

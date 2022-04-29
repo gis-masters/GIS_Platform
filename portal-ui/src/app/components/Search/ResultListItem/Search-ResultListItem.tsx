@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { MyLocation } from '@mui/icons-material';
 import { IconButton, ListItem, ListItemSecondaryAction, ListItemText } from '@mui/material';
@@ -23,7 +23,7 @@ export interface SearchResultListItemProps {
 
 @observer
 export class SearchResultListItem extends Component<SearchResultListItemProps> {
-  render(): ReactNode {
+  render() {
     const { name, description, Point } = this.props.geoObject;
 
     return (

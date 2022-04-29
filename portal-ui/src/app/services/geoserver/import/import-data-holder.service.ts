@@ -3,7 +3,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { ImportLayerItem, LayerAttribute } from './models';
 import { MatchingPair, TaskImport } from './taskImport';
 import { schemaService } from '../../crg/schema.service';
-import { OldFeatureDescription, OldPropertySchema, ValueType } from '../../crg/schemaOld.models';
+import { OldSchema, OldPropertySchema, ValueType } from '../../crg/schemaOld.models';
 import { AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../models';
 import { PropertiesComparatorService } from '../../properties-comparator.service';
 import { FeatureUtil } from '../../util/FeatureUtil';
@@ -135,7 +135,7 @@ export class ImportDataHolderService {
    * @param layerNativeName   Название импортированного слоя.
    * @param featureSchemaName Название схемы данных
    */
-  setFeatureSchema(layerNativeName: string, schema: OldFeatureDescription): void {
+  setFeatureSchema(layerNativeName: string, schema: OldSchema): void {
     const layerPair = this.findCompatiblePair(layerNativeName);
     layerPair.targetLayer.workTableName = layerNativeName;
     layerPair.targetLayer.pairs = [];

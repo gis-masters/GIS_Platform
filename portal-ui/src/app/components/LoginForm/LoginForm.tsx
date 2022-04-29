@@ -52,7 +52,9 @@ export class LoginForm extends Component<LoginFormProps> {
     if (route.data.page === Pages.LOGIN) {
       const user = await usersService.fetchCurrentUser(true);
       if (user?.id) {
-        void services.router.navigateByUrl('/projects');
+        services.ngZone.run(() => {
+          void services.router.navigateByUrl('/projects');
+        });
       }
     }
   }
@@ -192,7 +194,9 @@ export class LoginForm extends Component<LoginFormProps> {
         communicationService.authDialogSuccess.emit();
       } else {
         await usersService.fetchCurrentUser();
-        void services.router.navigateByUrl('/projects');
+        services.ngZone.run(() => {
+          void services.router.navigateByUrl('/projects');
+        });
       }
     } else {
       this.setUserDisabled(result.userDisabled);

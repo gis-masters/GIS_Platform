@@ -6,7 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { LibraryRecord, updateLibraryRecord } from '../../../services/crg/doc-library.service';
-import { PropertySchema, PropertyType } from '../../../services/crg/schema.models';
+import { PropertySchema, PropertyType, Schema } from '../../../services/crg/schema.models';
 import { getPatch } from '../../../services/util/patch';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { TextBadge } from '../../TextBadge/TextBadge';
@@ -18,7 +18,7 @@ const cnLibraryDocumentActionsEdit = cn('LibraryDocumentActions', 'Edit');
 
 interface LibraryDocumentActionsEditProps {
   document: LibraryRecord;
-  fields: PropertySchema<LibraryRecord>[];
+  schema: Schema<LibraryRecord>;
   as: ActionsItemVariant;
 }
 
@@ -59,9 +59,9 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
 
   @computed
   private get fieldsWithoutBinary(): PropertySchema<LibraryRecord>[] {
-    const { fields = [] } = this.props;
+    const { properties = [] } = this.props.schema || {};
 
-    return fields.filter(({ propertyType }) => propertyType !== PropertyType.BINARY);
+    return properties.filter(({ propertyType }) => propertyType !== PropertyType.BINARY);
   }
 
   @action.bound

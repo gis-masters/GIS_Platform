@@ -19,10 +19,13 @@ export enum ExplorerItemType {
 
   BASEMAP = 'basemap',
 
+  SCHEMA = 'schema',
+
   DATASET_ROOT = 'dr',
   LIBRARY_ROOT = 'lr',
   PROJECTS_ROOT = 'pr',
   BASEMAPS_ROOT = 'br',
+  SCHEMAS_ROOT = 'sr',
   ROOT = 'r'
 }
 
@@ -72,18 +75,25 @@ export interface Adapter {
   getId: (item: ExplorerItemData) => string;
   getTitle: (item: ExplorerItemData) => ReactNode;
   getMeta: (item: ExplorerItemData) => string;
-  getWidgets?: (item: ExplorerItemData) => Promise<ReactNode>;
+  getWidgets?: (item: ExplorerItemData) => ReactNode | Promise<ReactNode>;
   getDescription?: (item: ExplorerItemData) => ReactNode;
   getIcon?: (item: ExplorerItemData) => ReactNode;
   isFolder: (item: ExplorerItemData) => boolean;
-  getChildren?: (item: ExplorerItemData, pageOptions: PageOptions) => Promise<[ExplorerItemData[], number]>;
+  getChildren?: (
+    item: ExplorerItemData,
+    pageOptions: PageOptions
+  ) => [ExplorerItemData[], number] | Promise<[ExplorerItemData[], number]>;
   getChildrenWithParticularOne?: (
     item: ExplorerItemData,
     pageOptions: PageOptions,
     id: string
-  ) => Promise<[ExplorerItemData[], number, number]> | undefined;
+  ) => [ExplorerItemData[], number, number] | Promise<[ExplorerItemData[], number, number]> | undefined;
   getChildrenSortItems?: (item: ExplorerItemData) => SortItem[];
-  getChildById?: (item: ExplorerItemData, id: string, type: ExplorerItemType) => Promise<ExplorerItemData>;
+  getChildById?: (
+    item: ExplorerItemData,
+    id: string,
+    type: ExplorerItemType
+  ) => ExplorerItemData | Promise<ExplorerItemData>;
   getChildrenSortDefaultValue?: (item: ExplorerItemData) => string;
   getChildrenSortDefaultDirection?: (item: ExplorerItemData) => SortDir;
   getChildrenFilterField?: (item: ExplorerItemData) => string;

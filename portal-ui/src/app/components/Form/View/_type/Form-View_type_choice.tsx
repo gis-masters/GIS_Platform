@@ -24,9 +24,11 @@ class FormViewTypeChoice extends Component<FormControlProps> {
 
     return (
       <div className={cnFormView({ inSet, empty: !title && !valueCanBeDisplayed }, [className])}>
-        {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
-        {title || (valueCanBeDisplayed ? fieldValue : '—')}
-        <FormViewErrors errors={errors} />
+        <>
+          {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
+          {title || (valueCanBeDisplayed ? fieldValue : '—')}
+          <FormViewErrors errors={errors} />
+        </>
       </div>
     );
   }

@@ -75,7 +75,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
     const { schemaId } = currentProject.layers.find(
       layer => layer.type === CrgLayerType.VECTOR && layer.tableName === tableName
     ) as CrgVectorLayer;
-    const schema = await schemaService.getSchema(schemaId);
+    const schema = await schemaService.getOldSchema(schemaId);
 
     if (schema) {
       let title = '';

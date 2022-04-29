@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot, Root } from 'react-dom/client';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
@@ -16,13 +16,15 @@ import { ImportGmlResultsLink } from '../ImportGmlResultLink/ImportGmlResultsLin
 export class ImportGmlResultButtonComponent implements OnInit, OnChanges, OnDestroy {
   @Input() event: IWsMessage;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  private root: Root;
 
   ngOnInit() {
+    this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    unmountComponentAtNode(this.ref.nativeElement);
+    this.root.unmount();
   }
 
   ngOnChanges() {
@@ -33,6 +35,6 @@ export class ImportGmlResultButtonComponent implements OnInit, OnChanges, OnDest
     const payload = this.event.payload as WsImportModel;
     const reactElement = createElement(withRegistry(registry)(ImportGmlResultsLink), { reports: payload.payload });
 
-    render(reactElement, this.ref.nativeElement);
+    this.root?.render(reactElement);
   }
 }

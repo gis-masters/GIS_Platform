@@ -15,6 +15,8 @@ export interface LibraryDocumentActionsItemProps extends IClassNameProps {
   url?: string;
   download?: boolean;
   onClick?(): void;
+  submenu?: ReactNode[];
+  menuOpen?: boolean;
 }
 
 export const LibraryDocumentActionsItem: FC<LibraryDocumentActionsItemProps> = () => <></>;

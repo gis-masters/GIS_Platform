@@ -176,7 +176,7 @@ export class ImportToProject extends Component<ImportToProjectProps> {
       if (err.response?.status === 400) {
         const message = err.response?.data?.message;
         services.logger.error(message, error);
-        Toast.error({ message: message, details: (error as Error).message });
+        Toast.error({ message, details: (error as Error).message });
       } else if (err.response?.status === 409) {
         this.setFormErrors([err?.message]);
       } else if (err.response?.data?.errors) {
@@ -187,7 +187,7 @@ export class ImportToProject extends Component<ImportToProjectProps> {
               errors.push(message as string);
             } else {
               services.logger.error(message, error);
-              Toast.error({ message, details: (error as Error).message });
+              Toast.error({ message: String(message), details: (error as Error).message });
             }
           }
         });

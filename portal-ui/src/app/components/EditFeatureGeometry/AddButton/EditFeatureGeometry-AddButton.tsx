@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 import { AddCircleOutline } from '@mui/icons-material';
 
@@ -10,6 +10,7 @@ const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 interface EditFeatureGeometryAddButtonProps {
   onClick: () => void;
+  children: ReactNode;
 }
 
 export const EditFeatureGeometryAddButton: FC<EditFeatureGeometryAddButtonProps> = ({ onClick, children }) => (

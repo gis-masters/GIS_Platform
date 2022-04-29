@@ -31,6 +31,7 @@ export interface LibraryRecord {
   id?: number;
   type?: string;
   title?: string;
+  details?: string;
   // eslint-disable-next-line camelcase
   inner_path?: string;
   parent?: string;

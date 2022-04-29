@@ -4,7 +4,7 @@ import { CreateNewFolderOutlined, DescriptionOutlined, SvgIconComponent } from '
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { ContentType } from '../../../services/crg/schemaOld.models';
+import { OldContentType } from '../../../services/crg/schemaOld.models';
 import { DocHome } from '../../Icons/DocHome';
 
 const cnCreateLibraryElementMenuItem = cn('CreateLibraryElement', 'MenuItem');
@@ -16,7 +16,7 @@ const icons: Record<string, SvgIconComponent> = {
 };
 
 interface CreateLibraryElementMenuItemProps {
-  contentType: ContentType;
+  contentType: OldContentType;
   onClick: (contentTypeId: string) => void;
 }
 

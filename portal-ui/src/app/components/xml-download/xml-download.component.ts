@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot, Root } from 'react-dom/client';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
@@ -18,13 +18,15 @@ export class XmlDownloadComponent implements OnInit, OnChanges, OnDestroy {
   @Input() feature: WfsFeature;
   @Input() layer: CrgVectorLayer;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  private root: Root;
 
   ngOnInit() {
+    this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    unmountComponentAtNode(this.ref.nativeElement);
+    this.root.unmount();
   }
 
   ngOnChanges() {
@@ -38,7 +40,7 @@ export class XmlDownloadComponent implements OnInit, OnChanges, OnDestroy {
         layer: this.layer
       });
 
-      render(reactElement, this.ref.nativeElement);
+      this.root?.render(reactElement);
     }
   }
 }

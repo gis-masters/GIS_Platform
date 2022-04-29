@@ -97,7 +97,7 @@
 
     transition: opacity 0.15s;
 
-    opacity: 20%;
+    opacity: 0.2;
 
     justify-self: end;
   }
@@ -105,6 +105,6 @@
   &_highlighted &-Buttons,
   &:hover &-Buttons,
   & &-Buttons:focus {
-    opacity: 100%;
+    opacity: 1;
   }
 }

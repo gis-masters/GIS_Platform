@@ -30,7 +30,7 @@ export class Search extends Component {
 
   private anchor?: HTMLElement;
 
-  private kadNumRegex = /\d{2}?:?\d{2}:?\d{6}:/;
+  private kadNumRegex = /(?:\d{2}:?){2}\d{6}:/;
 
   render() {
     return (

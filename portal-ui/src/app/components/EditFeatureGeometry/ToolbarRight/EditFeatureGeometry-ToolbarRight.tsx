@@ -1,8 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 
 const cnEditFeatureGeometryToolbarRight = cn('EditFeatureGeometry', 'ToolbarRight');
 
-export const EditFeatureGeometryToolbarRight: FC = ({ children }) => (
+interface EditFeatureGeometryToolbarRightProps {
+  children: ReactNode;
+}
+
+export const EditFeatureGeometryToolbarRight: FC<EditFeatureGeometryToolbarRightProps> = ({ children }) => (
   <div className={cnEditFeatureGeometryToolbarRight()}>{children}</div>
 );

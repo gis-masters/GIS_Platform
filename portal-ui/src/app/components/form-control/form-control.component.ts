@@ -1,4 +1,4 @@
-import { createElement } from 'react';
+import { ComponentType, createElement } from 'react';
 import {
   Component,
   OnInit,
@@ -12,18 +12,17 @@ import {
   Output
 } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot, Root } from 'react-dom/client';
 import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { boundMethod } from 'autobind-decorator';
 
 import { OldPropertySchema } from '../../services/crg/schemaOld.models';
 import { FormControl } from '../Form/Control/Form-Control.composed';
-import { convertSchema } from '../../services/crg/schema.utils';
+import { convertProperties } from '../../services/crg/schema.utils';
 import { PropertyType } from '../../services/crg/schema.models';
 import { FormView } from '../Form/View/Form-View.composed';
-import { FormDialog } from '../FormDialog/FormDialog';
 import { registry } from '../../services/registry';
-import { Form } from '../Form/Form';
+import { FormControlProps } from '../Form/Control/Form-Control';
 
 @Component({
   selector: 'crg-form-control',
@@ -43,17 +42,17 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
   private onChange: (value: unknown) => void;
-
   private value: unknown;
-
   public editFeatureForm: FormGroup;
+  private root: Root;
 
   ngOnInit() {
+    this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    unmountComponentAtNode(this.ref.nativeElement);
+    this.root.unmount();
   }
 
   ngOnChanges() {
@@ -61,25 +60,28 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
   }
 
   private renderReactElement() {
-    const [convertedProperty] = convertSchema([this.property]);
+    const [convertedProperty] = convertProperties([this.property]);
 
     let value = this.value;
     if (typeof this.value === 'string' && convertedProperty.propertyType === PropertyType.FILE) {
       value = JSON.parse(this.value);
     }
 
-    const reactElement = createElement(withRegistry(registry)(convertedProperty.readOnly ? FormView : FormControl), {
-      property: convertedProperty,
-      type: convertedProperty.propertyType,
-      fieldValue: value,
-      Form: Form,
-      FormDialog: FormDialog,
-      variant: 'outlined',
-      onChange: this.handleChange,
-      fullWidthForOldForm: true
-    });
+    const reactElement = createElement(
+      withRegistry(registry)<FormControlProps>(
+        (convertedProperty.readOnly ? FormView : FormControl) as ComponentType<FormControlProps>
+      ),
+      {
+        property: convertedProperty,
+        type: convertedProperty.propertyType,
+        fieldValue: value,
+        variant: 'outlined',
+        onChange: this.handleChange,
+        fullWidthForOldForm: true
+      }
+    );
 
-    render(reactElement, this.ref.nativeElement);
+    this.root?.render(reactElement);
   }
 
   @boundMethod

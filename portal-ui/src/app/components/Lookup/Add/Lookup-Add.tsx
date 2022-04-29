@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
@@ -8,6 +8,7 @@ const cnLookupAdd = cn('Lookup', 'Add');
 
 interface LookupAddProps extends IClassNameProps {
   filled: boolean;
+  children: ReactNode;
 }
 
 export const LookupAdd: FC<LookupAddProps> = ({ children, filled, className }) => (

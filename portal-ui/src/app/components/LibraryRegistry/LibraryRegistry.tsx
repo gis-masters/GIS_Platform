@@ -14,10 +14,10 @@ import {
   PropertyType
 } from '../../services/crg/schema.models';
 import { DocumentLibrary, getLibrary, getLibraryRecords2, LibraryRecord } from '../../services/crg/doc-library.service';
-import { OldFeatureDescription } from '../../services/crg/schemaOld.models';
+import { OldSchema } from '../../services/crg/schemaOld.models';
 import { communicationService } from '../../services/communication.service';
 import { schemaService } from '../../services/crg/schema.service';
-import { convertSchema } from '../../services/crg/schema.utils';
+import { convertProperties } from '../../services/crg/schema.utils';
 import { formatDate } from '../../services/util/date.util';
 import { PageOptions } from '../../services/models';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
@@ -37,7 +37,7 @@ const cnLibraryRegistry = cn('LibraryRegistry');
 @observer
 export class LibraryRegistry extends Component {
   @observable private library?: DocumentLibrary;
-  @observable private schema?: OldFeatureDescription;
+  @observable private schema?: OldSchema;
   @observable private hiddenFields: string[] = [];
   @observable private tablePageOptions?: PageOptions;
 
@@ -46,7 +46,7 @@ export class LibraryRegistry extends Component {
   async componentDidMount() {
     const { libraryId } = route.params;
     this.setLibrary(await getLibrary(libraryId));
-    this.setSchema(await schemaService.getSchema(this.library.schemaId));
+    this.setSchema(await schemaService.getOldSchema(this.library.schemaId));
 
     communicationService.libraryItemsUpdated.on(() => {
       if (this.tableInvoke.reload) {
@@ -105,7 +105,7 @@ export class LibraryRegistry extends Component {
 
   @computed
   private get properties(): PropertySchema[] {
-    return convertSchema(this.schema?.properties || []).filter(
+    return convertProperties(this.schema?.properties || []).filter(
       ({ hidden, propertyType }) =>
         !hidden && propertyType !== PropertyType.BINARY && propertyType !== PropertyType.FIAS
     );
@@ -217,7 +217,7 @@ export class LibraryRegistry extends Component {
   }
 
   @action
-  private setSchema(schema: OldFeatureDescription) {
+  private setSchema(schema: OldSchema) {
     this.schema = schema;
   }
 

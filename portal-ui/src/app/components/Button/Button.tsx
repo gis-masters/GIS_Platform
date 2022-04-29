@@ -1,4 +1,4 @@
-import React, { Component, RefObject } from 'react';
+import React, { Component, FC, forwardRef, RefObject } from 'react';
 import { LoadingButton, LoadingButtonProps } from '@mui/lab';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -11,23 +11,22 @@ const cnButton = cn('Button');
 
 export interface ButtonProps extends LoadingButtonProps {
   routerLink?: string;
-  btnRef?: RefObject<HTMLButtonElement>;
+  innerRef?: RefObject<HTMLButtonElement>;
 }
 
-export class Button extends Component<ButtonProps> {
+class ButtonComponent extends Component<ButtonProps> {
   render() {
-    const { routerLink, href, btnRef, className, ...props } = this.props;
+    const { routerLink, href, innerRef, className, ...props } = this.props;
     const extendedProps: ButtonProps = {
       color: 'inherit',
       variant: 'outlined',
-      ref: btnRef,
       className: cnButton(null, [className]),
       href: routerLink || href,
       ...props,
       onClick: this.onClickHandler
     };
 
-    return <LoadingButton {...extendedProps} />;
+    return <LoadingButton ref={innerRef} {...extendedProps} />;
   }
 
   @boundMethod
@@ -50,3 +49,7 @@ export class Button extends Component<ButtonProps> {
     });
   }
 }
+
+export const Button: FC<Omit<ButtonProps, 'innerRef'>> = forwardRef<HTMLButtonElement>(
+  (props, ref: RefObject<HTMLButtonElement>) => <ButtonComponent innerRef={ref} {...props} />
+);

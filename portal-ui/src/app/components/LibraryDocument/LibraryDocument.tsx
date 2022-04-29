@@ -5,7 +5,7 @@ import moment from 'moment';
 import { cn } from '@bem-react/classname';
 
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
-import { convertSchema, getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
+import { convertProperties, applyContentTypeOld } from '../../services/crg/schema.utils';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../services/server-urls.service';
 import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
@@ -80,13 +80,13 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
   }
 
   private async fetchSchema(): Promise<void> {
-    const oldSchema = getSchemaWithAppliedContentType(
-      await schemaService.getSchema(this.props.document.schemaId),
+    const oldSchema = applyContentTypeOld(
+      await schemaService.getOldSchema(this.props.document.schemaId),
       this.props.document.content_type_id
     );
 
     this.setFields(
-      convertSchema(oldSchema.properties).filter(({ propertyType }) => propertyType !== PropertyType.BINARY)
+      convertProperties(oldSchema.properties).filter(({ propertyType }) => propertyType !== PropertyType.BINARY)
     );
   }
 

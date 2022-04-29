@@ -31,7 +31,7 @@ export class ProjectsAdd extends Component<ProjectsAddProps> {
       <>
         <Button
           className={cnProjectsAdd(null, [className])}
-          btnRef={this.btnRef}
+          ref={this.btnRef}
           onClick={onOpen}
           children='Создать проект'
           variant='outlined'

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot, Root } from 'react-dom/client';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
@@ -12,16 +12,18 @@ import { Help } from '../../components/Help/Help';
 })
 export class AboutComponent implements OnInit, OnDestroy {
   @ViewChild('helpReact', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  private root: Root;
 
   ngOnInit() {
+    this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    unmountComponentAtNode(this.ref.nativeElement);
+    this.root.unmount();
   }
 
   private renderReactElement() {
-    render(createElement(withRegistry(registry)(Help)), this.ref.nativeElement);
+    this.root.render(createElement(withRegistry(registry)(Help)));
   }
 }

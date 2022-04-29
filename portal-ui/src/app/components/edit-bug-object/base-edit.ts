@@ -2,7 +2,7 @@ import { OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 
-import { EditedField, OldFeatureDescription } from '../../services/crg/schemaOld.models';
+import { EditedField, OldSchema } from '../../services/crg/schemaOld.models';
 import { mapService } from '../../services/map/map.service';
 import { FeaturePropertyValidators, ValidationError } from '../../services/util/FeaturePropertyValidators';
 
@@ -12,7 +12,7 @@ export class BaseEdit implements OnDestroy {
   editFeatureForm: FormGroup;
   editFeatureData: EditedField[] = [];
 
-  protected featureDescription: OldFeatureDescription;
+  protected featureDescription: OldSchema;
 
   protected unsubscribe$: Subject<void> = new Subject<void>();
 

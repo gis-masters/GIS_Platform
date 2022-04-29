@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import { render, unmountComponentAtNode } from 'react-dom';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { registry } from '../../services/registry';
 import { LoginForm } from '../LoginForm/LoginForm';
+import { createRoot, Root } from 'react-dom/client';
 
 @Component({
   selector: 'crg-login-form',
@@ -13,13 +13,15 @@ import { LoginForm } from '../LoginForm/LoginForm';
 })
 export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  private root: Root;
 
   ngOnInit() {
+    this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    unmountComponentAtNode(this.ref.nativeElement);
+    this.root.unmount();
   }
 
   ngOnChanges() {
@@ -29,6 +31,6 @@ export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
   private renderReactElement() {
     const reactElement = createElement(withRegistry(registry)(LoginForm));
 
-    render(reactElement, this.ref.nativeElement);
+    this.root?.render(reactElement);
   }
 }

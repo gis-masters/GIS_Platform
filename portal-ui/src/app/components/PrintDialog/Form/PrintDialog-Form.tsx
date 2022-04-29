@@ -184,6 +184,11 @@ export class PrintDialogForm extends Component<PrintDialogFormProps> {
         propertyType: PropertyType.BOOL
       },
       {
+        name: 'border',
+        title: 'Рамка',
+        propertyType: PropertyType.BOOL
+      },
+      {
         name: 'date',
         title: 'Дата',
         display: 'checkbox',

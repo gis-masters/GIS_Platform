@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot, Root } from 'react-dom/client';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
@@ -16,13 +16,15 @@ export class FeaturesListSidebarComponent implements OnInit, OnDestroy, OnChange
   @Input() features: WfsFeature[];
   @Input() layerTitle: string;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  private root: Root;
 
   ngOnInit() {
+    this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    unmountComponentAtNode(this.ref.nativeElement);
+    this.root.unmount();
   }
 
   ngOnChanges() {
@@ -32,6 +34,6 @@ export class FeaturesListSidebarComponent implements OnInit, OnDestroy, OnChange
   private renderReactElement() {
     const reactElement = createElement(withRegistry(registry)(FeaturesListSidebar));
 
-    render(reactElement, this.ref.nativeElement);
+    this.root?.render(reactElement);
   }
 }

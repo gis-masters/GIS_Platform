@@ -2,6 +2,9 @@ body .MenuIconButton {
   position: relative;
 
   &-Icon {
+    width: 1em;
+    height: 1em;
+
     transform: translateX(-4px);
   }
 
@@ -9,5 +12,14 @@ body .MenuIconButton {
     position: absolute;
     top: calc(50% - 12px);
     left: calc(50% + 0px);
+  }
+
+  &-Anchor {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
   }
 }

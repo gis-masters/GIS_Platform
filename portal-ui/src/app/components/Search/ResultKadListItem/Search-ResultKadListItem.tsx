@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
@@ -29,7 +29,7 @@ export interface SearchResultKadListItemProps {
 export class SearchResultKadListItem extends Component<SearchResultKadListItemProps> {
   @observable private pointExist = true;
 
-  render(): ReactNode {
+  render() {
     const { value, title } = this.props.kadObject;
 
     return (

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./Lookup-List.scss';
@@ -9,6 +9,7 @@ interface LookupListProps {
   multiple: boolean;
   numerous: boolean;
   editable: boolean;
+  children: ReactNode;
 }
 
 export const LookupList: FC<LookupListProps> = ({ multiple, numerous, editable, children }) => (
