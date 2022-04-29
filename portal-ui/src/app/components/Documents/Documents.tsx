@@ -29,7 +29,7 @@ const defaultMaxDocuments = 100;
 export class Documents extends Component<DocumentsProps> {
   render() {
     const { value, property, editable } = this.props;
-    const { multiple, library } = property;
+    const { multiple, library, maxDocuments } = property;
     const numerous = value.length > 1;
 
     return (
@@ -55,6 +55,7 @@ export class Documents extends Component<DocumentsProps> {
             filled={Boolean(value.length)}
             onChange={this.addHandler}
             value={value}
+            maxDocuments={multiple ? maxDocuments : 1}
             libraryIdentifier={library}
           />
         )}

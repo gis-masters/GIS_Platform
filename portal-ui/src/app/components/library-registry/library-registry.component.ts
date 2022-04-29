@@ -3,6 +3,7 @@ import { createRoot, Root } from 'react-dom/client';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
+import { route } from '../../stores/Route.store';
 import { registry } from '../../services/registry';
 import { LibraryRegistry } from '../LibraryRegistry/LibraryRegistry';
 
@@ -29,7 +30,8 @@ export class LibraryRegistryComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(LibraryRegistry));
+    const libraryId = route.params.libraryId;
+    const reactElement = createElement(withRegistry(registry)(LibraryRegistry), { libraryId, id: 'registryPage' });
 
     this.root?.render(reactElement);
   }

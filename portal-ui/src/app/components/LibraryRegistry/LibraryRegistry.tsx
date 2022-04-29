@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { Check, Close, HomeOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { Checkbox } from '@mui/material';
 
-import { route } from '../../stores/Route.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import {
   PropertySchema,
@@ -29,23 +29,33 @@ import { Loading } from '../Loading/Loading';
 
 import { LibraryRegistrySettings } from './Settings/LibraryRegistry-Settings';
 import { LibraryRegistryExport } from './Export/LibraryRegistry-Export';
+import { DocumentInfo } from '../Documents/Documents';
 
 import '!style-loader!css-loader!sass-loader!./LibraryRegistry.scss';
 
 const cnLibraryRegistry = cn('LibraryRegistry');
 
+interface LibraryRegistryProps {
+  id: string;
+  libraryId: string;
+  inDialog?: boolean;
+  addedDocuments?: DocumentInfo[];
+  checkedLibraryDocuments?: LibraryRecord[];
+  onSelect?: (items: LibraryRecord[]) => void;
+}
+
 @observer
-export class LibraryRegistry extends Component {
+export class LibraryRegistry extends Component<LibraryRegistryProps> {
   @observable private library?: DocumentLibrary;
   @observable private schema?: OldSchema;
   @observable private hiddenFields: string[] = [];
   @observable private tablePageOptions?: PageOptions;
+  @observable private libraryDocuments: LibraryRecord[] = [];
 
   private tableInvoke: { reload?(): void } = {};
 
   async componentDidMount() {
-    const { libraryId } = route.params;
-    this.setLibrary(await getLibrary(libraryId));
+    this.setLibrary(await getLibrary(this.props.libraryId));
     this.setSchema(await schemaService.getOldSchema(this.library.schemaId));
 
     communicationService.libraryItemsUpdated.on(() => {
@@ -66,7 +76,7 @@ export class LibraryRegistry extends Component {
       <div className={cnLibraryRegistry()}>
         {this.ready ? (
           <>
-            <Breadcrumbs itemsType='link' items={this.breadcrumbsItems} />
+            {!this.props.inDialog && <Breadcrumbs itemsType='link' items={this.breadcrumbsItems} />}
             <XTable<LibraryRecord>
               className={cnLibraryRegistry('Table')}
               cols={this.cols.filter(({ field }) => !this.hiddenFields.includes(String(field)))}
@@ -174,7 +184,11 @@ export class LibraryRegistry extends Component {
     };
 
     return [
-      { CellContent: this.renderActions, align: 'center', cellProps: { padding: 'checkbox' } },
+      {
+        CellContent: this.props.inDialog ? this.renderCheckActions : this.renderActions,
+        align: 'center',
+        cellProps: { padding: 'checkbox' }
+      },
       ...this.properties.map(property => ({
         field: property.name,
         title: property.title,
@@ -204,6 +218,23 @@ export class LibraryRegistry extends Component {
   }
 
   @boundMethod
+  private renderCheckActions({ rowData }: { rowData: LibraryRecord }): ReactElement {
+    const { addedDocuments, checkedLibraryDocuments } = this.props;
+    const checked =
+      checkedLibraryDocuments.some(item => item.id === rowData.id) ||
+      addedDocuments.some(item => item.id === rowData.id);
+
+    return (
+      <Checkbox
+        disabled={addedDocuments.some(item => item.id === rowData.id)}
+        defaultChecked={checked}
+        value={rowData.id}
+        onChange={this.changeHandler}
+      />
+    );
+  }
+
+  @boundMethod
   private renderDate({ rowData, field }: { rowData: LibraryRecord; field: keyof LibraryRecord }): ReactElement {
     const property = this.properties.find(({ name }) => name === field) as PropertySchemaDatetime;
     const date = formatDate(rowData[field], property.format);
@@ -226,8 +257,12 @@ export class LibraryRegistry extends Component {
     if (!this.library || !this.schema) {
       return [[], 1];
     }
+    const response = await getLibraryRecords2(this.library.identifier, this.schema.name, pageOptions);
+    if (this.props.inDialog) {
+      this.setLibraryDocuments(response[0]);
+    }
 
-    return await getLibraryRecords2(this.library.identifier, this.schema.name, pageOptions);
+    return response;
   }
 
   @action.bound
@@ -240,7 +275,7 @@ export class LibraryRegistry extends Component {
   }
 
   private getStorageKey(): string {
-    return `registrySettings_${currentUser.id}_${this.library.identifier}`;
+    return `registrySettings_${currentUser.id}_${this.library.identifier}_${this.props.id}`;
   }
 
   private storeSettings() {
@@ -259,5 +294,21 @@ export class LibraryRegistry extends Component {
   private setHiddenFields(hiddenFields: string[]) {
     this.hiddenFields = hiddenFields;
     this.storeSettings();
+  }
+
+  @action.bound
+  private setLibraryDocuments(libraryDocuments: LibraryRecord[]) {
+    this.libraryDocuments = libraryDocuments;
+  }
+
+  @action.bound
+  private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+    const selectedRecord = this.libraryDocuments.find(item => item.id === Number(e.target.value));
+
+    this.props.onSelect(
+      checked
+        ? [...this.props.checkedLibraryDocuments, selectedRecord]
+        : this.props.checkedLibraryDocuments.filter(item => item !== selectedRecord)
+    );
   }
 }
