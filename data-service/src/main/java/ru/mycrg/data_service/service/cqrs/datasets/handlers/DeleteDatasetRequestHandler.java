@@ -12,7 +12,8 @@ import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.cqrs.datasets.requests.DeleteDatasetRequest;
 import ru.mycrg.data_service.service.resources.DataStoreClient;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
+import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
+import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
@@ -24,18 +25,18 @@ public class DeleteDatasetRequestHandler implements IRequestHandler<DeleteDatase
 
     private final DdlSchemas ddlSchemas;
     private final DataStoreClient dataStoreClient;
-    private final IResourceProtector datasetProtector;
+    private final IMasterResourceProtector resourceProtector;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final PermissionsService permissionsService;
 
     public DeleteDatasetRequestHandler(DdlSchemas ddlSchemas,
                                        DataStoreClient dataStoreClient,
-                                       IResourceProtector datasetProtector,
+                                       MasterResourceProtector resourceProtector,
                                        SchemasAndTablesRepository schemasAndTablesRepository,
                                        PermissionsService permissionsService) {
         this.ddlSchemas = ddlSchemas;
         this.dataStoreClient = dataStoreClient;
-        this.datasetProtector = datasetProtector;
+        this.resourceProtector = resourceProtector;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
     }
@@ -47,7 +48,7 @@ public class DeleteDatasetRequestHandler implements IRequestHandler<DeleteDatase
                 .findByIdentifier(datasetQualifier.toString())
                 .orElseThrow(() -> new NotFoundException(datasetQualifier));
 
-        if (!datasetProtector.isOwner(datasetQualifier)) {
+        if (!resourceProtector.isOwner(datasetQualifier)) {
             throw new ForbiddenException("Недостаточно прав для удаления набора: " + datasetQualifier.getQualifier());
         }
 

@@ -306,6 +306,8 @@ public class BasePermissionsRepository {
     public Optional<String> getRoleForDataset(ResourceQualifier dQualifier) {
         List<String> allPrincipalIds = principalService.getAllIds();
 
+        String identifier = dQualifier.getTable() != null ? dQualifier.getTable() : dQualifier.getSchema();
+
         String queryTemplate = "" +
                 "SELECT " +
                 "  p.role_id " +
@@ -314,7 +316,7 @@ public class BasePermissionsRepository {
                 "  JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
                 "  AND p.resource_table = 'schemas_and_tables' " +
                 "  AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
-                "  AND res.identifier = '" + dQualifier.getTable() + "'";
+                "  AND res.identifier = '" + identifier + "'";
 
         log.debug("Request getRoleForDataset: [{}]", queryTemplate);
 

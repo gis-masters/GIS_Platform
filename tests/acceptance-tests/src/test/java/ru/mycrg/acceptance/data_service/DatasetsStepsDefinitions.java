@@ -12,7 +12,6 @@ import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 
 import java.util.Map;
 
-import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -96,6 +95,13 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                                                  generateString(oktmoKey),
                                                  generateString(docTypeKey),
                                                  Integer.parseInt(scale));
+
+        createDataset(currentDatasetDto);
+    }
+
+    @When("Пользователь создал набор данных")
+    public void createRandomDataset() {
+        currentDatasetDto = new DatasetCreateDto(generateString("STRING_7"));
 
         createDataset(currentDatasetDto);
     }

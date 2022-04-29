@@ -106,17 +106,17 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует некий пользователь")
     public void initializeSomeUser() throws InterruptedException {
-        createRandomUser();
+        createRandomUserAndLogin();
     }
 
     @Given("Существует первый пользователь")
     public void initializeFirstUser() throws InterruptedException {
-        createRandomUser();
+        createRandomUserAndLogin();
     }
 
     @Given("Существует второй пользователь")
     public void initializeSecondUser() throws InterruptedException {
-        createRandomUser();
+        createRandomUserAndLogin();
     }
 
     @When("Администратор организации удаляет пользователя")
@@ -361,7 +361,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    private void createRandomUser() throws InterruptedException {
+    private void createRandomUserAndLogin() throws InterruptedException {
         authorizationBase.loginAsOwner();
 
         userDto = new UserCreateDto(generateString("STRING_10"),
