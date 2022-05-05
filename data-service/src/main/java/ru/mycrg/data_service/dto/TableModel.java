@@ -30,7 +30,7 @@ public class TableModel extends ResourceModel implements IResourceModel {
     public TableModel(SchemasAndTables table) {
         this(table.getId(), table.getTitle(), table.getDetails(), TABLE.name(), table.getIdentifier(),
              table.getItemsCount(), table.getCrs(), table.getSchemaId(), table.getCreatedAt().toString(), null,
-             table.getDocumentType(), table.getStatus(), table.getPublic(), table.getDocTerminationDate(),
+             table.getDocumentType(), table.getStatus(), table.getIsPublic(), table.getDocTerminationDate(),
              table.getDocApproveDate(), table.getFiasId(), table.getFiasAddress(), table.getFiasOktmo());
     }
 
@@ -52,7 +52,7 @@ public class TableModel extends ResourceModel implements IResourceModel {
     public TableModel(SchemasAndTables table, String role) {
         this(table.getId(), table.getTitle(), table.getDetails(), TABLE.name(), table.getIdentifier(),
              table.getItemsCount(), table.getCrs(), table.getSchemaId(), table.getCreatedAt().toString(), role,
-             table.getDocumentType(), table.getStatus(), table.getPublic(), table.getDocTerminationDate(),
+             table.getDocumentType(), table.getStatus(), table.getIsPublic(), table.getDocTerminationDate(),
              table.getDocApproveDate(), table.getFiasId(), table.getFiasAddress(), table.getFiasOktmo());
     }
 
@@ -95,11 +95,11 @@ public class TableModel extends ResourceModel implements IResourceModel {
         this.status = status;
     }
 
-    public Boolean getPublic() {
+    public Boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(Boolean aPublic) {
+    public void setIsPublic(Boolean aPublic) {
         isPublic = aPublic;
     }
 

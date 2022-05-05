@@ -9,6 +9,7 @@ import { DataTable, getDataTable } from '../../services/data.service';
 import { Role } from '../../services/crg/permissions.models';
 
 import { DataTableActionsDelete } from './Delete/DataTableActions-Delete';
+import { DataTableActionsEdit } from './Edit/DataTableActions-Edit';
 
 const cnDataTableActions = cn('DataTableActions');
 
@@ -32,11 +33,16 @@ export class DataTableActions extends Component<DataTableActionsProps> {
   }
 
   render() {
-    const deletionAllowed = currentUser.isAdmin || this.dataTable?.role === Role.OWNER;
+    const actionAllowed = currentUser.isAdmin || this.dataTable?.role === Role.OWNER;
 
     return (
       <div className={cnDataTableActions()}>
-        {deletionAllowed && <DataTableActionsDelete dataTable={this.dataTable} />}
+        {actionAllowed && this.dataTable && (
+          <>
+            <DataTableActionsEdit dataTable={this.dataTable} />
+            <DataTableActionsDelete dataTable={this.dataTable} />
+          </>
+        )}
       </div>
     );
   }

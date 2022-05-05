@@ -6,7 +6,7 @@ import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +25,8 @@ public class TableCreateDto extends ResourceCreateDto {
     @NotBlank
     @Size(min = 2, max = 50)
     private String schemaId;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime docTerminationDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate docTerminationDate;
 
     @Size(max = 100, message = "Не должно превышать 100 символов")
     private String status;
@@ -73,11 +73,11 @@ public class TableCreateDto extends ResourceCreateDto {
         this.schemaId = schemaId;
     }
 
-    public LocalDateTime getDocTerminationDate() {
+    public LocalDate getDocTerminationDate() {
         return docTerminationDate;
     }
 
-    public void setDocTerminationDate(LocalDateTime docTerminationDate) {
+    public void setDocTerminationDate(LocalDate docTerminationDate) {
         this.docTerminationDate = docTerminationDate;
     }
 
@@ -89,11 +89,11 @@ public class TableCreateDto extends ResourceCreateDto {
         this.status = status;
     }
 
-    public Boolean getPublic() {
+    public Boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(Boolean aPublic) {
+    public void setIsPublic(Boolean aPublic) {
         isPublic = aPublic;
     }
 

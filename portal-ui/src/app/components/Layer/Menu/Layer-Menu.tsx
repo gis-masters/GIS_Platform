@@ -39,8 +39,10 @@ import {
 import { ImportOutlined } from '../../Icons/ImportOutlined';
 import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
+import { DataTable, getDataTable } from '../../../services/data.service';
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
 import { LibraryDocument } from '../../LibraryDocument/LibraryDocument';
+import { DataTableCard } from '../../DataTableCard/DataTableCard';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
 
@@ -65,6 +67,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @observable private geometryType?: GeometryType;
   @observable private importXmlDialogOpen = false;
   @observable private rasterDocument: LibraryRecord;
+  @observable private dataTable: DataTable;
   @observable private dialogOpen = false;
 
   async componentDidMount() {
@@ -114,6 +117,15 @@ export class LayerMenu extends Component<LayerMenuProps> {
                 <CropFree />
               </ListItemIcon>
               Перейти к слою
+            </MenuItem>
+          )}
+
+          {!editMode && this.isVectorLayer && this.isDataTableInfoEnabled && (
+            <MenuItem onClick={this.getLayerDataTable}>
+              <ListItemIcon>
+                <FileOpenOutlined />
+              </ListItemIcon>
+              Информация
             </MenuItem>
           )}
 
@@ -194,6 +206,18 @@ export class LayerMenu extends Component<LayerMenuProps> {
             />
           )}
 
+        {this.dataTable && (
+          <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='md'>
+            <DialogTitle>{entity.title}</DialogTitle>
+            <DialogContent>
+              <DataTableCard dataTable={this.dataTable} />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.closeDialog}>Закрыть</Button>
+            </DialogActions>
+          </Dialog>
+        )}
+
         {this.rasterDocument && (
           <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='md'>
             <DialogTitle>{entity.title}</DialogTitle>
@@ -228,6 +252,13 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const { libraryId, recordId } = this.props.entity as CrgRasterLayer;
 
     return !!(libraryId && recordId);
+  }
+
+  @computed
+  private get isDataTableInfoEnabled(): boolean {
+    const { dataset, tableName } = this.props.entity as CrgVectorLayer;
+
+    return !!(dataset && tableName);
   }
 
   private async fetchPermissions() {
@@ -315,6 +346,20 @@ export class LayerMenu extends Component<LayerMenuProps> {
     }
   }
 
+  @boundMethod
+  private async getLayerDataTable() {
+    const { dataset, tableName } = this.props.entity as CrgVectorLayer;
+    try {
+      const dataTable = await getDataTable(dataset, tableName);
+      this.setDataTable(dataTable);
+      this.openDialog();
+    } catch (error) {
+      const err = error as AxiosError;
+      Toast.warn(`Ошибка получения набора данных. ${err.message}`);
+      services.logger.warn(`Ошибка получения набора данных. ${err.message}`);
+    }
+  }
+
   @action.bound
   private openEditGroupDialog() {
     this.editGroupDialogOpen = true;
@@ -368,6 +413,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @action.bound
   private setRasterDocument(document?: LibraryRecord) {
     this.rasterDocument = document;
+  }
+
+  @action.bound
+  private setDataTable(dataTable?: DataTable) {
+    this.dataTable = dataTable;
   }
 
   @action.bound

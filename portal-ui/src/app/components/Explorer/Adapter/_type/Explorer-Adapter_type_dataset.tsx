@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import moment from 'moment';
 import { Storage } from '@mui/icons-material';
 
 import {
@@ -18,6 +17,7 @@ import { staticImplements } from '../../../../services/util/staticImplements';
 import { getDatasetRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { communicationService } from '../../../../services/communication.service';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { formatDate } from '../../../../services/util/date.util';
 
 import { Adapter, ExplorerItemData, ExplorerItemEntityType, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { DatasetActionsAddToProject } from '../../../DatasetActions/AddToProject/DatasetActions-AddToProject';
@@ -43,7 +43,6 @@ export class ExplorerAdapterTypeDataset {
 
   static getDescription(item: ExplorerItemData<Dataset>): ReactNode {
     const { details, itemsCount, createdAt } = item.payload;
-    moment.locale('ru');
 
     return (
       <>
@@ -52,7 +51,7 @@ export class ExplorerAdapterTypeDataset {
         {createdAt ? (
           <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
-            {moment(createdAt).format('LL')}
+            {formatDate(createdAt, 'LL')}
           </ExplorerInfoDescItem>
         ) : null}
 

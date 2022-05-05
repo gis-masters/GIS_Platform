@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class ResourceCreateDto {
 
@@ -20,9 +20,9 @@ public class ResourceCreateDto {
     private String oktmo;
 
     @Size(max = 100, message = "Не должно превышать 100 символов")
-    private String docType;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime docApproveDate;
+    private String documentType;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate docApproveDate;
 
     @Range(min = 500, max = 100000, message = "Номинальный масштаб должен быть в диапазоне от 500 до 100 000")
     private Integer scale;
@@ -35,12 +35,12 @@ public class ResourceCreateDto {
         this.title = title;
     }
 
-    public ResourceCreateDto(String title, String details, String oktmo, String docType,
-                             LocalDateTime docApproveDate, Integer scale) {
+    public ResourceCreateDto(String title, String details, String oktmo, String documentType,
+                             LocalDate docApproveDate, Integer scale) {
         this.title = title;
         this.details = details;
         this.oktmo = oktmo;
-        this.docType = docType;
+        this.documentType = documentType;
         this.docApproveDate = docApproveDate;
         this.scale = scale;
     }
@@ -69,19 +69,19 @@ public class ResourceCreateDto {
         this.oktmo = oktmo;
     }
 
-    public String getDocType() {
-        return docType;
+    public String getDocumentType() {
+        return documentType;
     }
 
-    public void setDocType(String docType) {
-        this.docType = docType;
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
     }
 
-    public LocalDateTime getDocApproveDate() {
+    public LocalDate getDocApproveDate() {
         return docApproveDate;
     }
 
-    public void setDocApproveDate(LocalDateTime docApproveDate) {
+    public void setDocApproveDate(LocalDate docApproveDate) {
         this.docApproveDate = docApproveDate;
     }
 

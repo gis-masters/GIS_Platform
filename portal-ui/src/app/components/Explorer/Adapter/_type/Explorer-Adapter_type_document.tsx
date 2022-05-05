@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { InsertDriveFile } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
-import moment from 'moment';
 
 import { FileTiff } from '../../../Icons/FileTiff';
 import { currentUser } from '../../../../stores/CurrentUser.store';
@@ -14,6 +13,7 @@ import { getLibraryRecord, LibraryRecord } from '../../../../services/crg/doc-li
 import { convertProperties, applyContentTypeOld } from '../../../../services/crg/schema.utils';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
+import { formatDate } from '../../../../services/util/date.util';
 
 import { Adapter, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -37,7 +37,6 @@ export class ExplorerAdapterTypeDocument {
 
   static getDescription(item: ExplorerItemData<LibraryRecord>): ReactNode {
     const { details, created_at: createdAt } = item.payload;
-    moment.locale('ru');
 
     return (
       <>
@@ -46,7 +45,7 @@ export class ExplorerAdapterTypeDocument {
         {createdAt && (
           <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
-            {moment(createdAt).format('LL')}
+            {formatDate(createdAt, 'LL')}
           </ExplorerInfoDescItem>
         )}
       </>

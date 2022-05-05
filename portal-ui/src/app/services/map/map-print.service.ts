@@ -2,7 +2,6 @@ import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import domToImage from 'dom-to-image';
 import { jsPDF } from 'jspdf';
-import moment from 'moment';
 import { getPointResolution } from 'ol/proj';
 
 import { printSettings, StyleRuleExtended } from '../../stores/PrintSettings.store';
@@ -265,7 +264,6 @@ async function drawDate(mapContext: CanvasRenderingContext2D, designationsResize
 }
 
 export async function getDateImageSrc(resolution?: number): Promise<string> {
-  moment.locale('ru');
   const el = document.createElement('div');
   document.body.append(el);
   const root = createRoot(el);
@@ -342,7 +340,6 @@ async function drawLegend(mapContext: CanvasRenderingContext2D): Promise<void> {
 }
 
 export async function getLegendImageSrc(resolution?: number): Promise<string> {
-  moment.locale('ru');
   const el = document.createElement('div');
   document.body.append(el);
   const root = createRoot(el);

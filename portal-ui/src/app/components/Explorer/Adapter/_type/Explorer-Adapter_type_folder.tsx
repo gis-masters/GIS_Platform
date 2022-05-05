@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import moment from 'moment';
 import { FolderOutlined, TableViewOutlined } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { RegistryConsumer } from '@bem-react/di';
@@ -26,6 +25,7 @@ import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget'
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
+import { formatDate } from '../../../../services/util/date.util';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -51,7 +51,6 @@ export class ExplorerAdapterTypeFolder {
 
   static getDescription(item: ExplorerItemData<LibraryRecord>): ReactNode {
     const { details, created_at: createdAt } = item.payload;
-    moment.locale('ru');
 
     return (
       <>
@@ -60,7 +59,7 @@ export class ExplorerAdapterTypeFolder {
         {createdAt && (
           <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
-            {moment(createdAt).format('LL')}
+            {formatDate(createdAt, 'LL')}
           </ExplorerInfoDescItem>
         )}
       </>

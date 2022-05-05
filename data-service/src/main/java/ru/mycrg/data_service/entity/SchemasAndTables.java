@@ -6,6 +6,7 @@ import ru.mycrg.data_service.dto.ResourceType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "schemas_and_tables")
@@ -62,7 +63,7 @@ public class SchemasAndTables {
     @Column
     private String status;
 
-    @Column
+    @Column(name = "is_public")
     private Boolean isPublic;
 
     @Column(name = "doc_termination_date")
@@ -82,8 +83,10 @@ public class SchemasAndTables {
         this.identifier = identifier;
         this.title = dto.getTitle();
         this.details = dto.getDetails();
-        this.documentType = dto.getDocType();
-        this.docApproveDate = dto.getDocApproveDate();
+        this.documentType = dto.getDocumentType();
+        this.docApproveDate = Objects.nonNull(dto.getDocApproveDate())
+                ? dto.getDocApproveDate().atStartOfDay()
+                : null;
         this.fiasOktmo = dto.getOktmo();
         this.scale = dto.getScale();
         this.isFolder = resourceType.equals(ResourceType.DATASET);
@@ -226,11 +229,11 @@ public class SchemasAndTables {
         this.status = status;
     }
 
-    public Boolean getPublic() {
+    public Boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(Boolean aPublic) {
+    public void setIsPublic(Boolean aPublic) {
         isPublic = aPublic;
     }
 

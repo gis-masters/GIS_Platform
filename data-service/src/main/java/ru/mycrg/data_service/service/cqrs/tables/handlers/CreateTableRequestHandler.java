@@ -17,6 +17,8 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
@@ -64,14 +66,22 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
             }
 
             // Add record to schemasAndTables table
+            LocalDateTime approveDate = Objects.nonNull(dto.getDocApproveDate())
+                    ? dto.getDocApproveDate().atStartOfDay()
+                    : null;
+
+            LocalDateTime docTerminationDate = Objects.nonNull(dto.getDocTerminationDate())
+                    ? dto.getDocTerminationDate().atStartOfDay()
+                    : null;
+
             String path = dataset.getPath() + "/" + dataset.getId();
             SchemasAndTables table = new SchemasAndTables(TABLE, dto, tQualifier.getTable(), path);
             table.setCrs(dto.getCrs());
             table.setSchemaId(dto.getSchemaId());
             table.setStatus(dto.getStatus());
-            table.setPublic(dto.getPublic());
-            table.setDocApproveDate(dto.getDocApproveDate());
-            table.setDocTerminationDate(dto.getDocTerminationDate());
+            table.setIsPublic(dto.getIsPublic());
+            table.setDocApproveDate(approveDate);
+            table.setDocTerminationDate(docTerminationDate);
             table.setFiasId(dto.getFias__id());
             table.setFiasAdress(dto.getFias__address());
             table.setFiasOktmo(dto.getFias__oktmo());

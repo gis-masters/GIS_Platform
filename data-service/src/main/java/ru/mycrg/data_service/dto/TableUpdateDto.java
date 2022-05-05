@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class TableUpdateDto {
 
@@ -18,9 +18,9 @@ public class TableUpdateDto {
     private String oktmo;
 
     @Size(max = 100, message = "Не должно превышать 100 символов")
-    private String docType;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime docApproveDate;
+    private String documentType;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate docApproveDate;
 
     @Range(min = 500, max = 100000, message = "Номинальный масштаб должен быть в диапазоне от 500 до 100 000")
     private Integer scale;
@@ -28,8 +28,8 @@ public class TableUpdateDto {
     @Size(min = 8, max = 20, message = "Ожидается строка вида: 'EPSG:28406'")
     private String crs;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime docTerminationDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate docTerminationDate;
 
     @Size(max = 100, message = "Не должно превышать 100 символов")
     private String status;
@@ -66,19 +66,19 @@ public class TableUpdateDto {
         this.oktmo = oktmo;
     }
 
-    public String getDocType() {
-        return docType;
+    public String getDocumentType() {
+        return documentType;
     }
 
-    public void setDocType(String docType) {
-        this.docType = docType;
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
     }
 
-    public LocalDateTime getDocApproveDate() {
+    public LocalDate getDocApproveDate() {
         return docApproveDate;
     }
 
-    public void setDocApproveDate(LocalDateTime docApproveDate) {
+    public void setDocApproveDate(LocalDate docApproveDate) {
         this.docApproveDate = docApproveDate;
     }
 
@@ -98,11 +98,11 @@ public class TableUpdateDto {
         this.crs = crs;
     }
 
-    public LocalDateTime getDocTerminationDate() {
+    public LocalDate getDocTerminationDate() {
         return docTerminationDate;
     }
 
-    public void setDocTerminationDate(LocalDateTime docTerminationDate) {
+    public void setDocTerminationDate(LocalDate docTerminationDate) {
         this.docTerminationDate = docTerminationDate;
     }
 
@@ -114,11 +114,11 @@ public class TableUpdateDto {
         this.status = status;
     }
 
-    public Boolean getPublic() {
+    public Boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(Boolean aPublic) {
+    public void setIsPublic(Boolean aPublic) {
         isPublic = aPublic;
     }
 

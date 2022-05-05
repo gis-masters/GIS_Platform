@@ -391,5 +391,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                         contentType("application/merge-patch+json")
                 .when().
                         patch("" + layerId);
+
+        response.prettyPrint();
     }
 }

@@ -31,6 +31,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.mediator.Mediator;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -73,11 +74,15 @@ public class ImportGml {
         try {
             ImportReport importResult = new ImportReport();
 
+            LocalDate docDateApprove = Objects.nonNull(importGmlModel.getDocDateApprove())
+                    ? importGmlModel.getDocDateApprove().toLocalDate()
+                    : null;
+
             ResourceCreateDto dataset = new ResourceCreateDto(importGmlModel.getTitle(),
                                                               importGmlModel.getDetails(),
                                                               importGmlModel.getOktmo(),
                                                               importGmlModel.getDocumentType(),
-                                                              importGmlModel.getDocDateApprove(),
+                                                              docDateApprove,
                                                               importGmlModel.getScale());
 
             DatasetModel createdDataset = mediator.execute(new CreateDatasetRequest(dataset));

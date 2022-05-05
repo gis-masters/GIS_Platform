@@ -62,7 +62,93 @@ export interface DataTable extends DataEntity {
   dataset: string;
   role: Role;
   id?: number;
+  documentType?: string;
+  status?: string;
+  fias?: string;
+  docApproveDate?: string;
+  docTerminationDate?: string;
+  isPublic?: boolean;
 }
+
+export const dataTableSchema: PropertySchema<DataTable>[] = [
+  {
+    name: 'title',
+    title: 'Наименование слоя',
+    propertyType: PropertyType.STRING
+  },
+  {
+    name: 'details',
+    title: 'Описание слоя',
+    propertyType: PropertyType.STRING
+  },
+  {
+    name: 'crs',
+    title: 'Координатная система',
+    propertyType: PropertyType.STRING
+  },
+  {
+    name: 'documentType',
+    title: 'Тип документа',
+    propertyType: PropertyType.CHOICE,
+    options: [
+      {
+        title: 'Генеральный план',
+        value: 'GP'
+      },
+      {
+        title: 'СТП  муниципальных районов',
+        value: 'STPMO'
+      },
+      {
+        title: 'СТП  субъектов Российской Федерации',
+        value: 'STPRF'
+      },
+      {
+        title: 'Правила землепользования и застройки',
+        value: 'PZZ'
+      },
+      {
+        title: 'Программа комплексного развития',
+        value: 'PKR'
+      },
+      {
+        title: 'Проект планировки территории; Проект межевания территории',
+        value: 'PPTPMT'
+      }
+    ]
+  },
+  {
+    name: 'status',
+    title: 'Статус слоя',
+    propertyType: PropertyType.CHOICE,
+    options: [
+      { title: 'Проектный', value: 'Проектный' },
+      { title: 'Утвержденный', value: 'Утвержденный' },
+      { title: 'Архивный', value: 'Архивный' }
+    ]
+  },
+  {
+    name: 'fias',
+    title: 'Территориальная принадлежность',
+    propertyType: PropertyType.FIAS,
+    searchMode: 'oktmo'
+  },
+  {
+    name: 'docApproveDate',
+    title: 'Дата утверждения векторного документа',
+    propertyType: PropertyType.DATETIME
+  },
+  {
+    name: 'docTerminationDate',
+    title: 'Дата прекращения действия векторного документа',
+    propertyType: PropertyType.DATETIME
+  },
+  {
+    name: 'isPublic',
+    title: 'Публичный',
+    propertyType: PropertyType.BOOL
+  }
+];
 
 export interface DataTableConnection {
   layer: CrgLayer;
@@ -167,6 +253,15 @@ export async function updateDataTableRecord(
   patch: Partial<WfsFeature>
 ): Promise<void> {
   await http.patch(await getDatasetTableRecordUrl(datasetId, dataTableId, recordId), patch);
+  communicationService.dataTablesUpdated.emit();
+}
+
+export async function updateDataTable(
+  datasetId: string,
+  dataTableId: string,
+  patch: Partial<WfsFeature>
+): Promise<void> {
+  await http.put(await getDatasetTableUrl(datasetId, dataTableId), patch);
   communicationService.dataTablesUpdated.emit();
 }
 

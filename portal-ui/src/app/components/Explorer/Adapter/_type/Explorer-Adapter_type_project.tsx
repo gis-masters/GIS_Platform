@@ -1,10 +1,10 @@
 import React, { ReactNode } from 'react';
-import moment from 'moment';
 import { MapOutlined } from '@mui/icons-material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { ProjectsActions } from '../../../ProjectsActions/ProjectsActions';
 import { CrgProject } from '../../../../services/crg/projects.models';
+import { formatDate } from '../../../../services/util/date.util';
 
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 
@@ -26,8 +26,7 @@ export class ExplorerAdapterTypeProject {
 
   static getMeta(item: ExplorerItemData<CrgProject>): string {
     const { createdAt, id } = item.payload;
-    moment.locale('ru');
-    const date = createdAt ? `${moment(createdAt).format('LL')}` : '';
+    const date = createdAt ? `${formatDate(createdAt, 'LL')}` : '';
 
     return `${date} (id: ${id})`;
   }

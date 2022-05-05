@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import moment from 'moment';
 import { IconButton, Tooltip } from '@mui/material';
 import { LocalLibrary, TableViewOutlined } from '@mui/icons-material';
 
@@ -24,6 +23,7 @@ import { communicationService } from '../../../../services/communication.service
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import { getDocumentLibraryRoleAssignmentUrl } from '../../../../services/server-urls.service';
+import { formatDate } from '../../../../services/util/date.util';
 
 import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
@@ -49,7 +49,6 @@ export class ExplorerAdapterTypeLibrary {
 
   static getDescription(item: ExplorerItemData<DocumentLibrary>): ReactNode {
     const { details, createdAt, schemaId } = item.payload;
-    moment.locale('ru');
 
     return (
       <>
@@ -58,7 +57,16 @@ export class ExplorerAdapterTypeLibrary {
         {createdAt && (
           <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
-            {moment(createdAt).format('LL')}
+            {formatDate(createdAt, 'LL')}
+          </ExplorerInfoDescItem>
+        )}
+
+        {currentUser.isAdmin && (
+          <ExplorerInfoDescItem>
+            <ExplorerInfoDescTitle>Схема:</ExplorerInfoDescTitle>
+            <Link href={`/data-management?path_dm=%5B"r","root","sr","schemasRoot","schema","${schemaId}"%5D`}>
+              {schemaId}
+            </Link>
           </ExplorerInfoDescItem>
         )}
 

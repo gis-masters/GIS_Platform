@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
-import moment from 'moment';
-import { DataTable, getDataTable } from '../../../../services/data.service';
+import { DataTable, dataTableSchema, getDataTable } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { LayerIcon } from '../../../LayerIcon/LayerIcon.composed';
 import { getTableRoleAssignmentUrl } from '../../../../services/server-urls.service';
@@ -8,6 +7,8 @@ import { Role } from '../../../../services/crg/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
+import { formatDate } from '../../../../services/util/date.util';
 
 import { Adapter, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -33,7 +34,6 @@ export class ExplorerAdapterTypeTable {
 
   static getDescription(item: ExplorerItemData<DataTable>): ReactNode {
     const { details, createdAt, schemaId } = item.payload;
-    moment.locale('ru');
 
     return (
       <>
@@ -42,7 +42,7 @@ export class ExplorerAdapterTypeTable {
         {createdAt && (
           <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
-            {moment(createdAt).format('LL')}
+            {formatDate(createdAt, 'LL')}
           </ExplorerInfoDescItem>
         )}
 
@@ -65,10 +65,14 @@ export class ExplorerAdapterTypeTable {
   static async getWidgets(item: ExplorerItemData<DataTable>): Promise<ReactNode> {
     const { dataset, identifier, title } = item.payload;
     const url = await getTableRoleAssignmentUrl(dataset, identifier);
-    const currentItem = await getDataTable(dataset, identifier);
+    const currentItem = (await getDataTable(dataset, identifier)) as unknown as Record<string, unknown>;
 
     return (
       <>
+        <ExplorerInfoDescItem multiline>
+          <ViewContentWidget fields={dataTableSchema} data={currentItem} />
+        </ExplorerInfoDescItem>
+
         <ConnectionsTableToProjectsWidget dataTable={item.payload} />
         <PermissionsWidget
           url={url}

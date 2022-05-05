@@ -60,8 +60,8 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
                 tableForUpdate.setDetails(dto.getDetails());
             }
 
-            if (nonNull(dto.getDocType())) {
-                tableForUpdate.setDocumentType(dto.getDocType());
+            if (nonNull(dto.getDocumentType())) {
+                tableForUpdate.setDocumentType(dto.getDocumentType());
             }
 
             if (nonNull(dto.getCrs())) {
@@ -72,16 +72,16 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
                 tableForUpdate.setStatus(dto.getStatus());
             }
 
-            if (nonNull(dto.getPublic())) {
-                tableForUpdate.setPublic(dto.getPublic());
+            if (nonNull(dto.getIsPublic())) {
+                tableForUpdate.setIsPublic(dto.getIsPublic());
             }
 
             if (nonNull(dto.getDocApproveDate())) {
-                tableForUpdate.setDocApproveDate(dto.getDocApproveDate());
+                tableForUpdate.setDocApproveDate(dto.getDocApproveDate().atStartOfDay());
             }
 
             if (nonNull(dto.getDocTerminationDate())) {
-                tableForUpdate.setDocTerminationDate(dto.getDocTerminationDate());
+                tableForUpdate.setDocTerminationDate(dto.getDocTerminationDate().atStartOfDay());
             }
 
             if (nonNull(dto.getFias__oktmo())) {

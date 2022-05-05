@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import moment from 'moment';
 import { cn } from '@bem-react/classname';
 
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
@@ -15,6 +14,7 @@ import { ExplorerItemEntityType } from '../Explorer/Explorer.models';
 import { schemaService } from '../../services/crg/schema.service';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Role } from '../../services/crg/permissions.models';
+import { formatDate } from '../../services/util/date.util';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocument.scss';
 
@@ -36,7 +36,6 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
   }
 
   render() {
-    moment.locale('ru');
     const { contentOnly, document } = this.props;
 
     return (
@@ -47,7 +46,7 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
 
             <div className={cnLibraryDocument('Date')}>
               <span className={cnLibraryDocument('DateTitle')}>Дата создания:</span>
-              {moment(document.created_at).format('LL')}
+              {formatDate(document.created_at, 'LL')}
             </div>
 
             <div className={cnLibraryDocument('DocumentCard')}>
