@@ -133,6 +133,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
     communicationService.featuresUpdated.on(async () => {
       // TODO: Самый простой вариант с лишним запросом. Заменить на обновление данных без запроса.
+      this.attributeTable.selected = [];
       const lastRequest = this.requestAttribute$.getValue();
       await this.updateTable(lastRequest);
     }, this);

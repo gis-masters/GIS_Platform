@@ -87,7 +87,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.properties = data.properties;
         this.isNew = data.isNew;
         this.selectTab = Number(data.isNew);
-
         if (!this.isNew) {
           mapService.highlightFeatures(this.features);
           this.isGeometryChanged = false;
@@ -318,7 +317,16 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       .afterClosed()
       .pipe(filter(value => !!value))
       .subscribe(async () => {
-        await deleteDataTableRecord(dataset, tableName, this.features[0].id);
+        if (sidebars.editFeaturesData.mode === EditFeatureMode.multipleEdit) {
+          for (const layer of this.features) {
+            const featureLayer = getFeatureLayer(layer);
+
+            await deleteDataTableRecord(featureLayer.dataset, featureLayer.tableName, layer.id);
+          }
+        } else {
+          await deleteDataTableRecord(dataset, tableName, this.features[0].id);
+        }
+
         mapService.refreshLayers();
         communicationService.featuresUpdated.emit();
         sidebars.setFeaturesEdited(false);
