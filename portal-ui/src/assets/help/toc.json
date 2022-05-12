@@ -127,6 +127,11 @@
         "id": "placement_project",
         "title": "Размещение файлов в проект",
         "contentUrl": "/assets/help/map/dataManagement/06placement_project.html"
+      },
+      {
+        "id": "print_information",
+        "title": "Печать документа",
+        "contentUrl": "/assets/help/map/dataManagement/07print_information.html"
       }
     ]
   },
