@@ -34,11 +34,11 @@ export interface Schema<T extends Record<string, unknown> = Record<string, unkno
   properties?: PropertySchema<T>[];
   tableName?: string;
   geometryType?: SupportedGeometryType;
-  matchingCounter?: number;
   readOnly?: boolean;
   contentTypes?: ContentType[];
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];
+  printTemplates?: string[];
 }
 
 export interface ContentType {
@@ -49,6 +49,7 @@ export interface ContentType {
   properties: PropertySchema[];
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];
+  printTemplates?: string[];
 }
 
 export type DefaultValueFormula = (
@@ -62,13 +63,10 @@ interface BasePropertySchema<T = Record<string, unknown>> {
   propertyType: PropertyType;
   title: string;
   description?: ReactNode;
-  category?: string;
-  isSystemManaged?: string;
   hidden?: boolean;
   disabled?: boolean;
   required?: boolean;
   asTitle?: boolean;
-  isIndexed?: boolean;
   readOnly?: boolean;
   defaultValue?: unknown;
   minWidth?: number;
@@ -180,7 +178,7 @@ export interface PropertySchemaLookup<T = Record<string, unknown>> extends BaseP
 
 export interface PropertySchemaSet<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.SET;
-  fieldsSet: PropertySchema[];
+  properties: PropertySchema[];
   defaultValue?: Record<string, unknown>;
 }
 

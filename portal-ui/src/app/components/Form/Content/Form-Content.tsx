@@ -69,7 +69,6 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
                   errors={errors
                     .filter(({ field }) => field === propertySchema.name)
                     .flatMap(({ messages }) => messages)}
-                  FormView={FormView}
                 />
               ) : (
                 <FormControl
@@ -79,13 +78,12 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
                   onChange={this.fieldChangeHandler}
                   onNeedValidate={this.fieldNeedValidateHandler}
                   fieldValue={convertToComplexField(propertySchema, formValue)}
-                  formValue={convertToComplexField(propertySchema, formValue)}
-                  FormControl={FormControl}
+                  formValue={convertToComplexField(propertySchema, formValue) as Record<string, unknown>}
                   errors={errors
                     .filter(({ field }) => field === propertySchema.name)
                     .flatMap(({ messages }) => messages)}
                 >
-                  {formValue[propertySchema.name]}
+                  {String(formValue[propertySchema.name])}
                 </FormControl>
               )}
             </FormField>

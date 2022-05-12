@@ -2,6 +2,8 @@ body .MenuIconButton {
   position: relative;
 
   &-Icon {
+    display: inline-flex;
+
     width: 1em;
     height: 1em;
 

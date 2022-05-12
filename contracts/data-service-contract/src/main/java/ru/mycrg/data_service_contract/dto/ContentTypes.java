@@ -12,6 +12,7 @@ public class ContentTypes {
     private Boolean childOnly;
     private List<Object> children = new ArrayList<>();
     private List<Object> attributes = new ArrayList<>();
+    private List<String> printTemplates = new ArrayList<>();
 
     public ContentTypes() {
         // Required
@@ -47,6 +48,14 @@ public class ContentTypes {
 
     public void setAttributes(List<Object> attributes) {
         this.attributes = attributes;
+    }
+
+    public List<String> getPrintTemplates() {
+        return printTemplates;
+    }
+
+    public void setPrintTemplates(List<String> printTemplates) {
+        this.printTemplates = printTemplates;
     }
 
     public List<Object> getChildren() {

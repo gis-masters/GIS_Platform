@@ -19,6 +19,7 @@ public class SchemaDto {
     private boolean readOnly;
     private GeometryType geometryType;
     private List<ContentTypes> contentTypes = new ArrayList<>();
+    private List<String> printTemplates = new ArrayList<>();
 
     public void addProperty(SimplePropertyDto propertyDto) {
         properties.add(propertyDto);
@@ -110,6 +111,14 @@ public class SchemaDto {
 
     public void setContentTypes(List<ContentTypes> contentTypes) {
         this.contentTypes = contentTypes;
+    }
+
+    public List<String> getPrintTemplates() {
+        return printTemplates;
+    }
+
+    public void setPrintTemplates(List<String> printTemplates) {
+        this.printTemplates = printTemplates;
     }
 
     public String getType() {

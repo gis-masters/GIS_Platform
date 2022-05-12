@@ -5,4 +5,4 @@ import { asButton } from './_as/LibraryDocumentActions-Item_as_button';
 import { asIconButton } from './_as/LibraryDocumentActions-Item_as_iconButton';
 import { asMenu } from './_as/LibraryDocumentActions-Item_as_menu';
 
-export const LibraryDocumentActionsItem = compose(asButton, asIconButton, asMenu)(Presenter);
+export const LibraryDocumentActionsItem = compose(asButton, asIconButton, asMenu)(Presenter) as typeof Presenter;

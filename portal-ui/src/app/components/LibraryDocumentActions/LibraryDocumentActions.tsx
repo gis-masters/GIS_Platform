@@ -21,6 +21,7 @@ import { LibraryDocumentActionsSed } from './Sed/LibraryDocumentActions-Sed';
 import { LibraryDocumentActionsSave } from './Save/LibraryDocumentActions-Save';
 import { LibraryDocumentActionsOpen } from './Open/LibraryDocumentActions-Open';
 import { LibraryDocumentActionsEdit } from './Edit/LibraryDocumentActions-Edit';
+import { LibraryDocumentActionsPrint } from './Print/LibraryDocumentActions-Print';
 import { LibraryDocumentActionsShare } from './Share/LibraryDocumentActions-Share';
 import { LibraryDocumentActionsClose } from './Close/LibraryDocumentActions-Close';
 import { LibraryDocumentActionsDelete } from './Delete/LibraryDocumentActions-Delete';
@@ -76,6 +77,7 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
     const canDelete =
       organizationSettings.fileDownloadEnabled && (this.document?.role === Role.OWNER || currentUser.isAdmin);
     const isNew = !document.id;
+    const canPrint = Boolean(this.schema?.printTemplates?.length);
 
     return (
       <ContainerComponent className={cnLibraryDocumentActions({ forDialog }, [className])}>
@@ -90,6 +92,8 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
         {canCreateChildren && (
           <LibraryDocumentActionsCreateChild document={this.document || document} schema={this.schema} as={as} />
         )}
+
+        {canPrint && <LibraryDocumentActionsPrint document={this.document || document} schema={this.schema} as={as} />}
 
         {this.canBePlaced && (
           <LibraryDocumentActionsFilesPlacement document={this.document || document} schema={this.schema} as={as} />

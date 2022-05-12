@@ -68,42 +68,42 @@ const settings: Settings = {
 
 organizationSettings.setSettings(settings);
 
-export const SingleEditable = Template.bind({}) as ComponentStory<typeof Form>;
+export const SingleEditable = Template.bind({});
 SingleEditable.args = {
   fields: fieldsSingle,
   value: valueSingle,
   auto: true
 };
 
-export const SingleEditableEmpty = Template.bind({}) as ComponentStory<typeof Form>;
+export const SingleEditableEmpty = Template.bind({});
 SingleEditableEmpty.args = {
   fields: fieldsSingle,
   value: {},
   auto: true
 };
 
-export const MultipleEditable = Template.bind({}) as ComponentStory<typeof Form>;
+export const MultipleEditable = Template.bind({});
 MultipleEditable.args = {
   fields: fieldsMultiple,
   value: valueMultiple,
   auto: true
 };
 
-export const MultipleEditableScroll = Template.bind({}) as ComponentStory<typeof Form>;
+export const MultipleEditableScroll = Template.bind({});
 MultipleEditableScroll.args = {
   fields: fieldsMultiple,
   value: valueMultipleScroll,
   auto: true
 };
 
-export const MultipleEditableEmpty = Template.bind({}) as ComponentStory<typeof Form>;
+export const MultipleEditableEmpty = Template.bind({});
 MultipleEditableEmpty.args = {
   fields: fieldsMultiple,
   value: {},
   auto: true
 };
 
-export const SingleView = Template.bind({}) as ComponentStory<typeof Form>;
+export const SingleView = Template.bind({});
 SingleView.args = {
   fields: fieldsSingle,
   value: valueSingle,
@@ -111,7 +111,7 @@ SingleView.args = {
   auto: true
 };
 
-export const SingleViewEmpty = Template.bind({}) as ComponentStory<typeof Form>;
+export const SingleViewEmpty = Template.bind({});
 SingleViewEmpty.args = {
   fields: fieldsSingle,
   value: {},
@@ -119,7 +119,7 @@ SingleViewEmpty.args = {
   auto: true
 };
 
-export const MultipleView = Template.bind({}) as ComponentStory<typeof Form>;
+export const MultipleView = Template.bind({});
 MultipleView.args = {
   fields: fieldsMultiple,
   value: valueMultiple,
@@ -127,7 +127,7 @@ MultipleView.args = {
   auto: true
 };
 
-export const MultipleViewScroll = Template.bind({}) as ComponentStory<typeof Form>;
+export const MultipleViewScroll = Template.bind({});
 MultipleViewScroll.args = {
   fields: fieldsMultiple,
   value: valueMultipleScroll,
@@ -135,7 +135,7 @@ MultipleViewScroll.args = {
   auto: true
 };
 
-export const MultipleViewEmpty = Template.bind({}) as ComponentStory<typeof Form>;
+export const MultipleViewEmpty = Template.bind({});
 MultipleViewEmpty.args = {
   fields: fieldsMultiple,
   value: { photos: [] },

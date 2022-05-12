@@ -168,7 +168,7 @@ const setFormValue = action((changedValue: Partial<TestData> = {}) => {
 
 const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
-export const EditableUrl = Template.bind({}) as ComponentStory<typeof Form>;
+export const EditableUrl = Template.bind({});
 EditableUrl.args = {
   fields: testFields as PropertySchema[],
   value,
@@ -177,7 +177,7 @@ EditableUrl.args = {
   onFormChange: setFormValue
 };
 
-export const ReadonlyUrl = Template.bind({}) as ComponentStory<typeof Form>;
+export const ReadonlyUrl = Template.bind({});
 ReadonlyUrl.args = {
   readonly: true,
   fields: testFields as PropertySchema[],
@@ -198,7 +198,7 @@ const validateEmptyFieldsActions = (
   </Button>
 );
 
-export const ErrorsUrl = Template.bind({}) as ComponentStory<typeof Form>;
+export const ErrorsUrl = Template.bind({});
 ErrorsUrl.args = {
   fields: errorTestFields as PropertySchema[],
   value,
@@ -207,7 +207,7 @@ ErrorsUrl.args = {
   actions: validateActions
 };
 
-export const EmptyUrl = Template.bind({}) as ComponentStory<typeof Form>;
+export const EmptyUrl = Template.bind({});
 EmptyUrl.args = {
   fields: emptyFields as PropertySchema[],
   value,
@@ -216,7 +216,7 @@ EmptyUrl.args = {
   actions: validateEmptyFieldsActions
 };
 
-export const ReadOnlyEmptyUrl = Template.bind({}) as ComponentStory<typeof Form>;
+export const ReadOnlyEmptyUrl = Template.bind({});
 ReadOnlyEmptyUrl.args = {
   readonly: true,
   fields: emptyFields as PropertySchema[],

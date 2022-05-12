@@ -18,7 +18,7 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
 > {
   render() {
     const { htmlId, className, property, fieldValue = '', errors, variant = 'standard' } = this.props;
-    const { fieldsSet } = property as PropertySchemaSet;
+    const { properties } = property as PropertySchemaSet;
     const valueTyped = fieldValue as unknown as Record<string, unknown>;
 
     return (
@@ -27,7 +27,7 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
           <RegistryConsumer id='common'>
             {({ FormControl }) => (
               <>
-                {fieldsSet.map((subProperty, i) =>
+                {properties.map((subProperty, i) =>
                   !subProperty.hidden ? (
                     <FormControl
                       htmlId={!i ? htmlId : undefined}

@@ -21,14 +21,14 @@ export function applyContentTypeOld(schema: OldSchema, contentTypeId?: string): 
   const contentType = clonedSchema.contentTypes.find(cType => cType.id === contentTypeId);
 
   if (contentType) {
-    const { attributes, children, childOnly } = contentType;
+    const { attributes, children, childOnly, printTemplates } = contentType;
     const actualProperties: OldPropertySchema[] = attributes.map(contentTypeDescription => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeDescription.name);
 
       return { ...schemaProperty, ...contentTypeDescription };
     });
 
-    Object.assign(clonedSchema, { properties: actualProperties, children, childOnly });
+    Object.assign(clonedSchema, { properties: actualProperties, children, childOnly, printTemplates });
   }
 
   return clonedSchema;
@@ -40,14 +40,14 @@ export function applyContentType(schema: Schema, contentTypeId: string): Schema 
   const contentType = clonedSchema.contentTypes.find(cType => cType.id === contentTypeId);
 
   if (contentType) {
-    const { properties, children, childOnly, title } = contentType;
+    const { properties, children, childOnly, title, printTemplates } = contentType;
     const actualProperties: PropertySchema[] = properties.map(contentTypeProperty => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeProperty.name);
 
       return { ...schemaProperty, ...contentTypeProperty } as PropertySchema;
     });
 
-    Object.assign(clonedSchema, { title, properties: actualProperties, children, childOnly });
+    Object.assign(clonedSchema, { title, properties: actualProperties, children, childOnly, printTemplates });
   }
 
   return clonedSchema;
@@ -61,6 +61,7 @@ export function convertSchema<T extends Record<string, unknown>>({
   readOnly,
   children,
   childOnly,
+  printTemplates,
   properties,
   contentTypes
 }: OldSchema<T>): Schema<T> {
@@ -72,6 +73,7 @@ export function convertSchema<T extends Record<string, unknown>>({
     readOnly,
     children,
     childOnly,
+    printTemplates,
     properties: convertProperties(properties),
     contentTypes: contentTypes.map(convertContentType)
   };

@@ -30,4 +30,4 @@ export const FormControl = compose(
   withTypeDocument,
   withTypeUrl,
   withTypeDatetime
-)(Presenter);
+)(Presenter) as typeof Presenter;

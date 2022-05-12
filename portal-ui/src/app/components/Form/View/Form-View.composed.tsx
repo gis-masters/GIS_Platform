@@ -27,4 +27,4 @@ export const FormView = compose(
   withTypeSet,
   withTypeString,
   withTypeUrl
-)(Presenter);
+)(Presenter) as typeof Presenter;

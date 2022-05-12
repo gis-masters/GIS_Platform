@@ -41,6 +41,7 @@ export interface OldSchema<T extends Record<string, unknown> = Record<string, un
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];
   contentTypes?: OldContentType[];
+  printTemplates?: string[];
 }
 
 export interface OldContentType {
@@ -50,6 +51,7 @@ export interface OldContentType {
   icon?: string;
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];
+  printTemplates?: string[];
   attributes: OldPropertySchema[];
 }
 
@@ -128,7 +130,7 @@ export interface OldPropertySchemaBoolean<T extends Record<string, unknown> = Re
 export interface OldPropertySchemaSet<T extends Record<string, unknown> = Record<string, unknown>>
   extends OldBasePropertySchema<T> {
   valueType: ValueType.SET;
-  fieldsSet: OldPropertySchema[];
+  properties: OldPropertySchema[];
 }
 
 export interface OldPropertySchemaUrl<T extends Record<string, unknown> = Record<string, unknown>>

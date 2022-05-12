@@ -24,7 +24,7 @@ import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-SuperGroup.sc
 
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
-const EditFeatureGeometryGroup = compose(withMultiple)(GroupBase);
+const EditFeatureGeometryGroup = compose(withMultiple)(GroupBase) as typeof GroupBase;
 
 interface EditFeatureGeometrySuperGroupProps {
   geometryPart: CoordinateEdited[][];
@@ -87,12 +87,12 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
   private get isLastGroupEmpty(): boolean {
     const { geometryPart } = this.props;
 
-    return !geometryPart[geometryPart.length - 1].some(coordinate => coordinate.some(dismention => dismention));
+    return !geometryPart[geometryPart.length - 1].some(coordinate => coordinate.some(dimension => dimension));
   }
 
   @action.bound
   private addGroupHandler() {
-    const group = [];
+    const group: CoordinateEdited[] = [];
 
     for (let i = 0; i < this.props.minCoordsPerGroup; i++) {
       group.push(['', '']);

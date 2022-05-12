@@ -6,4 +6,9 @@ import { withTypeDateTime } from './_type/XTable-Filter_type_dateTime';
 import { withTypeFloat } from './_type/XTable-Filter_type_float';
 import { XTableFilter as Presenter } from './XTable-Filter';
 
-export const XTableFilter = compose(withTypeBool, withTypeChoice, withTypeDateTime, withTypeFloat)(Presenter);
+export const XTableFilter = compose(
+  withTypeBool,
+  withTypeChoice,
+  withTypeDateTime,
+  withTypeFloat
+)(Presenter) as typeof Presenter;

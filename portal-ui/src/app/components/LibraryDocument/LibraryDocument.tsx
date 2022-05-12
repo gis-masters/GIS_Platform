@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
-import { convertProperties, applyContentTypeOld } from '../../services/crg/schema.utils';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../services/server-urls.service';
+import { convertProperties, applyContentTypeOld } from '../../services/crg/schema.utils';
 import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';

@@ -16,7 +16,8 @@ const LibraryDocumentActionsItemAsIconButton: FC<LibraryDocumentActionsItemProps
   icon,
   download,
   onClick,
-  submenu
+  submenu,
+  loading
 }) => (
   <Tooltip title={title} enterDelay={600}>
     {submenu ? (
@@ -29,6 +30,7 @@ const LibraryDocumentActionsItemAsIconButton: FC<LibraryDocumentActionsItemProps
         color={color}
         href={url}
         download={download}
+        loading={loading}
       >
         {icon}
       </IconButton>

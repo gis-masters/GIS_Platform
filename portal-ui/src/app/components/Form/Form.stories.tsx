@@ -125,7 +125,7 @@ const testFields: PropertySchema<TestData>[] = [
     name: 'addr',
     title: 'Адрес',
     defaultValue: { type: 'private' },
-    fieldsSet: [
+    properties: [
       {
         propertyType: PropertyType.STRING,
         name: 'street',
@@ -157,7 +157,7 @@ const testFields: PropertySchema<TestData>[] = [
     propertyType: PropertyType.SET,
     name: 'services',
     title: 'Услуги',
-    fieldsSet: [
+    properties: [
       {
         propertyType: PropertyType.BOOL,
         name: 'service1',
@@ -303,7 +303,7 @@ const storyActions = (
 
 const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
-export const ContentOnly = Template.bind({}) as ComponentStory<typeof Form>;
+export const ContentOnly = Template.bind({});
 ContentOnly.args = {
   children: (
     <>
@@ -326,7 +326,7 @@ ContentOnly.args = {
   )
 };
 
-export const OutsideControl = Template.bind({}) as ComponentStory<typeof Form>;
+export const OutsideControl = Template.bind({});
 OutsideControl.args = {
   fields: testFields as PropertySchema[],
   value,
@@ -335,7 +335,7 @@ OutsideControl.args = {
   actions: storyActions
 };
 
-export const ReadOnly = Template.bind({}) as ComponentStory<typeof Form>;
+export const ReadOnly = Template.bind({});
 ReadOnly.args = {
   fields: testFields as PropertySchema[],
   value,
@@ -344,7 +344,7 @@ ReadOnly.args = {
   actions: storyActions
 };
 
-export const Auto = Template.bind({}) as ComponentStory<typeof Form>;
+export const Auto = Template.bind({});
 Auto.args = {
   id: 'autoForm',
   auto: true,

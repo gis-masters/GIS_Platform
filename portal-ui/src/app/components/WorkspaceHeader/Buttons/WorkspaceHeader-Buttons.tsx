@@ -9,7 +9,7 @@ import { User } from '../../User/User';
 import { route } from '../../../stores/Route.store';
 import { Pages } from '../../../app-routing.module';
 import { sidebars } from '../../../stores/Sidebars.store';
-import { PrintButton } from '../../PrintButton/PrintButton';
+import { PrintMapButton } from '../../PrintMapButton/PrintMapButton';
 import { HelpToggler } from '../../HelpToggler/HelpToggler';
 import { ExportGmlButton } from '../../ExportGmlButton/ExportGmlButton';
 import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
@@ -27,7 +27,7 @@ export class WorkspaceHeaderButtons extends Component {
       <div className={cnWorkspaceHeaderButtons()}>
         {route.data.page === Pages.DATA_MANAGEMENT && <CalculatorButton />}
         <CopyUrlButton inHeader />
-        {route.data.page === Pages.MAP && <PrintButton />}
+        {route.data.page === Pages.MAP && <PrintMapButton />}
         {route.data.page === Pages.MAP && (
           <Tooltip title='Проверка ошибок по приказу'>
             <IconButton onClick={this.handleBugsClick} color='inherit'>

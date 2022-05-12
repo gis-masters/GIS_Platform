@@ -12,14 +12,14 @@ import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import '!style-loader!css-loader!sass-loader!./Form-View_type_set.scss';
 
 const FormViewTypeSet: FC<FormControlProps> = observer(({ className, property, fieldValue = '', errors }) => {
-  const { fieldsSet } = property as PropertySchemaSet;
+  const { properties } = property as PropertySchemaSet;
   const valueTyped = fieldValue as Record<string, unknown>;
 
   return (
     <RegistryConsumer id='common'>
       {({ FormView }) => (
         <div className={cnFormView(null, [className])}>
-          {fieldsSet.map(subProperty => (
+          {properties.map(subProperty => (
             <FormView
               key={subProperty.name}
               property={subProperty}

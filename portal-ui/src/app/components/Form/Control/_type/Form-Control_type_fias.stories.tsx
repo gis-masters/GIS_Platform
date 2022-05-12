@@ -39,7 +39,7 @@ const setFormValue = action((changedValue: Partial<TestData> = {}) => {
 
 const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
-export const PlainControl = Template.bind({}) as ComponentStory<typeof Form>;
+export const PlainControl = Template.bind({});
 PlainControl.args = {
   fields: testFields as PropertySchema[],
   value,

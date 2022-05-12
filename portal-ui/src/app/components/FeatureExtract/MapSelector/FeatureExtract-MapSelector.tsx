@@ -8,7 +8,7 @@ import { printSettings } from '../../../stores/PrintSettings.store';
 import { PropertySchemaFile } from '../../../services/crg/schema.models';
 import { createFile, FileInfo } from '../../../services/files.service';
 import { FormControlProps } from '../../Form/Control/Form-Control';
-import { PrintDialog } from '../../PrintDialog/PrintDialog';
+import { PrintMapDialog } from '../../PrintMapDialog/PrintMapDialog';
 import { Button } from '../../Button/Button';
 import { Files } from '../../Files/Files';
 
@@ -41,7 +41,7 @@ export class FeatureExtractMapSelector extends Component<FormControlProps> {
           />
         )}
 
-        <PrintDialog onClose={this.closePrintDialog} open={this.printDialogOpen} onPrint={this.handlePrint} />
+        <PrintMapDialog onClose={this.closePrintDialog} open={this.printDialogOpen} onPrint={this.handlePrint} />
       </>
     );
   }

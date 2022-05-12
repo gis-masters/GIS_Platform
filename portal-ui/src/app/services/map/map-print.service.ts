@@ -7,7 +7,7 @@ import { getPointResolution } from 'ol/proj';
 import { printSettings, StyleRuleExtended } from '../../stores/PrintSettings.store';
 import { saveAsBlob } from '../util/FileSaver';
 import { mapService } from './map.service';
-import { PrintDialogDate } from '../../components/PrintDialog/Date/PrintDialog-Date';
+import { PrintMapDialogDate } from '../../components/PrintMapDialog/Date/PrintMapDialog-Date';
 import { mapStore } from '../../stores/Map.store';
 import { Legend } from '../../components/Legend/Legend';
 import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles.service';
@@ -267,7 +267,7 @@ export async function getDateImageSrc(resolution?: number): Promise<string> {
   const el = document.createElement('div');
   document.body.append(el);
   const root = createRoot(el);
-  const reactElement = createElement(PrintDialogDate, {
+  const reactElement = createElement(PrintMapDialogDate, {
     forPrint: true,
     resolution: resolution || printSettings.resolution
   });

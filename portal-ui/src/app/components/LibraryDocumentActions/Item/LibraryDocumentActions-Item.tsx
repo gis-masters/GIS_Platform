@@ -11,6 +11,7 @@ export interface LibraryDocumentActionsItemProps extends IClassNameProps {
   icon: ReactNode;
   title: string;
   disabled?: boolean;
+  loading?: boolean;
   color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning';
   url?: string;
   download?: boolean;

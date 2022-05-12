@@ -15,6 +15,7 @@ const LibraryDocumentActionsItemAsButton: FC<LibraryDocumentActionsItemProps> = 
   url,
   download,
   submenu,
+  loading,
   onClick
 }) =>
   submenu ? (
@@ -22,10 +23,11 @@ const LibraryDocumentActionsItemAsButton: FC<LibraryDocumentActionsItemProps> = 
       className={cnLibraryDocumentActionsItem(null, [className])}
       href={download ? url : undefined}
       routerLink={!download ? url : undefined}
-      disabled={disabled}
       onClick={onClick}
       color={color || 'inherit'}
       startIcon={icon}
+      disabled={disabled}
+      loading={loading}
       menu={submenu}
     >
       {title}
