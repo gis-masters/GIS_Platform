@@ -42,6 +42,7 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
       children,
       headerCellProps,
       className,
+      hidden,
       onBeforeFilterChange,
       onFilterChange
     } = this.props;
@@ -49,7 +50,7 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
     const cellProps = {
       ...headerCellProps,
       ...this.props,
-      className: cnXTableHeadCell({ sortable, filterable, filterType }, [className])
+      className: cnXTableHeadCell({ sortable, filterable, filterType, hidden }, [className])
     };
 
     delete cellProps.field;

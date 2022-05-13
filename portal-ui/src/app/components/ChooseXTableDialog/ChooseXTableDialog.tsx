@@ -48,6 +48,7 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
       actionButtonProps = {},
       single,
       additionalAction,
+      selectedItems,
       cols,
       onClose,
       getRowId
@@ -64,6 +65,7 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
             secondarySortField={secondarySortField}
             filterable
             single={single}
+            selectedItems={selectedItems}
             onSelect={this.onSelected}
             getRowId={getRowId}
           />

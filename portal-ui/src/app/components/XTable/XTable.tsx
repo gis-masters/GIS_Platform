@@ -5,6 +5,7 @@ import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, debounce } from 'lodash';
+import { VisibilityOff } from '@mui/icons-material';
 import {
   Table,
   TableBody,
@@ -37,6 +38,7 @@ import { XTableContainer } from './Container/XTable-Container';
 import { XTableHeaderActions } from './HeaderActions/XTable-HeaderActions';
 
 import '!style-loader!css-loader!sass-loader!./XTable.scss';
+import '!style-loader!css-loader!sass-loader!./Cell/XTable-Cell.scss';
 
 const cnXTable = cn('XTable');
 
@@ -53,6 +55,7 @@ export interface XTableColumn<T> {
   cellProps?: TableCellProps;
   headerCellProps?: TableCellProps;
   align?: TableCellProps['align'];
+  hidden?: boolean;
 }
 
 interface XTablePropsBase<T> extends IClassNameProps {
@@ -60,6 +63,7 @@ interface XTablePropsBase<T> extends IClassNameProps {
   headerActions?: ReactNode;
   headless?: boolean;
   cols: XTableColumn<T>[];
+  hiddenFields?: string[];
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
   filterable?: boolean;
@@ -141,7 +145,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
   }
 
   render() {
-    const { cols, filterable, filtersAlwaysEnabled, title, headerActions, headless, className, getRowId } = this.props;
+    const { filterable, filtersAlwaysEnabled, title, headerActions, headless, className, getRowId } = this.props;
 
     return (
       <div className={cnXTable(null, [className, 'scroll'])}>
@@ -162,7 +166,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
             {!headless && (
               <TableHead>
                 <TableRow>
-                  {cols.map(
+                  {this.cols.map(
                     (
                       {
                         field,
@@ -173,7 +177,8 @@ export class XTable<T> extends Component<XTableProps<T>> {
                         filterType = FilterType.STRING,
                         filterOptions,
                         align,
-                        headerCellProps
+                        headerCellProps,
+                        hidden
                       },
                       i
                     ) => (
@@ -188,6 +193,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
                         filterOptions={filterOptions}
                         align={align}
                         headerCellProps={headerCellProps}
+                        hidden={hidden}
                         onBeforeFilterChange={this.beforeFilterChange}
                         onFilterChange={this.afterFilterChange}
                       >
@@ -199,6 +205,14 @@ export class XTable<T> extends Component<XTableProps<T>> {
                             &nbsp;<DescriptionMark>{description}</DescriptionMark>
                           </>
                         )}
+                        {hidden && (
+                          <>
+                            &nbsp;
+                            <Tooltip title='Колонка скрыта настройками. Отображается из-за наличия фильтрации или сортировки.'>
+                              <VisibilityOff color='action' fontSize='small' />
+                            </Tooltip>
+                          </>
+                        )}
                       </XTableHeadCell>
                     )
                   )}
@@ -207,12 +221,17 @@ export class XTable<T> extends Component<XTableProps<T>> {
             )}
             <TableBody>
               {this.empty ? (
-                <XTableEmpty colsCount={cols.length} busy={this.busy} />
+                <XTableEmpty colsCount={this.cols.length} busy={this.busy} />
               ) : (
                 this.dataPaged.map((rowData, i) => (
                   <TableRow key={getRowId ? getRowId(rowData) : i} hover>
-                    {cols.map(({ field, CellContent, getIdBadge, cellProps, align }, i) => (
-                      <TableCell key={`${i}_${String(field)}`} align={align} {...(cellProps || {})}>
+                    {this.cols.map(({ field, CellContent, getIdBadge, cellProps, align, hidden }, i) => (
+                      <TableCell
+                        className={cnXTable('Cell', { hidden })}
+                        key={`${i}_${String(field)}`}
+                        align={align}
+                        {...(cellProps || {})}
+                      >
                         {CellContent ? (
                           <CellContent
                             rowData={rowData}
@@ -254,6 +273,22 @@ export class XTable<T> extends Component<XTableProps<T>> {
     const { getData } = this.props as XTablePropsAsync<T>;
 
     return Boolean(getData);
+  }
+
+  @computed
+  private get cols(): XTableColumn<T>[] {
+    const { cols, hiddenFields = [] } = this.props;
+
+    return cols
+      .map(col => {
+        col.hidden = hiddenFields.includes(String(col.field));
+
+        return col;
+      })
+      .filter(
+        ({ field, hidden }) =>
+          !hidden || this.pageOptions.sort === field || Object.keys(this.pageOptions.filter).includes(field as string)
+      );
   }
 
   @computed

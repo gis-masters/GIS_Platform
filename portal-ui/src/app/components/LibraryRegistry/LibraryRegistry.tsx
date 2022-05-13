@@ -19,12 +19,16 @@ import { communicationService } from '../../services/communication.service';
 import { schemaService } from '../../services/crg/schema.service';
 import { convertProperties } from '../../services/crg/schema.utils';
 import { formatDate } from '../../services/util/date.util';
-import { PageOptions } from '../../services/models';
+import { PageOptions, SortDir } from '../../services/models';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
+import { FilterQuery } from '../../services/util/filterObjects';
+import { SortParams } from '../../services/util/sortObjects';
 import { FilterType } from '../XTable/Filter/XTable-Filter';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { XTable, XTableColumn } from '../XTable/XTable';
+import { services } from '../../services/services';
+import { route } from '../../stores/Route.store';
 import { Loading } from '../Loading/Loading';
 
 import { LibraryRegistrySettings } from './Settings/LibraryRegistry-Settings';
@@ -39,6 +43,7 @@ interface LibraryRegistryProps {
   id: string;
   libraryId: string;
   inDialog?: boolean;
+  urlChangeEnabled?: boolean;
   addedDocuments?: DocumentInfo[];
   checkedLibraryDocuments?: LibraryRecord[];
   onSelect?: (items: LibraryRecord[]) => void;
@@ -51,6 +56,7 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   @observable private hiddenFields: string[] = [];
   @observable private tablePageOptions?: PageOptions;
   @observable private libraryDocuments: LibraryRecord[] = [];
+  @observable private filteredCols: string[] = [];
 
   private tableInvoke: { reload?(): void } = {};
 
@@ -79,13 +85,14 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
             {!this.props.inDialog && <Breadcrumbs itemsType='link' items={this.breadcrumbsItems} />}
             <XTable<LibraryRecord>
               className={cnLibraryRegistry('Table')}
-              cols={this.cols.filter(({ field }) => !this.hiddenFields.includes(String(field)))}
+              cols={this.cols}
+              hiddenFields={this.hiddenFields}
               getData={this.getData}
               getRowId={this.getRowId}
-              defaultSort={{ field: 'title', asc: true }}
+              defaultSort={this.sort}
               secondarySortField='id'
               filtersAlwaysEnabled
-              defaultFilter={{ is_folder: { $in: [null, false] } }}
+              defaultFilter={this.filter}
               headerActions={
                 <>
                   <LibraryRegistryExport
@@ -266,8 +273,21 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   }
 
   @action.bound
-  private handleTablePageOptionsChange(pageOptions: PageOptions) {
+  private async handleTablePageOptionsChange(pageOptions: PageOptions) {
     this.tablePageOptions = pageOptions;
+
+    const { sort, sortDir, filter } = pageOptions;
+    const encodedSort = JSON.stringify([sort, sortDir]);
+    const encodedFilter = JSON.stringify(filter);
+
+    await services.router.navigate([location.pathname], {
+      queryParams: {
+        sort: encodedSort,
+        filter: encodedFilter
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
   }
 
   private getRowId(rowData: LibraryRecord) {
@@ -287,6 +307,32 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
     const settings = JSON.parse(localStorage.getItem(this.getStorageKey()) || '{}') as { hiddenFields?: string[] };
     if (settings.hiddenFields) {
       this.setHiddenFields(settings.hiddenFields);
+    }
+  }
+
+  @computed
+  private get sort(): SortParams<LibraryRecord> {
+    try {
+      const queryParamsSort = route.queryParams?.sort;
+      const sort = queryParamsSort && (JSON.parse(queryParamsSort) as string[]);
+
+      return this.props.urlChangeEnabled && queryParamsSort
+        ? { field: sort[0], asc: sort[1] === SortDir.ASC }
+        : { field: 'title', asc: true };
+    } catch {
+      services.logger.error('Ошибка получения значений сортировки');
+    }
+  }
+
+  @computed
+  private get filter() {
+    try {
+      const queryParamsFilter = route.queryParams?.filter;
+      const filter = queryParamsFilter && (JSON.parse(queryParamsFilter) as FilterQuery);
+
+      return this.props.urlChangeEnabled && queryParamsFilter ? filter : { is_folder: { $in: [null, false] } };
+    } catch {
+      services.logger.error('Ошибка получения значений фильтров');
     }
   }
 
