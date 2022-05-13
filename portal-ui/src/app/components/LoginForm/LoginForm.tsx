@@ -49,6 +49,20 @@ export class LoginForm extends Component<LoginFormProps> {
   @observable private esiaLoading: boolean;
 
   async componentDidMount() {
+    if (route.queryParams.guestName && route.queryParams.guestPass) {
+      this.setUserData(route.queryParams.guestName, route.queryParams.guestPass);
+      await this.submitHandler();
+
+      await services.ngZone.run(async () => {
+        await services.router.navigate([location.pathname], {
+          queryParams: { guestName: null, guestPass: null },
+          queryParamsHandling: 'merge'
+        });
+      });
+
+      return;
+    }
+
     if (route.data.page === Pages.LOGIN) {
       const user = await usersService.fetchCurrentUser(true);
       if (user?.id) {
@@ -154,6 +168,14 @@ export class LoginForm extends Component<LoginFormProps> {
   }
 
   @action.bound
+  private setUserData(username: string, password: string) {
+    this.userData = {
+      username,
+      password
+    };
+  }
+
+  @action.bound
   private handlePasswordRecovery() {
     this.passwordRecovery =
       env.passwordRestore ||
@@ -173,8 +195,8 @@ export class LoginForm extends Component<LoginFormProps> {
   }
 
   @boundMethod
-  private async submitHandler(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  private async submitHandler(e?: React.FormEvent<HTMLFormElement>) {
+    e?.preventDefault();
     this.handleLoading(true);
     const regExp = new RegExp(knownRegex.email);
     if (!this.userData.username.length || !regExp.test(this.userData.username)) {
