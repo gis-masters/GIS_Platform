@@ -59,14 +59,33 @@ public class GDALService implements IExporter {
     /**
      * Экспорт в шейп.
      * <p>
-     * Выполняются следующие команды <p>
-     *     - mkdir SOME_DIR; <p>
-     *     - cd SOME_DIR; <p>
-     *     - ogr2ogr -file "ESRi Shapefile" agriculture_point.shp PG:"host=localhost port=5434 user=fiz password=314
-     *       dbname=database_1" -sql "SELECT * from test1_1.agriculture_point" --config SHAPE_ENCODING UTF-8; <p>
-     *     - zip -r ../agriculture.zip *; <p>
-     *     - cd ..; <p>
-     *     - rm -rf SOME_DIR
+     * Выполняются следующие команды <p> - mkdir SOME_DIR; <p> - cd SOME_DIR; <p>
+     * <br>
+     * Экспорт с помощью ogr2ogr <p> - ogr2ogr -file "ESRi Shapefile" agriculture_point.shp PG:"host=localhost port=5434
+     * user=fiz password=314 dbname=database_1" -sql "SELECT * from test1_1.agriculture_point" --config SHAPE_ENCODING
+     * UTF-8;
+     * <p>
+     * <br>
+     * Серия команд для смена 29 бита, отвечающего за кодировку для arcMap, в файле dbf.
+     * <p>
+     * И добавление файла .cpg для определения кодировки для Qgis
+     * <p>
+     * - head -c +29 heritagearea_1_1be9.dbf > head.ext // Вырезаем первые 28 байт чтобы избавиться от 29
+     * <p>
+     * - echo -n -e \\u0000 >> head.ext // Заполняем 29 байт пустым
+     * <p>
+     * - tail -c +31 heritagearea_1_1be9.dbf > tail.ext // Выделяем в отдельный файл нужный нам конец файла.
+     * <p>
+     * - dd if=tail.ext >> head.ext // соединяем две части
+     * <p>
+     * - rm heritagearea_1_1be9.dbf tail.ext
+     * <p>
+     * - mv head.ext heritagearea_1_1be9.dbf // заменяем dbf на новый с заменённым 29 байтом.
+     * <p>
+     * - echo "UTF-8" >> heritagearea_1_1be9.cpg // Добавим файл с указанием кодировки.
+     * <p>
+     * <br>
+     * - zip -r ../agriculture.zip *; <p> - cd ..; <p> - rm -rf SOME_DIR
      *
      * @param resource Ресурс для экспорта
      *
@@ -84,18 +103,28 @@ public class GDALService implements IExporter {
             String password = environment.getProperty("spring.datasource.password");
             String dbName = resource.getDbName();
             String schemaName = resource.getSchemaName();
-            String tableNAme = resource.getTableName();
+            String tableName = resource.getTableName();
 
-            String allInOneCommandTest = "mkdir " + randomDirName + "; cd " + randomDirName + "; " +
-                    "ogr2ogr -f \"ESRi Shapefile\" " + resource.getTableName() + ".shp PG:\"host=" + host + " port=" + port + " " +
-                    "user=" + userName + " password=" + password + " dbname=" + dbName + "\" -sql \"SELECT * from " + schemaName + "." + tableNAme + "\" --config SHAPE_ENCODING UTF-8; " +
-                    "zip -r ../" + resource.getTableName() + ".zip *; cd ..; rm -rf " + randomDirName;
+            String mkdirAndCd = String.format("mkdir %s; cd %s;", randomDirName, randomDirName);
+            String exportAShp = getOgr2OgrExportCommand(host, port, userName, password, dbName, schemaName, tableName);
+            String getTheHead = String.format(" head -c 29 %s.dbf > head.ext;", tableName);
+            String getTheTail = String.format(" tail -c +31 %s.dbf > tail.ext;", tableName);
+            String fillHead1b = " dd if=tail.ext bs=1 count=1 >> head.ext;";
+            String collectAll = " dd if=tail.ext >> head.ext;";
+            String removeSome = String.format(" rm %s.dbf tail.ext;", tableName);
+            String renameFile = String.format(" mv head.ext %s.dbf;", tableName);
+            String addCpgFile = String.format(" echo \"UTF-8\" >> %s.cpg;", tableName);
+            String archiveAll = String.format(" zip -r ../%s.zip *;", tableName);
+            String cleanUpAll = String.format(" cd ..; rm -rf %s;", randomDirName);
 
-            log.debug("execute command: {}", allInOneCommandTest);
+            String allInOneCommand = mkdirAndCd + exportAShp + getTheHead + getTheTail + fillHead1b + collectAll +
+                    removeSome + renameFile + addCpgFile + archiveAll + cleanUpAll;
+
+            log.debug("Execute export to SHP console command: {}", allInOneCommand);
 
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.directory(new File(rootPath));
-            processBuilder.command("sh", "-c", allInOneCommandTest);
+            processBuilder.command("sh", "-c", allInOneCommand);
             Process process = processBuilder.start();
             final boolean isSuccess = process.waitFor(20, SECONDS);
             if (!isSuccess) {
@@ -119,6 +148,14 @@ public class GDALService implements IExporter {
 
             throw new ExportException(e.getMessage(), e);
         }
+    }
+
+    private String getOgr2OgrExportCommand(String host, String port, String userName, String password, String dbName,
+                                           String schemaName, String tableName) {
+        return String.format("ogr2ogr -f \"ESRi Shapefile\" %s.shp " +
+                                     "PG:\"host=%s port=%s user=%s password=%s dbname=%s\" " +
+                                     "-sql \"SELECT * from %s.%s\" --config SHAPE_ENCODING UTF-8;",
+                             tableName, host, port, userName, password, dbName, schemaName, tableName);
     }
 
     private void logStream(InputStream inputStream) throws IOException {
