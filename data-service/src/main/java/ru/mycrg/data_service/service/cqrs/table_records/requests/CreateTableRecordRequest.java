@@ -44,8 +44,8 @@ public class CreateTableRecordRequest implements IRequest<Feature>, Auditable, I
     @Override
     public CrgAuditEvent getEvent() {
         String entityName = "unknown";
-        if (record != null) {
-            entityName = record.getTitle() == null ? "unknown" : record.getTitle();
+        if (rQualifier.getTable() != null) {
+            entityName = rQualifier.getTable();
         }
 
         return new CrgAuditEvent(mapper.convertValue(feature, JsonNode.class),

@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.audit_service.dto.AuditEventActionsType.*;
 import static ru.mycrg.acceptance.audit_service.dto.AuditEventEntityType.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerCreateDto;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
 
@@ -178,11 +179,8 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("Создана запись в журнале аудита о создании записи в слое")
-    public void checkFeatureCreate() throws InterruptedException {
-        sleep(500);
-
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, FEATURE.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
+    public void checkFeatureCreate() {
+        checkAuditEvent(CREATE.name(), FEATURE.name(), currentTableName);
     }
 
     @Then("Создан аудит лог о создании слоя")
@@ -218,11 +216,8 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Создан аудит лог об изменении записи в слое")
-    public void checkFeatureUpdate() throws InterruptedException {
-        sleep(500);
-
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, FEATURE.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
+    public void checkFeatureUpdate() {
+        checkAuditEvent(UPDATE.name(), FEATURE.name(), currentTableName);
     }
 
     @Then("Создана запись в журнале аудита о создании датасета")
@@ -316,7 +311,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
                 .orElseThrow(() -> new IllegalArgumentException(errMsg));
     }
 
-    private boolean checkAuditEvents(String path, String key) {
+    private boolean checkAuditEvents(String key, String value) {
         try {
             int currentAttempt = 0;
             do {
@@ -325,7 +320,41 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
                 getAllAuditEntity();
 
-                if (response.jsonPath().getList(path).contains(key)) {
+                if (response.jsonPath().getList(key).contains(value)) {
+                    return true;
+                }
+
+                sleep(800);
+            } while (currentAttempt < MAX_RETRY_ATTEMPT);
+
+            throw new RuntimeException("Audit event not created!");
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Audit event not created!");
+        }
+    }
+
+    private boolean checkAuditEvent(String actionType, String entityType, String entityName) {
+        try {
+            int currentAttempt = 0;
+            do {
+                currentAttempt++;
+                System.out.println("attempt check audit event by: actionType/entityType/entityName " + currentAttempt);
+
+                getAllAuditEntity();
+
+                List<AuditEventDto> lists = response.jsonPath().getList("_embedded.events", AuditEventDto.class);
+
+                boolean result = false;
+                for (AuditEventDto list: lists) {
+                    if (actionType.equalsIgnoreCase(list.getActionType())
+                            && entityType.equalsIgnoreCase(list.getEntityType())
+                            && entityName.equalsIgnoreCase(list.getEntityName())) {
+                        result = true;
+                        break;
+                    }
+                }
+
+                if (result) {
                     return true;
                 }
 

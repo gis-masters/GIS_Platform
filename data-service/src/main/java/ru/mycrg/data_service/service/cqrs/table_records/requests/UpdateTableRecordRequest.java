@@ -49,9 +49,14 @@ public class UpdateTableRecordRequest implements IRequest<Voidy>, Auditable, IUp
 
     @Override
     public CrgAuditEvent getEvent() {
+        String entityName = "unknown";
+        if (rQualifier.getTable() != null) {
+            entityName = rQualifier.getTable();
+        }
+
         return new CrgAuditEvent(mapper.convertValue(newFeature, JsonNode.class),
                                  "UPDATE",
-                                 "unknown",
+                                 entityName,
                                  FEATURE.name(),
                                  rQualifier.getRecord());
     }

@@ -4,12 +4,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class AuditEventDto {
 
+    private Long id;
+    private String userName;
     private String eventDateTime;
     private String actionType;
     private String entityName;
     private String entityType;
     private Long entityId;
+    private Long organizationId;
     private JsonNode entityStateAfter;
+    private Object _links;
 
     public AuditEventDto() {
         // Framework required
@@ -80,6 +84,38 @@ public class AuditEventDto {
 
     public void setEntityStateAfter(JsonNode entityStateAfter) {
         this.entityStateAfter = entityStateAfter;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
+    }
+
+    public Object get_links() {
+        return _links;
+    }
+
+    public void set_links(Object _links) {
+        this._links = _links;
     }
 
     @Override

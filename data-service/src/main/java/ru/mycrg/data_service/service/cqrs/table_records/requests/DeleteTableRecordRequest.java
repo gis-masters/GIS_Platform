@@ -37,9 +37,14 @@ public class DeleteTableRecordRequest implements IRequest<Voidy>, Auditable, IDe
 
     @Override
     public CrgAuditEvent getEvent() {
+        String entityName = "unknown";
+        if (rQualifier.getTable() != null) {
+            entityName = rQualifier.getTable();
+        }
+
         return new CrgAuditEvent(mapper.convertValue(feature.getId(), JsonNode.class),
                                  "DELETE",
-                                 "unknown",
+                                 entityName,
                                  FEATURE.name(),
                                  feature.getId());
     }
