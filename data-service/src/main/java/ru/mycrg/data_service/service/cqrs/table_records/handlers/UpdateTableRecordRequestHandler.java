@@ -33,7 +33,8 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
         SchemaDto schema = request.getSchema();
         Feature newFeature = request.getNewFeature();
         systemAttributeHandler.initSchema(schema)
-                              .prepareJsonb(newFeature);
+                              .prepareJsonb(newFeature)
+                              .decapitalize(newFeature);
 
         Feature oldFeature = spatialRecordsDao.findById(rQualifier, schema)
                                               .orElseThrow(() -> new NotFoundException(rQualifier.getRecord()));

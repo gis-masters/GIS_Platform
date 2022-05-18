@@ -107,7 +107,7 @@ public class EsiaController {
                 reason = e.getCause().getMessage();
             }
 
-            log.error("Не удалось обменять код на токен в ЕСИА. Причина: {}", reason);
+            log.error("Не удалось авторизоваться через портал госуслуг. State: {}. Reason: {}", state, reason);
         }
 
         return redirectTo(redirect);

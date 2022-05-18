@@ -13,6 +13,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Objects.nonNull;
@@ -119,6 +120,15 @@ public class SystemAttributeHandler {
 
     public SystemAttributeHandler prepareJsonb(@NotNull Feature feature) {
         prepareJsonb(feature.getProperties());
+
+        return this;
+    }
+
+    public SystemAttributeHandler decapitalize(@NotNull Feature feature) {
+        Map<String, Object> decapitalized = new HashMap<>();
+        feature.getProperties().forEach((k, v) -> decapitalized.put(k.toLowerCase(), v));
+
+        feature.setProperties(decapitalized);
 
         return this;
     }

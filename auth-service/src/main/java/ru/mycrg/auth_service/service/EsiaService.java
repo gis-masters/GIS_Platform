@@ -77,19 +77,25 @@ public class EsiaService {
     public Optional<EsiaUserInfo> getUser(String redirect,
                                           String code,
                                           String state) {
+        String accessToken;
         try {
-            EsiaUserInfo userInfo;
-
             EsiaJWT esiaJWT = tradeCodeForToken(redirect, code, state);
-            String accessToken = esiaJWT.getAccess_token();
+            accessToken = esiaJWT.getAccess_token();
+        } catch (Exception e) {
+            log.error("Не удалось обменять код на токен в ЕСИА. State: {}. Reason: {}",
+                      state, e.getMessage());
 
+            return Optional.empty();
+        }
+
+        try {
             String userSbjId = getUserSbjId(accessToken);
-            userInfo = getUserInfo(accessToken, userSbjId);
+            EsiaUserInfo userInfo = getUserInfo(accessToken, userSbjId);
             userInfo.setSbjId(userSbjId);
 
             return Optional.of(userInfo);
         } catch (Exception e) {
-            log.error("Не удалось авторизоваться через портал госуслуг. State: {}. Reason: {}",
+            log.error("Не удалось получить информацию о пользователе. State: {}. Reason: {}",
                       state, e.getMessage());
 
             return Optional.empty();
@@ -243,9 +249,14 @@ public class EsiaService {
         String[] accessParts = accessToken.split("\\.");
 
         String content = new String(Base64.getUrlDecoder().decode(accessParts[1]), StandardCharsets.UTF_8);
+
+        log.debug("Try read as map, accessToken content: {}", content);
+
         Map<String, String> result = mapper.readValue(content,
                                                       new TypeReference<Map<String, String>>() {
                                                       });
+
+        log.debug("Content successfully read: {}", result);
 
         return result.get("urn:esia:sbj_id");
     }
