@@ -132,6 +132,11 @@
         "id": "print_information",
         "title": "Печать документа",
         "contentUrl": "/assets/help/map/dataManagement/07print_information.html"
+      },
+      {
+        "id": "related_doc",
+        "title": "Связность документов",
+        "contentUrl": "/assets/help/map/dataManagement/08related_doc.html"
       }
     ]
   },
