@@ -10,7 +10,7 @@ import {
   PropertySchemaUrl,
   Schema,
   ContentType,
-  DefaultValueFormula
+  ValueFormula
 } from './schema.models';
 import { LibraryRecord } from './doc-library.service';
 import { DocumentInfo } from '../../components/Documents/Documents';
@@ -167,7 +167,7 @@ export function convertProperties<T extends Record<string, unknown>>(
   });
 }
 
-export const defaultValueWellKnownFormulas: Record<string, DefaultValueFormula> = {
+export const defaultValueWellKnownFormulas: Record<string, ValueFormula> = {
   inherit: (obj, property, parent) => parent[property.name],
   parentDocument: (obj, property, parent: LibraryRecord) => {
     const value: DocumentInfo[] = [{ id: parent.id, libraryId: parent.libraryId, title: parent.title }];

@@ -6,9 +6,10 @@ import { NoteAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
+import { currentProject } from '../../stores/CurrentProject.store';
 import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
-import { convertProperties, applyContentTypeOld } from '../../services/crg/schema.utils';
 import { getDefaultValues, validateFormValue } from '../../services/crg/formValidation.service';
+import { convertProperties, applyContentTypeOld } from '../../services/crg/schema.utils';
 import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { getFeatureUrl } from '../../services/map/map-link-following.service';
 import { communicationService } from '../../services/communication.service';
@@ -100,6 +101,10 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
 
   @computed
   private get documentFields(): PropertySchema<LibraryRecord>[] {
+    if (!currentProject.vectorLayers.length) {
+      return [];
+    }
+
     const { feature, layer } = this.props;
     const titlePropertyName = this.featureFields.find(({ asTitle }) => asTitle)?.name || 'title';
     const featureTitle = String(feature.properties[titlePropertyName] || '');
@@ -109,7 +114,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
         name: 'title',
         title: 'Название',
         propertyType: PropertyType.STRING,
-        defaultValue: `Выписка об объекте "${featureTitle}"`
+        defaultValueFormula: () => `Выписка об объекте "${featureTitle}"`
       },
       {
         name: 'map',
@@ -123,21 +128,21 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
         name: 'feature_id',
         title: 'ID объекта',
         propertyType: PropertyType.STRING,
-        defaultValue: feature.id.split('.').pop(),
+        defaultValueFormula: () => feature.id.split('.').pop(),
         readOnly: true
       },
       {
         name: 'layer',
         title: 'Слой',
         propertyType: PropertyType.STRING,
-        defaultValue: `${layer.title} (${layer.tableName})`,
+        defaultValueFormula: () => `${layer.title} (${layer.tableName})`,
         readOnly: true
       },
       {
         name: 'feature_url',
         title: 'Ссылка на объект',
         propertyType: PropertyType.STRING,
-        defaultValue: getFeatureUrl(feature),
+        defaultValueFormula: () => getFeatureUrl(feature),
         readOnly: true
       },
       {
@@ -145,7 +150,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
         title: 'GeoJSON',
         propertyType: PropertyType.STRING,
         display: 'code',
-        defaultValue: JSON.stringify(feature, null, 2),
+        defaultValueFormula: () => JSON.stringify(feature, null, 2),
         readOnly: true
       },
       {

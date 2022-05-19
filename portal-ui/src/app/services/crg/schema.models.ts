@@ -52,7 +52,7 @@ export interface ContentType {
   printTemplates?: string[];
 }
 
-export type DefaultValueFormula = (
+export type ValueFormula = (
   obj: Record<string, unknown>,
   property: PropertySchema,
   parent: Record<string, unknown>
@@ -70,7 +70,7 @@ interface BasePropertySchema<T = Record<string, unknown>> {
   readOnly?: boolean;
   defaultValue?: unknown;
   minWidth?: number;
-  defaultValueFormula?: string;
+  defaultValueFormula?: string | ValueFormula;
   defaultValueWellKnownFormula?: string;
   customValidationFunction?: FieldValidator;
 }

@@ -12,7 +12,7 @@ import {
   PropertySchemaInt,
   PropertySchemaString,
   PropertySchemaUrl,
-  DefaultValueFormula
+  ValueFormula
 } from './schema.models';
 import { defaultValueWellKnownFormulas } from './schema.utils';
 
@@ -286,8 +286,11 @@ export function getDefaultValues<T extends Record<string, unknown>>(
 
     if (field.defaultValueFormula) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-implied-eval
-        const formula = new Function('obj', 'property', 'parent', field.defaultValueFormula) as DefaultValueFormula;
+        const formula: ValueFormula =
+          typeof field.defaultValueFormula === 'string'
+            ? // eslint-disable-next-line @typescript-eslint/no-implied-eval
+              (new Function('obj', 'property', 'parent', field.defaultValueFormula) as ValueFormula)
+            : field.defaultValueFormula;
 
         values[field.name] = formula(values, field as PropertySchema, parent) as T[keyof T];
       } catch (error) {
