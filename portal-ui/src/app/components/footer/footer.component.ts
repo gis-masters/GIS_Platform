@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { Footer } from '../Footer/Footer';
 
+const FooterWithRegistry = withRegistry(registry)(Footer);
+
 @Component({
   selector: 'crg-footer',
   template: '<div class="footer" #react></div>'
@@ -28,7 +30,7 @@ export class FooterComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(Footer));
+    const reactElement = createElement(FooterWithRegistry);
 
     this.root?.render(reactElement);
   }

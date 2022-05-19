@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { ReValidateButton } from '../ReValidateButton/ReValidateButton';
 
+const ReValidateButtonWithRegistry = withRegistry(registry)(ReValidateButton);
+
 @Component({
   selector: 're-validate-button',
   template: '<div #react></div>'
@@ -28,7 +30,7 @@ export class ReValidateButtonComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(ReValidateButton));
+    const reactElement = createElement(ReValidateButtonWithRegistry);
 
     this.root?.render(reactElement);
   }

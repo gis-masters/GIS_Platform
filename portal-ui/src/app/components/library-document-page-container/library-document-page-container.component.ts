@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { LibraryDocumentPageContainer } from '../LibraryDocumentPageContainer/LibraryDocumentPageContainer';
 
+const LibraryDocumentPageContainerWithRegistry = withRegistry(registry)(LibraryDocumentPageContainer);
+
 @Component({
   selector: 'crg-library-document-page-container',
   template: '<div class="library-document-page-container" #react></div>',
@@ -29,7 +31,7 @@ export class LibraryDocumentPageContainerComponent implements OnInit, OnChanges,
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(LibraryDocumentPageContainer));
+    const reactElement = createElement(LibraryDocumentPageContainerWithRegistry);
 
     this.root?.render(reactElement);
   }

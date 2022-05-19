@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { MapToolbar } from '../MapToolbar/MapToolbar';
 
+const MapToolbarWithRegistry = withRegistry(registry)(MapToolbar);
+
 @Component({
   selector: 'crg-map-toolbar',
   template: '<div class="map-toolbar" #react></div>',
@@ -30,7 +32,7 @@ export class MapToolbarComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(MapToolbar));
+    const reactElement = createElement(MapToolbarWithRegistry);
 
     this.root?.render(reactElement);
   }

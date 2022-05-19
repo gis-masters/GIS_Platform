@@ -8,6 +8,8 @@ import { registry } from '../../services/registry';
 import { Dataset } from '../../services/data.service';
 import { PickupDatasets } from '../PickupDatasets/PickupDatasets';
 
+const PickupDatasetsWithRegistry = withRegistry(registry)(PickupDatasets);
+
 @Component({
   selector: 'pickup-datasets',
   template: '<div class="pickup-datasets" #react></div>'
@@ -31,7 +33,7 @@ export class PickupDatasetsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(PickupDatasets), {
+    const reactElement = createElement(PickupDatasetsWithRegistry, {
       onDatasetSelected: this.onDatasetSelected
     });
 

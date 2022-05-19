@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { BasemapsSelect } from '../BasemapsSelect/BasemapsSelect';
 import { registry } from '../../services/registry';
 
+const BasemapsSelectWithRegistry = withRegistry(registry)(BasemapsSelect);
+
 @Component({
   selector: 'crg-basemaps-select',
   template: '<div class="basemaps-select" #react></div>',
@@ -29,7 +31,7 @@ export class BasemapsSelectComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(BasemapsSelect));
+    const reactElement = createElement(BasemapsSelectWithRegistry);
 
     this.root?.render(reactElement);
   }

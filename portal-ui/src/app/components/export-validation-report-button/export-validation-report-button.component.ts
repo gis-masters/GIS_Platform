@@ -7,6 +7,8 @@ import { registry } from '../../services/registry';
 import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { ExportValidationReportButton } from '../ExportValidationReportButton/ExportValidationReportButton';
 
+const ExportValidationReportButtonWithRegistry = withRegistry(registry)(ExportValidationReportButton);
+
 @Component({
   selector: 'crg-export-validation-report-button',
   template: '<div class="export-validation-report-button" #react></div>',
@@ -31,7 +33,7 @@ export class ExportValidationReportButtonComponent implements OnInit, OnDestroy,
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(ExportValidationReportButton), { layers: this.layers });
+    const reactElement = createElement(ExportValidationReportButtonWithRegistry, { layers: this.layers });
 
     this.root?.render(reactElement);
   }

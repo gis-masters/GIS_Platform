@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { ServicesCalculator } from '../ServicesCalculator/ServicesCalculator';
 import { registry } from '../../services/registry';
 
+const ServicesCalculatorWithRegistry = withRegistry(registry)(ServicesCalculator);
+
 @Component({
   selector: 'crg-services-calculator',
   template: '<div class="services-calculator" #react></div>',
@@ -29,7 +31,7 @@ export class ServicesCalculatorComponent implements OnInit, OnChanges, OnDestroy
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(ServicesCalculator));
+    const reactElement = createElement(ServicesCalculatorWithRegistry);
 
     this.root?.render(reactElement);
   }

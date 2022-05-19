@@ -9,6 +9,8 @@ import { getEnvironment } from '../../services/environment';
 import { registry } from '../../services/registry';
 import { Toast } from '../../components/Toast/Toast';
 
+const ToastContainerWithRegistry = withRegistry(registry)(ToastContainer);
+
 @Component({
   selector: 'crg-root',
   templateUrl: './app.component.html'
@@ -76,7 +78,7 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
       pauseOnHover: true
     };
 
-    const reactElement = createElement(withRegistry(registry)(ToastContainer), props);
+    const reactElement = createElement(ToastContainerWithRegistry, props);
 
     this.root.render(reactElement);
   }

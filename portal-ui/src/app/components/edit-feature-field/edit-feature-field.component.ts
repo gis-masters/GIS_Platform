@@ -9,6 +9,8 @@ import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { registry } from '../../services/registry';
 import { createRoot, Root } from 'react-dom/client';
 
+const EditFeatureFieldWithRegistry = withRegistry(registry)(EditFeatureField);
+
 @Component({
   selector: 'crg-edit-feature-field',
   template: '<div class="edit-feature-field" #react></div>',
@@ -38,7 +40,7 @@ export class EditFeatureFieldComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(EditFeatureField), {
+    const reactElement = createElement(EditFeatureFieldWithRegistry, {
       type: this.type,
       field: this.field,
       featureInfo: {

@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { DataManagement } from '../DataManagement/DataManagement';
 
+const DataManagementWithRegistry = withRegistry(registry)(DataManagement);
+
 @Component({
   selector: 'crg-data-management',
   template: '<div class="data-management" #react></div>',
@@ -29,7 +31,7 @@ export class DataManagementComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(DataManagement));
+    const reactElement = createElement(DataManagementWithRegistry);
 
     this.root?.render(reactElement);
   }

@@ -8,6 +8,8 @@ import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { registry } from '../../services/registry';
 
+const FeatureExtractWithRegistry = withRegistry(registry)(FeatureExtract);
+
 @Component({
   selector: 'crg-feature-extract',
   template: '<div class="feature-extract" #react></div>',
@@ -33,7 +35,7 @@ export class FeatureExtractComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(FeatureExtract), {
+    const reactElement = createElement(FeatureExtractWithRegistry, {
       feature: this.feature,
       layer: this.layer
     });

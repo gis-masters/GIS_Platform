@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { LayersSidebar } from '../LayersSidebar/LayersSidebar';
 
+const LayersSidebarWithRegistry = withRegistry(registry)(LayersSidebar);
+
 @Component({
   selector: 'crg-layers-sidebar',
   template: '<div class="layers-sidebar" #react></div>',
@@ -29,7 +31,7 @@ export class LayersSidebarComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(LayersSidebar));
+    const reactElement = createElement(LayersSidebarWithRegistry);
 
     this.root?.render(reactElement);
   }

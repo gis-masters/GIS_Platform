@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { Projects } from '../Projects/Projects';
 
+const ProjectsWithRegistry = withRegistry(registry)(Projects);
+
 @Component({
   selector: 'crg-projects',
   template: '<div class="projects" #react></div>',
@@ -29,7 +31,7 @@ export class ProjectsComponent implements OnDestroy, OnInit {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(Projects));
+    const reactElement = createElement(ProjectsWithRegistry);
 
     this.root?.render(reactElement);
   }

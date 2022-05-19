@@ -24,6 +24,9 @@ import { FormView } from '../Form/View/Form-View.composed';
 import { registry } from '../../services/registry';
 import { FormControlProps } from '../Form/Control/Form-Control';
 
+const FormControlWithRegistry = withRegistry(registry)(FormControl);
+const FormViewWithRegistry = withRegistry(registry)(FormView);
+
 @Component({
   selector: 'crg-form-control',
   template: '<div class="form-control" #react></div>',
@@ -56,7 +59,7 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
   }
 
   ngOnChanges() {
-    this.renderReactElement();
+    // this.renderReactElement();
   }
 
   private renderReactElement() {
@@ -68,9 +71,7 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
     }
 
     const reactElement = createElement(
-      withRegistry(registry)<FormControlProps>(
-        (convertedProperty.readOnly ? FormView : FormControl) as ComponentType<FormControlProps>
-      ),
+      (convertedProperty.readOnly ? FormViewWithRegistry : FormControlWithRegistry) as ComponentType<FormControlProps>,
       {
         property: convertedProperty,
         type: convertedProperty.propertyType,

@@ -7,6 +7,8 @@ import { registry } from '../../services/registry';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { OpenInAnotherProject } from '../OpenInAnotherProject/OpenInAnotherProject';
 
+const OpenInAnotherProjectWithRegistry = withRegistry(registry)(OpenInAnotherProject);
+
 @Component({
   selector: 'crg-open-in-another-project',
   template: '<div class="open-in-another-project" #react></div>',
@@ -31,7 +33,7 @@ export class OpenInAnotherProjectComponent implements OnInit, OnChanges, OnDestr
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(OpenInAnotherProject), { feature: this.features[0] });
+    const reactElement = createElement(OpenInAnotherProjectWithRegistry, { feature: this.features[0] });
 
     this.root?.render(reactElement);
   }

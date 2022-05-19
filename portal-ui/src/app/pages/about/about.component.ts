@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { Help } from '../../components/Help/Help';
 
+const HelpWithRegistry = withRegistry(registry)(Help);
+
 @Component({
   selector: 'crg-about',
   templateUrl: './about.component.html'
@@ -24,6 +26,6 @@ export class AboutComponent implements OnInit, OnDestroy {
   }
 
   private renderReactElement() {
-    this.root.render(createElement(withRegistry(registry)(Help)));
+    this.root.render(createElement(HelpWithRegistry));
   }
 }

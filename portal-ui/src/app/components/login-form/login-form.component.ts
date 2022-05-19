@@ -6,6 +6,8 @@ import { registry } from '../../services/registry';
 import { LoginForm } from '../LoginForm/LoginForm';
 import { createRoot, Root } from 'react-dom/client';
 
+const LoginFormWithRegistry = withRegistry(registry)(LoginForm);
+
 @Component({
   selector: 'crg-login-form',
   template: '<div class="login-form" #react></div>',
@@ -29,7 +31,7 @@ export class LoginFormComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(LoginForm));
+    const reactElement = createElement(LoginFormWithRegistry);
 
     this.root?.render(reactElement);
   }

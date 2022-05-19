@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { LoginFormDialog } from '../LoginFormDialog/LoginFormDialog';
 
+const LoginFormDialogWithRegistry = withRegistry(registry)(LoginFormDialog);
+
 @Component({
   selector: 'crg-login-form-dialog',
   template: '<div class="login-form-dialog" #react></div>',
@@ -29,7 +31,7 @@ export class LoginFormDialogComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(LoginFormDialog));
+    const reactElement = createElement(LoginFormDialogWithRegistry);
 
     this.root?.render(reactElement);
   }

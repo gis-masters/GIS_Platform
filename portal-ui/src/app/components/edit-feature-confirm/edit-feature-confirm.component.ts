@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { EditFeatureConfirm } from '../EditFeatureConfirm/EditFeatureConfirm';
 
+const EditFeatureConfirmWithRegistry = withRegistry(registry)(EditFeatureConfirm);
+
 @Component({
   selector: 'crg-edit-feature-confirm',
   template: '<div class="edit-feature-confirm" #react></div>',
@@ -29,7 +31,7 @@ export class EditFeatureConfirmComponent implements OnInit, OnDestroy, OnChanges
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(EditFeatureConfirm));
+    const reactElement = createElement(EditFeatureConfirmWithRegistry);
 
     this.root?.render(reactElement);
   }

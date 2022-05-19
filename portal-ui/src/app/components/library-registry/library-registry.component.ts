@@ -7,6 +7,8 @@ import { route } from '../../stores/Route.store';
 import { registry } from '../../services/registry';
 import { LibraryRegistry } from '../LibraryRegistry/LibraryRegistry';
 
+const LibraryRegistryWithRegistry = withRegistry(registry)(LibraryRegistry);
+
 @Component({
   selector: 'crg-library-registry',
   template: '<div class="library-registry" #react></div>',
@@ -31,7 +33,7 @@ export class LibraryRegistryComponent implements OnInit, OnChanges, OnDestroy {
 
   private renderReactElement() {
     const libraryId = route.params.libraryId;
-    const reactElement = createElement(withRegistry(registry)(LibraryRegistry), {
+    const reactElement = createElement(LibraryRegistryWithRegistry, {
       libraryId,
       id: 'registryPage',
       urlChangeEnabled: true

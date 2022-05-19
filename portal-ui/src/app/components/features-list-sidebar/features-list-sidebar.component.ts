@@ -7,6 +7,8 @@ import { registry } from '../../services/registry';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { FeaturesListSidebar } from '../FeaturesListSidebar/FeaturesListSidebar';
 
+const FeaturesListSidebarWithRegistry = withRegistry(registry)(FeaturesListSidebar);
+
 @Component({
   selector: 'crg-features-list-sidebar',
   template: '<div class="features-list-sidebar" #react></div>',
@@ -32,7 +34,7 @@ export class FeaturesListSidebarComponent implements OnInit, OnDestroy, OnChange
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(FeaturesListSidebar));
+    const reactElement = createElement(FeaturesListSidebarWithRegistry);
 
     this.root?.render(reactElement);
   }

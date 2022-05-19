@@ -9,6 +9,8 @@ import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { XmlDownload } from '../XmlDownload/XmlDownload';
 import { registry } from '../../services/registry';
 
+const XmlDownloadWithRegistry = withRegistry(registry)(XmlDownload);
+
 @Component({
   selector: 'crg-xml-download',
   template: '<div class="xml-download" #react></div>',
@@ -35,7 +37,7 @@ export class XmlDownloadComponent implements OnInit, OnChanges, OnDestroy {
 
   private renderReactElement() {
     if (organizationSettings.downloadXmlGeometryEnabled) {
-      const reactElement = createElement(withRegistry(registry)(XmlDownload), {
+      const reactElement = createElement(XmlDownloadWithRegistry, {
         feature: this.feature,
         layer: this.layer
       });

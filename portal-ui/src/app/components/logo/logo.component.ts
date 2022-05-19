@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { Logo } from '../Logo/Logo';
 
+const LogoWithRegistry = withRegistry(registry)(Logo);
+
 @Component({
   selector: 'crg-logo',
   template: '<div class="logo" #react></div>',
@@ -29,7 +31,7 @@ export class LogoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(Logo));
+    const reactElement = createElement(LogoWithRegistry);
 
     this.root?.render(reactElement);
   }

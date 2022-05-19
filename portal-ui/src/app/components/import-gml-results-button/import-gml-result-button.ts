@@ -8,6 +8,8 @@ import { IWsMessage } from '../../services/ws.service';
 import { WsImportModel } from '../../services/crg/processes.service';
 import { ImportGmlResultsLink } from '../ImportGmlResultLink/ImportGmlResultsLink';
 
+const ImportGmlResultsLinkWithRegistry = withRegistry(registry)(ImportGmlResultsLink);
+
 @Component({
   selector: 'crg-import-gml-results-button',
   template: '<div class="import-gml-results-button" #react></div>',
@@ -33,7 +35,7 @@ export class ImportGmlResultButtonComponent implements OnInit, OnChanges, OnDest
 
   private renderReactElement() {
     const payload = this.event.payload as WsImportModel;
-    const reactElement = createElement(withRegistry(registry)(ImportGmlResultsLink), { reports: payload.payload });
+    const reactElement = createElement(ImportGmlResultsLinkWithRegistry, { reports: payload.payload });
 
     this.root?.render(reactElement);
   }

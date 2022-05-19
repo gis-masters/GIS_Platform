@@ -7,6 +7,8 @@ import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { registry } from '../../services/registry';
 import { CopyUrlButton } from '../CopyUrlButton/CopyUrlButton';
 
+const CopyUrlButtonWithRegistry = withRegistry(registry)(CopyUrlButton);
+
 @Component({
   selector: 'crg-copy-url-button',
   template: '<div class="copy-url-button" #react></div>',
@@ -31,7 +33,7 @@ export class CopyUrlButtonComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(CopyUrlButton), { feature: this.feature });
+    const reactElement = createElement(CopyUrlButtonWithRegistry, { feature: this.feature });
 
     this.root?.render(reactElement);
   }

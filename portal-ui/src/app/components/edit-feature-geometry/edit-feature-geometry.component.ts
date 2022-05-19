@@ -7,6 +7,8 @@ import { registry } from '../../services/registry';
 import { EditFeatureGeometry } from '../EditFeatureGeometry/EditFeatureGeometry';
 import { createRoot, Root } from 'react-dom/client';
 
+const EditFeatureGeometryWithRegistry = withRegistry(registry)(EditFeatureGeometry);
+
 @Component({
   selector: 'crg-edit-feature-geometry',
   template: '<div class="edit-feature-geometry" #react></div>',
@@ -32,7 +34,7 @@ export class EditFeatureGeometryComponent implements OnInit, OnDestroy, OnChange
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(EditFeatureGeometry), {
+    const reactElement = createElement(EditFeatureGeometryWithRegistry, {
       store: this.store,
       readOnly: this.readOnly
     });

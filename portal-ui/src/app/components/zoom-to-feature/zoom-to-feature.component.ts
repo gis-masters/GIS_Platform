@@ -7,6 +7,8 @@ import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { registry } from '../../services/registry';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 
+const ZoomToFeatureWithRegistry = withRegistry(registry)(ZoomToFeature);
+
 @Component({
   selector: 'crg-zoom-to-feature',
   template: '<div class="zoom-to-feature" #react></div>',
@@ -31,7 +33,7 @@ export class ZoomToFeatureComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(ZoomToFeature), { feature: this.feature });
+    const reactElement = createElement(ZoomToFeatureWithRegistry, { feature: this.feature });
 
     this.root?.render(reactElement);
   }

@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { DataImport } from '../DataImport/DataImport';
 import { registry } from '../../services/registry';
 
+const DataImportWithRegistry = withRegistry(registry)(DataImport);
+
 @Component({
   selector: 'crg-data-import',
   template: '<div class="data-import" #react></div>',
@@ -29,7 +31,7 @@ export class DataImportComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(DataImport));
+    const reactElement = createElement(DataImportWithRegistry);
 
     this.root?.render(reactElement);
   }

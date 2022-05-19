@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { OrgAdmin } from '../OrgAdmin/OrgAdmin';
 
+const OrgAdminWithRegistry = withRegistry(registry)(OrgAdmin);
+
 @Component({
   selector: 'crg-org-admin',
   template: '<div class="org-admin" #react></div>',
@@ -29,7 +31,7 @@ export class OrgAdminComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(OrgAdmin));
+    const reactElement = createElement(OrgAdminWithRegistry);
 
     this.root?.render(reactElement);
   }

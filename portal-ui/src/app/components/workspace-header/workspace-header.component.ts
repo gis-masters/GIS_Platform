@@ -6,6 +6,8 @@ import { createElement } from 'react';
 import { registry } from '../../services/registry';
 import { WorkspaceHeader } from '../WorkspaceHeader/WorkspaceHeader';
 
+const WorkspaceHeaderWithRegistry = withRegistry(registry)(WorkspaceHeader);
+
 @Component({
   selector: 'crg-workspace-header',
   template: '<div class="workspace-header" #react></div>',
@@ -29,7 +31,7 @@ export class WorkspaceHeaderComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(withRegistry(registry)(WorkspaceHeader));
+    const reactElement = createElement(WorkspaceHeaderWithRegistry);
 
     this.root?.render(reactElement);
   }
