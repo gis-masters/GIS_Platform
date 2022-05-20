@@ -328,7 +328,7 @@ ContentOnly.args = {
 
 export const OutsideControl = Template.bind({});
 OutsideControl.args = {
-  fields: testFields as PropertySchema[],
+  schema: { properties: testFields as PropertySchema[] },
   value,
   onFormChange: setFormValue,
   errors,
@@ -337,7 +337,7 @@ OutsideControl.args = {
 
 export const ReadOnly = Template.bind({});
 ReadOnly.args = {
-  fields: testFields as PropertySchema[],
+  schema: { properties: testFields as PropertySchema[] },
   value,
   errors,
   readonly: true,
@@ -348,7 +348,7 @@ export const Auto = Template.bind({});
 Auto.args = {
   id: 'autoForm',
   auto: true,
-  fields: testFields as PropertySchema[],
+  schema: { properties: testFields as PropertySchema[] },
   value,
   actionFunction,
   onActionSuccess: () => {

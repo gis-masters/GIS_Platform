@@ -1,39 +1,44 @@
 import React, { Component, ReactElement } from 'react';
 import { action, computed, observable, when } from 'mobx';
 import { observer } from 'mobx-react';
+import { Checkbox } from '@mui/material';
 import { Check, Close, HomeOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
-import { Checkbox } from '@mui/material';
 
+import { route } from '../../stores/Route.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import {
   PropertySchema,
   PropertySchemaChoice,
   PropertySchemaDatetime,
-  PropertyType
+  PropertySchemaDocument,
+  PropertySchemaUrl,
+  PropertyType,
+  Schema
 } from '../../services/crg/schema.models';
 import { DocumentLibrary, getLibrary, getLibraryRecords2, LibraryRecord } from '../../services/crg/doc-library.service';
-import { OldSchema } from '../../services/crg/schemaOld.models';
 import { communicationService } from '../../services/communication.service';
+import { calculateValues } from '../../services/crg/formValidation.service';
+import { getFieldRelations } from '../../services/crg/schema.utils';
 import { schemaService } from '../../services/crg/schema.service';
-import { convertProperties } from '../../services/crg/schema.utils';
-import { formatDate } from '../../services/util/date.util';
-import { PageOptions, SortDir } from '../../services/models';
-import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
-import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
 import { FilterQuery } from '../../services/util/filterObjects';
 import { SortParams } from '../../services/util/sortObjects';
+import { PageOptions, SortDir } from '../../services/models';
+import { formatDate } from '../../services/util/date.util';
+import { services } from '../../services/services';
+import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
+import { RelatedDocumentsButton } from '../RelatedDocumentsButton/RelatedDocumentsButton';
+import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
+import { DocumentInfo, Documents } from '../Documents/Documents';
 import { FilterType } from '../XTable/Filter/XTable-Filter';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { XTable, XTableColumn } from '../XTable/XTable';
-import { services } from '../../services/services';
-import { route } from '../../stores/Route.store';
+import { UrlsList } from '../UrlsList/UrlsList';
 import { Loading } from '../Loading/Loading';
 
 import { LibraryRegistrySettings } from './Settings/LibraryRegistry-Settings';
 import { LibraryRegistryExport } from './Export/LibraryRegistry-Export';
-import { DocumentInfo } from '../Documents/Documents';
 
 import '!style-loader!css-loader!sass-loader!./LibraryRegistry.scss';
 
@@ -52,7 +57,7 @@ interface LibraryRegistryProps {
 @observer
 export class LibraryRegistry extends Component<LibraryRegistryProps> {
   @observable private library?: DocumentLibrary;
-  @observable private schema?: OldSchema;
+  @observable private schema?: Schema;
   @observable private hiddenFields: string[] = [];
   @observable private tablePageOptions?: PageOptions;
   @observable private libraryDocuments: LibraryRecord[] = [];
@@ -62,7 +67,7 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
 
   async componentDidMount() {
     this.setLibrary(await getLibrary(this.props.libraryId));
-    this.setSchema(await schemaService.getOldSchema(this.library.schemaId));
+    this.setSchema(await schemaService.getSchema(this.library.schemaId));
 
     communicationService.libraryItemsUpdated.on(() => {
       if (this.tableInvoke.reload) {
@@ -122,7 +127,7 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
 
   @computed
   private get properties(): PropertySchema[] {
-    return convertProperties(this.schema?.properties || []).filter(
+    return (this.schema?.properties || []).filter(
       ({ hidden, propertyType }) =>
         !hidden && propertyType !== PropertyType.BINARY && propertyType !== PropertyType.FIAS
     );
@@ -172,6 +177,8 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
 
     const typesCols: Partial<Record<PropertyType, Partial<XTableColumn<LibraryRecord>>>> = {
       [PropertyType.BOOL]: { align: 'center', CellContent: this.renderBool, filterType: FilterType.BOOL },
+      [PropertyType.URL]: { CellContent: this.renderLink },
+      [PropertyType.DOCUMENT]: { CellContent: this.renderDocuments },
       [PropertyType.CHOICE]: {
         filterType: FilterType.CHOICE,
         CellContent: ({ rowData, field }) => (
@@ -192,7 +199,7 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
 
     return [
       {
-        CellContent: this.props.inDialog ? this.renderCheckActions : this.renderActions,
+        CellContent: this.props.inDialog ? this.renderCheck : this.renderActions,
         align: 'center',
         cellProps: { padding: 'checkbox' }
       },
@@ -204,7 +211,13 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
         filterable: filterableTypes.has(property.propertyType) && property.name !== 'id',
         ...typesCols[property.propertyType],
         filterOptions: property.propertyType === PropertyType.CHOICE ? property.options : undefined,
-        headerCellProps: { style: property.minWidth ? { minWidth: String(property.minWidth) + 'px' } : null }
+        headerCellProps: { style: property.minWidth ? { minWidth: String(property.minWidth) + 'px' } : null },
+        cellProps: {
+          classes: {
+            root: cnLibraryRegistry('Cell', { withRelations: !!getFieldRelations(property.name, this.schema).length })
+          }
+        },
+        AfterCellContent: this.renderRelations
       }))
     ];
   }
@@ -220,12 +233,60 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
     return value ? <Check color='primary' fontSize='small' /> : <Close color='disabled' fontSize='small' />;
   }
 
+  @boundMethod
+  private renderRelations({ rowData, field }: { rowData: LibraryRecord; field: keyof LibraryRecord }): ReactElement {
+    const relations = getFieldRelations(field, this.schema);
+
+    if (!relations.length) {
+      return null;
+    }
+
+    return (
+      <RelatedDocumentsButton
+        obj={rowData}
+        relations={relations}
+        className={cnLibraryRegistry('Relations')}
+        size='small'
+      />
+    );
+  }
+
+  @boundMethod
+  private renderLink({ rowData, field }: { rowData: LibraryRecord; field: keyof LibraryRecord }): ReactElement {
+    return rowData[field] ? (
+      <UrlsList
+        property={this.schema?.properties?.find(({ name }) => name === field) as PropertySchemaUrl}
+        value={String(rowData[field])}
+      />
+    ) : (
+      <></>
+    );
+  }
+
+  @boundMethod
+  private renderDocuments({ rowData, field }: { rowData: LibraryRecord; field: keyof LibraryRecord }): ReactElement {
+    let value: DocumentInfo[] = [];
+
+    try {
+      value = JSON.parse(String(rowData[field])) as DocumentInfo[];
+    } catch {}
+
+    return rowData[field] ? (
+      <Documents
+        property={this.schema?.properties?.find(({ name }) => name === field) as PropertySchemaDocument}
+        value={value}
+      />
+    ) : (
+      <></>
+    );
+  }
+
   private renderActions({ rowData }: { rowData: LibraryRecord }): ReactElement {
     return <LibraryDocumentActions className={cnLibraryRegistry('Actions')} document={rowData} as='menu' />;
   }
 
   @boundMethod
-  private renderCheckActions({ rowData }: { rowData: LibraryRecord }): ReactElement {
+  private renderCheck({ rowData }: { rowData: LibraryRecord }): ReactElement {
     const { addedDocuments, checkedLibraryDocuments } = this.props;
     const checked =
       checkedLibraryDocuments.some(item => item.id === rowData.id) ||
@@ -255,7 +316,7 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   }
 
   @action
-  private setSchema(schema: OldSchema) {
+  private setSchema(schema: Schema) {
     this.schema = schema;
   }
 
@@ -264,12 +325,15 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
     if (!this.library || !this.schema) {
       return [[], 1];
     }
-    const response = await getLibraryRecords2(this.library.identifier, this.schema.name, pageOptions);
+    const [documents, totalPages] = await getLibraryRecords2(this.library.identifier, this.schema.name, pageOptions);
     if (this.props.inDialog) {
-      this.setLibraryDocuments(response[0]);
+      this.setLibraryDocuments(documents);
     }
 
-    return response;
+    return [
+      documents.map(document => calculateValues<LibraryRecord>(document, this.schema?.properties || [])),
+      totalPages
+    ];
   }
 
   @action.bound
@@ -280,13 +344,15 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
     const encodedSort = JSON.stringify([sort, sortDir]);
     const encodedFilter = JSON.stringify(filter);
 
-    await services.router.navigate([location.pathname], {
-      queryParams: {
-        sort: encodedSort,
-        filter: encodedFilter
-      },
-      queryParamsHandling: 'merge',
-      replaceUrl: true
+    await services.ngZone.run(async () => {
+      await services.router.navigate([location.pathname], {
+        queryParams: {
+          sort: encodedSort,
+          filter: encodedFilter
+        },
+        queryParamsHandling: 'merge',
+        replaceUrl: true
+      });
     });
   }
 

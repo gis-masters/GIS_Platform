@@ -15,7 +15,7 @@ import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.
 import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
 
-const cnLibraryDocumentActionsPrint = cn('LibraryDocumentActionsPrint');
+const cnLibraryDocumentActionsPrint = cn('LibraryDocumentActions', 'Print');
 
 interface LibraryDocumentActionsPrintProps {
   document: LibraryRecord;

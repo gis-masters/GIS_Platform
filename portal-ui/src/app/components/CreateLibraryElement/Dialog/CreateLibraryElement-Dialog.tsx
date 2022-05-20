@@ -8,12 +8,12 @@ import { LibraryRecordRaw } from '../../../services/crg/doc-library.service';
 import { FieldErrors } from '../../../services/crg/formValidation.service';
 import { Button } from '../../Button/Button';
 import { Form } from '../../Form/Form';
-import { PropertySchema } from '../../../services/crg/schema.models';
+import { Schema } from '../../../services/crg/schema.models';
 
 const cnCreateLibraryElementDialog = cn('CreateLibraryElement', 'Dialog');
 
 export interface ExplorerCreateElementDialogProps {
-  fields?: PropertySchema[];
+  schema?: Schema;
   open: boolean;
   loading: boolean;
   formValue: LibraryRecordRaw;
@@ -32,18 +32,18 @@ export interface ExplorerCreateElementDialogProps {
 @observer
 export class CreateLibraryElementDialog extends React.Component<ExplorerCreateElementDialogProps> {
   render() {
-    const { open, loading, fields, formValue, formErrors, onFieldChange, onFieldNeedValidate } = this.props;
+    const { open, loading, schema, formValue, formErrors, onFieldChange, onFieldNeedValidate } = this.props;
 
     return (
       <>
-        {fields && (
+        {schema && (
           <Dialog fullWidth maxWidth='md' open={open} onClose={this.closeDialog}>
             <DialogTitle>Создание нового элемента</DialogTitle>
 
             <DialogContent className={cnCreateLibraryElementDialog()}>
               <Form<LibraryRecordRaw>
                 id='createLibraryElementForm'
-                fields={fields}
+                schema={schema}
                 value={formValue}
                 onFormChange={this.formChanged}
                 onFormSubmit={this.formSubmitHandler}

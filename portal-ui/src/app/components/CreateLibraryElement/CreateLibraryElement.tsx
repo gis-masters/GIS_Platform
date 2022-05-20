@@ -7,9 +7,8 @@ import { AxiosError } from 'axios';
 
 import { ExplorerStore } from '../Explorer/Explorer.store';
 import { createLibraryRecord, LibraryRecord, LibraryRecordRaw } from '../../services/crg/doc-library.service';
-import { convertProperties, applyContentTypeOld } from '../../services/crg/schema.utils';
-import { OldContentType, OldSchema } from '../../services/crg/schemaOld.models';
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { applyContentType } from '../../services/crg/schema.utils';
+import { ContentType, PropertyType, Schema } from '../../services/crg/schema.models';
 import { schemaService } from '../../services/crg/schema.service';
 import { ExplorerItemType } from '../Explorer/Explorer.models';
 import {
@@ -33,7 +32,7 @@ export interface CreateLibraryElementsProps {
 
 @observer
 export class CreateLibraryElement extends Component<CreateLibraryElementsProps> {
-  @observable private schema: OldSchema;
+  @observable private schema: Schema;
   @observable private contentTypeId: string;
   @observable private dialogOpen = false;
   @observable private dialogLoading = false;
@@ -42,9 +41,9 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   @observable private formValue: LibraryRecordRaw = {};
 
   async componentDidMount() {
-    const schema = await schemaService.getOldSchema(this.props.schemaId);
+    const schema = await schemaService.getSchema(this.props.schemaId);
     this.setSchema(schema);
-    this.setFormValue(getDefaultValues(this.fields));
+    this.setFormValue(getDefaultValues(this.preparedSchema.properties));
   }
 
   render() {
@@ -64,7 +63,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
           open={this.dialogOpen}
           formValue={this.formValue}
           loading={this.dialogLoading}
-          fields={this.fields}
+          schema={this.preparedSchema}
           onClose={this.closeDialog}
           onCreate={this.create}
           onChange={this.setFormValue}
@@ -77,26 +76,26 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   }
 
   @computed
-  private get contentTypesWithoutFolder(): OldContentType[] {
+  private get contentTypesWithoutFolder(): ContentType[] {
     const contentTypes = this.schema?.contentTypes || [];
 
     return contentTypes.filter(({ type, childOnly }) => type !== 'FOLDER' && !childOnly);
   }
 
   @computed
-  private get folderContentType(): OldContentType | undefined {
+  private get folderContentType(): ContentType | undefined {
     const contentTypes = this.schema?.contentTypes || [];
 
     return contentTypes.find(({ type, childOnly }) => type === 'FOLDER' && !childOnly);
   }
 
   @computed
-  private get preparedSchema(): OldSchema | null {
+  private get preparedSchema(): Schema | null {
     if (!this.schema) {
       return null;
     }
 
-    return applyContentTypeOld(this.schema, this.contentTypeId);
+    return applyContentType(this.schema, this.contentTypeId);
   }
 
   @computed
@@ -106,15 +105,6 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     }
 
     return this.contentTypeId && this.folderContentType?.id === this.contentTypeId;
-  }
-
-  @computed
-  private get fields(): PropertySchema[] {
-    if (!this.preparedSchema) {
-      return [];
-    }
-
-    return convertProperties(this.preparedSchema.properties);
   }
 
   @boundMethod
@@ -134,11 +124,11 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     this.setDialogLoading(false);
     this.setErrors([]);
     this.setServerErrors([]);
-    this.setFormValue(getDefaultValues(this.fields));
+    this.setFormValue(getDefaultValues(this.preparedSchema.properties));
   }
 
   @action
-  private setSchema(schema: OldSchema) {
+  private setSchema(schema: Schema) {
     this.schema = schema;
   }
 
@@ -166,7 +156,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
       }
     }
 
-    this.setErrors(validateFormValue(formData, this.fields));
+    this.setErrors(validateFormValue(formData, this.preparedSchema.properties));
     if (this.formErrors?.length) {
       this.setDialogLoading(false);
 
@@ -218,7 +208,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
 
   @boundMethod
   private formFieldChanged(value: unknown, fieldName: string, prevValue: unknown) {
-    const { propertyType } = this.fields.find(({ name }) => name === fieldName);
+    const { propertyType } = this.preparedSchema.properties.find(({ name }) => name === fieldName);
 
     if (propertyType === PropertyType.BINARY) {
       if (
@@ -238,7 +228,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   @boundMethod
   private formFieldValidateHandler(value: unknown, fieldName: string) {
     this.filterFieldErrors(fieldName);
-    this.setErrors(validateFormValue(this.formValue, this.fields));
+    this.setErrors(validateFormValue(this.formValue, this.preparedSchema.properties));
   }
 
   @action

@@ -1,4 +1,4 @@
-Feature Поле Fias
+Feature: Поле Fias
 
   Background:
     Given пользователь зарегистрирован

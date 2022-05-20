@@ -24,7 +24,7 @@ class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
   private anchorEl: HTMLButtonElement;
 
   render() {
-    const { icon, color = 'default', children, className, innerRef, ...iconButtonProps } = this.props;
+    const { icon, color = 'default', children, className, innerRef, size, ...iconButtonProps } = this.props;
 
     return (
       <>
@@ -33,10 +33,11 @@ class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
           color={color}
           onClick={this.toggle}
           ref={innerRef}
+          size={size}
           {...iconButtonProps}
         >
           <span className={cnMenuIconButton('Icon')}>{icon}</span>
-          <ArrowDropDown className={cnMenuIconButton('Arrow', { up: this.menuOpen })} />
+          <ArrowDropDown className={cnMenuIconButton('Arrow', { up: this.menuOpen, size })} fontSize={size} />
           <span className={cnMenuIconButton('Anchor')} ref={this.anchorRef} />
         </IconButton>
         <Menu open={this.menuOpen} onClose={this.close} anchorEl={this.anchorEl} onClick={this.close}>

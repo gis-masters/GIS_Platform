@@ -41,7 +41,7 @@ const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
 export const PlainControl = Template.bind({});
 PlainControl.args = {
-  fields: testFields as PropertySchema[],
+  schema: { properties: testFields as PropertySchema[] },
   value,
   onFormChange: setFormValue
 };

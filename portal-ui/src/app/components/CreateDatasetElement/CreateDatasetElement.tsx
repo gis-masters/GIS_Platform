@@ -32,7 +32,7 @@ export class CreateDatasetElement extends Component {
           open={this.dialogOpen}
           formValue={this.formValue}
           loading={this.dialogLoading}
-          fields={dataEntitySchema}
+          schema={dataEntitySchema}
           onClose={this.closeDialog}
           onCreate={this.create}
           onChange={this.setFormValue}
@@ -55,7 +55,7 @@ export class CreateDatasetElement extends Component {
     this.setDialogLoading(false);
     this.setErrors([]);
     this.setServerErrors([]);
-    this.setFormValue(getDefaultValues(dataEntitySchema));
+    this.setFormValue(getDefaultValues(dataEntitySchema.properties));
   }
 
   @action
@@ -92,7 +92,7 @@ export class CreateDatasetElement extends Component {
   @boundMethod
   private formFieldValidateHandler(value: unknown, fieldName: string) {
     this.filterFieldErrors(fieldName);
-    this.setErrors(validateFormValue(this.formValue, dataEntitySchema));
+    this.setErrors(validateFormValue(this.formValue, dataEntitySchema.properties));
   }
 
   @action

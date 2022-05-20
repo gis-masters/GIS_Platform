@@ -18,6 +18,7 @@ public class SchemaDto {
     private String geometryType;
     private List<Object> contentTypes = new ArrayList<>();
     private List<Object> printTemplates = new ArrayList<>();
+    private List<Object> relations = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -121,5 +122,13 @@ public class SchemaDto {
 
     public void setPrintTemplates(List<Object> printTemplates) {
         this.printTemplates = printTemplates;
+    }
+
+    public List<Object> getRelations() {
+        return relations;
+    }
+
+    public void setRelations(List<Object> relations) {
+        this.relations = relations;
     }
 }

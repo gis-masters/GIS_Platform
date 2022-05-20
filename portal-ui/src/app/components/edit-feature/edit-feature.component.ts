@@ -27,7 +27,7 @@ import { CrgVectorLayer } from '../../services/crg/projects.models';
 import { PropertySchema } from '../../services/crg/schema.models';
 import { schemaService } from '../../services/crg/schema.service';
 import { generateRandomId } from '../../services/util/randomId';
-import { convertProperties } from '../../services/crg/schema.utils';
+import { convertProperties, convertSchema, getFieldRelations } from '../../services/crg/schema.utils';
 import { mapService } from '../../services/map/map.service';
 import { BatchModel } from '../../services/crg/batch-model';
 import { formatDate } from '../../services/util/date.util';
@@ -134,7 +134,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                 name: key,
                 property,
                 value: String(currentValue),
-                isFgistpProperty: true
+                isFgistpProperty: true,
+                relations: getFieldRelations(key, convertSchema(this.featureDescription))
               });
 
               const formControl = new FormControl(
@@ -162,7 +163,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                   valueType: ValueType.STRING
                 },
                 value: String(currentValue),
-                isFgistpProperty: false
+                isFgistpProperty: false,
+                relations: getFieldRelations(key, convertSchema(this.featureDescription))
               });
 
               const formControl = new FormControl(currentValue);

@@ -5,6 +5,7 @@
 
   width: 62%;
   min-height: 24px;
+  padding-right: var(--FormFieldRightGap);
 
   &_empty {
     color: var(--gray);

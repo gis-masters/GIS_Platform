@@ -6,8 +6,8 @@ import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
+import { Schema } from '../../services/crg/schema.models';
 import { generateRandomId } from '../../services/util/randomId';
-import { PropertySchema } from '../../services/crg/schema.models';
 import { getDefaultValues } from '../../services/crg/formValidation.service';
 import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
 import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
@@ -17,7 +17,7 @@ const cnFormDialog = cn('FormDialog');
 
 export interface FormDialogProps<T extends Record<string, unknown>> {
   title?: ReactNode;
-  fields: PropertySchema<T>[];
+  schema: Schema<T>;
   value?: Partial<T>;
   open: boolean;
   unclosable?: boolean;
@@ -42,8 +42,8 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
       title,
       open,
       unclosable = false,
-      fields,
-      value = getDefaultValues(fields),
+      schema,
+      value = getDefaultValues(schema.properties),
       additionalAction,
       actionButtonProps = {},
       actionFunction,
@@ -60,7 +60,7 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
               <Form
                 id={htmlId}
                 className={cnFormDialog()}
-                fields={fields}
+                schema={schema}
                 value={value}
                 auto
                 onFormSubmit={this.submitHandler}

@@ -27,7 +27,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
     return (
       <FormDialog
         open={open}
-        fields={this.userInfo}
+        schema={{ properties: this.userProperties }}
         value={user}
         actionFunction={this.save}
         actionButtonProps={{ children: !user ? 'Создать' : 'Обновить' }}
@@ -37,7 +37,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
   }
 
   @computed
-  private get userInfo(): PropertySchema<NewUserData>[] {
+  private get userProperties(): PropertySchema<NewUserData>[] {
     const userInfo = [
       {
         name: 'email',

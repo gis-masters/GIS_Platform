@@ -5,8 +5,8 @@ import { cn } from '@bem-react/classname';
 
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../services/server-urls.service';
-import { convertProperties, applyContentTypeOld } from '../../services/crg/schema.utils';
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { applyContentType } from '../../services/crg/schema.utils';
+import { PropertyType, Schema } from '../../services/crg/schema.models';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
 import { LibraryRecord } from '../../services/crg/doc-library.service';
@@ -27,7 +27,7 @@ interface LibraryDocumentProps {
 
 @observer
 export class LibraryDocument extends Component<LibraryDocumentProps> {
-  @observable private fields: PropertySchema<LibraryRecord>[];
+  @observable private schema: Schema<LibraryRecord>;
   @observable private documentRoleAssignmentUrl: string;
 
   async componentDidMount() {
@@ -50,9 +50,7 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
             </div>
 
             <div className={cnLibraryDocument('DocumentCard')}>
-              {this.fields && (
-                <ViewContentWidget fields={this.fields as PropertySchema<Record<string, unknown>>[]} data={document} />
-              )}
+              {this.schema && <ViewContentWidget schema={this.schema as Schema} data={document} />}
             </div>
 
             {!contentOnly && this.documentRoleAssignmentUrl && (
@@ -79,14 +77,15 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
   }
 
   private async fetchSchema(): Promise<void> {
-    const oldSchema = applyContentTypeOld(
-      await schemaService.getOldSchema(this.props.document.schemaId),
+    const schema = applyContentType(
+      await schemaService.getSchema(this.props.document.schemaId),
       this.props.document.content_type_id
     );
 
-    this.setFields(
-      convertProperties(oldSchema.properties).filter(({ propertyType }) => propertyType !== PropertyType.BINARY)
-    );
+    this.setSchema({
+      ...schema,
+      properties: schema.properties.filter(({ propertyType }) => propertyType !== PropertyType.BINARY)
+    });
   }
 
   private async fetchDocumentPermissionUrl(): Promise<void> {
@@ -95,8 +94,8 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
   }
 
   @action.bound
-  private setFields(fields: PropertySchema<LibraryRecord>[]) {
-    this.fields = fields;
+  private setSchema(schema: Schema<LibraryRecord>) {
+    this.schema = schema;
   }
 
   @action.bound

@@ -58,7 +58,7 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
       <Form className={cnPrintMapDialog('Form')} onSubmit={this.submitHandler} id='printMapDialogForm'>
         <FormContent<MainFormValues>
           className={cnPrintMapDialog('FormPart', { part: 'main' })}
-          fields={this.mainFields}
+          schema={{ name: '', title: '', properties: this.mainFields }}
           formValue={mainFormValues}
           onFormChange={this.handleFormChange}
         />
@@ -66,7 +66,7 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
         {this.extraOpen && (
           <FormContent<ExtraFormValues>
             className={cnPrintMapDialog('FormPart', { part: 'extra' })}
-            fields={this.extraFields}
+            schema={{ name: '', title: '', properties: this.extraFields }}
             formValue={extraFormValues}
             onFormChange={this.handleFormChange}
           />

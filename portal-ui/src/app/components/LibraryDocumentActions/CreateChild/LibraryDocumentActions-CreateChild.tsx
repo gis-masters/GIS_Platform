@@ -82,7 +82,7 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
         <FormDialog
           open={this.dialogOpen}
           onClose={this.formDialogCloseHandler}
-          fields={properties}
+          schema={this.currentChild?.schema}
           value={{ content_type_id: this.currentChild?.contentType, ...getDefaultValues(properties, document) }}
           actionFunction={this.createDocument}
         />

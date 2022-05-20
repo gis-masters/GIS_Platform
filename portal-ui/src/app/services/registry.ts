@@ -6,6 +6,7 @@ import { FormDialog } from '../components/FormDialog/FormDialog';
 import { FormView } from '../components/Form/View/Form-View.composed';
 import { FormControl } from '../components/Form/Control/Form-Control.composed';
 import { LibraryDocument } from '../components/LibraryDocument/LibraryDocument';
+import { LibraryRegistry } from '../components/LibraryRegistry/LibraryRegistry';
 import { LibraryDocumentActions } from '../components/LibraryDocumentActions/LibraryDocumentActions.composed';
 
 export const registry = new Registry({ id: 'common' });
@@ -17,5 +18,6 @@ registry.fill({
   FormDialog,
   FormControl,
   LibraryDocument,
-  LibraryDocumentActions
+  LibraryDocumentActions,
+  LibraryRegistry
 });

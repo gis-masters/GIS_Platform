@@ -47,7 +47,7 @@ class LinkComponent extends Component<LinkProps> {
         ref={innerRef}
         {...otherProps}
       >
-        {target === '_blank' && (
+        {target === '_blank' && variant !== 'contents' && (
           <span className={cnLink('IconContainer')}>
             <OpenInNew className={cnLink('Icon')} />
           </span>

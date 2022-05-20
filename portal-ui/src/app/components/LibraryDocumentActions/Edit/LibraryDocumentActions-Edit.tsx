@@ -27,7 +27,7 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
   @observable private dialogOpen = false;
 
   render() {
-    const { as, document } = this.props;
+    const { as, document, schema } = this.props;
 
     return (
       <>
@@ -41,7 +41,7 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
 
         <FormDialog
           open={this.dialogOpen}
-          fields={this.fieldsWithoutBinary}
+          schema={{ ...schema, properties: this.fieldsWithoutBinary }}
           value={document}
           actionFunction={this.updateDocumentPage}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}

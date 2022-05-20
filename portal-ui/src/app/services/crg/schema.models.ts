@@ -27,9 +27,9 @@ export enum PropertyType {
   CUSTOM = 'custom' // frontend only
 }
 
-export interface Schema<T extends Record<string, unknown> = Record<string, unknown>> {
-  name: string;
-  title: string;
+export interface Schema<T = Record<string, unknown>> {
+  name?: string;
+  title?: string;
   description?: string;
   properties?: PropertySchema<T>[];
   tableName?: string;
@@ -39,6 +39,7 @@ export interface Schema<T extends Record<string, unknown> = Record<string, unkno
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];
   printTemplates?: string[];
+  relations?: Relation[];
 }
 
 export interface ContentType {
@@ -50,12 +51,19 @@ export interface ContentType {
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];
   printTemplates?: string[];
+  relations?: Relation[];
+}
+
+export interface Relation {
+  title: string;
+  property: string;
+  library: string;
 }
 
 export type ValueFormula = (
   obj: Record<string, unknown>,
   property: PropertySchema,
-  parent: Record<string, unknown>
+  parent?: Record<string, unknown>
 ) => unknown;
 
 interface BasePropertySchema<T = Record<string, unknown>> {
@@ -68,10 +76,13 @@ interface BasePropertySchema<T = Record<string, unknown>> {
   required?: boolean;
   asTitle?: boolean;
   readOnly?: boolean;
-  defaultValue?: unknown;
   minWidth?: number;
+  defaultValue?: unknown;
   defaultValueFormula?: string | ValueFormula;
   defaultValueWellKnownFormula?: string;
+  calculatedValueFormula?: string | ValueFormula;
+  calculatedValueWellKnownFormula?: string;
+  valueFormulaParams?: Record<string, unknown>;
   customValidationFunction?: FieldValidator;
 }
 

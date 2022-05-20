@@ -7,10 +7,9 @@ import { currentUser } from '../../../../stores/CurrentUser.store';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { Role } from '../../../../services/crg/permissions.models';
-import { PropertyType } from '../../../../services/crg/schema.models';
 import { schemaService } from '../../../../services/crg/schema.service';
 import { getLibraryRecord, LibraryRecord } from '../../../../services/crg/doc-library.service';
-import { convertProperties, applyContentTypeOld } from '../../../../services/crg/schema.utils';
+import { applyContentType } from '../../../../services/crg/schema.utils';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { formatDate } from '../../../../services/util/date.util';
@@ -63,18 +62,12 @@ export class ExplorerAdapterTypeDocument {
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
     const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id);
-    const oldSchema = applyContentTypeOld(
-      await schemaService.getOldSchema(item.payload.schemaId),
-      item.payload.content_type_id
-    );
-    const fields = convertProperties(oldSchema.properties).filter(
-      ({ propertyType }) => propertyType !== PropertyType.BINARY
-    );
+    const schema = applyContentType(await schemaService.getSchema(item.payload.schemaId), item.payload.content_type_id);
 
     return (
       <>
         <ExplorerInfoDescItem multiline>
-          <ViewContentWidget fields={fields} data={item.payload} />
+          <ViewContentWidget schema={schema} data={item.payload} />
         </ExplorerInfoDescItem>
 
         <PermissionsWidget

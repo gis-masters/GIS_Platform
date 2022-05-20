@@ -9,7 +9,6 @@ import { cn } from '@bem-react/classname';
 
 import { DocumentLibrary, LibraryRecord } from '../../services/crg/doc-library.service';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { LibraryRegistry } from '../LibraryRegistry/LibraryRegistry';
 import { DocumentInfo } from '../Documents/Documents';
 import { route } from '../../stores/Route.store';
 import { Button } from '../Button/Button';
@@ -70,14 +69,18 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
               )}
             </RegistryConsumer>
           ) : (
-            <LibraryRegistry
-              id='DocumentsAdd'
-              onSelect={this.handleMultipleSelect}
-              checkedLibraryDocuments={this.selectedDocuments || []}
-              libraryId={libraryIdentifier || route.params.libraryId}
-              addedDocuments={addedDocuments}
-              inDialog
-            />
+            <RegistryConsumer id='common'>
+              {({ LibraryRegistry }) => (
+                <LibraryRegistry
+                  id='DocumentsAdd'
+                  onSelect={this.handleMultipleSelect}
+                  checkedLibraryDocuments={this.selectedDocuments || []}
+                  libraryId={libraryIdentifier || route.params.libraryId}
+                  addedDocuments={addedDocuments}
+                  inDialog
+                />
+              )}
+            </RegistryConsumer>
           )}
         </DialogContent>
         <DialogActions>

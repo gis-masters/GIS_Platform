@@ -11,7 +11,7 @@ import { schemaService } from '../../../../services/crg/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { convertProperties, applyContentTypeOld } from '../../../../services/crg/schema.utils';
+import { applyContentType } from '../../../../services/crg/schema.utils';
 import {
   ContentTypeTypes,
   deleteLibraryRecord,
@@ -77,16 +77,12 @@ export class ExplorerAdapterTypeFolder {
   static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
     const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
     const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id);
-    const oldSchema = applyContentTypeOld(
-      await schemaService.getOldSchema(item.payload.schemaId),
-      item.payload.content_type_id
-    );
-    const fields = convertProperties(oldSchema.properties);
+    const schema = applyContentType(await schemaService.getSchema(item.payload.schemaId), item.payload.content_type_id);
 
     return (
       <>
         <ExplorerInfoDescItem multiline>
-          <ViewContentWidget fields={fields} data={item.payload} />
+          <ViewContentWidget schema={schema} data={item.payload} />
         </ExplorerInfoDescItem>
 
         <PermissionsWidget

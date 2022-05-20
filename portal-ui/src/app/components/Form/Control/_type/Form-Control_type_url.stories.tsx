@@ -170,7 +170,7 @@ const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
 export const EditableUrl = Template.bind({});
 EditableUrl.args = {
-  fields: testFields as PropertySchema[],
+  schema: { properties: testFields as PropertySchema[] },
   value,
   errors,
   actionFunction,
@@ -180,7 +180,7 @@ EditableUrl.args = {
 export const ReadonlyUrl = Template.bind({});
 ReadonlyUrl.args = {
   readonly: true,
-  fields: testFields as PropertySchema[],
+  schema: { properties: testFields as PropertySchema[] },
   value,
   errors,
   onFormChange: setFormValue
@@ -200,7 +200,7 @@ const validateEmptyFieldsActions = (
 
 export const ErrorsUrl = Template.bind({});
 ErrorsUrl.args = {
-  fields: errorTestFields as PropertySchema[],
+  schema: { properties: errorTestFields as PropertySchema[] },
   value,
   errors: errorsField,
   onFormChange: setFormValue,
@@ -209,7 +209,7 @@ ErrorsUrl.args = {
 
 export const EmptyUrl = Template.bind({});
 EmptyUrl.args = {
-  fields: emptyFields as PropertySchema[],
+  schema: { properties: emptyFields as PropertySchema[] },
   value,
   errors: emptyField,
   onFormChange: setFormValue,
@@ -219,7 +219,7 @@ EmptyUrl.args = {
 export const ReadOnlyEmptyUrl = Template.bind({});
 ReadOnlyEmptyUrl.args = {
   readonly: true,
-  fields: emptyFields as PropertySchema[],
+  schema: { properties: emptyFields as PropertySchema[] },
   value,
   errors: emptyField,
   onFormChange: setFormValue

@@ -2,6 +2,7 @@ import { ComponentType } from 'react';
 
 import { SupportedGeometryType } from '../geoserver/wfs.models';
 import { FormControlProps } from '../../components/Form/Control/Form-Control';
+import { Relation } from './schema.models';
 
 // Править в соответствии с
 // contracts/data-service-contract/src/main/java/ru/mycrg/data_service_contract/enums/ValueType.java
@@ -42,6 +43,7 @@ export interface OldSchema<T extends Record<string, unknown> = Record<string, un
   children?: { library?: string; contentType: string }[];
   contentTypes?: OldContentType[];
   printTemplates?: string[];
+  relations?: Relation[];
 }
 
 export interface OldContentType {
@@ -52,6 +54,7 @@ export interface OldContentType {
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];
   printTemplates?: string[];
+  relations?: Relation[];
   attributes: OldPropertySchema[];
 }
 
@@ -197,4 +200,5 @@ export interface EditedField {
   value: string;
   property: OldPropertySchema;
   isFgistpProperty: boolean;
+  relations?: Relation[];
 }

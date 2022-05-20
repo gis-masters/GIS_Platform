@@ -9,6 +9,7 @@ import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToPro
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { formatDate } from '../../../../services/util/date.util';
+import { Schema } from '../../../../services/crg/schema.models';
 
 import { Adapter, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -70,7 +71,7 @@ export class ExplorerAdapterTypeTable {
     return (
       <>
         <ExplorerInfoDescItem multiline>
-          <ViewContentWidget fields={dataTableSchema} data={currentItem} />
+          <ViewContentWidget schema={dataTableSchema as unknown as Schema} data={currentItem} />
         </ExplorerInfoDescItem>
 
         <ConnectionsTableToProjectsWidget dataTable={item.payload} />

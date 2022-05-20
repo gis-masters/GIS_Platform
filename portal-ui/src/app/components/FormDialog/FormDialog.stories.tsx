@@ -52,22 +52,22 @@ const actionFunction = async (formValue: TestData) => {
 
 const Template: ComponentStory<typeof FormDialog> = args => <FormDialog {...args} />;
 
-export const Create = Template.bind({}) as ComponentStory<typeof FormDialog>;
+export const Create = Template.bind({});
 Create.args = {
   title: 'Сотворение штуки',
   open: true,
-  fields: testFields as PropertySchema[],
+  schema: { properties: testFields as PropertySchema[] },
   actionButtonProps: { children: 'Создать штуку' },
   actionFunction,
   onSuccess: () => Toast.success('Создано успешно!'),
   onError: () => Toast.error('Error!')
 };
 
-export const Edit = Template.bind({}) as ComponentStory<typeof FormDialog>;
+export const Edit = Template.bind({});
 Edit.args = {
   title: 'Редактирование штуки',
   open: true,
-  fields: testFields as PropertySchema[],
+  schema: { properties: testFields as PropertySchema[] },
   value: testData,
   actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' },
   actionFunction,

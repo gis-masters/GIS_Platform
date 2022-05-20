@@ -72,7 +72,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
           open={this.formDialogOpen}
           value={this.value}
           onClose={this.closeFormDialog}
-          fields={this.documentFields}
+          schema={{ properties: this.documentFields }}
           actionFunction={this.createDocument}
           actionButtonProps={{ children: 'Создать документ' }}
         />

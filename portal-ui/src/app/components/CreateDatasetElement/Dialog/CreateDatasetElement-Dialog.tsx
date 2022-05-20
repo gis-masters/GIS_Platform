@@ -4,13 +4,13 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { RegistryConsumer } from '@bem-react/di';
 
 import { NewDataset } from '../../../services/data.service';
-import { PropertySchema } from '../../../services/crg/schema.models';
+import { Schema } from '../../../services/crg/schema.models';
 import { FieldErrors } from '../../../services/crg/formValidation.service';
 
 import { Button } from '../../Button/Button';
 
 export interface CreateDatasetElementDialogProps {
-  fields?: PropertySchema[];
+  schema?: Schema<NewDataset>;
   open: boolean;
   loading: boolean;
   formValue: Partial<NewDataset>;
@@ -26,7 +26,7 @@ export const CreateDatasetElementDialog: FC<CreateDatasetElementDialogProps> = o
   ({
     open,
     loading,
-    fields,
+    schema,
     formValue,
     formErrors,
     onFieldChange,
@@ -43,7 +43,7 @@ export const CreateDatasetElementDialog: FC<CreateDatasetElementDialogProps> = o
             {({ Form }) => (
               <Form<Partial<NewDataset>>
                 id='createDatasetForm'
-                fields={fields}
+                schema={schema}
                 value={formValue}
                 onFormChange={onChange}
                 onFormSubmit={onCreate}

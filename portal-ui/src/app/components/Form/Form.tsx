@@ -6,8 +6,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, isEqual } from 'lodash';
 
-import { PropertySchema } from '../../services/crg/schema.models';
+import { PropertySchema, Schema } from '../../services/crg/schema.models';
 import {
+  calculateValues,
   FieldErrors,
   getDefaultValues,
   normalizeServerErrors,
@@ -27,7 +28,7 @@ const cnForm = cn('Form');
 
 export interface FormProps<T extends Record<string, unknown>>
   extends Omit<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'ref'> {
-  fields?: PropertySchema<T>[];
+  schema?: Schema<T>;
   value?: T;
   errors?: FieldErrors[];
   onFormChange?(changedValue: T): void;
@@ -58,8 +59,10 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
   constructor(props: FormProps<T>) {
     super(props);
 
-    if (props.fields) {
-      this.value = cloneDeep(props.value || getDefaultValues(props.fields));
+    const properties = props.schema?.properties;
+
+    if (props.schema?.properties) {
+      this.value = calculateValues(cloneDeep(props.value || getDefaultValues(properties)), properties);
       this.initialValue = cloneDeep(this.value);
     }
   }
@@ -94,7 +97,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
 
   render() {
     const {
-      fields,
+      schema,
       children,
       className,
       errors,
@@ -115,9 +118,9 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
     return (
       <form action='#' onSubmit={this.submitHandler} {...otherProps} className={cnForm({ readonly }, [className])}>
         {children}
-        {!!fields && (
+        {!!schema && (
           <FormContent<T>
-            fields={fields}
+            schema={schema}
             formValue={this.value}
             onFormChange={this.changeHandler}
             onFieldChange={this.fieldChanged}
@@ -133,10 +136,10 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
 
   @boundMethod
   private changeHandler(changedValue: T) {
-    const { onFormChange, auto } = this.props;
+    const { onFormChange, auto, schema } = this.props;
 
     if (auto) {
-      this.setValue(changedValue);
+      this.setValue(calculateValues(changedValue, schema.properties));
     }
 
     if (onFormChange) {
@@ -169,8 +172,8 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
 
   @boundMethod
   private validate() {
-    const { fields } = this.props;
-    const errors = validateFormValue(this.value, fields as PropertySchema[]);
+    const { schema } = this.props;
+    const errors = validateFormValue(this.value, schema.properties as PropertySchema[]);
     this.setErrors(errors);
 
     return errors;
@@ -229,12 +232,15 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
 
   @boundMethod
   private fieldValidate(value: T[keyof T], fieldName: string) {
-    const { auto, fields, onFieldNeedValidate } = this.props;
-    const field = fields.find(({ name }) => name === fieldName) as PropertySchema;
+    const { auto, schema, onFieldNeedValidate } = this.props;
+    const field = schema.properties?.find(({ name }) => name === fieldName) as PropertySchema;
 
     if (auto) {
       this.filterFieldErrors(fieldName);
-      this.setErrors([...this.errors, validateFieldValue(value, field, this.value, fields as PropertySchema[])]);
+      this.setErrors([
+        ...this.errors,
+        validateFieldValue(value, field, this.value, schema.properties as PropertySchema[])
+      ]);
     }
 
     if (onFieldNeedValidate) {

@@ -69,15 +69,6 @@ export class ExplorerAdapterTypeLibrary {
             </Link>
           </ExplorerInfoDescItem>
         )}
-
-        {currentUser.isAdmin && (
-          <ExplorerInfoDescItem>
-            <ExplorerInfoDescTitle>Схема:</ExplorerInfoDescTitle>
-            <Link href={`/data-management?path_dm=%5B"r","root","sr","schemasRoot","schema","${schemaId}"%5D`}>
-              {schemaId}
-            </Link>
-          </ExplorerInfoDescItem>
-        )}
       </>
     );
   }

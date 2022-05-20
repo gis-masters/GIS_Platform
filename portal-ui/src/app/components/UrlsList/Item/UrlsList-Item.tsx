@@ -82,7 +82,7 @@ export class UrlsListItem extends Component<UrlFieldItemProps> {
         {editable && (
           <FormDialog
             open={this.editDialogOpen}
-            fields={getEditUrlFormSchema(property)}
+            schema={{ properties: getEditUrlFormSchema(property) }}
             value={item}
             actionFunction={this.editUrl}
             actionButtonProps={{ children: 'Сохранить' }}

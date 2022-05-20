@@ -80,6 +80,7 @@ import { FormControlComponent } from './components/form-control/form-control.com
 import { LibraryDocumentPageContainerComponent } from './components/library-document-page-container/library-document-page-container.component';
 import { ServicesCalculatorComponent } from './components/services-calculator/services-calculator.component';
 import { FeatureExtractComponent } from './components/feature-extract/feature-extract.component';
+import { RelatedDocumentsButtonComponent } from './components/related-documents-button/related-documents-button.component';
 
 @NgModule({
   declarations: [
@@ -141,7 +142,8 @@ import { FeatureExtractComponent } from './components/feature-extract/feature-ex
     XmlDownloadComponent,
     FormControlComponent,
     ServicesCalculatorComponent,
-    FeatureExtractComponent
+    FeatureExtractComponent,
+    RelatedDocumentsButtonComponent
   ],
   imports: [
     HttpClientModule,

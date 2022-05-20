@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
+import { Schema } from '../../services/crg/schema.models';
 import { formatDate } from '../../services/util/date.util';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { DataTable, dataTableSchema } from '../../services/data.service';
@@ -30,7 +31,10 @@ export class DataTableCard extends Component<DataTableCardProps> {
 
             <div className={cnDataTableCard('Card')}>
               {dataTable && (
-                <ViewContentWidget fields={dataTableSchema} data={dataTable as unknown as Record<string, unknown>} />
+                <ViewContentWidget
+                  schema={dataTableSchema as unknown as Schema}
+                  data={dataTable as unknown as Record<string, unknown>}
+                />
               )}
             </div>
           </>

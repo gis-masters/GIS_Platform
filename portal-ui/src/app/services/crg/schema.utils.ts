@@ -10,7 +10,8 @@ import {
   PropertySchemaUrl,
   Schema,
   ContentType,
-  ValueFormula
+  ValueFormula,
+  Relation
 } from './schema.models';
 import { LibraryRecord } from './doc-library.service';
 import { DocumentInfo } from '../../components/Documents/Documents';
@@ -40,14 +41,28 @@ export function applyContentType(schema: Schema, contentTypeId: string): Schema 
   const contentType = clonedSchema.contentTypes.find(cType => cType.id === contentTypeId);
 
   if (contentType) {
-    const { properties, children, childOnly, title, printTemplates } = contentType;
+    const {
+      title,
+      properties,
+      children = schema.children,
+      childOnly = schema.childOnly,
+      printTemplates = schema.printTemplates,
+      relations = schema.relations
+    } = contentType;
     const actualProperties: PropertySchema[] = properties.map(contentTypeProperty => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeProperty.name);
 
       return { ...schemaProperty, ...contentTypeProperty } as PropertySchema;
     });
 
-    Object.assign(clonedSchema, { title, properties: actualProperties, children, childOnly, printTemplates });
+    Object.assign(clonedSchema, {
+      title,
+      properties: actualProperties,
+      children,
+      childOnly,
+      printTemplates,
+      relations
+    });
   }
 
   return clonedSchema;
@@ -62,6 +77,7 @@ export function convertSchema<T extends Record<string, unknown>>({
   children,
   childOnly,
   printTemplates,
+  relations,
   properties,
   contentTypes
 }: OldSchema<T>): Schema<T> {
@@ -74,6 +90,7 @@ export function convertSchema<T extends Record<string, unknown>>({
     children,
     childOnly,
     printTemplates,
+    relations,
     properties: convertProperties(properties),
     contentTypes: contentTypes.map(convertContentType)
   };
@@ -167,11 +184,27 @@ export function convertProperties<T extends Record<string, unknown>>(
   });
 }
 
-export const defaultValueWellKnownFormulas: Record<string, ValueFormula> = {
+export const valueWellKnownFormulas: Record<string, ValueFormula> = {
   inherit: (obj, property, parent) => parent[property.name],
   parentDocument: (obj, property, parent: LibraryRecord) => {
     const value: DocumentInfo[] = [{ id: parent.id, libraryId: parent.libraryId, title: parent.title }];
 
     return JSON.stringify(value);
-  }
+  },
+  relationLink: (obj, { valueFormulaParams }) =>
+    JSON.stringify({
+      url:
+        `/data-management/library/${String(valueFormulaParams.library)}/registry?filter=` +
+        encodeURI(
+          JSON.stringify({ applicant_name: { $ilike: `%${String(obj[valueFormulaParams.property as string])}%` } })
+        ),
+      text: valueFormulaParams.title
+    })
 };
+
+export function getFieldRelations<T extends Record<string, unknown>>(
+  field: string | number,
+  schema: Schema<T>
+): Relation[] {
+  return schema?.relations?.filter(relation => relation.property === field) || [];
+}

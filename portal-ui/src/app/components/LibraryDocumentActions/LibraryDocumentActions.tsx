@@ -27,6 +27,7 @@ import { LibraryDocumentActionsClose } from './Close/LibraryDocumentActions-Clos
 import { LibraryDocumentActionsDelete } from './Delete/LibraryDocumentActions-Delete';
 import { LibraryDocumentActionsDownload } from './Download/LibraryDocumentActions-Download';
 import { LibraryDocumentActionsRegister } from './Register/LibraryDocumentActions-Register';
+import { LibraryDocumentActionsRelations } from './Relations/LibraryDocumentActions-Relations';
 import { LibraryDocumentActionsCreateChild } from './CreateChild/LibraryDocumentActions-CreateChild';
 import { LibraryDocumentActionsFilesPlacement } from './FilesPlacement/LibraryDocumentActions-FilesPlacement';
 
@@ -108,6 +109,9 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
         {!isNew && canDownload && <LibraryDocumentActionsDownload document={this.document || document} as={as} />}
 
         <LibraryDocumentActionsSed document={this.document || document} as={as} />
+        {this.schema?.relations?.length > 0 && (
+          <LibraryDocumentActionsRelations document={this.document || document} schema={this.schema} as={as} />
+        )}
 
         {!isNew && canDelete && (
           <LibraryDocumentActionsDelete document={this.document || document} as={as} onDelete={onDialogClose} />

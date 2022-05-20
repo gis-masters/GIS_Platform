@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import moment from 'moment';
 
 import { getEditUrlFormSchema, parseUrlValue } from '../../components/Form/Form.utils';
@@ -14,7 +15,7 @@ import {
   PropertySchemaUrl,
   ValueFormula
 } from './schema.models';
-import { defaultValueWellKnownFormulas } from './schema.utils';
+import { valueWellKnownFormulas } from './schema.utils';
 
 const messages = {
   required: 'Обязательное поле ',
@@ -274,42 +275,89 @@ export function normalizeServerErrors(errors: ServerFieldError[]): FieldErrors[]
 }
 
 export function getDefaultValues<T extends Record<string, unknown>>(
-  fields: PropertySchema<T>[],
+  properties: PropertySchema<T>[],
   parent: Record<string, unknown> = {}
 ): Partial<T> {
   const values: Partial<T> = {};
 
-  for (const field of fields) {
-    if (field.defaultValue) {
-      values[field.name] = field.defaultValue as T[keyof T];
+  for (const property of properties) {
+    if (property.defaultValue) {
+      values[property.name] = property.defaultValue as T[keyof T];
     }
 
-    if (field.defaultValueFormula) {
+    if (property.defaultValueFormula) {
       try {
         const formula: ValueFormula =
-          typeof field.defaultValueFormula === 'string'
+          typeof property.defaultValueFormula === 'string'
             ? // eslint-disable-next-line @typescript-eslint/no-implied-eval
-              (new Function('obj', 'property', 'parent', field.defaultValueFormula) as ValueFormula)
-            : field.defaultValueFormula;
+              (new Function('obj', 'property', 'parent', property.defaultValueFormula) as ValueFormula)
+            : property.defaultValueFormula;
 
-        values[field.name] = formula(values, field as PropertySchema, parent) as T[keyof T];
+        values[property.name] = formula(values, property as PropertySchema, parent) as T[keyof T];
       } catch (error) {
         throw new Error(`Ошибка при попытке вычислить значение по-умолчанию: ${String(error)}`);
       }
     }
 
-    if (field.defaultValueWellKnownFormula && defaultValueWellKnownFormulas[field.defaultValueWellKnownFormula]) {
+    if (property.defaultValueWellKnownFormula && valueWellKnownFormulas[property.defaultValueWellKnownFormula]) {
       try {
-        const formula = defaultValueWellKnownFormulas[field.defaultValueWellKnownFormula];
+        const formula = valueWellKnownFormulas[property.defaultValueWellKnownFormula];
 
-        values[field.name] = formula(values, field as PropertySchema, parent) as T[keyof T];
+        values[property.name] = formula(values, property as PropertySchema, parent) as T[keyof T];
       } catch (error) {
         throw new Error(
-          `Ошибка при попытке вычислить значение по-умолчанию [${field.defaultValueWellKnownFormula}]: ${String(error)}`
+          `Ошибка при попытке вычислить значение по-умолчанию [${property.defaultValueWellKnownFormula}]: ${String(
+            error
+          )}`
         );
       }
     }
   }
 
   return values;
+}
+
+export function calculateValues<T extends Record<string, unknown>>(obj: T, properties: PropertySchema<T>[]): T {
+  const value = cloneDeep(obj);
+
+  for (const property of properties) {
+    value[property.name] = getCalculatedValue(value, property as PropertySchema) as T[keyof T];
+  }
+
+  return value;
+}
+
+export function getCalculatedValue<T extends Record<string, unknown>>(
+  obj: Record<string, unknown>,
+  property: PropertySchema
+): unknown {
+  if (property.calculatedValueFormula) {
+    try {
+      const formula =
+        typeof property.calculatedValueFormula === 'string'
+          ? // eslint-disable-next-line @typescript-eslint/no-implied-eval
+            (new Function('obj', 'property', property.calculatedValueFormula) as ValueFormula)
+          : property.calculatedValueFormula;
+
+      return formula(obj, property) as T[keyof T];
+    } catch (error) {
+      throw new Error(`Ошибка при попытке вычислить значение: ${String(error)}`);
+    }
+  }
+
+  if (property.calculatedValueWellKnownFormula && valueWellKnownFormulas[property.calculatedValueWellKnownFormula]) {
+    try {
+      const formula = valueWellKnownFormulas[property.calculatedValueWellKnownFormula];
+
+      return formula(obj, property) as T[keyof T];
+    } catch (error) {
+      throw new Error(
+        `Ошибка при попытке вычислить значение по-умолчанию [${property.defaultValueWellKnownFormula}]: ${String(
+          error
+        )}`
+      );
+    }
+  }
+
+  return obj[property.name];
 }

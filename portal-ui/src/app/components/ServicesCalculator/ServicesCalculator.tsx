@@ -46,7 +46,7 @@ export interface InvoiceInfo {
   accountant: string;
 }
 
-const fields: PropertySchema<InvoiceInfo>[] = [
+const properties: PropertySchema<InvoiceInfo>[] = [
   {
     name: 'bank',
     title: 'Банк получателя',
@@ -153,7 +153,7 @@ export class ServicesCalculator extends Component {
 
         <FormDialog
           open={this.requisitesDialogOpen}
-          fields={fields}
+          schema={{ properties }}
           value={(JSON.parse(localStorage.getItem('invoiceRequisites')) as InvoiceInfo) || {}}
           actionButtonProps={{ children: 'Сохранить' }}
           actionFunction={this.setSelectedServices}

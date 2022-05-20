@@ -51,6 +51,7 @@ export interface XTableColumn<T> {
   filterOptions?: PropertyOption[];
   sortable?: boolean;
   CellContent?: ComponentType<{ rowData: T; field: keyof T; filterActive: boolean; filterParams: FilterQuery }>;
+  AfterCellContent?: ComponentType<{ rowData: T; field: keyof T; filterActive: boolean; filterParams: FilterQuery }>;
   getIdBadge?: (rowData: T) => string | number;
   cellProps?: TableCellProps;
   headerCellProps?: TableCellProps;
@@ -225,33 +226,44 @@ export class XTable<T> extends Component<XTableProps<T>> {
               ) : (
                 this.dataPaged.map((rowData, i) => (
                   <TableRow key={getRowId ? getRowId(rowData) : i} hover>
-                    {this.cols.map(({ field, CellContent, getIdBadge, cellProps, align, hidden }, i) => (
-                      <TableCell
-                        className={cnXTable('Cell', { hidden })}
-                        key={`${i}_${String(field)}`}
-                        align={align}
-                        {...(cellProps || {})}
-                      >
-                        {CellContent ? (
-                          <CellContent
-                            rowData={rowData}
-                            field={field}
-                            filterActive={this.filterActive}
-                            filterParams={this.filterQuery}
-                          />
-                        ) : (
-                          <>
-                            <Highlight
-                              word={this.filterQuery[field as string]}
-                              enabled={(filterable && this.filterActive) || filtersAlwaysEnabled}
-                            >
-                              {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
-                            </Highlight>
-                            {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}
-                          </>
-                        )}
-                      </TableCell>
-                    ))}
+                    {this.cols.map(
+                      ({ field, CellContent, AfterCellContent, getIdBadge, cellProps, align, hidden }, i) => (
+                        <TableCell
+                          className={cnXTable('Cell', { hidden })}
+                          key={`${i}_${String(field)}`}
+                          align={align}
+                          {...(cellProps || {})}
+                        >
+                          {CellContent ? (
+                            <CellContent
+                              rowData={rowData}
+                              field={field}
+                              filterActive={this.filterActive}
+                              filterParams={this.filterQuery}
+                            />
+                          ) : (
+                            <>
+                              <Highlight
+                                word={this.filterQuery[field as string]}
+                                enabled={(filterable && this.filterActive) || filtersAlwaysEnabled}
+                              >
+                                {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
+                              </Highlight>
+                              {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}
+                            </>
+                          )}
+
+                          {AfterCellContent && (
+                            <AfterCellContent
+                              rowData={rowData}
+                              field={field}
+                              filterActive={this.filterActive}
+                              filterParams={this.filterQuery}
+                            />
+                          )}
+                        </TableCell>
+                      )
+                    )}
                   </TableRow>
                 ))
               )}

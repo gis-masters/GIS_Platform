@@ -7,8 +7,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { DataTable, dataTableSchema, updateDataTable } from '../../../services/data.service';
-import { FormDialog } from '../../FormDialog/FormDialog';
+import { Schema } from '../../../services/crg/schema.models';
 import { getPatch } from '../../../services/util/patch';
+import { FormDialog } from '../../FormDialog/FormDialog';
 
 const cnDataTableActionsEdit = cn('DataTableActions', 'Edit');
 
@@ -31,7 +32,7 @@ export class DataTableActionsEdit extends Component<DataTableActionsEditProps> {
 
         <FormDialog
           open={this.dialogOpen}
-          fields={dataTableSchema}
+          schema={dataTableSchema as unknown as Schema}
           value={this.props.dataTable as Partial<DataTable>}
           actionFunction={this.update}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}

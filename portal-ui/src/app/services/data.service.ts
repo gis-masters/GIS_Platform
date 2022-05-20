@@ -7,7 +7,7 @@ import {
   getDatasetUrl,
   getTableConnectionsUrl
 } from './server-urls.service';
-import { PropertySchema, PropertyType } from './crg/schema.models';
+import { PropertyType, Schema } from './crg/schema.models';
 import { WfsFeature } from './geoserver/wfs.models';
 import { communicationService } from './communication.service';
 import { CrgLayer, CrgProject } from './crg/projects.models';
@@ -41,19 +41,21 @@ export interface Dataset extends DataEntity {
 
 export type NewDataset = Pick<Dataset, 'title' | 'details'>;
 
-export const dataEntitySchema: PropertySchema<NewDataset>[] = [
-  {
-    propertyType: PropertyType.STRING,
-    title: 'Название набора данных',
-    name: 'title',
-    required: true
-  },
-  {
-    propertyType: PropertyType.STRING,
-    title: 'Описание набора данных',
-    name: 'details'
-  }
-];
+export const dataEntitySchema: Schema<NewDataset> = {
+  properties: [
+    {
+      propertyType: PropertyType.STRING,
+      title: 'Название',
+      name: 'title',
+      required: true
+    },
+    {
+      propertyType: PropertyType.STRING,
+      title: 'Описание',
+      name: 'details'
+    }
+  ]
+};
 
 export interface DataTable extends DataEntity {
   type: DataEntityType.TABLE;
@@ -70,85 +72,87 @@ export interface DataTable extends DataEntity {
   isPublic?: boolean;
 }
 
-export const dataTableSchema: PropertySchema<DataTable>[] = [
-  {
-    name: 'title',
-    title: 'Наименование слоя',
-    propertyType: PropertyType.STRING
-  },
-  {
-    name: 'details',
-    title: 'Описание слоя',
-    propertyType: PropertyType.STRING
-  },
-  {
-    name: 'crs',
-    title: 'Координатная система',
-    propertyType: PropertyType.STRING
-  },
-  {
-    name: 'documentType',
-    title: 'Тип документа',
-    propertyType: PropertyType.CHOICE,
-    options: [
-      {
-        title: 'Генеральный план',
-        value: 'GP'
-      },
-      {
-        title: 'СТП  муниципальных районов',
-        value: 'STPMO'
-      },
-      {
-        title: 'СТП  субъектов Российской Федерации',
-        value: 'STPRF'
-      },
-      {
-        title: 'Правила землепользования и застройки',
-        value: 'PZZ'
-      },
-      {
-        title: 'Программа комплексного развития',
-        value: 'PKR'
-      },
-      {
-        title: 'Проект планировки территории; Проект межевания территории',
-        value: 'PPTPMT'
-      }
-    ]
-  },
-  {
-    name: 'status',
-    title: 'Статус слоя',
-    propertyType: PropertyType.CHOICE,
-    options: [
-      { title: 'Проектный', value: 'Проектный' },
-      { title: 'Утвержденный', value: 'Утвержденный' },
-      { title: 'Архивный', value: 'Архивный' }
-    ]
-  },
-  {
-    name: 'fias',
-    title: 'Территориальная принадлежность',
-    propertyType: PropertyType.FIAS,
-    searchMode: 'oktmo'
-  },
-  {
-    name: 'docApproveDate',
-    title: 'Дата утверждения векторного документа',
-    propertyType: PropertyType.DATETIME
-  },
-  {
-    name: 'docTerminationDate',
-    title: 'Дата прекращения действия векторного документа',
-    propertyType: PropertyType.DATETIME
-  },
-  {
-    name: 'isPublic',
-    title: 'Публичный',
-    propertyType: PropertyType.BOOL
-  }
-];
+export const dataTableSchema: Schema<DataTable> = {
+  properties: [
+    {
+      name: 'title',
+      title: 'Наименование слоя',
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'details',
+      title: 'Описание слоя',
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'crs',
+      title: 'Координатная система',
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'documentType',
+      title: 'Тип документа',
+      propertyType: PropertyType.CHOICE,
+      options: [
+        {
+          title: 'Генеральный план',
+          value: 'GP'
+        },
+        {
+          title: 'СТП  муниципальных районов',
+          value: 'STPMO'
+        },
+        {
+          title: 'СТП  субъектов Российской Федерации',
+          value: 'STPRF'
+        },
+        {
+          title: 'Правила землепользования и застройки',
+          value: 'PZZ'
+        },
+        {
+          title: 'Программа комплексного развития',
+          value: 'PKR'
+        },
+        {
+          title: 'Проект планировки территории; Проект межевания территории',
+          value: 'PPTPMT'
+        }
+      ]
+    },
+    {
+      name: 'status',
+      title: 'Статус слоя',
+      propertyType: PropertyType.CHOICE,
+      options: [
+        { title: 'Проектный', value: 'Проектный' },
+        { title: 'Утвержденный', value: 'Утвержденный' },
+        { title: 'Архивный', value: 'Архивный' }
+      ]
+    },
+    {
+      name: 'fias',
+      title: 'Территориальная принадлежность',
+      propertyType: PropertyType.FIAS,
+      searchMode: 'oktmo'
+    },
+    {
+      name: 'docApproveDate',
+      title: 'Дата утверждения векторного документа',
+      propertyType: PropertyType.DATETIME
+    },
+    {
+      name: 'docTerminationDate',
+      title: 'Дата прекращения действия векторного документа',
+      propertyType: PropertyType.DATETIME
+    },
+    {
+      name: 'isPublic',
+      title: 'Публичный',
+      propertyType: PropertyType.BOOL
+    }
+  ]
+};
 
 export interface DataTableConnection {
   layer: CrgLayer;

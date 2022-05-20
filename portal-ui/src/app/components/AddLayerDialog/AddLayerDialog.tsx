@@ -102,7 +102,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           <Form
             id='addLayerForm'
             onSubmit={this.add}
-            fields={this.fields}
+            schema={{ properties: this.fields }}
             value={this.formValue}
             onFormChange={this.handleFormChange}
             onFieldChange={this.formFieldChanged}

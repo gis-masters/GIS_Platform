@@ -5,22 +5,27 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
-import { PropertySchema, PropertyType } from '../../../services/crg/schema.models';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
+import { PropertySchema, PropertyType, Schema } from '../../../services/crg/schema.models';
 import { FieldErrors } from '../../../services/crg/formValidation.service';
+import { getFieldRelations } from '../../../services/crg/schema.utils';
 import { generateRandomId } from '../../../services/util/randomId';
+import { RelatedDocumentsButton } from '../../RelatedDocumentsButton/RelatedDocumentsButton';
 
+import { applyFieldValue, convertToComplexField } from '../Form.utils';
+import { FormHiddenField } from '../HiddenField/Form-HiddenField';
+import { FormControl } from '../Control/Form-Control.composed';
+import { FormView } from '../View/Form-View.composed';
 import { FormField } from '../Field/Form-Field';
 import { FormLabel } from '../Label/Form-Label';
-import { FormView } from '../View/Form-View.composed';
-import { FormControl } from '../Control/Form-Control.composed';
-import { FormHiddenField } from '../HiddenField/Form-HiddenField';
-import { applyFieldValue, convertToComplexField } from '../Form.utils';
+
+import '!style-loader!css-loader!sass-loader!../Relations/Form-Relations.scss';
 
 const cnFormContent = cn('Form', 'Content');
+const cnFormRelations = cn('Form', 'Relations');
 
 interface FormContentProps<T extends Record<string, unknown>> extends IClassNameProps {
-  fields?: PropertySchema<T>[];
+  schema: Schema<T>;
   formValue: Partial<T>;
   errors?: FieldErrors[];
   onFormChange?: (changedValue: Partial<T>) => void;
@@ -34,12 +39,13 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   FormContentProps<T>
 > {
   render() {
-    const { fields, formValue, className, errors = [], readonly } = this.props;
+    const { schema, formValue, className, errors = [], readonly } = this.props;
 
     return (
       <div className={cnFormContent(null, [className])}>
-        {fields.map((propertySchema: PropertySchema, i) => {
+        {schema.properties.map((propertySchema: PropertySchema, i) => {
           const htmlId = 'formField_' + generateRandomId();
+          const relations = getFieldRelations(propertySchema.name, schema);
 
           if (propertySchema.hidden) {
             return (
@@ -52,7 +58,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
           }
 
           return (
-            <FormField key={i}>
+            <FormField key={i} withRelations={!!relations.length}>
               <FormLabel
                 htmlFor={htmlId}
                 required={propertySchema.required}
@@ -61,11 +67,12 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
               >
                 {propertySchema.title}
               </FormLabel>
+
               {readonly || propertySchema.readOnly ? (
                 <FormView
                   property={propertySchema}
                   type={propertySchema.propertyType}
-                  fieldValue={convertToComplexField(propertySchema, formValue) as Record<string, unknown>}
+                  fieldValue={convertToComplexField(propertySchema, formValue)}
                   errors={errors
                     .filter(({ field }) => field === propertySchema.name)
                     .flatMap(({ messages }) => messages)}
@@ -78,13 +85,22 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
                   onChange={this.fieldChangeHandler}
                   onNeedValidate={this.fieldNeedValidateHandler}
                   fieldValue={convertToComplexField(propertySchema, formValue)}
-                  formValue={convertToComplexField(propertySchema, formValue) as Record<string, unknown>}
+                  formValue={formValue}
                   errors={errors
                     .filter(({ field }) => field === propertySchema.name)
                     .flatMap(({ messages }) => messages)}
                 >
                   {String(formValue[propertySchema.name])}
                 </FormControl>
+              )}
+
+              {!!relations.length && (
+                <RelatedDocumentsButton
+                  className={cnFormRelations()}
+                  obj={formValue}
+                  relations={relations}
+                  size='small'
+                />
               )}
             </FormField>
           );
@@ -95,8 +111,8 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
 
   @boundMethod
   private fieldChangeHandler({ value, propertyName }: { value: T[keyof T]; propertyName: keyof T }) {
-    const { formValue, onFormChange, onFieldChange, fields } = this.props;
-    const propertySchema: PropertySchema<T> = fields.find(({ name }) => name === propertyName);
+    const { formValue, onFormChange, onFieldChange, schema } = this.props;
+    const propertySchema: PropertySchema<T> = schema.properties.find(({ name }) => name === propertyName);
     const prevValue = formValue[propertyName];
 
     if (onFormChange) {

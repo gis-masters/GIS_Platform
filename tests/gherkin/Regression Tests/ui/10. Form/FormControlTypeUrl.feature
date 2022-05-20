@@ -1,4 +1,4 @@
-Feature Поле Url
+Feature: Поле Url
 
   Background:
     Given пользователь зарегистрирован

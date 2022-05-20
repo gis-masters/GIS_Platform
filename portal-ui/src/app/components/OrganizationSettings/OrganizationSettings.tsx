@@ -6,7 +6,7 @@ import { Container } from '@mui/material';
 import { cloneDeep } from 'lodash';
 import { action, IReactionDisposer, observable, reaction } from 'mobx';
 
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { PropertyType, Schema } from '../../services/crg/schema.models';
 import { organizationSettingsService } from '../../services/organization-settings';
 import { organizationSettings, Settings } from '../../stores/OrganizationSettings.store';
 import { generateRandomId } from '../../services/util/randomId';
@@ -18,38 +18,40 @@ import '!style-loader!css-loader!sass-loader!./OrganizationSettings.scss';
 
 const cnOrganizationSettings = cn('OrganizationSettings');
 
-const items: PropertySchema<Settings>[] = [
-  {
-    name: 'createProjectEnabled',
-    title: 'Создание проекта',
-    propertyType: PropertyType.BOOL
-  },
-  {
-    name: 'dataManagementEnabled',
-    title: 'Управление данными',
-    propertyType: PropertyType.BOOL
-  },
-  {
-    name: 'editProjectLayersEnabled',
-    title: 'Настройка слоев проекта',
-    propertyType: PropertyType.BOOL
-  },
-  {
-    name: 'createLibraryItemsEnabled',
-    title: 'Создание элементов в библиотеке',
-    propertyType: PropertyType.BOOL
-  },
-  {
-    name: 'fileDownloadEnabled',
-    title: 'Скачать документ',
-    propertyType: PropertyType.BOOL
-  },
-  {
-    name: 'downloadXmlGeometryEnabled',
-    title: 'Скачивание xml межевого плана и выгрузка координат и геометрии',
-    propertyType: PropertyType.BOOL
-  }
-];
+const schema: Schema<Settings> = {
+  properties: [
+    {
+      name: 'createProjectEnabled',
+      title: 'Создание проекта',
+      propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'dataManagementEnabled',
+      title: 'Управление данными',
+      propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'editProjectLayersEnabled',
+      title: 'Настройка слоев проекта',
+      propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'createLibraryItemsEnabled',
+      title: 'Создание элементов в библиотеке',
+      propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'fileDownloadEnabled',
+      title: 'Скачать документ',
+      propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'downloadXmlGeometryEnabled',
+      title: 'Скачивание xml межевого плана и выгрузка координат и геометрии',
+      propertyType: PropertyType.BOOL
+    }
+  ]
+};
 
 const defaultValue = {
   createLibraryItemsEnabled: false,
@@ -95,7 +97,7 @@ export class OrganizationSettings extends Component {
             id={htmlId}
             onFormSubmit={this.save}
             onActionSuccess={this.save}
-            fields={items}
+            schema={schema}
             value={this.formValue || defaultValue}
             auto
             actions={

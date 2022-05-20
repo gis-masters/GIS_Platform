@@ -45,7 +45,11 @@ public class SimplePropertyDto {
     private String searchMode;
     
     private int sequenceNumber;
-    
+
+    private String calculatedValueFormula;
+    private String calculatedValueWellKnownFormula;
+    private Object valueFormulaParams;
+
     private Integer length = -1;
     private Integer minLength = -1;
     private Integer maxLength = -1;
@@ -218,6 +222,30 @@ public class SimplePropertyDto {
 
     public void setSequenceNumber(int sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
+    }
+
+    public String getCalculatedValueFormula() {
+        return calculatedValueFormula;
+    }
+
+    public void setCalculatedValueFormula(String calculatedValueFormula) {
+        this.calculatedValueFormula = calculatedValueFormula;
+    }
+
+    public String getCalculatedValueWellKnownFormula() {
+        return calculatedValueWellKnownFormula;
+    }
+
+    public void setCalculatedValueWellKnownFormula(String calculatedValueWellKnownFormula) {
+        this.calculatedValueWellKnownFormula = calculatedValueWellKnownFormula;
+    }
+
+    public Object getValueFormulaParams() {
+        return valueFormulaParams;
+    }
+
+    public void setValueFormulaParams(Object valueFormulaParams) {
+        this.valueFormulaParams = valueFormulaParams;
     }
 
     public String getWhiteSpace() {

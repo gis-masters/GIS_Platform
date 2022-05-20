@@ -56,42 +56,42 @@ const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
 export const SingleEditable = Template.bind({});
 SingleEditable.args = {
-  fields: fieldsSingle,
+  schema: { properties: fieldsSingle },
   value: valueSingle,
   auto: true
 };
 
 export const SingleEditableEmpty = Template.bind({});
 SingleEditableEmpty.args = {
-  fields: fieldsSingle,
+  schema: { properties: fieldsSingle },
   value: {},
   auto: true
 };
 
 export const MultipleEditable = Template.bind({});
 MultipleEditable.args = {
-  fields: fieldsMultiple,
+  schema: { properties: fieldsMultiple },
   value: valueMultiple,
   auto: true
 };
 
 export const MultipleEditableScroll = Template.bind({});
 MultipleEditableScroll.args = {
-  fields: fieldsMultiple,
+  schema: { properties: fieldsMultiple },
   value: valueMultipleScroll,
   auto: true
 };
 
 export const MultipleEditableEmpty = Template.bind({});
 MultipleEditableEmpty.args = {
-  fields: fieldsMultiple,
+  schema: { properties: fieldsMultiple },
   value: {},
   auto: true
 };
 
 export const SingleView = Template.bind({});
 SingleView.args = {
-  fields: fieldsSingle,
+  schema: { properties: fieldsSingle },
   value: valueSingle,
   readonly: true,
   auto: true
@@ -99,7 +99,7 @@ SingleView.args = {
 
 export const SingleViewEmpty = Template.bind({});
 SingleViewEmpty.args = {
-  fields: fieldsSingle,
+  schema: { properties: fieldsSingle },
   value: {},
   readonly: true,
   auto: true
@@ -107,7 +107,7 @@ SingleViewEmpty.args = {
 
 export const MultipleView = Template.bind({});
 MultipleView.args = {
-  fields: fieldsMultiple,
+  schema: { properties: fieldsMultiple },
   value: valueMultiple,
   readonly: true,
   auto: true
@@ -115,7 +115,7 @@ MultipleView.args = {
 
 export const MultipleViewScroll = Template.bind({});
 MultipleViewScroll.args = {
-  fields: fieldsMultiple,
+  schema: { properties: fieldsMultiple },
   value: valueMultipleScroll,
   readonly: true,
   auto: true
@@ -123,7 +123,7 @@ MultipleViewScroll.args = {
 
 export const MultipleViewEmpty = Template.bind({});
 MultipleViewEmpty.args = {
-  fields: fieldsMultiple,
+  schema: { properties: fieldsMultiple },
   value: { photos: [] },
   readonly: true,
   auto: true

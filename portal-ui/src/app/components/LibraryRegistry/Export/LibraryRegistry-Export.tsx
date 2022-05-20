@@ -11,9 +11,9 @@ import {
   PropertySchema,
   PropertySchemaChoice,
   PropertySchemaDatetime,
-  PropertyType
+  PropertyType,
+  Schema
 } from '../../../services/crg/schema.models';
-import { OldSchema } from '../../../services/crg/schemaOld.models';
 import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
 import { formatDate } from '../../../services/util/date.util';
 import { PageOptions } from '../../../services/models';
@@ -26,7 +26,7 @@ const cnLibraryRegistryExport = cn('LibraryRegistry', 'Export');
 
 interface LibraryRegistryExportProps {
   library: DocumentLibrary;
-  schema: OldSchema;
+  schema: Schema;
   tablePageOptions: PageOptions;
   cols: XTableColumn<LibraryRecord>[];
   properties: PropertySchema[];
@@ -49,27 +49,25 @@ export class LibraryRegistryExport extends Component<LibraryRegistryExportProps>
   render() {
     return (
       <Tooltip title='Экспортировать реестр' placement='top'>
-        <span>
-          <MenuIconButton
-            className={cnLibraryRegistryExport()}
-            icon={<ArchiveOutlined />}
-            loading={this.loading}
-            disabled={this.loading}
-          >
-            <MenuItem onClick={this.exportCSV}>
-              <ListItemIcon>
-                <FileIcon ext='CSV' outlined />
-              </ListItemIcon>
-              Экспортировать в CSV
-            </MenuItem>
-            <MenuItem onClick={this.exportXLSX}>
-              <ListItemIcon>
-                <FileIcon ext='XLS' outlined />
-              </ListItemIcon>
-              Экспортировать в XLSX
-            </MenuItem>
-          </MenuIconButton>
-        </span>
+        <MenuIconButton
+          className={cnLibraryRegistryExport()}
+          icon={<ArchiveOutlined />}
+          loading={this.loading}
+          disabled={this.loading}
+        >
+          <MenuItem onClick={this.exportCSV}>
+            <ListItemIcon>
+              <FileIcon ext='CSV' outlined />
+            </ListItemIcon>
+            Экспортировать в CSV
+          </MenuItem>
+          <MenuItem onClick={this.exportXLSX}>
+            <ListItemIcon>
+              <FileIcon ext='XLS' outlined />
+            </ListItemIcon>
+            Экспортировать в XLSX
+          </MenuItem>
+        </MenuIconButton>
       </Tooltip>
     );
   }
