@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.util;
 
+import org.jetbrains.annotations.NotNull;
+import ru.mycrg.data_service.entity.Schema;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.ValueTitleProjection;
@@ -8,12 +10,31 @@ import ru.mycrg.data_service_contract.enums.ValueType;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.mycrg.data_service.service.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 
 public class SchemaUtil {
 
     private SchemaUtil() {
         throw new IllegalStateException("Utility class");
+    }
+
+    @NotNull
+    public static Schema mapToEntity(Schema entity, SchemaDto schemaDto) {
+        entity.setName(schemaDto.getName());
+        entity.setClassRule(toJsonNode(schemaDto));
+
+        String customRuleFunction = schemaDto.getCustomRuleFunction();
+        if (customRuleFunction != null) {
+            entity.setCustomRule(customRuleFunction);
+        }
+
+        String calcFiledFunction = schemaDto.getCalcFiledFunction();
+        if (calcFiledFunction != null) {
+            entity.setCalculatedFields(calcFiledFunction);
+        }
+
+        return entity;
     }
 
     public static boolean isPropertyExist(SchemaDto schema, String key) {

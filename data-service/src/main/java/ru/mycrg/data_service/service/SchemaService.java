@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.entity.Schema;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.mappers.SchemaMapper;
 import ru.mycrg.data_service.repository.DataSchemaRepository;
@@ -16,7 +15,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service.service.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SchemaUtil.isPropertyExist;
 import static ru.mycrg.data_service_contract.enums.ValueType.URL;
 
@@ -61,19 +59,6 @@ public class SchemaService {
         return schemaRepository.findByName(name).stream()
                                .findFirst()
                                .isPresent();
-    }
-
-    public void create(SchemaDto schemaDto) {
-        final String name = schemaDto.getName();
-        if (!schemaRepository.findByName(name).isEmpty()) {
-            throw new ConflictException("Schema " + name + " already exist");
-        }
-
-        final Schema entity = new Schema();
-        entity.setName(name);
-        entity.setClassRule(toJsonNode(schemaDto));
-
-        schemaRepository.save(entity);
     }
 
     public void throwIfNotMathSchema(String schemaName, Map<String, Object> body) {

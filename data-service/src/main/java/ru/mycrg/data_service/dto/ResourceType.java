@@ -6,5 +6,6 @@ public enum ResourceType {
     PERMISSION,
     DATASET,
     TABLE,
-    FEATURE
+    FEATURE,
+    SCHEMA
 }

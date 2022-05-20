@@ -7,7 +7,8 @@ public enum AuditEventEntityType {
     PERMISSION("PERMISSION"),
     DATASET("DATASET"),
     FEATURE("FEATURE"),
-    TABLE("TABLE");
+    TABLE("TABLE"),
+    SCHEMA("SCHEMA");
 
     String value;
 

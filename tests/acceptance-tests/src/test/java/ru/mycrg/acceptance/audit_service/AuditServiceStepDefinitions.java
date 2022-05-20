@@ -220,6 +220,16 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
         checkAuditEvent(UPDATE.name(), FEATURE.name(), currentTableName);
     }
 
+    @And("Создана запись в журнале аудита о создании схемы")
+    public void checkAuditEventForSchemaCreate() {
+        checkAuditEvent(CREATE.name(), SCHEMA.name(), "schemas");
+    }
+
+    @And("Создан аудит лог об изменении схемы")
+    public void checkAuditEventForSchemaUpdate() {
+        checkAuditEvent(UPDATE.name(), SCHEMA.name(), "schemas");
+    }
+
     @Then("Создана запись в журнале аудита о создании датасета")
     public void checkDatasetCreate() throws InterruptedException {
         sleep(500);
@@ -333,12 +343,15 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    private boolean checkAuditEvent(String actionType, String entityType, String entityName) {
+    private boolean checkAuditEvent(String actionType, String entityType, String tableName) {
         try {
             int currentAttempt = 0;
             do {
                 currentAttempt++;
-                System.out.println("attempt check audit event by: actionType/entityType/entityName " + currentAttempt);
+                System.out.println("Attempt: " + currentAttempt + ". Check audit event. " + "actionType: '" +
+                                           actionType + "' " + "entityType: '" +
+                                           entityType + "' tableName: '" +
+                                           tableName + "'");
 
                 getAllAuditEntity();
 
@@ -348,7 +361,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
                 for (AuditEventDto list: lists) {
                     if (actionType.equalsIgnoreCase(list.getActionType())
                             && entityType.equalsIgnoreCase(list.getEntityType())
-                            && entityName.equalsIgnoreCase(list.getEntityName())) {
+                            && tableName.equalsIgnoreCase(list.getEntityName())) {
                         result = true;
                         break;
                     }
