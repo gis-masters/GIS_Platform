@@ -3,10 +3,11 @@ package ru.mycrg.data_service.service.resources.protectors;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
-import ru.mycrg.data_service.dao.ddl.DdlSchemas;
 import ru.mycrg.data_service.dto.ResourceType;
+import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
@@ -19,28 +20,32 @@ import static ru.mycrg.data_service.dto.Roles.OWNER;
 @Component
 public class DatasetProtector implements IResourceProtector {
 
-    private final DdlSchemas ddlSchemas;
     private final IAuthenticationFacade authenticationFacade;
     private final BasePermissionsRepository basePermissionsRepository;
+    private final SchemasAndTablesRepository schemasAndTablesRepository;
 
-    public DatasetProtector(DdlSchemas ddlSchemas,
-                            IAuthenticationFacade authenticationFacade,
-                            BasePermissionsRepository basePermissionsRepository) {
-        this.ddlSchemas = ddlSchemas;
+    public DatasetProtector(IAuthenticationFacade authenticationFacade,
+                            BasePermissionsRepository basePermissionsRepository,
+                            SchemasAndTablesRepository schemasAndTablesRepository) {
         this.authenticationFacade = authenticationFacade;
         this.basePermissionsRepository = basePermissionsRepository;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
 
     @Override
     public void throwIfNotExist(@NotNull ResourceQualifier dQualifier) {
-        if (!ddlSchemas.isExist(dQualifier)) {
+        Optional<SchemasAndTables> dataset = schemasAndTablesRepository.findByIdentifier(dQualifier.toString());
+
+        if (dataset.isEmpty()) {
             throw new NotFoundException(dQualifier.getQualifier());
         }
     }
 
     @Override
     public void throwIfExists(@NotNull ResourceQualifier dQualifier) {
-        if (ddlSchemas.isExist(dQualifier)) {
+        Optional<SchemasAndTables> dataset = schemasAndTablesRepository.findByIdentifier(dQualifier.toString());
+
+        if (dataset.isPresent()) {
             throw new ConflictException("Набор данных " + dQualifier + " уже существует");
         }
     }

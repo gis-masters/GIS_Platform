@@ -4,9 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.ddl.DdlSchemas;
-import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
-import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.cqrs.datasets.requests.DeleteDatasetRequest;
@@ -44,9 +42,6 @@ public class DeleteDatasetRequestHandler implements IRequestHandler<DeleteDatase
     @Override
     public Voidy handle(DeleteDatasetRequest request) {
         ResourceQualifier datasetQualifier = request.getDatasetQualifier();
-        SchemasAndTables dataset = schemasAndTablesRepository
-                .findByIdentifier(datasetQualifier.toString())
-                .orElseThrow(() -> new NotFoundException(datasetQualifier));
 
         if (!resourceProtector.isOwner(datasetQualifier)) {
             throw new ForbiddenException("Недостаточно прав для удаления набора: " + datasetQualifier.getQualifier());
@@ -55,7 +50,7 @@ public class DeleteDatasetRequestHandler implements IRequestHandler<DeleteDatase
         // Delete from DB
         ddlSchemas.drop(datasetQualifier);
 
-        // Delete from information table
+        // Delete dataset from information table
         schemasAndTablesRepository.deleteByIdentifier(datasetQualifier.toString());
 
         // Delete from geoserver
@@ -65,7 +60,11 @@ public class DeleteDatasetRequestHandler implements IRequestHandler<DeleteDatase
         }
 
         // Delete assigned rule
-        permissionsService.deleteAssigned(datasetQualifier, dataset.getId());
+        schemasAndTablesRepository
+                .findByIdentifier(datasetQualifier.toString())
+                .ifPresent(dataset -> {
+                    permissionsService.deleteAssigned(datasetQualifier, dataset.getId());
+                });
 
         return new Voidy();
     }

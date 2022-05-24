@@ -3,10 +3,11 @@ package ru.mycrg.data_service.service.resources.protectors;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
-import ru.mycrg.data_service.dao.ddl.DdlTables;
 import ru.mycrg.data_service.dto.ResourceType;
+import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
@@ -19,28 +20,32 @@ import static ru.mycrg.data_service.dto.Roles.OWNER;
 @Component
 public class TableProtector implements IResourceProtector {
 
-    private final DdlTables ddlTables;
     private final IAuthenticationFacade authenticationFacade;
     private final BasePermissionsRepository basePermissionsRepository;
+    private final SchemasAndTablesRepository schemasAndTablesRepository;
 
-    public TableProtector(DdlTables ddlTables,
-                          IAuthenticationFacade authenticationFacade,
-                          BasePermissionsRepository basePermissionsRepository) {
-        this.ddlTables = ddlTables;
+    public TableProtector(IAuthenticationFacade authenticationFacade,
+                          BasePermissionsRepository basePermissionsRepository,
+                          SchemasAndTablesRepository schemasAndTablesRepository) {
         this.authenticationFacade = authenticationFacade;
         this.basePermissionsRepository = basePermissionsRepository;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
 
     @Override
     public void throwIfNotExist(@NotNull ResourceQualifier tQualifier) {
-        if (!ddlTables.isExist(tQualifier)) {
+        Optional<SchemasAndTables> table = schemasAndTablesRepository.findByIdentifier(tQualifier.toString());
+
+        if (table.isEmpty()) {
             throw new NotFoundException(tQualifier.getQualifier());
         }
     }
 
     @Override
     public void throwIfExists(@NotNull ResourceQualifier tQualifier) {
-        if (ddlTables.isExist(tQualifier)) {
+        Optional<SchemasAndTables> table = schemasAndTablesRepository.findByIdentifier(tQualifier.toString());
+
+        if (table.isPresent()) {
             throw new ConflictException("Таблица " + tQualifier + " уже существует");
         }
     }
