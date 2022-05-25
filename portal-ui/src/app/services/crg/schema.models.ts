@@ -57,6 +57,7 @@ export interface ContentType {
 export interface Relation {
   title: string;
   property: string;
+  targetProperty?: string;
   library: string;
 }
 

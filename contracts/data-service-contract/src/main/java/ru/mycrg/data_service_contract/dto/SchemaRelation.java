@@ -4,6 +4,7 @@ public class SchemaRelation {
 
     private String title;
     private String property;
+    private String targetProperty;
     private String library;
 
     public String getTitle() {
@@ -20,6 +21,14 @@ public class SchemaRelation {
 
     public void setProperty(String property) {
         this.property = property;
+    }
+
+    public String getTargetProperty() {
+        return targetProperty;
+    }
+
+    public void setTargetProperty(String targetProperty) {
+        this.targetProperty = targetProperty;
     }
 
     public String getLibrary() {

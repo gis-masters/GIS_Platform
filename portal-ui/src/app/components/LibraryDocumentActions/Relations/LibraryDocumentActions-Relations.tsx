@@ -31,9 +31,10 @@ export class LibraryDocumentActionsRelations extends Component<LibraryDocumentAc
         as={as}
         icon={<LinkOutlined />}
         submenu={schema.relations.map((relation, i) => {
+          const targetProperty = relation.targetProperty || relation.property;
           const url =
             `/data-management/library/${String(relation.library)}/registry?filter=` +
-            encodeURI(JSON.stringify({ [relation.property]: { $ilike: `%${String(document[relation.property])}%` } }));
+            encodeURI(JSON.stringify({ [targetProperty]: { $ilike: `%${String(document[relation.property])}%` } }));
 
           return (
             <Link href={url} key={i} target='_blank' variant='contents'>
