@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { getFileBaseName, getFileExtension } from '../../../services/files.util';
+import { getFileBaseName, getFileExtension, isImageFile } from '../../../services/files.util';
 import { FileInfo } from '../../../services/files.service';
 import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
@@ -11,6 +11,7 @@ import { FilesName } from '../Name/Files-Name';
 import { FilesIcon } from '../Icon/Files-Icon';
 import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
 import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
+import { Preview as FilesPreview } from '../Preview/Files-Preview';
 
 const cnFilesItem = cn('Files', 'Item');
 
@@ -23,6 +24,7 @@ interface FilesItemProps {
   numerous: boolean;
   multiple: boolean;
   onDelete(item: FileInfo): void;
+  onPreview(item: FileInfo): void;
 }
 
 export const FilesItem: FC<FilesItemProps> = ({
@@ -33,7 +35,8 @@ export const FilesItem: FC<FilesItemProps> = ({
   statusText,
   numerous,
   multiple,
-  onDelete
+  onDelete,
+  onPreview
 }) => {
   const ext = getFileExtension(item.title);
   const baseName = getFileBaseName(item.title);
@@ -45,6 +48,7 @@ export const FilesItem: FC<FilesItemProps> = ({
       <FilesName item={item} baseName={baseName} ext={ext} disabled={disabled} file={file} numerous={numerous} />
       {editable && (numerous || multiple) && <LookupNameGap />}
       {!!status && <LookupStatus status={status} statusText={statusText} />}
+      {isImageFile(item) && <FilesPreview item={item} onPreview={onPreview} />}
       {editable && (
         <LookupActions>
           <LookupDelete item={item} onDelete={onDelete} />

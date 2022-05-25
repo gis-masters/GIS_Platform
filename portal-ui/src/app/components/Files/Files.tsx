@@ -10,15 +10,17 @@ import { v4 as uuid } from 'uuid';
 import { PropertySchemaFile } from '../../services/crg/schema.models';
 import { createFile, FileInfo } from '../../services/files.service';
 import { LookupStatusType } from '../Lookup/Status/Lookup-Status';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { isImageFile } from '../../services/files.util';
 import { LookupList } from '../Lookup/List/Lookup-List';
 import { LookupAdd } from '../Lookup/Add/Lookup-Add';
-import { Lookup } from '../Lookup/Lookup';
-import { currentUser } from '../../stores/CurrentUser.store';
 import { FileInput } from '../FileInput/FileInput';
 import { sleep } from '../../services/util/sleep';
 import { env } from '../../stores/Env.store';
+import { Lookup } from '../Lookup/Lookup';
 
 import { FilesItem } from './Item/Files-Item';
+import { Carousel } from '../Carousel/Carousel';
 
 const cnFiles = cn('Files');
 
@@ -43,6 +45,8 @@ export class Files extends Component<FilesProps> {
   private uploadingNow: FileInfo | null = null;
   private uploadPool: FileInfo[] = [];
   @observable private newbies: NewbieFile[] = [];
+  @observable private previewOpen = false;
+  @observable private startingImageForPreview: FileInfo;
 
   render() {
     const { value, property, editable } = this.props;
@@ -50,42 +54,54 @@ export class Files extends Component<FilesProps> {
     const numerous = value.length > 1;
 
     return (
-      <Lookup className={cnFiles()}>
-        {!!value.length && (
-          <LookupList multiple={multiple} numerous={numerous} editable={editable}>
-            {value.map((item, i) => {
-              const newbie = this.getNewbie(item.id);
+      <>
+        <Lookup className={cnFiles()}>
+          {!!value.length && (
+            <LookupList multiple={multiple} numerous={numerous} editable={editable}>
+              {value.map((item, i) => {
+                const newbie = this.getNewbie(item.id);
 
-              return (
-                <FilesItem
-                  item={item}
-                  onDelete={this.deleteHandler}
-                  key={`${item.id}_${i}`}
-                  editable={editable}
-                  status={newbie?.status}
-                  file={newbie?.file}
-                  statusText={newbie?.statusText}
-                  numerous={numerous}
-                  multiple={multiple}
-                />
-              );
-            })}
-          </LookupList>
+                return (
+                  <FilesItem
+                    item={item}
+                    onDelete={this.deleteHandler}
+                    onPreview={this.previewHandler}
+                    key={`${item.id}_${i}`}
+                    editable={editable}
+                    status={newbie?.status}
+                    file={newbie?.file}
+                    statusText={newbie?.statusText}
+                    numerous={numerous}
+                    multiple={multiple}
+                  />
+                );
+              })}
+            </LookupList>
+          )}
+          {editable && value.length < this.max && (
+            <LookupAdd filled={Boolean(value.length)}>
+              <FileInput
+                multiple={multiple}
+                onChange={this.addHandler}
+                nameHidden={Boolean(value.length)}
+                buttonCaption={value.length ? 'Добавить' : 'Выбрать'}
+                autoClear
+                iconButton={!value.length}
+                buttonProps={{ variant: 'text', startIcon: <AddCircleOutline />, color: 'primary' }}
+              />
+            </LookupAdd>
+          )}
+        </Lookup>
+
+        {this.previewOpen && (
+          <Carousel
+            open={this.previewOpen}
+            onClose={this.onPreviewClose}
+            allImages={this.allImages}
+            startingImageForPreview={this.startingImageForPreview}
+          />
         )}
-        {editable && value.length < this.max && (
-          <LookupAdd filled={Boolean(value.length)}>
-            <FileInput
-              multiple={multiple}
-              onChange={this.addHandler}
-              nameHidden={Boolean(value.length)}
-              buttonCaption={value.length ? 'Добавить' : 'Выбрать'}
-              autoClear
-              iconButton={!value.length}
-              buttonProps={{ variant: 'text', startIcon: <AddCircleOutline />, color: 'primary' }}
-            />
-          </LookupAdd>
-        )}
-      </Lookup>
+      </>
     );
   }
 
@@ -106,6 +122,31 @@ export class Files extends Component<FilesProps> {
     if (this.uploadingNow?.id === deletingItem.id) {
       this.uploadingNow = null;
       void this.upload();
+    }
+  }
+
+  @action.bound
+  private previewHandler(item: FileInfo) {
+    this.previewOpen = true;
+    this.startingImageForPreview = item;
+  }
+
+  @action.bound
+  private onPreviewClose() {
+    this.previewOpen = false;
+  }
+
+  @computed
+  private get allImages(): FileInfo[] {
+    const { value } = this.props;
+    if (value.length) {
+      return value
+        .map(item => {
+          if (isImageFile(item)) {
+            return item;
+          }
+        })
+        .filter(item => item);
     }
   }
 

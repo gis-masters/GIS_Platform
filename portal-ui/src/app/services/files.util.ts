@@ -51,3 +51,9 @@ export function getReadableFileSize(bytes: number): string {
 export function isTifFile(file: FileInfo): boolean {
   return normalizeExtension(getFileExtension(file.title)) === 'tif';
 }
+
+export function isImageFile(file: FileInfo): boolean {
+  const images = ['jpg', 'png', 'gif', 'webp'];
+
+  return images.includes(normalizeExtension(getFileExtension(file.title)));
+}

@@ -1,0 +1,27 @@
+body .Carousel {
+  &-Slide {
+    display: flex;
+    justify-content: center;
+
+    height: 700px;
+    padding: 46px;
+  }
+
+  &-Image {
+    max-width: 100%;
+
+    object-fit: contain;
+  }
+
+  &-Right {
+    position: absolute;
+    top: calc(50% - 43px);
+    right: 20px;
+  }
+
+  &-Left {
+    position: absolute;
+    top: calc(50% - 43px);
+    left: 0;
+  }
+}
