@@ -57,6 +57,13 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
             return;
           }
 
+          const propertyReadonly = Boolean(
+            readonly ||
+              propertySchema.readOnly ||
+              propertySchema.calculatedValueFormula ||
+              propertySchema.calculatedValueWellKnownFormula
+          );
+
           return (
             <FormField key={i} withRelations={!!relations.length}>
               <FormLabel
@@ -68,7 +75,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
                 {propertySchema.title}
               </FormLabel>
 
-              {readonly || propertySchema.readOnly ? (
+              {propertyReadonly ? (
                 <FormView
                   property={propertySchema}
                   type={propertySchema.propertyType}

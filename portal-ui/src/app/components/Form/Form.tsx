@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { cloneDeep, isEqual } from 'lodash';
+import { cloneDeep } from 'lodash';
 
 import { PropertySchema, Schema } from '../../services/crg/schema.models';
 import {
@@ -20,6 +20,7 @@ export { FormField } from './Field/Form-Field';
 export { FormLabel } from './Label/Form-Label';
 import { FormContent } from './Content/Form-Content';
 import { FormActions } from './Actions/Form-Actions';
+import { isEqualExceptCalculated } from './Form.utils';
 export { FormControl } from './Control/Form-Control.composed';
 
 import '!style-loader!css-loader!sass-loader!./Form.scss';
@@ -63,7 +64,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
 
     if (props.schema?.properties) {
       this.value = calculateValues(cloneDeep(props.value || getDefaultValues(properties)), properties);
-      this.initialValue = cloneDeep(this.value);
+      this.initialValue = calculateValues(this.value, properties);
     }
   }
 
@@ -76,8 +77,8 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
     this.valueReactionDisposer = reaction(
       () => cloneDeep(this.props.value),
       value => {
-        if (!isEqual(value, this.initialValue)) {
-          this.setValue(value);
+        if (!isEqualExceptCalculated(value, this.initialValue, this.props.schema)) {
+          this.setValue(calculateValues(value, this.props.schema?.properties));
           this.initialValue = cloneDeep(value);
         }
       }
@@ -85,9 +86,10 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
   }
 
   componentDidUpdate() {
-    if (!isEqual(this.props.value, this.initialValue)) {
-      this.setValue(cloneDeep(this.props.value));
-      this.initialValue = cloneDeep(this.props.value);
+    const { value, schema } = this.props;
+    if (!isEqualExceptCalculated(value, this.initialValue, schema)) {
+      this.setValue(calculateValues(value, schema?.properties));
+      this.initialValue = cloneDeep(value);
     }
   }
 
@@ -137,13 +139,14 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
   @boundMethod
   private changeHandler(changedValue: T) {
     const { onFormChange, auto, schema } = this.props;
+    const value = calculateValues(changedValue, schema.properties);
 
     if (auto) {
-      this.setValue(calculateValues(changedValue, schema.properties));
+      this.setValue(value);
     }
 
     if (onFormChange) {
-      onFormChange(changedValue);
+      onFormChange(value);
     }
   }
 
