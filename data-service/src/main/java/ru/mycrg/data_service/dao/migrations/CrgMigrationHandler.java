@@ -56,8 +56,6 @@ public class CrgMigrationHandler {
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M7__initDefaultLibrary.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M8__addSrid314and315.sql"));
                 ScriptUtils.executeSqlScript(connection,
-                                             ctx.getResource("classpath:sql/M9__updateSchemasAndTables.sql"));
-                ScriptUtils.executeSqlScript(connection,
                                              ctx.getResource("classpath:sql/M10__delete_unused_tables.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M11__updateDocLibraries.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M12__addFileEntity.sql"));
