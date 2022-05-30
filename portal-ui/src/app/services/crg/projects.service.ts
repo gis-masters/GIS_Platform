@@ -27,8 +27,8 @@ import { communicationService } from '../communication.service';
 import { MAP_QUERY_PARAMS_DELIMITER } from '../map/map-link-following.service';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { preparePageOptions } from '../http.utils';
-import { Mime } from '../util/Mime';
 import { usersService } from './users.service';
+import { Mime } from '../util/Mime';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -159,13 +159,22 @@ class ProjectsService {
         }
       })
     );
+
     const allowedLayers = layers.filter((layer, i) => layersPermissions[i]);
+    const groups = await this.getGroups(project.id);
+
+    currentProject.setProject(project, allowedLayers, groups, layersErrors);
 
     if (project.id === id) {
       const queryParams = route.queryParams as { [key: string]: string };
 
-      const groups = await this.getGroups(project.id);
-      currentProject.setProject(project, allowedLayers, groups, layersErrors);
+      try {
+        const enabledLayers = queryParams.layers?.split(',');
+
+        this.updateEnabledLayer(enabledLayers, allowedLayers, layers);
+      } catch {
+        services.logger.error('Ошибка получения состояния слоев');
+      }
 
       let activeLayers: string[] = [];
 
@@ -190,6 +199,28 @@ class ProjectsService {
     } else {
       delete this.fetchingCurrentProject;
       await this.fetchCurrent(id);
+    }
+  }
+
+  private updateEnabledLayer(enabledLayers: string[], allowedLayers: CrgLayer[], allLayers: CrgLayer[]) {
+    if (enabledLayers) {
+      currentProject.layers.forEach(allowedLayer => {
+        enabledLayers.forEach(enabledLayerId => {
+          if (Number(enabledLayerId) === allowedLayer.id) {
+            allowedLayer.enabled = true;
+
+            if (allowedLayer.parentId) {
+              this.enableGroupAndAncestors(allowedLayer.parentId);
+            }
+          }
+        });
+      });
+
+      currentProject.visibleOnMapLayers.forEach(layer => {
+        layer.payload.enabled = enabledLayers.includes(String(layer.id));
+      });
+
+      this.showNotAllowedLayersError(allLayers);
     }
   }
 
@@ -337,6 +368,61 @@ class ProjectsService {
         throw error;
       }
     }
+  }
+
+  private showNotAllowedLayersError(allLayers: CrgLayer[]) {
+    let enabledLayers: number[] = [];
+
+    try {
+      const queryParams = route.queryParams as { [key: string]: string };
+      enabledLayers = queryParams.layers ? queryParams.layers.split(',').map(id => Number(id)) : [];
+    } catch {
+      services.logger.error('Ошибка получения состояния слоев');
+    }
+
+    const allNotAllowedLayers = this.getNotAllowedLayers(enabledLayers, allLayers);
+    let detailsNotAllowedLayers: string;
+    let detailsNotExistLayers: string;
+
+    const { notAllowedLayers, notExistLayers } = allNotAllowedLayers;
+
+    if (notAllowedLayers.length) {
+      detailsNotAllowedLayers = `Отсутствуют права на слои: ${notAllowedLayers.join(', ')}. `;
+    }
+
+    if (notExistLayers.length) {
+      detailsNotExistLayers = `Отсутствуют слои в проекте: ${notExistLayers.join(', ')}`;
+    }
+
+    if (detailsNotAllowedLayers || detailsNotExistLayers) {
+      Toast.warn({
+        message: 'В проекте есть недоступные слои',
+        details: detailsNotAllowedLayers || detailsNotExistLayers
+      });
+    }
+  }
+
+  private getNotAllowedLayers(layers: number[], allLayers: CrgLayer[]): Record<string, number[] | string[]> {
+    const notAllowedLayers: string[] = [];
+    const notExistLayers: number[] = [];
+
+    layers.forEach(id => {
+      if (
+        !currentProject.tree.some(visibleTreeLayer => visibleTreeLayer.id === id) &&
+        allLayers.some(layer => layer.id === id)
+      ) {
+        notAllowedLayers.push(allLayers.find(layer => layer.id === id).title);
+      }
+
+      if (
+        !currentProject.visibleOnMapLayers.some(visibleTreeLayer => visibleTreeLayer.id === id) &&
+        !allLayers.some(layer => layer.id === id)
+      ) {
+        notExistLayers.push(id);
+      }
+    });
+
+    return { notAllowedLayers, notExistLayers };
   }
 }
 

@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { DragDropContext, DragUpdate, Droppable, DropResult } from 'react-beautiful-dnd';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { currentProject } from '../../stores/CurrentProject.store';
 import { projectsService } from '../../services/crg/projects.service';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { TreeItem } from '../../services/crg/projects.models';
+import { setEnabledLayerToUrl } from '../../services/map/map-url.service';
+import { route } from '../../stores/Route.store';
+import { Pages } from '../../app-routing.module';
 
 import { LayersTreeInner } from './Inner/LayersTree-Inner';
 
@@ -21,9 +24,23 @@ interface LayersTreeProps {
 export class LayersTree extends Component<LayersTreeProps> {
   @observable combineEnabled = false;
   @observable highlightedGroupId?: number;
+  private reactionDisposer: IReactionDisposer;
 
   async componentDidMount() {
+    this.reactionDisposer = reaction(
+      () => currentProject.visibleOnMapLayers,
+      async () => {
+        if (route.data.page === Pages.MAP) {
+          await setEnabledLayerToUrl();
+        }
+      }
+    );
+
     await projectsService.testCurrentProjectLayers();
+  }
+
+  componentWillUnmount() {
+    this.reactionDisposer();
   }
 
   render() {

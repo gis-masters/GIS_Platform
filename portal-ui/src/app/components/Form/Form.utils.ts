@@ -3,6 +3,7 @@ import { action } from 'mobx';
 
 import { PropertySchema, PropertySchemaUrl, PropertyType, Schema } from '../../services/crg/schema.models';
 import { Fias } from '../../services/fias.service';
+import { knownRegex } from '../../services/regexp.service';
 import { UrlInfo } from './Control/_type/Form-Control_type_url';
 
 const fromComplex: Partial<
@@ -75,16 +76,21 @@ export function convertToComplexField<T extends Record<string, unknown>>(
 
 export function parseUrlValue(value: string, multiple: boolean, editable?: boolean): UrlInfo[] {
   if (value) {
+    if (knownRegex.url.test(value)) {
+      const url = JSON.parse(value) as string;
+
+      return [{ url, text: url }];
+    }
+
     if (!JSON.parse(value)) {
       return multiple ? [] : [{ url: '', text: '' }];
     }
 
-    let info = JSON.parse(value) as UrlInfo[];
-    if (!Array.isArray(info)) {
-      info = [info];
+    if (!Array.isArray(JSON.parse(value))) {
+      return [JSON.parse(value) as UrlInfo];
     }
 
-    return info;
+    return JSON.parse(value) as UrlInfo[];
   }
 
   if (!editable) {

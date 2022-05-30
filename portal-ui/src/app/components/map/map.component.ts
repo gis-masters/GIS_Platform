@@ -14,13 +14,11 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { fromMobx } from '../../services/util/fromMobx';
 import { sidebars } from '../../stores/Sidebars.store';
 import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
-import { route } from '../../stores/Route.store';
-import { services } from '../../services/services';
+import { setMapPositionToUrl } from '../../services/map/map-url.service';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { MapModes, mapStore } from '../../stores/Map.store';
 import { Emitter } from '../../services/common/Emitter';
-import { Pages } from '../../app-routing.module';
-import { sleep } from '../../services/util/sleep';
+import { route } from '../../stores/Route.store';
 
 @Component({
   selector: 'crg-map',
@@ -82,7 +80,7 @@ export class MapComponent implements OnInit, OnDestroy {
       },
       { fireImmediately: true }
     );
-    mapService.mapMoved.on(({ zoom, center }) => this.setMapPosition(zoom, center), this);
+    mapService.mapMoved.on(({ zoom, center }) => setMapPositionToUrl(zoom, center), this);
     mapService.zoomChanged.on(value => currentProject.changeZoom(value), this);
   }
 
@@ -156,18 +154,5 @@ export class MapComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     Emitter.scopeOff(this);
-  }
-
-  private async setMapPosition(zoom: number, center: string): Promise<void> {
-    await sleep(100);
-    if (route.data.page === Pages.MAP) {
-      await services.router.navigate([location.pathname], {
-        queryParams: {
-          zoom: Number(zoom).toFixed(2),
-          center
-        },
-        queryParamsHandling: 'merge'
-      });
-    }
   }
 }
