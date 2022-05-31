@@ -122,25 +122,26 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
                 return;
             }
 
+            Map<String, Object> oldContent = oldRecord.getContent();
+            Map<String, Object> newContent = newRecord.getContent();
+
             log.debug("UPDATE NEEDED");
-            Set<UUID> oldIds = fileFieldNames
-                    .stream()
-                    .flatMap(fileFieldName -> getFilesIdFromField(oldRecord.getContent(), fileFieldName).stream())
-                    .collect(Collectors.toSet());
+            fileFieldNames.stream()
+                          .filter(fileFieldName -> isFieldEdited(newContent, fileFieldName))
+                          .forEach(fileFieldName -> {
+                              log.debug("Handle field: {}", fileFieldName);
+                              Set<UUID> oldIds = new HashSet<>(getFilesIdFromField(oldContent, fileFieldName));
+                              Set<UUID> newIds = new HashSet<>(getFilesIdFromField(newContent, fileFieldName));
 
-            Set<UUID> newIds = fileFieldNames
-                    .stream()
-                    .flatMap(fileFieldName -> getFilesIdFromField(newRecord.getContent(), fileFieldName).stream())
-                    .collect(Collectors.toSet());
+                              log.debug("old ids: {}", oldIds);
+                              log.debug("new ids: {}", newIds);
 
-            log.debug("old ids: {}", oldIds);
-            log.debug("new ids: {}", newIds);
+                              HashSet<UUID> unionIds = new HashSet<>(oldIds);
+                              unionIds.addAll(newIds);
 
-            HashSet<UUID> unionIds = new HashSet<>(oldIds);
-            unionIds.addAll(newIds);
-
-            updateFilesInfo(unionIds, qualifier);
-            deleteFiles(oldIds, newIds);
+                              updateFilesInfo(unionIds, qualifier);
+                              deleteFiles(oldIds, newIds);
+                          });
         } catch (Exception e) {
             logError("Не удалось выполнить привязку файлов к сущности при обновлении", e);
         }
@@ -221,6 +222,10 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
         } else {
             return new ArrayList<>();
         }
+    }
+
+    private boolean isFieldEdited(Map<String, Object> record, String fileFieldName) {
+        return record.get(fileFieldName) != null;
     }
 
     @NotNull
