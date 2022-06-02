@@ -205,6 +205,12 @@ public class LayerService {
                             .collect(Collectors.toList());
     }
 
+    public List<RelatedLayersModel> findRelatedToDocumentsLayers(String libraryId, String recordId, String fileId) {
+        String tableName = String.format("%s_%s__%s", libraryId, recordId, fileId);
+
+        return findRelatedLayers("table", tableName);
+    }
+
     public Page<Layer> findLayers(String layerType, List<Project> projects, Pageable pageable) {
         Set<Long> projectIds = projects.stream()
                                        .map(Project::getId)

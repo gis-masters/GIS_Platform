@@ -14,6 +14,7 @@ import ru.mycrg.acceptance.data_service.processes.ImportTarget;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.Thread.sleep;
@@ -22,7 +23,9 @@ import static java.util.Objects.nonNull;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFileId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentRecordId;
+import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class LayersStepsDefinitions extends BaseStepsDefinitions {
@@ -71,6 +74,39 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
                         extract().response();
 
         currentProcessId = extractId(response.jsonPath().get("_links.self.href"));
+    }
+
+    @When("Пользователь делает запрос на получение проектов и слоёв связанных с файлом")
+    public void getRelatedToDocumentsProjectsAndLayers() {
+
+        Map<String, Object> queryParams = new HashMap<>() {{
+            put("libraryId", "dl_default");
+            put("recordId", currentRecordId);
+            put("fileId", tifFileId);
+        }};
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        queryParams(queryParams).
+                        contentType(ContentType.JSON)
+                .when().
+                       get("/find-related-to-documents-layers")
+                .then().
+                        log().ifError().
+                        extract().response();
+    }
+
+    @And("Сервер возвращает список слоёв и проектов связанных с растровым файлом")
+    public void checkResponseWithLayersAndProjects() {
+        List<Object> layers = response.jsonPath().getList("layer");
+        List<Object> projects = response.jsonPath().getList("project");
+
+        assertEquals(1, layers.size());
+        assertEquals(1, projects.size());
+
+        Integer currentLayerId = (Integer) response.jsonPath().getList("layer.id").get(0);
+
+        assertEquals(currentLayerId, layerId);
     }
 
     @And("Сервер возвращает тело начатого процесса импорта растрового слоя")

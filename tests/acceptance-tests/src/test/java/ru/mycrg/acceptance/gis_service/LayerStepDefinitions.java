@@ -23,6 +23,9 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
 import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFileId;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFilePath;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentRecordId;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
@@ -181,6 +184,24 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                     "");
         assertEquals(SC_CREATED, response.getStatusCode());
         extractAndSetLayerIdFromBody();
+    }
+
+    @Given("Существует растровый слой размещенный в проекте")
+    public void createRasterLayer() {
+        String dataSourceUri = String.format("file://%s", tifFilePath);
+        layerCreateDto = new LayerCreateDto("Тестовый растр", "raster");
+
+        layerCreateDto.setLibraryId("dl_default");
+        layerCreateDto.setMode("full");
+        layerCreateDto.setNativeCRS("EPSG:28406");
+        layerCreateDto.setDataSourceUri(dataSourceUri);
+        layerCreateDto.setRecordId(currentRecordId.longValue());
+        String tableName = String.format("%s_%s__%s", layerCreateDto.getLibraryId(), currentRecordId, tifFileId);
+        layerCreateDto.setTableName(tableName);
+
+        super.createEntity(layerCreateDto);
+
+        layerId = extractEntityIdFromResponse(response);
     }
 
     @When("Пользователь делает повторный запрос на создание слоя проекта")

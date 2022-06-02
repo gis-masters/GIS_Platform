@@ -24,6 +24,8 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     public static UUID firstFileId;
     public static UUID secondFileId;
+    public static UUID tifFileId;
+    public static String tifFilePath;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -175,6 +177,17 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
                         statusCode(SC_NOT_FOUND).
                         body("message",
                              equalTo("Ресурс не найден по идентификатору: " + secondFileId));
+    }
+
+    @Given("Существует файл с расширением tif")
+    public void createTifFile() {
+        String filePath = "src/test/resources/ru/mycrg/acceptance/resources/zolotopolenskoe_sp.tif";
+        File testTif = new File(filePath);
+
+        List<UUID> ids = createFiles(new File[]{testTif});
+        tifFileId = ids.get(0);
+        getFile(tifFileId);
+        tifFilePath = jsonPath.getString("path");
     }
 
     private void getFile(UUID firstFileId) {

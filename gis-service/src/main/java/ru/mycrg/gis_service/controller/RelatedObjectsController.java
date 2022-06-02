@@ -35,8 +35,30 @@ public class RelatedObjectsController {
                                           new ErrorInfo("value", "value parameter is empty"));
         }
 
-
         return layerService.findRelatedLayers(field, value);
+    }
+
+    @GetMapping("/find-related-to-documents-layers")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public List<RelatedLayersModel> findRelatedToDocumentsProjectsAndLayers(@RequestParam("libraryId") String libraryId,
+                                                                            @RequestParam("recordId") String recordId,
+                                                                            @RequestParam("fileId") String fileId) {
+        if (libraryId.isEmpty()) {
+            throw new BadRequestException("LibraryId required parameter is not present",
+                                          new ErrorInfo("libraryId", "libraryId parameter is empty"));
+        }
+
+        if (recordId.isEmpty()) {
+            throw new BadRequestException("RecordId required parameter is not present",
+                                          new ErrorInfo("recordId", "recordId parameter is empty"));
+        }
+
+        if (fileId.isEmpty()) {
+            throw new BadRequestException("FileId required parameter is not present",
+                                          new ErrorInfo("fileId", "fileId parameter is empty"));
+        }
+
+        return layerService.findRelatedToDocumentsLayers(libraryId, recordId, fileId);
     }
 
     @GetMapping("/find-related-by-basemap/{sourceBasemapId}")

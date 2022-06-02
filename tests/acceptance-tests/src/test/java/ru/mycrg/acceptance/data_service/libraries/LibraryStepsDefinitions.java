@@ -12,11 +12,13 @@ import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFileId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 
 public class LibraryStepsDefinitions extends LibraryBaseRecords {
@@ -195,15 +197,25 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("Отправляется запрос на создание записи в библиотеке {string} {string}")
     public void createRecordsRequest(String filePath, String body) {
-        File testTif = new File(filePath);
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                         contentType("multipart/form-data")
-                         .multiPart("file", testTif)
-                         .multiPart("body", body)
-                .when().
-                         log().ifValidationFails().
-                         post("/dl_default/records");
+        if (Objects.nonNull(filePath)) {
+            File testTif = new File(filePath);
+            response = getBaseRequestWithCurrentCookie()
+                    .given().
+                             contentType("multipart/form-data")
+                             .multiPart("file", testTif)
+                             .multiPart("body", body)
+                    .when().
+                             log().ifValidationFails().
+                             post("/dl_default/records");
+        } else {
+            response = getBaseRequestWithCurrentCookie()
+                    .given().
+                             contentType("multipart/form-data")
+                             .multiPart("body", body)
+                    .when().
+                             log().ifValidationFails().
+                             post("/dl_default/records");
+        }
     }
 
     @When("Существует запись в библиотеке на основе растрового файла {string}")
@@ -211,6 +223,24 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         String filePath = "src/test/resources/ru/mycrg/acceptance/resources/zolotopolenskoe_sp.tif";
         String body = "{\"title\": \"" + title + "\",\"content_type_id\": \"doc_v1\",\"native_crs\": \"EPSG:28406\"}";
         createRecordsRequest(filePath, body);
+        currentRecordId = extractEntityIdFromResponse(response);
+    }
+
+    @Given("Существует запись в библиотеке на основе растрового файла из БД {string}")
+    public void createLibraryDefaultRecord(String title) {
+        String body = "{" +
+                "    \"title\": \"" + title + "\"," +
+                "    \"native_crs\": \"EPSG:28406\"," +
+                "    \"some_files\": [" +
+                "        {" +
+                "            \"id\": \"" + tifFileId + "\"," +
+                "            \"title\": \"zolotopolenskoe_sp.tif\"," +
+                "            \"size\": 7860680" +
+                "        }" +
+                "    ]," +
+                "    \"content_type_id\": \"doc_v4\"" +
+                "}";
+        createRecordsRequest(null, body);
         currentRecordId = extractEntityIdFromResponse(response);
     }
 
