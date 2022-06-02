@@ -29,7 +29,7 @@ export const RelatedDocumentsButton: FC<RelatedDocumentsButtonProps> = observer(
           const targetProperty = relation.targetProperty || relation.property;
           const url =
             `/data-management/library/${String(relation.library)}/registry?filter=` +
-            encodeURI(JSON.stringify({ [targetProperty]: { $ilike: `%${String(obj[relation.property])}%` } }));
+            encodeURI(JSON.stringify({ [targetProperty]: { $ilike: String(obj[relation.property]) } }));
 
           return (
             <Link href={url} key={i} target='_blank' variant='contents'>

@@ -122,4 +122,5 @@ body.global-crosshair-cursor * {
   --light-gray: rgb(0 0 0 / 4%);
   --disabled: rgb(0 0 0 / 26%);
   --light: #f8f9fa;
+  --yellow: rgb(255 255 0 / 60%);
 }

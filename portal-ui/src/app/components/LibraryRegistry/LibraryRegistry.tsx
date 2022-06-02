@@ -371,6 +371,7 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   private async restoreSettings() {
     await when(() => Boolean(this.library));
     const settings = JSON.parse(localStorage.getItem(this.getStorageKey()) || '{}') as { hiddenFields?: string[] };
+
     if (settings.hiddenFields) {
       this.setHiddenFields(settings.hiddenFields);
     }

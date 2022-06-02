@@ -9,7 +9,8 @@ export class Explorer extends Block {
     filter: '.Explorer-Filter input',
     sort: '.Explorer-Sort input',
     sortDir: '.Explorer-Sort button',
-    pageSize: '.Explorer-PageSize input'
+    pageSize: '.Explorer-PageSize input',
+    registryButton: '.Explorer-ToolbarActions .RegistryButton'
   };
 
   async waitForVisible(): Promise<void> {
@@ -65,5 +66,11 @@ export class Explorer extends Block {
     const $explorerItem = await this.getElement('secondItem');
     await $explorerItem.click();
     await this.browser.pause(300); // animation
+  }
+
+  async openRegistry() {
+    const $registryButton = await this.getElement('registryButton');
+
+    return await $registryButton.click();
   }
 }

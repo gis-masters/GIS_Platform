@@ -244,7 +244,11 @@ export class ExplorerAdapterTypeFolder {
             />
           )}
 
-          <Link href={`/data-management/library/${item.payload.libraryId}/registry`} variant='contents'>
+          <Link
+            href={`/data-management/library/${item.payload.libraryId}/registry`}
+            className='RegistryButton'
+            variant='contents'
+          >
             <Tooltip title='Открыть реестр'>
               <IconButton>
                 <TableViewOutlined />

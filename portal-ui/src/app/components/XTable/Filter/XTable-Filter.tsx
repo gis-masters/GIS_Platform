@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, computed } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 import { IClassNameProps } from '@bem-react/core';
@@ -7,6 +7,8 @@ import { cn } from '@bem-react/classname';
 
 import { PropertyOption, PropertyType } from '../../../services/crg/schema.models';
 import { FilterQuery } from '../../../services/util/filterObjects';
+
+import { XTableFilterType } from '../FilterType/XTable-FilterType';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Filter.scss';
 
@@ -31,17 +33,40 @@ export interface XTableFilterProps extends IClassNameProps {
 
 @observer
 export class XTableFilter extends Component<XTableFilterProps> {
+  @observable private strictFiltering = false;
+
+  componentDidMount() {
+    const filter = this.props.filterQuery[this.props.field] as FilterQuery;
+    const filterValue = filter?.$ilike || filter?.$in;
+
+    if (filterValue === undefined) {
+      this.setStrictFiltering(false);
+    } else {
+      this.setStrictFiltering(!/^%.*%$/.test(String(filterValue)));
+    }
+  }
+
   render() {
     const { type } = this.props;
 
     return (
-      <TextField
-        variant='filled'
-        size='small'
-        className={cnXTableFilter({ type })}
-        onChange={this.handleChange}
-        value={this.value}
-      />
+      <>
+        <TextField
+          variant='filled'
+          size='small'
+          className={cnXTableFilter({ type })}
+          onChange={this.handleChange}
+          value={this.value}
+        />
+
+        {type === FilterType.STRING && (
+          <XTableFilterType
+            onClick={this.toggleStrictFiltering}
+            strictFiltering={this.strictFiltering}
+            filtered={this.strictFiltering || !!this.value}
+          />
+        )}
+      </>
     );
   }
 
@@ -64,12 +89,39 @@ export class XTableFilter extends Component<XTableFilterProps> {
 
     if (e.target.value?.length) {
       if (type === FilterType.STRING) {
-        filterQuery[field] = { $ilike: `%${e.target.value}%` };
+        filterQuery[field] = this.strictFiltering ? { $ilike: e.target.value } : { $ilike: `%${e.target.value}%` };
       } else {
         filterQuery[field] = e.target.value;
       }
+    } else if (this.strictFiltering) {
+      filterQuery[field] = { $in: ['', null] };
     } else {
       delete filterQuery[field];
+    }
+
+    onFilterChange();
+  }
+
+  @action.bound
+  private setStrictFiltering(strictFiltering: boolean) {
+    this.strictFiltering = strictFiltering;
+  }
+
+  @action.bound
+  private toggleStrictFiltering() {
+    this.setStrictFiltering(!this.strictFiltering);
+
+    const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
+
+    onBeforeFilterChange();
+    if (!this.value) {
+      if (this.strictFiltering) {
+        filterQuery[field] = { $in: ['', null] };
+      } else {
+        delete filterQuery[field];
+      }
+    } else {
+      filterQuery[field] = this.strictFiltering ? { $ilike: this.value } : { $ilike: `%${this.value}%` };
     }
 
     onFilterChange();
