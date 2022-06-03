@@ -1,5 +1,3 @@
-import { AxiosError } from 'axios';
-
 import { route } from '../../stores/Route.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
@@ -7,11 +5,11 @@ import { WfsFeature, WfsFeatureCollection } from '../geoserver/wfs.models';
 import { getFeatureLayer } from '../geoserver/layers.service';
 import { getFeaturesById } from '../geoserver/wfs.service';
 import { getWfsUrl } from '../server-urls.service';
-import { GeoserverException } from '../models';
 import { mapService } from './map.service';
 import { http } from '../http.service';
 import { Mime } from '../util/Mime';
 import { Toast } from '../../components/Toast/Toast';
+import { services } from '../services';
 
 export interface FeatureError {
   id: string;
@@ -31,42 +29,37 @@ export async function applyMapStateFromNavigator(): Promise<void> {
 
   // ссылка на выборку объектов по CQL-фильтру
   if (route.queryParams.queryFilter) {
-    const layerNames =
-      route.queryParams.queryLayers || currentProject.vectorLayers.map(({ complexName }) => complexName).join(',');
+    const layers =
+      route.queryParams.queryLayers.split(',') || currentProject.vectorLayers.map(({ complexName }) => complexName);
 
-    const params: Record<string, string> = {
-      service: 'wfs',
-      request: 'GetFeature',
-      outputFormat: Mime.JSON,
-      exceptions: Mime.JSON,
-      typeName: layerNames,
-      CQL_FILTER: route.queryParams.queryFilter,
-      startindex: '0',
-      count: '100'
-    };
+    const details = `Запрос: ${route.queryParams.queryFilter}\n\nСлои:\n${layers.join('\n')}`;
+    const features: WfsFeature[] = [];
 
-    const details = `Запрос: ${route.queryParams.queryFilter}\n\nСлои:\n${layerNames.split(',').join('\n')}`;
+    for (const layer of layers) {
+      try {
+        const params: Record<string, string> = {
+          service: 'wfs',
+          request: 'GetFeature',
+          outputFormat: Mime.JSON,
+          exceptions: Mime.JSON,
+          typeName: layer,
+          CQL_FILTER: route.queryParams.queryFilter,
+          startindex: '0',
+          count: '100'
+        };
 
-    try {
-      const { features } = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params });
+        const response = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params });
 
-      if (features.length) {
-        showFeatures(features);
-      } else {
-        Toast.warn({ message: 'Не найдено', details });
+        features.push(...response.features);
+      } catch {
+        services.logger.warn('Не найдены связанные объекты в слоях ' + layers.join(','));
       }
-    } catch (error) {
-      const exceptions = ((error as AxiosError)?.response?.data as { exceptions: GeoserverException[] })?.exceptions;
+    }
 
-      Toast.error({
-        message: 'Не найдено',
-        details: `${details}\n\nОшибка: ${
-          exceptions?.map(({ text }) => text)?.join('\n') ||
-          String((error as AxiosError)?.response?.data) ||
-          (error as AxiosError)?.message ||
-          String(error)
-        }`
-      });
+    if (features.length) {
+      showFeatures(features);
+    } else {
+      Toast.warn({ message: 'Не найдено', details });
     }
   }
 }

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
-import { FileOpenOutlined, LinkOutlined, OpenInNewOutlined } from '@mui/icons-material';
+import { FileOpenOutlined, LinkOutlined, MapOutlined, OpenInNewOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { Schema } from '../../../services/crg/schema.models';
 import { LibraryRecord } from '../../../services/crg/doc-library.service';
+import { buildCqlFilter } from '../../../services/util/cql';
+import { Schema } from '../../../services/crg/schema.models';
 import { Link } from '../../Link/Link';
 
 import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
@@ -27,21 +28,31 @@ export class LibraryDocumentActionsRelations extends Component<LibraryDocumentAc
     return (
       <LibraryDocumentActionsItem
         className={cnLibraryDocumentActionsRelations()}
-        title='Связанные документы'
+        title='Связи'
         as={as}
         icon={<LinkOutlined />}
         submenu={schema.relations.map((relation, i) => {
           const targetProperty = relation.targetProperty || relation.property;
-          const url =
-            `/data-management/library/${String(relation.library)}/registry?filter=` +
-            encodeURI(JSON.stringify({ [targetProperty]: { $ilike: String(document[relation.property]) } }));
+
+          let url: string;
+
+          if (relation.type === 'document') {
+            url =
+              `/data-management/library/${String(relation.library)}/registry?filter=` +
+              encodeURI(JSON.stringify({ [targetProperty]: { $ilike: String(document[relation.property]) } }));
+          }
+
+          if (relation.type === 'feature') {
+            const cqlFilter = buildCqlFilter({ [targetProperty]: String(document[relation.property]) });
+            url = `/projects/${relation.projectId}/map?queryLayers=${relation.layers.join(
+              ','
+            )}&queryFilter=${cqlFilter}`;
+          }
 
           return (
             <Link href={url} key={i} target='_blank' variant='contents'>
               <MenuItem>
-                <ListItemIcon>
-                  <FileOpenOutlined />
-                </ListItemIcon>
+                <ListItemIcon>{relation.type === 'document' ? <FileOpenOutlined /> : <MapOutlined />}</ListItemIcon>
                 <ListItemText>{relation.title}</ListItemText>
                 &nbsp;
                 <OpenInNewOutlined fontSize='small' color='action' />

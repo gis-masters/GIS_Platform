@@ -56,9 +56,12 @@ export interface ContentType {
 
 export interface Relation {
   title: string;
+  type: 'document' | 'feature';
   property: string;
   targetProperty?: string;
-  library: string;
+  library?: string;
+  projectId?: number;
+  layers?: string[];
 }
 
 export type ValueFormula = (
