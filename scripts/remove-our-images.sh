@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-docker-compose -f docker-compose.dev.yml -f docker-compose.yml down;
+# Imports
+. utils/textUtil
 
-echo '***** Remove images with our LABEL *****'
+# Actions
+./stop-all.sh
+
+printHeader "Remove images with our LABEL"
+
 docker rmi -f $(docker images --filter "label=MAINTAINER=Fanatic Fiz <fanaticfiz@outlook.com>" --format "{{.ID}}")

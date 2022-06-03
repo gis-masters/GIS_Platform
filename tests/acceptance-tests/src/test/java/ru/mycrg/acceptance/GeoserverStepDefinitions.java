@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgDto;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
+import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
@@ -240,11 +240,11 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + currentDatasetName)
+                get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + currentDatasetIdentifier)
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
-                        body("dataStore.name", equalTo(currentDatasetName),
+                        body("dataStore.name", equalTo(currentDatasetIdentifier),
                              "dataStore.type", equalTo("PostGIS"),
                              "dataStore.enabled", is(true));
     }
@@ -255,7 +255,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + currentDatasetName)
+                get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + currentDatasetIdentifier)
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_NOT_FOUND);

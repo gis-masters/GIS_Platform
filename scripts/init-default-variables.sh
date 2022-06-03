@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-echo Run CRG GIS
-
-echo Init variables
+echo Init default variables
 export DOCKER_CRG_HOST=${DOCKER_CRG_HOST:-cr.yandex/crp7o80lcrqlf17up9fq}
 
 export JAVA_XMS_SIZE=${JAVA_XMS_SIZE:-2G}
@@ -17,8 +15,7 @@ export GEOSERVER_USER=${GEOSERVER_USER:-admin@mail.ru}
 export GEOSERVER_PASSWORD=${GEOSERVER_PASSWORD:-geoserver}
 
 export RABBIT_TAG=${RABBIT_TAG:-management}
-export POSTGRES_TAG=${POSTGRES_TAG:-11.2}
-export POSTGIS_TAG=${POSTGIS_TAG:-11.7-2.5_2461}
+export POSTGIS_TAG=${POSTGIS_TAG:-14.3-3.2}
 export IS_DATA_EXIST=${IS_DATA_EXIST:-}
 export GEOSERVER_TAG=${GEOSERVER_TAG:-2.20.2}
 
@@ -49,14 +46,6 @@ export UI_WS_PORT=${UI_WS_PORT:-}
 export UI_WS_PATH=${UI_WS_PATH:-}
 export UI_SWN=${UI_SWN:-scratch_database}
 
+export RECREATE_DATADIR=False
 
-echo Init migrations
-export GEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR:-/opt/data/geoserver}
-export DB_DATA_DIR=${DB_DATA_DIR:-/opt/data/postgres}
-
-pushd assets/
-./migration-scripts/run.sh
-popd
-
-echo Docker compose UP
-docker-compose -f docker-compose.dev.yml -f docker-compose.yml up
+echo The host is: "$DOCKER_CRG_HOST"

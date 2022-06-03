@@ -10,8 +10,7 @@ Feature: При изменении слоя, осуществляется зап
     Given Существует набор
     Given Существует таблица
     When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>"
-    And Создан аудит лог о создании слоя
-    And Записано корректное тело слоя
+    And Создан аудит лог о создании слоя, с корректным телом
     Examples:
       | title                             | styleName    | type   | schemaId     | nativeCRS  | dataSourceUri |
       | Искусственные дорожные сооружения | transportobj | vector | transportobj | EPSG:28406 | STRING_6      |
@@ -23,8 +22,7 @@ Feature: При изменении слоя, осуществляется зап
     Given Существует слой проекта
     When Владелец делает запрос на обновление полей слоя проекта
       | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> |
-    And Создан аудит лог об изменении слоя
-    And Записано корректное тело слоя
+    And Создан аудит лог об изменении слоя, с корректным телом
     Examples:
       | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs |
       | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   |
@@ -35,4 +33,4 @@ Feature: При изменении слоя, осуществляется зап
     Given Существует таблица
     Given Существует слой проекта
     When Владелец делает запрос на удаление слоя
-    And Создан аудит лог об удалении слоя
+    And Создан аудит лог об удалении слоя, с корректным телом

@@ -15,7 +15,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.auth_service.GroupStepsDefinitions.usersGroupId;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
+import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -40,7 +40,7 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
         String url = response.getHeader("Location");
 
         Integer permissionId = extractId(response.getHeader("Location"));
-        assertThat(url, equalTo(makeDatasetPermissionUrl(currentDatasetName, permissionId)));
+        assertThat(url, equalTo(makeDatasetPermissionUrl(currentDatasetIdentifier, permissionId)));
     }
 
     @When("Администратор даёт доступ: {string} для текущего пользователя на текущий набор данных")
@@ -59,7 +59,7 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(currentDatasetName + "/roleAssignment");
+                        get(currentDatasetIdentifier + "/roleAssignment");
 
         Integer firstPermissionId = response.jsonPath().get("_embedded.permissions[0].id");
 
@@ -77,14 +77,14 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void makePageableRequest(String pageSize) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(currentDatasetName + "/roleAssignment/?size=" + pageSize);
+                        get(currentDatasetIdentifier + "/roleAssignment/?size=" + pageSize);
     }
 
     @When("Пользователь запрашивает правила для текущего набора")
     public void makePageableRequest() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(currentDatasetName + "/roleAssignment");
+                        get(currentDatasetIdentifier + "/roleAssignment");
     }
 
     @And("Количество правил соответствует ожидаемому: {string}")
@@ -107,13 +107,13 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
                         body(gson.toJson(dto)).
                         contentType(ContentType.JSON)
                 .when().
-                        post(currentDatasetName + "/roleAssignment");
+                        post(currentDatasetIdentifier + "/roleAssignment");
     }
 
     private void deletePermissionForCurrentDataset(Integer permissionId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        delete(String.format("%s/roleAssignment/%d", currentDatasetName, permissionId));
+                        delete(String.format("%s/roleAssignment/%d", currentDatasetIdentifier, permissionId));
     }
 
     private PermissionCreateDto generateRandomPermission() {

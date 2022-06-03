@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
+import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class ImportXmlStepsDefinition extends BaseStepsDefinitions {
@@ -17,7 +17,7 @@ public class ImportXmlStepsDefinition extends BaseStepsDefinitions {
         File xmlFile = new File("src/test/resources/ru/mycrg/acceptance/resources/" + fileName);
 
         Map<String, Object> queryParams = new HashMap<>() {{
-            put("datasetId", currentDatasetName);
+            put("datasetId", currentDatasetIdentifier);
             put("tableId", currentTableName);
             put("importType", importType);
         }};

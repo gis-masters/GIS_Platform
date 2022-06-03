@@ -19,7 +19,8 @@ public class CreatePermissionRequest implements IRequest<PermissionProjection>, 
     private PermissionCreateDto dto;
     private Permission newPermission;
 
-    public CreatePermissionRequest(ResourceQualifier rQualifier, Long resourceId,
+    public CreatePermissionRequest(ResourceQualifier rQualifier,
+                                   Long resourceId,
                                    PermissionCreateDto dto) {
         this.rQualifier = rQualifier;
         this.resourceId = resourceId;
@@ -35,7 +36,7 @@ public class CreatePermissionRequest implements IRequest<PermissionProjection>, 
     public CrgAuditEvent getEvent() {
         return new CrgAuditEvent(mapper.convertValue(dto, JsonNode.class),
                                  "CREATE",
-                                 dto.getPrincipalType() == null ? "unknown" : dto.getPrincipalType(),
+                                 "acl_permissions",
                                  PERMISSION.name(),
                                  newPermission.getId());
     }

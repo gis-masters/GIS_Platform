@@ -17,7 +17,7 @@ import java.util.Set;
 import static java.lang.Thread.sleep;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
+import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.schemaId;
 import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.tableName;
 
@@ -167,7 +167,7 @@ public class ValidationReportStepDefinition extends BaseStepsDefinitions {
     }
 
     private ExportResourceModel getValidExportResourceModel() {
-        return new ExportResourceModel(currentDatasetName, tableName, schemaId);
+        return new ExportResourceModel(currentDatasetIdentifier, tableName, schemaId);
     }
 
     private ExportResourceModel getNonValidExportResourceModel() {

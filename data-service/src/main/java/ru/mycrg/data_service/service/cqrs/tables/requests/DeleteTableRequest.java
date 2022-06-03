@@ -27,7 +27,7 @@ public class DeleteTableRequest implements IRequest<Voidy>, Auditable {
     public CrgAuditEvent getEvent() {
         return new CrgAuditEvent(mapper.convertValue(tQualifier, JsonNode.class),
                                  "DELETE",
-                                 tQualifier.getQualifier(),
+                                 tQualifier.getTable(),
                                  TABLE.name(),
                                  tQualifier.getRecord());
     }

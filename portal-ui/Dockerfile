@@ -1,4 +1,5 @@
 FROM nginx:1.20.2
+LABEL MAINTAINER="Fanatic Fiz <fanaticfiz@outlook.com>"
 
 COPY init/init_config.sh /opt
 COPY init/nginx_http.conf /opt

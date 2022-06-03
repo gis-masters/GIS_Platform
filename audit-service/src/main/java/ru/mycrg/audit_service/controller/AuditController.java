@@ -50,8 +50,12 @@ public class AuditController {
 
     @GetMapping(value = "/events")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> getAllEvents(Pageable pageable) {
-        Page<EventFullProjection> events = auditEventService.getAllEvents(pageable);
+    public ResponseEntity<Object> getAllEvents(
+            @RequestParam(name = "actionType", required = false, defaultValue = "") String actionType,
+            @RequestParam(name = "entityName", required = false, defaultValue = "") String entityName,
+            @RequestParam(name = "entityType", required = false, defaultValue = "") String entityType,
+            Pageable pageable) {
+        Page<EventFullProjection> events = auditEventService.getAllEvents(pageable, actionType, entityName, entityType);
 
         return ResponseEntity.ok(assembler.toResource(events));
     }

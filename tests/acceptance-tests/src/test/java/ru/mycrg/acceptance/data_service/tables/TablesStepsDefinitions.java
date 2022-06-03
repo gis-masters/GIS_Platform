@@ -10,7 +10,7 @@ import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
 
 import static org.junit.Assert.assertTrue;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
+import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
@@ -23,7 +23,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
         return super.getBaseRequestWithCurrentCookie()
-                    .basePath("/api/data/datasets/" + currentDatasetName + "/tables");
+                    .basePath("/api/data/datasets/" + currentDatasetIdentifier + "/tables");
     }
 
     @When("Отправляется запрос на создание таблицы {string} {string} {string} {string} {string}")
@@ -62,7 +62,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                         log().ifValidationFails().
                         delete("/" + currentTableName);
 
-        datasetsPool.remove(currentDatasetName);
+        datasetsPool.remove(currentDatasetIdentifier);
     }
 
     @Given("В текущем наборе данных существует таблица, созданная по тестовой схеме")

@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 
 public class AuditEventDto {
 
+    @Min(value = -1)
+    private Long entityId;
+
     @NotNull
     private LocalDateTime eventDateTime;
 
@@ -22,9 +25,6 @@ public class AuditEventDto {
 
     @Size(min = 3, max = 50)
     private String entityType;
-
-    @Min(value = 1)
-    private Long entityId;
 
     private JsonNode entityStateAfter;
 

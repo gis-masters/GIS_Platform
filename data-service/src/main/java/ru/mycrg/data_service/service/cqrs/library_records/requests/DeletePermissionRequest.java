@@ -29,7 +29,7 @@ public class DeletePermissionRequest implements IRequest<Voidy>, Auditable {
     public CrgAuditEvent getEvent() {
         return new CrgAuditEvent(mapper.convertValue(rQualifier, JsonNode.class),
                                  "DELETE",
-                                 rQualifier.getQualifier(),
+                                 "acl_permissions",
                                  PERMISSION.name(),
                                  permissionId);
     }

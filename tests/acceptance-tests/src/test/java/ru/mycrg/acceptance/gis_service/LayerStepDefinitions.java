@@ -22,7 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
+import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFileId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFilePath;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentRecordId;
@@ -67,7 +67,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         String dataStoreName = "scratch_database_" + orgId;
 
         layerCreateDto = new LayerCreateDto(generateString(title),
-                                            currentDatasetName,
+                                            currentDatasetIdentifier,
                                             currentTableName,
                                             generateString(styleName),
                                             type,
@@ -390,7 +390,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     private void updateLayer(DataTable dataTable) {
         List<String> data = dataTable.asList();
         layerUpdateDto = new LayerUpdateDto(generateString(data.get(0)),
-                                            currentDatasetName,
+                                            currentDatasetIdentifier,
                                             Boolean.parseBoolean(generateString(data.get(1))),
                                             Integer.parseInt(generateString(data.get(2))),
                                             Integer.parseInt(generateString(data.get(3))),

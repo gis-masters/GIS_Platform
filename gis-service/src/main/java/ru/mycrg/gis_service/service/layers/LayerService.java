@@ -118,7 +118,7 @@ public class LayerService {
 
                 messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                                      "CREATE",
-                                                     buildLayerInfo(project, layer),
+                                                     layer.getTableName(),
                                                      "LAYER",
                                                      layer.getId(),
                                                      objectMapper.convertValue(layerDto, JsonNode.class)));
@@ -160,7 +160,7 @@ public class LayerService {
         messageBus.produce(
                 new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                   "UPDATE",
-                                  buildLayerInfo(project, layerForUpdate),
+                                  layerForUpdate.getTableName(),
                                   "LAYER",
                                   layerForUpdate.getId(),
                                   objectMapper.convertValue(layerDto, JsonNode.class)));
@@ -171,7 +171,7 @@ public class LayerService {
 
         messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                              "DELETE",
-                                             buildLayerInfo(layer.getProject(), layer),
+                                             layer.getTableName(),
                                              "LAYER",
                                              layer.getId()));
     }
@@ -235,11 +235,6 @@ public class LayerService {
         } else {
             layer.setParent(null);
         }
-    }
-
-    @NotNull
-    private String buildLayerInfo(Project project, Layer layer) {
-        return String.format("%s_%s_%s", project.getName(), layer.getTableName(), layer.getTitle());
     }
 
     private Layer findLayerById(List<Layer> layers,

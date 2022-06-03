@@ -42,7 +42,7 @@ public class CreateLibraryRecordRequest implements IRequest<IRecord>, Auditable,
     public CrgAuditEvent getEvent() {
         return new CrgAuditEvent(mapper.convertValue(record, JsonNode.class),
                                  "CREATE",
-                                 record.getTitle() == null ? "unknown" : record.getTitle(),
+                                 rQualifier.getTable() == null ? "unknown" : rQualifier.getTable(),
                                  LIBRARY_RECORD.name(),
                                  record.getId() == null ? -1 : record.getId());
     }

@@ -28,7 +28,7 @@ public class CreateDatasetRequest implements IRequest<DatasetModel>, Auditable {
     public CrgAuditEvent getEvent() {
         return new CrgAuditEvent(mapper.convertValue(datasetDto, JsonNode.class),
                                  "CREATE",
-                                 datasetDto.getTitle() == null ? "unknown" : datasetDto.getTitle(),
+                                 datasetModel.getIdentifier() == null ? "unknown" : datasetModel.getIdentifier(),
                                  DATASET.name(),
                                  datasetModel.getId() == null ? -1 : datasetModel.getId());
     }

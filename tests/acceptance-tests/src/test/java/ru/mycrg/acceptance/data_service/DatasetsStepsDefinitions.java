@@ -21,7 +21,7 @@ import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.cur
 
 public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
-    public static String currentDatasetName;
+    public static String currentDatasetIdentifier;
     public static DatasetCreateDto currentDatasetDto;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
@@ -46,14 +46,14 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     public void checkDataset() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/" + currentDatasetName + "/tables");
+                        get("/" + currentDatasetIdentifier + "/tables");
 
         assertEquals(Integer.valueOf(1), response.jsonPath().get("page.totalElements"));
     }
 
     @When("Пользователь делает запрос на несуществующий набор данных {string}")
     public void getNotExistDataset(String datasetKey) {
-        getDatasetByName(generateString(datasetKey));
+        getDatasetByIdentifier(generateString(datasetKey));
     }
 
     @When("Пользователь делает запрос на набор данных {string}")
@@ -68,7 +68,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         }
 
         if (foundedDatasetName != null) {
-            getDatasetByName(foundedDatasetName);
+            getDatasetByIdentifier(foundedDatasetName);
         } else {
             throw new RuntimeException("Not found dataset by title: " + datasetTitle);
         }
@@ -130,7 +130,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     public void currentDatasetExist() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/" + currentDatasetName)
+                        get("/" + currentDatasetIdentifier)
                 .then().
                         statusCode(SC_OK);
     }
@@ -142,16 +142,16 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         log().ifValidationFails().
-                        delete("/" + currentDatasetName);
+                        delete("/" + currentDatasetIdentifier);
 
-        datasetsPool.remove(currentDatasetName);
+        datasetsPool.remove(currentDatasetIdentifier);
     }
 
     @Then("Текущий набор отсутствует в БД")
     public void currentDatasetNotExist() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/" + currentDatasetName)
+                        get("/" + currentDatasetIdentifier)
                 .then().
                         statusCode(SC_NOT_FOUND);
     }
@@ -205,14 +205,14 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     public void currentUserGetCurrentDataset() {
         authorizationBase.loginAsCurrentUser();
 
-        getDatasetByName(currentDatasetName);
+        getDatasetByIdentifier(currentDatasetIdentifier);
     }
 
     @When("Пользователь делает запрос на удаление слоя в наборе данных")
     public void deleteLayerFromDatasets() {
         response = getBaseRequestWithCurrentCookie()
                 .when().log().all().
-                       delete("/" + currentDatasetName + "/tables/" + currentTableName);
+                       delete("/" + currentDatasetIdentifier + "/tables/" + currentTableName);
     }
 
     private void createDataset(DatasetCreateDto dto) {
@@ -224,11 +224,17 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         log().ifValidationFails().
                         post();
 
-        currentDatasetName = extractDatasetName();
-        datasetsPool.put(currentDatasetName, dto);
+        currentDatasetIdentifier = extractDatasetIdentifier();
+
+        datasetsPool.put(currentDatasetIdentifier, dto);
     }
 
     private String extractDatasetName() {
+        return response.getHeader("Location")
+                       .split("/datasets/")[1];
+    }
+
+    private String extractDatasetIdentifier() {
         return response.getHeader("Location")
                        .split("/datasets/")[1];
     }
@@ -237,9 +243,9 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         return String.format("%s:%d/api/data/datasets/%s", testServerHost, testServerPort, datasetName);
     }
 
-    private void getDatasetByName(String datasetName) {
+    private void getDatasetByIdentifier(String currentDatasetIdentifier) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/" + datasetName);
+                        get("/" + currentDatasetIdentifier);
     }
 }

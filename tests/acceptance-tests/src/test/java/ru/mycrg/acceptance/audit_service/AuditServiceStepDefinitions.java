@@ -7,18 +7,22 @@ import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.audit_service.dto.AuditEventDto;
+import ru.mycrg.acceptance.audit_service.dto.AuditEventEntityType;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.lang.Thread.sleep;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.audit_service.dto.AuditEventActionsType.*;
 import static ru.mycrg.acceptance.audit_service.dto.AuditEventEntityType.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
+import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerCreateDto;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
@@ -27,8 +31,6 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     private final String CURRENT_TIME = "CURRENT_TIME";
     private final String EVENTS = "events";
-    private final String ACTION_TYPE_PATH = "_embedded.events.actionType";
-    private final String ENTITY_TYPE_PATH = "_embedded.events.entityType";
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -46,31 +48,28 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на создание события аудита {string} {string} {string} {string} {string} {string}")
-    public void addEvent(String eventDateTime, String actionType, String entityName, String entityType, String entityId,
-                         String entityStateAfter) {
+    public void addEvent(String eDateTime, String aType, String eName, String eType, String eId, String stateAfter) {
         AuditEventDto auditEventDto;
         String dateTime = null;
 
-        if (!isBlank(eventDateTime)) {
-            if (CURRENT_TIME.equals(eventDateTime)) {
+        if (!isBlank(eDateTime)) {
+            if (CURRENT_TIME.equals(eDateTime)) {
                 dateTime = LocalDateTime.now().toString();
             } else {
-                dateTime = eventDateTime;
+                dateTime = eDateTime;
             }
         }
 
-        if (isBlank(entityName) || isBlank(entityId) || isBlank(entityStateAfter)) {
-            auditEventDto = new AuditEventDto(dateTime, generateString(actionType));
+        if (isBlank(eName) || isBlank(eId) || isBlank(stateAfter)) {
+            auditEventDto = new AuditEventDto(dateTime, generateString(aType));
         } else {
             auditEventDto = new AuditEventDto(dateTime,
-                                              generateString(actionType),
-                                              generateString(entityName),
-                                              generateString(entityType),
-                                              Long.parseLong(entityId),
-                                              createJsonNode(generateJsonString(entityStateAfter)));
+                                              generateString(aType),
+                                              generateString(eName),
+                                              generateString(eType),
+                                              Long.parseLong(eId),
+                                              createJsonNode(generateJsonString(stateAfter)));
         }
-
-        System.out.println(auditEventDto);
 
         super.createEntity(auditEventDto);
     }
@@ -85,7 +84,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует событие аудита {string}")
     public void initializeAuditEvent(String actionType) {
-        addEvent(CURRENT_TIME, actionType, "", "", "", "");
+        addEvent(CURRENT_TIME, actionType, "testEntity", "user", "-1", "null");
     }
 
     @When("Пользователь делает запрос на обновление события аудита {string}")
@@ -149,218 +148,134 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @Then("Создан аудит лог о входе пользователя в систему")
     public void checkAuditEventSignIn() {
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, SIGN_IN.name()));
+        checkAuditEvent(SIGN_IN.name(), USER, "user");
     }
 
     @Then("Создан аудит лог о выходе пользователя из системы")
     public void checkAuditEventSignOut() {
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, SIGN_OUT.name()));
+        checkAuditEvent(SIGN_OUT.name(), USER, "user");
     }
 
-    @Then("Аудит лог о разлогинивании не создается")
-    public void checkSignOutWithoutToken() {
-        assertThrows(RuntimeException.class, () -> checkAuditEvents(ACTION_TYPE_PATH, SIGN_OUT.name()));
-    }
+    @Then("Создан аудит лог о создании проекта, с корректным телом")
+    public void checkProjectCreate() {
+        String projectName = projectDto.getProjectName();
 
-    @Then("Создан аудит лог о создании проекта")
-    public void checkProjectCreate() throws InterruptedException {
-        sleep(500);
-
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
+        checkAuditEvent(CREATE.name(), PROJECT, projectName);
     }
 
     @Then("Создана запись в журнале аудита о создании документа")
-    public void checkDocumentCreate() throws InterruptedException {
-        sleep(500);
-
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LIBRARY_RECORD.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
+    public void checkDocumentCreate() {
+        checkAuditEvent(CREATE.name(), LIBRARY_RECORD, DEFAULT_LIBRARY);
     }
 
     @Then("Создана запись в журнале аудита о создании записи в слое")
     public void checkFeatureCreate() {
-        checkAuditEvent(CREATE.name(), FEATURE.name(), currentTableName);
+        checkAuditEvent(CREATE.name(), FEATURE, currentTableName);
     }
 
-    @Then("Создан аудит лог о создании слоя")
-    public void checkLayerCreate() throws InterruptedException {
-        sleep(500);
+    @Then("Создан аудит лог о создании слоя, с корректным телом")
+    public void checkLayerCreate() {
+        String tableName = layerCreateDto.getTableName();
 
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
+        checkAuditEvent(CREATE.name(), LAYER, tableName);
     }
 
     @Then("Создан аудит лог об удалении проекта")
-    public void checkProjectDelete() throws InterruptedException {
-        sleep(500);
+    public void checkProjectDelete() {
+        String projectName = projectDto.getProjectName();
 
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
+        checkAuditEvent(DELETE.name(), PROJECT, projectName);
     }
 
-    @Then("Создан аудит лог об удалении слоя")
-    public void checkLayerDelete() throws InterruptedException {
-        sleep(500);
+    @Then("Создан аудит лог об удалении слоя, с корректным телом")
+    public void checkLayerDelete() {
+        String tableName = layerCreateDto.getTableName();
 
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
+        checkAuditEvent(DELETE.name(), LAYER, tableName);
     }
 
     @And("Создан аудит лог об изменении проекта")
-    public void checkProjectUpdate() throws InterruptedException {
-        sleep(500);
+    public void checkProjectUpdate() {
+        String projectName = projectDto.getProjectName();
 
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PROJECT.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
+        checkAuditEvent(UPDATE.name(), PROJECT, projectName);
     }
 
     @And("Создан аудит лог об изменении записи в слое")
     public void checkFeatureUpdate() {
-        checkAuditEvent(UPDATE.name(), FEATURE.name(), currentTableName);
+        checkAuditEvent(UPDATE.name(), FEATURE, currentTableName);
     }
 
     @And("Создана запись в журнале аудита о создании схемы")
     public void checkAuditEventForSchemaCreate() {
-        checkAuditEvent(CREATE.name(), SCHEMA.name(), "schemas");
+        checkAuditEvent(CREATE.name(), SCHEMA, "schemas");
     }
 
     @And("Создан аудит лог об изменении схемы")
     public void checkAuditEventForSchemaUpdate() {
-        checkAuditEvent(UPDATE.name(), SCHEMA.name(), "schemas");
+        checkAuditEvent(UPDATE.name(), SCHEMA, "schemas");
     }
 
     @Then("Создана запись в журнале аудита о создании датасета")
-    public void checkDatasetCreate() throws InterruptedException {
-        sleep(500);
-
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, DATASET.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
+    public void checkDatasetCreate() {
+        checkAuditEvent(CREATE.name(), DATASET, currentDatasetIdentifier);
     }
 
     @Then("Создана запись в журнале аудита об удалении датасета")
-    public void checkDatasetDelete() throws InterruptedException {
-        sleep(500);
-
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, DATASET.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
+    public void checkDatasetDelete() {
+        checkAuditEvent(DELETE.name(), DATASET, currentDatasetIdentifier);
     }
 
     @Then("Создана запись в журнале аудита о создании правила")
-    public void checkPermissionCreate() throws InterruptedException {
-        sleep(500);
-
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PERMISSION.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
+    public void checkPermissionCreate() {
+        checkAuditEvent(CREATE.name(), PERMISSION, "acl_permissions");
     }
 
     @Then("Создана запись в журнале аудита об удалении правила")
-    public void checkPermissionDelete() throws InterruptedException {
-        sleep(500);
-
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, PERMISSION.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
+    public void checkPermissionDelete() {
+        checkAuditEvent(DELETE.name(), PERMISSION, "acl_permissions");
     }
 
-    @And("Создан аудит лог об изменении слоя")
-    public void checkLayerUpdate() throws InterruptedException {
-        sleep(500);
+    @And("Создан аудит лог об изменении слоя, с корректным телом")
+    public void checkLayerUpdate() {
+        String tableName = layerCreateDto.getTableName();
 
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, LAYER.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
-    }
-
-    @And("Записано корректное тело проекта")
-    public void checkProjectEntityStateAfter() {
-        String projectName = projectDto.getProjectName();
-        String errMsg = String.format("Запись о данном проекте %s не найдена", projectName);
-
-        getAllAuditEntity();
-        checkAuditEventsEntityStateAfterByKey(projectName, "name", errMsg);
-    }
-
-    @And("Записано корректное тело слоя")
-    public void checkLayerEntityStateAfter() {
-        String errMsg = String.format("Запись о данном слое %s не найдена", gson.toJson(layerCreateDto));
-        getAllAuditEntity();
-
-        checkAuditEventsEntityStateAfterByKey(layerCreateDto.getTitle(), "title", errMsg);
-        checkAuditEventsEntityStateAfterByKey(layerCreateDto.getDataset(), "dataset", errMsg);
-        checkAuditEventsEntityStateAfterByKey(layerCreateDto.getNativeCRS(), "nativeCRS", errMsg);
+        checkAuditEvent(UPDATE.name(), LAYER, tableName);
     }
 
     @Then("Создана запись в журнале аудита о создании таблицы")
-    public void checkTableCreate() throws InterruptedException {
-        sleep(500);
-
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, TABLE.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, CREATE.name()));
+    public void checkTableCreate() {
+        checkAuditEvent(CREATE.name(), TABLE, currentTableName);
     }
 
     @Then("Создана запись в журнале аудита об обновлении таблицы")
-    public void checkTableUpdate() throws InterruptedException {
-        sleep(500);
-
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, TABLE.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, UPDATE.name()));
+    public void checkTableUpdate() {
+        checkAuditEvent(UPDATE.name(), TABLE, currentTableName);
     }
 
     @Then("Создана запись в журнале аудита об удалении таблицы")
-    public void checkTableDelete() throws InterruptedException {
-        sleep(500);
-
-        assertTrue(checkAuditEvents(ENTITY_TYPE_PATH, TABLE.name()));
-        assertTrue(checkAuditEvents(ACTION_TYPE_PATH, DELETE.name()));
+    public void checkTableDelete() {
+        checkAuditEvent(DELETE.name(), TABLE, currentTableName);
     }
 
-    private void checkAuditEventsEntityStateAfterByKey(String verifiedInformation, String key, String errMsg) {
-        response.jsonPath().getList("_embedded.events.entityStateAfter")
-                .stream()
-                .filter(listItem -> Objects.equals(((LinkedHashMap<?, ?>) listItem).get(key), verifiedInformation))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(errMsg));
-    }
-
-    private boolean checkAuditEvents(String key, String value) {
-        try {
-            int currentAttempt = 0;
-            do {
-                currentAttempt++;
-                System.out.println("attempt create audit event " + currentAttempt);
-
-                getAllAuditEntity();
-
-                if (response.jsonPath().getList(key).contains(value)) {
-                    return true;
-                }
-
-                sleep(800);
-            } while (currentAttempt < MAX_RETRY_ATTEMPT);
-
-            throw new RuntimeException("Audit event not created!");
-        } catch (InterruptedException e) {
-            throw new RuntimeException("Audit event not created!");
-        }
-    }
-
-    private boolean checkAuditEvent(String actionType, String entityType, String tableName) {
+    private boolean checkAuditEvent(String actionType, AuditEventEntityType entityType, String tableName) {
         try {
             int currentAttempt = 0;
             do {
                 currentAttempt++;
                 System.out.println("Attempt: " + currentAttempt + ". Check audit event. " + "actionType: '" +
                                            actionType + "' " + "entityType: '" +
-                                           entityType + "' tableName: '" +
+                                           entityType.name() + "' tableName: '" +
                                            tableName + "'");
 
-                getAllAuditEntity();
+                getEventsByFilter(actionType, entityType.name(), tableName);
 
                 List<AuditEventDto> lists = response.jsonPath().getList("_embedded.events", AuditEventDto.class);
 
                 boolean result = false;
                 for (AuditEventDto list: lists) {
                     if (actionType.equalsIgnoreCase(list.getActionType())
-                            && entityType.equalsIgnoreCase(list.getEntityType())
+                            && entityType.name().equalsIgnoreCase(list.getEntityType())
                             && tableName.equalsIgnoreCase(list.getEntityName())) {
                         result = true;
                         break;
@@ -371,12 +286,19 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
                     return true;
                 }
 
-                sleep(800);
+                sleep(1000);
             } while (currentAttempt < MAX_RETRY_ATTEMPT);
 
             throw new RuntimeException("Audit event not created!");
         } catch (InterruptedException e) {
             throw new RuntimeException("Audit event not created!");
         }
+    }
+
+    private void getEventsByFilter(String actionType, String entityType, String tableName) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        log().all().
+                        get("/?actionType=" + actionType + "&entityType=" + entityType + "&entityName=" + tableName);
     }
 }

@@ -15,7 +15,7 @@ import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
+import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
@@ -218,7 +218,7 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
                                      "\"binding\":\"java.lang.Long\"},\"target\":{\"name\":\"ruleid\"," +
                                      "\"type\":\"AsIs\"}}],\"srs\":28406," +
                                      "\"layerName\":\"FunctionalZone\",\"workTableName\":\"functionalzone\"," +
-                                     "\"schemaName\":\"functionalzone\"}]}", currentDatasetName);
+                                     "\"schemaName\":\"functionalzone\"}]}", currentDatasetIdentifier);
     }
 
     private String getInitImportInfo(Integer orgId) {

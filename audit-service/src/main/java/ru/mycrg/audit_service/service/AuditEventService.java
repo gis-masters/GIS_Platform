@@ -33,7 +33,7 @@ public class AuditEventService {
         this.projectionFactory = projectionFactory;
     }
 
-    public Page<EventFullProjection> getAllEvents(Pageable pageable) {
+    public Page<EventFullProjection> getAllEvents(Pageable pageable, String aType, String eName, String eType) {
         if (authenticationFacade.isRoot()) {
             log.debug("Get all events by Root");
 
@@ -43,15 +43,17 @@ public class AuditEventService {
             log.debug("Get all events by Organization Admin");
             Long orgId = authenticationFacade.getOrganizationId();
 
-            return auditRepository.findAllByOrganizationId(orgId, pageable)
-                                  .map(event -> projectionFactory.createProjection(EventFullProjection.class, event));
+            return auditRepository
+                    .findAllByOrganizationIdWithSpecificFilter(orgId, aType, eName, eType, pageable)
+                    .map(event -> projectionFactory.createProjection(EventFullProjection.class, event));
         } else {
             log.debug("Get all events by User");
             Long orgId = authenticationFacade.getOrganizationId();
             String userName = authenticationFacade.getLogin();
 
-            return auditRepository.findAllByOrganizationIdAndUserName(orgId, userName, pageable)
-                                  .map(event -> projectionFactory.createProjection(EventFullProjection.class, event));
+            return auditRepository
+                    .findAllByOrganizationIdAndUserWithSpecificFilter(orgId, userName, aType, eName, eType, pageable)
+                    .map(event -> projectionFactory.createProjection(EventFullProjection.class, event));
         }
     }
 

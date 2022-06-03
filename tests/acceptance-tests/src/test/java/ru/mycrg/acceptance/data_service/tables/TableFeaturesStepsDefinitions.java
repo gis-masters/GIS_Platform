@@ -13,12 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
+import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
@@ -28,7 +26,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
         String basePath = String.format("/api/data/datasets/%s/tables/%s/records",
-                                        currentDatasetName, currentTableName);
+                                        currentDatasetIdentifier, currentTableName);
 
         return super.getBaseRequestWithCurrentCookie()
                     .basePath(basePath);

@@ -25,14 +25,12 @@ services:
       - "5434:5432"
     volumes:
       - /opt/data/postgis:/var/lib/postgresql
+      - /opt/data/configs/db/extra.conf:/settings/extra.conf
     environment:
       POSTGRES_DBNAME: crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service
       POSTGRES_USER: $CRG_USER
       POSTGRES_PASS: $DB_PASS
-      EXISTING_DATA_DIR: $IS_DATA_EXIST
-      MAX_CONNECTIONS: ${POSTGRES_MAX_CONNECTIONS:-1000}
-      SHARED_BUFFERS: ${POSTGRES_SHARED_BUFFERS:-2GB}
-      WAL_LEVEL: ${POSTGRES_WAL_LEVEL:-logical}
+      RECREATE_DATADIR: $RECREATE_DATADIR
 
   geoserver:
     container_name: geoserver

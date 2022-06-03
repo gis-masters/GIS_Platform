@@ -40,7 +40,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                                     @NotNull HttpServletResponse response,
                                     @NotNull FilterChain chain) {
         if (isLogoutRequest(request)) {
-            messageBus.produce(new CrgAuditEvent(getToken(request), "SIGN_OUT"));
+            messageBus.produce(new CrgAuditEvent(getToken(request), "SIGN_OUT", "user", "USER", -1L));
             response.addCookie(cookieProducer.makeDeletionCookie());
         } else if (isGetTokenRequest(request)) {
             log.debug("isGetTokenRequest");
@@ -53,7 +53,8 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                 authenticator.requestToken(username, password)
                              .ifPresentOrElse(token -> {
                                  prepareResponse(response, token);
-                                 messageBus.produce(new CrgAuditEvent(token.getAccess_token(), "SIGN_IN"));
+                                 messageBus.produce(
+                                         new CrgAuditEvent(token.getAccess_token(), "SIGN_IN", "user", "USER", -1L));
                              }, () -> {
                                  sendUnauthorized(response);
                              });
