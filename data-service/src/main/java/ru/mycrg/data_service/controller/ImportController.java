@@ -12,13 +12,15 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.import_.ImportService;
 import ru.mycrg.data_service.service.import_.Importer;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.ImportRecordReport;
 
 import javax.validation.Valid;
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 
 @RestController
 public class ImportController extends BaseController {
@@ -47,10 +49,10 @@ public class ImportController extends BaseController {
                                           @RequestParam String tableId,
                                           @RequestParam("file") MultipartFile file,
                                           @RequestParam String importType) {
-        Importer importMp = importers.stream()
-                                     .filter(importer -> importType.equalsIgnoreCase(importer.getType()))
-                                     .findFirst()
-                                     .orElseThrow(() -> new BadRequestException("this importer is not exist"));
+        Importer importerMp = importers.stream()
+                                       .filter(importer -> importType.equalsIgnoreCase(importer.getType()))
+                                       .findFirst()
+                                       .orElseThrow(() -> new BadRequestException("this importer is not exist"));
 
         String filename = file.getOriginalFilename();
         String fileExtension = FilenameUtils.getExtension(filename);
@@ -69,8 +71,32 @@ public class ImportController extends BaseController {
 
         ResourceQualifier table = new ResourceQualifier(datasetId, tableId);
 
-        Long objectId = importMp.doImport(file, table);
+        Long objectId = (Long) importerMp.doImport(file, table);
 
         return ResponseEntity.status(OK).body(objectId);
+    }
+
+    @PostMapping("/import/excel")
+    public ResponseEntity<List<ImportRecordReport>> importExcel(@RequestParam("file") MultipartFile file,
+                                                                @RequestParam("libraryId") String libraryId,
+                                                                @RequestParam String importType) {
+        Importer importerExcel = importers.stream()
+                                          .filter(importer -> importType.equalsIgnoreCase(importer.getType()))
+                                          .findFirst()
+                                          .orElseThrow(() -> new BadRequestException("this importer is not exist"));
+
+        String filename = file.getOriginalFilename();
+        String fileExtension = FilenameUtils.getExtension(filename);
+
+        if (isEmpty(fileExtension) || !"xlsx".equalsIgnoreCase(fileExtension)) {
+            String msg = "Тип файла не Excel";
+            log.warn(msg);
+
+            throw new BadRequestException(msg);
+        }
+        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId, LIBRARY);
+        List<ImportRecordReport> result = (List<ImportRecordReport>) importerExcel.doImport(file, lQualifier);
+
+        return ResponseEntity.status(CREATED).body(result);
     }
 }

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 
 @Service
-public class ImportMp implements Importer {
+public class ImportMp implements Importer<Long> {
 
     private final Logger log = LoggerFactory.getLogger(ImportMp.class);
     private static final String SCHEMA_NAME = "mp";

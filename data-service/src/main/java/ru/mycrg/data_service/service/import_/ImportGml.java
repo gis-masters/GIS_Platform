@@ -22,7 +22,6 @@ import ru.mycrg.data_service.service.parsers.model.FeatureObject;
 import ru.mycrg.data_service.service.parsers.model.FeatureProperty;
 import ru.mycrg.data_service.service.parsers.model.SimpleFeatureData;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service.service.validation.ValidationService;
 import ru.mycrg.data_service.util.CrgScriptEngine;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
@@ -49,7 +48,6 @@ public class ImportGml {
     private final GmlParser gmlParser;
     private final ValidationService validationService;
     private final CrgScriptEngine scriptEngine;
-    private final TableService tableService;
     private final Mediator mediator;
 
     public ImportGml(RecordsDao recordsDao,
@@ -58,7 +56,6 @@ public class ImportGml {
                      GmlParser gmlParser,
                      ValidationService validationService,
                      CrgScriptEngine scriptEngine,
-                     TableService tableService,
                      Mediator mediator) {
         this.recordsDao = recordsDao;
         this.schemaService = schemaService;
@@ -66,7 +63,6 @@ public class ImportGml {
         this.gmlParser = gmlParser;
         this.validationService = validationService;
         this.scriptEngine = scriptEngine;
-        this.tableService = tableService;
         this.mediator = mediator;
     }
 

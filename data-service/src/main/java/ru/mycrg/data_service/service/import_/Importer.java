@@ -3,9 +3,9 @@ package ru.mycrg.data_service.service.import_;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
-public interface Importer {
+public interface Importer<T> {
 
     String getType();
 
-    Long doImport(MultipartFile file, ResourceQualifier rIdentifier);
+    T doImport(MultipartFile file, ResourceQualifier rIdentifier);
 }
