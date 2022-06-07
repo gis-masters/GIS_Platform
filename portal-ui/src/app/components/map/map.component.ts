@@ -6,19 +6,21 @@ import { NGXLogger } from 'ngx-logger';
 import { Extent } from 'ol/extent';
 import '!style-loader!css-loader!sass-loader!ol/ol.css';
 
-import { cn } from '../../services/util/cn';
 import { CrgExternalLayer, CrgLayer, CrgLayerType, TreeItem } from '../../services/crg/projects.models';
-import { mapService } from '../../services/map/map.service';
-import { fetchBasemaps } from '../../services/crg/basemaps.service';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { fromMobx } from '../../services/util/fromMobx';
-import { sidebars } from '../../stores/Sidebars.store';
 import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
 import { setMapPositionToUrl } from '../../services/map/map-url.service';
+import { fetchBasemaps } from '../../services/crg/basemaps.service';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { MapModes, mapStore } from '../../stores/Map.store';
+import { basemapsStore } from '../../stores/Basemaps.store';
+import { mapService } from '../../services/map/map.service';
 import { Emitter } from '../../services/common/Emitter';
+import { fromMobx } from '../../services/util/fromMobx';
+import { sidebars } from '../../stores/Sidebars.store';
 import { route } from '../../stores/Route.store';
+import { cn } from '../../services/util/cn';
+import { Toast } from '../Toast/Toast';
 
 @Component({
   selector: 'crg-map',
@@ -42,6 +44,17 @@ export class MapComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     await fetchBasemaps();
+
+    const queryParams = route.queryParams as { [key: string]: string };
+    const basemap = queryParams?.basemap;
+
+    if (basemap) {
+      if (basemapsStore.basemaps.some(({ id }) => id === Number(basemap))) {
+        basemapsStore.selectBasemap(Number(basemap));
+      } else {
+        Toast.warn(`Не удалось подключить подложку id: ${basemap}`);
+      }
+    }
 
     mapService.createMap();
     await applyMapStateFromNavigator();

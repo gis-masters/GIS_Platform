@@ -7,6 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { basemapsStore } from '../../../stores/Basemaps.store';
 import { Basemap } from '../../../services/crg/basemaps.models';
+import { services } from '../../../services/services';
 import { sleep } from '../../../services/util/sleep';
 
 import { BasemapsSelectThumbnail } from '../Thumbnail/BasemapsSelect-Thumbnail';
@@ -45,6 +46,13 @@ export class BasemapsSelectItem extends Component<BasemapsSelectItemProps> {
     onClick();
     await sleep(300);
     basemapsStore.selectBasemap(basemap.id);
+
+    await services.router.navigate([location.pathname], {
+      queryParams: {
+        basemap: basemap.id
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
   @action

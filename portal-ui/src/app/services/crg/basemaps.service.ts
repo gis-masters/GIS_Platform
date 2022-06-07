@@ -17,6 +17,7 @@ import {
   getBasemapUrl
 } from '../server-urls.service';
 import { Toast } from '../../components/Toast/Toast';
+import { route } from '../../stores/Route.store';
 
 interface ProjectBasemap {
   id: number;
@@ -72,7 +73,22 @@ export async function fetchBasemaps(): Promise<void> {
     const response = await http.get<PageableResponse<Basemap>>(url, { params });
     if (response._embedded) {
       const crgBaseMaps = handleBasemaps(projectBasemaps, response._embedded.basemaps);
+
       basemapsStore.initBaseMaps(crgBaseMaps);
+
+      if (crgBaseMaps.length) {
+        const queryParams = route.queryParams as { [key: string]: string };
+        const basemap = queryParams?.basemap;
+
+        if (!basemap) {
+          await services.router.navigate([location.pathname], {
+            queryParams: {
+              basemap: crgBaseMaps[0].id
+            },
+            queryParamsHandling: 'merge'
+          });
+        }
+      }
     }
   } catch (error) {
     services.logger.error('Подложки не подготовлены? ', error);
