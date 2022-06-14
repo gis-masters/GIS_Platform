@@ -18,6 +18,7 @@ export async function setMapPositionToUrl(zoom: number, center: string): Promise
 }
 
 export async function setEnabledLayerToUrl(): Promise<void> {
+  const currentPath = location.pathname;
   const layers = currentProject.visibleOnMapLayers
     .map(layer => {
       if (layer.payload.enabled === true) {
@@ -27,11 +28,20 @@ export async function setEnabledLayerToUrl(): Promise<void> {
     .filter(id => id);
 
   if (layers) {
-    await services.router.navigate([location.pathname], {
-      queryParams: {
-        layers: layers.join(',')
-      },
-      queryParamsHandling: 'merge'
+    await sleep(200);
+    if (location.pathname !== currentPath || currentProject.id !== Number(route.paramMap.get('projectId'))) {
+      return;
+    }
+
+    await services.provided;
+
+    await services.ngZone.run(async () => {
+      await services.router.navigate([location.pathname], {
+        queryParams: {
+          layers: layers.join(',')
+        },
+        queryParamsHandling: 'merge'
+      });
     });
   }
 }
