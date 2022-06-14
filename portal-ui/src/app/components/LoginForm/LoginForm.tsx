@@ -53,9 +53,13 @@ export class LoginForm extends Component<LoginFormProps> {
       this.setUserData(route.queryParams.guestName, route.queryParams.guestPass);
       await this.submitHandler();
 
+      const queryParams = route.queryParams;
+      queryParams.guestName = null;
+      queryParams.guestPass = null;
+
       await services.ngZone.run(async () => {
         await services.router.navigate([location.pathname], {
-          queryParams: { guestName: null, guestPass: null },
+          queryParams,
           queryParamsHandling: 'merge'
         });
       });
