@@ -71,7 +71,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                              "/oauth/token",
                              "/organizations/init",
                              "/perform_logout",
-                             "/integration/ais_ums/import").permitAll()
+                             "/integration/ais_ums/import",
+                             "/integration/statement/import").permitAll()
                 .antMatchers(GET,
                              "/actuator/health",
                              "/esia/**").permitAll()
