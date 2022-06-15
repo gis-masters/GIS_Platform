@@ -99,7 +99,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.editFeatureData = [];
 
         this.featureDescription.properties.forEach(({ name, valueType }) => {
-          if (!Object.keys(this.features[0].properties).includes(name) && valueType !== ValueType.GEOMETRY) {
+          if (
+            !Object.keys(this.features[0].properties).some(property => property.toLowerCase() === name.toLowerCase()) &&
+            valueType !== ValueType.GEOMETRY
+          ) {
             this.features[0].properties[name] = null;
           }
         });
