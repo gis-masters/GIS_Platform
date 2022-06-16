@@ -12,7 +12,6 @@ import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { services } from '../../services/services';
 import { route } from '../../stores/Route.store';
 import { Loading } from '../Loading/Loading';
-import { Toast } from '../Toast/Toast';
 import { Link } from '../Link/Link';
 
 const cnLibraryDocumentPageContainer = cn('LibraryDocumentPageContainer');
@@ -20,7 +19,7 @@ const cnLibraryDocumentPageContainer = cn('LibraryDocumentPageContainer');
 @observer
 export class LibraryDocumentPageContainer extends Component {
   @observable private document: LibraryRecord;
-  @observable private error: boolean;
+  @observable private error: string;
   @observable private busy = false;
 
   private operationId?: symbol;
@@ -40,7 +39,7 @@ export class LibraryDocumentPageContainer extends Component {
         {!this.error && this.document && <LibraryDocument document={this.document} />}
 
         {this.error && (
-          <EmptyListView text='Документ не найден'>
+          <EmptyListView text={this.error}>
             <Link href={'/data-management'}>На страницу управления данными</Link>
           </EmptyListView>
         )}
@@ -73,13 +72,11 @@ export class LibraryDocumentPageContainer extends Component {
 
       this.setLibraryItem(document);
     } catch (error) {
-      const err = error as AxiosError;
-      this.setError();
+      const err = error as AxiosError<{ message: string }>;
       this.setBusy(false);
-      Toast.error({
-        message: err.message,
-        canBeSuppressed: true
-      });
+
+      this.setError(err?.response?.data?.message || err?.message || 'Не удалось открыть документ');
+
       services.logger.error('Не удалось открыть документ: ', err.message);
     }
   }
@@ -90,8 +87,8 @@ export class LibraryDocumentPageContainer extends Component {
   }
 
   @action.bound
-  private setError() {
-    this.error = true;
+  private setError(error: string) {
+    this.error = error;
   }
 
   @action.bound
