@@ -2,6 +2,7 @@ package ru.mycrg.data_service.service.cqrs.table_records.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
+import ru.mycrg.data_service.dao.ddl.DdlTables;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
@@ -12,17 +13,21 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequestHandler;
 
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
+import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
 
 @Component
 public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTableRecordRequest, Feature> {
 
     private final SystemAttributeHandler systemAttributeHandler;
     private final SpatialRecordsDao spatialRecordsDao;
+    private final DdlTables ddlTables;
 
     public CreateTableRecordRequestHandler(SystemAttributeHandler systemAttributeHandler,
-                                           SpatialRecordsDao spatialRecordsDao) {
+                                           SpatialRecordsDao spatialRecordsDao,
+                                           DdlTables ddlTables) {
         this.systemAttributeHandler = systemAttributeHandler;
         this.spatialRecordsDao = spatialRecordsDao;
+        this.ddlTables = ddlTables;
     }
 
     @Override
@@ -31,9 +36,12 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
         SchemaDto schema = request.getSchema();
 
         systemAttributeHandler.initSchema(schema)
-                              .prepareJsonb(feature);
+                              .prepareJsonb(feature)
+                              .decapitalize(feature);
 
         ResourceQualifier qualifier = request.getQualifier();
+
+        throwIfNotMatchTableColumns(feature.getProperties(), ddlTables.getAllColumnNames(qualifier.getTable()));
 
         try {
             Feature newFeature = spatialRecordsDao.save(qualifier, feature);

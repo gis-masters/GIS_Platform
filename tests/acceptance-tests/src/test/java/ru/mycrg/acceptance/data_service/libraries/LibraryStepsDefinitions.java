@@ -12,11 +12,11 @@ import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFileId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
@@ -107,7 +107,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         DefaultRecordModel recordModel = new DefaultRecordModel("new_title");
         recordModel.setSome_files(new ArrayList<>());
 
-        updateRecord(currentRecordId, recordModel);
+        updateRecord(currentRecordId, gson.toJson(recordModel));
     }
 
     @When("Пользователь делает запрос на удаление файла")
@@ -117,7 +117,8 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @Given("В библиотеке по-умолчанию существует запись")
     public void initRecordInDefaultLibrary() {
-        createRecord(generateString("STRING_10"));
+        String body = String.format("{\"title\":\"%s\"}", generateString("STRING_10"));
+        createRecord(body);
 
         assertEquals(201, response.getStatusCode());
 
@@ -126,7 +127,8 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @Given("Пользователь создает документ")
     public void currentUserCreateRecordInDefaultLibrary() {
-        createRecord(generateString("STRING_8"));
+        String body = String.format("{\"title\":\"%s\"}", generateString("STRING_10"));
+        createRecord(body);
 
         assertEquals(201, response.getStatusCode());
 
@@ -164,17 +166,19 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("Пользователь делает запрос на обновление текущей записи")
     public void updateCurrentRecord() {
-        updateRecord(currentRecordId, new DefaultRecordModel("new title"));
+        updateRecord(currentRecordId, gson.toJson(new DefaultRecordModel("new title")));
     }
 
     @When("Пользователь делает запрос на обновление текущей записи передавая несуществующий атрибут")
     public void tryUpdateRecordWithNotExistAttributes() {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType("application/merge-patch+json").
-                        body("{\"not_exist_attribute\": \"some\"}")
-                .when().
-                        patch(String.format("/%s/records/%d", DEFAULT_LIBRARY, currentRecordId));
+        String body = "{\"not_exist_attribute\": \"some\"}";
+        updateRecord(currentRecordId, body);
+    }
+
+    @When("Пользователь делает запрос на обновление текущей записи передавая несуществующий в базе данных атрибут")
+    public void tryUpdateRecordWithNotExistAttributesInDB() {
+        String body = "{\"test\": \"test\"}";
+        updateRecord(currentRecordId, body);
     }
 
     @And("Запись успешно обновлена")
@@ -186,6 +190,22 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         assertEquals("new title", newTitle);
     }
 
+    @And("Запись успешно создана")
+    public void checkRecordCreation() {
+        String newTitle = response.jsonPath().get("title");
+
+        assertEquals("test", newTitle);
+    }
+
+    @And("Тело ответа содержит ошибку о том что данные не были сохранены")
+    public void checkErrorMessage() {
+        List<Object> errors = response.jsonPath().getList("errors.message");
+        assertTrue(errors.size() > 0);
+
+        String errorMessage = errors.get(0).toString();
+        assertEquals("Данные не сохранены. В базе данных поле test отсутсвует.", errorMessage);
+    }
+
     @When("Администратор запрашивает текущую запись")
     public void gelCurrentRecordFromDefaultLibraryAsOwner() {
         authorizationBase.loginAsOwner();
@@ -195,34 +215,31 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         get(String.format("/%s/records/%d", DEFAULT_LIBRARY, currentRecordId));
     }
 
-    @When("Отправляется запрос на создание записи в библиотеке {string} {string}")
-    public void createRecordsRequest(String filePath, String body) {
-        if (Objects.nonNull(filePath)) {
-            File testTif = new File(filePath);
-            response = getBaseRequestWithCurrentCookie()
-                    .given().
-                             contentType("multipart/form-data")
-                             .multiPart("file", testTif)
-                             .multiPart("body", body)
-                    .when().
-                             log().ifValidationFails().
-                             post("/dl_default/records");
-        } else {
-            response = getBaseRequestWithCurrentCookie()
-                    .given().
-                             contentType("multipart/form-data")
-                             .multiPart("body", body)
-                    .when().
-                             log().ifValidationFails().
-                             post("/dl_default/records");
-        }
+    @When("Отправляется запрос на создание записи в библиотеке по-умолчанию")
+    public void createRecordsRequest() {
+        createRecord(getRecordBodyForDlDefaultWithCorrectField());
+    }
+
+    @When("Пользователь делает запрос на создание записи передавая несуществующий в базе данных атрибут")
+    public void tryCreateRecordWithNotExistAttributesInDB() {
+        createRecord(getRecordBodyForDlDefaultWithIncorrectField());
     }
 
     @When("Существует запись в библиотеке на основе растрового файла {string}")
     public void initLibraryRecord(String title) {
         String filePath = "src/test/resources/ru/mycrg/acceptance/resources/zolotopolenskoe_sp.tif";
         String body = "{\"title\": \"" + title + "\",\"content_type_id\": \"doc_v1\",\"native_crs\": \"EPSG:28406\"}";
-        createRecordsRequest(filePath, body);
+        File testTif = new File(filePath);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                         contentType("multipart/form-data")
+                         .multiPart("file", testTif)
+                         .multiPart("body", body)
+                .when().
+                         log().ifValidationFails().
+                         post("/dl_default/records");
+
         currentRecordId = extractEntityIdFromResponse(response);
     }
 
@@ -240,7 +257,8 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                 "    ]," +
                 "    \"content_type_id\": \"doc_v4\"" +
                 "}";
-        createRecordsRequest(null, body);
+
+        createRecord(body);
         currentRecordId = extractEntityIdFromResponse(response);
     }
 
@@ -255,22 +273,11 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                  });
     }
 
-    private void createRecord(String title) {
+    private void createRecord(String body) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         contentType("multipart/form-data").
-                        multiPart("body",
-                                  String.format("{\"title\":\"%s\"}", title))
-                .when().
-                        log().all().
-                        post(String.format("/%s/records", DEFAULT_LIBRARY));
-    }
-
-    private void createRecord(DefaultRecordModel body) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType("multipart/form-data").
-                        multiPart("body", gson.toJson(body))
+                        multiPart("body", body)
                 .when().
                         log().ifValidationFails().
                         post(String.format("/%s/records", DEFAULT_LIBRARY));
@@ -289,18 +296,37 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         DefaultRecordModel record = new DefaultRecordModel(generateString("STRING_4"));
         record.setSome_files(descriptions);
 
-        createRecord(record);
+        createRecord(gson.toJson(record));
 
         currentRecordId = extractEntityIdFromResponse(response);
     }
 
-    private void updateRecord(Integer recordId, DefaultRecordModel body) {
+    private void updateRecord(Integer recordId, String body) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         contentType("application/merge-patch+json").
-                        body(gson.toJson(body))
+                        body(body)
                 .when().
                         log().all().
                         patch(String.format("/%s/records/%d", DEFAULT_LIBRARY, recordId));
+    }
+
+    private String getRecordBodyForDlDefaultWithIncorrectField() {
+        return "{" +
+                "    \"title\": \"test\"," +
+                "    \"oktmo\": \"123123\"," +
+                "    \"native_crs\": \"EPSG:28406\"," +
+                "    \"content_type_id\": \"doc_v4\"," +
+                "    \"test\": \"test\"" +
+                "}";
+    }
+
+    private String getRecordBodyForDlDefaultWithCorrectField() {
+        return "{" +
+                "    \"title\": \"test\"," +
+                "    \"oktmo\": \"123123\"," +
+                "    \"native_crs\": \"EPSG:28406\"," +
+                "    \"content_type_id\": \"doc_v4\"" +
+                "}";
     }
 }

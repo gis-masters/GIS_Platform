@@ -24,7 +24,7 @@ import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 @Repository
 public class DdlTables {
 
-    private static final Logger log = LoggerFactory.getLogger(DdlTables.class);
+    private final Logger log = LoggerFactory.getLogger(DdlTables.class);
 
     private final JdbcTemplate jdbcTemplate;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
@@ -112,7 +112,7 @@ public class DdlTables {
         schemasAndTablesRepository.deleteByIdentifier(rQualifier.getTable());
     }
 
-    private static boolean isGeometryExist(String createTableSql) {
+    private boolean isGeometryExist(String createTableSql) {
         return createTableSql.contains("shape public.geometry");
     }
 
@@ -125,7 +125,7 @@ public class DdlTables {
     }
 
     @NotNull
-    private static String handleChoice(@NotNull SimplePropertyDto attrDescription) {
+    private String handleChoice(@NotNull SimplePropertyDto attrDescription) {
         ForeignKeyType foreignKeyType = attrDescription.getForeignKeyType();
         if (foreignKeyType == null) {
             log.warn("ForeignKeyType not set. Will be used string type");
@@ -147,7 +147,7 @@ public class DdlTables {
     }
 
     @NotNull
-    private static String generatePropertySqlString(@NotNull SimplePropertyDto attrDescription) {
+    private String generatePropertySqlString(@NotNull SimplePropertyDto attrDescription) {
         switch (attrDescription.getValueType()) {
             case INT:
                 return attrDescription.getName() + " integer";
@@ -179,7 +179,7 @@ public class DdlTables {
         return attrDescription.getName() + " character varying";
     }
 
-    static String getExtensionTableQuery(String targetSchema, String extensionTable) {
+    private String getExtensionTableQuery(String targetSchema, String extensionTable) {
         return "CREATE TABLE " + targetSchema + "." + extensionTable + " (" +
                 "   object_id serial NOT NULL, " +
                 "   violations jsonb, " +

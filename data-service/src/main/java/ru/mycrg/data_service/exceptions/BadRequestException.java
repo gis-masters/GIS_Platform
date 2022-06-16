@@ -21,6 +21,12 @@ public class BadRequestException extends RuntimeException {
         errors.add(errorInfo);
     }
 
+    public BadRequestException(String msg, List<ErrorInfo> errorInfoList) {
+        super(msg);
+
+        errors.addAll(errorInfoList);
+    }
+
     public List<ErrorInfo> getErrors() {
         return errors;
     }

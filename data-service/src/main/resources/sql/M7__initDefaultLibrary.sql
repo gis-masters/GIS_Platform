@@ -210,6 +210,14 @@ SELECT 'dl_default_schema',
       "hidden": false,
       "valueType": "FILE",
       "multiple": false
+    },
+    {
+      "name": "test",
+      "title": "Not exist in database property",
+      "required": false,
+      "hidden": true,
+      "valueType": "STRING",
+      "maxLength": 500
     }
   ],
   "contentTypes": [

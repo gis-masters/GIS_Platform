@@ -28,7 +28,8 @@ public class DeleteTableRequestHandler implements IRequestHandler<DeleteTableReq
 
     public DeleteTableRequestHandler(DdlTables ddlTables,
                                      SchemasAndTablesRepository schemasAndTablesRepository,
-                                     PermissionsService permissionsService, IMessageBusProducer messageBus,
+                                     PermissionsService permissionsService,
+                                     IMessageBusProducer messageBus,
                                      IAuthenticationFacade authenticationFacade) {
         this.ddlTables = ddlTables;
         this.schemasAndTablesRepository = schemasAndTablesRepository;

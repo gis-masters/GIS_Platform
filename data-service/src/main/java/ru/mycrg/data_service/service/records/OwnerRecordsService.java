@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.RecordsDao;
+import ru.mycrg.data_service.dao.ddl.DdlTables;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -30,6 +31,7 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.service.records.RecordUtil.clearSystemAttributes;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
+import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
 
 @Service
 public class OwnerRecordsService implements IRecordsService {
@@ -42,19 +44,22 @@ public class OwnerRecordsService implements IRecordsService {
     private final SimpleIntentHandler simpleIntentHandler;
     private final DocumentLibraryService librariesService;
     private final SystemAttributeHandler systemAttributeHandler;
+    private final DdlTables ddlTables;
 
     public OwnerRecordsService(RecordsDao recordsDao,
                                FileStorageService fileStorageService,
                                PermissionsService permissionsService,
                                SimpleIntentHandler simpleIntentHandler,
                                DocumentLibraryService librariesService,
-                               SystemAttributeHandler systemAttributeHandler) {
+                               SystemAttributeHandler systemAttributeHandler,
+                               DdlTables ddlTables) {
         this.recordsDao = recordsDao;
         this.fileStorageService = fileStorageService;
         this.permissionsService = permissionsService;
         this.simpleIntentHandler = simpleIntentHandler;
         this.librariesService = librariesService;
         this.systemAttributeHandler = systemAttributeHandler;
+        this.ddlTables = ddlTables;
     }
 
     @Override
@@ -125,6 +130,7 @@ public class OwnerRecordsService implements IRecordsService {
                                       .fillFileInnerPath(record.getContent(), path);
             }
 
+            throwIfNotMatchTableColumns(record.getContent(), ddlTables.getAllColumnNames(lQualifier.getTable()));
             simpleIntentHandler.updateIntents(record);
             IRecord newRecord = recordsDao.addRecord(lQualifier, record);
             permissionsService.addOwnerPermission(lQualifier, record.getId());
@@ -144,10 +150,12 @@ public class OwnerRecordsService implements IRecordsService {
 
             Map<String, Object> clearedData = clearSystemAttributes(record);
 
+            throwIfNotMatchTableColumns(record.getContent(), ddlTables.getAllColumnNames(recordQualifier.getTable()));
+
             recordsDao.updateRecordById(recordQualifier, clearedData);
 
             log.debug("Record: '{}' successfully patched", recordQualifier.getRecord());
-        } catch (Exception e) {
+        } catch (CrgDaoException e) {
             throw new DataServiceException("Failed to update record: " + recordQualifier.getQualifier(), e.getCause());
         }
     }
