@@ -101,3 +101,11 @@
   top: 54px;
   right: 0;
 }
+
+.no-wrap-group {
+  flex-wrap: nowrap;
+}
+
+.no-wrap-group .read-value {
+  width: 100%;
+}

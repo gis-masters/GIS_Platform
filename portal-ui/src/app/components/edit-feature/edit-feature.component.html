@@ -186,8 +186,16 @@
               </div>
             </div>
 
-            <div *ngIf="!updatingAllowed" class="read-value">
-              {{ editFeatureItem.value }}
+            <div class="input-group no-wrap-group" *ngIf="!updatingAllowed">
+              <div class="read-value">
+                {{ editFeatureItem.value }}
+              </div>
+              <crg-related-documents-button
+                *ngIf="editFeatureItem.relations.length"
+                [obj]="features[0].properties"
+                [relations]="editFeatureItem.relations"
+              >
+              </crg-related-documents-button>
             </div>
           </div>
         </div>
