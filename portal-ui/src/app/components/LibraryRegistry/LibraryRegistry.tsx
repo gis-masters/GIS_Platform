@@ -5,6 +5,7 @@ import { Checkbox } from '@mui/material';
 import { Check, Close, HomeOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { AxiosError } from 'axios';
 
 import { route } from '../../stores/Route.store';
 import { currentUser } from '../../stores/CurrentUser.store';
@@ -31,6 +32,7 @@ import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumen
 import { RelatedDocumentsButton } from '../RelatedDocumentsButton/RelatedDocumentsButton';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
 import { DocumentInfo, Documents } from '../Documents/Documents';
+import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { FilterType } from '../XTable/Filter/XTable-Filter';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { XTable, XTableColumn } from '../XTable/XTable';
@@ -61,13 +63,12 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   @observable private hiddenFields: string[] = [];
   @observable private tablePageOptions?: PageOptions;
   @observable private libraryDocuments: LibraryRecord[] = [];
-  @observable private filteredCols: string[] = [];
+  @observable private error: string;
 
   private tableInvoke: { reload?(): void } = {};
 
   async componentDidMount() {
-    this.setLibrary(await getLibrary(this.props.libraryId));
-    this.setSchema(await schemaService.getSchema(this.library.schemaId));
+    await this.getInfo();
 
     communicationService.libraryItemsUpdated.on(() => {
       if (this.tableInvoke.reload) {
@@ -85,7 +86,7 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   render() {
     return (
       <div className={cnLibraryRegistry()}>
-        {this.ready ? (
+        {this.ready && (
           <>
             {!this.props.inDialog && <Breadcrumbs itemsType='link' items={this.breadcrumbsItems} />}
             <XTable<LibraryRecord>
@@ -118,9 +119,10 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
               onPageOptionsChange={this.handleTablePageOptionsChange}
             />
           </>
-        ) : (
-          <Loading noBackdrop />
         )}
+        {!this.ready && !this.error && <Loading noBackdrop />}
+
+        {this.error && <EmptyListView text={this.error} />}
       </div>
     );
   }
@@ -377,6 +379,17 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
     }
   }
 
+  private async getInfo() {
+    try {
+      this.setLibrary(await getLibrary(this.props.libraryId));
+      this.setSchema(await schemaService.getSchema(this.library.schemaId));
+    } catch (error) {
+      const err = error as AxiosError<{ message: string }>;
+
+      this.setError(err?.response?.data?.message || err?.message);
+    }
+  }
+
   @computed
   private get sort(): SortParams<LibraryRecord> {
     try {
@@ -412,6 +425,11 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   @action.bound
   private setLibraryDocuments(libraryDocuments: LibraryRecord[]) {
     this.libraryDocuments = libraryDocuments;
+  }
+
+  @action
+  private setError(error: string) {
+    this.error = error;
   }
 
   @action.bound

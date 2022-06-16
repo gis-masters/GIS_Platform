@@ -13,7 +13,7 @@ const cnEmptyListView = cn('EmptyListView');
 export interface EmptyListProps {
   text: string;
   secondaryText?: string;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export class EmptyListView extends Component<EmptyListProps> {
