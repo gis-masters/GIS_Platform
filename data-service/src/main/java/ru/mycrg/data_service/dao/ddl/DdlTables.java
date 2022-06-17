@@ -65,7 +65,8 @@ public class DdlTables {
                 target, PRIMARY_KEY, propertiesBuilder, targetTable);
 
         // Add GEOMETRY CONSTRAINT
-        if (isGeometryExist(query)) {
+        boolean geometryExist = isGeometryExist(query);
+        if (geometryExist) {
             query = String.format(
                     "%s ALTER TABLE ONLY %s ADD CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = %s));",
                     query, target, crsCode);
@@ -75,6 +76,13 @@ public class DdlTables {
 
         jdbcTemplate.execute(query);
         jdbcTemplate.execute(getExtensionTableQuery(targetSchema, extensionTable));
+
+        if (geometryExist) {
+            String indexName = targetTable + "_idx";
+            String createIndexQuery = String.format("CREATE INDEX %s ON %s USING gist (shape)", indexName, target);
+
+            jdbcTemplate.execute(createIndexQuery);
+        }
     }
 
     /**
@@ -148,35 +156,58 @@ public class DdlTables {
 
     @NotNull
     private String generatePropertySqlString(@NotNull SimplePropertyDto attrDescription) {
+        String result;
         switch (attrDescription.getValueType()) {
             case INT:
-                return attrDescription.getName() + " integer";
+                result = attrDescription.getName() + " integer";
+                break;
             case CHOICE:
-                return handleChoice(attrDescription);
+                result = handleChoice(attrDescription);
+                break;
             case STRING:
                 Integer maxLength = attrDescription.getMaxLength();
                 if (maxLength < 255) {
                     maxLength = 255;
                 }
 
-                return attrDescription.getName() + " character varying(" + maxLength + ")";
+                result = attrDescription.getName() + " character varying(" + maxLength + ")";
+                break;
             case DOUBLE:
-                return attrDescription.getName() + " numeric(38,8)";
+                result = attrDescription.getName() + " numeric(38,8)";
+                break;
             case URL:
-                return attrDescription.getName() + " text";
+                result = attrDescription.getName() + " text";
+                break;
             case GEOMETRY:
-                return "shape public.geometry";
+                result = "shape public.geometry";
+                break;
             case DATETIME:
-                return attrDescription.getName() + " timestamp";
+                result = attrDescription.getName() + " timestamp";
+                break;
             case LOOKUP:
-                return attrDescription.getName() + " text";
+                result = attrDescription.getName() + " text";
+                break;
             case FILE:
-                return attrDescription.getName() + " jsonb";
+                result = attrDescription.getName() + " jsonb";
+                break;
             default:
                 log.warn("Not supported attribute type: {}", attrDescription.getValueType());
+
+                result = attrDescription.getName() + " character varying";
         }
 
-        return attrDescription.getName() + " character varying";
+        String formula = attrDescription.getCalculatedValueWellKnownFormula();
+        if (formula != null) {
+            if (formula.equals("st_area")) {
+                result = result + " GENERATED ALWAYS AS (public.st_area(shape)) STORED";
+            } else if (formula.equals("st_length")) {
+                result = result + " GENERATED ALWAYS AS (public.st_length(shape)) STORED";
+            } else {
+                log.warn("Unknown valueWellKnownFormula: {}", formula);
+            }
+        }
+
+        return result;
     }
 
     private String getExtensionTableQuery(String targetSchema, String extensionTable) {

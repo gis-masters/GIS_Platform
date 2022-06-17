@@ -43,7 +43,7 @@ printHeader2 "Process start"
 echo "Start" >> result.txt
 date +"%D %T" >> result.txt
 
-. stop-all-except-db.sh
+. stop-except-db.sh
 . drop-all-our-databases.sh
 . delete-geoserver-data.sh "$BASE_DIR"
 . restore-geoserver.sh "$2" "$BASE_DIR"
@@ -54,4 +54,3 @@ date +"%D %T" >> result.txt
 printInfo "Done"
 echo "Done" >> result.txt
 date +"%D %T" >> result.txt
-

@@ -69,6 +69,26 @@ SELECT 'schema_for_test_table',
       "hidden": true,
       "required": false,
       "valueType": "GEOMETRY"
+    },
+    {
+      "name": "calc_area",
+      "title": "Авто площадь, м",
+      "hidden": false,
+      "required": false,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "calculatedValueWellKnownFormula": "st_area"
+    },
+    {
+      "name": "calc_length",
+      "title": "Авто длинна, м",
+      "hidden": false,
+      "required": false,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "calculatedValueWellKnownFormula": "st_length"
     }
   ]
 }'
