@@ -50,8 +50,6 @@ public class LibraryBaseRecords extends BaseStepsDefinitions {
                 .when().
                         log().all().
                         patch(String.format("/%s/records/%d", library, recordId));
-
-        response.prettyPrint();
     }
 
     public void deleteRecord(Integer recordId) {

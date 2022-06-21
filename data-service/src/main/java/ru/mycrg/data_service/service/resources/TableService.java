@@ -1,13 +1,12 @@
 package ru.mycrg.data_service.service.resources;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
-import ru.mycrg.data_service.dao.ddl.DdlTables;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
@@ -15,43 +14,30 @@ import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
-import ru.mycrg.data_service.service.PermissionsService;
-import ru.mycrg.data_service_contract.queue.request.LayerReferencesDeletionEvent;
-import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
-import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
+import static java.util.Collections.unmodifiableList;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 
 @Service
 public class TableService {
 
-    private final DdlTables ddlTables;
-    private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
-    private final PermissionsService permissionsService;
     private final BasePermissionsRepository permissionsRepository;
     private final BaseDao baseDao;
 
-    public TableService(DdlTables ddlTables,
-                        IMessageBusProducer messageBus,
-                        IAuthenticationFacade authenticationFacade,
+    public TableService(IAuthenticationFacade authenticationFacade,
                         SchemasAndTablesRepository schemasAndTablesRepository,
-                        PermissionsService permissionsService,
                         BasePermissionsRepository permissionsRepository,
                         BaseDao baseDao) {
-        this.messageBus = messageBus;
-        this.ddlTables = ddlTables;
         this.authenticationFacade = authenticationFacade;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
-        this.permissionsService = permissionsService;
         this.permissionsRepository = permissionsRepository;
         this.baseDao = baseDao;
     }
@@ -61,33 +47,41 @@ public class TableService {
                 .findByIdentifier(datasetIdentifier)
                 .orElseThrow(() -> new NotFoundException(datasetIdentifier));
 
+        long total;
+        List<TableModel> allowedTables;
         if (authenticationFacade.isOrganizationAdmin()) {
-            if (ecqlFilter == null) {
-                ecqlFilter = "path = '" + dataset.pathTo() + "'";
-            } else {
-                ecqlFilter = ecqlFilter + " AND path = '" + dataset.pathTo() + "'";
-            }
+            ecqlFilter = addPathToDataset(ecqlFilter, dataset.pathTo());
 
-            List<TableModel> tables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
-                                                      ecqlFilter,
-                                                      pageable,
-                                                      TableModel.class);
-            Long total = baseDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
-
-            return new PageImpl<>(Collections.unmodifiableList(tables), pageable, total);
+            allowedTables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
+                                            ecqlFilter,
+                                            pageable,
+                                            TableModel.class);
+            total = baseDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
         } else {
-            List<IResourceModel> allowedResources = permissionsRepository
-                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), ecqlFilter, null, pageable)
-                    .stream()
-                    .map(record -> new TableModel(record.getContent()))
-                    .collect(Collectors.toList());
+            ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, datasetIdentifier);
+            Optional<String> roleForParentDataset = permissionsRepository.getRoleForDataset(dQualifier);
+            if (roleForParentDataset.isPresent()) {
+                ecqlFilter = addPathToDataset(ecqlFilter, dataset.pathTo());
 
-            long total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER,
-                                                                dataset.pathTo(),
-                                                                ecqlFilter);
+                allowedTables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                ecqlFilter,
+                                                pageable,
+                                                TableModel.class);
+                total = baseDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
+            } else {
+                allowedTables = permissionsRepository
+                        .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), ecqlFilter, null, pageable)
+                        .stream()
+                        .map(record -> new TableModel(record.getContent()))
+                        .collect(Collectors.toList());
 
-            return new PageImpl<>(allowedResources, pageable, total);
+                total = permissionsRepository.getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                               dataset.pathTo(),
+                                                               ecqlFilter);
+            }
         }
+
+        return new PageImpl<>(unmodifiableList(allowedTables), pageable, total);
     }
 
     public IResourceModel getInfo(ResourceQualifier tQualifier) {
@@ -115,29 +109,13 @@ public class TableService {
         }
     }
 
-    @Transactional
-    public void delete(ResourceQualifier tQualifier) {
-        SchemasAndTables table = schemasAndTablesRepository
-                .findByIdentifier(tQualifier.getTable())
-                .orElseThrow(() -> new NotFoundException(tQualifier));
-
-        // resourceProtector.throwIfDeletionNotAllowed(targetTable, table.getId());
-
-        schemasAndTablesRepository.deleteByIdentifier(table.getIdentifier());
-
-        // Delete assigned rule
-        permissionsService.deleteAssigned(tQualifier, table.getId());
-
-        String extTableName = tQualifier.getTable() + EXTENSION_POSTFIX;
-        ResourceQualifier extTable = new ResourceQualifier(tQualifier.getSchema(), extTableName);
-
-        ddlTables.drop(tQualifier);
-        ddlTables.drop(extTable);
-
-        messageBus.produce(
-                new LayerReferencesDeletionEvent(getScratchWorkspaceName(authenticationFacade.getOrganizationId()),
-                                                 tQualifier.getSchema(),
-                                                 tQualifier.getTable(),
-                                                 authenticationFacade.getAccessToken()));
+    @NotNull
+    private String addPathToDataset(String ecqlFilter, String pathTo) {
+        if (ecqlFilter == null) {
+            ecqlFilter = "path = '" + pathTo + "'";
+        } else {
+            ecqlFilter = ecqlFilter + " AND path = '" + pathTo + "'";
+        }
+        return ecqlFilter;
     }
 }

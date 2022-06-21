@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class ImportXmlStepsDefinition extends BaseStepsDefinitions {

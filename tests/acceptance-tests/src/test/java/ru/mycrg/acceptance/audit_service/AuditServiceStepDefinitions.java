@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.audit_service.dto.AuditEventActionsType.*;
 import static ru.mycrg.acceptance.audit_service.dto.AuditEventEntityType.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerCreateDto;

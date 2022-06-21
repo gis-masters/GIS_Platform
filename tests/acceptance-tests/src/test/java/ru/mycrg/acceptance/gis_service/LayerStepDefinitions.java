@@ -22,7 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFileId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFilePath;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentRecordId;
@@ -412,7 +412,5 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                         contentType("application/merge-patch+json")
                 .when().
                         patch("" + layerId);
-
-        response.prettyPrint();
     }
 }

@@ -1,4 +1,4 @@
-package ru.mycrg.acceptance.data_service;
+package ru.mycrg.acceptance.data_service.datasets;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -8,7 +8,10 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.data_service.ImportStepsDefinitions;
+import ru.mycrg.acceptance.data_service.ValidationReportStepDefinition;
 import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
+import ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions;
 
 import java.util.Map;
 
@@ -28,6 +31,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
     private final ImportStepsDefinitions importSteps = new ImportStepsDefinitions();
     private final ValidationReportStepDefinition validationSteps = new ValidationReportStepDefinition();
+    private final TablesStepsDefinitions tablesSteps = new TablesStepsDefinitions();
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
@@ -111,6 +115,16 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         currentDatasetDto = new DatasetCreateDto(generateString("STRING_10"));
 
         createDataset(currentDatasetDto);
+    }
+
+    @When("Существует 'набор данных' с двумя слоями в нём")
+    public void createDatasetWithTwoTables() {
+        currentDatasetDto = new DatasetCreateDto(generateString("STRING_8"));
+
+        createDataset(currentDatasetDto);
+
+        tablesSteps.createTablesRequest("layer_test_1", "TestLayer1", "l1", "EPSG:28406", "schema_for_test_table");
+        tablesSteps.createTablesRequest("layer_test_2", "TestLayer2", "l2", "EPSG:28406", "schema_for_test_table");
     }
 
     @When("Пользователь создает новый набор данных")

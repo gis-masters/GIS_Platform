@@ -1,4 +1,4 @@
-package ru.mycrg.acceptance.data_service;
+package ru.mycrg.acceptance.data_service.datasets;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -15,7 +15,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.auth_service.GroupStepsDefinitions.usersGroupId;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -45,6 +45,8 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор даёт доступ: {string} для текущего пользователя на текущий набор данных")
     public void createPermissionForCurrentUserForCurrentDataset(String role) {
+        authorizationBase.loginAsOwner();
+
         createPermissionForCurrentDataset(new PermissionCreateDto("user", userId, role));
     }
 

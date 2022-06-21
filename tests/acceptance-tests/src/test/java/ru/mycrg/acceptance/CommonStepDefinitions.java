@@ -115,7 +115,5 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
     @Then("В ответе пункт {string} имеет значение {string}")
     public void checkResponseValue(String field, String value) {
         super.checkResponseValue(field, value);
-
-        response.prettyPrint();
     }
 }

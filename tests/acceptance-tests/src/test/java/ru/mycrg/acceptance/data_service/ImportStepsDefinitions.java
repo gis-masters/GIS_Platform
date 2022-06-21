@@ -15,7 +15,7 @@ import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
@@ -145,8 +145,6 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
 
         tableName = response.jsonPath().getList("tableName").get(0).toString();
         schemaId = response.jsonPath().getList("schemaId").get(0).toString();
-
-        response.prettyPrint();
 
         assertThat(layers.isEmpty(), is(not(true)));
 

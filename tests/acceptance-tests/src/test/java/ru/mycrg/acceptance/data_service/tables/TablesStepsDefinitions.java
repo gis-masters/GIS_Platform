@@ -6,11 +6,12 @@ import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
 
 import static org.junit.Assert.assertTrue;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
@@ -19,6 +20,8 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     public static TableCreateDto currentTableDto;
 
     private String TEST_TABLE_SCHEMA = "schema_for_test_table";
+
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
@@ -36,6 +39,15 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                                              generateString(schema));
 
         super.createEntity(currentTableDto);
+    }
+
+    @When("Пользователь делает запрос на выборку таблиц из 'набора данных'")
+    public void getAllTables() {
+        authorizationBase.loginAsCurrentUser();
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get();
     }
 
     @When("Существует таблица")

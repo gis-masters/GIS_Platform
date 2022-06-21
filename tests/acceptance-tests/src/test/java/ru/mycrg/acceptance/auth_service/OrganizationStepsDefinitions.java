@@ -127,13 +127,16 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
      */
     @Given("Существует любая организация")
     public void getExistOrg() throws InterruptedException {
-        final Iterator<Map.Entry<Integer, OrganizationCreateDto>> iterator = orgPool.entrySet().iterator();
+        Iterator<Map.Entry<Integer, OrganizationCreateDto>> iterator = orgPool.entrySet().iterator();
         if (iterator.hasNext()) {
             Map.Entry<Integer, OrganizationCreateDto> entry = iterator.next();
             orgId = entry.getKey();
             orgDto = entry.getValue();
+
+            System.out.println("Выбрана организация с id: " + orgId);
+            System.out.println("Org dto: [" + orgDto + "]");
         } else {
-            final List<String> data = new ArrayList<>();
+            List<String> data = new ArrayList<>();
             data.add("ООО FizИКоровы");
             data.add("1234567890");
             data.add("Ivanov");
@@ -141,7 +144,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             data.add("EMAIL_20");
             data.add("testPassword1");
 
-            final List<List<String>> raw = new ArrayList<>();
+            List<List<String>> raw = new ArrayList<>();
             raw.add(data);
 
             initOrg(DataTable.create(raw));

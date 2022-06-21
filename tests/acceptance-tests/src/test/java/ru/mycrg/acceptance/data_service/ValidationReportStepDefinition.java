@@ -17,7 +17,7 @@ import java.util.Set;
 import static java.lang.Thread.sleep;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.schemaId;
 import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.tableName;
 

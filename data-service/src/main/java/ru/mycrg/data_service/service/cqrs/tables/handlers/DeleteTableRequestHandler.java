@@ -46,8 +46,6 @@ public class DeleteTableRequestHandler implements IRequestHandler<DeleteTableReq
                 .findByIdentifier(tQualifier.getTable())
                 .orElseThrow(() -> new NotFoundException(tQualifier));
 
-        // resourceProtector.throwIfDeletionNotAllowed(targetTable, table.getId());
-
         schemasAndTablesRepository.deleteByIdentifier(table.getIdentifier());
 
         // Delete assigned rule

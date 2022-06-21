@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgDto;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
@@ -172,18 +172,16 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
     public void checkGeoserverLayersRulesIfUserIsAbsent() {
         String role = "admin_" + orgId;
 
-        final Response response = getBaseRequestWithCurrentCookie()
+        Response response = getBaseRequestWithCurrentCookie()
                 .when().
                         log().all().
                         get("/geoserver/rest/security/acl/layers");
 
-        response.prettyPrint();
-
-        final Map<Object, Object> layersRules =
+        Map<Object, Object> layersRules =
                 response.then().
-                        statusCode(SC_OK).
-                                extract().jsonPath().
-                                getMap("");
+                            statusCode(SC_OK).
+                            extract().jsonPath().
+                            getMap("");
 
         if (layersRules.containsValue(role)) {
             throw new CucumberException(role + " are present in layer rules");

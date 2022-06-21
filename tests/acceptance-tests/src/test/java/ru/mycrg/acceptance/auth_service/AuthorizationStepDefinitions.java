@@ -50,6 +50,11 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
     }
 
+    @When("Авторизуемся владельцем организации")
+    public void tryToGetAuthorizeAdmin2() {
+        authorizationBase.loginAsOwner();
+    }
+
     @And("Пользователь не может авторизоваться")
     public void notPossibleToLogin() {
         Map<String, String> queryParams = new HashMap<String, String>() {{
