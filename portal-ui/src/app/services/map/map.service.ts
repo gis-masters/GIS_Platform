@@ -671,7 +671,11 @@ class MapService {
       case SourceType.WMTS_P:
         return this.prepareWMTSPanorama(basemap);
       case SourceType.XYZ:
-        return new XYZ({ crossOrigin: 'Anonymous', url: basemap.url || undefined });
+        return new XYZ({
+          crossOrigin: 'Anonymous',
+          url: basemap.url || undefined,
+          projection: basemap.projection || 'EPSG:3857'
+        });
     }
   }
 

@@ -2,6 +2,7 @@
 import { cloneDeep, isEqual } from 'lodash';
 import { register } from 'ol/proj/proj4';
 import { Coordinate } from 'ol/coordinate';
+import { get } from 'ol/proj';
 import proj4 from 'proj4';
 
 import {
@@ -39,6 +40,8 @@ proj4.defs('EPSG:314314', proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 35.5
 proj4.defs('EPSG:7828', proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 32.5, x_0: 4_300_000 }));
 
 proj4.defs('EPSG:7829', proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 35.5, x_0: 5_300_000 }));
+
+proj4.defs('EPSG:3395', '+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs');
 
 register(proj4);
 
@@ -244,3 +247,9 @@ function transformMultiSuperGroup(
     )
   );
 }
+
+// Для подложек Яндекса, основанных на проекции 3395, нужно задать extend
+// https://gis.stackexchange.com/questions/187082/openlayers-3-projection-for-yandex-maps
+get('EPSG:3395').setExtent([
+  -20_037_508.342_789_244, -20_037_508.342_789_244, 20_037_508.342_789_244, 20_037_508.342_789_244
+]);
