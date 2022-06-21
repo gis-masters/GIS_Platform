@@ -130,6 +130,15 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         downloadFile(UUID.fromString(fileId));
     }
 
+    @Then("Оба файла доступны")
+    public void getFileById() {
+        getFile(firstFileId);
+        assertEquals(firstFileId.toString(), jsonPath.get("id"));
+
+        getFile(secondFileId);
+        assertEquals(secondFileId.toString(), jsonPath.get("id"));
+    }
+
     @Then("Квалификатор второго файла корректно ссылается на созданную запись в библиотеке")
     public void checkQualifierForSecondFileForLibrary() {
         getFile(secondFileId);

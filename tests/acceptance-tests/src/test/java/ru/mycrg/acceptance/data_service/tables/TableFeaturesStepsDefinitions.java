@@ -15,6 +15,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.firstFileId;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
@@ -74,6 +75,17 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         properties.put("some_files", fileDescriptions);
 
         createFeature(new GeoJsonModel(properties));
+    }
+
+    @When("Для текущей записи, в поле one_file, добавлен первый файл")
+    public void writeFirstFileToCurrentRecord() {
+        List<FileDescriptionModel> fileDescriptions = new ArrayList<>();
+        fileDescriptions.add(new FileDescriptionModel(firstFileId, 314L, "First file"));
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("one_file", fileDescriptions);
+
+        updateFeature(new GeoJsonModel(properties));
     }
 
     @When("Пользователь удаляет запись слоя")
