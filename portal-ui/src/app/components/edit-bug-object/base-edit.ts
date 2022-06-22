@@ -40,7 +40,9 @@ export class BaseEdit implements OnDestroy {
 
     this.editFeatureData.forEach((property: EditedField) => {
       const formProperty = this.editFeatureForm.controls[property.name];
-      if (formProperty.dirty && formProperty.valid) {
+      const valid = formProperty.errors?.required ? true : formProperty.valid;
+
+      if (formProperty.dirty && valid) {
         result.push(property);
       }
     });
