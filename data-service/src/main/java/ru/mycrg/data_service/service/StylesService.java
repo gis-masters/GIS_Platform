@@ -38,13 +38,14 @@ public class StylesService {
         this.tableService = tableService;
     }
 
-    public List<ActualStylesResponseModel> defineActualStyles(List<ActualStylesRequestModel> request) {
+    public List<ActualStylesResponseModel> defineActualStyles(List<ActualStylesRequestModel> request,
+                                                              String ecqlFilter) {
         return request.stream()
-                      .map(this::defineActualStyle)
+                      .map(requestModel -> defineActualStyle(requestModel, ecqlFilter))
                       .collect(Collectors.toList());
     }
 
-    public ActualStylesResponseModel defineActualStyle(ActualStylesRequestModel requestModel) {
+    public ActualStylesResponseModel defineActualStyle(ActualStylesRequestModel requestModel, String ecqlFilter) {
         ActualStylesResponseModel response = new ActualStylesResponseModel(requestModel);
         String tableName = requestModel.getIdentifier();
         ResourceQualifier tQualifier = new ResourceQualifier(requestModel.getDataset(), tableName);
@@ -63,7 +64,7 @@ public class StylesService {
 
             // Правило без фильтра подразумевает выборку без условий
             if (ruleFilters.contains(null) || ruleFilters.isEmpty()) {
-                String sqlQuery = buildSelectOneQueryWithBbox(tQualifier, bboxFilter);
+                String sqlQuery = buildSelectOneQueryWithBbox(tQualifier, bboxFilter, ecqlFilter);
                 List<IRecord> recordDtos = recordsDao.customListQuery(sqlQuery, schema);
                 if (!recordDtos.isEmpty()) {
                     styleRules.stream()
@@ -72,7 +73,7 @@ public class StylesService {
                               .ifPresent(styleRule -> response.addRule(styleRule.getName()));
                 }
             } else {
-                String sqlQuery = buildSelectQueryWithBbox(tQualifier, ruleFilters, bboxFilter);
+                String sqlQuery = buildSelectQueryWithBbox(tQualifier, ruleFilters, bboxFilter, ecqlFilter);
                 List<IRecord> recordDtos = recordsDao.customListQuery(sqlQuery, schema);
 
                 analyzeComparisonRule(styleRules, recordDtos, response);
@@ -81,7 +82,8 @@ public class StylesService {
                           .filter(styleRule -> styleRule.getFilter() instanceof ElseRuleFilter)
                           .findFirst()
                           .ifPresent(elseRule -> {
-                              String elseQuery = buildSelectNotQueryWithBbox(tQualifier, ruleFilters, bboxFilter);
+                              String elseQuery =
+                                      buildSelectNotQueryWithBbox(tQualifier, ruleFilters, bboxFilter, ecqlFilter);
 
                               boolean isSomeByElseRuleExist = !recordsDao.customListQuery(elseQuery, schema).isEmpty();
                               if (isSomeByElseRuleExist) {

@@ -18,17 +18,17 @@ public class GetActualLegendByStyleRulesTest {
     @Test
     public void shouldCorrectBuildIsEqualToQuery() {
         // ARRANGE
-        final String schemaName = "data";
-        final String tableName = "test_table";
-        final ResourceQualifier tQualifier = new ResourceQualifier(schemaName, tableName);
-        final SpatialRuleFilter bboxFilter = prepareBboxFilter();
-        final String propertyName = "ruleid";
-        final String value = "100";
+        String schemaName = "data";
+        String tableName = "test_table";
+        ResourceQualifier tQualifier = new ResourceQualifier(schemaName, tableName);
+        SpatialRuleFilter bboxFilter = prepareBboxFilter();
+        String propertyName = "ruleid";
+        String value = "100";
 
-        final ComparisonRuleFilter isEqualToFilter = new ComparisonRuleFilter(IS_EQUAL_TO, propertyName, value);
+        ComparisonRuleFilter isEqualToFilter = new ComparisonRuleFilter(IS_EQUAL_TO, propertyName, value);
 
         // ACT
-        final String resultQuery = buildSelectQueryWithBbox(tQualifier, List.of(isEqualToFilter), bboxFilter);
+        String resultQuery = buildSelectQueryWithBbox(tQualifier, List.of(isEqualToFilter), bboxFilter, null);
 
         // ASSERT
         assertEquals(
@@ -43,13 +43,13 @@ public class GetActualLegendByStyleRulesTest {
     @Test
     public void shouldCorrectBuildSelectOneQuery() {
         // ARRANGE
-        final String schemaName = "data";
-        final String tableName = "test_table";
-        final ResourceQualifier tQualifier = new ResourceQualifier(schemaName, tableName);
-        final SpatialRuleFilter bboxFilter = prepareBboxFilter();
+        String schemaName = "data";
+        String tableName = "test_table";
+        ResourceQualifier tQualifier = new ResourceQualifier(schemaName, tableName);
+        SpatialRuleFilter bboxFilter = prepareBboxFilter();
 
         // ACT
-        final String resultQuery = buildSelectOneQueryWithBbox(tQualifier, bboxFilter);
+        String resultQuery = buildSelectOneQueryWithBbox(tQualifier, bboxFilter, null);
 
         // ASSERT
         assertEquals(
@@ -63,24 +63,24 @@ public class GetActualLegendByStyleRulesTest {
 
     @NotNull
     private SpatialRuleFilter prepareBboxFilter() {
-        final List<Object> polygons = new ArrayList<>();
+        List<Object> polygons = new ArrayList<>();
         polygons.add(Arrays.asList("3704818.216281399", "5609337.871252162"));
         polygons.add(Arrays.asList("4125688.283718601", "5609337.871252162"));
         polygons.add(Arrays.asList("4125688.283718601", "5708125.428747838"));
         polygons.add(Arrays.asList("3704818.216281399", "5708125.428747838"));
         polygons.add(Arrays.asList("3704818.216281399", "5609337.871252162"));
 
-        final List<List<Object>> rings = new ArrayList<>();
+        List<List<Object>> rings = new ArrayList<>();
         rings.add(polygons);
 
-        final List<List<List<Object>>> multiPolygons = new ArrayList<>();
+        List<List<List<Object>>> multiPolygons = new ArrayList<>();
         multiPolygons.add(rings);
 
-        final SpatialLiteral literal = new SpatialLiteral();
+        SpatialLiteral literal = new SpatialLiteral();
         literal.setType(SpatialLiteralType.MULTIPOLYGON);
         literal.setCoordinates(multiPolygons);
 
-        final SpatialRuleFilter bboxFilter = new SpatialRuleFilter();
+        SpatialRuleFilter bboxFilter = new SpatialRuleFilter();
         bboxFilter.setOperator(SpacialRuleOperator.INTERSECTS);
         bboxFilter.setPropertyName("shape");
         bboxFilter.setLiteral(literal);
