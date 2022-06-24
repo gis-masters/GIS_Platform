@@ -49,7 +49,7 @@ public class TableRecordsController {
                                         .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
 
         feature.setSrs(table.getCrs());
-        schemaService.throwIfNotMathSchema(schema, feature.getProperties());
+        schemaService.throwIfNotMatchSchema(schema, feature.getProperties());
 
         Feature newFeature = mediator.execute(
                 new CreateTableRecordRequest(schema,
@@ -69,7 +69,7 @@ public class TableRecordsController {
         IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
         SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
                                         .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
-        schemaService.throwIfNotMathSchema(schema, feature.getProperties());
+        schemaService.throwIfNotMatchSchema(schema, feature.getProperties());
 
         feature.setSrs(table.getCrs());
         mediator.execute(

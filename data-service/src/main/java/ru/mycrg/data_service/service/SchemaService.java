@@ -61,16 +61,16 @@ public class SchemaService {
                                .isPresent();
     }
 
-    public void throwIfNotMathSchema(String schemaName, Map<String, Object> body) {
+    public void throwIfNotMatchSchema(String schemaName, Map<String, Object> body) {
         getSchemaByName(schemaName)
                 .ifPresentOrElse(
-                        schema -> throwIfNotMathSchema(schema, body),
+                        schema -> throwIfNotMatchSchema(schema, body),
                         () -> {
                             throw new BadRequestException("Не найдена схема: " + schemaName);
                         });
     }
 
-    public void throwIfNotMathSchema(SchemaDto schema, Map<String, Object> body) {
+    public void throwIfNotMatchSchema(SchemaDto schema, Map<String, Object> body) {
         body.keySet().forEach(key -> {
             if (!isPropertyExist(schema, key)) {
                 throw new BadRequestException("Свойства не соответствуют схеме",

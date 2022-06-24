@@ -78,6 +78,10 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
 
         assertThat(sorted, not(sorted.isEmpty()));
 
+        checkSorting(sortingDirection, sorted);
+    }
+
+    public static void checkSorting(String sortingDirection, List<Object> sorted) {
         for (int i = 1; i < sorted.size(); i++) {
             if (sorted.get(i) instanceof String) {
                 String next = String.valueOf(sorted.get(i));

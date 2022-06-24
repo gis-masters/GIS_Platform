@@ -214,6 +214,7 @@ public class RecordsDao {
                 "     )" +
                 " " + ecqlFiltersSection +
                 "   )" +
+                "  " + buildOrderBySection(pageable.getSort()) +
                 " LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset();
 
         log.debug("Request find allowed records: [{}]", query);

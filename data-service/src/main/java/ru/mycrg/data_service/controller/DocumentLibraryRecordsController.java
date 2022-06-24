@@ -115,7 +115,7 @@ public class DocumentLibraryRecordsController {
                                                             @RequestParam(value = "body") String jsonBody) {
         Map<String, Object> body = deserializeBody(jsonBody);
         SchemaDto schema = libraryService.getSchema(docLibId);
-        schemaService.throwIfNotMathSchema(schema, body);
+        schemaService.throwIfNotMatchSchema(schema, body);
 
         IRecord record = mediator.execute(
                 new CreateLibraryRecordRequest(schema,
@@ -132,7 +132,7 @@ public class DocumentLibraryRecordsController {
                                                @PathVariable Long recId,
                                                @RequestBody Map<String, Object> payload) {
         SchemaDto schema = libraryService.getSchema(docLibId);
-        schemaService.throwIfNotMathSchema(schema, payload);
+        schemaService.throwIfNotMatchSchema(schema, payload);
 
         ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
         mediator.execute(
@@ -163,7 +163,7 @@ public class DocumentLibraryRecordsController {
         pageable.getSort().forEach(order -> body.put(order.getProperty(), ""));
 
         String schemaId = libraryService.getInfo(docLibId).getSchemaId();
-        schemaService.throwIfNotMathSchema(schemaId, body);
+        schemaService.throwIfNotMatchSchema(schemaId, body);
     }
 
     private Map<String, Object> deserializeBody(@Nullable String jsonString) {

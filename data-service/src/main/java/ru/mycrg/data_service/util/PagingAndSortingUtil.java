@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.IS_FOLDER;
 
 public class PagingAndSortingUtil {
 
@@ -25,15 +25,9 @@ public class PagingAndSortingUtil {
     public static Pageable fetchFoldersFirst(Pageable pageable) {
         try {
             List<Sort.Order> orders = new ArrayList<>();
-            orders.add(Sort.Order.desc(CONTENT_TYPE_ID.name()));
+            orders.add(Sort.Order.desc(IS_FOLDER.name()));
 
-            pageable.getSort().forEach(order -> {
-                if (order.isAscending()) {
-                    orders.add(Sort.Order.asc(order.getProperty()));
-                } else {
-                    orders.add(Sort.Order.desc(order.getProperty()));
-                }
-            });
+            pageable.getSort().forEach(orders::add);
 
             final Sort modifiedSort = Sort.by(orders);
 

@@ -8,15 +8,20 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.DefaultRecordModel;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
+import ru.mycrg.acceptance.data_service.dto.RecordDto;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
+import static java.util.stream.IntStream.range;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static ru.mycrg.acceptance.CommonStepDefinitions.checkSorting;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFileId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
@@ -262,6 +267,112 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         currentRecordId = extractEntityIdFromResponse(response);
     }
 
+    @When("Существуют записи в библиотеке по-умолчанию {string}")
+    public void createMultipleRecords(String quantity) {
+        range(0, Integer.parseInt(quantity)).forEach(i -> initRecordInDefaultLibrary());
+    }
+
+    @When("Администратор делает запрос с сортировкой по {string} и {string} по всем записям библиотеки по-умолчанию")
+    public void getAllRecordsSortedByAdmin(String sortingFactor, String sortingDirection) {
+        getAllRecordsSorted(sortingFactor, sortingDirection);
+    }
+
+    @When("Администратор делает запрос в реестре с сортировкой по {string} и {string} по всем записям библиотеки по-умолчанию")
+    public void getAllRecordsSortedInRegister(String sortingFactor, String sortingDirection) {
+        String filter = "((is_folder+IN('false')+OR+is_folder+IS+null))";
+
+        getAllRecordsInRegisterSortedWithFilter(sortingFactor, sortingDirection, filter);
+    }
+
+    @When("Пользователь делает запрос с сортировкой по {string} и {string} по всем записям библиотеки по-умолчанию")
+    public void getAllRecordsSortedByCurrentUser(String sortingFactor, String sortingDirection) {
+        authorizationBase.loginAsCurrentUser();
+
+        getAllRecordsSorted(sortingFactor, sortingDirection);
+    }
+
+    @When("Пользователь делает запрос в реестре с сортировкой по {string} и {string} по всем записям библиотеки по-умолчанию")
+    public void getAllRecordsInRegisterSortedByCurrentUser(String sortingFactor, String sortingDirection) {
+        String filter = "((is_folder+IN('false')+OR+is_folder+IS+null))";
+
+        authorizationBase.loginAsCurrentUser();
+
+        getAllRecordsInRegisterSortedWithFilter(sortingFactor, sortingDirection, filter);
+    }
+
+    @When("В библиотеке документов по-умолчанию существует {string} папки")
+    public void getAllRecordsInRegisterSortedByCurrentUser(String quantityOfFolders) {
+        String folderContentType = "folder_v1";
+        String folderName = "test folder ";
+        range(0, Integer.parseInt(quantityOfFolders))
+                .forEach(i -> createRecordWithCheck(DEFAULT_LIBRARY,
+                                                    new RecordDto(folderName + i, null, folderContentType)));
+    }
+
+    @And("Папки находятся в начале списка")
+    public void checkFoldersFetchedFirst() {
+        String folderContentType = "folder_v1";
+
+        jsonPath = response.jsonPath();
+        List<String> sortedContentTypes = jsonPath.getList("_embedded.records.content.content_type_id");
+
+        if (sortedContentTypes.contains(folderContentType)) {
+            for (int i = 0; i < sortedContentTypes.size(); ) {
+                String contentTypeCurrent = sortedContentTypes.get(0);
+                if (nonNull(contentTypeCurrent)) {
+                    if (folderContentType.equals(contentTypeCurrent)) {
+                        sortedContentTypes.remove(0);
+                    } else {
+                        assertFalse(sortedContentTypes.contains(folderContentType));
+                        break;
+                    }
+                } else {
+                    assertFalse(sortedContentTypes.contains(folderContentType));
+                    break;
+                }
+            }
+        }
+    }
+
+    @And("Папки и записи отсортированы по {string} и {string} в {string}")
+    public void isFoldersAndRecordsSorted(String sortingType, String sortingDirection, String entity) {
+        String contentTypeIdKey = "content_type_id";
+        String folderContentType = "folder_v1";
+
+        jsonPath = response.jsonPath();
+        List<HashMap<String, Object>> records;
+        List<HashMap<String, Object>> folders = new ArrayList<>();
+
+        records = jsonPath.getList(String.format("_embedded.%s", entity));
+
+        records.stream()
+               .filter(record -> record.containsKey(contentTypeIdKey))
+               .forEach(record -> {
+                   Object value = record.get(contentTypeIdKey);
+                   if (nonNull(value) && value.equals(folderContentType)) {
+                       folders.add(record);
+                   }
+               });
+
+        records.removeAll(folders);
+
+        List<Object> foldersSorted = folders.stream()
+                                            .filter(folder -> folder.containsKey(sortingType))
+                                            .filter(folder -> nonNull(folder.get(sortingType)))
+                                            .map(folder -> folder.get(sortingType))
+                                            .collect(Collectors.toList());
+
+        checkSorting(sortingDirection, foldersSorted);
+
+        List<Object> recordsSorted = records.stream()
+                                            .filter(folder -> folder.containsKey(sortingType))
+                                            .filter(folder -> nonNull(folder.get(sortingType)))
+                                            .map(folder -> folder.get(sortingType))
+                                            .collect(Collectors.toList());
+
+        checkSorting(sortingDirection, recordsSorted);
+    }
+
     private void makeExactDocumentAsCurrent(String fName) {
         filesPool.entrySet().stream()
                  .filter(entry -> entry.getKey().equals(fName))
@@ -328,5 +439,28 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                 "    \"native_crs\": \"EPSG:28406\"," +
                 "    \"content_type_id\": \"doc_v4\"" +
                 "}";
+    }
+
+    private void getAllRecordsSorted(String sortingFiled, String sortingDirection) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(String.format("/%s/records?sort=%s,%s&%s",
+                                          DEFAULT_LIBRARY,
+                                          sortingFiled,
+                                          sortingDirection,
+                                          "size=1000"));
+    }
+
+    private void getAllRecordsInRegisterSortedWithFilter(String sortingFiled,
+                                                         String sortingDirection,
+                                                         String filter) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(String.format("/%s/records/as_registry?sort=%s,%s&filer=%s&%s",
+                                          DEFAULT_LIBRARY,
+                                          sortingFiled,
+                                          sortingDirection,
+                                          filter,
+                                          "size=1000"));
     }
 }
