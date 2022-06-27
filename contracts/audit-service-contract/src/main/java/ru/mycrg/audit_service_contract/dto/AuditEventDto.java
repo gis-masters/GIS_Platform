@@ -28,6 +28,8 @@ public class AuditEventDto {
 
     private JsonNode entityStateAfter;
 
+    private JsonNode entityIds;
+
     public AuditEventDto() {
         // Framework required
     }
@@ -42,13 +44,15 @@ public class AuditEventDto {
                          String entityName,
                          String entityType,
                          Long entityId,
-                         JsonNode entityStateAfter) {
+                         JsonNode entityStateAfter,
+                         JsonNode entityIds) {
         this(eventDateTime, actionType);
 
         this.entityName = entityName;
         this.entityType = entityType;
         this.entityId = entityId;
         this.entityStateAfter = entityStateAfter;
+        this.entityIds = entityIds;
     }
 
     public LocalDateTime getEventDateTime() {
@@ -97,6 +101,14 @@ public class AuditEventDto {
 
     public void setEntityStateAfter(JsonNode entityStateAfter) {
         this.entityStateAfter = entityStateAfter;
+    }
+
+    public JsonNode getEntityIds() {
+        return entityIds;
+    }
+
+    public void setEntityIds(JsonNode entityIds) {
+        this.entityIds = entityIds;
     }
 
     @Override

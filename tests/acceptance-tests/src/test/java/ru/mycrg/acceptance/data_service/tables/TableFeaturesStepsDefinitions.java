@@ -12,17 +12,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import static java.lang.String.join;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.firstFileId;
-import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     public static Integer currentFeatureId;
+    public static List<Integer> featureIds = new ArrayList<>();
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
@@ -60,6 +64,16 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         createFeature(new GeoJsonModel(properties));
     }
 
+    @When("В текущей таблице существует {string} записи")
+    public void createSomeFeaturesInCurrentTable(String quantity) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("title", "some feature");
+        for (int i = 0; i < Integer.parseInt(quantity); i++) {
+            createFeature(new GeoJsonModel(properties));
+            featureIds.add(currentFeatureId);
+        }
+    }
+
     @When("Пользователь создает новую запись в таблице")
     public void createNewFeatureInCurrentTable() {
         createSomeFeatureInCurrentTable();
@@ -91,6 +105,13 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     @When("Пользователь удаляет запись слоя")
     public void deleteCurrentRecord() {
         deleteFeature(currentFeatureId);
+    }
+
+    @When("Пользователь делает запрос на массовое удаление записей слоя")
+    public void deleteMultipleRecords() {
+        if (!featureIds.isEmpty()) {
+            deleteFeatures(featureIds);
+        }
     }
 
     @When("Пользователь обновляет запись слоя - удаляет файл")
@@ -132,6 +153,17 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertNotNull(jsonPath.get("id"));
     }
 
+    @And("Записи отсутствуют в БД")
+    public void recordsDoesntExistInDB() {
+        featureIds.forEach(featureId -> {
+            getBaseRequestWithCurrentCookie()
+                    .when().
+                            delete("/" + featureId)
+                    .then().
+                            statusCode(SC_NOT_FOUND);
+        });
+    }
+
     private void createFeature(GeoJsonModel geoJsonModel) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -166,5 +198,17 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         delete(String.format("/%s", id));
+    }
+
+    public void deleteFeatures(List<Integer> ids) {
+        String path = String.format("/api/data/datasets/%s/tables/%s/records",
+                                    currentDatasetIdentifier, currentTableName);
+
+        Iterable<String> iterable = ids.stream().map(Object::toString).collect(Collectors.toList());
+
+        response = getBaseRequestWithCurrentCookie()
+                .basePath(path)
+                .when().
+                        delete(String.format("/%s", join(",", iterable)));
     }
 }

@@ -8,6 +8,7 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.CreateTableRecordRequest;
+import ru.mycrg.data_service.service.cqrs.table_records.requests.DeleteMultipleTableRecordsRequest;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.DeleteTableRecordRequest;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.UpdateTableRecordRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -15,6 +16,8 @@ import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.Mediator;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
@@ -81,21 +84,25 @@ public class TableRecordsController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @DeleteMapping(path = "/datasets/{datasetId}/tables/{tableId}/records/{recordId}")
-    public ResponseEntity<Object> deleteTableRecord(@PathVariable String datasetId,
-                                                    @PathVariable String tableId,
-                                                    @PathVariable Long recordId) {
+    @DeleteMapping(path = "/datasets/{datasetId}/tables/{tableId}/records/{recordIds}")
+    public ResponseEntity<Object> deleteSeveralTableRecords(@PathVariable String datasetId,
+                                                            @PathVariable String tableId,
+                                                            @PathVariable List<Long> recordIds) {
         ResourceQualifier tableQualifier = new ResourceQualifier(datasetId, tableId);
-        ResourceQualifier recordQualifier = new ResourceQualifier(datasetId, tableId, recordId, FEATURE);
 
-        IResourceModel table = tableService.getInfo(tableQualifier);
-        SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
-                                        .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
-        Feature feature = spatialRecordsDao.findById(recordQualifier, schema)
-                                           .orElseThrow(() -> new NotFoundException(recordId));
+        if (recordIds.size() == 1) {
+            ResourceQualifier recordQualifier = new ResourceQualifier(datasetId, tableId, recordIds.get(0), FEATURE);
 
-        mediator.execute(
-                new DeleteTableRecordRequest(recordQualifier, feature, schema));
+            IResourceModel table = tableService.getInfo(tableQualifier);
+            SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
+                                            .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
+            Feature feature = spatialRecordsDao.findById(recordQualifier, schema)
+                                               .orElseThrow(() -> new NotFoundException(recordIds.get(0)));
+
+            mediator.execute(new DeleteTableRecordRequest(recordQualifier, feature, schema));
+        } else {
+            mediator.execute(new DeleteMultipleTableRecordsRequest(tableQualifier, recordIds));
+        }
 
         return ResponseEntity.noContent().build();
     }

@@ -2,6 +2,8 @@ package ru.mycrg.acceptance.audit_service.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.util.List;
+
 public class AuditEventDto {
 
     private Long id;
@@ -11,6 +13,7 @@ public class AuditEventDto {
     private String entityName;
     private String entityType;
     private Long entityId;
+    private List<Long> entityIds;
     private Long organizationId;
     private JsonNode entityStateAfter;
     private Object _links;
@@ -116,6 +119,14 @@ public class AuditEventDto {
 
     public void set_links(Object _links) {
         this._links = _links;
+    }
+
+    public List<Long> getEntityIds() {
+        return entityIds;
+    }
+
+    public void setEntityIds(List<Long> entityIds) {
+        this.entityIds = entityIds;
     }
 
     @Override

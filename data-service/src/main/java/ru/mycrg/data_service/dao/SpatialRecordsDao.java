@@ -17,7 +17,10 @@ import ru.mycrg.geo_json.Feature;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static java.lang.String.format;
+import static java.lang.String.join;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.generateInsertQuery;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.generateUpdateQuery;
@@ -49,12 +52,12 @@ public class SpatialRecordsDao {
 
             return feature;
         } catch (DataAccessException e) {
-            String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'", rIdentifier);
+            String msg = format("Не удалось выполнить вставку в таблицу: '%s'", rIdentifier);
             logError(msg, e);
 
             throw new CrgDaoException(msg);
         } catch (Exception e) {
-            String msg = String.format("Что то пошло не так при вставке в таблицу: '%s'", rIdentifier);
+            String msg = format("Что то пошло не так при вставке в таблицу: '%s'", rIdentifier);
             logError(msg, e);
 
             throw new CrgDaoException(msg);
@@ -63,8 +66,8 @@ public class SpatialRecordsDao {
 
     public Optional<Feature> findById(ResourceQualifier qualifier, SchemaDto schema) {
         try {
-            String query = String.format("SELECT * FROM %s WHERE %s = %d",
-                                         qualifier.getTableQualifier(), PRIMARY_KEY, qualifier.getRecord());
+            String query = format("SELECT * FROM %s WHERE %s = %d",
+                                  qualifier.getTableQualifier(), PRIMARY_KEY, qualifier.getRecord());
 
             log.debug("find feature by id: [{}]", query);
 
@@ -91,13 +94,13 @@ public class SpatialRecordsDao {
 
             pJdbcTemplate.getJdbcTemplate().update(query);
         } catch (DataAccessException e) {
-            String msg = String.format("Не удалось выполнить обновление фичи: '%s'. %s",
-                                       qualifier.getQualifier(), e.getCause().getMessage());
+            String msg = format("Не удалось выполнить обновление фичи: '%s'. %s",
+                                qualifier.getQualifier(), e.getCause().getMessage());
 
             throw new CrgDaoException(msg);
         } catch (Exception e) {
-            String msg = String.format("Что то пошло не так при обновлении фичи: '%s'. %s",
-                                       qualifier.getQualifier(), e.getCause().getMessage());
+            String msg = format("Что то пошло не так при обновлении фичи: '%s'. %s",
+                                qualifier.getQualifier(), e.getCause().getMessage());
 
             throw new CrgDaoException(msg);
         }
@@ -105,7 +108,7 @@ public class SpatialRecordsDao {
 
     public boolean isExist(ResourceQualifier qualifier) {
         try {
-            String query = String.format("SELECT * FROM %s WHERE %s = :id", qualifier.getTableQualifier(), PRIMARY_KEY);
+            String query = format("SELECT * FROM %s WHERE %s = :id", qualifier.getTableQualifier(), PRIMARY_KEY);
 
             log.debug("Query is feature exist by id: [{}]", query);
 
@@ -121,17 +124,18 @@ public class SpatialRecordsDao {
         }
     }
 
-    public void removeRecord(ResourceQualifier rQualifier, Long id) throws CrgDaoException {
+    public void removeMultipleRecords(ResourceQualifier rQualifier, List<Long> ids) throws CrgDaoException {
         try {
-            String query = String.format("DELETE FROM %s WHERE %s = %d",
-                                         rQualifier.getTableQualifier(), PRIMARY_KEY, id);
+            Iterable<String> iterable = ids.stream().map(Object::toString).collect(Collectors.toList());
 
-            log.debug("Request to delete feature: [{}]", query);
+            String query = format("DELETE FROM %s WHERE %s in (%s)",
+                                  rQualifier.getTableQualifier(), PRIMARY_KEY, join(",", iterable));
+            log.debug("Request to delete several features: [{}]", query);
 
-            pJdbcTemplate.update(query, new MapSqlParameterSource("id", id));
+            pJdbcTemplate.update(query, new MapSqlParameterSource("id", ids));
         } catch (Exception e) {
-            String msg = String.format("Не удалось выполнить удаление фичи: '%s' из: '%s'",
-                                       id, rQualifier.getTableQualifier());
+            String msg = format("Не удалось выполнить удаление фичей: '%s' из: '%s'",
+                                ids, rQualifier.getTableQualifier());
 
             throw new CrgDaoException(msg, e.getCause());
         }

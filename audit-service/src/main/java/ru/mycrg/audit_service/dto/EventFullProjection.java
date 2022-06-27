@@ -27,4 +27,6 @@ public interface EventFullProjection {
     Long getEntityId();
 
     JsonNode getEntityStateAfter();
+
+    JsonNode getEntityIds();
 }

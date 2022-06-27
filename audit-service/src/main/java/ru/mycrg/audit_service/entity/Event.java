@@ -46,6 +46,10 @@ public class Event {
     @Type(type = "jsonb-node")
     private JsonNode entityStateAfter;
 
+    @Column(name = "entity_ids")
+    @Type(type = "jsonb-node")
+    private JsonNode entityIds;
+
     public Event() {
         // Framework required
     }
@@ -61,9 +65,10 @@ public class Event {
         this(auditEventDto.getEventDateTime(), organizationId, userName, auditEventDto.getActionType());
 
         this.entityName = auditEventDto.getEntityName();
-        this.entityType =auditEventDto.getEntityType();
+        this.entityType = auditEventDto.getEntityType();
         this.entityId = auditEventDto.getEntityId();
         this.entityStateAfter = auditEventDto.getEntityStateAfter();
+        this.entityIds = auditEventDto.getEntityIds();
     }
 
     public LocalDateTime getEventDateTime() {
@@ -136,5 +141,13 @@ public class Event {
 
     public void setEntityStateAfter(JsonNode entityStateAfter) {
         this.entityStateAfter = entityStateAfter;
+    }
+
+    public JsonNode getEntityIds() {
+        return entityIds;
+    }
+
+    public void setEntityIds(JsonNode entityIds) {
+        this.entityIds = entityIds;
     }
 }

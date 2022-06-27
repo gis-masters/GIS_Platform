@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.controller;
 
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +16,9 @@ import ru.mycrg.data_service_contract.dto.ImportRecordReport;
 import javax.validation.Valid;
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.springframework.http.HttpStatus.*;
+import static org.springframework.util.StringUtils.getFilenameExtension;
+import static org.springframework.util.StringUtils.isEmpty;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 
@@ -55,7 +55,7 @@ public class ImportController extends BaseController {
                                        .orElseThrow(() -> new BadRequestException("this importer is not exist"));
 
         String filename = file.getOriginalFilename();
-        String fileExtension = FilenameUtils.getExtension(filename);
+        String fileExtension = getFilenameExtension(filename);
 
         if (file.isEmpty()) {
             String msg = "Загружаемый файл пустой";
@@ -86,7 +86,7 @@ public class ImportController extends BaseController {
                                           .orElseThrow(() -> new BadRequestException("this importer is not exist"));
 
         String filename = file.getOriginalFilename();
-        String fileExtension = FilenameUtils.getExtension(filename);
+        String fileExtension = getFilenameExtension(filename);
 
         if (isEmpty(fileExtension) || !"xlsx".equalsIgnoreCase(fileExtension)) {
             String msg = "Тип файла не Excel";

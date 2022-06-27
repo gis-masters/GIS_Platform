@@ -54,7 +54,8 @@ public class AuditEventHandler implements IEventHandler {
                                                             event.getEntityName(),
                                                             entityType,
                                                             event.getEntityId(),
-                                                            event.getEntityStateAfter());
+                                                            event.getEntityStateAfter(),
+                                                            event.getEntityIds());
 
             Request req = new Request.Builder()
                     .addHeader("Authorization", "Bearer " + event.getToken())
