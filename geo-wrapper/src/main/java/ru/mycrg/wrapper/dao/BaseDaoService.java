@@ -9,18 +9,21 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
 import ru.mycrg.data_service_contract.dto.import_.MatchingPair;
 import ru.mycrg.data_service_contract.dto.import_.TargetAttribute;
-import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import static java.lang.String.format;
+import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
-import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
 
 @Service
 public class BaseDaoService {
@@ -44,11 +47,11 @@ public class BaseDaoService {
         String table = resource.getTableName();
         String extensionTableName = table + EXTENSION_POSTFIX;
 
-        String rowsNeedingValidation = String.format("select target.*, target.xmin, ext.* from %s.%s as target " +
-                "LEFT JOIN %s.%s AS ext ON target.objectid = ext.object_id " +
-                "WHERE target.XMIN != ext._xmin OR ext.object_id isnull " +
-                "ORDER BY target.objectid " +
-                "LIMIT ?", schema, table, schema, extensionTableName);
+        String rowsNeedingValidation = format("select target.*, target.xmin, ext.* from %s.%s as target " +
+                                                      "LEFT JOIN %s.%s AS ext ON target.objectid = ext.object_id " +
+                                                      "WHERE target.XMIN != ext._xmin OR ext.object_id isnull " +
+                                                      "ORDER BY target.objectid " +
+                                                      "LIMIT ?", schema, table, schema, extensionTableName);
 
         log.debug("Sql (rowsNeedingValidation): {}, {}", rowsNeedingValidation, limit);
 
@@ -64,11 +67,13 @@ public class BaseDaoService {
 
         log.debug("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations.size());
 
-        String upsert = String.format("INSERT INTO %s.%s(object_id, violations, _xmin, valid, class_id) " +
-                "VALUES (?, to_json(?::json), ?, ?, ?) " +
-                "ON CONFLICT(object_id) DO UPDATE " +
-                "SET violations = EXCLUDED.violations, _xmin = EXCLUDED._xmin, " +
-                "valid = EXCLUDED.valid, class_id = EXCLUDED.class_id", schema, extensionTableName);
+        String upsert = format("INSERT INTO %s.%s(object_id, violations, _xmin, valid, class_id) " +
+                                       "VALUES (?, to_json(?::json), ?, ?, ?) " +
+                                       "ON CONFLICT(object_id) DO UPDATE " +
+                                       "SET violations = EXCLUDED.violations, _xmin = EXCLUDED._xmin, " +
+                                       "valid = EXCLUDED.valid, class_id = EXCLUDED.class_id",
+                               schema,
+                               extensionTableName);
 
         jdbcTemplate
                 .batchUpdate(upsert, violations, violations.size(),
@@ -84,7 +89,7 @@ public class BaseDaoService {
     public Long countTotalRows(ResourceProjection resource) {
         try {
             String schemaName = resource.getSchemaName();
-            String sqlRequest = String.format("SELECT count(*) FROM %s.%s", schemaName, resource.getTableName());
+            String sqlRequest = format("SELECT count(*) FROM %s.%s", schemaName, resource.getTableName());
 
             return datasourceFactory.getJdbcTemplate(resource.getDbName()).queryForObject(sqlRequest, Long.class);
         } catch (Exception e) {
@@ -103,7 +108,7 @@ public class BaseDaoService {
     public void copy(JdbcTemplate jdbcTemplate, ImportMqTask request) {
         String insertTo = "INSERT INTO " + request.getTargetResource().getSchemaName() + "." +
                 request.getTargetResource().getTableName();
-        String data = handleInsertMappingColumns(request.getPairs());
+        String data = handleInsertMappingColumns(request);
         String from = " FROM " + request.getSourceResource().getSchemaName() + "." +
                 '\"' + request.getSourceResource().getTableName() + '\"';
 
@@ -125,7 +130,7 @@ public class BaseDaoService {
     public void delete(JdbcTemplate jdbcTemplate, String schema, String table) {
         log.debug("Try delete: {}:{}", schema, table);
 
-        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.\"%s\"", schema, table));
+        jdbcTemplate.execute(format("DROP TABLE IF EXISTS %s.\"%s\"", schema, table));
     }
 
     /**
@@ -139,9 +144,9 @@ public class BaseDaoService {
     @Transactional
     public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate, ResourceProjection source, String orderField,
                                                 int limit, int offset) {
-        String sqlRequest = String.format("SELECT ST_AsBinary(shape) as " +
-                        "crg_b_geometry, * FROM %s.%s ORDER BY %s LIMIT ? OFFSET ?",
-                source.getSchemaName(), source.getTableName(), orderField);
+        String sqlRequest = format("SELECT ST_AsBinary(shape) as " +
+                                           "crg_b_geometry, * FROM %s.%s ORDER BY %s LIMIT ? OFFSET ?",
+                                   source.getSchemaName(), source.getTableName(), orderField);
 
         log.trace("Fetch sql: {}", sqlRequest);
 
@@ -163,7 +168,13 @@ public class BaseDaoService {
         });
     }
 
-    private String handleInsertMappingColumns(List<MatchingPair> mapping) {
+    private String handleInsertMappingColumns(ImportMqTask request) {
+        List<MatchingPair> mapping = request.getPairs();
+
+        List<String> propsWithFileType = request.getFeatureDescription().getProperties().stream()
+                                                .filter(property -> FILE.equals(property.getValueType()))
+                                                .map(SimplePropertyDto::getName)
+                                                .collect(Collectors.toList());
         String pre = " (";
         String post = ") ";
 
@@ -187,7 +198,9 @@ public class BaseDaoService {
             if ("the_geom".equals(tName)) {
                 targetColumns.append("shape, ");
             } else {
-                targetColumns.append(tName).append(", ");
+                if (!propsWithFileType.contains(tName)) {
+                    targetColumns.append(tName).append(", ");
+                }
             }
 
             if ("length".equalsIgnoreCase(sName)) {
@@ -195,7 +208,9 @@ public class BaseDaoService {
             } else if ("area".equalsIgnoreCase(sName)) {
                 sourceColumns.append("st_area(the_geom), ");
             } else {
-                sourceColumns.append("\"").append(sName).append("\", ");
+                if (!propsWithFileType.contains(sName)) {
+                    sourceColumns.append("\"").append(sName).append("\", ");
+                }
             }
         }
 
@@ -213,13 +228,13 @@ public class BaseDaoService {
     private Integer stringToInt(String param) {
         try {
             return Integer.parseInt(param);
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return -1;
         }
     }
 
     private String prepareUpdateRequest(ResourceProjection target, Map<String, Object> item) {
-        final String[] sql = {String.format("UPDATE %s.%s SET ", target.getSchemaName(), target.getTableName())};
+        final String[] sql = {format("UPDATE %s.%s SET ", target.getSchemaName(), target.getTableName())};
 
         item.forEach((key, value) -> {
             if (!PRIMARY_KEY.equals(key)) {
