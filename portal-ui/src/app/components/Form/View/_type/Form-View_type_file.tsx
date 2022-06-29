@@ -14,7 +14,7 @@ import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 @observer
 class FormViewTypeFile extends Component<FormControlProps> {
   render() {
-    const { className, inSet, property, errors, fieldValue } = this.props;
+    const { className, inSet, property, errors, fieldValue, fullWidthForOldForm } = this.props;
     let value = (fieldValue || []) as FileInfo[];
 
     try {
@@ -26,7 +26,7 @@ class FormViewTypeFile extends Component<FormControlProps> {
     }
 
     return (
-      <div className={cnFormView({ inSet }, [className])}>
+      <div className={cnFormView({ inSet, fullWidthForOldForm }, [className])}>
         {!value.length ? (
           <FormViewValue>—</FormViewValue>
         ) : (

@@ -41,6 +41,7 @@ const FormViewWithRegistry = withRegistry(registry)(FormView);
 })
 export class FormControlComponent implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
   @Input() property?: OldPropertySchema;
+  @Input() updatingAllowed?: boolean;
   @Output() inputModelChange = new EventEmitter<string>();
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 
@@ -69,9 +70,10 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
     if (typeof this.value === 'string' && convertedProperty.propertyType === PropertyType.FILE) {
       value = JSON.parse(this.value);
     }
+    const updatingAllowed = this.updatingAllowed && !convertedProperty.readOnly;
 
     const reactElement = createElement(
-      (convertedProperty.readOnly ? FormViewWithRegistry : FormControlWithRegistry) as ComponentType<FormControlProps>,
+      (updatingAllowed ? FormControlWithRegistry : FormViewWithRegistry) as ComponentType<FormControlProps>,
       {
         property: convertedProperty,
         type: convertedProperty.propertyType,
