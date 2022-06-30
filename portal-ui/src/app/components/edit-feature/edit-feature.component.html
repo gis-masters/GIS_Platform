@@ -111,6 +111,10 @@
             <span *ngIf="editFeatureItem.isFgistpProperty">
               {{ editFeatureItem.property?.title }}
             </span>
+            <crg-form-description
+              *ngIf="editFeatureItem.property?.description"
+              [property]="editFeatureItem.property"
+            ></crg-form-description>
           </div>
 
           <div class="col-6 px-0 new-form-fields">
@@ -161,6 +165,10 @@
             <span *ngIf="editFeatureItem.isFgistpProperty">
               {{ editFeatureItem.property?.title }}
             </span>
+            <crg-form-description
+              *ngIf="editFeatureItem.property?.description"
+              [property]="editFeatureItem.property"
+            ></crg-form-description>
           </div>
           <div class="col-6 px-0">
             <div class="input-group" *ngIf="updatingAllowed">
@@ -212,6 +220,10 @@
             <span *ngIf="editFeatureItem.isFgistpProperty">
               {{ editFeatureItem.property?.title }}
             </span>
+            <crg-form-description
+              *ngIf="editFeatureItem.property?.description"
+              [property]="editFeatureItem.property"
+            ></crg-form-description>
           </div>
           <div class="col-6 px-0">
             <div class="input-group" *ngIf="updatingAllowed">
@@ -246,6 +258,10 @@
               >{{ editFeatureItem.property?.title }}</span
             >
             <span *ngIf="editFeatureItem.isFgistpProperty">{{ editFeatureItem.property?.title }}</span>
+            <crg-form-description
+              *ngIf="editFeatureItem.property?.description"
+              [property]="editFeatureItem.property"
+            ></crg-form-description>
           </div>
           <div class="col-6 px-0">
             <div class="input-group" *ngIf="updatingAllowed">
@@ -282,6 +298,10 @@
               >{{ editFeatureItem.property?.title }}</span
             >
             <span *ngIf="editFeatureItem.isFgistpProperty">{{ editFeatureItem.property?.title }}</span>
+            <crg-form-description
+              *ngIf="editFeatureItem.property?.description"
+              [property]="editFeatureItem.property"
+            ></crg-form-description>
           </div>
           <div class="col-6 px-0">
             <div class="input-group" *ngIf="updatingAllowed">
@@ -310,7 +330,13 @@
         </div>
 
         <div *ngIf="editFeatureItem.property?.valueType?.includes('CHOICE')" class="row fiz-edit-item">
-          <div class="col-6 px-0 edit-item-title">{{ editFeatureItem.property?.title }}</div>
+          <div class="col-6 px-0 edit-item-title">
+            {{ editFeatureItem.property?.title }}
+            <crg-form-description
+              *ngIf="editFeatureItem.property?.description"
+              [property]="editFeatureItem.property"
+            ></crg-form-description>
+          </div>
           <div class="col-6 px-0">
             <div class="input-group" *ngIf="updatingAllowed">
               <select class="custom-select" formControlName="{{ editFeatureItem.name }}">

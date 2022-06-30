@@ -81,6 +81,7 @@ import { LibraryDocumentPageContainerComponent } from './components/library-docu
 import { ServicesCalculatorComponent } from './components/services-calculator/services-calculator.component';
 import { FeatureExtractComponent } from './components/feature-extract/feature-extract.component';
 import { RelatedDocumentsButtonComponent } from './components/related-documents-button/related-documents-button.component';
+import { FormDescriptionComponent } from './components/form-description/form-description.component';
 
 @NgModule({
   declarations: [
@@ -143,7 +144,8 @@ import { RelatedDocumentsButtonComponent } from './components/related-documents-
     FormControlComponent,
     ServicesCalculatorComponent,
     FeatureExtractComponent,
-    RelatedDocumentsButtonComponent
+    RelatedDocumentsButtonComponent,
+    FormDescriptionComponent
   ],
   imports: [
     HttpClientModule,
