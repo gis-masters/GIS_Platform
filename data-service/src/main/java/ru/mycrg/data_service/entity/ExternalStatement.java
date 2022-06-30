@@ -30,7 +30,6 @@ public class ExternalStatement {
     @Column(name = "cad_num")
     private String cadNum;
 
-    @Size(max = 255)
     @Column(name = "applicant")
     private String applicant;
 

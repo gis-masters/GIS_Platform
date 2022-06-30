@@ -7,13 +7,11 @@ public class ExternalStatementDto {
     @Size(max = 255, message = "Не должно превышать 255 символов")
     private String statementNum;
 
-    @Size(max = 255, message = "Не должно превышать 255 символов")
     private String type;
 
     @Size(max = 255, message = "Не должно превышать 255 символов")
     private String cadNum;
 
-    @Size(max = 255, message = "Не должно превышать 255 символов")
     private String applicant;
 
     @Size(max = 255, message = "Не должно превышать 255 символов")
