@@ -60,7 +60,7 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
   }
 
   ngOnChanges() {
-    // this.renderReactElement();
+    this.renderReactElement();
   }
 
   private renderReactElement() {

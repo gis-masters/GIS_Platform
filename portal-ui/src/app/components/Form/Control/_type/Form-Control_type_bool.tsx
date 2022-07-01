@@ -34,18 +34,27 @@ class FormControlTypeBool extends Component<FormControlProps> {
 
   @boundMethod
   private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { onChange, onNeedValidate, property } = this.props;
+    const { onChange, onNeedValidate, property, fieldValue } = this.props;
+    let value: boolean | string | number = e.target.checked;
+
+    if (typeof fieldValue === 'string') {
+      value = value ? 'true' : '';
+    }
+
+    if (typeof fieldValue === 'number') {
+      value = value ? 1 : 0;
+    }
 
     if (onChange) {
       onChange({
-        value: e.target.checked,
+        value,
         propertyName: property.name
       });
     }
 
     if (onNeedValidate) {
       onNeedValidate({
-        value: e.target.checked,
+        value,
         propertyName: property.name
       });
     }

@@ -411,6 +411,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         properties: newProperties
       });
 
+      communicationService.featuresUpdated.emit();
+
       return;
     }
 
