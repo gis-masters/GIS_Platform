@@ -31,6 +31,7 @@ import { LibraryRecord } from '../../services/crg/doc-library.service';
 import { PropertyType, Schema } from '../../services/crg/schema.models';
 import { viewedProjections } from '../../services/geoserver/projections.service';
 import { FilesPlacementDialogReport } from '../FilesPlacementDialogReport/FilesPlacementDialogReport';
+import { communicationService } from '../../services/communication.service';
 
 import { FilesPlacementReportStore as FilesPlacementStore } from './FilesPlacementDialog.store';
 import { FilesPlacementDialogStepIcon } from './StepIcon/FilesPlacementDialog-StepIcon';
@@ -298,6 +299,8 @@ export class FilesPlacementDialog extends Component<FilesPlacementDialogProps> {
 
     await Promise.allSettled(apiActions);
     this.store.setCommonProgress(false);
+
+    communicationService.updateFileConnections.emit(files);
   }
 
   @boundMethod

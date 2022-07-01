@@ -52,6 +52,9 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
     @Query("FROM Layer l WHERE l.tableName = :tableName AND l.project.id IN :projectIds")
     List<Layer> findRelatedByTableName(@Param("tableName") String tableName, Set<Long> projectIds);
 
+    @Query("FROM Layer l WHERE l.tableName like %:fileId% AND l.project.id IN :projectIds")
+    List<Layer> findRelatedByFileId(@Param("fileId") String fileId, Set<Long> projectIds);
+
     @Query("FROM Layer l WHERE l.dataset = :datasetId AND l.project.id IN :projectIds")
     List<Layer> findRelatedByDataset(@Param("datasetId") String datasetId, Set<Long> projectIds);
 

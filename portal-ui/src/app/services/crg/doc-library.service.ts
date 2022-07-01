@@ -15,6 +15,7 @@ import { communicationService } from '../communication.service';
 import { preparePageOptions } from '../http.utils';
 import { addEntityPermission, removeEntityPermission } from './permissions.client';
 import { ExplorerItemEntityType } from '../../components/Explorer/Explorer.models';
+import { CrgLayer, CrgProject } from './projects.models';
 
 export enum ContentTypeTypes {
   FOLDER = 'FOLDER'
@@ -23,6 +24,11 @@ export enum ContentTypeTypes {
 export interface DocumentLibrary extends DataEntity {
   type: DataEntityType.LIBRARY;
   role: Role;
+}
+
+export interface FileConnection {
+  layer: CrgLayer;
+  project: CrgProject;
 }
 
 export interface LibraryRecord {

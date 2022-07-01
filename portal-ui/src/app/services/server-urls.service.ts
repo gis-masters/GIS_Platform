@@ -301,6 +301,10 @@ export async function getTableConnectionsUrl(): Promise<string> {
   return `${await getProjectsUrl()}/find-related-layers`;
 }
 
+export async function getFileConnectionsUrl(): Promise<string> {
+  return `${await getProjectsUrl()}/find-related-to-file-layers`;
+}
+
 export async function getBasemapConnectionsUrl(sourceBasemapId: number): Promise<string> {
   return `${await getProjectsUrl()}/find-related-by-basemap/${sourceBasemapId}`;
 }

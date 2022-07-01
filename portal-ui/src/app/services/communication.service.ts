@@ -1,5 +1,6 @@
 import { CrgProject, CrgVectorLayer } from './crg/projects.models';
 import { Emitter } from './common/Emitter';
+import { FileInfo } from './files.service';
 
 export interface ObjectDto {
   id: string;
@@ -33,6 +34,7 @@ class CommunicationService {
   logout = new Emitter();
   basemapsUpdated = new Emitter();
   drawOff = new Emitter();
+  updateFileConnections = new Emitter<FileInfo[]>();
 
   off(scope: unknown) {
     Emitter.scopeOff(scope);

@@ -194,21 +194,16 @@ public class LayerService {
                                           new ErrorInfo("field", "Allowed: 'dataset', 'table'"));
         }
 
-        return relatedLayers.stream()
-                            .map(layer -> {
-                                LayerProjection lProjection = new LayerProjection(layer, getOrgWorkspaceName());
-                                ProjectProjection pProjection = projectService
-                                        .getProjectionByIdUnsafe(layer.getProject().getId());
-
-                                return new RelatedLayersModel(lProjection, pProjection);
-                            })
-                            .collect(Collectors.toList());
+        return mapToRelatedLayersModel(relatedLayers);
     }
 
-    public List<RelatedLayersModel> findRelatedToDocumentsLayers(String libraryId, String recordId, String fileId) {
-        String tableName = String.format("%s_%s__%s", libraryId, recordId, fileId);
+    public List<RelatedLayersModel> findRelatedToFilesLayers(String fileId) {
+        Set<Long> projectIds = projectService.getAll().stream()
+                                             .map(Project::getId)
+                                             .collect(Collectors.toSet());
+        List<Layer> relatedLayers = layerRepository.findRelatedByFileId(fileId, projectIds);
 
-        return findRelatedLayers("table", tableName);
+        return mapToRelatedLayersModel(relatedLayers);
     }
 
     public Page<Layer> findLayers(String layerType, List<Project> projects, Pageable pageable) {
@@ -243,6 +238,20 @@ public class LayerService {
                      .filter(l -> layerId.equals(l.getId()))
                      .findFirst()
                      .orElseThrow(() -> new NotFoundException(layerId));
+    }
+
+    private List<RelatedLayersModel> mapToRelatedLayersModel(List<Layer> relatedLayers) {
+        return relatedLayers.stream()
+                            .map(layer -> {
+                                LayerProjection lProjection = new LayerProjection(layer,
+                                                                                  getOrgWorkspaceName());
+                                ProjectProjection pProjection = projectService
+                                        .getProjectionByIdUnsafe(
+                                                layer.getProject().getId());
+
+                                return new RelatedLayersModel(lProjection, pProjection);
+                            })
+                            .collect(Collectors.toList());
     }
 
     @NotNull

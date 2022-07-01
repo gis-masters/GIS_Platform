@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { getFileBaseName, getFileExtension, isImageFile } from '../../../services/files.util';
+import { getFileBaseName, getFileExtension, isImageFile, isTifFile } from '../../../services/files.util';
 import { FileInfo } from '../../../services/files.service';
 import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
@@ -11,7 +11,8 @@ import { FilesName } from '../Name/Files-Name';
 import { FilesIcon } from '../Icon/Files-Icon';
 import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
 import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
-import { Preview as FilesPreview } from '../Preview/Files-Preview';
+import { FilesPreview } from '../Preview/Files-Preview';
+import { FilesConnections } from '../Connections/Files-Connections';
 
 const cnFilesItem = cn('Files', 'Item');
 
@@ -49,6 +50,7 @@ export const FilesItem: FC<FilesItemProps> = ({
       {editable && (numerous || multiple) && <LookupNameGap />}
       {!!status && <LookupStatus status={status} statusText={statusText} />}
       {isImageFile(item) && <FilesPreview item={item} onPreview={onPreview} />}
+      {isTifFile(item) && <FilesConnections fileId={item.id} />}
       {editable && (
         <LookupActions>
           <LookupDelete item={item} onDelete={onDelete} />

@@ -15,7 +15,7 @@ import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models'
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Button } from '../Button/Button';
 
-import { TableManagementWidgetItem } from './Item/ConnectionsToProjectsWidget-Item';
+import { ConnectionsToProjectsWidgetLink } from './Link/ConnectionsToProjectsWidget-Link';
 
 import '!style-loader!css-loader!sass-loader!./ConnectionsToProjectsWidget.scss';
 import '!style-loader!css-loader!sass-loader!./Dialog/ConnectionsToProjectsWidget-Dialog.scss';
@@ -26,6 +26,9 @@ const cnConnectionsToProjectsWidget = cn('ConnectionsToProjectsWidget');
 interface ConnectionsToProjectsWidgetProps extends IClassNameProps {
   connectedProjects: CrgProject[];
   loading: boolean;
+  dialogsOnly?: boolean;
+  dialogOpen?: boolean;
+  closeDialog?: () => void;
   onConnect: (project: CrgProject) => void;
 }
 
@@ -36,7 +39,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
   @observable private selectedProject?: CrgProject;
 
   render() {
-    const { connectedProjects, loading } = this.props;
+    const { connectedProjects, loading, dialogsOnly, dialogOpen, closeDialog } = this.props;
     const count = connectedProjects?.length || 0;
     const textProjects = `${count} ${pluralize(count, 'проект', 'проекта', 'проектов')}`;
 
@@ -45,26 +48,34 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
         <div className={cnConnectionsToProjectsWidget()}>
           {!loading ? (
             <>
-              Подключено в{' '}
-              {count ? <PseudoLink onClick={this.openCurrentProjectsDialog}>{textProjects}</PseudoLink> : textProjects}
-              <Tooltip title='Подключить в проект'>
-                <IconButton color='primary' size='small' onClick={this.openSelectProjectDialog}>
-                  {this.selectProjectDialogOpen ? <AddCircle /> : <AddCircleOutlineOutlined />}
-                </IconButton>
-              </Tooltip>
+              {!dialogsOnly && (
+                <>
+                  Подключено в{' '}
+                  {count ? (
+                    <PseudoLink onClick={this.openCurrentProjectsDialog}>{textProjects}</PseudoLink>
+                  ) : (
+                    textProjects
+                  )}
+                  <Tooltip title='Подключить в проект'>
+                    <IconButton color='primary' size='small' onClick={this.openSelectProjectDialog}>
+                      {this.selectProjectDialogOpen ? <AddCircle /> : <AddCircleOutlineOutlined />}
+                    </IconButton>
+                  </Tooltip>
+                </>
+              )}
               <Dialog
-                open={this.currentProjectsDialogOpen}
-                onClose={this.closeCurrentProjectsDialog}
+                open={dialogsOnly ? dialogOpen : this.currentProjectsDialogOpen}
+                onClose={dialogsOnly ? closeDialog : this.closeCurrentProjectsDialog}
                 PaperProps={{ className: cnConnectionsToProjectsWidget('Dialog') }}
               >
                 <DialogTitle>Проекты</DialogTitle>
                 <DialogContent>
                   {connectedProjects?.map(project => (
-                    <TableManagementWidgetItem project={project} key={project.id} />
+                    <ConnectionsToProjectsWidgetLink project={project} key={project.id} />
                   ))}
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={this.closeCurrentProjectsDialog}>Закрыть</Button>
+                  <Button onClick={dialogsOnly ? closeDialog : this.closeCurrentProjectsDialog}>Закрыть</Button>
                 </DialogActions>
               </Dialog>
               <Dialog open={this.selectProjectDialogOpen} onClose={this.closeSelectProjectDialog}>

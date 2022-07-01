@@ -1,5 +1,6 @@
+import { getFileConnectionsUrl, getFilesUrl, getFileUrl } from './server-urls.service';
+import { CrgLayer, CrgProject } from './crg/projects.models';
 import { http } from './http.service';
-import { getFilesUrl, getFileUrl } from './server-urls.service';
 
 export interface CrgFile {
   id: string;
@@ -29,6 +30,11 @@ export interface FileInfo {
   notLoaded?: boolean;
 }
 
+export interface FileConnection {
+  layer: CrgLayer;
+  project: CrgProject;
+}
+
 export async function createFile(file: File): Promise<CrgFile> {
   const formData = new FormData();
   formData.append('files', file);
@@ -40,4 +46,12 @@ export async function createFile(file: File): Promise<CrgFile> {
 
 export async function getFile(id: string): Promise<CrgFile> {
   return await http.get<CrgFile>(await getFileUrl(id));
+}
+
+export async function getFileConnections(fileId: string): Promise<FileConnection[]> {
+  const params = {
+    fileId: fileId
+  };
+
+  return await http.get<FileConnection[]>(await getFileConnectionsUrl(), { params });
 }

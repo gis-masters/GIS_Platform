@@ -80,8 +80,6 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
     public void getRelatedToDocumentsProjectsAndLayers() {
 
         Map<String, Object> queryParams = new HashMap<>() {{
-            put("libraryId", "dl_default");
-            put("recordId", currentRecordId);
             put("fileId", tifFileId);
         }};
 
@@ -90,7 +88,7 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
                         queryParams(queryParams).
                         contentType(ContentType.JSON)
                 .when().
-                       get("/find-related-to-documents-layers")
+                       get("/find-related-to-file-layers")
                 .then().
                         log().ifError().
                         extract().response();

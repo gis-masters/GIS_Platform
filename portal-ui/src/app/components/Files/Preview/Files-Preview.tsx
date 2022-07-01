@@ -13,7 +13,7 @@ interface PreviewProps<T> {
   onPreview(item: T): void;
 }
 
-export class Preview<T> extends Component<PreviewProps<T>> {
+export class FilesPreview<T> extends Component<PreviewProps<T>> {
   render() {
     return (
       <Tooltip title='Просмотр'>
