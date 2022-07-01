@@ -136,7 +136,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
               this.editFeatureData.push({
                 name: key,
                 property,
-                value: String(currentValue),
+                value: currentValue === null ? currentValue : String(currentValue),
                 isFgistpProperty: true,
                 relations: getFieldRelations(key, convertSchema(this.featureDescription))
               });
@@ -165,7 +165,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                   title: key,
                   valueType: ValueType.STRING
                 },
-                value: String(currentValue),
+                value: currentValue === null ? currentValue : String(currentValue),
                 isFgistpProperty: false,
                 relations: getFieldRelations(key, convertSchema(this.featureDescription))
               });
