@@ -18,6 +18,7 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentRecordId;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class FilesStepDefinitions extends BaseStepsDefinitions {
@@ -146,8 +147,8 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         int recordId = jsonPath.getInt("resourceQualifier.recordId");
         String table = jsonPath.getString("resourceQualifier.table");
         String resourceType = jsonPath.getString("resourceType");
-        // TODO: дать второй записи уникальный title и по нему искать
-        assertEquals(6, recordId);
+
+        assertEquals(currentRecordId.intValue(), recordId);
         assertEquals(DEFAULT_LIBRARY, table);
         assertEquals("LIBRARY_RECORD", resourceType);
     }

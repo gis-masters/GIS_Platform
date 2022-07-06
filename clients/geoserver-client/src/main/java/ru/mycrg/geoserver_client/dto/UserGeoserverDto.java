@@ -1,26 +1,22 @@
 package ru.mycrg.geoserver_client.dto;
 
+import ru.mycrg.auth_service_contract.dto.PasswordModel;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class UserGeoserverDto {
+public class UserGeoserverDto extends PasswordModel {
 
     @Email
     @NotBlank
     @Size(max = 60, message = "No more than 60 characters")
-    String userName;
-
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$",
-             message = "Пароль должен состоять только из цифр, заглавных и строчных букв латинского алфавита")
-    String password;
-
+    private String userName;
     private String role;
     private boolean enabled;
 
     public UserGeoserverDto() {
-        // Required
+        super();
     }
 
     public UserGeoserverDto(String userName) {
@@ -36,8 +32,9 @@ public class UserGeoserverDto {
     }
 
     public UserGeoserverDto(String userName, String password, String role, boolean enabled) {
+        super(password);
+
         this.userName = userName;
-        this.password = password;
         this.role = role;
         this.enabled = enabled;
     }
@@ -48,14 +45,6 @@ public class UserGeoserverDto {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public boolean isEnabled() {

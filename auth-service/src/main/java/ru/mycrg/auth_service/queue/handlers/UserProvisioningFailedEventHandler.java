@@ -3,13 +3,12 @@ package ru.mycrg.auth_service.queue.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_service.exceptions.AuthServiceException;
 import ru.mycrg.auth_service.repository.UserRepository;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import ru.mycrg.auth_service_contract.events.response.UserProvisioningFailedEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
-
-import javax.transaction.Transactional;
 
 @Service
 @Transactional

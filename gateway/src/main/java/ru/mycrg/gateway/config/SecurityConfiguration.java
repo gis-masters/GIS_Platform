@@ -72,7 +72,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                              "/organizations/init",
                              "/perform_logout",
                              "/integration/ais_ums/import",
-                             "/integration/statement/import").permitAll()
+                             "/integration/statement/import",
+                             "/request-password-reset",
+                             "/password-reset").permitAll()
                 .antMatchers(GET,
                              "/actuator/health",
                              "/esia/**").permitAll()

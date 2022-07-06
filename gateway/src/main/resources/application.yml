@@ -49,6 +49,14 @@ zuul:
       url: http://auth-service:9000/esia/
       sensitive-headers:
 
+    crg-auth-service-password-reset-request:
+      path: /request-password-reset/**
+      url: http://auth-service:9000/request-password-reset
+
+    crg-auth-service-password-reset:
+      path: /password-reset/**
+      url: http://auth-service:9000/password-reset
+
     # GIS SERVICE
     crg-gis-service-projects:
       path: /projects/**

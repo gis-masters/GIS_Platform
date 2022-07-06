@@ -28,6 +28,15 @@ spring:
     port: 5672
     username: fiz
     password: 314
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    username: GisPlatform@yandex.ru
+    password: ibhcizcxxbzyktvl
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.quitwait: false
 
 security:
   jwt:
@@ -40,6 +49,9 @@ security:
 crg-options:
   root-user-name: admin@mail.ru
   root-user-password: geoserver
+  reset-password-expiration-time: 60 # In minutes
+  reset-password-request-rate: 10 #In seconds
+
 
 esia:
   url: https://esia-portal1.test.gosuslugi.ru

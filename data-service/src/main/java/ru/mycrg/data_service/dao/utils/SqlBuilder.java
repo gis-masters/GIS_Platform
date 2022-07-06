@@ -158,32 +158,40 @@ public class SqlBuilder {
 
     @NotNull
     public static String generateUpdateQuery(ResourceQualifier qualifier, Feature feature) {
-        String crs = "EPSG:28406";
-        if (feature.getSrs() != null) {
-            crs = feature.getSrs();
-        }
-
         DbTable table = getSimpleDbTable(qualifier);
-        DbColumn geometryColumn = table.addColumn(DEFAULT_GEOMETRY_COLUMN_NAME);
 
         UpdateQuery updateQuery = new UpdateQuery(table);
-        updateQuery.addCustomSetClause(geometryColumn, "GEO_VALUE_TEMPLATE");
         updateQuery.addCondition(new CustomCondition(String.format("%s = %d", PRIMARY_KEY, qualifier.getRecord())));
 
         feature.getProperties().forEach((key, value) -> {
             updateQuery.addSetClause(table.addColumn(key), value);
         });
 
+        String query = updateQuery.validate().toString();
+
         GeoJsonObject geometry = feature.getGeometry();
-        geometry.setSrs(feature.getSrs());
+        if (geometry != null) {
+            String template = "GEO_VALUE_TEMPLATE";
+            DbColumn geometryColumn = table.addColumn(DEFAULT_GEOMETRY_COLUMN_NAME);
+            updateQuery.addCustomSetClause(geometryColumn, template);
 
-        String transformTemplate = "public.st_transform(" +
-                "  public.st_geomFromGeoJSON('" + geometry + "')," +
-                "  " + extractCrsNumber(crs) +
-                ")";
+            String crs = "EPSG:28406";
+            String featureSrs = feature.getSrs();
+            if (featureSrs != null) {
+                crs = featureSrs;
+            }
 
-        return updateQuery.validate().toString()
-                          .replace("'GEO_VALUE_TEMPLATE'", transformTemplate);
+            geometry.setSrs(featureSrs);
+
+            String transformTemplate = "public.st_transform(" +
+                    "  public.st_geomFromGeoJSON('" + geometry + "')," +
+                    "  " + extractCrsNumber(crs) +
+                    ")";
+
+            query = query.replace("'" + template + "'", transformTemplate);
+        }
+
+        return query;
     }
 
     public static DbTable getSimpleDbTable(@NotNull ResourceQualifier rQualifier) {

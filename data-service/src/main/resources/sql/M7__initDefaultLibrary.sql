@@ -21,17 +21,9 @@ CREATE TABLE IF NOT EXISTS data.dl_default
     CONSTRAINT dl_default_pkey PRIMARY KEY (id)
 ) TABLESPACE pg_default;
 
-INSERT INTO data.dl_default(title, is_folder, created_at, last_modified, created_by)
-SELECT 'System root directory', true, now(), now(), 'fiz@migration'
-WHERE NOT EXISTS(SELECT id FROM data.dl_default WHERE title = 'System root directory');
-
-INSERT INTO data.doc_libraries(title, table_name, created_at, last_modified, created_by)
-SELECT 'System root directory', '', now(), now(), 'fiz@migration'
-WHERE NOT EXISTS(SELECT id FROM data.doc_libraries WHERE title = 'System root directory');
-
 INSERT INTO data.doc_libraries(title, table_name, created_at, last_modified, created_by)
 SELECT 'Тестовая библиотека', 'Тестовая библиотека с отсылкой к таблице dl_default', now(), now(), 'fiz@migration'
-WHERE NOT EXISTS(SELECT id FROM data.doc_libraries WHERE title = 'System root directory');
+WHERE NOT EXISTS(SELECT id FROM data.doc_libraries WHERE title = 'Тестовая библиотека');
 
 INSERT INTO data.doc_libraries(title, details, table_name, schema_id, created_by, created_at, last_modified, path)
 SELECT 'Тестовая библиотека',

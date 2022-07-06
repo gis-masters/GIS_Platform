@@ -2,10 +2,9 @@ package ru.mycrg.auth_service_contract.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class UserCreateDto {
+public class UserCreateDto extends PasswordModel {
 
     @NotBlank(message = "Please provide user name")
     @Size(min = 3, max = 50, message = "No less 3 and no more than 50 characters")
@@ -29,23 +28,11 @@ public class UserCreateDto {
     @Size(max = 60, message = "No more than 60 characters")
     private String email;
 
-    //    ^                 # start-of-string
-    //    (?=.*[0-9])       # a digit must occur at least once
-    //    (?=.*[a-z])       # a lower case letter must occur at least once
-    //    (?=.*[A-Z])       # an upper case letter must occur at least once
-    //    (?=\S+$)          # no whitespace allowed in the entire string
-    //    .{8,}             # at least eight places though
-    //    $                 # end-of-string
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$",
-             message = "Пароль должен состоять только из цифр, заглавных и строчных букв латинского алфавита")
-    @NotBlank
-    private String password;
-
     @Size(max = 200, message = "No more than 200 characters")
     private String department;
 
     public UserCreateDto() {
-        // Framework required
+        super();
     }
 
     public UserCreateDto(String name, String surname, String email, String password) {
@@ -59,13 +46,14 @@ public class UserCreateDto {
 
     public UserCreateDto(String name, String middleName, String surname, String job, String phone, String email,
                          String password, String department) {
+        super(password);
+
         this.name = name;
         this.middleName = middleName;
         this.surname = surname;
         this.job = job;
         this.phone = phone;
         this.email = email;
-        this.password = password;
         this.department = department;
     }
 
@@ -99,14 +87,6 @@ public class UserCreateDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getSurname() {

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_service.dto.OrganizationFullProjection;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
@@ -22,7 +23,6 @@ import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEven
 import ru.mycrg.auth_service_contract.events.request.OrganizationRemovedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -37,15 +37,14 @@ import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
 @Transactional
 public class OrganizationService {
 
-    private final BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
-
     private final AESCryptor aesCryptor;
     private final AuthService authService;
+    private final BCryptPasswordEncoder encoder;
     private final UserRepository userRepository;
     private final IMessageBusProducer messageBus;
     private final ProjectionFactory projectionFactory;
-    private final OrganizationRepository organizationRepository;
     private final IAuthenticationFacade authenticationFacade;
+    private final OrganizationRepository organizationRepository;
 
     @Autowired
     public OrganizationService(OrganizationRepository organizationRepository,
@@ -54,7 +53,8 @@ public class OrganizationService {
                                ProjectionFactory projectionFactory,
                                IAuthenticationFacade authenticationFacade,
                                AESCryptor aesCryptor,
-                               AuthService authService) {
+                               AuthService authService,
+                               BCryptPasswordEncoder encoder) {
         this.organizationRepository = organizationRepository;
         this.authenticationFacade = authenticationFacade;
         this.projectionFactory = projectionFactory;
@@ -62,6 +62,7 @@ public class OrganizationService {
         this.messageBus = messageBus;
         this.aesCryptor = aesCryptor;
         this.authService = authService;
+        this.encoder = encoder;
     }
 
     /**
@@ -157,7 +158,7 @@ public class OrganizationService {
     private User mapDtoToUser(UserCreateDto owner) {
         return
                 new User(
-                        bCrypt.encode(owner.getPassword()),
+                        encoder.encode(owner.getPassword()),
                         owner.getName(),
                         owner.getSurname(),
                         owner.getEmail(),

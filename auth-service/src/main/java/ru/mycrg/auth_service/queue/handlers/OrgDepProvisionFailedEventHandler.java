@@ -3,14 +3,14 @@ package ru.mycrg.auth_service.queue.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_service.exceptions.AuthServiceException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
-import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import ru.mycrg.auth_service_contract.events.response.OrganizationDependencyProvisionFailedEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
+import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 
 import static ru.mycrg.auth_service.service.OrganizationStatus.PROVISIONING_FAILED;
 

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.AisUmsDao;
 import ru.mycrg.data_service.dto.AisUmsDto;
 import ru.mycrg.data_service.dto.AisUmsModel;
@@ -16,7 +17,6 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.repository.AisUmsRepository;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 

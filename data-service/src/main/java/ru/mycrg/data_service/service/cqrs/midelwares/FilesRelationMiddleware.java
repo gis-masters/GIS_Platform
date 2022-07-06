@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.entity.IRecord;
@@ -24,7 +25,6 @@ import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.IRequestMiddleware;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;

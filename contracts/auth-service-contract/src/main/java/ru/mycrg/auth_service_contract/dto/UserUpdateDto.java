@@ -3,7 +3,7 @@ package ru.mycrg.auth_service_contract.dto;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class UserUpdateDto {
+public class UserUpdateDto extends PasswordModel {
 
     @Size(min = 3, max = 50, message = "No less 3 and no more than 50 characters")
     private String name;
@@ -20,17 +20,6 @@ public class UserUpdateDto {
     @Size(max = 20, message = "No more than 20 characters")
     private String phone;
 
-    //    ^                 # start-of-string
-    //    (?=.*[0-9])       # a digit must occur at least once
-    //    (?=.*[a-z])       # a lower case letter must occur at least once
-    //    (?=.*[A-Z])       # an upper case letter must occur at least once
-    //    (?=\S+$)          # no whitespace allowed in the entire string
-    //    .{8,}             # at least eight places though
-    //    $                 # end-of-string
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$",
-             message = "Пароль должен состоять только из цифр, заглавных и строчных букв латинского алфавита")
-    private String password;
-
     @Pattern(regexp = "^(true|false)$", message = "Допустимые значения поля enabled: true или false")
     private String enabled;
 
@@ -38,7 +27,7 @@ public class UserUpdateDto {
     private String department;
 
     public UserUpdateDto() {
-        //Required by framework
+        super();
     }
 
     public String getName() {
@@ -79,14 +68,6 @@ public class UserUpdateDto {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String isEnabled() {

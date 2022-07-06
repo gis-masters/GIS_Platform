@@ -39,24 +39,25 @@ public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
-
     private final IMessageBusProducer messageBus;
     private final ProjectionFactory projectionFactory;
     private final UserRepository userRepository;
     private final OrganizationRepository orgRepository;
     private final AuthenticationFacade authenticationFacade;
+    private final BCryptPasswordEncoder encoder;
 
     public UserService(UserRepository userRepository,
                        IMessageBusProducer messageBus,
                        OrganizationRepository orgRepository,
                        AuthenticationFacade authenticationFacade,
-                       ProjectionFactory projectionFactory) {
+                       ProjectionFactory projectionFactory,
+                       BCryptPasswordEncoder encoder) {
         this.messageBus = messageBus;
         this.userRepository = userRepository;
         this.orgRepository = orgRepository;
         this.projectionFactory = projectionFactory;
         this.authenticationFacade = authenticationFacade;
+        this.encoder = encoder;
     }
 
     @NotNull
@@ -107,7 +108,7 @@ public class UserService {
         Organization organization = orgRepository.findById(orgId)
                                                  .orElseThrow(() -> new NotFoundException(orgId));
 
-        User newUser = new User(bCrypt.encode(dto.getPassword()),
+        User newUser = new User(encoder.encode(dto.getPassword()),
                                 dto.getName(),
                                 dto.getSurname(),
                                 dto.getEmail(),
@@ -226,7 +227,7 @@ public class UserService {
         }
 
         if (dto.getPassword() != null) {
-            userForUpdate.setPassword(bCrypt.encode(dto.getPassword()));
+            userForUpdate.setPassword(encoder.encode(dto.getPassword()));
         }
 
         if (dto.isEnabled() != null) {

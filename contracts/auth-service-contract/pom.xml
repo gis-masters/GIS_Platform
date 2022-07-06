@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>auth-service-contract</artifactId>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.8-SNAPSHOT</version>
 
     <name>auth-service-contract</name>
     <description>Contract of auth-service</description>
