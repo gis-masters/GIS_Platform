@@ -206,10 +206,10 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     public void importValidShape() throws InterruptedException {
         initDataset();
         importSteps.initImport();
-        importSteps.sendArchive();
+        importSteps.sendArchive("test.zip");
         importSteps.runImport();
         importSteps.waitUntilImportCompleteOnGeoserver();
-        importSteps.importToProject();
+        importSteps.importToProject("functionalZone");
         importSteps.waitImportToCurrentProject();
         importSteps.checkLayersAvailabilityInProject();
         checkDataset();

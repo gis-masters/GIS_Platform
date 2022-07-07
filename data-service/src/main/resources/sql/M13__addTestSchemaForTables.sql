@@ -93,3 +93,88 @@ SELECT 'schema_for_test_table',
   ]
 }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'schema_for_test_table');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'advertising_point_simf_2022',
+       '{
+  "name": "advertising_point_simf_2022",
+  "title": "Рекламные конструкции города Симферополь",
+  "readOnly": true,
+  "tableName": "advertising_point_simf_2022",
+  "originName": "advertising_point_simf_2022",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "choice": null,
+      "hidden": false,
+      "length": -1,
+      "pattern": null,
+      "multiple": false,
+      "required": true,
+      "maxLength": -1,
+      "minLength": -1,
+      "valueType": "CHOICE",
+      "whiteSpace": null,
+      "description": "",
+      "totalDigits": -1,
+      "enumerations": [
+        {
+          "title": "Модульная малая двухсторонняя ",
+          "value": "510000001"
+        },
+        {
+          "title": "Модульная малая односторонняя ",
+          "value": "510000002"
+        },
+        {
+          "title": "Отдельно стоящий короб ",
+          "value": "510000003"
+        }
+      ],
+      "maxInclusive": -1,
+      "minInclusive": -1,
+      "allowedValues": [],
+      "updateability": null,
+      "foreignKeyType": "STRING",
+      "fractionDigits": -1,
+      "sequenceNumber": 2,
+      "patternDescription": ""
+    },
+    {
+      "name": "location",
+      "title": "Местоположение (адресное описание)",
+      "hidden": false,
+      "multiple": false,
+      "required": false,
+      "valueType": "STRING"
+    },
+    {
+      "name": "photo",
+      "title": "Фотофиксация (фотомонтаж)",
+      "valueType": "FILE",
+      "multiple": true,
+      "maxSize": 50000000
+    },
+    {
+      "name": "shape",
+      "title": null,
+      "choice": null,
+      "hidden": false,
+      "multiple": false,
+      "required": false,
+      "valueType": "GEOMETRY",
+      "allowedValues": [
+        "Point"
+      ],
+      "updateability": null,
+      "fractionDigits": -1,
+      "sequenceNumber": 13,
+      "patternDescription": ""
+    }
+  ],
+  "description": "Рекламные конструкции города Симферополь",
+  "geometryType": "Point",
+  "customRuleFunction": null
+}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'advertising_point_simf_2022');

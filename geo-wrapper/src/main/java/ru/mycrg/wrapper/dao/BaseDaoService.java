@@ -198,7 +198,7 @@ public class BaseDaoService {
             if ("the_geom".equals(tName)) {
                 targetColumns.append("shape, ");
             } else {
-                if (!propsWithFileType.contains(tName)) {
+                if (propsWithFileType.stream().noneMatch(tName::equalsIgnoreCase)) {
                     targetColumns.append(tName).append(", ");
                 }
             }
@@ -208,7 +208,7 @@ public class BaseDaoService {
             } else if ("area".equalsIgnoreCase(sName)) {
                 sourceColumns.append("st_area(the_geom), ");
             } else {
-                if (!propsWithFileType.contains(sName)) {
+                if (propsWithFileType.stream().noneMatch(sName::equalsIgnoreCase)) {
                     sourceColumns.append("\"").append(sName).append("\", ");
                 }
             }
