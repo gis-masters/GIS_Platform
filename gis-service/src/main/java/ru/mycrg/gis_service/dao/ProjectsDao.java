@@ -16,6 +16,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
+import static java.lang.String.join;
+
 @Repository
 public class ProjectsDao {
 
@@ -41,7 +44,7 @@ public class ProjectsDao {
 
         String queryTemplate = "" +
                 "SELECT " +
-                "  DISTINCT ON (proj.name) " +
+                " " + buildDistinctOnSection(pageable.getSort()) +
                 "  proj.*, " +
                 "  per.role " +
                 "FROM " +
@@ -120,7 +123,20 @@ public class ProjectsDao {
                                             .map(order -> getProperty(order.getProperty()) + " " + order.getDirection())
                                             .collect(Collectors.toList());
 
-        return " ORDER BY " + String.join(",", orderItems) + " ";
+        return " ORDER BY " + join(",", orderItems) + " ";
+    }
+
+    @NotNull
+    public static String buildDistinctOnSection(Sort sort) {
+        if (sort.isUnsorted()) {
+            return "DISTINCT ON (proj.name)";
+        }
+
+        final List<String> propertiesForSorting = sort.stream()
+                                                      .map(order -> getProperty(order.getProperty()))
+                                                      .collect(Collectors.toList());
+
+        return format("DISTINCT ON (proj.name, %s) ", join(",", propertiesForSorting));
     }
 
     public static String buildInSection(Collection<String> ids) {
@@ -128,7 +144,7 @@ public class ProjectsDao {
                                          .map(s -> "'" + s + "'")
                                          .collect(Collectors.toList());
 
-        return String.join(",", asString);
+        return join(",", asString);
     }
 
     private static String getProperty(String property) {

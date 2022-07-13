@@ -188,8 +188,8 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         getBaseRequestWithCurrentCookie()
                 .then().
                 log().ifValidationFails().
-                        statusCode(SC_OK).
-                        body("$.size()", is(0));
+                statusCode(SC_OK).
+                body("$.size()", is(0));
     }
 
     @When("Администратор делает запрос на изменение правила с пользователя на пользовательскую группу")
@@ -254,8 +254,17 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         super.getAllEntities();
     }
 
+    @When("Пользователь делает запрос на получение доступных отсортированных проектов {string} {string}")
+    public void getAllowedSortedProjectsAsUser(String sortingType, String sortDirection) {
+        authorizationBase.loginAsCurrentUser();
+
+        super.getAllEntitiesSorted(sortingType, sortDirection);
+    }
+
     @When("Администратор делает запрос с сортировкой по {string} и {string} на все проекты")
     public void getAllProjectsSorted(String sortingType, String sortingDirection) {
+        authorizationBase.loginAsOwner();
+
         super.getAllEntitiesSorted(sortingType, sortingDirection);
     }
 
