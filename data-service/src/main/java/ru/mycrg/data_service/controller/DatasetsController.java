@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
+import ru.mycrg.data_service.dto.ResourceUpdateDto;
 import ru.mycrg.data_service.service.cqrs.datasets.requests.CreateDatasetRequest;
 import ru.mycrg.data_service.service.cqrs.datasets.requests.DeleteDatasetRequest;
+import ru.mycrg.data_service.service.cqrs.datasets.requests.UpdateDatasetRequest;
 import ru.mycrg.data_service.service.resources.DatasetService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.mediator.Mediator;
@@ -68,6 +70,18 @@ public class DatasetsController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PatchMapping("/datasets/{datasetId}")
+    public ResponseEntity<Object> updateDataset(@PathVariable String datasetId,
+                                                @Valid @RequestBody ResourceUpdateDto dto) {
+
+        ResourceQualifier dQualifier = new ResourceQualifier(datasetId);
+
+        mediator.execute(new UpdateDatasetRequest(dQualifier, dto));
+
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

@@ -72,6 +72,21 @@ export interface DataTable extends DataEntity {
   isPublic?: boolean;
 }
 
+export const datasetSchema: Schema<Dataset> = {
+  properties: [
+    {
+      name: 'title',
+      title: 'Наименование',
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'details',
+      title: 'Описание',
+      propertyType: PropertyType.STRING
+    }
+  ]
+};
+
 export const dataTableSchema: Schema<DataTable> = {
   properties: [
     {

@@ -15,6 +15,7 @@ import ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions;
 
 import java.util.Map;
 
+import static java.lang.String.format;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -217,16 +218,48 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на текущий набор данных")
     public void currentUserGetCurrentDataset() {
-        authorizationBase.loginAsCurrentUser();
-
         getDatasetByIdentifier(currentDatasetIdentifier);
     }
 
     @When("Пользователь делает запрос на удаление слоя в наборе данных")
     public void deleteLayerFromDatasets() {
         response = getBaseRequestWithCurrentCookie()
-                .when().log().all().
+                .when().
                        delete("/" + currentDatasetIdentifier + "/tables/" + currentTableName);
+    }
+
+    @When("Пользователь делает запрос на редактирование текущего набора данных {string} {string}")
+    public void currentUserUpdateCurrentDataset(String title, String details) {
+        authorizationBase.loginAsCurrentUser();
+
+        String body = format("{\"title\": \"%s\",\"details\": \"%s\"}", generateString(title), generateString(details));
+
+        updateDatasetByIdentifier(body);
+    }
+
+    @When("Владелец организации делает запрос на редактирование текущего набора данных {string} {string}")
+    public void orgOwnerUpdateCurrentDataset(String title, String details) {
+        authorizationBase.loginAsOwner();
+
+        String body = format("{\"title\": \"%s\",\"details\": \"%s\"}", generateString(title), generateString(details));
+
+        updateDatasetByIdentifier(body);
+    }
+
+    @When("Отправляется PATCH запрос на эндпоинт {string}")
+    public void sendRequestToEndpoint(String path) {
+        orgOwnerUpdateCurrentDataset("test", "test");
+    }
+
+    @And("Набор данных успешно обновлён")
+    public void checkResponseContainsUpdatedFields() {
+        getDatasetByIdentifier(currentDatasetIdentifier);
+
+        String title = response.jsonPath().get("title");
+        String details = response.jsonPath().get("details");
+
+        assertEquals("updated Title", title);
+        assertEquals("updated Details", details);
     }
 
     private void createDataset(DatasetCreateDto dto) {
@@ -254,12 +287,21 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private String makeDatasetUrl(String datasetName) {
-        return String.format("%s:%d/api/data/datasets/%s", testServerHost, testServerPort, datasetName);
+        return format("%s:%d/api/data/datasets/%s", testServerHost, testServerPort, datasetName);
     }
 
     private void getDatasetByIdentifier(String currentDatasetIdentifier) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + currentDatasetIdentifier);
+    }
+
+    private void updateDatasetByIdentifier(String body) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(body).
+                        contentType(ContentType.JSON)
+                .when().
+                        patch("/" + currentDatasetIdentifier);
     }
 }
