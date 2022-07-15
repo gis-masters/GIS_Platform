@@ -6,10 +6,12 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
+import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.RegisterDocumentRequest;
 import ru.mycrg.data_service.service.records.IRecordsService;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 
 import java.time.LocalDateTime;
@@ -53,6 +55,7 @@ public class RegistrarDocumentRequestHandler implements IRequestHandler<Register
         LocalDateTime now = LocalDateTime.now();
         String libraryId = rQualifier.getTable();
         Long registryNumber = librariesService.incrementRegistryNumber(libraryId);
+        SchemaDto schema = librariesService.getSchema(libraryId);
 
         IRecordsService recordsService = recordServiceFactory.get();
         IRecord record = recordsService.getById(rQualifier, rQualifier.getRecord());
@@ -69,7 +72,7 @@ public class RegistrarDocumentRequestHandler implements IRequestHandler<Register
         payload.put("gisogd_regdate", now.toLocalDate());
         payload.put("last_modified", now);
 
-        recordsService.updateRecord(rQualifier, new RecordEntity(payload));
+        recordsService.updateRecord(rQualifier, new RecordEntity(payload), schema);
 
         permissionsRepository.decreasePermissionsToViewerForAll(rQualifier);
 

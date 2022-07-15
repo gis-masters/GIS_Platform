@@ -8,6 +8,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class StringDecoder {
 
+    public static final double BOUND = 0.6;
+
     private StringDecoder() {
         throw new IllegalStateException("Utility class");
     }
@@ -27,12 +29,18 @@ public class StringDecoder {
     }
 
     private static boolean isNeedDecode(char[] chars) {
+        double wrongSymbols = 0.0;
+
         for (char aChar: chars) {
             if (LATIN_1_SUPPLEMENT.equals(Character.UnicodeBlock.of(aChar))) {
-                return true;
+                wrongSymbols++;
             }
         }
 
-        return false;
+        if (wrongSymbols == 0) {
+            return false;
+        }
+
+        return wrongSymbols / chars.length >= BOUND;
     }
 }

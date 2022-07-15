@@ -14,9 +14,10 @@ Feature: Создание групп слоев в проектах
     Then Сервер отвечает со статус-кодом 200
     And Поля группы слоев проекта совпадают с переданными
     Examples:
-      | title     | position |
-      | STRING_10 | NUMBER_2 |
-      | STRING_2  | NUMBER_2 |
+      | title      | position |
+      | STRING_10  | NUMBER_2 |
+      | STRING_2   | NUMBER_2 |
+      | sdf'fwef2f | NUMBER_2 |
 
   Scenario Outline: Создание группы слоев проекта с родительской группы слоев с валидными данными
     Given Существует проект "STRING_10"
@@ -36,6 +37,6 @@ Feature: Создание групп слоев в проектах
     When Пользователь делает запрос на создание группы слоев проекта "<title>", "<position>"
     Then Сервер отвечает со статус-кодом 400
     Examples:
-      | title      | position | reason            |
-      | STRING_0   | NUMBER_2 | Пустое название   |
-      | STRING_257 | NUMBER_2 | Длинное название  |
+      | title      | position | reason           |
+      | STRING_0   | NUMBER_2 | Пустое название  |
+      | STRING_257 | NUMBER_2 | Длинное название |

@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao.utils;
+package ru.mycrg.data_service.dao;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -11,13 +11,13 @@ import ru.mycrg.data_service_contract.enums.GeometryType;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 
 @Service
-public class GeometryHelper {
+public class GeometryDao {
 
-    private final Logger log = LoggerFactory.getLogger(GeometryHelper.class);
+    private final Logger log = LoggerFactory.getLogger(GeometryDao.class);
 
     private final JdbcTemplate jdbcTemplate;
 
-    public GeometryHelper(JdbcTemplate jdbcTemplate) {
+    public GeometryDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

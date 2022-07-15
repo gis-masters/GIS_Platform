@@ -13,6 +13,7 @@ Feature: Проверка сущности table
       | name      | title      | details     | crs        | schemaId              | reason                     |
       | STRING_3  | STRING_1   | STRING_1    | EPSG:28406 | schema_for_test_table | Граничные нижние значения  |
       | STRING_50 | STRING_250 | STRING_1000 | EPSG:28406 | schema_for_test_table | Граничные верхние значения |
+      | STRING_7  | 13'fsd'%&$ | &%$@{}*%$?> | EPSG:28406 | schema_for_test_table | Спецсимволы                |
 
   Scenario: Происходит обновление данных о таблице
     Given Существует набор

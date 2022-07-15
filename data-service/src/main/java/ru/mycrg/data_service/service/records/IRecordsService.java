@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 public interface IRecordsService {
 
@@ -24,11 +25,13 @@ public interface IRecordsService {
      * @param rQualifier Квалификатор библиотеки
      * @param recordId   Идентификатор записи
      */
-    IRecord getById(ResourceQualifier rQualifier, Long recordId);
+    IRecord getById(ResourceQualifier rQualifier,
+                    Long recordId);
 
     IRecord createRecord(ResourceQualifier lQualifier,
                          IRecord record,
-                         MultipartFile file);
+                         MultipartFile file,
+                         SchemaDto schema);
 
     /**
      * Update record.
@@ -36,7 +39,10 @@ public interface IRecordsService {
      * @param recordQualifier Идентификатор записи в библиотеке
      * @param payload         Данные для обновления
      */
-    void updateRecord(ResourceQualifier recordQualifier, IRecord payload);
+    void updateRecord(ResourceQualifier recordQualifier,
+                      IRecord payload,
+                      SchemaDto schema);
 
-    void deleteRecord(ResourceQualifier resourceQualifier, Long id) throws CrgDaoException;
+    void deleteRecord(ResourceQualifier resourceQualifier,
+                      Long id) throws CrgDaoException;
 }

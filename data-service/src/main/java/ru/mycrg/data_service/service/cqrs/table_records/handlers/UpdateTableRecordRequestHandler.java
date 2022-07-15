@@ -14,6 +14,7 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
+import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
 
@@ -48,7 +49,7 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
         throwIfNotMatchTableColumns(newFeature.getProperties(), ddlTables.getAllColumnNames(rQualifier.getTable()));
 
         try {
-            spatialRecordsDao.updateById(rQualifier, newFeature);
+            spatialRecordsDao.updateById(rQualifier, newFeature, PRIMARY_KEY, schema);
         } catch (CrgDaoException e) {
             String msg = "Не удалось обновить фичу в таблице: " + rQualifier.getTable();
             logError(msg, e);

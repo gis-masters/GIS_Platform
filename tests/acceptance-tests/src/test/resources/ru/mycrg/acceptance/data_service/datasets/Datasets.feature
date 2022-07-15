@@ -40,6 +40,7 @@ Feature: Наборы данных (datasets)
       | STRING_1   | STRING_1    | STRING_1  | STRING_1   | 500    | Граничные нижние значения  |
       | STRING_250 | STRING_1000 | STRING_50 | STRING_100 | 100000 | Граничные верхние значения |
       | STRING_10  | STRING_0    | STRING_0  | STRING_0   | 500    | Пустое описание допустимо  |
+      | фыа' adf'  | sd#@$%%^    | STRING_0  | STRING_0   | 500    | Спец символы               |
 
   Scenario: При удалении набора данных подчищаются потроха в базе данных и на геосервере
     When Отправляется запрос на создание набора "STRING_5" "STRING_5" "STRING_5" "STRING_5" "500"

@@ -79,8 +79,9 @@ public class ImportMp implements Importer<Long> {
             throw new NotFoundException(SchemaDto.class, SCHEMA_NAME);
         }
 
+        SchemaDto schema = schemaOfMp.get();
         List<SimplePropertyDto> crossedProperties = getCrossedPropertiesFromTwoSchemas(schemaOfCurrentLayer.get(),
-                                                                                       schemaOfMp.get());
+                                                                                       schema);
 
         try {
             Map<String, Object> dataForSavingToDB = xmlParser.parseByScheme(
@@ -95,7 +96,7 @@ public class ImportMp implements Importer<Long> {
             Map<String, Object> propertiesMatchingToDBColumns = getAllPropertiesMatchingToDBColumns(
                     dataForSavingToDBValid, columnNamesInTable);
 
-            return recordsDao.addRecord(table, new RecordEntity(propertiesMatchingToDBColumns)).getId();
+            return recordsDao.addRecord(table, new RecordEntity(propertiesMatchingToDBColumns), schema).getId();
         } catch (CrgDaoException e) {
             log.error(e.getMessage());
 

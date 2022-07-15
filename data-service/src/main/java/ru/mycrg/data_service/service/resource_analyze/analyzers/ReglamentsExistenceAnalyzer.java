@@ -34,6 +34,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
+import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 
 @Service
 public class ReglamentsExistenceAnalyzer implements IResourceAnalyzer {
@@ -172,7 +173,7 @@ public class ReglamentsExistenceAnalyzer implements IResourceAnalyzer {
             if (nonNull(r.getContent().get("link"))) {
                 JsonNode linkNode = JsonConverter.toJsonNodeFromString(
                         r.getContent().get("link").toString());
-                String objectId = r.getContent().get("objectid").toString();
+                String objectId = r.getContent().get(PRIMARY_KEY).toString();
                 if (nonNull(linkNode.get("url"))) {
                     String url = linkNode.get("url").toString().replace("\"", "");
                     urls.put(objectId, url);

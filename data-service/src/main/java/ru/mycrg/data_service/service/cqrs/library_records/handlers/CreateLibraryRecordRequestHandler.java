@@ -20,6 +20,7 @@ public class CreateLibraryRecordRequestHandler implements IRequestHandler<Create
         return recordServiceFactory.get()
                                    .createRecord(request.getQualifier(),
                                                  request.getRecord(),
-                                                 request.getFile());
+                                                 request.getFile(),
+                                                 request.getSchema());
     }
 }

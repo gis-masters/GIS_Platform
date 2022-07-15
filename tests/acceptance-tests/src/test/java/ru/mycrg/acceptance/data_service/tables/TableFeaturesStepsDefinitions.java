@@ -1,6 +1,7 @@
 package ru.mycrg.acceptance.data_service.tables;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
@@ -52,6 +53,14 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void createFeatureInCurrentTable() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("title", "some title here");
+
+        createFeature(new GeoJsonModel(properties));
+    }
+
+    @When("В текущем слое создаётся запись с title: {string}")
+    public void createFeatureInCurrentTable(String title) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("title", title);
 
         createFeature(new GeoJsonModel(properties));
     }
@@ -142,6 +151,13 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertNotNull(jsonPath.get("id"));
     }
 
+    @Then("Запись сохранена и поле title корректно заполнено {string}")
+    public void checkCreatedFeatureTitle(String expectedTitle) {
+        jsonPath = response.jsonPath();
+
+        assertEquals(expectedTitle, jsonPath.get("properties.title").toString());
+    }
+
     @And("Запись в таблице успешно обновлена")
     public void checkUpdatedFeature() {
         jsonPath = response.jsonPath();
@@ -169,7 +185,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                 .given().
                         contentType(ContentType.JSON)
                 .when().
-                        log().all().
                         body(gson.toJson(geoJsonModel)).
                         post("");
 

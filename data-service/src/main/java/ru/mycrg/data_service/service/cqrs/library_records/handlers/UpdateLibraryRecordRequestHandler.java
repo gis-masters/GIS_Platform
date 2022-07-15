@@ -41,7 +41,7 @@ public class UpdateLibraryRecordRequestHandler implements IRequestHandler<Update
                               .updateModifiedTime(newRecord)
                               .prepareJsonb(newRecord);
 
-        recordsService.updateRecord(recordQualifier, newRecord);
+        recordsService.updateRecord(recordQualifier, newRecord, schema);
 
         return new Voidy();
     }

@@ -1,12 +1,5 @@
 package ru.mycrg.data_service.dao.utils;
 
-import com.healthmarketscience.sqlbuilder.CustomCondition;
-import com.healthmarketscience.sqlbuilder.InsertQuery;
-import com.healthmarketscience.sqlbuilder.UpdateQuery;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 import org.geotools.data.jdbc.FilterToSQL;
 import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.postgis.PostGISDialect;
@@ -28,11 +21,9 @@ import ru.mycrg.geo_json.GeoJsonObject;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
-import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 
 public class SqlBuilder {
@@ -119,62 +110,9 @@ public class SqlBuilder {
     }
 
     @NotNull
-    public static String generateInsertQuery(ResourceQualifier qualifier, Feature feature) {
-        String crs = "EPSG:28406";
-        if (feature.getSrs() != null) {
-            crs = feature.getSrs();
-        }
-
-        DbTable table = getSimpleDbTable(qualifier);
-        DbColumn geometryColumn = table.addColumn(DEFAULT_GEOMETRY_COLUMN_NAME);
-
-        InsertQuery insertQuery = new InsertQuery(table);
-        insertQuery.addCustomColumn(geometryColumn, "GEO_VALUE_TEMPLATE");
-
-        Map<String, Object> properties = feature.getProperties();
-        if (properties != null) {
-            properties.forEach((key, value) -> {
-                DbColumn dbColumn = table.addColumn(key);
-
-                insertQuery.addColumn(dbColumn, value);
-            });
-        }
-
+    public static String buildGeometryValue(Feature feature) {
         GeoJsonObject geometry = feature.getGeometry();
         if (geometry != null) {
-            geometry.setSrs(feature.getSrs());
-        }
-
-        String transformTemplate = "public.st_transform(" +
-                "  public.st_geomFromGeoJSON('" + geometry + "')," +
-                "  " + extractCrsNumber(crs) +
-                ")";
-
-        String query = insertQuery.validate().toString()
-                                  .replace("'GEO_VALUE_TEMPLATE'", transformTemplate);
-
-        return String.format("%s returning lastval();", query);
-    }
-
-    @NotNull
-    public static String generateUpdateQuery(ResourceQualifier qualifier, Feature feature) {
-        DbTable table = getSimpleDbTable(qualifier);
-
-        UpdateQuery updateQuery = new UpdateQuery(table);
-        updateQuery.addCondition(new CustomCondition(String.format("%s = %d", PRIMARY_KEY, qualifier.getRecord())));
-
-        feature.getProperties().forEach((key, value) -> {
-            updateQuery.addSetClause(table.addColumn(key), value);
-        });
-
-        String query = updateQuery.validate().toString();
-
-        GeoJsonObject geometry = feature.getGeometry();
-        if (geometry != null) {
-            String template = "GEO_VALUE_TEMPLATE";
-            DbColumn geometryColumn = table.addColumn(DEFAULT_GEOMETRY_COLUMN_NAME);
-            updateQuery.addCustomSetClause(geometryColumn, template);
-
             String crs = "EPSG:28406";
             String featureSrs = feature.getSrs();
             if (featureSrs != null) {
@@ -183,22 +121,63 @@ public class SqlBuilder {
 
             geometry.setSrs(featureSrs);
 
-            String transformTemplate = "public.st_transform(" +
+            return "public.st_transform(" +
                     "  public.st_geomFromGeoJSON('" + geometry + "')," +
                     "  " + extractCrsNumber(crs) +
                     ")";
-
-            query = query.replace("'" + template + "'", transformTemplate);
         }
 
-        return query;
+        return "";
     }
 
-    public static DbTable getSimpleDbTable(@NotNull ResourceQualifier rQualifier) {
-        DbSpec spec = new DbSpec();
-        DbSchema dbSchema = spec.addSchema(rQualifier.getSchema());
+    @NotNull
+    public static String buildParameterizedInsertQuery(@NotNull ResourceQualifier qualifier,
+                                                       @NotNull Feature feature) {
+        String insertQuery = "INSERT INTO " + qualifier.getTableQualifier();
+        StringBuilder params = new StringBuilder();
+        StringBuilder values = new StringBuilder(" VALUES (");
+        String lastValSection = " returning lastval()";
 
-        return dbSchema.addTable(rQualifier.getTable());
+        GeoJsonObject geometry = feature.getGeometry();
+        if (geometry != null) {
+            params.append(DEFAULT_GEOMETRY_COLUMN_NAME).append(", ");
+            values.append(buildGeometryValue(feature)).append(", ");
+        }
+
+        feature.getProperties().forEach((paramName, value) -> {
+            params.append(paramName).append(", ");
+
+            values.append(":").append(paramName.trim()).append(", ");
+        });
+
+        String valueSection = values.substring(0, values.length() - 2) + ")";
+        String paramSection = " (" + params.substring(0, params.length() - 2) + ")";
+
+        return insertQuery + paramSection + valueSection + lastValSection;
+    }
+
+    @NotNull
+    public static String buildParameterizedUpdateQuery(@NotNull ResourceQualifier qualifier,
+                                                       @NotNull Feature feature,
+                                                       @NotNull String primaryKey) {
+        String updateQuery = "UPDATE " + qualifier.getTableQualifier() + " SET ";
+        StringBuilder setPart = new StringBuilder();
+        String whereSection = " WHERE (" + primaryKey + " = " + qualifier.getRecord() + ")";
+
+        GeoJsonObject geometry = feature.getGeometry();
+        if (geometry != null) {
+            setPart.append(DEFAULT_GEOMETRY_COLUMN_NAME).append(" = ")
+                   .append(buildGeometryValue(feature)).append(", ");
+        }
+
+        feature.getProperties().forEach((paramName, value) -> {
+            setPart.append(paramName).append(" = ")
+                   .append(":").append(paramName.trim()).append(", ");
+        });
+
+        String setPartSection = setPart.substring(0, setPart.length() - 2);
+
+        return updateQuery + setPartSection + whereSection;
     }
 
     private static String getProperty(String property) {

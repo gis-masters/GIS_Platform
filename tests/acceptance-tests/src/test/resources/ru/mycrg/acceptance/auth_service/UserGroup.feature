@@ -25,7 +25,7 @@ Feature: Действия с пользовательскими группами
 #      | groupName     | groupDescription     |
 #      | testGroupName | testGroupDescription |
 
-  Scenario Outline:Создание пользовательской группы c  невалидными данными (<reason>)
+  Scenario Outline: Создание пользовательской группы c невалидными данными (<reason>)
     When Администратор создает группу "<groupName>", "<groupDescription>"
     Then Сервер отвечает со статус-кодом 400
     Examples:
@@ -36,7 +36,7 @@ Feature: Действия с пользовательскими группами
       | STRING_2      | testGroupDescription | Короткое имя пользовательской группы      |
       | testGroupName | STRING_2             | Короткое описание пользовательской группы |
 
-  Scenario Outline:Выборка всех пользовательских групп
+  Scenario Outline: Выборка всех пользовательских групп
     Given Существует пользовательская группа "<groupName>", "<groupDescription>"
     When Администратор делает запрос на все группы
     Then В ответе есть пункт "groups"
@@ -82,7 +82,7 @@ Feature: Действия с пользовательскими группами
       | 2             |
       | 3             |
 
-  Scenario Outline:Обновление данных пользовательской группы
+  Scenario Outline: Обновление данных пользовательской группы
     Given Существует пользовательская группа "<groupName>", "<groupDescription>"
     When Администратор изменяет поля группы "<newGroupName>", "<newGroupDescription>"
     Then Сервер отвечает со статус-кодом 200

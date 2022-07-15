@@ -5,15 +5,15 @@ Feature: Создание событий аудита
       | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
     When Авторизируемся владельцем организации
 
-  Scenario Outline: Создание события аудита с валидными данными
+  Scenario Outline: Создание события аудита с валидными данными: (<reason>)
     When Пользователь делает запрос на создание события аудита "<eventDateTime>" "<actionType>" "<entityName>" "<entityType>" "<entityId>" "<entityStateAfter>"
     Then Сервер отвечает со статус-кодом 201
     Examples:
-      | eventDateTime | actionType | entityName | entityType | entityId | entityStateAfter |
-      | CURRENT_TIME  | SIGN_IN    |            |            |          |                  |
-      | CURRENT_TIME  | CREATE     | STRING_5   | PROJECT    | 43       | JSON             |
-      | CURRENT_TIME  | CREATE     | STRING_20  | PROJECT    | 43       | JSON             |
-      | CURRENT_TIME  | CREATE     | STRING_700 | PROJECT    | 1        | JSON             |
+      | eventDateTime | actionType | entityName | entityType | entityId | entityStateAfter | reason          |
+      | CURRENT_TIME  | SIGN_IN    |            |            |          |                  | Required fields |
+      | CURRENT_TIME  | CREATE     | STRING_5   | PROJECT    | 43       | JSON             | Success case 1  |
+      | CURRENT_TIME  | CREATE     | STRING_700 | PROJECT    | 1        | JSON             | Success case 2  |
+      | CURRENT_TIME  | CREATE     | sdf\'sdf'e | PROJECT    | 1        | JSON             | Spacial symbols |
 
   Scenario Outline: Создание события аудита c невалидными данными ("<reason>")
     When Пользователь делает запрос на создание события аудита "<eventDateTime>" "<actionType>" "<entityName>" "<entityType>" "<entityId>" "<entityStateAfter>"

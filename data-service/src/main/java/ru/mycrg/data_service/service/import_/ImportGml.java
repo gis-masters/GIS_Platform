@@ -8,7 +8,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.dao.utils.GeometryHelper;
+import ru.mycrg.data_service.dao.GeometryDao;
 import ru.mycrg.data_service.dto.*;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.SchemaService;
@@ -44,7 +44,7 @@ public class ImportGml {
 
     private final RecordsDao recordsDao;
     private final SchemaService schemaService;
-    private final GeometryHelper geometryHelper;
+    private final GeometryDao geometryDao;
     private final GmlParser gmlParser;
     private final ValidationService validationService;
     private final CrgScriptEngine scriptEngine;
@@ -52,14 +52,14 @@ public class ImportGml {
 
     public ImportGml(RecordsDao recordsDao,
                      SchemaService schemaService,
-                     GeometryHelper geometryHelper,
+                     GeometryDao geometryDao,
                      GmlParser gmlParser,
                      ValidationService validationService,
                      CrgScriptEngine scriptEngine,
                      Mediator mediator) {
         this.recordsDao = recordsDao;
         this.schemaService = schemaService;
-        this.geometryHelper = geometryHelper;
+        this.geometryDao = geometryDao;
         this.gmlParser = gmlParser;
         this.validationService = validationService;
         this.scriptEngine = scriptEngine;
@@ -152,7 +152,7 @@ public class ImportGml {
 
                 int countOfAddedRecords = addRecordsToTable(tableQualifier, featureData);
 
-                geometryHelper.makeValid(tableQualifier.getSchema(), tableQualifier.getTable());
+                geometryDao.makeValid(tableQualifier.getSchema(), tableQualifier.getTable());
 
                 if (countOfAddedRecords > 0) {
                     runValidation(datasetIdentifier, schema.getName(), tableCreateDto.getName());

@@ -7,9 +7,17 @@ import java.util.Map;
 
 public class Feature extends GeoJsonObject {
 
-    private Map<String, Object> properties = new HashMap<>();
+    private Map<String, Object> properties;
     private GeoJsonObject geometry;
     private Long id;
+
+    public Feature() {
+        this.properties = new HashMap<>();
+    }
+
+    public Feature(Map<String, Object> properties) {
+        this.properties = properties;
+    }
 
     public void setProperty(String key, Object value) {
         properties.put(key, value);

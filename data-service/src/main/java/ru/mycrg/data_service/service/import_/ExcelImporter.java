@@ -59,7 +59,7 @@ public class ExcelImporter implements Importer<List<ImportRecordReport>> {
             report.setLibraryId(docLibId);
             try {
                 convertPropsToNecessaryType(properties, schema.getProperties());
-                IRecord newRecord = recordsDao.addRecord(lQualifier, new RecordEntity(properties));
+                IRecord newRecord = recordsDao.addRecord(lQualifier, new RecordEntity(properties), schema);
                 report.setSuccess(true);
                 permissionsService.addOwnerPermission(lQualifier, newRecord.getId());
             } catch (CrgDaoException e) {

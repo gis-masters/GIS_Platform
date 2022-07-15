@@ -49,10 +49,13 @@ public class ImportController extends BaseController {
                                           @RequestParam String tableId,
                                           @RequestParam("file") MultipartFile file,
                                           @RequestParam String importType) {
-        Importer importerMp = importers.stream()
-                                       .filter(importer -> importType.equalsIgnoreCase(importer.getType()))
-                                       .findFirst()
-                                       .orElseThrow(() -> new BadRequestException("this importer is not exist"));
+        throwIfEmpty(datasetId, tableId, importType);
+
+        Importer importer = importers
+                .stream()
+                .filter(im -> importType.equalsIgnoreCase(im.getType()))
+                .findFirst()
+                .orElseThrow(() -> new BadRequestException("Задан некорректный тип импорта: " + importType));
 
         String filename = file.getOriginalFilename();
         String fileExtension = getFilenameExtension(filename);
@@ -71,7 +74,7 @@ public class ImportController extends BaseController {
 
         ResourceQualifier table = new ResourceQualifier(datasetId, tableId);
 
-        Long objectId = (Long) importerMp.doImport(file, table);
+        Long objectId = (Long) importer.doImport(file, table);
 
         return ResponseEntity.status(OK).body(objectId);
     }
@@ -98,5 +101,19 @@ public class ImportController extends BaseController {
         List<ImportRecordReport> result = (List<ImportRecordReport>) importerExcel.doImport(file, lQualifier);
 
         return ResponseEntity.status(CREATED).body(result);
+    }
+
+    private void throwIfEmpty(String datasetId, String tableId, String importType) {
+        if (datasetId.isEmpty()) {
+            throw new BadRequestException("не задан набор данных: " + datasetId);
+        }
+
+        if (tableId.isEmpty()) {
+            throw new BadRequestException("Не задана таблица: " + tableId);
+        }
+
+        if (importType.isEmpty()) {
+            throw new BadRequestException("Не задан тип импорта: " + importType);
+        }
     }
 }

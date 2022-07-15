@@ -49,5 +49,6 @@ public class ValidationUtilTest {
         assertEquals("", decode(""));
         assertEquals("{\"text\":\"Регламенты\"}", decode("{\"text\":\"Регламенты\"}"));
         assertEquals("{можно}", decode("{Ð¼Ð¾Ð¶Ð½Ð¾}"));
+        assertEquals("ООО «НТО»", decode("ООО «НТО»"));
     }
 }

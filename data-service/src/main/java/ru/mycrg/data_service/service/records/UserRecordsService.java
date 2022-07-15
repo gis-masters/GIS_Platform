@@ -195,17 +195,18 @@ public class UserRecordsService implements IRecordsService {
     @Transactional
     public IRecord createRecord(ResourceQualifier lQualifier,
                                 IRecord record,
-                                MultipartFile file) {
+                                MultipartFile file,
+                                SchemaDto schema) {
         throwIfCreateNotAllowed(lQualifier, record);
 
-        return ownerRecordsService.createRecord(lQualifier, record, file);
+        return ownerRecordsService.createRecord(lQualifier, record, file, schema);
     }
 
     @Override
-    public void updateRecord(ResourceQualifier rQualifier, IRecord record) {
+    public void updateRecord(ResourceQualifier rQualifier, IRecord record, SchemaDto schema) {
         throwIfUpdateNotAllowed(rQualifier, record); // возможно стоит перенести на уровень handler-а
 
-        ownerRecordsService.updateRecord(rQualifier, record);
+        ownerRecordsService.updateRecord(rQualifier, record, schema);
     }
 
     @Override

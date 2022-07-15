@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.FeatureRowMapper;
+import ru.mycrg.data_service.dao.utils.SqlParameterSourceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
@@ -22,8 +23,8 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.lang.String.join;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.generateInsertQuery;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.generateUpdateQuery;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildParameterizedInsertQuery;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildParameterizedUpdateQuery;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
 @Repository
@@ -32,36 +33,16 @@ public class SpatialRecordsDao {
 
     private final Logger log = LoggerFactory.getLogger(SpatialRecordsDao.class);
 
+    private final ParameterizedBaseDao pBaseDao;
     private final NamedParameterJdbcTemplate pJdbcTemplate;
+    private final SqlParameterSourceFactory sqlParameterSourceFactory;
 
-    public SpatialRecordsDao(NamedParameterJdbcTemplate parameterJdbcTemplate) {
-        System.setProperty("com.healthmarketscience.sqlbuilder.useBooleanLiterals", "true");
+    public SpatialRecordsDao(NamedParameterJdbcTemplate parameterJdbcTemplate,
+                             ParameterizedBaseDao pBaseDao,
+                             SqlParameterSourceFactory parameterSourceMapperFactory) {
         this.pJdbcTemplate = parameterJdbcTemplate;
-    }
-
-    public Feature save(@NotNull ResourceQualifier rIdentifier,
-                        @NotNull Feature feature) throws CrgDaoException {
-        try {
-            String query = generateInsertQuery(rIdentifier, feature);
-
-            log.debug("INSERT QUERY: [{}]", query);
-
-            Long id = pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
-
-            feature.setId(id);
-
-            return feature;
-        } catch (DataAccessException e) {
-            String msg = format("Не удалось выполнить вставку в таблицу: '%s'", rIdentifier);
-            logError(msg, e);
-
-            throw new CrgDaoException(msg);
-        } catch (Exception e) {
-            String msg = format("Что то пошло не так при вставке в таблицу: '%s'", rIdentifier);
-            logError(msg, e);
-
-            throw new CrgDaoException(msg);
-        }
+        this.pBaseDao = pBaseDao;
+        this.sqlParameterSourceFactory = parameterSourceMapperFactory;
     }
 
     public Optional<Feature> findById(ResourceQualifier qualifier, SchemaDto schema) {
@@ -86,21 +67,49 @@ public class SpatialRecordsDao {
         }
     }
 
-    public void updateById(ResourceQualifier qualifier, Feature newFeature) throws CrgDaoException {
+    public Feature save(@NotNull ResourceQualifier qualifier,
+                        @NotNull Feature feature,
+                        @NotNull SchemaDto schema) throws CrgDaoException {
         try {
-            String query = generateUpdateQuery(qualifier, newFeature);
+            String query = buildParameterizedInsertQuery(qualifier, feature);
+            MapSqlParameterSource parameterSource = sqlParameterSourceFactory.buildParameterizedSource(feature, schema);
 
-            log.debug("UPDATE QUERY: [{}]", query);
+            Long id = pBaseDao.save(query, parameterSource);
 
-            pJdbcTemplate.getJdbcTemplate().update(query);
-        } catch (DataAccessException e) {
-            String msg = format("Не удалось выполнить обновление фичи: '%s'. %s",
-                                qualifier.getQualifier(), e.getCause().getMessage());
+            feature.setId(id);
+
+            return feature;
+        } catch (CrgDaoException e) {
+            String msg = format("Не удалось выполнить вставку в таблицу: '%s'", qualifier);
+            logError(msg, e);
 
             throw new CrgDaoException(msg);
         } catch (Exception e) {
-            String msg = format("Что то пошло не так при обновлении фичи: '%s'. %s",
-                                qualifier.getQualifier(), e.getCause().getMessage());
+            String msg = format("Что то пошло не так при вставке в таблицу: '%s'", qualifier);
+            logError(msg, e);
+
+            throw new CrgDaoException(msg);
+        }
+    }
+
+    public void updateById(ResourceQualifier qualifier,
+                           Feature feature,
+                           String primaryKey,
+                           SchemaDto schema) throws CrgDaoException {
+        try {
+            String query = buildParameterizedUpdateQuery(qualifier, feature, primaryKey);
+            MapSqlParameterSource parameterSource = sqlParameterSourceFactory.buildParameterizedSource(feature, schema);
+
+            pBaseDao.updateById(query, parameterSource);
+        } catch (CrgDaoException e) {
+            String msg = format("Не удалось обновить запись: '%s'", qualifier.getRecord());
+            logError(msg, e);
+
+            throw new CrgDaoException(msg);
+        } catch (Exception e) {
+            String msg = format("Что то пошло не так при обновлении записи: '%s' в таблице: '%s'",
+                                qualifier.getRecord(), qualifier.getTableQualifier());
+            logError(msg, e);
 
             throw new CrgDaoException(msg);
         }
@@ -136,6 +145,7 @@ public class SpatialRecordsDao {
         } catch (Exception e) {
             String msg = format("Не удалось выполнить удаление фичей: '%s' из: '%s'",
                                 ids, rQualifier.getTableQualifier());
+            logError(msg, e);
 
             throw new CrgDaoException(msg, e.getCause());
         }

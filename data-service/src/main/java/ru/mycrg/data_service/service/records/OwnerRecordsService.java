@@ -105,11 +105,9 @@ public class OwnerRecordsService implements IRecordsService {
     }
 
     @Override
-    public IRecord createRecord(ResourceQualifier lQualifier, IRecord record, MultipartFile file) {
+    public IRecord createRecord(ResourceQualifier lQualifier, IRecord record, MultipartFile file, SchemaDto schema) {
         try {
             log.debug("try create record: {}", record);
-
-            SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
 
             systemAttributeHandler.initSchema(schema)
                                   .fillByContentType(record.getContent())
@@ -127,12 +125,13 @@ public class OwnerRecordsService implements IRecordsService {
 
                 systemAttributeHandler.initSchema(schema)
                                       .fillFileInfo(record.getContent(), file)
+                                      .prepareJsonb(record)
                                       .fillFileInnerPath(record.getContent(), path);
             }
 
             throwIfNotMatchTableColumns(record.getContent(), ddlTables.getAllColumnNames(lQualifier.getTable()));
             simpleIntentHandler.updateIntents(record);
-            IRecord newRecord = recordsDao.addRecord(lQualifier, record);
+            IRecord newRecord = recordsDao.addRecord(lQualifier, record, schema);
             permissionsService.addOwnerPermission(lQualifier, record.getId());
 
             return newRecord;
@@ -144,7 +143,7 @@ public class OwnerRecordsService implements IRecordsService {
     // Есть некий confusing пока идёт переход от сервисов к cqrs и его обработчикам команд.
     // По-идее всё должно переехать в обработчики.
     @Override
-    public void updateRecord(ResourceQualifier recordQualifier, IRecord record) {
+    public void updateRecord(ResourceQualifier recordQualifier, IRecord record, SchemaDto schema) {
         try {
             log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), record);
 
@@ -152,7 +151,7 @@ public class OwnerRecordsService implements IRecordsService {
 
             throwIfNotMatchTableColumns(record.getContent(), ddlTables.getAllColumnNames(recordQualifier.getTable()));
 
-            recordsDao.updateRecordById(recordQualifier, clearedData);
+            recordsDao.updateRecordById(recordQualifier, clearedData, schema);
 
             log.debug("Record: '{}' successfully patched", recordQualifier.getRecord());
         } catch (CrgDaoException e) {

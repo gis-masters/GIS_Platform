@@ -1,10 +1,5 @@
 package ru.mycrg.data_service.dao;
 
-import com.healthmarketscience.sqlbuilder.CustomCondition;
-import com.healthmarketscience.sqlbuilder.InsertQuery;
-import com.healthmarketscience.sqlbuilder.UpdateQuery;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +16,7 @@ import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.geo_json.Feature;
 
 import java.util.*;
 
@@ -33,47 +29,34 @@ public class RecordsDao {
 
     private final Logger log = LoggerFactory.getLogger(RecordsDao.class);
 
-    private final NamedParameterJdbcTemplate pJdbcTemplate;
     private final BaseDao baseDao;
+    private final SpatialRecordsDao spatialRecordsDao;
+    private final NamedParameterJdbcTemplate pJdbcTemplate;
 
-    public RecordsDao(NamedParameterJdbcTemplate parameterJdbcTemplate, BaseDao baseDao) {
+    public RecordsDao(NamedParameterJdbcTemplate parameterJdbcTemplate,
+                      SpatialRecordsDao spatialRecordsDao,
+                      BaseDao baseDao) {
         System.setProperty("com.healthmarketscience.sqlbuilder.useBooleanLiterals", "true");
-        this.pJdbcTemplate = parameterJdbcTemplate;
         this.baseDao = baseDao;
+        this.spatialRecordsDao = spatialRecordsDao;
+        this.pJdbcTemplate = parameterJdbcTemplate;
     }
 
-    public IRecord addRecord(@NotNull ResourceQualifier rIdentifier,
-                             @NotNull IRecord record) throws CrgDaoException {
-        try {
-            DbTable table = getSimpleDbTable(rIdentifier);
-            InsertQuery insertQuery = new InsertQuery(table);
+    public IRecord addRecord(@NotNull ResourceQualifier qualifier,
+                             @NotNull IRecord record,
+                             @NotNull SchemaDto schema) throws CrgDaoException {
+        Feature savedFeature = spatialRecordsDao.save(qualifier,
+                                                      new Feature(record.getContent()),
+                                                      schema);
+        record.getContent().put(ID.getName(), savedFeature.getId());
 
-            record.getContent().forEach((key, value) -> {
-                DbColumn dbColumn = table.addColumn(key);
+        return record;
+    }
 
-                insertQuery.addColumn(dbColumn, value);
-            });
-            String query = insertQuery.validate().toString();
-            query = query + " returning lastval();";
-
-            log.debug("INSERT QUERY: [{}]", query);
-
-            Long id = pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
-
-            record.getContent().put(ID.getName(), id);
-
-            return record;
-        } catch (DataAccessException e) {
-            String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'. %s",
-                                       rIdentifier, e.getCause().getMessage());
-
-            throw new CrgDaoException(msg);
-        } catch (Exception e) {
-            String msg = String.format("Что то пошло не так при вставке в таблицу: '%s'. %s",
-                                       rIdentifier, e.getCause().getMessage());
-
-            throw new CrgDaoException(msg);
-        }
+    public void updateRecordById(@NotNull ResourceQualifier qualifier,
+                                 @NotNull Map<String, Object> data,
+                                 @NotNull SchemaDto schema) throws CrgDaoException {
+        spatialRecordsDao.updateById(qualifier, new Feature(data), ID.getName(), schema);
     }
 
     public void addRecordsAsBatch(@NotNull ResourceQualifier rIdentifier,
@@ -100,7 +83,7 @@ public class RecordsDao {
 
             pJdbcTemplate.batchUpdate(query, body);
         } catch (DataAccessException e) {
-            String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'. %s",
+            String msg = String.format("Не удалось выполнить вставку(batch) в таблицу: '%s'. %s",
                                        rIdentifier, e.getCause().getMessage());
 
             throw new CrgDaoException(msg);
@@ -255,34 +238,6 @@ public class RecordsDao {
 
     public Long getTotal(ResourceQualifier tableQualifier, String ecqlFilter) {
         return baseDao.getTotal(tableQualifier, ecqlFilter);
-    }
-
-    public void updateRecordById(ResourceQualifier recordQualifier, Map<String, Object> data) throws CrgDaoException {
-        try {
-            DbTable table = getSimpleDbTable(recordQualifier);
-            UpdateQuery updateQuery = new UpdateQuery(table);
-            updateQuery.addCondition(
-                    new CustomCondition(String.format("%s = %d", ID.getName(), recordQualifier.getRecord())));
-
-            data.forEach((key, value) -> {
-                updateQuery.addSetClause(table.addColumn(key), value);
-            });
-            String query = updateQuery.validate().toString();
-
-            log.debug("UPDATE QUERY: [{}]", query);
-
-            pJdbcTemplate.getJdbcTemplate().update(query);
-        } catch (DataAccessException e) {
-            String msg = String.format("Не удалось выполнить обновление записи: '%s'. %s",
-                                       recordQualifier.getQualifier(), e.getCause().getMessage());
-
-            throw new CrgDaoException(msg);
-        } catch (Exception e) {
-            String msg = String.format("Что то пошло не так при обновлении записи: '%s'. %s",
-                                       recordQualifier.getQualifier(), e.getCause().getMessage());
-
-            throw new CrgDaoException(msg);
-        }
     }
 
     public void removeRecord(ResourceQualifier rQualifier, Long id) throws CrgDaoException {
