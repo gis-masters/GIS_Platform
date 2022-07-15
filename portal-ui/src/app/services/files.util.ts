@@ -52,8 +52,12 @@ export function isTifFile(file: FileInfo): boolean {
   return normalizeExtension(getFileExtension(file.title)) === 'tif';
 }
 
-export function isImageFile(file: FileInfo): boolean {
-  const images = ['jpg', 'png', 'gif', 'webp'];
+export function isPdfFile(file: FileInfo): boolean {
+  return normalizeExtension(getFileExtension(file.title)) === 'pdf';
+}
+
+export function isPreviewAllowed(file: FileInfo): boolean {
+  const images = ['jpg', 'png', 'gif', 'webp', 'pdf'];
 
   return images.includes(normalizeExtension(getFileExtension(file.title)));
 }

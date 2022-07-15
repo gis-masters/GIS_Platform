@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { getFileBaseName, getFileExtension, isImageFile, isTifFile } from '../../../services/files.util';
+import { getFileBaseName, getFileExtension, isPreviewAllowed, isTifFile } from '../../../services/files.util';
 import { FileInfo } from '../../../services/files.service';
 import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
@@ -49,7 +49,7 @@ export const FilesItem: FC<FilesItemProps> = ({
       <FilesName item={item} baseName={baseName} ext={ext} disabled={disabled} file={file} numerous={numerous} />
       {editable && (numerous || multiple) && <LookupNameGap />}
       {!!status && <LookupStatus status={status} statusText={statusText} />}
-      {isImageFile(item) && <FilesPreview item={item} onPreview={onPreview} />}
+      {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
       {isTifFile(item) && <FilesConnections fileId={item.id} />}
       {editable && (
         <LookupActions>

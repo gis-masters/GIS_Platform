@@ -18,3 +18,4 @@ stylelint.config.js
 *.spec.ts
 
 src/test.ts
+src/assets

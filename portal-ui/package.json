@@ -70,6 +70,7 @@
     "react-highlight-words": "0.18.0",
     "react-input-mask": "2.0.4",
     "react-nl2br": "1.0.3",
+    "react-pdf": "5.7.2",
     "react-toastify": "6.0.9",
     "rxjs": "6.5.3",
     "sift": "16.0.0",

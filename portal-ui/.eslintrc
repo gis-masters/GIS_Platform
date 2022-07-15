@@ -244,7 +244,8 @@
     "unicorn/no-array-for-each": "off",
     "unicorn/explicit-length-check": "off",
     "unicorn/no-array-callback-reference": "off",
-    "unicorn/number-literal-case": "off"
+    "unicorn/number-literal-case": "off",
+    "unicorn/new-for-builtins": "off"
   },
   "overrides": [
     {

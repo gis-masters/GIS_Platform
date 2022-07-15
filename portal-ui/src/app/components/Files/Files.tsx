@@ -11,7 +11,7 @@ import { PropertySchemaFile } from '../../services/crg/schema.models';
 import { createFile, FileInfo } from '../../services/files.service';
 import { LookupStatusType } from '../Lookup/Status/Lookup-Status';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { isImageFile } from '../../services/files.util';
+import { isPreviewAllowed } from '../../services/files.util';
 import { LookupList } from '../Lookup/List/Lookup-List';
 import { LookupAdd } from '../Lookup/Add/Lookup-Add';
 import { FileInput } from '../FileInput/FileInput';
@@ -142,7 +142,7 @@ export class Files extends Component<FilesProps> {
     if (value.length) {
       return value
         .map(item => {
-          if (isImageFile(item)) {
+          if (isPreviewAllowed(item)) {
             return item;
           }
         })

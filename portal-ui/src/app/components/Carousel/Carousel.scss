@@ -7,6 +7,10 @@ body .Carousel {
     padding: 46px;
   }
 
+  &-Slide_height_fullHeight {
+    height: 100%;
+  }
+
   &-Image {
     max-width: 100%;
 
@@ -23,5 +27,15 @@ body .Carousel {
     position: absolute;
     top: calc(50% - 43px);
     left: 0;
+  }
+
+  &-Document {
+    width: 100%;
+
+    canvas {
+      width: 100% !important;
+      max-width: 100%;
+      height: auto !important;
+    }
   }
 }

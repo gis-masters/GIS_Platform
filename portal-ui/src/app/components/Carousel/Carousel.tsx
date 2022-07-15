@@ -3,16 +3,21 @@ import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { Dialog, DialogActions, DialogContent } from '@mui/material';
+import { Breakpoint, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { Document, Page, pdfjs } from 'react-pdf';
 
 import { getFileDownloadUrl } from '../../services/server-urls.service';
 import { FileInfo } from '../../services/files.service';
+import { isPdfFile } from '../../services/files.util';
 import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./Carousel.scss';
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+pdfjs.GlobalWorkerOptions.workerSrc = '../../../assets/pdf-worker/pdf.worker.min.js';
 
 const cnCarousel = cn('Carousel');
 
@@ -28,6 +33,8 @@ export class Carousel extends Component<CarouselProps> {
   @observable private url: string;
   @observable private currentImage: FileInfo;
   @observable private busy = true;
+  @observable private pages: undefined[];
+  @observable private expandHandler = false;
 
   async componentDidMount() {
     this.setCurrentImage(this.props.startingImageForPreview);
@@ -39,10 +46,31 @@ export class Carousel extends Component<CarouselProps> {
 
     return (
       <>
-        <Dialog open={this.props.open} onClose={onClose} maxWidth='md' fullWidth className={cnCarousel()}>
-          <DialogContent className={cnCarousel('Slide')}>
-            <img className={cnCarousel('Image')} src={this.url} alt={this.currentImage?.title} onLoad={this.onLoad} />
-            <Loading visible={this.busy} />
+        <Dialog open={this.props.open} onClose={onClose} maxWidth={this.maxWidth} fullWidth className={cnCarousel()}>
+          <DialogContent className={cnCarousel('Slide', { height: this.expandHandler && 'fullHeight' }, ['scroll'])}>
+            {this.currentImage && isPdfFile(this.currentImage) ? (
+              <Document
+                className={cnCarousel('Document')}
+                error={console.error}
+                file={this.url}
+                loading='Загрузка pdf'
+                onLoadSuccess={this.onDocumentLoad}
+              >
+                {this.pages?.map((_, index) => (
+                  <Page key={index} pageNumber={index + 1} />
+                ))}
+              </Document>
+            ) : (
+              <>
+                <img
+                  className={cnCarousel('Image')}
+                  src={this.url}
+                  alt={this.currentImage?.title}
+                  onLoad={this.onLoad}
+                />
+                <Loading visible={this.busy} />
+              </>
+            )}
           </DialogContent>
           <DialogActions>
             {allImages.length !== 1 && (
@@ -55,6 +83,9 @@ export class Carousel extends Component<CarouselProps> {
                 </IconButton>
               </>
             )}
+            {this.currentImage && isPdfFile(this.currentImage) && (
+              <Button onClick={this.setExpandHandler}>{this.expandHandler ? 'Свернуть' : 'Развернуть'}</Button>
+            )}
             <Button onClick={onClose}>Закрыть</Button>
           </DialogActions>
         </Dialog>
@@ -64,6 +95,12 @@ export class Carousel extends Component<CarouselProps> {
 
   private async fileUrl(id: string) {
     this.setUrl(await getFileDownloadUrl(id));
+  }
+
+  @boundMethod
+  private onDocumentLoad({ numPages }) {
+    this.setPages([...(Array(numPages) as undefined[])]);
+    this.setBusy(false);
   }
 
   @boundMethod
@@ -119,5 +156,23 @@ export class Carousel extends Component<CarouselProps> {
   @action
   private setBusy(busy: boolean) {
     this.busy = busy;
+  }
+
+  @action
+  private setPages(pages: undefined[]) {
+    this.pages = pages;
+  }
+
+  @action.bound
+  private setExpandHandler() {
+    this.expandHandler = !this.expandHandler;
+  }
+
+  private get maxWidth(): false | Breakpoint {
+    if (!this.expandHandler) {
+      return this.currentImage && isPdfFile(this.currentImage) ? 'xl' : 'md';
+    }
+
+    return false;
   }
 }
