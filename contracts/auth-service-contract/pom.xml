@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>auth-service-contract</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
 
     <name>auth-service-contract</name>
     <description>Contract of auth-service</description>
@@ -43,13 +43,17 @@
         <repository>
             <id>GisPlatformFeed</id>
             <name>Gis portal azure repository</name>
-            <url>https://pkgs.dev.azure.com/programgeoplan/a6547131-6a32-454f-a123-0f76fe536a3c/_packaging/GisPlatformFeed/maven/v1</url>
+            <url>
+                https://pkgs.dev.azure.com/programgeoplan/a6547131-6a32-454f-a123-0f76fe536a3c/_packaging/GisPlatformFeed/maven/v1
+            </url>
         </repository>
     </distributionManagement>
     <repositories>
         <repository>
             <id>GisPlatformFeed</id>
-            <url>https://pkgs.dev.azure.com/programgeoplan/a6547131-6a32-454f-a123-0f76fe536a3c/_packaging/GisPlatformFeed/maven/v1</url>
+            <url>
+                https://pkgs.dev.azure.com/programgeoplan/a6547131-6a32-454f-a123-0f76fe536a3c/_packaging/GisPlatformFeed/maven/v1
+            </url>
             <releases>
                 <enabled>true</enabled>
             </releases>

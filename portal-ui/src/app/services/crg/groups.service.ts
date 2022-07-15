@@ -16,7 +16,7 @@ export interface CrgGroup {
   _links?: { [key: string]: ApiLink }[];
 }
 
-export type NewGroupData = Pick<CrgGroup, 'name' | 'description'>;
+export type GroupData = Pick<CrgGroup, 'name' | 'description'>;
 
 class GroupsService {
   private static _instance: GroupsService;
@@ -46,9 +46,15 @@ class GroupsService {
     return response._embedded ? response._embedded.groups : [];
   }
 
-  async create(groupData: NewGroupData) {
+  async create(groupData: GroupData) {
     const url = await getGroupsUrl();
     await http.post<CrgGroup>(url, groupData);
+    void this.debouncedFetchGroupsListStore();
+  }
+
+  async update(groupData: CrgGroup) {
+    const url = await getGroupUrl(groupData.id);
+    await http.patch<CrgGroup>(url, groupData);
     void this.debouncedFetchGroupsListStore();
   }
 

@@ -5,13 +5,16 @@ import { cn } from '@bem-react/classname';
 import { Tooltip, IconButton } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 
-import { CrgUser } from '../../../services/crg/users.service';
+import { OrgGroupsCreateEditDialog } from '../../OrgGroupCreateEditDialog/OrgGroupsCreateEditDialog';
 import { OrgUsersCreateEditDialog } from '../../OrgUsersCreateEditDialog/OrgUsersCreateEditDialog';
+import { CrgGroup } from '../../../services/crg/groups.service';
+import { CrgUser } from '../../../services/crg/users.service';
 
 const cnOrgActionsEdit = cn('OrgActions', 'Edit');
 
 interface OrgActionsEditProps {
-  user: CrgUser;
+  user?: CrgUser;
+  group?: CrgGroup;
 }
 
 @observer
@@ -26,7 +29,11 @@ export class OrgActionsEdit extends Component<OrgActionsEditProps> {
             <Edit />
           </IconButton>
         </Tooltip>
-        <OrgUsersCreateEditDialog open={this.dialogOpen} onClose={this.closeDialog} user={this.props.user} />
+        {this.props.group ? (
+          <OrgGroupsCreateEditDialog open={this.dialogOpen} onClose={this.closeDialog} group={this.props.group} />
+        ) : (
+          <OrgUsersCreateEditDialog open={this.dialogOpen} onClose={this.closeDialog} user={this.props.user} />
+        )}
       </>
     );
   }

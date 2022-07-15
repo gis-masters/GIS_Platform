@@ -20,12 +20,15 @@ import ru.mycrg.auth_service.repository.GroupRepository;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.security.IAuthenticationFacade;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
+import ru.mycrg.auth_service_contract.dto.GroupUpdateDto;
 import ru.mycrg.auth_service_contract.events.request.UserGroupDeletedEvent;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.time.LocalDateTime;
 import java.util.Set;
+
+import static java.util.Objects.nonNull;
 
 @Service
 @Transactional
@@ -125,6 +128,24 @@ public class GroupService {
                 .orElseThrow(() -> new NotFoundException(GROUP, groupId));
 
         group.removeUser(userId);
+    }
+
+    public void update(Long groupId, GroupUpdateDto dto) {
+        final Long orgId = authenticationFacade.getOrganizationId();
+
+        Group groupForUpdate = groupRepository.findByIdAndOrganizationId(groupId, orgId)
+                                              .orElseThrow(() -> new NotFoundException(GROUP, groupId));
+
+        if (nonNull(dto.getName())) {
+            groupForUpdate.setName(dto.getName());
+        }
+        if (nonNull(dto.getDescription())) {
+            groupForUpdate.setDescription(dto.getDescription());
+        }
+
+        groupForUpdate.setLastModified(LocalDateTime.now());
+
+        groupRepository.save(groupForUpdate);
     }
 
     public void delete(Long groupId) {

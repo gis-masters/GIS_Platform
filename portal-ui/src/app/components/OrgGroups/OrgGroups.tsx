@@ -1,13 +1,11 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component } from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { allGroups } from '../../stores/AllGroups.store';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { XTable, XTableColumn } from '../XTable/XTable';
-import { OrgActions } from '../OrgActions/OrgActions';
 
 import { OrgGroupsCreate } from './Create/OrgGroups-Create';
 import { OrgGroupsGroupActions } from './GroupActions/OrgGroups-GroupActions';
@@ -82,10 +80,5 @@ export class OrgGroups extends Component {
       ...group,
       usersCount: group.users.length
     }));
-  }
-
-  @boundMethod
-  private renderGroupActions(group: CrgGroupExtended): ReactNode {
-    return <OrgActions group={group} />;
   }
 }

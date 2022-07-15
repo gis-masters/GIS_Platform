@@ -155,7 +155,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>auth-service-contract</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <version>1.9-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

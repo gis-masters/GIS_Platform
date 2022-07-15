@@ -23,6 +23,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     public static GroupCreateDto usersGroupDto;
     public static Integer usersGroupId;
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -45,7 +46,18 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Администратор создает группу {string}, {string}")
-    public void createUserGroup(String groupName, String groupDescription) {
+    public void createUserGroupAsOwner(String groupName, String groupDescription) {
+        authorizationBase.loginAsOwner();
+
+        usersGroupDto = new GroupCreateDto(generateString(groupName), generateString(groupDescription));
+
+        super.createEntity(usersGroupDto);
+    }
+
+    @When("Пользователь делает запрос на создание группы {string}, {string}")
+    public void createUserGroupAsUser(String groupName, String groupDescription) {
+        authorizationBase.loginAsCurrentUser();
+
         usersGroupDto = new GroupCreateDto(generateString(groupName), generateString(groupDescription));
 
         super.createEntity(usersGroupDto);
@@ -76,7 +88,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
         if (isUsersGroupExistInPool(groupName)) {
             makeExactUsersGroupAsCurrent(groupName);
         } else {
-            createUserGroup(groupName, groupDescription);
+            createUserGroupAsOwner(groupName, groupDescription);
             assertEquals(SC_OK, response.getStatusCode());
             extractUsersGroupIdFromResponseBody();
         }
@@ -98,16 +110,23 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Администратор изменяет поля группы {string}, {string}")
-    public void updateUsersGroup(String newGroupName, String newGroupDescription) {
+    public void updateUsersGroupAsOwner(String newGroupName, String newGroupDescription) {
+        authorizationBase.loginAsOwner();
+
         usersGroupDto = new GroupCreateDto(generateString(newGroupName), generateString(newGroupDescription));
         String payload = gson.toJson(usersGroupDto);
 
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType(ContentType.JSON)
-                .when().
-                        body(payload).
-                        patch("/" + usersGroupId);
+        sendUpdateRequest(payload);
+    }
+
+    @When("Пользователь делает запрос на изменение полей группы {string}, {string}")
+    public void updateUsersGroupAsUser(String newGroupName, String newGroupDescription) {
+        authorizationBase.loginAsCurrentUser();
+
+        usersGroupDto = new GroupCreateDto(generateString(newGroupName), generateString(newGroupDescription));
+        String payload = gson.toJson(usersGroupDto);
+
+        sendUpdateRequest(payload);
     }
 
     @When("Администратор добавляет пользователя в пользовательскую группу")
@@ -166,7 +185,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     public void createMultipleUsersGroups(DataTable dataTable) {
         List<List<String>> data = dataTable.asLists();
         for (List<String> group: data) {
-            createUserGroup(group);
+            createUserGroupAsOwner(group);
         }
     }
 
@@ -180,7 +199,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
         super.checkSomethingOnPages(checkType, entitiesPerPage);
     }
 
-    private void createUserGroup(List<String> group) {
+    private void createUserGroupAsOwner(List<String> group) {
         usersGroupDto = new GroupCreateDto(generateString(group.get(0)), generateString(group.get(1)));
         String payload = gson.toJson(usersGroupDto);
 
@@ -201,5 +220,14 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                           usersGroupId = entry.getKey();
                           usersGroupDto = entry.getValue();
                       });
+    }
+
+    private void sendUpdateRequest(String payload) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType(ContentType.JSON)
+                .when().
+                        body(payload).
+                        patch("/" + usersGroupId);
     }
 }

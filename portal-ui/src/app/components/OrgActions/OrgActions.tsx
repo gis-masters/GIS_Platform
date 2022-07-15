@@ -26,7 +26,7 @@ export const OrgActions: FC<OrgActionsProps> = ({ user, userGroups, group, class
       principalType={user ? PrincipalType.USER : PrincipalType.GROUP}
       principalName={user ? user.name : group.name}
     />
-    {user && <OrgActionsEdit user={user} />}
+    <OrgActionsEdit user={user} group={group} />
     <OrgActionsDel group={group} user={user} />
   </div>
 );

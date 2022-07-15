@@ -13,6 +13,7 @@ import ru.mycrg.auth_service.dto.GroupProjection;
 import ru.mycrg.auth_service.security.IAuthenticationFacade;
 import ru.mycrg.auth_service.service.GroupService;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
+import ru.mycrg.auth_service_contract.dto.GroupUpdateDto;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -46,7 +47,7 @@ public class GroupController {
     }
 
     @PostMapping("/groups")
-    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<GroupProjection> createGroup(@Valid @RequestBody GroupCreateDto dto) {
         GroupProjection groupProjection = groupService.create(dto);
 
@@ -92,6 +93,15 @@ public class GroupController {
     @PutMapping("/groups/{id}")
     public ResponseEntity<Object> updateGroups(@PathVariable String id) {
         return new ResponseEntity<>(METHOD_NOT_ALLOWED);
+    }
+
+    @PatchMapping("/groups/{id}")
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> updateGroups(@PathVariable Long id,
+                                               @Valid @RequestBody GroupUpdateDto dto) {
+        groupService.update(id, dto);
+
+        return new ResponseEntity<>(NO_CONTENT);
     }
 
     @DeleteMapping("/groups/{id}")
