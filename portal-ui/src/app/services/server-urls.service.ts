@@ -74,6 +74,18 @@ export async function getGeoserverFeatureTypeInfoUrl(
   return `${await getGeoServerUrl()}/rest/workspaces/${workspace}/datastores/${dataset}/featuretypes/${tableName}.json`;
 }
 
+export async function getGeoserverFeatureTypesUrl(workspace: string, datastore: string): Promise<string> {
+  return `${await getGeoServerUrl()}/rest/workspaces/${workspace}/datastores/${datastore}/featuretypes.json`;
+}
+
+export async function getGeoserverFeatureTypeUrl(
+  workspace: string,
+  datastore: string,
+  feature: string
+): Promise<string> {
+  return `${await getGeoServerUrl()}/rest/workspaces/${workspace}/datastores/${datastore}/featuretypes/${feature}`;
+}
+
 export async function getGeoserverImportUrl(importId: number | string): Promise<string> {
   return `${await getGeoserverImportsUrl()}/${importId}`;
 }

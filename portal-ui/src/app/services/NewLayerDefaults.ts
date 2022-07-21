@@ -13,12 +13,9 @@ export function vectorLayerDefaults(): Pick<
   CrgVectorLayer,
   'id' | 'dataStoreName' | 'complexName' | 'enabled' | 'position' | 'transparency' | 'minZoom' | 'maxZoom' | 'type'
 > {
-  const dataStoreName = `scratch_database_${currentUser.orgId}`;
-
   return {
     ...defaultProps,
-    dataStoreName,
-    id: undefined,
+    dataStoreName: currentUser.workspaceName,
     complexName: undefined,
     type: CrgLayerType.VECTOR
   };

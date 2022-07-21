@@ -10,6 +10,7 @@ import { allPermissions } from '../../stores/AllPermissions.store';
 import { allDataEntitiesService } from '../../services/allDataEntities.service';
 import { allPermissionsService } from '../../services/crg/allPermissions.service';
 import { OrganizationSettings } from '../OrganizationSettings/OrganizationSettings';
+import { OrganizationClean } from '../OrganizationClean/OrganizationClean';
 import { OrgGroups } from '../OrgGroups/OrgGroups';
 import { OrgUsers } from '../OrgUsers/OrgUsers';
 import { Loading } from '../Loading/Loading';
@@ -21,7 +22,8 @@ const cnOrgAdmin = cn('OrgAdmin');
 const tabs = [
   [OrgUsers, 'Пользователи'],
   [OrgGroups, 'Группы'],
-  [OrganizationSettings, 'Настройки организации']
+  [OrganizationSettings, 'Настройки организации'],
+  [OrganizationClean, 'Очистка']
 ];
 
 @observer

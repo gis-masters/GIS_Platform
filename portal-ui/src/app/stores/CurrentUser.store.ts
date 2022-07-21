@@ -52,6 +52,16 @@ class CurrentUser implements OrgInfo {
   get isAdmin(): boolean {
     return this.authorities.includes(BuildInRole.ORG_ADMIN) || this.authorities.includes(BuildInRole.GLOBAL_ADMIN);
   }
+
+  @computed
+  get workspaceName(): string {
+    return `scratch_database_${this.orgId}`;
+  }
+
+  @computed
+  get datastoreName(): string {
+    return `${this.workspaceName}_store`;
+  }
 }
 
 export const currentUser = CurrentUser.instance;
