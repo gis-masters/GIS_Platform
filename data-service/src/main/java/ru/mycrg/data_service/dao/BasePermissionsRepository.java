@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
 import static ru.mycrg.data_service.util.RoleHandler.defineRoleById;
 

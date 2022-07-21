@@ -210,7 +210,7 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
         title: property.title,
         description: property.description,
         sortable: sortableTypes.has(property.propertyType),
-        filterable: filterableTypes.has(property.propertyType) && property.name !== 'id',
+        filterable: filterableTypes.has(property.propertyType),
         ...typesCols[property.propertyType],
         filterOptions: property.propertyType === PropertyType.CHOICE ? property.options : undefined,
         headerCellProps: { style: property.minWidth ? { minWidth: String(property.minWidth) + 'px' } : null },

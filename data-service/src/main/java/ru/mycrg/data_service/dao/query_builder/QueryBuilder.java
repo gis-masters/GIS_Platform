@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildWhereSection;
+import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 
 public class QueryBuilder {
 

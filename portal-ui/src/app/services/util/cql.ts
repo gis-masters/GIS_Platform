@@ -22,21 +22,21 @@ export function buildCqlFilter(query: FilterQuery): string {
 
 const operators: Record<string, (key: string, value: FilterQueryValue | FilterQuery) => string> = {
   $eq: (key: string, value: string | number | boolean) =>
-    value === null ? `${key} IS null` : `${key} = '${String(value)}'`,
+    value === null ? `"${key}" IS null` : `"${key}" = '${String(value)}'`,
   $ne: (key: string, value: string | number | boolean) =>
-    value === null ? `${key} IS NOT null` : `${key} <> '${String(value)}'`,
-  $like: (key: string, value: string) => `${key} LIKE '${value}'`,
-  $ilike: (key: string, value: string) => `${key} ILIKE '${value}'`,
+    value === null ? `"${key}" IS NOT null` : `"${key}" <> '${String(value)}'`,
+  $like: (key: string, value: string) => `"${key}" LIKE '${value}'`,
+  $ilike: (key: string, value: string) => `"${key}" ILIKE '${value}'`,
   $in: (key: string, value: string[]) =>
     value.includes(null)
-      ? `(${key} IN('${value.filter(val => val !== null).join("','")}') OR ${key} IS null)`
-      : `${key} IN('${value.join("','")}')`,
+      ? `("${key}" IN('${value.filter(val => val !== null).join("','")}') OR "${key}" IS null)`
+      : `"${key}" IN('${value.join("','")}')`,
   $nin: (key: string, value: string[]) =>
-    value.map(item => (item === null ? `${key} IS NOT null` : `(${key} <> '${item}')`)).join(' AND '),
-  $gt: (key: string, value: string | number) => `${key} > '${value}'`,
-  $lt: (key: string, value: string | number) => `${key} < '${value}'`,
-  $gte: (key: string, value: string | number) => `${key} >= '${value}'`,
-  $lte: (key: string, value: string | number) => `${key} <= '${value}'`
+    value.map(item => (item === null ? `"${key}" IS NOT null` : `("${key}" <> '${item}')`)).join(' AND '),
+  $gt: (key: string, value: string | number) => `"${key}" > '${value}'`,
+  $lt: (key: string, value: string | number) => `"${key}" < '${value}'`,
+  $gte: (key: string, value: string | number) => `"${key}" >= '${value}'`,
+  $lte: (key: string, value: string | number) => `"${key}" <= '${value}'`
 };
 
 const topLevelOperators: Record<string, (value: FilterQuery[]) => string> = {

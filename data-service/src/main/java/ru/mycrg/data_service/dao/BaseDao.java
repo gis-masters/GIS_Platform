@@ -14,8 +14,8 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildWhereSection;
 
 @Transactional
 @Repository

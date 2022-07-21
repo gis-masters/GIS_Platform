@@ -20,7 +20,9 @@ import ru.mycrg.geo_json.Feature;
 
 import java.util.*;
 
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
+import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildInSection;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
 @Repository

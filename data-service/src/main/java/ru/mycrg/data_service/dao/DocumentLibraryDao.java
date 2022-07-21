@@ -12,8 +12,8 @@ import ru.mycrg.data_service.entity.DocumentLibrary;
 
 import java.util.List;
 
+import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildWhereSection;
 
 // TODO: уже пора подумать и привести DocumentLibraryDao, ProcessDao и RecordsDao к единому знаменателю
 @Repository
