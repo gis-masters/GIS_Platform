@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.service.records.RecordUtil.clearSystemAttributes;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
@@ -147,7 +146,7 @@ public class OwnerRecordsService implements IRecordsService {
         try {
             log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), record);
 
-            Map<String, Object> clearedData = clearSystemAttributes(record);
+            Map<String, Object> clearedData = systemAttributeHandler.clearSystemAttributes(record);
 
             throwIfNotMatchTableColumns(record.getContent(), ddlTables.getAllColumnNames(recordQualifier.getTable()));
 

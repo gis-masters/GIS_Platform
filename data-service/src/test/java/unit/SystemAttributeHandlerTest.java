@@ -8,8 +8,10 @@ import ru.mycrg.data_service.service.SystemAttributeHandler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SystemAttributeHandlerTest {
 
@@ -19,7 +21,7 @@ public class SystemAttributeHandlerTest {
             new AuthenticationFacade());
 
     @Test
-    public void prepare_correct_fileName_from_title_without_extension() {
+    public void prepareCorrectFileName_fromTitleWithoutExtension() {
         IRecord record = prepareData("test", extensionType);
 
         String fileNameSimpleTitle = systemAttributeHandler.prepareFileName(record);
@@ -28,7 +30,7 @@ public class SystemAttributeHandlerTest {
     }
 
     @Test
-    public void Prepare_correct_fileName_from_title_with_extension() {
+    public void prepareCorrectFileName_fromTitleWithExtension() {
         IRecord record = prepareData("test.gml", extensionType);
 
         String fileNameTitleWithExtension = systemAttributeHandler.prepareFileName(record);
@@ -37,7 +39,7 @@ public class SystemAttributeHandlerTest {
     }
 
     @Test
-    public void Prepare_correct_fileName_without_title() {
+    public void prepareCorrectFileName_forRecordWithoutTitle() {
         IRecord record = prepareData("", extensionType);
 
         String fileNameBodyWithoutTitle = systemAttributeHandler.prepareFileName(record);
@@ -46,7 +48,7 @@ public class SystemAttributeHandlerTest {
     }
 
     @Test
-    public void Prepare_correct_fileName_without_type() {
+    public void prepareCorrectFileName_forRecordWithoutType() {
         IRecord record = prepareData("test", null);
 
         String fileNameBodyWithoutExtension = systemAttributeHandler.prepareFileName(record);
@@ -55,7 +57,7 @@ public class SystemAttributeHandlerTest {
     }
 
     @Test
-    public void Prepare_correct_fileName_from_title_with_double_extension() {
+    public void prepareCorrectFileName_fromTitleWithDoubleExtension() {
         IRecord record = prepareData("test.gml.gml", extensionType);
 
         String fileNameWithDoubleExtension = systemAttributeHandler.prepareFileName(record);
@@ -64,7 +66,7 @@ public class SystemAttributeHandlerTest {
     }
 
     @Test
-    public void Prepare_correct_fileName_from_title_with_several_points() {
+    public void prepareCorrectFileName_fromTitleWithSeveralPoints() {
         IRecord record = prepareData("test.12.10.2021", extensionType);
 
         String fileNameBodyTitleWithData = systemAttributeHandler.prepareFileName(record);
@@ -73,12 +75,27 @@ public class SystemAttributeHandlerTest {
     }
 
     @Test
-    public void Prepare_correct_fileName_from_title_with_points_and_extension() {
+    public void prepareCorrectFileName_fromTitleWithPointsAndExtension() {
         IRecord record = prepareData("test.12.13.gml", extensionType);
 
         String result = systemAttributeHandler.prepareFileName(record);
 
         assertEquals("test.12.13.gml", result);
+    }
+
+    @Test
+    public void shouldCorrectlyExtractLastIdFromPath() {
+        Optional<Long> lastId = systemAttributeHandler.getLastIdFromPath("/root/1/5");
+
+        assertTrue(lastId.isPresent());
+        assertEquals(5L, (long) lastId.get());
+    }
+
+    @Test
+    public void lastIdShouldBeEmpty_forRootPath() {
+        Optional<Long> lastId = systemAttributeHandler.getLastIdFromPath("/root/");
+
+        assertTrue(lastId.isEmpty());
     }
 
     private IRecord prepareData(String title, String type) {

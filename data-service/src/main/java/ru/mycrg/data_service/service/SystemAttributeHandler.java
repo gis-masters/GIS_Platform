@@ -13,8 +13,8 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
@@ -133,6 +133,21 @@ public class SystemAttributeHandler {
         return this;
     }
 
+    public Map<String, Object> clearSystemAttributes(@NotNull IRecord record) {
+        Map<String, Object> result = new HashMap<>();
+        record.getContent().forEach((key, value) -> {
+            if (!key.equals(ID.getName()) &&
+                    !key.equals(PATH.getName()) &&
+                    !key.equals(CREATED_AT.getName()) &&
+                    !key.equals(LAST_MODIFIED.getName()) &&
+                    !key.equals("is_folder")) {
+                result.put(key, value);
+            }
+        });
+
+        return result;
+    }
+
     @NotNull
     public String prepareFileName(@NotNull IRecord record) {
         Map<String, Object> content = record.getContent();
@@ -158,6 +173,26 @@ public class SystemAttributeHandler {
         }
 
         return "0";
+    }
+
+    public Set<String> extractFolderIdsFromPath(@NotNull String path) {
+        String[] splited = path.split("/root/");
+        if (splited.length < 2) {
+            return new HashSet<>();
+        }
+
+        return Arrays.stream(splited[1].split("/"))
+                     .collect(Collectors.toSet());
+    }
+
+    public Optional<Long> getLastIdFromPath(@NotNull String path) {
+        List<Long> ids = extractFolderIdsFromPath(path).stream()
+                                                       .map(Long::valueOf)
+                                                       .collect(Collectors.toList());
+
+        return ids.isEmpty()
+                ? Optional.empty()
+                : Optional.of(ids.get(ids.size() - 1));
     }
 
     private boolean attributeDefined(SystemLibraryAttributes attribute) {

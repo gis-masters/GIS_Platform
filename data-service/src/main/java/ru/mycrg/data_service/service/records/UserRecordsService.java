@@ -14,6 +14,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
+import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
@@ -25,8 +26,6 @@ import java.util.*;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.dto.Roles.VIEWER;
-import static ru.mycrg.data_service.service.records.RecordUtil.extractFolderIdsFromPath;
-import static ru.mycrg.data_service.service.records.RecordUtil.getLastIdFromPath;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
@@ -38,17 +37,20 @@ public class UserRecordsService implements IRecordsService {
     private final DocumentLibraryService librariesService;
     private final BasePermissionsRepository permissionsRepository;
     private final IMasterResourceProtector resourceProtector;
+    private final SystemAttributeHandler systemAttributeHandler;
 
     public UserRecordsService(RecordsDao recordsDao,
                               OwnerRecordsService ownerRecordsService,
                               DocumentLibraryService librariesService,
                               BasePermissionsRepository permissionsRepository,
-                              MasterResourceProtector resourceProtector) {
+                              MasterResourceProtector resourceProtector,
+                              SystemAttributeHandler systemAttributeHandler) {
         this.recordsDao = recordsDao;
         this.ownerRecordsService = ownerRecordsService;
         this.librariesService = librariesService;
         this.permissionsRepository = permissionsRepository;
         this.resourceProtector = resourceProtector;
+        this.systemAttributeHandler = systemAttributeHandler;
     }
 
     @Override
@@ -69,7 +71,7 @@ public class UserRecordsService implements IRecordsService {
             path = String.format("%s/%d", parent.getContent().get("path"), parentId);
             ecqlFilter = addAsEqual(ecqlFilter, PATH.getName(), path);
 
-            Set<String> ids = extractFolderIdsFromPath(path);
+            Set<String> ids = systemAttributeHandler.extractFolderIdsFromPath(path);
 
             boolean allowedByParentPermissions = permissionsRepository.isAllowedByParentsPermissions(lQualifier, ids);
             if (allowedByParentPermissions) {
@@ -124,7 +126,7 @@ public class UserRecordsService implements IRecordsService {
         // Если запись имеет родителей - получим роль наследуемую от них
         String path = String.valueOf(content.get(PATH.getName()));
         if (path != null && !path.equals(ROOT_FOLDER_PATH)) {
-            Set<String> ids = extractFolderIdsFromPath(path);
+            Set<String> ids = systemAttributeHandler.extractFolderIdsFromPath(path);
 
             Optional<String> oRole = permissionsRepository.bestRoleInheritedFromParent(rQualifier, ids);
             if (oRole.isPresent()) {
@@ -211,7 +213,7 @@ public class UserRecordsService implements IRecordsService {
 
     @Override
     public void deleteRecord(ResourceQualifier rQualifier, Long id) throws CrgDaoException {
-        throwIfDeleteNotAllowed(rQualifier, id);
+        throwIfDeleteNotAllowed(rQualifier);
 
         ownerRecordsService.deleteRecord(rQualifier, id);
     }
@@ -228,7 +230,7 @@ public class UserRecordsService implements IRecordsService {
 
         String path = record.getAsString(PATH.getName());
         if (path != null && !ROOT_FOLDER_PATH.equals(path)) {
-            Optional<Long> oLastFolderId = getLastIdFromPath(path);
+            Optional<Long> oLastFolderId = systemAttributeHandler.getLastIdFromPath(path);
             if (oLastFolderId.isEmpty()) {
                 throw new BadRequestException("Задан некорректный путь: " + path);
             } else {
@@ -244,25 +246,28 @@ public class UserRecordsService implements IRecordsService {
         }
 
         if (!libraryEditAllowed) { // Библиотека НЕ доступна для редактирования
-            if (inFolder) {  // Создаём в папке
-                if (!folderEditAllowed) { // Папка недоступна
-                    throw new ForbiddenException("Папка: " + lastFolderId + " не доступна для записи.");
-                } else {
+            if (inFolder) { // Создаём в папке
+                if (folderEditAllowed) {
                     // Разрешено в доступной на редактирование папке в недоступной для редактирования библиотеке
+                    return;
                 }
-            } else { // Запрещено создавать в корне
+
+                throw new ForbiddenException("Папка: " + lastFolderId + " не доступна для записи.");
+            } else {
+                // Запрещено создавать в корне
                 throw new ForbiddenException("Библиотека: '" + lQualifier + "' не доступна для записи.");
             }
         } else { // Библиотека доступна для редактирования
             if (inFolder) { // Создаём в папке
                 if (folderEditAllowed) {
                     // Разрешено создавать в доступной папке
-                } else { // Запрещено создавать в папках недоступных на редактирование
-                    throw new ForbiddenException("Папка: " + lastFolderId + " не доступна для записи.");
+                    return;
                 }
-            } else {
-                // Разрешено создавать в корне
+
+                // Запрещено создавать в папках недоступных на редактирование
+                throw new ForbiddenException("Папка: " + lastFolderId + " не доступна для записи.");
             }
+            // Разрешено создавать в корне
         }
     }
 
@@ -273,7 +278,7 @@ public class UserRecordsService implements IRecordsService {
 
         String path = record.getAsString(PATH.getName());
         if (path != null && !ROOT_FOLDER_PATH.equals(path)) {
-            Optional<Long> oLastFolderId = getLastIdFromPath(path);
+            Optional<Long> oLastFolderId = systemAttributeHandler.getLastIdFromPath(path);
             if (oLastFolderId.isEmpty()) {
                 throw new BadRequestException("Задан некорректный путь: " + path);
             } else {
@@ -290,7 +295,7 @@ public class UserRecordsService implements IRecordsService {
         }
     }
 
-    private void throwIfDeleteNotAllowed(ResourceQualifier rQualifier, Long id) {
+    private void throwIfDeleteNotAllowed(ResourceQualifier rQualifier) {
         if (!resourceProtector.isEditAllowed(rQualifier)) {
             String msg = "Библиотека: '" + rQualifier.getQualifier() + "' не доступна для удаления.";
 
