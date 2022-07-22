@@ -7,6 +7,8 @@ import ru.mycrg.gis_service.exceptions.GisServiceException;
 import ru.mycrg.gis_service.security.AuthenticationFacade;
 import ru.mycrg.http_client.ResponseModel;
 
+import java.util.List;
+
 @Service
 public class UserGeoserverService {
 
@@ -31,8 +33,15 @@ public class UserGeoserverService {
     public void delete(UserGeoserverDto dto) {
         try {
             UsersAndRolesService usersAndRolesService = new UsersAndRolesService(authenticationFacade.getAccessToken());
+            String userName = dto.getUserName();
 
-            checkGeoserverResponse(usersAndRolesService.deleteUser(dto.getUserName()));
+            List<String> roles = usersAndRolesService.getUserRoles(userName);
+
+            for (String role: roles) {
+                usersAndRolesService.disassociateUserWithRole(userName, role);
+            }
+
+            checkGeoserverResponse(usersAndRolesService.deleteUser(userName));
         } catch (Exception e) {
             throw new GisServiceException("Не удалось удалить пользователя на геосервере: " + e.getMessage());
         }

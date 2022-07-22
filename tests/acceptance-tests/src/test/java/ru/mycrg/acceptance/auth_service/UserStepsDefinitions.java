@@ -23,8 +23,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class UserStepsDefinitions extends BaseStepsDefinitions {
 
@@ -104,6 +103,20 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         createUser(userDto);
     }
 
+    @Then("На геосервере удалилась роль, связанная с пользователем")
+    public void checkRoleDeletionFromGeoserver() throws InterruptedException {
+        authorizationBase.loginAsOwner();
+
+        response = getBaseRequestWithCurrentCookie()
+                .basePath("geoserver/rest/security")
+                .when().
+                        get(String.format("/roles/user/%s.json", userDto.getEmail()));
+
+        List<Object> roles = response.jsonPath().getList("roles");
+
+        assertTrue(roles.isEmpty());
+    }
+
     @Given("Существует некий пользователь")
     public void initializeSomeUser() throws InterruptedException {
         createRandomUserAndLogin();
@@ -121,6 +134,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор организации удаляет пользователя")
     public void deleteUser() {
+        authorizationBase.loginAsOwner();
+
         super.deleteCurrentEntity();
 
         userPool.remove(userId);

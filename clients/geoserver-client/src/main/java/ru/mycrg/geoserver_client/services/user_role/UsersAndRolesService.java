@@ -8,6 +8,9 @@ import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
+import java.util.List;
+
+import static java.util.Objects.nonNull;
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 
 public class UsersAndRolesService extends GeoServerBaseService {
@@ -30,6 +33,17 @@ public class UsersAndRolesService extends GeoServerBaseService {
                                                .delete().build();
 
         httpClient.handleRequest(request);
+    }
+
+    public List<String> getUserRoles(String userName) throws HttpClientException {
+        String cName = prepareUserNameForGeoserver(userName);
+
+        Request request = builderWithBearerAuth.url(getGeoserverRestUrl() + "/security/roles/user/" + cName + ".json")
+                                               .get().build();
+
+        GeoserverRoleResponse body = httpClient.handleRequest(request, GeoserverRoleResponse.class).getBody();
+
+        return nonNull(body) ? body.getRoles() : List.of();
     }
 
     public ResponseModel<Object> createUser(String login, String password) throws HttpClientException {
@@ -65,6 +79,18 @@ public class UsersAndRolesService extends GeoServerBaseService {
         Request request = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/security/roles/role/" + role + "/user/" + cName)
                 .post(body).build();
+
+        return httpClient.handleRequest(request);
+    }
+
+    // https://docs.geoserver.org/2.13.2/user/rest/api/userrole.html
+    // /rest/roles/[service/<serviceName>/]role/<role>/user/<user>
+    public ResponseModel<Object> disassociateUserWithRole(String userName, String role) throws HttpClientException {
+        String cName = prepareUserNameForGeoserver(userName);
+
+        Request request = builderWithBearerAuth
+                .url(getGeoserverRestUrl() + "/security/roles/role/" + role + "/user/" + cName)
+                .delete().build();
 
         return httpClient.handleRequest(request);
     }
