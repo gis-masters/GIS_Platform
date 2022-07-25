@@ -24,7 +24,7 @@ import { getFeatureLayer } from '../../services/geoserver/layers.service';
 import { getFeaturesById } from '../../services/geoserver/wfs.service';
 import { getEmptyGeometry } from '../../services/geoserver/wfs.util';
 import { CrgVectorLayer } from '../../services/crg/projects.models';
-import { PropertySchema } from '../../services/crg/schema.models';
+import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
 import { schemaService } from '../../services/crg/schema.service';
 import { generateRandomId } from '../../services/util/randomId';
 import { convertProperties, convertSchema, getFieldRelations } from '../../services/crg/schema.utils';
@@ -130,6 +130,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
             if (property?.valueType === ValueType.DATETIME && currentValue) {
               currentValue = moment(currentValue).format('YYYY-MM-DD');
+            }
+
+            if ((property?.valueType === ValueType.STRING || property?.valueType === ValueType.TEXT) && currentValue) {
+              currentValue = String(currentValue).trim();
             }
 
             if (property) {
@@ -260,7 +264,11 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       const field = this.getFieldByKey(key as string);
       if (field) {
         const { [key]: value, ...rests } = newProperties;
-        newProperties = applyFieldValue(field, rests, value) as Record<string, string>;
+        let val = value;
+        if (field.propertyType === PropertyType.STRING) {
+          val = value.trim();
+        }
+        newProperties = applyFieldValue(field, rests, val) as Record<string, string>;
       }
     }
 
