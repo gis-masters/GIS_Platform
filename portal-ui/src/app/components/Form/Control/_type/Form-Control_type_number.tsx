@@ -56,9 +56,9 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
   }
 
   @boundMethod
-  private handleNumberChange(event: React.ChangeEvent<{ value: number | string | undefined }>) {
+  private handleNumberChange(event: React.ChangeEvent<{ value: string }>) {
     const targetValue = event.target.value;
-    const value = targetValue ? Number(targetValue) : targetValue;
+    const value = targetValue ? Number(targetValue) : null;
 
     this.change(value);
   }
