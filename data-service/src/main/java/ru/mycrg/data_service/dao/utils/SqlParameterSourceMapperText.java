@@ -1,30 +1,26 @@
 package ru.mycrg.data_service.dao.utils;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
-@Component
-public class DefaultSqlParameterSourceMapper implements SqlParameterSourceMapper {
+import static java.sql.Types.LONGVARCHAR;
+import static ru.mycrg.data_service_contract.enums.ValueType.TEXT;
 
-    private final Logger log = LoggerFactory.getLogger(DefaultSqlParameterSourceMapper.class);
+@Component
+public class SqlParameterSourceMapperText implements SqlParameterSourceMapper {
 
     @Override
     public void map(@NotNull MapSqlParameterSource parameterSource,
                     @NotNull SimplePropertyDto property,
                     @NotNull Object value) {
-        log.debug("Use default parameter source mapper for property: '{}' with type: '{}'",
-                  property.getName(), property.getValueType());
-
-        parameterSource.addValue(property.getName().toLowerCase(), value);
+        parameterSource.addValue(property.getName().toLowerCase(), value, LONGVARCHAR);
     }
 
     @Override
     public ValueType getType() {
-        return null;
+        return TEXT;
     }
 }

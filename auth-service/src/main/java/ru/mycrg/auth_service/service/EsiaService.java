@@ -1,6 +1,5 @@
 package ru.mycrg.auth_service.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +12,15 @@ import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.http_client.handlers.BaseRequestHandler;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
-import static ru.mycrg.auth_service.AuthJWTApplication.mapper;
+import static ru.mycrg.auth_service.util.AccessTokenHandler.extractUserSbjId;
 
 @Service
 public class EsiaService {
@@ -89,7 +89,7 @@ public class EsiaService {
         }
 
         try {
-            String userSbjId = getUserSbjId(accessToken);
+            String userSbjId = extractUserSbjId(accessToken);
             EsiaUserInfo userInfo = getUserInfo(accessToken, userSbjId);
             userInfo.setSbjId(userSbjId);
 
@@ -243,21 +243,5 @@ public class EsiaService {
 
             throw new IllegalStateException(msg);
         }
-    }
-
-    private String getUserSbjId(String accessToken) throws IOException {
-        String[] accessParts = accessToken.split("\\.");
-
-        String content = new String(Base64.getUrlDecoder().decode(accessParts[1]), StandardCharsets.UTF_8);
-
-        log.debug("Try read as map, accessToken content: {}", content);
-
-        Map<String, String> result = mapper.readValue(content,
-                                                      new TypeReference<Map<String, String>>() {
-                                                      });
-
-        log.debug("Content successfully read: {}", result);
-
-        return result.get("urn:esia:sbj_id");
     }
 }

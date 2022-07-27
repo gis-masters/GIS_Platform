@@ -31,12 +31,16 @@ public class SqlParameterSourceFactory {
                                                           @NotNull SchemaDto schema) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         feature.getProperties().forEach((paramName, value) -> {
-            getPropertyByName(schema, paramName).ifPresentOrElse(property -> {
-                sourceMappers.getOrDefault(property.getValueType(), defaultSqlParameterSourceMapper)
-                             .map(parameterSource, property, value);
-            }, () -> {
-                parameterSource.addValue(paramName, value);
-            });
+            if (value == null) {
+                parameterSource.addValue(paramName, null);
+            } else {
+                getPropertyByName(schema, paramName).ifPresentOrElse(property -> {
+                    sourceMappers.getOrDefault(property.getValueType(), defaultSqlParameterSourceMapper)
+                                 .map(parameterSource, property, value);
+                }, () -> {
+                    parameterSource.addValue(paramName, value);
+                });
+            }
         });
 
         return parameterSource;

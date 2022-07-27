@@ -49,6 +49,7 @@ import java.util.UUID;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
@@ -214,7 +215,7 @@ public class ImportGmlProcessHandler implements IProcessHandler {
             LocalDateTime aDate = null;
             if (Objects.nonNull(data.get("approve_date"))) {
                 aDate = LocalDateTime.parse(data.get("approve_date").toString(),
-                                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                                            DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN));
             }
 
             Integer scale = Integer.parseInt(String.valueOf(data.get("scale")));

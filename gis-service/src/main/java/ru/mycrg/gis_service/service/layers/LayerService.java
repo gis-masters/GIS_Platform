@@ -146,24 +146,30 @@ public class LayerService {
 
         Layer layerForUpdate = findLayerById(project.getLayers(), layerId);
 
-        LayerUpdateDto layerDto = layerMapper.toDto(layerForUpdate);
-        LayerUpdateDto patchedLayer = jsonPatcher.mergePatch(patchDto, layerDto, LayerUpdateDto.class);
+        try {
+            LayerUpdateDto layerDto = layerMapper.toDto(layerForUpdate);
+            LayerUpdateDto patchedLayer = jsonPatcher.mergePatch(patchDto, layerDto, LayerUpdateDto.class);
 
-        layerMapper.update(layerForUpdate, patchedLayer);
+            layerMapper.update(layerForUpdate, patchedLayer);
 
-        updateGroup(layerForUpdate, patchedLayer.getParentId(), project.getGroups());
+            updateGroup(layerForUpdate, patchedLayer.getParentId(), project.getGroups());
 
-        layerForUpdate.setLastModified(LocalDateTime.now());
+            layerForUpdate.setLastModified(LocalDateTime.now());
 
-        layerRepository.save(layerForUpdate);
+            layerRepository.save(layerForUpdate);
 
-        messageBus.produce(
-                new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                  "UPDATE",
-                                  layerForUpdate.getTableName(),
-                                  "LAYER",
-                                  layerForUpdate.getId(),
-                                  objectMapper.convertValue(layerDto, JsonNode.class)));
+            messageBus.produce(
+                    new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                      "UPDATE",
+                                      layerForUpdate.getTableName(),
+                                      "LAYER",
+                                      layerForUpdate.getId(),
+                                      objectMapper.convertValue(layerDto, JsonNode.class)));
+        } catch (Exception e) {
+            String msg = "Не удалось обновить слой: " + layerId;
+
+            throw new GisServiceException(msg, e.getCause());
+        }
     }
 
     public void delete(@NotNull Layer layer) {

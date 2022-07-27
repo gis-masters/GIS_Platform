@@ -6,6 +6,8 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATE_PATTERN;
+
 public class TableUpdateDto {
 
     @Size(max = 250, message = "Не должно превышать 250 символов")
@@ -19,7 +21,7 @@ public class TableUpdateDto {
 
     @Size(max = 100, message = "Не должно превышать 100 символов")
     private String documentType;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SYSTEM_DATE_PATTERN)
     private LocalDate docApproveDate;
 
     @Range(min = 500, max = 100000, message = "Номинальный масштаб должен быть в диапазоне от 500 до 100 000")
@@ -28,7 +30,7 @@ public class TableUpdateDto {
     @Size(min = 8, max = 20, message = "Ожидается строка вида: 'EPSG:28406'")
     private String crs;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SYSTEM_DATE_PATTERN)
     private LocalDate docTerminationDate;
 
     @Size(max = 100, message = "Не должно превышать 100 символов")

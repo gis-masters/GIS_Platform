@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -353,7 +354,9 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Удален слой ссылающийся на эту таблицу")
-    public void checkThatLayerWasDeleted() {
+    public void checkThatLayerWasDeleted() throws InterruptedException {
+        sleep(1000);
+
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         log().all().

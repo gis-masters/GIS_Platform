@@ -64,7 +64,9 @@ public class AuditEventHandler implements IEventHandler {
                     .build();
 
             response = httpClient.newCall(req).execute();
-            if (!response.isSuccessful()) {
+            if (response.isSuccessful()) {
+                log.debug("Success send audit event: {}", auditEventDto);
+            } else {
                 log.warn("Не удалось записать событие аудита: {}", auditEventDto);
             }
         } catch (Exception e) {

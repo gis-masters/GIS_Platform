@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATE_PATTERN;
+
 public class ResourceCreateDto {
 
     @NotBlank
@@ -21,7 +23,7 @@ public class ResourceCreateDto {
 
     @Size(max = 100, message = "Не должно превышать 100 символов")
     private String documentType;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SYSTEM_DATE_PATTERN)
     private LocalDate docApproveDate;
 
     @Range(min = 500, max = 100000, message = "Номинальный масштаб должен быть в диапазоне от 500 до 100 000")

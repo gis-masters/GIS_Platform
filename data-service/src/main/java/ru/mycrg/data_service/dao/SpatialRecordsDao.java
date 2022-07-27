@@ -70,26 +70,14 @@ public class SpatialRecordsDao {
     public Feature save(@NotNull ResourceQualifier qualifier,
                         @NotNull Feature feature,
                         @NotNull SchemaDto schema) throws CrgDaoException {
-        try {
-            String query = buildParameterizedInsertQuery(qualifier, feature);
-            MapSqlParameterSource parameterSource = sqlParameterSourceFactory.buildParameterizedSource(feature, schema);
+        String query = buildParameterizedInsertQuery(qualifier, feature);
+        MapSqlParameterSource parameterSource = sqlParameterSourceFactory.buildParameterizedSource(feature, schema);
 
-            Long id = pBaseDao.save(query, parameterSource);
+        Long id = pBaseDao.save(query, parameterSource);
 
-            feature.setId(id);
+        feature.setId(id);
 
-            return feature;
-        } catch (CrgDaoException e) {
-            String msg = format("Не удалось выполнить вставку в таблицу: '%s'", qualifier);
-            logError(msg, e);
-
-            throw new CrgDaoException(msg);
-        } catch (Exception e) {
-            String msg = format("Что то пошло не так при вставке в таблицу: '%s'", qualifier);
-            logError(msg, e);
-
-            throw new CrgDaoException(msg);
-        }
+        return feature;
     }
 
     public void updateById(ResourceQualifier qualifier,

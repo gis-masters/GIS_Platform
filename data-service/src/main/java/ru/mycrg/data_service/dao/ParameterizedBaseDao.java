@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
+import static ru.mycrg.data_service.util.ErrorDetailsExtractor.extractDetails;
+
 @Transactional
 @Repository
 public class ParameterizedBaseDao {
@@ -28,7 +31,10 @@ public class ParameterizedBaseDao {
 
             return pJdbcTemplate.queryForObject(query, parameterSource, Long.class);
         } catch (Exception e) {
-            throw new CrgDaoException(e.getMessage());
+            String msg = "Не удалось выполнить сохранение";
+            logError(msg, e);
+
+            throw new CrgDaoException(msg, extractDetails(e));
         }
     }
 

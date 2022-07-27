@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATE_PATTERN;
+
 public class TableCreateDto extends ResourceCreateDto {
 
     @NotBlank
@@ -25,7 +27,7 @@ public class TableCreateDto extends ResourceCreateDto {
     @NotBlank
     @Size(min = 2, max = 50)
     private String schemaId;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SYSTEM_DATE_PATTERN)
     private LocalDate docTerminationDate;
 
     @Size(max = 100, message = "Не должно превышать 100 символов")
