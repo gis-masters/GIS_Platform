@@ -11,7 +11,7 @@ import { allGroups } from '../../stores/AllGroups.store';
 import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../services/crg/permissions.models';
 import { communicationService } from '../../services/communication.service';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
-import { getTablePermissions } from '../../services/crg/permissions.client';
+import { getProjectPermissions, getTablePermissions } from '../../services/crg/permissions.client';
 import { CrgUser, usersService } from '../../services/crg/users.service';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Button } from '../Button/Button';
@@ -188,11 +188,14 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
 
   @boundMethod
   private async fetchPermissions() {
-    const { url, title } = this.props;
+    const { url, title, itemEntityType } = this.props;
     this.setPermissions([], true);
 
     try {
-      const permissions = await getTablePermissions(url);
+      const permissions =
+        itemEntityType === ExplorerItemEntityType.PROJECT
+          ? await getProjectPermissions(url)
+          : await getTablePermissions(url);
       // тут так надо
       // eslint-disable-next-line unicorn/consistent-destructuring
       if (url === this.props.url) {
@@ -205,7 +208,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
 
   @action.bound
   private handleMoar(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
-    const role = e.currentTarget.getAttribute('data-role') as Role;
+    const role = e.currentTarget.dataset.role as Role;
     this.moarExpanded[role] = true;
   }
 }

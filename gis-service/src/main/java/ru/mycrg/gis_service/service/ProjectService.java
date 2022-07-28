@@ -14,6 +14,7 @@ import ru.mycrg.gis_service.dao.ProjectsDao;
 import ru.mycrg.gis_service.dto.PermissionCreateDto;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
+import ru.mycrg.gis_service.dto.ProjectUpdateDto;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
@@ -31,6 +32,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultProjectName;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 import static ru.mycrg.gis_service.security.Roles.OWNER;
@@ -135,10 +137,10 @@ public class ProjectService {
      * Обновление проекта. До тех пор пока меняется только название проекта, можно менять только алиас в нашей БД. Не
      * меняя названия рабочей области на геосервере и схемы в БД.
      *
-     * @param projectId   Идентификатор проекта.
-     * @param projectName Новое название проекта.
+     * @param projectId Идентификатор проекта.
+     * @param updateDto Сущность для обновления проекта.
      */
-    public void update(long projectId, String projectName) {
+    public void update(long projectId, ProjectUpdateDto updateDto) {
         Project project;
         if (authenticationFacade.isRoot()) {
             project = projectRepository
@@ -151,14 +153,23 @@ public class ProjectService {
             }
         }
 
-        project.setName(projectName);
+        if (nonNull(updateDto.getName()) && !updateDto.getName().isEmpty()) {
+            project.setName(updateDto.getName());
+        }
+        if (nonNull(updateDto.getDescription()) && !updateDto.getDescription().isEmpty()) {
+            project.setDescription(updateDto.getDescription());
+        }
+        if (nonNull(updateDto.getBbox()) && !updateDto.getBbox().isEmpty()) {
+            project.setBbox(updateDto.getBbox());
+        }
+
         project.setLastModified(LocalDateTime.now());
 
         projectRepository.save(project);
 
         messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                              "UPDATE",
-                                             projectName,
+                                             project.getName(),
                                              "PROJECT",
                                              project.getId(),
                                              objectMapper.convertValue(project, JsonNode.class)));

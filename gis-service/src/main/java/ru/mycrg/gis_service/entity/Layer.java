@@ -1,5 +1,6 @@
 package ru.mycrg.gis_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.hateoas.Identifiable;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
@@ -73,6 +74,7 @@ public class Layer implements Identifiable<Long> {
     LocalDateTime lastModified = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Project project;
 
     @ManyToOne

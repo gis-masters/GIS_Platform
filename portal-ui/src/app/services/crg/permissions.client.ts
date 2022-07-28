@@ -13,6 +13,10 @@ import { http } from '../http.service';
 import { Toast } from '../../components/Toast/Toast';
 import { ExplorerItemEntityType } from '../../components/Explorer/Explorer.models';
 
+export async function getProjectPermissions(url: string): Promise<RoleAssignmentBody[]> {
+  return http.get<RoleAssignmentBody[]>(url);
+}
+
 export async function getTablePermissions(url: string): Promise<RoleAssignmentBody[]> {
   return http.getPaged<RoleAssignmentBody>(url);
 }
@@ -100,18 +104,6 @@ export async function removeDatasetPermission(payload: RoleAssignmentBody, datas
     await http.delete(`${url}/${payload.id}`);
   } catch (error) {
     handleSavingError(error, payload, 'удалить', 'набора данных', datasetId);
-  }
-}
-
-export async function getProjectPermissions(project: CrgProject): Promise<RoleAssignmentBody[]> {
-  try {
-    const list = await http.get<RoleAssignmentBody[]>(await getProjectPermissionsUrl(project.id));
-
-    return list.map(item => ({ ...item, principalId: Number(item.principalId) }));
-  } catch {
-    Toast.error(`Ошибка получения прав для проекта ${project.id}`);
-
-    return [];
   }
 }
 

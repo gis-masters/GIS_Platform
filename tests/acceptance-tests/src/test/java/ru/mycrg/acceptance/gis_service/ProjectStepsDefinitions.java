@@ -10,6 +10,7 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.gis_service.dto.ProjectRequestDto;
+import ru.mycrg.acceptance.gis_service.dto.ProjectUpdateDto;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -115,7 +116,13 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     public void updateCurrentProject(String projectName) {
         authorizationBase.loginAsCurrentUser();
 
-        updateProject(projectName);
+        String projName = generateString(projectName);
+        ProjectUpdateDto updateDto = new ProjectUpdateDto(projName);
+
+        String jsonBody = gson.toJson(updateDto);
+        projectDto = mapToProjectDto(projName);
+
+        updateProject(jsonBody);
     }
 
     @When("Администратор делает запрос на обновление полей проекта {string}")
@@ -125,11 +132,44 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         updateProject(projectName);
     }
 
+    @When("Администратор отправляет запрос на обновление проекта")
+    public void updateCurrentProjectAsAdmin() {
+        authorizationBase.loginAsOwner();
+
+        String projName = generateString("STRING_10");
+        ProjectUpdateDto updateDto = new ProjectUpdateDto(projName,
+                                                          generateString("description"),
+                                                          "[3824617.6,5725021.2,3834608.8,5743457.4]");
+        String jsonBody = gson.toJson(updateDto);
+        projectDto = mapToProjectDto(projName);
+
+        updateProject(jsonBody);
+    }
+
+    @When("Администратор делает запрос на обновление полей проекта {string} {string} {string}")
+    public void updateCurrentProjectAsAdmin(String name, String description, String bbox) {
+        authorizationBase.loginAsOwner();
+
+        String projName = generateString(name);
+        ProjectUpdateDto updateDto = new ProjectUpdateDto(projName, generateString(description), bbox);
+        String jsonBody = gson.toJson(updateDto);
+        projectDto = mapToProjectDto(projName);
+
+        updateProject(jsonBody);
+    }
+
     @When("Администратор даёт доступ: {string} для текущего пользователя на текущий проект")
     public void giveCurrentUserPermToCurrentProject(String role) {
         authorizationBase.loginAsOwner();
 
         addPermissionToProject(userId, "user", role);
+    }
+
+    @When("Пользователь даёт доступ: {string} для текущей пользовательской группы на текущий проект")
+    public void giveCurrentUserPermToCurrentProjectAsUser(String role) {
+        authorizationBase.loginAsCurrentUser();
+
+        addPermissionToProject(usersGroupId, "group", role);
     }
 
     @When("Администратор даёт доступ: {string} для текущей пользовательской группы на текущий проект")
@@ -177,9 +217,27 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает запрос на проверку правил текущего проекта")
     public void checkProjectPerm() {
+        authorizationBase.loginAsOwner();
+
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + projectId + "/permissions");
+    }
+
+    @When("Пользователь делает запрос на проверку правил текущего проекта")
+    public void checkProjectPermAsUser() {
+        authorizationBase.loginAsCurrentUser();
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + projectId + "/permissions");
+    }
+
+    @When("Пользователь делает запрос на удаление правил текущего проекта")
+    public void deleteProjectPermAsUser() {
+        authorizationBase.loginAsCurrentUser();
+
+        deletePermissionById();
     }
 
     @And("Сервер отвечает с пустым телом")
@@ -358,18 +416,22 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         post(String.format("/%d/permissions", projectId));
+
+        permId = extractEntityIdFromResponse(response);
     }
 
-    private void updateProject(String projectName) {
-        projectDto = mapToProjectDto(projectName);
+    private void deletePermissionById() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete(String.format("/%d/permissions/%s", projectId, permId));
+    }
 
-        String payload = gson.toJson(projectDto);
-
+    private void updateProject(String jsonBody) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        body(payload).
+                        body(jsonBody).
                         contentType(ContentType.JSON)
                 .when().
-                        put("" + projectId);
+                        patch("" + projectId);
     }
 }

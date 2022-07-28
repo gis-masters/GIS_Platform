@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
+import ru.mycrg.gis_service.dto.ProjectUpdateDto;
 import ru.mycrg.gis_service.service.ProjectService;
 
 import javax.validation.Valid;
@@ -54,11 +55,11 @@ public class ProjectController {
         return new ResponseEntity<>(project, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{projectId}")
+    @PatchMapping("/{projectId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> updateProject(@PathVariable long projectId,
-                                                @Valid @RequestBody ProjectRequestDto projectDto) {
-        projectService.update(projectId, projectDto.getProjectName());
+                                                @Valid @RequestBody ProjectUpdateDto projectDto) {
+        projectService.update(projectId, projectDto);
 
         return ResponseEntity.ok().build();
     }

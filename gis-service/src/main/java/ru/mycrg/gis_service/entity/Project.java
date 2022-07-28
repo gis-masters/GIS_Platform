@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Table(name="projects")
+@Table(name = "projects")
 public class Project implements Identifiable<Long> {
 
     @Id
@@ -20,6 +20,9 @@ public class Project implements Identifiable<Long> {
 
     @Column
     private String name;
+
+    @Column
+    private String description;
 
     @Column
     private String internalName;
@@ -176,6 +179,14 @@ public class Project implements Identifiable<Long> {
 
     public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

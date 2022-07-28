@@ -79,6 +79,7 @@ export interface CrgProject {
   id: number;
   name: string;
   internalName: string;
+  description: string;
   bbox: string;
   default: boolean;
   order: number;

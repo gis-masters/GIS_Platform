@@ -17,6 +17,7 @@ public class ProjectProjectionImpl implements ProjectProjection {
     private boolean isDefault;
     private LocalDateTime createdAt;
     private String role;
+    private String description;
 
     public ProjectProjectionImpl() {
         // Required
@@ -30,6 +31,7 @@ public class ProjectProjectionImpl implements ProjectProjection {
         this.bbox = project.getBbox();
         this.isDefault = project.isDefault();
         this.createdAt = project.getCreatedAt();
+        this.description = project.getDescription();
     }
 
     @Override
@@ -101,5 +103,14 @@ public class ProjectProjectionImpl implements ProjectProjection {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

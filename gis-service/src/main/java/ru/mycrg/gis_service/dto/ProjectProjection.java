@@ -14,6 +14,8 @@ public interface ProjectProjection {
 
     String getName();
 
+    String getDescription();
+
     String getInternalName();
 
     long getOrganizationId();

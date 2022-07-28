@@ -20,6 +20,7 @@ public class ProjectsMapper implements RowMapper<ProjectProjection> {
         project.setBbox(rs.getString("bbox"));
         project.setDefault(rs.getBoolean("is_default"));
         project.setRole(rs.getString("role"));
+        project.setDescription(rs.getString("description"));
 
         Timestamp createdAt = rs.getTimestamp("created_at");
         if (createdAt != null) {

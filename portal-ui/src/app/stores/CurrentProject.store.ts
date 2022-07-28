@@ -28,6 +28,7 @@ const emptyProject: CrgProjectData = {
   id: 0,
   bbox: '',
   createdAt: '',
+  description: '',
   default: false,
   name: '',
   order: 0,
@@ -44,6 +45,7 @@ class CurrentProject implements CrgProjectData {
 
   @observable bbox: string;
   @observable createdAt: string;
+  @observable description: string;
   @observable id: number;
   @observable internalName: string;
   @observable name: string;

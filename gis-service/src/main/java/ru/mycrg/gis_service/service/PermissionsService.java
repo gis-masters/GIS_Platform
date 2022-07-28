@@ -10,6 +10,7 @@ import ru.mycrg.gis_service.dto.PermissionProjection;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.ConflictException;
+import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.PermissionRepository;
@@ -33,15 +34,18 @@ public class PermissionsService {
     private final ProjectionFactory projectionFactory;
     private final ProjectService projectService;
     private final JsonPatcher jsonPatcher;
+    private final ResourceProtector resourceProtector;
 
     public PermissionsService(PermissionRepository permissionRepository,
                               ProjectionFactory projectionFactory,
                               ProjectService projectService,
-                              JsonPatcher jsonPatcher) {
+                              JsonPatcher jsonPatcher,
+                              ResourceProtector resourceProtector) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.projectionFactory = projectionFactory;
         this.permissionRepository = permissionRepository;
+        this.resourceProtector = resourceProtector;
     }
 
     public Map<Long, List<PermissionProjection>> getAll() {
@@ -59,6 +63,7 @@ public class PermissionsService {
 
     public List<PermissionProjection> getAll(long projectId) {
         return Stream.of(projectService.getById(projectId))
+                     .filter(this::isOwnerOrAdmin)
                      .map(this::getProjectPermissions)
                      .findFirst()
                      .orElseGet(ArrayList::new);
@@ -72,6 +77,8 @@ public class PermissionsService {
 
     public PermissionProjection create(long projectId, PermissionCreateDto dto) {
         Project project = projectService.getById(projectId);
+
+        isOwnerOrAdmin(project);
 
         checkPermission(dto, projectId, null);
 
@@ -143,11 +150,14 @@ public class PermissionsService {
 
     @NotNull
     private Permission getPermissionById(Long projectId, Long permissionId) {
-        return projectService.getById(projectId)
-                             .getPermissions().stream()
-                             .filter(permission -> permission.getId().equals(permissionId))
-                             .findFirst()
-                             .orElseThrow(() -> new NotFoundException(permissionId));
+        Project project = projectService.getById(projectId);
+        isOwnerOrAdmin(project);
+
+        return project
+                .getPermissions().stream()
+                .filter(permission -> permission.getId().equals(permissionId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(permissionId));
     }
 
     private List<PermissionProjection> getProjectPermissions(Project project) {
@@ -159,5 +169,13 @@ public class PermissionsService {
     @NotNull
     private PermissionProjection mapToProjection(Permission permission) {
         return projectionFactory.createProjection(PermissionProjection.class, permission);
+    }
+
+    private boolean isOwnerOrAdmin(@NotNull Project project) {
+        if (resourceProtector.isOwner(project)) {
+            return true;
+        }
+
+        throw new ForbiddenException("получения", "разрешений на проект", project.getName());
     }
 }
