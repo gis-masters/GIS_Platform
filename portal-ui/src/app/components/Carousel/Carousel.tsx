@@ -3,8 +3,8 @@ import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { Breakpoint, Dialog, DialogActions, DialogContent } from '@mui/material';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { Breakpoint, Dialog, DialogActions, DialogContent, Tooltip } from '@mui/material';
+import { ChevronLeft, ChevronRight, OpenInFull, CloseFullscreen } from '@mui/icons-material';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 import { getFileDownloadUrl } from '../../services/server-urls.service';
@@ -71,6 +71,13 @@ export class Carousel extends Component<CarouselProps> {
                 <Loading visible={this.busy} />
               </>
             )}
+            {this.currentImage && isPdfFile(this.currentImage) && (
+              <Tooltip title={this.expandHandler ? 'Свернуть' : 'Развернуть'}>
+                <IconButton className={cnCarousel('OpenInFull')} onClick={this.setExpandHandler}>
+                  {this.expandHandler ? <CloseFullscreen /> : <OpenInFull />}
+                </IconButton>
+              </Tooltip>
+            )}
           </DialogContent>
           <DialogActions>
             {allImages.length !== 1 && (
@@ -83,9 +90,7 @@ export class Carousel extends Component<CarouselProps> {
                 </IconButton>
               </>
             )}
-            {this.currentImage && isPdfFile(this.currentImage) && (
-              <Button onClick={this.setExpandHandler}>{this.expandHandler ? 'Свернуть' : 'Развернуть'}</Button>
-            )}
+
             <Button onClick={onClose}>Закрыть</Button>
           </DialogActions>
         </Dialog>
