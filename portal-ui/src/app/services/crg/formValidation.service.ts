@@ -167,7 +167,9 @@ function stringWellKnownRegex(value: unknown, { wellKnownRegex, regexErrorMessag
 
 function stringPassword(value: unknown, { display }: PropertySchemaString): string[] {
   if (display === 'password' && !new RegExp(knownRegex.password).test(String(value))) {
-    return ['Пароль должен состоять только из цифр, заглавных и строчных букв латинского алфавита '];
+    return [
+      'Пароль должен состоять только из цифр, заглавных и строчных букв латинского алфавита и содержать не менее 8 символов'
+    ];
   }
 }
 

@@ -32,6 +32,7 @@ interface FormContentProps<T extends Record<string, unknown>> extends IClassName
   onFieldChange?: (value: T[keyof T], propertyName: keyof T, prevValue: T[keyof T]) => void;
   onFieldNeedValidate?: (value: T[keyof T], propertyName: keyof T) => void;
   readonly?: boolean;
+  labelInTextField?: boolean;
 }
 
 @observer
@@ -39,7 +40,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   FormContentProps<T>
 > {
   render() {
-    const { schema, formValue, className, errors = [], readonly } = this.props;
+    const { schema, formValue, className, errors = [], readonly, labelInTextField } = this.props;
 
     return (
       <div className={cnFormContent(null, [className])}>
@@ -66,14 +67,16 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
 
           return (
             <FormField key={i} withRelations={!!relations.length}>
-              <FormLabel
-                htmlFor={htmlId}
-                required={propertySchema.required}
-                readonly={readonly}
-                description={propertySchema.description}
-              >
-                {propertySchema.title}
-              </FormLabel>
+              {!labelInTextField && (
+                <FormLabel
+                  htmlFor={htmlId}
+                  required={propertySchema.required}
+                  readonly={readonly}
+                  description={propertySchema.description}
+                >
+                  {propertySchema.title}
+                </FormLabel>
+              )}
 
               {propertyReadonly ? (
                 <FormView
@@ -93,6 +96,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
                   onNeedValidate={this.fieldNeedValidateHandler}
                   fieldValue={convertToComplexField(propertySchema, formValue)}
                   formValue={formValue}
+                  labelInTextField={labelInTextField}
                   errors={errors
                     .filter(({ field }) => field === propertySchema.name)
                     .flatMap(({ messages }) => messages)}

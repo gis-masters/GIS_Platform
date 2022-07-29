@@ -349,6 +349,14 @@ export async function getFileDownloadUrl(id: string): Promise<string> {
   return (await getFilesUrl()) + `/${id}/download`;
 }
 
+export async function getRestorePasswordUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/request-password-reset';
+}
+
+export async function getChangePasswordUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/password-reset';
+}
+
 export async function replaceUrl(url: string, addPath?: boolean): Promise<string> {
   if (!url) {
     return '';

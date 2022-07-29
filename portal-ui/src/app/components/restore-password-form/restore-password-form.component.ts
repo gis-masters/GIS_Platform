@@ -1,0 +1,38 @@
+import { createRoot, Root } from 'react-dom/client';
+import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
+import { createElement } from 'react';
+
+import { RestorePasswordForm } from '../RestorePasswordForm/RestorePasswordForm';
+import { registry } from '../../services/registry';
+
+const RestorePasswordFormWithRegistry = withRegistry(registry)(RestorePasswordForm);
+
+@Component({
+  selector: 'crg-restore-password-form',
+  template: '<div class="restore-password-form" #react></div>',
+  styleUrls: ['./restore-password-form.component.scss']
+})
+export class RestorePasswordFormComponent implements OnInit, OnChanges, OnDestroy {
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  private root: Root;
+
+  ngOnInit() {
+    this.root = createRoot(this.ref.nativeElement);
+    this.renderReactElement();
+  }
+
+  ngOnDestroy(): void {
+    this.root.unmount();
+  }
+
+  ngOnChanges() {
+    this.renderReactElement();
+  }
+
+  private renderReactElement() {
+    const reactElement = createElement(RestorePasswordFormWithRegistry);
+
+    this.root?.render(reactElement);
+  }
+}

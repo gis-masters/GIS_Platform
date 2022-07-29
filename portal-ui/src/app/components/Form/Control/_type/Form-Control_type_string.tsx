@@ -14,11 +14,20 @@ import '!style-loader!css-loader!sass-loader!./Form-Control_type_string.scss';
 @observer
 class FormControlTypeString extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue, inSet, property, errors, variant = 'standard' } = this.props;
+    const {
+      htmlId,
+      className,
+      fieldValue,
+      inSet,
+      property,
+      errors,
+      variant = 'standard',
+      labelInTextField
+    } = this.props;
     const { display, name } = property as PropertySchemaString;
 
     return (
-      <div className={cnFormControl({ inSet }, [className])}>
+      <div className={cnFormControl({ inSet, labelInTextField }, [className])}>
         {display === 'phone' ? (
           <InputMask
             mask='9 (999) 999 99 99'
@@ -43,11 +52,11 @@ class FormControlTypeString extends Component<FormControlProps> {
           <TextField
             id={htmlId}
             name={name}
-            fullWidth={!inSet}
+            fullWidth={labelInTextField || !inSet}
             value={fieldValue || ''}
             error={!!errors?.length}
             helperText={errors}
-            label={inSet ? property.title : undefined}
+            label={labelInTextField || inSet ? property.title : undefined}
             onChange={this.handleChange}
             onBlur={this.handleBlur}
             inputProps={{ className: 'scroll' }}

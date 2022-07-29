@@ -15,6 +15,7 @@ import ru.mycrg.auth_service.repository.UserRepository;
 import ru.mycrg.auth_service_contract.dto.InitPasswordResetDto;
 import ru.mycrg.auth_service_contract.dto.PasswordResetDto;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.String.format;
@@ -61,22 +62,26 @@ public class PasswordResetService {
                           tokenRepository.deleteByCreatedAtBefore(now().minusMinutes(tokenExpirationTime));
 
                           // Send email
-                          emailService.sendEmailResetPassword(user, resetToken.getToken());
+                          emailService.sendEmailResetPassword(user, resetToken.getToken(), dto.getOriginHost());
                       });
     }
 
-    public void activateToken(PasswordResetDto dto) {
-        tokenRepository.findByToken(dto.getToken())
-                       .ifPresentOrElse(token -> {
-                           throwIfTokenExpired(token);
+    public String activateToken(PasswordResetDto dto) {
+        Optional<PasswordResetToken> resetTokenOpt = tokenRepository.findByToken(dto.getToken());
+        if (resetTokenOpt.isPresent()) {
+            PasswordResetToken token = resetTokenOpt.get();
 
-                           User user = token.getUser();
-                           user.setPassword(encoder.encode(dto.getPassword()));
+            throwIfTokenExpired(token);
 
-                           tokenRepository.removeByUser(user);
-                       }, () -> {
-                           throw new BadRequestException("Token invalid or expired");
-                       });
+            User user = token.getUser();
+            user.setPassword(encoder.encode(dto.getPassword()));
+
+            tokenRepository.removeByUser(user);
+
+            return user.getLogin();
+        } else {
+            throw new BadRequestException("Token invalid or expired");
+        }
     }
 
     private void throwIfTokenExpired(PasswordResetToken token) {

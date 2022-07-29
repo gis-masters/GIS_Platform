@@ -11,6 +11,7 @@ import ru.mycrg.auth_service_contract.dto.PasswordResetDto;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -110,23 +111,31 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
                         get("/projects");
     }
 
-    @When("Отправляется POST запрос на эндпоинт request-password-reset, с телом в котором содержится поле email")
+    @When("Отправляется POST запрос на эндпоинт request-password-reset, с телом в котором содержится поле email и originHost")
     public void passwordResetRequest() {
-        String body = "{\"email\": \"d.alekseev@mycrg.ru\"}";
+        String body = "{\"email\": \"d.alekseev@mycrg.ru\", \"originHost\": \"http://localhost:8100\"}";
+
+        resetPassRequest(body);
+    }
+
+    @When("Пользователь делает запрос на восстановление пароля с невалидными данными {string} {string}")
+    public void passwordResetRequestWithInvalidData(String email, String originHost) {
+        String body = format("{\"email\": \"%s\", \"originHost\": \"%s\"}", email, originHost);
 
         resetPassRequest(body);
     }
 
     @When("Отправляется запрос на восстановление пароля с почтой НЕ существующего пользователя")
     public void passwordResetRequestUserNotExist() {
-        String body = String.format("{\"email\": \"%s\"}", generateString("EMAIL_5"));
+        String body = format("{\"email\": \"%s\", \"originHost\": \"http://localhost:8100\"}",
+                             generateString("EMAIL_5"));
 
         resetPassRequest(body);
     }
 
     @When("Запросы на восстановление пароля отправляются чаще 1 раза в 10 секунд")
     public void passwordResetRequestMoreThenOnePerTenSeconds() {
-        String body = "{\"email\": \"d.alekseev@mycrg.ru\"}";
+        String body = "{\"email\": \"d.alekseev@mycrg.ru\", \"originHost\": \"http://localhost:8100\"}";
 
         resetPassRequest(body);
         resetPassRequest(body);

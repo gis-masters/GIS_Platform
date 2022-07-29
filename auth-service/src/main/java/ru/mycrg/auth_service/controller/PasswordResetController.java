@@ -38,8 +38,8 @@ public class PasswordResetController {
     public ResponseEntity<Object> passwordReset(@Valid @RequestBody PasswordResetDto dto) {
         log.info("Reset password: {}", dto);
 
-        passwordResetService.activateToken(dto);
+        String login = passwordResetService.activateToken(dto);
 
-        return new ResponseEntity<>(OK);
+        return new ResponseEntity<>(login, OK);
     }
 }

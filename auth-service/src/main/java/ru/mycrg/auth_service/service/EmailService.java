@@ -14,7 +14,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,18 +30,15 @@ public class EmailService {
     @Autowired
     private Environment environment;
 
-    private final HttpServletRequest httpServletRequest;
-
-    public EmailService(JavaMailSender emailSender, HttpServletRequest httpServletRequest) {
+    public EmailService(JavaMailSender emailSender) {
         this.emailSender = emailSender;
-        this.httpServletRequest = httpServletRequest;
     }
 
-    public void sendEmailResetPassword(User receiver, String newToken) {
+    public void sendEmailResetPassword(User receiver, String newToken, String originHost) {
         String fullName = nonNull(receiver.getMiddleName())
                 ? format("%s %s", receiver.getName(), receiver.getMiddleName())
                 : receiver.getName();
-        String htmlBody = preparedMessageHtmlBody(fullName, newToken);
+        String htmlBody = preparedMessageHtmlBody(fullName, newToken, originHost);
 
         String sender = environment.getRequiredProperty("spring.mail.username");
 
@@ -66,21 +62,15 @@ public class EmailService {
         }
     }
 
-    private String preparedMessageHtmlBody(String fullName, String token) {
-        String fullURL = httpServletRequest.getRequestURL().toString();
-        if (!fullURL.contains("https")) {
-            fullURL = fullURL.replace("http", "https");
-        }
-
-        String baseSiteURL = fullURL.replace(httpServletRequest.getRequestURI(), "");
-        String restoreLink = format("%s/%s/%s", baseSiteURL, "password-reset", token);
+    private String preparedMessageHtmlBody(String fullName, String token, String originHost) {
+        String restoreLink = format("%s/%s/%s", originHost, "password-reset", token);
         String filePath = "templateEmail.html";
 
         String content;
         try {
             content = readFromFile(filePath);
             content = content.replace("{fullname}", fullName);
-            content = content.replace("{baseSiteURL}", baseSiteURL);
+            content = content.replace("{baseSiteURL}", originHost);
             content = content.replace("{restoreLink}", restoreLink);
         } catch (IOException e) {
             throw new BadRequestException(format("Не удалось прочитать файл %s. %s", filePath, e.getMessage()));

@@ -3,8 +3,8 @@ import { Block } from '../../Block';
 export class LoginForm extends Block {
   selectors = {
     form: '.LoginForm',
-    loginInput: '.LoginForm input#authUserEmail',
-    passwordInput: '.LoginForm input#authUserPassword',
+    loginInput: '.LoginForm input[name="username"]',
+    passwordInput: '.LoginForm input[name="password"]',
     button: '.LoginForm button[type="submit"]'
   };
 

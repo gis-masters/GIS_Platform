@@ -1,6 +1,12 @@
 import { AxiosError } from 'axios';
 
-import { getAuthUrl, getLogoutUrl, getOrganizationsUrl } from './server-urls.service';
+import {
+  getAuthUrl,
+  getChangePasswordUrl,
+  getLogoutUrl,
+  getOrganizationsUrl,
+  getRestorePasswordUrl
+} from './server-urls.service';
 import { communicationService } from './communication.service';
 import { getEnvironment } from './environment';
 import { services } from './services';
@@ -120,6 +126,18 @@ class AuthService {
     };
 
     return http.post(url + '/init', payload);
+  }
+
+  async restorePassword(email: string, originHost: string) {
+    const url = await getRestorePasswordUrl();
+
+    return http.post(url, { email, originHost });
+  }
+
+  async changePassword(password: string, token: string) {
+    const url = await getChangePasswordUrl();
+
+    return http.post(url, { password, token });
   }
 }
 

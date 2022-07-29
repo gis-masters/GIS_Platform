@@ -40,6 +40,7 @@ export interface FormProps<T extends Record<string, unknown>>
   onActionError?(error: Error | { errors: FieldErrors[] }): void;
   actions?: ReactNode;
   readonly?: boolean;
+  labelInTextField?: boolean;
   auto?: boolean;
   actionFunction?: (value: T) => Promise<void> | void;
   invoke?: {
@@ -111,6 +112,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
       onActionError,
       actions,
       readonly,
+      labelInTextField,
       actionFunction,
       auto,
       invoke,
@@ -129,6 +131,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
             onFieldNeedValidate={this.fieldValidate}
             errors={[...(errors || []), ...(this.serverErrors || []), ...(this.errors || [])]}
             readonly={readonly}
+            labelInTextField={labelInTextField}
           />
         )}
         {actions && <FormActions>{actions}</FormActions>}
@@ -163,9 +166,13 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
     if (auto && actionFunction) {
       const errors = this.validate();
 
-      if (errors.length) {
+      if (errors.length && onActionError) {
         onActionError({ errors });
 
+        return;
+      }
+
+      if (errors.length) {
         return;
       }
 
@@ -195,12 +202,12 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
         ? (error as FieldErrors[])
         : (error as AxiosError<{ errors?: FieldErrors[] }>)?.response?.data?.errors;
 
+      if (errors) {
+        this.setServerErrors(normalizeServerErrors(errors));
+      }
+
       if (onActionError) {
         onActionError(error as AxiosError<{ errors?: FieldErrors[] }>);
-
-        if (errors) {
-          this.setServerErrors(normalizeServerErrors(errors));
-        }
       }
     }
   }

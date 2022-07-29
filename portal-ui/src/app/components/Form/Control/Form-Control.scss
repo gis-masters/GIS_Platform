@@ -12,7 +12,8 @@
     width: auto;
   }
 
-  &_fullWidthForOldForm {
+  &_fullWidthForOldForm,
+  &_labelInTextField {
     width: 100%;
   }
 }

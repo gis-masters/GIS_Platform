@@ -18,6 +18,7 @@ export interface FormControlProps<T extends Record<string, unknown> = Record<str
   errors?: string[];
   variant?: 'standard' | 'outlined';
   fullWidthForOldForm?: boolean;
+  labelInTextField?: boolean;
   children?: ReactNode;
   onChange?: ({ value: T, propertyName: string }) => void;
   onNeedValidate?: ({ value: T, propertyName: string }) => void;

@@ -18,6 +18,8 @@ import { DataManagementPageComponent } from './pages/data-management/data-manage
 import { LibraryDocumentPageComponent } from './pages/library-document/library-document-page.component';
 import { LibraryRegistryPageComponent } from './pages/library-registry/library-registry-page.component';
 import { ServicesCalculatorPageComponent } from './pages/services-calculator/services-calculator-page.component';
+import { RestorePasswordFormPageComponent } from './pages/restore-password-form/restore-password-form-page.component';
+import { ChangePasswordFormPageComponent } from './pages/change-password-form/change-password-form-page.component';
 
 export enum Pages {
   HOME = 'home',
@@ -32,7 +34,9 @@ export enum Pages {
   DATA_MANAGEMENT = 'data-management',
   REGISTRY = 'registry',
   DOCUMENT = 'document',
-  SERVICES_CALCULATOR = 'services-calculator'
+  SERVICES_CALCULATOR = 'services-calculator',
+  RESTORE_PASSWORD = 'restore-password',
+  CHANGE_PASSWORD = 'change-password'
 }
 
 export interface AppRouteData extends Data {
@@ -64,6 +68,16 @@ const routes: AppRoutes = [
     path: 'register',
     component: RegisterComponent,
     data: { page: Pages.REGISTER }
+  },
+  {
+    path: 'restore-password',
+    component: RestorePasswordFormPageComponent,
+    data: { page: Pages.RESTORE_PASSWORD }
+  },
+  {
+    path: 'password-reset/:token',
+    component: ChangePasswordFormPageComponent,
+    data: { page: Pages.CHANGE_PASSWORD }
   },
   {
     path: 'services-calculator',
@@ -202,5 +216,7 @@ export const routingComponents = [
   DataManagementPageComponent,
   LibraryRegistryPageComponent,
   LibraryDocumentPageComponent,
-  ServicesCalculatorPageComponent
+  ServicesCalculatorPageComponent,
+  RestorePasswordFormPageComponent,
+  ChangePasswordFormPageComponent
 ];

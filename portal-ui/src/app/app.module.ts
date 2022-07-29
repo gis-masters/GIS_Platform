@@ -82,6 +82,8 @@ import { ServicesCalculatorComponent } from './components/services-calculator/se
 import { FeatureExtractComponent } from './components/feature-extract/feature-extract.component';
 import { RelatedDocumentsButtonComponent } from './components/related-documents-button/related-documents-button.component';
 import { FormDescriptionComponent } from './components/form-description/form-description.component';
+import { RestorePasswordFormComponent } from './components/restore-password-form/restore-password-form.component';
+import { ChangePasswordFormComponent } from './components/change-password-form/change-password-form.component';
 
 @NgModule({
   declarations: [
@@ -135,6 +137,7 @@ import { FormDescriptionComponent } from './components/form-description/form-des
     CopyUrlButtonComponent,
     ExportValidationReportButtonComponent,
     LoginFormComponent,
+    RestorePasswordFormComponent,
     OpenInAnotherProjectComponent,
     FooterComponent,
     ImportGmlResultButtonComponent,
@@ -145,7 +148,8 @@ import { FormDescriptionComponent } from './components/form-description/form-des
     ServicesCalculatorComponent,
     FeatureExtractComponent,
     RelatedDocumentsButtonComponent,
-    FormDescriptionComponent
+    FormDescriptionComponent,
+    ChangePasswordFormComponent
   ],
   imports: [
     HttpClientModule,

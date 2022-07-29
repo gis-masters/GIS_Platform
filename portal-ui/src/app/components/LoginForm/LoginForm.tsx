@@ -1,26 +1,28 @@
-import React, { ChangeEvent, Component } from 'react';
+import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cloneDeep } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
-import { FormControl, TextField } from '@mui/material';
+import { AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
+import { PropertyType, Schema } from '../../services/crg/schema.models';
+import { generateRandomId } from '../../services/util/randomId';
 import { usersService } from '../../services/crg/users.service';
 import { getEsiaUrl } from '../../services/server-urls.service';
-import { knownRegex } from '../../services/regexp.service';
 import { authService } from '../../services/auth.service';
 import { services } from '../../services/services';
 import { http } from '../../services/http.service';
 import { route } from '../../stores/Route.store';
 import { Pages } from '../../app-routing.module';
-import { Form, FormField } from '../Form/Form';
 import { Loading } from '../Loading/Loading';
 import { env } from '../../stores/Env.store';
 import { Button } from '../Button/Button';
+import { Form } from '../Form/Form';
 
 import '!style-loader!css-loader!sass-loader!./LoginForm.scss';
+import '!style-loader!css-loader!sass-loader!../HomePageForm/HomePageForm.scss';
 
 const cnLoginForm = cn('LoginForm');
 
@@ -38,20 +40,39 @@ const defaultData: AuthUserData = {
   password: ''
 };
 
+const schema = {
+  properties: [
+    {
+      name: 'username',
+      title: 'E-mail',
+      required: true,
+      wellKnownRegex: 'email',
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'password',
+      title: 'Пароль',
+      required: true,
+      display: 'password',
+      propertyType: PropertyType.STRING
+    }
+  ]
+};
+
 @observer
 export class LoginForm extends Component<LoginFormProps> {
-  @observable private usernameError: string;
-  @observable private passwordRecovery: string;
+  @observable private userData: AuthUserData = cloneDeep(defaultData);
   @observable private isUserDisabled: boolean;
   @observable private isWrongPassword: boolean;
-  @observable private userData: AuthUserData = cloneDeep(defaultData);
   @observable private loading: boolean;
   @observable private esiaLoading: boolean;
 
   async componentDidMount() {
     if (route.queryParams.guestName && route.queryParams.guestPass) {
-      this.setUserData(route.queryParams.guestName, route.queryParams.guestPass);
-      await this.submitHandler();
+      const { guestName, guestPass } = route.queryParams;
+
+      this.setUserData(guestName, guestPass);
+      await this.login({ username: guestName, password: guestPass });
 
       const queryParams = route.queryParams;
       queryParams.guestName = null;
@@ -79,67 +100,43 @@ export class LoginForm extends Component<LoginFormProps> {
 
   render() {
     const { inDialog } = this.props;
+    const htmlId = generateRandomId();
 
     return (
       <>
         {!this.loading ? (
-          <Form className={cnLoginForm({ inDialog })} id='LoginForm' onSubmit={this.submitHandler}>
-            <FormField>
-              <FormControl fullWidth>
-                <TextField
-                  label='E-mail'
-                  id='authUserEmail'
-                  onChange={this.handleEmail}
-                  value={this.userData.username}
-                  error={Boolean(this.usernameError)}
-                  helperText={this.usernameError}
-                  required
-                  fullWidth
-                  variant='standard'
-                />
-              </FormControl>
-            </FormField>
-            <FormField>
-              <FormControl fullWidth>
-                <TextField
-                  label='Пароль'
-                  id='authUserPassword'
-                  onChange={this.handlePassword}
-                  value={this.userData.password}
-                  type='password'
-                  required
-                  fullWidth
-                  variant='standard'
-                />
-              </FormControl>
-            </FormField>
-            {this.isWrongPassword && <div className={cnLoginForm('Error')}>Неверное имя пользователя или пароль</div>}
-            {this.isUserDisabled && (
-              <div className={cnLoginForm('Error')}>Запрос на создание принят и обрабатывается. Попробуйте позже.</div>
-            )}
-            {this.passwordRecovery && <div className={cnLoginForm('Recovery')}>{this.passwordRecovery}</div>}
-            <div className={cnLoginForm('Actions')}>
-              <span className={cnLoginForm('ActionsLeft')}>
-                <Button
-                  className={cnLoginForm('ActionsLogin')}
-                  form='LoginForm'
-                  type='submit'
-                  color='primary'
-                  disabled={this.esiaLoading}
-                >
-                  Войти
-                </Button>
-                {!!env.esia?.length && (
-                  <Button onClick={this.authWithEsia} loading={this.esiaLoading}>
-                    Войти с помощью ГОСУСЛУГ
+          <Form<Partial<AuthUserData>>
+            id={htmlId}
+            className={cnLoginForm({ inDialog }, ['HomePageForm'])}
+            schema={schema as unknown as Schema}
+            value={this.userData}
+            auto
+            labelInTextField
+            actionFunction={this.login}
+            actions={
+              <div className={cnLoginForm('Actions')}>
+                <span className={cnLoginForm('ActionsLeft')}>
+                  <Button
+                    className={cnLoginForm('ActionsLogin')}
+                    form={htmlId}
+                    type='submit'
+                    color='primary'
+                    disabled={this.esiaLoading}
+                  >
+                    Войти
                   </Button>
-                )}
-              </span>
-              <Button onClick={this.handlePasswordRecovery} disabled={this.esiaLoading}>
-                Забыли пароль?
-              </Button>
-            </div>
-          </Form>
+                  {!!env.esia?.length && (
+                    <Button onClick={this.authWithEsia} loading={this.esiaLoading}>
+                      Войти с помощью ГОСУСЛУГ
+                    </Button>
+                  )}
+                </span>
+                <Button href='/restore-password' disabled={this.esiaLoading}>
+                  Восстановить пароль
+                </Button>
+              </div>
+            }
+          />
         ) : (
           <Loading visible={this.loading} />
         )}
@@ -148,42 +145,11 @@ export class LoginForm extends Component<LoginFormProps> {
   }
 
   @action.bound
-  private handleEmail(e: ChangeEvent<HTMLInputElement>) {
-    this.usernameError = '';
-    this.userData.username = e.target.value;
-  }
-
-  @action.bound
-  private setUsernameError(message: string) {
-    this.usernameError = message;
-  }
-  @action.bound
-  private setUserDisabled(res: boolean) {
-    this.isUserDisabled = res;
-  }
-  @action.bound
-  private setWrongPassword(res: boolean) {
-    this.isWrongPassword = res;
-  }
-
-  @action.bound
-  private handlePassword(e: ChangeEvent<HTMLInputElement>) {
-    this.userData.password = e.target.value;
-  }
-
-  @action.bound
   private setUserData(username: string, password: string) {
     this.userData = {
       username,
       password
     };
-  }
-
-  @action.bound
-  private handlePasswordRecovery() {
-    this.passwordRecovery =
-      env.passwordRestore ||
-      'Отправьте заявку на восстановление пароля администратору ГИСОГД на почтовый адрес middel.erde@gmail.com';
   }
 
   @action.bound
@@ -199,34 +165,30 @@ export class LoginForm extends Component<LoginFormProps> {
   }
 
   @boundMethod
-  private async submitHandler(e?: React.FormEvent<HTMLFormElement>) {
-    e?.preventDefault();
+  private async login(value: AuthUserData) {
     this.handleLoading(true);
-    const regExp = new RegExp(knownRegex.email);
-    if (!this.userData.username.length || !regExp.test(this.userData.username)) {
-      this.setUsernameError('Пожалуйста введите корректный e-mail в формате name@domain');
-    }
 
-    if (this.usernameError) {
-      this.handleLoading(false);
-
-      return;
-    }
-
-    const result = await authService.authenticate(this.userData);
+    const result = await authService.authenticate(value);
     this.handleLoading(false);
-    if (result.ok) {
-      if (this.props.inDialog) {
-        communicationService.authDialogSuccess.emit();
-      } else {
-        await usersService.fetchCurrentUser();
-        services.ngZone.run(() => {
-          void services.router.navigateByUrl('/projects');
-        });
+
+    try {
+      if (result.ok) {
+        if (this.props.inDialog) {
+          communicationService.authDialogSuccess.emit();
+        } else {
+          await usersService.fetchCurrentUser();
+          services.ngZone.run(() => {
+            void services.router.navigateByUrl('/projects');
+          });
+        }
+      } else if (result.userDisabled) {
+        throw [{ field: 'password', messages: 'Запрос на создание принят и обрабатывается. Попробуйте позже' }];
+      } else if (result.wrongPassword) {
+        throw [{ field: 'password', messages: 'Неверное имя пользователя или пароль' }];
       }
-    } else {
-      this.setUserDisabled(result.userDisabled);
-      this.setWrongPassword(result.wrongPassword);
+    } catch (error) {
+      const err = error as AxiosError<{ errors?: Record<string, string>[] }>;
+      throw err.response?.data?.errors || [];
     }
   }
 }
