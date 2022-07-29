@@ -300,7 +300,7 @@ export class FilesPlacementDialog extends Component<FilesPlacementDialogProps> {
     await Promise.allSettled(apiActions);
     this.store.setCommonProgress(false);
 
-    communicationService.updateFileConnections.emit(files);
+    communicationService.fileConnectionsUpdated.emit(files);
   }
 
   @boundMethod

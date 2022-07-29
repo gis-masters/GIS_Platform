@@ -1,16 +1,23 @@
-import React, { FC } from 'react';
+import React, { Component } from 'react';
+import { action, observable } from 'mobx';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { observer } from 'mobx-react';
+import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { getFileBaseName, getFileExtension, isPreviewAllowed, isTifFile } from '../../../services/files.util';
-import { FileInfo } from '../../../services/files.service';
+import { FileConnection, FileInfo, getFileConnections } from '../../../services/files.service';
 import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
 import { LookupItem } from '../../Lookup/Item/Lookup-Item';
+import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
+import { communicationService } from '../../../services/communication.service';
+import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
+import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
+import { Button } from '../../Button/Button';
 
 import { FilesName } from '../Name/Files-Name';
 import { FilesIcon } from '../Icon/Files-Icon';
-import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
-import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
 import { FilesPreview } from '../Preview/Files-Preview';
 import { FilesConnections } from '../Connections/Files-Connections';
 
@@ -28,34 +35,118 @@ interface FilesItemProps {
   onPreview(item: FileInfo): void;
 }
 
-export const FilesItem: FC<FilesItemProps> = ({
-  item,
-  editable,
-  status,
-  file,
-  statusText,
-  numerous,
-  multiple,
-  onDelete,
-  onPreview
-}) => {
-  const ext = getFileExtension(item.title);
-  const baseName = getFileBaseName(item.title);
-  const disabled = ['loading', 'new', 'error'].includes(status);
+@observer
+export class FilesItem extends Component<FilesItemProps> {
+  @observable private connections: FileConnection[] = [];
+  @observable private currentFileId?: string;
+  @observable private deleteDialogOpen = false;
+  private operationId: symbol;
 
-  return (
-    <LookupItem className={cnFilesItem({ numerous })}>
-      <FilesIcon ext={ext} color={status === 'error' ? 'error' : 'action'} />
-      <FilesName item={item} baseName={baseName} ext={ext} disabled={disabled} file={file} numerous={numerous} />
-      {editable && (numerous || multiple) && <LookupNameGap />}
-      {!!status && <LookupStatus status={status} statusText={statusText} />}
-      {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
-      {isTifFile(item) && <FilesConnections fileId={item.id} />}
-      {editable && (
-        <LookupActions>
-          <LookupDelete item={item} onDelete={onDelete} />
-        </LookupActions>
-      )}
-    </LookupItem>
-  );
-};
+  async componentDidMount() {
+    if (isTifFile(this.props.item)) {
+      communicationService.fileConnectionsUpdated.on(async (filesInfo: FileInfo[]) => {
+        if (filesInfo.some(file => file.id === this.currentFileId)) {
+          this.dropConnections();
+          await this.fetchConnections();
+        }
+      }, this);
+      await this.fetchConnections();
+    }
+  }
+
+  async componentDidUpdate(prevProps: FilesItemProps) {
+    if (isTifFile(this.props.item) && this.props.item.id !== prevProps.item.id) {
+      this.dropConnections();
+      await this.fetchConnections();
+    }
+  }
+
+  componentWillUnmount() {
+    communicationService.off(this);
+  }
+
+  render() {
+    const { item, editable, status, file, statusText, numerous, multiple, onPreview } = this.props;
+    const ext = getFileExtension(item.title);
+    const baseName = getFileBaseName(item.title);
+    const disabled = ['loading', 'new', 'error'].includes(status);
+
+    return (
+      <>
+        <LookupItem className={cnFilesItem({ numerous })}>
+          <FilesIcon ext={ext} color={status === 'error' ? 'error' : 'action'} />
+          <FilesName item={item} baseName={baseName} ext={ext} disabled={disabled} file={file} numerous={numerous} />
+          {editable && (numerous || multiple) && <LookupNameGap />}
+          {!!status && <LookupStatus status={status} statusText={statusText} />}
+          {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
+          {!!this.connections?.length && <FilesConnections file={item} connections={this.connections} />}
+          {editable && (
+            <LookupActions>
+              <LookupDelete item={item} onDelete={this.deleteButtonClickHandler} />
+            </LookupActions>
+          )}
+        </LookupItem>
+
+        <Dialog open={this.deleteDialogOpen} onClose={this.closeDeleteDialog}>
+          <DialogTitle>Подтверждение удаления</DialogTitle>
+          <DialogContent className='scroll'>
+            Файл {item.title} подключен в проекты:
+            <ConnectionsToProjects type='list' connections={this.connections} />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.deleteHandler} color='primary'>
+              Удалить
+            </Button>
+            <Button onClick={this.closeDeleteDialog}>Закрыть</Button>
+          </DialogActions>
+        </Dialog>
+      </>
+    );
+  }
+
+  @boundMethod
+  private deleteButtonClickHandler(item: FileInfo) {
+    if (this.connections.length) {
+      this.openDeleteDialog();
+    } else {
+      this.props.onDelete(item);
+    }
+  }
+
+  @boundMethod
+  private deleteHandler() {
+    this.props.onDelete(this.props.item);
+  }
+
+  private async fetchConnections() {
+    const { id } = this.props.item;
+    const operationId = Symbol();
+    this.operationId = operationId;
+    this.currentFileId = id;
+
+    const documentConnections = await getFileConnections(id);
+    if (documentConnections.length && this.currentFileId === id && this.operationId === operationId) {
+      this.setConnections(documentConnections);
+    }
+  }
+
+  @action
+  private dropConnections() {
+    this.connections = null;
+  }
+
+  @action
+  private setConnections(connections: FileConnection[]) {
+    this.connections = connections;
+  }
+
+  @action.bound
+  private openDeleteDialog() {
+    this.deleteDialogOpen = true;
+  }
+
+  @action.bound
+  private closeDeleteDialog() {
+    this.deleteDialogOpen = false;
+  }
+}

@@ -9,6 +9,7 @@ import { createLayer } from '../../services/geoserver/layers.service';
 import { DataTable, getDataTableConnections } from '../../services/data.service';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
 import { CrgLayerType, CrgProject } from '../../services/crg/projects.models';
+import { FileConnection } from '../../services/files.service';
 
 const cnConnectionsTableToProjectsWidget = cn('ConnectionsTableToProjectsWidget');
 
@@ -20,7 +21,7 @@ interface ConnectionsTableToProjectsWidgetProps {
 export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTableToProjectsWidgetProps> {
   private currentDataTableId = '';
 
-  @observable private connections?: CrgProject[] = [];
+  @observable private connections?: FileConnection[] = [];
   @observable private loading = true;
 
   async componentDidMount() {
@@ -39,8 +40,10 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
       <ConnectionsToProjectsWidget
         className={cnConnectionsTableToProjectsWidget()}
         onConnect={this.connectHandler}
-        connectedProjects={this.connections}
+        connections={this.connections}
         loading={this.loading}
+        showAsExtendList
+        dialogTitle='Проекты, в которые подключен векторный слой'
       />
     );
   }
@@ -51,13 +54,13 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
     this.currentDataTableId = dataTable.identifier;
     const dataTableConnections = await getDataTableConnections(dataTable.identifier);
     if (dataTableConnections.length && this.currentDataTableId === dataTable.identifier) {
-      this.setConnections(dataTableConnections.map(({ project }) => project));
+      this.setConnections(dataTableConnections);
     }
     this.setLoading(false);
   }
 
   @action
-  private setConnections(connections: CrgProject[]) {
+  private setConnections(connections: FileConnection[]) {
     this.connections = connections;
   }
 

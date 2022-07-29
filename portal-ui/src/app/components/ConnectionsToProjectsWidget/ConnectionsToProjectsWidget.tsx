@@ -9,13 +9,13 @@ import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
 
-import { Role } from '../../services/crg/permissions.models';
-import { CrgProject } from '../../services/crg/projects.models';
+import { ConnectionsToProjects } from '../ConnectionsToProjects/ConnectionsToProjects';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { CrgProject } from '../../services/crg/projects.models';
+import { FileConnection } from '../../services/files.service';
+import { Role } from '../../services/crg/permissions.models';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Button } from '../Button/Button';
-
-import { ConnectionsToProjectsWidgetLink } from './Link/ConnectionsToProjectsWidget-Link';
 
 import '!style-loader!css-loader!sass-loader!./ConnectionsToProjectsWidget.scss';
 import '!style-loader!css-loader!sass-loader!./Dialog/ConnectionsToProjectsWidget-Dialog.scss';
@@ -24,11 +24,10 @@ import '!style-loader!css-loader!sass-loader!./Explorer/ConnectionsToProjectsWid
 const cnConnectionsToProjectsWidget = cn('ConnectionsToProjectsWidget');
 
 interface ConnectionsToProjectsWidgetProps extends IClassNameProps {
-  connectedProjects: CrgProject[];
+  connections?: FileConnection[];
   loading: boolean;
-  dialogsOnly?: boolean;
-  dialogOpen?: boolean;
-  closeDialog?: () => void;
+  dialogTitle: string;
+  showAsExtendList?: boolean;
   onConnect: (project: CrgProject) => void;
 }
 
@@ -39,8 +38,8 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
   @observable private selectedProject?: CrgProject;
 
   render() {
-    const { connectedProjects, loading, dialogsOnly, dialogOpen, closeDialog } = this.props;
-    const count = connectedProjects?.length || 0;
+    const { connections, loading, dialogTitle, showAsExtendList } = this.props;
+    const count = connections?.length || 0;
     const textProjects = `${count} ${pluralize(count, 'проект', 'проекта', 'проектов')}`;
 
     return (
@@ -48,34 +47,24 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
         <div className={cnConnectionsToProjectsWidget()}>
           {!loading ? (
             <>
-              {!dialogsOnly && (
-                <>
-                  Подключено в{' '}
-                  {count ? (
-                    <PseudoLink onClick={this.openCurrentProjectsDialog}>{textProjects}</PseudoLink>
-                  ) : (
-                    textProjects
-                  )}
-                  <Tooltip title='Подключить в проект'>
-                    <IconButton color='primary' size='small' onClick={this.openSelectProjectDialog}>
-                      {this.selectProjectDialogOpen ? <AddCircle /> : <AddCircleOutlineOutlined />}
-                    </IconButton>
-                  </Tooltip>
-                </>
-              )}
+              Подключено в{' '}
+              {count ? <PseudoLink onClick={this.openCurrentProjectsDialog}>{textProjects}</PseudoLink> : textProjects}
+              <Tooltip title='Подключить в проект'>
+                <IconButton color='primary' size='small' onClick={this.openSelectProjectDialog}>
+                  {this.selectProjectDialogOpen ? <AddCircle /> : <AddCircleOutlineOutlined />}
+                </IconButton>
+              </Tooltip>
               <Dialog
-                open={dialogsOnly ? dialogOpen : this.currentProjectsDialogOpen}
-                onClose={dialogsOnly ? closeDialog : this.closeCurrentProjectsDialog}
+                open={this.currentProjectsDialogOpen}
+                onClose={this.closeCurrentProjectsDialog}
                 PaperProps={{ className: cnConnectionsToProjectsWidget('Dialog') }}
               >
-                <DialogTitle>Проекты</DialogTitle>
-                <DialogContent>
-                  {connectedProjects?.map(project => (
-                    <ConnectionsToProjectsWidgetLink project={project} key={project.id} />
-                  ))}
+                <DialogTitle>{dialogTitle}</DialogTitle>
+                <DialogContent className='scroll'>
+                  <ConnectionsToProjects type={showAsExtendList ? 'list' : 'text'} connections={connections} />
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={dialogsOnly ? closeDialog : this.closeCurrentProjectsDialog}>Закрыть</Button>
+                  <Button onClick={this.closeCurrentProjectsDialog}>Закрыть</Button>
                 </DialogActions>
               </Dialog>
               <Dialog open={this.selectProjectDialogOpen} onClose={this.closeSelectProjectDialog}>
@@ -138,9 +127,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
 
   @boundMethod
   private handleSelect({ type, payload }: ExplorerItemData<CrgProject>) {
-    const { connectedProjects } = this.props;
-
-    if (type === ExplorerItemType.PROJECT && !connectedProjects.some(project => project.id === payload.id)) {
+    if (type === ExplorerItemType.PROJECT && !this.selectedItem(payload)) {
       this.setSelectedProject(payload);
     } else {
       this.setSelectedProject(null);
@@ -166,6 +153,17 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
   // eslint-disable-next-line @typescript-eslint/require-await
   @boundMethod
   private async testForDisabled({ payload }: ExplorerItemData<CrgProject>): Promise<boolean> {
-    return payload.role !== Role.OWNER || this.props.connectedProjects.some(project => project.id === payload.id);
+    return payload.role !== Role.OWNER || this.selectedItem(payload);
+  }
+
+  private selectedItem(payload: CrgProject): boolean {
+    const { connections } = this.props;
+    let selectedItem: boolean;
+
+    if (connections) {
+      selectedItem = connections.some(connection => connection.project.id === payload.id);
+    }
+
+    return selectedItem;
   }
 }

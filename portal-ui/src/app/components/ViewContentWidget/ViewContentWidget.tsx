@@ -16,7 +16,7 @@ interface ViewContentWidgetProps {
 
 export const ViewContentWidget: FC<ViewContentWidgetProps> = ({ data, schema }) => (
   <>
-    <span className={cnViewContentWidget('Title')}>Карточка документа:</span>
+    <span className={cnViewContentWidget('Title')}>Карточка {!data.dataset && 'документа'}:</span>
     <Paper className={cnViewContentWidget(null, ['scroll'])} variant='outlined' square>
       <RegistryConsumer id='common'>{({ Form }) => <Form schema={schema} value={data} readonly />}</RegistryConsumer>
     </Paper>

@@ -47,6 +47,7 @@ export class Files extends Component<FilesProps> {
   @observable private newbies: NewbieFile[] = [];
   @observable private previewOpen = false;
   @observable private startingImageForPreview: FileInfo;
+  @observable private deletingItem: FileInfo;
 
   render() {
     const { value, property, editable } = this.props;
@@ -114,6 +115,10 @@ export class Files extends Component<FilesProps> {
 
   @boundMethod
   private deleteHandler(deletingItem: FileInfo) {
+    this.delete(deletingItem);
+  }
+
+  private delete(deletingItem: FileInfo) {
     const { onChange, value } = this.props;
     onChange(value.filter(({ id }) => id !== deletingItem.id));
     this.delNewbie(deletingItem.id);

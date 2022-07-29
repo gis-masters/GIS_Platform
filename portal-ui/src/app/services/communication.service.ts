@@ -34,7 +34,7 @@ class CommunicationService {
   logout = new Emitter();
   basemapsUpdated = new Emitter();
   drawOff = new Emitter();
-  updateFileConnections = new Emitter<FileInfo[]>();
+  fileConnectionsUpdated = new Emitter<FileInfo[]>();
 
   off(scope: unknown) {
     Emitter.scopeOff(scope);

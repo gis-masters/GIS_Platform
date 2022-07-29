@@ -6,8 +6,9 @@ import { boundMethod } from 'autobind-decorator';
 
 import { Basemap } from '../../services/crg/basemaps.models';
 import { CrgProject } from '../../services/crg/projects.models';
-import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
 import { connectBasemapToProject, getBasemapConnections } from '../../services/crg/basemaps.service';
+import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
+import { FileConnection } from '../../services/files.service';
 
 const cnConnectionsBasemapToProjectsWidget = cn('ConnectionsBasemapToProjectsWidget');
 
@@ -19,7 +20,7 @@ interface ConnectionsBasemapToProjectsWidgetProps {
 export class ConnectionsBasemapToProjectsWidget extends Component<ConnectionsBasemapToProjectsWidgetProps> {
   private currentBasemapId = -1;
 
-  @observable private connections?: CrgProject[] = [];
+  @observable private connections?: FileConnection[] = [];
   @observable private loading = true;
 
   async componentDidMount() {
@@ -38,8 +39,9 @@ export class ConnectionsBasemapToProjectsWidget extends Component<ConnectionsBas
       <ConnectionsToProjectsWidget
         className={cnConnectionsBasemapToProjectsWidget()}
         onConnect={this.connectHandler}
-        connectedProjects={this.connections}
+        connections={this.connections}
         loading={this.loading}
+        dialogTitle='Проекты в которые подключена подложка'
       />
     );
   }
@@ -70,7 +72,7 @@ export class ConnectionsBasemapToProjectsWidget extends Component<ConnectionsBas
 
   @action
   private setConnections(connections: CrgProject[]) {
-    this.connections = connections;
+    this.connections = connections.map(project => ({ project }));
   }
 
   @action

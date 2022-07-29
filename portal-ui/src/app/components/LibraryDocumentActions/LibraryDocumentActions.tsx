@@ -114,7 +114,12 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
         )}
 
         {!isNew && canDelete && (
-          <LibraryDocumentActionsDelete document={this.document || document} as={as} onDelete={onDialogClose} />
+          <LibraryDocumentActionsDelete
+            document={this.document || document}
+            schema={this.schema}
+            as={as}
+            onDelete={onDialogClose}
+          />
         )}
 
         {forDialog && <LibraryDocumentActionsClose onClick={onDialogClose} as={as} />}

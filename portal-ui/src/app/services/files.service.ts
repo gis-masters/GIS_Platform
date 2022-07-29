@@ -31,7 +31,7 @@ export interface FileInfo {
 }
 
 export interface FileConnection {
-  layer: CrgLayer;
+  layer?: CrgLayer;
   project: CrgProject;
 }
 
