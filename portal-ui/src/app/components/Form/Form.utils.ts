@@ -3,7 +3,7 @@ import { action } from 'mobx';
 
 import { PropertySchema, PropertySchemaUrl, PropertyType, Schema } from '../../services/crg/schema.models';
 import { Fias } from '../../services/fias.service';
-import { knownRegex } from '../../services/regexp.service';
+import { services } from '../../services/services';
 import { UrlInfo } from './Control/_type/Form-Control_type_url';
 
 const fromComplex: Partial<
@@ -76,21 +76,23 @@ export function convertToComplexField<T extends Record<string, unknown>>(
 
 export function parseUrlValue(value: string, multiple: boolean, editable?: boolean): UrlInfo[] {
   if (value) {
-    if (knownRegex.url.test(value)) {
-      const url = JSON.parse(value) as string;
+    try {
+      const parsedValue = JSON.parse(value) as UrlInfo | UrlInfo[];
 
-      return [{ url, text: url }];
+      if (Array.isArray(parsedValue)) {
+        return parsedValue;
+      }
+
+      if (!parsedValue) {
+        return multiple ? [] : [{ url: '', text: '' }];
+      }
+
+      if (!Array.isArray(parsedValue)) {
+        return [parsedValue];
+      }
+    } catch {
+      services.logger.warn('Неверное значение url: ', value);
     }
-
-    if (!JSON.parse(value)) {
-      return multiple ? [] : [{ url: '', text: '' }];
-    }
-
-    if (!Array.isArray(JSON.parse(value))) {
-      return [JSON.parse(value) as UrlInfo];
-    }
-
-    return JSON.parse(value) as UrlInfo[];
   }
 
   if (!editable) {

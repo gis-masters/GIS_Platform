@@ -224,7 +224,7 @@
     "regexp/no-obscure-range": [
       "error",
       {
-        "allowed": ["alphanumeric", "а-я", "А-Я"]
+        "allowed": ["alphanumeric", "а-я", "А-Я", "А-я"]
       }
     ],
 

@@ -141,7 +141,7 @@ export class UrlsListItem extends Component<UrlFieldItemProps> {
         const content = await response.text();
         this.setContent(content);
       } catch {
-        this.setContent('Ошибка!');
+        this.setContent('Ошибка перехода по ссылке ' + this.props.item.url);
       }
       this.setFetching(false);
     }
