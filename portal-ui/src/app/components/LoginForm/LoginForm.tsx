@@ -178,7 +178,7 @@ export class LoginForm extends Component<LoginFormProps> {
         } else {
           await usersService.fetchCurrentUser();
           services.ngZone.run(() => {
-            void services.router.navigateByUrl('/projects');
+            void services.router.navigateByUrl('/projects/default');
           });
         }
       } else if (result.userDisabled) {
