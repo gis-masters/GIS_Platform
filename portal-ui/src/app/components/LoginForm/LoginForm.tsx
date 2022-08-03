@@ -1,23 +1,22 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cloneDeep } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
+import { env } from '../../stores/Env.store';
+import { route, Pages } from '../../stores/Route.store';
 import { communicationService } from '../../services/communication.service';
-import { PropertyType, Schema } from '../../services/crg/schema.models';
+import { PropertyType, Schema } from '../../services/data/schema.models';
+import { usersService } from '../../services/data/users.service';
 import { generateRandomId } from '../../services/util/randomId';
-import { usersService } from '../../services/crg/users.service';
 import { getEsiaUrl } from '../../services/server-urls.service';
 import { authService } from '../../services/auth.service';
 import { services } from '../../services/services';
 import { http } from '../../services/http.service';
-import { route } from '../../stores/Route.store';
-import { Pages } from '../../app-routing.module';
 import { Loading } from '../Loading/Loading';
-import { env } from '../../stores/Env.store';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
 
@@ -66,6 +65,11 @@ export class LoginForm extends Component<LoginFormProps> {
   @observable private isWrongPassword: boolean;
   @observable private loading: boolean;
   @observable private esiaLoading: boolean;
+
+  constructor(props: LoginFormProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     if (route.queryParams.guestName && route.queryParams.guestPass) {

@@ -1,7 +1,7 @@
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, makeObservable } from 'mobx';
 
-import { BuildInRole } from '../services/crg/permissions.models';
-import { OrgInfo } from '../services/crg/users.service';
+import { BuildInRole } from '../services/data/permissions.models';
+import { OrgInfo } from '../services/data/users.service';
 
 const emptyOrgInfo: OrgInfo = {
   id: 0,
@@ -35,6 +35,7 @@ class CurrentUser implements OrgInfo {
   }
 
   private constructor() {
+    makeObservable(this);
     Object.assign(this, emptyOrgInfo);
   }
 

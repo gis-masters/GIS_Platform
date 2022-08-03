@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -24,6 +24,11 @@ interface DataImportDialogProps {
 @observer
 export class DataImportDialog extends Component<DataImportDialogProps> {
   @observable private busy = false;
+
+  constructor(props: DataImportDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { open, onClose } = this.props;

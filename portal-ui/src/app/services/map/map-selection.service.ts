@@ -4,20 +4,19 @@ import { MultiPolygon } from 'ol/geom';
 import { DragPan, Extent } from 'ol/interaction';
 import ExtentInteraction from 'ol/interaction/Extent';
 
+import { sidebars } from '../../stores/Sidebars.store';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { MapAction, MapMode, MapSelectionTypes, mapStore, SELECTING_FEATURES_LIMIT } from '../../stores/Map.store';
+import { getFeaturesCollectionByXmlFilter } from '../geoserver/wfs.service';
+import { setSelectedFeaturesToUrl } from './map-url.service';
+import { makeXmlPolygonIntersect } from '../util/wfs.util';
+import { WfsFeature } from '../geoserver/wfs.models';
 import { mapService } from './map.service';
 import { services } from '../services';
-import { makeXmlPolygonIntersect } from '../util/wfs.util';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { getFeaturesByXmlFilter } from '../geoserver/wfs.service';
-import { MapActions, MapModes, mapStore } from '../../stores/Map.store';
-import { MapSelectionTypes, sidebars } from '../../stores/Sidebars.store';
-import { getFeatureLayer } from '../geoserver/layers.service';
-import { MAP_QUERY_PARAMS_DELIMITER } from './map-link-following.service';
-import { WfsFeature } from '../geoserver/wfs.models';
 
 type NamesChunks = { [srsName: string]: string[] };
 
-enum ActiveHotKey {
+enum ActiveModifierKey {
   SHIFT,
   CTRL,
   EMPTY
@@ -26,74 +25,69 @@ enum ActiveHotKey {
 class MapSelectionService {
   private static _instance: MapSelectionService;
 
-  private areaExtentAdd: ExtentInteraction;
-  private areaExtentRemove: ExtentInteraction;
-  private areaExtentReplace: ExtentInteraction;
-  private dragPanWheel: DragPan;
-  private activeHotKey: ActiveHotKey;
+  private areaExtentAdd = new ExtentInteraction({
+    condition: (e: MapBrowserEvent<UIEvent>) => {
+      const originalEvent = e.originalEvent as MouseEvent;
+
+      return (
+        mapStore.allowedActions.includes(MapAction.SELECT_WITH_MODIFICATORS) &&
+        originalEvent.shiftKey &&
+        !originalEvent.ctrlKey &&
+        originalEvent.button !== 1
+      );
+    },
+    pointerStyle: []
+  });
+
+  private areaExtentRemove = new ExtentInteraction({
+    condition: (e: MapBrowserEvent<UIEvent>) => {
+      const originalEvent = e.originalEvent as MouseEvent;
+
+      return (
+        mapStore.allowedActions.includes(MapAction.SELECT_WITH_MODIFICATORS) &&
+        originalEvent.ctrlKey &&
+        !originalEvent.shiftKey &&
+        originalEvent.button !== 1
+      );
+    },
+    pointerStyle: []
+  });
+  private areaExtentReplace = new ExtentInteraction({
+    condition: (e: MapBrowserEvent<UIEvent>) => {
+      const originalEvent = e.originalEvent as MouseEvent;
+
+      if (
+        mapStore.allowedActions.includes(MapAction.SELECT) &&
+        !originalEvent.shiftKey &&
+        !originalEvent.ctrlKey &&
+        !originalEvent.altKey &&
+        originalEvent.button !== 1
+      ) {
+        mapStore.setSelectionActive(true);
+
+        return true;
+      }
+    },
+    pointerStyle: []
+  });
+
+  private dragPanWheel = new DragPan({
+    condition: (e: MapBrowserEvent<UIEvent>) => {
+      const originalEvent = e.originalEvent as MouseEvent;
+
+      return originalEvent.button === 1;
+    },
+    onFocusOnly: false,
+    kinetic: new Kinetic(-0.005, 0.05, 100)
+  });
+
+  private activeModifierKey: ActiveModifierKey;
 
   static get instance() {
     return this._instance || (this._instance = new this());
   }
 
   private constructor() {
-    this.areaExtentAdd = new ExtentInteraction({
-      condition: (e: MapBrowserEvent<UIEvent>) => {
-        const originalEvent = e.originalEvent as MouseEvent;
-
-        return (
-          mapStore.allowedActions.includes(MapActions.SELECT_WITH_MODIFICATORS) &&
-          originalEvent.shiftKey &&
-          !originalEvent.ctrlKey &&
-          originalEvent.button !== 1
-        );
-      },
-      pointerStyle: []
-    });
-
-    this.areaExtentRemove = new ExtentInteraction({
-      condition: (e: MapBrowserEvent<UIEvent>) => {
-        const originalEvent = e.originalEvent as MouseEvent;
-
-        return (
-          mapStore.allowedActions.includes(MapActions.SELECT_WITH_MODIFICATORS) &&
-          originalEvent.ctrlKey &&
-          !originalEvent.shiftKey &&
-          originalEvent.button !== 1
-        );
-      },
-      pointerStyle: []
-    });
-
-    this.areaExtentReplace = new ExtentInteraction({
-      condition: (e: MapBrowserEvent<UIEvent>) => {
-        const originalEvent = e.originalEvent as MouseEvent;
-
-        if (
-          mapStore.allowedActions.includes(MapActions.SELECT) &&
-          !originalEvent.shiftKey &&
-          !originalEvent.ctrlKey &&
-          !originalEvent.altKey &&
-          originalEvent.button !== 1
-        ) {
-          mapStore.isSelectionActive(true);
-
-          return true;
-        }
-      },
-      pointerStyle: []
-    });
-
-    this.dragPanWheel = new DragPan({
-      condition: (e: MapBrowserEvent<UIEvent>) => {
-        const originalEvent = e.originalEvent as MouseEvent;
-
-        return originalEvent.button === 1;
-      },
-      onFocusOnly: false,
-      kinetic: new Kinetic(-0.005, 0.05, 100)
-    });
-
     mapService.mapCreate.on((): void => {
       mapService.map.addInteraction(this.dragPanWheel);
       mapService.map.addInteraction(this.areaExtentReplace);
@@ -107,11 +101,11 @@ class MapSelectionService {
         const originalEvent = e.originalEvent as MouseEvent;
 
         if (originalEvent.shiftKey) {
-          this.activeHotKey = ActiveHotKey.SHIFT;
+          this.activeModifierKey = ActiveModifierKey.SHIFT;
         } else if (originalEvent.ctrlKey) {
-          this.activeHotKey = ActiveHotKey.CTRL;
+          this.activeModifierKey = ActiveModifierKey.CTRL;
         } else if (!originalEvent.shiftKey && !originalEvent.ctrlKey && !originalEvent.altKey) {
-          this.activeHotKey = ActiveHotKey.EMPTY;
+          this.activeModifierKey = ActiveModifierKey.EMPTY;
         }
 
         this.areaExtentReplace.setActive(true);
@@ -125,9 +119,9 @@ class MapSelectionService {
         const originalEvent = e.originalEvent as MouseEvent;
 
         if (!originalEvent.shiftKey && !originalEvent.ctrlKey) {
-          mapStore.isSelectionActive(false);
+          mapStore.setSelectionActive(false);
         } else {
-          mapStore.isSelectionActive(true);
+          mapStore.setSelectionActive(true);
         }
       });
 
@@ -147,55 +141,61 @@ class MapSelectionService {
         if (
           originalEvent.shiftKey &&
           !originalEvent.ctrlKey &&
-          this.activeHotKey === ActiveHotKey.SHIFT &&
-          mapStore.allowedActions.includes(MapActions.SELECT_WITH_MODIFICATORS) &&
+          this.activeModifierKey === ActiveModifierKey.SHIFT &&
+          mapStore.allowedActions.includes(MapAction.SELECT_WITH_MODIFICATORS) &&
           originalEvent.button !== 1
         ) {
-          await this.setFeaturesInfo(this.areaExtentAdd, MapSelectionTypes.ADD, e.coordinate);
+          await this.selectFeaturesOnMap(this.areaExtentAdd, MapSelectionTypes.ADD, e.coordinate);
         } else if (
           originalEvent.ctrlKey &&
           !originalEvent.shiftKey &&
-          this.activeHotKey === ActiveHotKey.CTRL &&
-          mapStore.allowedActions.includes(MapActions.SELECT_WITH_MODIFICATORS) &&
+          this.activeModifierKey === ActiveModifierKey.CTRL &&
+          mapStore.allowedActions.includes(MapAction.SELECT_WITH_MODIFICATORS) &&
           originalEvent.button !== 1
         ) {
-          await this.setFeaturesInfo(this.areaExtentRemove, MapSelectionTypes.REMOVE, e.coordinate);
+          await this.selectFeaturesOnMap(this.areaExtentRemove, MapSelectionTypes.REMOVE, e.coordinate);
         } else if (
           !originalEvent.shiftKey &&
           !originalEvent.ctrlKey &&
-          this.activeHotKey === ActiveHotKey.EMPTY &&
-          mapStore.allowedActions.includes(MapActions.SELECT) &&
+          this.activeModifierKey === ActiveModifierKey.EMPTY &&
+          mapStore.allowedActions.includes(MapAction.SELECT) &&
           originalEvent.button !== 1
         ) {
-          await this.setFeaturesInfo(this.areaExtentReplace, MapSelectionTypes.REPLACE, e.coordinate);
+          await this.selectFeaturesOnMap(this.areaExtentReplace, MapSelectionTypes.REPLACE, e.coordinate);
         } else {
           this.areaExtentAdd.setExtent([0, 0, 0, 0]);
           this.areaExtentRemove.setExtent([0, 0, 0, 0]);
           this.areaExtentReplace.setExtent([0, 0, 0, 0]);
-          mapStore.isSelectionActive(false);
+          mapStore.setSelectionActive(false);
         }
       });
     }, this);
 
     mapService.mapClick.on(async coordinate => {
-      if (mapStore.allowedActions.includes(MapActions.PROKOL)) {
-        await this.showFeaturesInfo(MapSelectionTypes.REPLACE, mapService.getBufferByCoordinates(coordinate));
+      if (mapStore.allowedActions.includes(MapAction.PROKOL)) {
+        await this.selectFeaturesByCoordinates(
+          MapSelectionTypes.REPLACE,
+          mapService.getBufferByCoordinates(coordinate)
+        );
 
         sidebars.clearFeaturesWithError();
+        sidebars.openFeaturesSidebar();
       }
     }, this);
   }
 
-  async setFeaturesInfo(
+  private async selectFeaturesOnMap(
     areaExtent?: Extent,
     selectionType?: MapSelectionTypes,
     coordinate?: Coordinate
   ): Promise<void> {
     const buffer = this.generateBuffer(areaExtent, coordinate);
-    await this.showFeaturesInfo(selectionType, buffer);
+    if (buffer) {
+      await this.selectFeaturesByCoordinates(selectionType, buffer);
+    }
   }
 
-  generateBuffer(areaExtent: Extent, coordinate: Coordinate): MultiPolygon {
+  private generateBuffer(areaExtent: Extent, coordinate: Coordinate): MultiPolygon {
     const extent = areaExtent.getExtent();
     areaExtent.setExtent([0, 0, 0, 0]);
 
@@ -229,18 +229,17 @@ class MapSelectionService {
   }
 
   /**
-   * Отобразить информацию об объектах, которые пересекают заданные координаты.
+   * Выделить объекты, которые пересекают заданные координаты.
    */
-  private async showFeaturesInfo(selectionType: MapSelectionTypes, buffer: MultiPolygon) {
+  private async selectFeaturesByCoordinates(selectionType: MapSelectionTypes, buffer: MultiPolygon) {
     await services.provided;
     const visibleLayers = currentProject.visibleLayersWithoutRasters.map(({ payload }) => payload);
     if (!visibleLayers.length) {
       services.logger.debug('No visible layers');
+      this.selectFeatures([]);
 
       return;
     }
-
-    sidebars.setFeaturesLimit(false);
 
     const visibleLayersComplexNamesByCrs: NamesChunks = {};
 
@@ -259,73 +258,66 @@ class MapSelectionService {
       Object.entries(visibleLayersComplexNamesByCrs).map(([srsName, complexNames]) => {
         const xml = makeXmlPolygonIntersect(complexNames, buffer, srsName, selectionType);
 
-        return getFeaturesByXmlFilter(xml);
+        return getFeaturesCollectionByXmlFilter(xml);
       })
     );
 
-    const features = collections.flatMap(({ features }) => features || []).slice(0, 100);
+    const features = collections.flatMap(({ features }) => features || []);
 
-    if (
-      features.length + (sidebars.viewFeatures?.length ? sidebars.viewFeatures?.length : 0) > 100 &&
-      selectionType === MapSelectionTypes.ADD
-    ) {
-      sidebars.setFeaturesLimit(true);
+    const limitOverflow = features.splice(
+      Math.max(
+        SELECTING_FEATURES_LIMIT - (selectionType === MapSelectionTypes.ADD ? mapStore.selectedFeatures.length : 0),
+        0
+      ),
+      features.length
+    ).length;
 
-      return;
-    }
-
-    if (features.length === 100) {
-      sidebars.setFeaturesLimit(true);
-    }
-
-    if (features.length) {
-      let queryFeatures: WfsFeature[];
-      if (selectionType === MapSelectionTypes.ADD) {
-        queryFeatures = sidebars.viewFeatures ? [...features, ...sidebars.viewFeatures] : features;
-      } else if (selectionType === MapSelectionTypes.REPLACE) {
-        queryFeatures = features;
-      } else {
-        queryFeatures = [...sidebars.viewFeatures]
-          .map(feature => {
-            if (!features.some(feat => feat.id === feature.id)) {
-              return feature;
-            }
-          })
-          .filter(feature => feature);
-      }
-
-      await services.provided;
-      void services.ngZone.run(async () => {
-        await services.router.navigate([location.pathname], {
-          queryParams: {
-            features: queryFeatures
-              .map(feature => {
-                return `${feature.id}${MAP_QUERY_PARAMS_DELIMITER}${getFeatureLayer(feature).complexName}`;
-              })
-              .join(','),
-            queryFilter: null,
-            queryLayers: null
-          },
-          queryParamsHandling: 'merge'
-        });
-        sidebars.openFeatures(features, selectionType);
-      });
-    } else {
-      sidebars.closeFeatures();
-      sidebars.closeEdit();
-      await services.router.navigate([location.pathname], {
-        queryParams: {
-          features: null,
-          queryFilter: null,
-          queryLayers: null
-        },
-        queryParamsHandling: 'merge'
-      });
+    if (features.length || limitOverflow) {
+      this.selectFeatures(features, selectionType);
+    } else if (selectionType === MapSelectionTypes.REPLACE) {
+      sidebars.closeFeaturesSidebar();
+      this.selectFeatures([]);
     }
   }
 
   enableSelectionMode(enabled: boolean): void {
-    mapStore.setMode(enabled ? MapModes.DEFAULT : MapModes.SELECTION);
+    mapStore.setMode(enabled ? MapMode.DEFAULT : MapMode.SELECTION);
+  }
+
+  selectFeatures(features: WfsFeature[], selectionType: MapSelectionTypes = MapSelectionTypes.REPLACE) {
+    if (sidebars.needEditConfirmation(this.selectFeatures.bind(this, features, selectionType))) {
+      return;
+    }
+
+    sidebars.closeEdit();
+
+    if (selectionType === MapSelectionTypes.REPLACE) {
+      mapStore.setSelectedFeatures(features);
+    } else {
+      for (const feature of features) {
+        const index = mapStore.selectedFeatures.findIndex(({ id }) => {
+          return id === feature.id;
+        });
+
+        if (selectionType === MapSelectionTypes.REMOVE && index !== -1) {
+          const rests = [...mapStore.selectedFeatures];
+          rests.splice(index, 1);
+          mapStore.setSelectedFeatures(rests);
+        }
+
+        if (selectionType === MapSelectionTypes.ADD && index === -1) {
+          mapStore.setSelectedFeatures([...mapStore.selectedFeatures, feature]);
+        }
+      }
+    }
+
+    mapService.highlightFeatures(mapStore.highlightedFeatures);
+
+    void setSelectedFeaturesToUrl();
+
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 50);
   }
 }
 

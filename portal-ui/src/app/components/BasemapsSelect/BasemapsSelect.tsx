@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Menu, Paper, Tooltip, ButtonBase } from '@mui/material';
@@ -8,8 +8,8 @@ import { sleep } from '../../services/util/sleep';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { Basemap } from '../../services/crg/basemaps.models';
-import { Role } from '../../services/crg/permissions.models';
+import { Basemap } from '../../services/data/basemaps.models';
+import { Role } from '../../services/data/permissions.models';
 
 import { BasemapsSelectItem } from './Item/BasemapsSelect-Item';
 import { BasemapsSelectThumbnail } from './Thumbnail/BasemapsSelect-Thumbnail';
@@ -28,6 +28,11 @@ export class BasemapsSelect extends Component {
   @observable private open = false;
   @observable private ready = false;
   private ref = createRef<HTMLButtonElement>();
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.setReady();

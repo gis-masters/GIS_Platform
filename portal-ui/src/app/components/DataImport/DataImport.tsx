@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -11,8 +11,8 @@ import {
   checkImportStatus,
   updateProgress
 } from '../../services/geoserver/import/import.service';
-import { projectsService } from '../../services/crg/projects.service';
-import { schemaService } from '../../services/crg/schema.service';
+import { projectsService } from '../../services/gis/projects.service';
+import { schemaService } from '../../services/data/schema.service';
 import { route } from '../../stores/Route.store';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { DataImportTasksList } from '../DataImportTasksList/DataImportTasksList';
@@ -33,6 +33,11 @@ export class DataImport extends Component {
   private pollingOn = false;
   private pollingDelay = 500;
   @observable private dialogOpen = false;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   private get importUrl(): string {

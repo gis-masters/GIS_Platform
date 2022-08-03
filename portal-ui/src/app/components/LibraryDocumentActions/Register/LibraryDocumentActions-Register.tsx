@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { AssignmentTurnedInOutlined } from '@mui/icons-material';
@@ -7,7 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
-import { LibraryRecord, registerDocument } from '../../../services/crg/doc-library.service';
+import { LibraryRecord, registerDocument } from '../../../services/data/doc-library.service';
 import { services } from '../../../services/services';
 import { communicationService } from '../../../services/communication.service';
 import { Toast } from '../../Toast/Toast';
@@ -28,6 +28,11 @@ interface LibraryDocumentActionsRegisterProps {
 export class LibraryDocumentActionsRegister extends Component<LibraryDocumentActionsRegisterProps> {
   @observable private dialogOpen = false;
   @observable private busy: boolean;
+
+  constructor(props: LibraryDocumentActionsRegisterProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { as } = this.props;

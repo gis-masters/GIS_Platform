@@ -10,15 +10,15 @@ import { startWith } from 'rxjs/internal/operators/startWith';
 import { NGXLogger } from 'ngx-logger';
 
 import { communicationService } from '../../../services/communication.service';
-import { schemaService } from '../../../services/crg/schema.service';
+import { schemaService } from '../../../services/data/schema.service';
 import { getProjection } from '../../../services/geoserver/projections.service';
 import { getFeatureById } from '../../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../../services/geoserver/wfs.models';
 import { mapService } from '../../../services/map/map.service';
-import { ValidationResultsResponse, validationService } from '../../../services/crg/validation.service';
+import { ValidationResultsResponse, validationService } from '../../../services/data/validation.service';
 import { ProcessStatus } from '../../../services/models';
-import { CrgVectorLayer } from '../../../services/crg/projects.models';
-import { isFeaturesUpdateAllowed } from '../../../services/crg/permissions.service';
+import { CrgVectorLayer } from '../../../services/gis/projects.models';
+import { isFeaturesUpdateAllowed } from '../../../services/data/permissions.service';
 
 @Component({
   selector: 'crg-bugs-table',

@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 
 import { Emitter } from '../../../../services/common/Emitter';
-import { PageOptions, SortDir } from '../../../../services/models';
-import { Basemap } from '../../../../services/crg/basemaps.models';
-import { getBasemap, getBasemaps, getBasemapsWithParticularOne } from '../../../../services/crg/basemaps.service';
+import { PageOptions, SortOrder } from '../../../../services/models';
+import { Basemap } from '../../../../services/data/basemaps.models';
+import { getBasemap, getBasemaps, getBasemapsWithParticularOne } from '../../../../services/data/basemaps.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
@@ -89,8 +89,8 @@ export class ExplorerAdapterTypeBasemapsRoot {
     return 'title';
   }
 
-  static getChildrenSortDefaultDirection(): SortDir {
-    return SortDir.DESC;
+  static getChildrenSortDefaultOrder(): SortOrder {
+    return SortOrder.DESC;
   }
 
   static getRefreshEmitters(): Emitter[] {

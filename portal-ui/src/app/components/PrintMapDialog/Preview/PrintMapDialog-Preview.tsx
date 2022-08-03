@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { action, IReactionDisposer, observable, reaction } from 'mobx';
+import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Paper } from '@mui/material';
@@ -37,6 +37,11 @@ export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps>
   @observable private previewDragX = 0;
   @observable private previewDragY = 0;
   @observable private previewImageDataUri: string;
+
+  constructor(props: PrintMapDialogPreviewProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     this.reactionDisposer = reaction(

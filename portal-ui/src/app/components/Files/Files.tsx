@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { AddCircleOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 import { v4 as uuid } from 'uuid';
 
-import { PropertySchemaFile } from '../../services/crg/schema.models';
-import { createFile, FileInfo } from '../../services/files.service';
+import { PropertySchemaFile } from '../../services/data/schema.models';
+import { createFile, FileInfo } from '../../services/data/files.service';
 import { LookupStatusType } from '../Lookup/Status/Lookup-Status';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { isPreviewAllowed } from '../../services/files.util';
+import { isPreviewAllowed } from '../../services/data/files.util';
 import { LookupList } from '../Lookup/List/Lookup-List';
 import { LookupAdd } from '../Lookup/Add/Lookup-Add';
 import { FileInput } from '../FileInput/FileInput';
@@ -48,6 +48,11 @@ export class Files extends Component<FilesProps> {
   @observable private previewOpen = false;
   @observable private startingImageForPreview: FileInfo;
   @observable private deletingItem: FileInfo;
+
+  constructor(props: FilesProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { value, property, editable } = this.props;
@@ -151,7 +156,7 @@ export class Files extends Component<FilesProps> {
             return item;
           }
         })
-        .filter(item => item);
+        .filter(Boolean);
     }
   }
 

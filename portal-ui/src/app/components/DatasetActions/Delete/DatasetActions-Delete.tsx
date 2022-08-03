@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Delete, DeleteOutline } from '@mui/icons-material';
 import {
@@ -15,7 +15,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { Dataset, deleteDataset, getDatasetTables } from '../../../services/data.service';
+import { Dataset, deleteDataset, getDatasetTables } from '../../../services/data/data.service';
 import { Button } from '../../Button/Button';
 
 const cnDatasetActionsDelete = cn('DatasetActions', 'Delete');
@@ -31,6 +31,11 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
   @observable private deleteAllowed: boolean;
   @observable private btnLoading: boolean;
   @observable private errorMessage: string;
+
+  constructor(props: DatasetActionsDeleteProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { dataset } = this.props;

@@ -5,11 +5,11 @@ import { NGXLogger } from 'ngx-logger';
 
 import { mapService } from '../../../services/map/map.service';
 import { communicationService, ObjectDto } from '../../../services/communication.service';
-import { ValidationBrieflyInfo, validationService } from '../../../services/crg/validation.service';
+import { ValidationBrieflyInfo, validationService } from '../../../services/data/validation.service';
 import { IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { ProcessStatus, ProcessType } from '../../../services/models';
-import { CrgLayer, CrgVectorLayer } from '../../../services/crg/projects.models';
+import { CrgLayer, CrgVectorLayer } from '../../../services/gis/projects.models';
 import { currentProject } from '../../../stores/CurrentProject.store';
 
 @Component({

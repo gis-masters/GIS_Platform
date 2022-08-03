@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { Dialog, DialogContent, DialogActions } from '@mui/material';
@@ -9,7 +9,7 @@ import { Button } from '../../../Button/Button';
 import { Loading } from '../../../Loading/Loading';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
 import { HtmlContent } from '../../../HtmlContent/HtmlContent';
-import { OldPropertySchemaUrl, ValueType } from '../../../../services/crg/schemaOld.models';
+import { OldPropertySchemaUrl, ValueType } from '../../../../services/data/schemaOld.models';
 import { services } from '../../../../services/services';
 import { Link } from '../../../Link/Link';
 
@@ -34,6 +34,8 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
 
   constructor(props: EditFeaturesControlProps) {
     super(props);
+
+    makeObservable(this);
 
     try {
       this.value = JSON.parse(props.field.value) as PropertyTypeUrlValue;

@@ -1,57 +1,69 @@
-import React, { Component, ComponentType, createRef, ReactNode, RefObject } from 'react';
-import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
+import React, { Component, ComponentType, createRef, ReactElement, ReactNode, RefObject } from 'react';
+import { action, computed, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { Table, TableBody, TableCellProps, TableContainer, TableRow, Pagination, PaperProps } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
+import { IClassNameProps } from '@bem-react/core';
 import { cloneDeep, debounce } from 'lodash';
-import { VisibilityOff } from '@mui/icons-material';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableCellProps,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Pagination,
-  Tooltip
-} from '@mui/material';
+import { cn } from '@bem-react/classname';
 
+import { currentUser } from '../../stores/CurrentUser.store';
+import {
+  PropertySchemaChoice,
+  PropertySchemaDatetime,
+  PropertySchemaUrl,
+  PropertyType,
+  Relation
+} from '../../services/data/schema.models';
 import { filterObjects, FilterQuery } from '../../services/util/filterObjects';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
-import { PropertyOption } from '../../services/crg/schema.models';
-import { PageOptions, SortDir } from '../../services/models';
-import { DescriptionMark } from '../DescriptionMark/DescriptionMark';
-import { Highlight } from '../Highlight/Highlight';
-import { TextBadge } from '../TextBadge/TextBadge';
+import { PageOptions, SortOrder } from '../../services/models';
 import { Loading } from '../Loading/Loading';
 import { Toast } from '../Toast/Toast';
 
+import { XTableHead } from './Head/XTable-Head';
+import { XTableCell } from './Cell/XTable-Cell';
 import { XTableEmpty } from './Empty/XTable-Empty';
 import { XTableTitle } from './Title/XTable-Title';
-import { FilterType } from './Filter/XTable-Filter';
-import { XTableHeader } from './Header/XTable-Header';
 import { XTableFooter } from './Footer/XTable-Footer';
+import { XTableFilterProps } from './Filter/XTable-Filter';
+import { XTableTitleBar } from './TitleBar/XTable-TitleBar';
 import { XTableHeadCell } from './HeadCell/XTable-HeadCell';
-import { XTableContainer } from './Container/XTable-Container';
-import { XTableHeaderActions } from './HeaderActions/XTable-HeaderActions';
+import { XTableContainer, XTableContainerProps } from './Container/XTable-Container';
+import { XTableTitleBarActions } from './TitleBarActions/XTable-TitleBarActions';
 
 import '!style-loader!css-loader!sass-loader!./XTable.scss';
-import '!style-loader!css-loader!sass-loader!./Cell/XTable-Cell.scss';
 
 const cnXTable = cn('XTable');
 
+function defaultRowIdGetter<T extends { id?: string | number; identifier?: string; name?: string }>({
+  id,
+  identifier,
+  name
+}: T): string | number {
+  return id || identifier || name;
+}
+
 export interface XTableColumn<T> {
+  field?: keyof T;
   title?: ReactNode;
   description?: ReactNode;
-  field?: keyof T;
   filterable?: boolean;
-  filterType?: FilterType;
-  filterOptions?: PropertyOption[];
+  CustomFilterComponent?: ComponentType<XTableFilterProps>;
+  type?: PropertyType;
+  settings?: Partial<
+    Pick<PropertySchemaChoice, 'options'> &
+      Pick<PropertySchemaDatetime, 'format'> &
+      Pick<PropertySchemaUrl, 'openIn'> & { relations: Relation[] }
+  >;
   sortable?: boolean;
   CellContent?: ComponentType<{ rowData: T; field: keyof T; filterActive: boolean; filterParams: FilterQuery }>;
-  AfterCellContent?: ComponentType<{ rowData: T; field: keyof T; filterActive: boolean; filterParams: FilterQuery }>;
+  AfterCellContent?: <T>(p: {
+    rowData: T;
+    col: XTableColumn<T>;
+    filterActive: boolean;
+    filterParams: FilterQuery;
+  }) => ReactElement;
   getIdBadge?: (rowData: T) => string | number;
   cellProps?: TableCellProps;
   headerCellProps?: TableCellProps;
@@ -60,18 +72,26 @@ export interface XTableColumn<T> {
 }
 
 interface XTablePropsBase<T> extends IClassNameProps {
+  id?: string;
   title?: ReactNode;
   headerActions?: ReactNode;
-  headless?: boolean;
+  headerless?: boolean;
+  footerless?: boolean;
+  size?: 'small' | 'medium';
+  singleLineContent?: boolean;
   cols: XTableColumn<T>[];
-  hiddenFields?: string[];
+  hiddenFields?: string[]; // не забыть удалить
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
   filterable?: boolean;
   defaultFilter?: FilterQuery;
   filtersAlwaysEnabled?: boolean;
+  containerProps?: Partial<PaperProps & XTableContainerProps>;
   invoke?: {
-    reload?(): void;
+    reload?(): Promise<void>;
+    reset?(): void;
+    paginate?(page: number): void;
+    setPageSize?(size: number): void;
   };
   onFilter?(filtered: T[]): void;
   onPageOptionsChange?(pageOptions: PageOptions): void;
@@ -86,7 +106,16 @@ interface XTablePropsAsync<T> extends XTablePropsBase<T> {
   getData(pageOptions: PageOptions): Promise<[T[], number]>;
 }
 
+export type XTableInvoke = XTableProps<unknown>['invoke'];
+
 export type XTableProps<T> = XTablePropsSync<T> | XTablePropsAsync<T>;
+
+interface XTableColSettings {
+  hidden?: boolean;
+  width?: number;
+}
+
+type XTableColsSettings<T> = Partial<Record<keyof T, XTableColSettings>>;
 
 @observer
 export class XTable<T> extends Component<XTableProps<T>> {
@@ -99,6 +128,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
   @observable private tableMinHeight = 0;
   @observable private pageSize = 20;
   @observable private busy = false;
+  @observable private colsSettings: XTableColsSettings<T> = {};
 
   private fetchingOperationId: symbol;
   private tableRef: RefObject<HTMLDivElement> = createRef();
@@ -107,11 +137,15 @@ export class XTable<T> extends Component<XTableProps<T>> {
 
   constructor(props: XTableProps<T>) {
     super(props);
-    this.sortParams = props.defaultSort || { field: null, asc: true };
+    makeObservable(this);
+
+    this.reset();
+
     if (props.filtersAlwaysEnabled) {
       this.filterActive = true;
     }
-    this.filterQuery = props.defaultFilter || {};
+
+    this.restoreColsSettings(props.id);
   }
 
   componentDidMount() {
@@ -119,10 +153,20 @@ export class XTable<T> extends Component<XTableProps<T>> {
 
     if (invoke) {
       invoke.reload = this.fetchAsyncData;
+      invoke.reset = this.reset;
+      invoke.paginate = this.handlePagination.bind(this, null);
+      invoke.setPageSize = this.setPageSize;
     }
 
     this.pageOptionsReactionDisposer = reaction(
-      () => [{ ...this.sortParams }, { ...this.filterQuery }, this.filterActive, this.pageSize, this.page],
+      () => [
+        { ...this.sortParams },
+        { ...this.filterQuery },
+        this.filterActive,
+        this.page,
+        this.pageSize,
+        this.totalPages
+      ],
       debounce(() => {
         void this.fetchAsyncData();
         if (onPageOptionsChange) {
@@ -140,137 +184,110 @@ export class XTable<T> extends Component<XTableProps<T>> {
     );
   }
 
+  componentDidUpdate(prevProps: Readonly<XTableProps<T>>) {
+    const { id } = this.props;
+    if (id !== prevProps.id) {
+      this.restoreColsSettings(id);
+    }
+  }
+
   componentWillUnmount() {
     this.pageOptionsReactionDisposer();
     this.pagedDataReactionDisposer();
   }
 
   render() {
-    const { filterable, filtersAlwaysEnabled, title, headerActions, headless, className, getRowId } = this.props;
+    const {
+      filterable,
+      filtersAlwaysEnabled,
+      title,
+      headerActions,
+      headerless,
+      footerless,
+      className,
+      size,
+      singleLineContent,
+      containerProps,
+      getRowId = defaultRowIdGetter
+    } = this.props;
+
+    const colsTypesAlign: Partial<Record<PropertyType, TableCellProps['align']>> = {
+      [PropertyType.BOOL]: 'center',
+      [PropertyType.DATETIME]: 'center',
+      [PropertyType.INT]: 'right',
+      [PropertyType.FLOAT]: 'right'
+    };
 
     return (
       <div className={cnXTable(null, [className, 'scroll'])}>
-        <XTableHeader>
-          <XTableTitle>{title}</XTableTitle>
-          <XTableHeaderActions
-            filterActive={this.filterActive || filtersAlwaysEnabled}
-            filterable={filterable && !filtersAlwaysEnabled}
-            onToggleFilter={this.toggleFilter}
-            onChangePageSize={this.pageSizeChangeHandler}
-            pageSize={this.pageSize}
-          >
-            {headerActions}
-          </XTableHeaderActions>
-        </XTableHeader>
-        <TableContainer minHeight={this.tableMinHeight} containerRef={this.tableRef} component={XTableContainer}>
-          <Table stickyHeader>
-            {!headless && (
-              <TableHead>
-                <TableRow>
-                  {this.cols.map(
-                    (
-                      {
-                        field,
-                        title,
-                        description = '',
-                        sortable,
-                        filterable,
-                        filterType = FilterType.STRING,
-                        filterOptions,
-                        align,
-                        headerCellProps,
-                        hidden
-                      },
-                      i
-                    ) => (
-                      <XTableHeadCell
-                        key={`${i}_${String(field)}`}
-                        field={field}
-                        sortable={sortable}
-                        sortParams={this.sortParams}
-                        filterQuery={this.filterQuery}
-                        filterable={filterable && this.filterActive && filterable}
-                        filterType={filterType}
-                        filterOptions={filterOptions}
-                        align={align}
-                        headerCellProps={headerCellProps}
-                        hidden={hidden}
-                        onBeforeFilterChange={this.beforeFilterChange}
-                        onFilterChange={this.afterFilterChange}
-                      >
-                        <Tooltip title={description} open={!!description && undefined} enterDelay={700}>
-                          <span>{title}</span>
-                        </Tooltip>
-                        {description && (
-                          <>
-                            &nbsp;<DescriptionMark>{description}</DescriptionMark>
-                          </>
-                        )}
-                        {hidden && (
-                          <>
-                            &nbsp;
-                            <Tooltip title='Колонка скрыта настройками. Отображается из-за наличия фильтрации или сортировки.'>
-                              <VisibilityOff color='action' fontSize='small' />
-                            </Tooltip>
-                          </>
-                        )}
-                      </XTableHeadCell>
-                    )
-                  )}
-                </TableRow>
-              </TableHead>
-            )}
+        {!headerless && (
+          <XTableTitleBar>
+            <XTableTitle>{title}</XTableTitle>
+            <XTableTitleBarActions
+              filterActive={this.filterActive || filtersAlwaysEnabled}
+              filterable={filterable && !filtersAlwaysEnabled}
+              onChangePageSize={this.setPageSize}
+              onToggleFilter={this.toggleFilter}
+              pageSize={this.pageSize}
+            >
+              {headerActions}
+            </XTableTitleBarActions>
+          </XTableTitleBar>
+        )}
+        <TableContainer
+          minHeight={this.tableMinHeight}
+          containerRef={this.tableRef}
+          component={XTableContainer}
+          containerProps={containerProps}
+        >
+          <Table stickyHeader size={size}>
+            <XTableHead>
+              <TableRow>
+                {this.cols.map((col, i) => (
+                  <XTableHeadCell
+                    col={col}
+                    width={this.colsSettings[col.field]?.width}
+                    hidden={this.colsSettings[col.field]?.hidden}
+                    key={`${i}_${String(col.field)}`}
+                    sortParams={this.sortParams}
+                    filterActive={this.filterActive}
+                    filterQuery={this.filterQuery}
+                    singleLineContent={singleLineContent}
+                    onBeforeFilterChange={this.beforeFilterChange}
+                    onFilterChange={this.afterFilterChange}
+                    onWidthChange={this.changeColWidth}
+                    align={col.align || colsTypesAlign[col.type]}
+                  />
+                ))}
+              </TableRow>
+            </XTableHead>
+
             <TableBody>
               {this.empty ? (
                 <XTableEmpty colsCount={this.cols.length} busy={this.busy} />
               ) : (
                 this.dataPaged.map((rowData, i) => (
                   <TableRow key={getRowId ? getRowId(rowData) : i} hover>
-                    {this.cols.map(
-                      ({ field, CellContent, AfterCellContent, getIdBadge, cellProps, align, hidden }, i) => (
-                        <TableCell
-                          className={cnXTable('Cell', { hidden })}
-                          key={`${i}_${String(field)}`}
-                          align={align}
-                          {...(cellProps || {})}
-                        >
-                          {CellContent ? (
-                            <CellContent
-                              rowData={rowData}
-                              field={field}
-                              filterActive={this.filterActive}
-                              filterParams={this.filterQuery}
-                            />
-                          ) : (
-                            <>
-                              <Highlight
-                                word={this.filterQuery[field as string]}
-                                enabled={(filterable && this.filterActive) || filtersAlwaysEnabled}
-                              >
-                                {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
-                              </Highlight>
-                              {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}
-                            </>
-                          )}
-
-                          {AfterCellContent && (
-                            <AfterCellContent
-                              rowData={rowData}
-                              field={field}
-                              filterActive={this.filterActive}
-                              filterParams={this.filterQuery}
-                            />
-                          )}
-                        </TableCell>
-                      )
-                    )}
+                    {this.cols.map((col, i) => (
+                      <XTableCell<T>
+                        rowData={rowData}
+                        col={col}
+                        filterActive={(filterable && this.filterActive) || filtersAlwaysEnabled}
+                        filterQuery={this.filterQuery}
+                        singleLineContent={singleLineContent}
+                        width={this.colsSettings[col.field]?.width}
+                        hidden={this.colsSettings[col.field]?.hidden}
+                        key={`${i}_${String(col.field)}`}
+                        align={col.align || colsTypesAlign[col.type]}
+                      />
+                    ))}
                   </TableRow>
                 ))
               )}
             </TableBody>
           </Table>
         </TableContainer>
-        {this.paginationEnabled && (
+        {!footerless && this.paginationEnabled && (
           <XTableFooter>
             <Pagination count={this.totalPages} page={this.page} onChange={this.handlePagination} />
           </XTableFooter>
@@ -352,8 +369,9 @@ export class XTable<T> extends Component<XTableProps<T>> {
     return {
       page: this.page - 1,
       pageSize: this.pageSize,
+      totalPages: this.totalPages,
       sort: this.sortParams.field as string,
-      sortDir: this.sortParams.asc ? SortDir.ASC : SortDir.DESC,
+      sortOrder: this.sortParams.asc ? SortOrder.ASC : SortOrder.DESC,
       filter: (filterable && this.filterActive) || filtersAlwaysEnabled ? this.filterQuery : {}
     };
   }
@@ -364,8 +382,12 @@ export class XTable<T> extends Component<XTableProps<T>> {
   }
 
   @action.bound
-  private handlePagination(e: React.ChangeEvent<unknown>, value: number) {
+  private handlePagination(e: React.ChangeEvent<unknown> | null, value: number) {
+    const { onPageOptionsChange } = this.props;
     this._page = value;
+    if (onPageOptionsChange) {
+      onPageOptionsChange(this.pageOptions);
+    }
   }
 
   @action.bound
@@ -400,8 +422,8 @@ export class XTable<T> extends Component<XTableProps<T>> {
   }
 
   @action.bound
-  private pageSizeChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
-    this.pageSize = Number(e.target.value);
+  private setPageSize(size: number) {
+    this.pageSize = size;
   }
 
   @action
@@ -431,5 +453,42 @@ export class XTable<T> extends Component<XTableProps<T>> {
     } finally {
       this.setBusy(false);
     }
+  }
+
+  private getColsSettingsStorageKey(id: string): string {
+    return `XTableColsSettings_${id}_${currentUser.id}`;
+  }
+
+  @action
+  private restoreColsSettings(id: string) {
+    if (id) {
+      try {
+        this.colsSettings = JSON.parse(
+          localStorage.getItem(this.getColsSettingsStorageKey(id)) || '{}'
+        ) as XTableColsSettings<T>;
+      } catch {}
+    }
+  }
+
+  private saveColsSettings() {
+    const { id } = this.props;
+    if (id) {
+      localStorage.setItem(this.getColsSettingsStorageKey(id), JSON.stringify(this.colsSettings));
+    }
+  }
+
+  private debouncedSaveColsSettings = debounce(this.saveColsSettings, 500);
+
+  @action.bound
+  private changeColWidth(col: keyof T, width: number) {
+    this.colsSettings[col] = { ...this.colsSettings[col], width };
+    this.debouncedSaveColsSettings();
+  }
+
+  @action.bound
+  private reset() {
+    this._page = 1;
+    this.sortParams = this.props.defaultSort || { field: null, asc: true };
+    this.filterQuery = this.props.defaultFilter || {};
   }
 }

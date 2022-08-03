@@ -1,5 +1,5 @@
 import React from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
@@ -23,6 +23,11 @@ import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Form_type_Poi
 @observer
 class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryForm {
   @observable active = false;
+
+  constructor(props: EditFeatureGeometryFormProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { className, store } = this.props;
@@ -54,7 +59,7 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryForm {
     const { store } = this.props;
     const geometry = store.geometry as WfsPointGeometry;
 
-    return !geometry.coordinates.some(dismention => dismention);
+    return !geometry.coordinates.some(Boolean);
   }
 
   @boundMethod

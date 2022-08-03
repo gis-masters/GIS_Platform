@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import xmlbuilder from 'xmlbuilder';
 import FileSaver from 'file-saver';
 
-import { CrgVectorLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/gis/projects.models';
 import {
   CoordinateEdited,
   GeometryType,

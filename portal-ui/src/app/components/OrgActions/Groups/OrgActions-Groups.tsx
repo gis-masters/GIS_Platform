@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip, IconButton, Dialog, DialogContent, DialogActions } from '@mui/material';
 import { isEqual } from 'lodash';
@@ -7,8 +7,8 @@ import { cn } from '@bem-react/classname';
 import { People, PeopleOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
-import { CrgUser } from '../../../services/crg/users.service';
-import { CrgGroup, groupsService } from '../../../services/crg/groups.service';
+import { CrgUser } from '../../../services/data/users.service';
+import { CrgGroup, groupsService } from '../../../services/data/groups.service';
 import { allGroups } from '../../../stores/AllGroups.store';
 import { XTable, XTableColumn } from '../../XTable/XTable';
 import { Loading } from '../../Loading/Loading';
@@ -44,6 +44,11 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
       sortable: true
     }
   ];
+
+  constructor(props: OrgActionsGroupsProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { user } = this.props;

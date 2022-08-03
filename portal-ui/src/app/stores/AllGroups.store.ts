@@ -1,6 +1,6 @@
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 
-import { CrgGroup } from '../services/crg/groups.service';
+import { CrgGroup } from '../services/data/groups.service';
 
 class AllGroups {
   @observable fetching = false;
@@ -8,7 +8,9 @@ class AllGroups {
 
   private static _instance: AllGroups;
 
-  private constructor() {}
+  private constructor() {
+    makeObservable(this);
+  }
 
   @action
   setList(list: CrgGroup[]) {

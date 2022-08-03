@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 
 import { Library } from '../../../Icons/Library';
-import { PageOptions, SortDir } from '../../../../services/models';
+import { PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import {
   DocumentLibrary,
@@ -9,7 +9,7 @@ import {
   getLibrariesWithParticularOne,
   getLibrary,
   LibraryRecord
-} from '../../../../services/crg/doc-library.service';
+} from '../../../../services/data/doc-library.service';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 
@@ -102,8 +102,8 @@ export class ExplorerAdapterTypeLibraryRoot {
     return 'title';
   }
 
-  static getChildrenSortDefaultDirection(): SortDir {
-    return SortDir.ASC;
+  static getChildrenSortDefaultOrder(): SortOrder {
+    return SortOrder.ASC;
   }
 
   static getChildrenFilterField(): string {

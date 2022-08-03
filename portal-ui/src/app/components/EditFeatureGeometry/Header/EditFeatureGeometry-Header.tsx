@@ -1,14 +1,12 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
+
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Header.scss';
 
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
-interface EditFeatureGeometryHeaderProps {
-  children: ReactNode;
-}
-
-export const EditFeatureGeometryHeader: FC<EditFeatureGeometryHeaderProps> = ({ children }) => (
+export const EditFeatureGeometryHeader: FC<ChildrenProps> = ({ children }) => (
   <div className={cnEditFeatureGeometry('Header')}>{children}</div>
 );

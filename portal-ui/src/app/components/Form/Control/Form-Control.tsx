@@ -1,14 +1,17 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { PropertyType, PropertySchema } from '../../../services/crg/schema.models';
+import { PropertyType, PropertySchema } from '../../../services/data/schema.models';
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./Form-Control.scss';
 
 export const cnFormControl = cn('Form', 'Control');
 
-export interface FormControlProps<T extends Record<string, unknown> = Record<string, unknown>> extends IClassNameProps {
+export interface FormControlProps<T extends Record<string, unknown> = Record<string, unknown>>
+  extends IClassNameProps,
+    ChildrenProps {
   htmlId?: string;
   type?: PropertyType;
   property?: PropertySchema<T>;
@@ -19,7 +22,6 @@ export interface FormControlProps<T extends Record<string, unknown> = Record<str
   variant?: 'standard' | 'outlined';
   fullWidthForOldForm?: boolean;
   labelInTextField?: boolean;
-  children?: ReactNode;
   onChange?: ({ value: T, propertyName: string }) => void;
   onNeedValidate?: ({ value: T, propertyName: string }) => void;
 }

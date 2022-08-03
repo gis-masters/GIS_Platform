@@ -1,13 +1,13 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-const cnForm = cn('Form-Error');
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./Form-Error.scss';
 
-interface FormErrorProps extends IClassNameProps {
-  children: ReactNode;
-}
+const cnForm = cn('Form-Error');
 
-export const FormError: FC<FormErrorProps> = ({ children }) => <div className={cnForm()}>{children}</div>;
+export const FormError: FC<IClassNameProps & ChildrenProps> = ({ children }) => (
+  <div className={cnForm()}>{children}</div>
+);

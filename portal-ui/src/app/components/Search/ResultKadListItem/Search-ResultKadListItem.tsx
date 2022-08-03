@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { MyLocation } from '@mui/icons-material';
@@ -28,6 +28,11 @@ export interface SearchResultKadListItemProps {
 @observer
 export class SearchResultKadListItem extends Component<SearchResultKadListItemProps> {
   @observable private pointExist = true;
+
+  constructor(props: SearchResultKadListItemProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { value, title } = this.props.kadObject;

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { AssignmentOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
+import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
+import { AxiosError } from 'axios';
 
-import { getLibraryRecord, LibraryRecord } from '../../../services/crg/doc-library.service';
-import { LibraryDocument } from '../../LibraryDocument/LibraryDocument';
+import { getLibraryRecord, LibraryRecord } from '../../../services/data/doc-library.service';
 import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
@@ -15,12 +16,10 @@ import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
 import { LookupItem } from '../../Lookup/Item/Lookup-Item';
 import { LookupIcon } from '../../Lookup/Icon/Lookup-Icon';
 import { Loading } from '../../Loading/Loading';
+import { Toast } from '../../Toast/Toast';
 
 import { DocumentsName } from '../Name/Documents-Name';
 import { DocumentInfo } from '../Documents';
-import { AxiosError } from 'axios';
-import { Toast } from '../../Toast/Toast';
-import { LibraryDocumentActions } from '../../LibraryDocumentActions/LibraryDocumentActions.composed';
 
 const cnDocumentsItem = cn('Documents', 'Item');
 
@@ -40,6 +39,11 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
   @observable private status: LookupStatusType = 'normal';
   @observable private errorText = '';
   @observable private document: LibraryRecord;
+
+  constructor(props: DocumentsItemProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { item, editable, numerous, multiple, onDelete } = this.props;
@@ -64,16 +68,22 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
           <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='xl'>
             <DialogTitle>{this.document.title}</DialogTitle>
             <DialogContent>
-              <LibraryDocument document={this.document} contentOnly />
+              <RegistryConsumer id='common'>
+                {({ LibraryDocument }) => <LibraryDocument document={this.document} contentOnly />}
+              </RegistryConsumer>
             </DialogContent>
             <DialogActions>
-              <LibraryDocumentActions
-                document={this.document}
-                as='button'
-                hideOpen
-                forDialog
-                onDialogClose={this.closeDialog}
-              />
+              <RegistryConsumer id='common'>
+                {({ LibraryDocumentActions }) => (
+                  <LibraryDocumentActions
+                    document={this.document}
+                    as='button'
+                    hideOpen
+                    forDialog
+                    onDialogClose={this.closeDialog}
+                  />
+                )}
+              </RegistryConsumer>
             </DialogActions>
           </Dialog>
         )}

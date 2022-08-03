@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 import { Card, CardActions } from '@mui/material';
 import { observer } from 'mobx-react';
-import { action } from 'mobx';
+import { action, makeObservable } from 'mobx';
 
 import { ServicesInfo } from '../ServicesCalculator';
 import { ServicesCalculatorInvoice } from '../Invoice/ServicesCalculator-Invoice';
@@ -24,6 +24,11 @@ interface ServicesCalculatorActionsProps {
 
 @observer
 export class ServicesCalculatorActions extends Component<ServicesCalculatorActionsProps> {
+  constructor(props: ServicesCalculatorActionsProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { openRequisitesDialog, resultPrice, selectedServices } = this.props;
 

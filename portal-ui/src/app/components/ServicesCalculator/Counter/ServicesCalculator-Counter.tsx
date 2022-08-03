@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { action } from 'mobx';
+import { action, makeObservable } from 'mobx';
 
 import { ServicesInfo } from '../ServicesCalculator';
 import { ServicesCalculatorButton } from '../Button/ServicesCalculator-Button';
@@ -17,6 +17,11 @@ interface ServicesCalculatorCounterProps {
 
 @observer
 export class ServicesCalculatorCounter extends Component<ServicesCalculatorCounterProps> {
+  constructor(props: ServicesCalculatorCounterProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { service } = this.props;
 

@@ -3,13 +3,15 @@ import { computed } from 'mobx';
 
 export function fromMobx<T>(expression: () => T, invokeImmediately = true): Observable<T> {
   return new Observable(observer => {
-    const computedValue = computed(expression);
-    const disposer = computedValue.observe(changes => {
+    const computedValue = computed<T>(expression);
+    const disposer = computedValue.observe_(changes => {
       observer.next(changes.newValue);
     }, invokeImmediately);
 
     return () => {
-      disposer && disposer();
+      if (disposer) {
+        disposer();
+      }
     };
   });
 }

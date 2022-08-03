@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { AxiosError } from 'axios';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -9,7 +9,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } f
 
 import { http } from '../../../services/http.service';
 import { services } from '../../../services/services';
-import { EditedField } from '../../../services/crg/schemaOld.models';
+import { EditedField } from '../../../services/data/schemaOld.models';
 import { getBaseUrl } from '../../../services/server-urls.service';
 import { communicationService } from '../../../services/communication.service';
 import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
@@ -38,6 +38,11 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
   @observable private isDeleteDocumentDialogOpen = false;
   @observable private downloadUrl = '';
   @observable private deleteUrl = '';
+
+  constructor(props: DocumentItemProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     const baseUrl = await getBaseUrl();

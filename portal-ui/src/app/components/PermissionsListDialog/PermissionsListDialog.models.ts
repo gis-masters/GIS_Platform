@@ -1,5 +1,5 @@
-import { CrgProject } from '../../services/crg/projects.models';
-import { Dataset, DataTable } from '../../services/data.service';
+import { CrgProject } from '../../services/gis/projects.models';
+import { Dataset, VectorTable } from '../../services/data/data.service';
 import { XTableProps } from '../XTable/XTable';
 
 export enum PermissionsListItemType {
@@ -10,7 +10,7 @@ export enum PermissionsListItemType {
 
 export interface PermissionsXTablePropsSet {
   [PermissionsListItemType.PROJECT]: XTableProps<CrgProject>;
-  [PermissionsListItemType.TABLE]: XTableProps<DataTable>;
+  [PermissionsListItemType.TABLE]: XTableProps<VectorTable>;
   [PermissionsListItemType.DATASET]: XTableProps<Dataset>;
 }
 

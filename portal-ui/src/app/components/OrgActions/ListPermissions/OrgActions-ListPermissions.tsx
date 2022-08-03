@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Tooltip, IconButton } from '@mui/material';
 import { PlaylistAddCheck } from '@mui/icons-material';
 
-import { PrincipalType } from '../../../services/crg/permissions.models';
+import { PrincipalType } from '../../../services/data/permissions.models';
 import { PermissionsListDialog } from '../../PermissionsListDialog/PermissionsListDialog';
 
 const cnOrgActionsListPermissions = cn('OrgActions', 'ListPermissions');
@@ -19,6 +19,11 @@ interface OrgActionsListPermissionsProps {
 @observer
 export class OrgActionsListPermissions extends Component<OrgActionsListPermissionsProps> {
   @observable private open = false;
+
+  constructor(props: OrgActionsListPermissionsProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { principalId, principalName, principalType } = this.props;

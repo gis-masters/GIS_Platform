@@ -1,5 +1,5 @@
 import React, { Component, createRef, FC, forwardRef, ReactNode, RefObject } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ArrowDropDown } from '@mui/icons-material';
 import { Menu, PropTypes } from '@mui/material';
@@ -22,6 +22,11 @@ class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
   private anchorRef: RefObject<HTMLButtonElement> = createRef();
   @observable private menuOpen = false;
   private anchorEl: HTMLButtonElement;
+
+  constructor(props: MenuIconButtonProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { icon, color = 'default', children, className, innerRef, size, ...iconButtonProps } = this.props;

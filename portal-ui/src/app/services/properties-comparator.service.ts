@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { OldPropertySchema } from './crg/schemaOld.models';
+import { OldPropertySchema } from './data/schemaOld.models';
 import { DirectComparison, GeometryComparison, LastComparison, ObjectIdComparison } from './util/CrgComparatorUtil';
 import { LayerAttribute } from './geoserver/import/models';
 

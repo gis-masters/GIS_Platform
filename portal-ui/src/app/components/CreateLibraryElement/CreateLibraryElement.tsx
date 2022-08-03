@@ -1,22 +1,23 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { NoteAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
 import { ExplorerStore } from '../Explorer/Explorer.store';
-import { createLibraryRecord, LibraryRecord, LibraryRecordRaw } from '../../services/crg/doc-library.service';
-import { applyContentType } from '../../services/crg/schema.utils';
-import { ContentType, PropertyType, Schema } from '../../services/crg/schema.models';
-import { schemaService } from '../../services/crg/schema.service';
+import { createLibraryRecord, LibraryRecord, LibraryRecordRaw } from '../../services/data/doc-library.service';
+import { applyContentType } from '../../services/data/schema.utils';
+import { ContentType, PropertyType, Schema } from '../../services/data/schema.models';
+import { schemaService } from '../../services/data/schema.service';
 import { ExplorerItemType } from '../Explorer/Explorer.models';
 import {
+  cleanCalculatedValues,
   FieldErrors,
   getDefaultValues,
   normalizeServerErrors,
   validateFormValue
-} from '../../services/crg/formValidation.service';
+} from '../../services/formValidation.service';
 import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
 
 import { CreateLibraryElementDialog } from './Dialog/CreateLibraryElement-Dialog';
@@ -39,6 +40,11 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   @observable private formErrors?: FieldErrors[];
   @observable private serverFormErrors?: FieldErrors[];
   @observable private formValue: LibraryRecordRaw = {};
+
+  constructor(props: CreateLibraryElementsProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     const schema = await schemaService.getSchema(this.props.schemaId);
@@ -145,7 +151,9 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   @boundMethod
   private async create(formValue: LibraryRecord) {
     const { libraryIdentifier, schemaId, store } = this.props;
-    const formData = this.fillSystemAttributes(formValue);
+    const formData = this.fillSystemAttributes(
+      cleanCalculatedValues<LibraryRecord>(formValue, this.preparedSchema.properties)
+    );
 
     this.setDialogLoading(true);
 
@@ -189,7 +197,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
       ...formData,
       content_type_id: this.contentTypeId,
       path: this.props.path,
-      oktmo: formData.oktmo ? formData.oktmo : this.inheritOktmo()
+      oktmo: formData.oktmo || this.inheritOktmo()
     };
   }
 

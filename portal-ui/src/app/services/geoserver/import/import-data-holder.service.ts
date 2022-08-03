@@ -2,8 +2,8 @@ import { EventEmitter, Injectable } from '@angular/core';
 
 import { ImportLayerItem, LayerAttribute } from './models';
 import { MatchingPair, TaskImport } from './taskImport';
-import { schemaService } from '../../crg/schema.service';
-import { OldSchema, OldPropertySchema, ValueType } from '../../crg/schemaOld.models';
+import { schemaService } from '../../data/schema.service';
+import { OldSchema, OldPropertySchema, ValueType } from '../../data/schemaOld.models';
 import { AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../models';
 import { PropertiesComparatorService } from '../../properties-comparator.service';
 import { FeatureUtil } from '../../util/FeatureUtil';

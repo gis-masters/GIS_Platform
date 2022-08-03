@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 import { Dialog, DialogActions, DialogContent } from '@mui/material';
 
-import { PropertyType, Schema } from '../../services/crg/schema.models';
+import { PropertyType, Schema } from '../../services/data/schema.models';
 import { generateRandomId } from '../../services/util/randomId';
 import { authService } from '../../services/auth.service';
 import { services } from '../../services/services';

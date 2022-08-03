@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { services } from '../../../../services/services';
-import { ValueType } from '../../../../services/crg/schemaOld.models';
+import { ValueType } from '../../../../services/data/schemaOld.models';
 import { DocumentListItemData, DocumentsList } from '../../../DocumentsList/DocumentsList';
 
 import { cnEditFeatureFieldControl, EditFeaturesControlProps } from '../EditFeatureField-Control';
@@ -17,8 +17,10 @@ class EditFeatureFieldControlTypeLookup extends Component<EditFeaturesControlPro
   constructor(props: EditFeaturesControlProps) {
     super(props);
 
+    makeObservable(this);
+
     try {
-      this.setValue(JSON.parse(props.field.value));
+      this.setValue(JSON.parse(props.field.value) as DocumentListItemData[]);
     } catch {
       services.logger.warn('Incorrect lookup value: ', props.field.value);
     }

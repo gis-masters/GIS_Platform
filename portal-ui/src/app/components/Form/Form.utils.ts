@@ -1,10 +1,10 @@
 import { isEqual } from 'lodash';
 import { action } from 'mobx';
 
-import { PropertySchema, PropertySchemaUrl, PropertyType, Schema } from '../../services/crg/schema.models';
-import { Fias } from '../../services/fias.service';
-import { services } from '../../services/services';
+import { PropertySchema, PropertySchemaUrl, PropertyType, Schema } from '../../services/data/schema.models';
 import { UrlInfo } from './Control/_type/Form-Control_type_url';
+import { Fias } from '../../services/data/fias.service';
+import { services } from '../../services/services';
 
 const fromComplex: Partial<
   Record<
@@ -51,7 +51,7 @@ export const applyFieldValue = action(
   <T extends Record<string, unknown>>(
     propertySchema: PropertySchema<T>,
     formValue: Partial<T>,
-    fieldValue: T[keyof T]
+    fieldValue: T[keyof T & string]
   ): Partial<T> => {
     if (fromComplex[propertySchema.propertyType]) {
       return fromComplex[propertySchema.propertyType]<T>(propertySchema, formValue, fieldValue);

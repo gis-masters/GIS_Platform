@@ -1,16 +1,11 @@
-import { observable, action, reaction } from 'mobx';
+import { observable, action, reaction, makeObservable } from 'mobx';
 
-import { route } from './Route.store';
-import { CrgVectorLayer } from '../services/crg/projects.models';
+import { route, Pages } from './Route.store';
+import { CrgVectorLayer } from '../services/gis/projects.models';
 import { WfsFeature } from '../services/geoserver/wfs.models';
 import { Properties } from '../components/edit-feature/edit-feature.component';
 import { FeatureError } from '../services/map/map-link-following.service';
-
-export enum MapSelectionTypes {
-  ADD,
-  REMOVE,
-  REPLACE
-}
+import { mapStore } from './Map.store';
 
 export enum EditFeatureMode {
   multipleEdit = 'multipleEdit',
@@ -28,10 +23,7 @@ export interface EditFeaturesData {
 
 const defaultValues: Partial<Sidebars> = {
   leftOpen: true,
-  attributesOpen: false,
-  layerForAttributes: null,
-  featuresOpen: false,
-  viewFeatures: null,
+  featuresSidebarOpen: false,
   memorizedViewFeatures: null,
   deletedFeatures: null,
   editFeaturesData: null,
@@ -41,19 +33,15 @@ const defaultValues: Partial<Sidebars> = {
   featuresClosingConfirmationOpen: false,
   featuresClosingConfirmationCallback: null,
   bugReportOpen: false,
-  infoOpen: false,
-  isFeaturesLimitReached: false
+  infoOpen: false
 };
 
 class Sidebars {
   private static _instance: Sidebars;
 
   @observable leftOpen: boolean;
-  @observable attributesOpen: boolean;
-  @observable layerForAttributes?: CrgVectorLayer;
-  @observable featuresOpen: boolean;
+  @observable featuresSidebarOpen: boolean;
   @observable editOpen: boolean;
-  @observable viewFeatures?: WfsFeature[];
   @observable memorizedViewFeatures?: WfsFeature[];
   @observable deletedFeatures?: FeatureError[];
   @observable featuresWithNoAccess?: FeatureError[];
@@ -65,19 +53,19 @@ class Sidebars {
   @observable featuresClosingConfirmationCallback?: () => void;
   @observable bugReportOpen: boolean;
   @observable infoOpen: boolean;
-  @observable isFeaturesLimitReached?: boolean;
 
   static get instance() {
     return this._instance || (this._instance = new this());
   }
 
   private constructor() {
+    makeObservable(this);
     this.reset();
 
     reaction(
       () => route.data && route.data.page,
       page => {
-        if (page !== 'map') {
+        if (page !== Pages.MAP) {
           this.reset();
         }
       }
@@ -85,98 +73,47 @@ class Sidebars {
   }
 
   @action
-  openLeft() {
+  openLeftSidebar() {
     this.leftOpen = true;
   }
 
   @action
-  closeLeft() {
+  closeLeftSidebar() {
     this.leftOpen = false;
   }
 
-  @action
-  openAttributes(layer: CrgVectorLayer) {
-    this.attributesOpen = true;
-    this.layerForAttributes = layer;
-  }
-
-  @action
-  closeAttributes() {
-    this.attributesOpen = false;
-    this.layerForAttributes = null;
-  }
-
-  @action
-  openFeatures(features: WfsFeature[], selectionType?: MapSelectionTypes) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    if (this.needEditConfirmation(this.openFeatures.bind(this, features))) {
+  @action.bound
+  openFeaturesSidebar() {
+    if (this.needEditConfirmation(this.openFeaturesSidebar.bind(this))) {
       return;
     }
     this.closeBugReport();
     this.closeEdit();
-    this.featuresOpen = true;
+    this.featuresSidebarOpen = true;
 
-    if (this.viewFeatures) {
-      if (selectionType === MapSelectionTypes.REPLACE) {
-        this.viewFeatures = features;
-      } else {
-        features.forEach(feature => {
-          const index = this.viewFeatures.findIndex(element => {
-            return element.id === feature.id;
-          });
-
-          if (selectionType === MapSelectionTypes.REMOVE && index !== -1) {
-            this.viewFeatures.splice(index, 1);
-          }
-
-          if (selectionType === MapSelectionTypes.ADD && index === -1) {
-            this.viewFeatures.push(feature);
-          }
-        });
-      }
-    } else if (selectionType !== MapSelectionTypes.REMOVE) {
-      this.viewFeatures = features;
-    }
-
-    if (
-      !this.featuresWithErrors &&
-      this.viewFeatures.length === 1 &&
-      features.length === 1 &&
-      (selectionType === MapSelectionTypes.REPLACE || selectionType === MapSelectionTypes.ADD)
-    ) {
-      this.closeFeatures();
+    if (!this.featuresWithErrors && mapStore.selectedFeatures.length === 1) {
+      this.closeFeaturesSidebar();
       this.openEdit({
-        features: features,
+        features: mapStore.selectedFeatures,
         mode: EditFeatureMode.single
       });
     }
 
-    if ((!this.viewFeatures || this.viewFeatures.length === 0) && !this.featuresWithErrors) {
-      this.closeFeatures();
+    if (mapStore.selectedFeatures.length === 0 && !this.featuresWithErrors) {
+      this.closeFeaturesSidebar();
       this.closeEdit();
     }
   }
 
   @action.bound
-  closeFeatures() {
-    this.featuresOpen = false;
-    this.viewFeatures = null;
-  }
-
-  @action.bound
-  openFeaturesWithError() {
-    this.featuresOpen = true;
+  closeFeaturesSidebar() {
+    this.featuresSidebarOpen = false;
   }
 
   @action
   closeSidebar() {
-    this.closeFeatures();
+    this.closeFeaturesSidebar();
     this.closeEdit();
-  }
-
-  @action
-  setSingleFeature(feature: WfsFeature) {
-    this.viewFeatures = [feature];
   }
 
   @action
@@ -185,21 +122,14 @@ class Sidebars {
   }
 
   @action
-  setFeaturesLimit(reached: boolean) {
-    this.isFeaturesLimitReached = reached;
-  }
-
-  @action
   openEdit(data: EditFeaturesData) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (this.needEditConfirmation(this.openEdit.bind(this, data))) {
       return;
     }
     this.editFeaturesData = data;
     this.closeBugReport();
     this.editOpen = true;
-    this.closeFeatures();
-    this.viewFeatures = data.features;
+    this.closeFeaturesSidebar();
   }
 
   @action.bound
@@ -218,7 +148,7 @@ class Sidebars {
       return;
     }
     this.bugReportOpen = true;
-    this.closeFeatures();
+    this.closeFeaturesSidebar();
     this.closeEdit();
   }
 
@@ -276,7 +206,7 @@ class Sidebars {
   }
 
   @action
-  private needEditConfirmation(callback: () => void): boolean {
+  needEditConfirmation(callback: () => void): boolean {
     if (this.featuresEdited && !this.featuresClosingConfirmationOpen) {
       this.featuresClosingConfirmationOpen = true;
       this.featuresClosingConfirmationCallback = () => {

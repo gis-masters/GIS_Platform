@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
@@ -10,9 +10,9 @@ import {
   CrgLayerType,
   TreeItemPayload,
   CrgVectorLayer
-} from '../../services/crg/projects.models';
+} from '../../services/gis/projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { schemaService } from '../../services/crg/schema.service';
+import { schemaService } from '../../services/data/schema.service';
 
 import { LayerEye } from './Eye/Layer-Eye';
 import { LayerGap } from './Gap/Layer-Gap';
@@ -55,6 +55,11 @@ export class Layer extends Component<LayerProps> {
   @observable private menuY = 0;
   @observable private _errors: string[] = [];
   private menuAnchor?: HTMLElement;
+
+  constructor(props: LayerProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.testSchema();

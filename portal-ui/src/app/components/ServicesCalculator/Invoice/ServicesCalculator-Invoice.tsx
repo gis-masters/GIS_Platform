@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { jsPDF } from 'jspdf';
 import { cn } from '@bem-react/classname';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 
 import { Button } from '../../Button/Button';
 
@@ -22,6 +22,11 @@ interface ServicesCalculatorInvoiceProps {
 export class ServicesCalculatorInvoice extends Component<ServicesCalculatorInvoiceProps> {
   @observable private counter = 1;
   @observable private font: string;
+
+  constructor(props: ServicesCalculatorInvoiceProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     const response = await fetch('/assets/fonts/Roboto/Roboto-Regular.ttf.base64');

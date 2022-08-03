@@ -3,9 +3,9 @@ import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { RegistryConsumer } from '@bem-react/di';
 
-import { NewDataset } from '../../../services/data.service';
-import { Schema } from '../../../services/crg/schema.models';
-import { FieldErrors } from '../../../services/crg/formValidation.service';
+import { NewDataset } from '../../../services/data/data.service';
+import { Schema } from '../../../services/data/schema.models';
+import { FieldErrors } from '../../../services/formValidation.service';
 
 import { Button } from '../../Button/Button';
 

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { action, computed } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox, Divider, ListItemText, MenuItem, Select } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { withBemMod } from '@bem-react/core';
 import { isEqual } from 'lodash';
 
-import { PropertyOption, PropertyType } from '../../../../services/crg/schema.models';
+import { PropertyOption, PropertyType } from '../../../../services/data/schema.models';
 import { FilterQuery } from '../../../../services/util/filterObjects';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter';
@@ -17,6 +17,11 @@ const EMPTY = '~~~empty_value~~~';
 
 @observer
 class XTableFilterTypeChoice extends Component<XTableFilterProps> {
+  constructor(props: XTableFilterProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { className } = this.props;
 
@@ -26,7 +31,6 @@ class XTableFilterTypeChoice extends Component<XTableFilterProps> {
         onChange={this.handleChange}
         value={this.value}
         renderValue={this.renderSelectValue}
-        fullWidth
         multiple
         variant='filled'
         size='small'
@@ -48,9 +52,9 @@ class XTableFilterTypeChoice extends Component<XTableFilterProps> {
 
   @computed
   private get options(): PropertyOption[] {
-    const { filterOptions = [] } = this.props;
+    const { options = [] } = this.props;
 
-    return [{ title: 'Не заполнено', value: EMPTY }, ...filterOptions];
+    return [{ title: 'Не заполнено', value: EMPTY }, ...options];
   }
 
   @computed

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { computed } from 'mobx';
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
-import { CrgGroup, groupsService } from '../../services/crg/groups.service';
-import { CrgUser, usersService } from '../../services/crg/users.service';
+import { CrgGroup, groupsService } from '../../services/data/groups.service';
+import { CrgUser, usersService } from '../../services/data/users.service';
 import { XTable, XTableColumn } from '../XTable/XTable';
 
 import { OrgUsersCreate } from './Create/OrgUsers-Create';
@@ -96,6 +96,11 @@ export class OrgUsers extends Component {
       CellContent: OrgUsersUserActions
     }
   ];
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await Promise.all([await usersService.initUsersListStore(), await groupsService.initAllGroupsStore()]);

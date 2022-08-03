@@ -1,14 +1,15 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-const cnFormField = cn('Form', 'Field');
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./Form-Field.scss';
 
-interface FormFieldProps extends IClassNameProps {
+const cnFormField = cn('Form', 'Field');
+
+interface FormFieldProps extends IClassNameProps, ChildrenProps {
   withRelations?: boolean;
-  children: ReactNode;
 }
 
 export const FormField: FC<FormFieldProps> = ({ className, withRelations, children }) => (

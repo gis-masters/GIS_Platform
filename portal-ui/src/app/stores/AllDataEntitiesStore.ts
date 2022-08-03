@@ -1,17 +1,19 @@
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 
-import { Dataset, DataTable } from '../services/data.service';
+import { Dataset, VectorTable } from '../services/data/data.service';
 
 class AllDataEntities {
-  @observable dataTables: DataTable[] = [];
+  @observable vectorTables: VectorTable[] = [];
   @observable datasets: Dataset[] = [];
 
   private static _instance: AllDataEntities;
 
-  private constructor() {}
+  private constructor() {
+    makeObservable(this);
+  }
 
-  @action setDataTables(list: DataTable[]) {
-    this.dataTables = list;
+  @action setVectorTables(list: VectorTable[]) {
+    this.vectorTables = list;
   }
 
   @action setDatasets(list: Dataset[]) {

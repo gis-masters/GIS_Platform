@@ -1,12 +1,12 @@
 import React, { ReactNode } from 'react';
 import { SchemaOutlined } from '@mui/icons-material';
 
-import { OldSchema } from '../../../../services/crg/schemaOld.models';
+import { OldSchema } from '../../../../services/data/schemaOld.models';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { schemaService } from '../../../../services/crg/schema.service';
+import { schemaService } from '../../../../services/data/schema.service';
 import { filterObjects } from '../../../../services/util/filterObjects';
 import { sortObjects } from '../../../../services/util/sortObjects';
-import { PageOptions, SortDir } from '../../../../services/models';
+import { PageOptions, SortOrder } from '../../../../services/models';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 
@@ -44,11 +44,11 @@ export class ExplorerAdapterTypeSchemasRoot {
 
   static async getChildren(
     item: ExplorerItemData<null>,
-    { page, pageSize, sort, sortDir, filter }: PageOptions
+    { page, pageSize, sort, sortOrder, filter }: PageOptions
   ): Promise<[ExplorerItemData<OldSchema>[], number]> {
     const all = await schemaService.getAllSchemas();
     const filtered = filter.name ? filterObjects(all, { name: { $ilike: `%${String(filter.name)}%` } }) : all;
-    const sorted = sortObjects<OldSchema>(filtered, sort as keyof OldSchema, sortDir === SortDir.ASC, 'name');
+    const sorted = sortObjects<OldSchema>(filtered, sort as keyof OldSchema, sortOrder === SortOrder.ASC, 'name');
     const paged = sorted.slice(page * pageSize, page * pageSize + pageSize);
     const wrapped = paged.map(schema => ({ type: ExplorerItemType.SCHEMA, payload: schema }));
 
@@ -57,12 +57,12 @@ export class ExplorerAdapterTypeSchemasRoot {
 
   static async getChildrenWithParticularOne(
     item: ExplorerItemData<null>,
-    { pageSize, sort, sortDir, filter }: PageOptions,
+    { pageSize, sort, sortOrder, filter }: PageOptions,
     id: string
   ): Promise<[ExplorerItemData<OldSchema>[], number, number]> | undefined {
     const all = await schemaService.getAllSchemas();
     const filtered = filterObjects(all, filter);
-    const sorted = sortObjects<OldSchema>(filtered, sort as keyof OldSchema, sortDir === SortDir.ASC, 'name');
+    const sorted = sortObjects<OldSchema>(filtered, sort as keyof OldSchema, sortOrder === SortOrder.ASC, 'name');
     const index = sorted.findIndex(({ name }) => name === id);
 
     if (index === -1) {
@@ -100,8 +100,8 @@ export class ExplorerAdapterTypeSchemasRoot {
     return 'name';
   }
 
-  static getChildrenSortDefaultDirection(): SortDir {
-    return SortDir.ASC;
+  static getChildrenSortDefaultOrder(): SortOrder {
+    return SortOrder.ASC;
   }
 
   static getChildrenFilterField(): string {

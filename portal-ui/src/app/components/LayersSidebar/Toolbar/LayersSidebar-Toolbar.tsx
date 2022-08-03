@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
 import { CancelOutlined, CreateNewFolder, CreateNewFolderOutlined, SaveOutlined } from '@mui/icons-material';
@@ -8,7 +8,7 @@ import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { CrgLayer, CrgLayersGroup } from '../../../services/crg/projects.models';
+import { CrgLayer, CrgLayersGroup } from '../../../services/gis/projects.models';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
@@ -22,7 +22,7 @@ import { LayersSidebarToolbarLeft } from '../ToolbarLeft/LayersSidebar-ToolbarLe
 import { LayersSidebarToolbarRight } from '../ToolbarRight/LayersSidebar-ToolbarRight';
 
 import '!style-loader!css-loader!sass-loader!./LayersSidebar-Toolbar.scss';
-import { projectsService } from '../../../services/crg/projects.service';
+import { projectsService } from '../../../services/gis/projects.service';
 
 const cnLayersSidebarToolbar = cn('LayersSidebar', 'Toolbar');
 
@@ -37,6 +37,11 @@ interface LayersSidebarToolbarProps {
 export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
   @observable private createGroupDialogOpen = false;
   @observable private addLayerDialogOpen = false;
+
+  constructor(props: LayersSidebarToolbarProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { editMode, above } = this.props;

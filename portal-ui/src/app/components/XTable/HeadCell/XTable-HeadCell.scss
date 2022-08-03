@@ -1,4 +1,6 @@
 body .XTable-HeadCell {
+  width: calc(var(--XTableCellWidth) * 1px);
+
   cursor: default;
 
   &_filterable {
@@ -9,7 +11,7 @@ body .XTable-HeadCell {
     opacity: 0.7;
   }
 
-  &_filterType_dateTime.XTable-HeadCell_filterable {
-    min-width: 250px;
+  &_unspecifiedWidth {
+    max-width: 450px;
   }
 }

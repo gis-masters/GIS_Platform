@@ -3,23 +3,18 @@ import { Storage } from '@mui/icons-material';
 
 import {
   Dataset,
-  DataTable,
-  getDataset,
+  VectorTable,
   getDatasetTables,
   getDatasetTablesWithParticularOne,
-  getDataTable
-} from '../../../../services/data.service';
+  getVectorTable
+} from '../../../../services/data/data.service';
 import { Emitter } from '../../../../services/common/Emitter';
-import { PageOptions, SortDir } from '../../../../services/models';
-import { Role } from '../../../../services/crg/permissions.models';
-import { currentUser } from '../../../../stores/CurrentUser.store';
+import { PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { getDatasetRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { communicationService } from '../../../../services/communication.service';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { formatDate } from '../../../../services/util/date.util';
 
-import { Adapter, ExplorerItemData, ExplorerItemEntityType, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { DatasetActionsAddToProject } from '../../../DatasetActions/AddToProject/DatasetActions-AddToProject';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
@@ -67,20 +62,6 @@ export class ExplorerAdapterTypeDataset {
     return item.payload.identifier;
   }
 
-  static async getWidgets(item: ExplorerItemData<Dataset>): Promise<ReactNode> {
-    const url = await getDatasetRoleAssignmentUrl(item.payload.identifier);
-    const currentItem = await getDataset(item.payload.identifier);
-
-    return (
-      <PermissionsWidget
-        url={url}
-        title={item.payload.title}
-        itemEntityType={ExplorerItemEntityType.DATASET}
-        disabled={!(currentUser.isAdmin || currentItem.role === Role.OWNER)}
-      />
-    );
-  }
-
   static getIcon(): ReactNode {
     return <Storage color='primary' />;
   }
@@ -96,7 +77,7 @@ export class ExplorerAdapterTypeDataset {
   static async getChildren(
     item: ExplorerItemData<Dataset>,
     { filter, ...options }: PageOptions
-  ): Promise<[ExplorerItemData<DataTable>[], number]> {
+  ): Promise<[ExplorerItemData<VectorTable>[], number]> {
     const [tables, totalPages] = await getDatasetTables(item.payload.identifier, {
       ...options,
       filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined
@@ -109,7 +90,7 @@ export class ExplorerAdapterTypeDataset {
     item: ExplorerItemData<Dataset>,
     { filter, page, ...options }: PageOptions,
     identifier: string
-  ): Promise<[ExplorerItemData<DataTable>[], number, number]> | undefined {
+  ): Promise<[ExplorerItemData<VectorTable>[], number, number]> | undefined {
     const response = await getDatasetTablesWithParticularOne(item.payload.identifier, identifier, {
       ...options,
       filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
@@ -138,8 +119,11 @@ export class ExplorerAdapterTypeDataset {
     ];
   }
 
-  static async getChildById(item: ExplorerItemData<Dataset>, identifier: string): Promise<ExplorerItemData<DataTable>> {
-    const payload = await getDataTable(item.payload.identifier, identifier);
+  static async getChildById(
+    item: ExplorerItemData<Dataset>,
+    identifier: string
+  ): Promise<ExplorerItemData<VectorTable>> {
+    const payload = await getVectorTable(item.payload.identifier, identifier);
 
     return { type: ExplorerItemType.TABLE, payload };
   }
@@ -148,8 +132,8 @@ export class ExplorerAdapterTypeDataset {
     return 'created_at';
   }
 
-  static getChildrenSortDefaultDirection(): SortDir {
-    return SortDir.DESC;
+  static getChildrenSortDefaultOrder(): SortOrder {
+    return SortOrder.DESC;
   }
 
   static getChildrenFilterField(): string {
@@ -165,6 +149,6 @@ export class ExplorerAdapterTypeDataset {
   }
 
   static getRefreshEmitters(): Emitter[] {
-    return [communicationService.dataTablesUpdated];
+    return [communicationService.vectorTablesUpdated];
   }
 }

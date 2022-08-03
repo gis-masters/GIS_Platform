@@ -1,8 +1,8 @@
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 
-import { LibraryRecord } from '../../services/crg/doc-library.service';
-import { CrgProject } from '../../services/crg/projects.models';
-import { FileInfo } from '../../services/files.service';
+import { LibraryRecord } from '../../services/data/doc-library.service';
+import { CrgProject } from '../../services/gis/projects.models';
+import { FileInfo } from '../../services/data/files.service';
 
 export interface PlacementTask {
   id: string;
@@ -22,6 +22,7 @@ export class FilesPlacementReportStore {
   @observable project: CrgProject;
 
   constructor() {
+    makeObservable(this);
     this.initState();
   }
 
@@ -79,7 +80,7 @@ export class FilesPlacementReportStore {
     if (task) {
       task.status = 'DONE';
       task.inProgress = false;
-      task.description = description ? description : this.makeDefaultSuccessDescription(task);
+      task.description = description || this.makeDefaultSuccessDescription(task);
     }
   }
 
@@ -89,7 +90,7 @@ export class FilesPlacementReportStore {
     if (task) {
       task.status = 'ERROR';
       task.inProgress = false;
-      task.description = errorDescription ? errorDescription : this.makeDefaultErrorDescription(task);
+      task.description = errorDescription || this.makeDefaultErrorDescription(task);
     }
   }
 

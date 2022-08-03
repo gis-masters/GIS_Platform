@@ -1,6 +1,6 @@
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 
-import { SortDir } from '../../services/models';
+import { SortOrder } from '../../services/models';
 
 import { ExplorerItemData, pageSizeVariants, SortItem } from './Explorer.models';
 
@@ -14,12 +14,13 @@ export class ExplorerStore {
   @observable totalPages = 0;
   @observable sortItems: SortItem[] = [];
   @observable sort = '';
-  @observable sortDir: SortDir = SortDir.ASC;
+  @observable sortOrder: SortOrder = SortOrder.ASC;
   @observable filter: Record<string, string> = {};
   @observable loading = false;
   @observable restoringFromUrl = false;
 
   constructor(id: string) {
+    makeObservable(this);
     this.id = id;
     this.pageSizeStorageKey = 'ExplorerPageSize' + id;
     const storedSize = Number(localStorage.getItem(this.pageSizeStorageKey));
@@ -80,8 +81,8 @@ export class ExplorerStore {
   }
 
   @action
-  setSortDir(dir?: SortDir): void {
-    this.sortDir = dir || SortDir.ASC;
+  setSortOrder(order?: SortOrder): void {
+    this.sortOrder = order || SortOrder.ASC;
   }
 
   @action

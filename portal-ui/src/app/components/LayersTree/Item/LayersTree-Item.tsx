@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { action } from 'mobx';
+import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { projectsService } from '../../../services/crg/projects.service';
-import { TreeItem } from '../../../services/crg/projects.models';
+import { projectsService } from '../../../services/gis/projects.service';
+import { TreeItem } from '../../../services/gis/projects.models';
 import { Layer } from '../../Layer/Layer';
 
 import '!style-loader!css-loader!sass-loader!./LayersTree-Item.scss';
@@ -19,6 +19,11 @@ interface LayersTreeItemProps {
 
 @observer
 export class LayersTreeItem extends Component<LayersTreeItemProps> {
+  constructor(props: LayersTreeItemProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { editMode, item, highlighted } = this.props;
     const { isGroup, isEmptyGroup, payload, depth, visible, hiddenByZoom, errors } = item;

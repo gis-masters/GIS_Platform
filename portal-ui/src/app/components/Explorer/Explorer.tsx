@@ -12,14 +12,14 @@ import { boundMethod } from 'autobind-decorator';
 import { Emitter } from '../../services/common/Emitter';
 import { services } from '../../services/services';
 import { sleep } from '../../services/util/sleep';
-import { SortDir } from '../../services/models';
+import { SortOrder } from '../../services/models';
 import { Loading } from '../Loading/Loading';
 
 import { ExplorerStore } from './Explorer.store';
 import { emptyItem, ExplorerItemData, ExplorerItemType, KeyAction, keyActions, loadingItem } from './Explorer.models';
 import {
   getChildById,
-  getChildrenSortDefaultDirection,
+  getChildrenSortDefaultOrder,
   getChildrenSortDefaultValue,
   getChildrenSortItems,
   getId,
@@ -36,8 +36,8 @@ import { ExplorerService } from './Explorer.service';
 import '!style-loader!css-loader!sass-loader!./Explorer.scss';
 
 export type ExplorerUrlItem = [ExplorerItemType, string];
-// page, pageSize, sort, sortDir, filter
-export type ExplorerUrlOptions = [number, number, string, SortDir, Record<string, string>];
+// page, pageSize, sort, sortOrder, filter
+export type ExplorerUrlOptions = [number, number, string, SortOrder, Record<string, string>];
 
 const cnExplorer = cn('Explorer');
 
@@ -99,7 +99,7 @@ export class Explorer extends Component<ExplorerProps> {
     let prevPage = 0;
     let prevPageSize = 0;
     let prevSort: string;
-    let prevSortDir: SortDir;
+    let prevSortOrder: SortOrder;
     let prevFilter: Record<string, string>;
 
     this.reactionDisposers.push(
@@ -119,7 +119,7 @@ export class Explorer extends Component<ExplorerProps> {
         openedItem => {
           this.store.setFilter({});
           this.store.setSort(getChildrenSortDefaultValue(openedItem));
-          this.store.setSortDir(getChildrenSortDefaultDirection(openedItem));
+          this.store.setSortOrder(getChildrenSortDefaultOrder(openedItem));
           this.store.setSortItems(getChildrenSortItems(openedItem));
         }
       ),
@@ -130,14 +130,14 @@ export class Explorer extends Component<ExplorerProps> {
           this.store.page,
           this.store.pageSize,
           this.store.sort,
-          this.store.sortDir,
+          this.store.sortOrder,
           cloneDeep(this.store.filter)
         ],
-        async ([path, page, pageSize, sortDir, sort, filter]: [
+        async ([path, page, pageSize, sortOrder, sort, filter]: [
           ExplorerItemData[],
           number,
           number,
-          SortDir,
+          SortOrder,
           string,
           Record<string, string>
         ]) => {
@@ -158,7 +158,7 @@ export class Explorer extends Component<ExplorerProps> {
             !isEqual(path.slice(0, -1), prevPath.slice(0, -1)) ||
             prevPage !== page ||
             prevPageSize !== pageSize ||
-            prevSortDir !== sortDir ||
+            prevSortOrder !== sortOrder ||
             prevSort !== sort ||
             !isEqual(prevFilter, filter)
           ) {
@@ -170,7 +170,7 @@ export class Explorer extends Component<ExplorerProps> {
             !isEqual(path, prevPath) ||
             prevPage !== page ||
             prevPageSize !== pageSize ||
-            prevSortDir !== sortDir ||
+            prevSortOrder !== sortOrder ||
             prevSort !== sort ||
             !isEqual(prevFilter, filter)
           ) {
@@ -181,7 +181,7 @@ export class Explorer extends Component<ExplorerProps> {
             prevPage = page;
             prevPageSize = pageSize;
             prevSort = sort;
-            prevSortDir = sortDir;
+            prevSortOrder = sortOrder;
             prevFilter = filter;
           }
         },
@@ -309,12 +309,12 @@ export class Explorer extends Component<ExplorerProps> {
     this.savingToUrl = true;
 
     await services.provided;
-    const { path, page, pageSize, sort, sortDir, filter } = this.store;
+    const { path, page, pageSize, sort, sortOrder, filter } = this.store;
 
     const explorerItems = path.flatMap(item => [item.type, getId(item)]);
     const encodedURIPath = JSON.stringify(explorerItems);
 
-    const explorerOptions: ExplorerUrlOptions = [page, pageSize, sort, sortDir, filter];
+    const explorerOptions: ExplorerUrlOptions = [page, pageSize, sort, sortOrder, filter];
     const encodedURIOptions = JSON.stringify(explorerOptions);
 
     const { id } = this.props;
@@ -369,12 +369,12 @@ export class Explorer extends Component<ExplorerProps> {
       return;
     }
 
-    const [page, pageSize, sort, sortDir, filter] = JSON.parse(urlExplorerOptions) as ExplorerUrlOptions;
+    const [page, pageSize, sort, sortOrder, filter] = JSON.parse(urlExplorerOptions) as ExplorerUrlOptions;
 
     this.store.setPage(page);
     this.store.setPageSize(pageSize);
     this.store.setSort(sort);
-    this.store.setSortDir(sortDir);
+    this.store.setSortOrder(sortOrder);
     this.store.setFilter(filter);
   }
 }

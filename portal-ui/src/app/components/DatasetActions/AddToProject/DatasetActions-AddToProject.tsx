@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { AxiosError } from 'axios';
 import {
   Dialog,
@@ -15,17 +15,17 @@ import {
 } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { alertLayerOperationError, createLayer } from '../../../services/geoserver/layers.service';
-import { Dataset, DataTable, getAllDatasetTables } from '../../../services/data.service';
+import { alertLayerOperationError, createLayer } from '../../../services/gis/layers.service';
+import { Dataset, VectorTable, getAllDatasetTables } from '../../../services/data/data.service';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
 import { DialogActionsRight } from '../../DialogActionsRight/DialogActionsRight';
-import { CrgProject, CrgVectorLayer, NewCrgLayer } from '../../../services/crg/projects.models';
-import { projectsService } from '../../../services/crg/projects.service';
-import { vectorLayerDefaults } from '../../../services/NewLayerDefaults';
+import { CrgProject, CrgVectorLayer, NewCrgLayer } from '../../../services/gis/projects.models';
+import { projectsService } from '../../../services/gis/projects.service';
+import { vectorLayerDefaults } from '../../../services/gis/layers.utils';
 import { SortParams } from '../../../services/util/sortObjects';
 import { allProjects } from '../../../stores/AllProjects.store';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
-import { Role } from '../../../services/crg/permissions.models';
+import { Role } from '../../../services/data/permissions.models';
 import { XTableColumn } from '../../XTable/XTable';
 import { LayerAdd } from '../../Icons/LayerAdd';
 import { Loading } from '../../Loading/Loading';
@@ -40,7 +40,7 @@ interface DatasetActionsAddToProjectProps {
 
 @observer
 export class DatasetActionsAddToProject extends Component<DatasetActionsAddToProjectProps> {
-  @observable private dataTablesLayers: NewCrgLayer[];
+  @observable private vectorTablesLayers: NewCrgLayer[];
   @observable private projectsListDialogOpen = false;
   @observable private dialogOpen = false;
   @observable private addedLayers = 0;
@@ -56,6 +56,11 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
       sortable: true
     }
   ];
+
+  constructor(props: DatasetActionsAddToProjectProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await projectsService.initAllProjectsStore();
@@ -103,7 +108,7 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
           </DialogActions>
         </Dialog>
 
-        <Loading visible={this.busy} global value={(this.addedLayers / this.dataTablesLayers?.length) * 100} />
+        <Loading visible={this.busy} global value={(this.addedLayers / this.vectorTablesLayers?.length) * 100} />
       </>
     );
   }
@@ -130,9 +135,9 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
       project.id
     );
 
-    let dataTables: DataTable[];
+    let vectorTables: VectorTable[];
     try {
-      dataTables = await getAllDatasetTables(dataset);
+      vectorTables = await getAllDatasetTables(dataset);
     } catch {
       Toast.error({
         message: `Ошибка получения таблиц в наборе "${dataset.title}" (${dataset.identifier})`
@@ -141,8 +146,8 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
 
     const vectorDefaults = vectorLayerDefaults();
 
-    this.setDataTablesLayers(
-      dataTables.map((table, index) => {
+    this.setVectorTablesLayers(
+      vectorTables.map((table, index) => {
         return {
           ...vectorDefaults,
           parentId: group.id,
@@ -158,7 +163,7 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
       })
     );
 
-    for (const layer of this.dataTablesLayers) {
+    for (const layer of this.vectorTablesLayers) {
       try {
         await createLayer(layer, project.id);
         this.setAddedLayers(this.addedLayers + 1);
@@ -213,8 +218,8 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
   }
 
   @action
-  private setDataTablesLayers(dataTablesLayers: CrgVectorLayer[]) {
-    this.dataTablesLayers = dataTablesLayers;
+  private setVectorTablesLayers(vectorTablesLayers: CrgVectorLayer[]) {
+    this.vectorTablesLayers = vectorTablesLayers;
   }
 
   private getItemId({ id }: CrgProject): string {

@@ -1,6 +1,7 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 
+import { ChildrenProps } from '../../services/models';
 import { EmptyList } from '../Icons/EmptyList';
 
 import '!style-loader!css-loader!sass-loader!./EmptyListView.scss';
@@ -10,10 +11,9 @@ import '!style-loader!css-loader!sass-loader!./SecondaryText/EmptyListView-Secon
 
 const cnEmptyListView = cn('EmptyListView');
 
-export interface EmptyListProps {
+export interface EmptyListProps extends ChildrenProps {
   text: string;
   secondaryText?: string;
-  children?: ReactNode;
 }
 
 export class EmptyListView extends Component<EmptyListProps> {

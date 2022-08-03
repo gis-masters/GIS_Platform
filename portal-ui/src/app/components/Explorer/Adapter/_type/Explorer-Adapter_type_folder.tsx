@@ -5,13 +5,11 @@ import { RegistryConsumer } from '@bem-react/di';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { Emitter } from '../../../../services/common/Emitter';
-import { PageOptions, SortDir } from '../../../../services/models';
-import { Role } from '../../../../services/crg/permissions.models';
-import { schemaService } from '../../../../services/crg/schema.service';
+import { PageOptions, SortOrder } from '../../../../services/models';
+import { Role } from '../../../../services/data/permissions.models';
+import { schemaService } from '../../../../services/data/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
-import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { applyContentType } from '../../../../services/crg/schema.utils';
 import {
   ContentTypeTypes,
   deleteLibraryRecord,
@@ -19,15 +17,13 @@ import {
   getLibraryRecords,
   getLibraryRecordsWithParticularOne,
   LibraryRecord
-} from '../../../../services/crg/doc-library.service';
+} from '../../../../services/data/doc-library.service';
 import { Link } from '../../../Link/Link';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import { formatDate } from '../../../../services/util/date.util';
 
-import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerService } from '../../Explorer.service';
@@ -72,27 +68,6 @@ export class ExplorerAdapterTypeFolder {
 
   static getIcon(): ReactNode {
     return <FolderOutlined color='primary' />;
-  }
-
-  static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
-    const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
-    const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id);
-    const schema = applyContentType(await schemaService.getSchema(item.payload.schemaId), item.payload.content_type_id);
-
-    return (
-      <>
-        <ExplorerInfoDescItem multiline>
-          <ViewContentWidget schema={schema} data={item.payload} />
-        </ExplorerInfoDescItem>
-
-        <PermissionsWidget
-          url={url}
-          title={item.payload.title}
-          itemEntityType={ExplorerItemEntityType.FOLDER}
-          disabled={!(currentUser.isAdmin || currentItem.role === Role.OWNER)}
-        />
-      </>
-    );
   }
 
   static isFolder(): boolean {
@@ -208,8 +183,8 @@ export class ExplorerAdapterTypeFolder {
     return 'created_at';
   }
 
-  static getChildrenSortDefaultDirection(): SortDir {
-    return SortDir.DESC;
+  static getChildrenSortDefaultOrder(): SortOrder {
+    return SortOrder.DESC;
   }
 
   static getChildrenFilterField(): string {

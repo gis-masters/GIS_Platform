@@ -1,15 +1,15 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
+import { ChildrenProps } from '../../../services/models';
 import { Link } from '../../Link/Link';
 
 import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-BreadcrumbsItem.scss';
 
 const cnWorkspaceHeaderBreadcrumbsItem = cn('WorkspaceHeader', 'BreadcrumbsItem');
 
-interface WorkspaceHeaderBreadcrumbsItemProps {
+interface WorkspaceHeaderBreadcrumbsItemProps extends ChildrenProps {
   url?: string;
-  children: ReactNode;
 }
 
 export const WorkspaceHeaderBreadcrumbsItem: FC<WorkspaceHeaderBreadcrumbsItemProps> = ({ url, children }) =>

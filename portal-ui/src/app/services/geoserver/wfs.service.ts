@@ -1,24 +1,17 @@
-import { Coordinate } from 'ol/coordinate';
-import { isEqual } from 'lodash';
+import { chunk } from 'lodash';
 
-import {
-  WfsFeature,
-  WfsFeatureCollection,
-  CoordinateEdited,
-  WfsGeometry,
-  WfsMultiPolygonGeometry,
-  GeometryType
-} from './wfs.models';
+import { generateWfsSortParam } from './wfs.util';
 import { getGeoServerUrl, getWfsUrl } from '../server-urls.service';
-import { generateFilter, generateSortParam } from './wfs.util';
-import { RequestAttribute } from '../models';
+import { WfsFeature, WfsFeatureCollection } from './wfs.models';
+import { PageOptions } from '../models';
+import { CrgVectorLayer } from '../gis/projects.models';
+import { buildCqlFilter } from '../util/cql';
+import { cql2ol } from '../util/cql2ol';
 import { http } from '../http.service';
 import { Mime } from '../util/Mime';
+import { WFS } from '../ol/WFS';
 
 export const WFS_FEATURE_ID_DELIMITER = '.';
-
-type Coords = Coordinate | Coordinate[][] | Coordinate[][][];
-type CoordsEdited = CoordinateEdited | CoordinateEdited[][] | CoordinateEdited[][][];
 
 export async function getFeatureById(complexName: string, objectId: string): Promise<WfsFeature> {
   const url = await prepareLink(complexName, objectId);
@@ -31,95 +24,111 @@ export async function getFeatureById(complexName: string, objectId: string): Pro
   throw new Error('Not found feature by ID: ' + objectId);
 }
 
-export async function getFeatures(
-  complexName: string,
-  srsName?: string,
-  requestAttribute?: RequestAttribute
-): Promise<WfsFeatureCollection> {
-  const params: { [key: string]: string } = {
+function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {
+  return {
     service: 'wfs',
-    // version: '2.0.0',
     request: 'GetFeature',
     outputFormat: Mime.JSON,
     exceptions: Mime.JSON,
-    typeName: complexName,
-    // PROPERTYNAME: fillProp(complexName),
-    sortBy: generateSortParam(requestAttribute),
-    srsName
+    typeName: layer.complexName,
+    srsName: layer.nativeCRS
+  };
+}
+
+/**
+ * Get features by wfs
+ * @returns {Promise<[WfsFeature[], number, number, number]} features, total pages, features matched, features total
+ */
+export async function getFeatures(
+  layer: CrgVectorLayer,
+  pageOptions: PageOptions,
+  featureIds: string[] = [],
+  featureIdsNegative = false
+): Promise<[WfsFeature[], number, number, number]> {
+  const params: { [key: string]: string } = {
+    ...getBaseWfsParams(layer),
+    sortBy: generateWfsSortParam(pageOptions),
+    startindex: String(pageOptions.page * pageOptions.pageSize),
+    count: String(pageOptions.pageSize)
   };
 
-  if (requestAttribute && requestAttribute.page) {
-    const countRows = requestAttribute.page.pageSize ? requestAttribute.page.pageSize.toString() : '100';
-    const offset = requestAttribute.page.offset ? requestAttribute.page.offset.toString() : '0';
+  const cqlFilter = buildCqlFilter(pageOptions.filter);
+  const filter = cqlFilter ? cql2ol(cqlFilter) : undefined;
 
-    params.startindex = String(Number(offset) * Number(countRows));
-    params.count = countRows;
+  const featureRequest = new WFS().writeGetFeature({
+    viewParams: '',
+    srsName: layer.nativeCRS,
+    featureNS: '',
+    featurePrefix: '',
+    featureTypes: [layer.complexName],
+    startIndex: pageOptions.page * pageOptions.pageSize,
+    maxFeatures: pageOptions.pageSize,
+    sort: pageOptions.sort && { propertyName: pageOptions.sort, order: pageOptions.sortOrder },
+    featureIds,
+    featureIdsNegative,
+    filter
+  });
+
+  const xml = new XMLSerializer().serializeToString(featureRequest);
+
+  const collection = await getFeaturesCollectionByXmlFilter(xml);
+  const totalPages = Math.ceil(collection.numberMatched / pageOptions.pageSize);
+  let featuresTotal = collection.totalFeatures;
+
+  // при включенных фильтрах геосервер врёт насчёт totalFeatures
+  if (cqlFilter || featureIds?.length) {
+    const { ...paramsForTotalCount } = params;
+    paramsForTotalCount.startindex = '0';
+    paramsForTotalCount.count = '1';
+    const totalResponse = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params: paramsForTotalCount });
+    featuresTotal = totalResponse.totalFeatures;
   }
 
-  const cqlFilter = generateFilter(requestAttribute);
-  if (cqlFilter) {
-    params.CQL_FILTER = cqlFilter;
-  }
-  const fCollection = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params });
-
-  return clearFeatureId(fCollection);
+  return [collection.features, totalPages, collection.numberMatched, featuresTotal];
 }
 
 /**
  * Выборка объектов слоя по XML фильтру.
  * @param xml Подготовленный, при помощи библиотеки openLayers, XML document конвертированный в строку.
  */
-export async function getFeaturesByXmlFilter(xml: string): Promise<WfsFeatureCollection> {
+export async function getFeaturesCollectionByXmlFilter(xml: string): Promise<WfsFeatureCollection> {
   return http.post<WfsFeatureCollection>(await getWfsUrl(), xml, {
     headers: { 'Content-Type': Mime.XML },
-    params: { exceptions: Mime.JSON }
+    params: {
+      exceptions: Mime.JSON,
+      outputFormat: Mime.JSON
+    },
+    cache: { clear: false, disabled: false }
   });
 }
 
-export async function getFeaturesById(ids: string[], namespace: string): Promise<WfsFeature[]> {
+export async function getFeaturesById(ids: string[], complexName: string): Promise<WfsFeature[]> {
+  const limit = 100;
+
+  if (ids.length > limit) {
+    const result: WfsFeature[] = [];
+
+    for (const batch of chunk(ids, limit)) {
+      const features = await getFeaturesById(batch, complexName);
+      result.push(...features);
+    }
+
+    return result;
+  }
+
   const headers = { 'Content-Type': Mime.JSON };
   const params = {
     outputFormat: Mime.JSON,
     service: 'wfs',
     version: '2.0.0',
     request: 'GetFeature',
-    typeNames: namespace,
+    typeNames: complexName,
     featureID: ids.join(',')
   };
 
   const { features } = await http.get<WfsFeatureCollection>(await getWfsUrl(), { headers, params });
 
   return features;
-}
-
-export function isGeometryValid(geometry: WfsGeometry): boolean {
-  return isCoordinateValid(geometry.coordinates.flat(5) as Coordinate) && !hasUnclosedPolygons(geometry);
-}
-
-function hasUnclosedPolygons(geometry: WfsGeometry): boolean {
-  return geometry.type === GeometryType.MULTI_POLYGON
-    ? (geometry as WfsMultiPolygonGeometry).coordinates.some(polygon =>
-        polygon.some(loop => !isEqual(loop[0], loop[loop.length - 1]))
-      )
-    : false;
-}
-
-export function isCoordinateValid(coord: Coordinate): boolean {
-  return coord?.every(isDimensionValid);
-}
-
-export function isDimensionValid(dimension: string | number): boolean {
-  return !Number.isNaN(transformDimension(dimension));
-}
-
-export function normalizeCoordinates(coord: CoordsEdited | string | number): Coords | number {
-  return Array.isArray(coord)
-    ? ((coord as CoordsEdited[]).map(normalizeCoordinates) as Coords)
-    : transformDimension(coord);
-}
-
-export function transformDimension(dimension: number | string): number {
-  return String(dimension).trim() === '' ? Number.NaN : Number(dimension);
 }
 
 async function prepareLink(typeName: string, objectId: string): Promise<string> {
@@ -135,15 +144,4 @@ async function prepareLink(typeName: string, objectId: string): Promise<string> 
     '&outputFormat=application%2Fjson&featureID=' +
     objectId
   );
-}
-
-function clearFeatureId(fCollection: WfsFeatureCollection): WfsFeatureCollection {
-  fCollection.features.forEach((feature: WfsFeature) => {
-    const splitElement = feature.id.split('.')[1];
-    if (splitElement) {
-      feature.id = splitElement;
-    }
-  });
-
-  return fCollection;
 }

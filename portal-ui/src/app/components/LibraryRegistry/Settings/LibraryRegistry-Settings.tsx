@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
 import { Settings, SettingsOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { PropertySchema } from '../../../services/crg/schema.models';
+import { PropertySchema } from '../../../services/data/schema.models';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
 
 const cnLibraryRegistrySettings = cn('LibraryRegistry', 'Settings');
@@ -19,6 +19,11 @@ interface LibraryRegistrySettingsProps {
 @observer
 export class LibraryRegistrySettings extends Component<LibraryRegistrySettingsProps> {
   @observable private dialogOpen = false;
+
+  constructor(props: LibraryRegistrySettingsProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { hiddenFields: hiddenCols, properties } = this.props;

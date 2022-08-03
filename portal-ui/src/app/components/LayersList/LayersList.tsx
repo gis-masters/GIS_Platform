@@ -3,10 +3,10 @@ import { Checkbox } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 
 import { XTable } from '../XTable/XTable';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgLayer } from '../../services/gis/projects.models';
 
 import { LayersListItemCheck } from './ItemCheck/LayersList-ItemCheck';
 import { LayersListEmpty } from './Empty/LayersList-Empty';
@@ -31,6 +31,11 @@ interface LayersListProps {
 @observer
 export class LayersList extends Component<LayersListProps> {
   @observable private selectedLayers: CrgLayer[] = [];
+
+  constructor(props: LayersListProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { layers } = this.props;

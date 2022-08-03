@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 
 import { Platform } from '../services/environment';
 
@@ -18,6 +18,10 @@ class Help {
 
   @observable toc: Toc = [];
   @observable tocLoaded = false;
+
+  constructor() {
+    makeObservable(this);
+  }
 
   @action
   setToc(toc: Toc) {

@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import { Basemap } from '../../services/crg/basemaps.models';
+import { Basemap } from '../../services/data/basemaps.models';
 
 import { BasemapActionsDelete } from './Delete/BasemapActions-Delete';
 

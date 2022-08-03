@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { FileOpenOutlined } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord } from '../../../services/crg/doc-library.service';
+import { LibraryRecord } from '../../../services/data/doc-library.service';
 
 import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
 import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
@@ -21,6 +21,11 @@ interface LibraryDocumentActionsOpenProps {
 @observer
 export class LibraryDocumentActionsOpen extends Component<LibraryDocumentActionsOpenProps> {
   @observable private dialogOpen = false;
+
+  constructor(props: LibraryDocumentActionsOpenProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { as, document } = this.props;

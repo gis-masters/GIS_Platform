@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { action, computed } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { Role, PrincipalType, roles, projectRoles, rolesTitles } from '../../../services/crg/permissions.models';
-import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
-import { filterOutPrincipal } from '../../../services/crg/permissions.service';
+import { Role, PrincipalType, roles, projectRoles, rolesTitles } from '../../../services/data/permissions.models';
+import { PermissionsListItem } from '../../../services/data/allPermissions.service';
+import { filterOutPrincipal } from '../../../services/data/permissions.service';
 
 import { PermissionsListItemType } from '../PermissionsListDialog.models';
 
@@ -24,6 +24,11 @@ interface PermissionsListRoleSelectProps {
 
 @observer
 export class PermissionsListRoleSelect extends Component<PermissionsListRoleSelectProps> {
+  constructor(props: PermissionsListRoleSelectProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     return (
       <div className={cnPermissionsListRoleSelect()}>

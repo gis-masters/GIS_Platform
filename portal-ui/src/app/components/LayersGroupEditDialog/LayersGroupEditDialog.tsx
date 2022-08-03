@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -23,6 +23,11 @@ const LAYERS_GROUP_TITLE_MAX_LENGTH = 255;
 @observer
 export class LayersGroupEditDialog extends Component<LayersGroupEditDialogProps> {
   @observable private title = '';
+
+  constructor(props: LayersGroupEditDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { open, create, title } = this.props;

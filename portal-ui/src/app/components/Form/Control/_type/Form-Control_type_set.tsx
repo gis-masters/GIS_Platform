@@ -4,7 +4,7 @@ import { boundMethod } from 'autobind-decorator';
 import { RegistryConsumer } from '@bem-react/di';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertySchemaSet, PropertyType } from '../../../../services/crg/schema.models';
+import { PropertySchemaSet, PropertyType } from '../../../../services/data/schema.models';
 
 import { FormHiddenField } from '../../HiddenField/Form-HiddenField';
 import { cnFormControl, FormControlProps } from '../Form-Control';

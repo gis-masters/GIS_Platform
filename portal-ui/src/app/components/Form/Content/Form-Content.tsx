@@ -6,11 +6,11 @@ import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
-import { PropertySchema, PropertyType, Schema } from '../../../services/crg/schema.models';
-import { FieldErrors } from '../../../services/crg/formValidation.service';
-import { getFieldRelations } from '../../../services/crg/schema.utils';
+import { PropertySchema, PropertyType, Schema } from '../../../services/data/schema.models';
+import { FieldErrors } from '../../../services/formValidation.service';
+import { getFieldRelations } from '../../../services/data/schema.utils';
 import { generateRandomId } from '../../../services/util/randomId';
-import { RelatedDocumentsButton } from '../../RelatedDocumentsButton/RelatedDocumentsButton';
+import { RelationsButton } from '../../RelationsButton/RelationsButton';
 
 import { applyFieldValue, convertToComplexField } from '../Form.utils';
 import { FormHiddenField } from '../HiddenField/Form-HiddenField';
@@ -106,12 +106,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
               )}
 
               {!!relations.length && (
-                <RelatedDocumentsButton
-                  className={cnFormRelations()}
-                  obj={formValue}
-                  relations={relations}
-                  size='small'
-                />
+                <RelationsButton className={cnFormRelations()} obj={formValue} relations={relations} size='small' />
               )}
             </FormField>
           );
@@ -121,7 +116,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   }
 
   @boundMethod
-  private fieldChangeHandler({ value, propertyName }: { value: T[keyof T]; propertyName: keyof T }) {
+  private fieldChangeHandler({ value, propertyName }: { value: T[keyof T & string]; propertyName: keyof T }) {
     const { formValue, onFormChange, onFieldChange, schema } = this.props;
     const propertySchema: PropertySchema<T> = schema.properties.find(({ name }) => name === propertyName);
     const prevValue = formValue[propertyName];

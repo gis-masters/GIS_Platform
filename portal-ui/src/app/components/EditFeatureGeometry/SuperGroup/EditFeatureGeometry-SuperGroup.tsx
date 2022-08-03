@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, computed } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { IconButton, Tooltip } from '@mui/material';
@@ -37,6 +37,11 @@ interface EditFeatureGeometrySuperGroupProps {
 
 @observer
 export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometrySuperGroupProps> {
+  constructor(props: EditFeatureGeometrySuperGroupProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { geometryPart, minCoordsPerGroup, groupsMustBeClosed, store } = this.props;
     const anotherPolygonExists =
@@ -87,7 +92,7 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
   private get isLastGroupEmpty(): boolean {
     const { geometryPart } = this.props;
 
-    return !geometryPart[geometryPart.length - 1].some(coordinate => coordinate.some(dimension => dimension));
+    return !geometryPart[geometryPart.length - 1].some(coordinate => coordinate.some(Boolean));
   }
 
   @action.bound

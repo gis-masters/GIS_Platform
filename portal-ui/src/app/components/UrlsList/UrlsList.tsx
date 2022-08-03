@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { IClassNameProps } from '@bem-react/core';
 import { IconButton, Tooltip } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
@@ -9,11 +9,13 @@ import { boundMethod } from 'autobind-decorator';
 
 import { getEditUrlFormSchema, parseUrlValue } from '../Form/Form.utils';
 import { UrlInfo } from '../Form/Control/_type/Form-Control_type_url';
-import { PropertySchemaUrl } from '../../services/crg/schema.models';
+import { PropertySchemaUrl } from '../../services/data/schema.models';
 import { FormViewValue } from '../Form/ViewValue/Form-ViewValue';
 import { FormDialog } from '../FormDialog/FormDialog';
 
 import { UrlsListItem } from './Item/UrlsList-Item';
+
+import '!style-loader!css-loader!sass-loader!./UrlsList.scss';
 
 interface UrlFieldItemProps extends IClassNameProps {
   value: string;
@@ -27,6 +29,11 @@ const cnUrlsList = cn('UrlsList');
 @observer
 export class UrlsList extends Component<UrlFieldItemProps> {
   @observable private createDialogOpen = false;
+
+  constructor(props: UrlFieldItemProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { className, property, editable } = this.props;

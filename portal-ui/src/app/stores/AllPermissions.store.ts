@@ -1,11 +1,11 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, makeObservable } from 'mobx';
 
 import { allProjects } from './AllProjects.store';
 import { allDataEntitiesStore } from './AllDataEntitiesStore';
-import { ResourcePermissions, RoleAssignmentBody } from '../services/crg/permissions.models';
-import { PermissionsListItem } from '../services/crg/allPermissions.service';
-import { CrgProject } from '../services/crg/projects.models';
-import { DataEntityType, Dataset, DataTable } from '../services/data.service';
+import { ResourcePermissions, RoleAssignmentBody } from '../services/data/permissions.models';
+import { PermissionsListItem } from '../services/data/allPermissions.service';
+import { CrgProject } from '../services/gis/projects.models';
+import { DataEntityType, Dataset, VectorTable } from '../services/data/data.service';
 
 class AllPermissions {
   @observable fetching = false;
@@ -18,7 +18,9 @@ class AllPermissions {
     return this._instance || (this._instance = new this());
   }
 
-  private constructor() {}
+  private constructor() {
+    makeObservable(this);
+  }
 
   @computed
   get forProjects(): PermissionsListItem<CrgProject>[] {
@@ -29,8 +31,8 @@ class AllPermissions {
   }
 
   @computed
-  get forTables(): PermissionsListItem<DataTable>[] {
-    return allDataEntitiesStore.dataTables.map(table => ({
+  get forTables(): PermissionsListItem<VectorTable>[] {
+    return allDataEntitiesStore.vectorTables.map(table => ({
       entity: table,
       permissions:
         this.tablesAndDatasetsPermissionsHeap.find(

@@ -6,21 +6,21 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Toast } from '../../components/Toast/Toast';
-import { Dataset } from '../../services/data.service';
+import { Dataset } from '../../services/data/data.service';
 import {
   ComparableLayersPair,
   ImportDataHolderService
 } from '../../services/geoserver/import/import-data-holder.service';
 import { getAllImportLayers } from '../../services/geoserver/import/import.service';
-import { projectsService } from '../../services/crg/projects.service';
+import { projectsService } from '../../services/gis/projects.service';
 import { Process, ProcessStatus } from '../../services/models';
-import { OrganizationService } from '../../services/crg/organization.service';
 import { ImportLayer, ImportLayerItem } from '../../services/geoserver/import/models';
 import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { schemaService } from '../../services/crg/schema.service';
-import { OldSchema } from '../../services/crg/schemaOld.models';
+import { schemaService } from '../../services/data/schema.service';
+import { OldSchema } from '../../services/data/schemaOld.models';
+import { getProcess } from '../../services/data/processes.service';
 
 @Component({
   selector: 'crg-mapping-page',
@@ -43,7 +43,6 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line max-params
   constructor(
     private dialog: MatDialog,
-    private organizationService: OrganizationService,
     private router: Router,
     private route: ActivatedRoute,
     private importData: ImportDataHolderService,
@@ -106,7 +105,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
         interval(this.CHECK_STATUS_INTERVAL)
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(async () => {
-            const response: Process = await this.organizationService.getProcessById(crgProcess.id);
+            const response: Process = await getProcess(crgProcess.id);
             if (response.status === ProcessStatus.DONE) {
               this.unsubscribe$.next();
               projectsService.clearCurrent();

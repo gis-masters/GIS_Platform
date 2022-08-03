@@ -11,7 +11,8 @@ export class HomePageComponent {
   backgroundImage: string;
 
   async ngOnInit() {
-    this.backgroundImage = (await getEnvironment()).background;
+    const env = await getEnvironment();
+    this.backgroundImage = env.background;
   }
 
   setStyle(): Record<string, string> {

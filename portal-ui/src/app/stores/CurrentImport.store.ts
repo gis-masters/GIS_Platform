@@ -1,4 +1,4 @@
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, makeObservable } from 'mobx';
 
 import {
   ImportTaskFull,
@@ -71,7 +71,9 @@ class CurrentImport implements ImportInfo {
     error: false
   };
 
-  private constructor() {}
+  private constructor() {
+    makeObservable(this);
+  }
 
   public static get instance() {
     return this._instance || (this._instance = new this());

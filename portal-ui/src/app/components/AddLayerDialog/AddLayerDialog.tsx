@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -7,16 +7,16 @@ import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, isUndefined } from 'lodash';
 import { AxiosError } from 'axios';
 
-import { DocumentLibrary, getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
-import { awaitProcess, ProcessDataModel, createProcess } from '../../services/crg/processes.service';
-import { externalLayerDefaults, vectorLayerDefaults } from '../../services/NewLayerDefaults';
-import { FieldErrors, validateFormValue } from '../../services/crg/formValidation.service';
+import { DocumentLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
+import { awaitProcess, ProcessDataModel, createProcess } from '../../services/data/processes.service';
+import { externalLayerDefaults, vectorLayerDefaults } from '../../services/gis/layers.utils';
+import { FieldErrors, validateFormValue } from '../../services/formValidation.service';
 import { SelectLibraryRecord } from '../SelectLibraryRecord/SelectLibraryRecord';
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
-import { CrgLayerType, CrgLayer } from '../../services/crg/projects.models';
-import { Dataset, DataTable, getDataTable } from '../../services/data.service';
-import { generateNextLayerId } from '../../services/geoserver/layers.service';
-import { SelectDataTable } from '../SelectDataTable/SelectDataTable';
+import { PropertySchema, PropertyType } from '../../services/data/schema.models';
+import { CrgLayerType, CrgLayer } from '../../services/gis/projects.models';
+import { Dataset, VectorTable, getVectorTable } from '../../services/data/data.service';
+import { generateNextLayerId } from '../../services/gis/layers.service';
+import { SelectVectorTable } from '../SelectVectorTable/SelectVectorTable';
 import { getProcessUrl } from '../../services/server-urls.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
@@ -53,7 +53,7 @@ interface FormValue extends CrgLayer, Record<string, unknown> {
 
 export interface Datasource {
   dataset?: Dataset;
-  dataTable?: DataTable;
+  vectorTable?: VectorTable;
   libraryRecord?: LibraryRecord;
   library?: DocumentLibrary;
 }
@@ -74,13 +74,18 @@ const minZoomTitle = 'Уровень масштабной детализации
 
 @observer
 export class AddLayerDialog extends Component<AddLayerDialogProps> {
-  @observable private usedDataTables: DataTable[] = [];
-  @observable private usedDataTablesRequest?: Promise<DataTable[]>;
+  @observable private usedVectorTables: VectorTable[] = [];
+  @observable private usedVectorTablesRequest?: Promise<VectorTable[]>;
   @observable private usedLibraryRecords: LibraryRecord[] = [];
   @observable private usedLibraryRecordsRequest?: Promise<LibraryRecord[]>;
   @observable private formValue?: FormValue = cloneDeep(defaultValue);
   @observable private formErrors?: FieldErrors[];
   @observable private loading = false;
+
+  constructor(props: AddLayerDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.checkUsedTables();
@@ -132,8 +137,8 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   }
 
   @action
-  private setUsedDataTables(dataTables: DataTable[]) {
-    this.usedDataTables = dataTables;
+  private setUsedVectorTables(vectorTables: VectorTable[]) {
+    this.usedVectorTables = vectorTables;
   }
 
   @action
@@ -148,7 +153,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     if (!this.formValue.title && formValue.datasource) {
       const datasource = formValue.datasource;
 
-      this.formValue.title = datasource.dataTable?.title || datasource.libraryRecord?.title;
+      this.formValue.title = datasource.vectorTable?.title || datasource.libraryRecord?.title;
       this.formFieldChanged(this.formValue, 'title');
     }
   }
@@ -215,7 +220,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           name: 'datasource',
           title: 'Источник данных',
           defaultValue: true,
-          ControlComponent: props => <SelectDataTable {...props} usedDataTables={this.usedDataTables} />,
+          ControlComponent: props => <SelectVectorTable {...props} usedVectorTables={this.usedVectorTables} />,
           customValidationFunction: validateLayer
         }
       ];
@@ -307,7 +312,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   private async add(e: React.FormEvent<HTMLFormElement>) {
     this.validate();
     const { datasource = {}, title, minZoom, dataSourceUri, tableName, layerType } = this.formValue;
-    const { dataset, dataTable } = datasource;
+    const { dataset, vectorTable } = datasource;
     const vectorDefaults = vectorLayerDefaults();
 
     e.preventDefault();
@@ -317,13 +322,13 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         ...vectorDefaults,
         id: generateNextLayerId(),
         dataset: dataset?.identifier,
-        tableName: dataTable?.identifier,
-        complexName: `${dataStoreName}:${dataTable?.identifier}`,
+        tableName: vectorTable?.identifier,
+        complexName: `${dataStoreName}:${vectorTable?.identifier}`,
         title,
-        nativeCRS: dataTable.crs,
-        schemaId: dataTable.schemaId,
+        nativeCRS: vectorTable.crs,
+        schemaId: vectorTable.schemaId,
         minZoom,
-        styleName: dataTable.schemaId
+        styleName: vectorTable.schemaId
       } as CrgLayer);
       this.close();
 
@@ -403,30 +408,32 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     }
   }
 
-  private async checkUsedTables(): Promise<DataTable> {
-    if (this.usedDataTablesRequest) {
-      await this.usedDataTablesRequest;
-      this.usedDataTablesRequest = null;
+  private async checkUsedTables(): Promise<VectorTable> {
+    if (this.usedVectorTablesRequest) {
+      await this.usedVectorTablesRequest;
+      this.usedVectorTablesRequest = null;
       await this.checkUsedTables();
 
       return;
     }
 
-    const alreadyUsedDataTables = this.usedDataTables.filter(table =>
+    const alreadyUsedVectorTables = this.usedVectorTables.filter(table =>
       currentProject.layers.some(
         layer =>
           layer.type === CrgLayerType.VECTOR && table.dataset === layer.dataset && table.identifier === layer.tableName
       )
     );
 
-    this.usedDataTablesRequest = Promise.all(
+    this.usedVectorTablesRequest = Promise.all(
       currentProject.vectorLayers
         .filter(
           layer =>
-            !this.usedDataTables.some(table => table.dataset === layer.dataset && table.identifier === layer.tableName)
+            !this.usedVectorTables.some(
+              table => table.dataset === layer.dataset && table.identifier === layer.tableName
+            )
         )
         .map(async layer => {
-          const table = await getDataTable(layer.dataset, layer.tableName);
+          const table = await getVectorTable(layer.dataset, layer.tableName);
 
           // с бэка тут временами приходит всякая хрень
           if (!table.dataset) {
@@ -440,11 +447,11 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         })
     );
 
-    const newUsedDataTables = await this.usedDataTablesRequest;
-    this.usedDataTablesRequest = null;
+    const newUsedVectorTables = await this.usedVectorTablesRequest;
+    this.usedVectorTablesRequest = null;
 
-    if (alreadyUsedDataTables.length !== this.usedDataTables.length || newUsedDataTables.length > 0) {
-      this.setUsedDataTables([...alreadyUsedDataTables, ...newUsedDataTables]);
+    if (alreadyUsedVectorTables.length !== this.usedVectorTables.length || newUsedVectorTables.length > 0) {
+      this.setUsedVectorTables([...alreadyUsedVectorTables, ...newUsedVectorTables]);
     }
   }
 
@@ -483,7 +490,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     newUsedLibraryRecords = newUsedLibraryRecords.filter(item => !isUndefined(item));
     this.usedLibraryRecordsRequest = null;
 
-    if (alreadyUsedLibraryRecords.length !== this.usedDataTables.length || newUsedLibraryRecords.length > 0) {
+    if (alreadyUsedLibraryRecords.length !== this.usedVectorTables.length || newUsedLibraryRecords.length > 0) {
       this.setUsedLibraryRecords([...alreadyUsedLibraryRecords, ...newUsedLibraryRecords]);
     }
   }

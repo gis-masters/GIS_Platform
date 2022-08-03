@@ -5,7 +5,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { registry } from '../../services/registry';
-import { Dataset } from '../../services/data.service';
+import { Dataset } from '../../services/data/data.service';
 import { PickupDatasets } from '../PickupDatasets/PickupDatasets';
 
 const PickupDatasetsWithRegistry = withRegistry(registry)(PickupDatasets);

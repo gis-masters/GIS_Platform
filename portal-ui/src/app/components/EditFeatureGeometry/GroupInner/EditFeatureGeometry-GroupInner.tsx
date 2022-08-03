@@ -1,17 +1,18 @@
-import React, { FC, RefObject, CSSProperties, ReactNode } from 'react';
+import React, { FC, RefObject, CSSProperties } from 'react';
 import { cn } from '@bem-react/classname';
+
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-GroupInner.scss';
 
 const cnEditFeatureGeometryGroupInner = cn('EditFeatureGeometry', 'GroupInner');
 
-interface EditFeatureGeometryGroupInnerProps {
+interface EditFeatureGeometryGroupInnerProps extends ChildrenProps {
   coordHeight: number;
   coordsInViewport: number;
   startOffset: number;
   endOffset: number;
   innerRef: RefObject<HTMLDivElement>;
-  children: ReactNode;
   onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
 }
 

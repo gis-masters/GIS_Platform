@@ -4,7 +4,7 @@ import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { MenuItem, Select, SelectChangeEvent, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
-import { PropertyType, PropertySchemaChoice } from '../../../../services/crg/schema.models';
+import { PropertyType, PropertySchemaChoice } from '../../../../services/data/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormErrors } from '../../Errors/Form-Errors';

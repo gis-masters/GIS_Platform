@@ -2,6 +2,8 @@ import React, { Component, ComponentType, ReactNode } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
+import { ChildrenProps } from '../../../services/models';
+
 import { BreadcrumbsItemTitle } from '../ItemTitle/Breadcrumbs-ItemTitle';
 import { BreadcrumbsItemSubtitle } from '../ItemSubtitle/Breadcrumbs-ItemSubtitle';
 
@@ -11,12 +13,11 @@ export const cnBreadcrumbsItem = cn('Breadcrumbs', 'Item');
 
 export type BreadcrumbsItemsType = 'button' | 'link' | 'none';
 
-export interface BreadcrumbsItemData<T = unknown> {
+export interface BreadcrumbsItemData<T = unknown> extends ChildrenProps {
   title: ReactNode;
   subtitle?: ReactNode;
   url?: string;
   payload?: T;
-  children?: ReactNode;
   onClick?: (payload: T) => void;
 }
 

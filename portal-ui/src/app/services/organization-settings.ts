@@ -3,17 +3,19 @@ import { boundMethod } from 'autobind-decorator';
 
 import { OrganizationSettings, organizationSettings, Settings } from '../stores/OrganizationSettings.store';
 import { getOrganizationSettingsUrl } from './server-urls.service';
-import { Toast } from '../components/Toast/Toast';
 import { http } from './http.service';
+import { Toast } from '../components/Toast/Toast';
 
 class OrganizationSettingsService {
   private static _instance: OrganizationSettingsService;
-  private promise: Promise<Settings> = new Promise(this.promiseHandler);
+  private promise: Promise<Settings>;
 
   private resolve: (value?: Settings) => void;
   private reject: () => void;
 
-  private constructor() {}
+  private constructor() {
+    this.promise = new Promise(this.promiseHandler);
+  }
 
   @boundMethod
   private promiseHandler(resolve: (value: Settings) => void, reject: () => void) {

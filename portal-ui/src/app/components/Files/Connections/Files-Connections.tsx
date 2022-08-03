@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
+import { action, observable, makeObservable } from 'mobx';
+import { observer } from 'mobx-react';
+import { Badge, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
 import { Map, MapOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { Badge, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
-import { observer } from 'mobx-react';
-import { action, observable } from 'mobx';
 
+import { FileConnection, FileInfo } from '../../../services/data/files.service';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
-import { FileConnection, FileInfo } from '../../../services/files.service';
 import { IconButton } from '../../IconButton/IconButton';
 import { Button } from '../../Button/Button';
 
@@ -20,6 +20,11 @@ interface ConnectionsProps {
 @observer
 export class FilesConnections extends Component<ConnectionsProps> {
   @observable private dialogOpen = false;
+
+  constructor(props: ConnectionsProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { connections, file } = this.props;

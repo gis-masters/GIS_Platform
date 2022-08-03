@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AddBoxOutlined } from '@mui/icons-material';
 
 import { Loading } from '../Loading/Loading';
 import { services } from '../../services/services';
-import { EditedField } from '../../services/crg/schemaOld.models';
+import { EditedField } from '../../services/data/schemaOld.models';
 import { EditFeatureInfo } from '../EditFeatureField/EditFeatureField';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { createLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
+import { createLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
 
 import { DocumentsListItem } from './Item/DocumentsList-Item';
 
@@ -38,6 +38,11 @@ interface DocumentsListProps {
 @observer
 export class DocumentsList extends Component<DocumentsListProps> {
   @observable private loading = false;
+
+  constructor(props: DocumentsListProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { editedField, documents, featureInfo } = this.props;
@@ -139,7 +144,7 @@ export class DocumentsList extends Component<DocumentsListProps> {
 
         await transformFeature.updateProperty(featureInfo.layerName, featureInfo.feature.id, editedField.name, payload);
 
-        this.props.modifyCallback(JSON.parse(payload));
+        this.props.modifyCallback(JSON.parse(payload) as DocumentListItemData[]);
       }
     } catch (error) {
       services.logger.error('Something went wrong: ', error);

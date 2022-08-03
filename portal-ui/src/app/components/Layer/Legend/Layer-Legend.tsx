@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { LinearProgress } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -9,7 +9,7 @@ import {
   getLayerStyleRules,
   StyleRule
 } from '../../../services/geoserver/styles.service';
-import { CrgVectorLayer } from '../../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../../services/gis/projects.models';
 import { mapService } from '../../../services/map/map.service';
 import { Emitter } from '../../../services/common/Emitter';
 import { Legend } from '../../Legend/Legend';
@@ -30,6 +30,11 @@ export class LayerLegend extends Component<LayerLegendProps> {
   @observable private filteredLegend?: StyleRule[];
   @observable private filterEnabled = true;
   private legendRequestId?: symbol;
+
+  constructor(props: LayerLegendProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     this.setLegend(await getLayerStyleRules(this.props.layer));

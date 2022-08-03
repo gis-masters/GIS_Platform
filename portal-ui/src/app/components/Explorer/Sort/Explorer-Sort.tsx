@@ -5,7 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { SortOrderButton } from '../../SortOrderButton/SortOrderButton';
-import { SortDir } from '../../../services/models';
+import { SortOrder } from '../../../services/models';
 
 import { ExplorerStore } from '../Explorer.store';
 
@@ -22,7 +22,7 @@ interface ExplorerSortProps {
 export class ExplorerSort extends Component<ExplorerSortProps> {
   render() {
     const { store } = this.props;
-    const { sortItems, sort, sortDir } = store;
+    const { sortItems, sort, sortOrder } = store;
 
     return sortItems?.length ? (
       <div className={cnExplorerSort()}>
@@ -33,7 +33,7 @@ export class ExplorerSort extends Component<ExplorerSortProps> {
             </MenuItem>
           ))}
         </TextField>
-        <SortOrderButton asc={sortDir === SortDir.ASC} onClick={this.handleSortOrderClick} />
+        <SortOrderButton asc={sortOrder === SortOrder.ASC} onClick={this.handleSortOrderClick} />
       </div>
     ) : null;
   }
@@ -48,7 +48,7 @@ export class ExplorerSort extends Component<ExplorerSortProps> {
   @boundMethod
   private handleSortOrderClick() {
     const { store, onChange } = this.props;
-    store.setSortDir(store.sortDir === SortDir.ASC ? SortDir.DESC : SortDir.ASC);
+    store.setSortOrder(store.sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC);
     onChange();
   }
 }

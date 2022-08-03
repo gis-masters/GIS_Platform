@@ -3,7 +3,7 @@ import { InsertDriveFileOutlined } from '@mui/icons-material';
 import { AxiosError } from 'axios';
 
 import { services } from '../../../services/services';
-import { PageOptions, SortDir } from '../../../services/models';
+import { PageOptions, SortOrder } from '../../../services/models';
 import { Emitter } from '../../../services/common/Emitter';
 import { Toast } from '../../Toast/Toast';
 
@@ -61,12 +61,6 @@ export function getDescription(item: ExplorerItemData): ReactNode {
 
 export function getMeta(item: ExplorerItemData): string {
   return adapters[item.type].getMeta(item);
-}
-
-export async function getWidgets(item: ExplorerItemData): Promise<ReactNode> {
-  if (adapters[item.type].getWidgets) {
-    return await adapters[item.type].getWidgets(item);
-  }
 }
 
 export function getIcon(item: ExplorerItemData): ReactNode {
@@ -177,10 +171,8 @@ export function getChildrenSortDefaultValue(item: ExplorerItemData): string | un
   return adapters[item.type].getChildrenSortDefaultValue && adapters[item.type].getChildrenSortDefaultValue(item);
 }
 
-export function getChildrenSortDefaultDirection(item: ExplorerItemData): SortDir | undefined {
-  return (
-    adapters[item.type].getChildrenSortDefaultDirection && adapters[item.type].getChildrenSortDefaultDirection(item)
-  );
+export function getChildrenSortDefaultOrder(item: ExplorerItemData): SortOrder | undefined {
+  return adapters[item.type].getChildrenSortDefaultOrder && adapters[item.type].getChildrenSortDefaultOrder(item);
 }
 
 export function getChildrenFilterField(item: ExplorerItemData): string | undefined {

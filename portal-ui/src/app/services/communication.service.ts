@@ -1,6 +1,6 @@
-import { CrgProject, CrgVectorLayer } from './crg/projects.models';
+import { CrgProject, CrgVectorLayer } from './gis/projects.models';
 import { Emitter } from './common/Emitter';
-import { FileInfo } from './files.service';
+import { FileInfo } from './data/files.service';
 
 export interface ObjectDto {
   id: string;
@@ -18,13 +18,12 @@ class CommunicationService {
 
   validationInitiated = new Emitter<boolean>();
   needUpdateValidationResults = new Emitter<boolean>();
-  mapInited = new Emitter<boolean>();
   authDialogOpen = new Emitter();
   authDialogSuccess = new Emitter();
   featuresUpdated = new Emitter();
   permissionsUpdated = new Emitter();
   datasetsUpdated = new Emitter();
-  dataTablesUpdated = new Emitter();
+  vectorTablesUpdated = new Emitter();
   projectCreated = new Emitter<CrgProject>();
   projectsUpdated = new Emitter();
   allProjectsFetched = new Emitter();
@@ -35,6 +34,7 @@ class CommunicationService {
   basemapsUpdated = new Emitter();
   drawOff = new Emitter();
   fileConnectionsUpdated = new Emitter<FileInfo[]>();
+  openAttributesBar = new Emitter<CrgVectorLayer>();
 
   off(scope: unknown) {
     Emitter.scopeOff(scope);

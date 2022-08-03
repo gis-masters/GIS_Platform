@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
@@ -8,8 +8,8 @@ import { boundMethod } from 'autobind-decorator';
 import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { communicationService } from '../../services/communication.service';
-import { validationService } from '../../services/crg/validation.service';
-import { CrgVectorLayer } from '../../services/crg/projects.models';
+import { validationService } from '../../services/data/validation.service';
+import { CrgVectorLayer } from '../../services/gis/projects.models';
 import { LayersList } from '../LayersList/LayersList';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
@@ -26,6 +26,11 @@ interface ValidateLayersDialogProps {
 @observer
 export class ValidateLayersDialog extends Component<ValidateLayersDialogProps> {
   @observable private selectedLayers: CrgVectorLayer[] = [];
+
+  constructor(props: ValidateLayersDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { open } = this.props;

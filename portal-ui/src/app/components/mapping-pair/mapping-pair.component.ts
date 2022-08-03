@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 import { GeoUtil } from '../../services/util/GeoUtil';
-import { OldPropertySchema } from '../../services/crg/schemaOld.models';
+import { OldPropertySchema } from '../../services/data/schemaOld.models';
 import { PropertiesComparatorService } from '../../services/properties-comparator.service';
 import { LayerAttribute } from '../../services/geoserver/import/models';
 import { ImportDataHolderService } from '../../services/geoserver/import/import-data-holder.service';
@@ -18,13 +18,13 @@ export class MappingPairComponent implements OnInit, OnChanges {
   @Input() importedLayerAttribute: LayerAttribute; // Атрибут импортированного шейпа
   @Input() propertySchemas: OldPropertySchema[]; // Атрибуты описанные в схеме
 
-  columnForm: FormGroup;
+  columnForm: UntypedFormGroup;
   selectedProperty: OldPropertySchema;
 
   constructor(
     private importData: ImportDataHolderService,
     private crgComparator: PropertiesComparatorService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {}
 
   ngOnInit() {

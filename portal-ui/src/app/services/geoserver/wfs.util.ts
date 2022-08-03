@@ -1,5 +1,13 @@
-import { CoordinateEdited, GeometryType, WfsGeometry } from './wfs.models';
-import { RequestAttribute, FilterEvent } from '../models';
+import { isEqual } from 'lodash';
+import { Feature } from 'ol';
+import { Extent } from 'ol/extent';
+import { SimpleGeometry } from 'ol/geom';
+import { Coordinate } from 'ol/coordinate';
+
+import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry, WfsMultiPolygonGeometry } from './wfs.models';
+import { PageOptions, SortOrder } from '../models';
+import { wfsFeatureToFeature } from '../util/open-layers.util';
+import { services } from '../services';
 
 export function getEmptyGeometry(geometryType: GeometryType): WfsGeometry<CoordinateEdited> {
   if (geometryType === GeometryType.POINT) {
@@ -73,78 +81,66 @@ export function selectLabelForGeometryType(
   return ifOther || ifPointOrOther;
 }
 
-export function generateSortParam(requestAttribute: RequestAttribute): string {
-  if (!requestAttribute || !requestAttribute.sort || !requestAttribute.sort.column) {
-    return '';
-  }
+export function generateWfsSortParam(pageOptions: PageOptions): string {
+  const order = pageOptions.sortOrder === SortOrder.DESC ? '+D' : '+A';
 
-  let order = '+A';
-  if (requestAttribute.sort.newValue === 'desc') {
-    order = '+D';
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  const columnName = (requestAttribute.sort.column.prop as string).split('.')[1];
-
-  return columnName ? columnName + order : '';
+  return (pageOptions.sort && pageOptions.sort + order) || '';
 }
 
-export function generateFilter(requestAttribute: RequestAttribute): string | undefined {
-  if (!requestAttribute) {
-    return undefined;
-  }
+type Coords = Coordinate | Coordinate[][] | Coordinate[][][];
+type CoordsEdited = CoordinateEdited | CoordinateEdited[][] | CoordinateEdited[][][];
 
-  const filter = requestAttribute.filter;
-  if (!filter || !filter.length) {
-    return undefined;
-  }
-
-  let filterString = '';
-  filter.forEach((filterEvent: FilterEvent) => {
-    if (filterString !== '') {
-      filterString += ' AND ';
-    }
-
-    filterString = filterString + parseFilter(filterEvent);
-  });
-
-  return filterString;
+export function normalizeCoordinates(coord: CoordsEdited | string | number): Coords | number {
+  return Array.isArray(coord)
+    ? ((coord as CoordsEdited[]).map(normalizeCoordinates) as Coords)
+    : transformDimension(coord);
 }
 
-function parseFilter({ property, value }: FilterEvent): string {
-  // name ILIKE %some%
-  if (property.valueType === 'STRING') {
-    return `${property.name.toLowerCase()} ILIKE '%${String(value)}%'`;
-  }
-
-  // area BETWEEN n AND n+1
-  if (property.valueType === 'DOUBLE') {
-    return `${property.name.toLowerCase()} BETWEEN ${String(value)} AND ${upLastDigit(value[0])}`;
-  }
-
-  if (property.valueType === 'INT') {
-    return `${property.name.toLowerCase()} BETWEEN ${String(value)} AND ${Number(value) + 0.9}`;
-  }
-
-  // some_property IN('110')
-  if (property.valueType === 'CHOICE') {
-    return `${property.name.toLowerCase()} IN(${prepareChoiceValue(value)})`;
-  }
-
-  return '';
+export function isGeometryValid(geometry: WfsGeometry): boolean {
+  return isCoordinateValid(geometry.coordinates.flat(5) as Coordinate) && !hasUnclosedPolygons(geometry);
 }
 
-function upLastDigit(numberUsString: string) {
-  if (numberUsString.slice(-1) === '0') {
-    return numberUsString.replace(/.$/, '1');
-  }
-
-  const n = Number(numberUsString);
-  const k = n % 1 ? Math.pow(10, numberUsString.split('.')[1].length) : 1;
-
-  return (n * k + 1) / k;
+function hasUnclosedPolygons(geometry: WfsGeometry): boolean {
+  return geometry.type === GeometryType.MULTI_POLYGON
+    ? (geometry as WfsMultiPolygonGeometry).coordinates.some(polygon =>
+        polygon.some(loop => !isEqual(loop[0], loop[loop.length - 1]))
+      )
+    : false;
 }
 
-function prepareChoiceValue(value: string[]): string {
-  return value.map(item => `'${item}'`).join(',');
+export function isCoordinateValid(coord: Coordinate): boolean {
+  return coord?.every(isDimensionValid);
+}
+
+export function isDimensionValid(dimension: string | number): boolean {
+  return !Number.isNaN(transformDimension(dimension));
+}
+
+export function transformDimension(dimension: number | string): number {
+  return String(dimension).trim() === '' ? Number.NaN : Number(dimension);
+}
+
+export function getFeatureExtent(feature: WfsFeature): Extent {
+  const olFeature: Feature<SimpleGeometry> = wfsFeatureToFeature(feature, true);
+
+  if (!olFeature) {
+    services.logger.warn('Incorrect feature: ', feature);
+
+    return;
+  }
+
+  return olFeature.getGeometry().getExtent();
+}
+
+export function mergeExtents(extents: Extent[]): Extent {
+  const resultExtent: Extent = extents[0];
+
+  for (const extent of extents) {
+    resultExtent[0] = Math.min(resultExtent[0], extent[0]);
+    resultExtent[1] = Math.min(resultExtent[1], extent[1]);
+    resultExtent[2] = Math.max(resultExtent[2], extent[2]);
+    resultExtent[3] = Math.max(resultExtent[3], extent[3]);
+  }
+
+  return resultExtent;
 }

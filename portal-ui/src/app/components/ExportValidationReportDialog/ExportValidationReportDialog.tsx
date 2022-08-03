@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { exportValidationReportService } from '../../services/crg/export-validation-report.service';
-import { ExportResourceModel } from '../../services/crg/export.service';
-import { CrgVectorLayer } from '../../services/crg/projects.models';
+import { exportValidationReportService } from '../../services/data/export-validation-report.service';
+import { ExportResourceModel } from '../../services/data/export.service';
+import { CrgVectorLayer } from '../../services/gis/projects.models';
 import { sidebars } from '../../stores/Sidebars.store';
 import { LayersList } from '../LayersList/LayersList';
 import { Button } from '../Button/Button';
@@ -24,6 +24,11 @@ interface ExportValidationReportDialogProps {
 @observer
 export class ExportValidationReportDialog extends Component<ExportValidationReportDialogProps> {
   @observable private selectedLayers: CrgVectorLayer[] = [];
+
+  constructor(props: ExportValidationReportDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { open, layers } = this.props;

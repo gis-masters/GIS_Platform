@@ -1,35 +1,40 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import { createLayer } from '../../services/geoserver/layers.service';
-import { DataTable, getDataTableConnections } from '../../services/data.service';
+import { VectorTable, getVectorTableConnections } from '../../services/data/data.service';
+import { CrgLayerType, CrgProject } from '../../services/gis/projects.models';
+import { FileConnection } from '../../services/data/files.service';
+import { createLayer } from '../../services/gis/layers.service';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
-import { CrgLayerType, CrgProject } from '../../services/crg/projects.models';
-import { FileConnection } from '../../services/files.service';
 
 const cnConnectionsTableToProjectsWidget = cn('ConnectionsTableToProjectsWidget');
 
 interface ConnectionsTableToProjectsWidgetProps {
-  dataTable: DataTable;
+  vectorTable: VectorTable;
 }
 
 @observer
 export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTableToProjectsWidgetProps> {
-  private currentDataTableId = '';
+  private currentVectorTableId = '';
 
   @observable private connections?: FileConnection[] = [];
   @observable private loading = true;
+
+  constructor(props: ConnectionsTableToProjectsWidgetProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.fetchConnections();
   }
 
   async componentDidUpdate(prevProps: ConnectionsTableToProjectsWidgetProps) {
-    if (this.props.dataTable.identifier !== prevProps.dataTable.identifier) {
+    if (this.props.vectorTable.identifier !== prevProps.vectorTable.identifier) {
       this.dropConnections();
       await this.fetchConnections();
     }
@@ -49,12 +54,12 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
   }
 
   private async fetchConnections() {
-    const { dataTable } = this.props;
+    const { vectorTable } = this.props;
     this.setLoading(true);
-    this.currentDataTableId = dataTable.identifier;
-    const dataTableConnections = await getDataTableConnections(dataTable.identifier);
-    if (dataTableConnections.length && this.currentDataTableId === dataTable.identifier) {
-      this.setConnections(dataTableConnections);
+    this.currentVectorTableId = vectorTable.identifier;
+    const vectorTableConnections = await getVectorTableConnections(vectorTable.identifier);
+    if (vectorTableConnections.length && this.currentVectorTableId === vectorTable.identifier) {
+      this.setConnections(vectorTableConnections);
     }
     this.setLoading(false);
   }
@@ -76,12 +81,12 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
 
   @boundMethod
   private async connectHandler(project: CrgProject) {
-    const { dataTable } = this.props;
-    await this.createLayer(dataTable, dataTable.dataset, project);
+    const { vectorTable } = this.props;
+    await this.createLayer(vectorTable, vectorTable.dataset, project);
     await this.fetchConnections();
   }
 
-  private async createLayer(table: DataTable, dataset: string, project: CrgProject) {
+  private async createLayer(table: VectorTable, dataset: string, project: CrgProject) {
     const dataStoreName = `scratch_database_${currentUser.orgId}`;
     const newLayer = {
       dataStoreName,

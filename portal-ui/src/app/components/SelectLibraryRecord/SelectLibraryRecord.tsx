@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-import { DocumentLibrary, LibraryRecord } from '../../services/crg/doc-library.service';
+import { DocumentLibrary, LibraryRecord } from '../../services/data/doc-library.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
-import { schemaService } from '../../services/crg/schema.service';
+import { schemaService } from '../../services/data/schema.service';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { Datasource } from '../AddLayerDialog/AddLayerDialog';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
@@ -19,15 +19,20 @@ import '!style-loader!css-loader!sass-loader!./SelectLibraryRecord.scss';
 
 const cnSelectLibraryRecord = cn('SelectLibraryRecord');
 
-interface SelectDataTableProps extends FormControlProps {
+interface SelectLibraryRecordProps extends FormControlProps {
   usedLibraryRecords: LibraryRecord[];
 }
 
 @observer
-export class SelectLibraryRecord extends Component<SelectDataTableProps> {
+export class SelectLibraryRecord extends Component<SelectLibraryRecordProps> {
   @observable private dialogOpen = false;
   @observable private selectedLibraryRecord?: LibraryRecord;
   @observable private selectedLibrary?: DocumentLibrary;
+
+  constructor(props: SelectLibraryRecordProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { className, htmlId, fieldValue = {} } = this.props;

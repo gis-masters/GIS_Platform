@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 
 import { LayerAdd } from '../../Icons/LayerAdd';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
-import { Schema } from '../../../services/crg/schema.models';
+import { Schema } from '../../../services/data/schema.models';
 import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
-import { LibraryRecord } from '../../../services/crg/doc-library.service';
+import { LibraryRecord } from '../../../services/data/doc-library.service';
 import { FilesPlacementDialog } from '../../FilesPlacementDialog/FilesPlacementDialog';
 import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
 
@@ -22,6 +22,11 @@ interface LibraryDocumentActionsFilesPlacementProps {
 @observer
 export class LibraryDocumentActionsFilesPlacement extends Component<LibraryDocumentActionsFilesPlacementProps> {
   @observable private dialogOpen = false;
+
+  constructor(props: LibraryDocumentActionsFilesPlacementProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { as, document, schema } = this.props;

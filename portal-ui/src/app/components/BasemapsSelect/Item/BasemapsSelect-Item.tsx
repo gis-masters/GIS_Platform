@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { MenuItem } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { basemapsStore } from '../../../stores/Basemaps.store';
-import { Basemap } from '../../../services/crg/basemaps.models';
+import { Basemap } from '../../../services/data/basemaps.models';
 import { services } from '../../../services/services';
 import { sleep } from '../../../services/util/sleep';
 
@@ -24,6 +24,11 @@ interface BasemapsSelectItemProps {
 @observer
 export class BasemapsSelectItem extends Component<BasemapsSelectItemProps> {
   @observable private tooltipsOpen = false;
+
+  constructor(props: BasemapsSelectItemProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await sleep(300);

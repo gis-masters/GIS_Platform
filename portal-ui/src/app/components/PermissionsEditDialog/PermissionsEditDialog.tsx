@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
@@ -7,13 +7,13 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
-import { addEntityPermission, removeEntityPermission } from '../../services/crg/permissions.client';
-import { PrincipalType, Role, RoleAssignmentBody } from '../../services/crg/permissions.models';
-import { filterByPrincipal, filterOutPrincipal } from '../../services/crg/permissions.service';
-import { CrgGroup, groupsService } from '../../services/crg/groups.service';
+import { addEntityPermission, removeEntityPermission } from '../../services/data/permissions.client';
+import { PrincipalType, Role, RoleAssignmentBody } from '../../services/data/permissions.models';
+import { filterByPrincipal, filterOutPrincipal } from '../../services/data/permissions.service';
+import { CrgGroup, groupsService } from '../../services/data/groups.service';
 import { communicationService } from '../../services/communication.service';
-import { CrgUser, usersService } from '../../services/crg/users.service';
-import { ExplorerItemEntityType } from '../Explorer/Explorer.models';
+import { CrgUser, usersService } from '../../services/data/users.service';
+import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
 import { XTable, XTableColumn } from '../XTable/XTable';
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';
@@ -31,7 +31,7 @@ interface PermissionsEditDialogProps {
   url: string;
   title?: string;
   permissions: RoleAssignmentBody[];
-  itemEntityType?: ExplorerItemEntityType;
+  itemEntityType?: ExplorerItemEntityTypeTitle;
   open: boolean;
   onClose: () => void;
   onChange: () => void;
@@ -94,6 +94,11 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
       CellContent: this.renderGroupActions
     }
   ];
+
+  constructor(props: PermissionsEditDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     void usersService.initUsersListStore();

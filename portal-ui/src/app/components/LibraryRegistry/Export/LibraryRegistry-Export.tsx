@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, MenuItem, Tooltip } from '@mui/material';
 import { ArchiveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { DocumentLibrary, getAllLibraryRecords, LibraryRecord } from '../../../services/crg/doc-library.service';
+import { DocumentLibrary, getAllLibraryRecords, LibraryRecord } from '../../../services/data/doc-library.service';
 import {
   PropertySchema,
   PropertySchemaChoice,
   PropertySchemaDatetime,
   PropertyType,
   Schema
-} from '../../../services/crg/schema.models';
+} from '../../../services/data/schema.models';
 import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
 import { formatDate } from '../../../services/util/date.util';
 import { PageOptions } from '../../../services/models';
@@ -42,9 +42,16 @@ export class LibraryRegistryExport extends Component<LibraryRegistryExportProps>
       [PropertyType.CHOICE]: (content: unknown, property: PropertySchema) =>
         (property as PropertySchemaChoice).options.find(({ value }) => value === content)?.title || String(content),
       [PropertyType.DATETIME]: (content: unknown, property: PropertySchema) => {
-        return formatDate(content, (property as PropertySchemaDatetime).format);
+        return typeof content === 'number' || typeof content === 'string' || content instanceof Date
+          ? formatDate(content, (property as PropertySchemaDatetime).format)
+          : '';
       }
     };
+
+  constructor(props: LibraryRegistryExportProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

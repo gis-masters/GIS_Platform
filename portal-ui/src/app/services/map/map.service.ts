@@ -1,18 +1,19 @@
-import { chunk, debounce } from 'lodash';
+import { debounce } from 'lodash';
 import { reaction } from 'mobx';
 import { Map, View } from 'ol';
-import { defaults as defaultControls } from 'ol/control';
-import { Coordinate } from 'ol/coordinate';
-import { Extent, getTopLeft, getWidth } from 'ol/extent';
 import Feature from 'ol/Feature';
-import { Geometry, MultiPolygon, SimpleGeometry } from 'ol/geom';
 import ImageWrapper from 'ol/Image';
+import BaseLayer from 'ol/layer/Base';
+import { Coordinate } from 'ol/coordinate';
+import { ServerType } from 'ol/source/wms';
 import { Draw, Modify } from 'ol/interaction';
+import { get as getProjection } from 'ol/proj';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { ModifyEvent } from 'ol/interaction/Modify';
+import { defaults as defaultControls } from 'ol/control';
+import { Extent, getTopLeft, getWidth } from 'ol/extent';
+import { Geometry, MultiPolygon, SimpleGeometry } from 'ol/geom';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
-import BaseLayer from 'ol/layer/Base';
-import { get as getProjection } from 'ol/proj';
 import { ImageWMS, OSM, TileArcGISRest, TileImage, TileWMS, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
 import { Circle, Fill, Stroke, Style } from 'ol/style.js';
 import Tile from 'ol/Tile';
@@ -22,35 +23,35 @@ import ImageSource from 'ol/source/Image';
 import ImageLayer from 'ol/layer/Image';
 import { boundMethod } from 'autobind-decorator';
 
-import { currentProject } from '../../stores/CurrentProject.store';
-import { mapStore } from '../../stores/Map.store';
-import { currentMap } from '../../stores/CurrentMap.store';
-import { basemapsStore } from '../../stores/Basemaps.store';
 import { route } from '../../stores/Route.store';
+import { FilterBySelection, mapStore } from '../../stores/Map.store';
+import { basemapsStore } from '../../stores/Basemaps.store';
 import { communicationService } from '../communication.service';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
-import { Basemap, SourceType } from '../crg/basemaps.models';
-import { CrgExternalLayer, CrgLayer } from '../crg/projects.models';
+import { Basemap, SourceType } from '../data/basemaps.models';
+import { CrgExternalLayer, CrgLayer } from '../gis/projects.models';
 import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs.models';
 import { getWmsUrl } from '../server-urls.service';
 import { ScaleLine } from '../ol/ScaleLine';
 import { Emitter } from '../common/Emitter';
-import { services } from '../services';
-import { http } from '../http.service';
 import {
   CrgProjection,
   getFeatureProjection,
   olProjection,
-  transform,
+  transformExtent,
   transformGeometry
 } from '../geoserver/projections.service';
 import { sleep } from '../util/sleep';
+import { getFeatureExtent, mergeExtents } from '../geoserver/wfs.util';
+import { getMap } from '../geoserver/wms.service';
+import { buildCqlFilter } from '../util/cql';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
   LAYERS: string;
   FORMAT?: string;
   CQL_FILTER?: string;
+  featureId?: string;
 }
 
 interface CrgAdditionalLayerInfo {
@@ -59,7 +60,7 @@ interface CrgAdditionalLayerInfo {
 
 interface MapPosition {
   zoom: number;
-  center: string;
+  center: Coordinate;
 }
 
 interface LayerAdditionalProps {
@@ -156,11 +157,9 @@ class MapService {
 
     this.draftSourceModify = new Modify({ source: this.draftSource });
 
-    const queryParams = route.queryParams as { [key: string]: string };
-
-    if (queryParams.zoom && queryParams.center) {
-      this.zoom = Number(queryParams.zoom);
-      this.center = [Number(queryParams.center.split(',')[0]), Number(queryParams.center.split(',')[1])];
+    if (route.queryParams.zoom && route.queryParams.center) {
+      this.zoom = Number(route.queryParams.zoom);
+      this.center = [Number(route.queryParams.center.split(',')[0]), Number(route.queryParams.center.split(',')[1])];
     }
 
     this.view = new View({
@@ -213,7 +212,7 @@ class MapService {
     this.map.on('moveend', () => {
       this.mapMoved.emit({
         zoom: this.map.getView().getZoom(),
-        center: this.map.getView().getCenter().join(',')
+        center: this.map.getView().getCenter()
       });
     });
 
@@ -264,11 +263,6 @@ class MapService {
           FORMAT: 'image/png8' // TODO: Вынести в настройки слоя
         };
 
-        const { layerComplexName, filter } = currentProject.attributeTableFilter;
-        if (tableName === layerComplexName && filter) {
-          params.CQL_FILTER = filter;
-        }
-
         const commonLayerParams = {
           visible: true,
           opacity: transparency / 100,
@@ -278,7 +272,7 @@ class MapService {
         const commonWMSParams = {
           url: dataSourceUri,
           params,
-          serverType: 'geoserver',
+          serverType: 'geoserver' as ServerType,
           crossOrigin: 'anonymous'
         };
 
@@ -346,9 +340,14 @@ class MapService {
         FORMAT: imageFormat
       };
 
-      const { layerComplexName, filter } = currentProject.attributeTableFilter;
-      if (resultName === layerComplexName && filter) {
-        params.CQL_FILTER = filter;
+      const { tableName } = layers[0];
+      const { filterBySelection, ...filter } = mapStore.attributeTableFilter[tableName] || {};
+      if (Object.keys(filter).length) {
+        params.CQL_FILTER = buildCqlFilter(filter);
+      }
+
+      if (filterBySelection === FilterBySelection.ONLY_SELECTED) {
+        params.featureId = mapStore.selectedFeaturesByTableName[tableName]?.map(({ id }) => id).join(',');
       }
 
       const commonLayerParams = {
@@ -360,7 +359,7 @@ class MapService {
       const commonWMSParams = {
         url: await getWmsUrl(),
         params,
-        serverType: 'geoserver',
+        serverType: 'geoserver' as ServerType,
         crossOrigin: 'anonymous'
       };
 
@@ -383,7 +382,7 @@ class MapService {
   }
 
   private isNotFilteredLayer(layers: CrgLayer[]) {
-    return !(layers.length === 1 && currentProject.isFiltered(layers[0]));
+    return !(layers.length === 1 && mapStore.isFiltered(layers[0]));
   }
 
   private calcLayerName(layers: CrgLayer[]) {
@@ -569,35 +568,26 @@ class MapService {
     }
   }
 
-  positionToFeature(wfsFeature: WfsFeature, projection?: CrgProjection) {
-    projection = projection || getFeatureProjection(wfsFeature);
-    const olFeature: Feature<SimpleGeometry> = wfsFeatureToFeature(wfsFeature, true);
-    if (!olFeature) {
-      services.logger.warn('Incorrect feature: ', wfsFeature);
+  positionToFeature(feature: WfsFeature, projection: CrgProjection = getFeatureProjection(feature)) {
+    const extent = transformExtent(getFeatureExtent(feature), projection, olProjection);
+    this.positionToExtent(extent, feature.geometry?.type === GeometryType.POINT);
+  }
 
-      return;
-    }
+  positionToFeatures(features: WfsFeature[], projection?: CrgProjection) {
+    const extents = features.map(feature =>
+      transformExtent(getFeatureExtent(feature), projection || getFeatureProjection(feature), olProjection)
+    );
+    const isSinglePoint = features.length === 1 && features[0].geometry?.type === GeometryType.POINT;
 
-    const view = this.map.getView();
-    const size = this.map.getSize();
+    this.positionToExtent(mergeExtents(extents), isSinglePoint);
+  }
 
-    const geometry = olFeature.getGeometry();
-    const extent = chunk(geometry.getExtent(), 2).flatMap(coord =>
-      transform(projection, olProjection, coord)
-    ) as Extent;
-
-    switch (geometry.getType()) {
-      case GeometryType.POINT:
-        view.centerOn(extent, size, [size[0] / 2, size[1] / 2]);
-        break;
-      case GeometryType.MULTI_LINE_STRING:
-        this.fitToBbox(extent, [50, 50, 50, 50]);
-        break;
-      case GeometryType.MULTI_POLYGON:
-        this.fitToBbox(extent, [50, 50, 50, 50]);
-        break;
-      default:
-        services.logger.error('Unsupported geometry type: ', geometry.getType());
+  private positionToExtent(extent: Extent, pointMode?: boolean) {
+    if (pointMode) {
+      const size = this.map.getSize();
+      this.map.getView().centerOn(extent, size, [size[0] / 2, size[1] / 2]);
+    } else {
+      this.fitToBbox(extent, [50, 50, 50, 50]);
     }
   }
 
@@ -610,21 +600,22 @@ class MapService {
   }
 
   private async crgLayersLoadFunction(tile: Tile | ImageWrapper, url: string) {
-    currentMap.enrollLoadingStart();
+    mapStore.enrollLoadingStart();
     let data: Blob;
     try {
-      data = await http.get<Blob>(url, { responseType: 'blob' });
+      data = await getMap(url);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      data = error.error;
+      data = error?.error;
     }
     const blob = new Blob([data], { type: imageFormat });
     ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
-    currentMap.enrollLoadingFinish();
+
+    mapStore.enrollLoadingFinish();
   }
 
   private async externalGisMapServerLoadFunction(tile: Tile | ImageWrapper, url: string) {
-    currentMap.enrollLoadingStart();
+    mapStore.enrollLoadingStart();
     let data: Blob;
 
     const replacedUrl = url
@@ -645,7 +636,7 @@ class MapService {
 
     const blob = new Blob([data], { type: imageFormat });
     ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
-    currentMap.enrollLoadingFinish();
+    mapStore.enrollLoadingFinish();
   }
 
   /**

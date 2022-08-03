@@ -1,6 +1,6 @@
 import React, { Component, FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { toast, Id, ToastOptions } from 'react-toastify';
 import nl2br from 'react-nl2br';
@@ -48,8 +48,12 @@ export class Toast extends Component<ToastProps> {
     info: Info
   };
 
-  @observable
-  open = false;
+  @observable open = false;
+
+  constructor(props: ToastProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   static show(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
     const normalizedOpts = this.normalizeOpts(message, opts);
@@ -155,7 +159,7 @@ ${String(details)}`;
     }
     if (error) {
       tgMsg += `
-${error.message ? error.message : error.toString()}`;
+${error.message || error.toString()}`;
     }
 
     void sendTelegramError(tgMsg);
@@ -174,7 +178,7 @@ ${error.message ? error.message : error.toString()}`;
           <>
             <div className={cnToast('Message')}>
               {nl2br(details)}
-              {error ? nl2br(error.message ? error.message : error.toString()) : null}
+              {error ? nl2br(error.message || error.toString()) : null}
             </div>
             {sourceFile ? (
               <div className={cnToast('File')}>
@@ -212,7 +216,7 @@ ${error.message ? error.message : error.toString()}`;
   private toggleOpen() {
     this.open = !this.open;
     toast.update(this.props.toastInfo.id, {
-      autoClose: !this.open && (this.props.autoClose ? this.props.autoClose : Toast.defaultDuration)
+      autoClose: !this.open && (this.props.autoClose || Toast.defaultDuration)
     });
   }
 }

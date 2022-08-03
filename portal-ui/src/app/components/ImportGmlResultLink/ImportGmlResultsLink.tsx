@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 
 import { Link } from '../Link/Link';
-import { ImportResult } from '../../services/crg/processes.service';
+import { ImportResult } from '../../services/data/processes.service';
 import { ImportGmlResultDialog } from '../ImportGmlResultDialog/ImportGmlResultDialog';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 
@@ -20,9 +20,14 @@ interface ImportGmlResultsLinkProps {
 export class ImportGmlResultsLink extends Component<ImportGmlResultsLinkProps> {
   @observable private open = false;
 
+  constructor(props: ImportGmlResultsLinkProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
-    const { reports = {} as Partial<ImportResult> } = this.props;
-    const { importLayerReports, projectId } = reports;
+    const { reports } = this.props;
+    const { importLayerReports, projectId } = reports || {};
 
     return importLayerReports?.length ? (
       <div className={cnImportGmlResultsLink()}>
@@ -30,7 +35,7 @@ export class ImportGmlResultsLink extends Component<ImportGmlResultsLinkProps> {
           Отчет
         </PseudoLink>
         <Link href={`/projects/${projectId}/map`}>Перейти в проект</Link>
-        <ImportGmlResultDialog open={this.open} onClose={this.onClose} reports={this.props.reports} />
+        <ImportGmlResultDialog open={this.open} onClose={this.onClose} reports={reports} />
       </div>
     ) : null;
   }

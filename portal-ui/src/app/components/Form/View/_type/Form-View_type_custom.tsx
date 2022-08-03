@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertySchemaCustom, PropertyType } from '../../../../services/crg/schema.models';
+import { PropertySchemaCustom, PropertyType } from '../../../../services/data/schema.models';
 
 import { cnFormView } from '../Form-View';
 import { FormControlProps } from '../../Control/Form-Control';

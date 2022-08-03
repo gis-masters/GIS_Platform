@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
-import { action, computed } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 
 import { FilterQuery } from '../../../../services/util/filterObjects';
+import { PropertyType } from '../../../../services/data/schema.models';
 
-import { cnXTableFilter, FilterType, XTableFilterProps } from '../XTable-Filter';
+import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_dateTime.scss';
 
 @observer
 class XTableFilterTypeDateTime extends Component<XTableFilterProps> {
+  constructor(props: XTableFilterProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { className } = this.props;
 
@@ -59,7 +65,7 @@ class XTableFilterTypeDateTime extends Component<XTableFilterProps> {
 
     if (e.target.value) {
       filterQuery[field] = {
-        ...((filterQuery[field] as { $lte: string; $gte: string }) || {}),
+        ...(filterQuery[field] as { $lte: string; $gte: string }),
         $gte: e.target.value
       };
     } else if (this.to) {
@@ -79,7 +85,7 @@ class XTableFilterTypeDateTime extends Component<XTableFilterProps> {
 
     if (e.target.value) {
       filterQuery[field] = {
-        ...((filterQuery[field] as { $lte: string; $gte: string }) || {}),
+        ...(filterQuery[field] as { $lte: string; $gte: string }),
         $lte: e.target.value
       };
     } else if (this.from) {
@@ -94,6 +100,6 @@ class XTableFilterTypeDateTime extends Component<XTableFilterProps> {
 
 export const withTypeDateTime = withBemMod<XTableFilterProps, XTableFilterProps>(
   cnXTableFilter(),
-  { type: FilterType.DATETIME },
+  { type: PropertyType.DATETIME },
   () => XTableFilterTypeDateTime
 );

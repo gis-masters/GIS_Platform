@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { computed, action } from 'mobx';
+import { computed, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 
@@ -12,6 +12,11 @@ interface ServicesCalculatorCheckboxProps {
 
 @observer
 export class ServicesCalculatorCheckbox extends Component<ServicesCalculatorCheckboxProps> {
+  constructor(props: ServicesCalculatorCheckboxProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     return <Checkbox checked={this.selected} onChange={this.changeHandler} />;
   }

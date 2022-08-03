@@ -5,16 +5,15 @@ import { BugReport, BugReportOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { User } from '../../User/User';
-import { route } from '../../../stores/Route.store';
-import { Pages } from '../../../app-routing.module';
 import { sidebars } from '../../../stores/Sidebars.store';
-import { PrintMapButton } from '../../PrintMapButton/PrintMapButton';
-import { HelpToggler } from '../../HelpToggler/HelpToggler';
-import { ExportGmlButton } from '../../ExportGmlButton/ExportGmlButton';
+import { route, Pages } from '../../../stores/Route.store';
 import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
 import { CalculatorButton } from '../../CalculatorButton/CalculatorButton';
+import { ExportGmlButton } from '../../ExportGmlButton/ExportGmlButton';
+import { PrintMapButton } from '../../PrintMapButton/PrintMapButton';
 import { CopyUrlButton } from '../../CopyUrlButton/CopyUrlButton';
+import { HelpToggler } from '../../HelpToggler/HelpToggler';
+import { User } from '../../User/User';
 
 import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-Buttons.scss';
 

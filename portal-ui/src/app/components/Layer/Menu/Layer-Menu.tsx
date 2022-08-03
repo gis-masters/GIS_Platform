@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, Menu, MenuItem } from '@mui/material';
 import {
@@ -24,25 +24,26 @@ import {
   CrgRasterLayer,
   CrgVectorLayer,
   TreeItemPayload
-} from '../../../services/crg/projects.models';
-import { getLibraryRecord, LibraryRecord } from '../../../services/crg/doc-library.service';
+} from '../../../services/gis/projects.models';
+import { getLibraryRecord, LibraryRecord } from '../../../services/data/doc-library.service';
 import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs.models';
 import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
-import { schemaService } from '../../../services/crg/schema.service';
-import { exportService } from '../../../services/crg/export.service';
+import { communicationService } from '../../../services/communication.service';
+import { schemaService } from '../../../services/data/schema.service';
+import { exportService } from '../../../services/data/export.service';
 import { services } from '../../../services/services';
 import {
   isFeaturesCreateAllowed,
   isTableExportAllowed,
   isLayersManagementAllowed
-} from '../../../services/crg/permissions.service';
+} from '../../../services/data/permissions.service';
 import { ImportOutlined } from '../../Icons/ImportOutlined';
 import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
-import { DataTable, getDataTable } from '../../../services/data.service';
+import { VectorTable, getVectorTable } from '../../../services/data/data.service';
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
 import { LibraryDocument } from '../../LibraryDocument/LibraryDocument';
-import { DataTableCard } from '../../DataTableCard/DataTableCard';
+import { VectorTableCard } from '../../VectorTableCard/VectorTableCard';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
 
@@ -67,8 +68,13 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @observable private geometryType?: GeometryType;
   @observable private importXmlDialogOpen = false;
   @observable private rasterDocument: LibraryRecord;
-  @observable private dataTable: DataTable;
+  @observable private vectorTable: VectorTable;
   @observable private dialogOpen = false;
+
+  constructor(props: LayerMenuProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.fetchGeometryType();
@@ -120,8 +126,8 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!editMode && this.isVectorLayer && this.isDataTableInfoEnabled && (
-            <MenuItem onClick={this.getLayerDataTable}>
+          {!editMode && this.isVectorLayer && this.isVectorTableInfoEnabled && (
+            <MenuItem onClick={this.getLayerVectorTable}>
               <ListItemIcon>
                 <FileOpenOutlined />
               </ListItemIcon>
@@ -206,11 +212,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
             />
           )}
 
-        {this.dataTable && (
+        {this.vectorTable && (
           <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='md'>
             <DialogTitle>{entity.title}</DialogTitle>
             <DialogContent>
-              <DataTableCard dataTable={this.dataTable} />
+              <VectorTableCard vectorTable={this.vectorTable} />
             </DialogContent>
             <DialogActions>
               <Button onClick={this.closeDialog}>Закрыть</Button>
@@ -255,7 +261,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @computed
-  private get isDataTableInfoEnabled(): boolean {
+  private get isVectorTableInfoEnabled(): boolean {
     const { dataset, tableName } = this.props.entity as CrgVectorLayer;
 
     return !!(dataset && tableName);
@@ -285,7 +291,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   private openAttributeTable() {
     const { entity, onClose } = this.props;
 
-    sidebars.openAttributes(entity as CrgVectorLayer);
+    communicationService.openAttributesBar.emit(entity as CrgVectorLayer);
 
     onClose();
   }
@@ -347,11 +353,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @boundMethod
-  private async getLayerDataTable() {
+  private async getLayerVectorTable() {
     const { dataset, tableName } = this.props.entity as CrgVectorLayer;
     try {
-      const dataTable = await getDataTable(dataset, tableName);
-      this.setDataTable(dataTable);
+      const vectorTable = await getVectorTable(dataset, tableName);
+      this.setVectorTable(vectorTable);
       this.openDialog();
     } catch (error) {
       const err = error as AxiosError;
@@ -400,14 +406,12 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @action.bound
   private deleteGroup() {
     currentProject.deleteGroup(this.props.entity as CrgLayersGroup);
-    this.testAttributesBar();
   }
 
   @action.bound
   private deleteLayer() {
     const layer = this.props.entity as CrgLayer;
     currentProject.deleteLayer(layer);
-    this.testAttributesBar();
   }
 
   @action.bound
@@ -416,8 +420,8 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @action.bound
-  private setDataTable(dataTable?: DataTable) {
-    this.dataTable = dataTable;
+  private setVectorTable(vectorTable?: VectorTable) {
+    this.vectorTable = vectorTable;
   }
 
   @action.bound
@@ -428,10 +432,5 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @action.bound
   private closeDialog() {
     this.dialogOpen = false;
-  }
-  private testAttributesBar() {
-    if (sidebars.attributesOpen && !currentProject.layers.some(({ id }) => sidebars.layerForAttributes.id === id)) {
-      sidebars.closeAttributes();
-    }
   }
 }

@@ -3,8 +3,8 @@ import { action, observable } from 'mobx';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { Biotech } from '@mui/icons-material';
 
-import { PropertySchema, PropertyType } from '../../../../services/crg/schema.models';
-import { validateFormValue } from '../../../../services/crg/formValidation.service';
+import { PropertySchema, PropertyType } from '../../../../services/data/schema.models';
+import { validateFormValue } from '../../../../services/formValidation.service';
 import { Form } from '../../Form';
 import { sleep } from '../../../../services/util/sleep';
 import { Button } from '../../../Button/Button';

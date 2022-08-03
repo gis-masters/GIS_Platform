@@ -6,8 +6,8 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
 
-import { getFeatureUrl } from '../../services/map/map-link-following.service';
 import { copyToClipboard } from '../../services/util/clipboard.util';
+import { getFeatureUrl } from '../../services/map/map-url.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { Toast } from '../Toast/Toast';
 

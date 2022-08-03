@@ -11,7 +11,7 @@
 
 import { GeoUtil } from './GeoUtil';
 import { ImportTaskResponse } from '../geoserver/import/models';
-import { OldSchema, ValueType } from '../crg/schemaOld.models';
+import { OldSchema, ValueType } from '../data/schemaOld.models';
 import { FeatureUtil } from './FeatureUtil';
 import { GeometryType } from '../geoserver/wfs.models';
 

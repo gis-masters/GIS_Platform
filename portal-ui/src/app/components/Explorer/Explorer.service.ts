@@ -16,7 +16,7 @@ export class ExplorerService {
   }
 
   async refreshItems(): Promise<void> {
-    const { selectedItem, openedItem, pageSize, sort, sortDir, filter } = this.store;
+    const { selectedItem, openedItem, pageSize, sort, sortOrder, filter } = this.store;
     let { page } = this.store;
     let children: ExplorerItemData[];
     let totalPages: number;
@@ -27,18 +27,30 @@ export class ExplorerService {
     this.gettingChildrenOperationId = gettingChildrenToken;
 
     if (selectedItem.type === ExplorerItemType.EMPTY) {
-      [children = [], totalPages = 0] = await getChildren(openedItem, { page, pageSize, sort, sortDir, filter });
+      [children = [], totalPages = 0] = await getChildren(openedItem, {
+        page,
+        pageSize,
+        sort,
+        sortOrder,
+        filter
+      });
     } else {
       const response = await getChildrenWithParticularOne(
         openedItem,
-        { page, pageSize, sort, sortDir, filter },
+        { page, pageSize, sort, sortOrder, filter },
         getId(selectedItem)
       );
 
       if (response) {
         [children = [], totalPages = 0, page = 0] = response;
       } else {
-        [children = [], totalPages = 0] = await getChildren(openedItem, { page, pageSize, sort, sortDir, filter });
+        [children = [], totalPages = 0] = await getChildren(openedItem, {
+          page,
+          pageSize,
+          sort,
+          sortOrder: sortOrder,
+          filter
+        });
       }
     }
 

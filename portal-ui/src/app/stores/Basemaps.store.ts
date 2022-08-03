@@ -1,6 +1,6 @@
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 
-import { Basemap, SourceType } from '../services/crg/basemaps.models';
+import { Basemap, SourceType } from '../services/data/basemaps.models';
 
 const osmBasemap = { title: 'OSM', thumbnailUrn: '/assets/images/thumbnail-osm.jpg', type: SourceType.OSM, id: 666 };
 
@@ -15,11 +15,12 @@ class Basemaps {
   @observable currentBasemap: Basemap;
 
   private constructor() {
-    this.initBaseMaps([osmBasemap]);
+    makeObservable(this);
+    this.initBasemaps([osmBasemap]);
   }
 
   @action
-  initBaseMaps(basemaps: Basemap[]) {
+  initBasemaps(basemaps: Basemap[]) {
     if (basemaps.length) {
       this.basemaps = basemaps;
       this.currentBasemap = basemaps[0];
@@ -28,7 +29,7 @@ class Basemaps {
 
   @action
   clear() {
-    this.initBaseMaps([osmBasemap]);
+    this.initBasemaps([osmBasemap]);
   }
 
   @action

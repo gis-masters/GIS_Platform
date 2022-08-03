@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { communicationService } from '../../services/communication.service';
-import { projectsService } from '../../services/crg/projects.service';
+import { projectsService } from '../../services/gis/projects.service';
 
 @Component({
   selector: 'crg-map-page',
@@ -10,6 +9,5 @@ import { projectsService } from '../../services/crg/projects.service';
 export class MapPageComponent implements OnInit {
   async ngOnInit() {
     await projectsService.fetchCurrent();
-    communicationService.mapInited.emit(true);
   }
 }

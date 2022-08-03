@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { SendAndArchive, SendAndArchiveOutlined } from '@mui/icons-material';
 import { observer } from 'mobx-react';
@@ -8,7 +8,7 @@ import { AxiosError } from 'axios';
 import { boundMethod } from 'autobind-decorator';
 
 import { sendToSed } from '../../../services/crg/integration.service';
-import { LibraryRecord } from '../../../services/crg/doc-library.service';
+import { LibraryRecord } from '../../../services/data/doc-library.service';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
 
@@ -26,6 +26,11 @@ interface LibraryDocumentActionsSedProps {
 export class LibraryDocumentActionsSed extends Component<LibraryDocumentActionsSedProps> {
   @observable private dialogOpen = false;
   @observable private btnLoading: boolean;
+
+  constructor(props: LibraryDocumentActionsSedProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { as } = this.props;
@@ -66,7 +71,7 @@ export class LibraryDocumentActionsSed extends Component<LibraryDocumentActionsS
     try {
       await sendToSed(document.libraryId, document.id);
     } catch (error) {
-      const { status } = (error as AxiosError)?.response;
+      const status = (error as AxiosError)?.response?.status;
 
       Toast.error({
         message: 'Система электронного документооборота "Диалог" недоступна',

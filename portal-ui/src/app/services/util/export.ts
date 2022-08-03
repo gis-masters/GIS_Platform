@@ -1,5 +1,5 @@
 import { unparse } from 'papaparse';
-import XLSX from 'xlsx';
+import * as XLSX from 'xlsx';
 
 import { saveAsCsv } from './FileSaver';
 

@@ -1,20 +1,20 @@
-import React, { BaseHTMLAttributes, Component, FC, ReactNode, RefObject } from 'react';
+import React, { BaseHTMLAttributes, Component, FC, forwardRef, RefObject } from 'react';
 import { OpenInNew } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { sleep } from '../../services/util/sleep';
+import { ChildrenProps } from '../../services/models';
 import { services } from '../../services/services';
+import { sleep } from '../../services/util/sleep';
 
 import '!style-loader!css-loader!sass-loader!./Link.scss';
 
 const cnLink = cn('Link');
 
-export interface LinkProps extends BaseHTMLAttributes<HTMLAnchorElement> {
+export interface LinkProps extends BaseHTMLAttributes<HTMLAnchorElement>, ChildrenProps {
   href: string;
   variant?: 'normal' | 'none' | 'contents';
   className?: string;
-  children?: ReactNode;
   target?: string;
   download?: string | boolean;
   disabled?: boolean;
@@ -90,6 +90,6 @@ class LinkComponent extends Component<LinkProps> {
   }
 }
 
-export const Link: FC<Omit<LinkProps, 'innerRef'>> = React.forwardRef((props, ref: RefObject<HTMLAnchorElement>) => (
+export const Link: FC<Omit<LinkProps, 'innerRef'>> = forwardRef((props, ref: RefObject<HTMLAnchorElement>) => (
   <LinkComponent innerRef={ref} {...props} />
 ));

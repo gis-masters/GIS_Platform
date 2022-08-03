@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Dialog, DialogContent, DialogActions, TextField, IconButton, Tooltip } from '@mui/material';
@@ -35,6 +35,11 @@ interface EditFeatureGeometryAsTextProps {
 export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTextProps> {
   @observable private isOpen = false;
   @observable private text: string;
+
+  constructor(props: EditFeatureGeometryAsTextProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { geometryType, first } = this.props;
@@ -126,7 +131,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
       .replace(/,/g, '.')
       .split('\n')
       .map(row => row.trim().replace(/\s+/g, ' '))
-      .filter(row => row)
+      .filter(Boolean)
       .map(row => {
         const rowArr = row.split(/\s/);
         rowArr.reverse();

@@ -1,0 +1,10 @@
+.XTable-HeadCellTitle {
+  &_singleLineContent {
+    position: relative;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

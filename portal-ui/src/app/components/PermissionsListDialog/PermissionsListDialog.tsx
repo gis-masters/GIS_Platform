@@ -1,16 +1,16 @@
 import React, { Component, ReactElement } from 'react';
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogContent, DialogActions, Tabs, Tab } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { allPermissions } from '../../stores/AllPermissions.store';
-import { RoleAssignmentBody, PrincipalType, projectRoles } from '../../services/crg/permissions.models';
-import { PermissionsListItem } from '../../services/crg/allPermissions.service';
+import { RoleAssignmentBody, PrincipalType, projectRoles } from '../../services/data/permissions.models';
+import { PermissionsListItem } from '../../services/data/allPermissions.service';
 import { communicationService } from '../../services/communication.service';
-import { CrgProject } from '../../services/crg/projects.models';
-import { Dataset, DataTable, tablesEqual } from '../../services/data.service';
+import { CrgProject } from '../../services/gis/projects.models';
+import { Dataset, VectorTable, tablesEqual } from '../../services/data/data.service';
 import {
   addDatasetPermission,
   addProjectPermission,
@@ -18,7 +18,7 @@ import {
   removeDatasetPermission,
   removeProjectPermission,
   removeTablePermission
-} from '../../services/crg/permissions.client';
+} from '../../services/data/permissions.client';
 import { TextBadge } from '../TextBadge/TextBadge';
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';
@@ -46,9 +46,14 @@ interface PermissionsListProps {
 export class PermissionsListDialog extends Component<PermissionsListProps> {
   @observable private loading = false;
   @observable private changedProjectsList?: PermissionsListItem<CrgProject>[];
-  @observable private changedTablesList?: PermissionsListItem<DataTable>[];
+  @observable private changedTablesList?: PermissionsListItem<VectorTable>[];
   @observable private changedDatasetsList?: PermissionsListItem<Dataset>[];
   @observable private activeTab: PermissionsListItemType = PermissionsListItemType.PROJECT;
+
+  constructor(props: PermissionsListProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { principalId, principalType, principalName, open } = this.props;
@@ -191,7 +196,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @computed
-  private get currentTablesPermissions(): PermissionsListItem<DataTable>[] {
+  private get currentTablesPermissions(): PermissionsListItem<VectorTable>[] {
     return this.changedTablesList || this.existingTablesList;
   }
 
@@ -206,7 +211,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @computed
-  private get existingTablesList(): PermissionsListItem<DataTable>[] {
+  private get existingTablesList(): PermissionsListItem<VectorTable>[] {
     return this.preparePermissionsList(allPermissions.forTables);
   }
 
@@ -239,7 +244,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @computed
-  private get viewedTables(): DataTable[] {
+  private get viewedTables(): VectorTable[] {
     return this.currentTablesPermissions.map(({ entity }) => entity);
   }
 
@@ -306,7 +311,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @action.bound
-  private handleTableRolesChange(newItem: PermissionsListItem<DataTable>) {
+  private handleTableRolesChange(newItem: PermissionsListItem<VectorTable>) {
     this.initChangedLists();
 
     const changedIndex = this.changedTablesList.findIndex(
@@ -336,7 +341,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         break;
       }
       case PermissionsListItemType.TABLE: {
-        this.handleTableAdd(items as PermissionsListItem<DataTable>[]);
+        this.handleTableAdd(items as PermissionsListItem<VectorTable>[]);
         break;
       }
       case PermissionsListItemType.DATASET: {
@@ -359,7 +364,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @action
-  private handleTableAdd(items: PermissionsListItem<DataTable>[]) {
+  private handleTableAdd(items: PermissionsListItem<VectorTable>[]) {
     this.changedTablesList = [...this.changedTablesList, ...items];
   }
 
@@ -410,7 +415,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
     // tables
 
-    const toCreateTables: [DataTable, RoleAssignmentBody][] = [];
+    const toCreateTables: [VectorTable, RoleAssignmentBody][] = [];
     const leftTables = this.prepareFlatList(this.existingTablesList);
     const changedTables = this.prepareFlatList(this.changedTablesList);
 
@@ -485,7 +490,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @boundMethod
-  private renderTableRoleSelect({ rowData }: { rowData: DataTable }): ReactElement {
+  private renderTableRoleSelect({ rowData }: { rowData: VectorTable }): ReactElement {
     const { principalId, principalType } = this.props;
     const item = this.currentTablesPermissions.find(
       ({ entity }) => entity.identifier === rowData.identifier && entity.dataset === rowData.dataset
@@ -524,7 +529,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @boundMethod
-  private renderTableActions({ rowData }: { rowData: DataTable }): ReactElement {
+  private renderTableActions({ rowData }: { rowData: VectorTable }): ReactElement {
     return (
       <PermissionsListActions
         id={rowData.identifier}

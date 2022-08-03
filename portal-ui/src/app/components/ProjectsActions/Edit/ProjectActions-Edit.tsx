@@ -7,9 +7,9 @@ import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
 
 import { communicationService } from '../../../services/communication.service';
-import { projectsService } from '../../../services/crg/projects.service';
-import { CrgProject } from '../../../services/crg/projects.models';
-import { Schema } from '../../../services/crg/schema.models';
+import { projectsService } from '../../../services/gis/projects.service';
+import { CrgProject } from '../../../services/gis/projects.models';
+import { Schema } from '../../../services/data/schema.models';
 import { IconButton } from '../../IconButton/IconButton';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { getPatch } from '../../../services/util/patch';

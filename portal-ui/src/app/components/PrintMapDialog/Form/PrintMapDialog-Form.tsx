@@ -1,5 +1,5 @@
 import React, { Component, FormEvent } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
@@ -14,7 +14,7 @@ import {
 } from '../../../stores/PrintSettings.store';
 import { getPatch } from '../../../services/util/patch';
 import { SelectLegend } from '../../SelectLegend/SelectLegend';
-import { PropertyType, PropertySchema } from '../../../services/crg/schema.models';
+import { PropertyType, PropertySchema } from '../../../services/data/schema.models';
 import { FormContent } from '../../Form/Content/Form-Content';
 import { Form } from '../../Form/Form';
 
@@ -35,6 +35,11 @@ type ExtraFormValues = Pick<PrintSettings, 'resolution' | 'legendSize' | 'margin
 @observer
 export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
   @observable private extraOpen = false;
+
+  constructor(props: PrintMapDialogFormProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { pageFormatId, scale, resolution, orientation, margin, windRose, border, date, legend, legendSize } =

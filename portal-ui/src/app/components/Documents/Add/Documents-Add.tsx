@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { AddCircle, AddCircleOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
 import { DocumentsSelectDialog } from '../../DocumentsSelectDialog/DocumentsSelectDialog';
-import { DocumentLibrary, getLibrary } from '../../../services/crg/doc-library.service';
+import { DocumentLibrary, getLibrary } from '../../../services/data/doc-library.service';
 import { LookupAdd } from '../../Lookup/Add/Lookup-Add';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
@@ -28,6 +28,11 @@ interface DocumentsAddProps {
 export class DocumentsAdd extends Component<DocumentsAddProps> {
   @observable private dialogOpen = false;
   @observable private limitingLibrary?: DocumentLibrary;
+
+  constructor(props: DocumentsAddProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { filled, libraryIdentifier, maxDocuments, value, onChange } = this.props;

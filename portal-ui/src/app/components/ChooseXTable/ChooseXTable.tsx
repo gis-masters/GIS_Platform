@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 import { IClassNameProps } from '@bem-react/core';
@@ -38,6 +38,7 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
 
   constructor(props: ChooseXTableProps<T>) {
     super(props);
+    makeObservable(this);
 
     this.setViewed([...props.data]);
     this.setSelected([...(props.selectedItems || [])]);

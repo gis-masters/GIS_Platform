@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { LibraryAdd, LibraryAddOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { Button } from '../Button/Button';
-import { Dataset } from '../../services/data.service';
+import { Dataset } from '../../services/data/data.service';
 import { CreateDatasetDialog } from '../CreateDatasetDialog/CreateDatasetDialog';
 
 import { PickupDatasetsList } from './List/PickupDatasets-List';
@@ -26,6 +26,11 @@ export class PickupDatasets extends Component<PickupDatasetsProps> {
   @observable private open = false;
   @observable private creationDialogOpen = false;
   @observable private selectedDataset: string;
+
+  constructor(props: PickupDatasetsProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

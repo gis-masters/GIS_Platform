@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Tooltip, IconButton } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 
-import { CrgUser } from '../../../services/crg/users.service';
+import { CrgUser } from '../../../services/data/users.service';
 import { OrgUsersCreateEditDialog } from '../../OrgUsersCreateEditDialog/OrgUsersCreateEditDialog';
 
 const cnOrgGroupsEdit = cn('OrgGroups', 'Edit');
@@ -17,6 +17,11 @@ interface OrgGroupsEditProps {
 @observer
 export class OrgGroupsEdit extends Component<OrgGroupsEditProps> {
   @observable private dialogOpen = false;
+
+  constructor(props: OrgGroupsEditProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

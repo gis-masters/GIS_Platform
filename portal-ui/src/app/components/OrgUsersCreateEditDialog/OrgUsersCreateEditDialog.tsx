@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { computed } from 'mobx';
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
@@ -7,8 +7,8 @@ import { AxiosError } from 'axios';
 import { Toast } from '../Toast/Toast';
 import { getPatch } from '../../services/util/patch';
 import { FormDialog } from '../FormDialog/FormDialog';
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
-import { usersService, NewUserData, CrgUser } from '../../services/crg/users.service';
+import { PropertySchema, PropertyType } from '../../services/data/schema.models';
+import { usersService, NewUserData, CrgUser } from '../../services/data/users.service';
 
 import '!style-loader!css-loader!sass-loader!./OrgUsersCreateEditDialog.scss';
 
@@ -21,6 +21,11 @@ interface OrgUsersCreateEditDialogProps {
 
 @observer
 export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialogProps> {
+  constructor(props: OrgUsersCreateEditDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { open, onClose, user } = this.props;
 

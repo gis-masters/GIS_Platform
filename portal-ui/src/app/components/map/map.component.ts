@@ -2,23 +2,24 @@ import { reaction, IReactionDisposer } from 'mobx';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
-import { NGXLogger } from 'ngx-logger';
 import { Extent } from 'ol/extent';
-import '!style-loader!css-loader!sass-loader!ol/ol.css';
+import { cloneDeep } from 'lodash';
+import '!style-loader!css-loader!ol/ol.css';
 
-import { CrgExternalLayer, CrgLayer, CrgLayerType, TreeItem } from '../../services/crg/projects.models';
-import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
-import { setMapPositionToUrl } from '../../services/map/map-url.service';
-import { fetchBasemaps } from '../../services/crg/basemaps.service';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { printSettings } from '../../stores/PrintSettings.store';
-import { MapModes, mapStore } from '../../stores/Map.store';
-import { basemapsStore } from '../../stores/Basemaps.store';
-import { mapService } from '../../services/map/map.service';
-import { Emitter } from '../../services/common/Emitter';
-import { fromMobx } from '../../services/util/fromMobx';
-import { sidebars } from '../../stores/Sidebars.store';
 import { route } from '../../stores/Route.store';
+import { sidebars } from '../../stores/Sidebars.store';
+import { MapMode, mapStore } from '../../stores/Map.store';
+import { basemapsStore } from '../../stores/Basemaps.store';
+import { printSettings } from '../../stores/PrintSettings.store';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { CrgExternalLayer, CrgLayer, CrgLayerType, TreeItem } from '../../services/gis/projects.models';
+import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
+import { mapSelectionService } from '../../services/map/map-selection.service';
+import { fetchBasemaps } from '../../services/gis/project-basemaps.service';
+import { setMapPositionToUrl } from '../../services/map/map-url.service';
+import { mapService } from '../../services/map/map.service';
+import { fromMobx } from '../../services/util/fromMobx';
+import { Emitter } from '../../services/common/Emitter';
 import { cn } from '../../services/util/cn';
 import { Toast } from '../Toast/Toast';
 
@@ -39,8 +40,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
   private reactionDisposer: IReactionDisposer;
   private unsubscribe$: Subject<void> = new Subject<void>();
-
-  constructor(private logger: NGXLogger) {}
 
   async ngOnInit() {
     await fetchBasemaps();
@@ -65,7 +64,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     this.reactionDisposer = reaction(
-      () => [currentProject.visibleLayersBatched, currentProject.attributeTableFilter],
+      () => [currentProject.visibleLayersBatched, cloneDeep(mapStore.attributeTableFilter)],
       ([visibleBatches]: [TreeItem<CrgLayer>[][]]) => {
         mapService.hideUserLayers();
 
@@ -90,6 +89,8 @@ export class MapComponent implements OnInit, OnDestroy {
             visibleBatches.length - i
           );
         });
+
+        mapService.highlightFeatures(mapStore.highlightedFeatures);
       },
       { fireImmediately: true }
     );
@@ -106,16 +107,7 @@ export class MapComponent implements OnInit, OnDestroy {
         }, 0);
       });
 
-    fromMobx(() => sidebars.attributesOpen, true)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(attributesOpen => {
-        this.isAttrSidebarActive = attributesOpen;
-        setTimeout(() => {
-          window.dispatchEvent(new Event('resize'));
-        }, 0);
-      });
-
-    fromMobx(() => sidebars.featuresOpen, true)
+    fromMobx(() => sidebars.featuresSidebarOpen, true)
       .pipe(takeUntil(this.unsubscribe$), debounceTime(0))
       .subscribe(featuresOpen => {
         this.isFeaturesSidebarActive = featuresOpen;
@@ -146,7 +138,7 @@ export class MapComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(mode => {
         setTimeout(() => {
-          this.isDefaultActive = mode === MapModes.SELECTION;
+          this.isDefaultActive = mode === MapMode.SELECTION;
         }, 0);
       });
 
@@ -160,10 +152,13 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    mapStore.setMode(MapModes.DEFAULT);
+    mapStore.setMode(MapMode.DEFAULT);
     mapService.destroyMap();
+    mapSelectionService.selectFeatures([]);
     printSettings.reset();
-    this.reactionDisposer();
+    if (this.reactionDisposer) {
+      this.reactionDisposer();
+    }
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     Emitter.scopeOff(this);

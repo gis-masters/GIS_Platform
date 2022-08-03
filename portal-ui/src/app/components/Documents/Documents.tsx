@@ -3,14 +3,14 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { PropertySchemaDocument } from '../../services/crg/schema.models';
-import { LibraryRecord } from '../../services/crg/doc-library.service';
+import { PropertySchemaDocument } from '../../services/data/schema.models';
+import { LibraryRecord } from '../../services/data/doc-library.service';
 import { LookupList } from '../Lookup/List/Lookup-List';
 import { Lookup } from '../Lookup/Lookup';
 
 import { DocumentsItem } from './Item/Documents-Item';
 import { DocumentsAdd } from './Add/Documents-Add';
-import { computed } from 'mobx';
+import { computed, makeObservable } from 'mobx';
 
 const cnDocuments = cn('Documents');
 
@@ -27,6 +27,11 @@ const defaultMaxDocuments = 100;
 
 @observer
 export class Documents extends Component<DocumentsProps> {
+  constructor(props: DocumentsProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { value, property, editable } = this.props;
     const { multiple, library, maxDocuments } = property;

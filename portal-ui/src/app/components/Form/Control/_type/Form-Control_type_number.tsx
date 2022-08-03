@@ -3,7 +3,7 @@ import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { InputAdornment, Slider, TextField } from '@mui/material';
 
-import { PropertySchemaNumber } from '../../../../services/crg/schema.models';
+import { PropertySchemaNumber } from '../../../../services/data/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormErrors } from '../../Errors/Form-Errors';

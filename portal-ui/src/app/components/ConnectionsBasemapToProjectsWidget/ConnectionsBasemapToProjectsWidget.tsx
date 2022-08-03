@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Basemap } from '../../services/crg/basemaps.models';
-import { CrgProject } from '../../services/crg/projects.models';
-import { connectBasemapToProject, getBasemapConnections } from '../../services/crg/basemaps.service';
+import { connectBasemapToProject, getBasemapConnections } from '../../services/gis/project-basemaps.service';
+import { FileConnection } from '../../services/data/files.service';
+import { CrgProject } from '../../services/gis/projects.models';
+import { Basemap } from '../../services/data/basemaps.models';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
-import { FileConnection } from '../../services/files.service';
 
 const cnConnectionsBasemapToProjectsWidget = cn('ConnectionsBasemapToProjectsWidget');
 
@@ -22,6 +22,11 @@ export class ConnectionsBasemapToProjectsWidget extends Component<ConnectionsBas
 
   @observable private connections?: FileConnection[] = [];
   @observable private loading = true;
+
+  constructor(props: ConnectionsBasemapToProjectsWidgetProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.fetchConnections();

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem } from '@mui/material';
 import { InsertDriveFile, NoteAddOutlined } from '@mui/icons-material';
@@ -12,11 +12,11 @@ import {
   DocumentLibrary,
   getLibrary,
   LibraryRecord
-} from '../../../services/crg/doc-library.service';
-import { getDefaultValues } from '../../../services/crg/formValidation.service';
-import { applyContentType } from '../../../services/crg/schema.utils';
-import { schemaService } from '../../../services/crg/schema.service';
-import { Schema } from '../../../services/crg/schema.models';
+} from '../../../services/data/doc-library.service';
+import { getDefaultValues } from '../../../services/formValidation.service';
+import { applyContentType } from '../../../services/data/schema.utils';
+import { schemaService } from '../../../services/data/schema.service';
+import { Schema } from '../../../services/data/schema.models';
 import { sleep } from '../../../services/util/sleep';
 import { FormDialog } from '../../FormDialog/FormDialog';
 
@@ -47,6 +47,11 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
   private operationId: symbol;
   @observable private createdDocument?: LibraryRecord;
   @observable private createdDocumentDialogOpen = false;
+
+  constructor(props: LibraryDocumentActionsCreateChildProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.init();

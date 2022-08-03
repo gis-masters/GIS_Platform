@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
 import { Adjust, SvgIconComponent, Timeline, ReportProblemOutlined } from '@mui/icons-material';
 
 import { GeometryType, SupportedGeometryType } from '../../../services/geoserver/wfs.models';
-import { schemaService } from '../../../services/crg/schema.service';
+import { schemaService } from '../../../services/data/schema.service';
 import { LayerIconProps, cnLayerIcon } from '../LayerIcon';
 import { Shape } from '../../Icons/Shape';
 
@@ -18,6 +18,11 @@ interface LayerIconTypeVectorProps extends IClassNameProps {
 @observer
 class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
   @observable geometryType: SupportedGeometryType | 'unknown' = 'unknown';
+
+  constructor(props: LayerIconTypeVectorProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     const { schemaId } = this.props;

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Tooltip, IconButton } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
 
-import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
-import { PrincipalType } from '../../../services/crg/permissions.models';
-import { Dataset, DataTable } from '../../../services/data.service';
-import { CrgProject } from '../../../services/crg/projects.models';
+import { PermissionsListItem } from '../../../services/data/allPermissions.service';
+import { PrincipalType } from '../../../services/data/permissions.models';
+import { Dataset, VectorTable } from '../../../services/data/data.service';
+import { CrgProject } from '../../../services/gis/projects.models';
 import { PermissionsAddDialog } from '../../PermissionsAddDialog/PermissionsAddDialog';
 
 import { PermissionsListItemType } from '../PermissionsListDialog.models';
@@ -19,7 +19,7 @@ const cnPermissionsListDialogAdd = cn('PermissionsListDialog', 'Add');
 
 interface PermissionsListDialogAddProps {
   usedProjects: CrgProject[];
-  usedTables: DataTable[];
+  usedTables: VectorTable[];
   usedDatasets: Dataset[];
   principalId: number;
   principalType: PrincipalType;
@@ -36,6 +36,11 @@ const entityTypeLabels = {
 @observer
 export class PermissionsListDialogAdd extends Component<PermissionsListDialogAddProps> {
   @observable private open = false;
+
+  constructor(props: PermissionsListDialogAddProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { usedProjects, usedDatasets, usedTables, principalId, principalType, onAdd, type } = this.props;

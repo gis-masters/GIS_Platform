@@ -1,105 +1,164 @@
-import React, { Component } from 'react';
-import { action } from 'mobx';
+import React, { Component, createRef } from 'react';
+import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { TableCell, TableSortLabel, TableCellProps } from '@mui/material';
+import { TableCell, TableCellProps, Tooltip } from '@mui/material';
+import { VisibilityOff } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { PropertyOption } from '../../../services/crg/schema.models';
+import { PropertyType } from '../../../services/data/schema.models';
 import { FilterQuery } from '../../../services/util/filterObjects';
 import { SortParams } from '../../../services/util/sortObjects';
+import { DescriptionMark } from '../../DescriptionMark/DescriptionMark';
 
-import { FilterType } from '../Filter/XTable-Filter';
+import { XTableColumn } from '../XTable';
 import { XTableFilter } from '../Filter/XTable-Filter.composed';
+import { XTableHeadCellLabel } from '../HeadCellLabel/XTable-HeadCellLabel';
+import { XTableHeadCellTitle } from '../HeadCellTitle/XTable-HeadCellTitle';
+import { XTableHeadCellBorder } from '../HeadCellBorder/XTable-HeadCellBorder';
+import { XTableCellContent } from '../CellContent/XTable-CellContent.composed';
 
 import '!style-loader!css-loader!sass-loader!./XTable-HeadCell.scss';
 
 const cnXTableHeadCell = cn('XTable', 'HeadCell');
+const cnXTableFilter = cn('XTable', 'Filter');
 
 interface XTableHeadCellProps<T> extends TableCellProps {
-  field?: keyof T;
-  sortable?: boolean;
-  sortParams?: SortParams<T>;
-  filterable?: boolean;
-  filterQuery?: FilterQuery;
-  filterType: FilterType;
-  filterOptions?: PropertyOption[];
-  headerCellProps?: TableCellProps;
-  onBeforeFilterChange: () => void;
-  onFilterChange: () => void;
+  col: XTableColumn<T>;
+  sortParams: SortParams<T>;
+  filterActive: boolean;
+  filterQuery: FilterQuery;
+  singleLineContent: boolean;
+  width: number | undefined;
+  hidden: boolean | undefined;
+  onBeforeFilterChange(): void;
+  onFilterChange(): void;
+  onWidthChange(field: keyof T, width: number): void;
 }
+
+const MIN_CELL_WIDTH = 80;
 
 @observer
 export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
+  private cellRef = createRef<HTMLTableCellElement>();
+  private initialWidth: number;
+
+  constructor(props: XTableHeadCellProps<T>) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const {
-      field,
-      sortable,
+      col,
       sortParams,
-      filterable,
-      filterType,
+      filterActive,
       filterQuery,
-      filterOptions,
-      children,
-      headerCellProps,
       className,
+      singleLineContent,
+      style = {},
+      width,
       hidden,
       onBeforeFilterChange,
-      onFilterChange
+      onFilterChange,
+      onWidthChange,
+      ...otherProps
     } = this.props;
 
+    const filterable = filterActive && col.filterable;
+    const type = col.type || PropertyType.STRING;
+
     const cellProps = {
-      ...headerCellProps,
-      ...this.props,
-      className: cnXTableHeadCell({ sortable, filterable, filterType, hidden }, [className])
+      align: col.align,
+      ...otherProps,
+      ...col.headerCellProps,
+      style: {
+        ...style,
+        ...col.headerCellProps?.style,
+        '--XTableCellWidth': width
+      },
+      className: cnXTableHeadCell(
+        {
+          sortable: col.sortable,
+          filterable,
+          type,
+          hidden: col.hidden || hidden,
+          singleLineContent,
+          unspecifiedWidth: !width
+        },
+        [className, col.headerCellProps?.className]
+      )
     };
 
-    delete cellProps.field;
-    delete cellProps.sortable;
-    delete cellProps.filterable;
-    delete cellProps.sortParams;
-    delete cellProps.filterQuery;
-    delete cellProps.filterType;
-    delete cellProps.filterOptions;
-    delete cellProps.headerCellProps;
-    delete cellProps.onFilterChange;
-    delete cellProps.onBeforeFilterChange;
+    const FilterComponent = col.CustomFilterComponent || XTableFilter;
 
     return (
-      <TableCell {...cellProps}>
-        {sortable ? (
-          <TableSortLabel
-            active={sortParams?.field === field}
-            direction={sortParams?.asc || sortParams?.field !== field ? 'asc' : 'desc'}
-            onClick={this.handleSort}
+      <TableCell {...cellProps} ref={this.cellRef}>
+        <XTableCellContent
+          singleLineContent={singleLineContent}
+          unspecifiedWidth={!width}
+          col={col as XTableColumn<unknown>}
+        >
+          <XTableHeadCellLabel
+            col={col}
+            onSort={this.handleSort}
+            sortParams={sortParams}
+            singleLineContent={singleLineContent}
           >
-            {children}
-          </TableSortLabel>
-        ) : (
-          children
-        )}
+            <XTableHeadCellTitle col={col} singleLineContent={singleLineContent} />
+            {col.description && (
+              <>
+                &nbsp;
+                <DescriptionMark>{col.description}</DescriptionMark>
+              </>
+            )}
+            {col.hidden && (
+              <>
+                &nbsp;
+                <Tooltip title='Колонка скрыта настройками. Отображается из-за наличия фильтрации или сортировки.'>
+                  <VisibilityOff color='action' fontSize='small' />
+                </Tooltip>
+              </>
+            )}
+          </XTableHeadCellLabel>
+        </XTableCellContent>
         {filterable && (
-          <XTableFilter
-            field={field as string}
-            type={filterType}
-            filterOptions={filterOptions}
+          <FilterComponent
+            className={col.CustomFilterComponent && cnXTableFilter({ type: 'custom' })}
+            field={col.field as string}
+            type={type}
+            options={col.settings?.options}
             filterQuery={filterQuery}
             onBeforeFilterChange={onBeforeFilterChange}
             onFilterChange={onFilterChange}
           />
         )}
+        <XTableHeadCellBorder onResizeStart={this.resizeStartHandler} onResize={this.resizeHandler} />
       </TableCell>
     );
   }
 
   @action.bound
   private handleSort() {
-    const { field, sortParams } = this.props;
+    const { col, sortParams } = this.props;
 
-    if (sortParams.field !== field) {
-      sortParams.field = field;
+    if (sortParams.field !== col.field) {
+      sortParams.field = col.field;
       sortParams.asc = true;
     } else {
       sortParams.asc = !sortParams.asc;
     }
+  }
+
+  @action.bound
+  private resizeStartHandler() {
+    const { col, onWidthChange } = this.props;
+    this.initialWidth = this.cellRef.current.clientWidth;
+    onWidthChange(col.field, this.cellRef.current.clientWidth);
+  }
+
+  @action.bound
+  private resizeHandler(deltaX: number) {
+    const { col, onWidthChange } = this.props;
+    onWidthChange(col.field, Math.max(this.initialWidth + deltaX, MIN_CELL_WIDTH));
   }
 }

@@ -3,9 +3,9 @@ import { publishReplay, refCount } from 'rxjs/operators';
 import SockJS from 'sockjs-client';
 import { Stomp, CompatClient } from '@stomp/stompjs';
 
-import { WsImportModel } from './crg/processes.service';
+import { WsImportModel } from './data/processes.service';
 import { generateRandomId } from './util/randomId';
-import { BugObject } from './crg/validation.service';
+import { BugObject } from './data/validation.service';
 import { getWsEndpointUrl } from './server-urls.service';
 import { ProcessType } from './models';
 
@@ -71,7 +71,7 @@ class WsService {
     this.stompClient.connect({}, () => {
       this.setConnected(true);
       this.stompClient.subscribe('/topic/' + this.id + '/**', data => {
-        this._wsMsg$.next(JSON.parse(data.body));
+        this._wsMsg$.next(JSON.parse(data.body) as IWsMessage<ExportWsMsg | ValidationWsMsg | WsImportModel>);
       });
     });
   }

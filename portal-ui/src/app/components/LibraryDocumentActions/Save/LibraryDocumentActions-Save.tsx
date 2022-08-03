@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { SaveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { createLibraryRecord, LibraryRecord } from '../../../services/crg/doc-library.service';
+import { createLibraryRecord, LibraryRecord } from '../../../services/data/doc-library.service';
 
 import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
 import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
@@ -21,6 +21,11 @@ interface LibraryDocumentActionsSaveProps {
 @observer
 export class LibraryDocumentActionsSave extends Component<LibraryDocumentActionsSaveProps> {
   @observable private busy = false;
+
+  constructor(props: LibraryDocumentActionsSaveProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { as } = this.props;

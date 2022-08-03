@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { AxiosError } from 'axios';
 import { observer } from 'mobx-react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { projectsService } from '../../services/crg/projects.service';
+import { projectsService } from '../../services/gis/projects.service';
 import {
   alertLayerOperationError,
   createLayer,
   deleteLayer,
   generateNextLayerId,
   updateLayer
-} from '../../services/geoserver/layers.service';
+} from '../../services/gis/layers.service';
 import { LayersTree } from '../LayersTree/LayersTree';
 import { Loading } from '../Loading/Loading';
 
@@ -33,6 +33,11 @@ export class LayersSidebar extends Component {
   @observable private busy = false;
   @observable private queriedCount = 0;
   @observable private toolbarAbove = false;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

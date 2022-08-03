@@ -197,11 +197,11 @@ export class Http {
     } catch (error) {
       const err = error as AxiosError;
 
-      if (err.response.status === 401 && isAuthenticate) {
+      if (err.response?.status === 401 && isAuthenticate) {
         throw error;
       }
 
-      if (err.response.status === 401) {
+      if (err.response?.status === 401) {
         await this.waitForAuth();
 
         return this.post<T>(url, data, config);
@@ -219,7 +219,7 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      if (err.response.status === 401) {
+      if (err.response?.status === 401) {
         await this.waitForAuth();
 
         return this.put<T>(url, data, config);
@@ -243,7 +243,7 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      if (err.response.status === 401) {
+      if (err.response?.status === 401) {
         await this.waitForAuth();
 
         return this.patch<T>(url, data, config);
@@ -261,7 +261,7 @@ export class Http {
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      if (err.response.status === 401) {
+      if (err.response?.status === 401) {
         await this.waitForAuth();
 
         return this.delete<T>(url, config);

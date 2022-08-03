@@ -1,14 +1,15 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
+import { PropertyOption, PropertyType } from '../../services/data/schema.models';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
 import { filterObjects } from '../../services/util/filterObjects';
-import { PropertyOption } from '../../services/crg/schema.models';
-import { PageOptions, SortDir } from '../../services/models';
+import { PageOptions, SortOrder } from '../../services/models';
 import { sleep } from '../../services/util/sleep';
 
 import { XTable, XTableColumn } from './XTable';
-import { FilterType } from './Filter/XTable-Filter';
+
+import '!style-loader!css-loader!sass-loader!./XTable.stories.scss';
 
 export default {
   title: 'XTable',
@@ -25,6 +26,7 @@ interface TestData {
   amount: number;
   date: string;
   conclusive?: boolean;
+  long?: string;
 }
 
 const materialOptions: PropertyOption[] = [
@@ -90,7 +92,8 @@ const data: TestData[] = [
     amount: 1,
     weight: 420,
     date: '1021-12-12 12:00',
-    conclusive: false
+    conclusive: false,
+    long: 'Какой-то длинный предлинный многострочный текст со всякой фигнёй, чтобы точно не влезло в одну строку, а также соСлипшимисяДоНелепостиДлиннымиСловамиЧтобыТочноРаскосматилоПоШирине'
   },
   {
     id: 6,
@@ -241,25 +244,25 @@ const cols: XTableColumn<TestData>[] = [
     field: 'title',
     getIdBadge: ({ id }) => id,
     filterable: true,
-    sortable: true
+    sortable: true,
+    hidden: true
   },
   {
     title: 'Материал',
     field: 'material',
+    type: PropertyType.CHOICE,
+    settings: {
+      options: materialOptions
+    },
     filterable: true,
-    filterType: FilterType.CHOICE,
-    filterOptions: materialOptions,
-    CellContent: ({ rowData }) => (
-      <>{materialOptions.find(({ value }) => value === rowData.material)?.title || rowData.material}</>
-    ),
-    sortable: true
+    sortable: true,
+    hidden: true
   },
   {
     title: 'Вес',
     description: 'в килограммах',
+    type: PropertyType.FLOAT,
     filterable: true,
-    filterType: FilterType.FLOAT,
-    align: 'center',
     field: 'weight',
     sortable: true
   },
@@ -272,7 +275,7 @@ const cols: XTableColumn<TestData>[] = [
   {
     title: 'Дата',
     filterable: true,
-    filterType: FilterType.DATETIME,
+    type: PropertyType.DATETIME,
     align: 'center',
     field: 'date',
     sortable: true
@@ -280,16 +283,17 @@ const cols: XTableColumn<TestData>[] = [
   {
     title: 'Решает',
     filterable: true,
-    filterType: FilterType.BOOL,
+    type: PropertyType.BOOL,
     align: 'center',
     field: 'conclusive',
     sortable: true
   },
   {
+    field: 'long',
     title:
       'Просто ещё одна бесполезная колонка с длинным-предлинным многострочным названием и бессмысленным шаблонным описанием',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
+      'Бессмысленное шаблонное описание ещё одной бесполезной колонки с длинным-предлинным многострочным названием.'
   }
 ];
 
@@ -297,11 +301,17 @@ const defaultSort: SortParams<TestData> = { field: 'title', asc: true };
 
 class XTableForTestData extends XTable<TestData> {}
 
-async function getData({ page, pageSize, filter, sort, sortDir }: PageOptions): Promise<[TestData[], number]> {
+async function getData({
+  page,
+  pageSize,
+  filter,
+  sort,
+  sortOrder: sortDir
+}: PageOptions): Promise<[TestData[], number]> {
   await sleep(Math.random() * 1000);
 
   const filtered = filterObjects(data, filter);
-  const sorted = sortObjects(filtered, sort as keyof TestData, sortDir === SortDir.ASC, 'id');
+  const sorted = sortObjects(filtered, sort as keyof TestData, sortDir === SortOrder.ASC, 'id');
   const paged = sorted.slice(page * pageSize, page * pageSize + pageSize);
 
   return [paged, Math.ceil(filtered.length / pageSize)];
@@ -311,10 +321,9 @@ export const Small = Template.bind({}) as ComponentStory<typeof XTableForTestDat
 Small.args = {
   title: 'Таблица маленькая',
   data: smallData,
-  cols,
+  cols: cols.slice(0, -1),
   defaultSort,
-  secondarySortField: 'id',
-  getRowId: ({ id }) => id
+  secondarySortField: 'id'
 };
 
 export const Standard = Template.bind({}) as ComponentStory<typeof XTableForTestData>;
@@ -324,8 +333,7 @@ Standard.args = {
   cols,
   defaultSort,
   secondarySortField: 'id',
-  filterable: true,
-  getRowId: ({ id }) => id
+  filterable: true
 };
 
 export const Async = Template.bind({}) as ComponentStory<typeof XTableForTestData>;
@@ -336,6 +344,17 @@ Async.args = {
   defaultSort,
   secondarySortField: 'id',
   filterable: true,
-  filtersAlwaysEnabled: true,
-  getRowId: ({ id }) => id
+  filtersAlwaysEnabled: true
+};
+
+export const Compact = Template.bind({}) as ComponentStory<typeof XTableForTestData>;
+Compact.args = {
+  title: 'Компактная таблица с локальными данными',
+  data,
+  cols,
+  defaultSort,
+  secondarySortField: 'id',
+  filterable: true,
+  size: 'small',
+  singleLineContent: true
 };

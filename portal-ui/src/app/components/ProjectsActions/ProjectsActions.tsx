@@ -2,10 +2,10 @@ import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { PropertyType, Schema } from '../../services/crg/schema.models';
-import { CrgProject } from '../../services/crg/projects.models';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { Role } from '../../services/crg/permissions.models';
+import { PropertyType, Schema } from '../../services/data/schema.models';
+import { CrgProject } from '../../services/gis/projects.models';
+import { Role } from '../../services/data/permissions.models';
 
 import { ProjectActionsDelete } from './Delete/ProjectActions-Delete';
 import { ProjectActionsEdit } from './Edit/ProjectActions-Edit';

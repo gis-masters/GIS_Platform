@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { action, computed } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertyType } from '../../../../services/crg/schema.models';
+import { PropertyType } from '../../../../services/data/schema.models';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter';
 
@@ -13,6 +13,11 @@ import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_bool.scss';
 
 @observer
 class XTableFilterTypeBool extends Component<XTableFilterProps> {
+  constructor(props: XTableFilterProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { className } = this.props;
 

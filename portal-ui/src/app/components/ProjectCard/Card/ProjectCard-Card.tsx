@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { computed } from 'mobx';
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { CrgProject } from '../../../services/crg/projects.models';
+import { CrgProject } from '../../../services/gis/projects.models';
 import { Link } from '../../Link/Link';
 
 import { ProjectCardName } from '../Name/ProjectCard-Name';
@@ -19,6 +19,11 @@ interface ProjectCardCardProps {
 
 @observer
 export class ProjectCardCard extends Component<ProjectCardCardProps> {
+  constructor(props: ProjectCardCardProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { project } = this.props;
 

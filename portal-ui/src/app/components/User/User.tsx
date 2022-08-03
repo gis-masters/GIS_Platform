@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Menu, MenuItem, ListItemIcon } from '@mui/material';
 import { AccountCircle, ExitToApp } from '@mui/icons-material';
@@ -15,6 +15,11 @@ const cnUser = cn('User');
 @observer
 export class User extends Component {
   @observable private anchorEl: HTMLElement | null = null;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

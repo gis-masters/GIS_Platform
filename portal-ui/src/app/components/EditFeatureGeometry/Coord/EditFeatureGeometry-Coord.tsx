@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action } from 'mobx';
+import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { SimpleGeometry } from 'ol/geom';
 import { Feature } from 'ol';
@@ -10,7 +10,7 @@ import { boundMethod } from 'autobind-decorator';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs.models';
 import { olProjection, transformGeometry } from '../../../services/geoserver/projections.service';
-import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs.service';
+import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs.util';
 import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
 import { mapService } from '../../../services/map/map.service';
 
@@ -37,6 +37,11 @@ interface EditFeatureGeometryCoordProps {
 @observer
 export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoordProps> {
   private focusedPointMarker: Feature<SimpleGeometry>;
+
+  constructor(props: EditFeatureGeometryCoordProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { val, withControls, index, canBeDeleted, disabled, active } = this.props;

@@ -5,7 +5,7 @@ import { ShareOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord } from '../../../services/crg/doc-library.service';
+import { LibraryRecord } from '../../../services/data/doc-library.service';
 import { copyToClipboard } from '../../../services/util/clipboard.util';
 import { Toast } from '../../Toast/Toast';
 

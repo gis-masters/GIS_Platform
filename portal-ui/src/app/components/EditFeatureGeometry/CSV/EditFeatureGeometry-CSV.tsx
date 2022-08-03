@@ -1,5 +1,5 @@
 import React, { Component, ChangeEvent, createRef } from 'react';
-import { action } from 'mobx';
+import { action, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@mui/material';
 import { ArchiveOutlined, UnarchiveOutlined } from '@mui/icons-material';
@@ -27,6 +27,12 @@ interface EditFeatureGeometryCSVProps {
 
 export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProps> {
   private inputRef = createRef<HTMLInputElement>();
+
+  constructor(props: EditFeatureGeometryCSVProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { readOnly, empty, geometryType, first } = this.props;
     const partLabel = selectLabelForGeometryType(

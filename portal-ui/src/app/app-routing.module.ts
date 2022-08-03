@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Route, Data } from '@angular/router';
 
+import { Pages } from './stores/Route.store';
 import { CurrentUserResolver } from './services/resolvers/current-user-resolver.service';
 import { OrgAdminGuardService } from './services/org-admin-guard.service';
 import { WorkflowGuardService } from './services/workflow-guard.service';
@@ -20,24 +21,6 @@ import { LibraryRegistryPageComponent } from './pages/library-registry/library-r
 import { ServicesCalculatorPageComponent } from './pages/services-calculator/services-calculator-page.component';
 import { RestorePasswordFormPageComponent } from './pages/restore-password-form/restore-password-form-page.component';
 import { ChangePasswordFormPageComponent } from './pages/change-password-form/change-password-form-page.component';
-
-export enum Pages {
-  HOME = 'home',
-  LOGIN = 'login',
-  REGISTER = 'register',
-  RECOVERY = 'recovery',
-  ABOUT = 'about',
-  PROJECTS = 'projects',
-  IMPORT = 'import',
-  MAP = 'map',
-  ORG_ADMIN = 'org-admin',
-  DATA_MANAGEMENT = 'data-management',
-  REGISTRY = 'registry',
-  DOCUMENT = 'document',
-  SERVICES_CALCULATOR = 'services-calculator',
-  RESTORE_PASSWORD = 'restore-password',
-  CHANGE_PASSWORD = 'change-password'
-}
 
 export interface AppRouteData extends Data {
   page: Pages;
@@ -197,7 +180,7 @@ const routes: AppRoutes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
   providers: [WorkflowGuardService, ProjectsGuardService, OrgAdminGuardService]
 })

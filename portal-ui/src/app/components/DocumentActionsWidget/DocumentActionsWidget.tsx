@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { ImportToProject } from '../ImportToProject/ImportToProject';
-import { LibraryRecord } from '../../services/crg/doc-library.service';
+import { LibraryRecord } from '../../services/data/doc-library.service';
 
 import '!style-loader!css-loader!sass-loader!./Icon/DocumentActionsWidget-Icon.scss';
 

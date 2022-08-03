@@ -1,15 +1,16 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { Paper } from '@mui/material';
 import { IClassNameProps } from '@bem-react/core';
+
+import { ChildrenProps } from '../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./TextBadge.scss';
 
 const cnTextBadge = cn('TextBadge');
 
-interface TextBadgeProps extends IClassNameProps {
+interface TextBadgeProps extends IClassNameProps, ChildrenProps {
   id?: string | number;
-  children?: ReactNode;
 }
 
 export const TextBadge: FC<TextBadgeProps> = ({ id, className, children }) => (

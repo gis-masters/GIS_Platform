@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { action, computed } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { CrgGroup } from '../../../services/crg/groups.service';
-import { CrgUser } from '../../../services/crg/users.service';
+import { CrgGroup } from '../../../services/data/groups.service';
+import { CrgUser } from '../../../services/data/users.service';
 
 const cnPermissionsEditDialogCheckPrincipal = cn('PermissionsEditDialog', 'CheckPrincipal');
 
@@ -17,6 +17,11 @@ interface PermissionsEditDialogCheckPrincipalProps {
 
 @observer
 export class PermissionsEditDialogCheckPrincipal extends Component<PermissionsEditDialogCheckPrincipalProps> {
+  constructor(props: PermissionsEditDialogCheckPrincipalProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     return (
       <Checkbox

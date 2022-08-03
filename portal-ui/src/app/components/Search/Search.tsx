@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { SearchOutlined } from '@mui/icons-material';
@@ -31,6 +31,11 @@ export class Search extends Component {
   private anchor?: HTMLElement;
 
   private kadNumRegex = /(?:\d{2}:?){2}\d{6}:/;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

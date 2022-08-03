@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { StorageOutlined, TableViewOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@mui/material';
@@ -7,7 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 
-import { DocumentLibrary, LibraryRecord } from '../../services/crg/doc-library.service';
+import { DocumentLibrary, LibraryRecord } from '../../services/data/doc-library.service';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { DocumentInfo } from '../Documents/Documents';
 import { route } from '../../stores/Route.store';
@@ -32,6 +32,11 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
   @observable private selectedDocuments?: LibraryRecord[] = [];
   @observable private libraryView = false;
   @observable private error = false;
+
+  constructor(props: DocumentsSelectDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { libraryIdentifier, maxDocuments, dialogOpen, addedDocuments } = this.props;

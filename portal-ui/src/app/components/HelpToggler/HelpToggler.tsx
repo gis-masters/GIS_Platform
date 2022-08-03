@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Dialog, DialogContent, DialogContentText, DialogActions, Tooltip } from '@mui/material';
 import { LiveHelp, LiveHelpOutlined } from '@mui/icons-material';
@@ -20,6 +20,11 @@ export class HelpToggler extends Component {
   @observable private dialogOpen = false;
   @observable private selectedItem?: TocItem;
   private ref = createRef<HTMLButtonElement>();
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     if (!this.visible) {

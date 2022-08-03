@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, makeObservable } from 'mobx';
 
 import { currentUser } from './CurrentUser.store';
 
@@ -30,7 +30,9 @@ export class OrganizationSettings implements Settings {
     return this._instance || (this._instance = new this());
   }
 
-  private constructor() {}
+  private constructor() {
+    makeObservable(this);
+  }
 
   @action
   setSettings(settings?: Settings): void {

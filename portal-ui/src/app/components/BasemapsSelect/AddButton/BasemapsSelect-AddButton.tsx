@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { MenuItem, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { connectBasemapToProject, fetchBasemaps } from '../../../services/crg/basemaps.service';
 import { currentProject } from '../../../stores/CurrentProject.store';
-
+import { connectBasemapToProject, fetchBasemaps } from '../../../services/gis/project-basemaps.service';
 import { ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
-import { Basemap } from '../../../services/crg/basemaps.models';
+import { Basemap } from '../../../services/data/basemaps.models';
 import { Explorer } from '../../Explorer/Explorer';
 import { Button } from '../../Button/Button';
 
@@ -27,6 +26,11 @@ export interface BasemapsSelectAddButtonProps {
 export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonProps> {
   @observable private dialogOpen = false;
   @observable private basemap: Basemap;
+
+  constructor(props: BasemapsSelectAddButtonProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

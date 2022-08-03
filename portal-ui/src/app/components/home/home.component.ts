@@ -10,6 +10,7 @@ export class HomeComponent implements OnInit {
   envPlatform: Platform = 'simf';
 
   async ngOnInit() {
-    this.envPlatform = (await getEnvironment()).platform;
+    const env = await getEnvironment();
+    this.envPlatform = env.platform;
   }
 }

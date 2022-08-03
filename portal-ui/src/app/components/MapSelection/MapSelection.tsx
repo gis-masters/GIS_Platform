@@ -5,7 +5,7 @@ import { PlaylistAdd } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { MapModes, mapStore } from '../../stores/Map.store';
+import { MapMode, mapStore } from '../../stores/Map.store';
 import { mapSelectionService } from '../../services/map/map-selection.service';
 
 const cnMapSelection = cn('MapSelection');
@@ -19,7 +19,7 @@ export class MapSelection extends Component {
           className={cnMapSelection()}
           onClick={this.handleViewModeClick}
           size='small'
-          color={mapStore.mode === MapModes.SELECTION ? 'secondary' : 'default'}
+          color={mapStore.mode === MapMode.SELECTION ? 'secondary' : 'default'}
         >
           <PlaylistAdd />
         </IconButton>
@@ -29,6 +29,6 @@ export class MapSelection extends Component {
 
   @boundMethod
   private handleViewModeClick(): void {
-    mapSelectionService.enableSelectionMode(mapStore.mode === MapModes.SELECTION);
+    mapSelectionService.enableSelectionMode(mapStore.mode === MapMode.SELECTION);
   }
 }

@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../services/server-urls.service';
-import { applyContentType } from '../../services/crg/schema.utils';
-import { PropertyType, Schema } from '../../services/crg/schema.models';
+import { applyContentType } from '../../services/data/schema.utils';
+import { PropertyType, Schema } from '../../services/data/schema.models';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
-import { LibraryRecord } from '../../services/crg/doc-library.service';
-import { ExplorerItemEntityType } from '../Explorer/Explorer.models';
-import { schemaService } from '../../services/crg/schema.service';
+import { LibraryRecord } from '../../services/data/doc-library.service';
+import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
+import { schemaService } from '../../services/data/schema.service';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { Role } from '../../services/crg/permissions.models';
+import { Role } from '../../services/data/permissions.models';
 import { formatDate } from '../../services/util/date.util';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocument.scss';
@@ -29,6 +29,11 @@ interface LibraryDocumentProps {
 export class LibraryDocument extends Component<LibraryDocumentProps> {
   @observable private schema: Schema<LibraryRecord>;
   @observable private documentRoleAssignmentUrl: string;
+
+  constructor(props: LibraryDocumentProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.fetchSchema();
@@ -57,7 +62,7 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
               <PermissionsWidget
                 url={this.documentRoleAssignmentUrl}
                 title={document.title}
-                itemEntityType={ExplorerItemEntityType.DOCUMENT}
+                itemEntityType={ExplorerItemEntityTypeTitle.DOCUMENT}
                 disabled={!(currentUser.isAdmin || document.role === Role.OWNER)}
               />
             )}

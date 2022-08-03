@@ -1,0 +1,20 @@
+body .Attributes-Tab {
+  height: 34px;
+  min-height: 0;
+  padding: 0 4px 0 12px;
+
+  opacity: 1;
+  color: var(--white);
+
+  &.Attributes-Tab_selected {
+    color: var(--white);
+
+    font-weight: bold;
+  }
+
+  &_grade {
+    &_soft {
+      font-style: italic;
+    }
+  }
+}

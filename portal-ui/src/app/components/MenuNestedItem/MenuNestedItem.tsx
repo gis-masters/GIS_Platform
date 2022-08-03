@@ -1,5 +1,5 @@
 import React, { Component, createRef, FC, forwardRef, ReactNode, RefObject } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Menu, MenuItem, MenuItemProps, MenuProps } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
@@ -23,6 +23,11 @@ class MenuNestedItemComponent extends Component<MenuNestedItemProps> {
   private containerRef: RefObject<HTMLDivElement> = createRef();
   private menuContainerRef: RefObject<HTMLDivElement> = createRef();
   private anchorRef: RefObject<HTMLSpanElement> = createRef();
+
+  constructor(props: MenuNestedItemProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { ContainerProps, tabIndex, className, innerRef, submenu, children, parentMenuOpen, ...props } = this.props;

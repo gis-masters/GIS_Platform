@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { computed } from 'mobx';
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import {
@@ -21,14 +21,14 @@ import { Select } from '../Select/Select';
 import { XTableColumn } from '../XTable/XTable';
 import { ChooseXTable } from '../ChooseXTable/ChooseXTable';
 import { allProjects } from '../../stores/AllProjects.store';
-import { Role } from '../../services/crg/permissions.models';
-import { CrgProject } from '../../services/crg/projects.models';
-import { placeFiles } from '../../services/files-placement.service';
-import { FileInfo } from '../../services/files.service';
-import { isTifFile } from '../../services/files.util';
-import { projectsService } from '../../services/crg/projects.service';
-import { LibraryRecord } from '../../services/crg/doc-library.service';
-import { PropertyType, Schema } from '../../services/crg/schema.models';
+import { Role } from '../../services/data/permissions.models';
+import { CrgProject } from '../../services/gis/projects.models';
+import { placeFiles } from '../../services/gis/files-placement.service';
+import { FileInfo } from '../../services/data/files.service';
+import { isTifFile } from '../../services/data/files.util';
+import { projectsService } from '../../services/gis/projects.service';
+import { LibraryRecord } from '../../services/data/doc-library.service';
+import { PropertyType, Schema } from '../../services/data/schema.models';
 import { viewedProjections } from '../../services/geoserver/projections.service';
 import { FilesPlacementDialogReport } from '../FilesPlacementDialogReport/FilesPlacementDialogReport';
 import { communicationService } from '../../services/communication.service';
@@ -101,6 +101,11 @@ export class FilesPlacementDialog extends Component<FilesPlacementDialogProps> {
   ];
 
   private readonly store: FilesPlacementStore = new FilesPlacementStore();
+
+  constructor(props: FilesPlacementDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await projectsService.initAllProjectsStore();

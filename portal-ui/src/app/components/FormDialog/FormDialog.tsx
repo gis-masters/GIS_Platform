@@ -1,14 +1,14 @@
 import React, { Component, ReactNode } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { Schema } from '../../services/crg/schema.models';
+import { Schema } from '../../services/data/schema.models';
 import { generateRandomId } from '../../services/util/randomId';
-import { getDefaultValues } from '../../services/crg/formValidation.service';
+import { getDefaultValues } from '../../services/formValidation.service';
 import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
 import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
 import { Button, ButtonProps } from '../Button/Button';
@@ -36,6 +36,11 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
 > {
   @observable private busy = false;
   private formInvoke: { reset?(): void } = {};
+
+  constructor(props: FormDialogProps<T>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const {

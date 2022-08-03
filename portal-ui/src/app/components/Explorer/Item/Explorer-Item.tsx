@@ -1,5 +1,5 @@
 import React, { Component, ReactNode, RefObject } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -27,6 +27,11 @@ export interface ExplorerItemProps {
 @observer
 export class ExplorerItem extends Component<ExplorerItemProps> {
   @observable private disabled = false;
+
+  constructor(props: ExplorerItemProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     const { disabledTester, item } = this.props;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { GetApp, GetAppOutlined } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 
@@ -9,6 +9,11 @@ import { ExportGmlDialog } from '../ExportGmlDialog/ExportGmlDialog';
 @observer
 export class ExportGmlButton extends Component {
   @observable private open = false;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
@@ -25,6 +25,7 @@ export class PrintMapDialogCopy extends Component {
 
   constructor(props: Record<string, never>) {
     super(props);
+    makeObservable(this);
     this.clipboardApiAvailable = Boolean(navigator.clipboard?.write);
   }
 

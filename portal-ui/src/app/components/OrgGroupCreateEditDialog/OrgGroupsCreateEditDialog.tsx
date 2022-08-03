@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { computed } from 'mobx';
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { CrgGroup, groupsService } from '../../services/crg/groups.service';
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { CrgGroup, groupsService } from '../../services/data/groups.service';
+import { PropertySchema, PropertyType } from '../../services/data/schema.models';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { Toast } from '../Toast/Toast';
 
@@ -18,6 +18,11 @@ interface OrgGroupsCreateEditDialogProps {
 
 @observer
 export class OrgGroupsCreateEditDialog extends Component<OrgGroupsCreateEditDialogProps> {
+  constructor(props: OrgGroupsCreateEditDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { open, group, onClose } = this.props;
 

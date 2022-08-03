@@ -11,22 +11,20 @@ import {
   getLibraryRecords,
   getLibraryRecordsWithParticularOne,
   LibraryRecord
-} from '../../../../services/crg/doc-library.service';
+} from '../../../../services/data/doc-library.service';
 import { Link } from '../../../Link/Link';
 import { Emitter } from '../../../../services/common/Emitter';
-import { Role } from '../../../../services/crg/permissions.models';
-import { PageOptions, SortDir } from '../../../../services/models';
-import { schemaService } from '../../../../services/crg/schema.service';
+import { Role } from '../../../../services/data/permissions.models';
+import { PageOptions, SortOrder } from '../../../../services/models';
+import { schemaService } from '../../../../services/data/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { communicationService } from '../../../../services/communication.service';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
-import { getDocumentLibraryRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { formatDate } from '../../../../services/util/date.util';
 
 import { ExplorerStore } from '../../Explorer.store';
-import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerItemEntityType, SortItem } from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerService } from '../../Explorer.service';
@@ -75,20 +73,6 @@ export class ExplorerAdapterTypeLibrary {
 
   static getMeta(item: ExplorerItemData<DocumentLibrary>): string {
     return String(item.payload.identifier);
-  }
-
-  static async getWidgets(item: ExplorerItemData<DocumentLibrary>): Promise<ReactNode> {
-    const url = await getDocumentLibraryRoleAssignmentUrl(item.payload.identifier);
-    const currentItem = await getLibrary(item.payload.identifier);
-
-    return (
-      <PermissionsWidget
-        url={url}
-        title={item.payload.title}
-        itemEntityType={ExplorerItemEntityType.LIBRARY}
-        disabled={!(currentUser.isAdmin || currentItem.role === Role.OWNER)}
-      />
-    );
   }
 
   static getIcon(): ReactNode {
@@ -201,8 +185,8 @@ export class ExplorerAdapterTypeLibrary {
     return 'created_at';
   }
 
-  static getChildrenSortDefaultDirection(): SortDir {
-    return SortDir.DESC;
+  static getChildrenSortDefaultOrder(): SortOrder {
+    return SortOrder.DESC;
   }
 
   static getChildrenFilterField(): string {

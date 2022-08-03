@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { GroupAdd, GroupAddOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -15,6 +15,11 @@ const cnOrgGroups = cn('OrgGroups', 'Create');
 @observer
 export class OrgGroupsCreate extends Component {
   @observable private dialogOpen = false;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

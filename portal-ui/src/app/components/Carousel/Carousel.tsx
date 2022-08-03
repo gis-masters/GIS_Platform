@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { Breakpoint, Dialog, DialogActions, DialogContent, Tooltip } from '@mui/material';
@@ -8,8 +8,8 @@ import { ChevronLeft, ChevronRight, OpenInFull, CloseFullscreen } from '@mui/ico
 import { Document, Page, pdfjs } from 'react-pdf';
 
 import { getFileDownloadUrl } from '../../services/server-urls.service';
-import { FileInfo } from '../../services/files.service';
-import { isPdfFile } from '../../services/files.util';
+import { FileInfo } from '../../services/data/files.service';
+import { isPdfFile } from '../../services/data/files.util';
 import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';
@@ -35,6 +35,11 @@ export class Carousel extends Component<CarouselProps> {
   @observable private busy = true;
   @observable private pages: undefined[];
   @observable private expandHandler = false;
+
+  constructor(props: CarouselProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     this.setCurrentImage(this.props.startingImageForPreview);

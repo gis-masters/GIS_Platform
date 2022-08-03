@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
@@ -7,8 +7,8 @@ import { saveAs } from 'file-saver';
 import { boundMethod } from 'autobind-decorator';
 
 import { getFileDownloadUrl } from '../../../services/server-urls.service';
-import { getReadableFileSize } from '../../../services/files.util';
-import { FileInfo } from '../../../services/files.service';
+import { getReadableFileSize } from '../../../services/data/files.util';
+import { FileInfo } from '../../../services/data/files.service';
 import { LookupName } from '../../Lookup/Name/Lookup-Name';
 import { Link } from '../../Link/Link';
 
@@ -32,6 +32,11 @@ interface FilesNameProps {
 @observer
 export class FilesName extends Component<FilesNameProps> {
   @observable private url = '';
+
+  constructor(props: FilesNameProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     this.setUrl(await getFileDownloadUrl(this.props.item.id));

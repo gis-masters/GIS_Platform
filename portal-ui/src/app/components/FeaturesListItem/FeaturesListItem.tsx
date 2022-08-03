@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import React, { Component, CSSProperties } from 'react';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@mui/material';
@@ -7,12 +7,12 @@ import { ArrowForward } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
 import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgLayerType, CrgVectorLayer } from '../../services/crg/projects.models';
+import { CrgLayerType, CrgVectorLayer } from '../../services/gis/projects.models';
 import { WFS_FEATURE_ID_DELIMITER } from '../../services/geoserver/wfs.service';
 import { FeatureError } from '../../services/map/map-link-following.service';
-import { schemaService } from '../../services/crg/schema.service';
+import { schemaService } from '../../services/data/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { ValueType } from '../../services/crg/schemaOld.models';
+import { ValueType } from '../../services/data/schemaOld.models';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
@@ -26,6 +26,7 @@ interface FeaturesListItemProps {
   highlighted?: boolean;
   errorData?: FeatureError;
   message?: string;
+  style?: CSSProperties;
 }
 
 @observer
@@ -35,15 +36,16 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
 
   constructor(props: FeaturesListItemProps) {
     super(props);
+    makeObservable(this);
 
     if (!props.errorData) void this.fetchSchema();
   }
 
   render() {
-    const { feature, highlighted, errorData } = this.props;
+    const { feature, highlighted, errorData, style } = this.props;
 
     return (
-      <div className={cnFeaturesListItem({ highlighted })}>
+      <div className={cnFeaturesListItem({ highlighted })} style={style}>
         <div
           className={cnFeaturesListItem('Id', { disabled: !!errorData })}
           onDoubleClick={this.selectIt}

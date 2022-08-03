@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
+import { getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
 import { communicationService } from '../../services/communication.service';
 import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
@@ -23,6 +23,11 @@ export class LibraryDocumentPageContainer extends Component {
   @observable private busy = false;
 
   private operationId?: symbol;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.init();

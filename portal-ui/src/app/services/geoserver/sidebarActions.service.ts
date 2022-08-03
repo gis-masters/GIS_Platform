@@ -1,4 +1,4 @@
-import { CrgVectorLayer, CrgLayerType, CrgLayer } from '../crg/projects.models';
+import { CrgVectorLayer, CrgLayerType, CrgLayer } from '../gis/projects.models';
 
 import { getFeatureType } from './featuretypes.service';
 import { getProjection, olProjection, transform } from './projections.service';
@@ -6,7 +6,7 @@ import { getProjection, olProjection, transform } from './projections.service';
 import { isEqual } from 'lodash';
 import { mapService } from '../map/map.service';
 import { Toast } from '../../components/Toast/Toast';
-import { getLayerCoverage } from './layers.service';
+import { getLayerCoverage } from '../gis/layers.service';
 
 export async function focusToLayer(entity: CrgLayer): Promise<void> {
   try {

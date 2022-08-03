@@ -1,24 +1,37 @@
-import React, { CSSProperties, FC, ReactNode, RefObject } from 'react';
+import React, { CSSProperties, FC, RefObject } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
-import { Paper } from '@mui/material';
+import { Paper, PaperProps } from '@mui/material';
+
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Container.scss';
 
 const cnXTableContainer = cn('XTable', 'Container');
 
-interface XTableContainerProps extends IClassNameProps {
+export interface XTableContainerProps extends IClassNameProps, ChildrenProps {
   containerRef: RefObject<HTMLDivElement>;
   minHeight: number;
-  children: ReactNode;
+  containerProps: Partial<PaperProps & XTableContainerProps>;
 }
 
-export const XTableContainer: FC<XTableContainerProps> = ({ className, children, containerRef, minHeight }) => (
+export const XTableContainer: FC<XTableContainerProps> = ({
+  className,
+  children,
+  containerRef,
+  minHeight,
+  containerProps: {
+    minHeight: minHeightFromContainerProps,
+    className: classNameFromContainerProps,
+    ...containerProps
+  } = {}
+}) => (
   <Paper
-    className={cnXTableContainer(null, [className, 'scroll'])}
+    className={cnXTableContainer(null, [className, classNameFromContainerProps, 'scroll'])}
     square
     ref={containerRef}
-    style={{ '--XTableTableMinHeight': minHeight } as CSSProperties}
+    style={{ '--XTableTableMinHeight': minHeightFromContainerProps || minHeight } as CSSProperties}
+    {...containerProps}
   >
     {children}
   </Paper>

@@ -1,24 +1,24 @@
-import React, { Component, createRef, ReactNode } from 'react';
-import { action, observable } from 'mobx';
+import React, { Component, createRef } from 'react';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./Projects-Header.scss';
 
 const cnProjectsHeader = cn('Projects', 'Header');
 
-interface ProjectsHeaderProps {
-  children: ReactNode;
-}
-
 @observer
-export class ProjectsHeader extends Component<ProjectsHeaderProps> {
+export class ProjectsHeader extends Component<ChildrenProps> {
   private ref = createRef<HTMLDivElement>();
   private intersectionObserver: IntersectionObserver;
   @observable private stuck = false;
 
-  constructor(props: ProjectsHeaderProps) {
+  constructor(props: ChildrenProps) {
     super(props);
+
+    makeObservable(this);
 
     this.intersectionObserver = new IntersectionObserver(
       ([e]) => {

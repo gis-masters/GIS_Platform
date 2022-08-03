@@ -1,15 +1,15 @@
 import React, { Component, createRef } from 'react';
 import { AxiosError } from 'axios';
 import { observer } from 'mobx-react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AddBoxOutlined } from '@mui/icons-material';
 
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { communicationService } from '../../services/communication.service';
-import { projectsService } from '../../services/crg/projects.service';
-import { CrgProject } from '../../services/crg/projects.models';
+import { projectsService } from '../../services/gis/projects.service';
+import { CrgProject } from '../../services/gis/projects.models';
 import { allProjects } from '../../stores/AllProjects.store';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { ProjectsAdd } from '../ProjectAdd/ProjectsAdd';
@@ -37,6 +37,11 @@ export class Projects extends Component {
   @observable private addFormBusy = false;
   @observable private addFormOpen = false;
   @observable private addFormErrors: string[] = [];
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await projectsService.initAllProjectsStore();

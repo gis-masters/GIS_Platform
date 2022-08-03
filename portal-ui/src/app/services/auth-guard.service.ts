@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 
-import { usersService } from './crg/users.service';
+import { usersService } from './data/users.service';
 import { currentUser } from '../stores/CurrentUser.store';
 
 @Injectable({

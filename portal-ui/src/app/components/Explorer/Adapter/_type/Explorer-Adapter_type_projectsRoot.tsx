@@ -3,9 +3,9 @@ import { MapOutlined } from '@mui/icons-material';
 
 import { communicationService } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { projectsService } from '../../../../services/crg/projects.service';
-import { CrgProject } from '../../../../services/crg/projects.models';
-import { PageOptions, SortDir } from '../../../../services/models';
+import { projectsService } from '../../../../services/gis/projects.service';
+import { CrgProject } from '../../../../services/gis/projects.models';
+import { PageOptions, SortOrder } from '../../../../services/models';
 import { Emitter } from '../../../../services/common/Emitter';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
@@ -89,8 +89,8 @@ export class ExplorerAdapterTypeProjectsRoot {
     return 'createdAt';
   }
 
-  static getChildrenSortDefaultDirection(): SortDir {
-    return SortDir.DESC;
+  static getChildrenSortDefaultOrder(): SortOrder {
+    return SortOrder.DESC;
   }
 
   static getChildrenFilterField(): string {

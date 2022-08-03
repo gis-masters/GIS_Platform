@@ -25,16 +25,6 @@ declare global {
     keys<T>(obj: T): Array<keyof T>;
   }
 
-  interface ClipboardItem {
-    readonly types: string[];
-    getType: (type: string) => Promise<Blob>;
-  }
-
-  const ClipboardItem: {
-    prototype: ClipboardItem;
-    new (objects: Record<string, Blob>): ClipboardItem;
-  };
-
   interface Clipboard {
     read(): Promise<Array<ClipboardItem>>;
     write(items: Array<ClipboardItem>): Promise<void>;
@@ -46,6 +36,14 @@ declare global {
 
   interface HTMLCollection {
     [Symbol.iterator](): IterableIterator<Element>;
+  }
+
+  interface ResizeObserverCallback {
+    (entries: ResizeObserverEntry[], observer: ResizeObserver): void;
+  }
+
+  interface ResizeObserverOptions {
+    box?: ResizeObserverBoxOptions;
   }
 }
 

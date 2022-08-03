@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { projectsService } from '../../../services/crg/projects.service';
-import { CrgProject } from '../../../services/crg/projects.models';
+import { projectsService } from '../../../services/gis/projects.service';
+import { CrgProject } from '../../../services/gis/projects.models';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { Role } from '../../../services/crg/permissions.models';
+import { Role } from '../../../services/data/permissions.models';
 import { Button } from '../../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Delete.scss';
@@ -23,6 +23,11 @@ interface ProjectCardDeleteProps {
 @observer
 export class ProjectCardDelete extends Component<ProjectCardDeleteProps> {
   @observable private dialogOpen = false;
+
+  constructor(props: ProjectCardDeleteProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     if (!currentUser.isAdmin && this.props.project.role !== Role.OWNER) {

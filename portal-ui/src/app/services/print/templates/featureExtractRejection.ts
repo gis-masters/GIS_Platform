@@ -1,4 +1,4 @@
-import { LibraryRecord } from '../../crg/doc-library.service';
+import { LibraryRecord } from '../../data/doc-library.service';
 import { PrintTemplate } from '../print.service';
 
 function print(document: LibraryRecord): string {

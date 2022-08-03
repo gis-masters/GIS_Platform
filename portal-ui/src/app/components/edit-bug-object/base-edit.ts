@@ -1,26 +1,18 @@
-import { OnDestroy } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 
-import { EditedField, OldSchema } from '../../services/crg/schemaOld.models';
-import { mapService } from '../../services/map/map.service';
+import { EditedField, OldSchema } from '../../services/data/schemaOld.models';
 import { FeaturePropertyValidators, ValidationError } from '../../services/util/FeaturePropertyValidators';
 
 type Properties = { [key: string]: string };
 
-export class BaseEdit implements OnDestroy {
-  editFeatureForm: FormGroup;
+export class BaseEdit {
+  editFeatureForm: UntypedFormGroup;
   editFeatureData: EditedField[] = [];
 
   protected featureDescription: OldSchema;
 
   protected unsubscribe$: Subject<void> = new Subject<void>();
-
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-    mapService.clearDraft();
-  }
 
   getActualValuesFromForm(): Properties {
     // eslint-disable-next-line unicorn/prefer-object-from-entries

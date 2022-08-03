@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { computed } from 'mobx';
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { allGroups } from '../../stores/AllGroups.store';
-import { CrgGroup, groupsService } from '../../services/crg/groups.service';
+import { CrgGroup, groupsService } from '../../services/data/groups.service';
 import { XTable, XTableColumn } from '../XTable/XTable';
 
 import { OrgGroupsCreate } from './Create/OrgGroups-Create';
@@ -55,6 +55,11 @@ export class OrgGroups extends Component {
       CellContent: OrgGroupsGroupActions
     }
   ];
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await groupsService.initAllGroupsStore();

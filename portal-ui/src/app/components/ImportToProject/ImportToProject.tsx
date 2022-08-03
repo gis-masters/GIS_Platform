@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import { AxiosError } from 'axios';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 
 import { sidebars } from '../../stores/Sidebars.store';
 import { allProjects } from '../../stores/AllProjects.store';
 import { services } from '../../services/services';
 import { SortParams } from '../../services/util/sortObjects';
-import { Role } from '../../services/crg/permissions.models';
-import { CrgProject } from '../../services/crg/projects.models';
-import { projectsService } from '../../services/crg/projects.service';
-import { LibraryRecord } from '../../services/crg/doc-library.service';
-import { initImportProcess } from '../../services/crg/processes.service';
+import { Role } from '../../services/data/permissions.models';
+import { CrgProject } from '../../services/gis/projects.models';
+import { projectsService } from '../../services/gis/projects.service';
+import { LibraryRecord } from '../../services/data/doc-library.service';
+import { initImportProcess } from '../../services/data/processes.service';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { ProjectsAdd } from '../ProjectAdd/ProjectsAdd';
 import { XTableColumn } from '../XTable/XTable';
@@ -43,6 +43,11 @@ export class ImportToProject extends Component<ImportToProjectProps> {
   ];
 
   private sortParams: SortParams<CrgProject> = { asc: true, field: 'name' };
+
+  constructor(props: ImportToProjectProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await projectsService.initAllProjectsStore();

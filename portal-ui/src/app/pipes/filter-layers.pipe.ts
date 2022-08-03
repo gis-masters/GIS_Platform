@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CrgLayer } from '../services/crg/projects.models';
+import { CrgLayer } from '../services/gis/projects.models';
 
 @Pipe({
   name: 'filterLayers'

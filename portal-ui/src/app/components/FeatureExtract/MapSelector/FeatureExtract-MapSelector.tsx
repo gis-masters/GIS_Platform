@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { printSettings } from '../../../stores/PrintSettings.store';
-import { PropertySchemaFile } from '../../../services/crg/schema.models';
-import { createFile, FileInfo } from '../../../services/files.service';
+import { PropertySchemaFile } from '../../../services/data/schema.models';
+import { createFile, FileInfo } from '../../../services/data/files.service';
 import { FormControlProps } from '../../Form/Control/Form-Control';
 import { PrintMapDialog } from '../../PrintMapDialog/PrintMapDialog';
 import { Button } from '../../Button/Button';
@@ -18,6 +18,11 @@ const cnFeatureExtractMapSelector = cn('FeatureExtract', 'MapSelector');
 export class FeatureExtractMapSelector extends Component<FormControlProps> {
   @observable private printDialogOpen = false;
   @observable private mapLoading = false;
+
+  constructor(props: FormControlProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { fieldValue, property } = this.props;

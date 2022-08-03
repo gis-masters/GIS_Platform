@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Autocomplete, AutocompleteRenderInputParams, TextField } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { withBemMod } from '@bem-react/core';
 import { debounce } from 'lodash';
 
-import { Fias, getFiasAddress, getFiasOktmoAddress } from '../../../../services/fias.service';
-import { PropertySchemaFias, PropertyType } from '../../../../services/crg/schema.models';
+import { Fias, getFiasAddress, getFiasOktmoAddress } from '../../../../services/data/fias.service';
+import { PropertySchemaFias, PropertyType } from '../../../../services/data/schema.models';
 
 import { FormInfo } from '../../Info/Form-Info';
 import { cnFormControl, FormControlProps } from '../Form-Control';
@@ -25,6 +25,8 @@ class FormControlTypeFias extends Component<FormControlProps> {
 
   constructor(props: FormControlProps) {
     super(props);
+
+    makeObservable(this);
 
     this.getFiasList = debounce(this.getFiasList, 666);
   }
@@ -64,7 +66,7 @@ class FormControlTypeFias extends Component<FormControlProps> {
 
     const { onChange, property } = this.props;
     const fias = this.optionsList.find(option => {
-      const address = option.fullAddress ? option.fullAddress : option.locality;
+      const address = option.fullAddress || option.locality;
 
       return address === value;
     });
@@ -116,7 +118,7 @@ class FormControlTypeFias extends Component<FormControlProps> {
 
   @action.bound
   private setOptionList(list?: Fias[]) {
-    this.optionsList = list ? list : [];
+    this.optionsList = list || [];
   }
 
   @boundMethod

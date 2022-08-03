@@ -2,7 +2,7 @@ import React, { Component, ReactElement } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { Checkbox, Dialog, DialogActions, DialogContent } from '@mui/material';
 
 import { Button } from '../../Button/Button';
@@ -27,6 +27,11 @@ interface ServicesCalculatorListProps {
 @observer
 export class ServicesCalculatorList extends Component<ServicesCalculatorListProps> {
   @observable private selectedList: ServicesInfo[] = [];
+
+  constructor(props: ServicesCalculatorListProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidUpdate() {
     if (this.props.clearSelectedServices) {

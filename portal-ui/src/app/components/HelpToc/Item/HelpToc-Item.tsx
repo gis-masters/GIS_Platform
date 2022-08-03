@@ -3,7 +3,7 @@ import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { observer } from 'mobx-react';
 import { TreeItem } from '@mui/lab';
-import { action } from 'mobx';
+import { action, makeObservable } from 'mobx';
 
 import { TocItem } from '../../../stores/Help.store';
 
@@ -18,6 +18,11 @@ interface HelpTocProps extends IClassNameProps {
 
 @observer
 export class HelpTocItem extends Component<HelpTocProps> {
+  constructor(props: HelpTocProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { item, onSelect } = this.props;
 
@@ -27,7 +32,7 @@ export class HelpTocItem extends Component<HelpTocProps> {
         key={item.id}
         nodeId={item.id}
         label={item.title}
-        onClick={() => this.clickHandler(item)}
+        onClick={this.clickHandler}
       >
         {Array.isArray(item.children)
           ? item.children.map((node, index) => <HelpTocItem key={index} item={node} onSelect={onSelect} />)
@@ -36,8 +41,11 @@ export class HelpTocItem extends Component<HelpTocProps> {
     );
   }
 
-  @action
-  private clickHandler(item: TocItem) {
-    item.children ? null : this.props.onSelect(item);
+  @action.bound
+  private clickHandler() {
+    const { item, onSelect } = this.props;
+    if (!item.children) {
+      onSelect(item);
+    }
   }
 }

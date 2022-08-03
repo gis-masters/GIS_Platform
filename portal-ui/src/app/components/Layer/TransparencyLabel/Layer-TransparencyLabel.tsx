@@ -10,7 +10,5 @@ interface LayerTransparencyLabelProps {
 }
 
 export const LayerTransparencyLabel: FC<LayerTransparencyLabelProps> = ({ value }) => (
-  <div className={cnLayerTransparencyLabel()}>
-    {value}%
-  </div>
+  <div className={cnLayerTransparencyLabel()}>{value}%</div>
 );

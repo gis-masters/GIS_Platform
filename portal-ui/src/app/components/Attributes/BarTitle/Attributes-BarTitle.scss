@@ -1,0 +1,13 @@
+.Attributes-BarTitle {
+  overflow: hidden;
+  flex-grow: 1;
+
+  margin-right: 15px;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  color: var(--gray-dark);
+
+  font-size: 18px;
+}

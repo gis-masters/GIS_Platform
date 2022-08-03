@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from 'react';
-import { action, IReactionDisposer, observable, reaction } from 'mobx';
+import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
@@ -23,6 +23,11 @@ export class ExplorerToolbarActions extends Component<ExplorerToolbarActionsProp
 
   private toolbarActions: ReactNode;
   private reactionDisposer: IReactionDisposer;
+
+  constructor(props: ExplorerToolbarActionsProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.reactionDisposer = reaction(

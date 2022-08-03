@@ -4,11 +4,11 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-import { LibraryRecordRaw } from '../../../services/crg/doc-library.service';
-import { FieldErrors } from '../../../services/crg/formValidation.service';
+import { LibraryRecordRaw } from '../../../services/data/doc-library.service';
+import { FieldErrors } from '../../../services/formValidation.service';
 import { Button } from '../../Button/Button';
 import { Form } from '../../Form/Form';
-import { Schema } from '../../../services/crg/schema.models';
+import { Schema } from '../../../services/data/schema.models';
 
 const cnCreateLibraryElementDialog = cn('CreateLibraryElement', 'Dialog');
 

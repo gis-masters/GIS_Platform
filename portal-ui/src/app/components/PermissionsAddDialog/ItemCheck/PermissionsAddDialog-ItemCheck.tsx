@@ -4,16 +4,16 @@ import { cn } from '@bem-react/classname';
 import { Checkbox } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { Dataset, DataTable } from '../../../services/data.service';
-import { CrgProject } from '../../../services/crg/projects.models';
+import { Dataset, VectorTable } from '../../../services/data/data.service';
+import { CrgProject } from '../../../services/gis/projects.models';
 
 const cnPermissionsAddDialogItemCheck = cn('PermissionsAddDialog', 'ItemCheck');
 
 interface PermissionsAddDialogItemCheckProps {
-  item: CrgProject | DataTable | Dataset;
+  item: CrgProject | VectorTable | Dataset;
   checked: boolean;
   disabled: boolean;
-  onChange: (item: CrgProject | DataTable | Dataset, checked: boolean) => void;
+  onChange: (item: CrgProject | VectorTable | Dataset, checked: boolean) => void;
 }
 
 @observer

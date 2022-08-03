@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { TextField, Dialog, DialogTitle, DialogActions, DialogContent } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
@@ -9,7 +9,7 @@ import { Toast } from '../Toast/Toast';
 import { Button } from '../Button/Button';
 import { Loading } from '../Loading/Loading';
 import { Form, FormControl, FormField, FormLabel } from '../Form/Form';
-import { createDataset } from '../../services/data.service';
+import { createDataset } from '../../services/data/data.service';
 
 import '!style-loader!css-loader!sass-loader!./CreateDatasetDialog.scss';
 
@@ -29,6 +29,11 @@ export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
 
   private maxNameLength = 250;
   private maxDescLength = 1000;
+
+  constructor(props: CreateDatasetDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { open } = this.props;

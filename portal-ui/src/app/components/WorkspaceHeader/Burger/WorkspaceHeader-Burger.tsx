@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Menu, MenuItem, ListItemIcon } from '@mui/material';
 import { Menu as MenuIcon, Map, ViewModule, Business, CloudDownload, Storage } from '@mui/icons-material';
@@ -8,8 +8,7 @@ import { cn } from '@bem-react/classname';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { route } from '../../../stores/Route.store';
-import { Pages } from '../../../app-routing.module';
+import { Pages, route } from '../../../stores/Route.store';
 import { Link } from '../../Link/Link';
 
 import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-Burger.scss';
@@ -19,6 +18,11 @@ const cnWorkspaceHeaderBurger = cn('WorkspaceHeader', 'Burger');
 @observer
 export class WorkspaceHeaderBurger extends Component {
   @observable private anchorEl: HTMLElement | null = null;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

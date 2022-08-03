@@ -1,0 +1,39 @@
+import { Component, OnDestroy, ViewChild, OnInit, ElementRef, Input } from '@angular/core';
+import { createRoot, Root } from 'react-dom/client';
+import { createElement } from 'react';
+import { withRegistry } from '@bem-react/di';
+
+import { registry } from '../../services/registry';
+import { Attributes } from '../Attributes/Attributes';
+
+const AttributesWithRegistry = withRegistry(registry)(Attributes);
+
+@Component({
+  selector: 'crg-attributes',
+  template: '<div class="attributes" #react></div>',
+  styleUrls: ['./attributes.component.scss']
+})
+export class AttributesComponent implements OnInit, OnDestroy {
+  @Input() class: string;
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  private root: Root;
+
+  ngOnChanges() {
+    this.renderReactElement();
+  }
+
+  private renderReactElement() {
+    const reactElement = createElement(AttributesWithRegistry, { className: this.class });
+
+    this.root?.render(reactElement);
+  }
+
+  ngOnInit() {
+    this.root = createRoot(this.ref.nativeElement);
+    this.renderReactElement();
+  }
+
+  ngOnDestroy() {
+    this.root.unmount();
+  }
+}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@mui/material';
 import { NoteAddOutlined } from '@mui/icons-material';
@@ -7,16 +7,16 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { currentProject } from '../../stores/CurrentProject.store';
-import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
-import { getDefaultValues, validateFormValue } from '../../services/crg/formValidation.service';
-import { convertProperties, applyContentTypeOld } from '../../services/crg/schema.utils';
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
-import { getFeatureUrl } from '../../services/map/map-link-following.service';
+import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
+import { getDefaultValues, validateFormValue } from '../../services/formValidation.service';
+import { convertProperties, applyContentTypeOld } from '../../services/data/schema.utils';
+import { PropertySchema, PropertyType } from '../../services/data/schema.models';
 import { communicationService } from '../../services/communication.service';
-import { schemaService } from '../../services/crg/schema.service';
+import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { getFeatureUrl } from '../../services/map/map-url.service';
+import { schemaService } from '../../services/data/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { CrgVectorLayer } from '../../services/crg/projects.models';
-import { Role } from '../../services/crg/permissions.models';
+import { Role } from '../../services/data/permissions.models';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
 import { FormDialog } from '../FormDialog/FormDialog';
@@ -41,6 +41,11 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
   @observable private featureFields: PropertySchema[] = [];
   @observable private document?: LibraryRecord;
   @observable private library?: DocumentLibrary;
+
+  constructor(props: FeatureExtractProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     const { layer } = this.props;

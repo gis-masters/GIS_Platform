@@ -11,11 +11,5 @@ interface EditFeatureGeometryCSVInputProps {
 }
 
 export const EditFeatureGeometryCSVInput: FC<EditFeatureGeometryCSVInputProps> = ({ onChange, inputRef }) => (
-  <input
-    type='file'
-    onChange={onChange}
-    className={cnEditFeatureGeometry('CSVInput')}
-    ref={inputRef}
-    title=''
-  />
+  <input type='file' onChange={onChange} className={cnEditFeatureGeometry('CSVInput')} ref={inputRef} title='' />
 );

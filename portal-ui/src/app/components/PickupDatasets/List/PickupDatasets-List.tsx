@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { debounce } from 'lodash';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { Search } from '@mui/icons-material';
 import { InputAdornment, FormControl, List, Input, InputLabel, Pagination } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { Loading } from '../../Loading/Loading';
-import { SortDir } from '../../../services/models';
+import { SortOrder } from '../../../services/models';
 import { PickupDatasetsItem } from '../Item/PickupDatasets-Item';
-import { Dataset, getDatasets } from '../../../services/data.service';
+import { Dataset, getDatasets } from '../../../services/data/data.service';
 import { communicationService } from '../../../services/communication.service';
 
 import '!style-loader!css-loader!sass-loader!./../Filter/PickupDatasets-Filter.scss';
@@ -37,12 +37,14 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
 
   private readonly pageSize = 10;
   private readonly sortField = 'title';
-  private readonly sortDir = SortDir.ASC;
+  private readonly sortOrder = SortOrder.ASC;
 
   private readonly fetchDatasets: () => Promise<void>;
 
   constructor(props: PickupDatasetsListProps) {
     super(props);
+
+    makeObservable(this);
 
     this.fetchDatasets = debounce(this._fetchDatasets, 200);
   }
@@ -111,7 +113,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
       page: this.currentPage - 1,
       pageSize: this.pageSize,
       sort: this.sortField,
-      sortDir: this.sortDir,
+      sortOrder: this.sortOrder,
       filter: { title: { $ilike: `%${String(this.filterValue)}%` } }
     });
 

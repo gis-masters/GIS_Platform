@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertySchemaFile, PropertyType } from '../../../../services/crg/schema.models';
-import { FileInfo } from '../../../../services/files.service';
+import { PropertySchemaFile, PropertyType } from '../../../../services/data/schema.models';
+import { FileInfo } from '../../../../services/data/files.service';
 import { Files } from '../../../Files/Files';
 
 import { cnFormView } from '../Form-View';

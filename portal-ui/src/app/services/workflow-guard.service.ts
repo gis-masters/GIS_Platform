@@ -4,7 +4,7 @@ import { AxiosError } from 'axios';
 import { NGXLogger } from 'ngx-logger';
 
 import { currentProject } from '../stores/CurrentProject.store';
-import { projectsService } from './crg/projects.service';
+import { projectsService } from './gis/projects.service';
 
 @Injectable({
   providedIn: 'root'

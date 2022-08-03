@@ -1,15 +1,20 @@
+import { action } from 'mobx';
+
 import { route } from '../../stores/Route.store';
+import { SELECTING_FEATURES_LIMIT } from '../../stores/Map.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
+import { mapSelectionService } from './map-selection.service';
 import { WfsFeature, WfsFeatureCollection } from '../geoserver/wfs.models';
-import { getFeatureLayer } from '../geoserver/layers.service';
 import { getFeaturesById } from '../geoserver/wfs.service';
 import { getWfsUrl } from '../server-urls.service';
 import { mapService } from './map.service';
+import { services } from '../services';
 import { http } from '../http.service';
 import { Mime } from '../util/Mime';
 import { Toast } from '../../components/Toast/Toast';
-import { services } from '../services';
+import { CrgLayer } from '../gis/projects.models';
+import { projectsService } from '../gis/projects.service';
 
 export interface FeatureError {
   id: string;
@@ -17,10 +22,13 @@ export interface FeatureError {
   message: string;
 }
 
-export const MAP_QUERY_PARAMS_DELIMITER = '~';
-
 export async function applyMapStateFromNavigator(): Promise<void> {
-  // ссылка открытые ранее на объект(ы) "?features="
+  // ссылка на включенные слои "?layers="
+  if (route.queryParams.layers) {
+    restoreRecentOpenLayers();
+  }
+
+  // ссылка на открытые ранее на объект(ы) "?features="
   if (route.queryParams.features) {
     await restoreRecentOpenedFeatures();
 
@@ -45,7 +53,7 @@ export async function applyMapStateFromNavigator(): Promise<void> {
           typeName: layer,
           CQL_FILTER: route.queryParams.queryFilter,
           startindex: '0',
-          count: '100'
+          count: String(SELECTING_FEATURES_LIMIT)
         };
 
         const response = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params });
@@ -57,66 +65,144 @@ export async function applyMapStateFromNavigator(): Promise<void> {
     }
 
     if (features.length) {
-      showFeatures(features);
+      selectFeatures(features);
     } else {
       Toast.warn({ message: 'Не найдено', details });
     }
   }
 }
 
+function restoreRecentOpenLayers() {
+  const queryParams = route.queryParams as { [key: string]: string };
+  const enabledLayers = queryParams.layers?.split(',');
+
+  action(updateEnabledLayer)(enabledLayers, currentProject.layers, currentProject.rawLayersFromApi);
+}
+
+function updateEnabledLayer(enabledLayers: string[], allowedLayers: CrgLayer[], allLayers: CrgLayer[]) {
+  if (enabledLayers) {
+    currentProject.layers.forEach(allowedLayer => {
+      enabledLayers.forEach(enabledLayerId => {
+        if (Number(enabledLayerId) === allowedLayer.id) {
+          allowedLayer.enabled = true;
+
+          if (allowedLayer.parentId) {
+            projectsService.enableGroupAndAncestors(allowedLayer.parentId);
+          }
+        }
+      });
+    });
+
+    currentProject.visibleOnMapLayers.forEach(
+      action(treeItem => {
+        treeItem.payload.enabled = enabledLayers.includes(String(treeItem.id));
+      })
+    );
+
+    showNotAllowedLayersError(allLayers);
+  }
+}
+
+function showNotAllowedLayersError(allLayers: CrgLayer[]) {
+  let enabledLayers: number[] = [];
+
+  try {
+    const queryParams = route.queryParams as { [key: string]: string };
+    enabledLayers = queryParams.layers ? queryParams.layers.split(',').map(Number) : [];
+  } catch {
+    services.logger.error('Ошибка получения состояния слоев');
+  }
+
+  const allNotAllowedLayers = getNotAllowedLayers(enabledLayers, allLayers);
+  let detailsNotAllowedLayers: string;
+  let detailsNotExistLayers: string;
+
+  const { notAllowedLayers, notExistLayers } = allNotAllowedLayers;
+
+  if (notAllowedLayers.length) {
+    detailsNotAllowedLayers = `Отсутствуют права на слои: ${notAllowedLayers.join(', ')}. `;
+  }
+
+  if (notExistLayers.length) {
+    detailsNotExistLayers = `Отсутствуют слои в проекте: ${notExistLayers.join(', ')}`;
+  }
+
+  if (detailsNotAllowedLayers || detailsNotExistLayers) {
+    Toast.warn({
+      message: 'В проекте есть недоступные слои',
+      details: detailsNotAllowedLayers || detailsNotExistLayers
+    });
+  }
+}
+
+function getNotAllowedLayers(layers: number[], allLayers: CrgLayer[]): Record<string, number[] | string[]> {
+  const notAllowedLayers: string[] = [];
+  const notExistLayers: number[] = [];
+
+  layers.forEach(id => {
+    if (
+      !currentProject.tree.some(visibleTreeLayer => visibleTreeLayer.id === id) &&
+      allLayers.some(layer => layer.id === id)
+    ) {
+      notAllowedLayers.push(allLayers.find(layer => layer.id === id).title);
+    }
+
+    if (
+      !currentProject.visibleOnMapLayers.some(visibleTreeLayer => visibleTreeLayer.id === id) &&
+      !allLayers.some(layer => layer.id === id)
+    ) {
+      notExistLayers.push(id);
+    }
+  });
+
+  return { notAllowedLayers, notExistLayers };
+}
+
 async function restoreRecentOpenedFeatures() {
-  const featuresInLayers: Record<string, string[]> = {};
   const featuresWithNoAccess: FeatureError[] = [];
   const deletedLayers: FeatureError[] = [];
   const deletedFeatures: FeatureError[] = [];
   const features: WfsFeature[] = [];
 
-  route.queryParams.features.split(',').forEach(feature => {
-    const [featureId, workspace] = feature.split(MAP_QUERY_PARAMS_DELIMITER);
+  let featuresIdsInDatasetsAndTables: { [dataset: string]: { [table: string]: number[] } } = {};
 
-    if (!featuresInLayers[workspace]) {
-      featuresInLayers[workspace] = [featureId];
-    } else {
-      featuresInLayers[workspace].push(featureId);
-    }
-  });
+  try {
+    featuresIdsInDatasetsAndTables = JSON.parse(route.queryParams.features) as {
+      [dataset: string]: { [table: string]: number[] };
+    };
+  } catch {
+    return;
+  }
 
-  for (const key in featuresInLayers) {
-    const featureLayer = currentProject.vectorLayers.find(layer => layer.tableName === key.split(':')[1]);
-
-    if (featureLayer) {
-      const layerFeatures = await getFeaturesById(featuresInLayers[key], key);
-
-      deletedFeatures.push(
-        ...(featuresInLayers[key] || [])
-          .filter(feature => !layerFeatures.map(item => item.id).includes(feature))
-          .map(featureString => ({
-            id: featureString.split('.')[1],
-            layerTitle: currentProject.vectorLayers.find(layer => layer.complexName === key)?.title,
-            message: 'Объект удален'
-          }))
+  for (const [dataset, featuresIdsInTables] of Object.entries(featuresIdsInDatasetsAndTables)) {
+    for (const [tableName, featuresCutIds] of Object.entries(featuresIdsInTables)) {
+      const currentLayer = currentProject.vectorLayers.find(
+        layer => layer.tableName === tableName && layer.dataset === dataset
       );
 
-      features.push(...layerFeatures);
-    } else {
-      const layerInProject = currentProject.vectorLayers.find(layer => layer.tableName === key.split(':')[1]);
+      if (currentLayer) {
+        const featuresIds = featuresCutIds.map(cutId => `${currentLayer.tableName}.${cutId}`);
+        const layerFeatures = await getFeaturesById(featuresIds, currentLayer.complexName);
 
-      if (layerInProject) {
-        featuresInLayers[key].forEach(feature => {
-          featuresWithNoAccess.push({
-            id: feature.split('.')[1],
-            layerTitle: layerInProject.title,
-            message: 'Слой недоступен'
-          });
-        });
+        deletedFeatures.push(
+          ...featuresIds
+            .filter(featureId => !layerFeatures.some(({ id }) => featureId === id))
+            .map(featureId => ({
+              id: featureId.split('.')[1],
+              layerTitle: currentLayer.title,
+              message: 'Объект удален'
+            }))
+        );
+
+        features.push(...layerFeatures);
       } else {
-        featuresInLayers[key].forEach(feature => {
-          deletedLayers.push({
-            id: feature.split('.')[1],
-            layerTitle: key.split(':')[1],
-            message: 'Слой удален'
-          });
-        });
+        featuresWithNoAccess.push(
+          ...featuresCutIds.map(cutId => ({
+            id: String(cutId),
+            layerTitle: 'Слой недоступен',
+            message: 'Слой недоступен'
+          }))
+        );
       }
     }
   }
@@ -127,35 +213,21 @@ async function restoreRecentOpenedFeatures() {
 
   const hasErrors = Boolean(deletedFeatures.length + featuresWithNoAccess.length + deletedLayers.length);
 
-  showFeatures(features, hasErrors);
+  selectFeatures(features, hasErrors);
 }
 
-function showFeatures(features: WfsFeature[], hasErrors?: boolean) {
-  mapService.highlightFeatures(features);
+function selectFeatures(features: WfsFeature[], hasErrors?: boolean) {
+  mapSelectionService.selectFeatures(features);
 
-  if (features.length === 1 && !hasErrors) {
-    sidebars.openEdit({
-      features,
-      mode: EditFeatureMode.single
-    });
+  if (!hasErrors && !route.queryParams.center) {
+    if (features.length === 1) {
+      sidebars.openEdit({
+        features,
+        mode: EditFeatureMode.single
+      });
+    }
     setTimeout(() => {
-      mapService.positionToFeature(features[0]);
+      mapService.positionToFeatures(features);
     }, 200);
-  } else if ((features.length === 1 && hasErrors) || features.length > 1) {
-    sidebars.openFeatures(features);
-  } else if ((!features.length && hasErrors) || features.length > 1) {
-    sidebars.openFeaturesWithError();
   }
-}
-
-export function getFeatureUrl(feature: WfsFeature, projectId: number = currentProject.id): string {
-  const complexName = getFeatureLayer(feature)?.complexName;
-  const param = `${feature.id}${MAP_QUERY_PARAMS_DELIMITER}${complexName}`;
-
-  if (!complexName) {
-    Toast.warn('Ошибка получения слоя объекта');
-    throw new Error('Ошибка получения слоя объекта');
-  }
-
-  return `${location.origin}/projects/${projectId}/map/?features=${param}`;
 }

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@mui/material';
 import { GetApp, GetAppOutlined } from '@mui/icons-material';
 
 import { ExportValidationReportDialog } from '../ExportValidationReportDialog/ExportValidationReportDialog';
-import { CrgVectorLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/gis/projects.models';
 
 const cnExportValidationReportButton = cn('ExportValidationReportButton');
 
@@ -17,6 +17,11 @@ interface ExportValidationReportButtonProps {
 @observer
 export class ExportValidationReportButton extends Component<ExportValidationReportButtonProps> {
   @observable private open = false;
+
+  constructor(props: ExportValidationReportButtonProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { layers } = this.props;

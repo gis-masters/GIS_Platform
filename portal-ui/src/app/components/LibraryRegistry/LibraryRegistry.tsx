@@ -1,42 +1,35 @@
 import React, { Component, ReactElement } from 'react';
-import { action, computed, observable, when } from 'mobx';
+import { action, computed, observable, when, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
-import { Check, Close, HomeOutlined } from '@mui/icons-material';
+import { HomeOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
 import { route } from '../../stores/Route.store';
 import { currentUser } from '../../stores/CurrentUser.store';
+import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
+import { PropertySchema, PropertyType, Schema } from '../../services/data/schema.models';
 import {
-  PropertySchema,
-  PropertySchemaChoice,
-  PropertySchemaDatetime,
-  PropertySchemaDocument,
-  PropertySchemaUrl,
-  PropertyType,
-  Schema
-} from '../../services/crg/schema.models';
-import { DocumentLibrary, getLibrary, getLibraryRecords2, LibraryRecord } from '../../services/crg/doc-library.service';
+  DocumentLibrary,
+  getLibrary,
+  getLibraryRecords2,
+  LibraryRecord
+} from '../../services/data/doc-library.service';
 import { communicationService } from '../../services/communication.service';
-import { calculateValues } from '../../services/crg/formValidation.service';
-import { getFieldRelations } from '../../services/crg/schema.utils';
-import { schemaService } from '../../services/crg/schema.service';
+import { calculateValues } from '../../services/formValidation.service';
+import { schemaService } from '../../services/data/schema.service';
 import { FilterQuery } from '../../services/util/filterObjects';
 import { SortParams } from '../../services/util/sortObjects';
-import { PageOptions, SortDir } from '../../services/models';
-import { formatDate } from '../../services/util/date.util';
+import { PageOptions, SortOrder } from '../../services/models';
 import { services } from '../../services/services';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
-import { RelatedDocumentsButton } from '../RelatedDocumentsButton/RelatedDocumentsButton';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
-import { DocumentInfo, Documents } from '../Documents/Documents';
+import { XTable, XTableColumn, XTableInvoke } from '../XTable/XTable';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
-import { FilterType } from '../XTable/Filter/XTable-Filter';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
-import { XTable, XTableColumn } from '../XTable/XTable';
-import { UrlsList } from '../UrlsList/UrlsList';
+import { DocumentInfo } from '../Documents/Documents';
 import { Loading } from '../Loading/Loading';
 
 import { LibraryRegistrySettings } from './Settings/LibraryRegistry-Settings';
@@ -65,14 +58,19 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   @observable private libraryDocuments: LibraryRecord[] = [];
   @observable private error: string;
 
-  private tableInvoke: { reload?(): void } = {};
+  private tableInvoke: XTableInvoke = {};
+
+  constructor(props: LibraryRegistryProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.getInfo();
 
-    communicationService.libraryItemsUpdated.on(() => {
+    communicationService.libraryItemsUpdated.on(async () => {
       if (this.tableInvoke.reload) {
-        this.tableInvoke.reload();
+        await this.tableInvoke.reload();
       }
     });
 
@@ -94,7 +92,6 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
               cols={this.cols}
               hiddenFields={this.hiddenFields}
               getData={this.getData}
-              getRowId={this.getRowId}
               defaultSort={this.sort}
               secondarySortField='id'
               filtersAlwaysEnabled
@@ -156,131 +153,19 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
 
   @computed
   private get cols(): XTableColumn<LibraryRecord>[] {
-    const sortableTypes = new Set([
-      PropertyType.BOOL,
-      PropertyType.CALCULATED,
-      PropertyType.CHOICE,
-      PropertyType.DATETIME,
-      PropertyType.DURATION,
-      PropertyType.FLOAT,
-      PropertyType.INT,
-      PropertyType.STRING,
-      PropertyType.TIME
-    ]);
-
-    const filterableTypes = new Set([
-      PropertyType.BOOL,
-      PropertyType.CHOICE,
-      PropertyType.DATETIME,
-      PropertyType.FLOAT,
-      PropertyType.INT,
-      PropertyType.STRING
-    ]);
-
-    const typesCols: Partial<Record<PropertyType, Partial<XTableColumn<LibraryRecord>>>> = {
-      [PropertyType.BOOL]: { align: 'center', CellContent: this.renderBool, filterType: FilterType.BOOL },
-      [PropertyType.URL]: { CellContent: this.renderLink },
-      [PropertyType.DOCUMENT]: { CellContent: this.renderDocuments },
-      [PropertyType.CHOICE]: {
-        filterType: FilterType.CHOICE,
-        CellContent: ({ rowData, field }) => (
-          <>
-            {(
-              this.properties.find(
-                ({ name, propertyType }) => name === field && propertyType === PropertyType.CHOICE
-              ) as PropertySchemaChoice
-            )?.options.find(({ value }) => value === rowData[field])?.title || rowData[field]}
-          </>
-        )
-      },
-      [PropertyType.DATETIME]: { filterType: FilterType.DATETIME, CellContent: this.renderDate, align: 'center' },
-      [PropertyType.INT]: { align: 'right', filterType: FilterType.FLOAT },
-      [PropertyType.FLOAT]: { align: 'right', filterType: FilterType.FLOAT },
-      [PropertyType.STRING]: { filterType: FilterType.STRING }
-    };
-
     return [
       {
         CellContent: this.props.inDialog ? this.renderCheck : this.renderActions,
         align: 'center',
         cellProps: { padding: 'checkbox' }
       },
-      ...this.properties.map(property => ({
-        field: property.name,
-        title: property.title,
-        description: property.description,
-        sortable: sortableTypes.has(property.propertyType),
-        filterable: filterableTypes.has(property.propertyType),
-        ...typesCols[property.propertyType],
-        filterOptions: property.propertyType === PropertyType.CHOICE ? property.options : undefined,
-        headerCellProps: { style: property.minWidth ? { minWidth: String(property.minWidth) + 'px' } : null },
-        cellProps: {
-          classes: {
-            root: cnLibraryRegistry('Cell', { withRelations: !!getFieldRelations(property.name, this.schema).length })
-          }
-        },
-        AfterCellContent: this.renderRelations
-      }))
+      ...getXTableColumnsFromSchema<LibraryRecord>(this.schema)
     ];
   }
 
   @computed
   private get ready(): boolean {
     return Boolean(this.library && this.schema);
-  }
-
-  private renderBool({ rowData, field }: { rowData: LibraryRecord; field: keyof LibraryRecord }): ReactElement {
-    const value = ['true', '1'].includes(String(rowData[field]).toLowerCase());
-
-    return value ? <Check color='primary' fontSize='small' /> : <Close color='disabled' fontSize='small' />;
-  }
-
-  @boundMethod
-  private renderRelations({ rowData, field }: { rowData: LibraryRecord; field: keyof LibraryRecord }): ReactElement {
-    const relations = getFieldRelations(field, this.schema);
-
-    if (!relations.length) {
-      return null;
-    }
-
-    return (
-      <RelatedDocumentsButton
-        obj={rowData}
-        relations={relations}
-        className={cnLibraryRegistry('Relations')}
-        size='small'
-      />
-    );
-  }
-
-  @boundMethod
-  private renderLink({ rowData, field }: { rowData: LibraryRecord; field: keyof LibraryRecord }): ReactElement {
-    return rowData[field] ? (
-      <UrlsList
-        property={this.schema?.properties?.find(({ name }) => name === field) as PropertySchemaUrl}
-        value={String(rowData[field])}
-      />
-    ) : (
-      <></>
-    );
-  }
-
-  @boundMethod
-  private renderDocuments({ rowData, field }: { rowData: LibraryRecord; field: keyof LibraryRecord }): ReactElement {
-    let value: DocumentInfo[] = [];
-
-    try {
-      value = JSON.parse(String(rowData[field])) as DocumentInfo[];
-    } catch {}
-
-    return rowData[field] ? (
-      <Documents
-        property={this.schema?.properties?.find(({ name }) => name === field) as PropertySchemaDocument}
-        value={value}
-      />
-    ) : (
-      <></>
-    );
   }
 
   private renderActions({ rowData }: { rowData: LibraryRecord }): ReactElement {
@@ -302,14 +187,6 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
         onChange={this.changeHandler}
       />
     );
-  }
-
-  @boundMethod
-  private renderDate({ rowData, field }: { rowData: LibraryRecord; field: keyof LibraryRecord }): ReactElement {
-    const property = this.properties.find(({ name }) => name === field) as PropertySchemaDatetime;
-    const date = formatDate(rowData[field], property.format);
-
-    return <>{date}</>;
   }
 
   @action
@@ -342,7 +219,7 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   private async handleTablePageOptionsChange(pageOptions: PageOptions) {
     this.tablePageOptions = pageOptions;
 
-    const { sort, sortDir, filter } = pageOptions;
+    const { sort, sortOrder: sortDir, filter } = pageOptions;
     const encodedSort = JSON.stringify([sort, sortDir]);
     const encodedFilter = JSON.stringify(filter);
 
@@ -356,10 +233,6 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
         replaceUrl: true
       });
     });
-  }
-
-  private getRowId(rowData: LibraryRecord) {
-    return rowData.id;
   }
 
   private getStorageKey(): string {
@@ -397,7 +270,7 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
       const sort = queryParamsSort && (JSON.parse(queryParamsSort) as string[]);
 
       return this.props.urlChangeEnabled && queryParamsSort
-        ? { field: sort[0], asc: sort[1] === SortDir.ASC }
+        ? { field: sort[0], asc: sort[1] === SortOrder.ASC }
         : { field: 'title', asc: true };
     } catch {
       services.logger.error('Ошибка получения значений сортировки');

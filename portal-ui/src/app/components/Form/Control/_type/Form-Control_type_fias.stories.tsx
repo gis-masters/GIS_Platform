@@ -2,7 +2,7 @@ import React from 'react';
 import { action, observable } from 'mobx';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { PropertySchema, PropertyType } from '../../../../services/crg/schema.models';
+import { PropertySchema, PropertyType } from '../../../../services/data/schema.models';
 
 import { Form } from '../../Form';
 

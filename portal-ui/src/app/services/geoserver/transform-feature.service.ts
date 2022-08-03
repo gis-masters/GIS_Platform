@@ -5,13 +5,13 @@ import { Coordinate } from 'ol/coordinate';
 
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from './wfs.models';
 import { wfsGeometryToGeometry } from '../util/open-layers.util';
-import { OldSchema } from '../crg/schemaOld.models';
+import { OldSchema } from '../data/schemaOld.models';
 import { getFeatureProjection } from './projections.service';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { createDataTableRecord } from '../data.service';
-import { usersService } from '../crg/users.service';
+import { createVectorTableRecord } from '../data/data.service';
+import { usersService } from '../data/users.service';
 import { getWfsUrl } from '../server-urls.service';
-import { CrgLayer } from '../crg/projects.models';
+import { CrgLayer } from '../gis/projects.models';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { getEnvironment } from '../environment';
 import { services } from '../services';
@@ -149,7 +149,7 @@ export class TransformFeatureService {
 
     if (featuresData.length === 1) {
       const newFeature = { ...featuresData[0], id: undefined, geometry_name: undefined };
-      const record = await createDataTableRecord(dataset, tableName, newFeature);
+      const record = await createVectorTableRecord(dataset, tableName, newFeature);
 
       return [record.id];
     }

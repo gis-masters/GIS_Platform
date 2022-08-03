@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { action } from 'mobx';
+import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Slider } from '@mui/material';
 
-import { TreeItemPayload } from '../../../services/crg/projects.models';
+import { TreeItemPayload } from '../../../services/gis/projects.models';
 
 import { LayerTransparencyLabel } from '../TransparencyLabel/Layer-TransparencyLabel';
 
@@ -18,6 +18,11 @@ interface LayerTransparencyProps {
 
 @observer
 export class LayerTransparency extends Component<LayerTransparencyProps> {
+  constructor(props: LayerTransparencyProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { transparency } = this.props.entity;
 

@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { cloneDeep, isEqual } from 'lodash';
+import { chunk, cloneDeep, isEqual } from 'lodash';
 import { register } from 'ol/proj/proj4';
 import { Coordinate } from 'ol/coordinate';
 import { get } from 'ol/proj';
@@ -14,8 +14,9 @@ import {
   WfsMultiPolygonGeometry,
   GeometryType
 } from './wfs.models';
-import { getFeatureLayer } from './layers.service';
-import { normalizeCoordinates, isCoordinateValid } from './wfs.service';
+import { getLayerByFeatureInCurrentProject } from '../gis/layers.service';
+import { isCoordinateValid, normalizeCoordinates } from './wfs.util';
+import { Extent } from 'ol/extent';
 
 export interface CrgProjection {
   id: string;
@@ -109,7 +110,7 @@ export function getProjection(projectionStr: string): CrgProjection {
 }
 
 export function getFeatureProjection(feature: WfsFeature<Coordinate | CoordinateEdited>): CrgProjection {
-  const layer = getFeatureLayer(feature);
+  const layer = getLayerByFeatureInCurrentProject(feature);
 
   return getProjection(layer.nativeCRS);
 }
@@ -183,6 +184,10 @@ export function transformGeometry(
   }
 
   return geometry as WfsGeometry<Coordinate>;
+}
+
+export function transformExtent(extent: Extent, projectionFrom: CrgProjection, projectionTo: CrgProjection): Extent {
+  return chunk(extent, 2).flatMap(coord => transform(projectionFrom, projectionTo, coord)) as Extent;
 }
 
 function transformCoordinate(

@@ -1,40 +1,42 @@
 import moment from 'moment';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
-import { Coordinate } from 'ol/coordinate';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { boundMethod } from 'autobind-decorator';
+import { Coordinate } from 'ol/coordinate';
 import { isNumber } from 'lodash';
 
-import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { EditFeatureMode, EditFeaturesData, MapSelectionTypes, sidebars } from '../../stores/Sidebars.store';
-import { isFeaturesDeleteAllowed, isFeaturesUpdateAllowed } from '../../services/crg/permissions.service';
+import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
+import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { EditFeatureMode, EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
+import { isFeaturesDeleteAllowed, isFeaturesUpdateAllowed } from '../../services/data/permissions.service';
+import { convertProperties, convertSchema, getFieldRelations } from '../../services/data/schema.utils';
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
-import { deleteDataTableRecord, updateDataTableRecord } from '../../services/data.service';
+import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
+import { deleteVectorTableRecord, updateVectorTableRecord } from '../../services/data/data.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { getFeatureProjection } from '../../services/geoserver/projections.service';
-import { OldPropertySchema, ValueType } from '../../services/crg/schemaOld.models';
-import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { OldPropertySchema, ValueType } from '../../services/data/schemaOld.models';
+import { mapSelectionService } from '../../services/map/map-selection.service';
 import { applyFieldValue, convertToComplexField } from '../Form/Form.utils';
 import { communicationService } from '../../services/communication.service';
-import { getFeatureLayer } from '../../services/geoserver/layers.service';
 import { getFeaturesById } from '../../services/geoserver/wfs.service';
 import { getEmptyGeometry } from '../../services/geoserver/wfs.util';
-import { CrgVectorLayer } from '../../services/crg/projects.models';
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
-import { schemaService } from '../../services/crg/schema.service';
+import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { PropertySchema, PropertyType } from '../../services/data/schema.models';
+import { schemaService } from '../../services/data/schema.service';
 import { generateRandomId } from '../../services/util/randomId';
-import { convertProperties, convertSchema, getFieldRelations } from '../../services/crg/schema.utils';
 import { mapService } from '../../services/map/map.service';
-import { BatchModel } from '../../services/crg/batch-model';
+import { BatchModel } from '../../services/util/batch-model';
 import { formatDate } from '../../services/util/date.util';
 import { fromMobx } from '../../services/util/fromMobx';
-import { BaseEdit } from '../edit-bug-object/base-edit';
 import { services } from '../../services/services';
 import { sleep } from '../../services/util/sleep';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { BaseEdit } from '../edit-bug-object/base-edit';
 import { Toast } from '../Toast/Toast';
 
 export interface Properties {
@@ -67,7 +69,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   private unsubscribeFromMobx$: Subject<void> = new Subject<void>();
   private randomId = generateRandomId();
 
-  constructor(private formBuilder: FormBuilder, private dialog: MatDialog) {
+  constructor(private formBuilder: UntypedFormBuilder, private dialog: MatDialog) {
     super();
   }
 
@@ -83,7 +85,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
         this.mode = data.mode;
         this.features = data.features;
-        this.layer = data.layer || getFeatureLayer(this.features[0]);
+        this.layer = data.layer || getLayerByFeatureInCurrentProject(this.features[0]);
         this.properties = data.properties;
         this.isNew = data.isNew;
         this.selectTab = Number(data.isNew);
@@ -145,7 +147,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                 relations: getFieldRelations(key, convertSchema(this.featureDescription))
               });
 
-              const formControl = new FormControl(
+              const formControl = new UntypedFormControl(
                 {
                   value: currentValue,
                   disabled: property.name === 'GLOBALID'
@@ -174,7 +176,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                 relations: getFieldRelations(key, convertSchema(this.featureDescription))
               });
 
-              const formControl = new FormControl(currentValue);
+              const formControl = new UntypedFormControl(currentValue);
 
               if (this.mode === EditFeatureMode.multipleEdit) {
                 formControl.disable();
@@ -243,6 +245,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           sidebars.setFeaturesEdited(!this.editFeatureForm.pristine);
         });
       });
+  }
+
+  ngOnDestroy() {
+    mapService.highlightFeatures(mapStore.highlightedFeatures);
   }
 
   async editFeature(): Promise<void> {
@@ -332,19 +338,20 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       .subscribe(async () => {
         if (sidebars.editFeaturesData.mode === EditFeatureMode.multipleEdit) {
           for (const layer of this.features) {
-            const featureLayer = getFeatureLayer(layer);
+            const featureLayer = getLayerByFeatureInCurrentProject(layer);
 
-            await deleteDataTableRecord(featureLayer.dataset, featureLayer.tableName, layer.id);
+            await deleteVectorTableRecord(featureLayer.dataset, featureLayer.tableName, layer.id);
           }
         } else {
-          await deleteDataTableRecord(dataset, tableName, this.features[0].id);
+          await deleteVectorTableRecord(dataset, tableName, this.features[0].id);
         }
 
         mapService.refreshLayers();
         communicationService.featuresUpdated.emit();
         sidebars.setFeaturesEdited(false);
         if (this.viewFeatures) {
-          sidebars.openFeatures(this.viewFeatures, MapSelectionTypes.REPLACE);
+          mapSelectionService.selectFeatures(this.viewFeatures, MapSelectionTypes.REPLACE);
+          sidebars.openFeaturesSidebar();
         } else {
           sidebars.closeEdit();
         }
@@ -373,7 +380,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   @boundMethod
   async close(): Promise<void> {
     if (sidebars.memorizedViewFeatures) {
-      sidebars.openFeatures(sidebars.memorizedViewFeatures, MapSelectionTypes.REPLACE);
+      mapSelectionService.selectFeatures(sidebars.memorizedViewFeatures, MapSelectionTypes.REPLACE);
+      sidebars.openFeaturesSidebar();
     } else {
       await services.provided;
       await services.router.navigate([location.pathname], {
@@ -413,7 +421,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     if (features.length === 1) {
       const { dataset, tableName } = this.layer;
 
-      await updateDataTableRecord(dataset, tableName, features[0].id.split('.')[1], {
+      await updateVectorTableRecord(dataset, tableName, features[0].id.split('.')[1], {
         type: 'Feature',
         geometry: geometry,
         properties: newProperties

@@ -1,14 +1,12 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
+
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./Breadcrumbs-ItemTitle.scss';
 
 const cnBreadcrumbsItemTitle = cn('Breadcrumbs', 'ItemTitle');
 
-interface BreadcrumbsItemTitleProps {
-  children: ReactNode;
-}
-
-export const BreadcrumbsItemTitle: FC<BreadcrumbsItemTitleProps> = ({ children }) => (
+export const BreadcrumbsItemTitle: FC<ChildrenProps> = ({ children }) => (
   <div className={cnBreadcrumbsItemTitle()}>{children}</div>
 );

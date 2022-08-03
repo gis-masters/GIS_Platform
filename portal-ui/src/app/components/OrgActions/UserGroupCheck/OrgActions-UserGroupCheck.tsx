@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { computed, action } from 'mobx';
+import { computed, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Checkbox } from '@mui/material';
 
-import { CrgGroup } from '../../../services/crg/groups.service';
+import { CrgGroup } from '../../../services/data/groups.service';
 
 const cnOrgActionsUserGroupCheck = cn('OrgActions', 'UserGroupCheck');
 
@@ -15,6 +15,11 @@ interface OrgActionsUserGroupCheckProps {
 
 @observer
 export class OrgActionsUserGroupCheck extends Component<OrgActionsUserGroupCheckProps> {
+  constructor(props: OrgActionsUserGroupCheckProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     return <Checkbox className={cnOrgActionsUserGroupCheck()} checked={this.selected} onChange={this.changeHandler} />;
   }

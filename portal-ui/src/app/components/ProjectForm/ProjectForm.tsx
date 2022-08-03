@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
@@ -26,6 +26,11 @@ export class ProjectForm extends Component<ProjectFormProps> {
   @observable private newProjectName = '';
 
   private maxLength = 250;
+
+  constructor(props: ProjectFormProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { busy, errors = [], buttonProps = {}, onClose } = this.props;

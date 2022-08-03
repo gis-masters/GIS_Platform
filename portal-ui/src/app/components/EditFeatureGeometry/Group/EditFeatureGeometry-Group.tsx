@@ -1,6 +1,6 @@
 import React, { Component, ComponentType, PropsWithChildren, createRef } from 'react';
 import { observer } from 'mobx-react';
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, makeObservable } from 'mobx';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
@@ -50,6 +50,8 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
 
   constructor(props: EditFeatureGeometryGroupProps) {
     super(props);
+
+    makeObservable(this);
 
     this.calcOffsets(0);
     this.calcOffsets = debounce(this.calcOffsets, 100);
@@ -124,7 +126,7 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
 
   @computed
   private get empty() {
-    return !this.props.coordinates.flat(5).some(coord => coord);
+    return !this.props.coordinates.flat(5).some(Boolean);
   }
 
   @action.bound

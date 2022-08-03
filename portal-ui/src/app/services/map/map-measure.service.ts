@@ -3,7 +3,6 @@ import { createRoot, Root } from 'react-dom/client';
 import { reaction } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { LineString, Polygon, SimpleGeometry } from 'ol/geom';
-import OverlayPositioning from 'ol/OverlayPositioning';
 import { ModifyEvent } from 'ol/interaction/Modify';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { Fill, Stroke, Style } from 'ol/style';
@@ -17,7 +16,7 @@ import { unByKey } from 'ol/Observable';
 import { Feature, Overlay } from 'ol';
 import { EventsKey } from 'ol/events';
 
-import { MapModes, mapStore } from '../../stores/Map.store';
+import { MapMode, mapStore } from '../../stores/Map.store';
 import { UnitsOfAreaMeasurement } from '../util/open-layers.util';
 import { communicationService } from '../communication.service';
 import { GeometryType } from '../geoserver/wfs.models';
@@ -78,7 +77,7 @@ class MapMeasureService {
     reaction(
       () => mapStore.mode,
       mode => {
-        if (mode === MapModes.SELECTION || mode === MapModes.DEFAULT || mode === MapModes.PICK) {
+        if (mode === MapMode.SELECTION || mode === MapMode.DEFAULT || mode === MapMode.PICK) {
           this.measureOff();
         }
       }
@@ -88,7 +87,7 @@ class MapMeasureService {
   measureOn(mode: MeasureMode) {
     mapService.drawOff();
     this.measureOff();
-    mapStore.setMode(MapModes.MEASURE);
+    mapStore.setMode(MapMode.MEASURE);
     mapStore.setMeasureMode(mode);
     if (!this.inited) {
       this.init();
@@ -169,7 +168,7 @@ class MapMeasureService {
     const tooltipOverlay = new Overlay({
       element: tooltipNode,
       offset: [0, -10],
-      positioning: OverlayPositioning.BOTTOM_CENTER
+      positioning: 'bottom-center'
     });
     mapService.map.addOverlay(tooltipOverlay);
 

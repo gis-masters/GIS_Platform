@@ -5,7 +5,7 @@ import { withBemMod } from '@bem-react/core';
 import { TextField } from '@mui/material';
 import InputMask from 'react-input-mask';
 
-import { PropertyType, PropertySchemaString } from '../../../../services/crg/schema.models';
+import { PropertyType, PropertySchemaString } from '../../../../services/data/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 

@@ -5,7 +5,7 @@ import { createElement } from 'react';
 
 import { FeatureExtract } from '../FeatureExtract/FeatureExtract';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { CrgVectorLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/gis/projects.models';
 import { registry } from '../../services/registry';
 
 const FeatureExtractWithRegistry = withRegistry(registry)(FeatureExtract);

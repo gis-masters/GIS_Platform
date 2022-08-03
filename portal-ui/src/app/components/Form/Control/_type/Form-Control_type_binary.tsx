@@ -3,7 +3,7 @@ import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertyType, PropertySchemaBinary } from '../../../../services/crg/schema.models';
+import { PropertyType, PropertySchemaBinary } from '../../../../services/data/schema.models';
 import { FileInput } from '../../../FileInput/FileInput';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';

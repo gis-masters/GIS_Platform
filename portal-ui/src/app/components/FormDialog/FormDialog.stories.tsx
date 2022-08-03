@@ -2,9 +2,9 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { SaveOutlined } from '@mui/icons-material';
 
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { PropertySchema, PropertyType } from '../../services/data/schema.models';
 
-import { validateFormValue } from '../../services/crg/formValidation.service';
+import { validateFormValue } from '../../services/formValidation.service';
 import { sleep } from '../../services/util/sleep';
 import { Toast } from '../Toast/Toast';
 

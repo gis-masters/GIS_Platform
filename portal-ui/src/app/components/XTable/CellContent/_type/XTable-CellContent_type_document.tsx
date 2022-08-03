@@ -1,0 +1,75 @@
+import React, { Component } from 'react';
+import { action, observable, makeObservable } from 'mobx';
+import { observer } from 'mobx-react';
+import { Popover } from '@mui/material';
+import { pluralize } from 'numeralize-ru';
+import { withBemMod } from '@bem-react/core';
+
+import { PropertyType } from '../../../../services/data/schema.models';
+import { DocumentInfo, Documents } from '../../../Documents/Documents';
+import { PseudoLink } from '../../../PseudoLink/PseudoLink';
+
+import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
+
+@observer
+class XTableCellContentTypeDocument extends Component<XTableCellContentProps> {
+  @observable private popupAnchor?: HTMLSpanElement;
+
+  constructor(props: XTableCellContentProps) {
+    super(props);
+    makeObservable(this);
+  }
+
+  render() {
+    const { col, cellData, ...props } = this.props;
+    let value: DocumentInfo[] = [];
+
+    try {
+      if (typeof cellData === 'string') {
+        value = JSON.parse(String(cellData)) as DocumentInfo[];
+      }
+    } catch {}
+
+    const documents = (
+      <Documents
+        property={{ name: col.field, propertyType: PropertyType.DOCUMENT, title: String(col.title) }}
+        value={value}
+      />
+    );
+
+    return (
+      <XTableCellContentBase col={col} {...props}>
+        {cellData &&
+          Boolean(value.length) &&
+          (value.length === 1 ? (
+            documents
+          ) : (
+            <>
+              <PseudoLink onClick={this.handleClick}>
+                {value.length} {pluralize(value.length, 'документ', 'документа', 'документов')}
+              </PseudoLink>
+              <Popover open={Boolean(this.popupAnchor)} onClose={this.handleClose} anchorEl={this.popupAnchor}>
+                {documents}
+              </Popover>
+            </>
+          ))}
+      </XTableCellContentBase>
+    );
+  }
+
+  @action.bound
+  private handleClick(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+    this.popupAnchor = e.target as HTMLSpanElement;
+  }
+
+  @action.bound
+  private handleClose() {
+    this.popupAnchor = undefined;
+  }
+}
+
+export const withTypeDocument = withBemMod<XTableCellContentProps, XTableCellContentProps>(
+  cnXTableCellContent(),
+  { type: PropertyType.DOCUMENT },
+  () => XTableCellContentTypeDocument
+);

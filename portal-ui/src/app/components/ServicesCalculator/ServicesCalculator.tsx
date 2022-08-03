@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 
 import { FormDialog } from '../FormDialog/FormDialog';
-import { PropertySchema, PropertyType } from '../../services/crg/schema.models';
+import { PropertySchema, PropertyType } from '../../services/data/schema.models';
 
 import { ServicesCalculatorList } from './List/ServicesCalculator-List';
 import { ServicesCalculatorTitle } from './Title/ServicesCalculator-Title';
@@ -119,6 +119,7 @@ export class ServicesCalculator extends Component {
 
   constructor(props: Record<never, unknown>) {
     super(props);
+    makeObservable(this);
 
     if (localStorage.getItem('invoiceRequisites')) {
       this.setUnclosable(false);

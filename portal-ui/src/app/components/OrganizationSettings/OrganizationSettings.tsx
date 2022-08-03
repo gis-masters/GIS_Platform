@@ -4,9 +4,9 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { Container } from '@mui/material';
 import { cloneDeep } from 'lodash';
-import { action, IReactionDisposer, observable, reaction } from 'mobx';
+import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
 
-import { PropertyType, Schema } from '../../services/crg/schema.models';
+import { PropertyType, Schema } from '../../services/data/schema.models';
 import { organizationSettingsService } from '../../services/organization-settings';
 import { organizationSettings, Settings } from '../../stores/OrganizationSettings.store';
 import { generateRandomId } from '../../services/util/randomId';
@@ -68,6 +68,11 @@ export class OrganizationSettings extends Component {
   @observable private busy = false;
 
   private reactionDisposer: IReactionDisposer;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.reactionDisposer = reaction(

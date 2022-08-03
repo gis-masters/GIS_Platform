@@ -1,13 +1,14 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
+
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./Layer-Title.scss';
 
 const cnLayerTitle = cn('Layer', 'Title');
 
-interface LayerTitleProps {
+interface LayerTitleProps extends ChildrenProps {
   isError: boolean;
-  children: ReactNode;
 }
 
 export const LayerTitle: FC<LayerTitleProps> = ({ children, isError }) => (

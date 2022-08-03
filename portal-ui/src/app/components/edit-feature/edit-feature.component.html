@@ -173,12 +173,12 @@
           <div class="col-6 px-0">
             <div class="input-group" *ngIf="updatingAllowed">
               <input class="form-control" type="text" formControlName="{{ editFeatureItem.name }}" />
-              <crg-related-documents-button
+              <crg-relations-button
                 *ngIf="editFeatureItem.relations.length"
                 [obj]="features[0].properties"
                 [relations]="editFeatureItem.relations"
               >
-              </crg-related-documents-button>
+              </crg-relations-button>
               <span class="input-group-text error-badge" *ngIf="editFeatureForm.controls[editFeatureItem.name].errors">
                 <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
               </span>
@@ -198,12 +198,12 @@
               <div class="read-value">
                 {{ editFeatureItem.value }}
               </div>
-              <crg-related-documents-button
+              <crg-relations-button
                 *ngIf="editFeatureItem.relations.length"
                 [obj]="features[0].properties"
                 [relations]="editFeatureItem.relations"
               >
-              </crg-related-documents-button>
+              </crg-relations-button>
             </div>
           </div>
         </div>

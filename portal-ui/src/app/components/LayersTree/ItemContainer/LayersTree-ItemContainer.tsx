@@ -1,7 +1,9 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { cn } from '@bem-react/classname';
 import { Paper } from '@mui/material';
+
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./LayersTree-ItemContainer.scss';
 
@@ -16,11 +18,10 @@ declare module 'react-beautiful-dnd' {
 
 const cnLayersTreeItemContainer = cn('LayersTree', 'ItemContainer');
 
-interface LayersTreeItemContainerProps {
+interface LayersTreeItemContainerProps extends ChildrenProps {
   editMode: boolean;
   index: number;
   id: string;
-  children: ReactNode;
 }
 
 export const LayersTreeItemContainer: FC<LayersTreeItemContainerProps> = ({ editMode, children, index, id }) => (

@@ -1,8 +1,8 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { PropertySchema, PropertyType } from '../../../../services/crg/schema.models';
-import { FileInfo } from '../../../../services/files.service';
+import { PropertySchema, PropertyType } from '../../../../services/data/schema.models';
+import { FileInfo } from '../../../../services/data/files.service';
 import { Form } from '../../Form';
 import { organizationSettings, Settings } from '../../../../stores/OrganizationSettings.store';
 

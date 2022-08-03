@@ -1,9 +1,7 @@
 <div [class]="cn()">
-  <div
-    id="fiz-openLayer-map"
-    [class]="cn('map', { default: isDefaultActive, selection: isSelectionActive })"
-  >
+  <div id="fiz-openLayer-map" [class]="cn('map', { default: isDefaultActive, selection: isSelectionActive })">
     <crg-map-toolbar></crg-map-toolbar>
+    <crg-features-sidebar-teaser></crg-features-sidebar-teaser>
     <crg-basemaps-select></crg-basemaps-select>
   </div>
 
@@ -20,5 +18,5 @@
   >
   </crg-report-sidebar>
 
-  <crg-attributes-bar [class]="cn('bar', { dir: 'bottom' })" *ngIf="isAttrSidebarActive"> </crg-attributes-bar>
+  <crg-attributes [class]="cn('bar', { dir: 'bottom' })"></crg-attributes>
 </div>

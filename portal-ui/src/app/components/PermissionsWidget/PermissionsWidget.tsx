@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Skeleton } from '@mui/material';
 import { Edit, EditOutlined, Group, Person } from '@mui/icons-material';
@@ -8,16 +8,16 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
-import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../services/crg/permissions.models';
+import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../services/data/permissions.models';
+import { getProjectPermissions, getTablePermissions } from '../../services/data/permissions.client';
 import { communicationService } from '../../services/communication.service';
-import { CrgGroup, groupsService } from '../../services/crg/groups.service';
-import { getProjectPermissions, getTablePermissions } from '../../services/crg/permissions.client';
-import { CrgUser, usersService } from '../../services/crg/users.service';
+import { CrgGroup, groupsService } from '../../services/data/groups.service';
+import { CrgUser, usersService } from '../../services/data/users.service';
+import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
+import { PermissionsEditDialog } from '../PermissionsEditDialog/PermissionsEditDialog';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
-import { PermissionsEditDialog } from '../PermissionsEditDialog/PermissionsEditDialog';
-import { ExplorerItemEntityType } from '../Explorer/Explorer.models';
 
 import '!style-loader!css-loader!sass-loader!./PermissionsWidget.scss';
 
@@ -27,7 +27,7 @@ interface PermissionsWidgetProps {
   url: string;
   title?: string;
   disabled?: boolean;
-  itemEntityType?: ExplorerItemEntityType;
+  itemEntityType?: ExplorerItemEntityTypeTitle;
 }
 
 const MAX_PRINCIPALS_TO_SHOW = 20;
@@ -39,6 +39,11 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   @observable private dialogOpen = false;
   @observable private permissions: RoleAssignmentBody[] = [];
   @observable private moarExpanded: Partial<{ [key in Role]: true }> = {};
+
+  constructor(props: PermissionsWidgetProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     void usersService.initUsersListStore();
@@ -193,7 +198,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
 
     try {
       const permissions =
-        itemEntityType === ExplorerItemEntityType.PROJECT
+        itemEntityType === ExplorerItemEntityTypeTitle.PROJECT
           ? await getProjectPermissions(url)
           : await getTablePermissions(url);
       // тут так надо

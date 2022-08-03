@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { DownloadOutlined } from '@mui/icons-material';
 
 import { cn } from '@bem-react/classname';
 
 import { getDocLibrariesRecordsUrl } from '../../../services/server-urls.service';
-import { LibraryRecord } from '../../../services/crg/doc-library.service';
+import { LibraryRecord } from '../../../services/data/doc-library.service';
 
 import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
 import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
@@ -21,6 +21,11 @@ interface LibraryDocumentActionsDownloadProps {
 @observer
 export class LibraryDocumentActionsDownload extends Component<LibraryDocumentActionsDownloadProps> {
   @observable private url: string;
+
+  constructor(props: LibraryDocumentActionsDownloadProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.buildUrl();

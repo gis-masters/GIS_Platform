@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { observer } from 'mobx-react';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { getFileBaseName, getFileExtension, isPreviewAllowed, isTifFile } from '../../../services/files.util';
-import { FileConnection, FileInfo, getFileConnections } from '../../../services/files.service';
-import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
-import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
-import { LookupItem } from '../../Lookup/Item/Lookup-Item';
-import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
+import { getFileBaseName, getFileExtension, isPreviewAllowed, isTifFile } from '../../../services/data/files.util';
+import { FileConnection, FileInfo, getFileConnections } from '../../../services/data/files.service';
 import { communicationService } from '../../../services/communication.service';
+import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
+import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
+import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
 import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
+import { LookupItem } from '../../Lookup/Item/Lookup-Item';
 import { Button } from '../../Button/Button';
 
 import { FilesName } from '../Name/Files-Name';

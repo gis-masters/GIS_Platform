@@ -1,21 +1,55 @@
-import { ActivatedRouteSnapshot, RoutesRecognized, UrlSegment, ParamMap, RouterEvent } from '@angular/router';
-import { observable, action } from 'mobx';
+import {
+  ActivatedRouteSnapshot,
+  RoutesRecognized,
+  UrlSegment,
+  ParamMap,
+  RouterEvent,
+  ChildActivationStart
+} from '@angular/router';
+import { observable, action, makeObservable } from 'mobx';
 
 import { services } from '../services/services';
 import { AppRouteData } from '../app-routing.module';
 
 type Params = Record<string, string>;
 
+export enum Pages {
+  HOME = 'home',
+  LOGIN = 'login',
+  REGISTER = 'register',
+  RECOVERY = 'recovery',
+  ABOUT = 'about',
+  PROJECTS = 'projects',
+  IMPORT = 'import',
+  MAP = 'map',
+  ORG_ADMIN = 'org-admin',
+  DATA_MANAGEMENT = 'data-management',
+  REGISTRY = 'registry',
+  DOCUMENT = 'document',
+  SERVICES_CALCULATOR = 'services-calculator',
+  RESTORE_PASSWORD = 'restore-password',
+  CHANGE_PASSWORD = 'change-password'
+}
+
 class Route {
   private static _instance: Route;
 
   @observable url: UrlSegment[];
-  @observable params: Params;
-  @observable queryParams: Params;
+  @observable params: Params = {};
+  @observable queryParams: Params = {};
   @observable fragment: string;
   @observable data: AppRouteData;
   @observable paramMap: ParamMap;
   @observable queryParamMap: ParamMap;
+
+  private constructor() {
+    makeObservable(this);
+    void this.subscribe();
+  }
+
+  public static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   @action
   private setRoute(route: ActivatedRouteSnapshot) {
@@ -28,28 +62,24 @@ class Route {
     this.queryParamMap = route.queryParamMap;
   }
 
-  private constructor() {
-    void this.subscribe();
-  }
-
-  public static get instance() {
-    return this._instance || (this._instance = new this());
-  }
-
   private async subscribe() {
     await services.provided;
 
-    this.setRoute(this.getDeepestChildren(services.router.routerState.snapshot.root));
+    services.router.events.subscribe((e: RouterEvent) => {
+      if (e instanceof ChildActivationStart) {
+        this.setRoute(this.getDeepestChildren(e.snapshot.root));
+      }
 
-    services.router.events.subscribe((event: RouterEvent) => {
-      if (event instanceof RoutesRecognized) {
-        this.setRoute(this.getDeepestChildren(event.state.root));
+      if (e instanceof RoutesRecognized) {
+        this.setRoute(this.getDeepestChildren(e.state.root));
       }
     });
+
+    services.router.initialNavigation();
   }
 
   private getDeepestChildren(snapshot: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
-    return snapshot.children.length ? this.getDeepestChildren(snapshot.children[0]) : snapshot;
+    return snapshot.firstChild ? this.getDeepestChildren(snapshot.firstChild) : snapshot;
   }
 }
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { action } from 'mobx';
+import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 
-import { CrgLayer } from '../../../services/crg/projects.models';
+import { CrgLayer } from '../../../services/gis/projects.models';
 
 export interface LayersListItemCheckProps {
   layer: CrgLayer;
@@ -14,6 +14,11 @@ export interface LayersListItemCheckProps {
 
 @observer
 export class LayersListItemCheck extends Component<LayersListItemCheckProps> {
+  constructor(props: LayersListItemCheckProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { selected } = this.props;
 

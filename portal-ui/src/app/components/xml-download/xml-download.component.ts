@@ -5,7 +5,7 @@ import { createElement } from 'react';
 
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { CrgVectorLayer } from '../../services/crg/projects.models';
+import { CrgVectorLayer } from '../../services/gis/projects.models';
 import { XmlDownload } from '../XmlDownload/XmlDownload';
 import { registry } from '../../services/registry';
 

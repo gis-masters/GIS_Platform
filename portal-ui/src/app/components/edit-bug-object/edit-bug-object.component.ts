@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { NGXLogger } from 'ngx-logger';
 import { debounceTime } from 'rxjs/operators';
 
@@ -10,9 +10,9 @@ import { mapService } from '../../services/map/map.service';
 import { communicationService, ObjectDto } from '../../services/communication.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { validationService } from '../../services/crg/validation.service';
-import { schemaService } from '../../services/crg/schema.service';
-import { ValueType } from '../../services/crg/schemaOld.models';
+import { validationService } from '../../services/data/validation.service';
+import { schemaService } from '../../services/data/schema.service';
+import { ValueType } from '../../services/data/schemaOld.models';
 import { Toast } from '../Toast/Toast';
 
 @Component({
@@ -20,7 +20,7 @@ import { Toast } from '../Toast/Toast';
   templateUrl: './edit-bug-object.component.html',
   styleUrls: ['./edit-bug-object.component.css']
 })
-export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnInit {
+export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnInit, OnDestroy {
   @Input() data: ObjectDto[];
   @Output() closeMe = new EventEmitter<boolean>();
 
@@ -30,7 +30,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   private object: ObjectDto;
 
-  constructor(private formBuilder: FormBuilder, private logger: NGXLogger) {
+  constructor(private formBuilder: UntypedFormBuilder, private logger: NGXLogger) {
     super();
   }
 
@@ -52,6 +52,12 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       this.object = newObject;
       void this.handleObject(newObject);
     }
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    mapService.clearDraft();
   }
 
   async editFeature(): Promise<void> {
@@ -119,7 +125,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       const currentValue = featureProperties[key]; // Текущее значение свойства на геосервере
       const propertySchema = schemaService.getPropertySchemaByName(key, this.featureDescription.properties);
       if (propertySchema) {
-        const formControl = new FormControl(
+        const formControl = new UntypedFormControl(
           { value: currentValue, disabled: propertySchema.name === 'GLOBALID' },
           {
             validators: [FeaturePropertyValidators.validate(propertySchema)]
@@ -136,7 +142,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
           isFgistpProperty: true
         });
       } else {
-        this.editFeatureForm.addControl(key, new FormControl(currentValue));
+        this.editFeatureForm.addControl(key, new UntypedFormControl(currentValue));
         this.editFeatureData.push({
           name: key,
           property: {

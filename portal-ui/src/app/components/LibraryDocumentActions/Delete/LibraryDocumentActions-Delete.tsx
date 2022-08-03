@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   Accordion,
@@ -16,10 +16,10 @@ import { Delete, DeleteOutline, ExpandMore } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { deleteLibraryRecord, getLibraryRecords, LibraryRecord } from '../../../services/crg/doc-library.service';
-import { FileConnection, FileInfo, getFileConnections } from '../../../services/files.service';
+import { deleteLibraryRecord, getLibraryRecords, LibraryRecord } from '../../../services/data/doc-library.service';
+import { FileConnection, FileInfo, getFileConnections } from '../../../services/data/files.service';
+import { PropertyType, Schema } from '../../../services/data/schema.models';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
-import { PropertyType, Schema } from '../../../services/crg/schema.models';
 import { Button } from '../../Button/Button';
 
 import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
@@ -47,6 +47,11 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
   @observable private btnLoading: boolean;
   @observable private errorMessage: string;
   @observable private connections?: FilesConnections[];
+
+  constructor(props: LibraryDocumentActionsDeleteProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { as, document } = this.props;
@@ -155,7 +160,7 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
           return property.name;
         }
       })
-      .filter(item => item);
+      .filter(Boolean);
 
     const fields = fileFields.map(field => {
       return document[field] as FileInfo[];
@@ -206,7 +211,7 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
 
   @action
   private setConnections(connections: FilesConnections[]) {
-    this.connections = connections.filter(item => item);
+    this.connections = connections.filter(Boolean);
   }
 
   private async fetchConnections(currentFile: FileInfo, files: FileInfo[]) {

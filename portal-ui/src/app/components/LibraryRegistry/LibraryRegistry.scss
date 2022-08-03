@@ -23,20 +23,4 @@ body .LibraryRegistry {
   .MuiTableRow-hover:hover .LibraryRegistry-Actions {
     opacity: 1;
   }
-
-  &-Cell {
-    position: relative;
-
-    &_withRelations {
-      padding-right: 35px;
-    }
-  }
-
-  &-Relations {
-    position: absolute;
-    top: 50%;
-    right: 9px;
-
-    margin-top: -14px;
-  }
 }

@@ -2,7 +2,7 @@ import { PageableResponse, PageOptions, PageQueryParams } from './models';
 import { buildCqlFilter } from './util/cql';
 
 export function preparePageOptions(
-  { page, sort, sortDir, filter, pageSize, queryParams = {} }: PageOptions,
+  { page, sort, sortOrder: sortDir, filter, pageSize, queryParams = {} }: PageOptions,
   useCQL = false
 ): PageQueryParams {
   if (useCQL && filter && Object.keys(filter).length) {

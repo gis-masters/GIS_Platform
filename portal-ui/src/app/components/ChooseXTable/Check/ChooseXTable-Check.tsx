@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, computed } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Checkbox, Radio } from '@mui/material';
@@ -16,6 +16,11 @@ interface ChooseXTableCheckProps<T> {
 
 @observer
 export class ChooseXTableCheck<T> extends Component<ChooseXTableCheckProps<T>> {
+  constructor(props: ChooseXTableCheckProps<T>) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const Check = this.props.single ? Radio : Checkbox;
 

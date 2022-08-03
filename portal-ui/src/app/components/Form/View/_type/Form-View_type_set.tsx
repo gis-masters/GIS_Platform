@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { RegistryConsumer } from '@bem-react/di';
 
-import { PropertySchemaSet, PropertyType } from '../../../../services/crg/schema.models';
+import { PropertySchemaSet, PropertyType } from '../../../../services/data/schema.models';
 
 import { cnFormView } from '../Form-View';
 import { FormControlProps } from '../../Control/Form-Control';

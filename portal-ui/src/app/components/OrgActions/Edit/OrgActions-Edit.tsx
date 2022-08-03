@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Tooltip, IconButton } from '@mui/material';
@@ -7,8 +7,8 @@ import { Edit } from '@mui/icons-material';
 
 import { OrgGroupsCreateEditDialog } from '../../OrgGroupCreateEditDialog/OrgGroupsCreateEditDialog';
 import { OrgUsersCreateEditDialog } from '../../OrgUsersCreateEditDialog/OrgUsersCreateEditDialog';
-import { CrgGroup } from '../../../services/crg/groups.service';
-import { CrgUser } from '../../../services/crg/users.service';
+import { CrgGroup } from '../../../services/data/groups.service';
+import { CrgUser } from '../../../services/data/users.service';
 
 const cnOrgActionsEdit = cn('OrgActions', 'Edit');
 
@@ -20,6 +20,11 @@ interface OrgActionsEditProps {
 @observer
 export class OrgActionsEdit extends Component<OrgActionsEditProps> {
   @observable private dialogOpen = false;
+
+  constructor(props: OrgActionsEditProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

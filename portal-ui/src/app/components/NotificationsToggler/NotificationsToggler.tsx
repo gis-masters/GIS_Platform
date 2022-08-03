@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -17,6 +17,11 @@ const cnNotificationsToggler = cn('NotificationsToggler');
 export class NotificationsToggler extends Component {
   private unsubscribe$: Subject<void> = new Subject<void>();
   @observable private count = 0;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     eventService.events$

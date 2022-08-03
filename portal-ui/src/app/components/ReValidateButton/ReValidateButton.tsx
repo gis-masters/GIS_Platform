@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { LoopOutlined, Loop } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -12,6 +12,11 @@ const cnReValidateButton = cn('ReValidateButton');
 @observer
 export class ReValidateButton extends Component {
   @observable private open = false;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

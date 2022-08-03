@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Delete, DeleteOutline } from '@mui/icons-material';
 import {
@@ -16,8 +16,9 @@ import { pluralize } from 'numeralize-ru';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
-import { Basemap } from '../../../services/crg/basemaps.models';
-import { deleteBasemap, getBasemapConnections } from '../../../services/crg/basemaps.service';
+import { getBasemapConnections } from '../../../services/gis/project-basemaps.service';
+import { deleteBasemap } from '../../../services/data/basemaps.service';
+import { Basemap } from '../../../services/data/basemaps.models';
 import { Button } from '../../Button/Button';
 
 const cnBasemapActionsDelete = cn('BasemapActions', 'Delete');
@@ -31,6 +32,11 @@ export class BasemapActionsDelete extends Component<BasemapActionsDeleteProps> {
   @observable private dialogOpen = false;
   @observable private btnLoading: boolean;
   @observable private projectsCount: number;
+
+  constructor(props: BasemapActionsDeleteProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.fetchProjectsCount();
@@ -79,7 +85,8 @@ export class BasemapActionsDelete extends Component<BasemapActionsDeleteProps> {
 
   private async fetchProjectsCount() {
     const { basemap } = this.props;
-    this.setProjectsCount((await getBasemapConnections(basemap.id)).length);
+    const connections = await getBasemapConnections(basemap.id);
+    this.setProjectsCount(connections.length);
   }
 
   @action

@@ -5,7 +5,7 @@ import { createElement } from 'react';
 
 import { registry } from '../../services/registry';
 import { IWsMessage } from '../../services/ws.service';
-import { WsImportModel } from '../../services/crg/processes.service';
+import { WsImportModel } from '../../services/data/processes.service';
 import { ImportGmlResultsLink } from '../ImportGmlResultLink/ImportGmlResultsLink';
 
 const ImportGmlResultsLinkWithRegistry = withRegistry(registry)(ImportGmlResultsLink);

@@ -5,7 +5,7 @@ import { remove } from 'lodash';
 import { ProcessType } from './models';
 import { generateRandomId } from './util/randomId';
 import { IWsMessage, wsService } from './ws.service';
-import { WsImportModel } from './crg/processes.service';
+import { WsImportModel } from './data/processes.service';
 import { communicationService } from './communication.service';
 
 // Пока события будут завязаны на IWsMessage

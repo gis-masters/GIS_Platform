@@ -1,5 +1,5 @@
 import { getActualLegendUrl, getGeoServerUrl, getWmsUrl } from '../server-urls.service';
-import { CrgVectorLayer } from '../crg/projects.models';
+import { CrgVectorLayer } from '../gis/projects.models';
 import { mapService } from '../map/map.service';
 import { WfsGeometry } from './wfs.models';
 import { http } from '../http.service';
@@ -137,7 +137,7 @@ function parseFilter(xmlFilter?: Element): StyleFilter | undefined {
   ) {
     return {
       operator,
-      filters: [...xmlFilter.children].map(parseFilter).filter(filter => filter)
+      filters: [...xmlFilter.children].map(parseFilter).filter(Boolean)
     };
   }
 }

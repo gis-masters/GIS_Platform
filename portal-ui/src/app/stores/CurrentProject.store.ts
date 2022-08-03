@@ -1,4 +1,4 @@
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
@@ -11,10 +11,10 @@ import {
   CrgVectorLayer,
   NewCrgLayer,
   TreeItem
-} from '../services/crg/projects.models';
+} from '../services/gis/projects.models';
 import { getPatch } from '../services/util/patch';
-import { Role } from '../services/crg/permissions.models';
-import { AttributeTableFilter } from '../components/attributes-bar/attributes-bar.component';
+import { Role } from '../services/data/permissions.models';
+import { mapStore } from './Map.store';
 
 const MAX_LAYERS_IN_BATCH = 5;
 
@@ -53,17 +53,18 @@ class CurrentProject implements CrgProjectData {
   @observable organizationId: number;
   @observable default: boolean;
   @observable layers: CrgLayer[];
-  @observable allLayers: Record<string, string>[];
   @observable groups: CrgLayersGroup[];
   @observable primalLayers: CrgLayer[];
   @observable primalGroups: CrgLayersGroup[];
   @observable layersErrors: Record<string, string[]>;
-  @observable attributeTableFilter: AttributeTableFilter = {};
+  @observable rawLayersFromApi: CrgLayer[];
   @observable role: Role;
 
   @observable viewZoom: number;
 
-  private constructor() {}
+  private constructor() {
+    makeObservable(this);
+  }
 
   static get instance() {
     return this._instance || (this._instance = new this());
@@ -169,18 +170,9 @@ class CurrentProject implements CrgProjectData {
       currentTransparency === previousTransparency &&
       currentType === previousType &&
       lastBatch.length < MAX_LAYERS_IN_BATCH &&
-      !this.isFiltered(currentItem.payload) &&
-      !this.isFiltered(previousItem.payload)
+      !mapStore.isFiltered(currentItem.payload) &&
+      !mapStore.isFiltered(previousItem.payload)
     );
-  }
-
-  isFiltered(layer: CrgLayer) {
-    return this.attributeTableFilter?.layerComplexName === layer.complexName && this.attributeTableFilter.filter;
-  }
-
-  @action
-  updateAttributeTableFilter(data: AttributeTableFilter) {
-    this.attributeTableFilter = data;
   }
 
   @computed
@@ -300,7 +292,8 @@ class CurrentProject implements CrgProjectData {
     project: CrgProject,
     layers: CrgLayer[],
     groups: CrgLayersGroup[],
-    layersErrors: Record<string, string[]>
+    layersErrors: Record<string, string[]>,
+    rawLayersFromApi: CrgLayer[]
   ) {
     Object.assign(this, emptyProject, {
       ...project,
@@ -308,7 +301,8 @@ class CurrentProject implements CrgProjectData {
       groups,
       primalLayers: cloneDeep(layers),
       primalGroups: cloneDeep(groups),
-      layersErrors
+      layersErrors,
+      rawLayersFromApi
     });
   }
 

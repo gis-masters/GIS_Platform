@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Print, PrintOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord } from '../../../services/crg/doc-library.service';
+import { LibraryRecord } from '../../../services/data/doc-library.service';
 import { printDocument, printTemplates } from '../../../services/print/print.service';
-import { Schema } from '../../../services/crg/schema.models';
+import { Schema } from '../../../services/data/schema.models';
 import { Button } from '../../Button/Button';
 
 import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
@@ -33,6 +33,11 @@ interface TemplateData {
 export class LibraryDocumentActionsPrint extends Component<LibraryDocumentActionsPrintProps> {
   @observable private busy = false;
   @observable private selectTemplateDialogOpen = false;
+
+  constructor(props: LibraryDocumentActionsPrintProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { as } = this.props;

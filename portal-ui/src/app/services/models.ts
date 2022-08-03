@@ -1,4 +1,6 @@
-import { OldSchema, OldPropertySchema } from './crg/schemaOld.models';
+import { ReactNode } from 'react';
+
+import { OldSchema } from './data/schemaOld.models';
 import { GeometryType } from './geoserver/wfs.models';
 import { FilterQuery } from './util/filterObjects';
 
@@ -18,31 +20,6 @@ export interface PageableResponse<T> {
   _embedded?: Record<string, T[]>;
   _links: PageableLink[] | { [key: string]: PageableLink };
   page: PageablePage;
-}
-
-export interface RequestAttribute {
-  page?: Pageable;
-  sort?: Sortable;
-  filter?: FilterEvent[];
-}
-
-export interface Pageable {
-  pageSize?: number;
-  offset?: number;
-  count?: number;
-  limit?: number;
-}
-
-export interface Sortable {
-  column?: any;
-  sorts?: any;
-  newValue?: string;
-  prevValue?: string;
-}
-
-export interface FilterEvent {
-  property?: OldPropertySchema;
-  value?: string[];
 }
 
 export interface Process {
@@ -116,7 +93,7 @@ export const NOT_IMPORT_LAYER: OldSchema = {
   properties: []
 };
 
-export enum SortDir {
+export enum SortOrder {
   ASC = 'asc',
   DESC = 'desc'
 }
@@ -124,8 +101,9 @@ export enum SortDir {
 export interface PageOptions {
   page: number;
   pageSize: number;
+  totalPages?: number;
   sort?: string;
-  sortDir?: SortDir;
+  sortOrder?: SortOrder;
   filter?: FilterQuery;
   queryParams?: { [key: string]: string | number };
 }
@@ -141,4 +119,8 @@ export interface PageQueryParams {
   page: string;
   size: string;
   sort?: string;
+}
+
+export interface ChildrenProps {
+  children?: ReactNode;
 }

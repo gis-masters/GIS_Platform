@@ -5,7 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 import { TextField } from '@mui/material';
 import moment from 'moment';
 
-import { PropertyType, PropertySchemaDatetime } from '../../../../services/crg/schema.models';
+import { PropertyType, PropertySchemaDatetime } from '../../../../services/data/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormErrors } from '../../Errors/Form-Errors';

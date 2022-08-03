@@ -1,7 +1,7 @@
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 
 import { currentUser } from './CurrentUser.store';
-import { CrgUser } from '../services/crg/users.service';
+import { CrgUser } from '../services/data/users.service';
 
 class AllUsers {
   @observable fetching = false;
@@ -14,7 +14,9 @@ class AllUsers {
     return this._instance || (this._instance = new this());
   }
 
-  private constructor() {}
+  private constructor() {
+    makeObservable(this);
+  }
 
   @action
   setList(list: CrgUser[]) {

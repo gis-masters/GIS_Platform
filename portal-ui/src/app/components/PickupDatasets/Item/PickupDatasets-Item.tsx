@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import { pluralize } from 'numeralize-ru';
 
 import { Button } from '../../Button/Button';
-import { Dataset } from '../../../services/data.service';
+import { Dataset } from '../../../services/data/data.service';
 
 import '!style-loader!css-loader!sass-loader!./PickupDatasets-Item.scss';
 

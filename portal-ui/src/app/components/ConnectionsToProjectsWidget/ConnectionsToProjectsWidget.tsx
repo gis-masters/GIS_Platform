@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Skeleton, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@mui/material';
 import { AddCircle, AddCircleOutlineOutlined } from '@mui/icons-material';
@@ -9,11 +9,11 @@ import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
 
+import { FileConnection } from '../../services/data/files.service';
+import { CrgProject } from '../../services/gis/projects.models';
+import { Role } from '../../services/data/permissions.models';
 import { ConnectionsToProjects } from '../ConnectionsToProjects/ConnectionsToProjects';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { CrgProject } from '../../services/crg/projects.models';
-import { FileConnection } from '../../services/files.service';
-import { Role } from '../../services/crg/permissions.models';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Button } from '../Button/Button';
 
@@ -36,6 +36,11 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
   @observable private currentProjectsDialogOpen = false;
   @observable private selectProjectDialogOpen = false;
   @observable private selectedProject?: CrgProject;
+
+  constructor(props: ConnectionsToProjectsWidgetProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { connections, loading, dialogTitle, showAsExtendList } = this.props;

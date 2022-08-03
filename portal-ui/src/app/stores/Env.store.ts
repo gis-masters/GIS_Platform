@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 
 import { Platform, Environment, EnvironmentServer, ProtocolsBoolean } from '../services/environment';
 import { FlagsList } from '../services/feature-flags';
@@ -48,7 +48,9 @@ class Env implements Environment {
     return this._instance || (this._instance = new this());
   }
 
-  private constructor() {}
+  private constructor() {
+    makeObservable(this);
+  }
 
   @action
   setEnv(env: Environment): void {

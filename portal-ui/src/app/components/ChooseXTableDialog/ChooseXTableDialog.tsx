@@ -2,7 +2,7 @@ import React, { Component, ReactNode } from 'react';
 import { isEqual } from 'lodash';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { Dialog, DialogActions, DialogContent } from '@mui/material';
 
 import { XTableColumn } from '../XTable/XTable';
@@ -37,6 +37,11 @@ interface ChooseXTableDialogProps<T> {
 @observer
 export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>> {
   @observable private selected: T[] = [];
+
+  constructor(props: ChooseXTableDialogProps<T>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const {

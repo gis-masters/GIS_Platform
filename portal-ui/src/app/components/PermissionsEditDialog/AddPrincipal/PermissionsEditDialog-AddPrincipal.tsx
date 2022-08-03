@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   Checkbox,
@@ -18,10 +18,10 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../../stores/AllUsers.store';
 import { allGroups } from '../../../stores/AllGroups.store';
-import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../../services/crg/permissions.models';
+import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../../services/data/permissions.models';
 import { DialogActionsRight } from '../../DialogActionsRight/DialogActionsRight';
-import { CrgGroup } from '../../../services/crg/groups.service';
-import { CrgUser } from '../../../services/crg/users.service';
+import { CrgGroup } from '../../../services/data/groups.service';
+import { CrgUser } from '../../../services/data/users.service';
 import { XTable, XTableColumn } from '../../XTable/XTable';
 import { Button } from '../../Button/Button';
 
@@ -57,6 +57,11 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
     },
     ...this.getColumns()
   ];
+
+  constructor(props: PermissionsEditDialogAddPrincipalProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { principalType } = this.props;

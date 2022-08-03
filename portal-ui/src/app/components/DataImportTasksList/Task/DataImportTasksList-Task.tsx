@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip, Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { Delete } from '@mui/icons-material';
@@ -21,6 +21,11 @@ interface DataImportTasksListTaskProps {
 export class DataImportTasksListTask extends Component<DataImportTasksListTaskProps> {
   @observable private deleteDialogOpen = false;
   @observable private isDeleting = false;
+
+  constructor(props: DataImportTasksListTaskProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { short, task } = this.props;

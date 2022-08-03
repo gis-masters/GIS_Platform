@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchemaUrl, PropertyType } from '../../../../services/crg/schema.models';
+import { PropertySchemaUrl, PropertyType } from '../../../../services/data/schema.models';
 import { UrlsList } from '../../../UrlsList/UrlsList';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';

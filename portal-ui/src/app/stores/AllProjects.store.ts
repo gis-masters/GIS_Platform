@@ -1,6 +1,6 @@
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, makeObservable } from 'mobx';
 
-import { CrgProject } from '../services/crg/projects.models';
+import { CrgProject } from '../services/gis/projects.models';
 import { filterObjects } from '../services/util/filterObjects';
 import { patch } from '../services/util/patch';
 import { sortObjects } from '../services/util/sortObjects';
@@ -13,7 +13,9 @@ class AllProjects {
   @observable sortBy: keyof CrgProject = 'createdAt';
   @observable sortAsc = true;
 
-  private constructor() {}
+  private constructor() {
+    makeObservable(this);
+  }
 
   static get instance() {
     return this._instance || (this._instance = new this());

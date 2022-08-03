@@ -1,5 +1,5 @@
 import React, { Component, ComponentType } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
@@ -7,14 +7,14 @@ import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import { getLibraryRecord, LibraryRecord } from '../../services/crg/doc-library.service';
+import { getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
-import { PropertyType, Schema } from '../../services/crg/schema.models';
-import { applyContentType } from '../../services/crg/schema.utils';
-import { schemaService } from '../../services/crg/schema.service';
-import { Role } from '../../services/crg/permissions.models';
-import { FileInfo } from '../../services/files.service';
-import { isTifFile } from '../../services/files.util';
+import { PropertyType, Schema } from '../../services/data/schema.models';
+import { applyContentType } from '../../services/data/schema.utils';
+import { schemaService } from '../../services/data/schema.service';
+import { Role } from '../../services/data/permissions.models';
+import { FileInfo } from '../../services/data/files.service';
+import { isTifFile } from '../../services/data/files.util';
 
 import { ActionsItemVariant } from './Item/LibraryDocumentActions-Item';
 import { LibraryDocumentActionsSed } from './Sed/LibraryDocumentActions-Sed';
@@ -50,6 +50,11 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
   @observable private document: LibraryRecord;
   @observable private schema: Schema<LibraryRecord>;
   private operationId: symbol;
+
+  constructor(props: LibraryDocumentActionsProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.init();

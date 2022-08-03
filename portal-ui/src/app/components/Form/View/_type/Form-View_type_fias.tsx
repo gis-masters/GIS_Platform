@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertyType } from '../../../../services/crg/schema.models';
+import { PropertyType } from '../../../../services/data/schema.models';
 
 import { cnFormView } from '../Form-View';
 import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
-import { Fias } from '../../../../services/fias.service';
+import { Fias } from '../../../../services/data/fias.service';
 
 @observer
 class FormViewTypeFias extends Component<FormControlProps> {

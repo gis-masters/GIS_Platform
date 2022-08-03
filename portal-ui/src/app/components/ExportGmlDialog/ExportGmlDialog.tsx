@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import {
@@ -18,8 +18,8 @@ import { Form } from '../Form/Form';
 import { Button } from '../Button/Button';
 import { LayersList } from '../LayersList/LayersList';
 import { sidebars } from '../../stores/Sidebars.store';
-import { CrgVectorLayer } from '../../services/crg/projects.models';
-import { ExportResourceModel, exportService } from '../../services/crg/export.service';
+import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { ExportResourceModel, exportService } from '../../services/data/export.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 
 import '!style-loader!css-loader!sass-loader!./ExportGmlDialog.scss';
@@ -82,6 +82,11 @@ export class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   @observable private dialogOpen = false;
   @observable private selectedLayers: CrgVectorLayer[] = [];
   @observable private selectedSchema = '';
+
+  constructor(props: ExportGmlDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { open } = this.props;

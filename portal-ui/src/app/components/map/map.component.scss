@@ -1,4 +1,4 @@
-.map {
+::ng-deep .map {
   position: absolute;
   top: 55px;
   right: 0;
@@ -24,12 +24,12 @@
 
     overflow: hidden;
 
-    ::ng-deep .ol-attribution.ol-unselectable.ol-control.ol-uncollapsible {
+    .ol-attribution.ol-unselectable.ol-control.ol-uncollapsible {
       display: none;
     }
 
-    ::ng-deep .ol-scale-step-text,
-    ::ng-deep .ol-scale-text {
+    .ol-scale-step-text,
+    .ol-scale-text {
       white-space: nowrap;
 
       text-shadow:
@@ -43,15 +43,15 @@
         0 -2px 2px #fff;
     }
 
-    ::ng-deep .ol-scale-text {
+    .ol-scale-text {
       font: 16px/1.3 Verdana, Geneva, Tahoma, sans-serif;
     }
 
-    ::ng-deep .ol-scale-step-text {
+    .ol-scale-step-text {
       font: 14px/1.3 Verdana, Geneva, Tahoma, sans-serif;
     }
 
-    ::ng-deep .ol-rotate {
+    .ol-rotate {
       top: 60px;
       right: 15px;
     }

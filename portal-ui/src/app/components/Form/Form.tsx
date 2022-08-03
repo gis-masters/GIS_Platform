@@ -1,20 +1,21 @@
 import React, { Component, ReactNode } from 'react';
-import { action, IReactionDisposer, observable, reaction } from 'mobx';
+import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { PropertySchema, Schema } from '../../services/crg/schema.models';
+import { PropertySchema, Schema } from '../../services/data/schema.models';
 import {
   calculateValues,
+  cleanCalculatedValues,
   FieldErrors,
   getDefaultValues,
   normalizeServerErrors,
   validateFieldValue,
   validateFormValue
-} from '../../services/crg/formValidation.service';
+} from '../../services/formValidation.service';
 
 export { FormField } from './Field/Form-Field';
 export { FormLabel } from './Label/Form-Label';
@@ -60,6 +61,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
 
   constructor(props: FormProps<T>) {
     super(props);
+    makeObservable(this);
 
     const properties = props.schema?.properties;
 
@@ -190,10 +192,10 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
   }
 
   private async doAction() {
-    const { actionFunction, onActionSuccess, onActionError } = this.props;
+    const { actionFunction, onActionSuccess, onActionError, schema } = this.props;
 
     try {
-      await actionFunction(this.value as T);
+      await actionFunction(cleanCalculatedValues(this.value as T, schema.properties));
       if (onActionSuccess) {
         onActionSuccess(this.value as T);
       }

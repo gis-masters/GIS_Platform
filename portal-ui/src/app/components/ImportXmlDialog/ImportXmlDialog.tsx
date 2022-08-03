@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { Mime } from '../../services/util/Mime';
-import { services } from '../../services/services';
-import { importXml } from '../../services/import-xml.service';
-import { mapService } from '../../services/map/map.service';
+import { mapSelectionService } from '../../services/map/map-selection.service';
 import { getFeaturesById } from '../../services/geoserver/wfs.service';
-import { Button } from '../Button/Button';
-import { FileInput } from '../FileInput/FileInput';
+import { importXml } from '../../services/data/import-xml.service';
+import { mapService } from '../../services/map/map.service';
+import { services } from '../../services/services';
+import { Mime } from '../../services/util/Mime';
 import { Form, FormControl, FormField, FormLabel } from '../Form/Form';
+import { FileInput } from '../FileInput/FileInput';
+import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
 
 interface ImportXmlDialogProps {
@@ -28,6 +29,11 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
   @observable private file?: File;
   @observable private loading = false;
 
+  constructor(props: ImportXmlDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { open, onClose } = this.props;
 
@@ -40,7 +46,7 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
             <FormField>
               <FormLabel htmlFor='importXmlFileField'>Файл</FormLabel>
               <FormControl>
-                <FileInput accept={Mime.XML} fullWidth onChange={this.changeHandler} />
+                <FileInput accept={Mime.XML} fullWidth onChange={this.changeHandler} id='importXmlFileField' />
               </FormControl>
             </FormField>
           </Form>
@@ -69,10 +75,10 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
     try {
       this.setLoading(true);
       const objectId = await importXml(this.file, datasetId, tableId);
-      const wfsFeature = await getFeaturesById([objectId.toString()], complexName);
-      if (wfsFeature.length > 0) {
-        mapService.highlightFeatures(wfsFeature);
-        mapService.positionToFeature(wfsFeature[0]);
+      const wfsFeatures = await getFeaturesById([objectId.toString()], complexName);
+      if (wfsFeatures.length > 0) {
+        mapSelectionService.selectFeatures(wfsFeatures);
+        mapService.positionToFeatures(wfsFeatures);
       }
       Toast.success('Объекты из файла импортированы успешно');
     } catch (error) {

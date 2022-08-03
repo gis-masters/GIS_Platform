@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
@@ -25,6 +25,11 @@ export class HelpToc extends Component<HelpTocProps> {
   @observable private filterParam = '';
   @observable private searchResults: Toc = [];
   @observable private tocTreeHidden = false;
+
+  constructor(props: HelpTocProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { className, items, onSelect } = this.props;
@@ -71,7 +76,9 @@ export class HelpToc extends Component<HelpTocProps> {
 
   @action
   private clickHandler(item: TocItem) {
-    item.children ? null : this.props.onSelect(item);
+    if (!item.children) {
+      this.props.onSelect(item);
+    }
   }
 
   @action
@@ -101,7 +108,11 @@ export class HelpToc extends Component<HelpTocProps> {
   private handleFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
     this.setFilterParam(e.target.value);
     this.search(e.target.value);
-    e.target.value.trim() ? this.setTocTreeHidden(true) : this.setTocTreeHidden(false);
+    if (e.target.value.trim()) {
+      this.setTocTreeHidden(true);
+    } else {
+      this.setTocTreeHidden(false);
+    }
   }
 
   @action

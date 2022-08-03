@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord, updateLibraryRecord } from '../../../services/crg/doc-library.service';
-import { PropertySchema, PropertyType, Schema } from '../../../services/crg/schema.models';
+import { LibraryRecord, updateLibraryRecord } from '../../../services/data/doc-library.service';
+import { PropertySchema, PropertyType, Schema } from '../../../services/data/schema.models';
 import { getPatch } from '../../../services/util/patch';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { TextBadge } from '../../TextBadge/TextBadge';
@@ -25,6 +25,11 @@ interface LibraryDocumentActionsEditProps {
 @observer
 export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActionsEditProps> {
   @observable private dialogOpen = false;
+
+  constructor(props: LibraryDocumentActionsEditProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { as, document, schema } = this.props;

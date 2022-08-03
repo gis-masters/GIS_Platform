@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
@@ -9,8 +9,8 @@ import {
   getDefaultValues,
   normalizeServerErrors,
   validateFormValue
-} from '../../services/crg/formValidation.service';
-import { createDataset, dataEntitySchema, NewDataset } from '../../services/data.service';
+} from '../../services/formValidation.service';
+import { createDataset, dataEntitySchema, NewDataset } from '../../services/data/data.service';
 
 import { CreateDatasetElementDialog } from './Dialog/CreateDatasetElement-Dialog';
 import { CreateDatasetElementButton } from './Button/CreateDatasetElement-Button';
@@ -22,6 +22,11 @@ export class CreateDatasetElement extends Component {
   @observable private formErrors?: FieldErrors[];
   @observable private serverFormErrors?: FieldErrors[];
   @observable private formValue: Partial<NewDataset> = {};
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

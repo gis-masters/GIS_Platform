@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, Tooltip } from '@mui/material';
 import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { PropertySchemaUrl } from '../../../services/crg/schema.models';
+import { PropertySchemaUrl } from '../../../services/data/schema.models';
 import { getEditUrlFormSchema } from '../../Form/Form.utils';
 import { UrlInfo } from '../../Form/Control/_type/Form-Control_type_url';
 import { HtmlContent } from '../../HtmlContent/HtmlContent';
@@ -39,10 +39,15 @@ export class UrlsListItem extends Component<UrlFieldItemProps> {
   @observable private content = '';
   @observable private fetching = false;
 
+  constructor(props: UrlFieldItemProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { item, property, editable } = this.props;
     const { openIn } = property;
-    const text = item.text ? item.text : item.url;
+    const text = item.text || item.url;
 
     return (
       <>

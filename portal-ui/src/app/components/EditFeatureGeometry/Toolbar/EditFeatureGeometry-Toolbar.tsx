@@ -1,16 +1,14 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { Paper } from '@mui/material';
+
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Toolbar.scss';
 
 const cnEditFeatureGeometryToolbar = cn('EditFeatureGeometry', 'Toolbar');
 
-interface EditFeatureGeometryToolbarProps {
-  children: ReactNode;
-}
-
-export const EditFeatureGeometryToolbar: FC<EditFeatureGeometryToolbarProps> = ({ children }) => (
+export const EditFeatureGeometryToolbar: FC<ChildrenProps> = ({ children }) => (
   <Paper className={cnEditFeatureGeometryToolbar()} square variant='outlined'>
     {children}
   </Paper>

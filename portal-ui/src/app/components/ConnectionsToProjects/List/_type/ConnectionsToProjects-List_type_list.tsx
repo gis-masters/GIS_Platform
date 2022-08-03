@@ -2,8 +2,8 @@ import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 import { List, ListItem, ListItemText } from '@mui/material';
 
+import { FileConnection } from '../../../../services/data/files.service';
 import { Link } from '../../../Link/Link';
-import { FileConnection } from '../../../../services/files.service';
 
 import { cnConnectionsToProjectsList } from '../ConnectionsToProjects-List';
 

@@ -1,14 +1,12 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
+
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./Layer-InnardsInner.scss';
 
 const cnLayerInnardsInner = cn('Layer', 'InnardsInner');
 
-interface LayerInnardsInnerProps {
-  children: ReactNode;
-}
-
-export const LayerInnardsInner: FC<LayerInnardsInnerProps> = ({ children }) => (
+export const LayerInnardsInner: FC<ChildrenProps> = ({ children }) => (
   <div className={cnLayerInnardsInner()}>{children}</div>
 );

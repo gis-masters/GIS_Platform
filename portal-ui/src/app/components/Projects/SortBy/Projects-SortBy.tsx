@@ -4,7 +4,7 @@ import { MenuItem, TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { allProjects } from '../../../stores/AllProjects.store';
-import { CrgProject } from '../../../services/crg/projects.models';
+import { CrgProject } from '../../../services/gis/projects.models';
 
 import '!style-loader!css-loader!sass-loader!./Projects-SortBy.scss';
 

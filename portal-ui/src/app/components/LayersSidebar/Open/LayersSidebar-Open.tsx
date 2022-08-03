@@ -18,9 +18,9 @@ export class LayersSidebarOpen extends Component {
   @boundMethod
   private toggleOpen() {
     if (sidebars.leftOpen) {
-      sidebars.closeLeft();
+      sidebars.closeLeftSidebar();
     } else {
-      sidebars.openLeft();
+      sidebars.openLeftSidebar();
     }
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, IReactionDisposer, observable, reaction } from 'mobx';
+import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -44,6 +44,11 @@ export class SelectLegend extends Component<FormControlProps> {
   ];
 
   private sortParams: SortParams<StyleRuleExtended> = { asc: true, field: 'layerTitle' };
+
+  constructor(props: FormControlProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.disposer = reaction(

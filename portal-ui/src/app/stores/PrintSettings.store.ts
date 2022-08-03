@@ -1,8 +1,8 @@
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, makeObservable } from 'mobx';
 import { cloneDeep } from 'lodash';
 
 import { StyleRule } from '../services/geoserver/styles.service';
-import { CrgVectorLayer } from '../services/crg/projects.models';
+import { CrgVectorLayer } from '../services/gis/projects.models';
 import { currentProject } from './CurrentProject.store';
 
 export interface StyleRuleExtended extends StyleRule {
@@ -125,6 +125,7 @@ class PrintSettingsStore implements PrintSettings {
   }
 
   private constructor() {
+    makeObservable(this);
     this.reset();
   }
 

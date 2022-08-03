@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import nl2br from 'react-nl2br';
 
-import { PropertySchemaString, PropertyType } from '../../../../services/crg/schema.models';
+import { PropertySchemaString, PropertyType } from '../../../../services/data/schema.models';
 
 import { cnFormView } from '../Form-View';
 import { FormSetLabel } from '../../SetLabel/Form-SetLabel';

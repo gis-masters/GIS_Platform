@@ -1,15 +1,16 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
+
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./Lookup-List.scss';
 
 const cnLookupList = cn('Lookup', 'List');
 
-interface LookupListProps {
+interface LookupListProps extends ChildrenProps {
   multiple: boolean;
   numerous: boolean;
   editable: boolean;
-  children: ReactNode;
 }
 
 export const LookupList: FC<LookupListProps> = ({ multiple, numerous, editable, children }) => (

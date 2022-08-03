@@ -3,18 +3,11 @@ import { InsertDriveFile } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 
 import { FileTiff } from '../../../Icons/FileTiff';
-import { currentUser } from '../../../../stores/CurrentUser.store';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { Role } from '../../../../services/crg/permissions.models';
-import { schemaService } from '../../../../services/crg/schema.service';
-import { getLibraryRecord, LibraryRecord } from '../../../../services/crg/doc-library.service';
-import { applyContentType } from '../../../../services/crg/schema.utils';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
+import { LibraryRecord } from '../../../../services/data/doc-library.service';
 import { formatDate } from '../../../../services/util/date.util';
 
-import { Adapter, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
+import { Adapter, ExplorerItemData } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 
@@ -57,27 +50,6 @@ export class ExplorerAdapterTypeDocument {
 
   static getIcon(item: ExplorerItemData<LibraryRecord>): ReactNode {
     return item.payload.type === 'tif' ? <FileTiff color='primary' /> : <InsertDriveFile color='primary' />;
-  }
-
-  static async getWidgets(item: ExplorerItemData<LibraryRecord>): Promise<ReactNode> {
-    const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.payload.libraryId, item.payload.id);
-    const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id);
-    const schema = applyContentType(await schemaService.getSchema(item.payload.schemaId), item.payload.content_type_id);
-
-    return (
-      <>
-        <ExplorerInfoDescItem multiline>
-          <ViewContentWidget schema={schema} data={item.payload} />
-        </ExplorerInfoDescItem>
-
-        <PermissionsWidget
-          url={url}
-          title={item.payload.title}
-          itemEntityType={ExplorerItemEntityType.DOCUMENT}
-          disabled={!(currentUser.isAdmin || currentItem.role === Role.OWNER)}
-        />
-      </>
-    );
   }
 
   static isFolder(): boolean {

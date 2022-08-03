@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action } from 'mobx';
+import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Pagination } from '@mui/material';
@@ -17,6 +17,11 @@ interface ExplorerPaginationProps {
 
 @observer
 export class ExplorerPagination extends Component<ExplorerPaginationProps> {
+  constructor(props: ExplorerPaginationProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { page, totalPages } = this.props.store;
 

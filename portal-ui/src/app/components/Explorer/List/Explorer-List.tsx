@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { computed, IReactionDisposer, reaction, when } from 'mobx';
+import { computed, IReactionDisposer, reaction, when, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { List } from '@mui/material';
@@ -28,6 +28,11 @@ export class ExplorerList extends Component<ExplorerListProps> {
   private thisRef = createRef<HTMLUListElement>();
   private selectedItemRef = createRef<HTMLDivElement>();
   private selectedItemReactionDisposer: IReactionDisposer;
+
+  constructor(props: ExplorerListProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     const { store, onOpen } = this.props;

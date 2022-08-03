@@ -1,18 +1,18 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
 import { printSettings } from '../../../stores/PrintSettings.store';
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./PrintMapDialog-PreviewImageContainer.scss';
 
 const cnPrintMapDialogPreviewImageContainer = cn('PrintMapDialog', 'PreviewImageContainer');
 
-interface PrintMapDialogPreviewImageContainerProps {
+interface PrintMapDialogPreviewImageContainerProps extends ChildrenProps {
   onDragStart: (e: React.DragEvent<HTMLDivElement>) => void;
   onDragEnd: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrag: (e: React.DragEvent<HTMLDivElement>) => void;
-  children: ReactNode;
 }
 
 export const PrintMapDialogPreviewImageContainer: FC<PrintMapDialogPreviewImageContainerProps> = observer(

@@ -1,0 +1,7 @@
+.XTable-Head {
+  --XTableHeadHovered: 0;
+
+  &:hover {
+    --XTableHeadHovered: 1;
+  }
+}

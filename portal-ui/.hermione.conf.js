@@ -50,7 +50,11 @@ const config = {
   system: {
     parallelLimit: 1,
     fileExtensions: ['.ts', '.js']
-  }
+  },
+  sessionQuitTimeout: 60000,
+  takeScreenshotOnFailsTimeout: 60000,
+  httpTimeout: 60000,
+  pageLoadTimeout: 60000
 };
 
 const myConf = require('./.hermione.my-conf.js');

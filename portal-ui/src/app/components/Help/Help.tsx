@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -26,6 +26,7 @@ export class Help extends Component<HelpProps> {
 
   constructor(props: HelpProps) {
     super(props);
+    makeObservable(this);
 
     this.helpPart = this.props.helpPart || new HelpPart(this.props.path);
   }

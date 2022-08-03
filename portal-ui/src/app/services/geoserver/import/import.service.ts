@@ -20,7 +20,7 @@ import {
 } from './models';
 import { currentImport } from '../../../stores/CurrentImport.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { usersService } from '../../../services/crg/users.service';
+import { usersService } from '../../data/users.service';
 import { http } from '../../http.service';
 
 interface ImportRequestData {
@@ -45,8 +45,9 @@ export async function fetchCurrentImport(importId: string): Promise<void> {
 
 export async function getById(id: string): Promise<ScratchImport> {
   const url = await getGeoserverImportUrl(id);
+  const importStart = await http.get<InputStartResponseDto>(url);
 
-  return (await http.get<InputStartResponseDto>(url)).import;
+  return importStart.import;
 }
 
 export async function checkImportStatus(): Promise<void> {
@@ -104,8 +105,7 @@ export async function initScratchImport(file: File): Promise<ScratchImport> {
     return scratchImport;
   } catch (error) {
     currentImport.setError();
-
-    return Promise.reject(error);
+    throw error;
   }
 }
 
@@ -126,8 +126,7 @@ async function uploadTasks(url: string, file: File) {
     }
   } catch (error) {
     currentImport.setError();
-
-    return Promise.reject(error);
+    throw error;
   }
 }
 

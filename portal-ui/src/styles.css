@@ -2,13 +2,7 @@
 
 @import "./assets/fonts/MaterialIcons/MaterialIcons.css";
 
-@import "~@swimlane/ngx-datatable/index.css";
-
 @import "bootstrap.css";
-
-@import "bootstrap2.css";
-
-@import "~@swimlane/ngx-datatable/assets/icons.css";
 
 *,
 ::after,
@@ -113,13 +107,13 @@ body.global-crosshair-cursor * {
 
 :root {
   --white: #fff;
-  --blue: #1976d2;
-  --error: #f44336;
+  --blue: rgb(25 118 210);
+  --blue-light: rgb(25 118 210 / 8%);
   --gray: #6c757d;
   --gray-dark: #343a40;
+  --gray-light: rgb(0 0 0 / 4%);
   --primary: var(--blue);
-  --light-blue: rgb(25 118 210 / 8%);
-  --light-gray: rgb(0 0 0 / 4%);
+  --error: #f44336;
   --disabled: rgb(0 0 0 / 26%);
   --light: #f8f9fa;
   --yellow: rgb(255 255 0 / 60%);

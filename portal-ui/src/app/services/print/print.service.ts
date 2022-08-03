@@ -1,8 +1,8 @@
 import { jsPDF } from 'jspdf';
 
-import { LibraryRecord } from '../crg/doc-library.service';
-import { schemaService } from '../crg/schema.service';
-import { Schema } from '../crg/schema.models';
+import { LibraryRecord } from '../data/doc-library.service';
+import { schemaService } from '../data/schema.service';
+import { Schema } from '../data/schema.models';
 import { featureExtractRejectionTemplate } from './templates/featureExtractRejection';
 import { rawDataTemplate } from './templates/rawData';
 

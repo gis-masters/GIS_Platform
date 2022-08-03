@@ -5,8 +5,8 @@ import { TextField } from '@mui/material';
 import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutline, Send } from '@mui/icons-material';
 
 import { sleep } from '../../services/util/sleep';
-import { PropertyType, PropertySchema } from '../../services/crg/schema.models';
-import { getDefaultValues, validateFormValue } from '../../services/crg/formValidation.service';
+import { PropertyType, PropertySchema } from '../../services/data/schema.models';
+import { getDefaultValues, validateFormValue } from '../../services/formValidation.service';
 import { Mime } from '../../services/util/Mime';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';

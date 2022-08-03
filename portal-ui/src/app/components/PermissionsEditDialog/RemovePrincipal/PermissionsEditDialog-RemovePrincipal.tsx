@@ -4,7 +4,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { DeleteOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
-import { PrincipalType } from '../../../services/crg/permissions.models';
+import { PrincipalType } from '../../../services/data/permissions.models';
 
 const cnPermissionsEditDialogRemovePrincipal = cn('PermissionsEditDialog', 'RemovePrincipal');
 

@@ -1,5 +1,5 @@
 import React, { Component, createRef, DetailedHTMLProps, InputHTMLAttributes, ReactNode, RefObject } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
 import { AddCircleOutline, Close } from '@mui/icons-material';
@@ -30,6 +30,11 @@ export class FileInput extends Component<FileInputProps> {
   private btnRef: RefObject<HTMLButtonElement> = createRef();
   @observable private _empty = true;
   @observable private files: FileList | null = null;
+
+  constructor(props: FileInputProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const {

@@ -4,9 +4,9 @@ import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import { FileOpenOutlined, LinkOutlined, MapOutlined, OpenInNewOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord } from '../../../services/crg/doc-library.service';
+import { LibraryRecord } from '../../../services/data/doc-library.service';
 import { buildCqlFilter } from '../../../services/util/cql';
-import { Schema } from '../../../services/crg/schema.models';
+import { Schema } from '../../../services/data/schema.models';
 import { Link } from '../../Link/Link';
 
 import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { PageOptions, SortDir } from '../../services/models';
+import { PageOptions, SortOrder } from '../../services/models';
 import { Emitter } from '../../services/common/Emitter';
 
 import { ExplorerStore } from './Explorer.store';
@@ -29,7 +29,7 @@ export enum ExplorerItemType {
   ROOT = 'r'
 }
 
-export enum ExplorerItemEntityType {
+export enum ExplorerItemEntityTypeTitle {
   DATASET = 'набора данных',
   TABLE = 'таблицы',
 
@@ -77,7 +77,6 @@ export interface Adapter {
   getId: (item: ExplorerItemData) => string;
   getTitle: (item: ExplorerItemData) => ReactNode;
   getMeta: (item: ExplorerItemData) => string;
-  getWidgets?: (item: ExplorerItemData) => ReactNode | Promise<ReactNode>;
   getDescription?: (item: ExplorerItemData) => ReactNode;
   getIcon?: (item: ExplorerItemData) => ReactNode;
   isFolder: (item: ExplorerItemData) => boolean;
@@ -97,7 +96,7 @@ export interface Adapter {
     type: ExplorerItemType
   ) => ExplorerItemData | Promise<ExplorerItemData>;
   getChildrenSortDefaultValue?: (item: ExplorerItemData) => string;
-  getChildrenSortDefaultDirection?: (item: ExplorerItemData) => SortDir;
+  getChildrenSortDefaultOrder?: (item: ExplorerItemData) => SortOrder;
   getChildrenFilterField?: (item: ExplorerItemData) => string;
   getChildrenFilterLabel?: (item: ExplorerItemData) => string;
   getToolbarActions?: (

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Tooltip, IconButton, Dialog, DialogContent, DialogActions, DialogContentText } from '@mui/material';
@@ -7,8 +7,8 @@ import { Delete, DeleteOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
 import { Button } from '../../Button/Button';
-import { usersService, CrgUser } from '../../../services/crg/users.service';
-import { groupsService, CrgGroup } from '../../../services/crg/groups.service';
+import { usersService, CrgUser } from '../../../services/data/users.service';
+import { groupsService, CrgGroup } from '../../../services/data/groups.service';
 
 import { Loading } from '../../Loading/Loading';
 
@@ -23,6 +23,11 @@ interface OrgActionsDelProps {
 export class OrgActionsDel extends Component<OrgActionsDelProps> {
   @observable private loading = false;
   @observable private dialogOpen = false;
+
+  constructor(props: OrgActionsDelProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

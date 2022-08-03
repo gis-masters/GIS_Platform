@@ -1,20 +1,23 @@
-import React, { Component, ReactNode } from 'react';
-import { action, observable } from 'mobx';
+import React, { Component } from 'react';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Menu } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
 
+import { ChildrenProps } from '../../../services/models';
+
 import { cnLibraryDocumentActions, LibraryDocumentActionsProps } from '../LibraryDocumentActions';
 import { LibraryDocumentActionsMenuOpenContext } from '../Item/_as/LibraryDocumentActions-Item_as_menu';
 
-interface ContainerProps extends IClassNameProps {
-  children: ReactNode;
-}
-
 @observer
-class Container extends Component<ContainerProps> {
+class Container extends Component<IClassNameProps & ChildrenProps> {
   @observable private anchorEl: HTMLElement | null = null;
+
+  constructor(props: IClassNameProps & ChildrenProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { children, className } = this.props;

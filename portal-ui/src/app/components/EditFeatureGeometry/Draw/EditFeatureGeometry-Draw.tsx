@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Coordinate } from 'ol/coordinate';
 import { DrawEvent } from 'ol/interaction/Draw';
@@ -31,6 +31,11 @@ interface EditFeatureGeometryDrawProps {
 @observer
 export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawProps> {
   @observable private active = false;
+
+  constructor(props: EditFeatureGeometryDrawProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     communicationService.drawOff.on(() => {

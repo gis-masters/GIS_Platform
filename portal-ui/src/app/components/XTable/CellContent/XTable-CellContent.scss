@@ -1,0 +1,17 @@
+.XTable-CellContent {
+  position: relative;
+
+  display: block;
+  overflow: hidden;
+
+  width: calc(calc(var(--XTableCellWidth) - 32) * 1px);
+
+  &_singleLineContent {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &_unspecifiedWidth {
+    max-width: 418px;
+  }
+}

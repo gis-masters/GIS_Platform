@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 
-import { Dataset, getDataset, getDatasets, getDatasetsWithParticularOne } from '../../../../services/data.service';
+import { Dataset, getDataset, getDatasets, getDatasetsWithParticularOne } from '../../../../services/data/data.service';
 import { communicationService } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { PageOptions, SortDir } from '../../../../services/models';
+import { PageOptions, SortOrder } from '../../../../services/models';
 import { Emitter } from '../../../../services/common/Emitter';
 import { CreateDatasetElement } from '../../../CreateDatasetElement/CreateDatasetElement';
 import { Database } from '../../../Icons/Database';
@@ -97,8 +97,8 @@ export class ExplorerAdapterTypeDatasetRoot {
     return 'created_at';
   }
 
-  static getChildrenSortDefaultDirection(): SortDir {
-    return SortDir.DESC;
+  static getChildrenSortDefaultOrder(): SortOrder {
+    return SortOrder.DESC;
   }
 
   static getChildrenFilterField(): string {

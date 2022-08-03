@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Badge, IconButton, Tooltip } from '@mui/material';
 import { OpenInNew } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { currentProject } from '../../stores/CurrentProject.store';
-import { DataTableConnection, getDataTableConnections } from '../../services/data.service';
-import { MAP_QUERY_PARAMS_DELIMITER } from '../../services/map/map-link-following.service';
-import { CrgLayer, CrgProject } from '../../services/crg/projects.models';
+import { VectorTableConnection, getVectorTableConnections } from '../../services/data/data.service';
+import { getFeaturesUrlFragment } from '../../services/map/map-url.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { CrgProject } from '../../services/gis/projects.models';
 import { SortParams } from '../../services/util/sortObjects';
-import { services } from '../../services/services';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { XTableColumn } from '../XTable/XTable';
 
@@ -26,7 +25,7 @@ interface OpenInAnotherProjectProps {
 @observer
 export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
   @observable private dialogOpen = false;
-  @observable private connections: DataTableConnection[] = [];
+  @observable private connections: VectorTableConnection[] = [];
   private connectionsFetchingOperationId: symbol;
 
   private cols: XTableColumn<CrgProject>[] = [
@@ -39,6 +38,11 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
   ];
 
   private sortParams: SortParams<CrgProject> = { asc: true, field: 'name' };
+
+  constructor(props: OpenInAnotherProjectProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await this.fetchConnections();
@@ -90,7 +94,7 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
     const { feature } = this.props;
     const operationId = Symbol();
     this.connectionsFetchingOperationId = operationId;
-    const connections = await getDataTableConnections(feature.id.split('.')[0]);
+    const connections = await getVectorTableConnections(feature.id.split('.')[0]);
     if (this.connectionsFetchingOperationId === operationId) {
       this.setConnections(connections);
     }
@@ -116,8 +120,7 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
   @action.bound
   private select([project]: CrgProject[]) {
     this.closeDialog();
-    const { layer } = this.connections.find(connection => connection.project.id === project.id);
-    void this.navigateToObject(project, layer);
+    this.navigateToObject(project);
   }
 
   private getItemId(project: CrgProject): string {
@@ -125,18 +128,13 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
   }
 
   @action
-  private setConnections(connections: DataTableConnection[]) {
+  private setConnections(connections: VectorTableConnection[]) {
     this.connections = connections;
   }
 
-  private async navigateToObject(project: CrgProject, layer: CrgLayer) {
+  private navigateToObject(project: CrgProject) {
     const { feature } = this.props;
-    await services.provided;
 
-    services.ngZone.run(() => {
-      void services.router.navigate([`/projects/${project.id}/map`], {
-        queryParams: { features: `${feature.id}${MAP_QUERY_PARAMS_DELIMITER}${layer.complexName}` }
-      });
-    });
+    location.href = `${location.origin}/projects/${project.id}/map?features=${getFeaturesUrlFragment([feature])}`;
   }
 }

@@ -1,39 +1,33 @@
 import React, { ReactNode } from 'react';
-import { DataTable, dataTableSchema, getDataTable } from '../../../../services/data.service';
+import { VectorTable } from '../../../../services/data/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { LayerIcon } from '../../../LayerIcon/LayerIcon.composed';
-import { getTableRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { Role } from '../../../../services/crg/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { formatDate } from '../../../../services/util/date.util';
-import { Schema } from '../../../../services/crg/schema.models';
 
-import { Adapter, ExplorerItemData, ExplorerItemEntityType } from '../../Explorer.models';
+import { Adapter, ExplorerItemData } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { DataTableActions } from '../../../DataTableActions/DataTableActions';
+import { VectorTableActions } from '../../../VectorTableActions/VectorTableActions';
 import { Link } from '../../../Link/Link';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
-    [ExplorerItemType.TABLE]: DataTable;
+    [ExplorerItemType.TABLE]: VectorTable;
   }
 }
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeTable {
-  static getId(item: ExplorerItemData<DataTable>): string {
+  static getId(item: ExplorerItemData<VectorTable>): string {
     return item.payload.identifier;
   }
 
-  static getTitle(item: ExplorerItemData<DataTable>): string {
+  static getTitle(item: ExplorerItemData<VectorTable>): string {
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<DataTable>): ReactNode {
+  static getDescription(item: ExplorerItemData<VectorTable>): ReactNode {
     const { details, createdAt, schemaId } = item.payload;
 
     return (
@@ -59,33 +53,11 @@ export class ExplorerAdapterTypeTable {
     );
   }
 
-  static getMeta(item: ExplorerItemData<DataTable>): string {
+  static getMeta(item: ExplorerItemData<VectorTable>): string {
     return item.payload.identifier;
   }
 
-  static async getWidgets(item: ExplorerItemData<DataTable>): Promise<ReactNode> {
-    const { dataset, identifier, title } = item.payload;
-    const url = await getTableRoleAssignmentUrl(dataset, identifier);
-    const currentItem = (await getDataTable(dataset, identifier)) as unknown as Record<string, unknown>;
-
-    return (
-      <>
-        <ExplorerInfoDescItem multiline>
-          <ViewContentWidget schema={dataTableSchema as unknown as Schema} data={currentItem} />
-        </ExplorerInfoDescItem>
-
-        <ConnectionsTableToProjectsWidget dataTable={item.payload} />
-        <PermissionsWidget
-          url={url}
-          title={title}
-          itemEntityType={ExplorerItemEntityType.TABLE}
-          disabled={!(currentUser.isAdmin || currentItem.role === Role.OWNER)}
-        />
-      </>
-    );
-  }
-
-  static getIcon(item: ExplorerItemData<DataTable>): ReactNode {
+  static getIcon(item: ExplorerItemData<VectorTable>): ReactNode {
     return <LayerIcon type='vector' schemaId={item.payload.schemaId} colorized />;
   }
 
@@ -93,7 +65,7 @@ export class ExplorerAdapterTypeTable {
     return false;
   }
 
-  static getActions(item: ExplorerItemData<DataTable>): ReactNode {
-    return <DataTableActions dataTable={item.payload} />;
+  static getActions(item: ExplorerItemData<VectorTable>): ReactNode {
+    return <VectorTableActions vectorTable={item.payload} />;
   }
 }

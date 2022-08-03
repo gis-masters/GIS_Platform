@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertySchemaDatetime, PropertyType } from '../../../../services/crg/schema.models';
+import { PropertySchemaDatetime, PropertyType } from '../../../../services/data/schema.models';
 import { formatDate } from '../../../../services/util/date.util';
 
 import { cnFormView } from '../Form-View';
@@ -15,7 +15,10 @@ import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 class FormViewTypeDatetime extends Component<FormControlProps> {
   render() {
     const { className, errors, inSet, fieldValue = '—', property } = this.props;
-    const date = formatDate(fieldValue, (property as PropertySchemaDatetime).format);
+    const date =
+      typeof fieldValue === 'number' || typeof fieldValue === 'string' || fieldValue instanceof Date
+        ? formatDate(fieldValue, (property as PropertySchemaDatetime).format)
+        : '';
 
     return (
       <div className={cnFormView({ inSet, empty: fieldValue === '—', type: property.propertyType }, [className])}>

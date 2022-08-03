@@ -1,14 +1,11 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
+
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./LayersSidebar-ToolbarLeft.scss';
 
 const cnLayersSidebarToolbarLeft = cn('LayersSidebar', 'ToolbarLeft');
-
-interface LayersSidebarToolbarLeftProps {
-  children: ReactNode;
-}
-
-export const LayersSidebarToolbarLeft: FC<LayersSidebarToolbarLeftProps> = ({ children }) => (
+export const LayersSidebarToolbarLeft: FC<ChildrenProps> = ({ children }) => (
   <div className={cnLayersSidebarToolbarLeft()}>{children}</div>
 );

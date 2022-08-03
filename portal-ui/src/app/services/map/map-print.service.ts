@@ -12,7 +12,7 @@ import { mapStore } from '../../stores/Map.store';
 import { Legend } from '../../components/Legend/Legend';
 import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles.service';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgLayerType, CrgVectorLayer } from '../crg/projects.models';
+import { CrgLayerType, CrgVectorLayer } from '../gis/projects.models';
 import { sleep } from '../util/sleep';
 
 const BASE_SCALE_LINE_DPI = 150;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tabs, Tab } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -7,8 +7,8 @@ import { cn } from '@bem-react/classname';
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allPermissions } from '../../stores/AllPermissions.store';
-import { allDataEntitiesService } from '../../services/allDataEntities.service';
-import { allPermissionsService } from '../../services/crg/allPermissions.service';
+import { allDataEntitiesService } from '../../services/data/allDataEntities.service';
+import { allPermissionsService } from '../../services/data/allPermissions.service';
 import { OrganizationSettings } from '../OrganizationSettings/OrganizationSettings';
 import { OrganizationClean } from '../OrganizationClean/OrganizationClean';
 import { OrgGroups } from '../OrgGroups/OrgGroups';
@@ -29,6 +29,11 @@ const tabs = [
 @observer
 export class OrgAdmin extends Component {
   @observable private activeTab = 0;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     await allDataEntitiesService.initAllDataEntitiesStore();

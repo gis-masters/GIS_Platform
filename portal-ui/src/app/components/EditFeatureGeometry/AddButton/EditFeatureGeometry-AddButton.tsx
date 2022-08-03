@@ -1,16 +1,16 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { AddCircleOutline } from '@mui/icons-material';
 
+import { ChildrenProps } from '../../../services/models';
 import { Button } from '../../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-AddButton.scss';
 
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
-interface EditFeatureGeometryAddButtonProps {
+interface EditFeatureGeometryAddButtonProps extends ChildrenProps {
   onClick: () => void;
-  children: ReactNode;
 }
 
 export const EditFeatureGeometryAddButton: FC<EditFeatureGeometryAddButtonProps> = ({ onClick, children }) => (

@@ -10,7 +10,7 @@ import {
   OldPropertySchemaStringText,
   OldPropertySchemaInt,
   OldPropertySchemaDouble
-} from '../crg/schemaOld.models';
+} from '../data/schemaOld.models';
 import { services } from '../services';
 
 export interface ValidationError {
@@ -65,8 +65,7 @@ export class FeaturePropertyValidators {
         return errors;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const currentValue = control.value;
+      const currentValue = control.value as string;
       if (isEmpty(currentValue)) {
         // Если ввод пуст, посмотрим обязателен ли атрибут
         if (propertySchema.required) {

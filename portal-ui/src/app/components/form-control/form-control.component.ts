@@ -13,13 +13,13 @@ import {
 } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 import { createRoot, Root } from 'react-dom/client';
-import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { boundMethod } from 'autobind-decorator';
 
-import { OldPropertySchema } from '../../services/crg/schemaOld.models';
+import { OldPropertySchema } from '../../services/data/schemaOld.models';
 import { FormControl } from '../Form/Control/Form-Control.composed';
-import { convertProperties } from '../../services/crg/schema.utils';
-import { PropertyType } from '../../services/crg/schema.models';
+import { convertProperties } from '../../services/data/schema.utils';
+import { PropertyType } from '../../services/data/schema.models';
 import { FormView } from '../Form/View/Form-View.composed';
 import { registry } from '../../services/registry';
 import { FormControlProps } from '../Form/Control/Form-Control';
@@ -47,7 +47,7 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
 
   private onChange: (value: unknown) => void;
   private value: unknown;
-  public editFeatureForm: FormGroup;
+  public editFeatureForm: UntypedFormGroup;
   private root: Root;
 
   ngOnInit() {
@@ -103,7 +103,6 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
 
   registerOnChange(fn: (value: unknown) => void): void {
     this.onChange = fn;
-    this.renderReactElement();
   }
 
   registerOnTouched(): void {

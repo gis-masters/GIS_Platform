@@ -1,4 +1,4 @@
-import { NgModule, ErrorHandler } from '@angular/core';
+import { NgModule, ErrorHandler, ModuleWithProviders } from '@angular/core';
 import { LayoutModule } from '@angular/cdk/layout';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -10,13 +10,10 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
 import { MaterialModule } from './material.module';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxMaskModule } from 'ngx-mask';
-import { AlertModule } from 'ngx-bootstrap/alert';
 import { FileUploadModule } from 'ng2-file-upload';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { HttpClientModule } from '@angular/common/http';
-import { NgSelectModule } from '@ng-select/ng-select';
 
 import { LoadingModule } from './components/loading/loading.module';
 
@@ -40,8 +37,7 @@ import { ProgressItemComponent } from './components/progress-item/progress-item.
 import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/confirm-dialog.component';
 import { EditFeaturesSidebarComponent } from './components/edit-features-sidebar/edit-features-sidebar.component';
 import { EditFeatureComponent } from './components/edit-feature/edit-feature.component';
-import { AttributesBarComponent } from './components/attributes-bar/attributes-bar.component';
-import { TableFilterComponent } from './components/table-filter/table-filter.component';
+import { AttributesComponent } from './components/attributes/attributes.component';
 import { CopyFeaturesDialogComponent } from './components/dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ButtonComponent } from './components/button/button.component';
 import { ResizableBarDirective } from './directives/resizableBar.directive';
@@ -80,10 +76,11 @@ import { FormControlComponent } from './components/form-control/form-control.com
 import { LibraryDocumentPageContainerComponent } from './components/library-document-page-container/library-document-page-container.component';
 import { ServicesCalculatorComponent } from './components/services-calculator/services-calculator.component';
 import { FeatureExtractComponent } from './components/feature-extract/feature-extract.component';
-import { RelatedDocumentsButtonComponent } from './components/related-documents-button/related-documents-button.component';
 import { FormDescriptionComponent } from './components/form-description/form-description.component';
 import { RestorePasswordFormComponent } from './components/restore-password-form/restore-password-form.component';
 import { ChangePasswordFormComponent } from './components/change-password-form/change-password-form.component';
+import { RelationsButtonComponent } from './components/relations-button/relations-button.component';
+import { FeaturesSidebarTeaserComponent } from './components/features-sidebar-teaser/features-sidebar-teaser.component';
 
 @NgModule({
   declarations: [
@@ -107,8 +104,7 @@ import { ChangePasswordFormComponent } from './components/change-password-form/c
     ConfirmDialogComponent,
     EditFeaturesSidebarComponent,
     EditFeatureComponent,
-    AttributesBarComponent,
-    TableFilterComponent,
+    AttributesComponent,
     CopyFeaturesDialogComponent,
     ButtonComponent,
     ResizableBarDirective,
@@ -147,19 +143,19 @@ import { ChangePasswordFormComponent } from './components/change-password-form/c
     FormControlComponent,
     ServicesCalculatorComponent,
     FeatureExtractComponent,
-    RelatedDocumentsButtonComponent,
     FormDescriptionComponent,
-    ChangePasswordFormComponent
+    ChangePasswordFormComponent,
+    FormDescriptionComponent,
+    RelationsButtonComponent,
+    FeaturesSidebarTeaserComponent
   ],
   imports: [
     HttpClientModule,
     AppRoutingModule,
     MaterialModule,
-
     BrowserModule,
     FileUploadModule,
     BrowserAnimationsModule,
-    AlertModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
     LayoutModule,
@@ -169,12 +165,8 @@ import { ChangePasswordFormComponent } from './components/change-password-form/c
       serverLogLevel: NgxLoggerLevel.WARN
     }),
     NgxMaskModule.forRoot(),
-    NgxDatatableModule,
-    NgSelectModule,
-
     LoadingModule
-  ],
-  entryComponents: [AlertDialogComponent, ConfirmDialogComponent, CopyFeaturesDialogComponent],
+  ] as ModuleWithProviders<unknown>[],
   providers: [
     {
       provide: ErrorHandler,

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ScaleLine as BaseScaleLine } from 'ol/control';
 
-const normalUnits = {
+const normalUnits: Record<string, string> = {
   nm: 'нм',
   μm: 'мкм',
   mm: 'мм',

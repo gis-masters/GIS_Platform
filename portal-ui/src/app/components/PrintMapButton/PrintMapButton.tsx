@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@mui/material';
@@ -16,6 +16,11 @@ const cnPrintMapButton = cn('PrintMapButton');
 @observer
 export class PrintMapButton extends Component {
   @observable private dialogOpen = false;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

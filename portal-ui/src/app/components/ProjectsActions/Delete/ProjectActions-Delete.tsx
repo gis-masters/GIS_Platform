@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Delete, DeleteOutline } from '@mui/icons-material';
 import {
@@ -15,8 +15,8 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { communicationService } from '../../../services/communication.service';
-import { projectsService } from '../../../services/crg/projects.service';
-import { CrgProject } from '../../../services/crg/projects.models';
+import { projectsService } from '../../../services/gis/projects.service';
+import { CrgProject } from '../../../services/gis/projects.models';
 import { Button } from '../../Button/Button';
 
 const cnProjectActionsDelete = cn('ProjectActions', 'Delete');
@@ -28,6 +28,11 @@ interface ProjectActionsDeleteProps {
 @observer
 export class ProjectActionsDelete extends Component<ProjectActionsDeleteProps> {
   @observable private dialogOpen = false;
+
+  constructor(props: ProjectActionsDeleteProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidUpdate(prevProps: ProjectActionsDeleteProps) {
     if (prevProps.project.id !== this.props.project.id) {

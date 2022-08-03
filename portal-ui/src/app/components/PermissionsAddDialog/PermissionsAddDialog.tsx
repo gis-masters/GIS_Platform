@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Dialog, DialogContent, DialogActions, Checkbox, Select, MenuItem, SelectChangeEvent } from '@mui/material';
@@ -7,10 +7,10 @@ import { boundMethod } from 'autobind-decorator';
 
 import { allProjects } from '../../stores/AllProjects.store';
 import { allDataEntitiesStore } from '../../stores/AllDataEntitiesStore';
-import { Role, roles, rolesTitles, PrincipalType, projectRoles } from '../../services/crg/permissions.models';
-import { PermissionsListItem } from '../../services/crg/allPermissions.service';
-import { Dataset, DataTable, tablesEqual } from '../../services/data.service';
-import { CrgProject } from '../../services/crg/projects.models';
+import { Role, roles, rolesTitles, PrincipalType, projectRoles } from '../../services/data/permissions.models';
+import { PermissionsListItem } from '../../services/data/allPermissions.service';
+import { Dataset, VectorTable, tablesEqual } from '../../services/data/data.service';
+import { CrgProject } from '../../services/gis/projects.models';
 import {
   baseXTablePropsSet,
   PermissionsListItemType,
@@ -28,7 +28,7 @@ const cnPermissionsAddDialog = cn('PermissionsAddDialog');
 
 interface PermissionsAddDialogProps {
   usedProjects: CrgProject[];
-  usedTables: DataTable[];
+  usedTables: VectorTable[];
   usedDatasets: Dataset[];
   principalId: number;
   principalType: PrincipalType;
@@ -40,8 +40,13 @@ interface PermissionsAddDialogProps {
 
 @observer
 export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
-  @observable selectedItems: CrgProject[] | DataTable[] | Dataset[] = [];
+  @observable selectedItems: CrgProject[] | VectorTable[] | Dataset[] = [];
   @observable role: Role = Role.VIEWER;
+
+  constructor(props: PermissionsAddDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { open, type } = this.props;
@@ -114,16 +119,16 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   }
 
   @computed
-  private get availableItems(): CrgProject[] | DataTable[] | Dataset[] {
+  private get availableItems(): CrgProject[] | VectorTable[] | Dataset[] {
     return {
       [PermissionsListItemType.PROJECT]: allProjects.list,
-      [PermissionsListItemType.TABLE]: allDataEntitiesStore.dataTables,
+      [PermissionsListItemType.TABLE]: allDataEntitiesStore.vectorTables,
       [PermissionsListItemType.DATASET]: allDataEntitiesStore.datasets
     }[this.props.type];
   }
 
   @computed
-  private get usedItems(): CrgProject[] | DataTable[] | Dataset[] {
+  private get usedItems(): CrgProject[] | VectorTable[] | Dataset[] {
     const { type, usedProjects, usedTables, usedDatasets } = this.props;
 
     return {
@@ -166,7 +171,10 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   private handleSelectAll() {
     this.selectedItems = this.allSelected
       ? []
-      : ([...this.availableItems].filter(item => !this.isAlreadyUsed(item)) as CrgProject[] | DataTable[] | Dataset[]);
+      : ([...this.availableItems].filter(item => !this.isAlreadyUsed(item)) as
+          | CrgProject[]
+          | VectorTable[]
+          | Dataset[]);
   }
 
   @action.bound
@@ -175,7 +183,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   }
 
   @boundMethod
-  private renderCheckbox({ rowData }: { rowData: CrgProject | DataTable | Dataset }): ReactElement {
+  private renderCheckbox({ rowData }: { rowData: CrgProject | VectorTable | Dataset }): ReactElement {
     const { type } = this.props;
     let selected: boolean;
     const alreadyUsed = this.isAlreadyUsed(rowData);
@@ -186,7 +194,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
     }
     if (type === PermissionsListItemType.TABLE) {
       selected =
-        alreadyUsed || (this.selectedItems as DataTable[]).some(table => tablesEqual(table, rowData as DataTable));
+        alreadyUsed || (this.selectedItems as VectorTable[]).some(table => tablesEqual(table, rowData as VectorTable));
     }
     if (type === PermissionsListItemType.DATASET) {
       const { identifier } = rowData as Dataset;
@@ -203,7 +211,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
     );
   }
 
-  private isAlreadyUsed(item: CrgProject | DataTable | Dataset): boolean {
+  private isAlreadyUsed(item: CrgProject | VectorTable | Dataset): boolean {
     const { type, usedProjects, usedTables, usedDatasets } = this.props;
     if (type === PermissionsListItemType.PROJECT) {
       const { id } = item as CrgProject;
@@ -211,7 +219,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
       return usedProjects.some(usedProject => usedProject.id === id);
     }
     if (type === PermissionsListItemType.TABLE) {
-      return usedTables.some(usedTable => tablesEqual(item as DataTable, usedTable));
+      return usedTables.some(usedTable => tablesEqual(item as VectorTable, usedTable));
     }
     if (type === PermissionsListItemType.DATASET) {
       const { identifier } = item as Dataset;
@@ -221,7 +229,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   }
 
   @action.bound
-  private handleCheck(item: CrgProject | DataTable | Dataset, checked: boolean) {
+  private handleCheck(item: CrgProject | VectorTable | Dataset, checked: boolean) {
     if (checked) {
       (this.selectedItems as typeof item[]).push(item);
     } else {

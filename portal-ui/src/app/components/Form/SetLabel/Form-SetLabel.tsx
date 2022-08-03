@@ -1,12 +1,10 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
+
+import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./Form-SetLabel.scss';
 
 const cnFormSetLabel = cn('Form', 'SetLabel');
 
-interface FormSetLabelProps {
-  children: ReactNode;
-}
-
-export const FormSetLabel: FC<FormSetLabelProps> = ({ children }) => <div className={cnFormSetLabel()}>{children}</div>;
+export const FormSetLabel: FC<ChildrenProps> = ({ children }) => <div className={cnFormSetLabel()}>{children}</div>;

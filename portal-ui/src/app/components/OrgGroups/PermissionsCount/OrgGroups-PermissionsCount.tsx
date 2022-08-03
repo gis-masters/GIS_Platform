@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { PermissionsCount } from '../../PermissionsCount/PermissionsCount';
-import { PrincipalType } from '../../../services/crg/permissions.models';
+import { PrincipalType } from '../../../services/data/permissions.models';
 
 import { CrgGroupExtended } from '../OrgGroups';
 

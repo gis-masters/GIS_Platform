@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { KeyboardArrowDown, Warning } from '@mui/icons-material';
 
-import { ImportResult } from '../../services/crg/processes.service';
+import { ImportResult } from '../../services/data/processes.service';
 import { Button } from '../Button/Button';
 import { Link } from '../Link/Link';
 
@@ -37,8 +37,8 @@ interface ImportGmlResultDialogProps {
 @observer
 export class ImportGmlResultDialog extends Component<ImportGmlResultDialogProps> {
   render() {
-    const { open, reports = {} as Partial<ImportResult>, onClose } = this.props;
-    const { projectIsNew, projectId, projectName, importLayerReports = [] } = reports;
+    const { open, reports, onClose } = this.props;
+    const { projectIsNew, projectId, projectName, importLayerReports = [] } = reports || {};
 
     return (
       <Dialog open={open} onClose={onClose} PaperProps={{ className: cnImportGmlResultDialog() }}>
@@ -56,7 +56,7 @@ export class ImportGmlResultDialog extends Component<ImportGmlResultDialogProps>
             </AccordionSummary>
             <AccordionDetails>
               <List className={cnImportGmlResultDialog('ReportList')}>
-                {importLayerReports.map(reportItem => {
+                {importLayerReports?.map(reportItem => {
                   if (reportItem.success) {
                     return (
                       <ListItem key={reportItem.tableIdentifier}>
