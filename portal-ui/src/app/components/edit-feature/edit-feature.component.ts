@@ -285,9 +285,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         [{ ...this.features[0], properties: newProperties, geometry: this.changedGeometry }],
         this.layer
       );
-
-      mapService.refreshLayers();
-      communicationService.featuresUpdated.emit();
     } else {
       let geometry: WfsGeometry<Coordinate>;
 
@@ -316,6 +313,9 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       properties: this.properties,
       isNew: false
     });
+
+    mapService.refreshAllLayers();
+    communicationService.featuresUpdated.emit();
   }
 
   private getFieldByKey(key: string): PropertySchema {
@@ -346,7 +346,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           await deleteVectorTableRecord(dataset, tableName, this.features[0].id);
         }
 
-        mapService.refreshLayers();
+        mapService.refreshAllLayers();
         communicationService.featuresUpdated.emit();
         sidebars.setFeaturesEdited(false);
         if (this.viewFeatures) {
@@ -446,7 +446,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     this.loadPercent = percent > 100 ? 100 : percent;
     this.isSaveInProgress = false;
-    mapService.refreshLayers();
+    mapService.refreshAllLayers();
     mapService.clearDraft();
 
     Toast.success('Сохранено');

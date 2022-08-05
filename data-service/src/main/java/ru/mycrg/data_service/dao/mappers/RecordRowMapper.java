@@ -9,8 +9,11 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 
 import static java.sql.Types.*;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 
 public class RecordRowMapper extends BySchemaRowMapper implements RowMapper<IRecord> {
 
@@ -33,6 +36,14 @@ public class RecordRowMapper extends BySchemaRowMapper implements RowMapper<IRec
                     break;
                 case BIGINT:
                     record.put(columnName, rs.getLong(i));
+                    break;
+                case TIMESTAMP:
+                    Timestamp timestamp = rs.getTimestamp(i);
+                    if (timestamp != null) {
+                        record.put(columnName, timestamp.toLocalDateTime()
+                                                        .format(DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN)));
+                    }
+
                     break;
                 case OTHER:
                     if (rs.getObject(i) != null && schema != null) {

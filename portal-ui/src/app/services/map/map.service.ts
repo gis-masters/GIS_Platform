@@ -397,23 +397,6 @@ class MapService {
   /**
    * @param complexLayerName Название слоя в формате 'workspace:layerName'
    */
-  getLayerOpacity(complexLayerName: string) {
-    const layerByName = this.getLayerByName(complexLayerName);
-    if (layerByName) {
-      return layerByName.getOpacity();
-    }
-  }
-
-  getLayerVisibility(complexLayerName: string): boolean {
-    const layer = this.getLayerByName(complexLayerName);
-    if (layer) {
-      return layer.getVisible();
-    }
-  }
-
-  /**
-   * @param complexLayerName Название слоя в формате 'workspace:layerName'
-   */
   private getLayerByName(complexLayerName: string): ImageLayer<ImageSource> | TileLayer<TileSource> | undefined {
     return this.getUserLayers().find(layer => {
       const source = layer.getSource() as TileWMS;
@@ -423,7 +406,7 @@ class MapService {
   }
 
   // Принудительный рефреш
-  refreshLayers() {
+  refreshAllLayers() {
     this.getUserLayers().forEach(layer => layer.getSource().refresh());
   }
 

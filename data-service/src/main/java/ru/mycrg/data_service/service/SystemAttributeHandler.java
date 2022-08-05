@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
+import ru.mycrg.data_service.util.CrgScriptEngine;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
@@ -27,11 +28,14 @@ public class SystemAttributeHandler {
 
     private final Logger log = LoggerFactory.getLogger(SystemAttributeHandler.class);
 
+    private final CrgScriptEngine scriptEngine;
     private final IAuthenticationFacade authenticationFacade;
 
     private SchemaDto schema;
 
-    public SystemAttributeHandler(IAuthenticationFacade authenticationFacade) {
+    public SystemAttributeHandler(CrgScriptEngine scriptEngine,
+                                  IAuthenticationFacade authenticationFacade) {
+        this.scriptEngine = scriptEngine;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -131,6 +135,22 @@ public class SystemAttributeHandler {
         feature.setProperties(decapitalized);
 
         return this;
+    }
+
+    public Map<String, Object> customRulesCalculation(@NotNull Map<String, Object> fullProperties) {
+        Map<String, Object> result = new HashMap<>();
+
+        String calcFiledFunction = schema.getCalcFiledFunction();
+        if (calcFiledFunction != null) {
+            ((Map<String, Object>) scriptEngine.invokeFunction(fullProperties, calcFiledFunction))
+                    .forEach((key, value) -> {
+                        log.debug("Add prop: {}, with: {}", key, value);
+
+                        result.put(key, value);
+                    });
+        }
+
+        return result;
     }
 
     public Map<String, Object> clearSystemAttributes(@NotNull IRecord record) {

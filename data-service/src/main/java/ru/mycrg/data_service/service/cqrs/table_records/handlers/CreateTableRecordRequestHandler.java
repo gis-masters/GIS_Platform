@@ -39,6 +39,9 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
                               .prepareJsonb(feature)
                               .decapitalize(feature);
 
+        systemAttributeHandler.customRulesCalculation(feature.getProperties())
+                              .forEach(feature::setProperty);
+
         ResourceQualifier qualifier = request.getQualifier();
 
         throwIfNotMatchTableColumns(feature.getProperties(), ddlTables.getAllColumnNames(qualifier.getTable()));

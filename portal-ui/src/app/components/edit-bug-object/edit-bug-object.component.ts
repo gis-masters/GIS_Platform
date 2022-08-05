@@ -74,7 +74,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
         this.closeMe.emit(true);
         Toast.success('Сохранено');
 
-        mapService.refreshLayers();
+        mapService.refreshAllLayers();
         await validationService.initValidation([crgLayer]);
         communicationService.needUpdateValidationResults.emit();
       } else {

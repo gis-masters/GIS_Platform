@@ -110,10 +110,11 @@ public class OwnerRecordsService implements IRecordsService {
         try {
             log.debug("try create record: {}", record);
 
+            Map<String, Object> props = record.getContent();
             systemAttributeHandler.initSchema(schema)
-                                  .fillByContentType(record.getContent())
-                                  .addDefaultPath(record.getContent())
-                                  .fillCreator(record.getContent())
+                                  .fillByContentType(props)
+                                  .addDefaultPath(props)
+                                  .fillCreator(props)
                                   .updateModifiedTime(record)
                                   .prepareJsonb(record);
 
@@ -125,12 +126,14 @@ public class OwnerRecordsService implements IRecordsService {
                 String path = fileStorageService.storeFile(file, fileStorageService.generateFileName(file));
 
                 systemAttributeHandler.initSchema(schema)
-                                      .fillFileInfo(record.getContent(), file)
+                                      .fillFileInfo(props, file)
                                       .prepareJsonb(record)
-                                      .fillFileInnerPath(record.getContent(), path);
+                                      .fillFileInnerPath(props, path);
             }
 
-            throwIfNotMatchTableColumns(record.getContent(), ddlTables.getAllColumnNames(lQualifier.getTable()));
+            props.putAll(systemAttributeHandler.customRulesCalculation(props));
+
+            throwIfNotMatchTableColumns(props, ddlTables.getAllColumnNames(lQualifier.getTable()));
             simpleIntentHandler.updateIntents(record);
             IRecord newRecord = recordsDao.addRecord(lQualifier, record, schema);
             permissionsService.addOwnerPermission(lQualifier, record.getId());

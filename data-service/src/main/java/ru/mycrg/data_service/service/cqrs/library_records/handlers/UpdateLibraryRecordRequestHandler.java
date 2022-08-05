@@ -3,7 +3,6 @@ package ru.mycrg.data_service.service.cqrs.library_records.handlers;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.DocumentLibraryService;
-import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.UpdateLibraryRecordRequest;
 import ru.mycrg.data_service.service.records.IRecordsService;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
@@ -17,14 +16,11 @@ public class UpdateLibraryRecordRequestHandler implements IRequestHandler<Update
 
     private final DocumentLibraryService librariesService;
     private final RecordServiceFactory recordServiceFactory;
-    private final SystemAttributeHandler systemAttributeHandler;
 
     public UpdateLibraryRecordRequestHandler(DocumentLibraryService librariesService,
-                                             RecordServiceFactory recordServiceFactory,
-                                             SystemAttributeHandler systemAttributeHandler) {
+                                             RecordServiceFactory recordServiceFactory) {
         this.librariesService = librariesService;
         this.recordServiceFactory = recordServiceFactory;
-        this.systemAttributeHandler = systemAttributeHandler;
     }
 
     @Override
@@ -37,9 +33,6 @@ public class UpdateLibraryRecordRequestHandler implements IRequestHandler<Update
         request.setOldRecord(currentRecordState);
 
         SchemaDto schema = librariesService.getSchema(recordQualifier.getTable());
-        systemAttributeHandler.initSchema(schema)
-                              .updateModifiedTime(newRecord)
-                              .prepareJsonb(newRecord);
 
         recordsService.updateRecord(recordQualifier, newRecord, schema);
 

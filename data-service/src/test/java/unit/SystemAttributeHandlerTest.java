@@ -5,6 +5,7 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.security.AuthenticationFacade;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
+import ru.mycrg.data_service.util.CrgScriptEngine;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,7 @@ public class SystemAttributeHandlerTest {
     private final String extensionType = "gml";
 
     private final SystemAttributeHandler systemAttributeHandler = new SystemAttributeHandler(
-            new AuthenticationFacade());
+            new CrgScriptEngine(), new AuthenticationFacade());
 
     @Test
     public void prepareCorrectFileName_fromTitleWithoutExtension() {
