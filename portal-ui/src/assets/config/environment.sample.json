@@ -1,0 +1,33 @@
+{
+  "platform": "conv",
+  "production": false,
+  "server": {
+    "host": "localhost",
+    "port": "8100",
+    "wsPort": "8084",
+    "path": "",
+    "wsPath": ""
+  },
+  "scratchWorkspaceName": "scratch_database",
+  "flags": {
+    "dataManagement": true
+  },
+  "favicon": "/assets/logo/dev/favicon.png",
+  "suppressToastErrors": {
+    "http": false,
+    "https": false
+  },
+  "sendErrorsToTG": {
+    "http": false,
+    "https": false
+  },
+  "title": "ГИС Мастерская (Тестовый портал)",
+  "owner": "Тестовая мастерская",
+  "description": "Тестовая часть системы обеспечения градостроительной деятельности Республики Крым",
+  "contactsPhone": "+7 (978) 111-00-93",
+  "contactsEmail": "test@test.gov.ru",
+  "passwordRestore": "Никуда ничего не отправляйте",
+  "esia": "1",
+  "registration": "1",
+  "background": "/assets/background/crimea.jpg"
+}

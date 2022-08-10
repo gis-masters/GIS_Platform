@@ -306,6 +306,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     sidebars.closeEdit();
 
     await sleep(0);
+    this.isSaveInProgress = false;
+
     sidebars.openEdit({
       mode: this.mode,
       features: savedFeatures,
