@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
@@ -41,6 +41,11 @@ export class FilesItem extends Component<FilesItemProps> {
   @observable private currentFileId?: string;
   @observable private deleteDialogOpen = false;
   private operationId: symbol;
+
+  constructor(props: FilesItemProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     if (isTifFile(this.props.item)) {

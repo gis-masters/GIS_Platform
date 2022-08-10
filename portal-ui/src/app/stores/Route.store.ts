@@ -14,6 +14,7 @@ import { AppRouteData } from '../app-routing.module';
 type Params = Record<string, string>;
 
 export enum Pages {
+  NONE = '',
   HOME = 'home',
   LOGIN = 'login',
   REGISTER = 'register',
@@ -38,7 +39,7 @@ class Route {
   @observable params: Params = {};
   @observable queryParams: Params = {};
   @observable fragment: string;
-  @observable data: AppRouteData;
+  @observable data: AppRouteData = { page: Pages.NONE };
   @observable paramMap: ParamMap;
   @observable queryParamMap: ParamMap;
 

@@ -17,7 +17,8 @@ export async function setMapPositionToUrl(zoom: number, center: Coordinate): Pro
           zoom: Number(zoom).toFixed(2),
           center: center.map(Math.round).join(',')
         },
-        queryParamsHandling: 'merge'
+        queryParamsHandling: 'merge',
+        replaceUrl: true
       });
     });
   }
@@ -46,7 +47,8 @@ export async function setEnabledLayerToUrl(): Promise<void> {
         queryParams: {
           layers: layers.join(',')
         },
-        queryParamsHandling: 'merge'
+        queryParamsHandling: 'merge',
+        replaceUrl: true
       });
     });
   }
@@ -82,7 +84,8 @@ export async function setSelectedFeaturesToUrl(): Promise<void> {
         queryFilter: null,
         queryLayers: null
       },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
+      replaceUrl: true
     });
   });
 }
