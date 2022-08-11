@@ -15,6 +15,8 @@ import {
 } from './schema.models';
 import { LibraryRecord } from './doc-library.service';
 import { DocumentInfo } from '../../components/Documents/Documents';
+import { formatDate } from '../util/date.util';
+import { FileInfo } from './files.service';
 
 export function applyContentTypeOld(schema: OldSchema, contentTypeId?: string): OldSchema {
   const clonedSchema = cloneDeep(schema);
@@ -200,4 +202,65 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
 
 export function getFieldRelations<T>(field: string | number, schema: Schema<T>): Relation[] {
   return schema?.relations?.filter(relation => relation.property === field) || [];
+}
+
+const valueToReadableTransformers: Partial<Record<PropertyType, (value: unknown, property: PropertySchema) => string>> =
+  {
+    [PropertyType.BOOL](value: unknown) {
+      return ['true', '1'].includes(String(value).toLowerCase()) ? 'да' : 'нет';
+    },
+
+    [PropertyType.CHOICE](value: unknown, property: PropertySchema) {
+      return (property as PropertySchemaChoice).options.find(({ value }) => value === value)?.title || String(value);
+    },
+
+    [PropertyType.DATETIME](value: unknown, property: PropertySchema) {
+      return typeof value === 'number' || typeof value === 'string' || value instanceof Date
+        ? formatDate(value, (property as PropertySchemaDatetime).format)
+        : '';
+    },
+
+    [PropertyType.DOCUMENT](value: unknown) {
+      try {
+        if (typeof value === 'string' || Array.isArray(value)) {
+          const documents = Array.isArray(value) ? (value as DocumentInfo[]) : (JSON.parse(value) as DocumentInfo[]);
+
+          return documents.map(({ title }) => title).join(', ');
+        }
+      } catch {}
+
+      return '';
+    },
+
+    [PropertyType.FILE](value: unknown) {
+      try {
+        if (typeof value === 'string' || Array.isArray(value)) {
+          const files = Array.isArray(value) ? (value as FileInfo[]) : (JSON.parse(value) as FileInfo[]);
+
+          return files.map(({ title }) => title).join(', ');
+        }
+      } catch {}
+
+      return '';
+    },
+
+    [PropertyType.FLOAT](value: unknown, property: PropertySchemaFloat) {
+      if (value && typeof property.precision === 'number') {
+        value = Number(value).toFixed(property.precision);
+      }
+
+      return String(value).replace('.', ',');
+    }
+  };
+
+export function getReadablePropertyValue(value: unknown, property: PropertySchema): string {
+  if (value === null || value === undefined) {
+    return '';
+  }
+
+  if (valueToReadableTransformers[property.propertyType]) {
+    return valueToReadableTransformers[property.propertyType](value, property);
+  }
+
+  return String(value ?? '');
 }

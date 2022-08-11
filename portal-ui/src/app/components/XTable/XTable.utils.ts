@@ -33,7 +33,7 @@ export function getXTableColumnsFromSchema<T>(schema: Schema<T>): XTableColumn<T
 
     return {
       field: property.name,
-      title: property.title,
+      title: property.title || property.name,
       description: property.description,
       type: property.propertyType,
       settings: {

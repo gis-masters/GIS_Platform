@@ -1,6 +1,5 @@
 import { boundMethod } from 'autobind-decorator';
 import { debounce, DebouncedFunc } from 'lodash';
-import moment from 'moment';
 
 import { Toast } from '../../components/Toast/Toast';
 import { currentProject } from '../../stores/CurrentProject.store';
@@ -12,13 +11,7 @@ import { getSchemaUrl } from '../server-urls.service';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { CrgVectorLayer } from '../gis/projects.models';
 import { BugObject } from './validation.service';
-import {
-  OldSchema,
-  OldPropertySchema,
-  OldPropertySchemaChoice,
-  ValueType,
-  PropertyEnumeration
-} from './schemaOld.models';
+import { OldSchema, OldPropertySchema, OldPropertySchemaChoice, ValueType } from './schemaOld.models';
 import { Schema } from './schema.models';
 import { convertSchema } from './schema.utils';
 
@@ -131,6 +124,7 @@ class SchemaService {
   }
 
   /**
+   * @deprecated legacy, do not use
    * По наименованию фичи, попытаемся найти алиас в ее свойствах.
    * Если алиас найти не удалось просто вернем код.
    * @param layer Наименование фичи
@@ -175,6 +169,7 @@ class SchemaService {
   }
 
   /**
+   * @deprecated legacy, do not use
    * По присланному с сервера типу ошибки сформируем его короткое и неточное описание, выводимое пользователю,
    * в выпадающем списке в таблице с ошибками.
    * @param errorTypes Тип ошибки
@@ -205,68 +200,6 @@ class SchemaService {
 
       return error;
     });
-  }
-
-  async isReadOnly(schemaId: string): Promise<boolean> {
-    try {
-      const schema = await this.getOldSchema(schemaId);
-
-      return schema.readOnly;
-    } catch {
-      return true;
-    }
-  }
-
-  /**
-   * Свойства фичи заменяются на алиасы для сложных типов данных, таких как CHOICE например.
-   *
-   * @example
-   * inputFeature {
-   *   status: 314,
-   *   reg_status: 1
-   * }
-   * outputFeature {
-   *   status: 'Линии электропередач 10кВт',
-   *   reg_status: 'Утверждено'
-   * }
-   *
-   * @param schema
-   * @param featureProperties
-   */
-  replaceRowDataToAliases(schema: OldSchema, featureProperties: Record<string, unknown>): Record<string, unknown> {
-    const resultObject: Record<string, unknown> = {};
-
-    Object.keys(featureProperties).forEach(key => {
-      const schemaProperty = schema.properties.find(prop => prop.name.toLowerCase() === key.toLowerCase());
-      if (!schemaProperty) {
-        return;
-      }
-
-      if (schemaProperty.valueType === ValueType.CHOICE) {
-        const valueTitle = this.getValueTitle(featureProperties[key], schemaProperty.enumerations);
-        if (valueTitle) {
-          resultObject[key] = valueTitle;
-        }
-      } else if (schemaProperty.valueType === ValueType.DATETIME) {
-        if (!schemaProperty.dateFormat) {
-          if (featureProperties[key]) {
-            resultObject[key] = new Date(String(featureProperties[key])).toLocaleDateString();
-          }
-        } else if (featureProperties[key]) {
-          resultObject[key] = moment(featureProperties[key]).locale('ru').format(schemaProperty.dateFormat);
-        }
-      } else {
-        resultObject[key] = featureProperties[key];
-      }
-    });
-
-    return resultObject;
-  }
-
-  private getValueTitle(startValue: string | unknown, enumerations: PropertyEnumeration[]): string {
-    return enumerations.reduce((acc, { value, title }) => {
-      return String(startValue) === String(value) ? title : acc;
-    }, String(startValue));
   }
 
   private async fetch(fetchAll?: boolean): Promise<void> {

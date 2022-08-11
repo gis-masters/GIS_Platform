@@ -38,8 +38,6 @@ import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/conf
 import { EditFeaturesSidebarComponent } from './components/edit-features-sidebar/edit-features-sidebar.component';
 import { EditFeatureComponent } from './components/edit-feature/edit-feature.component';
 import { AttributesComponent } from './components/attributes/attributes.component';
-import { CopyFeaturesDialogComponent } from './components/dialogs/copy-features-dialog/copy-features-dialog.component';
-import { ButtonComponent } from './components/button/button.component';
 import { ResizableBarDirective } from './directives/resizableBar.directive';
 import { PageTitleComponent } from './components/page-title/page-title.component';
 import { DataImportComponent } from './components/data-import/data-import.component';
@@ -105,8 +103,6 @@ import { FeaturesSidebarTeaserComponent } from './components/features-sidebar-te
     EditFeaturesSidebarComponent,
     EditFeatureComponent,
     AttributesComponent,
-    CopyFeaturesDialogComponent,
-    ButtonComponent,
     ResizableBarDirective,
     PageTitleComponent,
     DataImportComponent,

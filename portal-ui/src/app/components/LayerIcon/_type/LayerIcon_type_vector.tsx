@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
-import { Adjust, SvgIconComponent, Timeline, ReportProblemOutlined } from '@mui/icons-material';
+import { Adjust, SvgIconComponent, PolylineOutlined, ReportProblemOutlined } from '@mui/icons-material';
 
 import { GeometryType, SupportedGeometryType } from '../../../services/geoserver/wfs.models';
 import { schemaService } from '../../../services/data/schema.service';
@@ -43,7 +43,7 @@ class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
         break;
       }
       case GeometryType.MULTI_LINE_STRING: {
-        Icon = Timeline;
+        Icon = PolylineOutlined;
         break;
       }
       case GeometryType.POINT: {

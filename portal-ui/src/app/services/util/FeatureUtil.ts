@@ -31,7 +31,7 @@ export class FeatureUtil {
   static getFeatureGeometry(featureDescription: OldSchema): string[] {
     const geometryProperty = featureDescription.properties.find(property => property.valueType === ValueType.GEOMETRY);
 
-    return geometryProperty?.allowedValues ? geometryProperty.allowedValues : [];
+    return geometryProperty?.allowedValues || [];
   }
 
   static filterByGeometry(fDescription: OldSchema[], layer?: ImportLayerItem): OldSchema[] {

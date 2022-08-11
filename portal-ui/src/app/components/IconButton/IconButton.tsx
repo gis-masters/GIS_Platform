@@ -23,7 +23,13 @@ export const IconButton: FC<IconButtonProps> = forwardRef(
       ref={ref}
     >
       {children}
-      {loading && <CircularProgress className={cnIconButton('Loader')} color='inherit' />}
+      {loading && (
+        <CircularProgress
+          className={cnIconButton('Loader')}
+          color='inherit'
+          size={props.size === 'small' ? 28 : undefined}
+        />
+      )}
     </BaseIconButton>
   )
 );

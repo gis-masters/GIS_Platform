@@ -7,20 +7,14 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { DocumentLibrary, getAllLibraryRecords, LibraryRecord } from '../../../services/data/doc-library.service';
-import {
-  PropertySchema,
-  PropertySchemaChoice,
-  PropertySchemaDatetime,
-  PropertyType,
-  Schema
-} from '../../../services/data/schema.models';
+import { getReadablePropertyValue } from '../../../services/data/schema.utils';
+import { PropertySchema, Schema } from '../../../services/data/schema.models';
 import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
-import { formatDate } from '../../../services/util/date.util';
 import { PageOptions } from '../../../services/models';
+import { sleep } from '../../../services/util/sleep';
 import { MenuIconButton } from '../../MenuIconButton/MenuIconButton';
 import { XTableColumn } from '../../XTable/XTable';
 import { FileIcon } from '../../FileIcon/FileIcon';
-import { sleep } from '../../../services/util/sleep';
 
 const cnLibraryRegistryExport = cn('LibraryRegistry', 'Export');
 
@@ -35,18 +29,6 @@ interface LibraryRegistryExportProps {
 @observer
 export class LibraryRegistryExport extends Component<LibraryRegistryExportProps> {
   @observable private loading = false;
-
-  private transformCellContent: Partial<Record<PropertyType, (content: unknown, property: PropertySchema) => string>> =
-    {
-      [PropertyType.BOOL]: (content: unknown) => (['true', '1'].includes(String(content).toLowerCase()) ? 'да' : 'нет'),
-      [PropertyType.CHOICE]: (content: unknown, property: PropertySchema) =>
-        (property as PropertySchemaChoice).options.find(({ value }) => value === content)?.title || String(content),
-      [PropertyType.DATETIME]: (content: unknown, property: PropertySchema) => {
-        return typeof content === 'number' || typeof content === 'string' || content instanceof Date
-          ? formatDate(content, (property as PropertySchemaDatetime).format)
-          : '';
-      }
-    };
 
   constructor(props: LibraryRegistryExportProps) {
     super(props);
@@ -104,15 +86,12 @@ export class LibraryRegistryExport extends Component<LibraryRegistryExportProps>
 
     for (const record of records) {
       data.push(
-        fields.map(({ field }) => {
-          const property = properties.find(({ name }) => name === field);
-          const content = record[field] === null ? '' : record[field];
-          if (this.transformCellContent[property.propertyType]) {
-            return this.transformCellContent[property.propertyType](content, property);
-          }
-
-          return content;
-        })
+        fields.map(({ field }) =>
+          getReadablePropertyValue(
+            record[field],
+            properties.find(({ name }) => name === field)
+          )
+        )
       );
     }
 

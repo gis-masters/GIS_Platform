@@ -1,22 +1,33 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, observable, makeObservable, computed } from 'mobx';
 import { observer } from 'mobx-react';
+import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
+import { FilterBySelection, mapStore } from '../../../stores/Map.store';
 import { CrgVectorLayer } from '../../../services/gis/projects.models';
+import { schemaService } from '../../../services/data/schema.service';
+import { getFeatures } from '../../../services/geoserver/wfs.service';
+import { Schema } from '../../../services/data/schema.models';
 import { PageOptions } from '../../../services/models';
-import { XTableInvoke } from '../../XTable/XTable';
+import { getXTableColumnsFromSchema } from '../../XTable/XTable.utils';
+import { XTableColumn, XTableInvoke } from '../../XTable/XTable';
 
-import { AttributesTable } from '../Table/Attributes-Table';
+import { AttributesCheck } from '../Check/Attributes-Check';
 import { AttributesBarHead } from '../BarHead/Attributes-BarHead';
 import { AttributesCounter } from '../Counter/Attributes-Counter';
 import { AttributesBarTitle } from '../BarTitle/Attributes-BarTitle';
 import { AttributesBarClose } from '../BarClose/Attributes-BarClose';
+import { AttributesBarActions } from '../BarActions/Attributes-BarActions';
 import { AttributesBarMinimize } from '../BarMinimize/Attributes-BarMinimize';
+import { AttributesCheckMaster } from '../CheckMaster/Attributes-CheckMaster';
+import { AttributesCheckFilter } from '../CheckFilter/Attributes-CheckFilter';
+import { AttributesTable, AttributesTableRecord } from '../Table/Attributes-Table';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Bar.scss';
 
 const cnAttributesBar = cn('Attributes', 'Bar');
+const cnAttributesCheckCell = cn('Attributes', 'CheckCell');
 
 interface AttributesBarProps {
   layer: CrgVectorLayer;
@@ -28,43 +39,138 @@ interface AttributesBarProps {
 
 @observer
 export class AttributesBar extends Component<AttributesBarProps> {
+  @observable private pageOptions?: PageOptions;
+  @observable private schema?: Schema;
   @observable featuresMatched = 0;
   @observable featuresTotal = 0;
+  private fetchingSchemaOperationId: symbol;
 
   constructor(props: AttributesBarProps) {
     super(props);
     makeObservable(this);
   }
 
+  async componentDidMount() {
+    await this.fetchSchema();
+  }
+
+  async componentDidUpdate(prevProps: AttributesBarProps) {
+    if (this.props.layer?.schemaId !== prevProps.layer?.schemaId) {
+      await this.fetchSchema();
+    }
+  }
+
   render() {
-    const { layer, tableInvoke, onMinimize, onClose, onPageOptionsChange } = this.props;
+    const { layer, tableInvoke, onMinimize, onClose } = this.props;
 
     return (
       <div className={cnAttributesBar()}>
         <AttributesBarHead>
           <AttributesBarTitle>{layer.title}</AttributesBarTitle>
           <AttributesCounter layer={layer} featuresMatched={this.featuresMatched} featuresTotal={this.featuresTotal} />
+          <AttributesBarActions
+            layer={layer}
+            cols={this.cols}
+            pageOptions={this.pageOptions}
+            featuresTotal={this.featuresTotal}
+            getData={this.getData}
+          />
           <AttributesBarMinimize onClick={onMinimize} />
           <AttributesBarClose onClick={onClose} />
         </AttributesBarHead>
         <AttributesTable
           layer={layer}
+          cols={this.cols}
+          schema={this.schema}
           invoke={tableInvoke}
-          onFeaturesMatchedChange={this.featuresMatchedChangeHandler}
-          onFeaturesTotalChange={this.featuresTotalChangeHandler}
-          onPageOptionsChange={onPageOptionsChange}
+          onPageOptionsChange={this.handlePageOptionsChange}
+          getData={this.getData}
         />
       </div>
     );
   }
 
+  @computed
+  private get cols(): XTableColumn<AttributesTableRecord>[] {
+    const { layer } = this.props;
+
+    if (!this.schema) {
+      return [];
+    }
+
+    return [
+      {
+        field: '_idCheck',
+        title: (
+          <AttributesCheckMaster layer={layer} featuresMatched={this.featuresMatched} pageOptions={this.pageOptions} />
+        ),
+        CustomFilterComponent: AttributesCheckFilter,
+        filterable: !!mapStore.selectedFeaturesByTableName[layer.tableName]?.length,
+        CellContent: AttributesCheck,
+        align: 'center',
+        headerCellProps: { padding: 'checkbox', size: 'small', align: 'center', className: cnAttributesCheckCell() },
+        cellProps: { padding: 'checkbox' }
+      },
+      { field: 'cutId', title: 'ID' },
+      ...getXTableColumnsFromSchema<AttributesTableRecord>(this.schema)
+    ];
+  }
+
+  @boundMethod
+  private async getData(pageOptions: PageOptions): Promise<[AttributesTableRecord[], number]> {
+    const { layer } = this.props;
+    const { filterBySelection, ...filter } = pageOptions.filter || {};
+    const featureIds =
+      filterBySelection && filterBySelection !== FilterBySelection.DISABLED
+        ? mapStore.selectedFeaturesByTableName[layer.tableName]?.map(({ id }) => id)
+        : [];
+
+    const [features, totalPages, featuresMatched, featuresTotal] = await getFeatures(
+      layer,
+      { ...pageOptions, filter },
+      featureIds,
+      filterBySelection === FilterBySelection.ONLY_NOT_SELECTED
+    );
+    const tableRecords: AttributesTableRecord[] = features.map(feature => ({
+      cutId: feature.id.split('.')[1],
+      feature,
+      ...feature.properties
+    }));
+
+    this.setFeaturesTotal(featuresTotal);
+    this.setFeaturesMatched(featuresMatched);
+
+    return [tableRecords, totalPages];
+  }
+
+  private async fetchSchema() {
+    const operationId = Symbol();
+    this.fetchingSchemaOperationId = operationId;
+    const schema = await schemaService.getSchema(this.props.layer.schemaId);
+    if (this.fetchingSchemaOperationId === operationId) {
+      this.setSchema(schema);
+    }
+  }
+
   @action.bound
-  private featuresMatchedChangeHandler(count: number) {
+  private setFeaturesMatched(count: number) {
     this.featuresMatched = count;
   }
 
   @action.bound
-  private featuresTotalChangeHandler(count: number) {
+  private setFeaturesTotal(count: number) {
     this.featuresTotal = count;
+  }
+
+  @action
+  private setSchema(schema: Schema) {
+    this.schema = schema;
+  }
+
+  @action.bound
+  private handlePageOptionsChange(pageOptions: PageOptions) {
+    const { onPageOptionsChange } = this.props;
+    this.pageOptions = pageOptions;
+    onPageOptionsChange(pageOptions);
   }
 }

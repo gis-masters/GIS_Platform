@@ -35,6 +35,8 @@ function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {
   };
 }
 
+const MAX_PAGE_SIZE = 10_000;
+
 /**
  * Get features by wfs
  * @returns {Promise<[WfsFeature[], number, number, number]} features, total pages, features matched, features total
@@ -45,6 +47,27 @@ export async function getFeatures(
   featureIds: string[] = [],
   featureIdsNegative = false
 ): Promise<[WfsFeature[], number, number, number]> {
+  if (pageOptions.pageSize > MAX_PAGE_SIZE) {
+    const pagedResultFeatures: WfsFeature[] = [];
+    let pagedResult: [WfsFeature[], number, number, number];
+
+    for (let page = 0; page < pageOptions.pageSize / MAX_PAGE_SIZE - 1; page++) {
+      pagedResult = await getFeatures(
+        layer,
+        { ...pageOptions, page, pageSize: MAX_PAGE_SIZE },
+        featureIds,
+        featureIdsNegative
+      );
+      if (pagedResult[0].length) {
+        pagedResultFeatures.push(...pagedResult[0]);
+      } else {
+        break;
+      }
+    }
+
+    return [pagedResultFeatures, ...(pagedResult.slice(1) as [number, number, number])];
+  }
+
   const params: { [key: string]: string } = {
     ...getBaseWfsParams(layer),
     sortBy: generateWfsSortParam(pageOptions),

@@ -74,7 +74,8 @@ async function isAllowedWithTable(
   targetPoint: TablePermissionPoint,
   schemaIdForReadonlyCheck?: string
 ): Promise<boolean> {
-  const readOnly = schemaIdForReadonlyCheck && (await schemaService.isReadOnly(schemaIdForReadonlyCheck));
+  const schema = schemaIdForReadonlyCheck && (await schemaService.getSchema(schemaIdForReadonlyCheck));
+  const readOnly = schema?.readOnly;
 
   let table: VectorTable;
   try {
