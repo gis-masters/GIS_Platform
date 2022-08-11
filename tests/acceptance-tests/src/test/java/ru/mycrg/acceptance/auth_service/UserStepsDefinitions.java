@@ -105,6 +105,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @Then("На геосервере удалилась роль, связанная с пользователем")
     public void checkRoleDeletionFromGeoserver() throws InterruptedException {
+        sleep(800);
+
         authorizationBase.loginAsOwner();
 
         response = getBaseRequestWithCurrentCookie()

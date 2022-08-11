@@ -14,6 +14,9 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
@@ -39,18 +42,23 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
         SchemaDto schema = request.getSchema();
         Feature newFeature = request.getNewFeature();
 
+        throwIfNotMatchTableColumns(newFeature.getProperties(), ddlTables.getAllColumnNames(rQualifier.getTable()));
+
+        Feature oldFeature = spatialRecordsDao.findById(rQualifier, schema)
+                                              .orElseThrow(() -> new NotFoundException(rQualifier.getRecord()));
+        request.setOldFeature(new Feature(new HashMap<>(oldFeature.getProperties())));
+
         systemAttributeHandler.initSchema(schema)
                               .prepareJsonb(newFeature)
                               .decapitalize(newFeature);
 
-        Feature oldFeature = spatialRecordsDao.findById(rQualifier, schema)
-                                              .orElseThrow(() -> new NotFoundException(rQualifier.getRecord()));
-        request.setOldFeature(oldFeature);
+        // path old props by new pros
+        Map<String, Object> oldProperties = oldFeature.getProperties();
+        oldProperties.putAll(newFeature.getProperties());
 
-        systemAttributeHandler.customRulesCalculation(oldFeature.getProperties())
+        // path old props by calculated values
+        systemAttributeHandler.customRulesCalculation(oldProperties)
                               .forEach(newFeature::setProperty);
-
-        throwIfNotMatchTableColumns(newFeature.getProperties(), ddlTables.getAllColumnNames(rQualifier.getTable()));
 
         try {
             spatialRecordsDao.updateById(rQualifier, newFeature, PRIMARY_KEY, schema);

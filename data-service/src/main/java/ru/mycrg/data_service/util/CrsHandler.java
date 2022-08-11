@@ -22,7 +22,7 @@ public class CrsHandler {
         try {
             String[] splitCrs = crs.split(":");
 
-            return Integer.valueOf(splitCrs[1]);
+            return Integer.valueOf(splitCrs[1].trim());
         } catch (Exception ex) {
             String errorMsg = "Error while getting crs number(srid)." + ex.getMessage();
             log.error(errorMsg);

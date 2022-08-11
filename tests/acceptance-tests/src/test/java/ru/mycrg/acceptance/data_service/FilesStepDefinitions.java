@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
+import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
@@ -179,7 +180,9 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("файлы принадлежащие этой записи также удалены")
-    public void checkThenFileAreDeleted() {
+    public void checkThenFileAreDeleted() throws InterruptedException {
+        sleep(800);
+
         getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + secondFileId)
@@ -231,7 +234,6 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
         response = requestSpecification
                 .when().
-                        log().all().
                         post();
 
         try {

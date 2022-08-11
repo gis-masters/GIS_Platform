@@ -138,6 +138,11 @@ public class SystemAttributeHandler {
     }
 
     public Map<String, Object> customRulesCalculation(@NotNull Map<String, Object> fullProperties) {
+        if (this.schema == null) {
+            throw new IllegalStateException("Не задана схема. Убедитесь что вызвали её инициализацию прежде чем " +
+                                                    "вызывать этот метод");
+        }
+
         Map<String, Object> result = new HashMap<>();
 
         String calcFiledFunction = schema.getCalcFiledFunction();
