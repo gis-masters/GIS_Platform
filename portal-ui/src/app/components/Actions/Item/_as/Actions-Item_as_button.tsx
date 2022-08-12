@@ -3,10 +3,10 @@ import { withBemMod } from '@bem-react/core';
 
 import { Button } from '../../../Button/Button';
 
-import { cnLibraryDocumentActionsItem, LibraryDocumentActionsItemProps } from '../LibraryDocumentActions-Item';
+import { cnActionsItem, ActionsItemProps } from '../Actions-Item.base';
 import { MenuButton } from '../../../MenuButton/MenuButton';
 
-const LibraryDocumentActionsItemAsButton: FC<LibraryDocumentActionsItemProps> = ({
+const ActionsItemAsButton: FC<ActionsItemProps> = ({
   title,
   icon,
   className,
@@ -20,7 +20,7 @@ const LibraryDocumentActionsItemAsButton: FC<LibraryDocumentActionsItemProps> = 
 }) =>
   submenu ? (
     <MenuButton
-      className={cnLibraryDocumentActionsItem(null, [className])}
+      className={cnActionsItem(null, [className])}
       href={download ? url : undefined}
       routerLink={!download ? url : undefined}
       onClick={onClick}
@@ -34,7 +34,7 @@ const LibraryDocumentActionsItemAsButton: FC<LibraryDocumentActionsItemProps> = 
     </MenuButton>
   ) : (
     <Button
-      className={cnLibraryDocumentActionsItem(null, [className])}
+      className={cnActionsItem(null, [className])}
       href={download ? url : undefined}
       routerLink={!download ? url : undefined}
       disabled={disabled}
@@ -46,8 +46,8 @@ const LibraryDocumentActionsItemAsButton: FC<LibraryDocumentActionsItemProps> = 
     </Button>
   );
 
-export const asButton = withBemMod<LibraryDocumentActionsItemProps, LibraryDocumentActionsItemProps>(
-  cnLibraryDocumentActionsItem(),
+export const asButton = withBemMod<ActionsItemProps, ActionsItemProps>(
+  cnActionsItem(),
   { as: 'button' },
-  () => LibraryDocumentActionsItemAsButton
+  () => ActionsItemAsButton
 );

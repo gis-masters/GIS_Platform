@@ -9,8 +9,8 @@ import { buildCqlFilter } from '../../../services/util/cql';
 import { Schema } from '../../../services/data/schema.models';
 import { Link } from '../../Link/Link';
 
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
-import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 
 const cnLibraryDocumentActionsRelations = cn('LibraryDocumentActions', 'Relations');
 
@@ -26,7 +26,7 @@ export class LibraryDocumentActionsRelations extends Component<LibraryDocumentAc
     const { as, schema, document } = this.props;
 
     return (
-      <LibraryDocumentActionsItem
+      <ActionsItem
         className={cnLibraryDocumentActionsRelations()}
         title='Связи'
         as={as}

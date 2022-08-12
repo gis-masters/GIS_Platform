@@ -1,0 +1,27 @@
+import React, { Component } from 'react';
+import { cn } from '@bem-react/classname';
+import { TableRow, TableRowProps } from '@mui/material';
+import { boundMethod } from 'autobind-decorator';
+
+const cnXTableRow = cn('XTable', 'Row');
+
+interface XTableRowProps<T> extends TableRowProps {
+  rowData: T;
+  onRowDoubleClick?(rowData: T): void;
+}
+
+export class XTableRow<T> extends Component<XTableRowProps<T>> {
+  render() {
+    const { rowData, onRowDoubleClick, ...props } = this.props;
+
+    return <TableRow hover {...props} className={cnXTableRow()} onDoubleClick={this.doubleClickHandler} />;
+  }
+
+  @boundMethod
+  private doubleClickHandler() {
+    const { onRowDoubleClick: onRowDoubleClick, rowData } = this.props;
+    if (onRowDoubleClick) {
+      onRowDoubleClick(rowData);
+    }
+  }
+}

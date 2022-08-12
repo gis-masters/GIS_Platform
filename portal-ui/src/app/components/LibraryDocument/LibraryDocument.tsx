@@ -3,18 +3,18 @@ import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../services/server-urls.service';
-import { applyContentType } from '../../services/data/schema.utils';
 import { PropertyType, Schema } from '../../services/data/schema.models';
+import { LibraryRecord } from '../../services/data/doc-library.service';
+import { applyContentType } from '../../services/data/schema.utils';
+import { schemaService } from '../../services/data/schema.service';
+import { Role } from '../../services/data/permissions.models';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { formatDate } from '../../services/util/date.util';
+import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
-import { LibraryRecord } from '../../services/data/doc-library.service';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
-import { schemaService } from '../../services/data/schema.service';
-import { currentUser } from '../../stores/CurrentUser.store';
-import { Role } from '../../services/data/permissions.models';
-import { formatDate } from '../../services/util/date.util';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocument.scss';
 

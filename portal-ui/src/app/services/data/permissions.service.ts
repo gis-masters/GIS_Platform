@@ -15,10 +15,8 @@ export enum BuildInRole {
 }
 
 enum TablePermissionPoint {
-  CREATE_FEATURE,
   READ_FEATURES,
   UPDATE_FEATURES,
-  DELETE_FEATURES,
   EXPORT,
   DELETE
 }
@@ -27,23 +25,13 @@ const tableRolesPermissionPoints = new Map<Role, TablePermissionPoint[]>([
   [
     Role.OWNER,
     [
-      TablePermissionPoint.CREATE_FEATURE,
       TablePermissionPoint.READ_FEATURES,
       TablePermissionPoint.UPDATE_FEATURES,
-      TablePermissionPoint.DELETE_FEATURES,
       TablePermissionPoint.EXPORT,
       TablePermissionPoint.DELETE
     ]
   ],
-  [
-    Role.CONTRIBUTOR,
-    [
-      TablePermissionPoint.CREATE_FEATURE,
-      TablePermissionPoint.READ_FEATURES,
-      TablePermissionPoint.UPDATE_FEATURES,
-      TablePermissionPoint.DELETE_FEATURES
-    ]
-  ],
+  [Role.CONTRIBUTOR, [TablePermissionPoint.READ_FEATURES, TablePermissionPoint.UPDATE_FEATURES]],
   [Role.VIEWER, [TablePermissionPoint.READ_FEATURES]]
 ]);
 
@@ -120,28 +108,12 @@ export async function isRasterReadAllowed(libraryId: string, recordId: number): 
   }
 }
 
-export function isFeaturesCreateAllowed(
-  datasetIdentifier: string,
-  tableIdentifier: string,
-  schemaId: string
-): Promise<boolean> {
-  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.CREATE_FEATURE, schemaId);
-}
-
 export function isFeaturesUpdateAllowed(
   datasetIdentifier: string,
   tableIdentifier: string,
   schemaId: string
 ): Promise<boolean> {
   return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.UPDATE_FEATURES, schemaId);
-}
-
-export function isFeaturesDeleteAllowed(
-  datasetIdentifier: string,
-  tableIdentifier: string,
-  schemaId: string
-): Promise<boolean> {
-  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.DELETE_FEATURES, schemaId);
 }
 
 export function isTableExportAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {

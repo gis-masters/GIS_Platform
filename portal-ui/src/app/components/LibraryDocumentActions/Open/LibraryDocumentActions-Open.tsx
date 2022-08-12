@@ -8,8 +8,8 @@ import { cn } from '@bem-react/classname';
 
 import { LibraryRecord } from '../../../services/data/doc-library.service';
 
-import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnLibraryDocumentActionsOpen = cn('LibraryDocumentActions', 'Open');
 
@@ -32,7 +32,7 @@ export class LibraryDocumentActionsOpen extends Component<LibraryDocumentActions
 
     return (
       <>
-        <LibraryDocumentActionsItem
+        <ActionsItem
           className={cnLibraryDocumentActionsOpen()}
           title='Открыть'
           as={as}

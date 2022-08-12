@@ -1,4 +1,4 @@
-import React, { Component, ComponentType } from 'react';
+import React, { Component } from 'react';
 import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IClassNameProps } from '@bem-react/core';
@@ -16,7 +16,8 @@ import { Role } from '../../services/data/permissions.models';
 import { FileInfo } from '../../services/data/files.service';
 import { isTifFile } from '../../services/data/files.util';
 
-import { ActionsItemVariant } from './Item/LibraryDocumentActions-Item';
+import { Actions } from '../Actions/Actions.composed';
+import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { LibraryDocumentActionsSed } from './Sed/LibraryDocumentActions-Sed';
 import { LibraryDocumentActionsSave } from './Save/LibraryDocumentActions-Save';
 import { LibraryDocumentActionsOpen } from './Open/LibraryDocumentActions-Open';
@@ -31,8 +32,6 @@ import { LibraryDocumentActionsRelations } from './Relations/LibraryDocumentActi
 import { LibraryDocumentActionsCreateChild } from './CreateChild/LibraryDocumentActions-CreateChild';
 import { LibraryDocumentActionsFilesPlacement } from './FilesPlacement/LibraryDocumentActions-FilesPlacement';
 
-import '!style-loader!css-loader!sass-loader!./LibraryDocumentActions.scss';
-
 export const cnLibraryDocumentActions = cn('LibraryDocumentActions');
 
 export interface LibraryDocumentActionsProps extends IClassNameProps {
@@ -40,7 +39,6 @@ export interface LibraryDocumentActionsProps extends IClassNameProps {
   as: ActionsItemVariant;
   hideOpen?: boolean;
   forDialog?: boolean;
-  ContainerComponent?: ComponentType;
   onDialogClose?(): void;
   onSave?(created: LibraryRecord): void;
 }
@@ -67,16 +65,7 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
   }
 
   render() {
-    const {
-      as,
-      ContainerComponent = 'div',
-      document,
-      className,
-      hideOpen,
-      forDialog,
-      onDialogClose,
-      onSave
-    } = this.props;
+    const { as, document, className, hideOpen, forDialog, onDialogClose, onSave } = this.props;
     const canEdit = [Role.CONTRIBUTOR, Role.OWNER].includes(this.document?.role) || currentUser.isAdmin;
     const canCreateChildren = Boolean(this.schema?.children?.length);
     const canDownload = this.schema?.properties.some(({ propertyType }) => propertyType === PropertyType.BINARY);
@@ -86,7 +75,7 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
     const canPrint = Boolean(this.schema?.printTemplates?.length);
 
     return (
-      <ContainerComponent className={cnLibraryDocumentActions({ forDialog }, [className])}>
+      <Actions className={cnLibraryDocumentActions({ forDialog }, [className])} as={as}>
         {isNew && <LibraryDocumentActionsSave onSave={onSave} document={this.document || document} as={as} />}
 
         {!hideOpen && <LibraryDocumentActionsOpen document={this.document || document} as={as} />}
@@ -128,7 +117,7 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
         )}
 
         {forDialog && <LibraryDocumentActionsClose onClick={onDialogClose} as={as} />}
-      </ContainerComponent>
+      </Actions>
     );
   }
 

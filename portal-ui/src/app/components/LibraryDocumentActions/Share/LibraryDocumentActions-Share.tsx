@@ -9,8 +9,8 @@ import { LibraryRecord } from '../../../services/data/doc-library.service';
 import { copyToClipboard } from '../../../services/util/clipboard.util';
 import { Toast } from '../../Toast/Toast';
 
-import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnLibraryDocumentActionsShare = cn('LibraryDocumentActions', 'Share');
 
@@ -25,7 +25,7 @@ export class LibraryDocumentActionsShare extends Component<LibraryDocumentAction
     const { as } = this.props;
 
     return (
-      <LibraryDocumentActionsItem
+      <ActionsItem
         className={cnLibraryDocumentActionsShare()}
         title='Копировать ссылку'
         icon={<ShareOutlined />}

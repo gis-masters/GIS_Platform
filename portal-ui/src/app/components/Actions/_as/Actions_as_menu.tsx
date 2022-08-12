@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Menu } from '@mui/material';
+import { Menu } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
 
 import { ChildrenProps } from '../../../services/models';
 
-import { cnLibraryDocumentActions, LibraryDocumentActionsProps } from '../LibraryDocumentActions';
-import { LibraryDocumentActionsMenuOpenContext } from '../Item/_as/LibraryDocumentActions-Item_as_menu';
+import { ActionsMenuOpenContext } from '../Item/_as/Actions-Item_as_menu';
+import { ActionsProps, cnActions } from '../Actions.base';
+import { IconButton } from '../../IconButton/IconButton';
 
 @observer
 class Container extends Component<IClassNameProps & ChildrenProps> {
@@ -24,19 +25,15 @@ class Container extends Component<IClassNameProps & ChildrenProps> {
     const open = Boolean(this.anchorEl);
 
     return (
-      <LibraryDocumentActionsMenuOpenContext.Provider value={open}>
-        <IconButton
-          className={cnLibraryDocumentActions({ open }, [className])}
-          onClick={this.toggleOpen}
-          color='primary'
-        >
-          <MoreHoriz />
+      <ActionsMenuOpenContext.Provider value={open}>
+        <IconButton size='small' className={cnActions({ open }, [className])} onClick={this.toggleOpen} color='primary'>
+          <MoreHoriz fontSize='small' />
         </IconButton>
 
         <Menu open={open} onClose={this.close} anchorEl={this.anchorEl} onClick={this.close} keepMounted>
           {children}
         </Menu>
-      </LibraryDocumentActionsMenuOpenContext.Provider>
+      </ActionsMenuOpenContext.Provider>
     );
   }
 
@@ -51,8 +48,6 @@ class Container extends Component<IClassNameProps & ChildrenProps> {
   }
 }
 
-export const asMenu = withBemMod<LibraryDocumentActionsProps, LibraryDocumentActionsProps>(
-  cnLibraryDocumentActions(),
-  { as: 'menu' },
-  LibraryDocumentActions => props => <LibraryDocumentActions {...props} ContainerComponent={Container} />
-);
+export const asMenu = withBemMod<ActionsProps, ActionsProps>(cnActions(), { as: 'menu' }, Actions => props => (
+  <Actions {...props} ContainerComponent={Container} />
+));

@@ -21,6 +21,7 @@ import { PageOptions, SortOrder } from '../../services/models';
 import { Loading } from '../Loading/Loading';
 import { Toast } from '../Toast/Toast';
 
+import { XTableRow } from './Row/XTable-Row';
 import { XTableHead } from './Head/XTable-Head';
 import { XTableCell } from './Cell/XTable-Cell';
 import { XTableEmpty } from './Empty/XTable-Empty';
@@ -95,6 +96,7 @@ interface XTablePropsBase<T> extends IClassNameProps {
   };
   onFilter?(filtered: T[]): void;
   onPageOptionsChange?(pageOptions: PageOptions): void;
+  onRowDoubleClick?(rowData: T): void;
   getRowId?(rowData: T): string | number;
 }
 
@@ -208,7 +210,8 @@ export class XTable<T> extends Component<XTableProps<T>> {
       size,
       singleLineContent,
       containerProps,
-      getRowId = defaultRowIdGetter
+      getRowId = defaultRowIdGetter,
+      onRowDoubleClick
     } = this.props;
 
     const colsTypesAlign: Partial<Record<PropertyType, TableCellProps['align']>> = {
@@ -267,7 +270,11 @@ export class XTable<T> extends Component<XTableProps<T>> {
                 <XTableEmpty colsCount={this.cols.length} busy={this.busy} />
               ) : (
                 this.dataPaged.map((rowData, i) => (
-                  <TableRow key={getRowId ? getRowId(rowData) : i} hover>
+                  <XTableRow
+                    rowData={rowData}
+                    key={getRowId ? getRowId(rowData) : i}
+                    onRowDoubleClick={onRowDoubleClick}
+                  >
                     {this.cols.map((col, i) => (
                       <XTableCell<T>
                         rowData={rowData}
@@ -281,7 +288,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
                         align={col.align || colsTypesAlign[col.type]}
                       />
                     ))}
-                  </TableRow>
+                  </XTableRow>
                 ))
               )}
             </TableBody>

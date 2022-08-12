@@ -17,7 +17,7 @@ import { getFeatureUrl } from '../../services/map/map-url.service';
 import { schemaService } from '../../services/data/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { Role } from '../../services/data/permissions.models';
-import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
+import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
 import { FormDialog } from '../FormDialog/FormDialog';
 

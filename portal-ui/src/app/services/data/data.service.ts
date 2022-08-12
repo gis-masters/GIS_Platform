@@ -263,7 +263,7 @@ export async function createVectorTableRecord(
   feature: WfsFeature
 ): Promise<WfsFeature> {
   const response = await http.post<WfsFeature>(await getDatasetTableRecordsUrl(datasetId, vectorTableId), feature);
-  communicationService.datasetsUpdated.emit();
+  communicationService.vectorTablesUpdated.emit();
 
   return response;
 }
@@ -293,12 +293,12 @@ export async function deleteVectorTableRecord(
   recordId: string
 ): Promise<void> {
   await http.delete(await getDatasetTableRecordUrl(datasetId, vectorTableId, recordId.split('.')[1]));
-  communicationService.datasetsUpdated.emit();
+  communicationService.featuresUpdated.emit();
 }
 
 export async function deleteVectorTable(datasetId: string, vectorTableId: string): Promise<void> {
   await http.delete(await getDatasetTableUrl(datasetId, vectorTableId));
-  communicationService.datasetsUpdated.emit();
+  communicationService.vectorTablesUpdated.emit();
 }
 
 export async function deleteDataset(identifier: string): Promise<void> {

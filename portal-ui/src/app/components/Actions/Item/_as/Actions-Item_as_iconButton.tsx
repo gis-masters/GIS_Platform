@@ -5,9 +5,9 @@ import { Tooltip } from '@mui/material';
 import { MenuIconButton } from '../../../MenuIconButton/MenuIconButton';
 import { IconButton } from '../../../IconButton/IconButton';
 
-import { cnLibraryDocumentActionsItem, LibraryDocumentActionsItemProps } from '../LibraryDocumentActions-Item';
+import { cnActionsItem, ActionsItemProps } from '../Actions-Item.base';
 
-const LibraryDocumentActionsItemAsIconButton: FC<LibraryDocumentActionsItemProps> = ({
+const ActionsItemAsIconButton: FC<ActionsItemProps> = ({
   title,
   className,
   disabled,
@@ -24,7 +24,7 @@ const LibraryDocumentActionsItemAsIconButton: FC<LibraryDocumentActionsItemProps
       <MenuIconButton icon={icon}>{submenu}</MenuIconButton>
     ) : (
       <IconButton
-        className={cnLibraryDocumentActionsItem(null, [className])}
+        className={cnActionsItem(null, [className])}
         disabled={disabled}
         onClick={onClick}
         color={color}
@@ -38,8 +38,8 @@ const LibraryDocumentActionsItemAsIconButton: FC<LibraryDocumentActionsItemProps
   </Tooltip>
 );
 
-export const asIconButton = withBemMod<LibraryDocumentActionsItemProps, LibraryDocumentActionsItemProps>(
-  cnLibraryDocumentActionsItem(),
+export const asIconButton = withBemMod<ActionsItemProps, ActionsItemProps>(
+  cnActionsItem(),
   { as: 'iconButton' },
-  () => LibraryDocumentActionsItemAsIconButton
+  () => ActionsItemAsIconButton
 );

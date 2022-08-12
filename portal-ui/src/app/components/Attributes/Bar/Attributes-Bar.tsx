@@ -13,7 +13,7 @@ import { PageOptions } from '../../../services/models';
 import { getXTableColumnsFromSchema } from '../../XTable/XTable.utils';
 import { XTableColumn, XTableInvoke } from '../../XTable/XTable';
 
-import { AttributesCheck } from '../Check/Attributes-Check';
+import { AttributesRowHead } from '../RowHead/Attributes-RowHead';
 import { AttributesBarHead } from '../BarHead/Attributes-BarHead';
 import { AttributesCounter } from '../Counter/Attributes-Counter';
 import { AttributesBarTitle } from '../BarTitle/Attributes-BarTitle';
@@ -106,8 +106,8 @@ export class AttributesBar extends Component<AttributesBarProps> {
         ),
         CustomFilterComponent: AttributesCheckFilter,
         filterable: !!mapStore.selectedFeaturesByTableName[layer.tableName]?.length,
-        CellContent: AttributesCheck,
-        align: 'center',
+        CellContent: AttributesRowHead,
+        align: 'left',
         headerCellProps: { padding: 'checkbox', size: 'small', align: 'center', className: cnAttributesCheckCell() },
         cellProps: { padding: 'checkbox' }
       },

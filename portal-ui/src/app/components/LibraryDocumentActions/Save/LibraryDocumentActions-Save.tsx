@@ -7,8 +7,8 @@ import { cn } from '@bem-react/classname';
 
 import { createLibraryRecord, LibraryRecord } from '../../../services/data/doc-library.service';
 
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
-import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 
 const cnLibraryDocumentActionsDelete = cn('LibraryDocumentActions', 'Edit');
 
@@ -31,7 +31,7 @@ export class LibraryDocumentActionsSave extends Component<LibraryDocumentActions
     const { as } = this.props;
 
     return (
-      <LibraryDocumentActionsItem
+      <ActionsItem
         className={cnLibraryDocumentActionsDelete()}
         title='Сохранить'
         color='primary'

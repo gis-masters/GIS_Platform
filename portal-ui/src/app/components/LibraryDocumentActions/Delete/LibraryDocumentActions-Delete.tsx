@@ -22,8 +22,8 @@ import { PropertyType, Schema } from '../../../services/data/schema.models';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { Button } from '../../Button/Button';
 
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
-import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 
 const cnLibraryDocumentActionsDelete = cn('LibraryDocumentActions', 'Delete');
 
@@ -58,7 +58,7 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
 
     return (
       <>
-        <LibraryDocumentActionsItem
+        <ActionsItem
           className={cnLibraryDocumentActionsDelete()}
           title='Удалить'
           color='error'

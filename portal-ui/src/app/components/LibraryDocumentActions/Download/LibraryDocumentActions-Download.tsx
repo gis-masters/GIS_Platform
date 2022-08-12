@@ -8,8 +8,8 @@ import { cn } from '@bem-react/classname';
 import { getDocLibrariesRecordsUrl } from '../../../services/server-urls.service';
 import { LibraryRecord } from '../../../services/data/doc-library.service';
 
-import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnLibraryDocumentActionsDownload = cn('LibraryDocumentActions', 'Download');
 
@@ -41,7 +41,7 @@ export class LibraryDocumentActionsDownload extends Component<LibraryDocumentAct
     const { as } = this.props;
 
     return (
-      <LibraryDocumentActionsItem
+      <ActionsItem
         className={cnLibraryDocumentActionsDownload()}
         title='Скачать'
         as={as}

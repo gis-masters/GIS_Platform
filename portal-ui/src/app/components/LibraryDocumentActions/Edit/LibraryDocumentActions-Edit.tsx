@@ -11,8 +11,8 @@ import { getPatch } from '../../../services/util/patch';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { TextBadge } from '../../TextBadge/TextBadge';
 
-import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnLibraryDocumentActionsEdit = cn('LibraryDocumentActions', 'Edit');
 
@@ -36,7 +36,7 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
 
     return (
       <>
-        <LibraryDocumentActionsItem
+        <ActionsItem
           className={cnLibraryDocumentActionsEdit()}
           title='Редактировать'
           as={as}

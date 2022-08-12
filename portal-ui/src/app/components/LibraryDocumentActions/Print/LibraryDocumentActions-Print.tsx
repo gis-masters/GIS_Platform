@@ -11,8 +11,8 @@ import { printDocument, printTemplates } from '../../../services/print/print.ser
 import { Schema } from '../../../services/data/schema.models';
 import { Button } from '../../Button/Button';
 
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
-import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
 
 const cnLibraryDocumentActionsPrint = cn('LibraryDocumentActions', 'Print');
@@ -44,7 +44,7 @@ export class LibraryDocumentActionsPrint extends Component<LibraryDocumentAction
 
     return (
       <>
-        <LibraryDocumentActionsItem
+        <ActionsItem
           className={cnLibraryDocumentActionsPrint()}
           title='Печать документа (PDF)'
           as={as}

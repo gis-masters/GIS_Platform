@@ -24,7 +24,7 @@ import { FilterQuery } from '../../services/util/filterObjects';
 import { SortParams } from '../../services/util/sortObjects';
 import { PageOptions, SortOrder } from '../../services/models';
 import { services } from '../../services/services';
-import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions.composed';
+import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
 import { XTable, XTableColumn, XTableInvoke } from '../XTable/XTable';
 import { EmptyListView } from '../EmptyListView/EmptyListView';

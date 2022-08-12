@@ -14,8 +14,8 @@ import { Toast } from '../../Toast/Toast';
 import { Button } from '../../Button/Button';
 import { ServerError } from '../../../services/http.service';
 
-import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnLibraryDocumentActionsRegister = cn('LibraryDocumentActions', 'Register');
 
@@ -39,7 +39,7 @@ export class LibraryDocumentActionsRegister extends Component<LibraryDocumentAct
 
     return (
       <>
-        <LibraryDocumentActionsItem
+        <ActionsItem
           className={cnLibraryDocumentActionsRegister()}
           title=' Зарегистрировать документ'
           icon={<AssignmentTurnedInOutlined />}

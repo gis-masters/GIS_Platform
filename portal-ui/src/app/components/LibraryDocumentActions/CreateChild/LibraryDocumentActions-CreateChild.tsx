@@ -20,8 +20,8 @@ import { Schema } from '../../../services/data/schema.models';
 import { sleep } from '../../../services/util/sleep';
 import { FormDialog } from '../../FormDialog/FormDialog';
 
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
-import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 
 const cnLibraryDocumentActionsCreateChild = cn('LibraryDocumentActions', 'CreateChild');
 
@@ -69,7 +69,7 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
 
     return (
       <>
-        <LibraryDocumentActionsItem
+        <ActionsItem
           className={cnLibraryDocumentActionsCreateChild()}
           title='Создать из документа...'
           as={as}

@@ -6,10 +6,10 @@ import { action, observable, makeObservable } from 'mobx';
 import { LayerAdd } from '../../Icons/LayerAdd';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 import { Schema } from '../../../services/data/schema.models';
-import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { LibraryRecord } from '../../../services/data/doc-library.service';
 import { FilesPlacementDialog } from '../../FilesPlacementDialog/FilesPlacementDialog';
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnLibraryDocumentActionsFilesPlacement = cn('LibraryDocumentActions', 'FilesPlacement');
 
@@ -33,7 +33,7 @@ export class LibraryDocumentActionsFilesPlacement extends Component<LibraryDocum
 
     return (
       <>
-        <LibraryDocumentActionsItem
+        <ActionsItem
           className={cnLibraryDocumentActionsFilesPlacement()}
           title='Разместить в проекте'
           icon={this.dialogOpen ? <LayerAdd /> : <LayerAddOutlined />}

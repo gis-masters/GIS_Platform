@@ -2,11 +2,11 @@ import React, { FC, ReactNode } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-export const cnLibraryDocumentActionsItem = cn('LibraryDocumentActions', 'Item');
+export const cnActionsItem = cn('Actions', 'Item');
 
 export type ActionsItemVariant = 'button' | 'iconButton' | 'menu';
 
-export interface LibraryDocumentActionsItemProps extends IClassNameProps {
+export interface ActionsItemProps extends IClassNameProps {
   as: ActionsItemVariant;
   icon: ReactNode;
   title: string;
@@ -20,4 +20,4 @@ export interface LibraryDocumentActionsItemProps extends IClassNameProps {
   menuOpen?: boolean;
 }
 
-export const LibraryDocumentActionsItem: FC<LibraryDocumentActionsItemProps> = () => <></>;
+export const ActionsItemBase: FC<ActionsItemProps> = () => <></>;

@@ -12,8 +12,8 @@ import { LibraryRecord } from '../../../services/data/doc-library.service';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
 
-import { ActionsItemVariant } from '../Item/LibraryDocumentActions-Item';
-import { LibraryDocumentActionsItem } from '../Item/LibraryDocumentActions-Item.composed';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnLibraryDocumentActionsSed = cn('LibraryDocumentActions', 'Sed');
 
@@ -37,7 +37,7 @@ export class LibraryDocumentActionsSed extends Component<LibraryDocumentActionsS
 
     return (
       <>
-        <LibraryDocumentActionsItem
+        <ActionsItem
           className={cnLibraryDocumentActionsSed()}
           title='Отправить в СЭД "Диалог"'
           as={as}

@@ -33,7 +33,7 @@ import { schemaService } from '../../../services/data/schema.service';
 import { exportService } from '../../../services/data/export.service';
 import { services } from '../../../services/services';
 import {
-  isFeaturesCreateAllowed,
+  isFeaturesUpdateAllowed,
   isTableExportAllowed,
   isLayersManagementAllowed
 } from '../../../services/data/permissions.service';
@@ -271,7 +271,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     if (this.isVectorLayer) {
       const { dataset, tableName, schemaId } = this.props.entity as CrgVectorLayer;
       const allowed = await Promise.all([
-        isFeaturesCreateAllowed(dataset, tableName, schemaId),
+        isFeaturesUpdateAllowed(dataset, tableName, schemaId),
         isTableExportAllowed(dataset, tableName),
         isLayersManagementAllowed()
       ]);

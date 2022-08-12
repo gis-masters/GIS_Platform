@@ -6,29 +6,26 @@ import { boundMethod } from 'autobind-decorator';
 
 import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { FilterQuery } from '../../../services/util/filterObjects';
+import { WfsFeature } from '../../../services/geoserver/wfs.models';
 
-import { AttributesTableRecord } from '../Table/Attributes-Table';
+import '!style-loader!css-loader!sass-loader!./Attributes-Check.scss';
 
 const cnAttributesCheck = cn('Attributes', 'Check');
 
 interface AttributesCheckProps {
-  rowData: AttributesTableRecord;
-  field: keyof AttributesTableRecord;
-  filterActive: boolean;
-  filterParams: FilterQuery;
+  feature: WfsFeature;
 }
 
 @observer
 export class AttributesCheck extends Component<AttributesCheckProps> {
   render() {
-    const { rowData } = this.props;
+    const { feature } = this.props;
 
     return (
       <Checkbox
         className={cnAttributesCheck()}
-        checked={mapStore.selectedFeatures.some(feature => feature.id === rowData.feature.id)}
-        value={rowData.feature.id}
+        checked={mapStore.selectedFeatures.some(({ id }) => id === feature.id)}
+        value={feature.id}
         onChange={this.changeHandler}
       />
     );
@@ -36,8 +33,8 @@ export class AttributesCheck extends Component<AttributesCheckProps> {
 
   @boundMethod
   private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
-    const { rowData } = this.props;
+    const { feature } = this.props;
     const selectionType = checked ? MapSelectionTypes.ADD : MapSelectionTypes.REMOVE;
-    mapSelectionService.selectFeatures([rowData.feature], selectionType);
+    mapSelectionService.selectFeatures([feature], selectionType);
   }
 }

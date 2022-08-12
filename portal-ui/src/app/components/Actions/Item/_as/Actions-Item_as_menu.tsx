@@ -7,17 +7,17 @@ import { withBemMod } from '@bem-react/core';
 import { MenuNestedItem } from '../../../MenuNestedItem/MenuNestedItem';
 import { Link } from '../../../Link/Link';
 
-import { cnLibraryDocumentActionsItem, LibraryDocumentActionsItemProps } from '../LibraryDocumentActions-Item';
+import { cnActionsItem, ActionsItemProps } from '../Actions-Item.base';
 
-export const LibraryDocumentActionsMenuOpenContext = createContext<boolean>(false);
+export const ActionsMenuOpenContext = createContext<boolean>(false);
 
-const LibraryDocumentActionsItemAsMenu: FC<LibraryDocumentActionsItemProps> = observer(
+const ActionsItemAsMenu: FC<ActionsItemProps> = observer(
   ({ title, className, disabled, icon, url, download, onClick, submenu }) =>
     submenu ? (
-      <LibraryDocumentActionsMenuOpenContext.Consumer>
+      <ActionsMenuOpenContext.Consumer>
         {parentMenuOpen => (
           <MenuNestedItem
-            className={cnLibraryDocumentActionsItem(null, [className])}
+            className={cnActionsItem(null, [className])}
             parentMenuOpen={parentMenuOpen}
             submenu={submenu}
           >
@@ -26,10 +26,10 @@ const LibraryDocumentActionsItemAsMenu: FC<LibraryDocumentActionsItemProps> = ob
             <ChevronRight color='action' />
           </MenuNestedItem>
         )}
-      </LibraryDocumentActionsMenuOpenContext.Consumer>
+      </ActionsMenuOpenContext.Consumer>
     ) : (
       <Link href={url} variant='contents' disabled={!url || Boolean(onClick)} download={download}>
-        <MenuItem className={cnLibraryDocumentActionsItem(null, [className])} disabled={disabled} onClick={onClick}>
+        <MenuItem className={cnActionsItem(null, [className])} disabled={disabled} onClick={onClick}>
           <ListItemIcon>{icon}</ListItemIcon>
           <ListItemText>{title}</ListItemText>
         </MenuItem>
@@ -37,8 +37,8 @@ const LibraryDocumentActionsItemAsMenu: FC<LibraryDocumentActionsItemProps> = ob
     )
 );
 
-export const asMenu = withBemMod<LibraryDocumentActionsItemProps, LibraryDocumentActionsItemProps>(
-  cnLibraryDocumentActionsItem(),
+export const asMenu = withBemMod<ActionsItemProps, ActionsItemProps>(
+  cnActionsItem(),
   { as: 'menu' },
-  () => LibraryDocumentActionsItemAsMenu
+  () => ActionsItemAsMenu
 );

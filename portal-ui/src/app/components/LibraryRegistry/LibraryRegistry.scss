@@ -19,7 +19,7 @@ body .LibraryRegistry {
   }
 
   &-Actions:focus,
-  &-Actions.LibraryDocumentActions_open,
+  &-Actions.Actions_open,
   .MuiTableRow-hover:hover .LibraryRegistry-Actions {
     opacity: 1;
   }

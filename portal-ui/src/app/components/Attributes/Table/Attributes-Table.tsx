@@ -4,12 +4,16 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { FilterBySelection, mapStore } from '../../../stores/Map.store';
+import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
+import { FilterBySelection, MapSelectionTypes, mapStore } from '../../../stores/Map.store';
+import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { communicationService } from '../../../services/communication.service';
 import { CrgVectorLayer } from '../../../services/gis/projects.models';
 import { WfsFeature } from '../../../services/geoserver/wfs.models';
+import { mapService } from '../../../services/map/map.service';
 import { Schema } from '../../../services/data/schema.models';
 import { PageOptions } from '../../../services/models';
+import { sleep } from '../../../services/util/sleep';
 import { XTable, XTableColumn, XTableInvoke } from '../../XTable/XTable';
 import { Loading } from '../../Loading/Loading';
 
@@ -95,6 +99,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
         getRowId={this.rowIdGetter}
         invoke={this.tableInvoke}
         onPageOptionsChange={this.handlePageOptionsChange}
+        onRowDoubleClick={this.handleRowDoubleClick}
       />
     ) : (
       <Loading visible />
@@ -126,6 +131,15 @@ export class AttributesTable extends Component<AttributesTableProps> {
     this.pageOptions = pageOptions;
     onPageOptionsChange(pageOptions);
     mapStore.updateAttributeTableFilter(layer, Object.keys(pageOptions.filter).length ? pageOptions.filter : undefined);
+  }
+
+  @boundMethod
+  private async handleRowDoubleClick({ feature }: AttributesTableRecord) {
+    mapService.positionToFeature(feature);
+    mapSelectionService.selectFeatures([feature], MapSelectionTypes.ADD);
+    sidebars.closeEdit();
+    await sleep(0);
+    sidebars.openEdit({ features: [feature], mode: EditFeatureMode.single });
   }
 
   @boundMethod

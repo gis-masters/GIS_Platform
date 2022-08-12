@@ -7,7 +7,7 @@ import { FormView } from '../components/Form/View/Form-View.composed';
 import { FormControl } from '../components/Form/Control/Form-Control.composed';
 import { LibraryDocument } from '../components/LibraryDocument/LibraryDocument';
 import { LibraryRegistry } from '../components/LibraryRegistry/LibraryRegistry';
-import { LibraryDocumentActions } from '../components/LibraryDocumentActions/LibraryDocumentActions.composed';
+import { LibraryDocumentActions } from '../components/LibraryDocumentActions/LibraryDocumentActions';
 
 export const registry = new Registry({ id: 'common' });
 

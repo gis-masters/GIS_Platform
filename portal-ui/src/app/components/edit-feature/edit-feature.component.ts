@@ -11,7 +11,7 @@ import { isNumber } from 'lodash';
 import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { EditFeatureMode, EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
-import { isFeaturesDeleteAllowed, isFeaturesUpdateAllowed } from '../../services/data/permissions.service';
+import { isFeaturesUpdateAllowed } from '../../services/data/permissions.service';
 import { convertProperties, convertSchema, getFieldRelations } from '../../services/data/schema.utils';
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
@@ -57,7 +57,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   isNew: boolean;
   selectTab: number;
 
-  deletingAllowed = false;
   updatingAllowed = false;
 
   isSaveInProgress = false;
@@ -408,7 +407,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     const { dataset, tableName, schemaId } = this.layer;
 
     this.updatingAllowed = await isFeaturesUpdateAllowed(dataset, tableName, schemaId);
-    this.deletingAllowed = await isFeaturesDeleteAllowed(dataset, tableName, schemaId);
   }
 
   private async batchUpdateFeatures(
