@@ -25,6 +25,7 @@ import static ru.mycrg.acceptance.CommonStepDefinitions.checkSorting;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFileId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.folder11Id;
 
 public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
@@ -190,7 +191,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @And("Запись успешно обновлена")
     public void checkRecord() {
-        getCurrentRecord();
+        getCurrentRecord(currentRecordId);
 
         String newTitle = response.jsonPath().get("title");
 
@@ -311,6 +312,13 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                                                     new RecordDto(folderName + i, null, folderContentType)));
     }
 
+    @When("Пользователь делает запрос на folder_1_1 запись в библиотеке")
+    public void getCurrentRecordInLibrary() {
+        authorizationBase.loginAsCurrentUser();
+
+        getCurrentRecord(folder11Id);
+    }
+
     @And("Папки находятся в начале списка")
     public void checkFoldersFetchedFirst() {
         String folderContentType = "folder_v1";
@@ -396,10 +404,10 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         post(String.format("/%s/records", DEFAULT_LIBRARY));
     }
 
-    private void getCurrentRecord() {
+    private void getCurrentRecord(Integer id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(String.format("/%s/records/%d", DEFAULT_LIBRARY, currentRecordId));
+                        get(String.format("/%s/records/%d", DEFAULT_LIBRARY, id));
     }
 
     private void createRecordWithSecondFile() {

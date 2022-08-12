@@ -255,6 +255,14 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         libraryBasePermissions.addPermission(urlToFile, userId, "user", role);
     }
 
+    @When("Текущему пользователю установлена роль {string}, для каталога folder_1_1")
+    public void setRoleForCurrentUserForFolder11(String role) {
+        authorizationBase.loginAsOwner();
+
+        String urlToFile = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, folder11Id);
+        libraryBasePermissions.addPermission(urlToFile, userId, "user", role);
+    }
+
     @Then("Пользователь не видит файлов и папок в тестовой библиотеке")
     public void checkLibraryIsEmptyForCurrentUser() {
         authorizationBase.loginAsCurrentUser();

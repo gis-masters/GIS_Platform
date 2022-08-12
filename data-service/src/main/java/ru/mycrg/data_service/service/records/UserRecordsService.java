@@ -23,9 +23,10 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.text.MessageFormat;
 import java.util.*;
 
+import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.dto.Roles.VIEWER;
+import static ru.mycrg.data_service.dto.Roles.*;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
@@ -146,8 +147,15 @@ public class UserRecordsService implements IRecordsService {
         // Проверим роль выданную непосредственно на запись
         Optional<String> oRole = permissionsRepository.getRoleForRecord(recordQualifier);
         if (oRole.isPresent()) {
-            content.put(ROLE.getName(), oRole.get());
-            definedRole = oRole.get();
+            if (nonNull(definedRole)) {
+                if (isFirstRoleBetterThanSecond(oRole.get(), definedRole)) {
+                    content.put(ROLE.getName(), oRole.get());
+                    definedRole = oRole.get();
+                }
+            } else {
+                content.put(ROLE.getName(), oRole.get());
+                definedRole = oRole.get();
+            }
         }
 
         // Если роль на данном этапе максимальная, то дальше ничего делать не нужно.
@@ -301,5 +309,17 @@ public class UserRecordsService implements IRecordsService {
 
             throw new ForbiddenException(msg);
         }
+    }
+
+    private boolean isFirstRoleBetterThanSecond(String recordRole, String defineRole) {
+        Map<String, Integer> roleWeights = new HashMap<>();
+        roleWeights.put(VIEWER.name(), 10);
+        roleWeights.put(CONTRIBUTOR.name(), 20);
+        roleWeights.put(OWNER.name(), 30);
+
+        Integer firstRoleWeight = roleWeights.get(recordRole);
+        Integer secondRoleWeight = roleWeights.get(defineRole);
+
+        return firstRoleWeight > secondRoleWeight;
     }
 }

@@ -347,7 +347,7 @@ public class BasePermissionsRepository {
 
         String queryTemplate = "" +
                 "SELECT " +
-                "  p.role_id " +
+                "  max(p.role_id) " +
                 "FROM " +
                 "  " + tableQualifier + " AS res " +
                 "  JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
