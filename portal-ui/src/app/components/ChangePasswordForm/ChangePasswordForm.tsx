@@ -102,13 +102,19 @@ export class ChangePasswordForm extends Component {
       }
       this.setLoading(false);
     } catch (error) {
-      const err = error as AxiosError<{ errors?: Record<string, string>[]; error_description?: string }>;
+      const err = error as AxiosError<{
+        errors?: Record<string, string>[];
+        error_description?: string;
+        message?: string;
+      }>;
       const errors = err.response?.data?.errors || [];
 
       if (errors.length > 0) {
         throw [{ field: 'password', messages: errors }];
       } else if (err.response?.data?.error_description) {
         throw [{ field: 'password', messages: [err.response?.data?.error_description] }];
+      } else if (err.response?.data?.message) {
+        throw [{ field: 'password', messages: [err.response?.data?.message] }];
       } else {
         throw [{ field: 'password', messages: ['Произошла ошибка'] }];
       }

@@ -44,7 +44,7 @@ export type FieldValidator = (
 ) => string[] | undefined;
 
 const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
-  [PropertyType.STRING]: [simpleRequired, stringLength, stringRegex, stringWellKnownRegex, stringPassword],
+  [PropertyType.STRING]: [simpleRequired, stringLength, stringRegex, stringWellKnownRegex, stringPassword, stringEmail],
   [PropertyType.INT]: [numberRequired, numberMinMax, numberInteger],
   [PropertyType.FLOAT]: [numberRequired, numberMinMax],
   [PropertyType.BOOL]: [simpleRequired],
@@ -71,9 +71,7 @@ export function validateFieldValue(
 
   return {
     field: property.name,
-    messages: validatorsList
-      ?.flatMap(validator => validator(value, property, formValue, allProperties))
-      .filter(err => err)
+    messages: validatorsList?.flatMap(validator => validator(value, property, formValue, allProperties)).filter(Boolean)
   };
 }
 
@@ -165,11 +163,17 @@ function stringWellKnownRegex(value: unknown, { wellKnownRegex, regexErrorMessag
   }
 }
 
-function stringPassword(value: unknown, { display }: PropertySchemaString): string[] {
-  if (display === 'password' && !new RegExp(knownRegex.password).test(String(value))) {
+function stringPassword(value: unknown, { display, regex, wellKnownRegex }: PropertySchemaString): string[] {
+  if (display === 'password' && !(regex || wellKnownRegex) && !new RegExp(knownRegex.password).test(String(value))) {
     return [
       'Пароль должен состоять только из цифр, заглавных и строчных букв латинского алфавита и содержать не менее 8 символов'
     ];
+  }
+}
+
+function stringEmail(value: unknown, { display, regex, wellKnownRegex }: PropertySchemaString): string[] {
+  if (display === 'email' && !(regex || wellKnownRegex) && !new RegExp(knownRegex.email).test(String(value))) {
+    return ['Некорректный E-mail'];
   }
 }
 

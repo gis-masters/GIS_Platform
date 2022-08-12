@@ -45,7 +45,7 @@ const schema = {
       name: 'username',
       title: 'E-mail',
       required: true,
-      wellKnownRegex: 'email',
+      display: 'email',
       propertyType: PropertyType.STRING
     },
     {
@@ -61,8 +61,6 @@ const schema = {
 @observer
 export class LoginForm extends Component<LoginFormProps> {
   @observable private userData: AuthUserData = cloneDeep(defaultData);
-  @observable private isUserDisabled: boolean;
-  @observable private isWrongPassword: boolean;
   @observable private loading: boolean;
   @observable private esiaLoading: boolean;
 

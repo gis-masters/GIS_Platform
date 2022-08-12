@@ -46,7 +46,7 @@ export class LibraryDocumentActionsOpen extends Component<LibraryDocumentActions
             {({ LibraryDocument, LibraryDocumentActions }) => (
               <>
                 <DialogTitle>{document.title}</DialogTitle>
-                <DialogContent>
+                <DialogContent className='scroll'>
                   <LibraryDocument document={document} contentOnly />
                 </DialogContent>
                 <DialogActions>

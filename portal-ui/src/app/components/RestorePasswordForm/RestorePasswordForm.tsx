@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
@@ -44,9 +44,13 @@ const schema = {
 export class RestorePasswordForm extends Component {
   @observable private formValue = cloneDeep(defaultData);
   @observable private emailValidationError: string;
-  @observable private errorMessage: string;
   @observable private successMessage = false;
   @observable private loading: boolean;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const htmlId = generateRandomId();
@@ -76,10 +80,24 @@ export class RestorePasswordForm extends Component {
           <DialogContent>
             {this.successMessage && (
               <>
-                Мы проверим, связана ли учетная запись с "{this.formValue.email}" и если да, вышлем вам инструкции о
-                том, как сбросить ваш пароль. Если вы не получили от нас электронное письмо, пожалуйста, используйте
-                действительный адрес электронной почты для сброса пароля вашей учетной записи. Или проверьте свою папку
-                "спам" и внесите {env.contactsEmail} в белый список, чтобы вы могли получать от нас электронные письма.
+                <div className={cnRestorePassword('Message')}>
+                  Мы проверим, связана ли учетная запись с{' '}
+                  <a href={`mailto:${this.formValue.email}`}>
+                    <i>{this.formValue.email}</i>
+                  </a>{' '}
+                  и если да, вышлем вам инструкции о том, как сбросить ваш пароль.
+                </div>
+                <div className={cnRestorePassword('Message')}>
+                  Если вы не получили от нас электронное письмо, пожалуйста, используйте действительный адрес
+                  электронной почты для сброса пароля вашей учетной записи или проверьте свою папку "Спам".
+                </div>
+                <div className={cnRestorePassword('Message')}>
+                  Внесите{' '}
+                  <a href={`mailto:${env.contactsEmail}`}>
+                    <i>{env.contactsEmail}</i>
+                  </a>{' '}
+                  в белый список, чтобы вы могли получать от нас электронные письма.
+                </div>
               </>
             )}
           </DialogContent>

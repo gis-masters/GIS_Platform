@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import { TextField } from '@mui/material';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { makeObservable, observable } from 'mobx';
 import InputMask from 'react-input-mask';
 
 import { PropertyType, PropertySchemaString } from '../../../../services/data/schema.models';
@@ -13,6 +15,14 @@ import '!style-loader!css-loader!sass-loader!./Form-Control_type_string.scss';
 
 @observer
 class FormControlTypeString extends Component<FormControlProps> {
+  @observable private showPassword = false;
+
+  constructor(props: FormControlProps) {
+    super(props);
+
+    makeObservable(this);
+  }
+
   render() {
     const {
       htmlId,
@@ -61,10 +71,19 @@ class FormControlTypeString extends Component<FormControlProps> {
             onBlur={this.handleBlur}
             inputProps={{ className: 'scroll' }}
             multiline={display === 'multiline' || display === 'code'}
-            type={display === 'password' ? 'password' : undefined}
+            type={this.type}
             minRows={2}
             maxRows={10}
             variant={variant}
+            InputProps={{
+              endAdornment: display === 'password' && (
+                <InputAdornment position='end'>
+                  <IconButton aria-label='Показать пароль' onClick={this.onShowPassword} edge='end'>
+                    {this.showPassword ? <Visibility fontSize='small' /> : <VisibilityOff fontSize='small' />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
         )}
       </div>
@@ -74,10 +93,11 @@ class FormControlTypeString extends Component<FormControlProps> {
   @boundMethod
   private handleChange(event: React.ChangeEvent<{ value: string }>) {
     const { onChange, property } = this.props;
+    const { display } = property as PropertySchemaString;
 
     if (onChange) {
       onChange({
-        value: event.target.value,
+        value: display === 'email' ? event.target.value.trim() : event.target.value,
         propertyName: property.name
       });
     }
@@ -93,6 +113,25 @@ class FormControlTypeString extends Component<FormControlProps> {
         propertyName: property.name
       });
     }
+  }
+
+  @boundMethod
+  private onShowPassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  private get type() {
+    const { display } = this.props.property as PropertySchemaString;
+
+    if (this.showPassword && display === 'password') {
+      return 'text';
+    }
+
+    if (display === 'email') {
+      return 'email';
+    }
+
+    return display === 'password' ? 'password' : undefined;
   }
 }
 
