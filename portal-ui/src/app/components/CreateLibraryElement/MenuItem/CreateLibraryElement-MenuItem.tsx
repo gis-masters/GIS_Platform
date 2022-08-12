@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ListItemIcon, MenuItem } from '@mui/material';
-import { CreateNewFolderOutlined, DescriptionOutlined, SvgIconComponent } from '@mui/icons-material';
+import { CreateNewFolderOutlined, DescriptionOutlined, FolderOpen, SvgIconComponent } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
@@ -11,6 +11,7 @@ const cnCreateLibraryElementMenuItem = cn('CreateLibraryElement', 'MenuItem');
 
 const icons: Record<string, SvgIconComponent> = {
   FOLDER: CreateNewFolderOutlined,
+  FOLDER_CREATE: FolderOpen,
   DOCUMENT: DescriptionOutlined,
   GPZU: DocHome
 };

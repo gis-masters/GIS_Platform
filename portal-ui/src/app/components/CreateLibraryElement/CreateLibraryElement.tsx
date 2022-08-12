@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { action, computed, observable, makeObservable } from 'mobx';
-import { NoteAddOutlined } from '@mui/icons-material';
+import { CreateNewFolderOutlined, NoteAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
@@ -61,8 +61,19 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
           ))}
         </MenuIconButton>
 
-        {this.folderContentType && (
-          <CreateLibraryElementFolderButton onClick={this.itemClickHandler} contentTypeId={this.folderContentType.id} />
+        {this.folderContentTypes?.length === 1 && (
+          <CreateLibraryElementFolderButton
+            onClick={this.itemClickHandler}
+            contentTypeId={this.folderContentTypes[0].id}
+          />
+        )}
+
+        {this.folderContentTypes?.length > 1 && (
+          <MenuIconButton icon={<CreateNewFolderOutlined />}>
+            {this.folderContentTypes.map((contentType, i) => (
+              <CreateLibraryElementMenuItem contentType={contentType} onClick={this.itemClickHandler} key={i} />
+            ))}
+          </MenuIconButton>
         )}
 
         <CreateLibraryElementDialog
@@ -89,10 +100,10 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   }
 
   @computed
-  private get folderContentType(): ContentType | undefined {
+  private get folderContentTypes(): ContentType[] {
     const contentTypes = this.schema?.contentTypes || [];
 
-    return contentTypes.find(({ type, childOnly }) => type === 'FOLDER' && !childOnly);
+    return contentTypes.filter(({ type, childOnly }) => type === 'FOLDER' && !childOnly);
   }
 
   @computed
@@ -110,7 +121,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
       return null;
     }
 
-    return this.contentTypeId && this.folderContentType?.id === this.contentTypeId;
+    return this.contentTypeId && !!this.folderContentTypes?.find(({ id }) => id === this.contentTypeId);
   }
 
   @boundMethod
