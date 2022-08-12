@@ -67,7 +67,7 @@ public class BasemapReferencesDeletionEventHandler implements IEventHandler {
                     .delete(workspaceName, coverageName, coverageName);
 
             new RasterStorage(event.getAuthToken())
-                    .delete(workspaceName, coverageName);
+                    .delete(workspaceName, coverageName, false);
 
             log.debug("Event: '{}'. Successfully deleted all basemap references: '{}'",
                       event.getId(), complexLayerName);

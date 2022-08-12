@@ -13,8 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
-import static ru.mycrg.messagebus_contract.MessageBusProperties.AUDIT_REQUEST_FANOUT;
-import static ru.mycrg.messagebus_contract.MessageBusProperties.AUDIT_REQUEST_QUEUE;
+import static ru.mycrg.messagebus_contract.MessageBusProperties.*;
 
 @Configuration
 public class RabbitConfiguration {

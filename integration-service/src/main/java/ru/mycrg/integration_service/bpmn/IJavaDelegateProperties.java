@@ -16,4 +16,6 @@ public interface IJavaDelegateProperties {
     String CHECK_STATUS_VAR_NAME = "checkStatus";
 
     String ENTITY_ID_VAR_NAME = "entityId";
+
+    String LAYER_COMPLEX_NAME = "layerComplexName";
 }

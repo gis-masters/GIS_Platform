@@ -6,7 +6,8 @@ public enum BpmnProcessKey {
     REMOVE_ORGANIZATION_PROCESS_ID("integration_deleteOrganizationProcess"),
     RESOURCE_ANALYZE_PROCESS("integration_resourceAnalyzeProcess"),
     USER_DELETE_PROCESS("integration_userDeleteProcess"),
-    CLEAR_GROUP_PERMISSIONS("integration_clearGroupPermissionProcess");
+    CLEAR_GROUP_PERMISSIONS("integration_clearGroupPermissionProcess"),
+    REFERENCE_LAYER_DELETION_PROCESS("integration_layerDeleteProcess");
 
     private final String value;
 

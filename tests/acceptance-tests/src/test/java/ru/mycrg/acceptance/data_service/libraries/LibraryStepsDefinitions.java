@@ -107,8 +107,10 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         deleteRecord(currentRecordId);
     }
 
-    @When("Пользователь обновляет запись библиотеки - удаляет файл")
+    @When("Администратор обновляет запись библиотеки - удаляет файл")
     public void updateLibraryDocument() {
+        authorizationBase.loginAsOwner();
+
         DefaultRecordModel recordModel = new DefaultRecordModel("new_title");
         recordModel.setSome_files(new ArrayList<>());
 

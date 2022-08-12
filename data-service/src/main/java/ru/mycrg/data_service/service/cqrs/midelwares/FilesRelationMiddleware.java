@@ -7,12 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.auth_service_contract.events.request.FileDeletedEvent;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.repository.FileRepository;
+import ru.mycrg.data_service.security.AuthenticationFacade;
 import ru.mycrg.data_service.service.ISchemable;
-import ru.mycrg.data_service.service.JsonConverter;
 import ru.mycrg.data_service.service.cqrs.files.ICreateFilesRelation;
 import ru.mycrg.data_service.service.cqrs.files.IDeleteFilesRelation;
 import ru.mycrg.data_service.service.cqrs.files.IUpdateFilesRelation;
@@ -24,12 +25,14 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.IRequestMiddleware;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.service.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.SchemaUtil.isFilePropertyExist;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
@@ -41,11 +44,17 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
 
     private final FileRepository fileRepository;
     private final FileStorageService fileStorageService;
+    private final IMessageBusProducer messageBus;
+    private final AuthenticationFacade authenticationFacade;
 
     public FilesRelationMiddleware(FileRepository fileRepository,
-                                   FileStorageService fileStorageService) {
+                                   FileStorageService fileStorageService,
+                                   IMessageBusProducer messageBus,
+                                   AuthenticationFacade authenticationFacade) {
         this.fileRepository = fileRepository;
         this.fileStorageService = fileStorageService;
+        this.messageBus = messageBus;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Transactional
@@ -100,7 +109,7 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
                 FileResourceQualifier fileResQualifier = new FileResourceQualifier(rQualifier.getSchema(),
                                                                                    rQualifier.getTable(),
                                                                                    newRecord.getId());
-                JsonNode jsonNode = JsonConverter.toJsonNode(fileResQualifier);
+                JsonNode jsonNode = toJsonNode(fileResQualifier);
 
                 ResourceQualifier lrQualifier = new ResourceQualifier(rQualifier, newRecord.getId());
                 fileRepository.setQualifier(lrQualifier.getType().name(), jsonNode, ids);
@@ -169,6 +178,10 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
             }
 
             fileRepository.delete(file);
+
+            messageBus.produce(new FileDeletedEvent(authenticationFacade.getLogin(),
+                                                    authenticationFacade.getAccessToken(),
+                                                    String.valueOf(id)));
         } else {
             log.info("Нечего удалять. Файл не найден по идентификатору: '{}'", id);
         }
@@ -180,7 +193,7 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
         FileResourceQualifier fileResQualifier = new FileResourceQualifier(rQualifier.getSchema(),
                                                                            rQualifier.getTable(),
                                                                            rQualifier.getRecord());
-        JsonNode jsonNode = JsonConverter.toJsonNode(fileResQualifier);
+        JsonNode jsonNode = toJsonNode(fileResQualifier);
 
         fileRepository.setQualifier(rQualifier.getType().name(), jsonNode, ids);
     }

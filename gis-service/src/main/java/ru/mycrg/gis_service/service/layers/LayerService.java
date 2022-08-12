@@ -207,7 +207,9 @@ public class LayerService {
         Set<Long> projectIds = projectService.getAll().stream()
                                              .map(Project::getId)
                                              .collect(Collectors.toSet());
-        List<Layer> relatedLayers = layerRepository.findRelatedByFileId(fileId, projectIds);
+        List<Layer> relatedLayers = projectIds.isEmpty()
+                ? new ArrayList<>()
+                : layerRepository.findRelatedByFileId(fileId, projectIds);
 
         return mapToRelatedLayersModel(relatedLayers);
     }

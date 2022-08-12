@@ -2,10 +2,10 @@ package ru.mycrg.integration_service.queue;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
-import ru.mycrg.messagebus_starter.DefaultMessageBusConsumer;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusConsumer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
+import ru.mycrg.messagebus_starter.DefaultMessageBusConsumer;
 
 import java.util.List;
 
@@ -24,7 +24,8 @@ public class MessageBusConsumer implements IMessageBusConsumer {
     @RabbitListener(queues = {
             USER_REQUEST_QUEUE,
             ORG_REQUEST_QUEUE,
-            AUDIT_REQUEST_QUEUE
+            AUDIT_REQUEST_QUEUE,
+            FILE_REQUEST_QUEUE
     })
     public void consume(IMessageBusEvent event) {
         messageBus.consume(event);

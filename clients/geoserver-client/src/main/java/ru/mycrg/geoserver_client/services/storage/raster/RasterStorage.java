@@ -71,11 +71,20 @@ public class RasterStorage extends GeoServerBaseService {
         }
     }
 
-    public ResponseModel<Object> delete(String workspaceName, String coverageStore) throws HttpClientException {
+    /**
+     * Delete  coverages from geoserver
+     *
+     * @param workspaceName The name of the workspace.
+     * @param coverageStore The name of store.
+     * @param recurse       responsible for cascade deleting of coverages
+     */
+    public ResponseModel<Object> delete(String workspaceName, String coverageStore, Boolean recurse)
+            throws HttpClientException {
         log.debug("try delete coverageStore: '{}' in workspace: '{}'", coverageStore, workspaceName);
 
         String coverageUrl = getGeoserverRestUrl().append(WORKSPACES).append(workspaceName)
                                                   .append(COVERAGE_STORES).append(coverageStore)
+                                                  .append("?recurse=").append(recurse)
                                                   .toString();
 
         Request request = builderWithBearerAuth.url(coverageUrl)

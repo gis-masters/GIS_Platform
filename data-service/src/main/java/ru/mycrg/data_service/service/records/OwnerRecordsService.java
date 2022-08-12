@@ -158,7 +158,9 @@ public class OwnerRecordsService implements IRecordsService {
         try {
             log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), record);
 
-            Map<String, Object> clearedData = systemAttributeHandler.clearSystemAttributes(record);
+            Map<String, Object> clearedData = systemAttributeHandler.initSchema(schema)
+                                                                    .prepareJsonb(record)
+                                                                    .clearSystemAttributes(record);
 
             throwIfNotMatchTableColumns(record.getContent(), ddlTables.getAllColumnNames(recordQualifier.getTable()));
 

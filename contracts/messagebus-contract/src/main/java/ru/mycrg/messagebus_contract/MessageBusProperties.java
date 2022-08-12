@@ -55,4 +55,7 @@ public class MessageBusProperties {
     // deleteRemoteReferences
     public static final String COMMON_REQUEST_QUEUE = "commonRequestQueue";
     public static final String COMMON_RESPONSE_QUEUE = "commonResponseQueue";
+
+    // File
+    public static final String FILE_REQUEST_QUEUE = "fileRequestQueue";
 }

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static java.lang.String.format;
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -23,9 +24,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
-import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFileId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFilePath;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentRecordId;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
@@ -38,6 +39,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     public static LayerUpdateDto layerUpdateDto;
     public static Integer layerId;
     public static String layerTitle = "Искусственные дорожные сооружения";
+    public static String layerComplexName;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -137,7 +139,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(layerCreateDto.getType(), jsonPath.get("type"));
         assertEquals(layerCreateDto.getSchemaId(), jsonPath.get("schemaId"));
         assertEquals(layerCreateDto.getNativeCRS(), jsonPath.get("nativeCRS"));
-        assertEquals(String.format("scratch_database_%s:%s", orgId, layerCreateDto.getTableName()),
+        assertEquals(format("scratch_database_%s:%s", orgId, layerCreateDto.getTableName()),
                      jsonPath.get("complexName"));
     }
 
@@ -189,7 +191,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует растровый слой размещенный в проекте")
     public void createRasterLayer() {
-        String dataSourceUri = String.format("file://%s", tifFilePath);
+        String dataSourceUri = format("file://%s", tifFilePath);
         layerCreateDto = new LayerCreateDto("Тестовый растр", "raster");
 
         layerCreateDto.setLibraryId("dl_default");
@@ -197,12 +199,13 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerCreateDto.setNativeCRS("EPSG:28406");
         layerCreateDto.setDataSourceUri(dataSourceUri);
         layerCreateDto.setRecordId(currentRecordId.longValue());
-        String tableName = String.format("%s_%s__%s", layerCreateDto.getLibraryId(), currentRecordId, tifFileId);
+        String tableName = format("%s_%s__%s", layerCreateDto.getLibraryId(), currentRecordId, tifFileId);
         layerCreateDto.setTableName(tableName);
 
         super.createEntity(layerCreateDto);
 
         layerId = extractEntityIdFromResponse(response);
+        layerComplexName = response.jsonPath().get("complexName");
     }
 
     @When("Пользователь делает повторный запрос на создание слоя проекта")
@@ -329,6 +332,33 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         super.deleteCurrentEntity();
 
         layerPool.remove(layerId);
+    }
+
+    @Then("Слой, созданный на основе файла, отсутсвует на gis-service")
+    public void checkThatRelatedLayerWasDeleted() throws InterruptedException {
+        sleep(1000);
+
+        super.getEntityById(layerId);
+
+        int statusCode = response.getStatusCode();
+
+        assertEquals(404, statusCode);
+    }
+
+    @Then("Слой, созданный на основе файла, отсутсвует на geoserver")
+    public void checkThatRelatedLayerWasDeletedOnGeoserver() {
+        String[] complexName = layerComplexName.split(":");
+        String workspace = complexName[0];
+        String storeName = format("store_%s", complexName[1]);
+
+        response = getBaseRequestWithCurrentCookie()
+                .basePath("geoserver/rest")
+                .when().
+                        get(format("/workspaces/%s/coveragestores/%s", workspace, storeName));
+
+        int statusCode = response.getStatusCode();
+
+        assertEquals(404, statusCode);
     }
 
     @And("В ответе на удаление слоя проекта есть упоминание ID")

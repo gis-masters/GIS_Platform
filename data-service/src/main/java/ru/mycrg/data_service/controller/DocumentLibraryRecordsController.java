@@ -131,14 +131,16 @@ public class DocumentLibraryRecordsController {
     public ResponseEntity<Object> updateRecord(@PathVariable String docLibId,
                                                @PathVariable Long recId,
                                                @RequestBody Map<String, Object> payload) {
-        SchemaDto schema = libraryService.getSchema(docLibId);
-        schemaService.throwIfNotMatchSchema(schema, payload);
+        if (!payload.isEmpty()) {
+            SchemaDto schema = libraryService.getSchema(docLibId);
+            schemaService.throwIfNotMatchSchema(schema, payload);
 
-        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
-        mediator.execute(
-                new UpdateLibraryRecordRequest(schema,
-                                               rQualifier,
-                                               new RecordEntity(payload)));
+            ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
+            mediator.execute(
+                    new UpdateLibraryRecordRequest(schema,
+                                                   rQualifier,
+                                                   new RecordEntity(payload)));
+        }
 
         return ResponseEntity.noContent().build();
     }

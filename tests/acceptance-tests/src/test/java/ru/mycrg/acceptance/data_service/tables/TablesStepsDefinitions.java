@@ -15,7 +15,6 @@ import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions
 
 public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
-    public static Integer currentFeatureId;
     public static String currentTableName;
     public static TableCreateDto currentTableDto;
 

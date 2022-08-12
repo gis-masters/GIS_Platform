@@ -61,6 +61,9 @@ public class RabbitConfiguration {
     @Bean public Queue deleteGisReferencesResponseQueue() { return new Queue(COMMON_RESPONSE_QUEUE);}
 
     @Bean
+    public Queue queueFileEventDeleted() { return new Queue(FILE_REQUEST_QUEUE);}
+
+    @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
