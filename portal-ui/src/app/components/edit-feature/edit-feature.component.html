@@ -195,9 +195,7 @@
             </div>
 
             <div class="input-group no-wrap-group" *ngIf="!updatingAllowed">
-              <div class="read-value">
-                {{ editFeatureItem.value }}
-              </div>
+              <div class="read-value">{{ editFeatureItem.value }}</div>
               <crg-relations-button
                 *ngIf="editFeatureItem.relations.length"
                 [obj]="features[0].properties"
@@ -243,9 +241,7 @@
               </div>
             </div>
 
-            <div *ngIf="!updatingAllowed" class="read-value">
-              {{ getDateTime(editFeatureItem.value) }}
-            </div>
+            <div *ngIf="!updatingAllowed" class="read-value">{{ getDateTime(editFeatureItem.value) }}</div>
           </div>
         </div>
 
@@ -283,9 +279,7 @@
               </div>
             </div>
 
-            <div *ngIf="!updatingAllowed" class="read-value">
-              {{ editFeatureItem.value }}
-            </div>
+            <div *ngIf="!updatingAllowed" class="read-value">{{ editFeatureItem.value }}</div>
           </div>
         </div>
 
@@ -323,9 +317,7 @@
               </div>
             </div>
 
-            <div *ngIf="!updatingAllowed" class="read-value">
-              {{ editFeatureItem.value }}
-            </div>
+            <div *ngIf="!updatingAllowed" class="read-value">{{ editFeatureItem.value }}</div>
           </div>
         </div>
 
@@ -362,9 +354,7 @@
               </div>
             </div>
 
-            <div *ngIf="!updatingAllowed" class="read-value">
-              {{ getEnumerationTitle(editFeatureItem.property.enumerations, editFeatureItem.value) }}
-            </div>
+            <div *ngIf="!updatingAllowed" class="read-value">{{ getEnumerationTitle(editFeatureItem.property.enumerations, editFeatureItem.value) }}</div>
           </div>
         </div>
       </div>
