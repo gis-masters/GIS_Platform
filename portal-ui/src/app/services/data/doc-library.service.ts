@@ -15,7 +15,6 @@ import { communicationService } from '../communication.service';
 import { preparePageOptions } from '../http.utils';
 import { addEntityPermission, removeEntityPermission } from './permissions.client';
 import { ExplorerItemEntityTypeTitle } from '../../components/Explorer/Explorer.models';
-import { CrgLayer, CrgProject } from '../gis/projects.models';
 
 export enum ContentTypeTypes {
   FOLDER = 'FOLDER'

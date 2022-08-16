@@ -226,7 +226,6 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
         {this.rasterDocument && (
           <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='md'>
-            <DialogTitle>{entity.title}</DialogTitle>
             <DialogContent>
               <LibraryDocument document={this.rasterDocument} contentOnly />
             </DialogContent>

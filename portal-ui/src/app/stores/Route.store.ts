@@ -67,6 +67,8 @@ class Route {
     await services.provided;
 
     services.router.events.subscribe((e: RouterEvent) => {
+      this.setRoute(this.getDeepestChildren(services.router.routerState.snapshot.root));
+
       if (e instanceof ChildActivationStart) {
         this.setRoute(this.getDeepestChildren(e.snapshot.root));
       }

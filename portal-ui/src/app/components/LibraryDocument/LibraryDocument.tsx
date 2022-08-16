@@ -2,26 +2,30 @@ import React, { Component } from 'react';
 import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { HomeOutlined } from '@mui/icons-material';
 
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../services/server-urls.service';
+import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
+import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
+import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
+import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
+import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
 import { PropertyType, Schema } from '../../services/data/schema.models';
 import { LibraryRecord } from '../../services/data/doc-library.service';
+import { getLibraryItemBreadcrumbs } from '../../services/util/breadcrumbs';
 import { applyContentType } from '../../services/data/schema.utils';
 import { schemaService } from '../../services/data/schema.service';
 import { Role } from '../../services/data/permissions.models';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { formatDate } from '../../services/util/date.util';
-import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
-import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
-import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
-import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
+import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocument.scss';
 
 const cnLibraryDocument = cn('LibraryDocument');
 
 interface LibraryDocumentProps {
-  document?: LibraryRecord;
+  document: LibraryRecord;
   contentOnly?: boolean;
 }
 
@@ -29,6 +33,7 @@ interface LibraryDocumentProps {
 export class LibraryDocument extends Component<LibraryDocumentProps> {
   @observable private schema: Schema<LibraryRecord>;
   @observable private documentRoleAssignmentUrl: string;
+  @observable private breadcrumbsItems: BreadcrumbsItemData[] = [];
 
   constructor(props: LibraryDocumentProps) {
     super(props);
@@ -38,6 +43,10 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
   async componentDidMount() {
     await this.fetchSchema();
     await this.fetchDocumentPermissionUrl();
+
+    if (document) {
+      await this.getBreadcrumbsItems();
+    }
   }
 
   render() {
@@ -47,7 +56,9 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
       <div className={cnLibraryDocument()}>
         {document && (
           <>
-            {!contentOnly && <h1 className={cnLibraryDocument('Title')}>{document.title}</h1>}
+            <Breadcrumbs itemsType='link' items={this.breadcrumbsItems} />
+
+            <h1 className={cnLibraryDocument('Title')}>{document.title}</h1>
 
             <div className={cnLibraryDocument('Date')}>
               <span className={cnLibraryDocument('DateTitle')}>Дата создания:</span>
@@ -106,5 +117,14 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
   @action.bound
   private setDocumentRoleAssignmentUrl(url: string) {
     this.documentRoleAssignmentUrl = url;
+  }
+
+  private async getBreadcrumbsItems() {
+    this.setBreadcrumbsItems(await getLibraryItemBreadcrumbs(this.props.document, <HomeOutlined />));
+  }
+
+  @action.bound
+  private setBreadcrumbsItems(breadcrumbsItems: BreadcrumbsItemData[]) {
+    this.breadcrumbsItems = breadcrumbsItems;
   }
 }

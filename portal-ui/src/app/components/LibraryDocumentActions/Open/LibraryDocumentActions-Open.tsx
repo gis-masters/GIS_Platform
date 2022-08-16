@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Dialog, DialogActions, DialogContent } from '@mui/material';
 import { FileOpenOutlined } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
@@ -45,9 +45,8 @@ export class LibraryDocumentActionsOpen extends Component<LibraryDocumentActions
           <RegistryConsumer id='common'>
             {({ LibraryDocument, LibraryDocumentActions }) => (
               <>
-                <DialogTitle>{document.title}</DialogTitle>
                 <DialogContent className='scroll'>
-                  <LibraryDocument document={document} contentOnly />
+                  <LibraryDocument document={document} contentOnly title={document.title} />
                 </DialogContent>
                 <DialogActions>
                   <LibraryDocumentActions

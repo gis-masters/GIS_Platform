@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, IconButton, Tooltip } from '@mui/material';
 import { NoteAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
@@ -84,7 +84,6 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
 
         {this.document && (
           <Dialog open={this.documentDialogOpen} onClose={this.closeDocumentDialog} fullWidth maxWidth='xl'>
-            <DialogTitle>{this.document.title}</DialogTitle>
             <DialogContent>
               <LibraryDocument document={this.document} contentOnly />
             </DialogContent>
