@@ -61,7 +61,7 @@ public class GmlParser {
         this.gml = new GML(GML.Version.GML3);
     }
 
-    public List<SimpleFeatureData> parseFeatureData(Resource file) throws GMLException {
+    public List<SimpleFeatureData> parseFeatures(Resource file) throws GMLException {
         try (SimpleFeatureIterator iter = gml.decodeFeatureIterator(file.getInputStream())) {
             return parseFeatures(iter);
         } catch (IOException | ParserConfigurationException | SAXException e) {

@@ -109,6 +109,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
         authorizationBase.loginAsOwner();
 
+        sleep(800);
+
         response = getBaseRequestWithCurrentCookie()
                 .basePath("geoserver/rest/security")
                 .when().

@@ -13,16 +13,16 @@ import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEd
 import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
-import { AddLayerDialog } from '../../AddLayerDialog/AddLayerDialog';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 import { LayersSettings } from '../../Icons/LayersSettings';
 import { LayerAdd } from '../../Icons/LayerAdd';
+import { projectsService } from '../../../services/gis/projects.service';
+import { AddLayerDialog } from '../../AddLayerDialog/AddLayerDialog';
 
 import { LayersSidebarToolbarLeft } from '../ToolbarLeft/LayersSidebar-ToolbarLeft';
 import { LayersSidebarToolbarRight } from '../ToolbarRight/LayersSidebar-ToolbarRight';
 
 import '!style-loader!css-loader!sass-loader!./LayersSidebar-Toolbar.scss';
-import { projectsService } from '../../../services/gis/projects.service';
 
 const cnLayersSidebarToolbar = cn('LayersSidebar', 'Toolbar');
 

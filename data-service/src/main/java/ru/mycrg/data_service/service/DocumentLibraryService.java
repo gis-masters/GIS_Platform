@@ -110,20 +110,20 @@ public class DocumentLibraryService {
         return oldRegistryNumber;
     }
 
-    public IResourceModel getInfo(String tableName) {
+    public IResourceModel getInfo(String libraryId) {
         DocumentLibrary dl = libraryRepository
-                .findByTableName(tableName)
-                .orElseThrow(() -> new NotFoundException(DocumentLibrary.class, tableName));
+                .findByTableName(libraryId)
+                .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: " + libraryId));
 
         if (authenticationFacade.isOrganizationAdmin()) {
             return new LibraryModel(dl, "OWNER");
         }
 
-        Optional<String> oRole = permissionsRepository.getRoleForLibrary(tableName);
+        Optional<String> oRole = permissionsRepository.getRoleForLibrary(libraryId);
         if (oRole.isPresent()) {
             return new LibraryModel(dl, oRole.get());
         } else {
-            throw new ForbiddenException("Недостаточно прав для просмотра библиотеки: " + tableName);
+            throw new ForbiddenException("Недостаточно прав для просмотра библиотеки: " + libraryId);
         }
     }
 

@@ -1,12 +1,12 @@
 package ru.mycrg.acceptance.data_service.processes;
 
-public class ImportInitializingModel {
+public class PlacementGmlModel {
 
     private String wsUiId;
     private ImportSource source;
     private ImportTarget target = new ImportTarget();
 
-    public ImportInitializingModel() {
+    public PlacementGmlModel() {
         // Required
     }
 

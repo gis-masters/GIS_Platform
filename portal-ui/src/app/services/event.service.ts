@@ -112,7 +112,11 @@ class EventService {
   private getFromLocalStorage(): IEvent[] {
     const events = localStorage.getItem(this.EVENTS_KEY);
 
-    return JSON.parse(events) as IEvent[];
+    try {
+      return JSON.parse(events) as IEvent[];
+    } catch {
+      this.update([]);
+    }
   }
 
   private analyzeEvents(events: IEvent[]) {

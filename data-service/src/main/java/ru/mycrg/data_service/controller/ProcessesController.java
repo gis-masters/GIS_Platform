@@ -8,10 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.entity.Process;
-import ru.mycrg.data_service.service.processes.ProcessHandlersFactory;
+import ru.mycrg.data_service.service.processes.ProcessHandler;
 import ru.mycrg.data_service.service.processes.ProcessService;
-import ru.mycrg.data_service.service.processes.dto.ImportInitializingModel;
+import ru.mycrg.data_service.service.processes.ProcessableModel;
 
+import javax.validation.Valid;
 import java.security.Principal;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -22,23 +23,22 @@ public class ProcessesController {
 
     private final EntityLinks links;
     private final ProcessService processService;
-    private final ProcessHandlersFactory processHandlersFactory;
+    private final ProcessHandler processHandler;
     private final PagedResourcesAssembler<Process> assembler;
 
     public ProcessesController(ProcessService processService,
-                               ProcessHandlersFactory processHandlersFactory,
+                               ProcessHandler processHandler,
                                PagedResourcesAssembler<Process> assembler,
                                EntityLinks links) {
-        this.processService = processService;
-        this.assembler = assembler;
         this.links = links;
-        this.processHandlersFactory = processHandlersFactory;
+        this.assembler = assembler;
+        this.processService = processService;
+        this.processHandler = processHandler;
     }
 
     @PostMapping()
-    public ResponseEntity<Resource<Process>> initProcess(@RequestBody ImportInitializingModel payload) {
-        Process process = processHandlersFactory.getHandler(payload)
-                                                .handle();
+    public ResponseEntity<Resource<Process>> initProcess(@Valid @RequestBody ProcessableModel processableModel) {
+        Process process = processHandler.handle(processableModel);
 
         Resource<Process> resource = new Resource<>(process);
         resource.add(linkTo(ProcessesController.class).slash(process.getId()).withSelfRel());

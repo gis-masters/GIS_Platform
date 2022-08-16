@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.processes.dto;
+package ru.mycrg.data_service.service.import_.dto;
 
 public class ImportInitializingModel {
 

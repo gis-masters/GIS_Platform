@@ -8,7 +8,6 @@ import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
-import ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerUpdateDto;
 
@@ -23,11 +22,12 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
+import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
-import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFileId;
-import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFilePath;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileId;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFilePath;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentRecordId;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
@@ -79,8 +79,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                                             generateString(epsg),
                                             generateString(dataSourceUri));
         if (type.equals("raster")) {
-            Long currentRecordId = Objects.nonNull(LibraryStepsDefinitions.currentRecordId)
-                    ? LibraryStepsDefinitions.currentRecordId
+            Long currentRecordId = Objects.nonNull(currentDocumentId)
+                    ? currentDocumentId
                     : Long.getLong(recordId);
             layerCreateDto.setLibraryId(libraryId);
             layerCreateDto.setRecordId(currentRecordId);
@@ -139,7 +139,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(layerCreateDto.getType(), jsonPath.get("type"));
         assertEquals(layerCreateDto.getSchemaId(), jsonPath.get("schemaId"));
         assertEquals(layerCreateDto.getNativeCRS(), jsonPath.get("nativeCRS"));
-        assertEquals(format("scratch_database_%s:%s", orgId, layerCreateDto.getTableName()),
+        assertEquals(String.format("scratch_database_%s:%s", orgId, layerCreateDto.getTableName()),
                      jsonPath.get("complexName"));
     }
 
@@ -191,15 +191,15 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует растровый слой размещенный в проекте")
     public void createRasterLayer() {
-        String dataSourceUri = format("file://%s", tifFilePath);
+        String dataSourceUri = format("file://%s", currentFilePath);
         layerCreateDto = new LayerCreateDto("Тестовый растр", "raster");
 
         layerCreateDto.setLibraryId("dl_default");
         layerCreateDto.setMode("full");
         layerCreateDto.setNativeCRS("EPSG:28406");
         layerCreateDto.setDataSourceUri(dataSourceUri);
-        layerCreateDto.setRecordId(currentRecordId.longValue());
-        String tableName = format("%s_%s__%s", layerCreateDto.getLibraryId(), currentRecordId, tifFileId);
+        layerCreateDto.setRecordId(currentDocumentId.longValue());
+        String tableName = format("%s_%s__%s", layerCreateDto.getLibraryId(), currentDocumentId, currentFileId);
         layerCreateDto.setTableName(tableName);
 
         super.createEntity(layerCreateDto);
@@ -287,7 +287,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(gson.toJson(layerUpdateDto)).
-                        contentType("application/merge-patch+json")
+                        contentType(PATCH_CONTENT_TYPE)
                 .when().
                         patch("" + layerId);
     }
@@ -377,7 +377,6 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .basePath("")
                 .when().
-                        log().all().
                         get(url);
 
         assertEquals(200, response.getStatusCode());
@@ -389,7 +388,6 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get(String.valueOf(layerId));
 
         assertEquals(404, response.getStatusCode());
@@ -442,7 +440,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(json).
-                        contentType("application/merge-patch+json")
+                        contentType(PATCH_CONTENT_TYPE)
                 .when().
                         patch("" + layerId);
     }

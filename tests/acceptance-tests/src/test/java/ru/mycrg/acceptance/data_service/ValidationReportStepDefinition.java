@@ -8,6 +8,7 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.ExportResourceModel;
 import ru.mycrg.acceptance.data_service.dto.ValidationRequestDto;
+import ru.mycrg.acceptance.data_service.processes.ProcessesStepDefinitions;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -15,15 +16,16 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.lang.Thread.sleep;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
-import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.schemaId;
 import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.tableName;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class ValidationReportStepDefinition extends BaseStepsDefinitions {
 
-    public static Integer processId;
+    private final ProcessesStepDefinitions processesStepDefinitions = new ProcessesStepDefinitions();
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -61,7 +63,7 @@ public class ValidationReportStepDefinition extends BaseStepsDefinitions {
 
     @Then("Пользователь скачивает отчет")
     public void downloadReport() {
-        extractAndCheckProcessId();
+//        extractAndCheckProcessId();
 
         response = getBaseRequestWithCurrentCookie().
                 when().
@@ -70,7 +72,7 @@ public class ValidationReportStepDefinition extends BaseStepsDefinitions {
     }
 
     @And("Отчёт содержит информацию о {int} проблемных полях")
-    public void chekReportCountId(int countUniqId) {
+    public void checkReportCountId(int countUniqId) {
         Set<String> uniqId = new HashSet<>();
 
         String[] splittingResponse = response.asString().split(";");
@@ -83,7 +85,7 @@ public class ValidationReportStepDefinition extends BaseStepsDefinitions {
     }
 
     @And("Отчёт содержит информацию об {int} ошибке\\(ах)")
-    public void chekReportCountRaws(int countRaws) {
+    public void checkReportCountRaws(int countRaws) {
         int countRawsIncludingHeader = countRaws + 1;
 
         String[] splittingResponse = response.asString().split("\n");
@@ -91,16 +93,9 @@ public class ValidationReportStepDefinition extends BaseStepsDefinitions {
         assertEquals(countRawsIncludingHeader, splittingResponse.length);
     }
 
-    @And("Сервер передаёт ID процесса в ответе")
-    public void extractAndCheckProcessId() {
-        processId = response.jsonPath().get("id");
-
-        assertNotEquals(processId, null);
-    }
-
     @And("Представление модели отчета корректно")
-    public void chekValidReportModelBody() {
-        getCurrentProcess();
+    public void checkValidReportModelBody() {
+        processesStepDefinitions.getCurrentProcess();
         Map<Object, Object> responseMap = response.jsonPath().getMap("");
 
         assertTrue(responseMap.containsKey("userName"));
@@ -111,41 +106,12 @@ public class ValidationReportStepDefinition extends BaseStepsDefinitions {
     }
 
     private String extractFileName() {
-        waitUntilProcessDone();
+        // processesStepDefinitions.waitUntilProcessDone();
 
         String filePath = response.jsonPath().getMap("details").get("payload").toString();
         String[] address = filePath.split("/");
 
         return address[address.length - 1];
-    }
-
-    private void waitUntilProcessDone() {
-        try {
-            int currentAttempt = 0;
-            do {
-                currentAttempt++;
-                System.out.println("Attempt process DONE: " + currentAttempt);
-
-                getCurrentProcess();
-
-                if ("DONE".equals(response.jsonPath().get("status"))) {
-                    return;
-                }
-
-                sleep(300);
-            } while (currentAttempt < MAX_RETRY_ATTEMPT);
-
-            throw new RuntimeException("Process not DONE after " + MAX_RETRY_ATTEMPT + " attempts !");
-        } catch (InterruptedException e) {
-            throw new RuntimeException("Process not DONE: " + e.getMessage());
-        }
-    }
-
-    private void getCurrentProcess() {
-        response = getBaseRequestWithCurrentCookie().
-                when().
-                        log().ifValidationFails().
-                        get("/processes/" + processId);
     }
 
     private void getValidationReport(String body) {

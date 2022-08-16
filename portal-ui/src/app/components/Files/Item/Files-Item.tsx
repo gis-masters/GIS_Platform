@@ -5,7 +5,13 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { getFileBaseName, getFileExtension, isPreviewAllowed, isTifFile } from '../../../services/data/files.util';
+import {
+  getFileBaseName,
+  getFileExtension,
+  isGmlFile,
+  isPreviewAllowed,
+  isTifFile
+} from '../../../services/data/files.util';
 import { FileConnection, FileInfo, getFileConnections } from '../../../services/data/files.service';
 import { communicationService } from '../../../services/communication.service';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
@@ -20,6 +26,7 @@ import { FilesName } from '../Name/Files-Name';
 import { FilesIcon } from '../Icon/Files-Icon';
 import { FilesPreview } from '../Preview/Files-Preview';
 import { FilesConnections } from '../Connections/Files-Connections';
+import { FilesPlacement } from '../Placement/Files-Placement';
 
 const cnFilesItem = cn('Files', 'Item');
 
@@ -84,6 +91,7 @@ export class FilesItem extends Component<FilesItemProps> {
           {editable && (numerous || multiple) && <LookupNameGap />}
           {!!status && <LookupStatus status={status} statusText={statusText} />}
           {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
+          {isGmlFile(item) && <FilesPlacement fileInfo={item} />}
           {!!this.connections?.length && <FilesConnections file={item} connections={this.connections} />}
           {editable && (
             <LookupActions>

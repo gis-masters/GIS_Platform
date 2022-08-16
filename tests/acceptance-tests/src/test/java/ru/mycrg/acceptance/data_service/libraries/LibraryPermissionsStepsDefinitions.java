@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryBasePermissions.currentPermissionId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryBasePermissions.makeLibraryPermissionUrl;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentRecordId;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 
 public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -421,7 +421,6 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get(url);
     }
 
@@ -446,7 +445,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void addPermissionForCurrentRecord() {
         authorizationBase.loginAsOwner();
 
-        String urlToFolder = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, currentRecordId);
+        String urlToFolder = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, currentDocumentId);
 
         libraryBasePermissions.addPermission(urlToFolder, userId, "user", "VIEWER");
 

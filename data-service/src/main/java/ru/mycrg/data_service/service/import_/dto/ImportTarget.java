@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.processes.dto;
+package ru.mycrg.data_service.service.import_.dto;
 
 public class ImportTarget {
 
@@ -41,5 +41,15 @@ public class ImportTarget {
 
     public void setMode(String mode) {
         this.mode = mode;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
+                "\"projectName\":" + (projectName == null ? "null" : "\"" + projectName + "\"") + ", " +
+                "\"projectIsNew\":\"" + projectIsNew + "\"" + ", " +
+                "\"mode\":" + (mode == null ? "null" : "\"" + mode + "\"") +
+                "}";
     }
 }

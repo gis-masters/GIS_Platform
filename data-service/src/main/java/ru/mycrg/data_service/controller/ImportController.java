@@ -51,9 +51,9 @@ public class ImportController extends BaseController {
                                           @RequestParam String importType) {
         throwIfEmpty(datasetId, tableId, importType);
 
-        Importer importer = importers
+        Importer fImporter = importers
                 .stream()
-                .filter(im -> importType.equalsIgnoreCase(im.getType()))
+                .filter(importer -> importer.getType().name().equalsIgnoreCase(importType))
                 .findFirst()
                 .orElseThrow(() -> new BadRequestException("Задан некорректный тип импорта: " + importType));
 
@@ -74,7 +74,7 @@ public class ImportController extends BaseController {
 
         ResourceQualifier table = new ResourceQualifier(datasetId, tableId);
 
-        Long objectId = (Long) importer.doImport(file, table);
+        Long objectId = (Long) fImporter.doImport(file, table);
 
         return ResponseEntity.status(OK).body(objectId);
     }
@@ -83,10 +83,10 @@ public class ImportController extends BaseController {
     public ResponseEntity<List<ImportRecordReport>> importExcel(@RequestParam("file") MultipartFile file,
                                                                 @RequestParam("libraryId") String libraryId,
                                                                 @RequestParam String importType) {
-        Importer importerExcel = importers.stream()
-                                          .filter(importer -> importType.equalsIgnoreCase(importer.getType()))
-                                          .findFirst()
-                                          .orElseThrow(() -> new BadRequestException("this importer is not exist"));
+        Importer eImporter = importers.stream()
+                                      .filter(importer -> importer.getType().name().equalsIgnoreCase(importType))
+                                      .findFirst()
+                                      .orElseThrow(() -> new BadRequestException("this importer is not exist"));
 
         String filename = file.getOriginalFilename();
         String fileExtension = getFilenameExtension(filename);
@@ -98,7 +98,7 @@ public class ImportController extends BaseController {
             throw new BadRequestException(msg);
         }
         ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId, LIBRARY);
-        List<ImportRecordReport> result = (List<ImportRecordReport>) importerExcel.doImport(file, lQualifier);
+        List<ImportRecordReport> result = (List<ImportRecordReport>) eImporter.doImport(file, lQualifier);
 
         return ResponseEntity.status(CREATED).body(result);
     }

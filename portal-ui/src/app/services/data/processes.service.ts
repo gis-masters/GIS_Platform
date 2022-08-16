@@ -1,9 +1,10 @@
 import { http } from '../http.service';
-import { wsService } from '../ws.service';
-import { Process, ProcessStatus } from '../models';
+import { Process, ProcessStatus, ProcessType } from '../models';
 import { getProcessesUrl, getProcessUrl } from '../server-urls.service';
 import { sleep } from '../util/sleep';
 import { Mime } from '../util/Mime';
+
+import { PlacementModel } from './file-placement.service';
 
 export interface ImportLayerReport {
   schemaId: string;
@@ -33,47 +34,29 @@ export interface ImportResult {
   success: boolean;
   reason: string;
 }
+
 export interface ProcessResponse {
   _links: {
     process: { href: string };
   };
 }
-export interface ProcessDataModel {
-  wsUiId: string;
-  source: {
-    libraryId: string;
-    objectId: number;
-  };
-  target: {
-    projectId: number;
-    projectName: string;
-    projectIsNew: boolean;
-    mode?: string;
-  };
+
+export interface ProcessableModel {
+  payload: PlacementModel;
+  type: ProcessType;
 }
 
-export async function initImportProcess(
-  libraryId: string,
-  objectId: number,
-  projectId: number | undefined,
-  projectName: string,
-  projectIsNew: boolean
-): Promise<Process> {
-  const payload: ProcessDataModel = {
-    wsUiId: wsService.getId(),
-    source: {
-      libraryId: libraryId,
-      objectId: Number(objectId)
-    },
-    target: {
-      projectId: projectId,
-      projectName: projectName,
-      projectIsNew: projectIsNew
-    }
-  };
+export async function createProcess(model: ProcessableModel): Promise<ProcessResponse> {
+  return http.post<ProcessResponse>(await getProcessesUrl(), JSON.stringify(model), {
+    headers: { 'Content-Type': Mime.JSON }
+  });
+}
 
-  return http.post<Process>(await getProcessesUrl(), JSON.stringify(payload), {
-    headers: { 'Content-Type': 'application/json' }
+export async function getProcess(id: number): Promise<Process> {
+  const url = await getProcessUrl(id);
+
+  return http.get<Process>(url, {
+    cache: { disabled: true }
   });
 }
 
@@ -96,18 +79,4 @@ export async function awaitProcess(url: string, i = 0): Promise<void> {
 
   i++;
   await awaitProcess(url, i);
-}
-
-export async function createProcess(payload: ProcessDataModel): Promise<ProcessResponse> {
-  return http.post<ProcessResponse>(await getProcessesUrl(), JSON.stringify(payload), {
-    headers: { 'Content-Type': Mime.JSON }
-  });
-}
-
-export async function getProcess(id: number): Promise<Process> {
-  const url = await getProcessUrl(id);
-
-  return http.get<Process>(url, {
-    cache: { disabled: true }
-  });
 }

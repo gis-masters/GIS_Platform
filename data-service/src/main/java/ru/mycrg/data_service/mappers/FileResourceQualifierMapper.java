@@ -1,0 +1,22 @@
+package ru.mycrg.data_service.mappers;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import ru.mycrg.data_service.dto.FileResourceQualifier;
+import ru.mycrg.data_service.exceptions.DataServiceException;
+
+import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
+
+public class FileResourceQualifierMapper {
+
+    public static FileResourceQualifier map(JsonNode resourceQualifier) {
+        try {
+            return mapper.readValue(resourceQualifier.toString(), FileResourceQualifier.class);
+        } catch (Exception e) {
+            String msg = "Некорректно сформирован квалификатор ресурса";
+            logError(msg, e);
+
+            throw new DataServiceException(msg);
+        }
+    }
+}

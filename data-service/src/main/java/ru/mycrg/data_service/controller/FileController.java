@@ -16,6 +16,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.mappers.FileResourceQualifierMapper;
 import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.cqrs.files.requests.CreateFileRequest;
@@ -148,15 +149,7 @@ public class FileController extends BaseController {
             throw new ForbiddenException("Файл недоступен. Ресурс не указан.");
         }
 
-        FileResourceQualifier frQualifier;
-        try {
-            frQualifier = mapper.readValue(resourceQualifier.toString(), FileResourceQualifier.class);
-        } catch (IOException e) {
-            String msg = "Некорректно сформирован квалификатор ресурса";
-            logError(msg, e);
-
-            throw new DataServiceException(msg);
-        }
+        FileResourceQualifier frQualifier = FileResourceQualifierMapper.map(resourceQualifier);
 
         ResourceQualifier rQualifier = new ResourceQualifier(frQualifier.getSchema(),
                                                              frQualifier.getTable(),

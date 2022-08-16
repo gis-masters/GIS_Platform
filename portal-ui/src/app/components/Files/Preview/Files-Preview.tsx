@@ -6,7 +6,7 @@ import { Tooltip } from '@mui/material';
 
 import { IconButton } from '../../IconButton/IconButton';
 
-const cnPreview = cn('Preview');
+const cnFilesPreview = cn('Files', 'Preview');
 
 interface PreviewProps<T> {
   item: T;
@@ -17,7 +17,7 @@ export class FilesPreview<T> extends Component<PreviewProps<T>> {
   render() {
     return (
       <Tooltip title='Просмотр'>
-        <IconButton className={cnPreview()} onClick={this.previewHandler} size='small'>
+        <IconButton className={cnFilesPreview()} onClick={this.previewHandler} size='small'>
           <ImageSearchOutlined fontSize='small' />
         </IconButton>
       </Tooltip>

@@ -19,6 +19,7 @@ import static java.lang.String.join;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.firstFileId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
@@ -194,7 +195,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     private void updateFeature(GeoJsonModel geoJsonModel) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        contentType("application/merge-patch+json")
+                        contentType(PATCH_CONTENT_TYPE)
                 .when().
                         body(gson.toJson(geoJsonModel)).
                         patch("/" + currentFeatureId);

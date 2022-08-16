@@ -108,7 +108,6 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON).
                         body(gson.toJson(dto))
                 .when().
-                        log().all().
                         put(String.format("/%s", tableName));
     }
 

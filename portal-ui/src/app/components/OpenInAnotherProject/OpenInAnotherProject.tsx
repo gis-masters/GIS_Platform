@@ -10,9 +10,7 @@ import { VectorTableConnection, getVectorTableConnections } from '../../services
 import { getFeaturesUrlFragment } from '../../services/map/map-url.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { CrgProject } from '../../services/gis/projects.models';
-import { SortParams } from '../../services/util/sortObjects';
-import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
-import { XTableColumn } from '../XTable/XTable';
+import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
 
 import '!style-loader!css-loader!sass-loader!./OpenInAnotherProject.scss';
 
@@ -27,17 +25,6 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
   @observable private dialogOpen = false;
   @observable private connections: VectorTableConnection[] = [];
   private connectionsFetchingOperationId: symbol;
-
-  private cols: XTableColumn<CrgProject>[] = [
-    {
-      field: 'name',
-      title: 'Название проекта',
-      filterable: true,
-      sortable: true
-    }
-  ];
-
-  private sortParams: SortParams<CrgProject> = { asc: true, field: 'name' };
 
   constructor(props: OpenInAnotherProjectProps) {
     super(props);
@@ -71,20 +58,13 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
             </IconButton>
           </span>
         </Tooltip>
-        <ChooseXTableDialog<CrgProject>
-          title='Выбор проекта'
-          actionButtonProps={{
-            children: 'Открыть'
-          }}
-          data={this.projects}
-          cols={this.cols}
-          defaultSort={this.sortParams}
-          secondarySortField='createdAt'
+
+        <SelectProjectsDialog
+          projects={this.projects}
           open={this.dialogOpen}
           onClose={this.closeDialog}
           onSelect={this.select}
-          getRowId={this.getItemId}
-          single
+          actionButtonLabel='Открыть'
         />
       </>
     );
@@ -121,10 +101,6 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
   private select([project]: CrgProject[]) {
     this.closeDialog();
     this.navigateToObject(project);
-  }
-
-  private getItemId(project: CrgProject): string {
-    return String(project?.id);
   }
 
   @action

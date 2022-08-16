@@ -9,6 +9,7 @@ import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.parsers.ExcelParser;
+import ru.mycrg.data_service.service.import_.dto.ImportInitializingModel;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.ImportRecordReport;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Objects.isNull;
+import static ru.mycrg.data_service.service.import_.ImportType.EXCEL;
 import static ru.mycrg.data_service_contract.enums.ValueType.*;
 
 @Service
@@ -41,8 +43,18 @@ public class ExcelImporter implements Importer<List<ImportRecordReport>> {
     }
 
     @Override
-    public String getType() {
-        return "excel";
+    public ImportType getType() {
+        return EXCEL;
+    }
+
+    @Override
+    public Importer<List<ImportRecordReport>> validate() {
+        return null;
+    }
+
+    @Override
+    public Importer<List<ImportRecordReport>> setPayload(ImportInitializingModel importInitialData, IRecord record) {
+        return null;
     }
 
     @Override

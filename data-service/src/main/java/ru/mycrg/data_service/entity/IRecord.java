@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.entity;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Map;
 
 public interface IRecord {
@@ -10,11 +12,9 @@ public interface IRecord {
 
     void setValue(String key, Object value);
 
-    String getFileType();
-
+    @Nullable
     String getTitle();
 
-    String getInnerPath();
-
+    @Nullable
     String getAsString(String field);
 }

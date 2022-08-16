@@ -62,7 +62,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на набор данных {string}")
-    public void getDataset(String datasetTitle) {
+    public void getDatasetByTitle(String datasetTitle) {
         String foundedDatasetName = null;
         for (Map.Entry<String, DatasetCreateDto> entry: datasetsPool.entrySet()) {
             String datasetName = entry.getKey();

@@ -10,7 +10,7 @@ import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsTo
 import { IconButton } from '../../IconButton/IconButton';
 import { Button } from '../../Button/Button';
 
-const cnConnections = cn('Connections');
+const cnFilesConnections = cn('Files', 'Connections');
 
 interface ConnectionsProps {
   file: FileInfo;
@@ -32,7 +32,7 @@ export class FilesConnections extends Component<ConnectionsProps> {
     return (
       <>
         <Tooltip title='Подключено в проекты'>
-          <IconButton className={cnConnections()} onClick={this.openDialog} size='small'>
+          <IconButton className={cnFilesConnections()} onClick={this.openDialog} size='small'>
             <Badge
               badgeContent={connections.length}
               anchorOrigin={{ horizontal: 'left', vertical: 'top' }}

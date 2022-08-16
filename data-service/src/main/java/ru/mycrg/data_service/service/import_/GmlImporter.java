@@ -6,22 +6,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service.dao.GeometryDao;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.dao.GeometryDao;
-import ru.mycrg.data_service.dto.*;
+import ru.mycrg.data_service.dto.ExportResourceModel;
+import ru.mycrg.data_service.dto.TableCreateDto;
+import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.SchemaService;
-import ru.mycrg.data_service.service.cqrs.datasets.requests.CreateDatasetRequest;
 import ru.mycrg.data_service.service.cqrs.tables.requests.CreateTableRequest;
 import ru.mycrg.data_service.service.import_.exceptions.ImportException;
-import ru.mycrg.data_service.service.import_.model.ImportGmlModel;
 import ru.mycrg.data_service.service.parsers.GmlParser;
 import ru.mycrg.data_service.service.parsers.model.FeatureData;
 import ru.mycrg.data_service.service.parsers.model.FeatureObject;
 import ru.mycrg.data_service.service.parsers.model.FeatureProperty;
 import ru.mycrg.data_service.service.parsers.model.SimpleFeatureData;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.validation.ValidationService;
 import ru.mycrg.data_service.util.CrgScriptEngine;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
@@ -30,7 +32,6 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.mediator.Mediator;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,9 +39,9 @@ import static java.util.Objects.isNull;
 import static ru.mycrg.data_service_contract.enums.ValueType.STRING;
 
 @Service
-public class ImportGml {
+public class GmlImporter {
 
-    private static final Logger log = LoggerFactory.getLogger(ImportGml.class);
+    private static final Logger log = LoggerFactory.getLogger(GmlImporter.class);
 
     private final RecordsDao recordsDao;
     private final SchemaService schemaService;
@@ -49,14 +50,16 @@ public class ImportGml {
     private final ValidationService validationService;
     private final CrgScriptEngine scriptEngine;
     private final Mediator mediator;
+    private final FileStorageService fileStorageService;
 
-    public ImportGml(RecordsDao recordsDao,
-                     SchemaService schemaService,
-                     GeometryDao geometryDao,
-                     GmlParser gmlParser,
-                     ValidationService validationService,
-                     CrgScriptEngine scriptEngine,
-                     Mediator mediator) {
+    public GmlImporter(RecordsDao recordsDao,
+                       SchemaService schemaService,
+                       GeometryDao geometryDao,
+                       GmlParser gmlParser,
+                       ValidationService validationService,
+                       CrgScriptEngine scriptEngine,
+                       Mediator mediator,
+                       FileStorageService fileStorageService) {
         this.recordsDao = recordsDao;
         this.schemaService = schemaService;
         this.geometryDao = geometryDao;
@@ -64,28 +67,29 @@ public class ImportGml {
         this.validationService = validationService;
         this.scriptEngine = scriptEngine;
         this.mediator = mediator;
+        this.fileStorageService = fileStorageService;
     }
 
-    public ImportReport doImport(Resource file, ImportGmlModel importGmlModel) {
+    /**
+     * Импорт данных из GML файла в набор данных.
+     */
+    public ImportReport doImport(String path, String datasetIdentifier, Boolean invertedCoordinates) {
+        Resource file;
+        try {
+            file = fileStorageService.loadAsResource(path);
+        } catch (Exception e) {
+            String msg = String.format("Не удалось загрузить файл по пути: '%s'", path);
+            log.error(msg, e.getCause());
+
+            throw new DataServiceException(msg);
+        }
+
         try {
             ImportReport importResult = new ImportReport();
 
-            LocalDate docDateApprove = Objects.nonNull(importGmlModel.getDocDateApprove())
-                    ? importGmlModel.getDocDateApprove().toLocalDate()
-                    : null;
-
-            ResourceCreateDto dataset = new ResourceCreateDto(importGmlModel.getTitle(),
-                                                              importGmlModel.getDetails(),
-                                                              importGmlModel.getOktmo(),
-                                                              importGmlModel.getDocumentType(),
-                                                              docDateApprove,
-                                                              importGmlModel.getScale());
-
-            DatasetModel createdDataset = mediator.execute(new CreateDatasetRequest(dataset));
-            final String datasetIdentifier = createdDataset.getIdentifier();
             importResult.setDatasetIdentifier(datasetIdentifier);
 
-            List<SimpleFeatureData> features = gmlParser.parseFeatureData(file);
+            List<SimpleFeatureData> features = gmlParser.parseFeatures(file);
             List<ImportLayerReport> importLayerReports = new ArrayList<>();
 
             getExistingSchemas(features, importLayerReports).forEach(schema -> {
@@ -100,12 +104,22 @@ public class ImportGml {
                     return;
                 }
 
-                ImportLayerReport importLayerReport = importLayer(file, oEpsg.get(), schema, datasetIdentifier,
-                                                                  importGmlModel.isInvertCoordinates());
-
-                if (importLayerReport.getSuccessCount() > 0 || Objects.nonNull(importLayerReport.getReason())) {
+                FeatureData featureData;
+                try {
+                    featureData = gmlParser.parseAttributes(file, schema, invertedCoordinates);
+                } catch (Exception e) {
+                    ImportLayerReport importLayerReport = new ImportLayerReport();
+                    importLayerReport.setSchemaId(schema.getName());
+                    importLayerReport.setTableTitle(schema.getTableName());
+                    importLayerReport.setReason("Не удалось выполнить импорт. Не удалось распарить атрибуты фичи");
                     importLayerReports.add(importLayerReport);
+
+                    return;
                 }
+
+                ImportLayerReport importLayerReport = importLayer(featureData, oEpsg.get(), schema, datasetIdentifier);
+
+                importLayerReports.add(importLayerReport);
             });
 
             importResult.setImportLayerReports(importLayerReports);
@@ -126,56 +140,64 @@ public class ImportGml {
                        .map(SimpleFeatureData::getEpsgCode);
     }
 
-    private ImportLayerReport importLayer(Resource file,
+    private ImportLayerReport importLayer(FeatureData featureData,
                                           String epsgCode,
                                           SchemaDto schema,
-                                          String datasetIdentifier,
-                                          boolean invertCoordinates) {
+                                          String datasetIdentifier) {
         ImportLayerReport importLayerReport = new ImportLayerReport(schema.getName(), epsgCode);
 
         try {
-            TableCreateDto tableCreateDto = new TableCreateDto(schema.getTitle());
-            tableCreateDto.setName(schema.getName() + "_" + RandomString.make(6).toLowerCase());
-            tableCreateDto.setSchemaId(schema.getName());
-            tableCreateDto.setCrs(epsgCode);
-
-            FeatureData featureData = gmlParser.parseAttributes(file, schema, invertCoordinates);
+            TableCreateDto table = new TableCreateDto(schema.getTitle());
+            table.setName(schema.getName() + "_" + RandomString.make(6).toLowerCase());
+            table.setSchemaId(schema.getName());
+            table.setCrs(epsgCode);
 
             if (schema.getCalcFiledFunction() != null) {
                 calculateFieldsByCustomRules(featureData, schema.getCalcFiledFunction());
             }
 
             if (!featureData.getObjects().isEmpty()) {
-                ResourceQualifier tableQualifier = new ResourceQualifier(datasetIdentifier, tableCreateDto.getName());
+                ResourceQualifier tableQualifier = new ResourceQualifier(datasetIdentifier, table.getName());
 
-                mediator.execute(new CreateTableRequest(tableCreateDto, tableQualifier));
+                mediator.execute(new CreateTableRequest(table, tableQualifier));
 
                 int countOfAddedRecords = addRecordsToTable(tableQualifier, featureData);
 
                 geometryDao.makeValid(tableQualifier.getSchema(), tableQualifier.getTable());
 
                 if (countOfAddedRecords > 0) {
-                    runValidation(datasetIdentifier, schema.getName(), tableCreateDto.getName());
+                    runValidation(datasetIdentifier, schema.getName(), table.getName());
                 }
 
                 importLayerReport.setSuccess(true);
-                importLayerReport.setTableIdentifier(tableCreateDto.getName());
+                importLayerReport.setTableIdentifier(table.getName());
                 importLayerReport.setSuccessCount(countOfAddedRecords);
                 importLayerReport.setTableTitle(schema.getTitle());
+            } else {
+                importLayerReport.setSuccess(true);
+                importLayerReport.setTableIdentifier(table.getName());
+                importLayerReport.setSuccessCount(0);
+                importLayerReport.setTableTitle(schema.getTitle());
             }
+        } catch (CrgDaoException e) {
+            String msg = "Ошибка при добавлении записи в таблицу " + schema.getTitle() + ". " + e.getMessage();
+            log.error(msg, e.getCause());
+
+            importLayerReport.setSuccess(false);
+            importLayerReport.setReason(msg);
         } catch (BadRequestException e) {
-            String message = String.format("Не удалось создать таблицу для слоя: %s", schema.getTitle());
-            log.error(message, e.getCause());
+            String msg = String.format("Не удалось создать таблицу для слоя: %s", schema.getTitle());
+            log.error(msg, e.getCause());
 
             importLayerReport.setSuccess(false);
-            importLayerReport.setReason(message);
+            importLayerReport.setReason(msg);
         } catch (Exception e) {
-            String message = String.format("Не удалось выполнить импорт слоя: '%s', по причине: %s",
-                                           schema.getTitle(), e.getMessage());
-            log.error(message, e.getCause());
+            String msg = String.format("Не удалось выполнить импорт слоя: '%s', по причине: %s",
+                                       schema.getTitle(), e.getMessage());
+            log.error(msg, e.getCause());
 
             importLayerReport.setSuccess(false);
-            importLayerReport.setReason(message);
+            importLayerReport.setReason(msg);
         }
 
         return importLayerReport;
@@ -237,21 +259,15 @@ public class ImportGml {
                        .collect(Collectors.toList());
     }
 
-    private int addRecordsToTable(ResourceQualifier tableQualifier, FeatureData propertiesBySchema) {
+    private int addRecordsToTable(ResourceQualifier tableQualifier,
+                                  FeatureData propertiesBySchema) throws CrgDaoException {
         List<FeatureObject> objects = propertiesBySchema.getObjects();
 
         Map<String, Object>[] objectList = preparePropsToDB(objects);
 
-        try {
-            recordsDao.addRecordsAsBatch(tableQualifier, objectList);
+        recordsDao.addRecordsAsBatch(tableQualifier, objectList);
 
-            return objectList.length;
-        } catch (CrgDaoException e) {
-            String msg = "Ошибка при добавлении записи в таблицу " + tableQualifier + ". " + e.getMessage();
-            log.error(msg);
-        }
-
-        return 0;
+        return objectList.length;
     }
 
     private Map<String, Object>[] preparePropsToDB(List<FeatureObject> objects) {

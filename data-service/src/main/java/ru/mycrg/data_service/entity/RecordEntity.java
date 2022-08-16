@@ -43,16 +43,6 @@ public class RecordEntity implements IRecord {
     }
 
     @Override
-    public String getFileType() {
-        return getAsString(FILE_TYPE.getName());
-    }
-
-    @Override
-    public String getInnerPath() {
-        return getAsString(INNER_PATH.getName());
-    }
-
-    @Override
     public String getAsString(String field) {
         Object o = content.get(field);
         if (o == null) {

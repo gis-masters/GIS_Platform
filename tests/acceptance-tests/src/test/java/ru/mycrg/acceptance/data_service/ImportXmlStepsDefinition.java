@@ -28,7 +28,6 @@ public class ImportXmlStepsDefinition extends BaseStepsDefinitions {
                         multiPart(xmlFile).
                         contentType("multipart/form-data")
                 .when().
-                        log().all().
                         post("/api/data/import/file");
     }
 }

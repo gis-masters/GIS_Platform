@@ -37,7 +37,7 @@ import '!style-loader!css-loader!sass-loader!./XTable.scss';
 
 const cnXTable = cn('XTable');
 
-function defaultRowIdGetter<T extends { id?: string | number; identifier?: string; name?: string }>({
+export function defaultRowIdGetter<T extends { id?: string | number; identifier?: string; name?: string }>({
   id,
   identifier,
   name

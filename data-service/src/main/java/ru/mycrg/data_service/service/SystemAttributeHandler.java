@@ -256,6 +256,10 @@ public class SystemAttributeHandler {
     }
 
     private void prepareJsonb(Map<String, Object> properties) {
+        if (schema == null) {
+            throw new IllegalStateException("Необходимо сначала задать схему методом: initSchema()");
+        }
+
         schema.getProperties().stream()
               .filter(property -> FILE.equals(property.getValueType()))
               .forEach(property -> {

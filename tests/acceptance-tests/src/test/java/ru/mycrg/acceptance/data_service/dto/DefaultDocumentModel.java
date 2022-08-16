@@ -1,19 +1,20 @@
 package ru.mycrg.acceptance.data_service.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultRecordModel {
+public class DefaultDocumentModel {
 
     private final String title;
     private String name;
     private String category;
     private List<FileDescriptionModel> some_files;
 
-    public DefaultRecordModel(String title) {
-        this(title, null, null, null);
+    public DefaultDocumentModel(String title) {
+        this(title, null, null, new ArrayList<>());
     }
 
-    public DefaultRecordModel(String title, String name, String category, List<FileDescriptionModel> someFiles) {
+    public DefaultDocumentModel(String title, String name, String category, List<FileDescriptionModel> someFiles) {
         this.title = title;
         this.name = name;
         this.category = category;
@@ -46,5 +47,9 @@ public class DefaultRecordModel {
 
     public void setSome_files(List<FileDescriptionModel> some_files) {
         this.some_files = some_files;
+    }
+
+    public void addFile(FileDescriptionModel file) {
+        this.some_files.add(file);
     }
 }

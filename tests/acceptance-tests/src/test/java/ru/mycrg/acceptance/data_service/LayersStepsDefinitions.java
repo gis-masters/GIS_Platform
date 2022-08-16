@@ -8,7 +8,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.LayerDto;
-import ru.mycrg.acceptance.data_service.processes.ImportInitializingModel;
+import ru.mycrg.acceptance.data_service.processes.PlacementGmlModel;
 import ru.mycrg.acceptance.data_service.processes.ImportSource;
 import ru.mycrg.acceptance.data_service.processes.ImportTarget;
 
@@ -23,8 +23,8 @@ import static java.util.Objects.nonNull;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.tifFileId;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentRecordId;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileId;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
@@ -49,7 +49,7 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
     public void createRasterLayer(String mode) {
         ImportTarget importTarget;
 
-        ImportSource importSource = new ImportSource("dl_default", Long.valueOf(currentRecordId));
+        ImportSource importSource = new ImportSource("dl_default", Long.valueOf(currentDocumentId));
 
         if (isNull(projectId)) {
             importTarget = new ImportTarget("raster test", true, mode);
@@ -57,7 +57,7 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
             importTarget = new ImportTarget(projectId.longValue(), false, mode);
         }
 
-        ImportInitializingModel payload = new ImportInitializingModel();
+        PlacementGmlModel payload = new PlacementGmlModel();
         payload.setWsUiId(generateString("STRING_6"));
         payload.setSource(importSource);
         payload.setTarget(importTarget);
@@ -67,7 +67,7 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
                 .given().
                         body(gson.toJson(payload)).
                         contentType(ContentType.JSON)
-                .when().log().all().
+                .when().
                        post("/processes")
                 .then().
                         log().ifError().
@@ -80,7 +80,7 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
     public void getRelatedToDocumentsProjectsAndLayers() {
 
         Map<String, Object> queryParams = new HashMap<>() {{
-            put("fileId", tifFileId);
+            put("fileId", currentFileId);
         }};
 
         response = getBaseRequestWithCurrentCookie()
@@ -117,7 +117,7 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
     @Then("Растровый слой создан на gisService {string} {string}")
     public void checkRasterLayerExistOnGisService(String titleChecked, String isPresent) {
         response = getBaseRequestWithCurrentCookie()
-                .when().log().all().
+                .when().
                        get("/" + projectId + "/layers")
                 .then().
                         log().ifError().
@@ -141,7 +141,6 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie().
                        basePath("/geoserver/rest")
                 .when().
-                       log().all().
                        get("/layers")
                 .then().
                         log().ifError().
@@ -174,7 +173,6 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
             Response response = getBaseRequestWithCurrentCookie()
                            .basePath("/api/data")
                     .when().
-                           log().all().
                            get("/processes/" + currentProcessId);
 
             if (response.statusCode() == SC_OK && "DONE".equals(response.jsonPath().get("status"))) {

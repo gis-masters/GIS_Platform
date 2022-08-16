@@ -62,7 +62,7 @@ public class BaseStepsDefinitions {
     public static Map<Integer, LayerGroupCreateDto> layerGroupPool = new LinkedHashMap<>();
     public static Map<String, DatasetCreateDto> datasetsPool = new LinkedHashMap<>();
     public static Map<Integer, LayerCreateDto> layerPool = new LinkedHashMap<>();
-    public static Map<String, Integer> filesPool = new LinkedHashMap<>();
+    public static Map<String, Integer> documentPool = new LinkedHashMap<>();
 
     public static Integer currentId;
 
@@ -286,7 +286,6 @@ public class BaseStepsDefinitions {
     public void getCurrentEntityByFilter(String filter) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get("?" + filter);
     }
 
@@ -386,7 +385,6 @@ public class BaseStepsDefinitions {
     private void getEntity(Integer id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get(String.valueOf(id));
     }
 }

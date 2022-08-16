@@ -8,6 +8,7 @@ import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.ddl.DdlTables;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.IResourceModel;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
@@ -16,6 +17,7 @@ import ru.mycrg.data_service.exceptions.TransformationException;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.parsers.XmlParser;
 import ru.mycrg.data_service.service.parsers.exceptions.XmlParserException;
+import ru.mycrg.data_service.service.import_.dto.ImportInitializingModel;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service.util.ImportValidationHandler;
@@ -25,13 +27,13 @@ import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.data_service.service.import_.ImportType.MP;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 
 @Service
-public class ImportMp implements Importer<Long> {
+public class MpImporter implements Importer<Long> {
 
-    private final Logger log = LoggerFactory.getLogger(ImportMp.class);
-    private static final String SCHEMA_NAME = "mp";
+    private final Logger log = LoggerFactory.getLogger(MpImporter.class);
 
     private final RecordsDao recordsDao;
     private final XmlParser xmlParser;
@@ -39,11 +41,13 @@ public class ImportMp implements Importer<Long> {
     private final TableService tableService;
     private final DdlTables ddlTables;
 
-    public ImportMp(RecordsDao recordsDao,
-                    XmlParser xmlParser,
-                    SchemaService schemaService,
-                    TableService tableService,
-                    DdlTables ddlTables) {
+    private final String MP_SCHEMA = "mp";
+
+    public MpImporter(RecordsDao recordsDao,
+                      XmlParser xmlParser,
+                      SchemaService schemaService,
+                      TableService tableService,
+                      DdlTables ddlTables) {
         this.recordsDao = recordsDao;
         this.xmlParser = xmlParser;
         this.schemaService = schemaService;
@@ -52,8 +56,18 @@ public class ImportMp implements Importer<Long> {
     }
 
     @Override
-    public String getType() {
-        return "mp";
+    public ImportType getType() {
+        return MP;
+    }
+
+    @Override
+    public Importer<Long> validate() {
+        return null;
+    }
+
+    @Override
+    public Importer<Long> setPayload(ImportInitializingModel importInitialData, IRecord record) {
+        return null;
     }
 
     /**
@@ -68,15 +82,17 @@ public class ImportMp implements Importer<Long> {
      * @throws DataServiceException Если парсинг xml  файла не выполнился успешно и если новая запись не добавлена в БД
      * @throws BadRequestException  Если преобразование геометрии не удалось
      */
+    @Override
     public Long doImport(MultipartFile file, ResourceQualifier table) {
         IResourceModel tableModel = tableService.getInfo(table);
         Optional<SchemaDto> schemaOfCurrentLayer = schemaService.getSchemaByName(tableModel.getSchemaId());
         if (schemaOfCurrentLayer.isEmpty()) {
-            throw new NotFoundException(SchemaDto.class, tableModel.getSchemaId());
+            throw new NotFoundException("Не найдена схема данных: " + tableModel.getSchemaId());
         }
-        Optional<SchemaDto> schemaOfMp = schemaService.getSchemaByName(SCHEMA_NAME);
+
+        Optional<SchemaDto> schemaOfMp = schemaService.getSchemaByName(MP_SCHEMA);
         if (schemaOfMp.isEmpty()) {
-            throw new NotFoundException(SchemaDto.class, SCHEMA_NAME);
+            throw new NotFoundException("Не найдена схема данных: " + MP_SCHEMA);
         }
 
         SchemaDto schema = schemaOfMp.get();

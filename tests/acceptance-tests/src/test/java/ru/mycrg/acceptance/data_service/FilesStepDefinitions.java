@@ -19,15 +19,15 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentRecordId;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     public static UUID firstFileId;
     public static UUID secondFileId;
-    public static UUID tifFileId;
-    public static String tifFilePath;
+    public static UUID currentFileId;
+    public static String currentFilePath;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -149,7 +149,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         String table = jsonPath.getString("resourceQualifier.table");
         String resourceType = jsonPath.getString("resourceType");
 
-        assertEquals(currentRecordId.intValue(), recordId);
+        assertEquals(currentDocumentId.intValue(), recordId);
         assertEquals(DEFAULT_LIBRARY, table);
         assertEquals("LIBRARY_RECORD", resourceType);
     }
@@ -198,15 +198,23 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         File testTif = new File(filePath);
 
         List<UUID> ids = createFiles(new File[]{testTif});
-        tifFileId = ids.get(0);
-        getFile(tifFileId);
-        tifFilePath = jsonPath.getString("path");
+        currentFileId = ids.get(0);
+
+        getFile(currentFileId);
+        currentFilePath = jsonPath.getString("path");
+    }
+
+    @Given("Существует GML файл")
+    public void createGmlFile() {
+        File testGml = new File("src/test/resources/ru/mycrg/acceptance/resources/correct.gml");
+
+        List<UUID> ids = createFiles(new File[]{testGml});
+        currentFileId = ids.get(0);
     }
 
     private void getFile(UUID firstFileId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get("/" + firstFileId);
 
         jsonPath = response.jsonPath();
@@ -217,7 +225,6 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get(url);
     }
 

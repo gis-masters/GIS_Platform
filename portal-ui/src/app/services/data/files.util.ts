@@ -61,3 +61,7 @@ export function isPreviewAllowed(file: FileInfo): boolean {
 
   return types.includes(normalizeExtension(getFileExtension(file.title)));
 }
+
+export function isGmlFile(file: FileInfo): boolean {
+  return normalizeExtension(getFileExtension(file.title)) === 'gml';
+}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { AxiosError } from 'axios';
 import {
   Dialog,
@@ -17,16 +17,12 @@ import { boundMethod } from 'autobind-decorator';
 
 import { alertLayerOperationError, createLayer } from '../../../services/gis/layers.service';
 import { Dataset, VectorTable, getAllDatasetTables } from '../../../services/data/data.service';
-import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
-import { DialogActionsRight } from '../../DialogActionsRight/DialogActionsRight';
 import { CrgProject, CrgVectorLayer, NewCrgLayer } from '../../../services/gis/projects.models';
+import { SelectProjectsDialog } from '../../SelectProjectDialog/SelectProjectDialog';
+import { DialogActionsRight } from '../../DialogActionsRight/DialogActionsRight';
 import { projectsService } from '../../../services/gis/projects.service';
 import { vectorLayerDefaults } from '../../../services/gis/layers.utils';
-import { SortParams } from '../../../services/util/sortObjects';
-import { allProjects } from '../../../stores/AllProjects.store';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
-import { Role } from '../../../services/data/permissions.models';
-import { XTableColumn } from '../../XTable/XTable';
 import { LayerAdd } from '../../Icons/LayerAdd';
 import { Loading } from '../../Loading/Loading';
 import { Button } from '../../Button/Button';
@@ -47,16 +43,6 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
   @observable private projectId: number;
   @observable private busy = false;
 
-  private sortParams: SortParams<CrgProject> = { asc: true, field: 'name' };
-  private cols: XTableColumn<CrgProject>[] = [
-    {
-      field: 'name',
-      title: 'Название проекта',
-      filterable: true,
-      sortable: true
-    }
-  ];
-
   constructor(props: DatasetActionsAddToProjectProps) {
     super(props);
     makeObservable(this);
@@ -75,20 +61,11 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
           </IconButton>
         </Tooltip>
 
-        <ChooseXTableDialog<CrgProject>
-          title='Выбор проекта'
-          data={this.projects}
-          cols={this.cols}
-          defaultSort={this.sortParams}
-          secondarySortField='createdAt'
+        <SelectProjectsDialog
           open={this.projectsListDialogOpen}
           onClose={this.closeProjectsListDialog}
           onSelect={this.onProjectSelected}
-          getRowId={this.getItemId}
-          single
-          actionButtonProps={{
-            children: 'Добавить в выбранный проект'
-          }}
+          actionButtonLabel='Добавить в выбранный проект'
         />
 
         <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
@@ -111,11 +88,6 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
         <Loading visible={this.busy} global value={(this.addedLayers / this.vectorTablesLayers?.length) * 100} />
       </>
     );
-  }
-
-  @computed
-  private get projects(): CrgProject[] {
-    return allProjects.list.filter(({ role }) => role === Role.OWNER);
   }
 
   @boundMethod
@@ -220,9 +192,5 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
   @action
   private setVectorTablesLayers(vectorTablesLayers: CrgVectorLayer[]) {
     this.vectorTablesLayers = vectorTablesLayers;
-  }
-
-  private getItemId({ id }: CrgProject): string {
-    return String(id);
   }
 }

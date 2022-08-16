@@ -303,7 +303,6 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     private void getEventsByFilter(String actionType, String entityType, String tableName) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get("/?actionType=" + actionType + "&entityType=" + entityType + "&entityName=" + tableName);
     }
 }

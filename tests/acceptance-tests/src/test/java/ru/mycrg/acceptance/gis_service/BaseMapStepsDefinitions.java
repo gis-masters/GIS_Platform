@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
 import static ru.mycrg.acceptance.data_service.InitialBaseMapsStepsDefinitions.baseMapId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
@@ -166,7 +167,7 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(payload).
-                        contentType("application/merge-patch+json")
+                        contentType(PATCH_CONTENT_TYPE)
                 .when().
                         patch("" + projectBasemapId);
     }

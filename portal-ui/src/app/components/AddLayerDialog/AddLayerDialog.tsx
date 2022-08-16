@@ -8,19 +8,19 @@ import { cloneDeep, isUndefined } from 'lodash';
 import { AxiosError } from 'axios';
 
 import { DocumentLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
-import { awaitProcess, ProcessDataModel, createProcess } from '../../services/data/processes.service';
 import { externalLayerDefaults, vectorLayerDefaults } from '../../services/gis/layers.utils';
+import { Dataset, VectorTable, getVectorTable } from '../../services/data/data.service';
 import { FieldErrors, validateFormValue } from '../../services/formValidation.service';
 import { SelectLibraryRecord } from '../SelectLibraryRecord/SelectLibraryRecord';
 import { PropertySchema, PropertyType } from '../../services/data/schema.models';
 import { CrgLayerType, CrgLayer } from '../../services/gis/projects.models';
-import { Dataset, VectorTable, getVectorTable } from '../../services/data/data.service';
-import { generateNextLayerId } from '../../services/gis/layers.service';
 import { SelectVectorTable } from '../SelectVectorTable/SelectVectorTable';
+import { placeFile } from '../../services/data/file-placement.service';
+import { generateNextLayerId } from '../../services/gis/layers.service';
+import { awaitProcess } from '../../services/data/processes.service';
 import { getProcessUrl } from '../../services/server-urls.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { wsService } from '../../services/ws.service';
 import { services } from '../../services/services';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
@@ -60,7 +60,7 @@ export interface Datasource {
 
 const layerTypeOptions = [
   { title: 'Векторный слой', value: 'vector' },
-  { title: 'Растровый слой', value: 'raster' },
+  // { title: 'Растровый слой', value: 'raster' },
   { title: 'Внешний слой (веб-сервис ArcGis)', value: 'external' }
 ];
 
@@ -341,22 +341,12 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
       const { libraryRecord } = this.formValue.datasource;
 
       try {
-        const payload: ProcessDataModel = {
-          wsUiId: wsService.getId(),
-          source: {
-            libraryId: libraryRecord.libraryId,
-            objectId: Number(libraryRecord.id)
-          },
-          target: {
-            projectId: currentProject.id,
-            projectName: currentProject.name,
-            projectIsNew: false,
-            mode: 'geoserver'
-          }
-        };
-
         this.setLoading(true);
-        const process = await createProcess(payload);
+
+        // Заглушка для последующей реализации.
+        // Документ не равно файл. Тут требуется дать пользователю выбрать файл и передать сюда его fileInfo
+        const process = await placeFile({ id: 'file_id as UUID', size: 314, title: 'some_file' }, currentProject.id);
+
         const processUrl = process._links.process.href.split('/');
         await awaitProcess(await getProcessUrl(Number(processUrl[processUrl.length - 1])));
         this.setLoading(false);

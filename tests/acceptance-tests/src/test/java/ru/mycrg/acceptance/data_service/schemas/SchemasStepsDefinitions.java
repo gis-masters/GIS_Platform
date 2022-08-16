@@ -76,7 +76,6 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
     private void getCurrentSchema() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get("?schemaIds=" + currentSchemaName);
     }
 

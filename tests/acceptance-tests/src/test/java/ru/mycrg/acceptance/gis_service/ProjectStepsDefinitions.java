@@ -6,6 +6,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
@@ -373,6 +374,17 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         super.getCurrentEntity();
 
         assertEquals(SC_NOT_FOUND, response.getStatusCode());
+    }
+
+    @And("в проекте слои были размещены в новой группе, все слои включены")
+    public void checkIsCurrentProjectGroupExist() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + projectId + "/groups");
+
+        JsonPath jsonPath = response.jsonPath();
+
+        assertTrue(jsonPath.getList("").size() > 0);
     }
 
     private boolean isProjectExistInPool(String projectName) {

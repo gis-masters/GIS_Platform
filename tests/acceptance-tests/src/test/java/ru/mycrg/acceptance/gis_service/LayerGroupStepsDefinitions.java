@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
@@ -257,7 +258,7 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(gson.toJson(layerGroupDto)).
-                        contentType("application/merge-patch+json")
+                        contentType(PATCH_CONTENT_TYPE)
                 .when().
                         patch("" + layerGroupId);
     }

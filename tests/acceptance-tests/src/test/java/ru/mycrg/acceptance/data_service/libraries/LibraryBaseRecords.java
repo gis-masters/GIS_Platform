@@ -5,6 +5,7 @@ import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.RecordDto;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 
 public class LibraryBaseRecords extends BaseStepsDefinitions {
@@ -45,10 +46,9 @@ public class LibraryBaseRecords extends BaseStepsDefinitions {
     public void updateRecord(String library, Integer recordId, RecordDto newBody) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        contentType("application/merge-patch+json").
+                        contentType(PATCH_CONTENT_TYPE).
                         body(gson.toJson(newBody))
                 .when().
-                        log().all().
                         patch(String.format("/%s/records/%d", library, recordId));
     }
 

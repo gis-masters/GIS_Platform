@@ -174,7 +174,6 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         Response response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get("/geoserver/rest/security/acl/layers");
 
         Map<Object, Object> layersRules =

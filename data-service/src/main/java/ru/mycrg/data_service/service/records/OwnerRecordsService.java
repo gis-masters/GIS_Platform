@@ -18,7 +18,6 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
-import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -42,7 +41,6 @@ public class OwnerRecordsService implements IRecordsService {
     private final RecordsDao recordsDao;
     private final FileStorageService fileStorageService;
     private final PermissionsService permissionsService;
-    private final SimpleIntentHandler simpleIntentHandler;
     private final DocumentLibraryService librariesService;
     private final SystemAttributeHandler systemAttributeHandler;
     private final DdlTables ddlTables;
@@ -50,14 +48,12 @@ public class OwnerRecordsService implements IRecordsService {
     public OwnerRecordsService(RecordsDao recordsDao,
                                FileStorageService fileStorageService,
                                PermissionsService permissionsService,
-                               SimpleIntentHandler simpleIntentHandler,
                                DocumentLibraryService librariesService,
                                SystemAttributeHandler systemAttributeHandler,
                                DdlTables ddlTables) {
         this.recordsDao = recordsDao;
         this.fileStorageService = fileStorageService;
         this.permissionsService = permissionsService;
-        this.simpleIntentHandler = simpleIntentHandler;
         this.librariesService = librariesService;
         this.systemAttributeHandler = systemAttributeHandler;
         this.ddlTables = ddlTables;
@@ -134,7 +130,6 @@ public class OwnerRecordsService implements IRecordsService {
             props.putAll(systemAttributeHandler.customRulesCalculation(props));
 
             throwIfNotMatchTableColumns(props, ddlTables.getAllColumnNames(lQualifier.getTable()));
-            simpleIntentHandler.updateIntents(record);
             IRecord newRecord = recordsDao.addRecord(lQualifier, record, schema);
             permissionsService.addOwnerPermission(lQualifier, record.getId());
 
@@ -158,11 +153,11 @@ public class OwnerRecordsService implements IRecordsService {
         try {
             log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), record);
 
+            throwIfNotMatchTableColumns(record.getContent(), ddlTables.getAllColumnNames(recordQualifier.getTable()));
+
             Map<String, Object> clearedData = systemAttributeHandler.initSchema(schema)
                                                                     .prepareJsonb(record)
                                                                     .clearSystemAttributes(record);
-
-            throwIfNotMatchTableColumns(record.getContent(), ddlTables.getAllColumnNames(recordQualifier.getTable()));
 
             recordsDao.updateRecordById(recordQualifier, clearedData, schema);
 

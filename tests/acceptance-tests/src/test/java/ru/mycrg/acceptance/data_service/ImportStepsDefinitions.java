@@ -113,7 +113,6 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
                         body("{}").
                         contentType(ContentType.JSON)
                 .when().
-                        log().all().
                         post("/geoserver/rest/imports/" + importId);
     }
 
@@ -126,7 +125,6 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
 
             Response response = getBaseRequestWithCurrentCookie()
                     .when().
-                            log().all().
                             get("/geoserver/rest/imports/" + importId);
 
             if (response.jsonPath().get("import.state").equals("COMPLETE")) {
@@ -143,7 +141,6 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
     public void checkLayersAvailabilityInProject() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get(format("/projects/%d/layers/", projectId));
 
         List<LinkedHashMap<Integer, Object>> layers = response.jsonPath().get();

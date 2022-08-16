@@ -4,6 +4,8 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, computed, observable, makeObservable } from 'mobx';
 import { Dialog, DialogActions, DialogContent } from '@mui/material';
+import { IClassNameProps } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 
 import { XTableColumn } from '../XTable/XTable';
 import { Button, ButtonProps } from '../Button/Button';
@@ -17,7 +19,7 @@ import '!style-loader!css-loader!sass-loader!./Table/ChooseXTableDialog-Table.sc
 
 const cnChooseXTableDialog = cn('ChooseXTableDialog');
 
-interface ChooseXTableDialogProps<T> {
+export interface ChooseXTableDialogProps<T> extends IClassNameProps {
   title: string;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   open: boolean;
@@ -27,7 +29,7 @@ interface ChooseXTableDialogProps<T> {
   cols: XTableColumn<T>[];
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
-  getRowId: (rowData: T) => string | number;
+  getRowId?: (rowData: T) => string | number;
   single?: boolean;
   additionalAction?: ReactNode;
   onClose(): void;
@@ -45,6 +47,7 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
 
   render() {
     const {
+      className,
       title,
       open,
       data,
@@ -55,12 +58,11 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
       additionalAction,
       selectedItems,
       cols,
-      onClose,
       getRowId
     } = this.props;
 
     return (
-      <Dialog PaperProps={{ className: cnChooseXTableDialog() }} open={open} onClose={onClose}>
+      <Dialog PaperProps={{ className: cnChooseXTableDialog(null, [className]) }} open={open} onClose={this.close}>
         <DialogContent>
           <ChooseXTable<T>
             title={title}
@@ -71,7 +73,7 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
             filterable
             single={single}
             selectedItems={selectedItems}
-            onSelect={this.onSelected}
+            onSelect={this.select}
             getRowId={getRowId}
           />
         </DialogContent>
@@ -79,15 +81,21 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
           <DialogActionsLeft>{additionalAction}</DialogActionsLeft>
           <DialogActionsRight>
             {this.changed && (
-              <Button disabled={!this.selected.length} onClick={this.select} color='primary' {...actionButtonProps}>
+              <Button disabled={!this.selected.length} onClick={this.submit} color='primary' {...actionButtonProps}>
                 {actionButtonProps.children || 'Выбрать'}
               </Button>
             )}
-            <Button onClick={onClose}>{this.changed ? 'Отмена' : 'Закрыть'}</Button>
+            <Button onClick={this.close}>{this.changed ? 'Отмена' : 'Закрыть'}</Button>
           </DialogActionsRight>
         </DialogActions>
       </Dialog>
     );
+  }
+
+  @boundMethod
+  private close() {
+    this.props.onClose();
+    this.select([]);
   }
 
   @computed
@@ -96,12 +104,12 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
   }
 
   @action.bound
-  private onSelected(selected: T[]) {
+  private select(selected: T[]) {
     this.selected = selected;
   }
 
   @action.bound
-  private select() {
+  private submit() {
     this.props.onSelect(this.selected);
   }
 }

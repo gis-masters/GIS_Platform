@@ -8,7 +8,7 @@ import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
 import { SortParams } from '../../services/util/sortObjects';
-import { XTable, XTableColumn } from '../XTable/XTable';
+import { defaultRowIdGetter, XTable, XTableColumn } from '../XTable/XTable';
 import { ButtonProps } from '../Button/Button';
 
 import { ChooseXTableCheck } from './Check/ChooseXTable-Check';
@@ -25,7 +25,7 @@ interface ChooseXTableProps<T> extends IClassNameProps {
   cols: XTableColumn<T>[];
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
-  getRowId: (rowData: T) => string | number;
+  getRowId?: (rowData: T) => string | number;
   single?: boolean;
   filterable?: boolean;
   onSelect(items: T[]): void;
@@ -111,7 +111,7 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
 
   @boundMethod
   private renderCheckbox({ rowData }: { rowData: T }): ReactElement {
-    const { single, getRowId, onSelect } = this.props;
+    const { single, getRowId = defaultRowIdGetter, onSelect } = this.props;
 
     return (
       <ChooseXTableCheck
@@ -132,7 +132,7 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
   }
 
   private isItemsCanBeViewed(prevProps: ChooseXTableProps<T>) {
-    const { data, getRowId } = this.props;
+    const { data, getRowId = defaultRowIdGetter } = this.props;
     if (!data?.length || !prevProps.data?.length) {
       return;
     }
