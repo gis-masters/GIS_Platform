@@ -235,6 +235,14 @@ const data: TestData[] = [
     weight: 0.2,
     date: '2021-03-16 12:45',
     conclusive: null
+  },
+  {
+    id: 22,
+    title: 'Эвкалиптовая кровать',
+    amount: 1,
+    weight: 250,
+    date: '2021-03-18 13:00',
+    conclusive: null
   }
 ];
 

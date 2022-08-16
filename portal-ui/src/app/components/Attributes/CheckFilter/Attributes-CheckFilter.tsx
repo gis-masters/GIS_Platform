@@ -6,7 +6,7 @@ import { Check, Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { FilterBySelection } from '../../../stores/Map.store';
-import { XTableFilterProps } from '../../XTable/Filter/XTable-Filter';
+import { XTableFilterProps } from '../../XTable/Filter/XTable-Filter.base';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-CheckFilter.scss';
 

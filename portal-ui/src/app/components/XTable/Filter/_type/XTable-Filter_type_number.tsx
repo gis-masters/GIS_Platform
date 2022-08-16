@@ -5,7 +5,7 @@ import { TextField } from '@mui/material';
 
 import { FilterQuery } from '../../../../services/util/filterObjects';
 
-import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter';
+import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_number.scss';
 

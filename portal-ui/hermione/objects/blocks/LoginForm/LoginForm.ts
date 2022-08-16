@@ -14,7 +14,7 @@ export class LoginForm extends Block {
   }
 
   async fill(login: string, password: string): Promise<void> {
-    const [$loginInput, $passwordInput] = await this.getElements(['loginInput', 'passwordInput']);
+    const [$loginInput, $passwordInput] = await this.getElementsList(['loginInput', 'passwordInput']);
     await $loginInput.setValue(login);
     await $passwordInput.setValue(password);
   }

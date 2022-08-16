@@ -7,7 +7,7 @@ import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema.models';
 
-import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter';
+import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_bool.scss';
 

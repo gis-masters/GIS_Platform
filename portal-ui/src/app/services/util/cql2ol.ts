@@ -95,7 +95,7 @@ const follows: Partial<Record<Token, Token[]>> = {
   [Token.RPAREN]: [Token.NOT, Token.LOGICAL, Token.END, Token.RPAREN],
   [Token.PROPERTY]: [Token.COMPARISON, Token.BETWEEN, Token.COMMA, Token.IS_NULL, Token.IN],
   [Token.BETWEEN]: [Token.VALUE],
-  [Token.IS_NULL]: [Token.END],
+  [Token.IS_NULL]: [Token.END, Token.RPAREN],
   [Token.COMPARISON]: [Token.VALUE],
   [Token.COMMA]: [Token.GEOMETRY, Token.VALUE, Token.PROPERTY],
   [Token.VALUE]: [Token.LOGICAL, Token.COMMA, Token.RPAREN, Token.END],

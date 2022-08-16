@@ -16,7 +16,19 @@ export class Block<S extends Record<string, string> = Record<string, string>> {
     return await this.browser.$((this.parentSelector || '') + String(this.selectors[key]));
   }
 
-  getElements(keys: (keyof this['selectors'])[]): Promise<WebdriverIO.Element[]> {
-    return Promise.all(keys.map(key => this.getElement(key)));
+  async getElementsList(keys: (keyof this['selectors'])[]): Promise<WebdriverIO.Element[]> {
+    return await Promise.all(keys.map(key => this.getElement(key)));
+  }
+
+  async getElements(key: keyof this['selectors']): Promise<WebdriverIO.Element[]> {
+    return await this.browser.$$((this.parentSelector || '') + String(this.selectors[key]));
+  }
+
+  async getSubElement(element: WebdriverIO.Element, key: keyof this['selectors']): Promise<WebdriverIO.Element> {
+    return await element.$((this.parentSelector || '') + String(this.selectors[key]));
+  }
+
+  async getSubElements(element: WebdriverIO.Element, key: keyof this['selectors']): Promise<WebdriverIO.Element[]> {
+    return await element.$$((this.parentSelector || '') + String(this.selectors[key]));
   }
 }

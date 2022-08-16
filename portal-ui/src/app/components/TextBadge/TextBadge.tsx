@@ -15,6 +15,12 @@ interface TextBadgeProps extends IClassNameProps, ChildrenProps {
 
 export const TextBadge: FC<TextBadgeProps> = ({ id, className, children }) => (
   <Paper className={cnTextBadge(null, [className])}>
-    {(id || typeof id === 'number') && `id: ${id}`} {children}
+    {(id || typeof id === 'number') && (
+      <>
+        <span className={cnTextBadge('Id')}>id: </span>
+        {id}
+      </>
+    )}
+    {children}
   </Paper>
 );

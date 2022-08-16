@@ -11,14 +11,14 @@ const cnXTableFilterStrictness = cn('XTable', 'FilterStrictness');
 
 interface XTableFilterStrictnessProps extends IClassNameProps {
   onClick: () => void;
-  strictFiltering: boolean;
+  strict: boolean;
   filtered: boolean;
 }
 
-export const XTableFilterStrictness: FC<XTableFilterStrictnessProps> = ({ onClick, strictFiltering, filtered }) => (
-  <Tooltip title={strictFiltering ? 'Строгое соответствие' : 'Поиск подстроки'}>
-    <IconButton className={cnXTableFilterStrictness({ filtered })} onClick={onClick} size='small'>
-      {strictFiltering ? '=' : '≈'}
+export const XTableFilterStrictness: FC<XTableFilterStrictnessProps> = ({ onClick, strict, filtered }) => (
+  <Tooltip title={strict ? 'Строгое соответствие' : 'Поиск подстроки'}>
+    <IconButton className={cnXTableFilterStrictness({ filtered, strict })} onClick={onClick} size='small'>
+      {strict ? '=' : '≈'}
     </IconButton>
   </Tooltip>
 );

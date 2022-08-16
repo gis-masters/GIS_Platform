@@ -27,7 +27,7 @@ import { XTableCell } from './Cell/XTable-Cell';
 import { XTableEmpty } from './Empty/XTable-Empty';
 import { XTableTitle } from './Title/XTable-Title';
 import { XTableFooter } from './Footer/XTable-Footer';
-import { XTableFilterProps } from './Filter/XTable-Filter';
+import { XTableFilterProps } from './Filter/XTable-Filter.base';
 import { XTableTitleBar } from './TitleBar/XTable-TitleBar';
 import { XTableHeadCell } from './HeadCell/XTable-HeadCell';
 import { XTableContainer, XTableContainerProps } from './Container/XTable-Container';

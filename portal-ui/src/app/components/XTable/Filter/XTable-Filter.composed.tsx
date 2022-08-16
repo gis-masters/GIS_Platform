@@ -5,12 +5,14 @@ import { withTypeChoice } from './_type/XTable-Filter_type_choice';
 import { withTypeDateTime } from './_type/XTable-Filter_type_dateTime';
 import { withTypeFloat } from './_type/XTable-Filter_type_float';
 import { withTypeInteger } from './_type/XTable-Filter_type_integer';
-import { XTableFilter as Presenter } from './XTable-Filter';
+import { withTypeString } from './_type/XTable-Filter_type_string';
+import { XTableFilterBase } from './XTable-Filter.base';
 
 export const XTableFilter = compose(
   withTypeBool,
   withTypeChoice,
   withTypeDateTime,
   withTypeFloat,
-  withTypeInteger
-)(Presenter) as typeof Presenter;
+  withTypeInteger,
+  withTypeString
+)(XTableFilterBase) as typeof XTableFilterBase;
