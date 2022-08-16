@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 
 import static java.sql.Types.*;
+import static java.util.Objects.isNull;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 
 public class RecordRowMapper extends BySchemaRowMapper implements RowMapper<IRecord> {
@@ -35,7 +36,11 @@ public class RecordRowMapper extends BySchemaRowMapper implements RowMapper<IRec
                     record.put(columnName, rs.getBoolean(i));
                     break;
                 case BIGINT:
-                    record.put(columnName, rs.getLong(i));
+                    if (isNull(rs.getObject(i))) {
+                        record.put(columnName, null);
+                    } else {
+                        record.put(columnName, rs.getLong(i));
+                    }
                     break;
                 case TIMESTAMP:
                     Timestamp timestamp = rs.getTimestamp(i);
