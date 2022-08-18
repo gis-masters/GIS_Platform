@@ -10,6 +10,7 @@ import { env } from '../../stores/Env.store';
 import { route, Pages } from '../../stores/Route.store';
 import { communicationService } from '../../services/communication.service';
 import { PropertyType, Schema } from '../../services/data/schema.models';
+import { FieldErrors } from '../../services/formValidation.service';
 import { usersService } from '../../services/data/users.service';
 import { generateRandomId } from '../../services/util/randomId';
 import { getEsiaUrl } from '../../services/server-urls.service';
@@ -63,6 +64,7 @@ export class LoginForm extends Component<LoginFormProps> {
   @observable private userData: AuthUserData = cloneDeep(defaultData);
   @observable private loading: boolean;
   @observable private esiaLoading: boolean;
+  @observable private errors: FieldErrors[] = [];
 
   constructor(props: LoginFormProps) {
     super(props);
@@ -114,6 +116,8 @@ export class LoginForm extends Component<LoginFormProps> {
             value={this.userData}
             auto
             labelInTextField
+            errors={this.errors}
+            onFieldChange={this.formFieldChanged}
             actionFunction={this.login}
             actions={
               <div className={cnLoginForm('Actions')}>
@@ -166,6 +170,16 @@ export class LoginForm extends Component<LoginFormProps> {
     this.loading = isLoading;
   }
 
+  @action
+  private setError(errors: FieldErrors[] = []) {
+    this.errors = errors;
+  }
+
+  @boundMethod
+  private formFieldChanged() {
+    this.setError();
+  }
+
   @boundMethod
   private async login(value: AuthUserData) {
     this.handleLoading(true);
@@ -186,6 +200,11 @@ export class LoginForm extends Component<LoginFormProps> {
       } else if (result.userDisabled) {
         throw [{ field: 'password', messages: 'Запрос на создание принят и обрабатывается. Попробуйте позже' }];
       } else if (result.wrongPassword) {
+        this.setError([
+          { field: 'password', messages: ['Неверное имя пользователя или пароль'] },
+          { field: 'username', messages: [''] }
+        ]);
+
         throw [{ field: 'password', messages: 'Неверное имя пользователя или пароль' }];
       }
     } catch (error) {
