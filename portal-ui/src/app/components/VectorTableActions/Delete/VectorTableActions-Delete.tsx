@@ -89,7 +89,7 @@ export class VectorTableActionsDelete extends Component<VectorTableActionsDelete
       this.setErrorMessage(err.message);
     }
 
-    this.setBtnLoading(false);
+    this.closeDialog();
   }
 
   @action.bound
