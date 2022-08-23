@@ -45,6 +45,7 @@ class MapMeasureService {
   private layer = new VectorLayer({
     source: this.source,
     zIndex: mapService.MEASURE_LAYER_ZINDEX,
+    properties: { name: 'measure' },
     style: new Style({
       fill: new Fill({
         color: this.markFillColor

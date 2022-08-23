@@ -72,6 +72,7 @@ export interface PrintSettings {
   date: boolean;
   legend: LegendOptions;
   legendSize: number;
+  showSystemLayers: { draft: boolean; measure: boolean };
 }
 
 const defaultPrintSettings: PrintSettings = {
@@ -94,7 +95,8 @@ const defaultPrintSettings: PrintSettings = {
     enabled: true,
     auto: true,
     items: []
-  }
+  },
+  showSystemLayers: { draft: false, measure: true }
 };
 
 class PrintSettingsStore implements PrintSettings {
@@ -115,6 +117,7 @@ class PrintSettingsStore implements PrintSettings {
   @observable date: boolean;
   @observable legend: LegendOptions;
   @observable legendSize: number;
+  @observable showSystemLayers: { draft: boolean; measure: boolean };
   @observable rotation = 0;
   @observable allLegend: StyleRuleExtended[] = [];
 

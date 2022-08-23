@@ -85,10 +85,18 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
   printSettings.setPrintingStatus(true, resolution);
 
   const { map, view, scaleLine } = mapService;
-  const { width, height, legend } = printSettings;
+  const { width, height, legend, showSystemLayers } = printSettings;
 
   const size = map.getSize();
   const viewResolution = view.getResolution();
+
+  if (!showSystemLayers.draft) {
+    mapService.hideSystemLayer('draft');
+  }
+
+  if (!showSystemLayers.measure) {
+    mapService.hideSystemLayer('measure');
+  }
 
   setPrintSize(resolution, translateX, translateY);
 
@@ -123,7 +131,9 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
 
       CanvasRenderingContext2D.prototype.resetTransform.apply(mapContext);
 
-      await drawMeasurementsTooltips(mapContext);
+      if (showSystemLayers.measure) {
+        await drawMeasurementsTooltips(mapContext);
+      }
 
       if (withDesignations) {
         await drawDesignations(mapContext, resolution, designationsResize, hideScaleDigits);
@@ -132,6 +142,8 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
       resolve(mapCanvas.toDataURL(mime));
 
       // Reset original map size
+      mapService.showSystemLayer('draft');
+      mapService.showSystemLayer('measure');
       scaleLine.setDpi();
       map.setSize(size);
       view.setResolution(viewResolution);

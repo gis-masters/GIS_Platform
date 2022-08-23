@@ -200,11 +200,13 @@ class MapService {
         new VectorLayer({
           source: this.draftSource,
           zIndex: this.DRAFT_LAYER_ZINDEX,
-          style: this.draftStyle
+          style: this.draftStyle,
+          properties: { name: 'draft' }
         }),
         new VectorLayer({
           source: this.markersSource,
-          zIndex: this.MARKERS_LAYER_ZINDEX
+          zIndex: this.MARKERS_LAYER_ZINDEX,
+          properties: { name: 'markers' }
         })
       ]
     });
@@ -437,6 +439,21 @@ class MapService {
 
     const olFeatures = featuresInOlProjection.map(feature => wfsFeatureToFeature(feature));
     this.draftSource.addFeatures(olFeatures);
+  }
+
+  private getSystemLayer(name: string): BaseLayer | undefined {
+    return this.map
+      .getLayers()
+      .getArray()
+      .find(layer => layer.getProperties().name === name);
+  }
+
+  hideSystemLayer(name: string) {
+    this.getSystemLayer(name)?.setOpacity(0);
+  }
+
+  showSystemLayer(name: string) {
+    this.getSystemLayer(name)?.setOpacity(1);
   }
 
   showSelectionMarker(coordinates: Coordinate[][][]) {

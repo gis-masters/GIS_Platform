@@ -46,9 +46,9 @@ export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps>
   async componentDidMount() {
     this.reactionDisposer = reaction(
       () => {
-        const { orientation, pageFormat, scale, margin, legend } = printSettings;
+        const { orientation, pageFormat, scale, margin, legend, showSystemLayers } = printSettings;
 
-        return [orientation, pageFormat, scale, margin, legend.auto];
+        return [orientation, pageFormat, scale, margin, legend.auto, showSystemLayers];
       },
       async () => {
         await this.updatePreview();

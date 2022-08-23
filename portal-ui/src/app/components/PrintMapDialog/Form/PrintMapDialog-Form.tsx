@@ -29,7 +29,7 @@ interface PrintMapDialogFormProps {
   onSubmit: () => void;
 }
 
-type MainFormValues = Pick<PrintSettings, 'pageFormatId' | 'scale' | 'orientation' | 'legend'>;
+type MainFormValues = Pick<PrintSettings, 'pageFormatId' | 'scale' | 'orientation' | 'legend' | 'showSystemLayers'>;
 type ExtraFormValues = Pick<PrintSettings, 'resolution' | 'legendSize' | 'margin' | 'windRose' | 'border' | 'date'>;
 
 @observer
@@ -42,13 +42,25 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
   }
 
   render() {
-    const { pageFormatId, scale, resolution, orientation, margin, windRose, border, date, legend, legendSize } =
-      printSettings;
+    const {
+      pageFormatId,
+      scale,
+      resolution,
+      orientation,
+      margin,
+      windRose,
+      border,
+      date,
+      legend,
+      legendSize,
+      showSystemLayers
+    } = printSettings;
     const mainFormValues: MainFormValues = {
       pageFormatId,
       scale,
       orientation,
-      legend
+      legend,
+      showSystemLayers
     };
     const extraFormValues: ExtraFormValues = {
       resolution,
@@ -123,6 +135,23 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
             title: 'авто',
             hidden: !printSettings.legend.enabled,
             propertyType: PropertyType.BOOL
+          }
+        ]
+      },
+      {
+        name: 'showSystemLayers',
+        title: 'Показать',
+        propertyType: PropertyType.SET,
+        properties: [
+          {
+            name: 'draft',
+            propertyType: PropertyType.BOOL,
+            title: 'выделение'
+          },
+          {
+            name: 'measure',
+            propertyType: PropertyType.BOOL,
+            title: 'измерения'
           }
         ]
       }
