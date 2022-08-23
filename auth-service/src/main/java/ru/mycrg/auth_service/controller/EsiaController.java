@@ -68,7 +68,7 @@ public class EsiaController {
                                          @RequestParam String state,
                                          HttpServletResponse response) {
         try {
-            log.debug("ESIA-ok Redirect url: {} \n Code: {} \n State: {}", redirect, code, state);
+            log.debug("ESIA-ok Redirect url: [{}] \n Code: '{}' \n State: '{}'", redirect, code, state);
             Long orgId = Long.valueOf(environment.getRequiredProperty("esia.org_id"));
             Long groupId = Long.valueOf(environment.getRequiredProperty("esia.group_id"));
 

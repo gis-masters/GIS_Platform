@@ -21,8 +21,8 @@ public class AccessTokenHandler {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String extractUserSbjId(String accessToken) throws IOException {
-        String[] accessParts = accessToken.split("\\.");
+    public static String extractUserSbjId(String esiaToken) throws IOException {
+        String[] accessParts = esiaToken.split("\\.");
 
         String content = new String(Base64.getUrlDecoder().decode(accessParts[1]), StandardCharsets.UTF_8);
 
@@ -30,7 +30,7 @@ public class AccessTokenHandler {
 
         log.debug("Content successfully read: {}", result);
 
-        return result.get(URN_ESIA_SBJ_ID_KEY);
+        return String.valueOf(result.get(URN_ESIA_SBJ_ID_KEY));
     }
 
     public static Map<String, String> asMap(String content) throws IOException {

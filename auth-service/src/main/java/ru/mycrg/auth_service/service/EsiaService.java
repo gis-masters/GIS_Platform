@@ -77,48 +77,62 @@ public class EsiaService {
     public Optional<EsiaUserInfo> getUser(String redirect,
                                           String code,
                                           String state) {
-        String accessToken;
-        try {
-            EsiaJWT esiaJWT = tradeCodeForToken(redirect, code, state);
-            accessToken = esiaJWT.getAccess_token();
-        } catch (Exception e) {
-            log.error("Не удалось обменять код на токен в ЕСИА. State: {}. Reason: {}",
-                      state, e.getMessage());
+        String esiaToken = tradeCodeForToken(redirect, code, state);
 
-            return Optional.empty();
+        String userSbjId;
+        try {
+            userSbjId = extractUserSbjId(esiaToken);
+        } catch (Exception e) {
+            String msg = String.format("Не удалось прочитать esia token. State: %s. Reason: %s", state, e.getMessage());
+            log.error(msg);
+
+            throw new IllegalStateException(msg);
         }
 
-        try {
-            String userSbjId = extractUserSbjId(accessToken);
-            EsiaUserInfo userInfo = getUserInfo(accessToken, userSbjId);
-            userInfo.setSbjId(userSbjId);
+        EsiaUserInfo userInfo = getUserInfo(esiaToken, userSbjId);
+        userInfo.setSbjId(userSbjId);
 
-            return Optional.of(userInfo);
-        } catch (Exception e) {
-            log.error("Не удалось получить информацию о пользователе. State: {}. Reason: {}",
-                      state, e.getMessage());
-
-            return Optional.empty();
-        }
+        return Optional.of(userInfo);
     }
 
-    private EsiaUserInfo getUserInfo(String accessToken, String userSbjId)
-            throws MalformedURLException, HttpClientException {
+    private EsiaUserInfo getUserInfo(String accessToken, String userSbjId) {
         EsiaUserInfo userInfo = new EsiaUserInfo();
 
-        getUserFio(accessToken, userSbjId, userInfo);
-        String userId = getUserId(accessToken, userSbjId);
-        userInfo.setId(userId);
-        getUserEmail(accessToken, userSbjId, userId, userInfo);
+        try {
+            getUserFio(accessToken, userSbjId, userInfo);
+        } catch (Exception e) {
+            String msg = String.format("Не удалось получить 'user fio'. Reason: %s", e.getMessage());
+            log.error(msg);
+
+            throw new IllegalStateException(msg);
+        }
+
+        try {
+            getUserId(accessToken, userSbjId, userInfo);
+        } catch (Exception e) {
+            String msg = String.format("Не удалось получить 'user id'. Reason: %s", e.getMessage());
+            log.error(msg);
+
+            throw new IllegalStateException(msg);
+        }
+
+        try {
+            getUserEmail(accessToken, userSbjId, userInfo);
+        } catch (Exception e) {
+            String msg = String.format("Не удалось получить 'user email'. Reason: %s", e.getMessage());
+            log.error(msg);
+
+            throw new IllegalStateException(msg);
+        }
 
         return userInfo;
     }
 
-    private void getUserEmail(String accessToken, String userSbjId, String userId, EsiaUserInfo userInfo)
+    private void getUserEmail(String accessToken, String userSbjId, EsiaUserInfo userInfo)
             throws MalformedURLException, HttpClientException {
-        URL getUserEmail = new URL(ESIA_SERV, ESIA_USER_INFO + userSbjId + "/ctts/" + userId);
+        URL getUserEmail = new URL(ESIA_SERV, ESIA_USER_INFO + userSbjId + "/ctts/" + userInfo.getId());
 
-        log.debug("Get user eMail URL: {}", getUserEmail);
+        log.debug("Get user EMAIL URL: {}", getUserEmail);
 
         Request request = new Request.Builder()
                 .url(getUserEmail)
@@ -141,11 +155,11 @@ public class EsiaService {
         }
     }
 
-    private String getUserId(String accessToken, String userSbjId)
+    private void getUserId(String accessToken, String userSbjId, EsiaUserInfo userInfo)
             throws MalformedURLException, HttpClientException {
         URL getUserId = new URL(ESIA_SERV, ESIA_USER_INFO + userSbjId + "/ctts");
 
-        log.debug("Get user id URL: {}", getUserId);
+        log.debug("Get user ID URL: {}", getUserId);
 
         Request request = new Request.Builder()
                 .url(getUserId)
@@ -159,7 +173,9 @@ public class EsiaService {
             Map<String, Object> body = response.getBody();
             String elements = body.get("elements").toString();
 
-            return elements.split("/ctts/")[1].replace("]", "");
+            String userId = elements.split("/ctts/")[1].replace("]", "");
+
+            userInfo.setId(userId);
         } else {
             String msg = String.format("Failed to get user id: Code: %d Msg: %s",
                                        response.getCode(), response.getMsg());
@@ -171,12 +187,12 @@ public class EsiaService {
 
     private void getUserFio(String accessToken, String userSbjId, EsiaUserInfo userInfo)
             throws MalformedURLException, HttpClientException {
-        URL getUserFio = new URL(ESIA_SERV, ESIA_USER_INFO + userSbjId);
+        URL getUserFioUrl = new URL(ESIA_SERV, ESIA_USER_INFO + userSbjId);
 
-        log.debug("Get user FIO URL: {}", getUserFio);
+        log.debug("Get user FIO URL: [{}]", getUserFioUrl);
 
         Request request = new Request.Builder()
-                .url(getUserFio)
+                .url(getUserFioUrl)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .get()
@@ -206,39 +222,50 @@ public class EsiaService {
         }
     }
 
-    private EsiaJWT tradeCodeForToken(String redirect, String code, String state)
-            throws HttpClientException, MalformedURLException {
-        String timestamp = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss Z").format(new Date());
-        String clientSecret = pkcs7Util.generateClientSecret(SCOPE, timestamp, CLIENT_ID, state);
+    private String tradeCodeForToken(String redirect, String code, String state) {
+        try {
+            String timestamp = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss Z").format(new Date());
+            String clientSecret = pkcs7Util.generateClientSecret(SCOPE, timestamp, CLIENT_ID, state);
 
-        RequestBody formBody = new FormBody.Builder()
-                .add("client_id", CLIENT_ID)
-                .add("code", code)
-                .add("grant_type", "authorization_code")
-                .add("client_secret", clientSecret)
-                .add("state", state)
-                .add("redirect_uri", redirect)
-                .add("scope", SCOPE)
-                .add("timestamp", timestamp)
-                .add("token_type", "Bearer")
-                .add("access_type", ACCESS_TYPE)
-                .build();
+            RequestBody formBody = new FormBody.Builder()
+                    .add("client_id", CLIENT_ID)
+                    .add("code", code)
+                    .add("grant_type", "authorization_code")
+                    .add("client_secret", clientSecret)
+                    .add("state", state)
+                    .add("redirect_uri", redirect)
+                    .add("scope", SCOPE)
+                    .add("timestamp", timestamp)
+                    .add("token_type", "Bearer")
+                    .add("access_type", ACCESS_TYPE)
+                    .build();
 
-        Request request = new Request.Builder()
-                .url(new URL(ESIA_SERV, ESIA_TOKEN_POINT))
-                .post(formBody)
-                .build();
+            URL url = new URL(ESIA_SERV, ESIA_TOKEN_POINT);
 
-        ResponseModel<EsiaJWT> response = httpClient.handleRequest(request, EsiaJWT.class);
-        if (response.isSuccessful()) {
-            EsiaJWT esiaJWT = response.getBody();
+            log.debug("Try trade code for token by url: [{}]", url);
 
-            log.debug("SUCCESS GET TOKEN. [{}]", esiaJWT);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(formBody)
+                    .build();
 
-            return esiaJWT;
-        } else {
-            String msg = String.format("Failed to get token. Code: %d, Msg: %s",
-                                       response.getCode(), response.getMsg());
+            ResponseModel<EsiaJWT> response = httpClient.handleRequest(request, EsiaJWT.class);
+            if (response.isSuccessful()) {
+                EsiaJWT esiaJWT = response.getBody();
+
+                log.debug("SUCCESS TRADE CODE FOR TOKEN: [{}]", esiaJWT);
+
+                return esiaJWT.getAccess_token();
+            } else {
+                String msg = String.format("Failed to get token. Code: %d, Msg: %s",
+                                           response.getCode(), response.getMsg());
+                log.error(msg);
+
+                throw new IllegalStateException(msg);
+            }
+        } catch (Exception e) {
+            String msg = String.format("Не удалось обменять код на токен в ЕСИА. State: %s. Reason: %s",
+                                       state, e.getMessage());
             log.error(msg);
 
             throw new IllegalStateException(msg);
