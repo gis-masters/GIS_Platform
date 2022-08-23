@@ -99,7 +99,13 @@ class Sidebars {
       });
     }
 
-    if (mapStore.selectedFeatures.length === 0 && !this.featuresWithErrors) {
+    if (
+      mapStore.selectedFeatures.length === 0 &&
+      !this.featuresWithErrors &&
+      !this.deletedFeatures.length &&
+      !this.featuresWithNoAccess.length &&
+      !this.deletedLayers.length
+    ) {
       this.closeFeaturesSidebar();
       this.closeEdit();
     }

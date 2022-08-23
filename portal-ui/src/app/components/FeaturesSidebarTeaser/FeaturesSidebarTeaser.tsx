@@ -42,7 +42,11 @@ export class FeaturesSidebarTeaser extends Component {
   }
 
   render() {
-    const count = mapStore.selectedFeatures.length;
+    const count =
+      mapStore.selectedFeatures.length ||
+      sidebars.deletedFeatures?.length ||
+      sidebars.featuresWithNoAccess?.length ||
+      sidebars.deletedLayers?.length;
     let Icon = PinDropOutlined;
 
     if (count === 1) {
