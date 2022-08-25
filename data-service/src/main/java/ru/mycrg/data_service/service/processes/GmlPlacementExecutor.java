@@ -4,7 +4,6 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -40,18 +39,13 @@ import ru.mycrg.mediator.Mediator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
-import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATE_PATTERN;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.OKTMO;
 import static ru.mycrg.data_service.validators.GmlPlacementModelValidator.throwIfNotValid;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;

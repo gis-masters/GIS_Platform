@@ -10,6 +10,7 @@ import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dto.RecordDto;
@@ -23,12 +24,15 @@ import ru.mycrg.data_service.service.cqrs.library_records.requests.DeleteLibrary
 import ru.mycrg.data_service.service.cqrs.library_records.requests.UpdateLibraryRecordRequest;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.util.EcqlRecordIdHandler;
+import ru.mycrg.data_service.validators.ecql.EcqlFilter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -41,6 +45,7 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.PagingAndSortingUtil.fetchFoldersFirst;
 
+@Validated
 @RestController
 public class DocumentLibraryRecordsController {
 
@@ -63,7 +68,7 @@ public class DocumentLibraryRecordsController {
     @GetMapping("/document-libraries/{docLibId}/records")
     public ResponseEntity<Object> getAll(@PathVariable String docLibId,
                                          @RequestParam(required = false) Long parent,
-                                         @RequestParam(name = "filter", required = false) String ecqlFilter,
+                                         @RequestParam(name = "filter", required = false) @EcqlFilter String ecqlFilter,
                                          Pageable pageable,
                                          PagedResourcesAssembler<RecordDto> pageAssembler) {
         ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
@@ -82,13 +87,16 @@ public class DocumentLibraryRecordsController {
     @GetMapping("/document-libraries/{docLibId}/records/as_registry")
     public ResponseEntity<Object> getAll(
             @PathVariable String docLibId,
-            @RequestParam(name = "filter", required = false) String ecqlFilter,
+            @RequestParam(name = "filter", required = false) @EcqlFilter String filter,
+            @RequestParam(name = "recordId", required = false) List<Long> recordId,
             Pageable pageable,
             PagedResourcesAssembler<RecordDto> pageAssembler) {
         ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
 
         checkSortedFields(docLibId, pageable);
         Pageable newPageable = fetchFoldersFirst(pageable);
+
+        String ecqlFilter = EcqlRecordIdHandler.joinAsIn(filter, recordId);
 
         Page<RecordDto> page = recordServiceFactory.get()
                                                    .getAsRegistry(lQualifier, newPageable, ecqlFilter)

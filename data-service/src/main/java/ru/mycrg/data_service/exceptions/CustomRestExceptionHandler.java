@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.exceptions;
 
+import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -186,8 +188,11 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex,
                                                             final WebRequest request) {
         List<ErrorInfo> errors = new ArrayList<>();
-        for (final ConstraintViolation<?> violation: ex.getConstraintViolations()) {
-            errors.add(new ErrorInfo(violation.getRootBeanClass().getName(), violation.getMessage()));
+        for (ConstraintViolation<?> violation: ex.getConstraintViolations()) {
+            Path propertyPath = violation.getPropertyPath();
+            String currentProp = ((PathImpl) propertyPath).getLeafNode().toString();
+
+            errors.add(new ErrorInfo(currentProp, violation.getMessage()));
         }
 
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, ex.getLocalizedMessage(), errors);

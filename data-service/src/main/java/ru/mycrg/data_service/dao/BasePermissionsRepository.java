@@ -21,6 +21,7 @@ import java.util.Set;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
 import static ru.mycrg.data_service.util.RoleHandler.defineRoleById;
+import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
 
 @Repository
 @Transactional
@@ -50,7 +51,7 @@ public class BasePermissionsRepository {
                 "   " + tableQualifier + " AS res " +
                 "   JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
                 "   AND p.resource_table = '" + tableName + "' " +
-                "   AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ")";
+                "   AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ")";
 
         log.debug("Query to find allowed directly: [{}]", query);
 
@@ -80,7 +81,7 @@ public class BasePermissionsRepository {
                 "      " + tableQualifier + " AS res " +
                 "      JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
                 "      AND p.resource_table = '" + tableName + "' " +
-                "      AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
+                "      AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
                 "      AND res.path = '" + parent + "' " +
                 " " +
                 "    UNION " +
@@ -95,7 +96,7 @@ public class BasePermissionsRepository {
                 "      " + tableQualifier + " AS res " +
                 "      JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
                 "      AND p.resource_table = '" + tableName + "' " +
-                "      AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
+                "      AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
                 "      AND res.path LIKE '" + parent + "/%' " +
                 "    GROUP BY " +
                 "      allowed_res_id" +
@@ -126,8 +127,8 @@ public class BasePermissionsRepository {
                 "  FROM " + tableQualifier + " AS res" +
                 "  JOIN data.acl_permissions AS p ON p.resource_id = res.id" +
                 "  AND p.resource_table = '" + tableName + "'" +
-                "  AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ")" +
-                "  AND res.id IN (" + buildInSection(parentFolderIds) + ")" +
+                "  AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ")" +
+                "  AND res.id IN (" + joinAndQuoteMark(parentFolderIds) + ")" +
                 ")";
 
         log.debug("Request is allowed by parents permissions: [{}]", requestTemplate);
@@ -154,7 +155,7 @@ public class BasePermissionsRepository {
                 "      " + tableQualifier + " AS res " +
                 "      JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
                 "      AND p.resource_table = '" + tableName + "' " +
-                "      AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
+                "      AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
                 "      AND res.path = '" + path + "' " +
                 "    UNION " +
                 "    SELECT " +
@@ -167,7 +168,7 @@ public class BasePermissionsRepository {
                 "      " + tableQualifier + " AS res " +
                 "      JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
                 "      AND p.resource_table = '" + tableName + "' " +
-                "      AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
+                "      AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
                 "      AND res.path LIKE '" + path + "/%' " +
                 "    GROUP BY " +
                 "      allowed_res_id" +
@@ -208,7 +209,7 @@ public class BasePermissionsRepository {
                 "JOIN data.acl_permissions AS p " +
                 "ON p.resource_id = res.id " +
                 "AND p.resource_table = 'schemas_and_tables' " +
-                "AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
+                "AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
                 "AND (" +
                 "   res.identifier = '" + tableName + "'" +
                 "   OR res.identifier = '" + schemaName + "'" +
@@ -240,7 +241,7 @@ public class BasePermissionsRepository {
                 "      " + qualifier + " AS res " +
                 "      JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
                 "      AND p.resource_table = '" + tableName + "' " +
-                "      AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
+                "      AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
                 "      AND res.path LIKE '" + path + "%'" +
                 ")";
 
@@ -268,8 +269,8 @@ public class BasePermissionsRepository {
                 "  " + qualifier + " AS res " +
                 "  JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
                 "  AND p.resource_table = '" + tableName + "' " +
-                "  AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ")" +
-                "  AND res.id IN (" + buildInSection(parentFolderIds) + ")";
+                "  AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ")" +
+                "  AND res.id IN (" + joinAndQuoteMark(parentFolderIds) + ")";
 
         log.debug("Query: best role inherited from parent: [{}]", queryTemplate);
 
@@ -291,7 +292,7 @@ public class BasePermissionsRepository {
                 "  data.doc_libraries AS res " +
                 "  JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
                 "  AND p.resource_table = 'doc_libraries' " +
-                "  AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
+                "  AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
                 "  AND res.table_name = '" + tableName + "'";
 
         log.debug("Request getRoleForLibrary: [{}]", queryTemplate);
@@ -316,7 +317,7 @@ public class BasePermissionsRepository {
                 "  data.schemas_and_tables AS res " +
                 "  JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
                 "  AND p.resource_table = 'schemas_and_tables' " +
-                "  AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
+                "  AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
                 "  AND res.identifier = '" + identifier + "'";
 
         log.debug("Request getRoleForDataset: [{}]", queryTemplate);
@@ -352,7 +353,7 @@ public class BasePermissionsRepository {
                 "  " + tableQualifier + " AS res " +
                 "  JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
                 "  AND p.resource_table = '" + tableName + "' " +
-                "  AND p.principal_id IN (" + buildInSection(allPrincipalIds) + ") " +
+                "  AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
                 "  AND res.id = " + recordId;
 
         log.debug("Query: role for record: [{}]", queryTemplate);

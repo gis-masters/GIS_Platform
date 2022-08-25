@@ -10,7 +10,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.util.List;
 
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildInSection;
+import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
 
 @Repository
 public class AisUmsDao {
@@ -49,7 +49,7 @@ public class AisUmsDao {
                 "              FROM data.schemas_and_tables " +
                 "              WHERE identifier = '" + datasetName + "' " +
                 "                AND is_folder = true) " +
-                "  AND schema_id IN (" + buildInSection(schemas) + ")" +
+                "  AND schema_id IN (" + joinAndQuoteMark(schemas) + ")" +
                 "  AND is_folder = FALSE";
 
         log.debug("Query to get all tables names: [{}]", query);

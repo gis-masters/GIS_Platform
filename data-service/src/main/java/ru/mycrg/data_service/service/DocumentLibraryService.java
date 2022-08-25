@@ -31,8 +31,8 @@ import java.util.stream.StreamSupport;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildInSection;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
 
 @Service
 public class DocumentLibraryService {
@@ -156,7 +156,7 @@ public class DocumentLibraryService {
                                      .collect(Collectors.toList());
             }
 
-            String filter = "is_folder = false and content_type_id in (" + buildInSection(contentTypes) + ")";
+            String filter = "is_folder = false and content_type_id in (" + joinAndQuoteMark(contentTypes) + ")";
 
             ResourceQualifier tableQualifier = new ResourceQualifier(documentLibrary.getTableName());
 

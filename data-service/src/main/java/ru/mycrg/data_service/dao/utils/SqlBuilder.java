@@ -11,7 +11,6 @@ import ru.mycrg.data_service.util.filter.FilterItem;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.geo_json.GeoJsonObject;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,14 +58,6 @@ public class SqlBuilder {
         }
 
         return result.toString();
-    }
-
-    public static String buildInSection(Collection<String> ids) {
-        List<String> asString = ids.stream()
-                                   .map(s -> "'" + s + "'")
-                                   .collect(Collectors.toList());
-
-        return String.join(",", asString);
     }
 
     @NotNull

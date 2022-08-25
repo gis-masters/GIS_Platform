@@ -21,8 +21,8 @@ import ru.mycrg.geo_json.Feature;
 import java.util.*;
 
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildInSection;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
+import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
 @Repository
@@ -194,8 +194,8 @@ public class RecordsDao {
                 " WHERE " +
                 "   (" +
                 "     (" +
-                "       id IN (" + buildInSection(ids) + ") " +
-                "       OR path LIKE ANY (array[ " + buildInSection(paths) + " ])" +
+                "       id IN (" + joinAndQuoteMark(ids) + ") " +
+                "       OR path LIKE ANY (array[ " + joinAndQuoteMark(paths) + " ])" +
                 "     )" +
                 " " + ecqlFiltersSection +
                 "   )" +
@@ -227,8 +227,8 @@ public class RecordsDao {
                 " WHERE " +
                 "   (" +
                 "     (" +
-                "       id IN (" + buildInSection(ids) + ") " +
-                "       OR path LIKE ANY (array[ " + buildInSection(paths) + " ])" +
+                "       id IN (" + joinAndQuoteMark(ids) + ") " +
+                "       OR path LIKE ANY (array[ " + joinAndQuoteMark(paths) + " ])" +
                 "     )" +
                 " " + ecqlFiltersSection +
                 "   )";

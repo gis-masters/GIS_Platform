@@ -306,6 +306,11 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         getAllRecordsInRegisterSortedWithFilter(sortingFactor, sortingDirection, filter);
     }
 
+    @When("Текущий пользователь, по эндпоинту as_registry, запрашивает записи c id: {string}")
+    public void getWithRecordId(String recordId) {
+        getRecordByEcqlFilterAndRecordId("", recordId);
+    }
+
     @When("Пользователь делает запрос с сортировкой по {string} и {string} по всем записям библиотеки по-умолчанию")
     public void getAllRecordsSortedByCurrentUser(String sortingFactor, String sortingDirection) {
         authorizationBase.loginAsCurrentUser();
@@ -485,6 +490,17 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                                           sortingDirection,
                                           filter,
                                           "size=1000"));
+    }
+
+    private void getRecordByEcqlFilterAndRecordId(String ecqlFilter, String recordId) {
+        String url = String.format("/%s/records/as_registry?filer=%s&recordId=%s",
+                                   DEFAULT_LIBRARY,
+                                   ecqlFilter,
+                                   recordId);
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(url);
     }
 
     private String getRecordBodyForDlDefaultWithIncorrectField() {
