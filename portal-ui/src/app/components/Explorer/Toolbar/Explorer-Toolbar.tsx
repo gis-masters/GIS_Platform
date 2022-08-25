@@ -23,7 +23,7 @@ interface ExplorerToolbarProps {
 export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({ store, service, onChange, full }) => {
   return (
     <div className={cnExplorerToolbar()}>
-      <ExplorerFilter store={store} onChange={onChange} />
+      <ExplorerFilter store={store} onChange={onChange} service={service} />
       <ExplorerSort store={store} onChange={onChange} />
       <ExplorerPageSize store={store} onChange={onChange} />
       <ExplorerToolbarDivider />

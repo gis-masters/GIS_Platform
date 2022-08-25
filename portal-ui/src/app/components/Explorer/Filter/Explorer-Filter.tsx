@@ -6,11 +6,13 @@ import { boundMethod } from 'autobind-decorator';
 
 import { getChildrenFilterField, getChildrenFilterLabel } from '../Adapter/Explorer-Adapter';
 import { ExplorerStore } from '../Explorer.store';
+import { ExplorerService } from '../Explorer.service';
 
 const cnExplorerFilter = cn('Explorer', 'Filter');
 
 interface ExplorerFilterProps {
   store: ExplorerStore;
+  service: ExplorerService;
   onChange: () => void;
 }
 
@@ -38,10 +40,11 @@ export class ExplorerFilter extends Component<ExplorerFilterProps> {
 
   @boundMethod
   private handleFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { store, onChange } = this.props;
+    const { store, service, onChange } = this.props;
     const { openedItem } = store;
     const filterField = getChildrenFilterField(openedItem);
     store.setFilter({ [filterField]: e.target.value });
     onChange();
+    service.paginate(0);
   }
 }
