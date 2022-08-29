@@ -11,12 +11,14 @@ import '!style-loader!css-loader!sass-loader!./Breadcrumbs-Item.scss';
 
 export const cnBreadcrumbsItem = cn('Breadcrumbs', 'Item');
 
-export type BreadcrumbsItemsType = 'button' | 'link' | 'none';
+export type BreadcrumbsItemsType = 'button' | 'link' | 'none' | 'showMore';
 
 export interface BreadcrumbsItemData<T = unknown> extends ChildrenProps {
-  title: ReactNode;
+  title?: ReactNode;
   subtitle?: ReactNode;
+  showMore?: boolean;
   url?: string;
+  showMoreList?: BreadcrumbsItemData<T>[];
   payload?: T;
   onClick?: (payload: T) => void;
 }

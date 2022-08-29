@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
-import { ButtonBase } from '@mui/material';
+import { action, makeObservable, observable } from 'mobx';
+import { ButtonBase, Tooltip } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
+import { observer } from 'mobx-react';
 
 import { BreadcrumbsItemData, BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item';
 
@@ -10,14 +12,30 @@ interface BreadcrumbsItemTypeButtonProps extends IClassNameProps {
   onClick?: (itemData: BreadcrumbsItemData['payload']) => void;
 }
 
+@observer
 class ContainerComponent extends Component<BreadcrumbsItemProps> {
+  @observable private needTooltip = false;
+
+  constructor(props: BreadcrumbsItemProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { className, children } = this.props;
 
-    return (
-      <ButtonBase className={className} onClick={this.handleClick}>
+    const inner = (
+      <ButtonBase className={className} onMouseEnter={this.handleMouseEnter} onClick={this.handleClick}>
         {children}
       </ButtonBase>
+    );
+
+    return this.needTooltip ? (
+      <Tooltip title={children} placement='top'>
+        {inner}
+      </Tooltip>
+    ) : (
+      inner
     );
   }
 
@@ -27,6 +45,12 @@ class ContainerComponent extends Component<BreadcrumbsItemProps> {
     if (onClick) {
       onClick(payload);
     }
+  }
+
+  @action.bound
+  private handleMouseEnter(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const itemTitle = e.currentTarget.children[0] as Partial<HTMLDivElement>;
+    this.needTooltip = itemTitle.offsetWidth < itemTitle.scrollWidth;
   }
 }
 
