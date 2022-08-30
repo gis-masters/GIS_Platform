@@ -9,7 +9,6 @@ import ru.mycrg.data_service.util.CrgScriptEngine;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -86,17 +85,16 @@ public class SystemAttributeHandlerTest {
 
     @Test
     public void shouldCorrectlyExtractLastIdFromPath() {
-        Optional<Long> lastId = systemAttributeHandler.getLastIdFromPath("/root/1/5");
-
-        assertTrue(lastId.isPresent());
-        assertEquals(5L, (long) lastId.get());
+        assertEquals(5L, (long) systemAttributeHandler.getLastIdFromPath("/root/1/5").get());
+        assertEquals(15597L, (long) systemAttributeHandler.getLastIdFromPath("/root/281/15597").get());
+        assertEquals(11177L, (long) systemAttributeHandler.getLastIdFromPath("/root/281/4233/11177").get());
+        assertEquals(1L, (long) systemAttributeHandler.getLastIdFromPath("/root/88/141/49932/1").get());
     }
 
     @Test
-    public void lastIdShouldBeEmpty_forRootPath() {
-        Optional<Long> lastId = systemAttributeHandler.getLastIdFromPath("/root/");
-
-        assertTrue(lastId.isEmpty());
+    public void lastIdShouldBeEmpty() {
+        assertTrue(systemAttributeHandler.getLastIdFromPath("/root/").isEmpty());
+        assertTrue(systemAttributeHandler.getLastIdFromPath("").isEmpty());
     }
 
     private IRecord prepareData(String title, String type) {

@@ -211,13 +211,19 @@ public class SystemAttributeHandler {
     }
 
     public Optional<Long> getLastIdFromPath(@NotNull String path) {
-        List<Long> ids = extractFolderIdsFromPath(path).stream()
-                                                       .map(Long::valueOf)
-                                                       .collect(Collectors.toList());
+        String[] splitByRoot = path.split("/root/");
+        if (splitByRoot.length < 2) {
+            return Optional.empty();
+        }
 
-        return ids.isEmpty()
-                ? Optional.empty()
-                : Optional.of(ids.get(ids.size() - 1));
+        String[] splitIds = path.split("/");
+        if (splitIds.length == 0) {
+            return Optional.empty();
+        } else {
+            Long lastId = Long.valueOf(splitIds[splitIds.length - 1]);
+
+            return Optional.of(lastId);
+        }
     }
 
     private boolean attributeDefined(SystemLibraryAttributes attribute) {
