@@ -2,14 +2,14 @@
 
 ##### Разработчик
 - [ ] Функциональность эксплораторно или автоматически протестирована.
-- [ ] Добавлены Acceptance Criteria в виде Gherkin (Cucumber) Feature file (Given When Then).
-- [ ] Acceptance Criteria скопированы в WorkItem.
+- [ ] Добавлены Acceptance Tests в виде Gherkin (Cucumber) Feature file (Given When Then).
+- [ ] Acceptance Tests скопированы в WorkItem.
 - [ ] Созданы задачи на эксплораторное тестирование и они привязаны к PR.
 - [ ] Создана задача на обновление инструкции и она привязана к PR.
 - [ ] Задача на обновление инструкции закрыта.
 
 ##### Менеджер проекта
-- [ ] Acceptance Criteria проверены и утверждены.
+- [ ] Acceptance Tests проверены и утверждены.
 - [ ] WorkItems (Bugs\PBI) привязаны к parent Feature в Backlog.
 
 ##### Тестировщик

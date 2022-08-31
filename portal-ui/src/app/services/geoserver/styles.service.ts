@@ -64,17 +64,17 @@ interface StyleFilterElse {
   operator: StyleFilterOperator.ELSE;
 }
 
-const sldStyles: Record<string, Promise<StyleRule[]>> = {};
+const parsedStyles: Record<string, Promise<StyleRule[]>> = {};
 
 export async function getLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> {
-  if (!sldStyles[layer.styleName]) {
-    sldStyles[layer.styleName] = _loadLayerStyle(layer);
+  if (!parsedStyles[layer.styleName]) {
+    parsedStyles[layer.styleName] = loadLayerStyleRules(layer);
   }
 
-  return await sldStyles[layer.styleName];
+  return await parsedStyles[layer.styleName];
 }
 
-async function _loadLayerStyle(layer: CrgVectorLayer): Promise<StyleRule[]> {
+async function loadLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> {
   const sldStyle = await getStyleSld(layer.styleName);
   const xmlDoc = new DOMParser().parseFromString(sldStyle, Mime.XML);
 
@@ -180,12 +180,23 @@ async function getLegendGraphicByRuleName(complexLayerName: string, ruleName: st
   return http.get(await getWmsUrl(), { responseType: 'blob', params });
 }
 
+// sld's cache
+const sldStyles: Record<string, Promise<string>> = {};
+
 /**
  * Get the style SLD definition body.
  *
  * @param complexStyleName style name or complex style name ("workspace_name:style_name")
  */
-async function getStyleSld(complexStyleName: string): Promise<string> {
+export async function getStyleSld(complexStyleName: string): Promise<string> {
+  if (!sldStyles[complexStyleName]) {
+    sldStyles[complexStyleName] = loadStyleSld(complexStyleName);
+  }
+
+  return await sldStyles[complexStyleName];
+}
+
+async function loadStyleSld(complexStyleName: string): Promise<string> {
   const geoServerUrl = await getGeoServerUrl();
   const workspacesUrl = geoServerUrl + '/rest/workspaces/';
   const names = complexStyleName.split(':');

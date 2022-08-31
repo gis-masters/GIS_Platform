@@ -1,13 +1,18 @@
 import { isEqual } from 'lodash';
 import { Feature } from 'ol';
 import { Extent } from 'ol/extent';
-import { SimpleGeometry } from 'ol/geom';
+import { MultiPolygon, SimpleGeometry } from 'ol/geom';
+import { intersects } from 'ol/format/filter';
 import { Coordinate } from 'ol/coordinate';
+import { WFS } from 'ol/format';
 
+import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry, WfsMultiPolygonGeometry } from './wfs.models';
-import { PageOptions, SortOrder } from '../models';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
+import { olProjection } from './projections.service';
+import { PageOptions, SortOrder } from '../models';
 import { services } from '../services';
+import { Mime } from '../util/Mime';
 
 export function getEmptyGeometry(geometryType: GeometryType): WfsGeometry<CoordinateEdited> {
   if (geometryType === GeometryType.POINT) {
@@ -143,4 +148,30 @@ export function mergeExtents(extents: Extent[]): Extent {
   }
 
   return resultExtent;
+}
+
+export function makeXmlPolygonIntersect(
+  featuresComplexName: string[],
+  polygon: MultiPolygon,
+  srsName: string,
+  selectionType: MapSelectionTypes
+): string {
+  const featureRequest = new WFS().writeGetFeature({
+    srsName,
+    featureTypes: featuresComplexName,
+    outputFormat: Mime.JSON,
+    filter: intersects('shape', polygon, olProjection.id),
+    featureNS: '',
+    featurePrefix: '',
+    maxFeatures:
+      selectionType !== MapSelectionTypes.REMOVE
+        ? Math.max(
+            mapStore.selectingFeaturesLimit -
+              (selectionType === MapSelectionTypes.ADD ? mapStore.selectedFeatures.length : 0),
+            1
+          )
+        : undefined
+  });
+
+  return new XMLSerializer().serializeToString(featureRequest);
 }

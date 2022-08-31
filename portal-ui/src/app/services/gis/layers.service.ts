@@ -151,9 +151,7 @@ export function alertLayerOperationError(
 
   const message = `Не удалось ${actionText} "${actionName}"`;
 
-  const details = e.response?.data?.message
-    ? e.response.data.message
-    : `Запрос: \n${responseDetails} \n\nДанные: \n${payloadDetails}`;
+  const details = e.response?.data?.message || `Запрос: \n${responseDetails} \n\nДанные: \n${payloadDetails}`;
 
   Toast.error({ message, details });
   services.logger.error(message, e);

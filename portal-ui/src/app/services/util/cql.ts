@@ -27,12 +27,29 @@ const operators: Record<string, (key: string, value: FilterQueryValue | FilterQu
     value === null ? `${key} IS NOT null` : `${key} <> '${String(value)}'`,
   $like: (key: string, value: string) => `${key} LIKE '${value}'`,
   $ilike: (key: string, value: string) => `${key} ILIKE '${value}'`,
-  $in: (key: string, value: string[]) =>
-    value.includes(null)
-      ? `(${key} IN('${value.filter(val => val !== null).join("','")}') OR ${key} IS null)`
-      : `${key} IN('${value.join("','")}')`,
-  $nin: (key: string, value: string[]) =>
-    value.map(item => (item === null ? `${key} IS NOT null` : `(${key} <> '${item}')`)).join(' AND '),
+  $in: (key: string, values: (string | number)[]) => {
+    const valuesQuoted = values.map(val => (typeof val === 'string' ? `'${val}'` : val));
+
+    return values.includes(null)
+      ? `(${key} IN(${valuesQuoted.filter(val => val !== null).join(',')}) OR ${key} IS null)`
+      : `${key} IN(${valuesQuoted.join(',')})`;
+  },
+  $nin: (key: string, values: (string | number)[]) => {
+    const valuesQuoted = values.map(val => (typeof val === 'string' ? `'${val}'` : val));
+
+    if (values.includes(null)) {
+      const valuesWithoutNullQuoted = valuesQuoted.filter(val => val !== null);
+      const isNotNullFragment = `${key} IS NOT null`;
+
+      if (!valuesWithoutNullQuoted.length) {
+        return isNotNullFragment;
+      }
+
+      return `(${isNotNullFragment} AND NOT(${key} IN(${valuesWithoutNullQuoted.join(',')})))`;
+    }
+
+    return `NOT (${key} IN(${valuesQuoted.join(',')}))`;
+  },
   $gt: (key: string, value: string | number) => `${key} > '${value}'`,
   $lt: (key: string, value: string | number) => `${key} < '${value}'`,
   $gte: (key: string, value: string | number) => `${key} >= '${value}'`,

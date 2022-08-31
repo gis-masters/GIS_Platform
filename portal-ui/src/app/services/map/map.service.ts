@@ -52,6 +52,7 @@ interface CrgWmsParams {
   FORMAT?: string;
   CQL_FILTER?: string;
   featureId?: string;
+  featureIdsNegative?: string;
 }
 
 interface CrgAdditionalLayerInfo {
@@ -348,8 +349,15 @@ class MapService {
         params.CQL_FILTER = buildCqlFilter(filter);
       }
 
-      if (filterBySelection === FilterBySelection.ONLY_SELECTED) {
-        params.featureId = mapStore.selectedFeaturesByTableName[tableName]?.map(({ id }) => id).join(',');
+      if (
+        filterBySelection === FilterBySelection.ONLY_SELECTED ||
+        filterBySelection === FilterBySelection.ONLY_NOT_SELECTED
+      ) {
+        params.featureId = mapStore.selectedFeaturesByTableName[tableName]?.map(({ id }) => id)?.join(',');
+      }
+
+      if (filterBySelection === FilterBySelection.ONLY_NOT_SELECTED && params.featureId) {
+        params.featureIdsNegative = 'true';
       }
 
       const commonLayerParams = {

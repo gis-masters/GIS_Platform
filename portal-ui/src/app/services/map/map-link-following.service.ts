@@ -1,7 +1,7 @@
 import { action } from 'mobx';
 
 import { route } from '../../stores/Route.store';
-import { SELECTING_FEATURES_LIMIT } from '../../stores/Map.store';
+import { mapStore } from '../../stores/Map.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { mapSelectionService } from './map-selection.service';
@@ -53,7 +53,7 @@ export async function applyMapStateFromNavigator(): Promise<void> {
           typeName: layer,
           CQL_FILTER: route.queryParams.queryFilter,
           startindex: '0',
-          count: String(SELECTING_FEATURES_LIMIT)
+          count: String(mapStore.selectingFeaturesLimit)
         };
 
         const response = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params });

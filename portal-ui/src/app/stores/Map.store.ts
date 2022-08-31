@@ -1,5 +1,6 @@
 import { action, computed, observable, reaction, makeObservable } from 'mobx';
 import Filter from 'ol/format/filter/Filter';
+import sift from 'sift';
 
 import { route, Pages } from './Route.store';
 import { MeasureItem, MeasureMode } from '../services/map/map-measure.service';
@@ -9,7 +10,7 @@ import { WfsFeature } from '../services/geoserver/wfs.models';
 import { FilterQuery, prepareLike } from '../services/util/filterObjects';
 import { buildCqlFilter } from '../services/util/cql';
 import { cql2ol } from '../services/util/cql2ol';
-import sift from 'sift';
+import { flags } from '../services/feature-flags';
 
 export enum MapSelectionTypes {
   ADD,
@@ -49,8 +50,6 @@ const actionsInModes = {
   [MapMode.PICK]: [MapAction.MOVE, MapAction.PICK]
 };
 
-export const SELECTING_FEATURES_LIMIT = 1000;
-
 const defaultValues: Partial<MapStore> = {
   selectionActive: false,
   mode: MapMode.DEFAULT,
@@ -67,6 +66,8 @@ class MapStore {
   @observable selectionActive: boolean;
   @observable unitsOfAreaMeasurement: UnitsOfAreaMeasurement;
   @observable selectedFeatures?: WfsFeature[];
+
+  private _selectingFeaturesLimit = 500;
 
   private static _instance: MapStore;
   static get instance() {
@@ -86,6 +87,10 @@ class MapStore {
         }
       }
     );
+  }
+
+  get selectingFeaturesLimit(): number {
+    return flags.selectingFeaturesLimit ? Number(flags.selectingFeaturesLimit) : this._selectingFeaturesLimit;
   }
 
   @computed

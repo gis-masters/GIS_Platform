@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { MapSelectionTypes, mapStore, SELECTING_FEATURES_LIMIT } from '../../../stores/Map.store';
+import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { CrgVectorLayer } from '../../../services/gis/projects.models';
 import { getFeatures } from '../../../services/geoserver/wfs.service';
@@ -120,7 +120,7 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
     const { layer, pageOptions } = this.props;
     const options = cloneDeep(pageOptions);
     delete options.filter?.filterBySelection;
-    const [features] = await getFeatures(layer, { ...options, page: 0, pageSize: SELECTING_FEATURES_LIMIT });
+    const [features] = await getFeatures(layer, { ...options, page: 0, pageSize: mapStore.selectingFeaturesLimit });
 
     return features;
   }

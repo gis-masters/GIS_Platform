@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { sidebars } from '../../stores/Sidebars.store';
-import { mapStore, SELECTING_FEATURES_LIMIT } from '../../stores/Map.store';
+import { mapStore } from '../../stores/Map.store';
 import { communicationService } from '../../services/communication.service';
 import { FeaturesList } from '../FeaturesList/FeaturesList';
 
@@ -34,9 +34,9 @@ export class FeaturesListSidebar extends Component {
               <Close />
             </IconButton>
           </div>
-          {mapStore.selectedFeatures.length >= SELECTING_FEATURES_LIMIT && (
+          {mapStore.selectedFeatures.length >= mapStore.selectingFeaturesLimit && (
             <div className={cnFeaturesListSidebar('Error')}>
-              Максимальное количество выбираемых объектов — {SELECTING_FEATURES_LIMIT}
+              Максимальное количество выбираемых объектов — {mapStore.selectingFeaturesLimit}
             </div>
           )}
           <FeaturesList />

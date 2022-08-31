@@ -1,10 +1,11 @@
 import { getEnvironment } from './environment';
 
 export interface FlagsList {
-  sample: boolean;
+  sample: string; // boolean
+  selectingFeaturesLimit: string; // number
 }
 
-const keys: (keyof FlagsList)[] = ['sample'];
+const keys: (keyof FlagsList)[] = ['sample', 'selectingFeaturesLimit'];
 
 function lsKey(key: string) {
   return `crg-flag-${key}`;
@@ -16,7 +17,9 @@ class Flags implements FlagsList {
     return this._instance || (this._instance = new this());
   }
 
-  sample = false;
+  sample = '';
+
+  selectingFeaturesLimit = '';
 
   private constructor() {
     void this.init();

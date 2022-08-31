@@ -6,10 +6,10 @@ import ExtentInteraction from 'ol/interaction/Extent';
 
 import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { MapAction, MapMode, MapSelectionTypes, mapStore, SELECTING_FEATURES_LIMIT } from '../../stores/Map.store';
+import { MapAction, MapMode, MapSelectionTypes, mapStore } from '../../stores/Map.store';
 import { getFeaturesCollectionByXmlFilter } from '../geoserver/wfs.service';
+import { makeXmlPolygonIntersect } from '../geoserver/wfs.util';
 import { setSelectedFeaturesToUrl } from './map-url.service';
-import { makeXmlPolygonIntersect } from '../util/wfs.util';
 import { WfsFeature } from '../geoserver/wfs.models';
 import { mapService } from './map.service';
 import { services } from '../services';
@@ -266,7 +266,8 @@ class MapSelectionService {
 
     const limitOverflow = features.splice(
       Math.max(
-        SELECTING_FEATURES_LIMIT - (selectionType === MapSelectionTypes.ADD ? mapStore.selectedFeatures.length : 0),
+        mapStore.selectingFeaturesLimit -
+          (selectionType === MapSelectionTypes.ADD ? mapStore.selectedFeatures.length : 0),
         0
       ),
       features.length
