@@ -9,7 +9,6 @@ import ru.mycrg.geoserver_client.services.storage.raster.RasterStorage;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
-import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.repository.LayerRepository;
 import ru.mycrg.gis_service.security.AuthenticationFacade;
 import ru.mycrg.http_client.ResponseModel;
@@ -48,13 +47,6 @@ public class RasterLayerHandler implements ILayerHandler {
 
         if (FULL_MODE.equals(dto.getMode()) || GEOSERVER_MODE.equals(dto.getMode())) {
             String tableName = dto.getTableName();
-            String type = dto.getType();
-
-            if (!GEOSERVER_MODE.equals(dto.getMode())
-                    && layerRepository.findByTableNameAndProjectAndType(tableName, project, type).isPresent()) {
-                throw new ConflictException("Уже существует растровый слой указывающий на таблицу: " + tableName);
-            }
-
             String workspaceName = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
             String storeName = buildRasterStoreName(tableName);
             CoverageModel coverage = new CoverageModel(dto.getTableName(), dto.getTitle(), "28406", dto.getNativeCRS());

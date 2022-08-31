@@ -8,7 +8,6 @@ import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
-import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.repository.LayerRepository;
 import ru.mycrg.gis_service.security.AuthenticationFacade;
 import ru.mycrg.gis_service.service.geoserver.LayerGeoserverService;
@@ -40,10 +39,6 @@ public class VectorLayerHandler implements ILayerHandler {
     @Override
     public Optional<Layer> create(Project project, LayerCreateDto dto) {
         log.debug("VectorLayerHandler create");
-
-        if (layerRepository.findByTableNameAndProjectAndType(dto.getTableName(), project, dto.getType()).isPresent()) {
-            throw new ConflictException("Vector layer with same tableName already exist");
-        }
 
         Layer newLayer = new Layer(dto);
         newLayer.setProject(project);
