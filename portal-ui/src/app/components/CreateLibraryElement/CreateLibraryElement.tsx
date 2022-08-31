@@ -49,7 +49,6 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   async componentDidMount() {
     const schema = await schemaService.getSchema(this.props.schemaId);
     this.setSchema(schema);
-    this.setFormValue(getDefaultValues(this.preparedSchema.properties));
   }
 
   render() {
@@ -132,6 +131,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
 
   @action.bound
   private openDialog() {
+    this.setFormValue(getDefaultValues(this.preparedSchema.properties));
     this.dialogOpen = true;
   }
 
@@ -141,7 +141,6 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     this.setDialogLoading(false);
     this.setErrors([]);
     this.setServerErrors([]);
-    this.setFormValue(getDefaultValues(this.preparedSchema.properties));
   }
 
   @action

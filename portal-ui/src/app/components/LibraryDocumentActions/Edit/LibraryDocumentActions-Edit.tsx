@@ -48,7 +48,7 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
           open={this.dialogOpen}
           schema={{ ...schema, properties: this.fieldsWithoutBinary }}
           value={document}
-          actionFunction={this.updateDocumentPage}
+          actionFunction={this.updateDocument}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}
           onClose={this.closeDialog}
           title={
@@ -80,7 +80,7 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
   }
 
   @boundMethod
-  private async updateDocumentPage(value: LibraryRecord) {
+  private async updateDocument(value: LibraryRecord) {
     await updateLibraryRecord(
       this.props.document.libraryId,
       this.props.document.id,
