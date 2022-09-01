@@ -150,6 +150,11 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         resetPassword(gson.toJson(passwordReset));
     }
 
+    @When("Отправляется GET запрос для проверки актуальности несуществующего токена")
+    public void checkToken() {
+        checkResetToken("someNotExistResetToken");
+    }
+
     @And("Тело ответа содержит ошибку о том что токен невалидный")
     public void checkErrorMessage() {
         String error = response.jsonPath().get("message");
@@ -174,5 +179,11 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         post("/password-reset");
+    }
+
+    private void checkResetToken(String token) {
+        response = getBaseRequest()
+                .when().
+                        get("/password-reset?token=" + token);
     }
 }

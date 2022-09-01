@@ -133,6 +133,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                 || (request.getServletPath().equals("/organizations/init") && request.getMethod().equals("POST"))
                 || (request.getServletPath().contains("/esia") && request.getMethod().equals("GET"))
                 || (request.getServletPath().equals("/password-reset") && request.getMethod().equals("POST"))
+                || (request.getServletPath().equals("/password-reset") && request.getMethod().equals("GET"))
                 || (request.getServletPath().equals("/request-password-reset") && request.getMethod().equals("POST"));
     }
 

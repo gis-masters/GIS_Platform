@@ -3,9 +3,7 @@ package ru.mycrg.auth_service.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.mycrg.auth_service.service.PasswordResetService;
 import ru.mycrg.auth_service_contract.dto.InitPasswordResetDto;
 import ru.mycrg.auth_service_contract.dto.PasswordResetDto;
@@ -41,5 +39,16 @@ public class PasswordResetController {
         String login = passwordResetService.activateToken(dto);
 
         return new ResponseEntity<>(login, OK);
+    }
+
+    @GetMapping("/password-reset")
+    public ResponseEntity<Object> checkToken(@RequestParam String token) {
+        log.info("Check reset-token: {}", token);
+
+        if (passwordResetService.isExist(token)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

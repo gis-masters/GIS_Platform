@@ -84,6 +84,13 @@ public class PasswordResetService {
         }
     }
 
+    public boolean isExist(String token) {
+        // Clear expired tokens
+        tokenRepository.deleteByCreatedAtBefore(now().minusMinutes(tokenExpirationTime));
+
+        return tokenRepository.findByToken(token).isPresent();
+    }
+
     private void throwIfTokenExpired(PasswordResetToken token) {
         if (token.getCreatedAt().plusMinutes(tokenExpirationTime).isBefore(now())) {
             tokenRepository.removeByUser(token.getUser());
