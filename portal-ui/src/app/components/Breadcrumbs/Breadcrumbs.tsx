@@ -60,14 +60,14 @@ export class Breadcrumbs<T> extends Component<BreadcrumbsProps<T>> {
         {this.breadcrumbs?.map((item, i) => (
           <Fragment key={i}>
             <>
-              {item.showMore && (
+              {item?.showMore && (
                 <>
                   <BreadcrumbsItem showMoreList={this.showMoreList} type={'showMore'} />
                   <BreadcrumbsDivider />
                 </>
               )}
 
-              {item.showMore === undefined && (
+              {item?.showMore === undefined && (
                 <>
                   <BreadcrumbsItem {...item} type={itemsType} />
                   {i !== this.breadcrumbs.length - 1 && <BreadcrumbsDivider />}

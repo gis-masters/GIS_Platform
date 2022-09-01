@@ -113,7 +113,10 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
 
   @boundMethod
   private handleSelect(item: ExplorerItemData<LibraryRecord>, path: ExplorerItemData[]) {
-    if (item.type === ExplorerItemType.DOCUMENT && !this.testForDisabled(item)) {
+    if (
+      (item.type === ExplorerItemType.DOCUMENT || item.type === ExplorerItemType.FOLDER) &&
+      !this.testForDisabled(item)
+    ) {
       this.select([path[path.length - 1].payload as LibraryRecord]);
     } else {
       this.select();
