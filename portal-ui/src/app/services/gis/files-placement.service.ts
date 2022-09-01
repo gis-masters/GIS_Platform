@@ -1,11 +1,16 @@
 import { AxiosError } from 'axios';
 
-import { CrgLayersGroup, CrgLayerType, CrgProject, CrgRasterLayer } from './projects.models';
+import { CrgLayersGroup, CrgLayerType, CrgProject, CrgRasterLayer, FilePlacementMode } from './projects.models';
 import { createRasterLayer } from './layers.service';
 import { LibraryRecord } from '../data/doc-library.service';
 import { projectsService } from './projects.service';
 import { FileInfo, getFile } from '../data/files.service';
 import { getFileBaseName } from '../data/files.util';
+
+interface FileOptions {
+  crs: string;
+  mode: FilePlacementMode;
+}
 
 export function placeFiles(
   files: FileInfo[],
@@ -21,12 +26,12 @@ export function placeFiles(
     tasks.push(creatingGroup);
   }
 
-  return [...tasks, ...files.map(file => placeFile(file, crs, project, document, creatingGroup))];
+  return [...tasks, ...files.map(file => placeFile(file, { crs, mode: 'full' }, project, document, creatingGroup))];
 }
 
 export async function placeFile(
   file: FileInfo,
-  crs: string,
+  fileOptions: FileOptions,
   project: CrgProject,
   document: LibraryRecord,
   layersGroupCreating?: Promise<CrgLayersGroup> | CrgLayersGroup
@@ -37,8 +42,8 @@ export async function placeFile(
   const rasterLayer: CrgRasterLayer = {
     title: getFileBaseName(title),
     type: CrgLayerType.RASTER,
-    mode: 'full',
-    nativeCRS: crs,
+    mode: fileOptions.mode,
+    nativeCRS: fileOptions.crs,
     tableName: `${document.libraryId}_${document.id}__${id}`,
     dataSourceUri: 'file://' + path,
     libraryId: document.libraryId,

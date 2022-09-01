@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { currentUser } from '../../../../stores/CurrentUser.store';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { getLibraryRecord, LibraryRecord } from '../../../../services/data/doc-library.service';
+import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { applyContentType } from '../../../../services/data/schema.utils';
 import { schemaService } from '../../../../services/data/schema.service';
 import { Role } from '../../../../services/data/permissions.models';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 import { Schema } from '../../../../services/data/schema.models';
-import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
+import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { getId } from '../../Adapter/Explorer-Adapter';
 
@@ -69,7 +69,6 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
   private async fetchData() {
     const { item } = this.props;
     const { payload } = item as ExplorerItemData<LibraryRecord>;
-
     const operationId = Symbol();
     this.operationId = operationId;
 

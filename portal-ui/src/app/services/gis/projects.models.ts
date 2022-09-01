@@ -7,6 +7,8 @@ export enum CrgLayerType {
   EXTERNAL_GEOSERVER = 'external_geoserver'
 }
 
+export type FilePlacementMode = 'full' | 'geoserver' | 'gis-service';
+
 interface CrgEntity {
   title: string;
   id?: number;
@@ -22,7 +24,7 @@ export interface CrgLayersGroup extends CrgEntity {
 
 export interface CrgRasterLayer extends CrgBaseLayer {
   type: CrgLayerType.RASTER;
-  mode: 'full' | 'geoserver' | 'gis-service';
+  mode: FilePlacementMode;
   dataStoreName?: string;
   dataSourceUri?: string;
   libraryId: string;

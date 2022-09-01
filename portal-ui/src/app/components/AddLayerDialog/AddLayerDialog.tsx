@@ -4,22 +4,22 @@ import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { cloneDeep, isUndefined } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { AxiosError } from 'axios';
 
 import { DocumentLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
+import { SelectFileInLibraryRecord } from '../SelectFileInLibraryRecord/SelectFileInLibraryRecord';
 import { externalLayerDefaults, vectorLayerDefaults } from '../../services/gis/layers.utils';
 import { Dataset, VectorTable, getVectorTable } from '../../services/data/data.service';
 import { FieldErrors, validateFormValue } from '../../services/formValidation.service';
-import { SelectLibraryRecord } from '../SelectLibraryRecord/SelectLibraryRecord';
 import { PropertySchema, PropertyType } from '../../services/data/schema.models';
 import { CrgLayerType, CrgLayer } from '../../services/gis/projects.models';
 import { SelectVectorTable } from '../SelectVectorTable/SelectVectorTable';
-import { placeFile } from '../../services/data/file-placement.service';
 import { generateNextLayerId } from '../../services/gis/layers.service';
-import { awaitProcess } from '../../services/data/processes.service';
-import { getProcessUrl } from '../../services/server-urls.service';
+import { placeFile } from '../../services/gis/files-placement.service';
+import { FileInfo, getFile } from '../../services/data/files.service';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { getFileBaseName } from '../../services/data/files.util';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { services } from '../../services/services';
 import { Button } from '../Button/Button';
@@ -56,11 +56,12 @@ export interface Datasource {
   vectorTable?: VectorTable;
   libraryRecord?: LibraryRecord;
   library?: DocumentLibrary;
+  file?: FileInfo;
 }
 
 const layerTypeOptions = [
   { title: 'Векторный слой', value: 'vector' },
-  // { title: 'Растровый слой', value: 'raster' },
+  { title: 'Растровый слой', value: 'raster' },
   { title: 'Внешний слой (веб-сервис ArcGis)', value: 'external' }
 ];
 
@@ -76,8 +77,6 @@ const minZoomTitle = 'Уровень масштабной детализации
 export class AddLayerDialog extends Component<AddLayerDialogProps> {
   @observable private usedVectorTables: VectorTable[] = [];
   @observable private usedVectorTablesRequest?: Promise<VectorTable[]>;
-  @observable private usedLibraryRecords: LibraryRecord[] = [];
-  @observable private usedLibraryRecordsRequest?: Promise<LibraryRecord[]>;
   @observable private formValue?: FormValue = cloneDeep(defaultValue);
   @observable private formErrors?: FieldErrors[];
   @observable private loading = false;
@@ -89,12 +88,10 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
 
   async componentDidMount() {
     await this.checkUsedTables();
-    await this.checkUsedLibraryRecords();
   }
 
   async componentDidUpdate() {
     await this.checkUsedTables();
-    await this.checkUsedLibraryRecords();
   }
 
   render() {
@@ -141,11 +138,6 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     this.usedVectorTables = vectorTables;
   }
 
-  @action
-  private setUsedLibraryRecords(libraryRecords: LibraryRecord[]) {
-    this.usedLibraryRecords = libraryRecords;
-  }
-
   @action.bound
   private handleFormChange(formValue: FormValue) {
     this.formValue = formValue;
@@ -153,7 +145,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     if (!this.formValue.title && formValue.datasource) {
       const datasource = formValue.datasource;
 
-      this.formValue.title = datasource.vectorTable?.title || datasource.libraryRecord?.title;
+      this.formValue.title = datasource.vectorTable?.title || datasource.file?.title;
       this.formFieldChanged(this.formValue, 'title');
     }
   }
@@ -258,7 +250,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           name: 'datasource',
           title: 'Документ',
           defaultValue: true,
-          ControlComponent: props => <SelectLibraryRecord {...props} usedLibraryRecords={this.usedLibraryRecords} />,
+          ControlComponent: SelectFileInLibraryRecord,
           customValidationFunction: validateLayer
         }
       ];
@@ -312,11 +304,11 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   private async add(e: React.FormEvent<HTMLFormElement>) {
     this.validate();
     const { datasource = {}, title, minZoom, dataSourceUri, tableName, layerType } = this.formValue;
-    const { dataset, vectorTable } = datasource;
+    const { dataset, vectorTable, library } = datasource;
     const vectorDefaults = vectorLayerDefaults();
 
     e.preventDefault();
-    const dataStoreName = `scratch_database_${currentUser.orgId}`;
+    const dataStoreName = currentUser.workspaceName;
     if (this.valid && (!layerType || layerType === CrgLayerType.VECTOR)) {
       this.props.onAdd({
         ...vectorDefaults,
@@ -338,18 +330,30 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     const externalDefaults = externalLayerDefaults();
 
     if (this.valid && layerType === CrgLayerType.RASTER) {
-      const { libraryRecord } = this.formValue.datasource;
+      const { libraryRecord, file } = this.formValue.datasource;
+      this.setLoading(true);
 
       try {
-        this.setLoading(true);
+        const record = await getLibraryRecord(library.identifier, libraryRecord.id);
+        const { path } = await getFile(file.id);
+        const fileTableName = `${record.libraryId}_${record.id}__${file.id}`;
 
-        // Заглушка для последующей реализации.
-        // Документ не равно файл. Тут требуется дать пользователю выбрать файл и передать сюда его fileInfo
-        const process = await placeFile({ id: 'file_id as UUID', size: 314, title: 'some_file' }, currentProject.id);
+        await placeFile(file, { crs: 'EPSG:3857', mode: 'geoserver' }, currentProject, record);
 
-        const processUrl = process._links.process.href.split('/');
-        await awaitProcess(await getProcessUrl(Number(processUrl[processUrl.length - 1])));
-        this.setLoading(false);
+        this.props.onAdd({
+          id: generateNextLayerId(),
+          title: title || getFileBaseName(file.title),
+          dataStoreName,
+          tableName: fileTableName, // name слоя не геосервере
+          complexName: `${dataStoreName}:${fileTableName}`,
+          enabled: true,
+          nativeCRS: 'EPSG:3857',
+          dataSourceUri: 'file://' + path,
+          libraryId: record.libraryId,
+          recordId: record.id,
+          mode: 'gis-service',
+          type: CrgLayerType.RASTER
+        });
       } catch (error) {
         Toast.error('Не удалось подключить слой');
         services.logger.error('Не удалось удалить файл: ', (error as AxiosError).message);
@@ -357,26 +361,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
 
         return;
       }
-      const innerPath = libraryRecord.inner_path.split('/');
-      const tableName = innerPath[innerPath.length - 1].split('.')[0];
-
-      this.props.onAdd({
-        id: generateNextLayerId(),
-        title,
-        dataStoreName,
-        tableName,
-        complexName: `${dataStoreName}:${tableName}`,
-        enabled: true,
-        nativeCRS: 'EPSG:3857',
-        position: -42,
-        transparency: 75,
-        minZoom,
-        maxZoom: 40,
-        libraryId: libraryRecord.libraryId,
-        recordId: libraryRecord.id,
-        mode: 'gis-service',
-        type: CrgLayerType.RASTER
-      });
+      this.setLoading(false);
 
       this.close();
 
@@ -442,46 +427,6 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
 
     if (alreadyUsedVectorTables.length !== this.usedVectorTables.length || newUsedVectorTables.length > 0) {
       this.setUsedVectorTables([...alreadyUsedVectorTables, ...newUsedVectorTables]);
-    }
-  }
-
-  private async checkUsedLibraryRecords(): Promise<LibraryRecord> {
-    if (this.usedLibraryRecordsRequest) {
-      await this.usedLibraryRecordsRequest;
-      this.usedLibraryRecordsRequest = null;
-      await this.checkUsedLibraryRecords();
-
-      return;
-    }
-
-    const alreadyUsedLibraryRecords = this.usedLibraryRecords.filter(libraryRecord =>
-      currentProject.rasterLayers.some(
-        ({ libraryId, recordId }) => libraryRecord.libraryId === libraryId && libraryRecord.id === recordId
-      )
-    );
-
-    this.usedLibraryRecordsRequest = Promise.all(
-      currentProject.rasterLayers
-        .filter(
-          layer =>
-            !this.usedLibraryRecords.some(
-              libraryRecord => libraryRecord.libraryId === layer.libraryId && libraryRecord.id === layer.recordId
-            )
-        )
-        .map(async layer => {
-          const { libraryId, recordId } = layer;
-          if (libraryId && recordId) {
-            return await getLibraryRecord(libraryId, recordId);
-          }
-        })
-    );
-
-    let newUsedLibraryRecords = await this.usedLibraryRecordsRequest;
-    newUsedLibraryRecords = newUsedLibraryRecords.filter(item => !isUndefined(item));
-    this.usedLibraryRecordsRequest = null;
-
-    if (alreadyUsedLibraryRecords.length !== this.usedVectorTables.length || newUsedLibraryRecords.length > 0) {
-      this.setUsedLibraryRecords([...alreadyUsedLibraryRecords, ...newUsedLibraryRecords]);
     }
   }
 

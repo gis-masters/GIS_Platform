@@ -87,12 +87,11 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
   }
 
   private async createLayer(table: VectorTable, dataset: string, project: CrgProject) {
-    const dataStoreName = `scratch_database_${currentUser.orgId}`;
     const newLayer = {
-      dataStoreName,
+      dataStoreName: currentUser.workspaceName,
       dataset: dataset,
       tableName: table.identifier,
-      complexName: `${dataStoreName}:${table.identifier}`,
+      complexName: `${currentUser.workspaceName}:${table.identifier}`,
       title: table.title,
       enabled: true,
       nativeCRS: table.crs,

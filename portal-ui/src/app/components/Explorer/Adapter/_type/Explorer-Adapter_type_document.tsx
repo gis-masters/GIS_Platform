@@ -2,12 +2,15 @@ import React, { ReactNode } from 'react';
 import { InsertDriveFile } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 
-import { FileTiff } from '../../../Icons/FileTiff';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { LibraryRecord } from '../../../../services/data/doc-library.service';
+import { getDocumentsFiles } from '../../../../services/data/files.util';
+import { FileInfo } from '../../../../services/data/files.service';
 import { formatDate } from '../../../../services/util/date.util';
+import { PageOptions } from '../../../../services/models';
+import { FileTiff } from '../../../Icons/FileTiff';
 
-import { Adapter, ExplorerItemData } from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 
@@ -53,7 +56,7 @@ export class ExplorerAdapterTypeDocument {
   }
 
   static isFolder(): boolean {
-    return false;
+    return true;
   }
 
   static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
@@ -62,5 +65,46 @@ export class ExplorerAdapterTypeDocument {
         {({ LibraryDocumentActions }) => <LibraryDocumentActions as='iconButton' hideOpen document={item.payload} />}
       </RegistryConsumer>
     );
+  }
+
+  static async getChildren(
+    explorerItem: ExplorerItemData<LibraryRecord>,
+    pageOptions: PageOptions
+  ): Promise<[ExplorerItemData<FileInfo>[], number]> {
+    const files: FileInfo[] = await getDocumentsFiles(explorerItem.payload);
+    const pagesCount = Math.ceil(files.length / pageOptions.pageSize);
+    const pageStart =
+      files.length > pageOptions.page * pageOptions.pageSize ? pageOptions.page * pageOptions.pageSize : 0;
+    const pageEnd = pageStart + pageOptions.pageSize;
+
+    return [files.slice(pageStart, pageEnd).map(item => ({ type: ExplorerItemType.FILE, payload: item })), pagesCount];
+  }
+
+  static async getChildById(
+    explorerItem: ExplorerItemData<LibraryRecord>,
+    fileId: string
+  ): Promise<ExplorerItemData<FileInfo>> {
+    const files: FileInfo[] = await getDocumentsFiles(explorerItem.payload);
+
+    return { type: ExplorerItemType.FILE, payload: files.find(file => file.id === fileId) };
+  }
+
+  static async getChildrenWithParticularOne(
+    explorerItem: ExplorerItemData<LibraryRecord>,
+    { page, ...options }: PageOptions,
+    fileId: string
+  ): Promise<[ExplorerItemData<FileInfo>[], number, number]> | undefined {
+    const files: FileInfo[] = await getDocumentsFiles(explorerItem.payload);
+    const fileIndex = files.findIndex(file => file.id === fileId);
+    const totalPages = Math.round(files.length / options.pageSize);
+    const filePage = Math.round(fileIndex / options.pageSize);
+
+    return [
+      files
+        .slice(filePage * options.pageSize, filePage * options.pageSize + options.pageSize)
+        .map(item => ({ type: ExplorerItemType.FILE, payload: item })),
+      totalPages,
+      filePage
+    ];
   }
 }

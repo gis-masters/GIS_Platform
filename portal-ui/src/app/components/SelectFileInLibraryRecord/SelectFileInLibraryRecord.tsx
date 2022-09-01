@@ -8,28 +8,26 @@ import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@
 import { DocumentLibrary, LibraryRecord } from '../../services/data/doc-library.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
-import { schemaService } from '../../services/data/schema.service';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { Datasource } from '../AddLayerDialog/AddLayerDialog';
+import { FileInfo } from '../../services/data/files.service';
+import { isTifFile } from '../../services/data/files.util';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!./SelectLibraryRecord.scss';
+import '!style-loader!css-loader!sass-loader!./SelectFileInLibraryRecord.scss';
 
-const cnSelectLibraryRecord = cn('SelectLibraryRecord');
-
-interface SelectLibraryRecordProps extends FormControlProps {
-  usedLibraryRecords: LibraryRecord[];
-}
+const cnSelectFileInLibraryRecord = cn('SelectFileInLibraryRecord');
 
 @observer
-export class SelectLibraryRecord extends Component<SelectLibraryRecordProps> {
+export class SelectFileInLibraryRecord extends Component<FormControlProps> {
   @observable private dialogOpen = false;
   @observable private selectedLibraryRecord?: LibraryRecord;
   @observable private selectedLibrary?: DocumentLibrary;
+  @observable private selectedFile?: FileInfo;
 
-  constructor(props: SelectLibraryRecordProps) {
+  constructor(props: FormControlProps) {
     super(props);
     makeObservable(this);
   }
@@ -42,7 +40,7 @@ export class SelectLibraryRecord extends Component<SelectLibraryRecordProps> {
       <>
         <ButtonBase
           focusRipple
-          className={cnSelectLibraryRecord({ empty: !libraryRecord }, [className])}
+          className={cnSelectFileInLibraryRecord({ empty: !libraryRecord }, [className])}
           id={htmlId}
           onClick={this.openDialog}
         >
@@ -53,7 +51,7 @@ export class SelectLibraryRecord extends Component<SelectLibraryRecordProps> {
           <DialogContent>
             <Explorer
               id='SelectLibraryRecord'
-              className={cnSelectLibraryRecord('Explorer')}
+              className={cnSelectFileInLibraryRecord('Explorer')}
               preset={ExplorerItemType.LIBRARY_ROOT}
               onSelect={this.handleSelect}
               onOpen={this.handleOpen}
@@ -61,7 +59,7 @@ export class SelectLibraryRecord extends Component<SelectLibraryRecordProps> {
             />
           </DialogContent>
           <DialogActions>
-            <Button color='primary' disabled={!this.selectedLibraryRecord} onClick={this.submitDialog}>
+            <Button color='primary' disabled={this.disabledSelect} onClick={this.submitDialog}>
               Выбрать
             </Button>
             <Button onClick={this.closeDialog}>Отмена</Button>
@@ -76,34 +74,40 @@ export class SelectLibraryRecord extends Component<SelectLibraryRecordProps> {
     const { fieldValue = {} } = this.props;
 
     if (fieldValue) {
-      const { libraryRecord, library } = fieldValue as Datasource;
+      const { libraryRecord, library, file } = fieldValue as Datasource;
 
       return [
         { title: library.title, subtitle: library.identifier },
-        { title: libraryRecord.title, subtitle: libraryRecord.id }
+        { title: libraryRecord.title, subtitle: libraryRecord.id },
+        { title: file.title, subtitle: file.id }
       ];
     }
   }
 
   @boundMethod
-  private async handleSelect(item: ExplorerItemData<LibraryRecord>, path: ExplorerItemData[]) {
-    if (item.type === ExplorerItemType.DOCUMENT && !(await this.testForDisabled(item))) {
-      this.select(path[path.length - 1].payload as LibraryRecord, path[1].payload as DocumentLibrary);
+  private handleSelect(item: ExplorerItemData<LibraryRecord>, path: ExplorerItemData[]) {
+    if (item.type === ExplorerItemType.FILE && !this.testForDisabled(item)) {
+      this.select(
+        path[path.length - 1].payload as FileInfo,
+        path[path.length - 2].payload as LibraryRecord,
+        path[1].payload as DocumentLibrary
+      );
     } else {
-      this.select(null, null);
+      this.select(null, null, null);
     }
   }
 
   @action
-  private select(libraryRecord: LibraryRecord, library: DocumentLibrary) {
+  private select(file: FileInfo, libraryRecord: LibraryRecord, library: DocumentLibrary) {
     this.selectedLibraryRecord = libraryRecord;
     this.selectedLibrary = library;
+    this.selectedFile = file;
   }
 
   @boundMethod
-  private async handleOpen(item: ExplorerItemData<LibraryRecord>, path: ExplorerItemData[]) {
-    if (item.type === ExplorerItemType.DOCUMENT) {
-      await this.handleSelect(item, path);
+  private handleOpen(item: ExplorerItemData<LibraryRecord>, path: ExplorerItemData[]) {
+    if (item.type === ExplorerItemType.FILE) {
+      this.handleSelect(item, path);
       this.submitDialog();
     }
   }
@@ -124,7 +128,7 @@ export class SelectLibraryRecord extends Component<SelectLibraryRecordProps> {
 
     this.closeDialog();
     this.props.onChange({
-      value: { libraryRecord: this.selectedLibraryRecord, library: this.selectedLibrary },
+      value: { libraryRecord: this.selectedLibraryRecord, library: this.selectedLibrary, file: this.selectedFile },
       propertyName: property.name
     });
 
@@ -133,32 +137,19 @@ export class SelectLibraryRecord extends Component<SelectLibraryRecordProps> {
   }
 
   @boundMethod
-  private async testForDisabled(item: ExplorerItemData<LibraryRecord>): Promise<boolean> {
-    if (item.type === ExplorerItemType.DOCUMENT) {
-      const libraryRecord = item.payload;
-
-      if (libraryRecord.type !== 'tif') {
-        return true;
-      }
-
-      if (!libraryRecord.schemaId) {
-        return true;
-      }
-
-      try {
-        const schema = await schemaService.getOldSchema(libraryRecord.schemaId);
-        if (!schema) {
-          return true;
-        }
-      } catch {
-        return true;
-      }
-
-      return this.props.usedLibraryRecords.some(
-        ({ libraryId, id }) => libraryRecord.libraryId === libraryId && libraryRecord.id === id
-      );
+  private testForDisabled(item: ExplorerItemData): boolean {
+    if (item.type === ExplorerItemType.FILE) {
+      return !isTifFile(item.payload as FileInfo);
     }
 
     return false;
+  }
+
+  private get disabledSelect(): boolean {
+    if (this.selectedFile) {
+      return !isTifFile(this.selectedFile);
+    }
+
+    return true;
   }
 }

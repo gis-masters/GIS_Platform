@@ -16,6 +16,7 @@ export enum ExplorerItemType {
   LIBRARY = 'lib',
   FOLDER = 'folder',
   DOCUMENT = 'doc',
+  FILE = 'file',
 
   BASEMAP = 'basemap',
 

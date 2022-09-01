@@ -24,6 +24,7 @@ import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basema
 import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_basemapsRoot';
 import { ExplorerAdapterTypeSchema } from './_type/Explorer-Adapter_type_schema';
 import { ExplorerAdapterTypeSchemasRoot } from './_type/Explorer-Adapter_type_schemasRoot';
+import { ExplorerAdapterTypeFile } from './_type/Explorer-Adapter_type_file';
 import { ExplorerService } from '../Explorer.service';
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
@@ -33,6 +34,7 @@ const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.LIBRARY]: ExplorerAdapterTypeLibrary,
   [ExplorerItemType.FOLDER]: ExplorerAdapterTypeFolder,
   [ExplorerItemType.DOCUMENT]: ExplorerAdapterTypeDocument,
+  [ExplorerItemType.FILE]: ExplorerAdapterTypeFile,
   [ExplorerItemType.DATASET_ROOT]: ExplorerAdapterTypeDatasetRoot,
   [ExplorerItemType.LIBRARY_ROOT]: ExplorerAdapterTypeLibraryRoot,
   [ExplorerItemType.ROOT]: ExplorerAdapterTypeRoot,

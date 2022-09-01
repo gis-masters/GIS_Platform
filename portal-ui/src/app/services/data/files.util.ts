@@ -1,4 +1,8 @@
 import { FileInfo } from './files.service';
+import { LibraryRecord } from './doc-library.service';
+import { applyContentType } from './schema.utils';
+import { schemaService } from './schema.service';
+import { PropertyType } from './schema.models';
 
 export function getFileExtension(name: string): string {
   const pos = name.lastIndexOf('.');
@@ -64,4 +68,20 @@ export function isPreviewAllowed(file: FileInfo): boolean {
 
 export function isGmlFile(file: FileInfo): boolean {
   return normalizeExtension(getFileExtension(file.title)) === 'gml';
+}
+
+export async function getDocumentsFiles(libraryRecord: LibraryRecord): Promise<FileInfo[]> {
+  const files: FileInfo[] = [];
+
+  const schema = applyContentType(await schemaService.getSchema(libraryRecord.schemaId), libraryRecord.content_type_id);
+
+  schema.properties.forEach(property => {
+    if (property.propertyType === PropertyType.FILE) {
+      (libraryRecord[property.name] as FileInfo[])?.forEach(file => {
+        files.push(file);
+      });
+    }
+  });
+
+  return files;
 }
