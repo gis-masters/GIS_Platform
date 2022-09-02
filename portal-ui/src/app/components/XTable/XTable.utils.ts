@@ -28,11 +28,22 @@ const sortableTypes = new Set([
 const smallPaddingTypes = new Set([PropertyType.FILE, PropertyType.DOCUMENT, PropertyType.URL]);
 
 export function getXTableColumnsFromSchema<T>(schema: Schema<T>): XTableColumn<T>[] {
+  return _getXTableColumnsFromSchema(schema) as XTableColumn<T>[];
+}
+
+export function getXTableColumnsFromSchemaWithLowerCaseKeys(schema: Schema): XTableColumn<Record<string, unknown>>[] {
+  return _getXTableColumnsFromSchema(schema, true);
+}
+
+function _getXTableColumnsFromSchema<T>(
+  schema: Schema<T>,
+  keysToLowerCase = false
+): XTableColumn<Record<string, unknown>>[] | XTableColumn<T>[] {
   return schema.properties.map(property => {
     const relations = getFieldRelations<T>(property.name, schema);
 
     return {
-      field: property.name,
+      field: keysToLowerCase ? property.name.toLowerCase() : property.name,
       title: property.title || property.name,
       description: property.description,
       type: property.propertyType,

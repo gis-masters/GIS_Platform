@@ -10,7 +10,7 @@ import { schemaService } from '../../../services/data/schema.service';
 import { getFeatures } from '../../../services/geoserver/wfs.service';
 import { Schema } from '../../../services/data/schema.models';
 import { PageOptions } from '../../../services/models';
-import { getXTableColumnsFromSchema } from '../../XTable/XTable.utils';
+import { getXTableColumnsFromSchemaWithLowerCaseKeys } from '../../XTable/XTable.utils';
 import { XTableColumn, XTableInvoke } from '../../XTable/XTable';
 
 import { AttributesRowHead } from '../RowHead/Attributes-RowHead';
@@ -112,8 +112,8 @@ export class AttributesBar extends Component<AttributesBarProps> {
         cellProps: { padding: 'checkbox' }
       },
       { field: 'cutId', title: 'ID' },
-      ...getXTableColumnsFromSchema<AttributesTableRecord>(this.schema)
-    ];
+      ...(getXTableColumnsFromSchemaWithLowerCaseKeys(this.schema) as XTableColumn<Partial<AttributesTableRecord>>[])
+    ] as XTableColumn<AttributesTableRecord>[];
   }
 
   @boundMethod
