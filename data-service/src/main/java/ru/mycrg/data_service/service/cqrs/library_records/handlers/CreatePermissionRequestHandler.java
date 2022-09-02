@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.cqrs.library_records.handlers;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Component;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.entity.Permission;
@@ -14,7 +15,6 @@ import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.PermissionRepository;
 import ru.mycrg.data_service.repository.RoleRepository;
-import ru.mycrg.data_service.security.AuthenticationFacade;
 import ru.mycrg.data_service.service.PrincipalService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.CreatePermissionRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -30,14 +30,14 @@ public class CreatePermissionRequestHandler implements IRequestHandler<CreatePer
     private final ProjectionFactory projectionFactory;
     private final RoleRepository roleRepository;
     private final PrincipalService principalService;
-    private final AuthenticationFacade authenticationFacade;
+    private final IAuthenticationFacade authenticationFacade;
     private final PermissionRepository permissionRepository;
     private final IMasterResourceProtector resourceProtector;
 
     public CreatePermissionRequestHandler(ProjectionFactory projectionFactory,
                                           RoleRepository roleRepository,
                                           PrincipalService principalService,
-                                          AuthenticationFacade authenticationFacade,
+                                          IAuthenticationFacade authenticationFacade,
                                           PermissionRepository permissionRepository,
                                           MasterResourceProtector resourceProtector) {
         this.projectionFactory = projectionFactory;

@@ -6,10 +6,10 @@ import org.springframework.security.concurrent.DelegatingSecurityContextRunnable
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.JsonConverter;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 

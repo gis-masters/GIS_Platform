@@ -242,7 +242,9 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Создан аудит лог об изменении слоя, с корректным телом")
-    public void checkLayerUpdate() {
+    public void checkLayerUpdate() throws InterruptedException {
+        sleep(800);
+
         String tableName = layerCreateDto.getTableName();
 
         checkAuditEvent(UPDATE.name(), LAYER, tableName);

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.Thread.sleep;
 import static java.util.Objects.nonNull;
 import static java.util.stream.IntStream.range;
 import static org.hamcrest.CoreMatchers.*;
@@ -127,9 +128,11 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     }
 
     @Given("В библиотеке по-умолчанию существует запись")
-    public void initRecordInDefaultLibrary() {
+    public void initRecordInDefaultLibrary() throws InterruptedException {
         String body = String.format("{\"title\":\"%s\"}", generateString("STRING_10"));
         createDocument(body);
+
+        sleep(800);
 
         assertEquals(201, response.getStatusCode());
 
@@ -290,8 +293,11 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     }
 
     @When("Существуют записи в библиотеке по-умолчанию {string}")
-    public void createMultipleRecords(String quantity) {
-        range(0, Integer.parseInt(quantity)).forEach(i -> initRecordInDefaultLibrary());
+    public void createMultipleRecords(String quantity) throws InterruptedException {
+        int recordCount = Integer.parseInt(quantity);
+        for (int i = 0; i < recordCount; i++) {
+            initRecordInDefaultLibrary();
+        }
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} по всем записям библиотеки по-умолчанию")

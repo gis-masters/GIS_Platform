@@ -6,6 +6,7 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_service.dto.OrganizationFullProjection;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
@@ -15,7 +16,6 @@ import ru.mycrg.auth_service.exceptions.ForbiddenException;
 import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
-import ru.mycrg.auth_service.security.IAuthenticationFacade;
 import ru.mycrg.auth_service_contract.AESCryptor;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
@@ -26,12 +26,13 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.vladmihalcea.hibernate.type.json.internal.JacksonUtil.toJsonNode;
+import static java.util.stream.Collectors.toList;
 import static ru.mycrg.auth_service.service.OrganizationStatus.DELETING;
 import static ru.mycrg.auth_service.service.OrganizationStatus.PROVISIONED;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
+import static ru.mycrg.common_utils.CrgGlobalProperties.prepareGeoserverLogin;
 
 @Service
 @Transactional
@@ -92,13 +93,15 @@ public class OrganizationService {
         // We use email as login
         newUser.setLogin(owner.getEmail());
         newUser.addAuthority(ORG_ADMIN);
+        newUser.setGeoserverLogin(prepareGeoserverLogin(newUser.getEmail(), newUser.getId()));
 
         messageBus.produce(
                 new OrganizationInitializedEvent(newOrganization.getId(),
                                                  authService.getRootAccessToken(),
                                                  aesCryptor.encrypt(owner.getPassword()),
                                                  owner.getEmail(),
-                                                 newUser.getLogin()));
+                                                 newUser.getLogin(),
+                                                 newUser.getGeoserverLogin()));
 
         return newOrganization;
     }
@@ -125,8 +128,8 @@ public class OrganizationService {
 
         final List<String> owners = organization.getUsers().stream()
                                                 .filter(User::isOwner)
-                                                .map(User::getLogin)
-                                                .collect(Collectors.toList());
+                                                .map(User::getGeoserverLogin)
+                                                .collect(toList());
 
         messageBus.produce(
                 new OrganizationRemovedEvent(orgId, authenticationFacade.getAccessToken(), owners));

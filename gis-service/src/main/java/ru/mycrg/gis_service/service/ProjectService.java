@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.gis_service.dao.ProjectsDao;
 import ru.mycrg.gis_service.dto.PermissionCreateDto;
 import ru.mycrg.gis_service.dto.ProjectProjection;
@@ -22,8 +24,6 @@ import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.PermissionRepository;
 import ru.mycrg.gis_service.repository.ProjectRepository;
-import ru.mycrg.gis_service.security.IAuthenticationFacade;
-import ru.mycrg.gis_service.security.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collections;

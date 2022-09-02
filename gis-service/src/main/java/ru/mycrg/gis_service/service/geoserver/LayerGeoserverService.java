@@ -3,21 +3,21 @@ package ru.mycrg.gis_service.service.geoserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.geoserver_client.services.feature_types.FeatureTypeService;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.exceptions.GisServiceException;
-import ru.mycrg.gis_service.security.AuthenticationFacade;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
 @Service
 public class LayerGeoserverService {
 
-    private final AuthenticationFacade authenticationFacade;
+    private final IAuthenticationFacade authenticationFacade;
 
     private final Logger log = LoggerFactory.getLogger(LayerGeoserverService.class);
 
-    public LayerGeoserverService(AuthenticationFacade authenticationFacade) {
+    public LayerGeoserverService(IAuthenticationFacade authenticationFacade) {
         this.authenticationFacade = authenticationFacade;
     }
 

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.FileProjection;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.ResourceType;
@@ -18,7 +19,6 @@ import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.mappers.FileResourceQualifierMapper;
 import ru.mycrg.data_service.repository.FileRepository;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.cqrs.files.requests.CreateFileRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
@@ -29,7 +29,6 @@ import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageExcepti
 import ru.mycrg.mediator.Mediator;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +38,6 @@ import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
 @RestController

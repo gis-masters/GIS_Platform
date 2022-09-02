@@ -44,7 +44,10 @@ public class UserCreatedEventHandler implements IEventHandler {
     @Override
     public void handle(IMessageBusEvent mqEvent) {
         UserCreatedEvent event = (UserCreatedEvent) mqEvent;
-        UserGeoserverDto userDto = new UserGeoserverDto(event.getLogin(), event.getPassword(), event.getRole());
+        UserGeoserverDto userDto = new UserGeoserverDto(event.getGeoserverLogin(),
+                                                        event.getLogin(),
+                                                        event.getPassword(),
+                                                        event.getRole());
         String token = event.getToken();
 
         try {

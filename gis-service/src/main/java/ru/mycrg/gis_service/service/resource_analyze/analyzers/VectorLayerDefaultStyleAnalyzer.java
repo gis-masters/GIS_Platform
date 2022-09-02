@@ -4,14 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.geoserver_client.services.layers.VectorLayer;
 import ru.mycrg.geoserver_client.services.layers.models.Layer;
 import ru.mycrg.gis_service.dto.LayerProjection;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ErrorInfo;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
-import ru.mycrg.gis_service.security.CrgAuthHelper;
-import ru.mycrg.gis_service.security.IAuthenticationFacade;
 import ru.mycrg.gis_service.service.layers.LayerService;
 import ru.mycrg.resource_analyzer_contract.IResource;
 import ru.mycrg.resource_analyzer_contract.IResourceAnalyzer;
@@ -110,8 +109,7 @@ public class VectorLayerDefaultStyleAnalyzer implements IResourceAnalyzer {
 
     private ResourceAnalyzerResult analyzeVectorLayerForDefaultStyle(IResource vectorLayer) {
         boolean isSameStyle = false;
-        VectorLayer geoserverLayerService = new VectorLayer(
-                CrgAuthHelper.getToken(authenticationFacade.getAuthentication()));
+        VectorLayer geoserverLayerService = new VectorLayer(authenticationFacade.getAccessToken());
 
         try {
             boolean isLayerExistOnGeoserver = geoserverLayerService.getByName(vectorLayer.getId()).isPresent();

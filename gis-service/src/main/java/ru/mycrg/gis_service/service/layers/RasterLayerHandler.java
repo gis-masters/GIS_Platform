@@ -3,6 +3,7 @@ package ru.mycrg.gis_service.service.layers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.geoserver_client.services.layers.rasters.CoverageHandler;
 import ru.mycrg.geoserver_client.services.layers.rasters.CoverageModel;
 import ru.mycrg.geoserver_client.services.storage.raster.RasterStorage;
@@ -10,7 +11,7 @@ import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.repository.LayerRepository;
-import ru.mycrg.gis_service.security.AuthenticationFacade;
+import ru.mycrg.gis_service.security.CrgAuthHandler;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
@@ -25,14 +26,17 @@ public class RasterLayerHandler implements ILayerHandler {
     private final Logger log = LoggerFactory.getLogger(RasterLayerHandler.class);
 
     private final LayerRepository layerRepository;
-    private final AuthenticationFacade authenticationFacade;
+    private final CrgAuthHandler crgAuthHandler;
+    private final IAuthenticationFacade authenticationFacade;
 
     public static final String FULL_MODE = "full";
     public static final String GEOSERVER_MODE = "geoserver";
 
     public RasterLayerHandler(LayerRepository layerRepository,
-                              AuthenticationFacade authenticationFacade) {
+                              CrgAuthHandler crgAuthHandler,
+                              IAuthenticationFacade authenticationFacade) {
         this.layerRepository = layerRepository;
+        this.crgAuthHandler = crgAuthHandler;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -67,7 +71,7 @@ public class RasterLayerHandler implements ILayerHandler {
     private void createRasterStore(String workspaceName,
                                    String store,
                                    String path) throws HttpClientException {
-        String accessToken = authenticationFacade.getRootAccessToken();
+        String accessToken = crgAuthHandler.getRootAccessToken();
 
         ResponseModel<Object> response = new RasterStorage(accessToken).createGeoTIFF(workspaceName, store, path);
 
@@ -78,7 +82,7 @@ public class RasterLayerHandler implements ILayerHandler {
 
     private void createRasterLayer(String workspaceName, String store, CoverageModel coverage)
             throws HttpClientException {
-        String accessToken = authenticationFacade.getRootAccessToken();
+        String accessToken = crgAuthHandler.getRootAccessToken();
 
         ResponseModel<Object> response = new CoverageHandler(accessToken)
                 .create(workspaceName, store, coverage);

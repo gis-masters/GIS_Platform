@@ -14,8 +14,9 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgDto;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
+import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.geoserverLogin;
+import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.getGeoserverLoginFromResponse;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class GeoserverStepDefinitions extends BaseStepsDefinitions {
@@ -50,6 +51,8 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере создан пользователь")
     public void checkGeoserverUser() {
+        getGeoserverLoginFromResponse();
+
         getBaseRequestWithCurrentCookie()
                 .when().
                 get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
@@ -57,7 +60,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                         log().ifValidationFails().
                         statusCode(SC_OK).
                         body("users.findAll { it.enabled == true }.userName",
-                             hasItems(orgDto.getOwner().getEmail()));
+                             hasItems(geoserverLogin));
     }
 
     @And("На Геосервере создана роль")
@@ -178,9 +181,9 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         Map<Object, Object> layersRules =
                 response.then().
-                            statusCode(SC_OK).
-                            extract().jsonPath().
-                            getMap("");
+                        statusCode(SC_OK).
+                        extract().jsonPath().
+                        getMap("");
 
         if (layersRules.containsValue(role)) {
             throw new CucumberException(role + " are present in layer rules");

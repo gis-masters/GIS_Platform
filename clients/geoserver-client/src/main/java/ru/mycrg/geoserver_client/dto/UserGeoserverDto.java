@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 
 public class UserGeoserverDto extends PasswordModel {
 
+    private String geoserverLogin;
     @Email
     @NotBlank
     @Size(max = 60, message = "No more than 60 characters")
@@ -19,24 +20,25 @@ public class UserGeoserverDto extends PasswordModel {
         super();
     }
 
-    public UserGeoserverDto(String userName) {
-        this(userName, null, null, true);
+    public UserGeoserverDto(String userName, String geoserverLogin) {
+        this(userName, null, null, true, geoserverLogin);
     }
 
-    public UserGeoserverDto(String userName, String password, String role) {
-        this(userName, password, role, true);
+    public UserGeoserverDto(String geoserverLogin, String userName, String password, String role) {
+        this(userName, password, role, true, geoserverLogin);
     }
 
     public UserGeoserverDto(String userName, String password, boolean enabled) {
-        this(userName, password, null, enabled);
+        this(userName, password, null, enabled, null);
     }
 
-    public UserGeoserverDto(String userName, String password, String role, boolean enabled) {
+    public UserGeoserverDto(String userName, String password, String role, boolean enabled, String geoserverLogin) {
         super(password);
 
         this.userName = userName;
         this.role = role;
         this.enabled = enabled;
+        this.geoserverLogin = geoserverLogin;
     }
 
     public String getUserName() {
@@ -61,5 +63,13 @@ public class UserGeoserverDto extends PasswordModel {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getGeoserverLogin() {
+        return geoserverLogin;
+    }
+
+    public void setGeoserverLogin(String geoserverLogin) {
+        this.geoserverLogin = geoserverLogin;
     }
 }

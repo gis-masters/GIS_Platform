@@ -2,13 +2,13 @@ package ru.mycrg.data_service.service.cqrs.tables.handlers;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dto.TableUpdateDto;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.cqrs.tables.requests.UpdateTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;

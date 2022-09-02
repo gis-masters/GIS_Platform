@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.security;
+package ru.mycrg.auth_facade;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.Authentication;
@@ -7,8 +7,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-import org.springframework.stereotype.Component;
-import ru.mycrg.auth_service.exceptions.ForbiddenException;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -19,22 +17,16 @@ import java.util.Optional;
 import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
 
-@Component
 public class AuthenticationFacade implements IAuthenticationFacade {
 
-    private static final String CLAIM_USER_ID = "user_id";
-    private static final String CLAIM_ORGANIZATIONS = "organizations";
-    private static final String CLAIM_GROUPS = "groups";
-
-    public Authentication getAuthentication() {
-        return SecurityContextHolder.getContext().getAuthentication();
-    }
+    private final String CLAIM_USER_ID = "user_id";
+    private final String CLAIM_USER_CRG_LOGIN = "crg_login";
+    private final String CLAIM_ORGANIZATIONS = "organizations";
+    private final String CLAIM_GROUPS = "groups";
 
     @Override
     public String getAccessToken() {
-        Authentication authentication = getAuthentication();
-
-        Object details = authentication.getDetails();
+        Object details = getAuthentication().getDetails();
         if (details != null) {
             return ((OAuth2AuthenticationDetails) details).getTokenValue();
         } else {
@@ -44,6 +36,11 @@ public class AuthenticationFacade implements IAuthenticationFacade {
 
     @Override
     public String getLogin() {
+        return getUserDetails().getCrgLogin();
+    }
+
+    @Override
+    public String getGeoserverLogin() {
         return getAuthentication().getName();
     }
 
@@ -59,9 +56,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
 
     @Override
     public Long getOrganizationId() {
-        Authentication authentication = getAuthentication();
-
-        return extractOrgId(authentication);
+        return extractOrgId(getAuthentication());
     }
 
     @Override
@@ -71,29 +66,30 @@ public class AuthenticationFacade implements IAuthenticationFacade {
 
     @Override
     public UserDetails getUserDetails() {
-        try {
-            UserDetails userDetails = new UserDetails();
-            Map<String, Object> decodedDetails = decode(getAuthentication());
+        UserDetails userDetails = new UserDetails();
+        Map<String, Object> decodedDetails = decode(getAuthentication());
 
-            getValue(decodedDetails, CLAIM_USER_ID)
-                    .ifPresent(o -> {
-                        userDetails.setUserId(Long.valueOf(String.valueOf(o)));
+        getValue(decodedDetails, CLAIM_USER_ID)
+                .ifPresent(o -> {
+                    userDetails.setUserId(Long.valueOf(String.valueOf(o)));
+                });
+
+        getValue(decodedDetails, CLAIM_USER_CRG_LOGIN)
+                .ifPresent(o -> {
+                    userDetails.setCrgLogin(String.valueOf(o));
+                });
+
+        getValue(decodedDetails, CLAIM_GROUPS)
+                .ifPresent(groups -> {
+                    ((ArrayList) groups).forEach(data -> {
+                        getValue((Map<String, Object>) data, "id")
+                                .ifPresent(o -> {
+                                    userDetails.addGroupId(Long.valueOf(String.valueOf(o)));
+                                });
                     });
+                });
 
-            getValue(decodedDetails, CLAIM_GROUPS)
-                    .ifPresent(groups -> {
-                        ((ArrayList) groups).forEach(data -> {
-                            getValue((Map<String, Object>) data, "id")
-                                    .ifPresent(o -> {
-                                        userDetails.addGroupId(Long.valueOf(String.valueOf(o)));
-                                    });
-                        });
-                    });
-
-            return userDetails;
-        } catch (Exception e) {
-            throw new ForbiddenException("Incorrect group claims");
-        }
+        return userDetails;
     }
 
     @NotNull
@@ -115,14 +111,14 @@ public class AuthenticationFacade implements IAuthenticationFacade {
         }
     }
 
-    private static Map<String, Object> decode(Principal principal) {
+    private Map<String, Object> decode(Principal principal) {
         var authentication = (OAuth2Authentication) principal;
         var details = (OAuth2AuthenticationDetails) authentication.getDetails();
 
         return (Map<String, Object>) details.getDecodedDetails();
     }
 
-    private static Optional<Object> getValue(Map<String, Object> data, String target) {
+    private Optional<Object> getValue(Map<String, Object> data, String target) {
         for (Map.Entry<String, Object> e: data.entrySet()) {
             if (target.equals(e.getKey())) {
                 return Optional.of(e.getValue());
@@ -133,9 +129,13 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     }
 
     @NotNull
-    private static Boolean isUserHasAuthority(@NotNull Authentication authentication, String authority) {
+    private Boolean isUserHasAuthority(@NotNull Authentication authentication, String authority) {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
         return authorities.contains(new SimpleGrantedAuthority(authority));
+    }
+
+    private Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 }

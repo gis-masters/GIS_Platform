@@ -2,10 +2,10 @@ package ru.mycrg.data_service.service;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.data_service.entity.Principal;
 import ru.mycrg.data_service.repository.PrincipalRepository;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
-import ru.mycrg.data_service.security.UserDetails;
 
 import java.util.ArrayList;
 import java.util.List;

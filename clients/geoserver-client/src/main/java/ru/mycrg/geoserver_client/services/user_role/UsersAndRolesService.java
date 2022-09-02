@@ -36,9 +36,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
     }
 
     public List<String> getUserRoles(String userName) throws HttpClientException {
-        String cName = prepareUserNameForGeoserver(userName);
-
-        Request request = builderWithBearerAuth.url(getGeoserverRestUrl() + "/security/roles/user/" + cName + ".json")
+        Request request = builderWithBearerAuth.url(getGeoserverRestUrl() + "/security/roles/user/" + userName + ".json")
                                                .get().build();
 
         GeoserverRoleResponse body = httpClient.handleRequest(request, GeoserverRoleResponse.class).getBody();
@@ -74,10 +72,8 @@ public class UsersAndRolesService extends GeoServerBaseService {
     public ResponseModel<Object> associateUserWithRole(String userName, String role) throws HttpClientException {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, "");
 
-        String cName = prepareUserNameForGeoserver(userName);
-
         Request request = builderWithBearerAuth
-                .url(getGeoserverRestUrl() + "/security/roles/role/" + role + "/user/" + cName)
+                .url(getGeoserverRestUrl() + "/security/roles/role/" + role + "/user/" + userName)
                 .post(body).build();
 
         return httpClient.handleRequest(request);
@@ -86,10 +82,8 @@ public class UsersAndRolesService extends GeoServerBaseService {
     // https://docs.geoserver.org/2.13.2/user/rest/api/userrole.html
     // /rest/roles/[service/<serviceName>/]role/<role>/user/<user>
     public ResponseModel<Object> disassociateUserWithRole(String userName, String role) throws HttpClientException {
-        String cName = prepareUserNameForGeoserver(userName);
-
         Request request = builderWithBearerAuth
-                .url(getGeoserverRestUrl() + "/security/roles/role/" + role + "/user/" + cName)
+                .url(getGeoserverRestUrl() + "/security/roles/role/" + role + "/user/" + userName)
                 .delete().build();
 
         return httpClient.handleRequest(request);

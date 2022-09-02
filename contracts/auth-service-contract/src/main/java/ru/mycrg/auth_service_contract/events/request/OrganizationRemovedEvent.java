@@ -4,19 +4,19 @@ import java.util.List;
 
 public class OrganizationRemovedEvent extends OrganizationBaseRequestEvent {
 
-    List<String> users;
+    List<String> geoserverLogins;
 
     public OrganizationRemovedEvent() {
         super();
     }
 
-    public OrganizationRemovedEvent(Long orgId, String token, List<String> users) {
+    public OrganizationRemovedEvent(Long orgId, String token, List<String> geoserverLogins) {
         super(orgId, token);
 
-        this.users = users;
+        this.geoserverLogins = geoserverLogins;
     }
 
-    public List<String> getUsers() {
-        return users;
+    public List<String> getGeoserverLogins() {
+        return geoserverLogins;
     }
 }

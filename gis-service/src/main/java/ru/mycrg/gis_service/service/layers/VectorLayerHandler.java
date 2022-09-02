@@ -9,7 +9,7 @@ import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.repository.LayerRepository;
-import ru.mycrg.gis_service.security.AuthenticationFacade;
+import ru.mycrg.gis_service.security.CrgAuthHandler;
 import ru.mycrg.gis_service.service.geoserver.LayerGeoserverService;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
@@ -25,15 +25,15 @@ public class VectorLayerHandler implements ILayerHandler {
     private final Logger log = LoggerFactory.getLogger(VectorLayerHandler.class);
 
     private final LayerRepository layerRepository;
-    private final AuthenticationFacade authenticationFacade;
+    private final CrgAuthHandler crgAuthHandler;
     private final LayerGeoserverService layerGeoserverService;
 
     public VectorLayerHandler(LayerRepository layerRepository,
-                              AuthenticationFacade authenticationFacade,
-                              LayerGeoserverService layerGeoserverService) {
+                              LayerGeoserverService layerGeoserverService,
+                              CrgAuthHandler crgAuthHandler) {
         this.layerRepository = layerRepository;
-        this.authenticationFacade = authenticationFacade;
         this.layerGeoserverService = layerGeoserverService;
+        this.crgAuthHandler = crgAuthHandler;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class VectorLayerHandler implements ILayerHandler {
     private void associateStyle(Layer layer) {
         log.debug("Add style: {} to layer: {}", layer.getStyleName(), layer.getTableName());
         try {
-            ResponseModel<Object> response = new StyleService(authenticationFacade.getRootAccessToken())
+            ResponseModel<Object> response = new StyleService(crgAuthHandler.getRootAccessToken())
                     .associate(layer.getDataStoreName() + ":" + layer.getTableName(), layer.getStyleName());
             if (!response.isSuccessful()) {
                 log.warn("Style not associated: {}", response);

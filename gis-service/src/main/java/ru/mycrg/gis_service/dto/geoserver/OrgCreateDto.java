@@ -16,6 +16,8 @@ public class OrgCreateDto {
     @NotNull
     private String ownerUserName;
 
+    private String geoserverLogin;
+
     public OrgCreateDto() {
     }
 
@@ -51,9 +53,18 @@ public class OrgCreateDto {
         this.ownerUserName = ownerUserName;
     }
 
+    public String getGeoserverLogin() {
+        return geoserverLogin;
+    }
+
+    public void setGeoserverLogin(String geoserverLogin) {
+        this.geoserverLogin = geoserverLogin;
+    }
+
     public String toJsonString() {
         return "{\"orgId\":" + orgId +
                 ",\"ownerRawPassword\":\"" + ownerRawPassword + "\"" +
+                ",\"geoserverLogin\":\"" + geoserverLogin + "\"" +
                 ",\"ownerEmail\":\"" + ownerEmail + "\"" +
                 ",\"ownerUserName\":\"" + ownerUserName + "\"" +
                 "}";

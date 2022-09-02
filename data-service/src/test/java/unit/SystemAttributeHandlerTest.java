@@ -1,9 +1,9 @@
 package unit;
 
 import org.junit.Test;
+import ru.mycrg.auth_facade.AuthenticationFacade;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
-import ru.mycrg.data_service.security.AuthenticationFacade;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.util.CrgScriptEngine;
 

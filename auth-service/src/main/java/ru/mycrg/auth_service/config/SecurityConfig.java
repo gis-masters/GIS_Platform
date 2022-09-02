@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import ru.mycrg.auth_facade.AuthenticationFacade;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 
 import java.util.Collections;
 
@@ -77,5 +79,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
+    }
+
+    @Bean
+    IAuthenticationFacade authenticationFacade() {
+        return new AuthenticationFacade();
     }
 }

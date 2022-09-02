@@ -1,14 +1,14 @@
-package ru.mycrg.data_service.security;
+package ru.mycrg.auth_facade;
 
 import org.springframework.security.core.Authentication;
 
 public interface IAuthenticationFacade {
 
-    Authentication getAuthentication();
-
     String getAccessToken();
 
     String getLogin();
+
+    String getGeoserverLogin();
 
     boolean isRoot();
 

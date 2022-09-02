@@ -3,7 +3,7 @@ package ru.mycrg.data_service.dao.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;

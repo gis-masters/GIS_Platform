@@ -161,13 +161,13 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>geoserver-client</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>1.2.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>auth-service-contract</artifactId>
-            <version>1.9-SNAPSHOT</version>
+            <version>1.9.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>

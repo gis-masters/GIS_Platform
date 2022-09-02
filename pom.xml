@@ -71,6 +71,8 @@
 
         <module>_libs/mediator</module>
         <module>_libs/geo-json</module>
+        <module>_libs/common-utils</module>
+        <module>_libs/auth-facade</module>
 
         <module>clients/http-client</module>
         <module>clients/oauth-client</module>
@@ -83,7 +85,6 @@
         <module>contracts/audit-service-contract</module>
         <module>contracts/resource-analyzer-contract</module>
 
-        <module>contracts/common-utils</module>
         <module>contracts/messagebus-starter</module>
         <module>contracts/validator</module>
         <module>contracts/schemas</module>

@@ -9,6 +9,7 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_service.dto.UserProjection;
 import ru.mycrg.auth_service.entity.Authorities;
 import ru.mycrg.auth_service.entity.Organization;
@@ -17,7 +18,6 @@ import ru.mycrg.auth_service.exceptions.ConflictException;
 import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
-import ru.mycrg.auth_service.security.AuthenticationFacade;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 import ru.mycrg.auth_service_contract.dto.UserUpdateDto;
@@ -32,6 +32,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.auth_service_contract.Authorities.USER;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
+import static ru.mycrg.common_utils.CrgGlobalProperties.prepareGeoserverLogin;
 
 @Service
 @Transactional
@@ -43,13 +45,13 @@ public class UserService {
     private final ProjectionFactory projectionFactory;
     private final UserRepository userRepository;
     private final OrganizationRepository orgRepository;
-    private final AuthenticationFacade authenticationFacade;
+    private final IAuthenticationFacade authenticationFacade;
     private final BCryptPasswordEncoder encoder;
 
     public UserService(UserRepository userRepository,
                        IMessageBusProducer messageBus,
                        OrganizationRepository orgRepository,
-                       AuthenticationFacade authenticationFacade,
+                       IAuthenticationFacade authenticationFacade,
                        ProjectionFactory projectionFactory,
                        BCryptPasswordEncoder encoder) {
         this.messageBus = messageBus;
@@ -77,6 +79,7 @@ public class UserService {
                                 .id(user.getId())
                                 .name(user.getName())
                                 .login(user.getLogin())
+                                .geoserverLogin(user.getGeoserverLogin())
                                 .surname(user.getSurname())
                                 .middleName(user.getMiddleName())
                                 .job(user.getJob())
@@ -122,15 +125,17 @@ public class UserService {
         newUser.setDepartment(dto.getDepartment());
 
         User savedUser = userRepository.save(newUser);
+        savedUser.setGeoserverLogin(prepareGeoserverLogin(savedUser.getLogin(), savedUser.getId()));
 
         organization.addUser(savedUser);
 
         messageBus.produce(
-                new UserCreatedEvent(savedUser.getLogin(),
+                new UserCreatedEvent(savedUser.getGeoserverLogin(),
+                                     savedUser.getLogin(),
                                      accessToken,
                                      dto.getPassword(),
                                      true,
-                                     "admin_" + orgId)
+                                     getDefaultRoleName(orgId))
         );
 
         return projectionFactory.createProjection(UserProjection.class, savedUser);

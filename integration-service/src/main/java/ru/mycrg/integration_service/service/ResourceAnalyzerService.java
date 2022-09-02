@@ -11,13 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
 import ru.mycrg.integration_service.dto.ResourceAnalyzeModel;
 import ru.mycrg.integration_service.dto.ResourceAnalyzeTask;
 import ru.mycrg.integration_service.exceptions.NotFoundException;
-import ru.mycrg.integration_service.security.IAuthenticationFacade;
 import ru.mycrg.resource_analyzer_contract.IResourceDefinition;
 
 import java.net.MalformedURLException;

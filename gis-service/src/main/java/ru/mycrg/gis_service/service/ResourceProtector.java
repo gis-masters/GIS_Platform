@@ -1,10 +1,10 @@
 package ru.mycrg.gis_service.service;
 
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
-import ru.mycrg.gis_service.security.IAuthenticationFacade;
-import ru.mycrg.gis_service.security.UserDetails;
 
 import java.util.List;
 import java.util.Objects;

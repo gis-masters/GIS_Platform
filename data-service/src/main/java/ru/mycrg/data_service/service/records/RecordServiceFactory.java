@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.records;
 
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 
 @Component
 public class RecordServiceFactory {

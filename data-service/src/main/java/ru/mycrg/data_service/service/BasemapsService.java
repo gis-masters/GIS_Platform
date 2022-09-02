@@ -9,10 +9,10 @@ import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.entity.BaseMap;
 import ru.mycrg.data_service.exceptions.CrgValidationException;
 import ru.mycrg.data_service.repository.BaseMapRepository;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service_contract.queue.request.BasemapReferencesDeletionEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 

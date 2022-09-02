@@ -11,8 +11,8 @@ import ru.mycrg.audit_service.dto.EventFullProjection;
 import ru.mycrg.audit_service.entity.Event;
 import ru.mycrg.audit_service.exceptions.AuditServiceException;
 import ru.mycrg.audit_service.repository.CrgAuditEventRepository;
-import ru.mycrg.audit_service.security.IAuthenticationFacade;
 import ru.mycrg.audit_service_contract.dto.AuditEventDto;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 
 @Service
 @Transactional

@@ -33,9 +33,9 @@ public class GeoserverDeleteOrgOperationsDelegate implements JavaDelegate {
     public void execute(DelegateExecution execution) throws Exception {
         final Object orgId = execution.getVariable(ORG_ID_VAR_NAME);
         final Object accessToken = execution.getVariable(TOKEN_VAR_NAME);
-        List<String> users = (List<String>) execution.getVariable(USERS_VAR_NAME);
+        List<String> geoserverLogins = (List<String>) execution.getVariable(USERS_VAR_NAME);
 
-        final String usersJson = objectMapper.writeValueAsString(users);
+        final String usersJson = objectMapper.writeValueAsString(geoserverLogins);
 
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),

@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import ru.mycrg.auth_facade.AuthenticationFacade;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -64,6 +66,11 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
     @Bean
     public TokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
+    }
+
+    @Bean
+    IAuthenticationFacade authenticationFacade() {
+        return new AuthenticationFacade();
     }
 
     @Override

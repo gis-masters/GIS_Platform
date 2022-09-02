@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.util.Objects.nonNull;
+
 public class CrgGlobalProperties {
 
     private static final String DEFAULT_DB_NAME = "database";
@@ -76,6 +78,17 @@ public class CrgGlobalProperties {
             return Optional.of(Long.parseLong(postfix));
         } catch (Exception e) {
             return Optional.empty();
+        }
+    }
+
+    public static String prepareGeoserverLogin(String userName, Long id) {
+        if (nonNull(userName)) {
+            String login = userName.replaceAll("[$&+,:;=?@#|'<>.^*()%!-]", "_");
+            login = login.concat(SEPARATOR + id);
+
+            return login;
+        } else {
+            return "";
         }
     }
 }

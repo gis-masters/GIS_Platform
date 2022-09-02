@@ -5,12 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.geoserver_client.services.storage.vector.ConnectionParameters;
 import ru.mycrg.geoserver_client.services.storage.vector.DataStore;
 import ru.mycrg.geoserver_client.services.storage.vector.VectorStorage;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.exceptions.ThirdPartyServiceException;
-import ru.mycrg.gis_service.security.IAuthenticationFacade;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 

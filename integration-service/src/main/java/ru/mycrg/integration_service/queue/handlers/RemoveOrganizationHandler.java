@@ -6,11 +6,11 @@ import org.camunda.bpm.engine.variable.Variables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import ru.mycrg.auth_service_contract.events.request.OrganizationRemovedEvent;
 import ru.mycrg.auth_service_contract.events.response.OrganizationDependencyRemovingFailedEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
+import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
@@ -48,7 +48,7 @@ public class RemoveOrganizationHandler implements IEventHandler {
                     .createVariables()
                     .putValue(EVENT_VAR_NAME, objectMapper.writeValueAsString(mqEvent))
                     .putValue(ORG_ID_VAR_NAME, mqEvent.getOrgId())
-                    .putValue(USERS_VAR_NAME, mqEvent.getUsers())
+                    .putValue(USERS_VAR_NAME, mqEvent.getGeoserverLogins())
                     .putValue(TOKEN_VAR_NAME, mqEvent.getToken());
 
             bpmnRuntimeService.startProcessInstanceByKey(

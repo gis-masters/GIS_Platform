@@ -4,8 +4,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.queue.MessageBusProducer;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.IRequestMiddleware;
 

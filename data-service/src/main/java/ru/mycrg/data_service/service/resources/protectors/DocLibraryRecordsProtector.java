@@ -2,13 +2,13 @@ package ru.mycrg.data_service.service.resources.protectors;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;

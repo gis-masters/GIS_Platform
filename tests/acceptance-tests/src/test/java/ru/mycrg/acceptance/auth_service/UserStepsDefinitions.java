@@ -31,6 +31,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     private static final int MAX_RETRY_ATTEMPT = 10;
 
     public static Integer userId;
+    public static String geoserverLogin;
     public static UserCreateDto userDto;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
@@ -103,6 +104,19 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         createUser(userDto);
     }
 
+    @Given("Существует пользователь у которого email содержит спецсимволы")
+    public void initializeUserWithSpecialSymbols() throws InterruptedException {
+        String email = format("test.email%s@test", generateString("STRING_5"));
+
+        UserCreateDto userDto = new UserCreateDto();
+        userDto.setName("testEmail");
+        userDto.setSurname("testEmail");
+        userDto.setEmail(email);
+        userDto.setPassword("aA111111");
+
+        createUser(userDto);
+    }
+
     @Then("На геосервере удалилась роль, связанная с пользователем")
     public void checkRoleDeletionFromGeoserver() throws InterruptedException {
         sleep(800);
@@ -111,14 +125,22 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
         sleep(800);
 
-        response = getBaseRequestWithCurrentCookie()
-                .basePath("geoserver/rest/security")
-                .when().
-                        get(String.format("/roles/user/%s.json", userDto.getEmail()));
+        getRolesFromGeoserverByUser(userDto.getEmail());
 
         List<Object> roles = response.jsonPath().getList("roles");
 
         assertTrue(roles.isEmpty());
+    }
+
+    @Then("Роль пользователя существует на геосервере")
+    public void checkUserOnGeoserverByGeoserverLogin() {
+        getGeoserverLoginFromResponse();
+
+        getRolesFromGeoserverByUser(geoserverLogin);
+
+        List<Object> roles = response.jsonPath().getList("roles");
+
+        assertFalse(roles.isEmpty());
     }
 
     @Given("Существует некий пользователь")
@@ -289,6 +311,11 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         assertThat(response.jsonPath().get("enabled"), is(Boolean.parseBoolean(userStatus)));
     }
 
+    public static void getGeoserverLoginFromResponse() {
+        geoserverLogin = response.jsonPath().get("geoserverLogin");
+        assertNotNull(geoserverLogin);
+    }
+
     private void takeForeignUserAsCurrent() {
         Map.Entry<Integer, UserCreateDto> entry;
         entry = userPool.entrySet().stream()
@@ -391,5 +418,12 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         createUser(userDto);
 
         authorizationBase.loginAsCurrentUser();
+    }
+
+    private void getRolesFromGeoserverByUser(String login) {
+        response = getBaseRequestWithCurrentCookie()
+                       .basePath("geoserver/rest/security")
+                .when().
+                       get(format("/roles/user/%s.json", login));
     }
 }

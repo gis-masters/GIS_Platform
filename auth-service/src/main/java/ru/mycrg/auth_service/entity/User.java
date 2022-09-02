@@ -23,6 +23,9 @@ public class User {
     @Column
     private String login;
 
+    @Column(name = "geoserver_login")
+    private String geoserverLogin;
+
     @Column
     private String password;
 
@@ -247,5 +250,13 @@ public class User {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public String getGeoserverLogin() {
+        return geoserverLogin;
+    }
+
+    public void setGeoserverLogin(String geoserverLogin) {
+        this.geoserverLogin = geoserverLogin;
     }
 }

@@ -69,6 +69,8 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
                                                      .collect(Collectors.toList());
 
             additionalInfo.put("user_id", user.getId());
+            additionalInfo.put("user_name", user.getGeoserverLogin());
+            additionalInfo.put("crg_login", user.getLogin());
             additionalInfo.put("groups", usersGroups);
             additionalInfo.put("organizations", usersOrganizations);
         }

@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.security;
+package ru.mycrg.auth_facade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ public class UserDetails {
 
     private Long userId;
     private List<Long> groups = new ArrayList<>();
+    private String crgLogin;
 
     public UserDetails() {
         // Required
@@ -30,5 +31,13 @@ public class UserDetails {
 
     public void setGroups(List<Long> groups) {
         this.groups = groups;
+    }
+
+    public String getCrgLogin() {
+        return crgLogin;
+    }
+
+    public void setCrgLogin(String crgLogin) {
+        this.crgLogin = crgLogin;
     }
 }

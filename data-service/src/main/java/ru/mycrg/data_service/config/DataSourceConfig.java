@@ -3,9 +3,9 @@ package ru.mycrg.data_service.config;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.config.CrgDataSource;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;

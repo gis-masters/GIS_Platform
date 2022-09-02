@@ -17,7 +17,7 @@ import java.net.URI;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
-import static ru.mycrg.audit_service.security.AuthenticationFacade.HAS_ANY_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RestController
 public class AuditController {

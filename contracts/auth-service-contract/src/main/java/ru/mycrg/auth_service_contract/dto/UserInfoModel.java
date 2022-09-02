@@ -8,6 +8,7 @@ public class UserInfoModel {
     private Long id;
     private String name;
     private String login;
+    private String geoserverLogin;
     private String middleName;
     private String surname;
     private String job;
@@ -30,7 +31,7 @@ public class UserInfoModel {
 
     public UserInfoModel(Long id, String name, String login, String surname, String email, boolean enabled,
                          Set<String> authorities, LocalDateTime createdAt, String orgName, Long orgId,
-                         String middleName, String job, String phone) {
+                         String middleName, String job, String phone, String geoserverLogin) {
         this.id = id;
         this.name = name;
         this.login = login;
@@ -44,6 +45,7 @@ public class UserInfoModel {
         this.middleName = middleName;
         this.job = job;
         this.phone = phone;
+        this.geoserverLogin = geoserverLogin;
     }
 
     public static UserInfoModelBuilder builder() {
@@ -102,7 +104,12 @@ public class UserInfoModel {
         return orgId;
     }
 
+    public String getGeoserverLogin() {
+        return geoserverLogin;
+    }
+
     public static class UserInfoModelBuilder {
+
         private Long id;
         private String name;
         private String login;
@@ -116,6 +123,7 @@ public class UserInfoModel {
         private String middleName;
         private String job;
         private String phone;
+        private String geoserverLogin;
 
         UserInfoModelBuilder() {
         }
@@ -132,6 +140,11 @@ public class UserInfoModel {
 
         public UserInfoModelBuilder login(String login) {
             this.login = login;
+            return this;
+        }
+
+        public UserInfoModelBuilder geoserverLogin(String geoserverLogin) {
+            this.geoserverLogin = geoserverLogin;
             return this;
         }
 
@@ -187,7 +200,7 @@ public class UserInfoModel {
 
         public UserInfoModel build() {
             return new UserInfoModel(id, name, login, surname, email, enabled, authorities, createdAt, orgName, orgId,
-                                     middleName, job, phone);
+                                     middleName, job, phone, geoserverLogin);
         }
 
         public String toString() {

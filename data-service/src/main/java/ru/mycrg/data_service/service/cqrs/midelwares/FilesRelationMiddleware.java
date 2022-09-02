@@ -7,12 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_service_contract.events.request.FileDeletedEvent;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.repository.FileRepository;
-import ru.mycrg.data_service.security.AuthenticationFacade;
 import ru.mycrg.data_service.service.ISchemable;
 import ru.mycrg.data_service.service.cqrs.files.ICreateFilesRelation;
 import ru.mycrg.data_service.service.cqrs.files.IDeleteFilesRelation;
@@ -45,12 +45,12 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
     private final FileRepository fileRepository;
     private final FileStorageService fileStorageService;
     private final IMessageBusProducer messageBus;
-    private final AuthenticationFacade authenticationFacade;
+    private final IAuthenticationFacade authenticationFacade;
 
     public FilesRelationMiddleware(FileRepository fileRepository,
                                    FileStorageService fileStorageService,
                                    IMessageBusProducer messageBus,
-                                   AuthenticationFacade authenticationFacade) {
+                                   IAuthenticationFacade authenticationFacade) {
         this.fileRepository = fileRepository;
         this.fileStorageService = fileStorageService;
         this.messageBus = messageBus;

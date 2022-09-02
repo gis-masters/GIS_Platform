@@ -2,13 +2,13 @@ package ru.mycrg.data_service.service;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.migrations.CrgMigrationHandler;
 import ru.mycrg.data_service.dao.ddl.DdlDatabase;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
 
 import java.util.Objects;
 

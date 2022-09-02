@@ -8,6 +8,8 @@ public interface IJavaDelegateProperties {
     String TOKEN_VAR_NAME = "token";
 
     String USERS_VAR_NAME = "users";
+
+    String USER_GEOSERVER_NAME = "geoserverLogin";
     String IS_DELETED_VAR_NAME = "isDeleted";
     String IS_CREATED_VAR_NAME = "isCreated";
 

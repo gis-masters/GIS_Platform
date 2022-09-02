@@ -17,8 +17,7 @@ import java.util.Objects;
 
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.TOKEN_VAR_NAME;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.USERS_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
 @Service("geoserverUserDeleteDelegate")
 public class GeoserverUserDeleteDelegate implements JavaDelegate {
@@ -33,11 +32,12 @@ public class GeoserverUserDeleteDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
+        final String geoserverLogin = execution.getVariable(USER_GEOSERVER_NAME).toString();
         final String login = execution.getVariable(USERS_VAR_NAME).toString();
         final String accessToken = execution.getVariable(TOKEN_VAR_NAME).toString();
         final RequestBody body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),
-                objectMapper.writeValueAsString(new UserGeoserverDto(login)));
+                objectMapper.writeValueAsString(new UserGeoserverDto(login, geoserverLogin)));
 
         Request req = new Request.Builder()
                 .url(new URL(baseHttpService.getGisServiceUrl(), "/geoserver/users"))

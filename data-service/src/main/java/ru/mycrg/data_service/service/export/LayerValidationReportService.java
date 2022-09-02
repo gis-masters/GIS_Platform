@@ -7,6 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.ValidationResultDao;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dto.ExportResourceModel;
@@ -14,7 +15,6 @@ import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.Process;
-import ru.mycrg.data_service.security.AuthenticationFacade;
 import ru.mycrg.data_service.service.CsvHandler;
 import ru.mycrg.data_service.service.JsonConverter;
 import ru.mycrg.data_service.service.SchemaService;
@@ -56,13 +56,13 @@ public class LayerValidationReportService {
 
     private final DatasourceFactory datasourceFactory;
     private final SchemaService schemaService;
-    private final AuthenticationFacade authenticationFacade;
+    private final IAuthenticationFacade authenticationFacade;
     private final ProcessService processService;
     private final WsNotificationService wsNotificationService;
 
     public LayerValidationReportService(SchemaService schemaService,
                                         Environment environment,
-                                        AuthenticationFacade authenticationFacade,
+                                        IAuthenticationFacade authenticationFacade,
                                         ProcessService processService,
                                         DatasourceFactory datasourceFactory,
                                         WsNotificationService wsNotificationService) {

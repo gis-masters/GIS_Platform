@@ -12,8 +12,8 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_service.dto.UserProjection;
-import ru.mycrg.auth_service.security.IAuthenticationFacade;
 import ru.mycrg.auth_service.service.UserService;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
@@ -22,7 +22,6 @@ import ru.mycrg.auth_service_contract.dto.UserUpdateDto;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
-import java.security.Principal;
 
 import static ru.mycrg.auth_service_contract.Authorities.*;
 
@@ -50,10 +49,10 @@ public class UserController {
     }
 
     @GetMapping("/users/current")
-    public ResponseEntity<UserInfoModel> getUserInfo(Principal principal) {
-        String userName = principal.getName();
+    public ResponseEntity<UserInfoModel> getUserInfo() {
+        String login = authenticationFacade.getLogin();
 
-        return ResponseEntity.ok(userService.getByLogin(userName));
+        return ResponseEntity.ok(userService.getByLogin(login));
     }
 
     @GetMapping("/users")

@@ -8,9 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.exceptions.GisServiceException;
-import ru.mycrg.gis_service.security.AuthenticationFacade;
 import ru.mycrg.gis_service.service.layers.LayerService;
 import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.exceptions.HttpClientException;
@@ -35,14 +35,14 @@ public class ReglamentsQuery implements IResourceQueryService {
     private final String layerType = "vector";
 
     private final LayerService layerService;
-    private final AuthenticationFacade authenticationFacade;
+    private final IAuthenticationFacade authenticationFacade;
 
     private final ResourceDefinition resourceDefinition;
     private final HttpClient httpClient;
     private final URL dataServiceUrl;
 
     public ReglamentsQuery(LayerService layerService,
-                           AuthenticationFacade authenticationFacade,
+                           IAuthenticationFacade authenticationFacade,
                            Environment environment) throws MalformedURLException {
         this.layerService = layerService;
         this.authenticationFacade = authenticationFacade;

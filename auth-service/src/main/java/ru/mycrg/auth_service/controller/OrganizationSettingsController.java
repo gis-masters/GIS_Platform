@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.auth_service.security.IAuthenticationFacade;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_service.service.OrganizationService;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;

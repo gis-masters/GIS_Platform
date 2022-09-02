@@ -8,9 +8,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.gis_service.dto.ProjectProjection;
-import ru.mycrg.gis_service.security.IAuthenticationFacade;
-import ru.mycrg.gis_service.security.UserDetails;
 
 import java.util.Collection;
 import java.util.List;

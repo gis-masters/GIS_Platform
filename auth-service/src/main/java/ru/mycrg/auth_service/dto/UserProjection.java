@@ -34,4 +34,6 @@ public interface UserProjection {
     Set<AuthorityProjection> getAuthorities();
 
     LocalDateTime getCreatedAt();
+
+    String getGeoserverLogin();
 }

@@ -12,6 +12,8 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import ru.mycrg.auth_facade.AuthenticationFacade;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_service_contract.AESCryptor;
 
 import javax.crypto.NoSuchPaddingException;
@@ -77,5 +79,10 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
         final String clientSecret = environment.getRequiredProperty("crg-options.client_secret");
 
         return new AESCryptor(clientSecret);
+    }
+
+    @Bean
+    IAuthenticationFacade authenticationFacade() {
+        return new AuthenticationFacade();
     }
 }

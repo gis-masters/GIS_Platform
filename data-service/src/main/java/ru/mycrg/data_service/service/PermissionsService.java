@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.dto.Resource;
 import ru.mycrg.data_service.entity.Permission;
@@ -17,7 +18,6 @@ import ru.mycrg.data_service.repository.PermissionRepository;
 import ru.mycrg.data_service.repository.PrincipalRepository;
 import ru.mycrg.data_service.repository.RoleRepository;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
-import ru.mycrg.data_service.security.AuthenticationFacade;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
@@ -33,7 +33,7 @@ public class PermissionsService {
     private final RoleRepository roleRepository;
     private final PrincipalService principalService;
     private final PrincipalRepository principalRepository;
-    private final AuthenticationFacade authenticationFacade;
+    private final IAuthenticationFacade authenticationFacade;
     private final PermissionRepository permissionRepository;
     private final IMasterResourceProtector resourceProtector;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
@@ -42,7 +42,7 @@ public class PermissionsService {
                               PermissionRepository permissionRepository,
                               PrincipalRepository principalRepository,
                               RoleRepository roleRepository,
-                              AuthenticationFacade authenticationFacade,
+                              IAuthenticationFacade authenticationFacade,
                               SchemasAndTablesRepository schemasAndTablesRepository,
                               MasterResourceProtector resourceProtector) {
         this.principalService = principalService;

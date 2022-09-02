@@ -30,7 +30,7 @@ public class CreateUserAndRole implements JavaDelegate {
         String roleName = getDefaultRoleName(dto.getOrgId());
         String rawPassword = aesCryptor.decrypt(dto.getOwnerRawPassword());
 
-        usersAndRolesService.createUser(dto.getOwnerEmail(), rawPassword);
+        usersAndRolesService.createUser(dto.getGeoserverLogin(), rawPassword);
         usersAndRolesService.createRole(roleName);
         usersAndRolesService.associateUserWithRole(dto.getOwnerUserName(), roleName);
     }

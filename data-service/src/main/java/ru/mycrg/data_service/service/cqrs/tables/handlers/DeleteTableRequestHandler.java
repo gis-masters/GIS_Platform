@@ -1,11 +1,11 @@
 package ru.mycrg.data_service.service.cqrs.tables.handlers;
 
 import org.springframework.stereotype.Component;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.ddl.DdlTables;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.cqrs.tables.requests.DeleteTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
