@@ -7,6 +7,7 @@ import { cn } from '@bem-react/classname';
 
 import { mapStore } from '../../stores/Map.store';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
 import { mapSelectionService } from '../../services/map/map-selection.service';
 import { communicationService } from '../../services/communication.service';
@@ -96,7 +97,7 @@ export class Attributes extends Component<IClassNameProps> {
 
   @action.bound
   private closeTab(layer: CrgVectorLayer) {
-    mapStore.updateAttributeTableFilter(layer);
+    attributesTableStore.updateFilter(layer);
 
     if (this.currentLayer?.id === layer.id) {
       this.currentLayer = undefined;
@@ -129,8 +130,6 @@ export class Attributes extends Component<IClassNameProps> {
 
   @action.bound
   private minimizeBar() {
-    mapStore.updateAttributeTableFilter(this.currentLayer);
-
     this.currentLayer = undefined;
     this.tablePageOptions = undefined;
 

@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogActions, Checkbox, Select, MenuItem, Selec
 import { boundMethod } from 'autobind-decorator';
 
 import { allProjects } from '../../stores/AllProjects.store';
-import { allDataEntitiesStore } from '../../stores/AllDataEntitiesStore';
+import { allDataEntitiesStore } from '../../stores/AllDataEntities.store';
 import { Role, roles, rolesTitles, PrincipalType, projectRoles } from '../../services/data/permissions.models';
 import { PermissionsListItem } from '../../services/data/allPermissions.service';
 import { Dataset, VectorTable, tablesEqual } from '../../services/data/data.service';

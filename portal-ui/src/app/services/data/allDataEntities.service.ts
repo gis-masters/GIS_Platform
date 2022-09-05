@@ -1,6 +1,6 @@
 import { debounce } from 'lodash';
 
-import { allDataEntitiesStore } from '../../stores/AllDataEntitiesStore';
+import { allDataEntitiesStore } from '../../stores/AllDataEntities.store';
 import { VectorTable, getAllDatasets, getAllDatasetTables } from './data.service';
 import { communicationService } from '../communication.service';
 import { Toast } from '../../components/Toast/Toast';

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { DeleteSweepOutlined, SquareFoot } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { MapMode, mapStore } from '../../stores/Map.store';
 import { mapMeasureService, MeasureMode } from '../../services/map/map-measure.service';
+import { IconButton } from '../IconButton/IconButton';
 import { Ruler } from '../Icons/Ruler';
 
 import '!style-loader!css-loader!sass-loader!./MapMeasure.scss';
@@ -23,8 +24,8 @@ export class MapMeasure extends Component {
         <Tooltip title='Измерить длину'>
           <IconButton
             onClick={this.handleLengthClick}
+            checked={isMeasureActive && mapStore.measureMode === 'length'}
             size='small'
-            color={isMeasureActive && mapStore.measureMode === 'length' ? 'secondary' : 'default'}
           >
             <Ruler />
           </IconButton>
@@ -32,8 +33,8 @@ export class MapMeasure extends Component {
         <Tooltip title='Измерить площадь'>
           <IconButton
             onClick={this.handleAreaClick}
+            checked={isMeasureActive && mapStore.measureMode === 'area'}
             size='small'
-            color={isMeasureActive && mapStore.measureMode === 'area' ? 'secondary' : 'default'}
           >
             <SquareFoot />
           </IconButton>

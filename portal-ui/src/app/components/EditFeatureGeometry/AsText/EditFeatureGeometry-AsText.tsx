@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Dialog, DialogContent, DialogActions, TextField, IconButton, Tooltip } from '@mui/material';
+import { Dialog, DialogContent, DialogActions, TextField, Tooltip } from '@mui/material';
 import { ListAlt } from '@mui/icons-material';
 import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
@@ -16,6 +16,7 @@ import {
   WfsMultiPolygonGeometry,
   WfsPointGeometry
 } from '../../../services/geoserver/wfs.models';
+import { IconButton } from '../../IconButton/IconButton';
 import { Button } from '../../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!../AsTextDialog/EditFeatureGeometry-AsTextDialog.scss';
@@ -54,11 +55,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
     return (
       <>
         <Tooltip title={`Координаты ${partLabel} как текст`}>
-          <IconButton
-            className={cnEditFeatureGeometry('AsText')}
-            color={this.isOpen ? 'secondary' : 'default'}
-            onClick={this.openDialog}
-          >
+          <IconButton className={cnEditFeatureGeometry('AsText')} onClick={this.openDialog}>
             <ListAlt />
           </IconButton>
         </Tooltip>

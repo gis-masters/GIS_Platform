@@ -3,10 +3,11 @@ import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Coordinate } from 'ol/coordinate';
 import { DrawEvent } from 'ol/interaction/Draw';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { Brush, BrushOutlined, SvgIconComponent } from '@mui/icons-material';
 import { Feature } from 'ol';
 import { SimpleGeometry } from 'ol/geom';
+import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
@@ -15,7 +16,7 @@ import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs.
 import { communicationService } from '../../../services/communication.service';
 import { mapService } from '../../../services/map/map.service';
 import { Emitter } from '../../../services/common/Emitter';
-import { boundMethod } from 'autobind-decorator';
+import { IconButton } from '../../IconButton/IconButton';
 
 const cnEditFeatureGeometryDraw = cn('EditFeatureGeometryDraw');
 
@@ -68,11 +69,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
 
     return (
       <Tooltip title={tip || 'Рисовать на карте'}>
-        <IconButton
-          className={cnEditFeatureGeometryDraw()}
-          onClick={this.clickHandler}
-          color={this.active ? 'secondary' : 'default'}
-        >
+        <IconButton className={cnEditFeatureGeometryDraw()} onClick={this.clickHandler} checked={this.active}>
           {this.active ? <IconActive /> : <IconNormal />}
         </IconButton>
       </Tooltip>

@@ -5,6 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
+import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { FilterBySelection, MapSelectionTypes, mapStore } from '../../../stores/Map.store';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { communicationService } from '../../../services/communication.service';
@@ -20,6 +21,7 @@ import { Loading } from '../../Loading/Loading';
 import '!style-loader!css-loader!sass-loader!./Attributes-Table.scss';
 import '!style-loader!css-loader!sass-loader!../TableContainer/Attributes-TableContainer.scss';
 import '!style-loader!css-loader!sass-loader!../CheckCell/Attributes-CheckCell.scss';
+import { FilterQuery } from '../../../services/util/filterObjects';
 
 const cnAttributesTable = cn('Attributes', 'Table');
 const cnAttributesTableContainer = cn('Attributes', 'TableContainer');
@@ -55,6 +57,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
     communicationService.featuresUpdated.on(this.reloadTable, this);
 
     invoke.setPageSize = this.forwardInvoke('setPageSize');
+    invoke.setFilter = this.forwardInvoke('setFilter');
     invoke.paginate = this.forwardInvoke('paginate');
     invoke.reload = this.forwardInvoke('reload');
     invoke.reset = this.forwardInvoke('reset');
@@ -70,8 +73,10 @@ export class AttributesTable extends Component<AttributesTableProps> {
   }
 
   async componentDidUpdate(prevProps: AttributesTableProps) {
-    if (this.props.layer?.schemaId !== prevProps.layer?.schemaId && this.tableInvoke.reload && this.tableInvoke.reset) {
-      this.tableInvoke.reset();
+    const { layer } = this.props;
+
+    if (layer?.schemaId !== prevProps.layer?.schemaId && this.tableInvoke.reset) {
+      this.tableInvoke.reset({ filter: attributesTableStore.getLayerFilter(layer) });
       await this.tableInvoke.reload();
     }
   }
@@ -121,16 +126,23 @@ export class AttributesTable extends Component<AttributesTableProps> {
 
   private callInvoke(key: keyof XTableInvoke, ...args: Parameters<XTableInvoke[keyof XTableInvoke]>) {
     if (this.tableInvoke[key]) {
-      return this.tableInvoke[key](...(args as [number]));
+      return this.tableInvoke[key](...(args as [number & FilterQuery]));
     }
   }
 
   @action.bound
   private handlePageOptionsChange(pageOptions: PageOptions) {
     const { onPageOptionsChange, layer } = this.props;
+
+    // this.pageOptions может быть совсем пустым только при инициализации
+    if (!this.pageOptions && attributesTableStore.filter[layer.tableName]) {
+      this.tableInvoke.setFilter(attributesTableStore.filter[layer.tableName]);
+    } else {
+      onPageOptionsChange(pageOptions);
+      attributesTableStore.updateFilter(layer, Object.keys(pageOptions.filter).length ? pageOptions.filter : undefined);
+    }
+
     this.pageOptions = pageOptions;
-    onPageOptionsChange(pageOptions);
-    mapStore.updateAttributeTableFilter(layer, Object.keys(pageOptions.filter).length ? pageOptions.filter : undefined);
   }
 
   @boundMethod

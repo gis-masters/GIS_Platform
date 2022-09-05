@@ -58,7 +58,11 @@ export class AttributesCheckFilter extends Component<XTableFilterProps> {
   private handleChange(e: React.MouseEvent<HTMLElement, MouseEvent>, value: FilterBySelection) {
     const { onBeforeFilterChange, onFilterChange, filterQuery } = this.props;
     onBeforeFilterChange();
-    filterQuery.filterBySelection = value;
+    if (value) {
+      filterQuery.filterBySelection = value;
+    } else {
+      delete filterQuery.filterBySelection;
+    }
     onFilterChange();
   }
 }

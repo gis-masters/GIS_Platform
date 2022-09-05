@@ -1,15 +1,12 @@
 import { action, computed, observable, reaction, makeObservable } from 'mobx';
-import Filter from 'ol/format/filter/Filter';
 import sift from 'sift';
 
 import { route, Pages } from './Route.store';
+import { attributesTableStore } from './AttributesTable.store';
 import { MeasureItem, MeasureMode } from '../services/map/map-measure.service';
 import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
-import { CrgLayer, CrgVectorLayer } from '../services/gis/projects.models';
+import { prepareLike } from '../services/util/filterObjects';
 import { WfsFeature } from '../services/geoserver/wfs.models';
-import { FilterQuery, prepareLike } from '../services/util/filterObjects';
-import { buildCqlFilter } from '../services/util/cql';
-import { cql2ol } from '../services/util/cql2ol';
 import { flags } from '../services/feature-flags';
 
 export enum MapSelectionTypes {
@@ -59,7 +56,6 @@ const defaultValues: Partial<MapStore> = {
 
 class MapStore {
   @observable private loadingCount = 0;
-  @observable attributeTableFilter: { [tableName: string]: FilterQuery } = {};
   measureItems: MeasureItem[] = observable.array([], { deep: false });
   @observable measureMode?: MeasureMode;
   @observable mode: MapMode;
@@ -119,16 +115,6 @@ class MapStore {
   }
 
   @computed
-  get attributeTableOlFilter(): { [tableName: string]: Filter } {
-    return Object.fromEntries(
-      Object.entries(this.attributeTableFilter).map(([tableName, filterQuery]) => [
-        tableName,
-        cql2ol(buildCqlFilter(filterQuery))
-      ])
-    );
-  }
-
-  @computed
   get highlightedFeatures(): WfsFeature[] {
     const filtersByLayers: {
       [tableName: string]: {
@@ -141,7 +127,7 @@ class MapStore {
       const [tableName] = feature.id.split('.');
 
       if (!filtersByLayers[tableName]) {
-        const { filterBySelection, ...attributeTableFilter } = mapStore.attributeTableFilter[tableName] || {};
+        const { filterBySelection, ...attributeTableFilter } = attributesTableStore.getLayerFilter(tableName, true);
         filtersByLayers[tableName] = {
           tester: Object.keys(attributeTableFilter).length ? sift(prepareLike(attributeTableFilter)) : undefined,
           negativeIds: filterBySelection === FilterBySelection.ONLY_NOT_SELECTED
@@ -152,19 +138,6 @@ class MapStore {
 
       return !negativeIds && (!tester || tester(feature.properties));
     });
-  }
-
-  isFiltered(layer: CrgLayer) {
-    return !!this.attributeTableFilter[layer.tableName];
-  }
-
-  @action
-  updateAttributeTableFilter(layer: CrgVectorLayer, filter?: FilterQuery) {
-    if (filter) {
-      this.attributeTableFilter[layer.tableName] = filter;
-    } else {
-      delete this.attributeTableFilter[layer.tableName];
-    }
   }
 
   @action

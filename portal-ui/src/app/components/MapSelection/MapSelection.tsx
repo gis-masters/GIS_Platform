@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
-import { PlaylistAdd } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { MapMode, mapStore } from '../../stores/Map.store';
 import { mapSelectionService } from '../../services/map/map-selection.service';
+import { RectangleSelectionAdd } from '../Icons/RectangleSelectionAdd';
+import { IconButton } from '../IconButton/IconButton';
 
 const cnMapSelection = cn('MapSelection');
 
@@ -19,9 +20,9 @@ export class MapSelection extends Component {
           className={cnMapSelection()}
           onClick={this.handleViewModeClick}
           size='small'
-          color={mapStore.mode === MapMode.SELECTION ? 'secondary' : 'default'}
+          checked={mapStore.mode === MapMode.SELECTION}
         >
-          <PlaylistAdd />
+          <RectangleSelectionAdd />
         </IconButton>
       </Tooltip>
     );

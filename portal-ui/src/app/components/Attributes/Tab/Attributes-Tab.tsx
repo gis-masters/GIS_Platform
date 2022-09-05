@@ -7,12 +7,14 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { mapStore } from '../../../stores/Map.store';
+import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { communicationService } from '../../../services/communication.service';
 import { CrgVectorLayer } from '../../../services/gis/projects.models';
 import { IconButton } from '../../IconButton/IconButton';
 
 import { AttributesTabInner } from '../TabInner/Attributes-TabInner';
 import { AttributesTabTitle } from '../TabTitle/Attributes-TabTitle';
+import { AttributesTabFilterMark } from '../TabFilterMark/Attributes-TabFilterMark';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Tab.scss';
 
@@ -43,7 +45,11 @@ export class AttributesTab extends Component<AttributesTabProps> {
         label={
           <AttributesTabInner>
             <AttributesTabTitle selected={selected}>{layer.title}</AttributesTabTitle>
+
             {!!this.selectedFeaturesCount && <>&nbsp;({this.selectedFeaturesCount})</>}
+
+            {attributesTableStore.isLayerFiltered(layer) && <AttributesTabFilterMark />}
+
             <IconButton
               href='#'
               edge='end'

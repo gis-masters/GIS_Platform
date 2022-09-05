@@ -35,7 +35,7 @@ export class FilesConnections extends Component<ConnectionsProps> {
           <IconButton className={cnFilesConnections()} onClick={this.openDialog} size='small'>
             <Badge
               badgeContent={connections.length}
-              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+              anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
               color='default'
             >
               {this.dialogOpen ? <Map fontSize='small' /> : <MapOutlined fontSize='small' />}

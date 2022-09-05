@@ -90,9 +90,10 @@ interface XTablePropsBase<T> extends IClassNameProps {
   containerProps?: Partial<PaperProps & XTableContainerProps>;
   invoke?: {
     reload?(): Promise<void>;
-    reset?(): void;
+    reset?(opts?: Partial<PageOptions>): void;
     paginate?(page: number): void;
     setPageSize?(size: number): void;
+    setFilter?(filter: FilterQuery): void;
   };
   onFilter?(filtered: T[]): void;
   onPageOptionsChange?(pageOptions: PageOptions): void;
@@ -151,14 +152,9 @@ export class XTable<T> extends Component<XTableProps<T>> {
   }
 
   componentDidMount() {
-    const { onPageOptionsChange, invoke } = this.props;
+    const { onPageOptionsChange } = this.props;
 
-    if (invoke) {
-      invoke.reload = this.fetchAsyncData;
-      invoke.reset = this.reset;
-      invoke.paginate = this.handlePagination.bind(this, null);
-      invoke.setPageSize = this.setPageSize;
-    }
+    this.fillInvoke();
 
     this.pageOptionsReactionDisposer = reaction(
       () => [
@@ -187,7 +183,12 @@ export class XTable<T> extends Component<XTableProps<T>> {
   }
 
   componentDidUpdate(prevProps: Readonly<XTableProps<T>>) {
-    const { id } = this.props;
+    const { id, invoke } = this.props;
+
+    if (invoke !== prevProps.invoke) {
+      this.fillInvoke();
+    }
+
     if (id !== prevProps.id) {
       this.restoreColsSettings(id);
     }
@@ -493,9 +494,36 @@ export class XTable<T> extends Component<XTableProps<T>> {
   }
 
   @action.bound
-  private reset() {
-    this._page = 1;
-    this.sortParams = this.props.defaultSort || { field: null, asc: true };
-    this.filterQuery = this.props.defaultFilter || {};
+  private reset(opts: Partial<PageOptions> = {}) {
+    this._page = opts.page || 1;
+
+    const sortOpts = { field: opts.sort as keyof T, asc: opts.sortOrder === SortOrder.ASC };
+    this.sortParams = {
+      field: null,
+      asc: true,
+      ...this.props.defaultSort,
+      ...sortOpts
+    };
+
+    this.filterQuery = opts.filter || this.props.defaultFilter || {};
+  }
+
+  @action.bound
+  private setFilterQuery(query: FilterQuery) {
+    this.beforeFilterChange();
+    this.filterQuery = query;
+    this.afterFilterChange();
+  }
+
+  private fillInvoke() {
+    const { invoke } = this.props;
+
+    if (invoke) {
+      invoke.reload = this.fetchAsyncData;
+      invoke.reset = this.reset;
+      invoke.paginate = this.handlePagination.bind(this, null);
+      invoke.setPageSize = this.setPageSize;
+      invoke.setFilter = this.setFilterQuery;
+    }
   }
 }

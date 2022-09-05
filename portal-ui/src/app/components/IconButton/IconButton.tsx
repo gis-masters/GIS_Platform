@@ -13,13 +13,14 @@ export interface IconButtonProps
     Partial<Pick<LinkProps, 'href' | 'download'>>,
     Omit<BaseHTMLAttributes<HTMLButtonElement>, 'color'> {
   loading?: boolean;
+  checked?: boolean;
 }
 
 export const IconButton: FC<IconButtonProps> = forwardRef(
-  ({ className, children, loading, ...props }, ref: RefObject<HTMLButtonElement>) => (
+  ({ className, children, loading, checked, ...props }, ref: RefObject<HTMLButtonElement>) => (
     <BaseIconButton
       {...(props.href ? { ...props, variant: 'none', LinkComponent: Link } : props)}
-      className={cnIconButton({ loading }, [className])}
+      className={cnIconButton({ loading, checked }, [className])}
       ref={ref}
     >
       {children}

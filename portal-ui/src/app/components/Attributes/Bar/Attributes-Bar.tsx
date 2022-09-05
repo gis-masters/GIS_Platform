@@ -18,11 +18,14 @@ import { AttributesBarHead } from '../BarHead/Attributes-BarHead';
 import { AttributesCounter } from '../Counter/Attributes-Counter';
 import { AttributesBarTitle } from '../BarTitle/Attributes-BarTitle';
 import { AttributesBarClose } from '../BarClose/Attributes-BarClose';
+import { AttributesBarHeadGap } from '../BarHeadGap/Attributes-BarHeadGap';
 import { AttributesBarActions } from '../BarActions/Attributes-BarActions';
 import { AttributesBarMinimize } from '../BarMinimize/Attributes-BarMinimize';
 import { AttributesCheckMaster } from '../CheckMaster/Attributes-CheckMaster';
 import { AttributesCheckFilter } from '../CheckFilter/Attributes-CheckFilter';
 import { AttributesTable, AttributesTableRecord } from '../Table/Attributes-Table';
+import { AttributesFiltersEnabler } from '../FiltersEnabler/Attributes-FiltersEnabler';
+import { AttributesBarRightActions } from '../BarRightActions/Attributes-BarRightActions';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Bar.scss';
 
@@ -68,6 +71,8 @@ export class AttributesBar extends Component<AttributesBarProps> {
         <AttributesBarHead>
           <AttributesBarTitle>{layer.title}</AttributesBarTitle>
           <AttributesCounter layer={layer} featuresMatched={this.featuresMatched} featuresTotal={this.featuresTotal} />
+          <AttributesFiltersEnabler layer={layer} />
+          <AttributesBarHeadGap />
           <AttributesBarActions
             layer={layer}
             cols={this.cols}
@@ -75,8 +80,10 @@ export class AttributesBar extends Component<AttributesBarProps> {
             featuresTotal={this.featuresTotal}
             getData={this.getData}
           />
-          <AttributesBarMinimize onClick={onMinimize} />
-          <AttributesBarClose onClick={onClose} />
+          <AttributesBarRightActions>
+            <AttributesBarMinimize onClick={onMinimize} />
+            <AttributesBarClose onClick={onClose} />
+          </AttributesBarRightActions>
         </AttributesBarHead>
         <AttributesTable
           layer={layer}

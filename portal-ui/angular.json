@@ -63,7 +63,8 @@
               "xlsx",
               "!style-loader!css-loader!sass-loader!.",
               "!style-loader!css-loader!sass-loader!..",
-              "!style-loader!css-loader!ol/ol.css"
+              "!style-loader!css-loader!ol/ol.css",
+              "!../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js"
             ]
           },
           "configurations": {

@@ -12,6 +12,7 @@ import { MapMode, mapStore } from '../../stores/Map.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { CrgExternalLayer, CrgLayer, CrgLayerType, TreeItem } from '../../services/gis/projects.models';
 import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
 import { mapSelectionService } from '../../services/map/map-selection.service';
@@ -64,7 +65,11 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     this.reactionDisposer = reaction(
-      () => [currentProject.visibleLayersBatched, cloneDeep(mapStore.attributeTableFilter)],
+      () => [
+        currentProject.visibleLayersBatched,
+        cloneDeep(attributesTableStore.filter),
+        cloneDeep(attributesTableStore.filterDisabled)
+      ],
       ([visibleBatches]: [TreeItem<CrgLayer>[][]]) => {
         mapService.hideUserLayers();
 

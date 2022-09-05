@@ -24,13 +24,14 @@ import ImageLayer from 'ol/layer/Image';
 import { boundMethod } from 'autobind-decorator';
 
 import { route } from '../../stores/Route.store';
-import { FilterBySelection, mapStore } from '../../stores/Map.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
+import { FilterBySelection, mapStore } from '../../stores/Map.store';
+import { attributesTableStore } from '../../stores/AttributesTable.store';
+import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs.models';
+import { CrgExternalLayer, CrgLayer } from '../gis/projects.models';
 import { communicationService } from '../communication.service';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
 import { Basemap, SourceType } from '../data/basemaps.models';
-import { CrgExternalLayer, CrgLayer } from '../gis/projects.models';
-import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs.models';
 import { getWmsUrl } from '../server-urls.service';
 import { ScaleLine } from '../ol/ScaleLine';
 import { Emitter } from '../common/Emitter';
@@ -41,10 +42,10 @@ import {
   transformExtent,
   transformGeometry
 } from '../geoserver/projections.service';
-import { sleep } from '../util/sleep';
 import { getFeatureExtent, mergeExtents } from '../geoserver/wfs.util';
 import { getMap } from '../geoserver/wms.service';
 import { buildCqlFilter } from '../util/cql';
+import { sleep } from '../util/sleep';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -344,7 +345,7 @@ class MapService {
       };
 
       const { tableName } = layers[0];
-      const { filterBySelection, ...filter } = mapStore.attributeTableFilter[tableName] || {};
+      const { filterBySelection, ...filter } = attributesTableStore.getLayerFilter(tableName);
       if (Object.keys(filter).length) {
         params.CQL_FILTER = buildCqlFilter(filter);
       }
@@ -392,7 +393,7 @@ class MapService {
   }
 
   private isNotFilteredLayer(layers: CrgLayer[]) {
-    return !(layers.length === 1 && mapStore.isFiltered(layers[0]));
+    return !(layers.length === 1 && attributesTableStore.isLayerFiltered(layers[0]));
   }
 
   private calcLayerName(layers: CrgLayer[]) {

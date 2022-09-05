@@ -1,7 +1,7 @@
 import { observable, action, computed, makeObservable } from 'mobx';
 
 import { allProjects } from './AllProjects.store';
-import { allDataEntitiesStore } from './AllDataEntitiesStore';
+import { allDataEntitiesStore } from './AllDataEntities.store';
 import { ResourcePermissions, RoleAssignmentBody } from '../services/data/permissions.models';
 import { PermissionsListItem } from '../services/data/allPermissions.service';
 import { CrgProject } from '../services/gis/projects.models';

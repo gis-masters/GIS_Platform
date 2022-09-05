@@ -2,6 +2,9 @@ import { action, computed, observable, makeObservable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
+import { attributesTableStore } from './AttributesTable.store';
+import { Role } from '../services/data/permissions.models';
+import { getPatch } from '../services/util/patch';
 import {
   CrgLayer,
   CrgLayersGroup,
@@ -12,9 +15,6 @@ import {
   NewCrgLayer,
   TreeItem
 } from '../services/gis/projects.models';
-import { getPatch } from '../services/util/patch';
-import { Role } from '../services/data/permissions.models';
-import { mapStore } from './Map.store';
 
 const MAX_LAYERS_IN_BATCH = 5;
 
@@ -170,8 +170,8 @@ class CurrentProject implements CrgProjectData {
       currentTransparency === previousTransparency &&
       currentType === previousType &&
       lastBatch.length < MAX_LAYERS_IN_BATCH &&
-      !mapStore.isFiltered(currentItem.payload) &&
-      !mapStore.isFiltered(previousItem.payload)
+      !attributesTableStore.isLayerFiltered(currentItem.payload) &&
+      !attributesTableStore.isLayerFiltered(previousItem.payload)
     );
   }
 
