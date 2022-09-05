@@ -11,8 +11,10 @@ import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 
+import '!style-loader!css-loader!sass-loader!./Form-View_type_string.scss';
+
 const FormViewTypeString: FC<FormControlProps> = observer(
-  ({ className, property, fieldValue = '—', errors, inSet }) => {
+  ({ className, property, fullWidthForOldForm, fieldValue = '—', errors, inSet }) => {
     if (fieldValue === null) {
       fieldValue = '—';
     }
@@ -21,7 +23,11 @@ const FormViewTypeString: FC<FormControlProps> = observer(
     const code = display === 'code';
 
     return (
-      <div className={cnFormView({ inSet, empty: fieldValue === '—', type: propertyType, display }, [className])}>
+      <div
+        className={cnFormView({ inSet, fullWidthForOldForm, empty: fieldValue === '—', type: propertyType, display }, [
+          className
+        ])}
+      >
         {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
         <FormViewValue code={code}>{code ? String(fieldValue) : nl2br(String(fieldValue))}</FormViewValue>
         <FormViewErrors errors={errors} />

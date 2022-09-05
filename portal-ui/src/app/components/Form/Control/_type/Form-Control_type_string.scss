@@ -6,4 +6,20 @@ body .Form-Control_type_string {
   fieldset {
     border: none;
   }
+
+  &.Form-Control_fullWidthForOldForm {
+    min-height: 38px;
+    padding: 10px;
+
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+
+    font-size: 14px;
+    line-height: 1.2;
+
+    input,
+    .MuiInputBase-root {
+      padding: 0;
+    }
+  }
 }
