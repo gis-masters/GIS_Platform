@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
@@ -25,6 +25,11 @@ interface ProjectActionsProps {
 @observer
 export class ProjectActionsEdit extends Component<ProjectActionsProps> {
   @observable private dialogOpen = false;
+
+  constructor(props: ProjectActionsProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { project, schema } = this.props;

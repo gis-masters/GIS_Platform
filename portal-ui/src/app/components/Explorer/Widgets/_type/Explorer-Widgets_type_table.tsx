@@ -11,6 +11,7 @@ import { Schema } from '../../../../services/data/schema.models';
 import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
+import { communicationService } from '../../../../services/communication.service';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
@@ -37,6 +38,14 @@ class ExplorerWidgetsTypeTable extends Component<ExplorerWidgetsProps> {
     if (getId(item) !== getId(prevProps.item)) {
       await this.fetchData();
     }
+
+    communicationService.vectorTablesUpdated.on(async () => {
+      await this.fetchData();
+    }, this);
+  }
+
+  componentWillUnmount() {
+    communicationService.off(this);
   }
 
   render() {
