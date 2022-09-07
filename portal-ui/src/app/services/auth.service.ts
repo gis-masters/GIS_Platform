@@ -139,6 +139,14 @@ class AuthService {
 
     return http.post(url, { password, token });
   }
+
+  async checkIsTokenExpired(token: string) {
+    const params = {
+      token: token
+    };
+
+    return http.get(await getChangePasswordUrl(), { params });
+  }
 }
 
 export const authService = AuthService.instance;

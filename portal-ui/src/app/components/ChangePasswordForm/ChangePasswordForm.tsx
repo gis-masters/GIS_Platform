@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
@@ -54,30 +54,54 @@ export class ChangePasswordForm extends Component {
   @observable private passwordValidationError: string;
   @observable private serverError: string;
   @observable private loading: boolean;
+  @observable private tokenExpired: boolean;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
+
+  async componentDidMount() {
+    await this.isTokenExpired();
+  }
 
   render() {
     const htmlId = generateRandomId();
 
     return (
       <div className={cnChangePassword(null, ['HomePageForm'])}>
-        <Form<Partial<ChangePassword>>
-          id={htmlId}
-          className={cnChangePassword('Form')}
-          schema={schema as unknown as Schema}
-          value={this.formValue}
-          auto
-          labelInTextField
-          actionFunction={this.savePassword}
-          actions={
-            <div className={cnChangePassword('Actions')}>
-              <Button disabled={this.loading} form={htmlId} type='submit' color='primary'>
-                Сохранить
-              </Button>
-            </div>
-          }
-        >
-          <div className={cnChangePassword('Title')}>Создание нового пароля</div>
-        </Form>
+        {this.tokenExpired && (
+          <div className={cnChangePassword('TokenExpired')}>
+            <div className={cnChangePassword('Message')}>Время действия ссылки на восстановление пароля истекло.</div>
+            <Button className={cnChangePassword('Button')} href='/restore-password' color='primary'>
+              Запросить новую ссылку для восстановления пароля
+            </Button>
+            <Button className={cnChangePassword('Button')} href='/'>
+              Вернуться на главную страницу
+            </Button>
+          </div>
+        )}
+
+        {this.tokenExpired === false && (
+          <Form<Partial<ChangePassword>>
+            id={htmlId}
+            className={cnChangePassword('Form')}
+            schema={schema as unknown as Schema}
+            value={this.formValue}
+            auto
+            labelInTextField
+            actionFunction={this.savePassword}
+            actions={
+              <div className={cnChangePassword('Actions')}>
+                <Button disabled={this.loading} form={htmlId} type='submit' color='primary'>
+                  Сохранить
+                </Button>
+              </div>
+            }
+          >
+            <div className={cnChangePassword('Title')}>Создание нового пароля</div>
+          </Form>
+        )}
       </div>
     );
   }
@@ -126,6 +150,25 @@ export class ChangePasswordForm extends Component {
   @action.bound
   private setLoading(isLoading: boolean): void {
     this.loading = isLoading;
+  }
+
+  @action.bound
+  private setTokenExpired(tokenExpired: boolean) {
+    this.tokenExpired = tokenExpired;
+  }
+
+  private async isTokenExpired() {
+    const pathname = location.pathname.split('/');
+
+    try {
+      await authService.checkIsTokenExpired(pathname[pathname.length - 1]);
+
+      this.setTokenExpired(false);
+    } catch (error) {
+      const err = error as AxiosError;
+
+      this.setTokenExpired(Number(err.status) === 404);
+    }
   }
 
   private get errors() {
