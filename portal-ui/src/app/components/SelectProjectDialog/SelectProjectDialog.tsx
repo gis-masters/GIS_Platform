@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 import { computed } from 'mobx';
 
 import { allProjects } from '../../stores/AllProjects.store';
@@ -11,10 +12,11 @@ import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 
 const cnSelectProjectDialogProps = cn('SelectProjectDialog');
 
-interface SelectProjectDialogProps {
+interface SelectProjectDialogProps extends IClassNameProps {
   projects?: CrgProject[];
   open: boolean;
   actionButtonLabel: string;
+  additionalAction?: ReactNode;
   onClose(): void;
   onSelect(items: CrgProject[]): void;
 }
@@ -26,11 +28,19 @@ export class SelectProjectsDialog extends Component<SelectProjectDialogProps> {
   }
 
   render() {
-    const { open, projects = this.projects, actionButtonLabel, onSelect, onClose } = this.props;
+    const {
+      open,
+      projects = this.projects,
+      actionButtonLabel,
+      className,
+      additionalAction,
+      onSelect,
+      onClose
+    } = this.props;
 
     return (
       <ChooseXTableDialog<CrgProject>
-        className={cnSelectProjectDialogProps()}
+        className={cnSelectProjectDialogProps(null, [className])}
         data={projects}
         title='Выбор проекта'
         cols={[
@@ -47,6 +57,7 @@ export class SelectProjectsDialog extends Component<SelectProjectDialogProps> {
         onClose={onClose}
         onSelect={onSelect}
         single
+        additionalAction={additionalAction}
         actionButtonProps={{
           children: actionButtonLabel
         }}

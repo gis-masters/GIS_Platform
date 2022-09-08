@@ -35,7 +35,7 @@ export class LibraryDocumentActionsFilesPlacement extends Component<LibraryDocum
       <>
         <ActionsItem
           className={cnLibraryDocumentActionsFilesPlacement()}
-          title='Разместить в проекте'
+          title='Разместить растровые файлы документа в проекте'
           icon={this.dialogOpen ? <LayerAdd /> : <LayerAddOutlined />}
           onClick={this.openDialog}
           as={as}

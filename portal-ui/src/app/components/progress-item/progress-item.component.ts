@@ -45,7 +45,7 @@ export class ProgressItemComponent implements OnDestroy {
         ) {
           const layerName = this.event.payload.payload.description;
 
-          return layerName ? layerName : 'Готово';
+          return layerName || 'Готово';
         }
 
         break;

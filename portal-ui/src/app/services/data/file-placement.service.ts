@@ -14,9 +14,14 @@ export interface FilePlacementModel {
   wsUiId: string;
   fileId: string;
   projectId: number;
+  invertedCoordinates?: boolean;
 }
 
-export async function placeFile(fileInfo: FileInfo, projectId: number): Promise<ProcessResponse> {
+export async function placeFile(
+  fileInfo: FileInfo,
+  projectId: number,
+  invertedCoordinates = false
+): Promise<ProcessResponse> {
   let type: ProcessType;
   if (isGmlFile(fileInfo)) {
     type = ProcessType.IMPORT_GML;
@@ -33,7 +38,8 @@ export async function placeFile(fileInfo: FileInfo, projectId: number): Promise<
       payload: {
         wsUiId: wsService.getId(),
         fileId: fileInfo.id,
-        projectId: projectId
+        projectId: projectId,
+        invertedCoordinates
       }
     }
   });

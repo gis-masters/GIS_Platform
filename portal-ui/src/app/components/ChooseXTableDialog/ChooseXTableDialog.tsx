@@ -65,6 +65,7 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
       <Dialog PaperProps={{ className: cnChooseXTableDialog(null, [className]) }} open={open} onClose={this.close}>
         <DialogContent>
           <ChooseXTable<T>
+            className={cnChooseXTableDialog('Table')}
             title={title}
             data={data}
             cols={cols}
