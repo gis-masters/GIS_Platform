@@ -22,25 +22,31 @@ public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
     private JsonNode entityIds;
 
     public CrgAuditEvent() {
-        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, null, null, null, null, null, null);
+        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, null, null, null, null, null, null, null);
     }
 
     public CrgAuditEvent(String token, String actionType) {
-        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, token, actionType, null, null, null, null);
+        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, token, actionType,
+             null, null, null, null, null);
     }
 
     public CrgAuditEvent(String token, String actionType, String entityName, String entityType, Long entityId) {
         this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, token, actionType, entityName, entityType,
-             entityId, null);
+             entityId, null, null);
     }
 
     public CrgAuditEvent(JsonNode state, String aType, String name, String eType, Long id) {
-        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, null, aType, name, eType, id, state);
+        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, null, aType, name, eType, id, state, null);
     }
 
     public CrgAuditEvent(String aType, String name, String eType, JsonNode entityIds) {
-        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, null, aType, name, eType, null, null);
-        this.entityIds = entityIds;
+        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, null, aType, name, eType, null, null,
+             entityIds);
+    }
+
+    public CrgAuditEvent(JsonNode state, String aType, String name, String eType, JsonNode entityIds) {
+        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, null, aType, name, eType, null, state,
+             entityIds);
     }
 
     public CrgAuditEvent(String token,
@@ -50,7 +56,7 @@ public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
                          Long entityId,
                          JsonNode entityStateAfter) {
         this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, token, actionType, entityName, entityType,
-             entityId, entityStateAfter);
+             entityId, entityStateAfter, null);
     }
 
     private CrgAuditEvent(UUID id,
@@ -61,7 +67,8 @@ public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
                           String entityName,
                           String entityType,
                           Long entityId,
-                          JsonNode entityStateAfter) {
+                          JsonNode entityStateAfter,
+                          JsonNode entityIds) {
         super(id, exchange, routingKey);
 
         this.token = token;
@@ -71,6 +78,7 @@ public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
         this.entityType = entityType;
         this.entityId = entityId;
         this.entityStateAfter = entityStateAfter;
+        this.entityIds = entityIds;
     }
 
     public String getToken() {

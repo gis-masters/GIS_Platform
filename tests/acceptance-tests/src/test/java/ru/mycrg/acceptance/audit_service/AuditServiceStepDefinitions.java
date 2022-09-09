@@ -211,6 +211,11 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
         checkAuditEvent(MULTIPLE_DELETION.name(), FEATURE, currentTableName);
     }
 
+    @And("Создан аудит лог о массовом редактировании записей")
+    public void checkFeaturesUpdate() {
+        checkAuditEvent(MULTIPLE_UPDATE.name(), FEATURE, currentTableName);
+    }
+
     @And("Создана запись в журнале аудита о создании схемы")
     public void checkAuditEventForSchemaCreate() {
         checkAuditEvent(CREATE.name(), SCHEMA, "schemas");

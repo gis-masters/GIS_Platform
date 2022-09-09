@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
+import static ru.mycrg.data_service.util.StringUtil.join;
 
 public class SqlBuilder {
 
@@ -123,12 +124,34 @@ public class SqlBuilder {
     @NotNull
     public static String buildParameterizedUpdateQuery(@NotNull ResourceQualifier qualifier,
                                                        @NotNull Feature feature,
-                                                       @NotNull String primaryKey) {
-        String updateQuery = "UPDATE " + qualifier.getTableQualifier() + " SET ";
-        StringBuilder setPart = new StringBuilder();
-        String whereSection = " WHERE (" + primaryKey + " = " + qualifier.getRecord() + ")";
+                                                       @NotNull String primaryKey,
+                                                       @NotNull List<Long> recordIds) {
+        String whereSection = " WHERE (" + primaryKey + " in (" + join(recordIds) + "))";
 
+        return prepareUpdateQuery(feature, qualifier, whereSection);
+    }
+
+    @NotNull
+    public static String buildParameterizedBatchUpdateQuery(ResourceQualifier qualifier,
+                                                            Feature feature,
+                                                            String primaryKey) {
+        String whereSection = String.format(" WHERE %s = :%s ", primaryKey, primaryKey);
+
+        return prepareUpdateQuery(feature, qualifier, whereSection);
+    }
+
+    private static String getProperty(String property) {
+        if (property.equalsIgnoreCase("createdAt")) {
+            return "created_at";
+        }
+
+        return property;
+    }
+
+    private static String prepareUpdateQuery(Feature feature, ResourceQualifier qualifier, String whereSection) {
+        StringBuilder setPart = new StringBuilder();
         GeoJsonObject geometry = feature.getGeometry();
+
         if (geometry != null) {
             setPart.append(DEFAULT_GEOMETRY_COLUMN_NAME).append(" = ")
                    .append(buildGeometryValue(feature)).append(", ");
@@ -140,15 +163,8 @@ public class SqlBuilder {
         });
 
         String setPartSection = setPart.substring(0, setPart.length() - 2);
+        String updateQuery = "UPDATE " + qualifier.getTableQualifier() + " SET ";
 
         return updateQuery + setPartSection + whereSection;
-    }
-
-    private static String getProperty(String property) {
-        if (property.equalsIgnoreCase("createdAt")) {
-            return "created_at";
-        }
-
-        return property;
     }
 }

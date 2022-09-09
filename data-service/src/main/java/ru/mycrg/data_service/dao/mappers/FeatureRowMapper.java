@@ -36,6 +36,9 @@ public class FeatureRowMapper extends BySchemaRowMapper implements RowMapper<Fea
                 case BIGINT:
                     properties.put(columnName, rs.getLong(i));
                     break;
+                case INTEGER:
+                    properties.put(columnName, rs.getInt(i));
+                    break;
                 case OTHER:
                     if (rs.getObject(i) != null && schema != null) {
                         handleBySchema(properties, columnName, rs.getObject(i));

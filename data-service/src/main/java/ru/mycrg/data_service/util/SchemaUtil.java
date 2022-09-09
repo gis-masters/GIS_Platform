@@ -7,7 +7,9 @@ import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.ValueTitleProjection;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static ru.mycrg.data_service.service.JsonConverter.toJsonNode;
@@ -67,6 +69,24 @@ public class SchemaUtil {
                 .getProperties().stream()
                 .filter(prDto -> prDto.getName().equalsIgnoreCase(name))
                 .findFirst();
+    }
+
+    public static Map<String, Object> excludeComplexFields(SchemaDto schema, Map<String, Object> properties) {
+        Map<String, Object> propsWithoutComplexFields = new HashMap<>();
+
+        properties.keySet().forEach(name -> {
+            if (!isComplexField(schema.getProperties(), name)) {
+                propsWithoutComplexFields.put(name, properties.get(name));
+            }
+        });
+
+        return propsWithoutComplexFields;
+    }
+
+    public static boolean isComplexField(List<SimplePropertyDto> properties, String propertyName) {
+        return properties.stream()
+                         .filter(property -> property.getName().equalsIgnoreCase(propertyName))
+                         .anyMatch(property -> FILE.equals(property.getValueType()));
     }
 
     private static boolean isPropertyExistByType(SchemaDto schema, ValueType type) {

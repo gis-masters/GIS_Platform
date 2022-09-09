@@ -1,10 +1,11 @@
 package ru.mycrg.data_service.service.resources;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.protectors.DatasetProtector;
 import ru.mycrg.data_service.service.resources.protectors.TableProtector;
 
@@ -17,6 +18,8 @@ import static org.springframework.web.servlet.HandlerMapping.URI_TEMPLATE_VARIAB
 
 @Component
 public class ResourcesInterceptor implements HandlerInterceptor {
+
+    private final Logger log = LoggerFactory.getLogger(ResourcesInterceptor.class);
 
     private final TableProtector tableProtector;
     private final DatasetProtector datasetProtector;
@@ -32,6 +35,8 @@ public class ResourcesInterceptor implements HandlerInterceptor {
                              @NotNull HttpServletResponse response,
                              @NotNull Object handler) {
         if (isRequestToTables(request)) {
+            log.debug("ResourcesInterceptor request path: '{}'", request.getServletPath());
+
             String datasetId = getAttribute(request, "datasetId")
                     .orElseThrow(() -> new BadRequestException("Not found attribute 'datasetId'"));
             String tableId = getAttribute(request, "tableId")
@@ -52,10 +57,13 @@ public class ResourcesInterceptor implements HandlerInterceptor {
     @NotNull
     private Optional<String> getAttribute(@NotNull HttpServletRequest request, String attrName) {
         try {
+            log.debug("Request get attr {}", request.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE));
             var attributes = (Map<String, String>) request.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
             return Optional.ofNullable(attributes.get(attrName));
         } catch (Exception e) {
+            log.warn("Cant get attributes from request. Reason: {}", e.getMessage());
+
             return Optional.empty();
         }
     }

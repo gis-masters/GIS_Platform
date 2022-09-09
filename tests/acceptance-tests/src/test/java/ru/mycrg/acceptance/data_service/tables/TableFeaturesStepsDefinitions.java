@@ -6,6 +6,7 @@ import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.acceptance.data_service.dto.GeoJsonModel;
 
@@ -29,6 +30,8 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     public static Integer currentFeatureId;
     public static List<Integer> featureIds = new ArrayList<>();
+
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
@@ -78,6 +81,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void createSomeFeaturesInCurrentTable(String quantity) {
         Map<String, Object> properties = new HashMap<>();
         properties.put("title", "some feature");
+        properties.put("objectname", "test obj_name");
         for (int i = 0; i < Integer.parseInt(quantity); i++) {
             createFeature(new GeoJsonModel(properties));
             featureIds.add(currentFeatureId);
@@ -121,6 +125,32 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void deleteMultipleRecords() {
         if (!featureIds.isEmpty()) {
             deleteFeatures(featureIds);
+        }
+    }
+
+    @When("Пользователь делает запрос на массовое редактирование записей слоя")
+    public void updateMultipleRecords() {
+        authorizationBase.loginAsCurrentUser();
+
+        Map<String, Object> props = new HashMap<>();
+        props.put("objectname", "updated_name");
+        props.put("title", "Updated title");
+
+        if (!featureIds.isEmpty()) {
+            updateFeatures(props, featureIds);
+        }
+    }
+
+    @When("Администратор делает запрос на массовое редактирование записей слоя")
+    public void updateMultipleRecordsAsAdmin() {
+        authorizationBase.loginAsOwner();
+
+        Map<String, Object> props = new HashMap<>();
+        props.put("objectname", "updated_name");
+        props.put("title", "Updated title");
+
+        if (!featureIds.isEmpty()) {
+            updateFeatures(props, featureIds);
         }
     }
 
@@ -168,6 +198,30 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertNotNull(jsonPath.get("properties"));
         assertNotNull(jsonPath.get("geometry"));
         assertNotNull(jsonPath.get("id"));
+    }
+
+    @And("Записи в таблице успешно обновлены")
+    public void checkUpdatedFeatures() {
+        getFeatures(featureIds);
+
+        jsonPath = response.jsonPath();
+
+        List<Map<String, Object>> properties = jsonPath.getList("properties");
+        properties.forEach(property -> assertEquals("Updated title", property.get("title").toString()));
+    }
+
+    @And("Калькулируемые поля пересчитаны в связи с редактированием")
+    public void checkCalculatedFields() {
+        List<Map<String, Object>> properties = jsonPath.getList("properties");
+
+        properties
+                .forEach(property -> {
+                    String objectName = property.get("objectname").toString();
+                    String objectId = property.get("objectid").toString();
+                    String expectedName = "updated_name_test_" + objectId;
+
+                    assertEquals(expectedName, objectName);
+                });
     }
 
     @And("Записи отсутствуют в БД")
@@ -226,5 +280,33 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                 .basePath(path)
                 .when().
                         delete(String.format("/%s", join(",", iterable)));
+    }
+
+    public void updateFeatures(Map<String, Object> properties, List<Integer> ids) {
+        String path = String.format("/api/data/datasets/%s/tables/%s/records-multiple",
+                                    currentDatasetIdentifier, currentTableName);
+
+        Iterable<String> iterable = ids.stream().map(Object::toString).collect(Collectors.toList());
+
+        response = getBaseRequestWithCurrentCookie().
+                given().
+                        basePath(path).
+                        contentType(PATCH_CONTENT_TYPE).
+                        body(gson.toJson(properties))
+                .when().
+                        patch(String.format("/%s", join(",", iterable)));
+    }
+
+    public void getFeatures(List<Integer> ids) {
+        String path = String.format("/api/data/datasets/%s/tables/%s/records",
+                                    currentDatasetIdentifier, currentTableName);
+
+        Iterable<String> iterable = ids.stream().map(Object::toString).collect(Collectors.toList());
+
+        response = getBaseRequestWithCurrentCookie().
+                given().
+                        basePath(path)
+                .when().
+                        get(String.format("/%s", join(",", iterable)));
     }
 }

@@ -7,10 +7,12 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.data_service.dto.PermissionCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
 
 import static org.junit.Assert.assertTrue;
+import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class TablesStepsDefinitions extends BaseStepsDefinitions {
@@ -102,6 +104,13 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         updateTableInfo(currentTableName, new TableUpdateDto("update title"));
     }
 
+    @When("Администратор даёт доступ: {string} для текущего пользователя на текущую таблицу")
+    public void createPermissionForCurrentUserForCurrentDataset(String role) {
+        authorizationBase.loginAsOwner();
+
+        createPermissionForCurrentDataset(new PermissionCreateDto("user", userId, role));
+    }
+
     private void updateTableInfo(String tableName, TableUpdateDto dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -115,5 +124,14 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + currentTableName);
+    }
+
+    private void createPermissionForCurrentDataset(PermissionCreateDto dto) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(dto)).
+                        contentType(ContentType.JSON)
+                .when().
+                        post("/" + currentTableName + "/roleAssignment");
     }
 }

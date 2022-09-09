@@ -20,6 +20,7 @@ import ru.mycrg.geo_json.Feature;
 
 import java.util.*;
 
+import static com.google.common.primitives.Longs.asList;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
 import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
@@ -58,7 +59,8 @@ public class RecordsDao {
     public void updateRecordById(@NotNull ResourceQualifier qualifier,
                                  @NotNull Map<String, Object> data,
                                  @NotNull SchemaDto schema) throws CrgDaoException {
-        spatialRecordsDao.updateById(qualifier, new Feature(data), ID.getName(), schema);
+        spatialRecordsDao.updateByIds(qualifier, new Feature(data), ID.getName(), schema,
+                                      asList(qualifier.getRecord()));
     }
 
     public void addRecordsAsBatch(@NotNull ResourceQualifier rIdentifier,

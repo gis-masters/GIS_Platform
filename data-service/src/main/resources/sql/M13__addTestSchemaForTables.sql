@@ -1,4 +1,4 @@
-INSERT INTO data.schemas (name, class_rule)
+INSERT INTO data.schemas (name, class_rule, calculated_fields)
 SELECT 'schema_for_test_table',
        '{
   "name": "schema_for_test_table",
@@ -6,6 +6,12 @@ SELECT 'schema_for_test_table',
   "description": "Схема для тестов",
   "tableName": "test_table",
   "properties": [
+    {
+      "name": "objectname",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
     {
       "name": "title",
       "title": "Заголовок",
@@ -91,7 +97,10 @@ SELECT 'schema_for_test_table',
       "calculatedValueWellKnownFormula": "st_length"
     }
   ]
-}'
+}',
+       'var results = {};
+       results.objectname = obj.objectname + ''_test_''+ obj.objectid;
+       return results;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'schema_for_test_table');
 
 INSERT INTO data.schemas (name, class_rule)

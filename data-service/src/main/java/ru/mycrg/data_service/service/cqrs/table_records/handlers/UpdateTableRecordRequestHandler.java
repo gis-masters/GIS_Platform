@@ -17,6 +17,7 @@ import ru.mycrg.mediator.Voidy;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.google.common.primitives.Longs.asList;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
@@ -61,7 +62,7 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
                               .forEach(newFeature::setProperty);
 
         try {
-            spatialRecordsDao.updateById(rQualifier, newFeature, PRIMARY_KEY, schema);
+            spatialRecordsDao.updateByIds(rQualifier, newFeature, PRIMARY_KEY, schema, asList(rQualifier.getRecord()));
         } catch (CrgDaoException e) {
             String msg = "Не удалось обновить фичу в таблице: " + rQualifier.getTable();
             logError(msg, e);

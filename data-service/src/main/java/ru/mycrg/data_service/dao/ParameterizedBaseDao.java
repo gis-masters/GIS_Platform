@@ -5,9 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+
+import java.util.List;
 
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.ErrorDetailsExtractor.extractDetails;
@@ -44,6 +47,17 @@ public class ParameterizedBaseDao {
             log.debug("UPDATE by id QUERY: [{}]", query);
 
             pJdbcTemplate.update(query, parameterSource);
+        } catch (Exception e) {
+            throw new CrgDaoException(e.getMessage());
+        }
+    }
+
+    public void batchUpdate(@NotNull String query,
+                            @NotNull List<MapSqlParameterSource> parameterSource) throws CrgDaoException {
+        try {
+            log.debug("batchUpdate QUERY: [{}]", query);
+
+            pJdbcTemplate.batchUpdate(query, parameterSource.toArray(SqlParameterSource[]::new));
         } catch (Exception e) {
             throw new CrgDaoException(e.getMessage());
         }

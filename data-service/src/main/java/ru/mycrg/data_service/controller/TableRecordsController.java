@@ -7,10 +7,7 @@ import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.SchemaService;
-import ru.mycrg.data_service.service.cqrs.table_records.requests.CreateTableRecordRequest;
-import ru.mycrg.data_service.service.cqrs.table_records.requests.DeleteMultipleTableRecordsRequest;
-import ru.mycrg.data_service.service.cqrs.table_records.requests.DeleteTableRecordRequest;
-import ru.mycrg.data_service.service.cqrs.table_records.requests.UpdateTableRecordRequest;
+import ru.mycrg.data_service.service.cqrs.table_records.requests.*;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -18,8 +15,10 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.Mediator;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
@@ -43,11 +42,29 @@ public class TableRecordsController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/datasets/{datasetId}/tables/{tableId}/records/{recordIds}")
+    public ResponseEntity<List<Feature>> getTableRecords(@PathVariable String datasetId,
+                                                         @PathVariable String tableId,
+                                                         @PathVariable List<Long> recordIds) {
+        ResourceQualifier qualifier = new ResourceQualifier(datasetId, tableId);
+
+        IResourceModel table = tableService.getInfo(qualifier);
+        SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
+                                        .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
+
+        List<Feature> features = spatialRecordsDao.findByIds(qualifier, schema, recordIds);
+
+        return new ResponseEntity<>(features, OK);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/datasets/{datasetId}/tables/{tableId}/records")
     public ResponseEntity<Feature> createTableRecord(@PathVariable String datasetId,
                                                      @PathVariable String tableId,
                                                      @RequestBody Feature feature) {
-        IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
+        ResourceQualifier resourceQualifier = new ResourceQualifier(datasetId, tableId);
+
+        IResourceModel table = tableService.getInfo(resourceQualifier);
         SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
                                         .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
 
@@ -56,7 +73,7 @@ public class TableRecordsController {
 
         Feature newFeature = mediator.execute(
                 new CreateTableRecordRequest(schema,
-                                             new ResourceQualifier(datasetId, tableId),
+                                             resourceQualifier,
                                              feature));
 
         return new ResponseEntity<>(newFeature, CREATED);
@@ -79,6 +96,27 @@ public class TableRecordsController {
                 new UpdateTableRecordRequest(schema,
                                              new ResourceQualifier(datasetId, tableId, recordId, FEATURE),
                                              feature));
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PatchMapping(path = "/datasets/{datasetId}/tables/{tableId}/records-multiple/{recordIds}",
+                  consumes = APPLICATION_JSON_MERGE_PATCH)
+    public ResponseEntity<Object> updateMultipleTableRecord(@PathVariable String datasetId,
+                                                            @PathVariable String tableId,
+                                                            @PathVariable List<Long> recordIds,
+                                                            @RequestBody Map<String, Object> properties) {
+        IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
+        SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
+                                        .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
+        schemaService.throwIfNotMatchSchema(schema, properties);
+
+        mediator.execute(
+                new UpdateMultipleTableRecordRequest(new ResourceQualifier(datasetId, tableId),
+                                                     properties,
+                                                     schema,
+                                                     recordIds));
 
         return ResponseEntity.noContent().build();
     }

@@ -60,7 +60,7 @@ Feature: Выборка проектов
       | project_name                     |
       | otherName                        |
     When Администратор делает запрос на выборку проектов с фильтрацией по полю "<filterKey>" и значению "<filterValue>"
-    Then В выборке присутствуют определённое кол-во элементов: "3"
+    Then В выборке присутствуют определённое кол-во элементов: "2"
     Examples:
       | filterKey | filterValue |
       | name      | PROJECT     |
