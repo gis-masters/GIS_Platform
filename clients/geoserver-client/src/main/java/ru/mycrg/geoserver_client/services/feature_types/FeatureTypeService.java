@@ -6,6 +6,7 @@ import okhttp3.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
+import ru.mycrg.geoserver_client.services.storage.vector.DataStoreModel;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
@@ -15,8 +16,9 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
 
     private final Logger log = LoggerFactory.getLogger(FeatureTypeService.class);
 
-    public static final String WORKSPACES = "/workspaces/";
-    public static final String DATA_STORES = "/datastores/";
+    private static final String WORKSPACES = "/workspaces/";
+    private static final String DATA_STORES = "/datastores/";
+    private static final String FEATURE_TYPES = "/featuretypes/";
 
     public FeatureTypeService(String accessToken) {
         super(accessToken);
@@ -29,7 +31,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
         String url = getGeoserverRestUrl()
                 .append(WORKSPACES).append(workspaceName)
                 .append(DATA_STORES).append(dataStoreName)
-                .append("/featuretypes.json").toString();
+                .append(FEATURE_TYPES).toString();
 
         Request request = builderWithBearerAuth.url(url)
                                                .get().build();
@@ -48,7 +50,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
 
         String url = getGeoserverRestUrl()
                 .append(WORKSPACES).append(workspaceName)
-                .append("/featuretypes/")
+                .append(FEATURE_TYPES)
                 .append(featureName).append(".json").toString();
 
         Request request = builderWithBearerAuth.url(url).get().build();
@@ -81,12 +83,34 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
         String url = getGeoserverRestUrl()
                 .append(WORKSPACES).append(workspaceName)
                 .append(DATA_STORES).append(dataStoreName)
-                .append("/featuretypes.json").toString();
+                .append(FEATURE_TYPES).toString();
 
         Request request = builderWithBearerAuth.url(url)
                                                .post(body).build();
 
         log.debug("create feature: {} on datastore: {}", featureName, dataStoreName);
+
+        return httpClient.handleRequest(request);
+    }
+
+    @Override
+    public ResponseModel<Object> create(String workspaceName,
+                                        String dataStoreName,
+                                        FeatureTypeModel featureType) throws HttpClientException {
+        log.debug("try create feature new: {} in: {}", featureType, workspaceName);
+
+        String payload = gson.toJson(new FeatureTypeWrapModel(featureType));
+
+        String url = getGeoserverRestUrl()
+                .append(WORKSPACES).append(workspaceName)
+                .append(DATA_STORES).append(dataStoreName)
+                .append(FEATURE_TYPES).toString();
+
+        Request request = builderWithBearerAuth.url(url)
+                                               .post(RequestBody.create(payload, JSON_MEDIA_TYPE))
+                                               .build();
+
+        log.debug("create feature: {} on datastore: {}", featureType, dataStoreName);
 
         return httpClient.handleRequest(request);
     }
@@ -100,7 +124,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
         String url = getGeoserverRestUrl()
                 .append(WORKSPACES).append(workspaceName)
                 .append(DATA_STORES).append(dataStoreName)
-                .append("/featuretypes/").append(featureName)
+                .append(FEATURE_TYPES).append(featureName)
                 .toString();
 
         Request request = builderWithBearerAuth

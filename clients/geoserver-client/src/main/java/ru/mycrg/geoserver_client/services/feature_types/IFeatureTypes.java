@@ -22,6 +22,8 @@ public interface IFeatureTypes {
      */
     ResponseModel<Object> create(String workspaceName, String dataStoreName, String featureName, Integer srs) throws HttpClientException;
 
+    ResponseModel<Object> create(String workspaceName, String dataStoreName, FeatureTypeModel featureType) throws HttpClientException;
+
     /**
      * Удаление featureType. <p>
      *

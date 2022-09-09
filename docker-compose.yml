@@ -51,9 +51,12 @@ services:
       - /opt/file_storage:/opt/file_storage
     environment:
       APM_URL: ${APM_URL}
+      GEOSERVER_ADMIN_USER: admin
       GEOSERVER_ADMIN_PASSWORD: $GEOSERVER_PASSWORD
       INITIAL_MEMORY: ${JAVA_XMS_SIZE}
       MAXIMUM_MEMORY: ${JAVA_XMX_SIZE}
+      STABLE_EXTENSIONS: importer-plugin
+      COMMUNITY_EXTENSIONS: ogr-datastore-plugin
 
 
   auth-service:
