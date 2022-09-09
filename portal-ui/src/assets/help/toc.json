@@ -33,6 +33,11 @@
         "id": "accountChange",
         "title": "Смена учётной записи",
         "contentUrl": "/assets/help/map/03accountChange.html"
+      },
+      {
+        "id": "restorePassword",
+        "title": "Восстановление пароля",
+        "contentUrl": "/assets/help/login/03restorePassword.html"
       }
     ]
   },
@@ -103,6 +108,23 @@
         "title": "Наборы данных",
         "contentUrl": "/assets/help/map/dataManagement/01dataSets.html"
       },
+
+      {
+        "id": "editDataset",
+        "title": "Редактирование набора данных",
+        "contentUrl": "/assets/help/map/dataManagement/08editDataset.html"
+      },
+      {
+        "id": "substrate",
+        "title": "Картографическая подоснова",
+        "contentUrl": "/assets/help/map/dataManagement/03substrate.html"
+      }
+    ]
+  },
+  {
+    "id": "data-management",
+    "title": "Библиотека документов",
+    "children": [
       {
         "id": "libraryDocs",
         "title": "Библиотека документов",
@@ -115,17 +137,12 @@
       },
       {
         "id": "registry",
-        "title": "Реестр",
+        "title": "Реестр документов",
         "contentUrl": "/assets/help/map/dataManagement/05registry.html"
       },
       {
-        "id": "substrate",
-        "title": "Картографическая подоснова",
-        "contentUrl": "/assets/help/map/dataManagement/03substrate.html"
-      },
-      {
         "id": "placement_project",
-        "title": "Размещение файлов в проект",
+        "title": "Размещение растровых файлов в проект",
         "contentUrl": "/assets/help/map/dataManagement/06placement_project.html"
       },
       {
@@ -137,6 +154,11 @@
         "id": "related_doc",
         "title": "Связность документов",
         "contentUrl": "/assets/help/map/dataManagement/08related_doc.html"
+      },
+      {
+        "id": "00gmlImport(ENU_NED)",
+        "title": "Размещение gml файлов в проект",
+        "contentUrl": "/assets/help/map/dataManagement/09gmlImport(ENU_NED).html"
       }
     ]
   },
@@ -167,6 +189,11 @@
             "id": "renameGroup",
             "title": "Переименование группы",
             "contentUrl": "/assets/help/map/projectManagement/03renameGroup.html"
+          },
+          {
+            "id": "visual_max_min",
+            "title": "Настройка слоя",
+            "contentUrl": "/assets/help/map/projectManagement/09visual_max_min.html"
           },
           {
             "id": "deleteGroup",
@@ -209,6 +236,11 @@
         "id": "org-admin",
         "title": "Работа с данными слоя(Атрибутивная таблица)",
         "children": [
+          {
+            "id": "new_atribut_table",
+            "title": "Работа с данными слоя",
+            "contentUrl": "/assets/help/map/12new_atribut_table.html"
+          },
           {
             "id": "punctureObject",
             "title": "Получение дополнительной информации об объекте (прокол)",
