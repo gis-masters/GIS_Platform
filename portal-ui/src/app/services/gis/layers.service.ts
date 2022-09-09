@@ -17,6 +17,7 @@ import {
 import { getGeoServerUrl, getProjectLayersUrl, getProjectLayerUrl, replaceUrl } from '../server-urls.service';
 import { Toast } from '../../components/Toast/Toast';
 import { services } from '../services';
+import { PropertyType, Schema } from '../data/schema.models';
 
 interface GeoserverLayerInfo {
   name: string;
@@ -76,6 +77,30 @@ interface GeoserverCoverage {
     crs: string;
   };
 }
+
+export const crgLayerSchema: Schema<CrgLayer> = {
+  properties: [
+    {
+      name: 'title',
+      title: 'Название слоя',
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'minZoom',
+      title: 'Минимальный уровень масштабирования',
+      maxValue: 40,
+      description: 'Слой будет скрыт при уровне масштаба меньше указанного',
+      propertyType: PropertyType.INT
+    },
+    {
+      name: 'maxZoom',
+      title: 'Максимальный уровень масштабирования',
+      maxValue: 40,
+      description: 'Слой будет скрыт при уровне масштаба больше указанного',
+      propertyType: PropertyType.INT
+    }
+  ]
+};
 
 export async function deleteLayer(layerId: number): Promise<void> {
   await http.delete(await getProjectLayerUrl(currentProject.id, layerId));

@@ -225,7 +225,15 @@ class CurrentProject implements CrgProjectData {
       'transparency'
     ];
 
-    const layersMeaningfulFields: (keyof NewCrgLayer)[] = ['enabled', 'parentId', 'position', 'title', 'transparency'];
+    const layersMeaningfulFields: (keyof NewCrgLayer)[] = [
+      'enabled',
+      'parentId',
+      'position',
+      'title',
+      'transparency',
+      'minZoom',
+      'maxZoom'
+    ];
 
     return {
       groupsToCreate: this.tree

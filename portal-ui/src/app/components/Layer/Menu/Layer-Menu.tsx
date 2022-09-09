@@ -10,7 +10,8 @@ import {
   DeleteOutline,
   Edit,
   ListAlt,
-  UnarchiveOutlined
+  UnarchiveOutlined,
+  TuneOutlined
 } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
@@ -46,6 +47,9 @@ import { LibraryDocument } from '../../LibraryDocument/LibraryDocument';
 import { VectorTableCard } from '../../VectorTableCard/VectorTableCard';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
+import { FormDialog } from '../../FormDialog/FormDialog';
+import { TextBadge } from '../../TextBadge/TextBadge';
+import { crgLayerSchema } from '../../../services/gis/layers.service';
 
 interface LayerMenuProps {
   entity: TreeItemPayload;
@@ -70,6 +74,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @observable private rasterDocument: LibraryRecord;
   @observable private vectorTable: VectorTable;
   @observable private dialogOpen = false;
+  @observable private layerEditDialog = false;
 
   constructor(props: LayerMenuProps) {
     super(props);
@@ -98,6 +103,15 @@ export class LayerMenu extends Component<LayerMenuProps> {
           <MenuItem disableRipple>
             <LayerTransparency entity={entity} />
           </MenuItem>
+
+          {editMode && !isGroup && (
+            <MenuItem onClick={this.openLayerEditDialog}>
+              <ListItemIcon>
+                <TuneOutlined />
+              </ListItemIcon>
+              Свойства
+            </MenuItem>
+          )}
 
           {!editMode && this.isVectorLayer && (
             <MenuItem onClick={this.openAttributeTable}>
@@ -233,6 +247,23 @@ export class LayerMenu extends Component<LayerMenuProps> {
               <Button onClick={this.closeDialog}>Закрыть</Button>
             </DialogActions>
           </Dialog>
+        )}
+
+        {!isGroup && editMode && (
+          <FormDialog<Partial<CrgLayer>>
+            open={this.layerEditDialog}
+            schema={crgLayerSchema}
+            value={entity as CrgLayer}
+            actionFunction={this.editLayer}
+            actionButtonProps={{ children: 'Изменить' }}
+            onClose={this.closeLayerEditDialog}
+            title={
+              <>
+                Свойства слоя
+                <TextBadge id={entity.id} />
+              </>
+            }
+          />
         )}
       </>
     );
@@ -403,6 +434,13 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @action.bound
+  private editLayer(layer: Partial<CrgLayer>) {
+    (this.props.entity as CrgLayer).title = layer.title;
+    (this.props.entity as CrgLayer).maxZoom = layer.maxZoom;
+    (this.props.entity as CrgLayer).minZoom = layer.minZoom;
+  }
+
+  @action.bound
   private deleteGroup() {
     currentProject.deleteGroup(this.props.entity as CrgLayersGroup);
   }
@@ -421,6 +459,17 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @action.bound
   private setVectorTable(vectorTable?: VectorTable) {
     this.vectorTable = vectorTable;
+  }
+
+  @action.bound
+  private openLayerEditDialog() {
+    this.layerEditDialog = true;
+    this.props.onClose();
+  }
+
+  @action.bound
+  private closeLayerEditDialog() {
+    this.layerEditDialog = false;
   }
 
   @action.bound
