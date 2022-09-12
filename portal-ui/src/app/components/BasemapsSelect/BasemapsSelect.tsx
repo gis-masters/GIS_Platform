@@ -58,6 +58,8 @@ export class BasemapsSelect extends Component {
             open={this.open}
             anchorEl={this.ref.current}
             onClose={this.close}
+            transformOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
             {(currentUser.isAdmin || currentProject.role === Role.OWNER) && (
               <BasemapsSelectAddButton disabledItems={this.basemaps} />
