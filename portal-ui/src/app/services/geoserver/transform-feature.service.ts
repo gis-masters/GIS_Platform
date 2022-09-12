@@ -10,7 +10,7 @@ import { getFeatureProjection } from './projections.service';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { createVectorTableRecord } from '../data/data.service';
 import { usersService } from '../data/users.service';
-import { getWfsUrl } from '../server-urls.service';
+import { getDatasetTableMultipleRecordsUrl, getWfsUrl } from '../server-urls.service';
 import { CrgLayer } from '../gis/projects.models';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { getEnvironment } from '../environment';
@@ -59,6 +59,12 @@ export class TransformFeatureService {
       </Transaction>`;
 
     return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
+  }
+
+  async multipleEdit(datasetId: string, tableId: string, recordsId: string, properties: Properties): Promise<void> {
+    const url = await getDatasetTableMultipleRecordsUrl(datasetId, tableId, recordsId);
+
+    await http.patch(url, properties);
   }
 
   async updateFeatures(

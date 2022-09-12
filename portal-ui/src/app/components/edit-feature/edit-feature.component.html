@@ -1,13 +1,5 @@
 <div class="container-fluid edit-feature">
-  <div
-    class="row"
-    style="
-      padding-top: 5px;
-      padding-bottom: 5px;
-
-      background-color: gainsboro;
-    "
-  >
+  <div class="row" style="padding-top: 5px; padding-bottom: 5px; background-color: gainsboro">
     <div class="col-12" style="padding-right: 5px; padding-left: 5px">
       <button
         *ngIf="updatingAllowed"
@@ -42,7 +34,7 @@
   </div>
 
   <div class="row edit-content">
-    <crg-loading *ngIf="isSaveInProgress" [percents]="loadPercent"></crg-loading>
+    <crg-loading *ngIf="isSaveInProgress"></crg-loading>
 
     <ng-container *ngIf="mode === 'single'; else editAttrsForm">
       <mat-tab-group class="tabs" [(selectedIndex)]="selectTab">
@@ -118,7 +110,16 @@
             ></crg-form-description>
           </div>
 
-          <div class="col-6 px-0 new-form-fields">
+          <div
+            class="col-6 px-0 new-form-fields"
+            *ngIf="
+              !(
+                mode === 'multipleEdit' &&
+                (editFeatureItem.property?.valueType?.includes('FILE') ||
+                  editFeatureItem.property?.valueType?.includes('LOOKUP'))
+              )
+            "
+          >
             <crg-form-control
               formControlName="{{ editFeatureItem.name }}"
               [property]="editFeatureItem.property"
@@ -149,6 +150,19 @@
 
             <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
               <span class="template-text">Оставить как есть</span>
+            </div>
+          </div>
+
+          <div
+            class="col-6 px-0 new-form-fields not-editable-form-fields"
+            *ngIf="
+              mode === 'multipleEdit' &&
+              (editFeatureItem.property?.valueType?.includes('FILE') ||
+                editFeatureItem.property?.valueType?.includes('LOOKUP'))
+            "
+          >
+            <div class="not-editable">
+              <span class="template-text">Недоступно для множественного редактирования</span>
             </div>
           </div>
         </div>
@@ -317,7 +331,9 @@
             </div>
 
             <div *ngIf="!updatingAllowed" class="read-value">
+              
               {{ getEnumerationTitle(editFeatureItem.property.enumerations, editFeatureItem.value) }}
+            
             </div>
           </div>
         </div>

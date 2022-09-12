@@ -30,7 +30,6 @@ import { PropertySchema, PropertyType } from '../../services/data/schema.models'
 import { schemaService } from '../../services/data/schema.service';
 import { generateRandomId } from '../../services/util/randomId';
 import { mapService } from '../../services/map/map.service';
-import { BatchModel } from '../../services/util/batch-model';
 import { formatDate } from '../../services/util/date.util';
 import { fromMobx } from '../../services/util/fromMobx';
 import { services } from '../../services/services';
@@ -60,7 +59,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   updatingAllowed = false;
 
   isSaveInProgress = false;
-  loadPercent = 0;
   changedGeometry?: WfsGeometry<Coordinate>;
   isGeometryValid = false;
   isGeometryChanged = false;
@@ -415,12 +413,9 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     newProperties: Properties,
     geometry?: WfsGeometry<Coordinate>
   ) {
-    const batchModel = new BatchModel(features);
-    let percent = 0;
+    const { dataset, tableName } = this.layer;
 
     if (features.length === 1) {
-      const { dataset, tableName } = this.layer;
-
       await updateVectorTableRecord(dataset, tableName, features[0].id.split('.')[1], {
         type: 'Feature',
         geometry: geometry,
@@ -432,19 +427,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       return;
     }
 
-    for (let i = 0; i < batchModel.totalBatches; i++) {
-      await transformFeature.updateFeatures(
-        layerName,
-        batchModel.batches[i],
-        this.featureDescription,
-        newProperties,
-        geometry
-      );
-      percent = Math.ceil(batchModel.percentOfOneBatch * i);
-      this.loadPercent = percent > 100 ? 100 : percent;
-    }
+    const featuresId: string = features.map(feature => feature.id.split('.')[1]).join(',');
 
-    this.loadPercent = percent > 100 ? 100 : percent;
+    await transformFeature.multipleEdit(dataset, tableName, featuresId, newProperties);
+
     this.isSaveInProgress = false;
     mapService.refreshAllLayers();
     mapService.clearDraft();

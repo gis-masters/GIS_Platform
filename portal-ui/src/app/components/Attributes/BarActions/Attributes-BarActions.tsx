@@ -2,11 +2,17 @@ import React, { Component } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { EditOutlined } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
+import { boundMethod } from 'autobind-decorator';
+import { pluralize } from 'numeralize-ru';
 
-import { mapStore } from '../../../stores/Map.store';
+import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { CrgVectorLayer } from '../../../services/gis/projects.models';
 import { WfsFeature } from '../../../services/geoserver/wfs.models';
+import { IconButton } from '../../IconButton/IconButton';
 import { PageOptions } from '../../../services/models';
+import { mapStore } from '../../../stores/Map.store';
 import { XTableColumn } from '../../XTable/XTable';
 
 import { AttributesBarActionExport } from '../BarActionExport/Attributes-BarActionExport';
@@ -34,8 +40,8 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
   render() {
     const { layer, cols, pageOptions, featuresTotal, getData } = this.props;
     // кнопки пока временно скрыты
-    // const count = this.selectedFeatures.length;
-    // const objLabel = ` ${count} объект${pluralize(count, '', 'а', 'ов')}`;
+    const count = this.selectedFeatures.length;
+    const objLabel = ` ${count} объект${pluralize(count, '', 'а', 'ов')}`;
     // const objToOtherLabel = objLabel + ' в другой слой';
 
     return (
@@ -62,6 +68,14 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
           </>
         )} */}
 
+        {!!count && (
+          <Tooltip title={`Редактировать${objLabel}`}>
+            <IconButton size='small' onClick={this.multipleEdit}>
+              <EditOutlined fontSize='small' />
+            </IconButton>
+          </Tooltip>
+        )}
+
         {!!featuresTotal && (
           <AttributesBarActionExport
             layer={layer}
@@ -78,5 +92,15 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
   @computed
   private get selectedFeatures(): WfsFeature[] {
     return mapStore.selectedFeaturesByTableName[this.props.layer.tableName] || [];
+  }
+
+  @boundMethod
+  private multipleEdit() {
+    const features: WfsFeature[] = mapStore.selectedFeaturesByTableName[this.props.layer.tableName];
+
+    sidebars.openEdit({
+      features,
+      mode: features.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
+    });
   }
 }

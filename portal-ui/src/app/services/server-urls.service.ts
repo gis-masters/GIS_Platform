@@ -305,6 +305,14 @@ export async function getDatasetTableRecordUrl(datasetId: string, tableId: strin
   return `${await getDatasetUrl(datasetId)}/tables/${tableId}/records/${recordId}`;
 }
 
+export async function getDatasetTableMultipleRecordsUrl(
+  datasetId: string,
+  tableId: string,
+  recordsId: string
+): Promise<string> {
+  return `${await getDatasetUrl(datasetId)}/tables/${tableId}/records-multiple/${recordsId}`;
+}
+
 export async function getTableRoleAssignmentUrl(datasetId: string, tableId: string): Promise<string> {
   return `${await getDatasetTableUrl(datasetId, tableId)}/roleAssignment`;
 }
