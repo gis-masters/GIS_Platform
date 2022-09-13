@@ -42,7 +42,9 @@ class ProjectsService {
     reaction(
       () => route.params?.projectId,
       async id => {
-        await this.fetchCurrent(Number(id));
+        if (id) {
+          await this.fetchCurrent(Number(id));
+        }
       }
     );
 

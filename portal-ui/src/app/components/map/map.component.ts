@@ -23,6 +23,7 @@ import { fromMobx } from '../../services/util/fromMobx';
 import { Emitter } from '../../services/common/Emitter';
 import { cn } from '../../services/util/cn';
 import { Toast } from '../Toast/Toast';
+import { projectsService } from '../../services/gis/projects.service';
 
 @Component({
   selector: 'crg-map',
@@ -160,6 +161,7 @@ export class MapComponent implements OnInit, OnDestroy {
     mapStore.setMode(MapMode.DEFAULT);
     mapService.destroyMap();
     mapSelectionService.selectFeatures([]);
+    projectsService.clearCurrent();
     printSettings.reset();
     if (this.reactionDisposer) {
       this.reactionDisposer();

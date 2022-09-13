@@ -247,7 +247,7 @@ class MapService {
   }
 
   hideUserLayers() {
-    this.getUserLayers().forEach(layer => {
+    this.getUserLayers()?.forEach(layer => {
       layer.setVisible(false);
     });
   }
@@ -653,7 +653,7 @@ class MapService {
    */
   private getUserLayers(): (ImageLayer<ImageSource> | TileLayer<TileSource>)[] {
     return this.map
-      .getLayers()
+      ?.getLayers()
       .getArray()
       .filter(layer => this.isUserLayer(layer)) as (ImageLayer<ImageSource> | TileLayer<TileSource>)[];
   }
