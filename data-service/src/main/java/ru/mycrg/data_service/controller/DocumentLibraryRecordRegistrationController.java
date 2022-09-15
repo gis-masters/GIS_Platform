@@ -28,8 +28,8 @@ public class DocumentLibraryRecordRegistrationController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/document-libraries/{docLibId}/records/{recId}/register")
-    public ResponseEntity<String> downloadBinary(@PathVariable String docLibId,
-                                                 @PathVariable Long recId) {
+    public ResponseEntity<String> register(@PathVariable String docLibId,
+                                           @PathVariable Long recId) {
         log.debug("Request to registration document with id: {}", recId);
 
         String regNumber = mediator.execute(

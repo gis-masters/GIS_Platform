@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Feature extends GeoJsonObject {
 
@@ -30,6 +31,10 @@ public class Feature extends GeoJsonObject {
 
     public Map<String, Object> getProperties() {
         return properties;
+    }
+
+    public Set<String> getPropertyNames() {
+        return properties.keySet();
     }
 
     public void setProperties(Map<String, Object> properties) {

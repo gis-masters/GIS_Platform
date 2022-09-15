@@ -42,13 +42,15 @@ public class SqlParameterSourceMapperDatetime implements SqlParameterSourceMappe
         }
 
         LocalDateTime dateTime;
+        String asString = value.toString();
         try {
-            dateTime = LocalDateTime.parse((CharSequence) value, DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN));
-        } catch (DateTimeParseException e) {
-            log.debug(String.format("Datetime '{}' does not match format: '%s'. Try without time as '%s'",
-                                    SYSTEM_DATETIME_PATTERN, SYSTEM_DATE_PATTERN),
-                      value);
-            dateTime = LocalDate.parse((CharSequence) value, DateTimeFormatter.ofPattern(SYSTEM_DATE_PATTERN))
+            dateTime = LocalDateTime.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN));
+        } catch (Exception e) {
+            String msg = String.format("Datetime '{}' does not match format: '%s'. Try without time as '%s'",
+                                       SYSTEM_DATETIME_PATTERN, SYSTEM_DATE_PATTERN);
+            log.debug(msg, value);
+
+            dateTime = LocalDate.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATE_PATTERN))
                                 .atTime(0, 0, 0);
         }
 

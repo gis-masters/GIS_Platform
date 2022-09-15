@@ -112,7 +112,7 @@ public class SpatialRecordsDao {
 
             pBaseDao.updateById(query, parameterSource);
         } catch (CrgDaoException e) {
-            String msg = format("Не удалось обновить записи: '%s' в таблце %s",
+            String msg = format("Не удалось обновить записи: '%s' в таблице %s",
                                 join(ids), qualifier.getTableQualifier());
             logError(msg, e);
 

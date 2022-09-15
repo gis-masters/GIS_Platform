@@ -59,7 +59,7 @@ public class UpdateMultipleTableRecordRequestHandler implements IRequestHandler<
                     "Таблица: '" + qualifier.getTableQualifier() + "' не доступна для обновления.");
         }
 
-        throwIfNotMatchTableColumns(properties, ddlTables.getAllColumnNames(qualifier.getTable()));
+        throwIfNotMatchTableColumns(properties.keySet(), ddlTables.getAllColumnNames(qualifier.getTable()));
         Map<String, Object> propsWithoutComplexFields = excludeComplexFields(schema, properties);
 
         Feature newFeature = new Feature(new HashMap<>(propsWithoutComplexFields));

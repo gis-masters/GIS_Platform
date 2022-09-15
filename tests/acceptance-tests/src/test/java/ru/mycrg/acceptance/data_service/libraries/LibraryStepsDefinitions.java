@@ -228,7 +228,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         assertTrue(errors.size() > 0);
 
         String errorMessage = errors.get(0).toString();
-        assertEquals("Данные не сохранены. В базе данных поле test отсутсвует.", errorMessage);
+        assertEquals("В базе данных поле test отсутствует.", errorMessage);
     }
 
     @When("Администратор запрашивает текущую запись")

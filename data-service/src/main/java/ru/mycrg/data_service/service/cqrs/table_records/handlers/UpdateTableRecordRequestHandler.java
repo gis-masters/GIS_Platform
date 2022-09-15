@@ -43,7 +43,7 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
         SchemaDto schema = request.getSchema();
         Feature newFeature = request.getNewFeature();
 
-        throwIfNotMatchTableColumns(newFeature.getProperties(), ddlTables.getAllColumnNames(rQualifier.getTable()));
+        throwIfNotMatchTableColumns(newFeature.getPropertyNames(), ddlTables.getAllColumnNames(rQualifier.getTable()));
 
         Feature oldFeature = spatialRecordsDao.findById(rQualifier, schema)
                                               .orElseThrow(() -> new NotFoundException(rQualifier.getRecord()));

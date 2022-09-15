@@ -1,47 +1,42 @@
 package ru.mycrg.data_service.util;
 
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TableUtils {
 
-    public static List<String> conformityCheckColumnsFromDBAndSchema(Map<String, Object> data,
-                                                                     List<String> columnNames) {
-        List<String> notMatchingColumns = new ArrayList<>();
-
-        Set<String> recordNames = data.keySet();
-
-        for (String recordName: recordNames) {
-            if (!columnNames.contains(recordName.toLowerCase())) {
-                notMatchingColumns.add(recordName);
-            }
-        }
-
-        return notMatchingColumns;
+    private TableUtils() {
+        throw new IllegalStateException("Utility class");
     }
 
-    public static void throwIfNotMatchTableColumns(Map<String, Object> data, List<String> columnNames)
-            throws DataServiceException {
-        List<String> notMatchingColumns = conformityCheckColumnsFromDBAndSchema(data, columnNames);
+    public static void throwIfNotMatchTableColumns(Set<String> propsBySchema, List<String> dbColumns) {
+        List<String> notMatchingColumns = getNotMatchingColumns(propsBySchema, dbColumns);
 
         if (!notMatchingColumns.isEmpty()) {
-            String commonMessage = "Данные не сохранены. Некорректный запрос";
             List<ErrorInfo> errors = new ArrayList<>();
             for (String column: notMatchingColumns) {
                 ErrorInfo errorInfo = new ErrorInfo();
                 errorInfo.setField(column);
-                errorInfo.setMessage(String.format("Данные не сохранены. В базе данных поле %s отсутсвует.", column));
+                errorInfo.setMessage(String.format("В базе данных поле %s отсутствует.", column));
 
                 errors.add(errorInfo);
             }
 
-            throw new BadRequestException(commonMessage, errors);
+            throw new BadRequestException("Некорректный запрос. Поля не соответствуют БД", errors);
         }
+    }
+
+    private static List<String> getNotMatchingColumns(Set<String> schemaProps,
+                                                      List<String> dbColumns) {
+        List<String> notMatchingColumns = new ArrayList<>();
+        for (String key: schemaProps) {
+            if (!dbColumns.contains(key.toLowerCase())) {
+                notMatchingColumns.add(key);
+            }
+        }
+
+        return notMatchingColumns;
     }
 }

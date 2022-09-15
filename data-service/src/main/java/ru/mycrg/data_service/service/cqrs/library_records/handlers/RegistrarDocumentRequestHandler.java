@@ -6,7 +6,6 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
-import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.RegisterDocumentRequest;
 import ru.mycrg.data_service.service.records.IRecordsService;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
@@ -16,6 +15,7 @@ import ru.mycrg.mediator.IRequestHandler;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -67,7 +67,7 @@ public class RegistrarDocumentRequestHandler implements IRequestHandler<Register
                                          now.toLocalDate().getYear(),
                                          registryNumber);
 
-        HashMap<String, Object> payload = new HashMap<>();
+        Map<String, Object> payload = new HashMap<>();
         payload.put("gisogd_regnum", regNumber);
         payload.put("gisogd_regdate", now.toLocalDate());
         payload.put("last_modified", now);
@@ -80,12 +80,7 @@ public class RegistrarDocumentRequestHandler implements IRequestHandler<Register
     }
 
     private String getLibraryNumber(String libraryId) {
-        String libraryNumber = libraryId.split("dl_data_section")[1];
-        if (libraryNumber != null) {
-            return libraryNumber;
-        }
-
-        return "314";
+        return libraryId.replaceAll("\\D+","");
     }
 
     private Optional<String> extractOktmo(IRecord record) {

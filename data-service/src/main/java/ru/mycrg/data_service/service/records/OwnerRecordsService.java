@@ -129,7 +129,7 @@ public class OwnerRecordsService implements IRecordsService {
 
             props.putAll(systemAttributeHandler.customRulesCalculation(props));
 
-            throwIfNotMatchTableColumns(props, ddlTables.getAllColumnNames(lQualifier.getTable()));
+            throwIfNotMatchTableColumns(props.keySet(), ddlTables.getAllColumnNames(lQualifier.getTable()));
             IRecord newRecord = recordsDao.addRecord(lQualifier, record, schema);
             permissionsService.addOwnerPermission(lQualifier, record.getId());
 
@@ -153,7 +153,8 @@ public class OwnerRecordsService implements IRecordsService {
         try {
             log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), record);
 
-            throwIfNotMatchTableColumns(record.getContent(), ddlTables.getAllColumnNames(recordQualifier.getTable()));
+            throwIfNotMatchTableColumns(record.getContent().keySet(),
+                                        ddlTables.getAllColumnNames(recordQualifier.getTable()));
 
             Map<String, Object> clearedData = systemAttributeHandler.initSchema(schema)
                                                                     .prepareJsonb(record)

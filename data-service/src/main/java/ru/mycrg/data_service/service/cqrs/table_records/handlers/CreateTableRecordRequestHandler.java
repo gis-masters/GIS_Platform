@@ -44,7 +44,7 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
 
         ResourceQualifier qualifier = request.getQualifier();
 
-        throwIfNotMatchTableColumns(feature.getProperties(), ddlTables.getAllColumnNames(qualifier.getTable()));
+        throwIfNotMatchTableColumns(feature.getPropertyNames(), ddlTables.getAllColumnNames(qualifier.getTable()));
 
         try {
             Feature newFeature = spatialRecordsDao.save(qualifier, feature, schema);
