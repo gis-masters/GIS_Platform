@@ -25,8 +25,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.CommonStepDefinitions.checkSorting;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
-import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileId;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.folder11Id;
 

@@ -35,4 +35,8 @@ public interface IResourceModel {
     String getCrs();
 
     String getSchemaId();
+
+    default boolean isCompatibleByCrs(IResourceModel otherTable) {
+        return getCrs().equalsIgnoreCase(otherTable.getCrs());
+    }
 }

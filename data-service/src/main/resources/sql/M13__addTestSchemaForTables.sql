@@ -96,7 +96,10 @@ SELECT 'schema_for_test_table',
       "fractionDigits": 2,
       "calculatedValueWellKnownFormula": "st_length"
     }
-  ]
+  ],
+   "description": "Тестовая схема",
+   "geometryType": "MultiPolygon",
+   "customRuleFunction": null
 }',
        'var results = {};
        results.objectname = obj.objectname + ''_test_''+ obj.objectid;

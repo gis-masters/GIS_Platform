@@ -22,7 +22,6 @@ public class SchemaDto {
     private List<String> printTemplates = new ArrayList<>();
     private List<SchemaRelation> relations = new ArrayList<>();
 
-
     public void addProperty(SimplePropertyDto propertyDto) {
         properties.add(propertyDto);
     }
@@ -137,5 +136,9 @@ public class SchemaDto {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isCompatibleByGeometry(SchemaDto otherSchema) {
+        return getGeometryType().equals(otherSchema.getGeometryType());
     }
 }

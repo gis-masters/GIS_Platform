@@ -8,13 +8,19 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service.util.filter.FilterCondition;
 import ru.mycrg.data_service.util.filter.FilterItem;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.geo_json.GeoJsonObject;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
+import static java.util.Objects.isNull;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
+import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service.util.StringUtil.join;
 
@@ -138,6 +144,51 @@ public class SqlBuilder {
         String whereSection = String.format(" WHERE %s = :%s ", primaryKey, primaryKey);
 
         return prepareUpdateQuery(feature, qualifier, whereSection);
+    }
+
+    @NotNull
+    public static String buildCopyQuery(String sourceTable, String targetTable, SchemaDto sourceSchema,
+                                        SchemaDto targetSchema, List<Long> featureIds) {
+        String insertTo = "INSERT INTO " + targetTable;
+        String data = mappingColumns(sourceSchema, targetSchema);
+        String from = " FROM " + sourceTable;
+        String where = format(" WHERE %s IN (%s)", PRIMARY_KEY, join(featureIds));
+        String returnIds = format(" RETURNING %s;", PRIMARY_KEY);
+
+        return insertTo + data + from + where + returnIds;
+    }
+
+    private static String mappingColumns(SchemaDto sourceSchema, SchemaDto targetSchema) {
+        String pre = " (";
+        String post = ") ";
+        List<SimplePropertyDto> sourceProps = sourceSchema.getProperties();
+        List<SimplePropertyDto> targetProps = targetSchema.getProperties();
+
+        StringBuilder targetColumns = new StringBuilder();
+        StringBuilder sourceColumns = new StringBuilder("SELECT ");
+
+        for (SimplePropertyDto sourceProperty: sourceProps) {
+            if (isNull(sourceProperty.getCalculatedValueWellKnownFormula())
+                    || sourceProperty.getCalculatedValueWellKnownFormula().isEmpty()) {
+                String name = sourceProperty.getName().toLowerCase();
+                ValueType valueType = sourceProperty.getValueType();
+
+                long countOfFoundProperty = targetProps
+                        .stream()
+                        .filter(targetProperty -> targetProperty.getName().equalsIgnoreCase(name))
+                        .filter(targetProperty -> targetProperty.getValueType().equals(valueType))
+                        .count();
+                if (countOfFoundProperty > 0) {
+                    targetColumns.append(name).append(", ");
+                    sourceColumns.append("\"").append(name).append("\", ");
+                }
+            }
+        }
+
+        targetColumns = new StringBuilder(pre + targetColumns.substring(0, targetColumns.length() - 2) + post);
+        sourceColumns = new StringBuilder(sourceColumns.substring(0, sourceColumns.length() - 2));
+
+        return targetColumns + sourceColumns.toString();
     }
 
     private static String getProperty(String property) {

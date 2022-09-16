@@ -3,12 +3,13 @@ package ru.mycrg.acceptance.data_service.tables;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.data_service.dto.FeaturesCopyModel;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.acceptance.data_service.dto.GeoJsonModel;
+import ru.mycrg.acceptance.data_service.dto.QualifierDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static io.restassured.http.ContentType.JSON;
 import static java.lang.String.join;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.junit.Assert.assertEquals;
@@ -24,6 +26,7 @@ import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.firstFileId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
@@ -79,6 +82,8 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     @When("В текущей таблице существует {string} записи")
     public void createSomeFeaturesInCurrentTable(String quantity) {
+        featureIds = new ArrayList<>();
+
         Map<String, Object> properties = new HashMap<>();
         properties.put("title", "some feature");
         properties.put("objectname", "test obj_name");
@@ -154,6 +159,20 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    @When("Администратор делает запрос на копирование записей слоя")
+    public void copyMultipleRecordsAsAdmin() {
+        authorizationBase.loginAsOwner();
+
+        copyFeatures(prepareCopyModel());
+    }
+
+    @When("Пользователь делает запрос на копирование записей слоя")
+    public void copyMultipleRecordsAsUser() {
+        authorizationBase.loginAsCurrentUser();
+
+        copyFeatures(prepareCopyModel());
+    }
+
     @When("Пользователь обновляет запись слоя - удаляет файл")
     public void updateCurrentRecordWithDeleteFiles() {
         Map<String, Object> properties = new HashMap<>();
@@ -202,7 +221,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Записи в таблице успешно обновлены")
     public void checkUpdatedFeatures() {
-        getFeatures(featureIds);
+        getFeatures(featureIds, currentDatasetIdentifier, currentTableName);
 
         jsonPath = response.jsonPath();
 
@@ -224,6 +243,17 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                 });
     }
 
+    @And("Записи успешно скопированы в другую таблицу")
+    public void checkCopiedFeatures() {
+        getFeatures(featureIds, currentDatasetIdentifier, anotherTableName);
+
+        jsonPath = response.jsonPath();
+
+        List<Integer> ids = jsonPath.getList("id");
+        assertEquals(featureIds.size(), ids.size());
+        assertEquals(featureIds, ids);
+    }
+
     @And("Записи отсутствуют в БД")
     public void recordsDoesntExistInDB() {
         featureIds.forEach(featureId -> {
@@ -238,7 +268,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     private void createFeature(GeoJsonModel geoJsonModel) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        contentType(ContentType.JSON)
+                        contentType(JSON)
                 .when().
                         body(gson.toJson(geoJsonModel)).
                         post("");
@@ -256,10 +286,11 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     }
 
     // Нет GET пока что
+
     private void getFeature(Integer id) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        contentType(ContentType.JSON)
+                        contentType(JSON)
                 .when().
                         get("/" + id);
     }
@@ -270,7 +301,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                         delete(String.format("/%s", id));
     }
 
-    public void deleteFeatures(List<Integer> ids) {
+    private void deleteFeatures(List<Integer> ids) {
         String path = String.format("/api/data/datasets/%s/tables/%s/records",
                                     currentDatasetIdentifier, currentTableName);
 
@@ -282,7 +313,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                         delete(String.format("/%s", join(",", iterable)));
     }
 
-    public void updateFeatures(Map<String, Object> properties, List<Integer> ids) {
+    private void updateFeatures(Map<String, Object> properties, List<Integer> ids) {
         String path = String.format("/api/data/datasets/%s/tables/%s/records-multiple",
                                     currentDatasetIdentifier, currentTableName);
 
@@ -297,9 +328,19 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                         patch(String.format("/%s", join(",", iterable)));
     }
 
-    public void getFeatures(List<Integer> ids) {
+    private void copyFeatures(FeaturesCopyModel copyModel) {
+        response = getBaseRequestWithCurrentCookie().
+                given().
+                        basePath("/api/data/records/copy").
+                        body(gson.toJson(copyModel))
+                        .contentType(JSON)
+                .when().
+                        post();
+    }
+
+    private void getFeatures(List<Integer> ids, String datasetId, String tableName) {
         String path = String.format("/api/data/datasets/%s/tables/%s/records",
-                                    currentDatasetIdentifier, currentTableName);
+                                    datasetId, tableName);
 
         Iterable<String> iterable = ids.stream().map(Object::toString).collect(Collectors.toList());
 
@@ -308,5 +349,13 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                         basePath(path)
                 .when().
                         get(String.format("/%s", join(",", iterable)));
+    }
+
+    private static FeaturesCopyModel prepareCopyModel() {
+        QualifierDto source = new QualifierDto(currentDatasetIdentifier, currentTableName);
+        QualifierDto target = new QualifierDto(currentDatasetIdentifier, anotherTableName);
+
+        FeaturesCopyModel copyModel = new FeaturesCopyModel(source, target, featureIds);
+        return copyModel;
     }
 }

@@ -23,6 +23,7 @@ import static ru.mycrg.acceptance.audit_service.dto.AuditEventEntityType.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerCreateDto;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
@@ -214,6 +215,11 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     @And("Создан аудит лог о массовом редактировании записей")
     public void checkFeaturesUpdate() {
         checkAuditEvent(MULTIPLE_UPDATE.name(), FEATURE, currentTableName);
+    }
+
+    @And("Создан аудит лог о копировании записей")
+    public void checkFeaturesCopied() {
+        checkAuditEvent(COPYING.name(), FEATURE, anotherTableName);
     }
 
     @And("Создана запись в журнале аудита о создании схемы")

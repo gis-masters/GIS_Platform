@@ -189,4 +189,16 @@ public class SpatialRecordsDao {
             throw new CrgDaoException(msg, e.getCause());
         }
     }
+
+    @Transactional
+    public List<Long> copyRecords(String targetTable, String sourceTable, SchemaDto sourceSchema,
+                                  SchemaDto targetSchema,
+                                  List<Long> featureIds) {
+
+        String copyQuery = buildCopyQuery(sourceTable, targetTable, sourceSchema, targetSchema, featureIds);
+
+        log.debug("SQL copy records query: {}", copyQuery);
+
+        return pJdbcTemplate.getJdbcTemplate().queryForList(copyQuery, Long.class);
+    }
 }

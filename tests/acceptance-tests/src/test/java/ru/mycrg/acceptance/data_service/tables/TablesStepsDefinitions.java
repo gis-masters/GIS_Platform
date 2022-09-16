@@ -11,6 +11,7 @@ import ru.mycrg.acceptance.data_service.dto.PermissionCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
@@ -18,7 +19,9 @@ import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions
 public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
     public static String currentTableName;
+    public static String anotherTableName;
     public static TableCreateDto currentTableDto;
+    public static TableCreateDto anotherTableDto;
 
     private String TEST_TABLE_SCHEMA = "schema_for_test_table";
 
@@ -61,6 +64,42 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                             schemaId);
     }
 
+    @When("Существует другая таблица")
+    public void initAnotherTable() {
+        anotherTableName = generateString("STRING_5");
+        anotherTableDto = new TableCreateDto(anotherTableName,
+                                             generateString("Another table title"),
+                                             generateString(""),
+                                             generateString("EPSG:28406"),
+                                             generateString(TEST_TABLE_SCHEMA));
+
+        super.createEntity(anotherTableDto);
+    }
+
+    @When("Существует таблица доступная только для чтения")
+    public void initReadOnlyTable() {
+        String schemaId = "advertising_point_simf_2022";
+        anotherTableName = schemaId + "_" + generateString("STRING_5");
+
+        createTablesRequest((anotherTableName),
+                            "Искусственные дорожные сооружения",
+                            "some description",
+                            "EPSG:28406",
+                            schemaId);
+    }
+
+    @When("Существует таблица, имеющая код EPSG {string}")
+    public void initTableWithEpsg(String codeEpsg) {
+        String schemaId = "advertising_point_simf_2022";
+        anotherTableName = schemaId + "_" + generateString("STRING_5");
+
+        createTablesRequest((anotherTableName),
+                            "Искусственные дорожные сооружения",
+                            "some description",
+                            codeEpsg,
+                            schemaId);
+    }
+
     @When("Пользователь создает запрос на создание новой таблицы")
     public void createNewTable() {
         initTable();
@@ -99,16 +138,30 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         assertTrue("update title".equals(newTitle));
     }
 
+    @And("Тело ответа содержит ошибку о том что таблица доступна только для чтения")
+    public void checkErrorMessageIsCorrect() {
+        String message = response.jsonPath().get("message");
+
+        assertEquals("Таблица, в которую производится копирование, доступна только для чтения.", message);
+    }
+
     @When("Пользователь делает запрос на обновление информации о текущей таблице")
     public void updateCurrentTable() {
         updateTableInfo(currentTableName, new TableUpdateDto("update title"));
     }
 
     @When("Администратор даёт доступ: {string} для текущего пользователя на текущую таблицу")
-    public void createPermissionForCurrentUserForCurrentDataset(String role) {
+    public void createPermissionForCurrentUserForCurrentTable(String role) {
         authorizationBase.loginAsOwner();
 
-        createPermissionForCurrentDataset(new PermissionCreateDto("user", userId, role));
+        createPermissionForTable(new PermissionCreateDto("user", userId, role), currentTableName);
+    }
+
+    @Given("Администратор даёт доступ: {string} для текущего пользователя на другую таблицу")
+    public void createPermissionForCurrentUserForAnotherTable(String role) {
+        authorizationBase.loginAsOwner();
+
+        createPermissionForTable(new PermissionCreateDto("user", userId, role), anotherTableName);
     }
 
     private void updateTableInfo(String tableName, TableUpdateDto dto) {
@@ -126,12 +179,12 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                         get("/" + currentTableName);
     }
 
-    private void createPermissionForCurrentDataset(PermissionCreateDto dto) {
+    private void createPermissionForTable(PermissionCreateDto dto, String tableName) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(gson.toJson(dto)).
                         contentType(ContentType.JSON)
                 .when().
-                        post("/" + currentTableName + "/roleAssignment");
+                        post("/" + tableName + "/roleAssignment");
     }
 }
