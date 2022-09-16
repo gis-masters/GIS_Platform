@@ -72,9 +72,11 @@ export class LoginForm extends Component<LoginFormProps> {
   }
 
   async componentDidMount() {
-    if (route.queryParams.guestName && route.queryParams.guestPass) {
-      const { guestName, guestPass } = route.queryParams;
+    const url = new URL(location.href);
+    const guestName = url.searchParams.get('guestName');
+    const guestPass = url.searchParams.get('guestPass');
 
+    if (guestName && guestPass) {
       this.setUserData(guestName, guestPass);
       await this.login({ username: guestName, password: guestPass });
 
