@@ -53,12 +53,16 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
             >
               <ToggleButton value='xy'>
                 <Tooltip title='X — восток, Y — север (ENU)' placement='left'>
-                  <CoordinateAxesXY fontSize='small' />
+                  <span>
+                    <CoordinateAxesXY fontSize='small' />
+                  </span>
                 </Tooltip>
               </ToggleButton>
               <ToggleButton value='yx'>
                 <Tooltip title='X — север, Y — восток (NED)' placement='right'>
-                  <CoordinateAxesYX fontSize='small' />
+                  <span>
+                    <CoordinateAxesYX fontSize='small' />
+                  </span>
                 </Tooltip>
               </ToggleButton>
             </ToggleButtonGroup>

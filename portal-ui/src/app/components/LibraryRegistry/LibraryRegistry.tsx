@@ -90,7 +90,6 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
             <XTable<LibraryRecord>
               className={cnLibraryRegistry('Table')}
               cols={this.cols}
-              hiddenFields={this.hiddenFields}
               getData={this.getData}
               defaultSort={this.sort}
               secondarySortField='id'
@@ -160,7 +159,10 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
         cellProps: { padding: 'checkbox' }
       },
       ...getXTableColumnsFromSchema<LibraryRecord>(this.schema)
-    ];
+    ].map((item: XTableColumn<LibraryRecord>) => ({
+      ...item,
+      hidden: this.hiddenFields.includes(String(item.field)) || item.hidden
+    }));
   }
 
   @computed

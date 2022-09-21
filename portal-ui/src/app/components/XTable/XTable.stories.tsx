@@ -253,7 +253,7 @@ const cols: XTableColumn<TestData>[] = [
     getIdBadge: ({ id }) => id,
     filterable: true,
     sortable: true,
-    hidden: true
+    hidden: false
   },
   {
     title: 'Материал',
@@ -264,7 +264,7 @@ const cols: XTableColumn<TestData>[] = [
     },
     filterable: true,
     sortable: true,
-    hidden: true
+    hidden: false
   },
   {
     title: 'Вес',

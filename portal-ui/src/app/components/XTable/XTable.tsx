@@ -81,7 +81,6 @@ interface XTablePropsBase<T> extends IClassNameProps {
   size?: 'small' | 'medium';
   singleLineContent?: boolean;
   cols: XTableColumn<T>[];
-  hiddenFields?: string[]; // не забыть удалить
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
   filterable?: boolean;
@@ -314,18 +313,12 @@ export class XTable<T> extends Component<XTableProps<T>> {
 
   @computed
   private get cols(): XTableColumn<T>[] {
-    const { cols, hiddenFields = [] } = this.props;
+    const { cols } = this.props;
 
-    return cols
-      .map(col => {
-        col.hidden = hiddenFields.includes(String(col.field));
-
-        return col;
-      })
-      .filter(
-        ({ field, hidden }) =>
-          !hidden || this.pageOptions.sort === field || Object.keys(this.pageOptions.filter).includes(field as string)
-      );
+    return cols.filter(
+      ({ field, hidden }) =>
+        !hidden || this.pageOptions.sort === field || Object.keys(this.pageOptions.filter).includes(field as string)
+    );
   }
 
   @computed

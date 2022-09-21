@@ -54,6 +54,7 @@ function _getXTableColumnsFromSchema<T>(
         relations: relations.length ? relations : undefined
       },
       filterable: filterableTypes.has(property.propertyType),
+      hidden: property.hidden,
       sortable: sortableTypes.has(property.propertyType),
       headerCellProps: { style: property.minWidth ? { minWidth: String(property.minWidth) + 'px' } : null },
       AfterCellContent: relations?.length ? (XTableRelationsButton as XTableColumn<T>['AfterCellContent']) : undefined,
