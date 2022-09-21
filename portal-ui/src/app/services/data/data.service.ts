@@ -5,16 +5,18 @@ import {
   getDatasetTablesUrl,
   getDatasetTableUrl,
   getDatasetUrl,
+  getRecordsCopyUrl,
   getTableConnectionsUrl
 } from '../server-urls.service';
 import { PropertyType, Schema } from './schema.models';
-import { WfsFeature } from '../geoserver/wfs.models';
+import { CoordinateEdited, WfsFeature } from '../geoserver/wfs.models';
 import { communicationService } from '../communication.service';
 import { CrgLayer, CrgProject } from '../gis/projects.models';
 import { PageableResponse, PageOptions } from '../models';
 import { preparePageOptions } from '../http.utils';
 import { Role } from './permissions.models';
 import { http } from '../http.service';
+import { Coordinate } from 'ol/coordinate';
 
 export enum DataEntityType {
   DATASET = 'SCHEMA',
@@ -287,12 +289,37 @@ export async function updateVectorTable(
   communicationService.vectorTablesUpdated.emit();
 }
 
-export async function deleteVectorTableRecord(
+export async function copyFeatures(
+  sourceLayer: CrgLayer,
+  targetLayer: CrgLayer,
+  features: WfsFeature[]
+): Promise<void> {
+  const featureIds = features.map(feature => Number(feature.id.split('.')[1]));
+
+  const copyTablesInfo = {
+    source: {
+      schema: sourceLayer.dataset,
+      table: sourceLayer.tableName
+    },
+    target: {
+      schema: targetLayer.dataset,
+      table: targetLayer.tableName
+    },
+    featureIds
+  };
+
+  await http.post(await getRecordsCopyUrl(), copyTablesInfo);
+  communicationService.featuresUpdated.emit();
+}
+
+export async function deleteFeatures(
   datasetId: string,
   vectorTableId: string,
-  recordId: string
+  features: WfsFeature<Coordinate | CoordinateEdited>[]
 ): Promise<void> {
-  await http.delete(await getDatasetTableRecordUrl(datasetId, vectorTableId, recordId.split('.')[1]));
+  const featureIds = features.map(feature => feature.id.split('.')[1]).join(',');
+
+  await http.delete(await getDatasetTableRecordUrl(datasetId, vectorTableId, featureIds));
   communicationService.featuresUpdated.emit();
 }
 

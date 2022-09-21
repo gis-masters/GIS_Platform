@@ -249,6 +249,10 @@ export async function getDocLibrariesUrl(): Promise<string> {
   return `${await getDataUrl()}/document-libraries`;
 }
 
+export async function getRecordsCopyUrl(): Promise<string> {
+  return `${await getDataUrl()}/records/copy`;
+}
+
 export async function getDocLibraryUrl(id: string): Promise<string> {
   return `${await getDocLibrariesUrl()}/${id}`;
 }

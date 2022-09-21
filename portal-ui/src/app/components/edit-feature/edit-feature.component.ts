@@ -15,7 +15,7 @@ import { isFeaturesUpdateAllowed } from '../../services/data/permissions.service
 import { convertProperties, convertSchema, getFieldRelations } from '../../services/data/schema.utils';
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
-import { deleteVectorTableRecord, updateVectorTableRecord } from '../../services/data/data.service';
+import { deleteFeatures, updateVectorTableRecord } from '../../services/data/data.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { getFeatureProjection } from '../../services/geoserver/projections.service';
@@ -336,13 +336,13 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       .pipe(filter(value => !!value))
       .subscribe(async () => {
         if (sidebars.editFeaturesData.mode === EditFeatureMode.multipleEdit) {
-          for (const layer of this.features) {
-            const featureLayer = getLayerByFeatureInCurrentProject(layer);
+          for (const feature of this.features) {
+            const featureLayer = getLayerByFeatureInCurrentProject(feature);
 
-            await deleteVectorTableRecord(featureLayer.dataset, featureLayer.tableName, layer.id);
+            await deleteFeatures(featureLayer.dataset, featureLayer.tableName, [feature]);
           }
         } else {
-          await deleteVectorTableRecord(dataset, tableName, this.features[0].id);
+          await deleteFeatures(dataset, tableName, [this.features[0]]);
         }
 
         mapService.refreshAllLayers();

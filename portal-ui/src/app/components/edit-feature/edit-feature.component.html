@@ -18,7 +18,7 @@
       </button>
 
       <button
-        *ngIf="updatingAllowed && !isNew"
+        *ngIf="updatingAllowed && !isNew && mode !== 'multipleEdit'"
         class="del-button"
         mat-stroked-button
         color="error"

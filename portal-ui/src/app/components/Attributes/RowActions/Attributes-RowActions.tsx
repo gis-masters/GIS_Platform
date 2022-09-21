@@ -12,7 +12,7 @@ import { sleep } from '../../../services/util/sleep';
 import { mapService } from '../../../services/map/map.service';
 import { WfsFeature } from '../../../services/geoserver/wfs.models';
 import { CrgVectorLayer } from '../../../services/gis/projects.models';
-import { deleteVectorTableRecord } from '../../../services/data/data.service';
+import { deleteFeatures } from '../../../services/data/data.service';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Actions } from '../../Actions/Actions.composed';
@@ -87,7 +87,7 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
   @boundMethod
   private async delete() {
     const { feature, layer } = this.props;
-    await deleteVectorTableRecord(layer.dataset, layer.tableName, feature.id);
+    await deleteFeatures(layer.dataset, layer.tableName, [feature]);
     mapSelectionService.selectFeatures([feature], MapSelectionTypes.REMOVE);
     mapService.refreshAllLayers();
     this.closeDeletionDialog();
