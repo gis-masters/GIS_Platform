@@ -2,15 +2,18 @@ import { isEqual } from 'lodash';
 import { Feature } from 'ol';
 import { Extent } from 'ol/extent';
 import { MultiPolygon, SimpleGeometry } from 'ol/geom';
-import { intersects } from 'ol/format/filter';
+import { intersects, and } from 'ol/format/filter';
 import { Coordinate } from 'ol/coordinate';
 import { WFS } from 'ol/format';
 
-import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry, WfsMultiPolygonGeometry } from './wfs.models';
+import { attributesTableStore } from '../../stores/AttributesTable.store';
+import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
 import { olProjection } from './projections.service';
 import { PageOptions, SortOrder } from '../models';
+import { buildCqlFilter } from '../util/cql';
+import { cql2ol } from '../util/cql2ol';
 import { services } from '../services';
 import { Mime } from '../util/Mime';
 
@@ -151,16 +154,22 @@ export function mergeExtents(extents: Extent[]): Extent {
 }
 
 export function makeXmlPolygonIntersect(
-  featuresComplexName: string[],
+  complexName: string,
   polygon: MultiPolygon,
   srsName: string,
   selectionType: MapSelectionTypes
 ): string {
+  const tableName = complexName.split(':')[1];
+  const cqlFilter: string = buildCqlFilter(attributesTableStore.getLayerFilter(tableName));
+  const olFilter = cqlFilter
+    ? and(intersects('shape', polygon, olProjection.id), cql2ol(cqlFilter))
+    : intersects('shape', polygon, olProjection.id);
+
   const featureRequest = new WFS().writeGetFeature({
     srsName,
-    featureTypes: featuresComplexName,
+    featureTypes: [complexName],
     outputFormat: Mime.JSON,
-    filter: intersects('shape', polygon, olProjection.id),
+    filter: olFilter,
     featureNS: '',
     featurePrefix: '',
     maxFeatures:
