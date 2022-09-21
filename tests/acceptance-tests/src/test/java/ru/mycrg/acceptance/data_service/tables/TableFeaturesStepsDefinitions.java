@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.String.join;
+import static java.util.stream.Collectors.toList;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -265,6 +265,21 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         });
     }
 
+    @And("Запись в таблице с результатами валидации отсутствует")
+    public void recordDoesntExistInExtensionTable() {
+        if (!response.asString().isEmpty()) {
+            List<Map<String, Object>> results = response.jsonPath().getList("results");
+
+            long count = results.stream()
+                                .filter(result -> result.containsKey("objectId"))
+                                .map(result -> result.get("objectId"))
+                                .filter(objectId -> objectId.equals(currentFeatureId))
+                                .count();
+
+            assertEquals(0, count);
+        }
+    }
+
     private void createFeature(GeoJsonModel geoJsonModel) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -305,7 +320,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         String path = String.format("/api/data/datasets/%s/tables/%s/records",
                                     currentDatasetIdentifier, currentTableName);
 
-        Iterable<String> iterable = ids.stream().map(Object::toString).collect(Collectors.toList());
+        Iterable<String> iterable = ids.stream().map(Object::toString).collect(toList());
 
         response = getBaseRequestWithCurrentCookie()
                 .basePath(path)
@@ -317,7 +332,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         String path = String.format("/api/data/datasets/%s/tables/%s/records-multiple",
                                     currentDatasetIdentifier, currentTableName);
 
-        Iterable<String> iterable = ids.stream().map(Object::toString).collect(Collectors.toList());
+        Iterable<String> iterable = ids.stream().map(Object::toString).collect(toList());
 
         response = getBaseRequestWithCurrentCookie().
                 given().
@@ -342,7 +357,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         String path = String.format("/api/data/datasets/%s/tables/%s/records",
                                     datasetId, tableName);
 
-        Iterable<String> iterable = ids.stream().map(Object::toString).collect(Collectors.toList());
+        Iterable<String> iterable = ids.stream().map(Object::toString).collect(toList());
 
         response = getBaseRequestWithCurrentCookie().
                 given().

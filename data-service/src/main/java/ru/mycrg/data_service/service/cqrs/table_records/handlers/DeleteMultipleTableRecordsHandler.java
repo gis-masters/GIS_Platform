@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.table_records.handlers;
 
 import org.springframework.stereotype.Component;
+import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dao.ddl.DdlTables;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
@@ -10,15 +11,25 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
+import java.util.List;
+
+import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
+import static ru.mycrg.data_service.util.StringUtil.join;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.EXTENSION_TABLE_ID;
+
 @Component
 public class DeleteMultipleTableRecordsHandler implements IRequestHandler<DeleteMultipleTableRecordsRequest, Voidy> {
 
     private final SpatialRecordsDao spatialRecordsDao;
     private final DdlTables ddlTables;
 
-    public DeleteMultipleTableRecordsHandler(SpatialRecordsDao spatialRecordsDao, DdlTables ddlTables) {
+    private final BaseDao baseDao;
+
+    public DeleteMultipleTableRecordsHandler(SpatialRecordsDao spatialRecordsDao, DdlTables ddlTables,
+                                             BaseDao baseDao) {
         this.spatialRecordsDao = spatialRecordsDao;
         this.ddlTables = ddlTables;
+        this.baseDao = baseDao;
     }
 
     @Override
@@ -28,10 +39,19 @@ public class DeleteMultipleTableRecordsHandler implements IRequestHandler<Delete
         try {
             ddlTables.isExist(rQualifier);
             spatialRecordsDao.removeMultipleRecords(rQualifier, request.getIds());
+            removeRecordsFromExtensionTableByObjectId(rQualifier, request.getIds());
         } catch (CrgDaoException e) {
             throw new DataServiceException(e.getMessage(), e.getCause());
         }
 
         return new Voidy();
+    }
+
+    private void removeRecordsFromExtensionTableByObjectId(ResourceQualifier rQualifier, List<Long> objectIds)
+            throws CrgDaoException {
+        String extTableName = rQualifier.getTable() + EXTENSION_POSTFIX;
+        ResourceQualifier extTable = new ResourceQualifier(rQualifier.getSchema(), extTableName);
+
+        baseDao.removeRecord(extTable, EXTENSION_TABLE_ID.getName(), join(objectIds));
     }
 }

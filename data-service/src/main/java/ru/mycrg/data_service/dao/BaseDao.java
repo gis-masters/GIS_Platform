@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.util.List;
@@ -72,5 +73,33 @@ public class BaseDao {
         log.debug("Request find total by path: [{}]", query);
 
         return pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
+    }
+
+    /**
+     * Для удаления записи по параметру и его значению.
+     * <p>
+     * Значение будет встроено в IN условие, соответственно можно передавать несколько значений через запятую
+     *
+     * @param rQualifier Квалификатор ресурса
+     * @param param      Поле, по которому производится удаление записи
+     * @param value      Значение, при котором запись удаляется
+     *
+     * @throws CrgDaoException Когда не удалось выполнить удаление
+     */
+    public void removeRecord(ResourceQualifier rQualifier, String param, Object value) throws CrgDaoException {
+        try {
+            String query = String.format("DELETE FROM %s WHERE %s IN (%s)",
+                                         rQualifier.getTableQualifier(), param, value);
+
+            log.debug("Request to delete record: [{}]", query);
+
+            pJdbcTemplate.getJdbcTemplate().execute(query);
+        } catch (Exception e) {
+            String msg = String.format("Не удалось выполнить удаление объекта(ов): '%s' из: '%s'",
+                                       value, rQualifier.getTableQualifier());
+            log.debug(msg);
+
+            throw new CrgDaoException(msg, e.getCause());
+        }
     }
 }

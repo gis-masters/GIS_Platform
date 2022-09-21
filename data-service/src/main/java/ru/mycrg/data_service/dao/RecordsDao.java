@@ -245,17 +245,6 @@ public class RecordsDao {
     }
 
     public void removeRecord(ResourceQualifier rQualifier, Long id) throws CrgDaoException {
-        try {
-            String query = String.format("DELETE FROM %s WHERE id = :id", rQualifier.getTableQualifier());
-
-            log.debug("Request to delete record: [{}]", query);
-
-            pJdbcTemplate.update(query, new MapSqlParameterSource("id", id));
-        } catch (Exception e) {
-            String msg = String.format("Не удалось выполнить удаление объекта: '%s' из: '%s'",
-                                       id, rQualifier.getTableQualifier());
-
-            throw new CrgDaoException(msg, e.getCause());
-        }
+        baseDao.removeRecord(rQualifier, ID.getName(), id);
     }
 }

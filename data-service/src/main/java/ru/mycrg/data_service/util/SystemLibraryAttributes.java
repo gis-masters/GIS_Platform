@@ -3,6 +3,7 @@ package ru.mycrg.data_service.util;
 public enum SystemLibraryAttributes {
 
     ID("id"),
+    EXTENSION_TABLE_ID("object_id"),
     TITLE("title"),
     CREATED_AT("created_at"),
     LAST_MODIFIED("last_modified"),

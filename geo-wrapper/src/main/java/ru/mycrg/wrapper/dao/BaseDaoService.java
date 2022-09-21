@@ -59,6 +59,27 @@ public class BaseDaoService {
     }
 
     @Transactional
+    public void deleteAllRecordsFromExtTableWhichNotExist(JdbcTemplate jdbcTemplate,
+                                                          ResourceProjection resource) {
+        String schema = resource.getSchemaName();
+        String table = resource.getTableName();
+        String extensionTableName = table + EXTENSION_POSTFIX;
+
+        String deleteFromExtTable = format("DELETE " +
+                                                   " FROM %3$s.%1$s as extTable" +
+                                                   " WHERE extTable.object_id IN (SELECT extension.object_id as id" +
+                                                   "                                      FROM %3$s.%1$s as extension" +
+                                                   "                                      LEFT JOIN %3$s.%2$s as main" +
+                                                   "                                      ON extension.object_id = main.objectid" +
+                                                   "                                      WHERE main.objectid is NULL)",
+                                           extensionTableName, table, schema);
+
+        log.debug("Sql (deleteFromExtTable): {}, ", deleteFromExtTable);
+
+        jdbcTemplate.execute(deleteFromExtTable);
+    }
+
+    @Transactional
     public void saveValidationResults(JdbcTemplate jdbcTemplate,
                                       ResourceProjection resource,
                                       List<ObjectValidationResult> violations) {

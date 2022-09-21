@@ -25,6 +25,7 @@ import ru.mycrg.data_service.util.filter.FilterItem;
 import java.util.List;
 
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.fillWhereSectionByFilter;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.EXTENSION_TABLE_ID;
 
 @Transactional
 public class ValidationResultDao {
@@ -99,7 +100,7 @@ public class ValidationResultDao {
         DbSchema dbSchema = spec.addSchema(rQualifier.getSchema());
 
         DbTable dbTable = dbSchema.addTable(rQualifier.getTable());
-        dbTable.addColumn("object_id");
+        dbTable.addColumn(EXTENSION_TABLE_ID.getName());
         dbTable.addColumn("violations");
         dbTable.addColumn("_xmin");
         dbTable.addColumn("valid");

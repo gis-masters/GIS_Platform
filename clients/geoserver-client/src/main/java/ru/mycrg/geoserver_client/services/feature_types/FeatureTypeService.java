@@ -6,7 +6,6 @@ import okhttp3.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
-import ru.mycrg.geoserver_client.services.storage.vector.DataStoreModel;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 

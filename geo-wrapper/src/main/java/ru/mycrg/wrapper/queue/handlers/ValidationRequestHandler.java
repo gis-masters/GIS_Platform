@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.ValidationProcessModel;
@@ -13,7 +14,6 @@ import ru.mycrg.data_service_contract.queue.response.ValidationResponseEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
-import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
@@ -89,6 +89,7 @@ public class ValidationRequestHandler implements IEventHandler {
         try {
             LocalTime startTime = LocalTime.now();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
+            baseDaoService.deleteAllRecordsFromExtTableWhichNotExist(jdbcTemplate, resource);
 
             List<Map<String, Object>> nextBatch;
             int batchSize = DaoProperties.BATCH_SIZE;

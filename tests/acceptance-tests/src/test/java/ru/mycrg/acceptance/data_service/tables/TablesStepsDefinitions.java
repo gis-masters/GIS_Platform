@@ -14,6 +14,8 @@ import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
+import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.schemaId;
+import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.tableName;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class TablesStepsDefinitions extends BaseStepsDefinitions {
@@ -125,6 +127,8 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                                              generateString(""),
                                              generateString("EPSG:28406"),
                                              generateString(TEST_TABLE_SCHEMA));
+        tableName = currentTableName;
+        schemaId = TEST_TABLE_SCHEMA;
 
         super.createEntity(currentTableDto);
     }
