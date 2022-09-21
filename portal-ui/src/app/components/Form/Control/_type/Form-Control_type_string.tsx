@@ -79,7 +79,7 @@ class FormControlTypeString extends Component<FormControlProps> {
             InputProps={{
               endAdornment: display === 'password' && (
                 <InputAdornment position='end'>
-                  <IconButton aria-label='Показать пароль' onClick={this.onShowPassword} edge='end'>
+                  <IconButton aria-label='Показать пароль' onClick={this.onShowPassword} edge='end' size='small'>
                     {this.showPassword ? <Visibility fontSize='small' /> : <VisibilityOff fontSize='small' />}
                   </IconButton>
                 </InputAdornment>
