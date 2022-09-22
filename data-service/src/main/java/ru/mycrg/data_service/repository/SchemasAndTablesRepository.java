@@ -1,6 +1,8 @@
 package ru.mycrg.data_service.repository;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 
@@ -12,4 +14,7 @@ public interface SchemasAndTablesRepository extends PagingAndSortingRepository<S
     Optional<SchemasAndTables> findByIdentifier(String identifier);
 
     void deleteByIdentifier(String identifier);
+
+    @Query("SELECT crs FROM SchemasAndTables WHERE identifier = :identifier")
+    Optional<String> findCrsByIdentifier(@Param("identifier") String identifier);
 }

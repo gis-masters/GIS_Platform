@@ -8,21 +8,26 @@ public class ResourceProjection {
     private String schemaName;
     private String tableName;
     private SchemaDto schema;
+    private String crs;
 
     public ResourceProjection() {
+        // Required
     }
 
     public ResourceProjection(String dbName, String schemaName, String tableName) {
-        this.dbName = dbName;
-        this.schemaName = schemaName;
-        this.tableName = tableName;
+        this(dbName, schemaName, tableName, null, null);
     }
 
     public ResourceProjection(String dbName, String schemaName, String tableName, SchemaDto schema) {
+        this(dbName, schemaName, tableName, schema, null);
+    }
+
+    public ResourceProjection(String dbName, String schemaName, String tableName, SchemaDto schema, String crs) {
         this.dbName = dbName;
         this.schemaName = schemaName;
         this.tableName = tableName;
         this.schema = schema;
+        this.crs = crs;
     }
 
     @JsonIgnore
@@ -60,6 +65,14 @@ public class ResourceProjection {
 
     public void setSchema(SchemaDto schema) {
         this.schema = schema;
+    }
+
+    public String getCrs() {
+        return crs;
+    }
+
+    public void setCrs(String crs) {
+        this.crs = crs;
     }
 
     @Override

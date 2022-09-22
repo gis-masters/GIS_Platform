@@ -8,6 +8,7 @@ import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.processes.ProcessService;
+import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
@@ -26,17 +27,20 @@ public class ExportService {
     private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
     private final WsNotificationService wsNotificationService;
+    private final TableService tableService;
 
     public ExportService(IMessageBusProducer messageBus,
                          SchemaService schemaService,
                          IAuthenticationFacade authenticationFacade,
                          ProcessService processService,
-                         WsNotificationService wsNotificationService) {
+                         WsNotificationService wsNotificationService,
+                         TableService tableService) {
         this.messageBus = messageBus;
         this.schemaService = schemaService;
         this.processService = processService;
         this.authenticationFacade = authenticationFacade;
         this.wsNotificationService = wsNotificationService;
+        this.tableService = tableService;
     }
 
     public Process export(ExportRequestModel request) {
@@ -52,11 +56,13 @@ public class ExportService {
 
         request.getResources().forEach(resourceModel -> {
             schemaService.getSchemaByName(resourceModel.getSchemaId()).ifPresent(schema -> {
+                String tableCrs = tableService.getTableCrs(resourceModel.getTable());
                 payload.addResource(
                         new ResourceProjection(dbName,
                                                resourceModel.getDataset(),
                                                resourceModel.getTable(),
-                                               schema));
+                                               schema,
+                                               tableCrs));
             });
         });
 

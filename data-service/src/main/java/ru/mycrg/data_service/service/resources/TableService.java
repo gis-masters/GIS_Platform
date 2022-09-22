@@ -109,6 +109,12 @@ public class TableService {
         }
     }
 
+    public String getTableCrs(String identifier) {
+        return schemasAndTablesRepository
+                .findCrsByIdentifier(identifier)
+                .orElseThrow(() -> new NotFoundException("Не задан crs для таблицы: " + identifier));
+    }
+
     @NotNull
     private String addPathToDataset(String ecqlFilter, String pathTo) {
         if (ecqlFilter == null) {

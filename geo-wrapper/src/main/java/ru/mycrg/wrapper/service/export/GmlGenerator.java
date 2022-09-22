@@ -32,12 +32,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static java.io.File.separator;
+import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.BATCH_SIZE;
 import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
@@ -153,9 +151,9 @@ public class GmlGenerator implements IExporter {
 
                     // Выгружаются только те свойства что прописаны в 10 приказе, тобишь schema.getProperties()
                     schema.getProperties().stream()
-                           .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
-                           .forEach(simplePropertyDto -> fillFeatureMember(featureMember, docHolder.getGmlDocument(),
-                                                                           propFromDb, simplePropertyDto));
+                          .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
+                          .forEach(simplePropertyDto -> fillFeatureMember(featureMember, docHolder.getGmlDocument(),
+                                                                          propFromDb, simplePropertyDto));
 
                     // Отдельно обрабатываем геометрию
                     Object crgBGeometry = propFromDb.get("crg_b_geometry");
@@ -164,7 +162,7 @@ public class GmlGenerator implements IExporter {
                         try {
                             geometry = wkb.read((byte[]) crgBGeometry);
 
-                            generateGeometry(geometry, docHolder.getGmlDocument(), featureMember);
+                            generateGeometry(geometry, docHolder.getGmlDocument(), featureMember, resource.getCrs());
                         } catch (ParseException e) {
                             log.warn("Ошибка при попытке распарсить геометрию. {}", e.getLocalizedMessage());
                         }
@@ -211,7 +209,7 @@ public class GmlGenerator implements IExporter {
         objectNode.appendChild(nameNode);
 
         Element classIdNode = gmlDocument.createElement("ClassID");
-        classIdNode.setTextContent(classId.toString());
+        classIdNode.setTextContent(nonNull(classId) ? classId.toString() : "");
         objectNode.appendChild(classIdNode);
 
         objectCollection.appendChild(objectNode);
@@ -239,11 +237,11 @@ public class GmlGenerator implements IExporter {
         });
     }
 
-    private void generateGeometry(Geometry geometry, Document document, Element featureMember) {
+    private void generateGeometry(Geometry geometry, Document document, Element featureMember, String crsTable) {
         String geometryType = geometry.getGeometryType();
 
         final String geometrySRSName = "srsName";
-        final String geometrySRSValue = "urn:ogc:def:crs:EPSG:28406";
+        final String geometrySRSValue = "urn:ogc:def:crs:" + crsTable;
         final String gmlCoordinates = "gml:coordinates";
 
         if ("Point".equals(geometryType)) {
