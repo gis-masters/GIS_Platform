@@ -1,6 +1,6 @@
 package ru.mycrg.geoserver_client.services.feature_types;
 
-import ru.mycrg.geoserver_client.services.storage.vector.NameHrefProjection;
+import ru.mycrg.geoserver_client.contracts.NameHrefProjection;
 
 import java.util.ArrayList;
 import java.util.List;

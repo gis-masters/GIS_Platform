@@ -11,8 +11,8 @@ interface FilesIconProps {
   color?: 'inherit' | 'action' | 'disabled' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
 }
 
-export const FilesIcon: FC<FilesIconProps> = ({ /*ext,*/ color }) => (
+export const FilesIcon: FC<FilesIconProps> = ({ ext, color }) => (
   <LookupIcon className={cnFilesIcon()}>
-    <FileIcon ext={''} color={color} outlined />
+    <FileIcon ext={ext} color={color} outlined />
   </LookupIcon>
 );

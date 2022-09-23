@@ -1,24 +1,22 @@
 package ru.mycrg.data_service.dto;
 
-import ru.mycrg.data_service_contract.enums.ProcessType;
-
 public class WsMessageDto<T> {
 
-    private ProcessType type;
+    private String type;
     private T payload;
 
     public WsMessageDto() {}
 
-    public WsMessageDto(ProcessType type, T response) {
+    public WsMessageDto(String type, T response) {
         this.type = type;
         this.payload = response;
     }
 
-    public ProcessType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(ProcessType type) {
+    public void setType(String type) {
         this.type = type;
     }
 

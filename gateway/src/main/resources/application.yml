@@ -15,8 +15,8 @@ spring:
 
 zuul:
   host:
-    connect-timeout-millis: 10000
-    socket-timeout-millis: 10000
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
     # max-total-connections: 500
     # max-per-route-connections: 20
     # time-unit: MILLISECONDS

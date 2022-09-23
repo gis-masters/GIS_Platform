@@ -1,20 +1,14 @@
 import React, { FC, useCallback } from 'react';
-import { SelectChangeEvent } from '@mui/material';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 
+import { SelectProjection } from '../../SelectProjection/SelectProjection';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import {
-  viewedProjections,
-  getProjection,
-  replaceHiddenProjectionId
-} from '../../../services/geoserver/projections.service';
-import { FormField, FormLabel, FormControl } from '../../Form/Form';
-import { Select } from '../../Select/Select';
+import { getProjection, replaceHiddenProjectionId } from '../../../services/geoserver/projections.service';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ProjSel.scss';
 
-const cnEditFeatureGeometry = cn('EditFeatureGeometry');
+const cnEditFeatureGeometryProjSel = cn('EditFeatureGeometry', 'ProjSel');
 
 interface Props {
   store: EditFeatureGeometryStore;
@@ -22,22 +16,17 @@ interface Props {
 
 export const EditFeatureGeometryProjSel: FC<Props> = observer(({ store }: Props) => {
   const handleChange = useCallback(
-    (e: SelectChangeEvent) => {
-      store.setProjection(getProjection(e.target.value));
+    (name: string) => {
+      store.setProjection(getProjection(name));
     },
     [store]
   );
 
   return (
-    <FormField className={cnEditFeatureGeometry('ProjSel')}>
-      <FormLabel htmlFor='projSel'>Система координат</FormLabel>
-      <FormControl>
-        <Select
-          options={viewedProjections.map(proj => ({ value: proj.id, children: proj.title }))}
-          onChange={handleChange}
-          value={replaceHiddenProjectionId(store.currentProjection.id)}
-        />
-      </FormControl>
-    </FormField>
+    <SelectProjection
+      className={cnEditFeatureGeometryProjSel()}
+      value={replaceHiddenProjectionId(store.currentProjection.id)}
+      onChange={handleChange}
+    />
   );
 });

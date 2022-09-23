@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
-import { observer } from 'mobx-react';
-import { ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { AxiosError } from 'axios';
+import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { action, observable, makeObservable } from 'mobx';
+import { ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 
-import { sidebars } from '../../stores/Sidebars.store';
+import { Toast } from '../Toast/Toast';
 import { services } from '../../services/services';
+import { sidebars } from '../../stores/Sidebars.store';
+import { isDxfFile } from '../../services/data/files.util';
 import { FileInfo } from '../../services/data/files.service';
-import { CrgProject } from '../../services/gis/projects.models';
-import { placeFile } from '../../services/data/file-placement.service';
-import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
 import { CoordinateAxesXY } from '../Icons/CoordinateAxesXY';
 import { CoordinateAxesYX } from '../Icons/CoordinateAxesYX';
-import { Toast } from '../Toast/Toast';
+import { CrgProject } from '../../services/gis/projects.models';
+import { SelectProjection } from '../SelectProjection/SelectProjection';
+import { placeDxf, placeGml } from '../../services/data/file-placement.service';
+import { defaultProjection } from '../../services/geoserver/projections.service';
+import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
+
+import '!style-loader!css-loader!sass-loader!./ProjectPlacementDialog.scss';
 
 const cnProjectPlacementDialog = cn('ProjectPlacementDialog');
 
@@ -27,6 +32,7 @@ interface ProjectPlacementDialogProps {
 export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProps> {
   @observable private addFormBusy = false;
   @observable private invertedCoordinates = false;
+  @observable private selectedCrs = defaultProjection.id;
 
   constructor(props: ProjectPlacementDialogProps) {
     super(props);
@@ -34,7 +40,7 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
   }
 
   render() {
-    const { open, onClose } = this.props;
+    const { open, onClose, fileInfo } = this.props;
 
     return (
       <SelectProjectsDialog
@@ -44,29 +50,37 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
         onSelect={this.onProjectSelected}
         actionButtonLabel='Разместить в выбранном проекте'
         additionalAction={
-          <Tooltip title='В GML файле могут содержаться координаты в разных системах. Если в результате импорта ориентация и расположение импортированных объектов на карте отличаются от ожидаемых — попробуйте разместить GML файл заново, выбрав другой режим с помощью этого переключателя.'>
-            <ToggleButtonGroup
-              size='small'
-              value={this.invertedCoordinates ? 'xy' : 'yx'}
-              exclusive
-              onChange={this.handleCoordinatesInversionSwitcherChange}
-            >
-              <ToggleButton value='xy'>
-                <Tooltip title='X — восток, Y — север (ENU)' placement='left'>
-                  <span>
-                    <CoordinateAxesXY fontSize='small' />
-                  </span>
-                </Tooltip>
-              </ToggleButton>
-              <ToggleButton value='yx'>
-                <Tooltip title='X — север, Y — восток (NED)' placement='right'>
-                  <span>
-                    <CoordinateAxesYX fontSize='small' />
-                  </span>
-                </Tooltip>
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </Tooltip>
+          isDxfFile(fileInfo) ? (
+            <SelectProjection
+              className={cnProjectPlacementDialog('SelectProjection')}
+              value={this.selectedCrs}
+              onChange={this.onProjectionSelected}
+            />
+          ) : (
+            <Tooltip title='В GML файле могут содержаться координаты в разных системах. Если в результате импорта ориентация и расположение импортированных объектов на карте отличаются от ожидаемых — попробуйте разместить GML файл заново, выбрав другой режим с помощью этого переключателя.'>
+              <ToggleButtonGroup
+                size='small'
+                value={this.invertedCoordinates ? 'xy' : 'yx'}
+                exclusive
+                onChange={this.handleCoordinatesInversionSwitcherChange}
+              >
+                <ToggleButton value='xy'>
+                  <Tooltip title='X — восток, Y — север (ENU)' placement='left'>
+                    <span>
+                      <CoordinateAxesXY fontSize='small' />
+                    </span>
+                  </Tooltip>
+                </ToggleButton>
+                <ToggleButton value='yx'>
+                  <Tooltip title='X — север, Y — восток (NED)' placement='right'>
+                    <span>
+                      <CoordinateAxesYX fontSize='small' />
+                    </span>
+                  </Tooltip>
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Tooltip>
+          )
         }
       />
     );
@@ -77,6 +91,11 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
     const { fileInfo } = this.props;
 
     await this.place(fileInfo, project.id);
+  }
+
+  @action.bound
+  private onProjectionSelected(crs: string) {
+    this.selectedCrs = crs;
   }
 
   @action.bound
@@ -92,7 +111,9 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
     this.setFormBusy(true);
 
     try {
-      await placeFile(fileInfo, projectId, this.invertedCoordinates);
+      await (isDxfFile(this.props.fileInfo)
+        ? placeDxf(fileInfo, projectId, this.selectedCrs)
+        : placeGml(fileInfo, projectId, this.invertedCoordinates));
 
       this.props.onClose();
       sidebars.openInfo();

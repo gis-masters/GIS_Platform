@@ -1,9 +1,11 @@
 package ru.mycrg.geoserver_client.services.storage.raster;
 
-public class CoverageStoreRequest {
+import ru.mycrg.geoserver_client.contracts.coveragestores.CoverageStoreRequestModel;
+
+public class CoverageStoreRequestWrapper {
     public final CoverageStoreRequestModel coverageStore;
 
-    public CoverageStoreRequest(CoverageStoreRequestModel coverageStore) {
+    public CoverageStoreRequestWrapper(CoverageStoreRequestModel coverageStore) {
         this.coverageStore = coverageStore;
     }
 

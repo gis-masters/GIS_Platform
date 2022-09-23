@@ -1,6 +1,6 @@
-package ru.mycrg.geoserver_client.services.storage.raster;
+package ru.mycrg.geoserver_client.contracts.coveragestores;
 
-import ru.mycrg.geoserver_client.services.storage.vector.NameHrefProjection;
+import ru.mycrg.geoserver_client.contracts.NameHrefProjection;
 
 public class CoverageStoreResponseModel {
 

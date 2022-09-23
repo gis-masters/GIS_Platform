@@ -35,13 +35,13 @@ public class GisServiceLayerDeleteDelegate implements JavaDelegate {
 
         final String findRelatedLayersPath = String.format("/projects/find-related-to-file-layers?fileId=%s", fileId);
 
-        Request req = new Request.Builder()
+        Request request = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .url(new URL(baseHttpService.getGisServiceUrl(), findRelatedLayersPath))
                 .get()
                 .build();
 
-        Response response = httpClient.newCall(req).execute();
+        Response response = httpClient.newCall(request).execute();
         if (response.isSuccessful()) {
             String body = requireNonNull(response.body()).string();
             JSONArray relatedLayers = new JSONArray(body);

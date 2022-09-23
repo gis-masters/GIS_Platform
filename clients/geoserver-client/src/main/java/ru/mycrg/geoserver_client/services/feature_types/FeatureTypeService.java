@@ -5,6 +5,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.mycrg.geoserver_client.contracts.featuretypes.FeatureTypeModel;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
@@ -96,9 +97,9 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
     public ResponseModel<Object> create(String workspaceName,
                                         String dataStoreName,
                                         FeatureTypeModel featureType) throws HttpClientException {
-        log.debug("try create feature new: {} in: {}", featureType, workspaceName);
-
         String payload = gson.toJson(new FeatureTypeWrapModel(featureType));
+
+        log.debug("try create new feature: [{}] in workspace: '{}'", payload, workspaceName);
 
         String url = getGeoserverRestUrl()
                 .append(WORKSPACES).append(workspaceName)
@@ -106,10 +107,8 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
                 .append(FEATURE_TYPES).toString();
 
         Request request = builderWithBearerAuth.url(url)
-                                               .post(RequestBody.create(payload, JSON_MEDIA_TYPE))
+                                               .post(RequestBody.create(JSON_MEDIA_TYPE, payload))
                                                .build();
-
-        log.debug("create feature: {} on datastore: {}", featureType, dataStoreName);
 
         return httpClient.handleRequest(request);
     }

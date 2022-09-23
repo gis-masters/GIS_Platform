@@ -9,6 +9,10 @@ import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
 public class FileResourceQualifierMapper {
 
+    private FileResourceQualifierMapper() {
+        throw new IllegalArgumentException("Utility class");
+    }
+
     public static FileResourceQualifier map(JsonNode resourceQualifier) {
         try {
             return mapper.readValue(resourceQualifier.toString(), FileResourceQualifier.class);

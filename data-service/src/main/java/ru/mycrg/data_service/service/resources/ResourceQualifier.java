@@ -12,7 +12,7 @@ import static ru.mycrg.data_service.dto.ResourceType.*;
 
 public class ResourceQualifier {
 
-    public static final String SEPARATOR = "\\.";
+    private static final String SEPARATOR = "\\.";
 
     private final String schema;
     private final String table;

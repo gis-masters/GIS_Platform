@@ -393,6 +393,14 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(404, response.getStatusCode());
     }
 
+    @And("В проекте создан растровый слой на основе DXF файла")
+    public void checkIsRasterLayerCreated() {
+        super.getCurrentEntityByFilter("title", "best");
+
+        assertEquals("best", response.jsonPath().getList("title").get(0));
+        assertEquals("raster", response.jsonPath().getList("type").get(0));
+    }
+
     private void makeLastAvailableLayerAsCurrent() {
         layerPool.entrySet().stream()
                  .skip(layerPool.size() - 1)

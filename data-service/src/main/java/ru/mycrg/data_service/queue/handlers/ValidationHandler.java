@@ -57,7 +57,7 @@ public class ValidationHandler implements IEventHandler {
                 log.warn("Not supported process status. {}", process);
         }
 
-        wsNotificationService.send(new WsMessageDto<>(VALIDATION, event), processService.getWsUiId(process));
+        wsNotificationService.send(new WsMessageDto<>(VALIDATION.name(), event), processService.getWsUiId(process));
     }
 
     private void addSubStep(Process process, ValidationResponseEvent responseEvent) {

@@ -4,7 +4,6 @@ import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static io.restassured.http.ContentType.JSON;
@@ -34,17 +33,23 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         gmlPlacementModel.setWsUiId("Fiat lux");
         gmlPlacementModel.setProjectId(Long.valueOf(projectId));
 
-        PlacementPayloadModel placementModel = new PlacementPayloadModel();
-        placementModel.setType("IMPORT_GML");
-        placementModel.setPayload(gmlPlacementModel);
-
         ProcessableModel processableModel = new ProcessableModel();
         processableModel.setType("IMPORT");
-        processableModel.setPayload(placementModel);
+        processableModel.setPayload(gmlPlacementModel);
 
         initProcess(processableModel);
 
         currentProcessId = extractId(response.jsonPath().get("_links.self.href"));
+    }
+
+    @When("Пользователь публикует DXF")
+    public void tryPlacementDxfAsProcess() {
+        DxfPlacementModel dxfPlacementModel = new DxfPlacementModel();
+        dxfPlacementModel.setFileId(currentFileId);
+        dxfPlacementModel.setWsUiId("Fiat lux");
+        dxfPlacementModel.setProjectId(Long.valueOf(projectId));
+
+        placeFile(dxfPlacementModel);
     }
 
     @When("процесс завершается успешно")
@@ -73,6 +78,16 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         } catch (InterruptedException e) {
             throw new RuntimeException("Process not DONE: " + e.getMessage());
         }
+    }
+
+    private void placeFile(DxfPlacementModel dxfPlacementModel) {
+        ProcessableModel processableModel = new ProcessableModel();
+        processableModel.setType("IMPORT");
+        processableModel.setPayload(dxfPlacementModel);
+
+        initProcess(processableModel);
+
+        currentProcessId = extractId(response.jsonPath().get("_links.self.href"));
     }
 
     private void getProcess(Integer processId) {

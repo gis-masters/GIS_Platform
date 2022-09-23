@@ -1,6 +1,6 @@
-package ru.mycrg.geoserver_client.services.storage.raster;
+package ru.mycrg.geoserver_client.contracts.coveragestores;
 
-public class CoverageStoreResponse {
+public class CoverageStoreResponseWrapper {
 
     private CoverageStoreResponseModel coverageStore;
 

@@ -116,6 +116,7 @@ export function getFeatureProjection(feature: WfsFeature<Coordinate | Coordinate
 }
 
 export const olProjection = projections.find(({ id }) => id === 'EPSG:3857');
+export const defaultProjection = projections.find(({ id }) => id === 'EPSG:7829');
 
 export function transform(projFrom: CrgProjection, projTo: CrgProjection, coordinate: Coordinate): Coordinate {
   if (projFrom.id === projTo.id) {

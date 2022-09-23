@@ -29,10 +29,11 @@ spring:
     username: fiz
     password: 314
 
-camunda.bpm:
-  admin-user:
-    id: demo
-    password: demo
+camunda:
+  bpm:
+    admin-user:
+      id: demo
+      password: demo
 
 management:
   endpoint:

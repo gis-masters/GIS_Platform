@@ -53,6 +53,7 @@ public class RasterLayerHandler implements ILayerHandler {
             String tableName = dto.getTableName();
             String workspaceName = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
             String storeName = buildRasterStoreName(tableName);
+            // TODO: Наверное это не очень создавать все хранилища для растров в проекции 28406
             CoverageModel coverage = new CoverageModel(dto.getTableName(), dto.getTitle(), "28406", dto.getNativeCRS());
 
             createRasterStore(workspaceName, storeName, dto.getDataSourceUri());

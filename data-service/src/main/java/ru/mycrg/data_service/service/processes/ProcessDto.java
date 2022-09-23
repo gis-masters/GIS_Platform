@@ -5,17 +5,17 @@ import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import javax.validation.constraints.NotNull;
 
-public class ProcessableModel {
+public class ProcessDto {
 
     @NotNull
     Object payload;
 
     @NotNull
     @ValidateEnum(targetClassType = ProcessType.class, message = "Допустимые значения поля type: " +
-            "IMPORT, IMPORT_GML, IMPORT_RASTER, VALIDATION, VALIDATION_REPORT, EXPORT")
+            "IMPORT, VALIDATION, VALIDATION_REPORT, EXPORT")
     String type;
 
-    public ProcessableModel() {
+    public ProcessDto() {
         // Required
     }
 

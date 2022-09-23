@@ -57,7 +57,7 @@ public class ExportHandler implements IEventHandler {
                 log.warn("Not supported process status. {}", process);
         }
 
-        wsNotificationService.send(new WsMessageDto<>(EXPORT, event), processService.getWsUiId(process));
+        wsNotificationService.send(new WsMessageDto<>(EXPORT.name(), event), processService.getWsUiId(process));
     }
 
     private void addSubStep(Process process, ExportResponseEvent responseEvent) {

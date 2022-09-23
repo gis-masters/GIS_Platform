@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.service.processes.ProcessHandler;
 import ru.mycrg.data_service.service.processes.ProcessService;
-import ru.mycrg.data_service.service.processes.ProcessableModel;
+import ru.mycrg.data_service.service.processes.ProcessDto;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -37,7 +37,7 @@ public class ProcessesController {
     }
 
     @PostMapping()
-    public ResponseEntity<Resource<Process>> initProcess(@Valid @RequestBody ProcessableModel processableModel) {
+    public ResponseEntity<Resource<Process>> initProcess(@Valid @RequestBody ProcessDto processableModel) {
         Process process = processHandler.handle(processableModel);
 
         Resource<Process> resource = new Resource<>(process);

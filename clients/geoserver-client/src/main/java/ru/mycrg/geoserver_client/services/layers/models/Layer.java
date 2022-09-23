@@ -1,6 +1,6 @@
 package ru.mycrg.geoserver_client.services.layers.models;
 
-import ru.mycrg.geoserver_client.services.storage.vector.NameHrefProjection;
+import ru.mycrg.geoserver_client.contracts.NameHrefProjection;
 
 public class Layer {
 

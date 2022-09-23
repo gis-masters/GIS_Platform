@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import ru.mycrg.geoserver_client.services.storage.vector.ConnectionParameters;
-import ru.mycrg.geoserver_client.services.storage.vector.DataStore;
+import ru.mycrg.geoserver_client.contracts.datastores.PostGisConnectionParameters;
+import ru.mycrg.geoserver_client.contracts.datastores.VectorDataStore;
 import ru.mycrg.geoserver_client.services.storage.vector.VectorStorage;
 import ru.mycrg.geoserver_client.services.workspace.WorkspacesService;
 import ru.mycrg.gis_service.dto.geoserver.OrgCreateDto;
@@ -50,10 +50,10 @@ public class CreateWorkspaceAndStorage implements JavaDelegate {
         String dbOwner = environment.getRequiredProperty("spring.datasource.username");
         String dbPass = environment.getRequiredProperty("spring.datasource.password");
 
-        ConnectionParameters connParams = new ConnectionParameters(dbHost, String.valueOf(dbPort), dbName, "public",
-                                                                   dbOwner, dbPass, "postgis");
+        PostGisConnectionParameters connParams = new PostGisConnectionParameters(dbHost, String.valueOf(dbPort), dbName, "public",
+                                                                                 dbOwner, dbPass, "postgis");
 
-        DataStore dataStore = new DataStore(getDefaultStoreName(scratchWorkspaceName), connParams);
+        VectorDataStore dataStore = new VectorDataStore(getDefaultStoreName(scratchWorkspaceName), connParams);
 
         new VectorStorage(accessToken).create(scratchWorkspaceName, dataStore);
     }

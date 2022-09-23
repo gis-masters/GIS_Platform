@@ -57,11 +57,13 @@ public class RabbitConfiguration {
         return BindingBuilder.bind(queueExportResponse()).to(fanoutExchangeExportResponse());
     }
 
+    @Bean public Queue queueFileEventDeleted() { return new Queue(FILE_REQUEST_QUEUE);}
+
     @Bean public Queue deleteGisReferencesRequestQueue() { return new Queue(COMMON_REQUEST_QUEUE);}
     @Bean public Queue deleteGisReferencesResponseQueue() { return new Queue(COMMON_RESPONSE_QUEUE);}
 
-    @Bean
-    public Queue queueFileEventDeleted() { return new Queue(FILE_REQUEST_QUEUE);}
+    @Bean public Queue dataToIntegrationQueue() { return new Queue(DATA_TO_INTEGRATION_QUEUE);}
+    @Bean public Queue integrationToDataQueue() { return new Queue(INTEGRATION_TO_DATA_QUEUE);}
 
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {

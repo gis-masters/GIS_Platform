@@ -108,8 +108,6 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertEquals("100b.png", firstObj.get("title"));
         assertNotNull(firstObj.get("createdAt"));
         assertEquals("png", firstObj.get("extension"));
-        // assertEquals("RECORD", firstObj.get("resourceType"));
-        // assertEquals("dl_default.1", firstObj.get("resourceQualifier"));
         assertNotNull(firstObj.get("createdBy"));
         assertNotNull(firstObj.get("id"));
         assertNotNull(firstObj.get("size"));
@@ -192,12 +190,14 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
                              equalTo("Ресурс не найден по идентификатору: " + secondFileId));
     }
 
-    @Given("Существует файл с расширением tif")
-    public void createTifFile() {
-        String filePath = "src/test/resources/ru/mycrg/acceptance/resources/zolotopolenskoe_sp.tif";
-        File testTif = new File(filePath);
+    @Given("Существует файл {string}")
+    public void createFile(String fileName) {
+        File testFile = new File("src/test/resources/ru/mycrg/acceptance/resources/" + fileName);
+        if (!testFile.exists()) {
+            throw new IllegalStateException("Not exist test resource: " + fileName);
+        }
 
-        List<UUID> ids = createFiles(new File[]{testTif});
+        List<UUID> ids = createFiles(new File[]{testFile});
         currentFileId = ids.get(0);
 
         getFile(currentFileId);

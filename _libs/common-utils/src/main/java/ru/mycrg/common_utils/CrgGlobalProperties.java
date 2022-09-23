@@ -22,53 +22,63 @@ public class CrgGlobalProperties {
     }
 
     @NotNull
+    public static String join(String s1, String s2) {
+        return s1 + SEPARATOR + s2;
+    }
+
+    @NotNull
+    public static String join(String s1, String s2, String s3) {
+        return s1 + SEPARATOR + s2 + SEPARATOR + s3;
+    }
+
+    @NotNull
     public static String getDefaultDatabaseName() {
         return DEFAULT_DB_NAME;
     }
 
     @NotNull
     public static String getDefaultDatabaseName(Long orgId) {
-        return DEFAULT_DB_NAME + SEPARATOR + orgId;
+        return join(DEFAULT_DB_NAME, orgId.toString());
     }
 
     @NotNull
     public static String getDefaultDatabaseName(String orgId) {
-        return DEFAULT_DB_NAME + SEPARATOR + orgId;
+        return join(DEFAULT_DB_NAME, orgId);
     }
 
     @NotNull
     public static String getScratchWorkspaceName(String dbName) {
-        return SCRATCH_DB_PREFIX + SEPARATOR + dbName;
+        return join(SCRATCH_DB_PREFIX, dbName);
     }
 
     @NotNull
     public static String getScratchWorkspaceName(Long orgId) {
-        return SCRATCH_DB_PREFIX + SEPARATOR + getDefaultDatabaseName(orgId);
+        return join(SCRATCH_DB_PREFIX, getDefaultDatabaseName(orgId));
     }
 
     @NotNull
     public static String getDefaultProjectName(Long projectId) {
-        return DEFAULT_PROJECT_NAME + SEPARATOR + projectId;
+        return join(DEFAULT_PROJECT_NAME, projectId.toString());
     }
 
     @NotNull
     public static String getDefaultStoreName(String name) {
-        return name + SEPARATOR + DEFAULT_STORE_POSTFIX;
+        return join(name, DEFAULT_STORE_POSTFIX);
     }
 
     @NotNull
     public static String buildRasterStoreName(String custom) {
-        return DEFAULT_STORE_POSTFIX + SEPARATOR + custom;
+        return join(DEFAULT_STORE_POSTFIX, custom);
     }
 
     @NotNull
     public static String getDefaultRoleName(Object orgId) {
-        return DEFAULT_ROLE_NAME + SEPARATOR + orgId;
+        return join(DEFAULT_ROLE_NAME, orgId.toString());
     }
 
     @NotNull
     public static String generateDatasetName() {
-        return DEFAULT_SCHEMA_PREFIX + SEPARATOR + UUID.randomUUID().toString().substring(0, 6);
+        return join(DEFAULT_SCHEMA_PREFIX, UUID.randomUUID().toString().substring(0, 6));
     }
 
     public static Optional<Long> extractIdFromDbName(@NotNull String dbName) {

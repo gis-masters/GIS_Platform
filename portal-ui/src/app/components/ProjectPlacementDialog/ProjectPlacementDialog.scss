@@ -1,3 +1,6 @@
 body .ProjectPlacementDialog {
-  min-width: 80%;
+  &-SelectProjection {
+    min-width: 300px;
+    margin-right: 50px;
+  }
 }

@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.processes;
 
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 public interface IExecutor<T> {
@@ -22,9 +23,7 @@ public interface IExecutor<T> {
     ProcessType getType();
 
     /**
-     * Инициализация, т.е. добавляем в executor пришедшие данные.
-     * <p>
-     * Встроена в процесс и выполняется фабрикой после выбора подходящего executor-а.
+     * Инициализация, добавляем данные по процессу в котором это будет выполняться.
      *
      * @param payload Переданные данные, необходимые для выполнения задачи.
      *
@@ -51,4 +50,22 @@ public interface IExecutor<T> {
      * @return Отчет о процессе
      */
     T getReport();
+
+    /**
+     * Добавляем в executor пришедшие данные.
+     *
+     * @param processModel Данные о процессе.
+     *
+     * @return IExecutor для удобства (построения "цепочки").
+     *
+     * @throws BadRequestException Если не смогли "понять" переданные данные.
+     */
+    IExecutor<T> setPayload(ProcessModel processModel);
+
+    /**
+     * detached процесс - это процесс, который будет завершен позже, например после прихода сообщения из очереди.
+     */
+    default boolean notDetached() {
+        return true;
+    }
 }

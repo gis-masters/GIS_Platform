@@ -4,7 +4,7 @@ import { getProcessesUrl, getProcessUrl } from '../server-urls.service';
 import { sleep } from '../util/sleep';
 import { Mime } from '../util/Mime';
 
-import { PlacementModel } from './file-placement.service';
+import { DfxPlacementModel, GmlPlacementModel } from './file-placement.service';
 
 export interface ImportLayerReport {
   schemaId: string;
@@ -42,8 +42,8 @@ export interface ProcessResponse {
 }
 
 export interface ProcessableModel {
-  payload: PlacementModel;
   type: ProcessType;
+  payload: GmlPlacementModel | DfxPlacementModel;
 }
 
 export async function createProcess(model: ProcessableModel): Promise<ProcessResponse> {

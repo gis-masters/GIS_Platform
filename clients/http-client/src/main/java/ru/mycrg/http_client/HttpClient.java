@@ -39,12 +39,18 @@ public class HttpClient {
 
                 return model;
             } else {
-                log.error("Request failed: {} / Body: {}", response, body);
+                log.error("Request failed: {} / RequestBody: '{}'", response, body);
 
                 return new ResponseModel<>(response, body);
             }
         } catch (IOException e) {
-            throw new HttpClientException("Host unreachable", e.getCause());
+            String msg = "Host unreachable. Reason: " + e.getMessage();
+
+            throw new HttpClientException(msg, e);
+        } catch (Exception e) {
+            String msg = "Failed to handle request. Reason: " + e.getMessage();
+
+            throw new HttpClientException(msg, e);
         }
     }
 

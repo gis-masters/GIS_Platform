@@ -66,7 +66,7 @@ public class ImportHandler implements IEventHandler {
             wsUiId = extraInfo.asText();
         }
 
-        wsNotificationService.send(new WsMessageDto<>(IMPORT, event), wsUiId);
+        wsNotificationService.send(new WsMessageDto<>(IMPORT.name(), event), wsUiId);
     }
 
     private void addSubStep(Process process, ImportResponseEvent event) {

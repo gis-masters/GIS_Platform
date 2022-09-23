@@ -1,4 +1,4 @@
-package ru.mycrg.geoserver_client.services.storage.raster;
+package ru.mycrg.geoserver_client.contracts.coveragestores;
 
 public class CoverageStoreRequestModel {
     private final String name;

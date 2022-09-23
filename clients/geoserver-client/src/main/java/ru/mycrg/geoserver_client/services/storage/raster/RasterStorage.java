@@ -5,6 +5,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.mycrg.geoserver_client.contracts.coveragestores.CoverageStoreRequestModel;
+import ru.mycrg.geoserver_client.contracts.coveragestores.CoverageStoreResponseWrapper;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
@@ -35,7 +37,7 @@ public class RasterStorage extends GeoServerBaseService {
 
         CoverageStoreRequestModel coverageStore = new CoverageStoreRequestModel(name, workspace, true, "GeoTIFF", path);
 
-        String payload = gson.toJson(new CoverageStoreRequest(coverageStore));
+        String payload = gson.toJson(new CoverageStoreRequestWrapper(coverageStore));
 
         Request request = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + WORKSPACES + workspace + COVERAGE_STORES)
@@ -45,7 +47,7 @@ public class RasterStorage extends GeoServerBaseService {
         return httpClient.handleRequest(request);
     }
 
-    public ResponseModel<CoverageStoreResponse> getStorage(String workspace, String store) throws HttpClientException {
+    public ResponseModel<CoverageStoreResponseWrapper> getStorage(String workspace, String store) throws HttpClientException {
         String url = getGeoserverRestUrl().append(WORKSPACES).append(workspace)
                                           .append(COVERAGE_STORES).append(store)
                                           .toString();
@@ -53,7 +55,7 @@ public class RasterStorage extends GeoServerBaseService {
         Request request = builderWithBearerAuth.url(url)
                                                .get().build();
 
-        return httpClient.handleRequest(request, CoverageStoreResponse.class);
+        return httpClient.handleRequest(request, CoverageStoreResponseWrapper.class);
     }
 
     public boolean isExist(String workspace, String store) throws HttpClientException {

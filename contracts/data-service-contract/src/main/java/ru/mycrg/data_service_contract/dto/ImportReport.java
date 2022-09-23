@@ -17,11 +17,6 @@ public class ImportReport {
         // Required
     }
 
-    public ImportReport(String msg) {
-        this.success = false;
-        this.reason = msg;
-    }
-
     public String getDatasetIdentifier() {
         return datasetIdentifier;
     }

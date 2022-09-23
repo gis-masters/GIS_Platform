@@ -1,5 +1,6 @@
 package ru.mycrg.geoserver_client.services.feature_types;
 
+import ru.mycrg.geoserver_client.contracts.featuretypes.FeatureTypeModel;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 

@@ -70,6 +70,10 @@ export function isGmlFile(file: FileInfo): boolean {
   return normalizeExtension(getFileExtension(file.title)) === 'gml';
 }
 
+export function isDxfFile(file: FileInfo): boolean {
+  return normalizeExtension(getFileExtension(file.title)) === 'dxf';
+}
+
 export async function getDocumentsFiles(libraryRecord: LibraryRecord): Promise<FileInfo[]> {
   const files: FileInfo[] = [];
 

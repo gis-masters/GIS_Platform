@@ -11,6 +11,7 @@ import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.JsonConverter;
+import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.data_service.service.JsonConverter.*;
 
 @Component
 public class ProcessHandler {
@@ -39,14 +41,14 @@ public class ProcessHandler {
                                                 .collect(toMap(IProcessExecutorsFactory::getType, Function.identity()));
     }
 
-    public Process handle(ProcessableModel model) {
+    public Process handle(ProcessDto model) {
         ProcessType type = ProcessType.valueOf(model.getType());
         IProcessExecutorsFactory executorsFactory = executorFactories.get(type);
         if (executorsFactory == null) {
             throw new BadRequestException("Задан не поддерживаемый тип процесса: " + type);
         }
 
-        IExecutor<?> executor = executorsFactory.getExecutor(model.getPayload());
+        IExecutor<?> executor = executorsFactory.getExecutor(model);
 
         try {
             ProcessType processType = executor.getType();
@@ -57,6 +59,10 @@ public class ProcessHandler {
                                                     model.getPayload());
 
             log.debug("Создан процесс: '{}'", process.getId());
+
+            executor.initialize(model.getPayload())
+                    .setPayload(new ProcessModel(process.getId(), databaseName))
+                    .validate();
 
             SecurityContext securityContext = SecurityContextHolder.getContext();
             DelegatingSecurityContextRunnable wrappedRunnable = new DelegatingSecurityContextRunnable(() -> {
@@ -76,13 +82,16 @@ public class ProcessHandler {
         try {
             Object result = executor.execute();
 
-            log.debug("Процесс успешно завершен");
-            processService.complete(databaseName, process.getId(), JsonConverter.toJsonNode(result));
+            if (executor.notDetached()) {
+                log.debug("Процесс успешно завершен");
+
+                processService.complete(databaseName, process.getId(), toJsonNode(result));
+            }
         } catch (Exception e) {
             String msg = "Выполненение процесса потерпело неудачу. Причина: " + e.getMessage();
 
             log.error(msg, e.getCause());
-            processService.error(databaseName, process.getId(), JsonConverter.toJsonNode(executor.getReport()));
+            processService.error(databaseName, process.getId(), toJsonNode(executor.getReport()));
         }
     }
 }

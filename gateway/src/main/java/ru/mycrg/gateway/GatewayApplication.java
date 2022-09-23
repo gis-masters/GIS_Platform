@@ -19,6 +19,9 @@ public class GatewayApplication {
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
 
+    @Value("${zuul.host.connect-timeout-millis}")
+    private String ctm;
+
     public static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static void main(String[] args) {
@@ -28,6 +31,7 @@ public class GatewayApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void appReadyEvent() {
         log.info("App ready with:");
-        log.info("max-file-size: " + maxFileSize);
+        log.info("max-file-size: {}", maxFileSize);
+        log.info("connect-timeout-millis: {}", ctm);
     }
 }

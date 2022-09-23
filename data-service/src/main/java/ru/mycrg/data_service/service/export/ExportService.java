@@ -71,7 +71,7 @@ public class ExportService {
 
         final ExportResponseEvent responseEvent = new ExportResponseEvent(requestEvent, PENDING, title, 0);
         wsNotificationService.send(
-                new WsMessageDto<>(EXPORT, responseEvent), request.getWsUiId());
+                new WsMessageDto<>(EXPORT.name(), responseEvent), request.getWsUiId());
 
         return process;
     }

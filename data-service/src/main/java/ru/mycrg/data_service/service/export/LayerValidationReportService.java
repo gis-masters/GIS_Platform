@@ -98,7 +98,7 @@ public class LayerValidationReportService {
                         log.info("Init feature: generateReport");
 
                         reportModel.setStatus(PENDING);
-                        wsNotificationService.send(new WsMessageDto<>(VALIDATION_REPORT, reportModel), wsUiId);
+                        wsNotificationService.send(new WsMessageDto<>(VALIDATION_REPORT.name(), reportModel), wsUiId);
 
                         handleResources(resources, schemas, filePath, reportModel);
 
@@ -107,14 +107,14 @@ public class LayerValidationReportService {
                                                 process.getId(),
                                                 JsonConverter.toJsonNode(reportModel));
 
-                        wsNotificationService.send(new WsMessageDto<>(VALIDATION_REPORT, reportModel), wsUiId);
+                        wsNotificationService.send(new WsMessageDto<>(VALIDATION_REPORT.name(), reportModel), wsUiId);
                     } catch (Exception e) {
                         log.error("Не удалось создать отчет: {}", e.getMessage());
                         processService.error(dbName, process);
 
                         reportModel.setStatus(ERROR);
                         reportModel.setError(e.getMessage());
-                        wsNotificationService.send(new WsMessageDto<>(VALIDATION_REPORT, reportModel), wsUiId);
+                        wsNotificationService.send(new WsMessageDto<>(VALIDATION_REPORT.name(), reportModel), wsUiId);
                     } finally {
                         if (nonNull(csvHandler)) {
                             csvHandler.close();

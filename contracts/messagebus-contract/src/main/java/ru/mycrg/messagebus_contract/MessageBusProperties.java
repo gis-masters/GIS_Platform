@@ -58,4 +58,8 @@ public class MessageBusProperties {
 
     // File
     public static final String FILE_REQUEST_QUEUE = "fileRequestQueue";
+
+    // Common
+    public static final String DATA_TO_INTEGRATION_QUEUE = "dataToIntegrationQueue";
+    public static final String INTEGRATION_TO_DATA_QUEUE = "IntegrationToDataQueue";
 }

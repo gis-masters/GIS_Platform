@@ -8,6 +8,7 @@ import { cn } from '@bem-react/classname';
 import {
   getFileBaseName,
   getFileExtension,
+  isDxfFile,
   isGmlFile,
   isPreviewAllowed,
   isTifFile
@@ -88,16 +89,14 @@ export class FilesItem extends Component<FilesItemProps> {
         <LookupItem className={cnFilesItem({ numerous })}>
           <FilesIcon ext={ext} color={status === 'error' ? 'error' : 'action'} />
           <FilesName item={item} baseName={baseName} ext={ext} disabled={disabled} file={file} numerous={numerous} />
-          {editable && (numerous || multiple) && <LookupNameGap />}
+          {(numerous || multiple) && <LookupNameGap />}
           {!!status && <LookupStatus status={status} statusText={statusText} />}
-          {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
-          {isGmlFile(item) && <FilesPlacement fileInfo={item} />}
-          {!!this.connections?.length && <FilesConnections file={item} connections={this.connections} />}
-          {editable && (
-            <LookupActions>
-              <LookupDelete item={item} onDelete={this.deleteButtonClickHandler} />
-            </LookupActions>
-          )}
+          <LookupActions>
+            {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
+            {(isGmlFile(item) || isDxfFile(item)) && <FilesPlacement fileInfo={item} />}
+            {!!this.connections?.length && <FilesConnections file={item} connections={this.connections} />}
+            {editable && <LookupDelete item={item} onDelete={this.deleteButtonClickHandler} />}
+          </LookupActions>
         </LookupItem>
 
         <Dialog open={this.deleteDialogOpen} onClose={this.closeDeleteDialog}>

@@ -41,6 +41,7 @@ export class ProgressItemComponent implements OnDestroy {
           this.event.payload.type === ProcessType.EXPORT ||
           this.event.payload.type === ProcessType.VALIDATION_REPORT ||
           this.event.payload.type === ProcessType.IMPORT_GML ||
+          this.event.payload.type === ProcessType.IMPORT_DXF ||
           this.event.payload.type === ProcessType.IMPORT_RASTER
         ) {
           const layerName = this.event.payload.payload.description;
@@ -102,6 +103,7 @@ export class ProgressItemComponent implements OnDestroy {
 
     return (
       type !== ProcessType.IMPORT_GML &&
+      type !== ProcessType.IMPORT_DXF &&
       type !== ProcessType.IMPORT_RASTER &&
       payload.payload.status === ProcessStatus.DONE
     );

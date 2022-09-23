@@ -40,13 +40,17 @@ public class IntegrationApplication {
     public void initGeoserverClient() {
         log.info("initGeoserverClient");
 
+        String geoserverHost = properties.getGeoserverHost();
         GeoserverInfo geoserverInfo = GeoserverInfo
                 .builder()
-                .host(properties.getGeoserverHost().split(":")[0])
-                .port(Integer.parseInt(properties.getGeoserverHost().split(":")[1]))
+                .host(geoserverHost.split(":")[0])
+                .port(Integer.parseInt(geoserverHost.split(":")[1]))
                 .userServiceName(properties.getUserServiceName())
                 .build();
 
-        GeoserverClient.initialize(geoserverInfo);
+        GeoserverClient.initialize(geoserverInfo, null);
+
+        log.info("Integration service ready with:");
+        log.info("geoserver-host {}", geoserverHost);
     }
 }

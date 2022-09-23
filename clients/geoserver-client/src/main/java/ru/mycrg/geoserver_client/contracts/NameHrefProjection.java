@@ -1,4 +1,4 @@
-package ru.mycrg.geoserver_client.services.storage.vector;
+package ru.mycrg.geoserver_client.contracts;
 
 public class NameHrefProjection {
 
@@ -6,6 +6,7 @@ public class NameHrefProjection {
     private String href;
 
     public NameHrefProjection() {
+        // Required
     }
 
     public NameHrefProjection(String name, String href) {

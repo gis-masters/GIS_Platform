@@ -1,46 +1,47 @@
 import { ProcessType } from '../models';
 import { wsService } from '../ws.service';
 
-import { isGmlFile } from './files.util';
 import { FileInfo } from './files.service';
 import { createProcess, ProcessResponse } from './processes.service';
 
-export interface PlacementModel {
-  payload: FilePlacementModel;
-  type: ProcessType;
-}
-
-export interface FilePlacementModel {
+export interface GmlPlacementModel {
   wsUiId: string;
   fileId: string;
   projectId: number;
   invertedCoordinates?: boolean;
 }
 
-export async function placeFile(
+export interface DfxPlacementModel {
+  wsUiId: string;
+  fileId: string;
+  projectId: number;
+  crs: string;
+}
+
+export async function placeGml(
   fileInfo: FileInfo,
   projectId: number,
-  invertedCoordinates = false
+  invertedCoordinates: boolean
 ): Promise<ProcessResponse> {
-  let type: ProcessType;
-  if (isGmlFile(fileInfo)) {
-    type = ProcessType.IMPORT_GML;
-  }
-
-  if (!type) {
-    throw new Error(`Неподдерживаемый тип файла: ${fileInfo.title}`);
-  }
-
   return createProcess({
     type: ProcessType.IMPORT,
     payload: {
-      type,
-      payload: {
-        wsUiId: wsService.getId(),
-        fileId: fileInfo.id,
-        projectId: projectId,
-        invertedCoordinates
-      }
+      wsUiId: wsService.getId(),
+      fileId: fileInfo.id,
+      projectId: projectId,
+      invertedCoordinates: invertedCoordinates ?? undefined
+    }
+  });
+}
+
+export async function placeDxf(fileInfo: FileInfo, projectId: number, crs: string): Promise<ProcessResponse> {
+  return createProcess({
+    type: ProcessType.IMPORT,
+    payload: {
+      wsUiId: wsService.getId(),
+      fileId: fileInfo.id,
+      projectId,
+      crs
     }
   });
 }

@@ -1,40 +1,13 @@
 package ru.mycrg.data_service.service.import_.dto;
 
-import java.util.UUID;
+import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 
-public class GmlPlacementModel {
+public class GmlPlacementModel extends FilePlacementPayloadModel {
 
-    private String wsUiId;
-    private UUID fileId;
-    private Long projectId;
     private boolean invertedCoordinates;
 
     public GmlPlacementModel() {
         // Required
-    }
-
-    public String getWsUiId() {
-        return wsUiId;
-    }
-
-    public void setWsUiId(String wsUiId) {
-        this.wsUiId = wsUiId;
-    }
-
-    public UUID getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(UUID fileId) {
-        this.fileId = fileId;
-    }
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
     }
 
     public boolean isInvertedCoordinates() {

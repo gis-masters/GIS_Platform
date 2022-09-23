@@ -2,16 +2,17 @@ package ru.mycrg.geoserver_client.services.storage.vector;
 
 public class DataStoreResponse {
 
-    private DataStores dataStores;
+    private DataStoreWrapper dataStores;
 
     public DataStoreResponse() {
+        // Required
     }
 
-    public DataStores getDataStores() {
+    public DataStoreWrapper getDataStores() {
         return dataStores;
     }
 
-    public void setDataStores(DataStores dataStores) {
+    public void setDataStores(DataStoreWrapper dataStores) {
         this.dataStores = dataStores;
     }
 }

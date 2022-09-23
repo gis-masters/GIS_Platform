@@ -1,4 +1,3 @@
-#Open in https://sequencediagram.org/
 title Deletion of layers related to deleted file
 
 actor User

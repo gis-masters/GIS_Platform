@@ -58,7 +58,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        log().all().
                         contentType("multipart/form-data").
                         multiPart("file", file).
                         multiPart("body",
@@ -270,6 +269,25 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                          log().ifValidationFails().
                          post("/dl_default/records");
 
+        currentDocumentId = extractEntityIdFromResponse(response);
+    }
+
+    @Given("Существует запись в библиотеке c прикреплённым файлом")
+    public void createRecordWithCurrentFileOnDefaultLibrary() {
+        String body = "{" +
+                "    \"title\": \"DXF file\"," +
+                "    \"native_crs\": \"EPSG:28406\"," +
+                "    \"some_files\": [" +
+                "        {" +
+                "            \"id\": \"" + currentFileId + "\"," +
+                "            \"title\": \"best.dxf\"," +
+                "            \"size\": 314314" +
+                "        }" +
+                "    ]," +
+                "    \"content_type_id\": \"doc_v4\"" +
+                "}";
+
+        createDocument(body);
         currentDocumentId = extractEntityIdFromResponse(response);
     }
 

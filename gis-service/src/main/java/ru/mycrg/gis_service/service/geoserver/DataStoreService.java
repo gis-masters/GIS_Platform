@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.geoserver_client.services.storage.vector.ConnectionParameters;
-import ru.mycrg.geoserver_client.services.storage.vector.DataStore;
+import ru.mycrg.geoserver_client.contracts.datastores.PostGisConnectionParameters;
+import ru.mycrg.geoserver_client.contracts.datastores.VectorDataStore;
 import ru.mycrg.geoserver_client.services.storage.vector.VectorStorage;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.exceptions.ThirdPartyServiceException;
@@ -40,7 +40,7 @@ public class DataStoreService {
             final String orgWorkspace = getScratchWorkspaceName(orgId);
 
             final VectorStorage vectorStorage = new VectorStorage(authenticationFacade.getAccessToken());
-            final DataStore dataStore = new DataStore(dataStoreId, prepareConnectionParameters(orgId, dataStoreId));
+            final VectorDataStore dataStore = new VectorDataStore(dataStoreId, prepareConnectionParameters(orgId, dataStoreId));
 
             ResponseModel<Object> responseModel = vectorStorage.create(orgWorkspace, dataStore);
             if (!responseModel.isSuccessful()) {
@@ -72,7 +72,7 @@ public class DataStoreService {
     }
 
     @NotNull
-    private ConnectionParameters prepareConnectionParameters(Long orgId, String dataStoreId) {
+    private PostGisConnectionParameters prepareConnectionParameters(Long orgId, String dataStoreId) {
         String postGis = environment
                 .getRequiredProperty("spring.datasource.url")
                 .split("//")[1]
@@ -84,7 +84,7 @@ public class DataStoreService {
         String dbOwner = environment.getRequiredProperty("spring.datasource.username");
         String dbPass = environment.getRequiredProperty("spring.datasource.password");
 
-        return new ConnectionParameters(dbHost, String.valueOf(dbPort), dbName, dataStoreId, dbOwner, dbPass,
-                                        "postgis");
+        return new PostGisConnectionParameters(dbHost, String.valueOf(dbPort), dbName, dataStoreId, dbOwner, dbPass,
+                                               "postgis");
     }
 }

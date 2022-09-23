@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.processes;
+package ru.mycrg.data_service.service.processes.executors;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -25,10 +25,14 @@ import ru.mycrg.data_service.service.cqrs.datasets.requests.CreateDatasetRequest
 import ru.mycrg.data_service.service.import_.GmlImporter;
 import ru.mycrg.data_service.service.import_.dto.GmlPlacementModel;
 import ru.mycrg.data_service.service.import_.model.WsImportModel;
+import ru.mycrg.data_service.service.processes.FileType;
+import ru.mycrg.data_service.service.processes.IExecutor;
+import ru.mycrg.data_service.service.processes.IFilePlacer;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
 import ru.mycrg.data_service_contract.dto.ImportReport;
+import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.http_client.HttpClient;
@@ -44,15 +48,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
+import static ru.mycrg.common_utils.CrgGlobalProperties.join;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.service.processes.FileType.GML;
 import static ru.mycrg.data_service.validators.GmlPlacementModelValidator.throwIfNotValid;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
-import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT_GML;
+import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 
 @Component
-public class GmlPlacementExecutor implements IExecutor<ImportReport> {
+public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlacer {
 
     private final Logger log = LoggerFactory.getLogger(GmlPlacementExecutor.class);
 
@@ -69,6 +75,7 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport> {
     private UUID wsMsgId;
     private GmlPlacementModel payload;
     private ImportReport importReport;
+    private ProcessModel processModel;
 
     public GmlPlacementExecutor(Mediator mediator,
                                 GmlImporter importGml,
@@ -138,20 +145,16 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport> {
         return importReport;
     }
 
-    private String getResultName(IRecord document, File file) {
-        String fileTitle = StringUtils.stripFilenameExtension(file.getTitle());
-
-        String temp = document.getTitle() + "_" + fileTitle;
-        if (temp.length() > 255) {
-            return temp.substring(0, 255);
-        } else {
-            return temp;
-        }
-    }
-
     @Override
     public ImportReport getReport() {
         return this.importReport;
+    }
+
+    @Override
+    public IExecutor<ImportReport> setPayload(ProcessModel processModel) {
+        this.processModel = processModel;
+
+        return this;
     }
 
     @Override
@@ -184,7 +187,23 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport> {
 
     @Override
     public ProcessType getType() {
-        return IMPORT_GML;
+        return IMPORT;
+    }
+
+    @Override
+    public FileType getFileType() {
+        return FileType.GML;
+    }
+
+    private String getResultName(IRecord document, File file) {
+        String fileTitle = StringUtils.stripFilenameExtension(file.getTitle());
+
+        String temp = document.getTitle() + "_" + fileTitle;
+        if (temp.length() > 255) {
+            return temp.substring(0, 255);
+        } else {
+            return temp;
+        }
     }
 
     private String createDataset(String datasetName) {
@@ -196,7 +215,7 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport> {
 
     private void sendWsMsg(ProcessStatus status, ImportReport payload, String msg) {
         wsNotificationService.send(
-                new WsMessageDto<>(IMPORT_GML,
+                new WsMessageDto<>(join(IMPORT.name(), GML.name()),
                                    new WsImportModel(wsMsgId, status, payload, msg)),
                 this.payload.getWsUiId()
         );
