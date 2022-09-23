@@ -120,7 +120,7 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
   }
 
   private async getBreadcrumbsItems() {
-    this.setBreadcrumbsItems(await getLibraryItemBreadcrumbs(this.props.document, <HomeOutlined />));
+    this.setBreadcrumbsItems(await getLibraryItemBreadcrumbs(this.props.document, <HomeOutlined />, true));
   }
 
   @action.bound

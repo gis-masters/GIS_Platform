@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { AssignmentOutlined } from '@mui/icons-material';
+import { AssignmentOutlined, FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
@@ -21,7 +21,10 @@ import { Toast } from '../../Toast/Toast';
 import { DocumentsName } from '../Name/Documents-Name';
 import { DocumentInfo } from '../Documents';
 
+import '!style-loader!css-loader!sass-loader!../Dialog/Documents-Dialog.scss';
+
 const cnDocumentsItem = cn('Documents', 'Item');
+const cnDocumentsDialog = cn('DocumentsDialog');
 
 interface DocumentsItemProps {
   item: DocumentInfo;
@@ -45,6 +48,10 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
     makeObservable(this);
   }
 
+  async componentDidMount(): Promise<void> {
+    await this.load();
+  }
+
   render() {
     const { item, editable, numerous, multiple, onDelete } = this.props;
 
@@ -52,7 +59,11 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
       <>
         <LookupItem className={cnDocumentsItem({ numerous })}>
           <LookupIcon>
-            <AssignmentOutlined color={this.errorText ? 'error' : 'action'} />
+            {this.document?.is_folder ? (
+              <FolderOutlined color={this.errorText ? 'error' : 'action'} />
+            ) : (
+              <AssignmentOutlined color={this.errorText ? 'error' : 'action'} />
+            )}
           </LookupIcon>
           <DocumentsName item={item} disabled={this.disabled} numerous={numerous} onClick={this.open} />
           {editable && (numerous || multiple) && <LookupNameGap />}
@@ -66,7 +77,17 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
 
         {this.document && (
           <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='xl'>
-            <DialogTitle>{this.document.title}</DialogTitle>
+            <DialogTitle className={cnDocumentsDialog('Title')}>
+              <div className={cnDocumentsDialog('TypeIcon')}>
+                {this.document?.is_folder ? (
+                  <FolderOutlined color='primary' />
+                ) : (
+                  <InsertDriveFileOutlined color='primary' />
+                )}
+              </div>
+              {this.document.title}
+            </DialogTitle>
+
             <DialogContent>
               <RegistryConsumer id='common'>
                 {({ LibraryDocument }) => <LibraryDocument document={this.document} contentOnly />}
@@ -93,6 +114,26 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
     );
   }
 
+  @action
+  private setDocument(doc: LibraryRecord) {
+    this.document = doc;
+  }
+
+  @action
+  private openDialog() {
+    this.dialogOpen = true;
+  }
+
+  @action
+  private setLoading(loading: boolean) {
+    this.loading = loading;
+  }
+
+  @action.bound
+  private closeDialog() {
+    this.dialogOpen = false;
+  }
+
   @boundMethod
   private async open() {
     await this.load();
@@ -110,25 +151,5 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
       Toast.warn(`Ошибка получения документа. ${err.response.data.message || err.message}`);
     }
     this.setLoading(false);
-  }
-
-  @action
-  private setDocument(doc: LibraryRecord) {
-    this.document = doc;
-  }
-
-  @action
-  private openDialog() {
-    this.dialogOpen = true;
-  }
-
-  @action.bound
-  private closeDialog() {
-    this.dialogOpen = false;
-  }
-
-  @action
-  private setLoading(loading: boolean) {
-    this.loading = loading;
   }
 }

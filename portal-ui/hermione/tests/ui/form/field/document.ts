@@ -1,4 +1,4 @@
-import { TestDefinition } from 'hermione';
+import { Test, TestDefinition, TestDefinitionCallback } from 'hermione';
 
 import { Form } from '../../../../objects/blocks/Form/Form';
 import { BLPage } from '../../../../objects/pages/BL.page';
@@ -10,6 +10,7 @@ interface TestDefinitionWithOnly extends TestDefinition {
 declare const it: TestDefinitionWithOnly;
 
 describe('Форма', () => {
+  hermione.skip.in('chrome');
   describe('Поле document', () => {
     /**
      * Scenario: Внешний вид

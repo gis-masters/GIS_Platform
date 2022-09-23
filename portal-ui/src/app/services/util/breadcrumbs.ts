@@ -8,13 +8,16 @@ import { services } from '../services';
 
 export async function getLibraryItemBreadcrumbs<T>(
   item: LibraryRecord,
-  HomeIcon: ReactNode
+  HomeIcon: ReactNode,
+  withCurrentItemFocus?: boolean
 ): Promise<BreadcrumbsItemData<T>[]> {
-  const { libraryId, path } = item;
+  const { libraryId, path, id, title, is_folder } = item;
   const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];
   const libraryRootPath = JSON.stringify([...libraryRootUrlItems, 'empty', 'empty']);
   const libraryPath = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, 'empty', 'empty']);
   const library = await getLibrary(libraryId);
+  // eslint-disable-next-line camelcase
+  const currentItem = is_folder ? ['folder', id] : ['doc', id];
 
   const breadcrumbs = [
     { title: HomeIcon, url: '/data-management' },
@@ -43,7 +46,8 @@ export async function getLibraryItemBreadcrumbs<T>(
 
     parentsInfo = parentsInfo.filter(Boolean);
 
-    const itemParentsBreadcrumbs = parentsInfo?.map(({ title }, index) => {
+    let pathWithoutCurrent: string;
+    const itemParentsBreadcrumbs = parentsInfo?.map((parent, index) => {
       const folders: (string | number)[] = [];
       for (let i = 0; i < index + 1; i++) {
         folders.push('folder', parentsInfo[i].id);
@@ -51,11 +55,24 @@ export async function getLibraryItemBreadcrumbs<T>(
 
       const folderPath = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, ...folders, 'empty', 'empty']);
 
+      if (withCurrentItemFocus) {
+        pathWithoutCurrent = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, ...folders, ...currentItem]);
+      }
+
       return {
-        title,
+        title: parent.title,
         url: `/data-management?path_dm=${folderPath}`
       };
     });
+
+    if (withCurrentItemFocus) {
+      itemParentsBreadcrumbs.push({
+        title,
+        url: `/data-management?path_dm=${
+          pathWithoutCurrent ?? JSON.stringify([...libraryRootUrlItems, 'library', libraryId, ...currentItem])
+        }`
+      });
+    }
 
     return [...breadcrumbs, ...itemParentsBreadcrumbs];
   } catch (error) {
