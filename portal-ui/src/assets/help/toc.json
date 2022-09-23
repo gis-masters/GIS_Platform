@@ -172,6 +172,22 @@
         "contentUrl": "/assets/help/map/00map.html"
       },
       {
+        "id": "dataVerification",
+        "title": "Проверка данных",
+        "children": [
+          {
+            "id": "changeOrderLayers",
+            "title": "Проверка ошибок по приказу",
+            "contentUrl": "/assets/help/map/dataVerification/01validateLayers.html"
+          },
+          {
+            "id": "createGroup",
+            "title": "Просмотр ошибок",
+            "contentUrl": "/assets/help/map/dataVerification/03objectsList.html"
+          }
+        ]
+      },
+      {
         "id": "projectManagementTitle",
         "title": "Настройка структуры проекта",
         "children": [
@@ -362,42 +378,6 @@
             "contentUrl": "/assets/help/map/dataManagement/00dataManagement.html"
           }
         ]
-      }
-    ]
-  },
-  {
-    "id": "validate",
-    "title": "Работа с данными",
-    "platforms": ["conv"],
-    "children": [
-      {
-        "id": "validate-data",
-        "title": "Проверка данных",
-        "platforms": ["conv"],
-        "contentUrl": "/assets/help/validate/00validate.html"
-      },
-      {
-        "id": "validateLayers",
-        "title": "Выполнение проверки данных на соответствие приказу.",
-        "contentUrl": "/assets/help/validate/01validateLayers.html"
-      },
-      {
-        "id": "layersList",
-        "title": "Список слоёв формы, после проверки.",
-        "platforms": ["conv"],
-        "contentUrl": "/assets/help/validate/02layersList.html"
-      },
-      {
-        "id": "objectsList",
-        "title": "Список объектов, содержащих ошибки по приказу.",
-        "platforms": ["conv"],
-        "contentUrl": "/assets/help/validate/03objectsList.html"
-      },
-      {
-        "id": "errorsList",
-        "title": "Список содержащихся в объектах ошибок согласно приказу.",
-        "platforms": ["conv"],
-        "contentUrl": "/assets/help/validate/04errorsList.html"
       }
     ]
   },
