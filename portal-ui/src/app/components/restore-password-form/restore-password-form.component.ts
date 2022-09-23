@@ -4,7 +4,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { RestorePasswordForm } from '../RestorePasswordForm/RestorePasswordForm';
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 
 const RestorePasswordFormWithRegistry = withRegistry(registry)(RestorePasswordForm);
 

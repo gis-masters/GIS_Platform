@@ -27,20 +27,27 @@ const sortableTypes = new Set([
 
 const smallPaddingTypes = new Set([PropertyType.FILE, PropertyType.DOCUMENT, PropertyType.URL]);
 
-export function getXTableColumnsFromSchema<T>(schema: Schema<T>): XTableColumn<T>[] {
-  return _getXTableColumnsFromSchema(schema) as XTableColumn<T>[];
+export function getXTableColumnsFromSchema<T>(schema: Schema<T>, overrides?: XTableColumn<T>[]): XTableColumn<T>[] {
+  return _getXTableColumnsFromSchema(schema, false, overrides) as XTableColumn<T>[];
 }
 
-export function getXTableColumnsFromSchemaWithLowerCaseKeys(schema: Schema): XTableColumn<Record<string, unknown>>[] {
-  return _getXTableColumnsFromSchema(schema, true);
+export function getXTableColumnsFromSchemaWithLowerCaseKeys(
+  schema: Schema,
+  overrides?: XTableColumn<Record<string, unknown>>[]
+): XTableColumn<Record<string, unknown>>[] {
+  return _getXTableColumnsFromSchema(schema, true, overrides);
 }
 
 function _getXTableColumnsFromSchema<T>(
   schema: Schema<T>,
-  keysToLowerCase = false
-): XTableColumn<Record<string, unknown>>[] | XTableColumn<T>[] {
+  keysToLowerCase: boolean,
+  overrides: XTableColumn<T>[] = []
+): XTableColumn<Record<string, unknown> | T>[] {
   return schema.properties.map(property => {
     const relations = getFieldRelations<T>(property.name, schema);
+    const override = overrides.find(({ field }) =>
+      keysToLowerCase ? property.name.toLowerCase() === String(field).toLowerCase() : property.name === field
+    );
 
     return {
       field: keysToLowerCase ? property.name.toLowerCase() : property.name,
@@ -58,7 +65,9 @@ function _getXTableColumnsFromSchema<T>(
       sortable: sortableTypes.has(property.propertyType),
       headerCellProps: { style: property.minWidth ? { minWidth: String(property.minWidth) + 'px' } : null },
       AfterCellContent: relations?.length ? (XTableRelationsButton as XTableColumn<T>['AfterCellContent']) : undefined,
-      cellProps: { padding: smallPaddingTypes.has(property.propertyType) ? 'checkbox' : undefined }
-    };
+      cellProps: { padding: smallPaddingTypes.has(property.propertyType) ? 'checkbox' : undefined },
+
+      ...override
+    } as XTableColumn<Record<string, unknown> | T>;
   });
 }

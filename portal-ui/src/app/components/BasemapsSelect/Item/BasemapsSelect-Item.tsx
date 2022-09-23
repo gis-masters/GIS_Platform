@@ -56,7 +56,8 @@ export class BasemapsSelectItem extends Component<BasemapsSelectItemProps> {
       queryParams: {
         basemap: basemap.id
       },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
+      replaceUrl: true
     });
   }
 

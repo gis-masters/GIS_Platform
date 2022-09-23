@@ -323,14 +323,17 @@ export function getDefaultValues<T extends Record<string, unknown>>(
   return values;
 }
 
-export function calculateValues<T extends Record<string, unknown>>(obj: T, properties: PropertySchema<T>[]): T {
+export function calculateValues<T extends Record<string, unknown>>(
+  obj: Partial<T>,
+  properties: PropertySchema<T>[]
+): T {
   const value = cloneDeep(obj);
 
   for (const property of properties) {
     value[property.name] = getCalculatedValue(value, property as PropertySchema) as T[keyof T & string];
   }
 
-  return value;
+  return value as T;
 }
 
 export function cleanCalculatedValues<T extends Record<string, unknown>>(obj: T, properties: PropertySchema<T>[]): T {

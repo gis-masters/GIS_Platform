@@ -4,7 +4,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { ChangePasswordForm } from '../ChangePasswordForm/ChangePasswordForm';
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 
 const ChangePasswordFormWithRegistry = withRegistry(registry)(ChangePasswordForm);
 

@@ -1,0 +1,27 @@
+body .BreadcrumbsStory {
+  &-Container {
+    display: flex;
+    align-items: center;
+
+    height: 50px;
+    margin-bottom: 20px;
+  }
+
+  &-Settings {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  &-Slider {
+    width: 150px;
+  }
+
+  &-Input {
+    width: 60px;
+
+    .MuiInput-input {
+      text-align: right;
+    }
+  }
+}

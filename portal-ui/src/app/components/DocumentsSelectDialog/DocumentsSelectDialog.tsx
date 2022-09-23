@@ -7,6 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 
+import { CommonDiRegistry } from '../../services/di-registry';
 import { DocumentLibrary, LibraryRecord } from '../../services/data/doc-library.service';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { DocumentInfo } from '../Documents/Documents';
@@ -61,7 +62,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
         <DialogContent>
           {!this.libraryView ? (
             <RegistryConsumer id='common'>
-              {({ Explorer }) => (
+              {({ Explorer }: CommonDiRegistry) => (
                 <Explorer
                   id='DocumentsAdd'
                   className={cnDocumentsSelectDialog('Explorer')}
@@ -75,7 +76,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
             </RegistryConsumer>
           ) : (
             <RegistryConsumer id='common'>
-              {({ LibraryRegistry }) => (
+              {({ LibraryRegistry }: CommonDiRegistry) => (
                 <LibraryRegistry
                   id='DocumentsAdd'
                   onSelect={this.handleMultipleSelect}

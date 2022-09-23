@@ -13,11 +13,12 @@ import {
   getLibrary,
   LibraryRecord
 } from '../../../services/data/doc-library.service';
-import { getDefaultValues } from '../../../services/formValidation.service';
-import { applyContentType } from '../../../services/data/schema.utils';
-import { schemaService } from '../../../services/data/schema.service';
-import { Schema } from '../../../services/data/schema.models';
 import { sleep } from '../../../services/util/sleep';
+import { Schema } from '../../../services/data/schema.models';
+import { CommonDiRegistry } from '../../../services/di-registry';
+import { schemaService } from '../../../services/data/schema.service';
+import { applyContentType } from '../../../services/data/schema.utils';
+import { getDefaultValues } from '../../../services/formValidation.service';
 import { FormDialog } from '../../FormDialog/FormDialog';
 
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -102,12 +103,14 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
             <DialogTitle>{this.createdDocument.title}</DialogTitle>
             <DialogContent>
               <RegistryConsumer id='common'>
-                {({ LibraryDocument }) => <LibraryDocument document={this.createdDocument} contentOnly />}
+                {({ LibraryDocument }: CommonDiRegistry) => (
+                  <LibraryDocument document={this.createdDocument} contentOnly />
+                )}
               </RegistryConsumer>
             </DialogContent>
             <DialogActions>
               <RegistryConsumer id='common'>
-                {({ LibraryDocumentActions }) => (
+                {({ LibraryDocumentActions }: CommonDiRegistry) => (
                   <LibraryDocumentActions
                     as='button'
                     hideOpen

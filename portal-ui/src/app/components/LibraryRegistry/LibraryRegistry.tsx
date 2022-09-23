@@ -1,8 +1,9 @@
 import React, { Component, ReactElement } from 'react';
 import { action, computed, observable, when, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Subject, takeUntil } from 'rxjs';
+import { NavigationEnd, RouterEvent } from '@angular/router';
 import { Checkbox } from '@mui/material';
-import { HomeOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
@@ -11,29 +12,30 @@ import { route } from '../../stores/Route.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
 import { PropertySchema, PropertyType, Schema } from '../../services/data/schema.models';
+import { communicationService } from '../../services/communication.service';
+import { calculateValues } from '../../services/formValidation.service';
+import { schemaService } from '../../services/data/schema.service';
+import { FilterQuery } from '../../services/util/filterObjects';
+import { PageOptions, SortOrder } from '../../services/models';
+import { SortParams } from '../../services/util/sortObjects';
+import { services } from '../../services/services';
 import {
   DocumentLibrary,
   getLibrary,
   getLibraryRecords2,
   LibraryRecord
 } from '../../services/data/doc-library.service';
-import { communicationService } from '../../services/communication.service';
-import { calculateValues } from '../../services/formValidation.service';
-import { schemaService } from '../../services/data/schema.service';
-import { FilterQuery } from '../../services/util/filterObjects';
-import { SortParams } from '../../services/util/sortObjects';
-import { PageOptions, SortOrder } from '../../services/models';
-import { services } from '../../services/services';
+import { getIdsFromPath, getPathFromIds, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
-import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
-import { XTable, XTableColumn, XTableInvoke } from '../XTable/XTable';
+import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
+import { XTable, XTableColumn, XTableProps } from '../XTable/XTable';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
-import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { DocumentInfo } from '../Documents/Documents';
 import { Loading } from '../Loading/Loading';
 
-import { LibraryRegistrySettings } from './Settings/LibraryRegistry-Settings';
 import { LibraryRegistryExport } from './Export/LibraryRegistry-Export';
+import { LibraryRegistrySettings } from './Settings/LibraryRegistry-Settings';
+import { LibraryRegistryBreadcrumbs } from './Breadcrumbs/LibraryRegistry-Breadcrumbs';
 
 import '!style-loader!css-loader!sass-loader!./LibraryRegistry.scss';
 
@@ -57,12 +59,20 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   @observable private tablePageOptions?: PageOptions;
   @observable private libraryDocuments: LibraryRecord[] = [];
   @observable private error: string;
-
-  private tableInvoke: XTableInvoke = {};
+  private defaultSort: SortParams<LibraryRecord> = { field: 'title', asc: true };
+  private defaultFilter: FilterQuery = registryDefaultFilter;
+  private unsubscribe$: Subject<void> = new Subject<void>();
+  private tableInvoke: XTableProps<LibraryRecord>['invoke'] = {};
+  private selfInitedNavigationIds: number[] = [];
 
   constructor(props: LibraryRegistryProps) {
     super(props);
     makeObservable(this);
+
+    if (props.urlChangeEnabled) {
+      this.defaultSort = this.getSortFromUrl();
+      this.defaultFilter = this.getFilterFromUrl();
+    }
   }
 
   async componentDidMount() {
@@ -74,10 +84,27 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
       }
     });
 
+    if (this.props.urlChangeEnabled) {
+      services.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe((e: RouterEvent) => {
+        if (e instanceof NavigationEnd) {
+          if (this.selfInitedNavigationIds.includes(e.id)) {
+            this.selfInitedNavigationIds.splice(this.selfInitedNavigationIds.indexOf(e.id), 1);
+
+            return;
+          }
+
+          this.tableInvoke.setSort(this.getSortFromUrl());
+          this.tableInvoke.setFilter(this.getFilterFromUrl());
+        }
+      });
+    }
+
     await this.restoreSettings();
   }
 
   componentWillUnmount() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
     communicationService.off(this);
   }
 
@@ -86,15 +113,24 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
       <div className={cnLibraryRegistry()}>
         {this.ready && (
           <>
-            {!this.props.inDialog && <Breadcrumbs itemsType='link' items={this.breadcrumbsItems} />}
+            {!this.props.inDialog && (
+              <LibraryRegistryBreadcrumbs
+                filter={this.tablePageOptions?.filter}
+                library={this.library}
+                path={this.breadcrumbsPath}
+                onItemClick={this.handleBreadcrumbsItemClick}
+                fromHome
+              />
+            )}
             <XTable<LibraryRecord>
               className={cnLibraryRegistry('Table')}
               cols={this.cols}
+              id={this.getId()}
               getData={this.getData}
-              defaultSort={this.sort}
+              defaultSort={this.defaultSort}
               secondarySortField='id'
               filtersAlwaysEnabled
-              defaultFilter={this.filter}
+              defaultFilter={this.defaultFilter}
               headerActions={
                 <>
                   <LibraryRegistryExport
@@ -109,6 +145,7 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
                     hiddenFields={this.hiddenFields}
                     onChangeHiddenFields={this.setHiddenFields}
                   />
+                  <LibraryViewSwitch to='explorer' library={this.library} path={this.breadcrumbsPath} />
                 </>
               }
               invoke={this.tableInvoke}
@@ -123,6 +160,10 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
     );
   }
 
+  private getId(): string {
+    return this.props.id + '_LibraryRegistry_' + this.library.identifier;
+  }
+
   @computed
   private get properties(): PropertySchema[] {
     return (this.schema?.properties || []).filter(
@@ -132,22 +173,8 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   }
 
   @computed
-  private get breadcrumbsItems(): BreadcrumbsItemData[] {
-    const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];
-    const libraryRootPath = JSON.stringify([...libraryRootUrlItems, 'empty', 'empty']);
-    const libraryPath = JSON.stringify([...libraryRootUrlItems, 'library', this.library?.identifier, 'empty', 'empty']);
-
-    return [
-      { title: <HomeOutlined />, url: '/data-management' },
-      {
-        title: 'Библиотеки документов',
-        url: `/data-management?path_dm=${libraryRootPath}`
-      },
-      {
-        title: this.library?.title,
-        url: `/data-management?path_dm=${libraryPath}`
-      }
-    ];
+  private get breadcrumbsPath(): number[] {
+    return getIdsFromPath((this.tablePageOptions?.filter?.path as FilterQuery)?.$ilike as string);
   }
 
   @computed
@@ -158,7 +185,21 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
         align: 'center',
         cellProps: { padding: 'checkbox' }
       },
-      ...getXTableColumnsFromSchema<LibraryRecord>(this.schema)
+      ...getXTableColumnsFromSchema<LibraryRecord>(this.schema, [
+        {
+          field: 'path',
+          type: PropertyType.CUSTOM,
+          CellContent: ({ rowData, filterParams }) => (
+            <LibraryRegistryBreadcrumbs
+              filter={filterParams}
+              path={getIdsFromPath(rowData.path)}
+              library={this.library}
+              onItemClick={this.handleBreadcrumbsItemClick}
+              size='small'
+            />
+          )
+        }
+      ])
     ].map((item: XTableColumn<LibraryRecord>) => ({
       ...item,
       hidden: this.hiddenFields.includes(String(item.field)) || item.hidden
@@ -168,6 +209,11 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   @computed
   private get ready(): boolean {
     return Boolean(this.library && this.schema);
+  }
+
+  @boundMethod
+  private handleBreadcrumbsItemClick(path: number[]) {
+    this.tableInvoke.setFilter({ ...this.tablePageOptions?.filter, path: { $ilike: getPathFromIds(path) } });
   }
 
   private renderActions({ rowData }: { rowData: LibraryRecord }): ReactElement {
@@ -218,15 +264,15 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
   }
 
   @action.bound
-  private async handleTablePageOptionsChange(pageOptions: PageOptions) {
+  private handleTablePageOptionsChange(pageOptions: PageOptions) {
     this.tablePageOptions = pageOptions;
 
     const { sort, sortOrder: sortDir, filter } = pageOptions;
     const encodedSort = JSON.stringify([sort, sortDir]);
     const encodedFilter = JSON.stringify(filter);
 
-    await services.ngZone.run(async () => {
-      await services.router.navigate([location.pathname], {
+    services.ngZone.run(() => {
+      void services.router.navigate([location.pathname], {
         queryParams: {
           sort: encodedSort,
           filter: encodedFilter
@@ -234,6 +280,11 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
         queryParamsHandling: 'merge',
         replaceUrl: true
       });
+
+      const currentNavigation = services.router.getCurrentNavigation();
+      if (currentNavigation) {
+        this.selfInitedNavigationIds.push(currentNavigation.id);
+      }
     });
   }
 
@@ -265,29 +316,24 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
     }
   }
 
-  @computed
-  private get sort(): SortParams<LibraryRecord> {
+  private getSortFromUrl(): SortParams<LibraryRecord> | undefined {
     try {
       const queryParamsSort = route.queryParams?.sort;
       const sort = queryParamsSort && (JSON.parse(queryParamsSort) as string[]);
 
-      return this.props.urlChangeEnabled && queryParamsSort
-        ? { field: sort[0], asc: sort[1] === SortOrder.ASC }
-        : { field: 'title', asc: true };
+      return sort && { field: sort[0], asc: sort[1] === SortOrder.ASC };
     } catch {
-      services.logger.error('Ошибка получения значений сортировки');
+      services.logger.warn('LibraryRegistry: не удалось восстановить параметры сортировки из url');
     }
   }
 
-  @computed
-  private get filter() {
+  private getFilterFromUrl(): FilterQuery {
     try {
       const queryParamsFilter = route.queryParams?.filter;
-      const filter = queryParamsFilter && (JSON.parse(queryParamsFilter) as FilterQuery);
 
-      return this.props.urlChangeEnabled && queryParamsFilter ? filter : { is_folder: { $in: [null, false] } };
+      return queryParamsFilter && (JSON.parse(queryParamsFilter) as FilterQuery);
     } catch {
-      services.logger.error('Ошибка получения значений фильтров');
+      services.logger.warn('LibraryRegistry: не удалось восстановить параметры фильтрации из url');
     }
   }
 

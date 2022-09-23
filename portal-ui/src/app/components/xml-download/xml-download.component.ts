@@ -7,7 +7,7 @@ import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { CrgVectorLayer } from '../../services/gis/projects.models';
 import { XmlDownload } from '../XmlDownload/XmlDownload';
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 
 const XmlDownloadWithRegistry = withRegistry(registry)(XmlDownload);
 

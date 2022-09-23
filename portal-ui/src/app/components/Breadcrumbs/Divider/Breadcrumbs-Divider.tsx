@@ -8,6 +8,6 @@ const cnBreadcrumbsDivider = cn('Breadcrumbs', 'Divider');
 
 export const BreadcrumbsDivider: FC = () => (
   <div className={cnBreadcrumbsDivider()}>
-    <ChevronRight />
+    <ChevronRight fontSize='inherit' />
   </div>
 );

@@ -6,6 +6,7 @@ import { FileOpenOutlined } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 
+import { CommonDiRegistry } from '../../../services/di-registry';
 import { LibraryRecord } from '../../../services/data/doc-library.service';
 
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
@@ -43,10 +44,10 @@ export class LibraryDocumentActionsOpen extends Component<LibraryDocumentActions
 
         <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='xl'>
           <RegistryConsumer id='common'>
-            {({ LibraryDocument, LibraryDocumentActions }) => (
+            {({ LibraryDocument, LibraryDocumentActions }: CommonDiRegistry) => (
               <>
                 <DialogContent className='scroll'>
-                  <LibraryDocument document={document} contentOnly title={document.title} />
+                  <LibraryDocument document={document} contentOnly />
                 </DialogContent>
                 <DialogActions>
                   <LibraryDocumentActions

@@ -8,6 +8,7 @@ import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
+import { CommonDiRegistry } from '../../../services/di-registry';
 import { getLibraryRecord, LibraryRecord } from '../../../services/data/doc-library.service';
 import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
@@ -90,12 +91,12 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
 
             <DialogContent>
               <RegistryConsumer id='common'>
-                {({ LibraryDocument }) => <LibraryDocument document={this.document} contentOnly />}
+                {({ LibraryDocument }: CommonDiRegistry) => <LibraryDocument document={this.document} contentOnly />}
               </RegistryConsumer>
             </DialogContent>
             <DialogActions>
               <RegistryConsumer id='common'>
-                {({ LibraryDocumentActions }) => (
+                {({ LibraryDocumentActions }: CommonDiRegistry) => (
                   <LibraryDocumentActions
                     document={this.document}
                     as='button'

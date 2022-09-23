@@ -21,7 +21,7 @@ import { FormControl } from '../Form/Control/Form-Control.composed';
 import { convertProperties } from '../../services/data/schema.utils';
 import { PropertyType } from '../../services/data/schema.models';
 import { FormView } from '../Form/View/Form-View.composed';
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 import { FormControlProps } from '../Form/Control/Form-Control';
 
 const FormControlWithRegistry = withRegistry(registry)(FormControl);

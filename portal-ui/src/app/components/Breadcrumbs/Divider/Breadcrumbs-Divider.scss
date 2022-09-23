@@ -3,8 +3,10 @@
   align-items: center;
   justify-content: center;
 
-  width: 36px;
-  padding-bottom: 1px;
+  width: calc(36px * var(--BreadcrumbsSize));
+  padding-bottom: calc(1px * var(--BreadcrumbsSize));
 
   color: var(--gray);
+
+  font-size: calc(1.5rem * var(--BreadcrumbsSize));
 }

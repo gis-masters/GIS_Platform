@@ -1,5 +1,12 @@
 .Breadcrumbs {
   display: flex;
 
-  max-width: 100%;
+  width: 100%;
+
+  --BreadcrumbsSize: 1;
+  --BreadcrumbsItemNestingLevel: 0;
+
+  &_size_small {
+    --BreadcrumbsSize: 0.7;
+  }
 }

@@ -1,4 +1,4 @@
-import React, { Component, CSSProperties } from 'react';
+import React, { Component, CSSProperties, ReactNode } from 'react';
 import { IReactionDisposer, reaction, when } from 'mobx';
 import { observer } from 'mobx-react';
 import { Subject } from 'rxjs';
@@ -16,6 +16,7 @@ import { SortOrder } from '../../services/models';
 import { Loading } from '../Loading/Loading';
 
 import { ExplorerStore } from './Explorer.store';
+import { ExplorerService } from './Explorer.service';
 import { emptyItem, ExplorerItemData, ExplorerItemType, KeyAction, keyActions, loadingItem } from './Explorer.models';
 import {
   getChildById,
@@ -26,12 +27,12 @@ import {
   getRefreshEmitters,
   isFolder
 } from './Adapter/Explorer-Adapter';
+import { ExplorerToolbarRight } from './ToolbarRight/Explorer-ToolbarRight';
+import { ExplorerBreadcrumb } from './Breadcrumbs/Explorer-Breadcrumb';
 import { ExplorerPagination } from './Pagination/Explorer-Pagination';
 import { ExplorerToolbar } from './Toolbar/Explorer-Toolbar';
-import { ExplorerTitle } from './Title/Explorer-Title';
 import { ExplorerList } from './List/Explorer-List';
 import { ExplorerInfo } from './Info/Explorer-Info';
-import { ExplorerService } from './Explorer.service';
 
 import '!style-loader!css-loader!sass-loader!./Explorer.scss';
 
@@ -58,6 +59,7 @@ export interface ExplorerProps extends IClassNameProps {
   withoutTitle?: boolean;
   fixedHeight?: boolean;
   urlChangeEnabled?: boolean;
+  toolbarRightContent?: ReactNode;
   onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   onOpen?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   disabledTester?(item: ExplorerItemData): Promise<boolean> | boolean;
@@ -198,6 +200,12 @@ export class Explorer extends Component<ExplorerProps> {
     this.urlChangeEnabled = true;
   }
 
+  componentDidUpdate(prevProps: ExplorerProps) {
+    if (!isEqual(prevProps.path, this.props.path) || !isEqual(prevProps.preset, this.props.preset)) {
+      this.init({ ...this.props });
+    }
+  }
+
   componentWillUnmount() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -207,14 +215,8 @@ export class Explorer extends Component<ExplorerProps> {
     Emitter.scopeOff(this);
   }
 
-  componentDidUpdate(prevProps: ExplorerProps) {
-    if (!isEqual(prevProps, this.props)) {
-      this.init({ ...this.props });
-    }
-  }
-
   render() {
-    const { withInfoPanel, fixedHeight, withoutTitle, className, disabledTester } = this.props;
+    const { withInfoPanel, fixedHeight, withoutTitle, toolbarRightContent, className, disabledTester } = this.props;
 
     return (
       <div
@@ -223,7 +225,7 @@ export class Explorer extends Component<ExplorerProps> {
         tabIndex={0}
         style={{ '--ExplorerPageSize': fixedHeight ? this.store.pageSize : 0 } as CSSProperties}
       >
-        {!withoutTitle && <ExplorerTitle store={this.store} onOpen={this.openItem} />}
+        {!withoutTitle && <ExplorerBreadcrumb store={this.store} onOpen={this.openItem} />}
         <ExplorerList store={this.store} onOpen={this.openItem} disabledTester={disabledTester} />
         <ExplorerToolbar
           service={this.service}
@@ -231,6 +233,7 @@ export class Explorer extends Component<ExplorerProps> {
           onChange={this.service.refreshItems}
           full={withInfoPanel}
         />
+        <ExplorerToolbarRight>{toolbarRightContent}</ExplorerToolbarRight>
         {withInfoPanel && <ExplorerInfo store={this.store} />}
         <ExplorerPagination store={this.store} onChange={this.service.paginate} />
         <Loading visible={this.store.loading || this.store.restoringFromUrl} noBackdrop />
@@ -250,16 +253,16 @@ export class Explorer extends Component<ExplorerProps> {
 
   @boundMethod
   openItem(item: ExplorerItemData, depth: number = this.store.path.length - 1): void {
-    if (this.props.onOpen) {
-      this.props.onOpen(item, this.store.path);
-    }
-
     if (!isFolder(item)) {
       return;
     }
 
     this.store.setPath([...this.store.path.slice(0, depth), item, loadingItem]);
     this.store.setPage(0);
+
+    if (this.props.onOpen) {
+      this.props.onOpen(item, this.store.path);
+    }
   }
 
   @boundMethod
@@ -334,7 +337,7 @@ export class Explorer extends Component<ExplorerProps> {
   private async restoreStateFromUrl(url: URL = new URL(window.location.href)) {
     this.store.setRestoringFromUrl(true);
 
-    const { id } = this.props;
+    const { id, onOpen } = this.props;
 
     if (url.searchParams.get(`path_${id}`)) {
       const urlExplorerPath = url.searchParams.get(`path_${id}`);
@@ -360,6 +363,10 @@ export class Explorer extends Component<ExplorerProps> {
     await sleep(100);
 
     this.store.setRestoringFromUrl(false);
+
+    if (onOpen) {
+      onOpen(this.store.openedItem, this.store.path);
+    }
   }
 
   private restoreOptions(url: URL) {

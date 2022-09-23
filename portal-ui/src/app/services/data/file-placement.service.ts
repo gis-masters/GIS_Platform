@@ -28,7 +28,7 @@ export async function placeFile(
   }
 
   if (!type) {
-    throw new Error(`Не поддерживаемый тип файла: ${fileInfo.title}`);
+    throw new Error(`Неподдерживаемый тип файла: ${fileInfo.title}`);
   }
 
   return createProcess({

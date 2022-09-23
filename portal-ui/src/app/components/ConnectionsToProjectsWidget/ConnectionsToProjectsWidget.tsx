@@ -9,11 +9,12 @@ import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
 
-import { FileConnection } from '../../services/data/files.service';
-import { CrgProject } from '../../services/gis/projects.models';
+import { CommonDiRegistry } from '../../services/di-registry';
 import { Role } from '../../services/data/permissions.models';
-import { ConnectionsToProjects } from '../ConnectionsToProjects/ConnectionsToProjects';
+import { CrgProject } from '../../services/gis/projects.models';
+import { FileConnection } from '../../services/data/files.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { ConnectionsToProjects } from '../ConnectionsToProjects/ConnectionsToProjects';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Button } from '../Button/Button';
 
@@ -76,7 +77,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
                 <DialogTitle>Выбор проекта</DialogTitle>
                 <DialogContent>
                   <RegistryConsumer id='common'>
-                    {({ Explorer }) => (
+                    {({ Explorer }: CommonDiRegistry) => (
                       <Explorer
                         className={cnConnectionsToProjectsWidget('Explorer')}
                         id='ConnectionsToProjectsWidget'

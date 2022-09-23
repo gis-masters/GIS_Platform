@@ -4,7 +4,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { BasemapsSelect } from '../BasemapsSelect/BasemapsSelect';
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 
 const BasemapsSelectWithRegistry = withRegistry(registry)(BasemapsSelect);
 

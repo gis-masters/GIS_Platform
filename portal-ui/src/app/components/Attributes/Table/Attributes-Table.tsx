@@ -22,6 +22,7 @@ import '!style-loader!css-loader!sass-loader!./Attributes-Table.scss';
 import '!style-loader!css-loader!sass-loader!../TableContainer/Attributes-TableContainer.scss';
 import '!style-loader!css-loader!sass-loader!../CheckCell/Attributes-CheckCell.scss';
 import { FilterQuery } from '../../../services/util/filterObjects';
+import { SortParams } from '../../../services/util/sortObjects';
 
 const cnAttributesTable = cn('Attributes', 'Table');
 const cnAttributesTableContainer = cn('Attributes', 'TableContainer');
@@ -126,7 +127,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
 
   private callInvoke(key: keyof XTableInvoke, ...args: Parameters<XTableInvoke[keyof XTableInvoke]>) {
     if (this.tableInvoke[key]) {
-      return this.tableInvoke[key](...(args as [number & FilterQuery]));
+      return this.tableInvoke[key](...(args as [number & FilterQuery & SortParams<unknown>]));
     }
   }
 

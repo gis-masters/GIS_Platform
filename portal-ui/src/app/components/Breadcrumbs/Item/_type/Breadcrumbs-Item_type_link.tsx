@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
 import { ButtonBase, Tooltip } from '@mui/material';
 import { action, makeObservable, observable } from 'mobx';
+import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 
 import { Link } from '../../../Link/Link';
@@ -23,18 +24,18 @@ class ContainerComponent extends Component<BreadcrumbsItemProps> {
   }
 
   render() {
-    const { className, children, url } = this.props;
+    const { url, title, className, style, children } = this.props;
 
     const inner = (
-      <ButtonBase className={className} onMouseEnter={this.handleMouseEnter}>
+      <ButtonBase className={className} onMouseEnter={this.handleMouseEnter} style={style}>
         {children}
       </ButtonBase>
     );
 
     return (
-      <Link href={url} variant='contents'>
+      <Link href={url} variant='contents' onClick={this.handleClick}>
         {this.needTooltip ? (
-          <Tooltip title={children} placement='top'>
+          <Tooltip title={title} placement='top'>
             {inner}
           </Tooltip>
         ) : (
@@ -48,6 +49,16 @@ class ContainerComponent extends Component<BreadcrumbsItemProps> {
   private handleMouseEnter(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     const itemTitle = e.currentTarget.children[0] as Partial<HTMLDivElement>;
     this.needTooltip = itemTitle.offsetWidth < itemTitle.scrollWidth;
+  }
+
+  @boundMethod
+  private handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    const { onClick, payload } = this.props;
+
+    if (onClick) {
+      e.preventDefault();
+      onClick(payload);
+    }
   }
 }
 

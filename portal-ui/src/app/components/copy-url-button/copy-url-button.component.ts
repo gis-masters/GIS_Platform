@@ -4,7 +4,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 import { CopyUrlButton } from '../CopyUrlButton/CopyUrlButton';
 
 const CopyUrlButtonWithRegistry = withRegistry(registry)(CopyUrlButton);

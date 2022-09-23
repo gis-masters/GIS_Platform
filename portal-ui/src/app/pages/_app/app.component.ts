@@ -6,7 +6,7 @@ import { NGXLogger } from 'ngx-logger';
 import { createElement } from 'react';
 
 import { getEnvironment } from '../../services/environment';
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 import { Toast } from '../../components/Toast/Toast';
 
 const ToastContainerWithRegistry = withRegistry(registry)(ToastContainer);

@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
-import { LocalLibrary, TableViewOutlined } from '@mui/icons-material';
+import { LocalLibrary } from '@mui/icons-material';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import {
@@ -209,28 +208,13 @@ export class ExplorerAdapterTypeLibrary {
       (organizationSettings.createLibraryItemsEnabled && currentItem.role && currentItem.role !== Role.VIEWER);
 
     return (
-      full && (
-        <>
-          {enabled && (
-            <CreateLibraryElement
-              libraryIdentifier={item.payload.identifier}
-              schemaId={item.payload.schemaId}
-              store={store}
-            />
-          )}
-
-          <Link
-            href={`/data-management/library/${item.payload.identifier}/registry`}
-            className='RegistryButton'
-            variant='contents'
-          >
-            <Tooltip title='Открыть реестр'>
-              <IconButton>
-                <TableViewOutlined />
-              </IconButton>
-            </Tooltip>
-          </Link>
-        </>
+      full &&
+      enabled && (
+        <CreateLibraryElement
+          libraryIdentifier={item.payload.identifier}
+          schemaId={item.payload.schemaId}
+          store={store}
+        />
       )
     );
   }

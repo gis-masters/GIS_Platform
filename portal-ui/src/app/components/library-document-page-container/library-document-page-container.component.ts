@@ -3,7 +3,7 @@ import { createRoot, Root } from 'react-dom/client';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 import { LibraryDocumentPageContainer } from '../LibraryDocumentPageContainer/LibraryDocumentPageContainer';
 
 const LibraryDocumentPageContainerWithRegistry = withRegistry(registry)(LibraryDocumentPageContainer);

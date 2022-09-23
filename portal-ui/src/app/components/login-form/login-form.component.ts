@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef } from '
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 import { LoginForm } from '../LoginForm/LoginForm';
 import { createRoot, Root } from 'react-dom/client';
 

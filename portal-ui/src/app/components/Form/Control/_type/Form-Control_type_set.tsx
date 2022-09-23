@@ -4,6 +4,7 @@ import { boundMethod } from 'autobind-decorator';
 import { RegistryConsumer } from '@bem-react/di';
 import { withBemMod } from '@bem-react/core';
 
+import { CommonDiRegistry } from '../../../../services/di-registry';
 import { PropertySchemaSet, PropertyType } from '../../../../services/data/schema.models';
 
 import { FormHiddenField } from '../../HiddenField/Form-HiddenField';
@@ -25,7 +26,7 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
       <div className={cnFormControl()}>
         <div className={className}>
           <RegistryConsumer id='common'>
-            {({ FormControl }) => (
+            {({ FormControl }: CommonDiRegistry) => (
               <>
                 {properties.map((subProperty, i) =>
                   !subProperty.hidden ? (
@@ -38,9 +39,7 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
                       fieldValue={valueTyped[subProperty.name]}
                       variant={variant}
                       inSet
-                    >
-                      {fieldValue}
-                    </FormControl>
+                    />
                   ) : (
                     <FormHiddenField key={i} name={String(subProperty.name)} value={valueTyped[subProperty.name]} />
                   )

@@ -2,22 +2,21 @@ import React, { Component } from 'react';
 import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { HomeOutlined } from '@mui/icons-material';
 
+import { currentUser } from '../../stores/CurrentUser.store';
+import { formatDate } from '../../services/util/date.util';
+import { Role } from '../../services/data/permissions.models';
+import { schemaService } from '../../services/data/schema.service';
+import { applyContentType } from '../../services/data/schema.utils';
+import { LibraryRecord } from '../../services/data/doc-library.service';
+import { PropertyType, Schema } from '../../services/data/schema.models';
+import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
+import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
+import { getLibraryRecordBreadcrumbs } from '../DataManagement/DataManagement.utils';
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../services/server-urls.service';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
-import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
-import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
-import { PropertyType, Schema } from '../../services/data/schema.models';
-import { LibraryRecord } from '../../services/data/doc-library.service';
-import { getLibraryItemBreadcrumbs } from '../../services/util/breadcrumbs';
-import { applyContentType } from '../../services/data/schema.utils';
-import { schemaService } from '../../services/data/schema.service';
-import { Role } from '../../services/data/permissions.models';
-import { currentUser } from '../../stores/CurrentUser.store';
-import { formatDate } from '../../services/util/date.util';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocument.scss';
@@ -120,7 +119,7 @@ export class LibraryDocument extends Component<LibraryDocumentProps> {
   }
 
   private async getBreadcrumbsItems() {
-    this.setBreadcrumbsItems(await getLibraryItemBreadcrumbs(this.props.document, <HomeOutlined />, true));
+    this.setBreadcrumbsItems(await getLibraryRecordBreadcrumbs(this.props.document, true));
   }
 
   @action.bound

@@ -9,11 +9,11 @@ import { getTitle } from '../Adapter/Explorer-Adapter';
 import { ExplorerItemData } from '../Explorer.models';
 import { ExplorerStore } from '../Explorer.store';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-Title.scss';
+import '!style-loader!css-loader!sass-loader!./Explorer-Breadcrumb.scss';
 
-const cnExplorerTitle = cn('Explorer', 'Title');
+const cnExplorerBreadcrumb = cn('Explorer', 'Breadcrumbs');
 
-interface ExplorerTitleProps {
+interface ExplorerBreadcrumbsProps {
   store: ExplorerStore;
   onOpen: (item: ExplorerItemData, depth: number) => void;
 }
@@ -28,7 +28,7 @@ const handleClick = ({ item, depth, onOpen }: ExplorerBreadcrumbItemData) => {
   onOpen(item, depth);
 };
 
-export const ExplorerTitle: FC<ExplorerTitleProps> = observer(({ store, onOpen }) => {
+export const ExplorerBreadcrumb: FC<ExplorerBreadcrumbsProps> = observer(({ store, onOpen }) => {
   const items: BreadcrumbsItemData<ExplorerBreadcrumbItemData>[] = store.path.slice(0, -1).map((pathItem, i) => ({
     title: getTitle(pathItem),
     payload: {
@@ -39,5 +39,5 @@ export const ExplorerTitle: FC<ExplorerTitleProps> = observer(({ store, onOpen }
     onClick: handleClick
   }));
 
-  return <Breadcrumbs className={cnExplorerTitle()} items={items} itemsType='button' />;
+  return <Breadcrumbs className={cnExplorerBreadcrumb()} items={items} itemsType='button' />;
 });

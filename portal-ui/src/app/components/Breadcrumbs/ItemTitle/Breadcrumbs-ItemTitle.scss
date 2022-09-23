@@ -6,5 +6,9 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 
-  font-size: 16px;
+  font-size: calc(16px * var(--BreadcrumbsSize));
+
+  .MuiSvgIcon-root {
+    font-size: calc(1.5rem * var(--BreadcrumbsSize));
+  }
 }

@@ -17,5 +17,6 @@ target/
 
 # VS Code
 .vscode/
+_libs/auth-facade/bin/
 
 scripts/result.txt

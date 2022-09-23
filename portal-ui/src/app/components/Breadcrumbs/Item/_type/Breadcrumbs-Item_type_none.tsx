@@ -7,8 +7,10 @@ interface BreadcrumbsItemTypeNoneProps extends IClassNameProps {
   type: 'none';
 }
 
-const ContainerComponent: FC<BreadcrumbsItemProps> = ({ className, children }) => (
-  <div className={className}>{children}</div>
+const ContainerComponent: FC<BreadcrumbsItemProps> = ({ className, style, children }) => (
+  <div className={className} style={style}>
+    {children}
+  </div>
 );
 
 export const withTypeNone = withBemMod<BreadcrumbsItemProps, BreadcrumbsItemTypeNoneProps>(

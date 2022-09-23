@@ -93,6 +93,7 @@ interface XTablePropsBase<T> extends IClassNameProps {
     paginate?(page: number): void;
     setPageSize?(size: number): void;
     setFilter?(filter: FilterQuery): void;
+    setSort?(sort: SortParams<T>): void;
   };
   onFilter?(filtered: T[]): void;
   onPageOptionsChange?(pageOptions: PageOptions): void;
@@ -508,6 +509,11 @@ export class XTable<T> extends Component<XTableProps<T>> {
     this.afterFilterChange();
   }
 
+  @action.bound
+  private setSortParams(sort: SortParams<T>) {
+    this.sortParams = sort;
+  }
+
   private fillInvoke() {
     const { invoke } = this.props;
 
@@ -517,6 +523,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
       invoke.paginate = this.handlePagination.bind(this, null);
       invoke.setPageSize = this.setPageSize;
       invoke.setFilter = this.setFilterQuery;
+      invoke.setSort = this.setSortParams;
     }
   }
 }

@@ -103,7 +103,6 @@ export async function getLibraryRecords(
   return [libraryRecords, response.page.totalPages];
 }
 
-// eslint-disable-next-line sonarjs/no-identical-functions
 export async function getLibraryRecords2(
   libraryId: string,
   schemaId: string,

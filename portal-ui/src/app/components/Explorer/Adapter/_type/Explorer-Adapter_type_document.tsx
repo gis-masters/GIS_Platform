@@ -6,6 +6,7 @@ import { staticImplements } from '../../../../services/util/staticImplements';
 import { LibraryRecord } from '../../../../services/data/doc-library.service';
 import { getDocumentsFiles } from '../../../../services/data/files.util';
 import { FileInfo } from '../../../../services/data/files.service';
+import { CommonDiRegistry } from '../../../../services/di-registry';
 import { formatDate } from '../../../../services/util/date.util';
 import { PageOptions } from '../../../../services/models';
 import { FileTiff } from '../../../Icons/FileTiff';
@@ -62,7 +63,9 @@ export class ExplorerAdapterTypeDocument {
   static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
     return (
       <RegistryConsumer id='common'>
-        {({ LibraryDocumentActions }) => <LibraryDocumentActions as='iconButton' hideOpen document={item.payload} />}
+        {({ LibraryDocumentActions }: CommonDiRegistry) => (
+          <LibraryDocumentActions as='iconButton' hideOpen document={item.payload} />
+        )}
       </RegistryConsumer>
     );
   }

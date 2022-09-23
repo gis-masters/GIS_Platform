@@ -1,12 +1,14 @@
 import React, { ReactNode } from 'react';
-import { FolderOutlined, TableViewOutlined } from '@mui/icons-material';
-import { IconButton, Tooltip } from '@mui/material';
+import { FolderOutlined } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
+import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { Emitter } from '../../../../services/common/Emitter';
-import { PageOptions, SortOrder } from '../../../../services/models';
+import { formatDate } from '../../../../services/util/date.util';
+import { CommonDiRegistry } from '../../../../services/di-registry';
 import { Role } from '../../../../services/data/permissions.models';
+import { PageOptions, SortOrder } from '../../../../services/models';
 import { schemaService } from '../../../../services/data/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
@@ -18,10 +20,7 @@ import {
   getLibraryRecordsWithParticularOne,
   LibraryRecord
 } from '../../../../services/data/doc-library.service';
-import { Link } from '../../../Link/Link';
-import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
-import { formatDate } from '../../../../services/util/date.util';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -77,7 +76,9 @@ export class ExplorerAdapterTypeFolder {
   static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
     return (
       <RegistryConsumer id='common'>
-        {({ LibraryDocumentActions }) => <LibraryDocumentActions document={item.payload} as='iconButton' hideOpen />}
+        {({ LibraryDocumentActions }: CommonDiRegistry) => (
+          <LibraryDocumentActions document={item.payload} as='iconButton' hideOpen />
+        )}
       </RegistryConsumer>
     );
   }
@@ -208,29 +209,14 @@ export class ExplorerAdapterTypeFolder {
       (organizationSettings.createLibraryItemsEnabled && [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role));
 
     return (
-      full && (
-        <>
-          {createEnabled && (
-            <CreateLibraryElement
-              libraryIdentifier={item.payload.libraryId}
-              schemaId={item.payload.schemaId}
-              path={path}
-              store={store}
-            />
-          )}
-
-          <Link
-            href={`/data-management/library/${item.payload.libraryId}/registry`}
-            className='RegistryButton'
-            variant='contents'
-          >
-            <Tooltip title='Открыть реестр'>
-              <IconButton>
-                <TableViewOutlined />
-              </IconButton>
-            </Tooltip>
-          </Link>
-        </>
+      full &&
+      createEnabled && (
+        <CreateLibraryElement
+          libraryIdentifier={item.payload.libraryId}
+          schemaId={item.payload.schemaId}
+          path={path}
+          store={store}
+        />
       )
     );
   }

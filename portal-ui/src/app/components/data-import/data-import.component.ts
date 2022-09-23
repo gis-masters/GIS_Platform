@@ -4,7 +4,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { DataImport } from '../DataImport/DataImport';
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 
 const DataImportWithRegistry = withRegistry(registry)(DataImport);
 

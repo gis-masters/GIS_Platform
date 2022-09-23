@@ -19,7 +19,6 @@ describe('XTable', () => {
        * Given открыта страница XTable в библиотеке блоков (/bl/?path=/story/xtable--standard)
        * Given фильтры таблицы включены
        */
-
       beforeEach(async function () {
         const bl = new BLPage(this.browser);
         const xTable = new XTable(this.browser);

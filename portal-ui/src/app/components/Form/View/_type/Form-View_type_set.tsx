@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { RegistryConsumer } from '@bem-react/di';
 
+import { CommonDiRegistry } from '../../../../services/di-registry';
 import { PropertySchemaSet, PropertyType } from '../../../../services/data/schema.models';
 
 import { cnFormView } from '../Form-View';
@@ -17,7 +18,7 @@ const FormViewTypeSet: FC<FormControlProps> = observer(({ className, property, f
 
   return (
     <RegistryConsumer id='common'>
-      {({ FormView }) => (
+      {({ FormView }: CommonDiRegistry) => (
         <div className={cnFormView(null, [className])}>
           {properties.map(subProperty => (
             <FormView

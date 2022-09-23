@@ -1,46 +1,110 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Input, Slider } from '@mui/material';
+import { AllInclusive, HomeOutlined, SvgIconComponent, WidthFull, WidthNormal, WidthWide } from '@mui/icons-material';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { HomeOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { Breadcrumbs } from './Breadcrumbs';
 import { BreadcrumbsItemData } from './Item/Breadcrumbs-Item';
+
+import '!style-loader!css-loader!sass-loader!./Breadcrumbs.stories.scss';
+
+const cnBreadcrumbsStory = cn('BreadcrumbsStory');
 
 export default {
   title: 'Breadcrumbs',
   component: Breadcrumbs
 } as ComponentMeta<typeof Breadcrumbs>;
 
-const Template: ComponentStory<typeof Breadcrumbs> = args => <Breadcrumbs {...args} />;
+const MIN = 80;
+const MAX = 1000;
+
+function minMax(value: number) {
+  if (value < MIN) {
+    return MIN;
+  } else if (value > MAX) {
+    return MAX;
+  }
+
+  return value;
+}
+
+const Template: ComponentStory<typeof Breadcrumbs> = props => {
+  const [maxWidth, setMaxWidth] = useState(MAX);
+  let Icon: SvgIconComponent = AllInclusive;
+
+  if (maxWidth < 200) {
+    Icon = WidthNormal;
+  } else if (maxWidth < 500) {
+    Icon = WidthWide;
+  } else if (maxWidth < 1000) {
+    Icon = WidthFull;
+  }
+
+  const handleSliderChange = (e: Event, value: number) => {
+    setMaxWidth(value);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMaxWidth(e.target.value === '' ? MAX : Number(e.target.value));
+  };
+
+  const handleBlur = () => {
+    if (maxWidth < MIN) {
+      setMaxWidth(MIN);
+    } else if (maxWidth > MAX) {
+      setMaxWidth(MAX);
+    }
+  };
+
+  return (
+    <div className={cnBreadcrumbsStory()}>
+      <div className={cnBreadcrumbsStory('Container')} style={{ maxWidth: maxWidth < MAX && minMax(maxWidth) }}>
+        <Breadcrumbs {...props} />
+      </div>
+
+      <div className={cnBreadcrumbsStory('Settings')}>
+        <i>Ширина:</i>
+        <Icon color='action' />
+        <Slider
+          className={cnBreadcrumbsStory('Slider')}
+          value={maxWidth}
+          onChange={handleSliderChange}
+          max={MAX}
+          min={MIN}
+          step={10}
+        />
+        <Input
+          className={cnBreadcrumbsStory('Input')}
+          value={maxWidth === MAX ? '' : maxWidth}
+          size='small'
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          inputProps={{
+            step: 10,
+            min: MIN,
+            max: MAX,
+            type: 'number',
+            className: cnBreadcrumbsStory('InputControl')
+          }}
+          endAdornment={maxWidth < MAX && 'px'}
+        />
+      </div>
+    </div>
+  );
+};
 
 export const Regular = Template.bind({});
-
 Regular.args = {
   itemsType: 'link',
   items: breadcrumbsItems()
 };
 
-export const MaxWidth500Breadcrumbs = Template.bind({});
-
-MaxWidth500Breadcrumbs.args = {
+export const Small = Template.bind({});
+Small.args = {
   itemsType: 'link',
-  items: breadcrumbsItems(),
-  maxWidth: 500
-};
-
-export const MaxWidth250Breadcrumbs = Template.bind({});
-
-MaxWidth250Breadcrumbs.args = {
-  itemsType: 'link',
-  items: breadcrumbsItems(),
-  maxWidth: 400
-};
-
-export const MaxWidth100Breadcrumbs = Template.bind({});
-
-MaxWidth100Breadcrumbs.args = {
-  itemsType: 'link',
-  items: breadcrumbsItems(),
-  maxWidth: 100
+  size: 'small',
+  items: breadcrumbsItems()
 };
 
 function breadcrumbsItems(): BreadcrumbsItemData[] {
@@ -69,13 +133,13 @@ function breadcrumbsItems(): BreadcrumbsItemData[] {
   ]);
 
   return [
-    { title: <HomeOutlined />, url: '/data-management' },
+    { title: <HomeOutlined fontSize='inherit' />, url: '/data-management' },
     {
       title: 'Библиотеки документов',
       url: `/data-management?path_dm=${libraryRootPath}`
     },
     {
-      title: 'Документы территориального планирования муниципальных образований',
+      title: 'Кратко',
       url: `/data-management?path_dm=${libraryPath}`
     },
     {

@@ -6,7 +6,7 @@ import { EditedField, ValueType } from '../../services/data/schemaOld.models';
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { CrgVectorLayer } from '../../services/gis/projects.models';
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 import { createRoot, Root } from 'react-dom/client';
 
 const EditFeatureFieldWithRegistry = withRegistry(registry)(EditFeatureField);

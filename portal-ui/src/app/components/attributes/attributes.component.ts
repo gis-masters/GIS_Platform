@@ -3,7 +3,7 @@ import { createRoot, Root } from 'react-dom/client';
 import { createElement } from 'react';
 import { withRegistry } from '@bem-react/di';
 
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 import { Attributes } from '../Attributes/Attributes';
 
 const AttributesWithRegistry = withRegistry(registry)(Attributes);

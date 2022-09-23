@@ -31,7 +31,7 @@ const cnForm = cn('Form');
 export interface FormProps<T extends Record<string, unknown>>
   extends Omit<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'ref'> {
   schema?: Schema<T>;
-  value?: T;
+  value?: Partial<T>;
   errors?: FieldErrors[];
   onFormChange?(changedValue: T): void;
   onFormSubmit?(changedValue: T): void;
@@ -162,7 +162,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
 
     const { onFormSubmit, value, auto, actionFunction, onActionError } = this.props;
     if (onFormSubmit) {
-      onFormSubmit(auto ? (this.value as T) : value);
+      onFormSubmit(auto ? (this.value as T) : (value as T));
     }
 
     if (auto && actionFunction) {
@@ -215,7 +215,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
   }
 
   @action.bound
-  private setValue(value: T) {
+  private setValue(value: Partial<T>) {
     this.value = value;
   }
 

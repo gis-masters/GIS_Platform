@@ -41,11 +41,11 @@ class LinkComponent extends Component<LinkProps> {
       <a
         href={href}
         target={download ? '_blank' : target}
-        onClick={this.navigate}
         className={cnLink({ variant, disabled }, [className])}
         download={download}
         ref={innerRef}
         {...otherProps}
+        onClick={this.navigate}
       >
         {target === '_blank' && variant !== 'contents' && (
           <span className={cnLink('IconContainer')}>

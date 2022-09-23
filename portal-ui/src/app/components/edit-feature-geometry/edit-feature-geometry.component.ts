@@ -3,7 +3,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 import { EditFeatureGeometry } from '../EditFeatureGeometry/EditFeatureGeometry';
 import { createRoot, Root } from 'react-dom/client';
 

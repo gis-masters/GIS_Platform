@@ -3,8 +3,9 @@ import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { RegistryConsumer } from '@bem-react/di';
 
-import { NewDataset } from '../../../services/data/data.service';
+import { CommonDiRegistry } from '../../../services/di-registry';
 import { Schema } from '../../../services/data/schema.models';
+import { NewDataset } from '../../../services/data/data.service';
 import { FieldErrors } from '../../../services/formValidation.service';
 
 import { Button } from '../../Button/Button';
@@ -40,8 +41,8 @@ export const CreateDatasetElementDialog: FC<CreateDatasetElementDialogProps> = o
         <DialogTitle>Создание нового набора данных</DialogTitle>
         <DialogContent>
           <RegistryConsumer id='common'>
-            {({ Form }) => (
-              <Form<Partial<NewDataset>>
+            {({ Form }: CommonDiRegistry) => (
+              <Form<NewDataset>
                 id='createDatasetForm'
                 schema={schema}
                 value={formValue}

@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { withRegistry } from '@bem-react/di';
 
 import '../src/styles.css';
-import { registry } from '../src/app/services/registry';
+import { registry } from '../src/app/services/di-registry';
 import { Toast } from '../src/app/components/Toast/Toast';
 import { LoginFormDialog } from '../src/app/components/LoginFormDialog/LoginFormDialog';
 import { StoryWrapper } from './StoryWrapper/StoryWrapper';

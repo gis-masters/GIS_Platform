@@ -11,7 +11,7 @@ import { LibraryDocumentActions } from '../components/LibraryDocumentActions/Lib
 
 export const registry = new Registry({ id: 'common' });
 
-registry.fill({
+const dependencies = {
   Explorer,
   Form,
   FormView,
@@ -20,4 +20,8 @@ registry.fill({
   LibraryDocument,
   LibraryDocumentActions,
   LibraryRegistry
-});
+};
+
+export type CommonDiRegistry = typeof dependencies;
+
+registry.fill(dependencies);

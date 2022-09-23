@@ -25,8 +25,8 @@ export const XTableTitleBarActions: FC<XTableTitleBarActionsProps> = ({
   onChangePageSize
 }) => (
   <div className={cnXTableTitleBarActions()}>
-    {children}
     <XTablePageSize pageSize={pageSize} onChange={onChangePageSize} />
     {filterable && <FilterButton filterActive={filterActive} onClick={onToggleFilter} />}
+    {children}
   </div>
 );

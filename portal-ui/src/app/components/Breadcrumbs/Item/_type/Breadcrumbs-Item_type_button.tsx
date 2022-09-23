@@ -22,16 +22,16 @@ class ContainerComponent extends Component<BreadcrumbsItemProps> {
   }
 
   render() {
-    const { className, children } = this.props;
+    const { title, className, style, children } = this.props;
 
     const inner = (
-      <ButtonBase className={className} onMouseEnter={this.handleMouseEnter} onClick={this.handleClick}>
+      <ButtonBase className={className} onMouseEnter={this.handleMouseEnter} onClick={this.handleClick} style={style}>
         {children}
       </ButtonBase>
     );
 
     return this.needTooltip ? (
-      <Tooltip title={children} placement='top'>
+      <Tooltip title={title} placement='top'>
         {inner}
       </Tooltip>
     ) : (

@@ -4,7 +4,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { ServicesCalculator } from '../ServicesCalculator/ServicesCalculator';
-import { registry } from '../../services/registry';
+import { registry } from '../../services/di-registry';
 
 const ServicesCalculatorWithRegistry = withRegistry(registry)(ServicesCalculator);
 

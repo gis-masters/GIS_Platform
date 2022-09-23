@@ -7,6 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { Schema } from '../../services/data/schema.models';
+import { CommonDiRegistry } from '../../services/di-registry';
 import { generateRandomId } from '../../services/util/randomId';
 import { getDefaultValues } from '../../services/formValidation.service';
 import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
@@ -61,7 +62,7 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
         {title && <DialogTitle>{title}</DialogTitle>}
         <DialogContent className='scroll'>
           <RegistryConsumer id='common'>
-            {({ Form }) => (
+            {({ Form }: CommonDiRegistry) => (
               <Form
                 id={htmlId}
                 className={cnFormDialog()}
