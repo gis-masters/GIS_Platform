@@ -33,7 +33,7 @@ SELECT 'thermalpipeline_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Сети теплоснабжения»",
+            "title": "«Сети теплоснабжения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -427,7 +427,7 @@ SELECT 'thermalpipeline_line',
           },
           {
             "name": "STATUS",
-            "title": "Статус объекта",
+            "title": "Справочник: Статус объекта",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -468,7 +468,7 @@ SELECT 'thermalpipeline_line',
           },
           {
             "name": "REG_STATUS",
-            "title": "Значение объекта",
+            "title": "Справочник: Значение объекта",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -547,23 +547,23 @@ SELECT 'thermalpipeline_line',
         "customRuleFunction": null
       }',
        'var errors = [];
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;',
+       if (obj.status == ''2'') {
+         if (!obj.function) {
+           errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.function) {
+           errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+       }
+ 
+       if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+         if (!obj.event_time) {
+           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.event_time) {
+           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+       }
+ 
+       return errors;',
        'var results = {};
 
       var status;
@@ -1225,7 +1225,7 @@ SELECT 'telecomnetworkline_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Сети электросвязи»",
+            "title": " «Сети электросвязи»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -1859,7 +1859,7 @@ SELECT 'electrictransformer_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Электрические подстанции»",
+            "title": " «Электрические подстанции»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -2704,7 +2704,7 @@ SELECT 'railwayfacility_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты железнодорожного транспорта»",
+            "title": " «Объекты железнодорожного транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -3825,7 +3825,7 @@ SELECT 'wastefacility_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты утилизации, обезвреживания, размещения отходов производства и потребления»",
+            "title": " «Объекты утилизации, обезвреживания, размещения отходов производства и потребления»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -4748,7 +4748,7 @@ SELECT 'waterfacility_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты водоснабжения»",
+            "title": " «Объекты водоснабжения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -5454,7 +5454,7 @@ SELECT 'publictransportservice_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты хранения и обслуживания общественного пассажирского транспорта»",
+            "title": " «Объекты хранения и обслуживания общественного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -6007,7 +6007,7 @@ SELECT 'airtransportobj_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты воздушного транспорта»",
+            "title": " «Объекты воздушного транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -6745,7 +6745,7 @@ SELECT 'autoservice_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты обслуживания и хранения автомобильного транспорта»",
+            "title": " «Объекты обслуживания и хранения автомобильного транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -7509,7 +7509,7 @@ SELECT 'heritage_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты культурного наследия (ОКН)»",
+            "title": " «Объекты культурного наследия (ОКН)»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -8190,7 +8190,7 @@ SELECT 'resort_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты санаторно-курортного назначения»",
+            "title": " «Объекты санаторно-курортного назначения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -8783,7 +8783,7 @@ SELECT 'servicefacility_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Прочие объекты, связанные с производственной деятельностью»",
+            "title": " «Прочие объекты, связанные с производственной деятельностью»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -9624,7 +9624,7 @@ SELECT 'sewerfacility_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты водоотведения»",
+            "title": " «Объекты водоотведения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -10295,7 +10295,7 @@ SELECT 'culture_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты культуры и искусства»",
+            "title": " «Объекты культуры и искусства»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -11038,7 +11038,7 @@ SELECT 'mineraldep_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Месторождения и проявления полезных ископаемых»",
+            "title": " «Месторождения и проявления полезных ископаемых»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -11532,7 +11532,7 @@ SELECT 'transplogisticobj_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Комплексные объекты транспортной инфраструктуры»",
+            "title": " «Комплексные объекты транспортной инфраструктуры»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -12013,7 +12013,7 @@ SELECT 'publictransportobj_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты автомобильного пассажирского транспорта»",
+            "title": " «Объекты автомобильного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -12481,7 +12481,7 @@ SELECT 'envmonitoring_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты государственной системы наблюдений за состоянием окружающей среды»",
+            "title": " «Объекты государственной системы наблюдений за состоянием окружающей среды»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -12969,7 +12969,7 @@ SELECT 'hydro_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Поверхностные водные объекты»",
+            "title": " «Поверхностные водные объекты»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -13385,7 +13385,7 @@ SELECT 'engprotectionobj_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты инженерной защиты от опасных геологических процессов»",
+            "title": " «Объекты инженерной защиты от опасных геологических процессов»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -13882,7 +13882,7 @@ SELECT 'waterpipeline_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Сети водоснабжения»",
+            "title": "«Сети водоснабжения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -14118,7 +14118,7 @@ SELECT 'waterpipeline_line',
             "length": -1,
             "pattern": null,
             "multiple": false,
-            "required": true,
+            "required": false,
             "maxLength": -1,
             "minLength": -1,
             "valueType": "DOUBLE",
@@ -14232,7 +14232,7 @@ SELECT 'waterpipeline_line',
           },
           {
             "name": "STATUS",
-            "title": "Статус объекта",
+            "title": "Справочник: Статус объекта",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -14273,7 +14273,7 @@ SELECT 'waterpipeline_line',
           },
           {
             "name": "REG_STATUS",
-            "title": "Значение объекта",
+            "title": "Справочник: Значение объекта",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -14353,31 +14353,31 @@ SELECT 'waterpipeline_line',
       }',
        'var errors = [];
 
-      if (obj.classid == ''602041201'') {
-        if (!obj.zone_size) {
-          errors.push({attribute: ''zone_size'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.zone_size) {
-          errors.push({attribute: ''zone_size'', error: ''Значение заполняется только для объекта "Водовод"''});
-      }
-
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;',
+       if (obj.classid == ''602041201'') {
+         if (!obj.zone_size) {
+           errors.push({attribute: ''zone_size'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.zone_size) {
+           errors.push({attribute: ''zone_size'', error: ''Значение заполняется только для объекта "Водовод"''});
+       }
+ 
+       if (obj.status == ''2'') {
+         if (!obj.function) {
+           errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.function) {
+           errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+       }
+ 
+       if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+         if (!obj.event_time) {
+           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.event_time) {
+           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+       }
+ 
+       return errors;',
        'var results = {};
 
       var status;
@@ -14441,7 +14441,7 @@ SELECT 'culture',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты культуры и искусства»",
+            "title": " «Объекты культуры и искусства»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -15166,7 +15166,7 @@ SELECT 'manufacturing',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Предприятия и объекты добывающей и обрабатывающей промышленности»",
+            "title": " «Предприятия и объекты добывающей и обрабатывающей промышленности»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -15975,7 +15975,7 @@ SELECT 'authorityservice',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Прочие объекты обслуживания»",
+            "title": " «Прочие объекты обслуживания»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -17934,7 +17934,7 @@ SELECT 'natureprotectarea',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Особо охраняемые природные территории»",
+            "title": " «Особо охраняемые природные территории»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -18380,7 +18380,7 @@ SELECT 'gasfacility',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты добычи и транспортировки газа»",
+            "title": " «Объекты добычи и транспортировки газа»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -19060,7 +19060,7 @@ SELECT 'gasfacility_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты добычи и транспортировки газа»",
+            "title": " «Объекты добычи и транспортировки газа»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -19758,7 +19758,7 @@ SELECT 'publictransportobj',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты автомобильного пассажирского транспорта»",
+            "title": " «Объекты автомобильного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -20208,7 +20208,7 @@ SELECT 'thermalfacility',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты теплоснабжения»",
+            "title": " «Объекты теплоснабжения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -20945,7 +20945,7 @@ SELECT 'envmonitoring',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты государственной системы наблюдений за состоянием окружающей среды»",
+            "title": " «Объекты государственной системы наблюдений за состоянием окружающей среды»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -21415,7 +21415,7 @@ SELECT 'thermalfacility_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты теплоснабжения»",
+            "title": " «Объекты теплоснабжения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -22170,7 +22170,7 @@ SELECT 'road_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Автомобильные дороги»",
+            "title": " «Автомобильные дороги»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -23047,7 +23047,7 @@ SELECT 'telecomfacility',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты связи»",
+            "title": " «Объекты связи»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -23734,7 +23734,7 @@ SELECT 'customcontrol',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Пункт пропуска через Государственную границу»",
+            "title": " «Пункт пропуска через Государственную границу»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -24320,7 +24320,7 @@ SELECT 'education',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты образования и науки»",
+            "title": " «Объекты образования и науки»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -25181,7 +25181,7 @@ SELECT 'publictransportline_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Линии общественного пассажирского транспорта»",
+            "title": " «Линии общественного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -25697,7 +25697,7 @@ SELECT 'telecomfacility_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты связи»",
+            "title": " «Объекты связи»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -26402,7 +26402,7 @@ SELECT 'resort',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты санаторно-курортного назначения»",
+            "title": " «Объекты санаторно-курортного назначения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -26977,7 +26977,7 @@ SELECT 'servicefacility',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Прочие объекты, связанные с производственной деятельностью»",
+            "title": " «Прочие объекты, связанные с производственной деятельностью»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -28401,7 +28401,7 @@ SELECT 'transportobj',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Искусственные дорожные сооружения»",
+            "title": " «Искусственные дорожные сооружения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -29023,7 +29023,7 @@ SELECT 'transportobj_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Искусственные дорожные сооружения»",
+            "title": " «Искусственные дорожные сооружения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -29645,7 +29645,7 @@ SELECT 'transportobj_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Искусственные дорожные сооружения»",
+            "title": " «Искусственные дорожные сооружения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -30285,7 +30285,7 @@ SELECT 'wastefacility',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты утилизации, обезвреживания, размещения отходов производства и потребления»",
+            "title": " «Объекты утилизации, обезвреживания, размещения отходов производства и потребления»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -31190,7 +31190,7 @@ SELECT 'waterfacility',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты водоснабжения»",
+            "title": " «Объекты водоснабжения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -31878,7 +31878,7 @@ SELECT 'otherobject',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Иные объекты федерального значения, объекты регионального значения, объекты местного значения»",
+            "title": " «Иные объекты федерального значения, объекты регионального значения, объекты местного значения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -32482,7 +32482,7 @@ SELECT 'forest',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Леса»",
+            "title": " «Леса»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -32972,7 +32972,7 @@ SELECT 'education_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты образования и науки»",
+            "title": " «Объекты образования и науки»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -33851,7 +33851,7 @@ SELECT 'electricpowerstation',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Электростанции»",
+            "title": " «Электростанции»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -34709,7 +34709,7 @@ SELECT 'publictransportservice',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты хранения и обслуживания общественного пассажирского транспорта»",
+            "title": " «Объекты хранения и обслуживания общественного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -35244,7 +35244,7 @@ SELECT 'airtransportobj',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты воздушного транспорта»",
+            "title": " «Объекты воздушного транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -35964,7 +35964,7 @@ SELECT 'electricpowerstation_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Электростанции»",
+            "title": " «Электростанции»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -36840,7 +36840,7 @@ SELECT 'autoservice',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты обслуживания и хранения автомобильного транспорта»",
+            "title": " «Объекты обслуживания и хранения автомобильного транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -37586,7 +37586,7 @@ SELECT 'hydraulicstructures_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Гидротехнические сооружения»",
+            "title": " «Гидротехнические сооружения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -38214,7 +38214,7 @@ SELECT 'gaspipeline_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Распределительные трубопроводы для транспортировки газа»",
+            "title": " «Распределительные трубопроводы для транспортировки газа»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -38874,7 +38874,7 @@ SELECT 'street_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Улично-дорожная сеть городского поселения»",
+            "title": " «Улично-дорожная сеть городского поселения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -39489,7 +39489,7 @@ SELECT 'hydraulicstructures_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Гидротехнические сооружения»",
+            "title": " «Гидротехнические сооружения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -40135,7 +40135,7 @@ SELECT 'health',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты здравоохранения»",
+            "title": " «Объекты здравоохранения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -41113,7 +41113,7 @@ SELECT 'customcontrol_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Пункт пропуска через Государственную границу»",
+            "title": " «Пункт пропуска через Государственную границу»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -41717,7 +41717,7 @@ SELECT 'health_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты здравоохранения»",
+            "title": " «Объекты здравоохранения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -42713,7 +42713,7 @@ SELECT 'railwayline_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Железнодорожный путь»",
+            "title": " «Железнодорожный путь»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -43449,7 +43449,7 @@ SELECT 'pipeline_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов»",
+            "title": " «Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -44090,7 +44090,7 @@ SELECT 'cemetery_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Места погребения»",
+            "title": " «Места погребения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -44512,7 +44512,7 @@ SELECT 'cemetery_point',
           },
           {
             "name": "STATUS",
-            "title": "Статус объекта",
+            "title": "Справочник: Статус объекта",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -44553,7 +44553,7 @@ SELECT 'cemetery_point',
           },
           {
             "name": "REG_STATUS",
-            "title": "Значение объекта",
+            "title": "Справочник: Значение объекта",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -44633,55 +44633,49 @@ SELECT 'cemetery_point',
       }',
        'var errors = [];
 
-      if (obj.classid == ''602050301'') {
-        if (!obj.cemet_type) {
-          errors.push({attribute: ''cemet_type'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.cemet_type) {
-          errors.push({attribute: ''cemet_type'', error: ''Значение заполняется только для объекта "Кладбище"''});
-      }
-
-      if (obj.classid == ''602050301'') {
-        if (!obj.cemet_stype) {
-          errors.push({attribute: ''cemet_stype'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.cemet_stype) {
-          errors.push({attribute: ''cemet_stype'', error: ''Значение заполняется только для объекта "Кладбище"''});
-      }
-
-      if (obj.classid == ''602050302'') {
-        if (!obj.cemet_wtype) {
-          errors.push({attribute: ''cemet_wtype'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.cemet_wtype) {
-          errors.push({attribute: ''cemet_wtype'', error: ''Значение заполняется только для объекта "Воинское кладбище, военное мемориальное кладбище"''});
-      }
-
-      if (obj.classid == ''602050301'' || obj.classid == ''602050302'') {
-        if (!obj.cemet_stat) {
-          errors.push({attribute: ''cemet_stat'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.cemet_stat) {
-          errors.push({attribute: ''cemet_stat'', error: ''Значение заполняется только для объектов "Кладбище", "Воинское кладбище, военное мемориальное кладбище"''});
-      }
-
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;',
+       if (obj.classid == ''602050301'') {
+         if (!obj.cemet_type) {
+           errors.push({attribute: ''cemet_type'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.cemet_type) {
+           errors.push({attribute: ''cemet_type'', error: ''Значение заполняется только для объекта "Кладбище"''});
+       }
+ 
+       if (obj.classid == ''602050301'') {
+         if (!obj.cemet_stype) {
+           errors.push({attribute: ''cemet_stype'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.cemet_stype) {
+           errors.push({attribute: ''cemet_stype'', error: ''Значение заполняется только для объекта "Кладбище"''});
+       }
+ 
+       if (obj.classid == ''602050302'') {
+         if (!obj.cemet_wtype) {
+           errors.push({attribute: ''cemet_wtype'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.cemet_wtype) {
+           errors.push({attribute: ''cemet_wtype'', error: ''Значение заполняется только для объекта "Воинское кладбище, военное мемориальное кладбище"''});
+       }
+ 
+       if (obj.classid == ''602050301'' || obj.classid == ''602050302'') {
+         if (!obj.cemet_stat) {
+           errors.push({attribute: ''cemet_stat'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.cemet_stat) {
+           errors.push({attribute: ''cemet_stat'', error: ''Значение заполняется только для объектов "Кладбище", "Воинское кладбище, военное мемориальное кладбище"''});
+       }
+ 
+      
+ 
+       if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+         if (!obj.event_time) {
+           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.event_time) {
+           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+       }
+ 
+       return errors;',
        'var results = {};
 
       var regStatus;
@@ -44763,7 +44757,7 @@ SELECT 'cemetery',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Места погребения»",
+            "title": " «Места погребения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -45418,7 +45412,7 @@ SELECT 'investmentzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Территории и зоны, на которых устанавливается особый юридический статус, и/или действуют особые финансовые и нефинансовые механизмы поддержки инвестиционной и инновационной деятельности»",
+            "title": " «Территории и зоны, на которых устанавливается особый юридический статус, и/или действуют особые финансовые и нефинансовые механизмы поддержки инвестиционной и инновационной деятельности»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -45869,7 +45863,7 @@ SELECT 'watertransportobj',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты водного транспорта»",
+            "title": " «Объекты водного транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -46684,7 +46678,7 @@ SELECT 'electricline_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Линии электропередачи (ЛЭП)»",
+            "title": " «Линии электропередачи (ЛЭП)»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -47487,7 +47481,7 @@ SELECT 'watertransportobj_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты водного транспорта»",
+            "title": " «Объекты водного транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -48320,7 +48314,7 @@ SELECT 'historicsettlement',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Границы территории исторического поселения»",
+            "title": " «Границы территории исторического поселения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -48547,7 +48541,7 @@ SELECT 'public',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Общественные пространства»",
+            "title": " «Общественные пространства»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -49278,7 +49272,7 @@ SELECT 'sewerfacility',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты водоотведения»",
+            "title": " «Объекты водоотведения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -49931,7 +49925,7 @@ SELECT 'functionalzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Функциональные зоны»",
+            "title": " «Функциональные зоны»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -50948,7 +50942,7 @@ SELECT 'technoriskarea',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
+            "title": " «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -51322,7 +51316,7 @@ SELECT 'coastalprotectionzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Прибрежные защитные полосы»",
+            "title": " «Прибрежные защитные полосы»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -51549,7 +51543,7 @@ SELECT 'publictransportstops',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Остановочные пункты общественного пассажирского транспорта»",
+            "title": " «Остановочные пункты общественного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -52158,7 +52152,7 @@ SELECT 'hazardarea',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Зона экстренного оповещения»",
+            "title": " «Зона экстренного оповещения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -52304,7 +52298,7 @@ SELECT 'publictransportstops_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Остановочные пункты общественного пассажирского транспорта»",
+            "title": " «Остановочные пункты общественного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -52931,7 +52925,7 @@ SELECT 'otherobject_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Иные объекты федерального значения, объекты регионального значения, объекты местного значения»",
+            "title": " «Иные объекты федерального значения, объекты регионального значения, объекты местного значения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -53553,7 +53547,7 @@ SELECT 'resortarea',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Лечебно-оздоровительные местности и курорты»",
+            "title": " «Лечебно-оздоровительные местности и курорты»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -53972,7 +53966,7 @@ SELECT 'social',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты социального обслуживания»",
+            "title": " «Объекты социального обслуживания»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -54810,7 +54804,7 @@ SELECT 'agriculture',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства»",
+            "title": " «Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -55794,7 +55788,7 @@ SELECT 'social_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты социального обслуживания»",
+            "title": " «Объекты социального обслуживания»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -56650,7 +56644,7 @@ SELECT 'agriculture_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства»",
+            "title": " «Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -57652,7 +57646,7 @@ SELECT 'wildlifeprotection',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты государственной системы наблюдений за состоянием окружающей среды»",
+            "title": " «Объекты государственной системы наблюдений за состоянием окружающей среды»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -58147,7 +58141,7 @@ SELECT 'heritagearea',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Границы территорий объектов культурного наследия и историко-культурных заповедников»",
+            "title": " «Границы территорий объектов культурного наследия и историко-культурных заповедников»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -58597,7 +58591,7 @@ SELECT 'mineraldep',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Месторождения и проявления полезных ископаемых»",
+            "title": " «Месторождения и проявления полезных ископаемых»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -59073,7 +59067,7 @@ SELECT 'transplogisticobj',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Комплексные объекты транспортной инфраструктуры»",
+            "title": " «Комплексные объекты транспортной инфраструктуры»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -59536,7 +59530,7 @@ SELECT 'heritageprotectionzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Зоны охраны объектов культурного наследия (памятников истории и культуры) народов Российской Федерации»\"",
+            "title": " «Зоны охраны объектов культурного наследия (памятников истории и культуры) народов Российской Федерации»\"",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -59803,7 +59797,7 @@ SELECT 'engprotectionzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Охранная зона инженерных коммуникаций»",
+            "title": " «Охранная зона инженерных коммуникаций»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -60078,7 +60072,7 @@ SELECT 'foreshore',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Береговые полосы»",
+            "title": " «Береговые полосы»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -60305,7 +60299,7 @@ SELECT 'transpprotectionzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Охранная зона транспортных коммуникаций»",
+            "title": " «Охранная зона транспортных коммуникаций»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -60564,7 +60558,7 @@ SELECT 'recreation',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты отдыха и туризма»",
+            "title": " «Объекты отдыха и туризма»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -61477,7 +61471,7 @@ SELECT 'natureprotectionzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Охранная зона особо охраняемых природных территорий»",
+            "title": " «Охранная зона особо охраняемых природных территорий»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -61781,7 +61775,7 @@ SELECT 'traditionalarea',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Территории традиционного природопользования коренных малочисленных народов Севера, Сибири и Дальнего Востока РФ»",
+            "title": " «Территории традиционного природопользования коренных малочисленных народов Севера, Сибири и Дальнего Востока РФ»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -62112,7 +62106,7 @@ SELECT 'specialeconomicarea',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Особые экономические зоны»",
+            "title": " «Особые экономические зоны»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -63418,7 +63412,7 @@ SELECT 'electrictransformer',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Электрические подстанции»",
+            "title": " «Электрические подстанции»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -64245,7 +64239,7 @@ SELECT 'railwayfacility',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты железнодорожного транспорта»",
+            "title": " «Объекты железнодорожного транспорта»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -66595,7 +66589,7 @@ SELECT 'emergencyprotectionobj_point',
           },
           {
             "name": "STATUS",
-            "title": "Статус объекта",
+            "title": "Справочник: Статус объекта",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -66636,7 +66630,7 @@ SELECT 'emergencyprotectionobj_point',
           },
           {
             "name": "REG_STATUS",
-            "title": "Значение объекта",
+            "title": "Справочник: Значение объекта",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -66716,79 +66710,79 @@ SELECT 'emergencyprotectionobj_point',
       }',
        'var errors = [];
 
-      if (obj.classid == ''602050202'') {
-        if (!obj.fp_type) {
-          errors.push({attribute: ''fp_type'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.fp_type) {
-          errors.push({attribute: ''fp_type'', error: ''Значение заполняется только для объекта "Объекты обеспечения пожарной безопасности"''});
-      }
-
-      if (obj.classid == ''602050202'') {
-        if (!obj.fp_class) {
-          errors.push({attribute: ''fp_class'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.fp_class) {
-          errors.push({attribute: ''fp_class'', error: ''Значение заполняется только для объекта "Объекты обеспечения пожарной безопасности"''});
-      }
-
-      if (obj.classid == ''602050202'') {
-        if (!obj.fe_coun) {
-          errors.push({attribute: ''fe_coun'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.fe_coun) {
-          errors.push({attribute: ''fe_coun'', error: ''Значение заполняется только для объекта "Объекты обеспечения пожарной безопасности"''});
-      }
-
-      if (obj.classid == ''602050202'') {
-        if (!obj.w_source) {
-          errors.push({attribute: ''w_source'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.w_source) {
-          errors.push({attribute: ''w_source'', error: ''Значение заполняется только для объекта "Объекты обеспечения пожарной безопасности"''});
-      }
-
-      if (obj.classid == ''602050203'') {
-        if (!obj.fs_objects) {
-          errors.push({attribute: ''fs_objects'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.fs_objects) {
-          errors.push({attribute: ''fs_objects'', error: ''Значение заполняется только для объекта "Объекты лесопожарной охраны"''});
-      }
-
-      if (obj.classid == ''602050204'') {
-        if (!obj.d_objects) {
-          errors.push({attribute: ''d_objects'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.d_objects) {
-          errors.push({attribute: ''d_objects'', error: ''Значение заполняется только для объекта "Объекты мониторинга и прогнозирования"''});
-      }
-
-      if (obj.classid == ''602050205'') {
-        if (!obj.s_alert) {
-          errors.push({attribute: ''s_alert'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.s_alert) {
-          errors.push({attribute: ''s_alert'', error: ''Значение заполняется только для объекта "Объекты информирования и оповещения"''});
-      }
-
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;',
+       if (obj.classid == ''602050202'') {
+         if (!obj.fp_type) {
+           errors.push({attribute: ''fp_type'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.fp_type) {
+           errors.push({attribute: ''fp_type'', error: ''Значение заполняется только для объекта "Объекты обеспечения пожарной безопасности"''});
+       }
+ 
+       if (obj.classid == ''602050202'') {
+         if (!obj.fp_class) {
+           errors.push({attribute: ''fp_class'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.fp_class) {
+           errors.push({attribute: ''fp_class'', error: ''Значение заполняется только для объекта "Объекты обеспечения пожарной безопасности"''});
+       }
+ 
+       if (obj.classid == ''602050202'') {
+         if (!obj.fe_count) {
+           errors.push({attribute: ''fe_count'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.fe_count) {
+           errors.push({attribute: ''fe_count'', error: ''Значение заполняется только для объекта "Объекты обеспечения пожарной безопасности"''});
+       }
+ 
+       if (obj.classid == ''602050202'') {
+         if (!obj.w_source) {
+           errors.push({attribute: ''w_source'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.w_source) {
+           errors.push({attribute: ''w_source'', error: ''Значение заполняется только для объекта "Объекты обеспечения пожарной безопасности"''});
+       }
+ 
+       if (obj.classid == ''602050203'') {
+         if (!obj.fs_objects) {
+           errors.push({attribute: ''fs_objects'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.fs_objects) {
+           errors.push({attribute: ''fs_objects'', error: ''Значение заполняется только для объекта "Объекты лесопожарной охраны"''});
+       }
+ 
+       if (obj.classid == ''602050204'') {
+         if (!obj.d_objects) {
+           errors.push({attribute: ''d_objects'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.d_objects) {
+           errors.push({attribute: ''d_objects'', error: ''Значение заполняется только для объекта "Объекты мониторинга и прогнозирования"''});
+       }
+ 
+       if (obj.classid == ''602050205'') {
+         if (!obj.s_alert) {
+           errors.push({attribute: ''s_alert'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.s_alert) {
+           errors.push({attribute: ''s_alert'', error: ''Значение заполняется только для объекта "Объекты информирования и оповещения"''});
+       }
+ 
+       if (obj.status == ''2'') {
+         if (!obj.function) {
+           errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.function) {
+           errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+       }
+ 
+       if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+         if (!obj.event_time) {
+           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+         }
+       } else if (obj.event_time) {
+           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+       }
+ 
+       return errors;',
        'var results = {};
 
       var regStatus;
@@ -66870,7 +66864,7 @@ SELECT 'manufacturing_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Предприятия и объекты добывающей и обрабатывающей промышленности»",
+            "title": " «Предприятия и объекты добывающей и обрабатывающей промышленности»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -67697,7 +67691,7 @@ SELECT 'authorityservice_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Прочие объекты обслуживания»",
+            "title": " «Прочие объекты обслуживания»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -68562,7 +68556,7 @@ SELECT 'sport_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты физкультурного и спортивного назначения»",
+            "title": " «Объекты физкультурного и спортивного назначения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -69263,7 +69257,7 @@ SELECT 'recreation_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты отдыха и туризма»",
+            "title": " «Объекты отдыха и туризма»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -70943,7 +70937,7 @@ SELECT 'waterprotectionzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Водоохранные зоны»",
+            "title": " «Водоохранные зоны»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -71170,7 +71164,7 @@ SELECT 'envdanger_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
+            "title": " «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -71506,7 +71500,7 @@ SELECT 'prison',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты ФСИН России»",
+            "title": " «Объекты ФСИН России»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -71993,7 +71987,7 @@ SELECT 'greeneryplanting',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Территории зеленого фонда городских и сельских поселений»",
+            "title": " «Территории зеленого фонда городских и сельских поселений»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -72387,7 +72381,7 @@ SELECT 'forestpark',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Лесопарковый зеленый пояс»",
+            "title": " «Лесопарковый зеленый пояс»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -73416,7 +73410,7 @@ SELECT 'transpsanitarygapzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций»",
+            "title": " «Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -73683,7 +73677,7 @@ SELECT 'sanitaryprotectionzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Санитарно-защитная зона»",
+            "title": " «Санитарно-защитная зона»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -74057,7 +74051,7 @@ SELECT 'drinkwaterprotectionzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения»",
+            "title": " «Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -74514,7 +74508,7 @@ SELECT 'resortprotectionzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Зоны округов санитарной (горно-санитарной) охраны»",
+            "title": " «Зоны округов санитарной (горно-санитарной) охраны»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -74773,7 +74767,7 @@ SELECT 'landuse',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Земли по категориям»",
+            "title": " «Земли по категориям»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -74952,7 +74946,7 @@ SELECT 'mineralarea',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Участки недр, предоставленных для добычи полезных ископаемых, а также в целях, не связанных с их добычей»",
+            "title": " «Участки недр, предоставленных для добычи полезных ископаемых, а также в целях, не связанных с их добычей»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -75314,7 +75308,7 @@ SELECT 'engsanitarygapzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций»",
+            "title": " «Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -75573,7 +75567,7 @@ SELECT 'otherzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Иные зоны с особыми условиями использования»",
+            "title": " «Иные зоны с особыми условиями использования»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -75899,7 +75893,7 @@ SELECT 'envdanger',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
+            "title": " «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -76217,7 +76211,7 @@ SELECT 'streetv_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Улично-дорожная сеть сельского поселения»",
+            "title": " «Улично-дорожная сеть сельского поселения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -76763,7 +76757,7 @@ SELECT 'otherprotectionzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Охранная зона иного назначения»",
+            "title": " «Охранная зона иного назначения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -77281,7 +77275,7 @@ SELECT 'hydro',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Поверхностные водные объекты»",
+            "title": " «Поверхностные водные объекты»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -77679,7 +77673,7 @@ SELECT 'floodarea',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Зоны затопления и подтопления»",
+            "title": " «Зоны затопления и подтопления»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -78006,7 +78000,7 @@ SELECT 'areabasedevelopment',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Комплексное развитие территорий»",
+            "title": " «Комплексное развитие территорий»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -78405,7 +78399,7 @@ SELECT 'fishprotectionzone',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Рыбоохранная и рыбохозяйственная заповедная зоны»",
+            "title": " «Рыбоохранная и рыбохозяйственная заповедная зоны»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -78660,7 +78654,7 @@ SELECT 'waterways_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Водные пути»",
+            "title": " «Водные пути»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -79373,7 +79367,7 @@ SELECT 'hydro_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Поверхностные водные объекты»",
+            "title": " «Поверхностные водные объекты»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -79772,7 +79766,7 @@ SELECT 'sewerpipeline_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Сети водоотведения»",
+            "title": " «Сети водоотведения»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -80315,7 +80309,7 @@ SELECT 'engprotectionobj_line',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты инженерной защиты от опасных геологических процессов»",
+            "title": " «Объекты инженерной защиты от опасных геологических процессов»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -81241,7 +81235,7 @@ SELECT 'natureprotectarea_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Особо охраняемые природные территории»",
+            "title": " «Особо охраняемые природные территории»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -81705,7 +81699,7 @@ SELECT 'technoriskarea_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
+            "title": " «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -82097,7 +82091,7 @@ SELECT 'resortarea_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Лечебно-оздоровительные местности и курорты»",
+            "title": " «Лечебно-оздоровительные местности и курорты»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -82534,7 +82528,7 @@ SELECT 'prison_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты ФСИН России»",
+            "title": " «Объекты ФСИН России»",
             "choice": null,
             "hidden": false,
             "length": -1,
@@ -83039,7 +83033,7 @@ SELECT 'wildlifeprotection_point',
           },
           {
             "name": "CLASSID",
-            "title": "Перечень объектов в классе «Объекты государственной системы наблюдений за состоянием окружающей среды»",
+            "title": " «Объекты государственной системы наблюдений за состоянием окружающей среды»",
             "choice": null,
             "hidden": false,
             "length": -1,
