@@ -123,7 +123,7 @@ services:
       CRG_OPTIONS_AUDIT_SERVICE_URL: http://audit-service:8086
       CRG_OPTIONS_GEOSERVER_HOST: geoserver:8080
     ports:
-      - 8338:8338
+      - "8338:8338"
     volumes:
       - /opt/logs:/opt/logs
 
@@ -164,7 +164,7 @@ services:
       - /opt/export:/opt/export
       - /opt/spatial_data:/opt/spatial_data
     ports:
-      - 8084:8084
+      - "8084:8084"
 
   gis-service:
     container_name: crg-gis-service
@@ -198,7 +198,7 @@ services:
     volumes:
       - /opt/logs:/opt/logs
     ports:
-      - 8082:8082
+      - "8082:8082"
     logging:
       options:
         max-size: "10m"
@@ -220,7 +220,7 @@ services:
       SPRING_RABBITMQ_USERNAME: $CRG_USER
       SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
     ports:
-      - 8100:8100
+      - "8100:8100"
     volumes:
       - /opt/logs:/opt/logs
     logging:
@@ -294,8 +294,8 @@ services:
       - /opt/reglaments:/usr/share/nginx/html/reglaments
       - /opt/ssl:/opt/ssl
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
 
   audit-service:
     container_name: crg-audit-service
@@ -312,7 +312,7 @@ services:
       SPRING_FLYWAY_PASSWORD: $DB_PASS
 
     ports:
-      - 8086:8086
+      - "8086:8086"
     volumes:
       - /opt/logs:/opt/logs
     logging:

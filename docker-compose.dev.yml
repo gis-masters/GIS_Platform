@@ -3,27 +3,27 @@ version: '3.7'
 services:
   rabbitmq:
     ports:
-      - 5672:5672
+      - "5672:5672"
 
   auth-service:
     build: auth-service
     ports:
-      - 9000:9000
+      - "9000:9000"
 
   gis-service:
     build: gis-service
     ports:
-      - 8082:8082
+      - "8082:8082"
 
   integration-service:
     build: integration-service
     ports:
-      - 8338:8338
+      - "8338:8338"
 
   data-service:
     build: data-service
     ports:
-      - 8084:8084
+      - "8084:8084"
 
   geo-wrapper:
     build: geo-wrapper
@@ -37,4 +37,4 @@ services:
   audit-service:
     build: audit-service
     ports:
-    - 8086:8086
+      - "8086:8086"

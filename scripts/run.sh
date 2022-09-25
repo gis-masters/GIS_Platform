@@ -6,8 +6,6 @@
 # Actions
 printHeader "Run CRG GIS"
 
-. init-default-variables.sh
-
 while [ -n "$1" ]; do
   case "$1" in
   -clear)
