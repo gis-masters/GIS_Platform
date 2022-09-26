@@ -3,7 +3,7 @@ version: '3.7'
 services:
   rabbitmq:
     container_name: rabbitmq
-    image: $DOCKER_CRG_HOST/rabbitmq:$RABBIT_TAG
+    image: ${DOCKER_CRG_HOST}/rabbitmq:${RABBIT_TAG}
     restart: always
     labels:
       co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"node\",\"queue\",\"exchange\"],\"module\":\"rabbitmq\",\"hosts\":[\"localhost:15672\"],\"username\":\"$CRG_USER\",\"password\":\"$RABBIT_PASS\"}]"
@@ -11,12 +11,12 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: $CRG_USER
-      RABBITMQ_DEFAULT_PASS: $RABBIT_PASS
+      RABBITMQ_DEFAULT_USER: ${CRG_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASS}
 
   postgis:
     container_name: postgis
-    image: $DOCKER_CRG_HOST/postgis:$POSTGIS_TAG
+    image: ${DOCKER_CRG_HOST}/postgis:${POSTGIS_TAG}
     shm_size: 1g
     labels:
       co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"database\",\"bgwriter\",\"activity\",\"statement\"],\"module\":\"postgresql\",\"hosts\":[\"postgres://localhost:5434?sslmode=disable\"],\"username\":\"$CRG_USER\",\"password\":\"$DB_PASS\"}]"
@@ -28,13 +28,13 @@ services:
       - /opt/data/configs/db/extra.conf:/settings/extra.conf
     environment:
       POSTGRES_DBNAME: crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service
-      POSTGRES_USER: $CRG_USER
-      POSTGRES_PASS: $DB_PASS
-      RECREATE_DATADIR: $RECREATE_DATADIR
+      POSTGRES_USER: ${CRG_USER}
+      POSTGRES_PASS: ${DB_PASS}
+      RECREATE_DATADIR: ${RECREATE_DATADIR}
 
   geoserver:
     container_name: geoserver
-    image: $DOCKER_CRG_HOST/geoserver:$GEOSERVER_TAG
+    image: ${DOCKER_CRG_HOST}/geoserver:${GEOSERVER_TAG}
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/geoserver || exit 1"]
@@ -52,7 +52,7 @@ services:
     environment:
       APM_URL: ${APM_URL}
       GEOSERVER_ADMIN_USER: admin
-      GEOSERVER_ADMIN_PASSWORD: $GEOSERVER_PASSWORD
+      GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_PASSWORD}
       INITIAL_MEMORY: ${JAVA_XMS_SIZE}
       MAXIMUM_MEMORY: ${JAVA_XMX_SIZE}
       STABLE_EXTENSIONS: importer-plugin
@@ -61,26 +61,26 @@ services:
 
   auth-service:
     container_name: crg-auth
-    image: $DOCKER_CRG_HOST/auth-service:$CRG_AUTH_TAG
+    image: ${DOCKER_CRG_HOST}/auth-service:${CRG_AUTH_TAG}
     restart: always
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_auth_service
-      SPRING_DATASOURCE_USERNAME: $CRG_USER
-      SPRING_DATASOURCE_PASSWORD: $DB_PASS
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
 
       SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_auth_service
-      SPRING_FLYWAY_USER: $CRG_USER
-      SPRING_FLYWAY_PASSWORD: $DB_PASS
+      SPRING_FLYWAY_USER: ${CRG_USER}
+      SPRING_FLYWAY_PASSWORD: ${DB_PASS}
 
       SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_USERNAME: $CRG_USER
-      SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
+      SPRING_RABBITMQ_USERNAME: ${CRG_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
 
-      CRG_OPTIONS_ROOT_USER_NAME: $GEOSERVER_USER
-      CRG_OPTIONS_ROOT_USER_PASSWORD: $GEOSERVER_PASSWORD
+      CRG_OPTIONS_ROOT_USER_NAME: ${GEOSERVER_USER}
+      CRG_OPTIONS_ROOT_USER_PASSWORD: ${GEOSERVER_PASSWORD}
 
       ESIA_URL: ${ESIA_URL:-https://esia.gosuslugi.ru}
       ESIA_CLIENT_ID: GISOGD_CRIMEA
@@ -103,7 +103,7 @@ services:
 
   integration-service:
     container_name: crg-integration-service
-    image: $DOCKER_CRG_HOST/crg-integration-service:$CRG_INTEGRATION_SERVICE_TAG
+    image: ${DOCKER_CRG_HOST}/crg-integration-service:${CRG_INTEGRATION_SERVICE_TAG}
     restart: always
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
@@ -111,12 +111,12 @@ services:
       APM_URL: ${APM_URL}
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/bpmn_camunda
-      SPRING_DATASOURCE_USERNAME: $CRG_USER
-      SPRING_DATASOURCE_PASSWORD: $DB_PASS
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
 
       SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_USERNAME: $CRG_USER
-      SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
+      SPRING_RABBITMQ_USERNAME: ${CRG_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
 
       CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
@@ -129,22 +129,22 @@ services:
 
   data-service:
     container_name: crg-data-service
-    image: $DOCKER_CRG_HOST/crg-data-service:$CRG_DATA_SERVICE_TAG
+    image: ${DOCKER_CRG_HOST}/crg-data-service:${CRG_DATA_SERVICE_TAG}
     restart: always
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_data_service
-      SPRING_DATASOURCE_USERNAME: $CRG_USER
-      SPRING_DATASOURCE_PASSWORD: $DB_PASS
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
       SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_USERNAME: $CRG_USER
-      SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
+      SPRING_RABBITMQ_USERNAME: ${CRG_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
 
       SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_data_service
-      SPRING_FLYWAY_USER: $CRG_USER
-      SPRING_FLYWAY_PASSWORD: $DB_PASS
+      SPRING_FLYWAY_USER: ${CRG_USER}
+      SPRING_FLYWAY_PASSWORD: ${DB_PASS}
 
       CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
       CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
@@ -155,8 +155,8 @@ services:
       CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/export/
       CRG_OPTIONS_CLIENT_ID: admin
       CRG_OPTIONS_CLIENT_SECRET: geoserver
-      CRG_OPTIONS_ROOT_USER_NAME: $GEOSERVER_USER
-      CRG_OPTIONS_ROOT_USER_PASSWORD: $GEOSERVER_PASSWORD
+      CRG_OPTIONS_ROOT_USER_NAME: ${GEOSERVER_USER}
+      CRG_OPTIONS_ROOT_USER_PASSWORD: ${GEOSERVER_PASSWORD}
       CRG_OPTIONS_INTEGRATION_SED_URL: https://sed-server/docker-config-endpoint
     volumes:
       - /opt/logs:/opt/logs
@@ -168,30 +168,30 @@ services:
 
   gis-service:
     container_name: crg-gis-service
-    image: $DOCKER_CRG_HOST/crg-gis-service:$CRG_GIS_SERVICE_TAG
+    image: ${DOCKER_CRG_HOST}/crg-gis-service:${CRG_GIS_SERVICE_TAG}
     restart: always
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_gis_service
-      SPRING_DATASOURCE_USERNAME: $CRG_USER
-      SPRING_DATASOURCE_PASSWORD: $DB_PASS
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
       SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_USERNAME: $CRG_USER
-      SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
+      SPRING_RABBITMQ_USERNAME: ${CRG_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
 
       SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_gis_service
-      SPRING_FLYWAY_USER: $CRG_USER
-      SPRING_FLYWAY_PASSWORD: $DB_PASS
+      SPRING_FLYWAY_USER: ${CRG_USER}
+      SPRING_FLYWAY_PASSWORD: ${DB_PASS}
 
       CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
       CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
       CRG_OPTIONS_CLIENT_ID: admin
       CRG_OPTIONS_CLIENT_SECRET: geoserver
-      CRG_OPTIONS_ROOT_USER_NAME: $GEOSERVER_USER
-      CRG_OPTIONS_ROOT_USER_PASSWORD: $GEOSERVER_PASSWORD
+      CRG_OPTIONS_ROOT_USER_NAME: ${GEOSERVER_USER}
+      CRG_OPTIONS_ROOT_USER_PASSWORD: ${GEOSERVER_PASSWORD}
 
       CRG_OPTIONS_GEOSERVER_HOST: geoserver:8080
       CRG_OPTIONS_USER_SERVICE_NAME: postgres_db_user_service
@@ -206,7 +206,7 @@ services:
 
   gateway:
     container_name: crg-gateway
-    image: $DOCKER_CRG_HOST/crg-gateway:$CRG_GATEWAY_TAG
+    image: ${DOCKER_CRG_HOST}/crg-gateway:${CRG_GATEWAY_TAG}
     restart: always
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
@@ -217,8 +217,8 @@ services:
       CRG_OPTIONS_CLIENT_SECRET: geoserver
 
       SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_USERNAME: $CRG_USER
-      SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
+      SPRING_RABBITMQ_USERNAME: ${CRG_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
     ports:
       - "8100:8100"
     volumes:
@@ -230,7 +230,7 @@ services:
 
   geo-wrapper:
     container_name: geo-wrapper
-    image: $DOCKER_CRG_HOST/geo-wrapper:$CRG_WRAPPER_TAG
+    image: ${DOCKER_CRG_HOST}/geo-wrapper:${CRG_WRAPPER_TAG}
     restart: always
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
@@ -238,11 +238,11 @@ services:
       APM_URL: ${APM_URL}
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/postgres
-      SPRING_DATASOURCE_USERNAME: $CRG_USER
-      SPRING_DATASOURCE_PASSWORD: $DB_PASS
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
       SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_USERNAME: $CRG_USER
-      SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
+      SPRING_RABBITMQ_USERNAME: ${CRG_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
 
       CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
@@ -263,7 +263,7 @@ services:
 
   portal-ui:
     container_name: crg-ui
-    image: $DOCKER_CRG_HOST/crg-ui:$CRG_UI_TAG
+    image: ${DOCKER_CRG_HOST}/crg-ui:${CRG_UI_TAG}
     restart: always
     environment:
       UI_PLATFORM: $UI_PLATFORM
@@ -299,17 +299,17 @@ services:
 
   audit-service:
     container_name: crg-audit-service
-    image: $DOCKER_CRG_HOST/crg-audit-service:$CRG_AUDIT_SERVICE_TAG
+    image: ${DOCKER_CRG_HOST}/crg-audit-service:${CRG_AUDIT_SERVICE_TAG}
     restart: always
     environment:
       APM_URL: ${APM_URL}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_audit_service
-      SPRING_DATASOURCE_USERNAME: $CRG_USER
-      SPRING_DATASOURCE_PASSWORD: $DB_PASS
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
 
       SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_audit_service
-      SPRING_FLYWAY_USER: $CRG_USER
-      SPRING_FLYWAY_PASSWORD: $DB_PASS
+      SPRING_FLYWAY_USER: ${CRG_USER}
+      SPRING_FLYWAY_PASSWORD: ${DB_PASS}
 
     ports:
       - "8086:8086"
