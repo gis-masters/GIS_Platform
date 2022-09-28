@@ -26,9 +26,9 @@ public class GmlUtil {
         StringBuilder result = new StringBuilder();
         for (Coordinate coordinate: coordinates) {
             result
-                    .append(trimCoordinate(coordinate.y))
-                    .append(",")
                     .append(trimCoordinate(coordinate.x))
+                    .append(",")
+                    .append(trimCoordinate(coordinate.y))
                     .append(" ");
         }
 

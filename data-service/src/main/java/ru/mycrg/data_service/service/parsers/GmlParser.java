@@ -26,6 +26,7 @@ import ru.mycrg.data_service.service.parsers.model.FeatureProperty;
 import ru.mycrg.data_service.service.parsers.model.SimpleFeatureData;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.enums.ValueType;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,6 +41,7 @@ import static java.util.Objects.nonNull;
 import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
 import static javax.xml.XMLConstants.ACCESS_EXTERNAL_SCHEMA;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
+import static ru.mycrg.data_service_contract.enums.ValueType.*;
 
 @Service
 public class GmlParser {
@@ -213,7 +215,7 @@ public class GmlParser {
                     elementsByTagName = element.getElementsByTagNameNS("*", StringUtils.capitalize(propertyName));
                 }
             }
-            property.setType(schemaProperty.getValueType());
+            property.setType(defineValueType(schemaProperty));
             if (elementsByTagName.getLength() > 0) {
                 Element propertyElement = (Element) elementsByTagName.item(0);
                 String value = propertyElement.getTextContent();
@@ -430,5 +432,23 @@ public class GmlParser {
 
             throw new EpsgParserException(errorMsg);
         }
+    }
+
+    private ValueType defineValueType(SimplePropertyDto schemaProperty) {
+        ValueType vType;
+        if (CHOICE.equals(schemaProperty.getValueType())) {
+            switch (schemaProperty.getForeignKeyType()) {
+                case LONG:
+                case INTEGER:
+                    vType = INT;
+                    break;
+                default:
+                    vType = STRING;
+            }
+        } else {
+            vType = schemaProperty.getValueType();
+        }
+
+        return vType;
     }
 }
