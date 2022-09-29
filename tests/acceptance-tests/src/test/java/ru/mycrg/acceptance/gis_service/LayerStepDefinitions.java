@@ -11,10 +11,12 @@ import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerUpdateDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static java.lang.Long.getLong;
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_CREATED;
@@ -40,6 +42,9 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     public static Integer layerId;
     public static String layerTitle = "Искусственные дорожные сооружения";
     public static String layerComplexName;
+    public static String currentWorkspace;
+    public static String currentCoveragestoreName;
+    public static String currentStoreName;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -81,7 +86,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         if (type.equals("raster")) {
             Long currentRecordId = Objects.nonNull(currentDocumentId)
                     ? currentDocumentId
-                    : Long.getLong(recordId);
+                    : getLong(recordId);
             layerCreateDto.setLibraryId(libraryId);
             layerCreateDto.setRecordId(currentRecordId);
             layerCreateDto.setMode(mode);
@@ -206,6 +211,11 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
         layerId = extractEntityIdFromResponse(response);
         layerComplexName = response.jsonPath().get("complexName");
+    }
+
+    @Given("Пользователь делает запрос на размещение растрового слоя в проекте")
+    public void createRasterLayerRequest() {
+        createRasterLayer();
     }
 
     @When("Пользователь делает повторный запрос на создание слоя проекта")
@@ -334,7 +344,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerPool.remove(layerId);
     }
 
-    @Then("Слой, созданный на основе файла, отсутсвует на gis-service")
+    @Then("Слой, созданный на основе файла, отсутствует на gis-service")
     public void checkThatRelatedLayerWasDeleted() throws InterruptedException {
         sleep(1000);
 
@@ -345,16 +355,14 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(404, statusCode);
     }
 
-    @Then("Слой, созданный на основе файла, отсутсвует на geoserver")
+    @Then("Слой, созданный на основе файла, отсутствует на geoserver")
     public void checkThatRelatedLayerWasDeletedOnGeoserver() {
-        String[] complexName = layerComplexName.split(":");
-        String workspace = complexName[0];
-        String storeName = format("store_%s", complexName[1]);
+        getCurrentWorkspaceAndStoreName();
 
         response = getBaseRequestWithCurrentCookie()
                 .basePath("geoserver/rest")
                 .when().
-                        get(format("/workspaces/%s/coveragestores/%s", workspace, storeName));
+                        get(format("/workspaces/%s/coveragestores/%s", currentWorkspace, currentStoreName));
 
         int statusCode = response.getStatusCode();
 
@@ -399,6 +407,36 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
         assertEquals("best", response.jsonPath().getList("title").get(0));
         assertEquals("raster", response.jsonPath().getList("type").get(0));
+    }
+
+    @Then("Параметр transparent color по умолчанию чёрный")
+    public void checkLayerTransparentColorIsBlack() {
+        getCurrentWorkspaceAndStoreName();
+        getCurrentLayerFromGeoserver(currentWorkspace, currentStoreName, currentCoveragestoreName);
+
+        Map<String, Object> entry = response.jsonPath().getMap("coverage.parameters.entry");
+
+        assertNotNull(entry);
+
+        List<String> parameters = (ArrayList<String>) entry.get("string");
+
+        assertTrue(parameters.contains("InputTransparentColor"));
+        assertTrue(parameters.contains("#000000"));
+    }
+
+    private void getCurrentLayerFromGeoserver(String workspace, String coveragestore, String coverage) {
+        response = getBaseRequestWithCurrentCookie()
+                       .basePath("geoserver/rest")
+                .when().
+                       get(format("/workspaces/%s/coveragestores/%s/coverages/%s.json",
+                                  workspace, coveragestore, coverage));
+    }
+
+    private void getCurrentWorkspaceAndStoreName() {
+        String[] complexName = layerComplexName.split(":");
+        currentWorkspace = complexName[0];
+        currentCoveragestoreName = complexName[1];
+        currentStoreName = format("store_%s", complexName[1]);
     }
 
     private void makeLastAvailableLayerAsCurrent() {

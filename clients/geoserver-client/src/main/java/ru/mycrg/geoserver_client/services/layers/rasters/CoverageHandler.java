@@ -56,4 +56,35 @@ public class CoverageHandler extends GeoServerBaseService {
 
         return httpClient.handleRequest(request);
     }
+
+    //TODO: Придётся переписать, если будет необходимость обновлять другие поля
+    public ResponseModel<Object> updateTransparentColorParameter(String workspace, String store, String coverageName,
+                                                                 String colorCode)
+            throws HttpClientException {
+        log.debug("try set default color for raster layer: '{}' in store: '{}'", coverageName, store);
+
+        String payload = String.format("{ \"coverage\": {" +
+                                               "        \"parameters\": {" +
+                                               "            \"entry\": [" +
+                                               "                {" +
+                                               "                    \"string\": [" +
+                                               "                        \"InputTransparentColor\"," +
+                                               "                        \"%s\"" +
+                                               "                    ]" +
+                                               "                }" +
+                                               "            ]" +
+                                               "        }" +
+                                               "    }}", colorCode);
+
+        String url = getGeoserverRestUrl().append(WORKSPACES).append(workspace)
+                                          .append(COVERAGE_STORES).append(store)
+                                          .append(COVERAGES).append(coverageName)
+                                          .toString();
+
+        Request request = builderWithBearerAuth.url(url)
+                                               .put(RequestBody.create(JSON_MEDIA_TYPE, payload))
+                                               .build();
+
+        return httpClient.handleRequest(request);
+    }
 }

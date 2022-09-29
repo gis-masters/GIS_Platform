@@ -30,3 +30,10 @@ Feature: Создание растровых слоёв
       | raster | STRING_0   | dl_default | 1        | gis-service | Пустой nativeCRS (raster)  |
       | raster | EPSG:28406 |            | 1        | gis-service | Пустое поле libraryId      |
       | raster | EPSG:28406 | dl_default | 1        | gis         | Некорректное поле mode     |
+
+  Scenario: При создании растрового слоя параметр transparent color по умолчанию чёрный
+    Given Существует проект "STRING_10"
+    Given Существует файл "zolotopolenskoe_sp.tif"
+    Given Существует запись в библиотеке на основе растрового файла "raster transparent test"
+    When Пользователь делает запрос на размещение растрового слоя в проекте
+    Then Параметр transparent color по умолчанию чёрный
