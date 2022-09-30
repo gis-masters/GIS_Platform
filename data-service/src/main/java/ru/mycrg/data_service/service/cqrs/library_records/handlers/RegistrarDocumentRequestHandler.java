@@ -68,8 +68,8 @@ public class RegistrarDocumentRequestHandler implements IRequestHandler<Register
                                          registryNumber);
 
         Map<String, Object> payload = new HashMap<>();
-        payload.put("gisogd_regnum", regNumber);
-        payload.put("gisogd_regdate", now.toLocalDate());
+        payload.put("regnum", regNumber);
+        payload.put("regdate", now.toLocalDate());
         payload.put("last_modified", now);
 
         recordsService.updateRecord(rQualifier, new RecordEntity(payload), schema);
