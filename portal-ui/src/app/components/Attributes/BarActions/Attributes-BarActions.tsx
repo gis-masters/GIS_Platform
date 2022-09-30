@@ -8,8 +8,8 @@ import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 import { AxiosError } from 'axios';
 
-import { copyFeatures, deleteFeatures } from '../../../services/data/data.service';
 import { isFeaturesUpdateAllowed } from '../../../services/data/permissions.service';
+import { copyFeatures, deleteFeatures } from '../../../services/data/data.service';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { CrgLayer, CrgVectorLayer } from '../../../services/gis/projects.models';
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
@@ -48,8 +48,11 @@ interface AttributesBarActionsProps {
 @observer
 export class AttributesBarActions extends Component<AttributesBarActionsProps> {
   @observable private multipleCopyDialogOpen = false;
+  @observable private multipleDeleteDialogOpen = false;
+  @observable private featuresUpdateAllowed = false;
   @observable private multipleCopyTargetLayer: CrgVectorLayer;
   @observable private layersAvailableForCopy: CrgVectorLayer[];
+  private operationId: symbol;
 
   private readonly layerDialogCols: XTableColumn<CrgLayer>[] = [
     {
@@ -64,6 +67,18 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
     makeObservable(this);
   }
 
+  async componentDidMount(): Promise<void> {
+    await this.init();
+  }
+
+  async componentDidUpdate(prevProps: Readonly<AttributesBarActionsProps>): Promise<void> {
+    const { layer } = this.props;
+
+    if (prevProps.layer.id !== layer.id) {
+      await this.init();
+    }
+  }
+
   render() {
     const { layer, cols, pageOptions, featuresTotal, getData } = this.props;
     const count = this.selectedFeatures.length;
@@ -74,23 +89,27 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
       <div className={cnAttributesBarActions()}>
         {!!count && (
           <>
+            {this.featuresUpdateAllowed && (
+              <Tooltip title={`Редактировать${objLabel}`}>
+                <IconButton size='small' onClick={this.multipleEdit}>
+                  <EditOutlined fontSize='small' />
+                </IconButton>
+              </Tooltip>
+            )}
+
             <Tooltip title={`Копировать${objToOtherLabel}`}>
               <IconButton size='small' onClick={this.openMultipleCopyDialog}>
                 <ContentCopyOutlined fontSize='small' />
               </IconButton>
             </Tooltip>
 
-            <Tooltip title={`Удалить${objLabel}`}>
-              <IconButton size='small' onClick={this.multipleDelete}>
-                <DeleteOutlined fontSize='small' />
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip title={`Редактировать${objLabel}`}>
-              <IconButton size='small' onClick={this.multipleEdit}>
-                <EditOutlined fontSize='small' />
-              </IconButton>
-            </Tooltip>
+            {this.featuresUpdateAllowed && (
+              <Tooltip title={`Удалить${objLabel}`}>
+                <IconButton size='small' onClick={this.openMultipleDeleteDialog}>
+                  <DeleteOutlined fontSize='small' />
+                </IconButton>
+              </Tooltip>
+            )}
           </>
         )}
 
@@ -103,6 +122,18 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
             getData={getData}
           />
         )}
+
+        <Dialog open={this.multipleDeleteDialogOpen} onClose={this.closeMultipleDeleteDialog}>
+          <DialogContent>
+            <DialogContentText>Вы действительно хотите удалить {objLabel}?</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.multipleDelete} color='primary'>
+              Удалить
+            </Button>
+            <Button onClick={this.closeMultipleDeleteDialog}>Отмена</Button>
+          </DialogActions>
+        </Dialog>
 
         <Dialog open={this.multipleCopyDialogOpen} onClose={this.closeMultipleCopyDialog} maxWidth='lg'>
           <DialogContent>
@@ -146,6 +177,8 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
 
   @boundMethod
   private async multipleDelete() {
+    this.closeMultipleDeleteDialog();
+
     const features: WfsFeature[] = mapStore.selectedFeaturesByTableName[this.props.layer.tableName];
     const { dataset, tableName } = this.props.layer;
 
@@ -207,6 +240,19 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
     );
   }
 
+  private async init() {
+    const operationId = Symbol();
+    this.operationId = operationId;
+
+    const { layer } = this.props;
+
+    const updateAllowed = await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, layer.schemaId);
+
+    if (this.operationId === operationId) {
+      this.setFeaturesUpdateAllowed(updateAllowed);
+    }
+  }
+
   @action.bound
   private setLayersAvailableForCopy(layersAvailableForCopy: CrgVectorLayer[]) {
     this.layersAvailableForCopy = layersAvailableForCopy;
@@ -226,5 +272,20 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
   @action.bound
   private closeMultipleCopyDialog() {
     this.multipleCopyDialogOpen = false;
+  }
+
+  @action.bound
+  private openMultipleDeleteDialog() {
+    this.multipleDeleteDialogOpen = true;
+  }
+
+  @action.bound
+  private closeMultipleDeleteDialog() {
+    this.multipleDeleteDialogOpen = false;
+  }
+
+  @action.bound
+  private setFeaturesUpdateAllowed(featuresUpdateAllowed: boolean) {
+    this.featuresUpdateAllowed = featuresUpdateAllowed;
   }
 }
