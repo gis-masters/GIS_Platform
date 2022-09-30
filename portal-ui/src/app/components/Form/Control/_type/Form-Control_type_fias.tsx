@@ -136,6 +136,7 @@ class FormControlTypeFias extends Component<FormControlProps> {
         multiline
         minRows={1}
         maxRows={3}
+        error={!!errors.length}
         helperText={errors}
         size={variant === 'outlined' ? 'small' : 'medium'}
       />

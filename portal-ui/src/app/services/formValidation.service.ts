@@ -48,6 +48,7 @@ const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
   [PropertyType.INT]: [numberRequired, numberMinMax, numberInteger],
   [PropertyType.FLOAT]: [numberRequired, numberMinMax],
   [PropertyType.BOOL]: [simpleRequired],
+  [PropertyType.FIAS]: [fiasSimpleRequired],
   [PropertyType.BINARY]: [simpleRequired],
   [PropertyType.DATETIME]: [simpleRequired, datetimeValid, datetimeMinMax],
   [PropertyType.CHOICE]: [choiceRequired, choiceValueInOptions],
@@ -241,6 +242,19 @@ function numberMinMax(
   }
 
   return errors;
+}
+
+// fias
+
+function fiasSimpleRequired(
+  value: unknown,
+  property: PropertySchema,
+  formValue: Record<string, unknown>
+): string[] | undefined {
+  const fiasValue = formValue[`${property.name}__address`] as string;
+  if (property.required && !fiasValue) {
+    return [messages.required];
+  }
 }
 
 // file
