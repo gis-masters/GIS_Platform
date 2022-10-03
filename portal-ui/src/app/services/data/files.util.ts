@@ -1,8 +1,5 @@
 import { FileInfo } from './files.service';
 import { LibraryRecord } from './doc-library.service';
-import { applyContentType } from './schema.utils';
-import { schemaService } from './schema.service';
-import { PropertyType } from './schema.models';
 
 export function getFileExtension(name: string): string {
   const pos = name.lastIndexOf('.');
@@ -74,18 +71,20 @@ export function isDxfFile(file: FileInfo): boolean {
   return normalizeExtension(getFileExtension(file.title)) === 'dxf';
 }
 
-export async function getDocumentsFiles(libraryRecord: LibraryRecord): Promise<FileInfo[]> {
-  const files: FileInfo[] = [];
+export function getDocumentFiles(libraryRecord: LibraryRecord): FileInfo[] {
+  return Object.values(libraryRecord)
+    .filter(value => Array.isArray(value) && value.every(isFileInfo))
+    .flat() as FileInfo[];
+}
 
-  const schema = applyContentType(await schemaService.getSchema(libraryRecord.schemaId), libraryRecord.content_type_id);
-
-  schema.properties.forEach(property => {
-    if (property.propertyType === PropertyType.FILE) {
-      (libraryRecord[property.name] as FileInfo[])?.forEach(file => {
-        files.push(file);
-      });
-    }
-  });
-
-  return files;
+function isFileInfo(object: Partial<FileInfo>): boolean {
+  // используем утиную типизацию, чтобы не делать асинхронный запрос схемы
+  return (
+    object.id &&
+    typeof object.id === 'string' &&
+    object.size &&
+    typeof object.size === 'number' &&
+    object.title &&
+    typeof object.title === 'string'
+  );
 }

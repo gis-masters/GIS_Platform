@@ -5,7 +5,7 @@ import { TextField } from '@mui/material';
 import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutline, Send } from '@mui/icons-material';
 
 import { sleep } from '../../services/util/sleep';
-import { PropertyType, PropertySchema } from '../../services/data/schema.models';
+import { PropertyType, PropertySchema, Schema } from '../../services/data/schema.models';
 import { getDefaultValues, validateFormValue } from '../../services/formValidation.service';
 import { Mime } from '../../services/util/Mime';
 import { Button } from '../Button/Button';
@@ -365,4 +365,33 @@ Auto.args = {
       {storyActions}
     </>
   )
+};
+
+const schemaWithDefaultValue: Schema = {
+  properties: [
+    {
+      name: 'name',
+      title: 'Имя',
+      propertyType: PropertyType.STRING,
+      defaultValue: 'John'
+    },
+    {
+      name: 'surname',
+      title: 'Фамилия',
+      propertyType: PropertyType.STRING,
+      defaultValueWellKnownFormula: 'inherit'
+    },
+    {
+      name: 'initials',
+      title: 'Инициалы',
+      propertyType: PropertyType.STRING,
+      defaultValueFormula: 'return obj.name.slice(0,1) + ". " + parent.surname.slice(0,1) + "."'
+    }
+  ]
+};
+export const DefaultValue = Template.bind({});
+DefaultValue.args = {
+  id: 'defaultValue',
+  schema: schemaWithDefaultValue,
+  value: getDefaultValues(schemaWithDefaultValue.properties, { surname: 'Doe' })
 };

@@ -4,7 +4,7 @@ import { RegistryConsumer } from '@bem-react/di';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { LibraryRecord } from '../../../../services/data/doc-library.service';
-import { getDocumentsFiles } from '../../../../services/data/files.util';
+import { getDocumentFiles } from '../../../../services/data/files.util';
 import { FileInfo } from '../../../../services/data/files.service';
 import { CommonDiRegistry } from '../../../../services/di-registry';
 import { formatDate } from '../../../../services/util/date.util';
@@ -56,8 +56,8 @@ export class ExplorerAdapterTypeDocument {
     return item.payload.type === 'tif' ? <FileTiff color='primary' /> : <InsertDriveFile color='primary' />;
   }
 
-  static isFolder(): boolean {
-    return true;
+  static isFolder(item: ExplorerItemData<LibraryRecord>): boolean {
+    return !!getDocumentFiles(item.payload).length;
   }
 
   static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
@@ -70,11 +70,11 @@ export class ExplorerAdapterTypeDocument {
     );
   }
 
-  static async getChildren(
+  static getChildren(
     explorerItem: ExplorerItemData<LibraryRecord>,
     pageOptions: PageOptions
-  ): Promise<[ExplorerItemData<FileInfo>[], number]> {
-    const files: FileInfo[] = await getDocumentsFiles(explorerItem.payload);
+  ): [ExplorerItemData<FileInfo>[], number] {
+    const files: FileInfo[] = getDocumentFiles(explorerItem.payload);
     const pagesCount = Math.ceil(files.length / pageOptions.pageSize);
     const pageStart =
       files.length > pageOptions.page * pageOptions.pageSize ? pageOptions.page * pageOptions.pageSize : 0;
@@ -83,21 +83,18 @@ export class ExplorerAdapterTypeDocument {
     return [files.slice(pageStart, pageEnd).map(item => ({ type: ExplorerItemType.FILE, payload: item })), pagesCount];
   }
 
-  static async getChildById(
-    explorerItem: ExplorerItemData<LibraryRecord>,
-    fileId: string
-  ): Promise<ExplorerItemData<FileInfo>> {
-    const files: FileInfo[] = await getDocumentsFiles(explorerItem.payload);
+  static getChildById(explorerItem: ExplorerItemData<LibraryRecord>, fileId: string): ExplorerItemData<FileInfo> {
+    const files: FileInfo[] = getDocumentFiles(explorerItem.payload);
 
     return { type: ExplorerItemType.FILE, payload: files.find(file => file.id === fileId) };
   }
 
-  static async getChildrenWithParticularOne(
+  static getChildrenWithParticularOne(
     explorerItem: ExplorerItemData<LibraryRecord>,
     { page, ...options }: PageOptions,
     fileId: string
-  ): Promise<[ExplorerItemData<FileInfo>[], number, number]> | undefined {
-    const files: FileInfo[] = await getDocumentsFiles(explorerItem.payload);
+  ): [ExplorerItemData<FileInfo>[], number, number] | undefined {
+    const files: FileInfo[] = getDocumentFiles(explorerItem.payload);
     const fileIndex = files.findIndex(file => file.id === fileId);
     const totalPages = Math.round(files.length / options.pageSize);
     const filePage = Math.round(fileIndex / options.pageSize);

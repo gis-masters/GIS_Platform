@@ -14,6 +14,7 @@ const cnMenuIconButton = cn('MenuIconButton');
 interface MenuIconButtonProps extends Omit<IconButtonProps, 'ref'> {
   icon: ReactNode;
   color?: PropTypes.Color;
+  keepMounted?: boolean;
   innerRef?: RefObject<HTMLButtonElement>;
 }
 
@@ -29,7 +30,16 @@ class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
   }
 
   render() {
-    const { icon, color = 'default', children, className, innerRef, size, ...iconButtonProps } = this.props;
+    const {
+      icon,
+      color = 'default',
+      children,
+      className,
+      innerRef,
+      size,
+      keepMounted,
+      ...iconButtonProps
+    } = this.props;
 
     return (
       <>
@@ -45,7 +55,13 @@ class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
           <ArrowDropDown className={cnMenuIconButton('Arrow', { up: this.menuOpen, size })} fontSize={size} />
           <span className={cnMenuIconButton('Anchor')} ref={this.anchorRef} />
         </IconButton>
-        <Menu open={this.menuOpen} onClose={this.close} anchorEl={this.anchorEl} onClick={this.close}>
+        <Menu
+          open={this.menuOpen}
+          onClose={this.close}
+          anchorEl={this.anchorEl}
+          onClick={this.close}
+          keepMounted={keepMounted}
+        >
           {children}
         </Menu>
       </>

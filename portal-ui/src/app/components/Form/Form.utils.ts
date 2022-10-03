@@ -119,7 +119,7 @@ export function getEditUrlFormSchema(field: PropertySchemaUrl): PropertySchema<U
   ];
 }
 
-export function isEqualExceptCalculated<T>(a: Partial<T>, b: Partial<T>, schema: Schema<T>): boolean {
+export function isEqualExceptCalculated<T>(a: Partial<T> = {}, b: Partial<T> = {}, schema: Schema<T>): boolean {
   for (const key of Object.keys({ ...a, ...b })) {
     const property = schema?.properties?.find(({ name }) => name === key);
     if (!property?.calculatedValueFormula && !property?.calculatedValueWellKnownFormula && !isEqual(a[key], b[key])) {

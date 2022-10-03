@@ -15,12 +15,13 @@ import { communicationService } from '../../../../services/communication.service
 import {
   ContentTypeTypes,
   deleteLibraryRecord,
+  DocumentLibrary,
   getLibraryRecord,
   getLibraryRecords,
   getLibraryRecordsWithParticularOne,
   LibraryRecord
 } from '../../../../services/data/doc-library.service';
-import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
+import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -202,20 +203,21 @@ export class ExplorerAdapterTypeFolder {
     service: ExplorerService,
     full: boolean
   ): Promise<ReactNode> {
-    const path = `${item.payload.path}/${item.payload.id}`;
     const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id);
     const createEnabled =
       currentUser.isAdmin ||
       (organizationSettings.createLibraryItemsEnabled && [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role));
+    const createHandler = (record: LibraryRecord, isFolder: boolean) => {
+      store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
+    };
 
     return (
       full &&
       createEnabled && (
-        <CreateLibraryElement
-          libraryIdentifier={item.payload.libraryId}
-          schemaId={item.payload.schemaId}
-          path={path}
-          store={store}
+        <CreateLibraryRecord
+          library={store.path.find(({ type }) => type === ExplorerItemType.LIBRARY).payload as DocumentLibrary}
+          parent={currentItem}
+          onCreate={createHandler}
         />
       )
     );

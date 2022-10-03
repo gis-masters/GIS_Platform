@@ -19,7 +19,7 @@ import { schemaService } from '../../../../services/data/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
-import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
+import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
 import { formatDate } from '../../../../services/util/date.util';
 
 import { ExplorerStore } from '../../Explorer.store';
@@ -206,17 +206,11 @@ export class ExplorerAdapterTypeLibrary {
     const enabled =
       currentUser.isAdmin ||
       (organizationSettings.createLibraryItemsEnabled && currentItem.role && currentItem.role !== Role.VIEWER);
+    const createHandler = (record: LibraryRecord, isFolder: boolean) => {
+      store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
+    };
 
-    return (
-      full &&
-      enabled && (
-        <CreateLibraryElement
-          libraryIdentifier={item.payload.identifier}
-          schemaId={item.payload.schemaId}
-          store={store}
-        />
-      )
-    );
+    return full && enabled && <CreateLibraryRecord library={item.payload} onCreate={createHandler} />;
   }
 
   static getRefreshEmitters(): Emitter[] {

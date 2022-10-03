@@ -67,7 +67,10 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
   render() {
     const { as, document, className, hideOpen, forDialog, onDialogClose, onSave } = this.props;
     const canEdit = [Role.CONTRIBUTOR, Role.OWNER].includes(this.document?.role) || currentUser.isAdmin;
-    const canCreateChildren = Boolean(this.schema?.children?.length);
+    const isFolder = this.schema?.contentTypes?.some(
+      ({ id, type }) => this.document?.content_type_id === id && type === 'FOLDER'
+    );
+    const canCreateChildren = Boolean(this.schema?.children?.length) && !isFolder;
     const canDownload = this.schema?.properties.some(({ propertyType }) => propertyType === PropertyType.BINARY);
     const canDelete =
       organizationSettings.fileDownloadEnabled && (this.document?.role === Role.OWNER || currentUser.isAdmin);
