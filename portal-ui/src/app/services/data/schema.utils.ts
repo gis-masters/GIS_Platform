@@ -211,7 +211,7 @@ const valueToReadableTransformers: Partial<Record<PropertyType, (value: unknown,
     },
 
     [PropertyType.CHOICE](value: unknown, property: PropertySchema) {
-      return (property as PropertySchemaChoice).options.find(({ value }) => value === value)?.title || String(value);
+      return (property as PropertySchemaChoice).options.find(option => option.value === value)?.title || String(value);
     },
 
     [PropertyType.DATETIME](value: unknown, property: PropertySchema) {
