@@ -7,6 +7,8 @@ import { Link } from '../../../Link/Link';
 
 import { cnConnectionsToProjectsList } from '../ConnectionsToProjects-List';
 
+import '!style-loader!css-loader!sass-loader!./ConnectionsToProjects-List_type_list.scss';
+
 interface ConnectionsToProjectsListProps {
   connections: FileConnection[];
   className: string;

@@ -314,11 +314,9 @@ export class FilesPlacementDialog extends Component<FilesPlacementDialogProps> {
   }
 
   private resetState() {
-    const { document } = this.props;
-
     this.store.setStep(0);
     this.store.setFiles([]);
-    this.store.setCrs(document.native_crs || '');
+    this.store.setCrs('');
     this.store.setProject();
 
     this.store.clear();
