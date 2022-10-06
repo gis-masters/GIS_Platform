@@ -184,20 +184,49 @@ export function convertProperties<T extends Record<string, unknown>>(
 
 export const valueWellKnownFormulas: Record<string, ValueFormula> = {
   inherit: (obj, property, parent) => parent[property.name],
+
   parentDocument: (obj, property, parent: LibraryRecord) => {
     const value: DocumentInfo[] = [{ id: parent.id, libraryId: parent.libraryId, title: parent.title }];
 
     return JSON.stringify(value);
   },
-  relationLink: (obj, { valueFormulaParams }) =>
+
+  relationLink: (obj, { valueFormulaParams = {} }) =>
     JSON.stringify({
       url:
         `/data-management/library/${String(valueFormulaParams.library)}/registry?filter=` +
         encodeURI(
           JSON.stringify({ applicant_name: { $ilike: `%${String(obj[valueFormulaParams.property as string])}%` } })
         ),
-      text: valueFormulaParams.title
-    })
+      text: valueFormulaParams.text
+    }),
+
+  linkToFeaturesMentioningThisDocument: (obj: LibraryRecord, { valueFormulaParams = {} }) => {
+    const {
+      projectId,
+      property,
+      layers,
+      text = 'Связанные объекты'
+    } = valueFormulaParams as {
+      projectId: number;
+      property: string;
+      layers: string[];
+      text?: string;
+    };
+    const pathname = `/projects/${projectId}/map`;
+    const filter = `${property}%20LIKE%20%27%25{%22id%22:${obj.id},%25%22libraryId%22:%22${obj.libraryId}%22%25%27`;
+
+    if (!obj.id || !obj.libraryId) {
+      return [];
+    }
+
+    return JSON.stringify([
+      {
+        url: `${pathname}?queryLayers=${layers.join(',')}&queryFilter=${filter}`,
+        text
+      }
+    ]);
+  }
 };
 
 export function getFieldRelations<T>(field: string | number, schema: Schema<T>): Relation[] {
