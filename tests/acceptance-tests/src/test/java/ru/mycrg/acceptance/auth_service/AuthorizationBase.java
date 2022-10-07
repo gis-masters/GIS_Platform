@@ -19,8 +19,10 @@ public class AuthorizationBase extends BaseStepsDefinitions {
     public static final String AUTH_COOKIE = "crgAuthCookie";
     public static final String AUTH_COOKIE_VALUE_SEPARATOR = "---crg---";
 
-    public Response loginAsRoot() {
-        return authorizeUser(rootUserName, rootPassword, "root");
+    public void loginAsRoot() {
+        Response response = authorizeUser(rootUserName, rootPassword, "root");
+
+        checkCookieAndWriteAsCurrent(response);
     }
 
     public void loginAsOwner() {

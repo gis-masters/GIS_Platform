@@ -26,7 +26,8 @@ public class MessageBusConsumer implements IMessageBusConsumer {
             ORG_REQUEST_QUEUE,
             AUDIT_REQUEST_QUEUE,
             FILE_REQUEST_QUEUE,
-            DATA_TO_INTEGRATION_QUEUE
+            DATA_TO_INTEGRATION_QUEUE,
+            AUTH_TO_INTEGRATION_QUEUE
     })
     public void consume(IMessageBusEvent event) {
         messageBus.consume(event);

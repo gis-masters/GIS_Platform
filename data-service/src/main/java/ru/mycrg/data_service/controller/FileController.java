@@ -19,6 +19,7 @@ import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.mappers.FileResourceQualifierMapper;
 import ru.mycrg.data_service.repository.FileRepository;
+import ru.mycrg.data_service.service.OrgSettingsKeeper;
 import ru.mycrg.data_service.service.cqrs.files.requests.CreateFileRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
@@ -48,17 +49,20 @@ public class FileController extends BaseController {
     private final FileStorageService fileStorageService;
     private final IAuthenticationFacade authenticationFacade;
     private final IMasterResourceProtector resourceProtector;
+    private final OrgSettingsKeeper orgSettingsKeeper;
 
     public FileController(Mediator mediator,
                           FileRepository fileRepository,
                           FileStorageService fileStorageService,
                           IAuthenticationFacade authenticationFacade,
-                          MasterResourceProtector resourceProtector) {
+                          MasterResourceProtector resourceProtector,
+                          OrgSettingsKeeper orgSettingsKeeper) {
         this.mediator = mediator;
         this.fileStorageService = fileStorageService;
         this.fileRepository = fileRepository;
         this.authenticationFacade = authenticationFacade;
         this.resourceProtector = resourceProtector;
+        this.orgSettingsKeeper = orgSettingsKeeper;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -89,6 +93,8 @@ public class FileController extends BaseController {
     @GetMapping("/files/{id}/download")
     public ResponseEntity<Resource> downloadFile(@PathVariable UUID id,
                                                  HttpServletRequest request) {
+        orgSettingsKeeper.throwIfDownloadFileNotAllowed();
+
         File file = fileRepository.findById(id)
                                   .orElseThrow(() -> new NotFoundException(id));
 

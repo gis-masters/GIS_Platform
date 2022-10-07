@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_service.util.Pkcs7Util;
 import ru.mycrg.auth_service_contract.dto.esia.EsiaJWT;
 import ru.mycrg.auth_service_contract.dto.esia.EsiaUserInfo;
 import ru.mycrg.http_client.HttpClient;

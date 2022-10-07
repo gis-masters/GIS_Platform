@@ -1,6 +1,7 @@
 package ru.mycrg.acceptance.auth_service;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
@@ -23,17 +24,33 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @When("Авторизируемся под рутом")
-    public Cookie authorizeAsRoot() {
-        response = authorizationBase.loginAsRoot();
+    public void authorizeAsRoot() {
+        authorizationBase.loginAsRoot();
+    }
 
-        authorizationBase.checkCookieAndWriteAsCurrent(response);
-
-        return response.getDetailedCookie(AUTH_COOKIE);
+    @Given("Администратор системы авторизован")
+    public void authorizeAsSystemAdmin() {
+        authorizeAsRoot();
     }
 
     @When("Авторизируемся пользователем")
     public void authorizeAsCurrentUser() {
         authorizationBase.loginAsCurrentUser();
+    }
+
+    @Given("Пользователь авторизован")
+    public void currentUserAuthorized() {
+        authorizeAsCurrentUser();
+    }
+
+    @When("Авторизируемся владельцем организации")
+    public void authorizeAsOrgOwner() {
+        authorizationBase.loginAsOwner();
+    }
+
+    @When("Авторизуемся владельцем организации")
+    public void orgOwnerAuthorized() {
+        authorizeAsOrgOwner();
     }
 
     @When("Авторизируемся пользователем у которого email прописан в верхнем регистре")
@@ -48,13 +65,8 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsUserWithEmailAndPassword(email, userDto.getPassword());
     }
 
-    @When("Авторизируемся владельцем организации")
-    public void tryToGetAuthorizeAdmin() {
-        authorizationBase.loginAsOwner();
-    }
-
-    @When("Авторизуемся владельцем организации")
-    public void tryToGetAuthorizeAdmin2() {
+    @When("Владелец организации авторизован")
+    public void tryToGetAuthorizeOrgAdmin() {
         authorizationBase.loginAsOwner();
     }
 

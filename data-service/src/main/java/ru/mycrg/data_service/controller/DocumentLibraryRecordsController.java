@@ -18,6 +18,7 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
+import ru.mycrg.data_service.service.OrgSettingsKeeper;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.CreateLibraryRecordRequest;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.DeleteLibraryRecordRequest;
@@ -51,17 +52,20 @@ public class DocumentLibraryRecordsController {
 
     private final Mediator mediator;
     private final SchemaService schemaService;
+    private final OrgSettingsKeeper orgSettingsKeeper;
     private final DocumentLibraryService libraryService;
     private final RecordServiceFactory recordServiceFactory;
 
     public DocumentLibraryRecordsController(SchemaService schemaService,
                                             DocumentLibraryService libraryService,
                                             RecordServiceFactory recordServiceFactory,
-                                            Mediator mediator) {
+                                            Mediator mediator,
+                                            OrgSettingsKeeper orgSettingsKeeper) {
         this.mediator = mediator;
         this.schemaService = schemaService;
         this.libraryService = libraryService;
         this.recordServiceFactory = recordServiceFactory;
+        this.orgSettingsKeeper = orgSettingsKeeper;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -121,6 +125,8 @@ public class DocumentLibraryRecordsController {
     public ResponseEntity<Map<String, Object>> createObject(@PathVariable String docLibId,
                                                             @RequestParam(required = false) MultipartFile file,
                                                             @RequestParam(value = "body") String jsonBody) {
+        orgSettingsKeeper.throwIfCreateLibraryItemNotAllowed();
+
         Map<String, Object> body = deserializeBody(jsonBody);
         SchemaDto schema = libraryService.getSchema(docLibId);
         schemaService.throwIfNotMatchSchema(schema, body);

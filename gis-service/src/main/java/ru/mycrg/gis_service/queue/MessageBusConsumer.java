@@ -9,7 +9,7 @@ import ru.mycrg.messagebus_starter.DefaultMessageBusConsumer;
 
 import java.util.List;
 
-import static ru.mycrg.messagebus_contract.MessageBusProperties.COMMON_REQUEST_QUEUE;
+import static ru.mycrg.messagebus_contract.MessageBusProperties.*;
 
 @Service
 public class MessageBusConsumer implements IMessageBusConsumer {
@@ -22,7 +22,8 @@ public class MessageBusConsumer implements IMessageBusConsumer {
 
     @Override
     @RabbitListener(queues = {
-            COMMON_REQUEST_QUEUE
+            COMMON_REQUEST_QUEUE,
+            AUTH_TO_GIS_QUEUE
     })
     public void consume(IMessageBusEvent event) {
         messageBus.consume(event);

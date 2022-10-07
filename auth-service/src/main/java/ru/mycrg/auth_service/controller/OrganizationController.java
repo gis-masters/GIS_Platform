@@ -26,8 +26,12 @@ public class OrganizationController {
 
     private final Logger log = LoggerFactory.getLogger(OrganizationController.class);
 
+    private final OrganizationService organizationService;
+
     @Autowired
-    private OrganizationService organizationService;
+    public OrganizationController(OrganizationService organizationService) {
+        this.organizationService = organizationService;
+    }
 
     @PostMapping("/init")
     public ResponseEntity<Object> createOrganization(@Valid @RequestBody OrganizationCreateDto createDto) {

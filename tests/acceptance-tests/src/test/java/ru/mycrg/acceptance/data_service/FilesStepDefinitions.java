@@ -46,7 +46,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Загружен произвольный файл")
-    public void загруженПроизвольныйФайл() {
+    public void loadAnyFile() {
         List<UUID> ids = createFiles(new File[]{firstFile});
 
         firstFileId = ids.get(0);

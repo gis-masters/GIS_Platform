@@ -1,6 +1,5 @@
 package ru.mycrg.auth_service.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,7 +26,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-import static com.vladmihalcea.hibernate.type.json.internal.JacksonUtil.toJsonNode;
 import static java.util.stream.Collectors.toList;
 import static ru.mycrg.auth_service.service.OrganizationStatus.DELETING;
 import static ru.mycrg.auth_service.service.OrganizationStatus.PROVISIONED;
@@ -82,10 +80,9 @@ public class OrganizationService {
             throw new ConflictException("Данный email уже занят");
         }
 
-        Organization newOrganization;
-
         User newUser = userRepository.save(mapDtoToUser(owner));
 
+        Organization newOrganization;
         newOrganization = mapDtoToOrganization(createDto);
         newOrganization.addUser(newUser);
 
@@ -110,13 +107,6 @@ public class OrganizationService {
         return projectionFactory.createProjection(OrganizationFullProjection.class, getById(orgId));
     }
 
-    public void updateSettings(Long id, String jsonSettings) {
-        Organization organization = getById(id);
-        organization.setSettings(toJsonNode(jsonSettings));
-
-        organizationRepository.save(organization);
-    }
-
     public void delete(Long orgId) {
         final Organization organization = getById(orgId);
         if (!PROVISIONED.toString().equals(organization.getStatus())) {
@@ -135,23 +125,13 @@ public class OrganizationService {
                 new OrganizationRemovedEvent(orgId, authenticationFacade.getAccessToken(), owners));
     }
 
-    public JsonNode getSetting(Long id) {
-        if (!id.equals(authenticationFacade.getOrganizationId())) {
-            throw new ForbiddenException("Not allowed");
-        }
-
-        return organizationRepository.findById(id)
-                                     .orElseThrow(() -> new NotFoundException(id))
-                                     .getSettings();
-    }
-
     private Organization getById(Long id) {
         if (authenticationFacade.isRoot() || id.equals(authenticationFacade.getOrganizationId())) {
             return organizationRepository.findById(id)
                                          .orElseThrow(() -> new NotFoundException(id));
-        } else {
-            throw new ForbiddenException("Not allowed");
         }
+
+        throw new ForbiddenException("Нет доступа к организации: " + id);
     }
 
     private Organization mapDtoToOrganization(OrganizationCreateDto dto) {
@@ -159,15 +139,14 @@ public class OrganizationService {
     }
 
     private User mapDtoToUser(UserCreateDto owner) {
-        return
-                new User(
-                        encoder.encode(owner.getPassword()),
-                        owner.getName(),
-                        owner.getSurname(),
-                        owner.getEmail(),
-                        owner.getMiddleName(),
-                        owner.getJob(),
-                        owner.getPhone()
-                );
+        return new User(
+                encoder.encode(owner.getPassword()),
+                owner.getName(),
+                owner.getSurname(),
+                owner.getEmail(),
+                owner.getMiddleName(),
+                owner.getJob(),
+                owner.getPhone()
+        );
     }
 }

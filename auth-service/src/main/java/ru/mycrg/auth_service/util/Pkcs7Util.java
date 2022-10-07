@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.service;
+package ru.mycrg.auth_service.util;
 
 import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cms.*;

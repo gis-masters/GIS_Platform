@@ -62,4 +62,11 @@ public class MessageBusProperties {
     // Common
     public static final String DATA_TO_INTEGRATION_QUEUE = "dataToIntegrationQueue";
     public static final String INTEGRATION_TO_DATA_QUEUE = "IntegrationToDataQueue";
+
+    // Auth publish/subscribe
+    public static final String AUTH_TO_DATA_QUEUE = "authToDataQueue";
+    public static final String AUTH_TO_GIS_QUEUE = "authToGisQueue";
+    public static final String AUTH_TO_INTEGRATION_QUEUE = "authToIntegrationQueue";
+    public static final String ORG_SETTINGS_FANOUT = "orgSettingsFanout";
+    public static final String ORG_SETTINGS_KEY = "orgSettingsFanoutKey";
 }

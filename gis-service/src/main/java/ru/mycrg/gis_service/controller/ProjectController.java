@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.gis_service.dto.ProjectUpdateDto;
+import ru.mycrg.gis_service.security.OrgSettingsKeeper;
 import ru.mycrg.gis_service.service.ProjectService;
 
 import javax.validation.Valid;
@@ -22,10 +23,13 @@ import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final OrgSettingsKeeper orgSettingsKeeper;
     private final PagedResourcesAssembler<ProjectProjection> assembler;
 
     public ProjectController(ProjectService projectService,
+                             OrgSettingsKeeper orgSettingsKeeper,
                              PagedResourcesAssembler<ProjectProjection> assembler) {
+        this.orgSettingsKeeper = orgSettingsKeeper;
         this.assembler = assembler;
         this.projectService = projectService;
     }
@@ -50,6 +54,7 @@ public class ProjectController {
     @PostMapping
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<ProjectProjection> createProject(@Valid @RequestBody ProjectRequestDto projectDto) {
+        orgSettingsKeeper.throwIfCreateProjectNotAllowed();
         ProjectProjection project = projectService.create(projectDto);
 
         return new ResponseEntity<>(project, HttpStatus.CREATED);

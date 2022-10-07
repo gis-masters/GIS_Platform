@@ -79,6 +79,21 @@ public class RabbitConfiguration {
         return BindingBuilder.bind(queueUserInit()).to(fanoutExchangeUserInit());
     }
 
+    // Настраиваем publish/subscribe обмен для настроек организаций через тип 'fanout'
+    // Создадим три очереди, по одной на каждый сервис
+    @Bean public Queue authToDataQueue() { return new Queue(AUTH_TO_DATA_QUEUE); }
+    @Bean public Queue authToGisQueue() { return new Queue(AUTH_TO_GIS_QUEUE); }
+    @Bean public Queue authToIntegrationQueue() { return new Queue(AUTH_TO_INTEGRATION_QUEUE); }
+
+    // Создадим fanout. Сообщения будут направлятся не в очереди а в этот "обменник".
+    // Очереди будут связаны с обменником и будут все получать сообщения.
+    @Bean public FanoutExchange authSettingsFanout() { return new FanoutExchange(ORG_SETTINGS_FANOUT); }
+
+    // Свяжем fanout со всеми очередями
+    @Bean public Binding authToDataBinding() { return BindingBuilder.bind(authToDataQueue()).to(authSettingsFanout());}
+    @Bean public Binding authToGisBinding() { return BindingBuilder.bind(authToGisQueue()).to(authSettingsFanout()); }
+    @Bean public Binding authToIntegrationBinding() { return BindingBuilder.bind(authToIntegrationQueue()).to(authSettingsFanout()); }
+
     // Common configuration
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {

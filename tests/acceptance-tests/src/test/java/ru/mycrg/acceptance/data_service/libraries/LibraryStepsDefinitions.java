@@ -143,8 +143,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         String body = String.format("{\"title\":\"%s\"}", generateString("STRING_10"));
         createDocument(body);
 
-        assertEquals(201, response.getStatusCode());
-
         currentDocumentId = extractEntityIdFromResponse(response);
     }
 
