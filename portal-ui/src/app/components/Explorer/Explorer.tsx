@@ -27,7 +27,6 @@ import {
   getRefreshEmitters,
   isFolder
 } from './Adapter/Explorer-Adapter';
-import { ExplorerToolbarRight } from './ToolbarRight/Explorer-ToolbarRight';
 import { ExplorerBreadcrumb } from './Breadcrumbs/Explorer-Breadcrumb';
 import { ExplorerPagination } from './Pagination/Explorer-Pagination';
 import { ExplorerToolbar } from './Toolbar/Explorer-Toolbar';
@@ -59,7 +58,7 @@ export interface ExplorerProps extends IClassNameProps {
   withoutTitle?: boolean;
   fixedHeight?: boolean;
   urlChangeEnabled?: boolean;
-  toolbarRightContent?: ReactNode;
+  libraryViewSwitch?: ReactNode;
   onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   onOpen?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   disabledTester?(item: ExplorerItemData): Promise<boolean> | boolean;
@@ -216,7 +215,7 @@ export class Explorer extends Component<ExplorerProps> {
   }
 
   render() {
-    const { withInfoPanel, fixedHeight, withoutTitle, toolbarRightContent, className, disabledTester } = this.props;
+    const { withInfoPanel, fixedHeight, withoutTitle, libraryViewSwitch, className, disabledTester } = this.props;
 
     return (
       <div
@@ -232,8 +231,8 @@ export class Explorer extends Component<ExplorerProps> {
           store={this.store}
           onChange={this.service.refreshItems}
           full={withInfoPanel}
+          libraryViewSwitch={libraryViewSwitch}
         />
-        <ExplorerToolbarRight>{toolbarRightContent}</ExplorerToolbarRight>
         {withInfoPanel && <ExplorerInfo store={this.store} />}
         <ExplorerPagination store={this.store} onChange={this.service.paginate} />
         <Loading visible={this.store.loading || this.store.restoringFromUrl} noBackdrop />

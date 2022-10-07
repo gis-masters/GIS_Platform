@@ -3,8 +3,11 @@ import { cn } from '@bem-react/classname';
 
 import { ChildrenProps } from '../../../services/models';
 import { FilterButton } from '../../FilterButton/FilterButton';
+import { ToolbarDivider } from '../../ToolbarDivider/ToolbarDivider';
 
 import { XTablePageSize } from '../PageSize/XTable-PageSize';
+
+import '!style-loader!css-loader!sass-loader!./XTable-TitleBarActions.scss';
 
 const cnXTableTitleBarActions = cn('XTable', 'TitleBarActions');
 
@@ -26,6 +29,7 @@ export const XTableTitleBarActions: FC<XTableTitleBarActionsProps> = ({
 }) => (
   <div className={cnXTableTitleBarActions()}>
     <XTablePageSize pageSize={pageSize} onChange={onChangePageSize} />
+    <ToolbarDivider />
     {filterable && <FilterButton filterActive={filterActive} onClick={onToggleFilter} />}
     {children}
   </div>

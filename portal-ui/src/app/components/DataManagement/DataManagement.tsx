@@ -31,7 +31,7 @@ export class DataManagement extends Component {
           withInfoPanel
           fixedHeight
           id='dm'
-          toolbarRightContent={
+          libraryViewSwitch={
             this.library && <LibraryViewSwitch to='registry' library={this.library} path={this.path} />
           }
           onOpen={this.handleOpenItem}
