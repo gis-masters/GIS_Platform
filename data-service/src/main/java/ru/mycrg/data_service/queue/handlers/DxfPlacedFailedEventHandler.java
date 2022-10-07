@@ -15,8 +15,8 @@ import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
-import static ru.mycrg.data_service.service.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.service.processes.FileType.DXF;
+import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 

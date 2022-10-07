@@ -121,6 +121,38 @@ public class RecordsDao {
         }
     }
 
+    //Сейчас подходит только для третьей библиотеки. Захардкоженнный запрос.
+    public List<IRecord> findAllForDataSection3(ResourceQualifier lQualifier, SchemaDto schema, String contentType) {
+        try {
+            String query = String.format("SELECT *," +
+                                                 " uuid_in(md5(random()::text || random()::text)::cstring) as guid," +
+                                                 " '3fa85f64-5717-4562-b3fc-2c963f66afa6' AS inboxdatakey," +
+                                                 " '3fa85f64-5717-4562-b3fc-2c963f66afa6' AS territorykey," +
+                                                 " content_type_id AS classid" +
+                                                 " FROM %s",
+//                                                 " WHERE content_type_id = :contentTypeId",
+                                         lQualifier.getTableQualifier());
+
+            log.debug("find record by content type: [{}]", query);
+
+            List<IRecord> records = pJdbcTemplate.query(query,
+                                                        new MapSqlParameterSource("contentTypeId", contentType),
+                                                        new RowMapperResultSetExtractor<>(
+                                                                new RecordRowMapper(schema)
+                                                        ));
+            if (records == null || records.isEmpty()) {
+                return List.of();
+            }
+
+            return records;
+        } catch (DataAccessException e) {
+            log.warn("Записи в таблице {} по content type {} не были получены. Причина: {}",
+                     lQualifier, contentType, e.getMessage());
+
+            return List.of();
+        }
+    }
+
     public List<IRecord> customListQuery(String sqlRequest,
                                          SchemaDto schema) {
         log.debug("Custom query: [{}]", sqlRequest);

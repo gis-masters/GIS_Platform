@@ -10,7 +10,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.mediator.IRequest;
 
 import static ru.mycrg.data_service.dto.ResourceType.PERMISSION;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class CreatePermissionRequest implements IRequest<PermissionProjection>, Auditable {
 

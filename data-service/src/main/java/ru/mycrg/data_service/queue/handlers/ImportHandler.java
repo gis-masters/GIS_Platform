@@ -14,7 +14,7 @@ import ru.mycrg.data_service_contract.queue.response.ImportResponseEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 
 @Service

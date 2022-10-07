@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class FileResourceQualifierMapper {
 

@@ -3,7 +3,6 @@ package ru.mycrg.data_service.service.processes.executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.WsMessageDto;
@@ -29,7 +28,7 @@ import java.util.UUID;
 
 import static org.springframework.util.StringUtils.*;
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.service.processes.FileType.DXF;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;

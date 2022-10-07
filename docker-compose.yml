@@ -158,6 +158,10 @@ services:
       CRG_OPTIONS_ROOT_USER_NAME: ${GEOSERVER_USER}
       CRG_OPTIONS_ROOT_USER_PASSWORD: ${GEOSERVER_PASSWORD}
       CRG_OPTIONS_INTEGRATION_SED_URL: https://sed-server/docker-config-endpoint
+      CRG_OPTIONS_INTEGRATION_GISOGD_RF: https://gisogd.npc.ba/api/rgmu
+      CRG_OPTIONS_INTEGRATION_GISOGD_RF_TOKEN: https://id-gisogd.npc.ba/oidc/connect/token
+      CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_ID: gisogdrfclient1
+      CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_SECRET: XDZ8XHY8TPR2WKXR6MHPTJ0MH0V4RT9QGHZOB90D6SQG9VNA67Y2QQJ4R
     volumes:
       - /opt/logs:/opt/logs
       - /opt/file_storage:/opt/file_storage

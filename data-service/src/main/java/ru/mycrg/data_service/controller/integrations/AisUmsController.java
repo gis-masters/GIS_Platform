@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.controller;
+package ru.mycrg.data_service.controller.integrations;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

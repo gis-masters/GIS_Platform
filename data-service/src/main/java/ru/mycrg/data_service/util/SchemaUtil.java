@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static ru.mycrg.data_service.service.JsonConverter.toJsonNode;
+import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 
 public class SchemaUtil {

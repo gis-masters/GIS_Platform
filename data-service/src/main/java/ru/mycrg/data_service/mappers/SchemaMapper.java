@@ -10,7 +10,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.io.IOException;
 
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 @Service
 public class SchemaMapper {

@@ -14,7 +14,7 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequest;
 
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class CreateLibraryRecordRequest implements IRequest<IRecord>, Auditable, ICreateFilesRelation {
 

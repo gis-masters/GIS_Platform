@@ -10,7 +10,7 @@ import ru.mycrg.mediator.Voidy;
 import java.util.List;
 
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class DeleteMultipleTableRecordsRequest implements IRequest<Voidy>, Auditable {
 

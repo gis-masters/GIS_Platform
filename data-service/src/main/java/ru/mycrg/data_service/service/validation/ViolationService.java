@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 

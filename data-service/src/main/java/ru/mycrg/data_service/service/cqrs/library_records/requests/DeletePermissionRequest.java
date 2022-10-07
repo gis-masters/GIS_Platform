@@ -8,7 +8,7 @@ import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.Voidy;
 
 import static ru.mycrg.data_service.dto.ResourceType.PERMISSION;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class DeletePermissionRequest implements IRequest<Voidy>, Auditable {
 

@@ -35,7 +35,10 @@ public class HttpClient {
             String body = responseBody.string();
             if (response.isSuccessful()) {
                 ResponseModel<T> model = new ResponseModel<>(response);
-                model.setBody(gson.fromJson(body, type));
+                T bodyM = readBody(type, body);
+                if (bodyM != null) {
+                    model.setBody(bodyM);
+                }
 
                 return model;
             } else {
@@ -90,5 +93,15 @@ public class HttpClient {
 
     public IHttpRequestHandler getRequestHandler() {
         return requestHandler;
+    }
+
+    private <T> T readBody(Class<T> type, String body) {
+        try {
+            return gson.fromJson(body, type);
+        } catch (Exception e) {
+            log.error("Response body is not valid! Body is {}", body);
+
+            return null;
+        }
     }
 }

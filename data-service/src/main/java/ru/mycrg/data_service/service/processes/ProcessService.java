@@ -13,7 +13,7 @@ import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.ProcessRepository;
-import ru.mycrg.data_service.service.JsonConverter;
+import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import javax.validation.constraints.NotNull;
@@ -22,7 +22,7 @@ import java.security.Principal;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 

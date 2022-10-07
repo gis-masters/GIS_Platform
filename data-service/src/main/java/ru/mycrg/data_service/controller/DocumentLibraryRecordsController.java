@@ -43,7 +43,7 @@ import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.PagingAndSortingUtil.fetchFoldersFirst;
 
 @Validated

@@ -16,7 +16,7 @@ import ru.mycrg.mediator.IRequest;
 import java.util.Map;
 
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
 public class CreateTableRecordRequest implements IRequest<Feature>, Auditable, ICreateFilesRelation {

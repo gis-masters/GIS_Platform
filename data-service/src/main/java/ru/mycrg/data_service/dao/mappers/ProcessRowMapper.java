@@ -3,7 +3,7 @@ package ru.mycrg.data_service.dao.mappers;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.jdbc.core.RowMapper;
 import ru.mycrg.data_service.entity.Process;
-import ru.mycrg.data_service.service.JsonConverter;
+import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 

@@ -31,8 +31,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
-import static ru.mycrg.data_service.service.JsonConverter.toJsonNode;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.SchemaUtil.isFilePropertyExist;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;

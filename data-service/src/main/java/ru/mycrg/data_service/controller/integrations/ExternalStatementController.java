@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.controller;
+package ru.mycrg.data_service.controller.integrations;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

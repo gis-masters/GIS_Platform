@@ -14,7 +14,7 @@ import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
-import ru.mycrg.data_service.service.JsonConverter;
+import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.handlers.BaseRequestHandler;

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class UpdateMultipleTableRecordRequest implements IRequest<Voidy>, Auditable {
 

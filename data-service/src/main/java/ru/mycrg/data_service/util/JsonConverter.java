@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service;
+package ru.mycrg.data_service.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -34,13 +34,6 @@ public class JsonConverter {
         }
     }
 
-    @Nullable
-    private static String getJsonString(Object value) throws JsonProcessingException {
-        return mapper.writer()
-                     .withDefaultPrettyPrinter()
-                     .writeValueAsString(value);
-    }
-
     public static JsonNode toJsonNodeFromString(String json) {
         try {
             return mapper.readTree(json);
@@ -49,5 +42,12 @@ public class JsonConverter {
 
             return JacksonUtil.toJsonNode("");
         }
+    }
+
+    @Nullable
+    private static String getJsonString(Object value) throws JsonProcessingException {
+        return mapper.writer()
+                     .withDefaultPrettyPrinter()
+                     .writeValueAsString(value);
     }
 }

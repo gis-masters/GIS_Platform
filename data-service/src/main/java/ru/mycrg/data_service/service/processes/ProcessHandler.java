@@ -10,7 +10,6 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.JsonConverter;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
@@ -20,7 +19,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
-import static ru.mycrg.data_service.service.JsonConverter.*;
+import static ru.mycrg.data_service.util.JsonConverter.*;
 
 @Component
 public class ProcessHandler {

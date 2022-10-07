@@ -8,7 +8,7 @@ import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.mediator.IRequest;
 
 import static ru.mycrg.data_service.dto.ResourceType.DATASET;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class CreateDatasetRequest implements IRequest<DatasetModel>, Auditable {
 
