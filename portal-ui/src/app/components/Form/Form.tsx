@@ -16,7 +16,9 @@ import {
   validateFieldValue,
   validateFormValue
 } from '../../services/formValidation.service';
+import { services } from '../../services/services';
 
+import { FormErrors } from './Errors/Form-Errors';
 export { FormField } from './Field/Form-Field';
 export { FormLabel } from './Label/Form-Label';
 import { FormContent } from './Content/Form-Content';
@@ -57,6 +59,8 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
   @observable private value?: Partial<T>;
   @observable private errors?: FieldErrors[];
   @observable private serverErrors?: FieldErrors[];
+  @observable private hiddenFieldsErrors?: string[] = [];
+  @observable private generalServerErrors?: string[] = [];
   private valueReactionDisposer: IReactionDisposer;
 
   constructor(props: FormProps<T>) {
@@ -136,6 +140,7 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
             labelInTextField={labelInTextField}
           />
         )}
+        <FormErrors errors={[...this.hiddenFieldsErrors, ...this.generalServerErrors]} />
         {actions && <FormActions>{actions}</FormActions>}
       </form>
     );
@@ -167,6 +172,25 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
 
     if (auto && actionFunction) {
       const errors = this.validate();
+
+      const hiddenErrors = errors
+        .map(error => {
+          if (error.hidden) {
+            return `Поле ${error.title}: ${error.messages.join(error.messages.length > 1 ? ', ' : '')}`;
+          }
+        })
+        .filter(Boolean);
+
+      if (hiddenErrors.length) {
+        hiddenErrors.forEach(hiddenError => {
+          services.logger.error('Ошибка в скрытом поле: ' + hiddenError);
+        });
+
+        this.setHiddenFieldsErrors([
+          hiddenErrors.length > 1 ? 'Ошибка в полях формы.' : 'Ошибка в поле формы.',
+          ...hiddenErrors
+        ]);
+      }
 
       if (errors.length && onActionError) {
         onActionError({ errors });
@@ -200,13 +224,53 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
         onActionSuccess(this.value as T);
       }
     } catch (error) {
-      const errors: FieldErrors[] = Array.isArray(error)
+      const axiosError = error as AxiosError<{ errors: Record<string, unknown>[]; message: string }>;
+      const formErrors: FieldErrors[] = Array.isArray(error)
         ? (error as FieldErrors[])
         : (error as AxiosError<{ errors?: FieldErrors[] }>)?.response?.data?.errors;
+      const fieldsErrors: FieldErrors[] = [];
+      const generalErrors: string[] = [];
 
-      if (errors) {
-        this.setServerErrors(normalizeServerErrors(errors));
+      if (formErrors?.length) {
+        formErrors.forEach(err => {
+          const field = schema.properties.find(property => property.name === err.field);
+
+          if (field && !field.hidden) {
+            fieldsErrors.push(err);
+          }
+
+          if (field.hidden) {
+            generalErrors.push(`${field.title}: ${err.messages.join(err.messages.length > 1 ? ', ' : '')}`);
+          }
+
+          if (!field && err.messages) {
+            generalErrors.push(...err.messages);
+          }
+        });
       }
+
+      if (!formErrors?.length) {
+        if (axiosError.response?.data?.message) {
+          generalErrors.push(axiosError.response.data.message);
+        }
+
+        if (!axiosError.response?.data?.message) {
+          if (axiosError.message) {
+            generalErrors.push(`Ошибка сервера ${axiosError.message}`);
+          }
+
+          if (!axiosError.message && axiosError.response?.status) {
+            generalErrors.push(`Ошибка сервера ${axiosError.response?.status}`);
+          }
+
+          if (!axiosError.message && !axiosError.response?.status) {
+            generalErrors.push('Ошибка сервера');
+          }
+        }
+      }
+
+      this.setGeneralServerErrors(generalErrors);
+      this.setServerErrors(normalizeServerErrors(fieldsErrors));
 
       if (onActionError) {
         onActionError(error as AxiosError<{ errors?: FieldErrors[] }>);
@@ -227,6 +291,16 @@ export class Form<T extends Record<string, unknown> = Record<string, unknown>> e
   @action
   private setServerErrors(errors?: FieldErrors[]) {
     this.serverErrors = errors;
+  }
+
+  @action
+  private setHiddenFieldsErrors(errors?: string[]) {
+    this.hiddenFieldsErrors = errors;
+  }
+
+  @action
+  private setGeneralServerErrors(errors?: string[]) {
+    this.generalServerErrors = errors;
   }
 
   @boundMethod

@@ -12,6 +12,7 @@ import {
   OldPropertySchemaDouble
 } from '../data/schemaOld.models';
 import { services } from '../services';
+import { Fias } from '../data/fias.service';
 
 export interface ValidationError {
   attribute: string;
@@ -66,6 +67,17 @@ export class FeaturePropertyValidators {
       }
 
       const currentValue = control.value as string;
+
+      if (
+        propertySchema.valueType === ValueType.FIAS &&
+        isEmpty((currentValue as Fias)?.fullAddress) &&
+        propertySchema.required
+      ) {
+        errors.required = 'Поле обязательно к заполнению';
+
+        return errors;
+      }
+
       if (isEmpty(currentValue)) {
         // Если ввод пуст, посмотрим обязателен ли атрибут
         if (propertySchema.required) {

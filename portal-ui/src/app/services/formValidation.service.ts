@@ -26,6 +26,8 @@ const messages = {
 
 export interface FieldErrors {
   field: string;
+  hidden?: boolean;
+  title?: string;
   messages: string[];
 }
 
@@ -72,6 +74,8 @@ export function validateFieldValue(
 
   return {
     field: property.name,
+    hidden: property.hidden,
+    title: property.title,
     messages: validatorsList?.flatMap(validator => validator(value, property, formValue, allProperties)).filter(Boolean)
   };
 }
@@ -288,7 +292,7 @@ function filesLoaded(value: FileInfo[] = []): string[] | undefined {
 }
 
 export function normalizeServerErrors(errors: ServerFieldError[]): FieldErrors[] {
-  return errors.map(({ field, message, defaultMessage, messages }) => ({
+  return errors?.map(({ field, message, defaultMessage, messages }) => ({
     field,
     messages: messages || [message || defaultMessage]
   }));
