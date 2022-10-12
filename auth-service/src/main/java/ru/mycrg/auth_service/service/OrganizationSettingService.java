@@ -116,7 +116,6 @@ public class OrganizationSettingService {
             Map<String, Object> newSettings = fromString(newOrgSettings, Map.class);
             for (Map.Entry<String, String> entry: knownSettings.entrySet()) {
                 String k = entry.getKey();
-                String v = entry.getValue();
                 if (newSettings.containsKey(k)) {
                     result.put(k, newSettings.get(k));
                 }

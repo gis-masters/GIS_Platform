@@ -72,8 +72,7 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
     );
     const canCreateChildren = Boolean(this.schema?.children?.length) && !isFolder;
     const canDownload = this.schema?.properties.some(({ propertyType }) => propertyType === PropertyType.BINARY);
-    const canDelete =
-      organizationSettings.fileDownloadEnabled && (this.document?.role === Role.OWNER || currentUser.isAdmin);
+    const canDelete = organizationSettings.downloadFiles && (this.document?.role === Role.OWNER || currentUser.isAdmin);
     const isNew = !document.id;
     const canPrint = Boolean(this.schema?.printTemplates?.length);
 

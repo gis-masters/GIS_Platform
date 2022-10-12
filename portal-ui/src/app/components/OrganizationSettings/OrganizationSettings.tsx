@@ -21,32 +21,32 @@ const cnOrganizationSettings = cn('OrganizationSettings');
 const schema: Schema<Settings> = {
   properties: [
     {
-      name: 'createProjectEnabled',
+      name: 'createProject',
       title: 'Создание проекта',
       propertyType: PropertyType.BOOL
     },
     {
-      name: 'dataManagementEnabled',
+      name: 'dataManagement',
       title: 'Управление данными',
       propertyType: PropertyType.BOOL
     },
     {
-      name: 'editProjectLayersEnabled',
+      name: 'editProjectLayer',
       title: 'Настройка слоев проекта',
       propertyType: PropertyType.BOOL
     },
     {
-      name: 'createLibraryItemsEnabled',
+      name: 'createLibraryItem',
       title: 'Создание элементов в библиотеке',
       propertyType: PropertyType.BOOL
     },
     {
-      name: 'fileDownloadEnabled',
+      name: 'downloadFiles',
       title: 'Скачать документ',
       propertyType: PropertyType.BOOL
     },
     {
-      name: 'downloadXmlGeometryEnabled',
+      name: 'downloadXml',
       title: 'Скачивание xml межевого плана и выгрузка координат и геометрии',
       propertyType: PropertyType.BOOL
     }
@@ -54,12 +54,12 @@ const schema: Schema<Settings> = {
 };
 
 const defaultValue = {
-  createLibraryItemsEnabled: false,
-  createProjectEnabled: false,
-  dataManagementEnabled: false,
-  fileDownloadEnabled: false,
-  downloadXmlGeometryEnabled: false,
-  editProjectLayersEnabled: false
+  createLibraryItem: false,
+  createProject: false,
+  dataManagement: false,
+  downloadFiles: false,
+  downloadXml: false,
+  editProjectLayer: false
 };
 
 @observer

@@ -54,7 +54,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
             );
           }
 
-          if (propertySchema.propertyType === PropertyType.FILE && !organizationSettings.fileDownloadEnabled) {
+          if (propertySchema.propertyType === PropertyType.FILE && !organizationSettings.downloadFiles) {
             return;
           }
 

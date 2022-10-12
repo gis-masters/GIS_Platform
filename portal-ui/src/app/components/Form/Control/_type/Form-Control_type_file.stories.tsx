@@ -58,12 +58,12 @@ const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
 // заполнение стора настроек, удалить по возможности
 const settings: Settings = {
-  createProjectEnabled: true,
-  dataManagementEnabled: true,
-  editProjectLayersEnabled: true,
-  createLibraryItemsEnabled: true,
-  fileDownloadEnabled: true,
-  downloadXmlGeometryEnabled: true
+  createProject: true,
+  dataManagement: true,
+  editProjectLayer: true,
+  createLibraryItem: true,
+  downloadFiles: true,
+  downloadXml: true
 };
 
 organizationSettings.setSettings(settings);

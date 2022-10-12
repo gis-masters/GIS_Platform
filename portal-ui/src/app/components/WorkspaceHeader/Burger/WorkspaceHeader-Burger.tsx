@@ -63,7 +63,7 @@ export class WorkspaceHeaderBurger extends Component {
             </MenuItem>
           </Link>
 
-          {organizationSettings.dataManagementEnabled && (
+          {organizationSettings.dataManagement && (
             <Link href='/data-management' variant='contents' delay={300}>
               <MenuItem onClick={this.close}>
                 <ListItemIcon>

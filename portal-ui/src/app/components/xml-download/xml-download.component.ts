@@ -36,7 +36,7 @@ export class XmlDownloadComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    if (organizationSettings.downloadXmlGeometryEnabled) {
+    if (organizationSettings.downloadXml) {
       const reactElement = createElement(XmlDownloadWithRegistry, {
         feature: this.feature,
         layer: this.layer

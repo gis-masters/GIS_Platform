@@ -8,12 +8,12 @@ export async function mockOrganizationSettings(browser: WebdriverIO.Browser) {
     url: /.*organizations\/settings$/,
     status: 200,
     response: JSON.stringify({
-      fileDownloadEnabled: true,
-      createProjectEnabled: true,
-      dataManagementEnabled: true,
-      editProjectLayersEnabled: true,
-      createLibraryItemsEnabled: true,
-      downloadXmlGeometryEnabled: true
+      fileDownload: true,
+      createProject: true,
+      dataManagement: true,
+      editProjectLayer: true,
+      createLibraryItem: true,
+      downloadXml: true
     })
   });
 }

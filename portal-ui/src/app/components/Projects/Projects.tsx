@@ -64,7 +64,7 @@ export class Projects extends Component {
               <ProjectsFilter />
               <ProjectsSortBy />
               <ProjectsSortOrder />
-              {organizationSettings.createProjectEnabled && (
+              {organizationSettings.createProject && (
                 <ProjectsAdd
                   className={cnProjects('Add')}
                   busy={this.addFormBusy}

@@ -206,7 +206,7 @@ export class ExplorerAdapterTypeFolder {
     const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id);
     const createEnabled =
       currentUser.isAdmin ||
-      (organizationSettings.createLibraryItemsEnabled && [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role));
+      (organizationSettings.createLibraryItem && [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role));
     const createHandler = (record: LibraryRecord, isFolder: boolean) => {
       store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
     };

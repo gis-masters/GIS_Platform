@@ -3,21 +3,21 @@ import { observable, action, computed, makeObservable } from 'mobx';
 import { currentUser } from './CurrentUser.store';
 
 export interface Settings {
-  createProjectEnabled: boolean;
-  dataManagementEnabled: boolean;
-  editProjectLayersEnabled: boolean;
-  createLibraryItemsEnabled: boolean;
-  fileDownloadEnabled: boolean;
-  downloadXmlGeometryEnabled: boolean;
+  createProject: boolean;
+  dataManagement: boolean;
+  editProjectLayer: boolean;
+  createLibraryItem: boolean;
+  downloadFiles: boolean;
+  downloadXml: boolean;
 }
 
 const emptySettings: Settings = {
-  createProjectEnabled: false,
-  dataManagementEnabled: false,
-  editProjectLayersEnabled: false,
-  createLibraryItemsEnabled: false,
-  fileDownloadEnabled: false,
-  downloadXmlGeometryEnabled: false
+  createProject: false,
+  dataManagement: false,
+  editProjectLayer: false,
+  createLibraryItem: false,
+  downloadFiles: false,
+  downloadXml: false
 };
 
 export class OrganizationSettings implements Settings {
@@ -41,38 +41,38 @@ export class OrganizationSettings implements Settings {
   }
 
   @action
-  setSettingsError(emptySettings: boolean): void {
-    this.settingsError = emptySettings;
+  setSettingsError(isError: boolean): void {
+    this.settingsError = isError;
   }
 
   @computed
-  get createProjectEnabled(): boolean {
-    return currentUser.isAdmin || this.settings.createProjectEnabled;
+  get createProject(): boolean {
+    return currentUser.isAdmin || this.settings.createProject;
   }
 
   @computed
-  get dataManagementEnabled(): boolean {
-    return currentUser.isAdmin || this.settings.dataManagementEnabled;
+  get dataManagement(): boolean {
+    return currentUser.isAdmin || this.settings.dataManagement;
   }
 
   @computed
-  get editProjectLayersEnabled(): boolean {
-    return currentUser.isAdmin || this.settings.editProjectLayersEnabled;
+  get editProjectLayer(): boolean {
+    return currentUser.isAdmin || this.settings.editProjectLayer;
   }
 
   @computed
-  get createLibraryItemsEnabled(): boolean {
-    return currentUser.isAdmin || this.settings.createLibraryItemsEnabled;
+  get createLibraryItem(): boolean {
+    return currentUser.isAdmin || this.settings.createLibraryItem;
   }
 
   @computed
-  get fileDownloadEnabled(): boolean {
-    return currentUser.isAdmin || this.settings.fileDownloadEnabled;
+  get downloadFiles(): boolean {
+    return currentUser.isAdmin || this.settings.downloadFiles;
   }
 
   @computed
-  get downloadXmlGeometryEnabled(): boolean {
-    return currentUser.isAdmin || this.settings.downloadXmlGeometryEnabled;
+  get downloadXml(): boolean {
+    return currentUser.isAdmin || this.settings.downloadXml;
   }
 }
 

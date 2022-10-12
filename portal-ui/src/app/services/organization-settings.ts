@@ -1,10 +1,11 @@
 import { AxiosError } from 'axios';
 import { boundMethod } from 'autobind-decorator';
 
-import { OrganizationSettings, organizationSettings, Settings } from '../stores/OrganizationSettings.store';
-import { getOrganizationSettingsUrl } from './server-urls.service';
 import { http } from './http.service';
+
 import { Toast } from '../components/Toast/Toast';
+import { getOrganizationSettingsUrl } from './server-urls.service';
+import { organizationSettings, Settings } from '../stores/OrganizationSettings.store';
 
 class OrganizationSettingsService {
   private static _instance: OrganizationSettingsService;
@@ -39,14 +40,8 @@ class OrganizationSettingsService {
     }
   }
 
-  async getOrganizationSettings(): Promise<OrganizationSettings> {
-    await this.promise;
-
-    return organizationSettings;
-  }
-
   async setOrganizationSettings(settings: Settings): Promise<void> {
-    await http.put<Settings>(await getOrganizationSettingsUrl(), settings);
+    await http.patch<Settings>(await getOrganizationSettingsUrl(), settings);
 
     organizationSettings.setSettings(settings);
   }

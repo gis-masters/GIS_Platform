@@ -87,7 +87,7 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
               </Tooltip>
             )}
 
-            {organizationSettings.editProjectLayersEnabled && (
+            {organizationSettings.editProjectLayer && (
               <Tooltip title='Настроить слои проекта'>
                 <IconButton onClick={this.handleEditModeClick}>
                   {editMode ? <LayersSettings /> : <LayersSettingsOutline />}
