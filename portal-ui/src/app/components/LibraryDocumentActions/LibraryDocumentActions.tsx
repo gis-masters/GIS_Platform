@@ -158,10 +158,10 @@ export class LibraryDocumentActions extends Component<LibraryDocumentActionsProp
 
   @boundMethod
   private canBeRegistered(): boolean {
-    const { gisogd_regnum, role } = this.props.document;
+    const { gisogd_regnum, role, is_folder } = this.document || this.props.document;
 
     // eslint-disable-next-line camelcase
-    return !gisogd_regnum && (role === Role.CONTRIBUTOR || role === Role.OWNER || currentUser.isAdmin);
+    return !gisogd_regnum && !is_folder && (role === Role.CONTRIBUTOR || role === Role.OWNER || currentUser.isAdmin);
   }
 
   @action

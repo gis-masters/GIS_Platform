@@ -13,8 +13,6 @@ import { PermissionsAddDialog } from '../../PermissionsAddDialog/PermissionsAddD
 
 import { PermissionsListItemType } from '../PermissionsListDialog.models';
 
-import '!style-loader!css-loader!sass-loader!./PermissionsListDialog-Add.scss';
-
 const cnPermissionsListDialogAdd = cn('PermissionsListDialog', 'Add');
 
 interface PermissionsListDialogAddProps {
