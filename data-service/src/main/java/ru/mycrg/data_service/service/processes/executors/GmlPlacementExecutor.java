@@ -53,8 +53,7 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_N
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.service.processes.FileType.GML;
 import static ru.mycrg.data_service.validators.GmlPlacementModelValidator.throwIfNotValid;
-import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
-import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 
 @Component
@@ -118,29 +117,38 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
 
         String dataset = createDataset(resultName);
         importReport = importGml.doImport(file.getPath(), dataset, payload.isInvertedCoordinates());
-        log.debug("GML разложен в набор данных: '{}'", this.importReport.getDatasetIdentifier());
-        log.debug("Создано {} слоёв", this.importReport.getImportLayerReports().size());
+        if (importReport.getImportLayerReports().isEmpty()) {
+            log.warn("Импорт GML завершился неудачей. Не удалось создать слои.");
 
-        // Создание и размещение в новой группе в проекте
-        Long projectId = this.payload.getProjectId();
-        sendWsMsg(PENDING, null, "Подключение слоёв к проекту...");
+            importReport.setSuccess(false);
+            importReport.setReason("Не удалось создать слои");
 
-        createGroup(projectId, resultName).ifPresentOrElse(groupId -> {
-            joinLayers(projectId, groupId, importReport);
-        }, () -> {
-            String msg = "Не удалось создать группу в проекте: " + projectId;
-            log.error(msg);
+            sendWsMsg(ERROR, importReport, "Импорт GML завершился неудачей");
+        } else {
+            log.debug("GML разложен в набор данных: '{}'", this.importReport.getDatasetIdentifier());
+            log.debug("Создано {} слоёв", this.importReport.getImportLayerReports().size());
 
-            throw new DataServiceException(msg);
-        });
+            // Создание и размещение в новой группе в проекте
+            Long projectId = this.payload.getProjectId();
+            sendWsMsg(PENDING, null, "Подключение слоёв к проекту...");
 
-        log.debug("В существующем проекте: '{}' размещены слои", projectId);
+            createGroup(projectId, resultName).ifPresentOrElse(groupId -> {
+                joinLayers(projectId, groupId, importReport);
+            }, () -> {
+                String msg = "Не удалось создать группу в проекте: " + projectId;
+                log.error(msg);
 
-        importReport.setProjectId(projectId);
-        importReport.setProjectIsNew(false);
-        importReport.setSuccess(true);
+                throw new DataServiceException(msg);
+            });
 
-        sendWsMsg(DONE, importReport, "Импорт GML завершен");
+            log.debug("В существующем проекте: '{}' размещены слои", projectId);
+
+            importReport.setProjectId(projectId);
+            importReport.setProjectIsNew(false);
+            importReport.setSuccess(true);
+
+            sendWsMsg(DONE, importReport, "Импорт GML завершен");
+        }
 
         return importReport;
     }

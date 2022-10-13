@@ -215,12 +215,14 @@ public class GmlParser {
                     elementsByTagName = element.getElementsByTagNameNS("*", StringUtils.capitalize(propertyName));
                 }
             }
+
             property.setType(defineValueType(schemaProperty));
             if (elementsByTagName.getLength() > 0) {
                 Element propertyElement = (Element) elementsByTagName.item(0);
                 String value = propertyElement.getTextContent();
                 property.setValue(value);
             }
+
             objectProperties.add(property);
         }
     }
@@ -437,13 +439,20 @@ public class GmlParser {
     private ValueType defineValueType(SimplePropertyDto schemaProperty) {
         ValueType vType;
         if (CHOICE.equals(schemaProperty.getValueType())) {
-            switch (schemaProperty.getForeignKeyType()) {
-                case LONG:
-                case INTEGER:
-                    vType = INT;
-                    break;
-                default:
-                    vType = STRING;
+            if (schemaProperty.getForeignKeyType() == null) {
+                log.warn("Не задан параметр: foreignKeyType для свойства типа CHOICE: '{}'. " +
+                                 "По дефолту будет использован STRING", schemaProperty.getName());
+
+                vType = schemaProperty.getValueType();
+            } else {
+                switch (schemaProperty.getForeignKeyType()) {
+                    case LONG:
+                    case INTEGER:
+                        vType = INT;
+                        break;
+                    default:
+                        vType = STRING;
+                }
             }
         } else {
             vType = schemaProperty.getValueType();
