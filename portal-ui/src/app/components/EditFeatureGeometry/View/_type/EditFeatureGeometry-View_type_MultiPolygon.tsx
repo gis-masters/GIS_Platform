@@ -17,5 +17,5 @@ const EditFeatureGeometryViewTypeMultiPolygon: FC<EditFeatureGeometryViewProps> 
 export const withTypeMultiPolygon = withBemMod<EditFeatureGeometryViewProps>(
   cnEditFeatureGeometryView(),
   { type: GeometryType.MULTI_POLYGON },
-  () => props => <EditFeatureGeometryViewTypeMultiPolygon {...props} />
+  () => EditFeatureGeometryViewTypeMultiPolygon
 );

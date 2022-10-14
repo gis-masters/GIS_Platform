@@ -6,7 +6,14 @@ import { intersects, and } from 'ol/format/filter';
 import { Coordinate } from 'ol/coordinate';
 import { WFS } from 'ol/format';
 
-import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry, WfsMultiPolygonGeometry } from './wfs.models';
+import {
+  CoordinateEdited,
+  GeometryType,
+  WfsFeature,
+  WfsGeometry,
+  WfsMultiPolygonGeometry,
+  WfsPointGeometry
+} from './wfs.models';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
@@ -17,17 +24,24 @@ import { cql2ol } from '../util/cql2ol';
 import { services } from '../services';
 import { Mime } from '../util/Mime';
 
-export function getEmptyGeometry(geometryType: GeometryType): WfsGeometry<CoordinateEdited> {
-  if (geometryType === GeometryType.POINT) {
+export function getEmptyGeometry(type: GeometryType): WfsGeometry<CoordinateEdited> {
+  if (type === GeometryType.POINT) {
     return {
-      type: GeometryType.POINT,
+      type,
       coordinates: ['', '']
+    } as WfsPointGeometry<CoordinateEdited>;
+  }
+
+  if (type === GeometryType.LINE_STRING || type === GeometryType.MULTI_POINT) {
+    return {
+      type,
+      coordinates: [['', '']]
     };
   }
 
-  if (geometryType === GeometryType.MULTI_LINE_STRING) {
+  if (type === GeometryType.MULTI_LINE_STRING || type === GeometryType.POLYGON) {
     return {
-      type: GeometryType.MULTI_LINE_STRING,
+      type,
       coordinates: [
         [
           ['', ''],
@@ -37,7 +51,7 @@ export function getEmptyGeometry(geometryType: GeometryType): WfsGeometry<Coordi
     };
   }
 
-  if (geometryType === GeometryType.MULTI_POLYGON) {
+  if (type === GeometryType.MULTI_POLYGON) {
     return {
       type: GeometryType.MULTI_POLYGON,
       coordinates: [
@@ -55,20 +69,15 @@ export function getEmptyGeometry(geometryType: GeometryType): WfsGeometry<Coordi
 }
 
 function isLinear(geometryType: GeometryType) {
-  return [
-    GeometryType.CIRCLE,
-    GeometryType.LINEAR_RING,
-    GeometryType.LINE_STRING,
-    GeometryType.MULTI_LINE_STRING
-  ].includes(geometryType);
+  return geometryType === GeometryType.LINE_STRING || geometryType === GeometryType.MULTI_LINE_STRING;
 }
 
 function isPolygonal(geometryType: GeometryType) {
-  return [GeometryType.MULTI_POLYGON, GeometryType.POLYGON].includes(geometryType);
+  return geometryType === GeometryType.POLYGON || geometryType === GeometryType.MULTI_POLYGON;
 }
 
 function isPoint(geometryType: GeometryType) {
-  return geometryType === GeometryType.POINT;
+  return geometryType === GeometryType.POINT || geometryType === GeometryType.MULTI_POINT;
 }
 
 export function selectLabelForGeometryType(

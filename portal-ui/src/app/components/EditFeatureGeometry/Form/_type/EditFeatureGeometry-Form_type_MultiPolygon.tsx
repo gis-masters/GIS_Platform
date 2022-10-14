@@ -1,20 +1,27 @@
-import React from 'react';
-import { action } from 'mobx';
+import React, { Component } from 'react';
+import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { WfsMultiPolygonGeometry, CoordinateEdited, GeometryType } from '../../../../services/geoserver/wfs.models';
-
 import {
-  EditFeatureGeometryFormProps,
-  EditFeatureGeometryForm,
-  cnEditFeatureGeometryForm
-} from '../EditFeatureGeometry-Form';
+  WfsMultiPolygonGeometry,
+  CoordinateEdited,
+  GeometryType,
+  WfsPolygonGeometry
+} from '../../../../services/geoserver/wfs.models';
+
+import { EditFeatureGeometryFormProps, cnEditFeatureGeometryForm } from '../EditFeatureGeometry-Form';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import { EditFeatureGeometryAddButton } from '../../AddButton/EditFeatureGeometry-AddButton';
+import { getEmptyGeometry } from '../../../../services/geoserver/wfs.util';
 
 @observer
-class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
+class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeometryFormProps> {
+  constructor(props: EditFeatureGeometryFormProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { className, store } = this.props;
     const geometry = store.geometry as WfsMultiPolygonGeometry;
@@ -41,14 +48,8 @@ class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
   @action.bound
   private addPolygonHandler() {
     const geometry = this.props.store.geometry as WfsMultiPolygonGeometry<CoordinateEdited>;
-    geometry.coordinates.push([
-      [
-        ['', ''],
-        ['', ''],
-        ['', ''],
-        ['', '']
-      ]
-    ]);
+    const { coordinates } = getEmptyGeometry(GeometryType.POLYGON) as WfsPolygonGeometry<CoordinateEdited>;
+    geometry.coordinates.push(coordinates);
   }
 
   @action.bound
@@ -61,5 +62,5 @@ class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
 export const withTypeMultiPolygon = withBemMod<EditFeatureGeometryFormProps>(
   cnEditFeatureGeometryForm(),
   { type: GeometryType.MULTI_POLYGON },
-  () => props => <EditFeatureGeometryFormTypeMultiPolygon {...props} />
+  () => EditFeatureGeometryFormTypeMultiPolygon
 );

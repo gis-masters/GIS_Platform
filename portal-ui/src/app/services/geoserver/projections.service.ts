@@ -12,7 +12,10 @@ import {
   WfsPointGeometry,
   WfsMultiLineStringGeometry,
   WfsMultiPolygonGeometry,
-  GeometryType
+  GeometryType,
+  WfsMultiPointGeometry,
+  WfsPolygonGeometry,
+  WfsLineStringGeometry
 } from './wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../gis/layers.service';
 import { isCoordinateValid, normalizeCoordinates } from './wfs.util';
@@ -154,7 +157,22 @@ export function transformGeometry(
     } as WfsPointGeometry;
   }
 
-  if (geometryType === GeometryType.MULTI_LINE_STRING) {
+  if (geometryType === GeometryType.MULTI_POINT || geometryType === GeometryType.LINE_STRING) {
+    const newCoordinates = transformGroup(
+      coordinates as Coordinate[],
+      projFrom,
+      projTo,
+      originGeometry && ([originGeometry.coordinates] as Coordinate[]),
+      transformedOriginGeometry && ([transformedOriginGeometry.coordinates] as Coordinate[])
+    );
+
+    return {
+      ...geometry,
+      coordinates: newCoordinates
+    } as WfsMultiPointGeometry | WfsLineStringGeometry;
+  }
+
+  if (geometryType === GeometryType.MULTI_LINE_STRING || geometryType === GeometryType.POLYGON) {
     const newCoordinates = transformSuperGroup(
       coordinates as Coordinate[][],
       projFrom,
@@ -166,7 +184,7 @@ export function transformGeometry(
     return {
       ...geometry,
       coordinates: newCoordinates
-    } as WfsMultiLineStringGeometry;
+    } as WfsMultiLineStringGeometry | WfsPolygonGeometry;
   }
 
   if (geometryType === GeometryType.MULTI_POLYGON) {

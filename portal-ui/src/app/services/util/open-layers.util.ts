@@ -1,4 +1,4 @@
-import { LineString, MultiLineString, MultiPolygon, Point, Polygon, SimpleGeometry } from 'ol/geom';
+import { LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon, SimpleGeometry } from 'ol/geom';
 import { getArea, getLength } from 'ol/sphere';
 import { Coordinate } from 'ol/coordinate';
 import { Feature } from 'ol';
@@ -46,20 +46,24 @@ export function wfsFeatureToFeature(
  */
 export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry<Coordinate>): SimpleGeometry | undefined {
   if (!wfsGeometry) {
-    Toast.error('Некорректная геометрия');
-
-    return;
+    throw new Error('Некорректная геометрия');
   }
 
   switch (wfsGeometry.type) {
     case GeometryType.POINT:
       return new Point(wfsGeometry.coordinates);
-    case GeometryType.MULTI_POLYGON:
-      return new MultiPolygon(wfsGeometry.coordinates);
+    case GeometryType.MULTI_POINT:
+      return new MultiPoint(wfsGeometry.coordinates);
+    case GeometryType.LINE_STRING:
+      return new LineString(wfsGeometry.coordinates);
     case GeometryType.MULTI_LINE_STRING:
       return new MultiLineString(wfsGeometry.coordinates);
+    case GeometryType.POLYGON:
+      return new Polygon(wfsGeometry.coordinates);
+    case GeometryType.MULTI_POLYGON:
+      return new MultiPolygon(wfsGeometry.coordinates);
     default:
-      Toast.error(`Not supported geometry type: ${wfsGeometry.type}`);
+      throw new Error(`Not supported geometry type: ${wfsGeometry.type}`);
   }
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
@@ -54,14 +54,6 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryForm {
     );
   }
 
-  @computed
-  private get isEmpty(): boolean {
-    const { store } = this.props;
-    const geometry = store.geometry as WfsPointGeometry;
-
-    return !geometry.coordinates.some(Boolean);
-  }
-
   @boundMethod
   private changeHandler(val?: CoordinateEdited) {
     this.props.store.geometry.coordinates = val;
@@ -71,20 +63,10 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryForm {
   private asTextHandler(val: CoordinateEdited[]) {
     this.props.store.geometry.coordinates = val[0];
   }
-
-  @action.bound
-  private enableActive() {
-    this.active = true;
-  }
-
-  @action.bound
-  private disableActive() {
-    this.active = false;
-  }
 }
 
 export const withTypePoint = withBemMod<EditFeatureGeometryFormProps>(
   cnEditFeatureGeometryForm(),
   { type: GeometryType.POINT },
-  () => props => <EditFeatureGeometryFormTypePoint {...props} />
+  () => EditFeatureGeometryFormTypePoint
 );

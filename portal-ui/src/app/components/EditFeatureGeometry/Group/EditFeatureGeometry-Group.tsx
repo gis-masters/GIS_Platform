@@ -30,7 +30,7 @@ export interface EditFeatureGeometryGroupProps extends IClassNameProps {
   minCoordsCount: number;
   mustBeClosed?: boolean;
   canBeDeleted: boolean;
-  onDelete: (index: number) => void;
+  onDelete?: (index: number) => void;
   Container?: ComponentType<ContainerProps>;
   multiple: boolean;
   index: number;
@@ -114,7 +114,6 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
                 store.geometryType,
                 `контур${index ? ' (вырезку)' : ''}`,
                 'линию',
-                'точку',
                 'группу'
               )}
             />

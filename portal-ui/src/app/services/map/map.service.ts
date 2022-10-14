@@ -546,7 +546,7 @@ class MapService {
   @boundMethod
   modificationHandler(e: ModifyEvent) {
     const geometry = (e.features.item(0) as Feature<SimpleGeometry>).getGeometry();
-    this.modificationDone.emit(geometry.getType() !== GeometryType.POLYGON && geometry);
+    this.modificationDone.emit(geometry);
   }
 
   draw(geometryType: GeometryType, handler: (e: DrawEvent) => void) {

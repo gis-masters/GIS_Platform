@@ -161,7 +161,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
           {!editMode &&
             this.isVectorLayer &&
             this.featuresCreateAllowed &&
-            this.geometryType === GeometryType.MULTI_POLYGON && (
+            (this.geometryType === GeometryType.MULTI_POLYGON || this.geometryType === GeometryType.POLYGON) && (
               <MenuItem onClick={this.openImportXmlDialog}>
                 <ListItemIcon>
                   <ImportOutlined />
@@ -216,7 +216,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
         {!editMode &&
           this.isVectorLayer &&
           this.featuresCreateAllowed &&
-          this.geometryType === GeometryType.MULTI_POLYGON && (
+          (this.geometryType === GeometryType.MULTI_POLYGON || this.geometryType === GeometryType.POLYGON) && (
             <ImportXmlDialog
               open={this.importXmlDialogOpen}
               onClose={this.closeImportXmlDialog}

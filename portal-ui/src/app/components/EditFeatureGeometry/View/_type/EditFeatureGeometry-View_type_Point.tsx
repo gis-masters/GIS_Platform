@@ -20,5 +20,5 @@ const EditFeatureGeometryViewTypePoint: FC<EditFeatureGeometryViewProps> = ({ st
 export const withTypePoint = withBemMod<EditFeatureGeometryViewProps>(
   cnEditFeatureGeometryView(),
   { type: GeometryType.POINT },
-  () => props => <EditFeatureGeometryViewTypePoint {...props} />
+  () => EditFeatureGeometryViewTypePoint
 );

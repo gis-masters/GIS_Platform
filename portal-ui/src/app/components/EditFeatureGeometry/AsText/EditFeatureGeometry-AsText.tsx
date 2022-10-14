@@ -12,6 +12,7 @@ import { communicationService } from '../../../services/communication.service';
 import {
   CoordinateEdited,
   GeometryType,
+  WfsLineStringGeometry,
   WfsMultiLineStringGeometry,
   WfsMultiPolygonGeometry,
   WfsPointGeometry
@@ -48,7 +49,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
       geometryType,
       `контура${first ? '' : ' (вырезки)'}`,
       'линии',
-      'точки',
+      geometryType === GeometryType.MULTI_POINT ? 'точек' : 'точки',
       'группы'
     );
 
@@ -143,14 +144,20 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
           newCoordinates = [(emptyGeometry as WfsPointGeometry<CoordinateEdited>).coordinates];
           break;
         }
-        case GeometryType.MULTI_LINE_STRING: {
+        case GeometryType.LINE_STRING:
+        case GeometryType.MULTI_POINT: {
+          newCoordinates = (emptyGeometry as WfsLineStringGeometry).coordinates;
+          break;
+        }
+        case GeometryType.MULTI_LINE_STRING:
+        case GeometryType.POLYGON: {
           newCoordinates = (emptyGeometry as WfsMultiLineStringGeometry).coordinates[0];
           break;
         }
-        case GeometryType.MULTI_POLYGON: {
-          newCoordinates = (emptyGeometry as WfsMultiPolygonGeometry).coordinates[0][0];
-          break;
-        }
+        default:
+          if ([GeometryType.MULTI_POLYGON].includes(geometryType)) {
+            newCoordinates = (emptyGeometry as WfsMultiPolygonGeometry).coordinates[0][0];
+          }
       }
     }
 

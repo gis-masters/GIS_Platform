@@ -91,8 +91,15 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
       point.splice(0, point.length, ...transform(olProjection, store.currentProjection, drawed));
       onDraw(point);
     } else {
-      const drawed = (e.feature as Feature<SimpleGeometry>).getGeometry().getCoordinates() as Coordinate[][];
-      const newPart = drawed[0].map(coord => transform(olProjection, store.currentProjection, coord));
+      let drawed = (e.feature as Feature<SimpleGeometry>).getGeometry().getCoordinates() as
+        | Coordinate[]
+        | Coordinate[][];
+      if (Array.isArray(drawed[0][0])) {
+        drawed = drawed[0] as Coordinate[];
+      }
+      const newPart = (drawed as Coordinate[]).map((coord: Coordinate) =>
+        transform(olProjection, store.currentProjection, coord)
+      );
       onDraw(newPart);
     }
   }

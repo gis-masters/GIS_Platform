@@ -38,15 +38,18 @@ class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
     let htmlColor: string;
 
     switch (this.geometryType) {
+      case GeometryType.POLYGON:
       case GeometryType.MULTI_POLYGON: {
         Icon = Shape;
         break;
       }
+      case GeometryType.LINE_STRING:
       case GeometryType.MULTI_LINE_STRING: {
         Icon = PolylineOutlined;
         break;
       }
-      case GeometryType.POINT: {
+      case GeometryType.POINT:
+      case GeometryType.MULTI_POINT: {
         Icon = Adjust;
         break;
       }

@@ -1,11 +1,11 @@
 import { observable, action, reaction, makeObservable } from 'mobx';
 
-import { route, Pages } from './Route.store';
-import { CrgVectorLayer } from '../services/gis/projects.models';
-import { WfsFeature } from '../services/geoserver/wfs.models';
-import { Properties } from '../components/edit-feature/edit-feature.component';
-import { FeatureError } from '../services/map/map-link-following.service';
 import { mapStore } from './Map.store';
+import { route, Pages } from './Route.store';
+import { WfsFeature } from '../services/geoserver/wfs.models';
+import { CrgVectorLayer } from '../services/gis/projects.models';
+import { FeatureError } from '../services/map/map-link-following.service';
+import { Properties } from '../components/edit-feature/edit-feature.component';
 
 export enum EditFeatureMode {
   multipleEdit = 'multipleEdit',

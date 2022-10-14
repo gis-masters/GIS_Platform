@@ -1,6 +1,6 @@
 import { Feature } from 'ol';
 import WFS, { WriteTransactionOptions } from 'ol/format/WFS';
-import { Geometry, MultiLineString, MultiPolygon, Point } from 'ol/geom';
+import { Geometry, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
 import { Coordinate } from 'ol/coordinate';
 
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from './wfs.models';
@@ -93,8 +93,17 @@ export class TransformFeatureService {
         if (geometry.type === GeometryType.POINT) {
           geom = new Point(geometry.coordinates);
         }
+        if (geometry.type === GeometryType.MULTI_POINT) {
+          geom = new MultiPoint(geometry.coordinates);
+        }
+        if (geometry.type === GeometryType.LINE_STRING) {
+          geom = new LineString(geometry.coordinates);
+        }
         if (geometry.type === GeometryType.MULTI_LINE_STRING) {
           geom = new MultiLineString(geometry.coordinates);
+        }
+        if (geometry.type === GeometryType.POLYGON) {
+          geom = new Polygon(geometry.coordinates);
         }
         if (geometry.type === GeometryType.MULTI_POLYGON) {
           geom = new MultiPolygon(geometry.coordinates);

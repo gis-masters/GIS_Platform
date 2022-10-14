@@ -5,7 +5,7 @@ import { DownloadOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { Coordinate } from 'ol/coordinate';
 import { cn } from '@bem-react/classname';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import xmlbuilder from 'xmlbuilder';
 import FileSaver from 'file-saver';
 
@@ -51,7 +51,7 @@ export class XmlDownload extends Component<XmlDownloadProps> {
   private download() {
     const { feature, layer } = this.props;
     const { properties, geometry } = feature;
-    const uuid = uuidv4().toUpperCase();
+    const guid = uuid().toUpperCase();
 
     let cadastralBlock: string;
     if (properties.cad_num) {
@@ -60,7 +60,7 @@ export class XmlDownload extends Component<XmlDownloadProps> {
 
     const mp = {
       MP: {
-        '@GUID': uuid,
+        '@GUID': guid,
         '@Version': '06',
         Package: {
           FormParcels: {
@@ -126,7 +126,7 @@ export class XmlDownload extends Component<XmlDownloadProps> {
     };
 
     const xml = xmlbuilder.create(mp).end({ pretty: true });
-    const fileName = properties.shape_area || properties.area_doc || properties.cad_num || uuid;
+    const fileName = properties.shape_area || properties.area_doc || properties.cad_num || guid;
     const blob = new Blob([xml], { type: 'xml' });
 
     FileSaver.saveAs(blob, `${String(fileName)}.xml`);
@@ -154,11 +154,11 @@ export class XmlDownload extends Component<XmlDownloadProps> {
     }
 
     if (geometry.type === GeometryType.MULTI_LINE_STRING) {
-      const geometryMultiLineString = geometry as WfsMultiLineStringGeometry;
+      const { coordinates } = geometry as WfsMultiLineStringGeometry;
 
       return {
         Contours: {
-          NewContour: geometryMultiLineString.coordinates.map(contour => {
+          NewContour: coordinates.map(contour => {
             return {
               EntitySpatial: {
                 SpatialElement: {
@@ -176,10 +176,10 @@ export class XmlDownload extends Component<XmlDownloadProps> {
 
       return {
         Contours: {
-          NewContour: geometryMultiPolygon.coordinates.map(poligon => {
+          NewContour: geometryMultiPolygon.coordinates.map(polygon => {
             return {
               EntitySpatial: {
-                SpatialElement: poligon.map(contour => {
+                SpatialElement: polygon.map(contour => {
                   return {
                     SpelementUnit: this.getUnitCoord(contour)
                   };
