@@ -7,5 +7,6 @@ public enum ResourceType {
     DATASET,
     TABLE,
     FEATURE,
-    SCHEMA
+    SCHEMA,
+    BASEMAP
 }

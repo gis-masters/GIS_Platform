@@ -92,6 +92,18 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    @Given("Существует подложка с указанными pluggableToNewProject и position {string}")
+    public void initBaseMapWithPositionAndPluggable(String position) {
+        baseMapDto = new InitialBaseMapCreateDto("wmts", "Test basemap", "/assets/images/thumbnail-our.jpg",
+                                                 "WMTS", "http://localhost:8100/geoserver/gwc/service/wmts",
+                                                 "TestLayerName", "raster", "EPSG:900913",
+                                                 "image/png", 256, 21, 21,
+                                                 Integer.parseInt(position), true);
+
+        super.createEntity(baseMapDto);
+        extractBaseMapIdFromLocation();
+    }
+
     @When("Пользователь делает запрос на обновление полей подложки")
     public void updateBaseMap(DataTable dataTable) {
         baseMapDto = mapToBaseMapDto(dataTable);
@@ -198,6 +210,17 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
                                                    Integer.parseInt(generateString(data.get(9))),
                                                    Integer.parseInt(generateString(data.get(10))),
                                                    Integer.parseInt(generateString(data.get(11))));
+            case 14:
+                return new InitialBaseMapCreateDto(generateString(data.get(0)), generateString(data.get(1)),
+                                                   generateString(data.get(2)), generateString(data.get(3)),
+                                                   generateString(data.get(4)), generateString(data.get(5)),
+                                                   generateString(data.get(6)), generateString(data.get(7)),
+                                                   generateString(data.get(8)),
+                                                   Integer.parseInt(generateString(data.get(9))),
+                                                   Integer.parseInt(generateString(data.get(10))),
+                                                   Integer.parseInt(generateString(data.get(11))),
+                                                   Integer.parseInt(generateString(data.get(12))),
+                                                   Boolean.parseBoolean(data.get(13)));
             default:
                 return new InitialBaseMapCreateDto();
         }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Projection(
         name = "baseMapProjection",
-        types = { BaseMap.class })
+        types = {BaseMap.class})
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public interface BaseMapProjection {
 
@@ -40,4 +40,7 @@ public interface BaseMapProjection {
 
     LocalDateTime getCreatedAt();
 
+    Boolean getPluggableToNewProject();
+
+    Integer getPosition();
 }

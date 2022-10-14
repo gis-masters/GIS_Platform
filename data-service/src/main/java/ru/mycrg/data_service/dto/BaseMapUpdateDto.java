@@ -5,23 +5,18 @@ import ru.mycrg.data_service.validators.ValidateEnum;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 
-public class BaseMapCreateDto {
+public class BaseMapUpdateDto {
 
-    @NotBlank
     @Length(max = 255)
     private String name;
 
-    @NotBlank
     @Length(min = 3, max = 255)
     private String title;
 
-    @NotBlank
     @Length(min = 3, max = 255)
     private String thumbnailUrn;
 
-    @NotBlank
     @ValidateEnum(targetClassType = SourceType.class,
                   message = "Please provide correct ENUM value: OSM, XYZ, WMTS, WMTS_P")
     private String type;
@@ -57,7 +52,7 @@ public class BaseMapCreateDto {
 
     private Boolean pluggableToNewProject;
 
-    public BaseMapCreateDto() {
+    public BaseMapUpdateDto() {
         // Required
     }
 

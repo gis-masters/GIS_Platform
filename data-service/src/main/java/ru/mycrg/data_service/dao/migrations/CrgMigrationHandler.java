@@ -65,6 +65,7 @@ public class CrgMigrationHandler {
                                              ctx.getResource("classpath:sql/M14__addFeatureExtractLibrary.sql"));
                 ScriptUtils.executeSqlScript(connection,
                                              ctx.getResource("classpath:sql/M15__updateSchemasAndTables_V2.sql"));
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M16__updateBaseMaps.sql"));
             }
 
             tempDataSource.close();

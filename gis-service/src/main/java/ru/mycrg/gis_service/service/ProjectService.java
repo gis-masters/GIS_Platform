@@ -17,11 +17,13 @@ import ru.mycrg.gis_service.dto.PermissionCreateDto;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.gis_service.dto.ProjectUpdateDto;
+import ru.mycrg.gis_service.entity.BaseMap;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
+import ru.mycrg.gis_service.repository.BaseMapRepository;
 import ru.mycrg.gis_service.repository.PermissionRepository;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 
@@ -49,19 +51,25 @@ public class ProjectService {
     private final IAuthenticationFacade authenticationFacade;
     private final MessageBusProducer messageBus;
     private final ProjectsDao projectsDao;
+    private final BaseMapRepository baseMapRepository;
+    private final DataServiceBasemapsClient dataServiceBasemapsClient;
 
     public ProjectService(ProjectProjectionFactory projectionFactory,
                           ProjectRepository projectRepository,
                           PermissionRepository permissionRepository,
                           IAuthenticationFacade authenticationFacade,
                           MessageBusProducer messageBus,
-                          ProjectsDao projectsDao) {
+                          ProjectsDao projectsDao,
+                          BaseMapRepository baseMapRepository,
+                          DataServiceBasemapsClient dataServiceBasemapsClient) {
         this.projectionFactory = projectionFactory;
         this.projectRepository = projectRepository;
         this.permissionRepository = permissionRepository;
         this.authenticationFacade = authenticationFacade;
         this.messageBus = messageBus;
         this.projectsDao = projectsDao;
+        this.baseMapRepository = baseMapRepository;
+        this.dataServiceBasemapsClient = dataServiceBasemapsClient;
     }
 
     public Page<ProjectProjection> getPaged(String name, Pageable pageable) {
@@ -189,6 +197,8 @@ public class ProjectService {
         projectRepository.save(savedProject);
         permissionRepository.save(new Permission(new PermissionCreateDto(userId, "user", OWNER.name()), savedProject));
 
+        plugInBaseMapToNewProject(savedProject);
+
         messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                              "CREATE",
                                              savedProject.getName(),
@@ -211,6 +221,17 @@ public class ProjectService {
         } else {
             throw new ForbiddenException("Недостаточно прав для удаления проекта: " + projectId);
         }
+    }
+
+    private void plugInBaseMapToNewProject(Project project) {
+        dataServiceBasemapsClient.getAllPluggable()
+                                 .forEach(dto -> {
+                                     BaseMap baseMap = new BaseMap(dto);
+
+                                     baseMapRepository.save(baseMap);
+
+                                     project.addBaseMap(baseMap);
+                                 });
     }
 
     private boolean isOwner(Project project) {

@@ -7,15 +7,15 @@ Feature: Создание подложки
 
   Scenario Outline: Создание подложки с валидными данными
     When Пользователь делает запрос на создание подложки
-      | <name> | <title> | <thumbnailUrn> | <type> | <url> | <layerName> | <style> | <projection> | <format> | <size> | <resolution> | <matrixIDs> |
+      | <name> | <title> | <thumbnailUrn> | <type> | <url> | <layerName> | <style> | <projection> | <format> | <size> | <resolution> | <matrixIDs> | <position> | <pluggableToNewProject> |
     Then Сервер отвечает со статус-кодом 201
     And Сервер передает ID созданной подложки
     When Пользователь делает запрос на указанную подложку источник
     Then Сервер отвечает со статус-кодом 200
     And Поля подложки совпадают с переданными
     Examples:
-      | name  | title     | thumbnailUrn                     | type | url                                              | layerName  | style   | projection  | format    | size | resolution | matrixIDs |
-      | wmts' | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layer>Name | ras<ter | EPSG:900913 | image/png | 256  | 21         | 21        |
+      | name  | title     | thumbnailUrn                     | type | url                                              | layerName  | style   | projection  | format    | size | resolution | matrixIDs | position | pluggableToNewProject |
+      | wmts' | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layer>Name | ras<ter | EPSG:900913 | image/png | 256  | 21         | 21        | 1        | true                  |
 
   Scenario Outline: Создание подложки с невалидными данными (<reason>)
     When Пользователь делает запрос на создание подложки

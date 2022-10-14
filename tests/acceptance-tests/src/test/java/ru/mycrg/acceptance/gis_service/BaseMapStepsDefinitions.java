@@ -3,13 +3,16 @@ package ru.mycrg.acceptance.gis_service;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.path.json.JsonPath;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_CREATED;
@@ -17,8 +20,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
 import static ru.mycrg.acceptance.data_service.InitialBaseMapsStepsDefinitions.baseMapId;
@@ -170,6 +172,44 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
                         contentType(PATCH_CONTENT_TYPE)
                 .when().
                         patch("" + projectBasemapId);
+    }
+
+    @When("Пользователь делает запрос на существующую подложку для проекта")
+    public void getBasemapsByProject() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get();
+    }
+
+    @Then("В проект подключены pluggable подложки")
+    public void checkResponseContainsBasemap() {
+        getBasemapsByProject();
+
+        JsonPath path = response.jsonPath();
+        List<Object> baseMapList = path.getList("");
+        assertFalse(baseMapList.isEmpty());
+    }
+
+    @Then("В подложке проставлено поле position и равно значению {string}")
+    public void checkBaseMapHasPosition(String position) {
+        JsonPath path = response.jsonPath();
+
+        List<Map<String, Object>> baseMapList = path.getList("");
+        assertFalse(baseMapList.isEmpty());
+
+        Optional<Map<String, Object>> currentBasemapOpt = baseMapList.stream()
+                                                                     .filter(basemap -> basemap.containsKey(
+                                                                             "baseMapId"))
+                                                                     .filter(basemap -> baseMapId.equals(
+                                                                             basemap.get("baseMapId")))
+                                                                     .findAny();
+
+        assertTrue(currentBasemapOpt.isPresent());
+
+        Map<String, Object> basemap = currentBasemapOpt.get();
+
+        assertTrue(basemap.containsKey("position"));
+        assertEquals(Integer.parseInt(position), basemap.get("position"));
     }
 
     @And("Поля подложки проекта совпадают с переданными {int}, {string}, {int}")

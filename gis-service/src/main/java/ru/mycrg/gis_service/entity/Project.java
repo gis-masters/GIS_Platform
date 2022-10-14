@@ -1,5 +1,6 @@
 package ru.mycrg.gis_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -52,6 +53,7 @@ public class Project implements Identifiable<Long> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", orphanRemoval = true)
     private Set<Permission> permissions = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
             name = "projects_basemaps",

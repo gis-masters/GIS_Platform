@@ -14,6 +14,8 @@ public class InitialBaseMapCreateDto {
     private Integer size;
     private Integer resolution;
     private Integer matrixIds;
+    private Integer position;
+    private boolean pluggableToNewProject;
 
     public InitialBaseMapCreateDto(String name, String title, String thumbnailUrn, String type, String url,
                                    String layerName, String style, String projection, String format, Integer size,
@@ -37,6 +39,26 @@ public class InitialBaseMapCreateDto {
         this.title = title;
         this.thumbnailUrn = thumbnailUrn;
         this.type = type;
+    }
+
+    public InitialBaseMapCreateDto(String name, String title, String thumbnailUrn, String type, String url,
+                                   String layerName, String style, String projection, String format, Integer size,
+                                   Integer resolution, Integer matrixIds, Integer position,
+                                   boolean pluggableToNewProject) {
+        this.name = name;
+        this.title = title;
+        this.thumbnailUrn = thumbnailUrn;
+        this.type = type;
+        this.url = url;
+        this.layerName = layerName;
+        this.style = style;
+        this.projection = projection;
+        this.format = format;
+        this.size = size;
+        this.resolution = resolution;
+        this.matrixIds = matrixIds;
+        this.position = position;
+        this.pluggableToNewProject = pluggableToNewProject;
     }
 
     public InitialBaseMapCreateDto() {
@@ -88,5 +110,13 @@ public class InitialBaseMapCreateDto {
 
     public Integer getMatrixIds() {
         return matrixIds;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public boolean isPluggableToNewProject() {
+        return pluggableToNewProject;
     }
 }

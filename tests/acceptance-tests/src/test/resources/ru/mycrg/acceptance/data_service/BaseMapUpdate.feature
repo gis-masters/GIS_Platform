@@ -10,7 +10,7 @@ Feature: Обновление подложек
       | <name> | <title> | <thumbnailUrn> | <type> |
     When Пользователь делает запрос на обновление полей подложки
       | <newName> | <newTitle> | <newThumbnailUrn> | <newType> |
-    Then Сервер отвечает со статус-кодом 200
+    Then Сервер отвечает со статус-кодом 204
     When Пользователь делает запрос на указанную подложку источник
     And Поля подложки совпадают с переданными "<newName>", "<newTitle>", "<newThumbnailUrn>", "<newType>"
     Examples:

@@ -57,6 +57,12 @@ public class BaseMap {
     private @LastModifiedDate
     LocalDateTime lastModified = LocalDateTime.now();
 
+    @Column(name = "pluggable_to_new_project")
+    private Boolean pluggableToNewProject;
+
+    @Column
+    private Integer position;
+
     public BaseMap() {
         // Required
     }
@@ -179,5 +185,21 @@ public class BaseMap {
 
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public Boolean getPluggableToNewProject() {
+        return pluggableToNewProject;
+    }
+
+    public void setPluggableToNewProject(Boolean pluggableInNewProject) {
+        this.pluggableToNewProject = pluggableInNewProject;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.entity.BaseMap;
-import ru.mycrg.data_service.service.BasemapsService;
+import ru.mycrg.data_service.repository.BaseMapRepository;
 import ru.mycrg.resource_analyzer_contract.IResource;
 import ru.mycrg.resource_analyzer_contract.IResourceDefinition;
 import ru.mycrg.resource_analyzer_contract.IResourceQueryService;
@@ -20,19 +20,19 @@ import java.util.stream.Collectors;
 @Service
 public class BasemapQuery implements IResourceQueryService {
 
-    private final BasemapsService basemapsService;
     private final ResourceDefinition resourceDefinition;
+    private final BaseMapRepository baseMapRepository;
 
-    public BasemapQuery(BasemapsService basemapsService) {
-        this.basemapsService = basemapsService;
+    public BasemapQuery(BaseMapRepository baseMapRepository) {
+        this.baseMapRepository = baseMapRepository;
 
         resourceDefinition = new ResourceDefinition("BaseMaps", "Подложки");
     }
 
     public Page<IResource> getResources(Pageable pageable) {
-        final List<IResource> result = basemapsService.getWithNotNullLayerName(pageable).stream()
-                                                      .map(this::mapBaseMapToResource)
-                                                      .collect(Collectors.toList());
+        final List<IResource> result = getWithNotNullLayerName(pageable).stream()
+                                                                        .map(this::mapBaseMapToResource)
+                                                                        .collect(Collectors.toList());
 
         return new PageImpl<>(result, pageable, result.size());
     }
@@ -47,5 +47,9 @@ public class BasemapQuery implements IResourceQueryService {
         resProps.put("layerName", baseMap.getLayerName());
 
         return new Resource(String.valueOf(baseMap.getId()), baseMap.getTitle(), resourceDefinition, resProps);
+    }
+
+    private Page<BaseMap> getWithNotNullLayerName(Pageable pageable) {
+        return baseMapRepository.findBaseMapByLayerNameNotNull(pageable);
     }
 }
