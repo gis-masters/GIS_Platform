@@ -27,11 +27,13 @@ import { XTableCell } from './Cell/XTable-Cell';
 import { XTableEmpty } from './Empty/XTable-Empty';
 import { XTableTitle } from './Title/XTable-Title';
 import { XTableFooter } from './Footer/XTable-Footer';
-import { XTableFilterProps } from './Filter/XTable-Filter.base';
 import { XTableTitleBar } from './TitleBar/XTable-TitleBar';
 import { XTableHeadCell } from './HeadCell/XTable-HeadCell';
-import { XTableContainer, XTableContainerProps } from './Container/XTable-Container';
+import { XTableFilterProps } from './Filter/XTable-Filter.base';
+import { XTableFilterPanel } from './FilterPanel/XTable-FilterPanel';
 import { XTableTitleBarActions } from './TitleBarActions/XTable-TitleBarActions';
+import { XTableContainer, XTableContainerProps } from './Container/XTable-Container';
+import { XTableFilterPanelItemContentProps } from './FilterPanelItemContent/XTable-FilterPanelItemContent.base';
 
 import '!style-loader!css-loader!sass-loader!./XTable.scss';
 
@@ -51,6 +53,7 @@ export interface XTableColumn<T> {
   description?: ReactNode;
   filterable?: boolean;
   CustomFilterComponent?: ComponentType<XTableFilterProps>;
+  CustomFilterPanelItemComponent?: ComponentType<XTableFilterPanelItemContentProps>;
   type?: PropertyType;
   settings?: Partial<
     Pick<PropertySchemaChoice, 'options'> &
@@ -78,6 +81,7 @@ interface XTablePropsBase<T> extends IClassNameProps {
   headerActions?: ReactNode;
   headerless?: boolean;
   footerless?: boolean;
+  showFiltersPanel?: boolean;
   size?: 'small' | 'medium';
   singleLineContent?: boolean;
   cols: XTableColumn<T>[];
@@ -211,6 +215,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
       size,
       singleLineContent,
       containerProps,
+      showFiltersPanel,
       getRowId = defaultRowIdGetter,
       onRowDoubleClick
     } = this.props;
@@ -226,7 +231,16 @@ export class XTable<T> extends Component<XTableProps<T>> {
       <div className={cnXTable(null, [className, 'scroll'])}>
         {!headerless && (
           <XTableTitleBar>
-            <XTableTitle>{title}</XTableTitle>
+            {title && <XTableTitle>{title}</XTableTitle>}
+            {showFiltersPanel && (
+              <XTableFilterPanel
+                filterQuery={this.filterQuery}
+                cols={this.cols}
+                onBeforeFilterChange={this.beforeFilterChange}
+                onFilterChange={this.afterFilterChange}
+                onUpdateFilter={this.setFilterQuery}
+              />
+            )}
             <XTableTitleBarActions
               filterActive={this.filterActive || filtersAlwaysEnabled}
               filterable={filterable && !filtersAlwaysEnabled}

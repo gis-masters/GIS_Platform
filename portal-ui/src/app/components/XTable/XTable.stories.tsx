@@ -355,6 +355,17 @@ Async.args = {
   filtersAlwaysEnabled: true
 };
 
+export const FilterPanel = Template.bind({}) as ComponentStory<typeof XTableForTestData>;
+FilterPanel.args = {
+  getData,
+  cols,
+  defaultSort,
+  showFiltersPanel: true,
+  secondarySortField: 'id',
+  filterable: true,
+  filtersAlwaysEnabled: true
+};
+
 export const Compact = Template.bind({}) as ComponentStory<typeof XTableForTestData>;
 Compact.args = {
   title: 'Компактная таблица с локальными данными',

@@ -1,4 +1,4 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, ReactElement, useEffect, useState } from 'react';
 import { action, computed, observable, when, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Subject, takeUntil } from 'rxjs';
@@ -22,6 +22,7 @@ import { services } from '../../services/services';
 import {
   DocumentLibrary,
   getLibrary,
+  getLibraryRecord,
   getLibraryRecords2,
   LibraryRecord
 } from '../../services/data/doc-library.service';
@@ -130,6 +131,7 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
               defaultSort={this.defaultSort}
               secondarySortField='id'
               filtersAlwaysEnabled
+              showFiltersPanel
               defaultFilter={this.defaultFilter}
               headerActions={
                 <>
@@ -197,7 +199,24 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
               onItemClick={this.handleBreadcrumbsItemClick}
               size='small'
             />
-          )
+          ),
+          CustomFilterPanelItemComponent:
+            !!this.breadcrumbsPath?.at(-1) &&
+            observer(() => {
+              const [data, setData] = useState<LibraryRecord>();
+              const id = this.breadcrumbsPath.at(-1);
+
+              useEffect(() => {
+                void (async () => {
+                  if (this.library?.identifier && id) {
+                    const result = await getLibraryRecord(this.library?.identifier, id);
+                    setData(result);
+                  }
+                })();
+              });
+
+              return <span>{data?.title}</span>;
+            })
         }
       ])
     ].map((item: XTableColumn<LibraryRecord>) => ({
@@ -213,7 +232,14 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
 
   @boundMethod
   private handleBreadcrumbsItemClick(path: number[]) {
-    this.tableInvoke.setFilter({ ...this.tablePageOptions?.filter, path: { $ilike: getPathFromIds(path) } });
+    const filter = { ...this.tablePageOptions?.filter };
+
+    if (path.length) {
+      filter.path = { $ilike: getPathFromIds(path) };
+    } else {
+      delete filter.path;
+    }
+    this.tableInvoke.setFilter(filter);
   }
 
   private renderActions({ rowData }: { rowData: LibraryRecord }): ReactElement {

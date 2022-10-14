@@ -42,7 +42,9 @@ export class Breadcrumbs<T> extends Component<BreadcrumbsProps<T>> {
 
   async componentDidMount() {
     await this.checkItemsFit();
-    this.resizeObserver.observe(this.container.current);
+    if (this.container.current) {
+      this.resizeObserver.observe(this.container.current);
+    }
   }
 
   async componentDidUpdate(prevProps: BreadcrumbsProps<T>) {

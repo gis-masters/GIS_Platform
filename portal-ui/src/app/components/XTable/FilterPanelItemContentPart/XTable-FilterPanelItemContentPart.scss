@@ -1,0 +1,9 @@
+.XTable-FilterPanelItemContentPart {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  &_value {
+    flex-shrink: 0;
+  }
+}

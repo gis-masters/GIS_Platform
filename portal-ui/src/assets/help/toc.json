@@ -118,13 +118,7 @@
         "id": "substrate",
         "title": "Картографическая подоснова",
         "contentUrl": "/assets/help/map/dataManagement/03substrate.html"
-      }
-    ]
-  },
-  {
-    "id": "data-management",
-    "title": "Библиотека документов",
-    "children": [
+      },
       {
         "id": "libraryDocs",
         "title": "Библиотека документов",
@@ -138,7 +132,7 @@
       {
         "id": "registry",
         "title": "Реестр документов",
-        "contentUrl": "/assets/help/map/dataManagement/05registry.html"
+        "contentUrl": "/assets/help/registry/05registry.html"
       },
       {
         "id": "placement_project",
@@ -159,6 +153,17 @@
         "id": "00gmlImport(ENU_NED)",
         "title": "Размещение gml файлов в проект",
         "contentUrl": "/assets/help/map/dataManagement/09gmlImport(ENU_NED).html"
+      }
+    ]
+  },
+  {
+    "id": "registry",
+    "title": "Реестр документов",
+    "children": [
+      {
+        "id": "registry",
+        "title": "Реестр документов",
+        "contentUrl": "/assets/help/registry/05registry.html"
       }
     ]
   },

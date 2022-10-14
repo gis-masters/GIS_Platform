@@ -14,6 +14,7 @@ import { ExplorerActions } from '../Actions/Explorer-Actions';
 import '!style-loader!css-loader!sass-loader!./Explorer-Info.scss';
 
 export const cnExplorerInfo = cn('Explorer', 'Info');
+export const cnExplorerWidgets = cn('Explorer', 'Widgets');
 
 export interface ExplorerInfoProps extends IClassNameProps {
   store: ExplorerStore;
@@ -27,7 +28,7 @@ export const ExplorerInfo: FC<ExplorerInfoProps> = observer(({ className, store 
       <ExplorerInfoContent>
         <ExplorerInfoTitle>{getTitle(selectedItem)}</ExplorerInfoTitle>
         {getDescription(selectedItem)}
-        <ExplorerWidgets item={selectedItem} type={selectedItem.type} />
+        <ExplorerWidgets className={cnExplorerWidgets()} item={selectedItem} type={selectedItem.type} />
       </ExplorerInfoContent>
       <ExplorerActions store={store} />
     </Card>

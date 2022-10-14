@@ -4,6 +4,8 @@ import { IClassNameProps } from '@bem-react/core';
 
 import { ExplorerItemData, ExplorerItemType } from '../Explorer.models';
 
+import '!style-loader!css-loader!sass-loader!./Explorer-Widgets.scss';
+
 export const cnExplorerWidgets = cn('Explorer', 'Widgets');
 
 export interface ExplorerWidgetsProps extends IClassNameProps {
