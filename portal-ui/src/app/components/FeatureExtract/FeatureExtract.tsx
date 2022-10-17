@@ -5,6 +5,7 @@ import { Dialog, DialogActions, DialogContent, IconButton, Tooltip } from '@mui/
 import { NoteAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { AxiosError } from 'axios';
 
 import { currentProject } from '../../stores/CurrentProject.store';
 import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
@@ -20,6 +21,7 @@ import { Role } from '../../services/data/permissions.models';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
 import { FormDialog } from '../FormDialog/FormDialog';
+import { Toast } from '../Toast/Toast';
 
 import { FeatureExtractMapSelector } from './MapSelector/FeatureExtract-MapSelector';
 
@@ -49,7 +51,15 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
 
   async componentDidMount() {
     const { layer } = this.props;
-    this.setLibrary(await getLibrary(libraryIdentifier));
+    try {
+      this.setLibrary(await getLibrary(libraryIdentifier));
+    } catch (error) {
+      const err = error as AxiosError<{ message?: string }>;
+      Toast.error({
+        message: `Ошибка доступа к библиотеке документов ${libraryIdentifier}. [${err.message}]`,
+        details: err.response.data?.message
+      });
+    }
     const featureSchema = await schemaService.getOldSchema(layer.schemaId);
     this.setFields(convertProperties(featureSchema.properties));
 
