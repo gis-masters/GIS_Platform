@@ -107,7 +107,7 @@ public class QueryBuilder {
             resultCondition.addCondition(mapToCondition(bboxFilter));
         }
 
-        if (ecqlFilter != null) {
+        if (ecqlFilter != null && !ecqlFilter.isBlank()) {
             resultCondition.addCondition(new CustomCondition(buildWhereSection(ecqlFilter).replace("WHERE", "")));
         }
 

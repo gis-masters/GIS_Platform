@@ -6,6 +6,9 @@ import ru.mycrg.data_service.exceptions.ErrorInfo;
 
 import java.util.List;
 
+import static org.springframework.util.StringUtils.isEmpty;
+import static ru.mycrg.data_service.util.EcqlParser.parse;
+
 public class ActualStyleRequestModelValidator {
 
     public static final String COMMON_MSG = "Argument validation exception";
@@ -36,6 +39,12 @@ public class ActualStyleRequestModelValidator {
             if (style.getRules().isEmpty()) {
                 throw new BadRequestException(COMMON_MSG,
                                               new ErrorInfo("rules", "Должно присутствовать хотя бы одно правило"));
+            }
+
+            String ecqlFilter = style.getEcqlFilter();
+            if (!isEmpty(ecqlFilter) && parse(ecqlFilter).isEmpty()) {
+                throw new BadRequestException(COMMON_MSG,
+                                              new ErrorInfo("ecqlFilter", "Задан некорректный ECQL filter"));
             }
         });
     }

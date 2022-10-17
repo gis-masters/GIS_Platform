@@ -38,15 +38,15 @@ public class StylesService {
         this.tableService = tableService;
     }
 
-    public List<ActualStylesResponseModel> defineActualStyles(List<ActualStylesRequestModel> request,
-                                                              String ecqlFilter) {
+    public List<ActualStylesResponseModel> defineActualStyles(List<ActualStylesRequestModel> request) {
         return request.stream()
-                      .map(requestModel -> defineActualStyle(requestModel, ecqlFilter))
+                      .map(this::defineActualStyle)
                       .collect(Collectors.toList());
     }
 
-    public ActualStylesResponseModel defineActualStyle(ActualStylesRequestModel requestModel, String ecqlFilter) {
+    public ActualStylesResponseModel defineActualStyle(ActualStylesRequestModel requestModel) {
         ActualStylesResponseModel response = new ActualStylesResponseModel(requestModel);
+        String ecqlFilter = requestModel.getEcqlFilter();
         String tableName = requestModel.getIdentifier();
         ResourceQualifier tQualifier = new ResourceQualifier(requestModel.getDataset(), tableName);
 

@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.util;
 
-import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
 import org.opengis.filter.Filter;
 import org.slf4j.Logger;
@@ -19,7 +18,7 @@ public class EcqlParser {
     public static Optional<Filter> parse(String ecqlFilter) {
         try {
             return Optional.ofNullable(ECQL.toFilter(ecqlFilter));
-        } catch (CQLException e) {
+        } catch (Exception e) {
             log.warn("Задан некорректный ECQL фильтр: [{}]", ecqlFilter);
 
             return Optional.empty();

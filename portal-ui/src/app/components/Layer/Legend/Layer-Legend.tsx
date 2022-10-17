@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, observable, makeObservable, IReactionDisposer, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { LinearProgress } from '@mui/material';
+import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { cloneDeep } from 'lodash';
 
 import {
   filterLegendForCurrentMapView,
   getLayerStyleRules,
   StyleRule
 } from '../../../services/geoserver/styles.service';
+import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { CrgVectorLayer } from '../../../services/gis/projects.models';
 import { mapService } from '../../../services/map/map.service';
 import { Emitter } from '../../../services/common/Emitter';
@@ -29,6 +32,7 @@ export class LayerLegend extends Component<LayerLegendProps> {
   @observable private legend?: StyleRule[] = [];
   @observable private filteredLegend?: StyleRule[];
   @observable private filterEnabled = true;
+  private pagedDataReactionDisposer: IReactionDisposer;
   private legendRequestId?: symbol;
 
   constructor(props: LayerLegendProps) {
@@ -44,9 +48,20 @@ export class LayerLegend extends Component<LayerLegendProps> {
     mapService.mapMoved.on(async () => {
       await this.filterLegend();
     }, this);
+
+    this.pagedDataReactionDisposer = reaction(
+      () => [cloneDeep(attributesTableStore.filter), cloneDeep(attributesTableStore.filterDisabled)],
+      () => {
+        void this.filterLegend();
+      },
+      {
+        fireImmediately: true
+      }
+    );
   }
 
   componentWillUnmount() {
+    this.pagedDataReactionDisposer();
     Emitter.scopeOff(this);
   }
 
@@ -69,6 +84,7 @@ export class LayerLegend extends Component<LayerLegendProps> {
     );
   }
 
+  @boundMethod
   private async filterLegend() {
     const { layer } = this.props;
 

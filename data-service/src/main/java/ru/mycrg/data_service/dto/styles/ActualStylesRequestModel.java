@@ -6,6 +6,7 @@ import java.util.List;
 public class ActualStylesRequestModel extends ActualStylesModel {
 
     private SpatialRuleFilter filter;
+    private String ecqlFilter;
     private List<StyleRule> rules = new ArrayList<>();
 
     public ActualStylesRequestModel() {
@@ -28,11 +29,20 @@ public class ActualStylesRequestModel extends ActualStylesModel {
         this.filter = filter;
     }
 
+    public String getEcqlFilter() {
+        return ecqlFilter;
+    }
+
+    public void setEcqlFilter(String ecqlFilter) {
+        this.ecqlFilter = ecqlFilter;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "\"dataset\": \"" + dataset + "\"," +
                 "\"identifier\": \"" + identifier + "\"," +
+                "\"ecqlFilter\":" + (ecqlFilter == null ? "null" : "\"" + ecqlFilter + "\"") + ", " +
                 "\"rules\": " + rules + "\"," +
                 "\"filter\": " + filter +
                 '}';

@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.dto.styles.ActualStylesRequestModel;
 import ru.mycrg.data_service.dto.styles.ActualStylesResponseModel;
@@ -30,13 +29,12 @@ public class StylesController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/styles/actual")
-    public ResponseEntity<Object> getActualStyles(@RequestBody List<ActualStylesRequestModel> styles,
-                                                  @RequestParam(name = "filter", required = false) String ecqlFilter) {
-        log.debug("getActualStyles: '{}'. By filter: '{}'", styles, ecqlFilter);
+    public ResponseEntity<Object> getActualStyles(@RequestBody List<ActualStylesRequestModel> styles) {
+        log.debug("getActualStyles: '{}'", styles);
 
         throwIfNotValid(styles);
 
-        List<ActualStylesResponseModel> response = stylesService.defineActualStyles(styles, ecqlFilter);
+        List<ActualStylesResponseModel> response = stylesService.defineActualStyles(styles);
 
         return ResponseEntity.ok().body(response);
     }
