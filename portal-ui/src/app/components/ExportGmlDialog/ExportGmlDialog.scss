@@ -3,10 +3,6 @@ body .ExportGmlDialog {
     padding: 16px 24px 0;
   }
 
-  &-Content {
-    width: 600px;
-  }
-
   &-Total {
     position: absolute;
     top: 20px;
@@ -19,6 +15,14 @@ body .ExportGmlDialog {
 
   &-Form {
     padding: 15px 0;
+  }
+
+  &-EpsgSelector {
+    max-width: 220px;
+
+    & .MuiInput-root {
+      margin-top: 10px;
+    }
   }
 
   &-SchemaSelector {

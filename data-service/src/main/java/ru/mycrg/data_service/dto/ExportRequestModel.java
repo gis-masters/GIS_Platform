@@ -21,6 +21,11 @@ public class ExportRequestModel {
     @NotEmpty
     private List<ExportResourceModel> resources = new ArrayList<>();
 
+    @NotBlank
+    private String epsg;
+
+    private boolean invertedCoordinates;
+
     public String getWsUiId() {
         return wsUiId;
     }
@@ -51,5 +56,21 @@ public class ExportRequestModel {
 
     public void setDocSchema(String docSchema) {
         this.docSchema = docSchema;
+    }
+
+    public String getEpsg() {
+        return epsg;
+    }
+
+    public void setEpsg(String epsg) {
+        this.epsg = epsg;
+    }
+
+    public boolean isInvertedCoordinates() {
+        return invertedCoordinates;
+    }
+
+    public void setInvertedCoordinates(boolean invertedCoordinates) {
+        this.invertedCoordinates = invertedCoordinates;
     }
 }

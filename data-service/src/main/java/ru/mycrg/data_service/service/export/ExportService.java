@@ -16,6 +16,7 @@ import ru.mycrg.data_service_contract.queue.response.ExportResponseEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
 import static ru.mycrg.data_service_contract.enums.ProcessType.EXPORT;
 
@@ -53,6 +54,8 @@ public class ExportService {
         ExportProcessModel payload = new ExportProcessModel();
         payload.setFormat(request.getFormat());
         payload.setDocSchema(request.getDocSchema());
+        payload.setEpsg(extractCrsNumber(request.getEpsg()));
+        payload.setInvertedCoordinates(request.isInvertedCoordinates());
 
         request.getResources().forEach(resourceModel -> {
             schemaService.getSchemaByName(resourceModel.getSchemaId()).ifPresent(schema -> {

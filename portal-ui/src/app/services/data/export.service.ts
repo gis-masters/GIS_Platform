@@ -4,9 +4,12 @@ import { http } from '../http.service';
 import { wsService } from '../ws.service';
 import { getExportUrl } from '../server-urls.service';
 
+// data-service/src/main/java/ru/mycrg/data_service/dto/ExportRequestModel.java
 export interface ExportRequest {
   resources: ExportResourceModel[];
   format: 'GML' | 'ESRI Shapefile';
+  epsg: string;
+  invertedCoordinates?: boolean;
   wsUiId?: string;
   docSchema?: string;
 }
@@ -28,18 +31,26 @@ class ExportService {
     const payload: ExportRequest = {
       wsUiId: wsService.getId(),
       format: 'ESRI Shapefile',
-      resources: resources
+      resources: resources,
+      epsg: 'EPSG:28406'
     };
 
     return this.export(payload);
   }
 
-  async exportAsGML(docSchema: string, resources: ExportResourceModel[]): Promise<Process> {
+  async exportAsGML(
+    docSchema: string,
+    resources: ExportResourceModel[],
+    epsg: string,
+    invertedCoordinates: boolean
+  ): Promise<Process> {
     const payload: ExportRequest = {
       wsUiId: wsService.getId(),
       format: 'GML',
       resources: resources,
-      docSchema: docSchema
+      docSchema: docSchema,
+      epsg,
+      invertedCoordinates
     };
 
     return this.export(payload);

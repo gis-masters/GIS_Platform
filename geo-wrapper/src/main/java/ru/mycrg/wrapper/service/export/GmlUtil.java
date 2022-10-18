@@ -22,21 +22,20 @@ public class GmlUtil {
     }
 
     @NotNull
-    static String convertToString(@NotNull Coordinate[] coordinates) {
+    public static String convertToString(@NotNull Coordinate[] coordinates, boolean invert) {
         StringBuilder result = new StringBuilder();
         for (Coordinate coordinate: coordinates) {
-            result
-                    .append(trimCoordinate(coordinate.x))
-                    .append(",")
-                    .append(trimCoordinate(coordinate.y))
-                    .append(" ");
+            result.append(trimCoordinate(invert ? coordinate.y : coordinate.x))
+                  .append(",")
+                  .append(trimCoordinate(invert ? coordinate.x : coordinate.y))
+                  .append(" ");
         }
 
         return result.toString().trim();
     }
-    // Исправляем конвертацию BigDecimal -> "0E-8"
 
-    static String getString(Object value) {
+    // Исправляем конвертацию BigDecimal -> "0E-8"
+    public static String getString(Object value) {
         if (value instanceof BigDecimal) {
             return ((BigDecimal) value).toPlainString();
         }
@@ -45,7 +44,7 @@ public class GmlUtil {
     }
 
     @NotNull
-    static String getDefaultValue(SimplePropertyDto property) {
+    public static String getDefaultValue(SimplePropertyDto property) {
         if (property.getValueType() == ValueType.INT || property.getValueType() == ValueType.CHOICE) {
             return "0";
         }

@@ -10,13 +10,14 @@ import { isEqual } from 'lodash';
 import { SortParams } from '../../services/util/sortObjects';
 import { defaultRowIdGetter, XTable, XTableColumn } from '../XTable/XTable';
 import { ButtonProps } from '../Button/Button';
+import { PageOptions } from '../../services/models';
 
 import { ChooseXTableCheck } from './Check/ChooseXTable-Check';
 import { ChooseXTableTitle } from './Title/ChooseXTable-Title';
 
 const cnChooseXTable = cn('ChooseXTable');
 
-interface ChooseXTableProps<T> extends IClassNameProps {
+interface ChooseXTableBaseProps<T> extends IClassNameProps {
   title?: string;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   data: T[];
@@ -30,6 +31,16 @@ interface ChooseXTableProps<T> extends IClassNameProps {
   filterable?: boolean;
   onSelect(items: T[]): void;
 }
+
+interface ChooseXTableSyncProps<T> extends ChooseXTableBaseProps<T> {
+  data: T[];
+}
+
+interface ChooseXTableAsyncProps<T> extends ChooseXTableBaseProps<T> {
+  getData(pageOptions: PageOptions): Promise<[T[], number]>;
+}
+
+export type ChooseXTableProps<T> = ChooseXTableSyncProps<T> | ChooseXTableAsyncProps<T>;
 
 @observer
 export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
@@ -54,6 +65,7 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
 
   render() {
     const { title, data, defaultSort, secondarySortField, single, filterable, className } = this.props;
+    const { getData } = this.props as ChooseXTableAsyncProps<T>;
 
     return (
       <XTable<T>
@@ -65,6 +77,7 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
         secondarySortField={secondarySortField}
         onFilter={this.setViewed}
         filterable={filterable}
+        getData={getData}
       />
     );
   }

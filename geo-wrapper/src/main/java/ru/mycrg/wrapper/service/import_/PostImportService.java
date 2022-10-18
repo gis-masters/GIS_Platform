@@ -58,7 +58,7 @@ public class PostImportService extends AbstractImportChainItem {
             while (true) {
                 // Выбираем
                 List<Map<String, Object>> batch = baseDaoService.fetchBatch(
-                        jdbcTemplate, resProjection, PRIMARY_KEY, DaoProperties.BATCH_SIZE, offset);
+                        jdbcTemplate, resProjection, PRIMARY_KEY, DaoProperties.BATCH_SIZE, offset, 28406);
                 if (batch.isEmpty()) {
                     break;
                 }

@@ -89,6 +89,7 @@ public class GmlGenerator implements IExporter {
         path = saveXml(documentHolder.getGmlDocument(), randomFileName + ".gml");
 
         log.debug("Done gml generation");
+
         return path;
     }
 
@@ -100,20 +101,20 @@ public class GmlGenerator implements IExporter {
      * @return Обертка содержащая основной файл и лог файл.
      */
     @NotNull
-    public GmlDocumentHolder createDomDocuments(ExportRequestEvent event) {
+    private GmlDocumentHolder createDomDocuments(ExportRequestEvent event) {
         try {
-            ExportProcessModel request = event.getPayload();
+            ExportProcessModel payload = event.getPayload();
 
-            GmlDocumentHolder docHolder = createXmlDocument(request.getDocSchema());
+            GmlDocumentHolder docHolder = createXmlDocument(payload.getDocSchema());
 
             ExportResponseEvent mqResponse = new ExportResponseEvent(event, PENDING, "Инициализация", 2);
             messageBus.produce(mqResponse);
 
-            log.debug("Handle {} sources", request.getResourceProjections().size());
+            log.debug("Handle {} sources", payload.getResourceProjections().size());
 
             processedRows = 0;
-            totalRows = calculateTotalRows(request);
-            request.getResourceProjections()
+            totalRows = calculateTotalRows(payload);
+            payload.getResourceProjections()
                    .forEach(resource -> handleResource(event, docHolder, resource));
 
             return docHolder;
@@ -134,13 +135,15 @@ public class GmlGenerator implements IExporter {
         log.debug("Handle source: {}", resource);
 
         try {
+            ExportProcessModel payload = event.getPayload();
+
             SchemaDto schema = resource.getSchema();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
 
             int offset = 0;
             while (true) {
                 List<Map<String, Object>> batch = baseDaoService.fetchBatch(jdbcTemplate, resource, PRIMARY_KEY,
-                                                                            BATCH_SIZE, offset);
+                                                                            BATCH_SIZE, offset, payload.getEpsg());
                 if (batch.isEmpty()) {
                     break;
                 }
@@ -162,7 +165,7 @@ public class GmlGenerator implements IExporter {
                         try {
                             geometry = wkb.read((byte[]) crgBGeometry);
 
-                            generateGeometry(geometry, docHolder.getGmlDocument(), featureMember, resource.getCrs());
+                            generateGeometry(geometry, docHolder.getGmlDocument(), featureMember, payload);
                         } catch (ParseException e) {
                             log.warn("Ошибка при попытке распарсить геометрию. {}", e.getLocalizedMessage());
                         }
@@ -237,12 +240,16 @@ public class GmlGenerator implements IExporter {
         });
     }
 
-    private void generateGeometry(Geometry geometry, Document document, Element featureMember, String crsTable) {
+    private void generateGeometry(Geometry geometry,
+                                  Document document,
+                                  Element featureMember,
+                                  ExportProcessModel payload) {
         String geometryType = geometry.getGeometryType();
 
         final String geometrySRSName = "srsName";
-        final String geometrySRSValue = "urn:ogc:def:crs:" + crsTable;
+        final String geometrySRSValue = "urn:ogc:def:crs:EPSG:" + payload.getEpsg();
         final String gmlCoordinates = "gml:coordinates";
+        boolean invertedCoordinates = payload.isInvertedCoordinates();
 
         if ("Point".equals(geometryType)) {
             Element geometryElement = document.createElement("gml:Point");
@@ -251,7 +258,7 @@ public class GmlGenerator implements IExporter {
             featureMember.appendChild(geometryElement);
 
             Element coordinate = document.createElement(gmlCoordinates);
-            coordinate.setTextContent(convertToString(geometry.getCoordinates()));
+            coordinate.setTextContent(convertToString(geometry.getCoordinates(), invertedCoordinates));
             geometryElement.appendChild(coordinate);
         } else if ("MultiLineString".equals(geometryType)) {
             Element geometryElement = document.createElement("gml:LineString");
@@ -260,7 +267,7 @@ public class GmlGenerator implements IExporter {
             featureMember.appendChild(geometryElement);
 
             Element coordinate = document.createElement(gmlCoordinates);
-            coordinate.setTextContent(convertToString(geometry.getCoordinates()));
+            coordinate.setTextContent(convertToString(geometry.getCoordinates(), invertedCoordinates));
             geometryElement.appendChild(coordinate);
         } else if ("MultiPolygon".equals(geometryType)) {
             Element geometryElement = document.createElement("gml:Polygon");
@@ -278,7 +285,7 @@ public class GmlGenerator implements IExporter {
                 exterior.appendChild(linearRing);
 
                 Element coordinate = document.createElement(gmlCoordinates);
-                coordinate.setTextContent(convertToString(exteriorRing.getCoordinates()));
+                coordinate.setTextContent(convertToString(exteriorRing.getCoordinates(), invertedCoordinates));
                 linearRing.appendChild(coordinate);
             }
 
@@ -294,7 +301,7 @@ public class GmlGenerator implements IExporter {
                     interior.appendChild(linearRing);
 
                     Element coordinate = document.createElement(gmlCoordinates);
-                    coordinate.setTextContent(convertToString(hole.getCoordinates()));
+                    coordinate.setTextContent(convertToString(hole.getCoordinates(), invertedCoordinates));
                     linearRing.appendChild(coordinate);
                 }
             }
@@ -334,7 +341,7 @@ public class GmlGenerator implements IExporter {
      *                  <li> Doc.20201010000 – Положение о территориальном планировании поселения
      *                  <li> Doc.20301010000 – Положение о территориальном планировании городского округа.<ul>
      *
-     * @return Обьект содержащий document и все ключевые ноды.
+     * @return Объект содержащий document и все ключевые ноды.
      */
     private GmlDocumentHolder createXmlDocument(String docSchema) throws ParserConfigurationException {
         log.debug("create xml document");

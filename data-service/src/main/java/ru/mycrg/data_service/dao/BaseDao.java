@@ -34,8 +34,7 @@ public class BaseDao {
     public <T> Optional<T> findByFilter(ResourceQualifier tQualifier, String ecqlFilter, Class<T> clazz) {
         try {
             String query = String.format("SELECT * FROM %s %s",
-                                         tQualifier.getTableQualifier(),
-                                         buildWhereSection(ecqlFilter));
+                                         tQualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
             log.debug("Find by filter: [{}]", query);
 
             T obj = pJdbcTemplate.getJdbcTemplate()
@@ -49,7 +48,7 @@ public class BaseDao {
         }
     }
 
-    public <T> List<T> findAll(ResourceQualifier tableQualifier,
+    public <T> List<T> findAll(ResourceQualifier qualifier,
                                String ecqlFilter,
                                Pageable pageable,
                                Class<T> clazz) {
@@ -57,7 +56,7 @@ public class BaseDao {
                 .addValue("offset", pageable.getOffset())
                 .addValue("limit", pageable.getPageSize());
 
-        String query = "SELECT * FROM " + tableQualifier +
+        String query = "SELECT * FROM " + qualifier.getTableQualifier() +
                 "  " + buildWhereSection(ecqlFilter) +
                 "  " + buildOrderBySection(pageable.getSort()) +
                 "  LIMIT :limit OFFSET :offset";
@@ -67,8 +66,9 @@ public class BaseDao {
         return pJdbcTemplate.query(query, params, new BeanPropertyRowMapper<>(clazz));
     }
 
-    public Long getTotal(ResourceQualifier tableQualifier, String ecqlFilter) {
-        String query = String.format("SELECT count(*) FROM %s %s", tableQualifier, buildWhereSection(ecqlFilter));
+    public Long getTotal(ResourceQualifier qualifier, String ecqlFilter) {
+        String query = String.format("SELECT count(*) FROM %s %s",
+                                     qualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
 
         log.debug("Request find total by path: [{}]", query);
 

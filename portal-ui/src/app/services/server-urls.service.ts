@@ -146,6 +146,10 @@ export async function getExportUrl(): Promise<string> {
   return (await getDataUrl()) + '/export';
 }
 
+export async function getEpsgUrl(): Promise<string> {
+  return (await getDataUrl()) + '/epsg';
+}
+
 export async function getExportValidationResultUrl(): Promise<string> {
   return (await getDataUrl()) + '/export/validation_results';
 }

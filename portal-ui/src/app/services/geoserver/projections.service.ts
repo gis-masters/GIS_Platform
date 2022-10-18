@@ -21,6 +21,13 @@ import { getLayerByFeatureInCurrentProject } from '../gis/layers.service';
 import { isCoordinateValid, normalizeCoordinates } from './wfs.util';
 import { Extent } from 'ol/extent';
 
+export interface Projection {
+  identifier: string;
+  authName: string;
+  authSrid: number;
+  proj4Text: string;
+}
+
 export interface CrgProjection {
   id: string;
   title: string;

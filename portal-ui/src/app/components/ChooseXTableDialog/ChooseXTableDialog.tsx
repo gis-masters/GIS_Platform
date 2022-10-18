@@ -8,6 +8,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { XTableColumn } from '../XTable/XTable';
+import { PageOptions } from '../../services/models';
 import { Button, ButtonProps } from '../Button/Button';
 import { ChooseXTable } from '../ChooseXTable/ChooseXTable';
 import { SortParams } from '../../services/util/sortObjects';
@@ -19,7 +20,7 @@ import '!style-loader!css-loader!sass-loader!./Table/ChooseXTableDialog-Table.sc
 
 const cnChooseXTableDialog = cn('ChooseXTableDialog');
 
-export interface ChooseXTableDialogProps<T> extends IClassNameProps {
+export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   title: string;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   open: boolean;
@@ -35,6 +36,16 @@ export interface ChooseXTableDialogProps<T> extends IClassNameProps {
   onClose(): void;
   onSelect(items: T[]): void;
 }
+
+interface ChooseXTableDialogSyncProps<T> extends ChooseXTableDialogBaseProps<T> {
+  data: T[];
+}
+
+interface ChooseXTableDialogAsyncProps<T> extends ChooseXTableDialogBaseProps<T> {
+  getData(pageOptions: PageOptions): Promise<[T[], number]>;
+}
+
+export type ChooseXTableDialogProps<T> = ChooseXTableDialogAsyncProps<T> | ChooseXTableDialogSyncProps<T>;
 
 @observer
 export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>> {
@@ -59,7 +70,8 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
       selectedItems,
       cols,
       getRowId
-    } = this.props;
+    } = this.props as ChooseXTableDialogSyncProps<T>;
+    const { getData } = this.props as ChooseXTableDialogAsyncProps<T>;
 
     return (
       <Dialog PaperProps={{ className: cnChooseXTableDialog(null, [className]) }} open={open} onClose={this.close}>
@@ -76,6 +88,7 @@ export class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>>
             selectedItems={selectedItems}
             onSelect={this.select}
             getRowId={getRowId}
+            getData={getData}
           />
         </DialogContent>
         <DialogActions>

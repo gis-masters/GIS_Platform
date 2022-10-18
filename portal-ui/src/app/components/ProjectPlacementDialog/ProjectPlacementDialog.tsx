@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 import { AxiosError } from 'axios';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { action, observable, makeObservable } from 'mobx';
-import { ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 
 import { Toast } from '../Toast/Toast';
 import { services } from '../../services/services';
 import { sidebars } from '../../stores/Sidebars.store';
 import { isDxfFile } from '../../services/data/files.util';
 import { FileInfo } from '../../services/data/files.service';
-import { CoordinateAxesXY } from '../Icons/CoordinateAxesXY';
-import { CoordinateAxesYX } from '../Icons/CoordinateAxesYX';
 import { CrgProject } from '../../services/gis/projects.models';
+import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { SelectProjection } from '../SelectProjection/SelectProjection';
 import { placeDxf, placeGml } from '../../services/data/file-placement.service';
 import { defaultProjection } from '../../services/geoserver/projections.service';
@@ -57,33 +56,16 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
               onChange={this.onProjectionSelected}
             />
           ) : (
-            <Tooltip title='В GML файле могут содержаться координаты в разных системах. Если в результате импорта ориентация и расположение импортированных объектов на карте отличаются от ожидаемых — попробуйте разместить GML файл заново, выбрав другой режим с помощью этого переключателя.'>
-              <ToggleButtonGroup
-                size='small'
-                value={this.invertedCoordinates ? 'xy' : 'yx'}
-                exclusive
-                onChange={this.handleCoordinatesInversionSwitcherChange}
-              >
-                <ToggleButton value='xy'>
-                  <Tooltip title='X — восток, Y — север (ENU)' placement='left'>
-                    <span>
-                      <CoordinateAxesXY fontSize='small' />
-                    </span>
-                  </Tooltip>
-                </ToggleButton>
-                <ToggleButton value='yx'>
-                  <Tooltip title='X — север, Y — восток (NED)' placement='right'>
-                    <span>
-                      <CoordinateAxesYX fontSize='small' />
-                    </span>
-                  </Tooltip>
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </Tooltip>
+            <CoordinateAxes onSelect={this.handleSelect} invertedCoordinates={this.invertedCoordinates} />
           )
         }
       />
     );
+  }
+
+  @boundMethod
+  private handleSelect(inverted: boolean) {
+    this.invertedCoordinates = inverted;
   }
 
   @action.bound
@@ -129,10 +111,5 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
     } finally {
       this.setFormBusy(false);
     }
-  }
-
-  @action.bound
-  private handleCoordinatesInversionSwitcherChange(e: React.MouseEvent<HTMLElement, MouseEvent>, value: string) {
-    this.invertedCoordinates = value === 'xy';
   }
 }

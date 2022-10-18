@@ -161,13 +161,14 @@ public class BaseDaoService {
      * @param source       Данные ресурса из которого производится выборка
      * @param limit        Размер партии
      * @param offset       Смещение
+     * @param epsg         Код EPSG
      */
     @Transactional
     public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate, ResourceProjection source, String orderField,
-                                                int limit, int offset) {
-        String sqlRequest = format("SELECT ST_AsBinary(shape) as " +
-                                           "crg_b_geometry, * FROM %s.%s ORDER BY %s LIMIT ? OFFSET ?",
-                                   source.getSchemaName(), source.getTableName(), orderField);
+                                                int limit, int offset, int epsg) {
+        String sqlRequest = format("SELECT st_asBinary(st_transform(shape, %d)) as crg_b_geometry, * " +
+                                           "FROM %s.%s ORDER BY %s LIMIT ? OFFSET ?",
+                                   epsg, source.getSchemaName(), source.getTableName(), orderField);
 
         log.trace("Fetch sql: {}", sqlRequest);
 

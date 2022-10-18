@@ -7,6 +7,8 @@ public class ExportProcessModel {
 
     private String docSchema = "Doc.20301010000";
     private String format;
+    private Integer epsg;
+    private boolean invertedCoordinates;
     private List<ResourceProjection> resourceProjections = new ArrayList<>();
 
     public String getDocSchema() {
@@ -35,5 +37,21 @@ public class ExportProcessModel {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public Integer getEpsg() {
+        return epsg;
+    }
+
+    public void setEpsg(Integer epsg) {
+        this.epsg = epsg;
+    }
+
+    public boolean isInvertedCoordinates() {
+        return invertedCoordinates;
+    }
+
+    public void setInvertedCoordinates(boolean invertedCoordinates) {
+        this.invertedCoordinates = invertedCoordinates;
     }
 }
