@@ -89,12 +89,13 @@ public class GmlImporter {
 
             importResult.setDatasetIdentifier(datasetIdentifier);
 
+            String defaultCrs = gmlParser.getDefaultCrs(file);
             List<SimpleFeatureData> features = gmlParser.parseFeatures(file);
             List<ImportLayerReport> importLayerReports = new ArrayList<>();
 
             getExistingSchemas(features, importLayerReports).forEach(schema -> {
                 Optional<String> oEpsg = getEpsg(features, schema);
-                if (oEpsg.isEmpty()) {
+                if (oEpsg.isEmpty() && isNull(defaultCrs)) {
                     ImportLayerReport importLayerReport = new ImportLayerReport();
                     importLayerReport.setSchemaId(schema.getName());
                     importLayerReport.setTableTitle(schema.getTableName());
@@ -106,18 +107,18 @@ public class GmlImporter {
 
                 FeatureData featureData;
                 try {
-                    featureData = gmlParser.parseAttributes(file, schema, invertedCoordinates);
+                    featureData = gmlParser.parseAttributes(file, schema, invertedCoordinates, defaultCrs);
                 } catch (Exception e) {
                     ImportLayerReport importLayerReport = new ImportLayerReport();
                     importLayerReport.setSchemaId(schema.getName());
                     importLayerReport.setTableTitle(schema.getTableName());
-                    importLayerReport.setReason("Не удалось выполнить импорт. Не удалось распарить атрибуты фичи");
+                    importLayerReport.setReason("Не удалось выполнить импорт. Не удалось распарсить атрибуты фичи");
                     importLayerReports.add(importLayerReport);
 
                     return;
                 }
-
-                ImportLayerReport importLayerReport = importLayer(featureData, oEpsg.get(), schema, datasetIdentifier);
+                String epsg = oEpsg.orElse(defaultCrs);
+                ImportLayerReport importLayerReport = importLayer(featureData, epsg, schema, datasetIdentifier);
 
                 importLayerReports.add(importLayerReport);
             });
