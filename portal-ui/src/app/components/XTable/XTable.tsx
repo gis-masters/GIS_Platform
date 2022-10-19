@@ -1,4 +1,4 @@
-import React, { Component, ComponentType, createRef, ReactElement, ReactNode, RefObject } from 'react';
+import React, { Component, ComponentType, createRef, ReactNode, RefObject } from 'react';
 import { action, computed, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Table, TableBody, TableCellProps, TableContainer, TableRow, Pagination, PaperProps } from '@mui/material';
@@ -48,7 +48,7 @@ export function defaultRowIdGetter<T extends { id?: string | number; identifier?
 }
 
 export interface XTableColumn<T> {
-  field?: keyof T;
+  field?: keyof T & string;
   title?: ReactNode;
   description?: ReactNode;
   filterable?: boolean;
@@ -62,17 +62,18 @@ export interface XTableColumn<T> {
   >;
   sortable?: boolean;
   CellContent?: ComponentType<{ rowData: T; field: keyof T; filterActive: boolean; filterParams: FilterQuery }>;
-  AfterCellContent?: <T>(p: {
+  AfterCellContent?: ComponentType<{
     rowData: T;
     col: XTableColumn<T>;
     filterActive: boolean;
     filterParams: FilterQuery;
-  }) => ReactElement;
+  }>;
   getIdBadge?: (rowData: T) => string | number;
   cellProps?: TableCellProps;
   headerCellProps?: TableCellProps;
   align?: TableCellProps['align'];
   hidden?: boolean;
+  width?: number;
 }
 
 interface XTablePropsBase<T> extends IClassNameProps {
@@ -264,7 +265,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
                 {this.cols.map((col, i) => (
                   <XTableHeadCell
                     col={col}
-                    width={this.colsSettings[col.field]?.width}
+                    width={this.colsSettings[col.field]?.width || col.width}
                     hidden={this.colsSettings[col.field]?.hidden}
                     key={`${i}_${String(col.field)}`}
                     sortParams={this.sortParams}
@@ -297,7 +298,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
                         filterActive={(filterable && this.filterActive) || filtersAlwaysEnabled}
                         filterQuery={this.filterQuery}
                         singleLineContent={singleLineContent}
-                        width={this.colsSettings[col.field]?.width}
+                        width={this.colsSettings[col.field]?.width || col.width}
                         hidden={this.colsSettings[col.field]?.hidden}
                         key={`${i}_${String(col.field)}`}
                         align={col.align || colsTypesAlign[col.type]}

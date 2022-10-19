@@ -1,6 +1,10 @@
 body .Link {
   &_variant_normal {
     color: var(--blue);
+
+    &:hover {
+      color: var(--red);
+    }
   }
 
   &-IconContainer {

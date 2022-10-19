@@ -4,7 +4,7 @@ import { HomeOutlined } from '@mui/icons-material';
 
 import { services } from '../../services/services';
 import { getLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
-import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
+import { BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { FilterQuery } from '../../services/util/filterObjects';
 import { Toast } from '../Toast/Toast';
 
@@ -25,7 +25,7 @@ export function getLibraryFolderExplorerUrl(libraryIdentifier: string, path: num
 
 export async function getLibraryRecordBreadcrumbs(
   item: LibraryRecord,
-  withCurrentItemFocus?: boolean
+  includeSelf?: boolean
 ): Promise<BreadcrumbsItemData[]> {
   const { libraryId, path, id, title, is_folder: isFolder } = item;
   const libraryRootPath = JSON.stringify([...libraryRootUrlItems, 'empty', 'empty']);
@@ -57,7 +57,7 @@ export async function getLibraryRecordBreadcrumbs(
     parentsInfo = parentsInfo.filter(Boolean);
 
     let pathWithoutCurrent: string;
-    const itemParentsBreadcrumbs = parentsInfo?.map((parent, index) => {
+    const itemParentsBreadcrumbs: BreadcrumbsItemData[] = parentsInfo?.map((parent, index) => {
       const folders: (string | number)[] = [];
       for (let i = 0; i < index + 1; i++) {
         folders.push('folder', parentsInfo[i].id);
@@ -65,7 +65,7 @@ export async function getLibraryRecordBreadcrumbs(
 
       const folderPath = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, ...folders, 'empty', 'empty']);
 
-      if (withCurrentItemFocus) {
+      if (includeSelf) {
         pathWithoutCurrent = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, ...folders, ...currentItem]);
       }
 
@@ -75,9 +75,9 @@ export async function getLibraryRecordBreadcrumbs(
       };
     });
 
-    if (withCurrentItemFocus) {
+    if (includeSelf) {
       itemParentsBreadcrumbs.push({
-        title,
+        title: <b>{title}</b>,
         url: `/data-management?path_dm=${
           pathWithoutCurrent ?? JSON.stringify([...libraryRootUrlItems, 'library', libraryId, ...currentItem])
         }`

@@ -2,8 +2,7 @@ import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { Breadcrumbs } from '../../Breadcrumbs/Breadcrumbs';
-import { BreadcrumbsItemData } from '../../Breadcrumbs/Item/Breadcrumbs-Item';
+import { Breadcrumbs, BreadcrumbsItemData } from '../../Breadcrumbs/Breadcrumbs';
 
 import { getTitle } from '../Adapter/Explorer-Adapter';
 import { ExplorerItemData } from '../Explorer.models';

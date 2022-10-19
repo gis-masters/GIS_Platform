@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent } from '@mui/material';
 import { FileOpenOutlined } from '@mui/icons-material';
-import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 
-import { CommonDiRegistry } from '../../../services/di-registry';
 import { LibraryRecord } from '../../../services/data/doc-library.service';
+import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -42,26 +40,7 @@ export class LibraryDocumentActionsOpen extends Component<LibraryDocumentActions
           onClick={this.openDialog}
         />
 
-        <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='xl'>
-          <RegistryConsumer id='common'>
-            {({ LibraryDocument, LibraryDocumentActions }: CommonDiRegistry) => (
-              <>
-                <DialogContent className='scroll'>
-                  <LibraryDocument document={document} contentOnly />
-                </DialogContent>
-                <DialogActions>
-                  <LibraryDocumentActions
-                    document={document}
-                    as='button'
-                    hideOpen
-                    forDialog
-                    onDialogClose={this.closeDialog}
-                  />
-                </DialogActions>
-              </>
-            )}
-          </RegistryConsumer>
-        </Dialog>
+        <LibraryDocumentDialog document={document} open={this.dialogOpen} onClose={this.closeDialog} />
       </>
     );
   }

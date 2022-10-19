@@ -4,7 +4,6 @@ body .LibraryDocument {
   gap: 15px;
 
   height: 100%;
-  padding: 20px 30px;
 
   &-DocumentCardForm {
     overflow: auto;
@@ -17,11 +16,8 @@ body .LibraryDocument {
     flex-shrink: 1;
   }
 
-  &-Title {
-    word-break: break-all;
-
-    font-size: 24px;
-    font-weight: 500;
+  &-Breadcrumbs {
+    margin-bottom: 10px;
   }
 
   &-DocumentCardTitle,
@@ -29,9 +25,5 @@ body .LibraryDocument {
     margin-right: 0.4em;
 
     color: var(--gray);
-  }
-
-  &-Actions {
-    justify-content: flex-end;
   }
 }

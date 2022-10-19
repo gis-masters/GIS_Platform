@@ -8,9 +8,8 @@ import { boundMethod } from 'autobind-decorator';
 import { Dataset, VectorTable } from '../../services/data/data.service';
 import { schemaService } from '../../services/data/schema.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
 import { FormControlProps } from '../Form/Control/Form-Control';
-import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
+import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
 

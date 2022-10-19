@@ -9,4 +9,10 @@
   color: var(--gray);
 
   font-size: calc(1.5rem * var(--BreadcrumbsSize));
+
+  &_edge {
+    justify-content: flex-start;
+
+    width: calc(30px * var(--BreadcrumbsSize));
+  }
 }

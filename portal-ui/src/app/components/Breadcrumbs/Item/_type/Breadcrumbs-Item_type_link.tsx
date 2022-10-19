@@ -7,7 +7,9 @@ import { observer } from 'mobx-react';
 
 import { Link } from '../../../Link/Link';
 
-import { BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item';
+import { BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item.base';
+
+import '!style-loader!css-loader!sass-loader!./Breadcrumbs-Item_type_link.scss';
 
 interface BreadcrumbsItemTypeLinkProps extends IClassNameProps {
   type: 'link';
@@ -28,20 +30,22 @@ class ContainerComponent extends Component<BreadcrumbsItemProps> {
 
     const inner = (
       <ButtonBase className={className} onMouseEnter={this.handleMouseEnter} style={style}>
-        {children}
+        <Link href={url} onClick={this.handleClick}>
+          {children}
+        </Link>
       </ButtonBase>
     );
 
     return (
-      <Link href={url} variant='contents' onClick={this.handleClick}>
+      <>
         {this.needTooltip ? (
-          <Tooltip title={title} placement='top'>
+          <Tooltip title={title} placement='top' disableInteractive>
             {inner}
           </Tooltip>
         ) : (
           inner
         )}
-      </Link>
+      </>
     );
   }
 

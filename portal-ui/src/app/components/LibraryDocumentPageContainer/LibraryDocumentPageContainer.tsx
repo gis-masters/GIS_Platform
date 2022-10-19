@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import { observable, action, makeObservable } from 'mobx';
+import { FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
+import { route } from '../../stores/Route.store';
+import { services } from '../../services/services';
 import { communicationService } from '../../services/communication.service';
+import { getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
+import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
-import { services } from '../../services/services';
-import { route } from '../../stores/Route.store';
+import { TextBadge } from '../TextBadge/TextBadge';
 import { Loading } from '../Loading/Loading';
 import { Link } from '../Link/Link';
+
+import '!style-loader!css-loader!sass-loader!./LibraryDocumentPageContainer.scss';
 
 const cnLibraryDocumentPageContainer = cn('LibraryDocumentPageContainer');
 
@@ -39,9 +44,26 @@ export class LibraryDocumentPageContainer extends Component {
   }
 
   render() {
+    const TypeIcon = this.document?.is_folder ? FolderOutlined : InsertDriveFileOutlined;
+
     return (
       <div className={cnLibraryDocumentPageContainer()}>
-        {!this.error && this.document && <LibraryDocument document={this.document} />}
+        {!this.error && this.document && (
+          <>
+            <h1 className={cnLibraryDocumentPageContainer('Title')}>
+              <TypeIcon color='primary' className={cnLibraryDocumentPageContainer('TypeIcon')} />
+              {this.document.title}
+              {this.document.id && <TextBadge id={this.document.id} className={cnLibraryDocumentPageContainer('Id')} />}
+            </h1>
+            <LibraryDocument document={this.document} />
+            <LibraryDocumentActions
+              className={cnLibraryDocumentPageContainer('Actions')}
+              document={this.document}
+              as='button'
+              hideOpen
+            />
+          </>
+        )}
 
         {this.error && (
           <EmptyListView text={this.error}>

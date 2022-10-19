@@ -41,9 +41,9 @@ import {
 import { ImportOutlined } from '../../Icons/ImportOutlined';
 import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
+import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 import { VectorTable, getVectorTable } from '../../../services/data/data.service';
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
-import { LibraryDocument } from '../../LibraryDocument/LibraryDocument';
 import { VectorTableCard } from '../../VectorTableCard/VectorTableCard';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
@@ -239,14 +239,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
         )}
 
         {this.rasterDocument && (
-          <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='md'>
-            <DialogContent>
-              <LibraryDocument document={this.rasterDocument} contentOnly />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.closeDialog}>Закрыть</Button>
-            </DialogActions>
-          </Dialog>
+          <LibraryDocumentDialog document={this.rasterDocument} open={this.dialogOpen} onClose={this.closeDialog} />
         )}
 
         {!isGroup && editMode && (

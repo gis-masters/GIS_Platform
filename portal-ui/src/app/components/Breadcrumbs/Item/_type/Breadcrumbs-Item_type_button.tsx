@@ -5,7 +5,8 @@ import { ButtonBase, Tooltip } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 
-import { BreadcrumbsItemData, BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item';
+import { BreadcrumbsItemData } from '../../Breadcrumbs';
+import { BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item.base';
 
 interface BreadcrumbsItemTypeButtonProps extends IClassNameProps {
   type: 'button';
@@ -31,7 +32,7 @@ class ContainerComponent extends Component<BreadcrumbsItemProps> {
     );
 
     return this.needTooltip ? (
-      <Tooltip title={title} placement='top'>
+      <Tooltip title={title} placement='top' disableInteractive>
         {inner}
       </Tooltip>
     ) : (

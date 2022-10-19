@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { HomeOutlined } from '@mui/icons-material';
+import { FolderOutlined, HomeOutlined, LocalLibraryOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
 import {
   getIdsFromPath,
-  getRegistryUrlWithFilter,
-  getRegistryUrlWithPath
+  getRegistryUrlWithPath,
+  getRegistryUrlWithFilter
 } from '../../DataManagement/DataManagement.utils';
 import { FilterQuery } from '../../../services/util/filterObjects';
 import { DocumentLibrary, getLibraryRecord, LibraryRecord } from '../../../services/data/doc-library.service';
-import { BreadcrumbsItemData } from '../../Breadcrumbs/Item/Breadcrumbs-Item';
-import { Breadcrumbs, BreadcrumbsProps } from '../../Breadcrumbs/Breadcrumbs';
+import { Breadcrumbs, BreadcrumbsProps, BreadcrumbsItemData } from '../../Breadcrumbs/Breadcrumbs';
+import { Library } from '../../Icons/Library';
 
 import '!style-loader!css-loader!sass-loader!./LibraryRegistry-Breadcrumbs.scss';
+import '!style-loader!css-loader!sass-loader!../BreadcrumbsIcon/LibraryRegistry-BreadcrumbsIcon.scss';
 
 const cnLibraryRegistryBreadcrumbs = cn('LibraryRegistry', 'Breadcrumbs');
+const cnLibraryRegistryBreadcrumbsIcon = cn('LibraryRegistry', 'BreadcrumbsIcon');
 
 interface LibraryRegistryBreadcrumbsProps {
   library: DocumentLibrary;
@@ -26,6 +28,7 @@ interface LibraryRegistryBreadcrumbsProps {
   fromHome?: boolean;
   size?: BreadcrumbsProps['size'];
   onItemClick(path: number[]): void;
+  menuButtonOnly?: boolean;
 }
 
 @observer
@@ -49,10 +52,16 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
   }
 
   render() {
-    const { size = 'medium' } = this.props;
+    const { size = 'medium', menuButtonOnly } = this.props;
 
     return (
-      <Breadcrumbs className={cnLibraryRegistryBreadcrumbs({ size })} items={this.items} itemsType='link' size={size} />
+      <Breadcrumbs
+        className={cnLibraryRegistryBreadcrumbs({ size, menuButtonOnly })}
+        items={this.items}
+        itemsType='link'
+        size={size}
+        menuButtonOnly={menuButtonOnly}
+      />
     );
   }
 
@@ -68,7 +77,12 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
       items.push(
         { title: <HomeOutlined />, url: '/data-management' },
         {
-          title: 'Библиотеки документов',
+          title: (
+            <>
+              <Library color='primary' fontSize='small' className={cnLibraryRegistryBreadcrumbsIcon()} />
+              Библиотеки документов
+            </>
+          ),
           url: `/data-management?path_dm=${libraryRootPath}`
         }
       );
@@ -79,7 +93,12 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
       delete filterWithoutPath.path;
       items.push(
         {
-          title: library.title,
+          title: (
+            <>
+              <LocalLibraryOutlined color='primary' fontSize='small' className={cnLibraryRegistryBreadcrumbsIcon()} />
+              {library.title}
+            </>
+          ),
           url: getRegistryUrlWithFilter(library.identifier, filterWithoutPath),
           onClick: onItemClick,
           payload: []
@@ -88,7 +107,12 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
           const pathIds = [...getIdsFromPath(path), id];
 
           return {
-            title,
+            title: (
+              <>
+                <FolderOutlined color='primary' fontSize='small' className={cnLibraryRegistryBreadcrumbsIcon()} />
+                {title}
+              </>
+            ),
             url: getRegistryUrlWithPath(library.identifier, pathIds, filterWithoutPath),
             onClick: onItemClick,
             payload: pathIds

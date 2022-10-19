@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, IconButton, Tooltip } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { NoteAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
@@ -18,8 +18,7 @@ import { getFeatureUrl } from '../../services/map/map-url.service';
 import { schemaService } from '../../services/data/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { Role } from '../../services/data/permissions.models';
-import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
-import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
+import { LibraryDocumentDialog } from '../LibraryDocumentDialog/LibraryDocumentDialog';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { Toast } from '../Toast/Toast';
 
@@ -93,21 +92,11 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
         />
 
         {this.document && (
-          <Dialog open={this.documentDialogOpen} onClose={this.closeDocumentDialog} fullWidth maxWidth='xl'>
-            <DialogContent>
-              <LibraryDocument document={this.document} contentOnly />
-            </DialogContent>
-            <DialogActions>
-              <LibraryDocumentActions
-                document={this.document}
-                as='button'
-                hideOpen
-                forDialog
-                onDialogClose={this.closeDocumentDialog}
-                onSave={this.setDocument}
-              />
-            </DialogActions>
-          </Dialog>
+          <LibraryDocumentDialog
+            document={this.document}
+            open={this.documentDialogOpen}
+            onClose={this.closeDocumentDialog}
+          />
         )}
       </>
     );

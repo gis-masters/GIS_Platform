@@ -181,7 +181,9 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
 
   @computed
   private get cols(): XTableColumn<LibraryRecord>[] {
-    return [
+    const pathProperty = this.schema.properties.find(({ name }) => name === 'path');
+    const pathHidden = !pathProperty || pathProperty.hidden;
+    const cols: XTableColumn<LibraryRecord>[] = [
       {
         CellContent: this.props.inDialog ? this.renderCheck : this.renderActions,
         align: 'center',
@@ -193,11 +195,11 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
           type: PropertyType.CUSTOM,
           CellContent: ({ rowData, filterParams }) => (
             <LibraryRegistryBreadcrumbs
-              filter={filterParams}
-              path={getIdsFromPath(rowData.path)}
-              library={this.library}
-              onItemClick={this.handleBreadcrumbsItemClick}
               size='small'
+              filter={filterParams}
+              library={this.library}
+              path={getIdsFromPath(rowData.path)}
+              onItemClick={this.handleBreadcrumbsItemClick}
             />
           ),
           CustomFilterPanelItemComponent:
@@ -216,13 +218,38 @@ export class LibraryRegistry extends Component<LibraryRegistryProps> {
               });
 
               return <span>{data?.title}</span>;
-            })
+            }),
+          width: 150
+        },
+        {
+          field: 'title',
+          AfterCellContent: pathHidden
+            ? ({ rowData, filterParams }) => (
+                <LibraryRegistryBreadcrumbs
+                  size='small'
+                  filter={filterParams}
+                  library={this.library}
+                  path={getIdsFromPath(rowData.path)}
+                  onItemClick={this.handleBreadcrumbsItemClick}
+                  menuButtonOnly
+                />
+              )
+            : undefined
         }
       ])
     ].map((item: XTableColumn<LibraryRecord>) => ({
       ...item,
       hidden: this.hiddenFields.includes(String(item.field)) || item.hidden
     }));
+
+    if (pathHidden) {
+      const pathColIndex = cols.findIndex(({ field }) => field === 'path');
+      if (pathColIndex !== -1) {
+        cols.splice(pathColIndex, 1);
+      }
+    }
+
+    return cols;
   }
 
   @computed

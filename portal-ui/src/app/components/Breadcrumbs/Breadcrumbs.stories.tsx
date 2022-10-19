@@ -4,8 +4,7 @@ import { AllInclusive, HomeOutlined, SvgIconComponent, WidthFull, WidthNormal, W
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { cn } from '@bem-react/classname';
 
-import { Breadcrumbs } from './Breadcrumbs';
-import { BreadcrumbsItemData } from './Item/Breadcrumbs-Item';
+import { Breadcrumbs, BreadcrumbsItemData } from './Breadcrumbs';
 
 import '!style-loader!css-loader!sass-loader!./Breadcrumbs.stories.scss';
 
@@ -20,24 +19,18 @@ const MIN = 80;
 const MAX = 1000;
 
 function minMax(value: number) {
-  if (value < MIN) {
-    return MIN;
-  } else if (value > MAX) {
-    return MAX;
-  }
-
-  return value;
+  return Math.max(Math.min(value, MAX), MIN);
 }
 
 const Template: ComponentStory<typeof Breadcrumbs> = props => {
   const [maxWidth, setMaxWidth] = useState(MAX);
   let Icon: SvgIconComponent = AllInclusive;
 
-  if (maxWidth < 200) {
+  if (maxWidth < MAX * 0.2) {
     Icon = WidthNormal;
-  } else if (maxWidth < 500) {
+  } else if (maxWidth < MAX * 0.5) {
     Icon = WidthWide;
-  } else if (maxWidth < 1000) {
+  } else if (maxWidth < MAX) {
     Icon = WidthFull;
   }
 
@@ -94,61 +87,42 @@ const Template: ComponentStory<typeof Breadcrumbs> = props => {
   );
 };
 
+const items: BreadcrumbsItemData[] = [
+  { title: <HomeOutlined fontSize='inherit' />, url: '/data-management' },
+  {
+    title: 'Библиотеки документов',
+    url: '#lib'
+  },
+  {
+    title: 'Кратко',
+    url: '#folder1'
+  },
+  {
+    title: 'Длинное название папки №444',
+    url: '#folder2'
+  },
+  {
+    title: 'Длинное название документа №8888',
+    url: '#doc'
+  }
+];
+
 export const Regular = Template.bind({});
 Regular.args = {
   itemsType: 'link',
-  items: breadcrumbsItems()
+  items
 };
 
 export const Small = Template.bind({});
 Small.args = {
   itemsType: 'link',
   size: 'small',
-  items: breadcrumbsItems()
+  items
 };
 
-function breadcrumbsItems(): BreadcrumbsItemData[] {
-  const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];
-  const libraryRootPath = JSON.stringify([...libraryRootUrlItems, 'empty', 'empty']);
-  const libraryPath = JSON.stringify([...libraryRootUrlItems, 'library', 'dl_default_3', 'empty', 'empty']);
-  const folderPath = JSON.stringify([
-    ...libraryRootUrlItems,
-    'library',
-    'dl_default',
-    'folder',
-    '444',
-    'empty',
-    'empty'
-  ]);
-  const docPath = JSON.stringify([
-    ...libraryRootUrlItems,
-    'library',
-    'dl_default',
-    'folder',
-    '444',
-    'doc',
-    '8888',
-    'empty',
-    'empty'
-  ]);
-
-  return [
-    { title: <HomeOutlined fontSize='inherit' />, url: '/data-management' },
-    {
-      title: 'Библиотеки документов',
-      url: `/data-management?path_dm=${libraryRootPath}`
-    },
-    {
-      title: 'Кратко',
-      url: `/data-management?path_dm=${libraryPath}`
-    },
-    {
-      title: 'Длинное название папки №444',
-      url: `/data-management?path_dm=${folderPath}`
-    },
-    {
-      title: 'Длинное название документа №8888',
-      url: `/data-management?path_dm=${docPath}`
-    }
-  ];
-}
+export const MenuButtonOnly = Template.bind({});
+MenuButtonOnly.args = {
+  itemsType: 'link',
+  menuButtonOnly: true,
+  items
+};

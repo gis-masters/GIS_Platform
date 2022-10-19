@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { AssignmentOutlined, FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
+import { AssignmentOutlined, FolderOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
-import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
-import { CommonDiRegistry } from '../../../services/di-registry';
 import { getLibraryRecord, LibraryRecord } from '../../../services/data/doc-library.service';
+import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
@@ -22,10 +20,7 @@ import { Toast } from '../../Toast/Toast';
 import { DocumentsName } from '../Name/Documents-Name';
 import { DocumentInfo } from '../Documents';
 
-import '!style-loader!css-loader!sass-loader!../Dialog/Documents-Dialog.scss';
-
 const cnDocumentsItem = cn('Documents', 'Item');
-const cnDocumentsDialog = cn('DocumentsDialog');
 
 interface DocumentsItemProps {
   item: DocumentInfo;
@@ -77,37 +72,7 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
         </LookupItem>
 
         {this.document && (
-          <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='xl'>
-            <DialogTitle className={cnDocumentsDialog('Title')}>
-              <div className={cnDocumentsDialog('TypeIcon')}>
-                {this.document?.is_folder ? (
-                  <FolderOutlined color='primary' />
-                ) : (
-                  <InsertDriveFileOutlined color='primary' />
-                )}
-              </div>
-              {this.document.title}
-            </DialogTitle>
-
-            <DialogContent>
-              <RegistryConsumer id='common'>
-                {({ LibraryDocument }: CommonDiRegistry) => <LibraryDocument document={this.document} contentOnly />}
-              </RegistryConsumer>
-            </DialogContent>
-            <DialogActions>
-              <RegistryConsumer id='common'>
-                {({ LibraryDocumentActions }: CommonDiRegistry) => (
-                  <LibraryDocumentActions
-                    document={this.document}
-                    as='button'
-                    hideOpen
-                    forDialog
-                    onDialogClose={this.closeDialog}
-                  />
-                )}
-              </RegistryConsumer>
-            </DialogActions>
-          </Dialog>
+          <LibraryDocumentDialog document={this.document} open={this.dialogOpen} onClose={this.closeDialog} />
         )}
 
         <Loading visible={this.loading} global noBackdrop />

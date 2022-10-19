@@ -5,14 +5,13 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-import { DocumentLibrary, LibraryRecord } from '../../services/data/doc-library.service';
+import { isTifFile } from '../../services/data/files.util';
+import { FileInfo } from '../../services/data/files.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { BreadcrumbsItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
+import { DocumentLibrary, LibraryRecord } from '../../services/data/doc-library.service';
+import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { Datasource } from '../AddLayerDialog/AddLayerDialog';
-import { FileInfo } from '../../services/data/files.service';
-import { isTifFile } from '../../services/data/files.util';
-import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
 

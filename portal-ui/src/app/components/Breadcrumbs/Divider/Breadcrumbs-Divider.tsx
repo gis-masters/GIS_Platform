@@ -1,13 +1,22 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { ChevronRight } from '@mui/icons-material';
+import { ChevronRight, ExpandMore } from '@mui/icons-material';
 
 import '!style-loader!css-loader!sass-loader!./Breadcrumbs-Divider.scss';
 
 const cnBreadcrumbsDivider = cn('Breadcrumbs', 'Divider');
 
-export const BreadcrumbsDivider: FC = () => (
-  <div className={cnBreadcrumbsDivider()}>
-    <ChevronRight fontSize='inherit' />
-  </div>
-);
+interface BreadcrumbsDividerProps {
+  down?: boolean;
+  edge?: boolean;
+}
+
+export const BreadcrumbsDivider: FC<BreadcrumbsDividerProps> = ({ down, edge }) => {
+  const Icon = down ? ExpandMore : ChevronRight;
+
+  return (
+    <div className={cnBreadcrumbsDivider({ edge })}>
+      <Icon fontSize='inherit' />
+    </div>
+  );
+};

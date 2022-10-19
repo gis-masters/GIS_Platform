@@ -48,22 +48,24 @@ export const XTableCell = observer((({
       {...(cellProps || {})}
       style={{ '--XTableCellWidth': width }}
     >
-      {CellContent ? (
-        <CellContent rowData={rowData} field={field} filterActive={filterActive} filterParams={filterQuery} />
-      ) : (
-        <XTableCellContent
-          singleLineContent={singleLineContent}
-          unspecifiedWidth={!width}
-          type={type}
-          col={col as XTableColumn<unknown>}
-          cellData={rowData[field]}
-        >
-          <Highlight word={filterQuery[field as string]} enabled={filterActive}>
-            {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
-          </Highlight>
-          {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}
-        </XTableCellContent>
-      )}
+      <XTableCellContent
+        singleLineContent={singleLineContent}
+        unspecifiedWidth={!width}
+        type={type}
+        col={col as XTableColumn<unknown>}
+        cellData={rowData[field]}
+      >
+        {CellContent ? (
+          <CellContent rowData={rowData} field={field} filterActive={filterActive} filterParams={filterQuery} />
+        ) : (
+          <>
+            <Highlight word={filterQuery[field as string]} enabled={filterActive}>
+              {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
+            </Highlight>
+            {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}
+          </>
+        )}
+      </XTableCellContent>
 
       {AfterCellContent && (
         <AfterCellContent rowData={rowData} filterActive={filterActive} filterParams={filterQuery} col={col} />

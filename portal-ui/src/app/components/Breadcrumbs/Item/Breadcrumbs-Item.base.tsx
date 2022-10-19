@@ -1,9 +1,8 @@
-import React, { Component, ComponentType, CSSProperties, ReactNode } from 'react';
+import React, { Component, ComponentType, CSSProperties } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { ChildrenProps } from '../../../services/models';
-
+import { BreadcrumbsItemData } from '../Breadcrumbs';
 import { BreadcrumbsItemTitle } from '../ItemTitle/Breadcrumbs-ItemTitle';
 import { BreadcrumbsNestingGap } from '../NestingGap/Breadcrumbs-NestingGap';
 import { BreadcrumbsItemSubtitle } from '../ItemSubtitle/Breadcrumbs-ItemSubtitle';
@@ -14,23 +13,12 @@ export const cnBreadcrumbsItem = cn('Breadcrumbs', 'Item');
 
 export type BreadcrumbsItemsType = 'button' | 'link' | 'none' | 'showMore';
 
-export interface BreadcrumbsItemData<T = unknown> extends ChildrenProps {
-  title?: ReactNode;
-  subtitle?: ReactNode;
-  url?: string;
-  showMoreList?: BreadcrumbsItemData<T>[];
-  nestingLevel?: number;
-  payload?: T;
-  style?: CSSProperties;
-  onClick?: (payload: T) => void;
-}
-
 export interface BreadcrumbsItemProps<T = unknown> extends BreadcrumbsItemData<T>, IClassNameProps {
   type: BreadcrumbsItemsType;
   ContainerComponent?: ComponentType<BreadcrumbsItemProps>;
 }
 
-export class BreadcrumbsItem<T> extends Component<BreadcrumbsItemProps<T>> {
+export class BreadcrumbsItemBase<T> extends Component<BreadcrumbsItemProps<T>> {
   render() {
     const { title, subtitle, nestingLevel, ContainerComponent, className, children } = this.props;
 

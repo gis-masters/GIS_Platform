@@ -17,8 +17,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { LoadingModule } from './components/loading/loading.module';
 
-import { FilterLayersPipe } from './pipes/filter-layers.pipe';
-
 import { AppComponent } from './pages/_app/app.component';
 
 import { ProjectsComponent } from './components/projects/projects.component';
@@ -41,8 +39,8 @@ import { AttributesComponent } from './components/attributes/attributes.componen
 import { ResizableBarDirective } from './directives/resizableBar.directive';
 import { PageTitleComponent } from './components/page-title/page-title.component';
 import { DataImportComponent } from './components/data-import/data-import.component';
-import { AtleastPipe } from './pipes/atleast.pipe';
 import { WorkspaceHeaderComponent } from './components/workspace-header/workspace-header.component';
+import { WorkspaceContentComponent } from './components/workspace-content/workspace-content.component';
 import { HomeComponent } from './components/home/home.component';
 import { MapComponent } from './components/map/map.component';
 import { ServicesProvider } from './components/services-provider/services-provider.component';
@@ -91,7 +89,6 @@ import { FeaturesSidebarTeaserComponent } from './components/features-sidebar-te
     BugsTableComponent,
     ReportSidebarComponent,
     ViolationsViewComponent,
-    FilterLayersPipe,
     EditBugObjectComponent,
     ErrorsBadgeComponent,
     InfoSidebarComponent,
@@ -106,8 +103,8 @@ import { FeaturesSidebarTeaserComponent } from './components/features-sidebar-te
     ResizableBarDirective,
     PageTitleComponent,
     DataImportComponent,
-    AtleastPipe,
     WorkspaceHeaderComponent,
+    WorkspaceContentComponent,
     HomeComponent,
     MapComponent,
     ServicesProvider,

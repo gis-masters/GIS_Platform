@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem } from '@mui/material';
+import { ListItemIcon, MenuItem } from '@mui/material';
 import { InsertDriveFile, NoteAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
-import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 
 import {
@@ -15,10 +14,10 @@ import {
 } from '../../../services/data/doc-library.service';
 import { sleep } from '../../../services/util/sleep';
 import { Schema } from '../../../services/data/schema.models';
-import { CommonDiRegistry } from '../../../services/di-registry';
 import { schemaService } from '../../../services/data/schema.service';
 import { applyContentType } from '../../../services/data/schema.utils';
 import { getDefaultValues } from '../../../services/formValidation.service';
+import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 import { FormDialog } from '../../FormDialog/FormDialog';
 
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -94,34 +93,11 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
         />
 
         {this.createdDocument && (
-          <Dialog
+          <LibraryDocumentDialog
+            document={this.createdDocument}
             open={this.createdDocumentDialogOpen}
             onClose={this.handleCreatedDocumentDialogClose}
-            fullWidth
-            maxWidth='xl'
-          >
-            <DialogTitle>{this.createdDocument.title}</DialogTitle>
-            <DialogContent>
-              <RegistryConsumer id='common'>
-                {({ LibraryDocument }: CommonDiRegistry) => (
-                  <LibraryDocument document={this.createdDocument} contentOnly />
-                )}
-              </RegistryConsumer>
-            </DialogContent>
-            <DialogActions>
-              <RegistryConsumer id='common'>
-                {({ LibraryDocumentActions }: CommonDiRegistry) => (
-                  <LibraryDocumentActions
-                    as='button'
-                    hideOpen
-                    document={this.createdDocument}
-                    forDialog
-                    onDialogClose={this.handleCreatedDocumentDialogClose}
-                  />
-                )}
-              </RegistryConsumer>
-            </DialogActions>
-          </Dialog>
+          />
         )}
       </>
     );
