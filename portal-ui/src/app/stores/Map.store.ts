@@ -199,6 +199,11 @@ class MapStore {
   private reset() {
     Object.assign(this, defaultValues);
   }
+
+  @computed
+  get limitReached(): boolean {
+    return this.selectedFeatures.length >= this.selectingFeaturesLimit;
+  }
 }
 
 export const mapStore = MapStore.instance;

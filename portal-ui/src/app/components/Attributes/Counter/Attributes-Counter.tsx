@@ -22,6 +22,11 @@ export const AttributesCounter: FC<AttributesCounterProps> = observer(({ layer, 
 
   return (
     <div className={cnAttributesCounter()}>
+      {mapStore.limitReached && (
+        <AttributesCounterItem color='error'>
+          Достигнут максимум выбираемых объектов: {mapStore.selectingFeaturesLimit}
+        </AttributesCounterItem>
+      )}
       {!!selectedCount && <AttributesCounterItem>выделено: {selectedCount}</AttributesCounterItem>}
       {featuresMatched !== featuresTotal && <AttributesCounterItem>найдено: {featuresMatched}</AttributesCounterItem>}
       {!!featuresTotal && <AttributesCounterItem>всего: {featuresTotal}</AttributesCounterItem>}

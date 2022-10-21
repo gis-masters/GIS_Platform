@@ -34,7 +34,11 @@ export class AttributesCheck extends Component<AttributesCheckProps> {
   @boundMethod
   private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { feature } = this.props;
-    const selectionType = checked ? MapSelectionTypes.ADD : MapSelectionTypes.REMOVE;
-    mapSelectionService.selectFeatures([feature], selectionType);
+    if (mapStore.limitReached) {
+      mapSelectionService.selectFeatures([feature], !checked && MapSelectionTypes.REMOVE);
+    } else {
+      const selectionType = checked ? MapSelectionTypes.ADD : MapSelectionTypes.REMOVE;
+      mapSelectionService.selectFeatures([feature], selectionType);
+    }
   }
 }

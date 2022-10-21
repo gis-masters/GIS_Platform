@@ -85,7 +85,10 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
 
   private async testSelectionAllness() {
     const { featuresMatched } = this.props;
-    if (featuresMatched !== this.selectedFeatures.length) {
+    if (
+      mapStore.selectingFeaturesLimit !== this.selectedFeatures.length &&
+      featuresMatched !== this.selectedFeatures.length
+    ) {
       this.setSelectionAllness(false);
 
       return;
