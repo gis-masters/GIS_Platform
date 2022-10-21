@@ -200,7 +200,7 @@
             ></crg-form-description>
           </div>
           <div class="col-6 px-0">
-            <div class="input-group" *ngIf="updatingAllowed">
+            <div class="input-group" *ngIf="isReadOnly(editFeatureItem.property)">
               <input class="form-control" type="date" formControlName="{{ editFeatureItem.name }}" />
               <span class="input-group-text error-badge" *ngIf="editFeatureForm.controls[editFeatureItem.name].errors">
                 <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
@@ -217,7 +217,9 @@
               </div>
             </div>
 
-            <div *ngIf="!updatingAllowed" class="read-value">{{ getDateTime(editFeatureItem.value) }}</div>
+            <div *ngIf="!isReadOnly(editFeatureItem.property)" class="read-value">
+              {{ getDateTime(editFeatureItem.value) }}
+            </div>
           </div>
         </div>
 
@@ -236,7 +238,8 @@
             ></crg-form-description>
           </div>
           <div class="col-6 px-0">
-            <div class="input-group" *ngIf="updatingAllowed">
+            <div class="input-group" *ngIf="isReadOnly(editFeatureItem.property)">
+              111
               <input class="form-control" type="number" formControlName="{{ editFeatureItem.name }}" />
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
                 <span class="input-group-text error-badge">
@@ -255,7 +258,7 @@
               </div>
             </div>
 
-            <div *ngIf="!updatingAllowed" class="read-value">{{ editFeatureItem.value }}</div>
+            <div *ngIf="!isReadOnly(editFeatureItem.property)" class="read-value">11{{ editFeatureItem.value }}</div>
           </div>
         </div>
 
@@ -274,7 +277,7 @@
             ></crg-form-description>
           </div>
           <div class="col-6 px-0">
-            <div class="input-group" *ngIf="updatingAllowed">
+            <div class="input-group" *ngIf="isReadOnly(editFeatureItem.property)">
               <input class="form-control" type="number" formControlName="{{ editFeatureItem.name }}" />
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
                 <span class="input-group-text error-badge">
@@ -293,7 +296,7 @@
               </div>
             </div>
 
-            <div *ngIf="!updatingAllowed" class="read-value">{{ editFeatureItem.value }}</div>
+            <div *ngIf="!isReadOnly(editFeatureItem.property)" class="read-value">{{ editFeatureItem.value }}</div>
           </div>
         </div>
 
@@ -306,7 +309,7 @@
             ></crg-form-description>
           </div>
           <div class="col-6 px-0">
-            <div class="input-group" *ngIf="updatingAllowed">
+            <div class="input-group" *ngIf="isReadOnly(editFeatureItem.property)">
               <select class="custom-select" formControlName="{{ editFeatureItem.name }}">
                 <option [value]=""></option>
                 <option *ngFor="let enumOption of editFeatureItem.property.enumerations" [value]="enumOption.value">
@@ -330,10 +333,8 @@
               </div>
             </div>
 
-            <div *ngIf="!updatingAllowed" class="read-value">
-              
+            <div *ngIf="!isReadOnly(editFeatureItem.property)" class="read-value">
               {{ getEnumerationTitle(editFeatureItem.property.enumerations, editFeatureItem.value) }}
-            
             </div>
           </div>
         </div>

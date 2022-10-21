@@ -439,4 +439,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     communicationService.featuresUpdated.emit();
   }
+
+  isReadOnly(property: OldPropertySchema): boolean {
+    if (this.updatingAllowed) {
+      return !property.readOnly;
+    }
+
+    return this.updatingAllowed;
+  }
 }

@@ -65,12 +65,16 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
 
   private renderReactElement() {
     const [convertedProperty] = convertProperties([this.property]);
-
     let value = this.value;
     if (typeof this.value === 'string' && convertedProperty.propertyType === PropertyType.FILE) {
       value = JSON.parse(this.value);
     }
-    const updatingAllowed = this.updatingAllowed && !convertedProperty.readOnly;
+
+    let updatingAllowed = this.updatingAllowed;
+
+    if (updatingAllowed) {
+      updatingAllowed = !convertedProperty.readOnly;
+    }
 
     const reactElement = createElement(
       (updatingAllowed ? FormControlWithRegistry : FormViewWithRegistry) as ComponentType<FormControlProps>,
