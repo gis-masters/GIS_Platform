@@ -66,6 +66,15 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                             schemaId);
     }
 
+    @When("Существует таблица по схеме {string}")
+    public void initTable(String schemaName) {
+        createTablesRequest((schemaName + "_" + generateString("STRING_5")),
+                            "Искусственные дорожные сооружения",
+                            "some description",
+                            "EPSG:28406",
+                            schemaName);
+    }
+
     @When("Существует другая таблица")
     public void initAnotherTable() {
         anotherTableName = generateString("STRING_5");
@@ -102,9 +111,22 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                             schemaId);
     }
 
-    @When("Пользователь создает запрос на создание новой таблицы")
-    public void createNewTable() {
+    @When("Пользователь делает запрос на создание новой таблицы")
+    public void createNewTableAsUser() {
+        authorizationBase.loginAsCurrentUser();
         initTable();
+    }
+
+    @When("Администратор делает запрос на создание новой таблицы")
+    public void createNewTableAsAdmin() {
+        authorizationBase.loginAsOwner();
+        initTable();
+    }
+
+    @When("Администратор делает запрос на создание новой таблицы по схеме, не имеющей поле для геометрии")
+    public void createNewTableWithoutGeometryAsAdmin() {
+        authorizationBase.loginAsOwner();
+        initTable("dl_default_schema");
     }
 
     @When("Пользователь делает запрос на удаление текущей таблицы")
@@ -147,6 +169,13 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         String message = response.jsonPath().get("message");
 
         assertEquals("Таблица, в которую производится копирование, доступна только для чтения.", message);
+    }
+
+    @And("Тело ответа содержит ошибку о том что таблица не может быть создана, т.к. отсутствует поле для геометрии")
+    public void checkErrorMessageContainsErrorThatGeometryFieldIsMissing() {
+        String message = response.jsonPath().get("message");
+
+        assertTrue(message.contains("Причина: отсутствует поле для геометрии"));
     }
 
     @When("Пользователь делает запрос на обновление информации о текущей таблице")
