@@ -22,12 +22,14 @@ import { PageOptions } from '../../services/models';
 import { LayersList } from '../LayersList/LayersList';
 import { sidebars } from '../../stores/Sidebars.store';
 import { getKnownEpsg } from '../../services/data/epsg.service';
+import { PropertyType } from '../../services/data/schema.models';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgVectorLayer } from '../../services/gis/projects.models';
 import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
+import { XTableNumberFilter } from '../XTable/NumberFilter/XTable-NumberFilter';
 import { ExportResourceModel, exportService } from '../../services/data/export.service';
 import { CrgProjection, Projection, viewedProjections } from '../../services/geoserver/projections.service';
 
@@ -86,6 +88,10 @@ interface ExportGmlDialogProps {
   onClose: () => void;
 }
 
+interface ProjectionModified extends Projection {
+  auth_srid: number;
+}
+
 @observer
 export class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   @observable private projectionDialogOpen = false;
@@ -97,12 +103,18 @@ export class ExportGmlDialog extends Component<ExportGmlDialogProps> {
 
   private readonly addMoreId = 'addMore';
 
-  private cols: XTableColumn<Projection>[] = [
+  private cols: XTableColumn<ProjectionModified>[] = [
     {
-      field: 'identifier',
-      title: 'SRID',
-      filterable: false,
-      sortable: false
+      field: 'authName',
+      title: 'Тип SRID'
+    },
+    {
+      field: 'auth_srid',
+      title: 'Код SRID',
+      type: PropertyType.INT,
+      CustomFilterComponent: XTableNumberFilter,
+      filterable: true,
+      sortable: true
     }
   ];
 
@@ -177,12 +189,13 @@ export class ExportGmlDialog extends Component<ExportGmlDialogProps> {
           </DialogActions>
         </Dialog>
 
-        <ChooseXTableDialog<Projection>
+        <ChooseXTableDialog<ProjectionModified>
           data={[]}
           getData={this.getProjections}
           title={'Выбор системы координат'}
           open={this.projectionDialogOpen}
           cols={this.cols}
+          getRowId={this.getRowId}
           onClose={this.closeProjectionDialog}
           onSelect={this.selectProjectionFromDialog}
           single
@@ -241,9 +254,11 @@ export class ExportGmlDialog extends Component<ExportGmlDialogProps> {
 
   @action.bound
   private selectProjectionFromDialog(proj: Projection[]) {
+    const id = [proj[0].authName, proj[0].authSrid].join(':');
+
     this.unshiftProjection({
-      id: proj[0].identifier,
-      title: proj[0].identifier
+      id,
+      title: id
     });
 
     this.selectedCrs = this.projections[0].id;
@@ -289,7 +304,18 @@ export class ExportGmlDialog extends Component<ExportGmlDialogProps> {
     this.projections = projections;
   }
 
-  private async getProjections(pageOptions: PageOptions): Promise<[Projection[], number]> {
-    return await getKnownEpsg(pageOptions);
+  private async getProjections(pageOptions: PageOptions): Promise<[ProjectionModified[], number]> {
+    const [projections, totalPages] = await getKnownEpsg(pageOptions);
+
+    const modifiedProjections: ProjectionModified[] = projections.map(proj => ({
+      ...proj,
+      auth_srid: proj.authSrid
+    }));
+
+    return [modifiedProjections, totalPages];
+  }
+
+  private getRowId(rowData: Projection) {
+    return rowData.authName + String(rowData.authSrid);
   }
 }

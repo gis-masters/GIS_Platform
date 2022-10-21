@@ -65,7 +65,7 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
 
   render() {
     const { title, data, defaultSort, secondarySortField, single, filterable, className } = this.props;
-    const { getData } = this.props as ChooseXTableAsyncProps<T>;
+    const { getData, getRowId } = this.props as ChooseXTableAsyncProps<T>;
 
     return (
       <XTable<T>
@@ -77,6 +77,7 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
         secondarySortField={secondarySortField}
         onFilter={this.setViewed}
         filterable={filterable}
+        getRowId={getRowId}
         getData={getData}
       />
     );
