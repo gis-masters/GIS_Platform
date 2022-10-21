@@ -4,6 +4,23 @@ import { PageableResponse, PageOptions } from '../models';
 import { preparePageOptions } from '../http.utils';
 import { Basemap } from './basemaps.models';
 import { http } from '../http.service';
+import { PropertyType, Schema } from './schema.models';
+
+export const basemapEditSchema: Schema<Basemap> = {
+  properties: [
+    {
+      name: 'pluggableToNewProject',
+      title: 'Включить в новый проект',
+      description: 'Подложки по умолчанию включенные в новый проект',
+      propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'position',
+      title: 'Позиция',
+      propertyType: PropertyType.INT
+    }
+  ]
+};
 
 export async function getBasemaps(pageOptions: PageOptions): Promise<[Basemap[], number]> {
   const params = preparePageOptions(pageOptions);
@@ -30,4 +47,8 @@ export async function getBasemap(basemapId: string): Promise<Basemap> {
 export async function deleteBasemap(basemapId: number): Promise<void> {
   await http.delete(await getBasemapUrl(basemapId));
   communicationService.basemapsUpdated.emit();
+}
+
+export async function updateBasemap(basemap: Basemap, payload: Partial<Basemap>): Promise<void> {
+  await http.patch(await getBasemapUrl(basemap.id), payload);
 }

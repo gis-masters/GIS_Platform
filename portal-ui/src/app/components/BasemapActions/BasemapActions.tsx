@@ -5,6 +5,7 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { Basemap } from '../../services/data/basemaps.models';
 
 import { BasemapActionsDelete } from './Delete/BasemapActions-Delete';
+import { BasemapActionsEdit } from './Edit/BasemapActions-Edit';
 
 const cnBasemapActions = cn('BasemapActions');
 
@@ -13,5 +14,8 @@ interface BasemapActionsProps {
 }
 
 export const BasemapActions: FC<BasemapActionsProps> = ({ basemap }) => (
-  <div className={cnBasemapActions()}>{currentUser.isAdmin && <BasemapActionsDelete basemap={basemap} />}</div>
+  <div className={cnBasemapActions()}>
+    {currentUser.isAdmin && <BasemapActionsEdit as='iconButton' basemap={basemap} />}
+    {currentUser.isAdmin && <BasemapActionsDelete basemap={basemap} />}
+  </div>
 );

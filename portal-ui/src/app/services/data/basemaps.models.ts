@@ -23,4 +23,6 @@ export interface Basemap {
   size?: number;
   resolution?: number;
   matrixIds?: number;
+
+  pluggableToNewProject?: boolean;
 }
