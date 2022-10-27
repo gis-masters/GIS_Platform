@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
@@ -17,11 +18,16 @@ interface PermissionsEditDialogRoleSelectProps {
 
 @observer
 export class PermissionsEditDialogRoleSelect extends Component<PermissionsEditDialogRoleSelectProps> {
+  constructor(props: PermissionsEditDialogRoleSelectProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     return (
       <Select
         className={cnPermissionsEditDialogRoleSelect()}
-        value={this.getPrincipalRole()}
+        value={this.getPrincipalRole}
         onChange={this.changeHandler}
         variant='standard'
       >
@@ -34,7 +40,8 @@ export class PermissionsEditDialogRoleSelect extends Component<PermissionsEditDi
     );
   }
 
-  private getPrincipalRole(): Role {
+  @computed
+  private get getPrincipalRole(): Role {
     const { principalId, principalType, currentPermissions } = this.props;
 
     return currentPermissions.reduce((role: Role, permission: RoleAssignmentBody) => {
