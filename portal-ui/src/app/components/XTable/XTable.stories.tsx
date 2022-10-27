@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { PropertyOption, PropertyType } from '../../services/data/schema.models';
@@ -7,7 +7,7 @@ import { filterObjects } from '../../services/util/filterObjects';
 import { PageOptions, SortOrder } from '../../services/models';
 import { sleep } from '../../services/util/sleep';
 
-import { XTable, XTableColumn } from './XTable';
+import { XTable, XTableColumn, XTableProps } from './XTable';
 
 import '!style-loader!css-loader!sass-loader!./XTable.stories.scss';
 
@@ -307,7 +307,7 @@ const cols: XTableColumn<TestData>[] = [
 
 const defaultSort: SortParams<TestData> = { field: 'title', asc: true };
 
-class XTableForTestData extends XTable<TestData> {}
+type XTableForTestData = (p: XTableProps<TestData>) => ReactElement;
 
 async function getData({
   page,
@@ -325,7 +325,7 @@ async function getData({
   return [paged, Math.ceil(filtered.length / pageSize)];
 }
 
-export const Small = Template.bind({}) as ComponentStory<typeof XTableForTestData>;
+export const Small = Template.bind({}) as ComponentStory<XTableForTestData>;
 Small.args = {
   title: 'Таблица маленькая',
   data: smallData,
@@ -334,7 +334,7 @@ Small.args = {
   secondarySortField: 'id'
 };
 
-export const Standard = Template.bind({}) as ComponentStory<typeof XTableForTestData>;
+export const Standard = Template.bind({}) as ComponentStory<XTableForTestData>;
 Standard.args = {
   title: 'Таблица с локальными данными',
   data,
@@ -344,7 +344,7 @@ Standard.args = {
   filterable: true
 };
 
-export const Async = Template.bind({}) as ComponentStory<typeof XTableForTestData>;
+export const Async = Template.bind({}) as ComponentStory<XTableForTestData>;
 Async.args = {
   title: 'Таблица с данными с сервера',
   getData,
@@ -355,9 +355,9 @@ Async.args = {
   filtersAlwaysEnabled: true
 };
 
-export const FilterPanel = Template.bind({}) as ComponentStory<typeof XTableForTestData>;
+export const FilterPanel = Template.bind({}) as ComponentStory<XTableForTestData>;
 FilterPanel.args = {
-  getData,
+  data,
   cols,
   defaultSort,
   showFiltersPanel: true,
@@ -366,7 +366,7 @@ FilterPanel.args = {
   filtersAlwaysEnabled: true
 };
 
-export const Compact = Template.bind({}) as ComponentStory<typeof XTableForTestData>;
+export const Compact = Template.bind({}) as ComponentStory<XTableForTestData>;
 Compact.args = {
   title: 'Компактная таблица с локальными данными',
   data,

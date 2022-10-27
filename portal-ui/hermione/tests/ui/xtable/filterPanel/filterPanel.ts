@@ -92,21 +92,18 @@ describe('XTable', () => {
       const xTableFilterPanel = new XTableFilterPanel(this.browser);
 
       await xTableFilterPanel.setStringFieldValue('бу');
-      const stringValue = await xTableFilterPanel.getFirstFilterValue();
-      assert.equal('%бу%', stringValue);
-
       await xTableFilterPanel.setBoolFieldValue(true);
 
       const boolValue = await xTableFilterPanel.getSecondFilterValue();
       assert.equal('да', boolValue);
 
-      await xTableFilterPanel.clearFilter();
+      await xTableFilterPanel.clearFirstFilter();
 
       const remainingValue = await xTableFilterPanel.getFirstFilterValue();
       assert.equal('да', remainingValue);
 
-      const tableFilterValue = xTableFilterPanel.getFirstColValues();
-      assert.isEmpty(tableFilterValue, 'Не пустое, хотя должно быть');
+      const tableFilterValue = await xTableFilterPanel.getFirstColValues();
+      assert.deepEqual(tableFilterValue, ['Дыба'], 'Не правильная работа фильтра');
     });
 
     /**

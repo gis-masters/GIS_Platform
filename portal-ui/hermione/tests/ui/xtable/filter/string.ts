@@ -1,9 +1,9 @@
 import { TestDefinition } from 'hermione';
+import { assert } from 'chai';
 
 import { BLPage } from '../../../../objects/pages/BL.page';
 import { XTable } from '../../../../objects/blocks/XTable/XTable';
 import { XTableFilterTypeString } from '../../../../objects/blocks/XTable/filter/XTableFilter_type_string';
-import { assert } from 'chai';
 
 interface TestDefinitionWithOnly extends TestDefinition {
   only: TestDefinition;

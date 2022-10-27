@@ -32,6 +32,7 @@ describe('Управление данными', () => {
     it('Внешний вид', async function () {
       const explorer = new Explorer(this.browser);
       await explorer.waitForVisible();
+      await this.browser.pause(500);
       await explorer.assertSelfie();
     });
 
@@ -132,6 +133,7 @@ describe('Управление данными', () => {
       const etalonTitle = 'Краснополянское сельское поселение';
 
       await explorer.waitForVisible();
+      await this.browser.pause(500);
       await dataManagementPage.navigate(notCorrectUrl);
       await this.browser.pause(1000);
 

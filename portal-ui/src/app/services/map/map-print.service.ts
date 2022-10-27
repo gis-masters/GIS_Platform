@@ -1,7 +1,6 @@
 import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import domToImage from 'dom-to-image';
-import { jsPDF } from 'jspdf';
 import { getPointResolution } from 'ol/proj';
 
 import { printSettings, StyleRuleExtended } from '../../stores/PrintSettings.store';
@@ -26,6 +25,8 @@ export enum ImageMime {
 
 export async function printMap(directly: boolean): Promise<Blob> {
   const { pageWidth, pageHeight, pageFormat, orientation, margin } = printSettings;
+
+  const { default: jsPDF } = await import('jspdf');
 
   const pdf = new jsPDF(orientation, undefined, pageFormat.id);
 
@@ -275,7 +276,7 @@ async function drawDate(mapContext: CanvasRenderingContext2D, designationsResize
   });
 }
 
-export async function getDateImageSrc(resolution?: number): Promise<string> {
+async function getDateImageSrc(resolution?: number): Promise<string> {
   const el = document.createElement('div');
   document.body.append(el);
   const root = createRoot(el);
@@ -351,7 +352,7 @@ async function drawLegend(mapContext: CanvasRenderingContext2D): Promise<void> {
   });
 }
 
-export async function getLegendImageSrc(resolution?: number): Promise<string> {
+async function getLegendImageSrc(resolution?: number): Promise<string> {
   const el = document.createElement('div');
   document.body.append(el);
   const root = createRoot(el);
@@ -375,8 +376,6 @@ let lastFilteredLegendRequestId: symbol;
 async function autoFilterLegend() {
   const filteredLegendRequestId = Symbol();
   lastFilteredLegendRequestId = filteredLegendRequestId;
-
-  // await Promise.all(printSettings.layers.map(layer => getLayerStyleRules(layer)));
 
   try {
     const filteredLegendResponse = await filterLegendForCurrentMapView(printSettings.layers);

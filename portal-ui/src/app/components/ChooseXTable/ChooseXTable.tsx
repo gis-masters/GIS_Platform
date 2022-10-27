@@ -7,10 +7,11 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
-import { SortParams } from '../../services/util/sortObjects';
-import { defaultRowIdGetter, XTable, XTableColumn } from '../XTable/XTable';
-import { ButtonProps } from '../Button/Button';
 import { PageOptions } from '../../services/models';
+import { defaultRowIdGetter } from '../XTable/XTable.utils';
+import { SortParams } from '../../services/util/sortObjects';
+import { XTable, XTableColumn } from '../XTable/XTable';
+import { ButtonProps } from '../Button/Button';
 
 import { ChooseXTableCheck } from './Check/ChooseXTable-Check';
 import { ChooseXTableTitle } from './Title/ChooseXTable-Title';

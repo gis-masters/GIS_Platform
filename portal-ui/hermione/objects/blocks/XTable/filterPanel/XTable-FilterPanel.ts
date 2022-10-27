@@ -39,7 +39,7 @@ export class XTableFilterPanel extends Block {
   async setStringFieldValue(value: string): Promise<void> {
     const $input = await this.getElement('inputTypeString');
     await $input.setValue(value);
-    await this.browser.pause(1000); // loader
+    await this.browser.pause(200);
   }
 
   async setFloatFieldValue(value1: number, value2: number): Promise<void> {
@@ -80,20 +80,16 @@ export class XTableFilterPanel extends Block {
     await this.browser.pause(400); // button animation
   }
 
-  async clearFilter(): Promise<void> {
+  async clearFirstFilter(): Promise<void> {
     const $clear = await this.getElement('firstFilterChipClear');
-
-    await this.browser.pause(800); // loader
     $clear.click();
-    await this.browser.pause(800); // loader
+    await this.browser.pause(200);
   }
 
   async clearAllFilter(): Promise<void> {
     const $clear = await this.getElement('allFiltersChipClear');
-
-    await this.browser.pause(800); // loader
     $clear.click();
-    await this.browser.pause(800); // loader
+    await this.browser.pause(200);
   }
 
   async getFilterTitle(): Promise<string> {

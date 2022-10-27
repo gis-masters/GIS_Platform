@@ -1,46 +1,11 @@
-import React, { Component } from 'react';
-import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { CircularProgress, List, ListItemButton, ListItemText } from '@mui/material';
-import { ErrorOutlined, DoneOutlined } from '@mui/icons-material';
+import React, { FC, lazy, Suspense } from 'react';
 
-import { FilesPlacementReportStore } from '../FilesPlacementDialog/FilesPlacementDialog.store';
+import { FilesPlacementDialogReportProps } from './FilesPlacementDialogReport.async';
 
-import '!style-loader!css-loader!sass-loader!./FilesPlacementDialogReport.scss';
-import '!style-loader!css-loader!sass-loader!./List/FilesPlacementDialogReport-List.scss';
+const FilesPlacementDialogReportAsync = lazy(() => import('./FilesPlacementDialogReport.async'));
 
-const cnFilesPlacementDialogReport = cn('FilesPlacementDialogReport');
-
-interface FilesPlacementDialogReportProps {
-  store: FilesPlacementReportStore;
-}
-
-@observer
-export class FilesPlacementDialogReport extends Component<FilesPlacementDialogReportProps> {
-  render() {
-    const { store } = this.props;
-
-    const tasks = store.tasks;
-
-    return (
-      <div className={cnFilesPlacementDialogReport()}>
-        <List className={cnFilesPlacementDialogReport('List')} dense>
-          {tasks.map(task => (
-            <ListItemButton
-              className={cnFilesPlacementDialogReport('ListItem')}
-              key={task.id}
-              selected={task.inProgress}
-            >
-              <ListItemText primary={task.title} secondary={task.description ? task.description : null} />
-              <>
-                {task.status === 'PENDING' && <CircularProgress size={16} />}
-                {task.status === 'DONE' && <DoneOutlined color='success' />}
-                {task.status === 'ERROR' && <ErrorOutlined color='warning' />}
-              </>
-            </ListItemButton>
-          ))}
-        </List>
-      </div>
-    );
-  }
-}
+export const FilesPlacementDialogReport: FC<FilesPlacementDialogReportProps> = props => (
+  <Suspense>
+    <FilesPlacementDialogReportAsync {...props} />
+  </Suspense>
+);

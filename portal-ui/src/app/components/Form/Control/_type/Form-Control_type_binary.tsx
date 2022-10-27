@@ -1,47 +1,17 @@
-import React, { Component } from 'react';
-import { boundMethod } from 'autobind-decorator';
-import { observer } from 'mobx-react';
+import React, { FC, lazy, Suspense } from 'react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertyType, PropertySchemaBinary } from '../../../../services/data/schema.models';
-import { FileInput } from '../../../FileInput/FileInput';
+import { PropertyType } from '../../../../services/data/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
-import { FormErrors } from '../../Errors/Form-Errors';
 
-@observer
-class FormControlTypeBinary extends Component<FormControlProps> {
-  render() {
-    const { htmlId, className, errors, property, fieldValue } = this.props;
-    const { accept, name } = property as PropertySchemaBinary;
+const FormControlTypeBinaryAsync = lazy(() => import('./Form-Control_type_binary.async'));
 
-    return (
-      <div className={cnFormControl(null, [className])}>
-        <FileInput accept={accept} id={htmlId} onChange={this.handleChange} value={fieldValue as string} name={name} />
-        <FormErrors errors={errors} />
-      </div>
-    );
-  }
-
-  @boundMethod
-  private handleChange(selectedFiles: FileList | null) {
-    const { onChange, onNeedValidate, property } = this.props;
-
-    if (onChange) {
-      onChange({
-        value: selectedFiles && selectedFiles[0],
-        propertyName: property.name
-      });
-    }
-
-    if (onNeedValidate) {
-      onNeedValidate({
-        value: selectedFiles && selectedFiles[0],
-        propertyName: property.name
-      });
-    }
-  }
-}
+const FormControlTypeBinary: FC<FormControlProps> = props => (
+  <Suspense>
+    <FormControlTypeBinaryAsync {...props} />
+  </Suspense>
+);
 
 export const withTypeBinary = withBemMod<FormControlProps, FormControlProps>(
   cnFormControl(),

@@ -1,5 +1,3 @@
-import { jsPDF } from 'jspdf';
-
 import { LibraryRecord } from '../data/doc-library.service';
 import { schemaService } from '../data/schema.service';
 import { Schema } from '../data/schema.models';
@@ -25,6 +23,7 @@ export async function printDocument(document: LibraryRecord, templateName: strin
     throw `Не найден шаблон печати "${templateName}"`;
   }
 
+  const { default: jsPDF } = await import('jspdf');
   const doc = new jsPDF(template.orientation, 'px', template.format);
   doc.addFileToVFS('roboto.ttf', await getFont());
   doc.addFont('roboto.ttf', 'roboto', 'normal');

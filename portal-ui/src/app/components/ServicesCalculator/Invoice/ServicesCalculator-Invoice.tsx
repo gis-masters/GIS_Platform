@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
-import { jsPDF } from 'jspdf';
 import { cn } from '@bem-react/classname';
 import { action, observable, makeObservable } from 'mobx';
 
@@ -48,6 +47,7 @@ export class ServicesCalculatorInvoice extends Component<ServicesCalculatorInvoi
 
   @boundMethod
   private async print() {
+    const { default: jsPDF } = await import('jspdf');
     const doc = new jsPDF('p', 'px', 'a4');
 
     doc.addFileToVFS('roboto.ttf', this.font);
