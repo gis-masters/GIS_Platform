@@ -18,7 +18,7 @@ export class ErrorsBadgeComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     const errorsChange = changes.errors;
     if (errorsChange && !errorsChange.isFirstChange() && errorsChange.currentValue) {
-      this.generateTooltip(errorsChange.currentValue);
+      this.generateTooltip(errorsChange.currentValue as ValidationErrors);
     }
   }
 

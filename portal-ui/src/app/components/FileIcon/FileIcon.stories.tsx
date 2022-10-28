@@ -10,12 +10,12 @@ export default {
 
 const Template: ComponentStory<typeof FileIcon> = args => <FileIcon {...args} />;
 
-export const Filled = Template.bind({}) as ComponentStory<typeof FileIcon>;
+export const Filled = Template.bind({});
 Filled.args = {
   ext: 'TIF'
 };
 
-export const Outlined = Template.bind({}) as ComponentStory<typeof FileIcon>;
+export const Outlined = Template.bind({});
 Outlined.args = {
   ext: 'PNG',
   outlined: true

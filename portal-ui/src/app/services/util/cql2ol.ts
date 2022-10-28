@@ -72,12 +72,14 @@ const patterns = {
         while (idx < len && depth > 0) {
           idx++;
           switch (text.charAt(idx)) {
-            case '(':
+            case '(': {
               depth++;
               break;
-            case ')':
+            }
+            case ')': {
               depth--;
               break;
+            }
             default:
             // in default case, do nothing
           }
@@ -196,13 +198,14 @@ function buildAst(tokens: TokenInfo[]) {
     switch (tok.type) {
       case Token.PROPERTY:
       case Token.GEOMETRY:
-      case Token.VALUE:
+      case Token.VALUE: {
         postfix.push(tok);
         break;
+      }
       case Token.COMPARISON:
       case Token.BETWEEN:
       case Token.IS_NULL:
-      case Token.LOGICAL:
+      case Token.LOGICAL: {
         while (
           operatorStack.length > 0 &&
           precedence[operatorStack[operatorStack.length - 1].type] <= precedence[tok.type]
@@ -212,13 +215,15 @@ function buildAst(tokens: TokenInfo[]) {
 
         operatorStack.push(tok);
         break;
+      }
       case Token.SPATIAL:
       case Token.NOT:
       case Token.IN:
-      case Token.LPAREN:
+      case Token.LPAREN: {
         operatorStack.push(tok);
         break;
-      case Token.RPAREN:
+      }
+      case Token.RPAREN: {
         while (operatorStack.length > 0 && operatorStack[operatorStack.length - 1].type !== Token.LPAREN) {
           postfix.push(operatorStack.pop());
         }
@@ -228,11 +233,14 @@ function buildAst(tokens: TokenInfo[]) {
           postfix.push(operatorStack.pop());
         }
         break;
+      }
       case Token.COMMA:
-      case Token.END:
+      case Token.END: {
         break;
-      default:
+      }
+      default: {
         throw new Error(`Unknown token type ${String(tok.type)}`);
+      }
     }
   }
 
@@ -259,16 +267,18 @@ function buildAst(tokens: TokenInfo[]) {
     let values: (string | number)[];
 
     switch (tok.type) {
-      case Token.LOGICAL:
+      case Token.LOGICAL: {
         rhs = buildTree() as Filter;
         lhs = buildTree() as Filter;
 
         return logicals[tok.text.toUpperCase()](lhs, rhs);
-      case Token.NOT:
+      }
+      case Token.NOT: {
         operand = buildTree() as Filter;
 
         return not(operand);
-      case Token.IN:
+      }
+      case Token.IN: {
         values = [];
 
         do {
@@ -278,30 +288,35 @@ function buildAst(tokens: TokenInfo[]) {
         property = buildTree() as string;
 
         return inOperator(property, values);
-      case Token.BETWEEN:
+      }
+      case Token.BETWEEN: {
         postfix.pop(); // unneeded AND token here
         max = buildTree() as number;
         min = buildTree() as number;
         property = buildTree() as string;
 
         return between(property, min, max);
-      case Token.COMPARISON:
+      }
+      case Token.COMPARISON: {
         value = buildTree() as string;
         property = buildTree() as string;
 
         return operators[tok.text.toUpperCase()](property, value);
-      case Token.IS_NULL:
+      }
+      case Token.IS_NULL: {
         property = buildTree() as string;
 
         return isNull(property);
-      case Token.VALUE:
+      }
+      case Token.VALUE: {
         match = tok.text.match(/^'(.*)'$/);
 
         return match ? match[1].replace(/''/g, "'") : Number(tok.text);
-      case Token.SPATIAL:
+      }
+      case Token.SPATIAL: {
         // eslint-disable-next-line sonarjs/no-nested-switch
         switch (tok.text.toUpperCase()) {
-          case 'BBOX':
+          case 'BBOX': {
             maxy = buildTree() as number;
             maxx = buildTree() as number;
             miny = buildTree() as number;
@@ -309,34 +324,42 @@ function buildAst(tokens: TokenInfo[]) {
             property = buildTree() as string;
 
             return bbox(property, [minx, miny, maxx, maxy]);
-          case 'INTERSECTS':
+          }
+          case 'INTERSECTS': {
             value = buildTree() as Geometry;
             property = buildTree() as string;
 
             return intersects(property, value);
-          case 'WITHIN':
+          }
+          case 'WITHIN': {
             value = buildTree() as Geometry;
             property = buildTree() as string;
 
             return within(property, value);
-          case 'CONTAINS':
+          }
+          case 'CONTAINS': {
             value = buildTree() as Geometry;
             property = buildTree() as string;
 
             return contains(property, value);
-          case 'DWITHIN':
+          }
+          case 'DWITHIN': {
             unit = buildTree() as Units;
             distance = Number(buildTree());
             value = buildTree() as Geometry;
             property = buildTree() as string;
 
             return dwithin(property, value, distance, unit);
+          }
         }
         break;
-      case Token.GEOMETRY:
+      }
+      case Token.GEOMETRY: {
         return new WKT().readFeature(tok.text).getGeometry();
-      default:
+      }
+      default: {
         return tok.text;
+      }
     }
   }
 

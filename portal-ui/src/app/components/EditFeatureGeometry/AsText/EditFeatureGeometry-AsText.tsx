@@ -154,10 +154,11 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
           newCoordinates = (emptyGeometry as WfsMultiLineStringGeometry).coordinates[0];
           break;
         }
-        default:
+        default: {
           if ([GeometryType.MULTI_POLYGON].includes(geometryType)) {
             newCoordinates = (emptyGeometry as WfsMultiPolygonGeometry).coordinates[0][0];
           }
+        }
       }
     }
 

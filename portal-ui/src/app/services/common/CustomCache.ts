@@ -21,7 +21,7 @@ export class CustomCache<T = unknown> {
   store: { [key: string]: StoreItem<T> } = {};
 
   constructor(config?: CustomCacheConfig) {
-    this.config = { ...defaultConfig, ...(config || {}) };
+    this.config = { ...defaultConfig, ...config };
   }
 
   match(key: string, config?: CustomCacheConfig): T | undefined {

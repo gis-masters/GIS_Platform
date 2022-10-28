@@ -90,34 +90,40 @@ export class FeaturePropertyValidators {
       }
       // Если что-то введено, проверим его согласно типу атрибута.
       switch (propertySchema.valueType) {
-        case ValueType.CHOICE:
+        case ValueType.CHOICE: {
           this.enumeration(currentValue, propertySchema, errors);
           break;
-        case ValueType.STRING:
+        }
+        case ValueType.STRING: {
           this.minLength(currentValue, propertySchema, errors);
           this.maxLength(currentValue, propertySchema, errors);
           this.facetLength(currentValue, propertySchema, errors);
           this.pattern(currentValue, propertySchema, errors);
 
           break;
-        case ValueType.INT:
+        }
+        case ValueType.INT: {
           this.minInclusive(currentValue, propertySchema, errors);
           this.maxInclusive(currentValue, propertySchema, errors);
           this.totalDigits(currentValue, propertySchema, errors);
 
           break;
-        case ValueType.DOUBLE:
+        }
+        case ValueType.DOUBLE: {
           this.totalDigits(currentValue, propertySchema, errors);
           this.fractionDigits(currentValue, propertySchema, errors);
           this.isPositive(currentValue, errors);
 
           break;
-        case ValueType.LOOKUP:
+        }
+        case ValueType.LOOKUP: {
           break;
-        default:
+        }
+        default: {
           console.error('Unsupported ValueType:', propertySchema.valueType);
 
           return errors;
+        }
       }
 
       return errors;

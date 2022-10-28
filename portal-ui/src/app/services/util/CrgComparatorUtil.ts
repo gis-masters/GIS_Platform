@@ -79,7 +79,7 @@ export class ObjectIdComparison implements CrgComparison {
       };
     }
 
-    return result ? result : this.comparison.compare(source, properties);
+    return result || this.comparison.compare(source, properties);
   }
 
   setNext(comparison: CrgComparison): void {

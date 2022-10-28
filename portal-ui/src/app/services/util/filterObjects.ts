@@ -7,9 +7,6 @@ export interface FilterQuery {
   [key: string]: FilterQueryValue | FilterQuery | FilterQuery[];
 }
 
-type CustomFieldsPrep<T, F extends keyof T> = (a: T[F], item?: T) => string | number;
-export type CustomFilterFieldsPrep<T> = { [key in keyof T]?: CustomFieldsPrep<T, key> };
-
 export function filterObjects<T>(arr: T[], query: FilterQuery): T[] {
   return arr.filter(sift(prepareLike(query)));
 }

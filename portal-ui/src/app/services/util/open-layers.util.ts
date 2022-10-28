@@ -50,20 +50,27 @@ export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry<Coordinate>): Sim
   }
 
   switch (wfsGeometry.type) {
-    case GeometryType.POINT:
+    case GeometryType.POINT: {
       return new Point(wfsGeometry.coordinates);
-    case GeometryType.MULTI_POINT:
+    }
+    case GeometryType.MULTI_POINT: {
       return new MultiPoint(wfsGeometry.coordinates);
-    case GeometryType.LINE_STRING:
+    }
+    case GeometryType.LINE_STRING: {
       return new LineString(wfsGeometry.coordinates);
-    case GeometryType.MULTI_LINE_STRING:
+    }
+    case GeometryType.MULTI_LINE_STRING: {
       return new MultiLineString(wfsGeometry.coordinates);
-    case GeometryType.POLYGON:
+    }
+    case GeometryType.POLYGON: {
       return new Polygon(wfsGeometry.coordinates);
-    case GeometryType.MULTI_POLYGON:
+    }
+    case GeometryType.MULTI_POLYGON: {
       return new MultiPolygon(wfsGeometry.coordinates);
-    default:
+    }
+    default: {
       throw new Error(`Not supported geometry type: ${wfsGeometry.type}`);
+    }
   }
 }
 

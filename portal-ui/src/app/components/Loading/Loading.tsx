@@ -23,7 +23,7 @@ export const Loading: FC<LoadingProps> = ({ visible, className, noBackdrop, size
   return (
     <div className={cnLoading({ noBackdrop, global }, [className])}>
       <CircularProgress
-        size={size ? size : 100}
+        size={size || 100}
         value={value}
         variant={typeof value === 'number' ? 'determinate' : 'indeterminate'}
       />

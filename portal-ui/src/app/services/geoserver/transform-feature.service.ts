@@ -212,17 +212,21 @@ export class TransformFeatureService {
   private getNode(type: TransactionType, features: Feature<Geometry>[], options: WriteTransactionOptions): Node {
     let node: Node;
     switch (type) {
-      case TransactionType.INSERT:
+      case TransactionType.INSERT: {
         node = this.formatWFS.writeTransaction(features, null, null, options);
         break;
-      case TransactionType.UPDATE:
+      }
+      case TransactionType.UPDATE: {
         node = this.formatWFS.writeTransaction(null, features, null, options);
         break;
-      case TransactionType.DELETE:
+      }
+      case TransactionType.DELETE: {
         node = this.formatWFS.writeTransaction(null, null, features, options);
         break;
-      default:
+      }
+      default: {
         services.logger.warn('Unsupported transaction type: ', type);
+      }
     }
 
     return node;

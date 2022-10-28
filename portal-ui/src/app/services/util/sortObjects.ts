@@ -3,23 +3,9 @@ export interface SortParams<T> {
   asc: boolean;
 }
 
-type CustomFieldsPrep<T, F extends keyof T> = (a: T[F]) => string | number;
-export type CustomSortFieldsPrep<T> = { [key in keyof T]?: CustomFieldsPrep<T, key> };
-
-function compare<T>(
-  a: T,
-  b: T,
-  { field, asc }: SortParams<T>,
-  customFieldsPrep?: CustomSortFieldsPrep<T>,
-  fallBackSortField?: keyof T
-): number {
-  let fieldA: T[keyof T] | number | string = a[field];
-  let fieldB: T[keyof T] | number | string = b[field];
-
-  if (customFieldsPrep && customFieldsPrep[field]) {
-    fieldA = customFieldsPrep[field](a[field]);
-    fieldB = customFieldsPrep[field](b[field]);
-  }
+function compare<T>(a: T, b: T, { field, asc }: SortParams<T>, fallBackSortField?: keyof T): number {
+  const fieldA: T[keyof T] | number | string = a[field];
+  const fieldB: T[keyof T] | number | string = b[field];
 
   let result = 0;
 
@@ -33,17 +19,11 @@ function compare<T>(
     result = -result;
   }
 
-  return result || (fallBackSortField ? compare(a, b, { field: fallBackSortField, asc }, customFieldsPrep) : 0);
+  return result || (fallBackSortField ? compare(a, b, { field: fallBackSortField, asc }) : 0);
 }
 
-export function sortObjects<T>(
-  arr: T[],
-  field: keyof T,
-  asc: boolean,
-  fallBackSortField: keyof T,
-  customFieldsPrep?: CustomSortFieldsPrep<T>
-): T[] {
+export function sortObjects<T>(arr: T[], field: keyof T, asc: boolean, fallBackSortField?: keyof T): T[] {
   return [...arr].sort((a, b) => {
-    return compare(a, b, { field, asc }, customFieldsPrep, fallBackSortField);
+    return compare(a, b, { field, asc }, fallBackSortField);
   });
 }

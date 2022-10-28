@@ -664,18 +664,22 @@ class MapService {
     }
 
     switch (basemap.type) {
-      case SourceType.OSM:
+      case SourceType.OSM: {
         return new OSM();
-      case SourceType.WMTS:
+      }
+      case SourceType.WMTS: {
         return this.prepareWMTS(basemap);
-      case SourceType.WMTS_P:
+      }
+      case SourceType.WMTS_P: {
         return this.prepareWMTSPanorama(basemap);
-      case SourceType.XYZ:
+      }
+      case SourceType.XYZ: {
         return new XYZ({
           crossOrigin: 'Anonymous',
           url: basemap.url || undefined,
           projection: basemap.projection || 'EPSG:3857'
         });
+      }
     }
   }
 

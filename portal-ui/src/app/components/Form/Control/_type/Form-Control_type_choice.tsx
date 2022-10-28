@@ -61,7 +61,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
           <ToggleButtonGroup
             size='small'
             color='primary'
-            value={fieldValue ? fieldValue : defaultValue}
+            value={fieldValue || defaultValue}
             exclusive
             onChange={this.handleChangeButtonToggle}
           >

@@ -98,18 +98,22 @@ export class ResizableBarDirective implements OnInit {
     let pos: number;
 
     switch (this.direction) {
-      case 'top':
+      case 'top': {
         pos = y;
         break;
-      case 'right':
+      }
+      case 'right': {
         pos = x;
         break;
-      case 'bottom':
+      }
+      case 'bottom': {
         pos = document.body.clientHeight - y;
         break;
-      case 'left':
+      }
+      case 'left': {
         pos = document.body.clientWidth - x;
         break;
+      }
     }
 
     return pos;

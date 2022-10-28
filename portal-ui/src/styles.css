@@ -1,8 +1,8 @@
-@import "./assets/fonts/Roboto/Roboto.css";
+@import url("./assets/fonts/Roboto/Roboto.css");
 
-@import "./assets/fonts/MaterialIcons/MaterialIcons.css";
+@import url("./assets/fonts/MaterialIcons/MaterialIcons.css");
 
-@import "bootstrap.css";
+@import url("bootstrap.css");
 
 *,
 ::after,
