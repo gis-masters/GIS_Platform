@@ -77,6 +77,7 @@ import { RestorePasswordFormComponent } from './components/restore-password-form
 import { ChangePasswordFormComponent } from './components/change-password-form/change-password-form.component';
 import { RelationsButtonComponent } from './components/relations-button/relations-button.component';
 import { FeaturesSidebarTeaserComponent } from './components/features-sidebar-teaser/features-sidebar-teaser.component';
+import { SystemManagementComponent } from './components/system-management/system-management.component';
 
 @NgModule({
   declarations: [
@@ -140,7 +141,8 @@ import { FeaturesSidebarTeaserComponent } from './components/features-sidebar-te
     ChangePasswordFormComponent,
     FormDescriptionComponent,
     RelationsButtonComponent,
-    FeaturesSidebarTeaserComponent
+    FeaturesSidebarTeaserComponent,
+    SystemManagementComponent
   ],
   imports: [
     HttpClientModule,

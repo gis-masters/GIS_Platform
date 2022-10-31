@@ -12,19 +12,19 @@ public class AuthService {
 
     private final OAuthClient oAuthClient;
 
-    private final String rootUserName;
-    private final String rootUserPass;
+    private final String systemAdminLogin;
+    private final String systemAdminPassword;
 
     public AuthService(Environment environment, OAuthClient oAuthClient) {
         this.oAuthClient = oAuthClient;
 
-        rootUserName = environment.getRequiredProperty("crg-options.root-user-name");
-        rootUserPass = environment.getRequiredProperty("crg-options.root-user-password");
+        systemAdminLogin = environment.getRequiredProperty("crg-options.system-admin-login");
+        systemAdminPassword = environment.getRequiredProperty("crg-options.system-admin-password");
     }
 
     public String getRootAccessToken() {
         try {
-            return oAuthClient.getToken(rootUserName, rootUserPass)
+            return oAuthClient.getToken(systemAdminLogin, systemAdminPassword)
                               .getAccess_token();
         } catch (HttpClientException e) {
             throw new AuthServiceException("Error get root token");

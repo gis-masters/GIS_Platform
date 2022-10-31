@@ -104,15 +104,15 @@ public class ImportService {
             String authServiceUrl = environment.getRequiredProperty("crg-options.auth-service-url");
             String clientId = environment.getRequiredProperty("crg-options.client_id");
             String clientSecret = environment.getRequiredProperty("crg-options.client_secret");
-            String rootUserName = environment.getRequiredProperty("crg-options.root-user-name");
-            String rootUserPass = environment.getRequiredProperty("crg-options.root-user-password");
+            String systemAdminLogin = environment.getRequiredProperty("crg-options.system-admin-login");
+            String systemAdminPassword = environment.getRequiredProperty("crg-options.system-admin-password");
 
             return OAuthClient.builder()
                               .url(new URL(authServiceUrl))
                               .clientId(clientId)
                               .clientSecret(clientSecret)
                               .build()
-                              .getToken(rootUserName, rootUserPass)
+                              .getToken(systemAdminLogin, systemAdminPassword)
                               .getAccess_token();
         } catch (Exception e) {
             throw new DataServiceException("Error get root token");

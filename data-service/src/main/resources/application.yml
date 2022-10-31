@@ -58,8 +58,8 @@ crg-options:
   exportStoragePath: /opt/export/
   client_id: admin
   client_secret: geoserver
-  root-user-name: admin@mail.ru
-  root-user-password: geoserver
+  system-admin-login: admin@mail.ru
+  system-admin-password: geoserver
   integration:
     sed-url: https://httpbin.org/anything
     gisogd-rf: https://gisogd.npc.ba/api/rgmu

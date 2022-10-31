@@ -47,8 +47,8 @@ security:
     refresh_token_validity_seconds: 1209600
 
 crg-options:
-  root-user-name: admin@mail.ru
-  root-user-password: geoserver
+  system-admin-login: admin@mail.ru
+  system-admin-password: geoserver
   reset-password-expiration-time: 60 # In minutes
   reset-password-request-rate: 10 #In seconds
 

@@ -2,29 +2,19 @@ import { observable, action, computed, makeObservable } from 'mobx';
 
 import { currentUser } from './CurrentUser.store';
 
-export interface Settings {
-  createProject: boolean;
-  dataManagement: boolean;
-  editProjectLayer: boolean;
-  createLibraryItem: boolean;
-  downloadFiles: boolean;
-  downloadXml: boolean;
+export interface OrgSettings {
+  id: string;
+  system?: Record<string, boolean>;
+  organization?: Record<string, boolean>;
 }
 
-const emptySettings: Settings = {
-  createProject: false,
-  dataManagement: false,
-  editProjectLayer: false,
-  createLibraryItem: false,
-  downloadFiles: false,
-  downloadXml: false
-};
-
-export class OrganizationSettings implements Settings {
+export class OrganizationSettings {
   private static _instance: OrganizationSettings;
 
   @observable settingsError: boolean;
-  @observable settings: Settings = emptySettings;
+  @observable orgSettings: OrgSettings;
+  @observable systemSettings: OrgSettings[];
+  @observable availableOrgsSettings: Record<string, string>;
 
   public static get instance(): OrganizationSettings {
     return this._instance || (this._instance = new this());
@@ -35,8 +25,18 @@ export class OrganizationSettings implements Settings {
   }
 
   @action
-  setSettings(settings?: Settings): void {
-    this.settings = settings;
+  setSettings(settings?: OrgSettings | OrgSettings[]): void {
+    if (Array.isArray(settings)) {
+      this.systemSettings = settings;
+    } else {
+      this.orgSettings = settings;
+    }
+    this.setSettingsError(false);
+  }
+
+  @action
+  setAvailableSettings(settings?: Record<string, string>): void {
+    this.availableOrgsSettings = settings;
     this.setSettingsError(false);
   }
 
@@ -47,32 +47,44 @@ export class OrganizationSettings implements Settings {
 
   @computed
   get createProject(): boolean {
-    return currentUser.isAdmin || this.settings.createProject;
+    return this.allowedToUse(this.orgSettings.system?.createProject, this.orgSettings.organization?.createProject);
   }
 
   @computed
   get dataManagement(): boolean {
-    return currentUser.isAdmin || this.settings.dataManagement;
+    return this.allowedToUse(this.orgSettings.system?.dataManagement, this.orgSettings.organization?.dataManagement);
   }
 
   @computed
   get editProjectLayer(): boolean {
-    return currentUser.isAdmin || this.settings.editProjectLayer;
+    return this.allowedToUse(
+      this.orgSettings.system?.editProjectLayer,
+      this.orgSettings.organization?.editProjectLayer
+    );
   }
 
   @computed
   get createLibraryItem(): boolean {
-    return currentUser.isAdmin || this.settings.createLibraryItem;
+    return this.allowedToUse(
+      this.orgSettings.system?.createLibraryItem,
+      this.orgSettings.organization?.createLibraryItem
+    );
   }
 
   @computed
   get downloadFiles(): boolean {
-    return currentUser.isAdmin || this.settings.downloadFiles;
+    return this.allowedToUse(this.orgSettings.system?.downloadFiles, this.orgSettings.organization?.downloadFiles);
   }
 
   @computed
   get downloadXml(): boolean {
-    return currentUser.isAdmin || this.settings.downloadXml;
+    return this.allowedToUse(this.orgSettings.system?.downloadXml, this.orgSettings.organization?.downloadXml);
+  }
+
+  private allowedToUse(systemSetting: boolean, orgSetting: boolean): boolean {
+    const setting = systemSetting ? orgSetting : systemSetting;
+
+    return currentUser.isAdmin || setting;
   }
 }
 

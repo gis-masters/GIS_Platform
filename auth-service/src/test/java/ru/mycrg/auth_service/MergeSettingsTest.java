@@ -16,35 +16,34 @@ class MergeSettingsTest {
     }
 
     @Test
-    void useOrgSettingsThenGlobalEmpty() {
+    void globalSettingsFalseByDefault() {
         Map<String, Object> orgSettings = new HashMap<>();
-        orgSettings.put("some", true);
-        orgSettings.put("other", false);
+        orgSettings.put("s1", true);
+        orgSettings.put("s2", false);
 
         Map<String, Object> result = mergeSettings(new HashMap<>(), orgSettings);
 
-        assertTrue(result.containsKey("some"));
-        assertTrue(result.containsKey("other"));
+        assertFalse(result.containsKey("s1"));
+        assertFalse(result.containsKey("s2"));
         assertFalse(result.containsKey("other_"));
     }
 
     @Test
-    void globalSettingsMorePowerful() {
-        Map<String, Object> orgSettings = new HashMap<>();
-        orgSettings.put("some", true);
-        orgSettings.put("other", true);
-        orgSettings.put("other3", true);
-
+    void mergeGlobalSettingsAndOrgSettings() {
         Map<String, Object> globalSettings = new HashMap<>();
-        orgSettings.put("some", false);
-        orgSettings.put("other", false);
-        orgSettings.put("other2", true);
+        globalSettings.put("s1", true);
+        globalSettings.put("s2", true);
+        globalSettings.put("s3", false);
+
+        Map<String, Object> orgSettings = new HashMap<>();
+        orgSettings.put("s1", false);
+        orgSettings.put("s2", true);
+        orgSettings.put("s3", true);
 
         Map<String, Object> result = mergeSettings(globalSettings, orgSettings);
 
-        assertFalse((Boolean) result.get("some"));
-        assertFalse((Boolean) result.get("other"));
-        assertTrue((Boolean) result.get("other2"));
-        assertTrue((Boolean) result.get("other3"));
+        assertFalse((Boolean) result.get("s1"));
+        assertTrue((Boolean) result.get("s2"));
+        assertFalse((Boolean) result.get("s3"));
     }
 }

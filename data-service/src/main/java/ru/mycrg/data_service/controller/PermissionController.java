@@ -11,7 +11,7 @@ import ru.mycrg.data_service.dto.Resource;
 import ru.mycrg.data_service.service.PermissionsService;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 public class PermissionController {
@@ -23,7 +23,7 @@ public class PermissionController {
     }
 
     @GetMapping("/all-permissions")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> getAllPermissions(Pageable pageable,
                                                     PagedResourcesAssembler<Resource> pageAssembler) {
         final Page<Resource> result = permissionsService.getAll(pageable);

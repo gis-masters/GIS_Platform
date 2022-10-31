@@ -44,6 +44,7 @@ public class OrganizationService {
     private final ProjectionFactory projectionFactory;
     private final IAuthenticationFacade authenticationFacade;
     private final OrganizationRepository organizationRepository;
+    private final OrganizationSettingService settingService;
 
     @Autowired
     public OrganizationService(OrganizationRepository organizationRepository,
@@ -53,7 +54,8 @@ public class OrganizationService {
                                IAuthenticationFacade authenticationFacade,
                                AESCryptor aesCryptor,
                                AuthService authService,
-                               BCryptPasswordEncoder encoder) {
+                               BCryptPasswordEncoder encoder,
+                               OrganizationSettingService settingService) {
         this.organizationRepository = organizationRepository;
         this.authenticationFacade = authenticationFacade;
         this.projectionFactory = projectionFactory;
@@ -62,12 +64,13 @@ public class OrganizationService {
         this.aesCryptor = aesCryptor;
         this.authService = authService;
         this.encoder = encoder;
+        this.settingService = settingService;
     }
 
     /**
      * Создание организации.
      * <p>
-     * Вместе с организацией создается первоначальный пользователь (супер админ).
+     * Вместе с организацией создается первоначальный пользователь (администратор системы).
      *
      * @param createDto {@link OrganizationCreateDto}
      *
@@ -86,7 +89,10 @@ public class OrganizationService {
         newOrganization = mapDtoToOrganization(createDto);
         newOrganization.addUser(newUser);
 
-        organizationRepository.save(newOrganization);
+        Organization savedOrg = organizationRepository.save(newOrganization);
+
+        settingService.initOrgSetting(savedOrg);
+
         // We use email as login
         newUser.setLogin(owner.getEmail());
         newUser.addAuthority(ORG_ADMIN);

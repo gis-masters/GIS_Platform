@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.service.PrincipalService;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 public class PrincipalController {
@@ -20,7 +20,7 @@ public class PrincipalController {
     }
 
     @DeleteMapping("/principals/{identifier}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deletePrincipal(
             @RequestParam(name = "type") String type,
             @PathVariable Long identifier) {

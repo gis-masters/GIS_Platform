@@ -25,7 +25,7 @@ public class OrgSettingsKeeper {
 
     public void throwIfCreateLibraryItemNotAllowed() {
         Object createLibraryItem = serviceSettings.get("createLibraryItem");
-        if (createLibraryItem != null && !(boolean) createLibraryItem) {
+        if (createLibraryItem != null && !Boolean.parseBoolean(createLibraryItem.toString())) {
             log.info("CreateLibraryItemNotAllowed by settings");
 
             throw new NotFoundException("");
@@ -34,7 +34,7 @@ public class OrgSettingsKeeper {
 
     public void throwIfDownloadFileNotAllowed() {
         Object downloadFiles = serviceSettings.get("downloadFiles");
-        if (downloadFiles != null && !(boolean) downloadFiles) {
+        if (downloadFiles != null && !Boolean.parseBoolean(downloadFiles.toString())) {
             log.info("DownloadFileNotAllowed by settings");
 
             throw new NotFoundException("");

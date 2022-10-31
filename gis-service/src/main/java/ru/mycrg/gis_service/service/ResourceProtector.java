@@ -50,7 +50,7 @@ public class ResourceProtector {
     /**
      * Считаем что пользователь является владельцем ресурса, если:
      * <li> Пользователь имеет OWNER право.
-     * <li> Пользователей является GLOBAL_ADMIN или ORG_ADMIN.
+     * <li> Пользователей является SYSTEM_ADMIN или ORG_ADMIN.
      */
     public boolean isOwner(Project project) {
         return authenticationFacade.isOrganizationAdmin()

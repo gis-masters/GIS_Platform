@@ -26,7 +26,7 @@ public interface IMasterResourceProtector {
      * <br>
      * Считаем что пользователь является владельцем ресурса, если:
      * <li> Пользователь имеет OWNER право.
-     * <li> Пользователь является GLOBAL_ADMIN или ORG_ADMIN.
+     * <li> Пользователь является SYSTEM_ADMIN или ORG_ADMIN.
      *
      * @param qualifier Квалификатор ресурса
      */

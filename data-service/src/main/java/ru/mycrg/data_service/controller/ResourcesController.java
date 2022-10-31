@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 public class ResourcesController {
@@ -31,7 +31,7 @@ public class ResourcesController {
     }
 
     @GetMapping("/resources/{resourceType}/entities")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> getAllResources(@PathVariable String resourceType,
                                                   Pageable pageable,
                                                   PagedResourcesAssembler<IResource> pageAssembler) {

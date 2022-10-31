@@ -12,7 +12,7 @@ import ru.mycrg.auth_service.entity.Organization;
 
 import java.util.Optional;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_AUTHORITY;
 
 @RepositoryRestResource(collectionResourceRel = "organizations",
                         path = "organizations",
@@ -20,15 +20,15 @@ import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_AUTHORITY;
 public interface OrganizationRepository extends PagingAndSortingRepository<Organization, Long> {
 
     @Override
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
     Iterable<Organization> findAll();
 
     @Override
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
     Page<Organization> findAll(Pageable pageable);
 
     @Override
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
     Iterable<Organization> findAll(Sort sort);
 
     // NOT Exported

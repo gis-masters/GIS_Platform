@@ -14,7 +14,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_AUTHORITY;
 
 @RestController
 @RequestMapping("/integration/ais_ums")
@@ -47,7 +47,7 @@ public class AisUmsController {
     }
 
     @GetMapping("/clean")
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
     public ResponseEntity<Object> cleanDuplicate() {
         aisUmsService.cleanDuplicate();
 
@@ -55,7 +55,7 @@ public class AisUmsController {
     }
 
     @DeleteMapping("/delete")
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteByDepartment(@RequestParam String departmentName) {
         aisUmsService.deleteAllByDepName(departmentName);
 

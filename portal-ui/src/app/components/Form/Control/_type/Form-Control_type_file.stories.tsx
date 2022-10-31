@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { PropertySchema, PropertyType } from '../../../../services/data/schema.models';
 import { FileInfo } from '../../../../services/data/files.service';
 import { Form } from '../../Form';
-import { organizationSettings, Settings } from '../../../../stores/OrganizationSettings.store';
+import { organizationSettings, OrgSettings } from '../../../../stores/OrganizationSettings.store';
 
 export default {
   title: 'Form/Field/file',
@@ -56,17 +56,37 @@ const valueMultipleScroll: TestData = { photos: [...multipleFilesData, ...multip
 
 const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
-// заполнение стора настроек, удалить по возможности
-const settings: Settings = {
-  createProject: true,
-  dataManagement: true,
-  editProjectLayer: true,
-  createLibraryItem: true,
-  downloadFiles: true,
-  downloadXml: true
+const settings: OrgSettings = {
+  id: '10',
+  organization: {
+    createLibraryItem: true,
+    createProject: true,
+    dataManagement: true,
+    downloadFiles: true,
+    downloadXml: true,
+    editProjectLayer: true
+  },
+  system: {
+    createLibraryItem: true,
+    createProject: true,
+    dataManagement: true,
+    downloadFiles: true,
+    downloadXml: true,
+    editProjectLayer: true
+  }
+};
+
+const availableOrgsSettings: Record<string, string> = {
+  downloadXml: 'Скачивание xml межевого плана и выгрузка координат и геометрии',
+  createLibraryItem: 'Создание элементов в библиотеке',
+  editProjectLayer: 'Настройка слоев проекта',
+  dataManagement: 'Управление данными',
+  createProject: 'Создание проекта',
+  downloadFiles: 'Скачать документ'
 };
 
 organizationSettings.setSettings(settings);
+organizationSettings.setAvailableSettings(availableOrgsSettings);
 
 export const SingleEditable = Template.bind({});
 SingleEditable.args = {

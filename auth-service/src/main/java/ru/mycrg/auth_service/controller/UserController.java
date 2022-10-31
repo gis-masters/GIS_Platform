@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateDto userCreateDto,
                                              @RequestParam(name = "orgId", required = false) Long orgId) {
         Long organizationId;
@@ -110,7 +110,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
         userService.delete(id);
 
@@ -118,7 +118,7 @@ public class UserController {
     }
 
     @PostMapping("/users/{id}/roles/{authority}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> addAuthority(@PathVariable Long id,
                                                @PathVariable String authority) {
         if (!isAuthorityExist(authority)) {
@@ -131,7 +131,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}/roles/{authority}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> removeAuthority(@PathVariable Long id,
                                                   @PathVariable String authority) {
         userService.removeAuthority(id, authority);

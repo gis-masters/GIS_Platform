@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
 
 public class AuthenticationFacade implements IAuthenticationFacade {
@@ -46,7 +46,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
 
     @Override
     public boolean isRoot() {
-        return isUserHasAuthority(getAuthentication(), GLOBAL_ADMIN);
+        return isUserHasAuthority(getAuthentication(), SYSTEM_ADMIN);
     }
 
     @Override

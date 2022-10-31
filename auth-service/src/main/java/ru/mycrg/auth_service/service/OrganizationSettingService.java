@@ -1,6 +1,9 @@
 package ru.mycrg.auth_service.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +13,15 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.exceptions.AuthServiceException;
 import ru.mycrg.auth_service.exceptions.BadRequestException;
-import ru.mycrg.auth_service.exceptions.ForbiddenException;
 import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
+import ru.mycrg.auth_service_contract.dto.OrgSettingsRequestDto;
+import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
 import ru.mycrg.auth_service_contract.events.request.OrgSettingsUpdatedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.vladmihalcea.hibernate.type.json.internal.JacksonUtil.fromString;
 import static com.vladmihalcea.hibernate.type.json.internal.JacksonUtil.toJsonNode;
@@ -29,7 +32,7 @@ import static ru.mycrg.auth_service.util.SettingsHandler.mergeSettings;
 @Transactional
 public class OrganizationSettingService {
 
-    private static final long GLOBAL_ORG_ID = -1L;
+    public static final long ROOT_ORG_ID = -1L;
 
     private final Logger log = LoggerFactory.getLogger(OrganizationSettingService.class);
 
@@ -53,26 +56,30 @@ public class OrganizationSettingService {
         return knownSettings;
     }
 
-    public Map<String, Object> getSetting(Long id) {
-        if (authenticationFacade.isRoot() || id.equals(authenticationFacade.getOrganizationId())) {
-            JsonNode settings = organizationRepository.findById(id)
-                                                      .orElseThrow(() -> new NotFoundException(id))
-                                                      .getSettings();
+    public Set<OrgSettingsResponseDto> getSystemSettings() {
+        Organization systemOrganization = organizationRepository.findById(ROOT_ORG_ID)
+                                                                .orElseThrow(() -> new NotFoundException(ROOT_ORG_ID));
 
-            Map<String, Object> result = new HashMap<>();
-            if (settings != null) {
-                Map<String, Object> current = fromString(settings.toString(), Map.class);
-                knownSettings.forEach((k, v) -> {
-                    if (current.containsKey(k)) {
-                        result.put(k, current.get(k));
-                    }
-                });
-            }
+        Set<OrgSettingsRequestDto> systemSettings = readSystemSettings(systemOrganization.getSettings());
 
-            return result;
+        Set<OrgSettingsResponseDto> result = new HashSet<>();
+        systemSettings.forEach(dto -> {
+            result.add(new OrgSettingsResponseDto(dto.getId(), dto.getSettings()));
+        });
+
+        return result;
+    }
+
+    public OrgSettingsResponseDto getSettings(Long id) {
+        Map<String, Object> systemSettings = new HashMap<>();
+        Optional<OrgSettingsResponseDto> oSystem = getSystemSettings().stream()
+                                                                      .filter(dto -> dto.getId().equals(id))
+                                                                      .findFirst();
+        if (oSystem.isPresent()) {
+            systemSettings = oSystem.get().getSystem();
         }
 
-        throw new ForbiddenException("Нет доступа к настройкам организации: " + id);
+        return new OrgSettingsResponseDto(id, systemSettings, getOrgSettings(id));
     }
 
     /**
@@ -83,78 +90,168 @@ public class OrganizationSettingService {
      * @param id          Идентификатор организации
      * @param newSettings Новые настройки
      */
-    public void updateSettings(Long id, String newSettings) {
-        Organization organization = organizationRepository.findById(id)
-                                                          .orElseThrow(() -> new NotFoundException(id));
+    public void updateSettings(Long id, OrgSettingsRequestDto newSettings) {
+        if (authenticationFacade.isRoot()) {
+            Organization systemOrganization = organizationRepository.findById(id)
+                                                                    .orElseThrow(() -> new NotFoundException(id));
 
-        Map<String, Object> overlappedSettings = overlapOldSettings(newSettings, organization.getSettings());
+            Map<String, Object> resultSettings;
 
+            log.debug("Add new setting: '{}' to system settings", newSettings);
+
+            Set<OrgSettingsRequestDto> systemSettings = readSystemSettings(systemOrganization.getSettings());
+
+            Optional<OrgSettingsRequestDto> oOrgSettings = readSystemSettingsForOrganization(newSettings.getId());
+            if (oOrgSettings.isPresent()) {
+                OrgSettingsRequestDto oldSettings = oOrgSettings.get();
+
+                resultSettings = overlapOldSettings(oldSettings.getSettings(), newSettings.getSettings());
+
+                oldSettings.setSettings(resultSettings);
+
+                replaceSetting(systemSettings, oldSettings);
+            } else {
+                systemSettings.add(newSettings);
+            }
+
+            systemOrganization.setSettings(
+                    toJsonNode(JacksonUtil.toString(systemSettings)));
+
+            organizationRepository.save(systemOrganization);
+
+            mergeAndBroadcast(newSettings.getSettings(),
+                              getOrgSettings(newSettings.getId()),
+                              systemOrganization.getId());
+        } else {
+            if (!Objects.equals(id, newSettings.getId())) {
+                // BadRequestException а не ForbiddenException осмысленно, чтобы не было возможности вычислить
+                // существующие организации.
+                throw new BadRequestException("Сущность не найден(а) по идентификатору: " + newSettings.getId());
+            }
+
+            Long orgId = newSettings.getId();
+            Map<String, Object> newOrgSettings = newSettings.getSettings();
+
+            Organization organization = organizationRepository.findById(orgId)
+                                                              .orElseThrow(() -> new NotFoundException(orgId));
+
+            organization.setSettings(
+                    toJsonNode(JacksonUtil.toString(newOrgSettings)));
+
+            organizationRepository.save(organization);
+
+            Map<String, Object> systemOrgSettings = new HashMap<>();
+            Optional<OrgSettingsRequestDto> oSystemOrgSettings = readSystemSettingsForOrganization(orgId);
+            if (oSystemOrgSettings.isPresent()) {
+                systemOrgSettings = oSystemOrgSettings.get().getSettings();
+            }
+
+            mergeAndBroadcast(systemOrgSettings, newOrgSettings, orgId);
+        }
+    }
+
+    public void initOrgSetting(Organization organization) {
+        Map<String, Object> enabledKnownSetting = new HashMap<>();
+        getKnownSetting().forEach((k, v) -> enabledKnownSetting.put(k, true));
+
+        // init in system settings
+        Set<OrgSettingsRequestDto> systemSettings = getSystemSettings()
+                .stream()
+                .map(responseDto -> new OrgSettingsRequestDto(responseDto.getId(), responseDto.getSystem()))
+                .collect(Collectors.toSet());
+
+        systemSettings.add(new OrgSettingsRequestDto(organization.getId(), enabledKnownSetting));
+
+        Organization systemOrganization = organizationRepository.findById(ROOT_ORG_ID)
+                                                                .orElseThrow(() -> new NotFoundException(ROOT_ORG_ID));
+
+        systemOrganization.setSettings(
+                toJsonNode(JacksonUtil.toString(systemSettings)));
+
+        organizationRepository.save(systemOrganization);
+
+        // init in organization settings
         organization.setSettings(
-                toJsonNode(convertToJson(overlappedSettings))
-        );
+                toJsonNode(JacksonUtil.toString(enabledKnownSetting)));
 
         organizationRepository.save(organization);
+    }
 
-        Map<String, Object> globalSettings = getGlobalSettings();
-        Map<String, Object> mergedSettings = mergeSettings(globalSettings, overlappedSettings);
+    private void replaceSetting(Set<OrgSettingsRequestDto> systemSettings, OrgSettingsRequestDto oldSettings) {
+        systemSettings.remove(new OrgSettingsRequestDto(oldSettings.getId()));
+        systemSettings.add(oldSettings);
+    }
+
+    private void mergeAndBroadcast(Map<String, Object> systemOrgSettings,
+                                   Map<String, Object> newOrgSettings,
+                                   Long orgId) {
+        Map<String, Object> mergedSettings = mergeSettings(systemOrgSettings, newOrgSettings);
+
         log.debug("Broadcast new settings: {}", mergedSettings);
 
         messageBus.produce(
-                new OrgSettingsUpdatedEvent(organization.getId(), mergedSettings));
+                new OrgSettingsUpdatedEvent(orgId, mergedSettings));
+    }
+
+    @NotNull
+    private Map<String, Object> getOrgSettings(Long orgId) {
+        Map<String, Object> result = new HashMap<>();
+        Organization organization = organizationRepository.findById(orgId)
+                                                          .orElseThrow(() -> new NotFoundException(orgId));
+
+        JsonNode settings = organization.getSettings();
+        if (settings != null) {
+            result = fromString(settings.toString(), Map.class);
+        }
+
+        return result;
     }
 
     /**
      * Накладываем новые настройки поверх старых. Используем известные нам настройки.
      */
-    private Map<String, Object> overlapOldSettings(String newOrgSettings, JsonNode currentOrgSettings) {
+    private Map<String, Object> overlapOldSettings(Map<String, Object> oldSettings,
+                                                   Map<String, Object> newSettings) {
         Map<String, Object> result = new HashMap<>();
-        try {
-            if (currentOrgSettings != null) {
-                result = fromString(currentOrgSettings.toString(), Map.class);
-            }
+        if (oldSettings != null) {
+            result = new HashMap<>(oldSettings);
+        }
 
-            Map<String, Object> newSettings = fromString(newOrgSettings, Map.class);
-            for (Map.Entry<String, String> entry: knownSettings.entrySet()) {
-                String k = entry.getKey();
-                if (newSettings.containsKey(k)) {
-                    result.put(k, newSettings.get(k));
-                }
+        for (Map.Entry<String, String> entry: knownSettings.entrySet()) {
+            String k = entry.getKey();
+            if (newSettings.containsKey(k)) {
+                result.put(k, newSettings.get(k));
             }
-        } catch (Exception e) {
-            String msg = "Передано некорректное тело: " + newOrgSettings;
-            log.error(msg, e);
-
-            throw new BadRequestException(msg);
         }
 
         return result;
     }
 
-    private String convertToJson(Map<String, Object> oldSettings) {
-        String asJsonString;
+    private Set<OrgSettingsRequestDto> readSystemSettings(JsonNode jsonNode) {
+        if (jsonNode == null) {
+            return new HashSet<>();
+        }
+
         try {
-            asJsonString = mapper.writeValueAsString(oldSettings);
+            return mapper.readValue(jsonNode.toString(),
+                                    new TypeReference<Set<OrgSettingsRequestDto>>() {
+                                    });
         } catch (Exception e) {
-            String msg = "Не удалось прочитать старые настройки.";
+            String msg = String.format("Не удалось прочесть настройки всех организаций: '%s' из БД. Причина: %s",
+                                       jsonNode, e.getMessage());
             log.error(msg, e);
 
             throw new AuthServiceException(msg);
         }
-
-        return asJsonString;
     }
 
-    private Map<String, Object> getGlobalSettings() {
-        Map<String, Object> result = new HashMap<>();
+    private Optional<OrgSettingsRequestDto> readSystemSettingsForOrganization(Long orgId) {
+        Organization systemOrganization = organizationRepository.findById(ROOT_ORG_ID)
+                                                                .orElseThrow(() -> new NotFoundException(ROOT_ORG_ID));
 
-        Optional<Organization> oRootOrg = organizationRepository.findById(GLOBAL_ORG_ID);
-        if (oRootOrg.isPresent()) {
-            JsonNode settings = oRootOrg.get().getSettings();
-            if (settings != null) {
-                result = fromString(settings.toString(), Map.class);
-            }
-        }
-
-        return result;
+        return readSystemSettings(systemOrganization.getSettings())
+                .stream()
+                .filter(settings -> settings.getId().equals(orgId))
+                .findFirst();
     }
 }

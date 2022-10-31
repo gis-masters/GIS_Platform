@@ -354,7 +354,7 @@ public class BaseStepsDefinitions {
         deleteEntity(id);
     }
 
-    public void deleteAllEntitiesInOrg() {
+    public void clearAllOrganizationPools() {
         userPool.clear();
         usersGroupPool.clear();
         baseMapsPool.clear();

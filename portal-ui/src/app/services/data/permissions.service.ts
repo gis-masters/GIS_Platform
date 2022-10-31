@@ -8,12 +8,6 @@ import { schemaService } from './schema.service';
 import { VectorTable, getVectorTable } from './data.service';
 import { getLibraryRecord } from './doc-library.service';
 
-export enum BuildInRole {
-  GLOBAL_ADMIN = 'GLOBAL_ADMIN',
-  ORG_ADMIN = 'ORG_ADMIN',
-  USER = 'USER'
-}
-
 enum TablePermissionPoint {
   READ_FEATURES,
   UPDATE_FEATURES,

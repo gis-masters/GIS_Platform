@@ -18,10 +18,10 @@ public class CrgAuthHandler {
 
     public String getRootAccessToken() {
         try {
-            String rootUserName = environment.getRequiredProperty("crg-options.root-user-name");
-            String rootUserPass = environment.getRequiredProperty("crg-options.root-user-password");
+            String systemAdminLogin = environment.getRequiredProperty("crg-options.system-admin-login");
+            String systemAdminPassword = environment.getRequiredProperty("crg-options.system-admin-password");
 
-            return oAuthClient.getToken(rootUserName, rootUserPass)
+            return oAuthClient.getToken(systemAdminLogin, systemAdminPassword)
                               .getAccess_token();
         } catch (Exception e) {
             throw new GisServiceException("Error get root token");

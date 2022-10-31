@@ -6,7 +6,7 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { organizationSettingsService } from '../organization-settings';
 import { getUsersUrl, getUserUrl } from '../server-urls.service';
 import { communicationService } from '../communication.service';
-import { BuildInRole } from './permissions.models';
+import { BuiltInRole } from './permissions.models';
 import { http } from '../http.service';
 import { services } from '../services';
 
@@ -26,7 +26,7 @@ export interface CrgUser {
   phone?: string;
   login: string;
   enabled: boolean;
-  authorities: BuildInRole[];
+  authorities: BuiltInRole[];
   createdAt: string;
   password?: string;
   _links?: { [key: string]: ApiLink }[];

@@ -41,12 +41,12 @@ public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
+    private final BCryptPasswordEncoder encoder;
+    private final UserRepository userRepository;
     private final IMessageBusProducer messageBus;
     private final ProjectionFactory projectionFactory;
-    private final UserRepository userRepository;
     private final OrganizationRepository orgRepository;
     private final IAuthenticationFacade authenticationFacade;
-    private final BCryptPasswordEncoder encoder;
 
     public UserService(UserRepository userRepository,
                        IMessageBusProducer messageBus,
@@ -67,33 +67,34 @@ public class UserService {
         User user = userRepository.findByLogin(login)
                                   .orElseThrow(() -> new NotFoundException(login));
 
+        Set<String> authorities = user.getAuthorities().stream()
+                                      .map(Authorities::getAuthority)
+                                      .collect(Collectors.toSet());
+
+        UserInfoModel dto = UserInfoModel.builder()
+                                         .id(user.getId())
+                                         .name(user.getName())
+                                         .login(user.getLogin())
+                                         .geoserverLogin(user.getGeoserverLogin())
+                                         .surname(user.getSurname())
+                                         .middleName(user.getMiddleName())
+                                         .job(user.getJob())
+                                         .phone(user.getPhone())
+                                         .email(user.getEmail())
+                                         .enabled(user.isEnabled())
+                                         .authorities(authorities)
+                                         .createdAt(user.getCreatedAt())
+                                         .build();
+
         Set<Organization> organizations = user.getOrganizations();
         if (!organizations.isEmpty()) {
             Organization organization = organizations.iterator().next();
 
-            Set<String> authorities = user.getAuthorities().stream()
-                                          .map(Authorities::getAuthority)
-                                          .collect(Collectors.toSet());
-
-            return UserInfoModel.builder()
-                                .id(user.getId())
-                                .name(user.getName())
-                                .login(user.getLogin())
-                                .geoserverLogin(user.getGeoserverLogin())
-                                .surname(user.getSurname())
-                                .middleName(user.getMiddleName())
-                                .job(user.getJob())
-                                .phone(user.getPhone())
-                                .email(user.getEmail())
-                                .enabled(user.isEnabled())
-                                .authorities(authorities)
-                                .createdAt(user.getCreatedAt())
-                                .orgId(organization.getId())
-                                .orgName(organization.getName())
-                                .build();
+            dto.setOrgId(organization.getId());
+            dto.setOrgName(organization.getName());
         }
 
-        return new UserInfoModel(login);
+        return dto;
     }
 
     public boolean isExist(String login) {

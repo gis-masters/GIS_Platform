@@ -24,6 +24,7 @@ export enum Pages {
   IMPORT = 'import',
   MAP = 'map',
   ORG_ADMIN = 'org-admin',
+  SYSTEM_MANAGEMENT = 'system-management',
   DATA_MANAGEMENT = 'data-management',
   REGISTRY = 'registry',
   DOCUMENT = 'document',

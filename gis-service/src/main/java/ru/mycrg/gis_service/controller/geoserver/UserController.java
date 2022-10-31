@@ -8,7 +8,7 @@ import ru.mycrg.gis_service.service.geoserver.UserGeoserverService;
 
 import javax.validation.Valid;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 @RequestMapping(value = "/geoserver/users")
@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserGeoserverDto dto) {
         userGeoserverService.create(dto);
 
@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteUser(@Valid @RequestBody UserGeoserverDto dto) {
         userGeoserverService.delete(dto);
 

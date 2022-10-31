@@ -9,14 +9,14 @@ import ru.mycrg.auth_service_contract.Authorities;
 
 import java.util.List;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_AUTHORITY;
 
 @RestController
 @RequestMapping(value = "/roles")
 public class AuthoritiesController {
 
     @GetMapping
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
     public ResponseEntity<List<String>> getAuthorities() {
         return ResponseEntity.ok(Authorities.getAuthorities());
     }

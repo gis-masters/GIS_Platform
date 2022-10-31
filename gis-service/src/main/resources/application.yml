@@ -40,8 +40,8 @@ crg-options:
   userServiceName: postgres_db_user_service
   client_id: admin
   client_secret: geoserver
-  root-user-name: admin@mail.ru
-  root-user-password: geoserver
+  system-admin-login: admin@mail.ru
+  system-admin-password: geoserver
 
 server:
   port: 8082

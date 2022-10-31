@@ -6,6 +6,8 @@ import { LoginForm } from '../../../objects/blocks/LoginForm/LoginForm';
 import { mockOauthToken } from '../_mock/oauthToken';
 import { mockUsersCurrent } from '../_mock/usersCurrent';
 import { mockProjects } from '../_mock/projects';
+import { mockSettings } from '../_mock/settings';
+import { mockKnownSettings } from '../_mock/knownSettings';
 
 interface TestDefinitionWithOnly extends TestDefinition {
   only: TestDefinition;
@@ -39,6 +41,8 @@ describe('Авторизация', () => {
     await mockOauthToken(this.browser);
     await mockUsersCurrent(this.browser);
     await mockProjects(this.browser);
+    await mockSettings(this.browser);
+    await mockKnownSettings(this.browser);
 
     const loginForm = new LoginForm(this.browser);
     await loginForm.login('hermione@test', 'Avadakedavra1');

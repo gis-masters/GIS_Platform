@@ -1,7 +1,7 @@
 import { DataEntityType } from './data.service';
 
-export enum BuildInRole {
-  GLOBAL_ADMIN = 'GLOBAL_ADMIN',
+export enum BuiltInRole {
+  SYSTEM_ADMIN = 'SYSTEM_ADMIN',
   ORG_ADMIN = 'ORG_ADMIN',
   USER = 'USER'
 }

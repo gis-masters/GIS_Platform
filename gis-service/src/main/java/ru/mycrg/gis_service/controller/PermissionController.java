@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
@@ -93,7 +93,7 @@ public class PermissionController {
     }
 
     @DeleteMapping("/permissions/{id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteEntityPermissions(@RequestParam(name = "principal_type") String principalType,
                                                           @PathVariable(name = "id") long principalId) {
         log.debug("Запрос на удаление разрешений {}: {} ", principalType, principalId);

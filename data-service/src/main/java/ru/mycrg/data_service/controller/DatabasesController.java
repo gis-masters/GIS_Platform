@@ -11,7 +11,8 @@ import ru.mycrg.data_service.service.DatabaseService;
 import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.OK;
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 public class DatabasesController {
@@ -23,7 +24,7 @@ public class DatabasesController {
     }
 
     @GetMapping("/databases/{dbName}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<DatabaseCreateDto> getDb(@PathVariable String dbName) {
         if (databaseService.isExist(dbName)) {
             return ResponseEntity.status(OK).body(new DatabaseCreateDto(dbName));
@@ -32,7 +33,7 @@ public class DatabasesController {
         throw new NotFoundException(dbName);
     }
 
-    @PreAuthorize("hasAuthority('GLOBAL_ADMIN')")
+    @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
     @PostMapping("/databases")
     public ResponseEntity<Object> createDb(@Valid @RequestBody DatabaseCreateDto dto) {
         databaseService.create(dto.getName());
@@ -40,7 +41,7 @@ public class DatabasesController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     @DeleteMapping("/databases/{dbName}")
     public ResponseEntity<Object> deleteDb(@PathVariable String dbName) {
         databaseService.delete(dbName);

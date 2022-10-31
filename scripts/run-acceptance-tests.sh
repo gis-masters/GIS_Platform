@@ -11,7 +11,7 @@ pushd ../
                    -Denv.HOST=http://localhost \
                    -Denv.PORT=8100 \
                    -Denv.ROOT_NAME=admin@mail.ru \
-                   -Denv.ROOT_PASS=geoserver \
+                   -Denv.ROOT_PASS=Esterhazy2022 \
                    -Dcucumber.filter.tags="@OnlyThis"
   elif [[ -z "$1" ]]; then
     printHeader2 "Run ALL acceptance tests"
@@ -20,7 +20,7 @@ pushd ../
                    -Denv.HOST=http://localhost \
                    -Denv.PORT=8100 \
                    -Denv.ROOT_NAME=admin@mail.ru \
-                   -Denv.ROOT_PASS=geoserver
+                   -Denv.ROOT_PASS=Esterhazy2022
   else
     printHeader2 "Not acceptable parameter"
   fi

@@ -1,0 +1,11 @@
+.SystemManagement-Content {
+  & .MuiTabs-flexContainer {
+    overflow: auto;
+  }
+
+  & .MuiTabs-fixed {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

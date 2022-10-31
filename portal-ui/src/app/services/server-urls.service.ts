@@ -138,6 +138,10 @@ export async function getOrganizationSettingsUrl(): Promise<string> {
   return `${await getOrganizationsUrl()}/settings`;
 }
 
+export async function getOrganizationKnownSettingsUrl(): Promise<string> {
+  return `${await getOrganizationsUrl()}/known-settings`;
+}
+
 export async function getSchemaUrl(): Promise<string> {
   return (await getDataUrl()) + '/schemas';
 }

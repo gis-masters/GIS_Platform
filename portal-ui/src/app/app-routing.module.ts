@@ -21,6 +21,9 @@ import { LibraryRegistryPageComponent } from './pages/library-registry/library-r
 import { ServicesCalculatorPageComponent } from './pages/services-calculator/services-calculator-page.component';
 import { RestorePasswordFormPageComponent } from './pages/restore-password-form/restore-password-form-page.component';
 import { ChangePasswordFormPageComponent } from './pages/change-password-form/change-password-form-page.component';
+import { SystemManagementPageComponent } from './pages/system-management/system-management-page.component';
+import { SystemManagementGuardService } from './services/system-management-guard.service';
+import { SystemAdminGuardService } from './services/system-admin-guard.service';
 
 export interface AppRouteData extends Data {
   page: Pages;
@@ -80,7 +83,7 @@ const routes: AppRoutes = [
   {
     path: 'projects/default',
     component: ProjectsPageComponent,
-    canActivate: [ProjectsGuardService],
+    canActivate: [ProjectsGuardService, SystemAdminGuardService],
     resolve: {
       user: CurrentUserResolver
     },
@@ -89,6 +92,7 @@ const routes: AppRoutes = [
   {
     path: 'projects',
     component: ProjectsPageComponent,
+    canActivate: [SystemAdminGuardService],
     resolve: {
       user: CurrentUserResolver
     },
@@ -96,7 +100,7 @@ const routes: AppRoutes = [
   },
   {
     path: 'projects/:projectId',
-    canActivate: [WorkflowGuardService],
+    canActivate: [WorkflowGuardService, SystemAdminGuardService],
     children: [
       {
         path: 'import',
@@ -143,15 +147,25 @@ const routes: AppRoutes = [
   {
     path: 'org-admin',
     component: OrgAdminPageComponent,
-    canActivate: [OrgAdminGuardService],
+    canActivate: [OrgAdminGuardService, SystemAdminGuardService],
     resolve: {
       user: CurrentUserResolver
     },
     data: { page: Pages.ORG_ADMIN }
   },
   {
+    path: 'system-management',
+    component: SystemManagementPageComponent,
+    canActivate: [SystemManagementGuardService],
+    resolve: {
+      user: CurrentUserResolver
+    },
+    data: { page: Pages.SYSTEM_MANAGEMENT }
+  },
+  {
     path: 'data-management',
     component: DataManagementPageComponent,
+    canActivate: [SystemAdminGuardService],
     resolve: {
       user: CurrentUserResolver
     },
@@ -160,6 +174,7 @@ const routes: AppRoutes = [
   {
     path: 'data-management/library/:libraryId/registry',
     component: LibraryRegistryPageComponent,
+    canActivate: [SystemAdminGuardService],
     resolve: {
       user: CurrentUserResolver
     },
@@ -168,6 +183,7 @@ const routes: AppRoutes = [
   {
     path: 'data-management/library/:libraryId/document/:documentId',
     component: LibraryDocumentPageComponent,
+    canActivate: [SystemAdminGuardService],
     resolve: {
       user: CurrentUserResolver
     },
@@ -196,6 +212,7 @@ export const routingComponents = [
   MappingPageComponent,
   ProjectsPageComponent,
   OrgAdminPageComponent,
+  SystemManagementPageComponent,
   DataManagementPageComponent,
   LibraryRegistryPageComponent,
   LibraryDocumentPageComponent,

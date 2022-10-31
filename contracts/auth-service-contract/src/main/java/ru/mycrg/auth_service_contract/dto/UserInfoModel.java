@@ -29,6 +29,14 @@ public class UserInfoModel {
         this.name = name;
     }
 
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
+
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
+
     public UserInfoModel(Long id, String name, String login, String surname, String email, boolean enabled,
                          Set<String> authorities, LocalDateTime createdAt, String orgName, Long orgId,
                          String middleName, String job, String phone, String geoserverLogin) {

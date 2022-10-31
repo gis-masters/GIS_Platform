@@ -12,8 +12,8 @@ import ru.mycrg.gis_service.service.OrganizationService;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_AUTHORITY;
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 @RequestMapping(value = "/geoserver/organizations")
@@ -26,7 +26,7 @@ public class OrganizationController {
     }
 
     @PostMapping
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
     public ResponseEntity<Object> createOrganizationOnGeoserver(@Valid @RequestBody OrgCreateDto dto,
                                                                 Authentication authentication) {
         final ProcessInstance processInstance = bpmnService.create(dto, authentication);
@@ -37,7 +37,7 @@ public class OrganizationController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteOrganizationOnGeoserver(@PathVariable Long id,
                                                                 @RequestBody List<String> users,
                                                                 Authentication authentication) {

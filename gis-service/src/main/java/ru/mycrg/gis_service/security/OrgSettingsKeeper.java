@@ -25,7 +25,7 @@ public class OrgSettingsKeeper {
 
     public void throwIfCreateProjectNotAllowed() {
         Object createProject = serviceSettings.get("createProject");
-        if (createProject != null && !(boolean) createProject) {
+        if (createProject != null && !Boolean.parseBoolean(createProject.toString())) {
             log.info("CreateProjectNotAllowed by settings");
 
             throw new NotFoundException("");

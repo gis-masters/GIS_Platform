@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static java.lang.Long.getLong;
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_CREATED;
@@ -86,7 +85,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         if (type.equals("raster")) {
             Long currentRecordId = Objects.nonNull(currentDocumentId)
                     ? currentDocumentId
-                    : getLong(recordId);
+                    : Long.parseLong(recordId);
             layerCreateDto.setLibraryId(libraryId);
             layerCreateDto.setRecordId(currentRecordId);
             layerCreateDto.setMode(mode);

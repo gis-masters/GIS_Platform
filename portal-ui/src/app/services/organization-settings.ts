@@ -1,17 +1,17 @@
 import { AxiosError } from 'axios';
 import { boundMethod } from 'autobind-decorator';
 
-import { http } from './http.service';
-
+import { getOrganizationKnownSettingsUrl, getOrganizationSettingsUrl } from './server-urls.service';
+import { organizationSettings, OrgSettings } from '../stores/OrganizationSettings.store';
+import { PropertyType, Schema } from './data/schema.models';
 import { Toast } from '../components/Toast/Toast';
-import { getOrganizationSettingsUrl } from './server-urls.service';
-import { organizationSettings, Settings } from '../stores/OrganizationSettings.store';
+import { http } from './http.service';
 
 class OrganizationSettingsService {
   private static _instance: OrganizationSettingsService;
-  private promise: Promise<Settings>;
+  private promise: Promise<OrgSettings>;
 
-  private resolve: (value?: Settings) => void;
+  private resolve: (value?: OrgSettings) => void;
   private reject: () => void;
 
   private constructor() {
@@ -19,15 +19,18 @@ class OrganizationSettingsService {
   }
 
   @boundMethod
-  private promiseHandler(resolve: (value: Settings) => void, reject: () => void) {
+  private promiseHandler(resolve: (value: OrgSettings) => void, reject: () => void) {
     this.resolve = resolve;
     this.reject = reject;
   }
 
   async fetch() {
     try {
-      const settings = await http.get<Settings>(await getOrganizationSettingsUrl());
+      const settings = await http.get<OrgSettings>(await getOrganizationSettingsUrl());
       organizationSettings.setSettings(settings);
+
+      const availableSettings = await http.get<Record<string, string>>(await getOrganizationKnownSettingsUrl());
+      organizationSettings.setAvailableSettings(availableSettings);
       this.resolve();
     } catch (error) {
       organizationSettings.setSettingsError(true);
@@ -40,10 +43,27 @@ class OrganizationSettingsService {
     }
   }
 
-  async setOrganizationSettings(settings: Settings): Promise<void> {
-    await http.patch<Settings>(await getOrganizationSettingsUrl(), settings);
+  async setOrganizationSettings(settings: OrgSettings): Promise<void> {
+    await http.patch<OrgSettings>(await getOrganizationSettingsUrl(), settings);
 
     organizationSettings.setSettings(settings);
+  }
+
+  orgSchema(settings: Record<string, boolean>, systemManagement: boolean): Schema<Record<string, unknown>> {
+    const settingsKeys = Object.keys(settings);
+
+    return {
+      properties: settingsKeys.map(item => {
+        if (organizationSettings.availableOrgsSettings[item]) {
+          return {
+            name: item,
+            title: organizationSettings.availableOrgsSettings[item],
+            propertyType: PropertyType.BOOL,
+            readOnly: systemManagement ? false : !organizationSettings.orgSettings.system[item]
+          };
+        }
+      })
+    };
   }
 
   static get instance() {

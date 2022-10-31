@@ -20,7 +20,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RepositoryRestController
@@ -47,7 +47,7 @@ public class GroupController {
     }
 
     @PostMapping("/groups")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<GroupProjection> createGroup(@Valid @RequestBody GroupCreateDto dto) {
         GroupProjection groupProjection = groupService.create(dto);
 
@@ -96,7 +96,7 @@ public class GroupController {
     }
 
     @PatchMapping("/groups/{id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> updateGroups(@PathVariable Long id,
                                                @Valid @RequestBody GroupUpdateDto dto) {
         groupService.update(id, dto);
@@ -105,7 +105,7 @@ public class GroupController {
     }
 
     @DeleteMapping("/groups/{id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteGroup(@PathVariable Long id) {
         groupService.delete(id);
 

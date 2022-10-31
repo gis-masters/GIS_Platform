@@ -14,6 +14,7 @@ import { FieldErrors } from '../../services/formValidation.service';
 import { usersService } from '../../services/data/users.service';
 import { generateRandomId } from '../../services/util/randomId';
 import { getEsiaUrl } from '../../services/server-urls.service';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { authService } from '../../services/auth.service';
 import { services } from '../../services/services';
 import { http } from '../../services/http.service';
@@ -192,10 +193,23 @@ export default class LoginForm extends Component<LoginFormProps> {
 
     try {
       if (result.ok) {
+        await usersService.fetchCurrentUser();
+
+        if (currentUser.isSystemAdmin) {
+          services.ngZone.run(() => {
+            void services.router.navigateByUrl('/system-management');
+          });
+
+          if (this.props.inDialog) {
+            communicationService.authDialogSuccess.emit();
+          }
+
+          return;
+        }
+
         if (this.props.inDialog) {
           communicationService.authDialogSuccess.emit();
         } else {
-          await usersService.fetchCurrentUser();
           services.ngZone.run(() => {
             void services.router.navigateByUrl('/projects/default');
           });

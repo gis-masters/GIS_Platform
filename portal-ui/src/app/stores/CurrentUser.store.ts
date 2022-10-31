@@ -1,6 +1,6 @@
 import { observable, computed, action, makeObservable } from 'mobx';
 
-import { BuildInRole } from '../services/data/permissions.models';
+import { BuiltInRole } from '../services/data/permissions.models';
 import { OrgInfo } from '../services/data/users.service';
 
 const emptyOrgInfo: OrgInfo = {
@@ -25,7 +25,7 @@ class CurrentUser implements OrgInfo {
   @observable surname: string;
   @observable login: string;
   @observable enabled: boolean;
-  @observable authorities: BuildInRole[];
+  @observable authorities: BuiltInRole[];
   @observable createdAt: string;
   @observable orgName: string;
   @observable orgId: number;
@@ -51,7 +51,12 @@ class CurrentUser implements OrgInfo {
 
   @computed
   get isAdmin(): boolean {
-    return this.authorities.includes(BuildInRole.ORG_ADMIN) || this.authorities.includes(BuildInRole.GLOBAL_ADMIN);
+    return this.authorities.includes(BuiltInRole.ORG_ADMIN) || this.authorities.includes(BuiltInRole.SYSTEM_ADMIN);
+  }
+
+  @computed
+  get isSystemAdmin(): boolean {
+    return this.authorities.includes(BuiltInRole.SYSTEM_ADMIN);
   }
 
   @computed
