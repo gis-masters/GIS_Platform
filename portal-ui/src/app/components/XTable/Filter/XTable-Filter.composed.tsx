@@ -7,6 +7,7 @@ import { withTypeFloat } from './_type/XTable-Filter_type_float';
 import { withTypeInteger } from './_type/XTable-Filter_type_integer';
 import { withTypeString } from './_type/XTable-Filter_type_string';
 import { XTableFilterBase } from './XTable-Filter.base';
+import { withTypeDocument } from './_type/XTable-Filter_type_document';
 
 export const XTableFilter = compose(
   withTypeBool,
@@ -14,5 +15,6 @@ export const XTableFilter = compose(
   withTypeDateTime,
   withTypeFloat,
   withTypeInteger,
+  withTypeDocument,
   withTypeString
 )(XTableFilterBase) as typeof XTableFilterBase;

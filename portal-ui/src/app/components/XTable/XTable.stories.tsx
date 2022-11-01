@@ -26,6 +26,7 @@ interface TestData {
   amount: number;
   date: string;
   conclusive?: boolean;
+  documents?: string;
   long?: string;
 }
 
@@ -305,6 +306,19 @@ const cols: XTableColumn<TestData>[] = [
   }
 ];
 
+const colsWithDocuments: XTableColumn<TestData>[] = [
+  ...cols.slice(0, -1),
+  {
+    title: 'Документы',
+    filterable: true,
+    type: PropertyType.DOCUMENT,
+    align: 'center',
+    field: 'documents',
+    sortable: true
+  },
+  cols.at(-1)
+];
+
 const defaultSort: SortParams<TestData> = { field: 'title', asc: true };
 
 type XTableForTestData = (p: XTableProps<TestData>) => ReactElement;
@@ -348,7 +362,7 @@ export const Async = Template.bind({}) as ComponentStory<XTableForTestData>;
 Async.args = {
   title: 'Таблица с данными с сервера',
   getData,
-  cols,
+  cols: colsWithDocuments,
   defaultSort,
   secondarySortField: 'id',
   filterable: true,
@@ -358,7 +372,7 @@ Async.args = {
 export const FilterPanel = Template.bind({}) as ComponentStory<XTableForTestData>;
 FilterPanel.args = {
   data,
-  cols,
+  cols: colsWithDocuments,
   defaultSort,
   showFiltersPanel: true,
   secondarySortField: 'id',

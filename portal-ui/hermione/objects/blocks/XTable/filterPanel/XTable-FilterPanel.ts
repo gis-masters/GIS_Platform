@@ -13,6 +13,7 @@ export class XTableFilterPanel extends Block {
     firstFilterChipClear: '.XTable-FilterPanel .XTable-FilterPanelItem:nth-child(2) .MuiSvgIcon-root',
     allFiltersChipClear: '.XTable-FilterPanel .XTable-FilterPanelItem:nth-child(1) .MuiSvgIcon-root',
     inputTypeString: '.XTable-Filter_type_string .MuiInputBase-input',
+    inputTypeDocument: '.XTable-Filter_type_document .MuiInputBase-input',
     firstInputTypeFloat: '.XTable-Filter_type_float .MuiTextField-root:first-child .MuiInputBase-input',
     secondInputTypeFloat: '.XTable-Filter_type_float .MuiTextField-root:last-child .MuiInputBase-input',
     firstInputTypeDateTime: '.XTable-Filter_type_dateTime .MuiTextField-root:first-child .MuiInputBase-input',
@@ -42,6 +43,12 @@ export class XTableFilterPanel extends Block {
     await this.browser.pause(200);
   }
 
+  async setDocumentFieldValue(value: string): Promise<void> {
+    const $input = await this.getElement('inputTypeDocument');
+    await $input.setValue(value);
+    await this.browser.pause(300); //  input animation
+  }
+
   async setFloatFieldValue(value1: number, value2: number): Promise<void> {
     const $firstInput = await this.getElement('firstInputTypeFloat');
     const $secondInput = await this.getElement('secondInputTypeFloat');
@@ -62,7 +69,6 @@ export class XTableFilterPanel extends Block {
   }
 
   async setBoolFieldValue(bool: boolean): Promise<void> {
-    await this.browser.pause(1400); // loader
     if (bool) {
       const $firstInput = await this.getElement('firstBoolBtn');
       await $firstInput.click();
@@ -77,7 +83,7 @@ export class XTableFilterPanel extends Block {
   async toggleStrictness(): Promise<void> {
     const $strictness = await this.getElement('strictness');
     await $strictness.click();
-    await this.browser.pause(400); // button animation
+    await this.browser.pause(300); //  input animation
   }
 
   async clearFirstFilter(): Promise<void> {

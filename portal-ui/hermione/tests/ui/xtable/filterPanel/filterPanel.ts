@@ -92,6 +92,7 @@ describe('XTable', () => {
       const xTableFilterPanel = new XTableFilterPanel(this.browser);
 
       await xTableFilterPanel.setStringFieldValue('бу');
+
       await xTableFilterPanel.setBoolFieldValue(true);
 
       const boolValue = await xTableFilterPanel.getSecondFilterValue();
@@ -127,6 +128,29 @@ describe('XTable', () => {
 
       const value = await xTableFilterPanel.getFirstFilterValue();
       assert.equal('буск', value);
+    });
+
+    /**
+     * Scenario: При изменении введённого значения у поля типа Document в фильтре в панели фильтров изменяется содержимое фильтра
+     *   When пользователь изменяет текст и тип фильтрации в поле типа Document
+     *   Then в панели фильтров изменяется указанный фильтр
+     */
+    it('При изменении введённого значения у поля типа Document в фильтре в панели фильтров изменяется содержимое фильтра', async function () {
+      const xTableFilterPanel = new XTableFilterPanel(this.browser);
+
+      await xTableFilterPanel.setDocumentFieldValue('документ');
+
+      const title = await xTableFilterPanel.getFilterTitle();
+      assert.equal('Документы', title);
+
+      const firstValue = await xTableFilterPanel.getFirstFilterValue();
+      assert.equal('%документ%', firstValue);
+
+      await xTableFilterPanel.setDocumentFieldValue('678');
+      await xTableFilterPanel.toggleStrictness();
+
+      const value = await xTableFilterPanel.getFirstFilterValue();
+      assert.equal('%документ678%', value);
     });
 
     /**

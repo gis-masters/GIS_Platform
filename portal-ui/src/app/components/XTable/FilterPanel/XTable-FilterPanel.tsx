@@ -90,7 +90,6 @@ export class XTableFilterPanel<T> extends Component<XTableFilterPanelProps<T>> {
 
     return !(
       item.type === PropertyType.BINARY ||
-      item.type === PropertyType.DOCUMENT ||
       item.type === PropertyType.FIAS ||
       item.type === PropertyType.LOOKUP ||
       item.type === PropertyType.CUSTOM ||

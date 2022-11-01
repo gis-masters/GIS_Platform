@@ -8,6 +8,7 @@ const filterableTypes = new Set([
   PropertyType.BOOL,
   PropertyType.CHOICE,
   PropertyType.DATETIME,
+  PropertyType.DOCUMENT,
   PropertyType.FLOAT,
   PropertyType.INT,
   PropertyType.STRING

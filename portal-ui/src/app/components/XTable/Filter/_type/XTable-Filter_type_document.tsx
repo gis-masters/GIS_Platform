@@ -1,0 +1,63 @@
+import React, { Component } from 'react';
+import { action, computed, makeObservable } from 'mobx';
+import { observer } from 'mobx-react';
+import { TextField } from '@mui/material';
+import { withBemMod } from '@bem-react/core';
+
+import { PropertyType } from '../../../../services/data/schema.models';
+import { FilterQuery } from '../../../../services/util/filterObjects';
+
+import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
+
+import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_document.scss';
+
+@observer
+class XTableFilterTypeDocument extends Component<XTableFilterProps> {
+  constructor(props: XTableFilterProps) {
+    super(props);
+    makeObservable(this);
+  }
+
+  render() {
+    const { className } = this.props;
+
+    return (
+      <TextField
+        variant='filled'
+        size='small'
+        className={cnXTableFilter(null, [className])}
+        onChange={this.handleChange}
+        value={this.value}
+      />
+    );
+  }
+
+  @computed
+  private get value(): string {
+    const { filterQuery, field } = this.props;
+    const value = ((filterQuery[field] as FilterQuery)?.$ilike as string) || '';
+
+    return value.replace(/^%|%$/g, '');
+  }
+
+  @action.bound
+  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
+
+    onBeforeFilterChange();
+
+    if (e.target.value?.length) {
+      filterQuery[field] = { $ilike: `%${e.target.value}%` };
+    } else {
+      delete filterQuery[field];
+    }
+
+    onFilterChange();
+  }
+}
+
+export const withTypeDocument = withBemMod<XTableFilterProps, XTableFilterProps>(
+  cnXTableFilter(),
+  { type: PropertyType.DOCUMENT },
+  () => XTableFilterTypeDocument
+);
