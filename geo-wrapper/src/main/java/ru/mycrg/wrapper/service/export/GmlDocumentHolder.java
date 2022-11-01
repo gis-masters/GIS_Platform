@@ -8,11 +8,16 @@ public class GmlDocumentHolder {
     private final Document gmlDocument;
     private final Element gmlFeatureCollection;
     private final Element objectCollection;
+    private final Element specialZoneCollection;
 
-    public GmlDocumentHolder(Document mainDoc, Element gmlFeatureCollection, Element objectCollection) {
+    public GmlDocumentHolder(Document mainDoc,
+                             Element gmlFeatureCollection,
+                             Element objectCollection,
+                             Element specialZoneCollection) {
         this.gmlDocument = mainDoc;
         this.gmlFeatureCollection = gmlFeatureCollection;
         this.objectCollection = objectCollection;
+        this.specialZoneCollection = specialZoneCollection;
     }
 
     public Document getGmlDocument() {
@@ -27,4 +32,7 @@ public class GmlDocumentHolder {
         return objectCollection;
     }
 
+    public Element getSpecialZoneCollection() {
+        return specialZoneCollection;
+    }
 }

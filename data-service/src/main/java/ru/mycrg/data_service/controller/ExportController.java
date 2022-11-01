@@ -12,14 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.ExportRequestModel;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.entity.Process;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.StorageService;
-import ru.mycrg.data_service.service.export.ExportService;
+import ru.mycrg.data_service.service.export.Exporter;
 import ru.mycrg.data_service.service.export.LayerValidationReportService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 
@@ -28,22 +30,27 @@ public class ExportController extends BaseController {
 
     private final Logger log = LoggerFactory.getLogger(ExportController.class);
 
-    private final ExportService exportService;
-    private final LayerValidationReportService reporter;
+    private final List<Exporter> exporters;
     private final StorageService storageService;
+    private final LayerValidationReportService reporter;
 
     @Autowired
     public ExportController(StorageService storageService,
                             LayerValidationReportService reporter,
-                            ExportService exportService) {
-        this.exportService = exportService;
+                            List<Exporter> exporters) {
+        this.exporters = exporters;
         this.reporter = reporter;
         this.storageService = storageService;
     }
 
     @PostMapping("/export")
     public ResponseEntity<Process> exportProjectLayers(@Valid @RequestBody ExportRequestModel dto) {
-        Process process = exportService.export(dto);
+        Process process = exporters
+                .stream()
+                .filter(ex -> ex.getType().getType().equalsIgnoreCase(dto.getFormat()))
+                .findFirst()
+                .orElseThrow(() -> new BadRequestException("Нет обработчика для формата: " + dto.getFormat()))
+                .doExport(dto);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), ACCEPTED);
     }

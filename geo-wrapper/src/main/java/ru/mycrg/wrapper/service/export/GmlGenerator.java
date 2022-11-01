@@ -32,13 +32,17 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static java.io.File.separator;
+import static java.math.RoundingMode.HALF_UP;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
-import static ru.mycrg.wrapper.dao.DaoProperties.BATCH_SIZE;
-import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
+import static ru.mycrg.wrapper.dao.DaoProperties.*;
 import static ru.mycrg.wrapper.service.export.GmlUtil.*;
 
 @Service
@@ -152,18 +156,27 @@ public class GmlGenerator implements IExporter {
                     String id = generateId();
                     Element featureMember = addFeatureMember(docHolder, schema.getOriginName(), id);
 
-                    // Выгружаются только те свойства что прописаны в 10 приказе, тобишь schema.getProperties()
-                    schema.getProperties().stream()
-                          .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
-                          .forEach(simplePropertyDto -> fillFeatureMember(featureMember, docHolder.getGmlDocument(),
-                                                                          propFromDb, simplePropertyDto));
+                    // Выгружаются только те свойства, что прописаны в 10 приказе, тобишь schema.getProperties(),
+                    // кроме поля shape
+                    List<SimplePropertyDto> properties = schema.getProperties();
+                    properties.stream()
+                              .filter(property -> DEFAULT_GEOMETRY_COLUMN_NAME.equalsIgnoreCase(property.getName()))
+                              .findFirst()
+                              .ifPresent(properties::remove);
+
+                    properties.stream()
+                              .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
+                              .forEach(simplePropertyDto -> fillFeatureMember(featureMember, docHolder.getGmlDocument(),
+                                                                              propFromDb, simplePropertyDto));
 
                     // Отдельно обрабатываем геометрию
+                    double area = 0;
                     Object crgBGeometry = propFromDb.get("crg_b_geometry");
                     if (crgBGeometry != null) {
                         Geometry geometry;
                         try {
                             geometry = wkb.read((byte[]) crgBGeometry);
+                            area = BigDecimal.valueOf(geometry.getArea()).setScale(2, HALF_UP).doubleValue();
 
                             generateGeometry(geometry, docHolder.getGmlDocument(), featureMember, payload);
                         } catch (ParseException e) {
@@ -171,7 +184,13 @@ public class GmlGenerator implements IExporter {
                         }
                     }
 
-                    addObjectMember(docHolder, id, schema.getDescription(), propFromDb.get("classid"));
+                    if ("objectCollection".equals(resource.getType())) {
+                        addObjectMember(docHolder, id, schema.getDescription(), propFromDb.get("classid"));
+                    } else if ("specialZoneCollection".equals(resource.getType())) {
+                        addSpatialZoneMember(docHolder, id, area, schema.getDescription(), propFromDb.get("classid"));
+                    } else {
+                        log.warn("Ресурс не принадлежит ни одной из известных коллекций: {}", resource.getType());
+                    }
                 });
 
                 processedRows += batch.size();
@@ -218,6 +237,32 @@ public class GmlGenerator implements IExporter {
         objectCollection.appendChild(objectNode);
     }
 
+    private void addSpatialZoneMember(GmlDocumentHolder docHolder,
+                                      String id,
+                                      double area,
+                                      String description,
+                                      Object classId) {
+        Document gmlDocument = docHolder.getGmlDocument();
+        Element specialZoneCollection = docHolder.getSpecialZoneCollection();
+
+        Element specialZoneNode = gmlDocument.createElement("SpecialZone");
+        specialZoneNode.setAttribute("IDREF", id);
+
+        Element sizeNode = gmlDocument.createElement("Size");
+        sizeNode.setTextContent(String.valueOf(area));
+        specialZoneNode.appendChild(sizeNode);
+
+        Element contentRestrictionsNode = gmlDocument.createElement("ContentRestrictions");
+        contentRestrictionsNode.setTextContent(description);
+        specialZoneNode.appendChild(contentRestrictionsNode);
+
+        Element classIdNode = gmlDocument.createElement("CLASSID");
+        classIdNode.setTextContent(nonNull(classId) ? classId.toString() : "");
+        specialZoneNode.appendChild(classIdNode);
+
+        specialZoneCollection.appendChild(specialZoneNode);
+    }
+
     /**
      * Наполняем featureMember свойствами
      */
@@ -251,7 +296,7 @@ public class GmlGenerator implements IExporter {
         final String gmlCoordinates = "gml:coordinates";
         boolean invertedCoordinates = payload.isInvertedCoordinates();
 
-        if ("Point".equals(geometryType)) {
+        if ("Point".equals(geometryType) || "MultiPoint".equals(geometryType)) {
             Element geometryElement = document.createElement("gml:Point");
             geometryElement.setAttribute(geometrySRSName, geometrySRSValue);
             geometryElement.setAttribute(GML_ID, generateId());
@@ -363,11 +408,15 @@ public class GmlGenerator implements IExporter {
         gmlFeatureCollection.setAttribute(GML_ID, "featureID1");
         featureCollection.appendChild(gmlFeatureCollection);
 
-        // Base node
+        // ObjectCollection
         Element objectCollection = mainDoc.createElement("ObjectCollection");
         rootNode.appendChild(objectCollection);
 
-        return new GmlDocumentHolder(mainDoc, gmlFeatureCollection, objectCollection);
+        // ObjectCollection
+        Element specialZoneCollection = mainDoc.createElement("SpecialZoneCollection");
+        rootNode.appendChild(specialZoneCollection);
+
+        return new GmlDocumentHolder(mainDoc, gmlFeatureCollection, objectCollection, specialZoneCollection);
     }
 
     @NotNull

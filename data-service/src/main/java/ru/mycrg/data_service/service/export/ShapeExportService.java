@@ -16,35 +16,37 @@ import ru.mycrg.data_service_contract.queue.response.ExportResponseEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.data_service.service.export.ExportType.SHAPE;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
 import static ru.mycrg.data_service_contract.enums.ProcessType.EXPORT;
 
 @Service
-public class ExportService {
+public class ShapeExportService implements Exporter {
 
+    private final TableService tableService;
     private final SchemaService schemaService;
     private final ProcessService processService;
     private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
     private final WsNotificationService wsNotificationService;
-    private final TableService tableService;
 
-    public ExportService(IMessageBusProducer messageBus,
-                         SchemaService schemaService,
-                         IAuthenticationFacade authenticationFacade,
-                         ProcessService processService,
-                         WsNotificationService wsNotificationService,
-                         TableService tableService) {
+    public ShapeExportService(TableService tableService,
+                              SchemaService schemaService,
+                              ProcessService processService,
+                              IMessageBusProducer messageBus,
+                              IAuthenticationFacade authenticationFacade,
+                              WsNotificationService wsNotificationService) {
         this.messageBus = messageBus;
+        this.tableService = tableService;
         this.schemaService = schemaService;
         this.processService = processService;
         this.authenticationFacade = authenticationFacade;
         this.wsNotificationService = wsNotificationService;
-        this.tableService = tableService;
     }
 
-    public Process export(ExportRequestModel request) {
+    @Override
+    public Process doExport(ExportRequestModel request) {
         long orgId = authenticationFacade.getOrganizationId();
         final String dbName = getDefaultDatabaseName(orgId);
         final String title = String.format("Экспорт. Кол-во слоев: %d", request.getResources().size());
@@ -77,5 +79,10 @@ public class ExportService {
                 new WsMessageDto<>(EXPORT.name(), responseEvent), request.getWsUiId());
 
         return process;
+    }
+
+    @Override
+    public ExportType getType() {
+        return SHAPE;
     }
 }

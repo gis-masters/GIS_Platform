@@ -9,25 +9,32 @@ public class ResourceProjection {
     private String tableName;
     private SchemaDto schema;
     private String crs;
+    private String type;
 
     public ResourceProjection() {
         // Required
     }
 
     public ResourceProjection(String dbName, String schemaName, String tableName) {
-        this(dbName, schemaName, tableName, null, null);
+        this(dbName, schemaName, tableName, null, null, "objectCollection");
     }
 
     public ResourceProjection(String dbName, String schemaName, String tableName, SchemaDto schema) {
-        this(dbName, schemaName, tableName, schema, null);
+        this(dbName, schemaName, tableName, schema, null, "objectCollection");
     }
 
     public ResourceProjection(String dbName, String schemaName, String tableName, SchemaDto schema, String crs) {
+        this(dbName, schemaName, tableName, schema, crs, null);
+    }
+
+    public ResourceProjection(String dbName, String schemaName, String tableName, SchemaDto schema, String crs,
+                              String type) {
         this.dbName = dbName;
         this.schemaName = schemaName;
         this.tableName = tableName;
         this.schema = schema;
         this.crs = crs;
+        this.type = type;
     }
 
     @JsonIgnore
@@ -73,6 +80,14 @@ public class ResourceProjection {
 
     public void setCrs(String crs) {
         this.crs = crs;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
