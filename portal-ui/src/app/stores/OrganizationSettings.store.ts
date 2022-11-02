@@ -81,6 +81,11 @@ export class OrganizationSettings {
     return this.allowedToUse(this.orgSettings.system?.downloadXml, this.orgSettings.organization?.downloadXml);
   }
 
+  @computed
+  get SEDDialog(): boolean {
+    return this.allowedToUse(this.orgSettings.system?.sedDialog, this.orgSettings.organization?.sedDialog);
+  }
+
   private allowedToUse(systemSetting: boolean, orgSetting: boolean): boolean {
     const setting = systemSetting ? orgSetting : systemSetting;
 

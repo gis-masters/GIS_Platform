@@ -79,32 +79,25 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
     return (
       <Actions className={cnLibraryDocumentActions({ forDialog }, [className])} as={as}>
         {isNew && <LibraryDocumentActionsSave onSave={onSave} document={this.document || document} as={as} />}
-
         {!hideOpen && <LibraryDocumentActionsOpen document={this.document || document} as={as} />}
-
         {!isNew && canEdit && (
           <LibraryDocumentActionsEdit document={this.document || document} schema={this.schema} as={as} />
         )}
-
         {canCreateChildren && (
           <LibraryDocumentActionsCreateChild document={this.document || document} schema={this.schema} as={as} />
         )}
-
         {canPrint && <LibraryDocumentActionsPrint document={this.document || document} schema={this.schema} as={as} />}
-
         {this.canBePlaced && (
           <LibraryDocumentActionsFilesPlacement document={this.document || document} schema={this.schema} as={as} />
         )}
-
         {!isNew && <LibraryDocumentActionsShare document={this.document || document} as={as} />}
-
         {!isNew && this.canBeRegistered() && (
           <LibraryDocumentActionsRegister document={this.document || document} as={as} />
         )}
-
         {!isNew && canDownload && <LibraryDocumentActionsDownload document={this.document || document} as={as} />}
 
-        <LibraryDocumentActionsSed document={this.document || document} as={as} />
+        {organizationSettings.SEDDialog && <LibraryDocumentActionsSed document={this.document || document} as={as} />}
+
         {this.schema?.relations?.length > 0 && (
           <LibraryDocumentActionsRelations document={this.document || document} schema={this.schema} as={as} />
         )}
@@ -117,7 +110,6 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
             onDelete={onDialogClose}
           />
         )}
-
         {forDialog && <LibraryDocumentActionsClose onClick={onDialogClose} as={as} />}
       </Actions>
     );
