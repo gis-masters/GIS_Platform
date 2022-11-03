@@ -22,8 +22,6 @@ public class LayerGeoserverService {
     }
 
     public boolean isLayerExist(String dataStoreName, String tableName) throws HttpClientException {
-        log.debug("feature exist: {} on geoserver workspace: {} ", tableName, dataStoreName);
-
         return new FeatureTypeService(authenticationFacade.getAccessToken())
                 .isExist(dataStoreName, tableName);
     }

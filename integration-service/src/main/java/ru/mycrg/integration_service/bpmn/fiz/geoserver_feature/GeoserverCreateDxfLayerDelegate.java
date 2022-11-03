@@ -36,7 +36,10 @@ public class GeoserverCreateDxfLayerDelegate implements JavaDelegate {
                                              event.getLayerTitle(),
                                              event.getCrs(),
                                              event.getLibraryId(),
-                                             event.getRecordId());
+                                             event.getRecordId(),
+                                             event.getSchemaId(),
+                                             event.getStyleName(),
+                                             event.getWorkspaceName());
 
             watch.start("create FeatureTypeService");
             log.debug("before");

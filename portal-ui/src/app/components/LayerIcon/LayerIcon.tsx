@@ -4,7 +4,7 @@ import { cn } from '@bem-react/classname';
 
 export const cnLayerIcon = cn('LayerIcon');
 
-export type LayerIconType = 'vector' | 'raster' | 'group' | 'error' | 'unknown';
+export type LayerIconType = 'vector' | 'vectorFromFile' | 'raster' | 'group' | 'error' | 'unknown';
 
 export interface LayerIconProps extends IClassNameProps {
   type: LayerIconType;

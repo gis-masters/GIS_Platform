@@ -1,24 +1,22 @@
+import { isEqual } from 'lodash';
+
+import { mapService } from '../map/map.service';
+import { Toast } from '../../components/Toast/Toast';
+import { getLayerCoverage } from '../gis/layers.service';
 import { CrgVectorLayer, CrgLayerType, CrgLayer } from '../gis/projects.models';
 
 import { getFeatureType } from './featuretypes.service';
 import { getProjection, olProjection, transform } from './projections.service';
 
-import { isEqual } from 'lodash';
-import { mapService } from '../map/map.service';
-import { Toast } from '../../components/Toast/Toast';
-import { getLayerCoverage } from '../gis/layers.service';
-
 export async function focusToLayer(entity: CrgLayer): Promise<void> {
   try {
-    const { nativeBoundingBox } =
-      entity.type === CrgLayerType.VECTOR
+    const { nativeBoundingBox, srs } =
+      entity.type === CrgLayerType.VECTOR || entity.type === CrgLayerType.VECTOR_FROM_FILE
         ? await getFeatureType(entity as CrgVectorLayer)
         : await getLayerCoverage(entity);
 
-    const { maxx, maxy, minx, miny, crs } = nativeBoundingBox;
-
-    const crsStr = typeof crs === 'string' ? crs : crs.$;
-    const projection = getProjection(crsStr);
+    const { maxx, maxy, minx, miny } = nativeBoundingBox;
+    const projection = getProjection(srs);
 
     if (isEqual([maxx, maxy, minx, miny], [-1, -1, 0, 0])) {
       showGoToBoundingBoxError();

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-pushd migration-scripts/
+pushd migration-scripts/ || exit
 
 echo "List of migrations for geoserver catalog: ${GEOSERVER_DATA_DIR}"
 ls -l
@@ -28,4 +28,4 @@ fi
 echo "Copy styles"
 cp -r ../initialConfig/geoserver/styles/* ${GEOSERVER_DATA_DIR}/styles
 
-popd
+popd || exit

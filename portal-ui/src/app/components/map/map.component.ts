@@ -80,7 +80,7 @@ export class MapComponent implements OnInit, OnDestroy {
           const layers = batch.map(item => item.payload).reverse();
 
           void mapService.addLayers(
-            layers.filter(l => l.type === CrgLayerType.VECTOR || l.type === CrgLayerType.RASTER),
+            layers.filter(l => l.type !== CrgLayerType.EXTERNAL && l.type !== CrgLayerType.EXTERNAL_GEOSERVER),
             visibleBatches.length - i,
             actualTransparency / 100
           );

@@ -2,6 +2,7 @@ import { Role } from '../data/permissions.models';
 
 export enum CrgLayerType {
   VECTOR = 'vector',
+  VECTOR_FROM_FILE = 'vectorFromFile',
   RASTER = 'raster',
   EXTERNAL = 'external',
   EXTERNAL_GEOSERVER = 'external_geoserver'

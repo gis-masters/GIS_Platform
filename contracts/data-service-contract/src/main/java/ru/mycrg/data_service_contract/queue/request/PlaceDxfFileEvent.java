@@ -24,6 +24,8 @@ public class PlaceDxfFileEvent extends DefaultMessageBusRequestEvent implements 
     private String pathToFile;
     private String crs = "EPSG:7829";
     private String token;
+    private String schemaId;
+    private String styleName;
 
     public PlaceDxfFileEvent() {
         super(UUID.randomUUID(), DATA_TO_INTEGRATION_QUEUE);
@@ -31,7 +33,8 @@ public class PlaceDxfFileEvent extends DefaultMessageBusRequestEvent implements 
 
     public PlaceDxfFileEvent(String token, ProcessModel processModel, UUID wsMsgId, String wsUiId,
                              Long projectId, String libraryId, Long recordId, String layerTitle,
-                             String workspaceName, String storeName, String featureName, String pathToFile, String crs) {
+                             String workspaceName, String storeName, String featureName, String pathToFile,
+                             String crs, String schemaId, String styleName) {
         super(UUID.randomUUID(), DATA_TO_INTEGRATION_QUEUE);
 
         this.processModel = processModel;
@@ -48,6 +51,8 @@ public class PlaceDxfFileEvent extends DefaultMessageBusRequestEvent implements 
         this.pathToFile = pathToFile;
         this.crs = crs;
         this.token = token;
+        this.schemaId = schemaId;
+        this.styleName = styleName;
     }
 
     public UUID getWsMsgId() {
@@ -154,6 +159,22 @@ public class PlaceDxfFileEvent extends DefaultMessageBusRequestEvent implements 
         this.layerTitle = layerTitle;
     }
 
+    public String getSchemaId() {
+        return schemaId;
+    }
+
+    public void setSchemaId(String schemaId) {
+        this.schemaId = schemaId;
+    }
+
+    public String getStyleName() {
+        return styleName;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -169,7 +190,9 @@ public class PlaceDxfFileEvent extends DefaultMessageBusRequestEvent implements 
                 "\"layerTitle\":" + (layerTitle == null ? "null" : "\"" + layerTitle + "\"") + ", " +
                 "\"pathToFile\":" + (pathToFile == null ? "null" : "\"" + pathToFile + "\"") + ", " +
                 "\"crs\":" + (crs == null ? "null" : "\"" + crs + "\"") + ", " +
-                "\"token\":" + (token == null ? "null" : "\"" + token + "\"") +
+                "\"token\":" + (token == null ? "null" : "\"" + token + "\"") + ", " +
+                "\"schemaId\":" + (schemaId == null ? "null" : "\"" + schemaId + "\"") + ", " +
+                "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") +
                 "}";
     }
 }

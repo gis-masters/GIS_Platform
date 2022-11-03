@@ -131,7 +131,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!editMode && (this.isVectorLayer || this.isRasterLayer) && (
+          {!editMode && (this.isVectorLayer || this.isRasterLayer || this.isVectorFromFileLayer) && (
             <MenuItem onClick={this.goToLayer}>
               <ListItemIcon>
                 <CropFree />
@@ -149,7 +149,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!editMode && this.isRasterLayer && this.isDocumentInfoEnabled && (
+          {!editMode && (this.isVectorFromFileLayer || this.isRasterLayer) && this.isDocumentInfoEnabled && (
             <MenuItem onClick={this.getLayerDocument}>
               <ListItemIcon>
                 <FileOpenOutlined />
@@ -267,6 +267,13 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const { entity, isGroup } = this.props;
 
     return !isGroup && (entity as CrgLayer).type === CrgLayerType.VECTOR;
+  }
+
+  @computed
+  private get isVectorFromFileLayer(): boolean {
+    const { entity, isGroup } = this.props;
+
+    return !isGroup && (entity as CrgLayer).type === CrgLayerType.VECTOR_FROM_FILE;
   }
 
   @computed

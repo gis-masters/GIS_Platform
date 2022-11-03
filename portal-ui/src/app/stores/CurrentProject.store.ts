@@ -84,6 +84,12 @@ class CurrentProject implements CrgProjectData {
         isGroup: false,
         errors: this.layersErrors[layer.complexName]
       })),
+      ...this.vectorFromFileLayers.map(layer => ({
+        id: layer.id,
+        payload: layer,
+        isGroup: false,
+        errors: this.layersErrors[layer.complexName]
+      })),
       ...this.rasterLayers.map(layer => ({ id: layer.id, payload: layer, isGroup: false })),
       ...this.externalLayers.map(layer => ({ id: layer.id, payload: layer, isGroup: false }))
     ]
@@ -193,6 +199,11 @@ class CurrentProject implements CrgProjectData {
   @computed
   get rasterLayers(): CrgRasterLayer[] {
     return (this.layers?.filter(l => l.type === CrgLayerType.RASTER) || []) as CrgRasterLayer[];
+  }
+
+  @computed
+  get vectorFromFileLayers(): CrgRasterLayer[] {
+    return (this.layers?.filter(l => l.type === CrgLayerType.VECTOR_FROM_FILE) || []) as CrgRasterLayer[];
   }
 
   @computed

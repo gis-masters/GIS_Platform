@@ -400,12 +400,12 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(404, response.getStatusCode());
     }
 
-    @And("В проекте создан растровый слой на основе DXF файла")
+    @And("В проекте создан векторный слой на основе DXF файла")
     public void checkIsRasterLayerCreated() {
         super.getCurrentEntityByFilter("title", "best");
 
         assertEquals("best", response.jsonPath().getList("title").get(0));
-        assertEquals("raster", response.jsonPath().getList("type").get(0));
+        assertEquals("vectorFromFile", response.jsonPath().getList("type").get(0));
     }
 
     @Then("Параметр transparent color по умолчанию чёрный")

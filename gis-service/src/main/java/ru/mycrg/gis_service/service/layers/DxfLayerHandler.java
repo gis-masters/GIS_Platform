@@ -3,6 +3,7 @@ package ru.mycrg.gis_service.service.layers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.geoserver_client.services.styles.StyleService;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.entity.Layer;
@@ -14,44 +15,48 @@ import ru.mycrg.gis_service.service.geoserver.LayerGeoserverService;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
-import java.util.Objects;
 import java.util.Optional;
 
-import static java.util.Objects.*;
-import static ru.mycrg.gis_service.service.layers.LayerService.DATA_SERVICE_API_PREFIX;
+import static java.util.Objects.nonNull;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 
 @Component
-public class VectorLayerHandler implements ILayerHandler {
+public class DxfLayerHandler implements ILayerHandler {
 
-    private final Logger log = LoggerFactory.getLogger(VectorLayerHandler.class);
+    private final Logger log = LoggerFactory.getLogger(DxfLayerHandler.class);
 
     private final LayerRepository layerRepository;
     private final CrgAuthHandler crgAuthHandler;
     private final LayerGeoserverService layerGeoserverService;
+    private final IAuthenticationFacade authenticationFacade;
 
-    public VectorLayerHandler(LayerRepository layerRepository,
-                              LayerGeoserverService layerGeoserverService,
-                              CrgAuthHandler crgAuthHandler) {
+    public DxfLayerHandler(LayerRepository layerRepository,
+                           LayerGeoserverService layerGeoserverService,
+                           CrgAuthHandler crgAuthHandler,
+                           IAuthenticationFacade authenticationFacade) {
         this.layerRepository = layerRepository;
         this.layerGeoserverService = layerGeoserverService;
         this.crgAuthHandler = crgAuthHandler;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Override
     public Optional<Layer> create(Project project, LayerCreateDto dto) {
-        log.debug("VectorLayerHandler create");
+        log.debug("DXF create");
 
         Layer newLayer = new Layer(dto);
         newLayer.setProject(project);
-        newLayer.setDataSourceUri(String.format("%s/datasets/%s/tables/%s",
-                                                DATA_SERVICE_API_PREFIX, dto.getDataset(), dto.getTableName()));
 
         Layer savedLayer = layerRepository.save(newLayer);
 
         try {
+            log.debug("Check layer on geoserver by {}:{}", savedLayer.getDataStoreName(), savedLayer.getTableName());
+
             boolean existOnGeoserver = layerGeoserverService.isLayerExist(savedLayer.getDataStoreName(),
                                                                           savedLayer.getTableName());
             if (!existOnGeoserver) {
+                log.debug("layer not exist");
+
                 ResponseModel<Object> responseModel = layerGeoserverService.createLayer(savedLayer);
                 if (responseModel.isSuccessful()) {
                     associateStyle(savedLayer);
@@ -65,7 +70,9 @@ public class VectorLayerHandler implements ILayerHandler {
                     throw new BadRequestException(msg);
                 }
             } else {
-                log.debug("Layer already exist. Nothing to do.");
+                log.debug("Layer already exist.");
+
+                associateStyle(savedLayer);
             }
         } catch (HttpClientException e) {
             String msg = String.format("Не удалось опубликовать слой %s на геосервере. Reason: %s",
@@ -80,20 +87,22 @@ public class VectorLayerHandler implements ILayerHandler {
 
     @Override
     public String getType() {
-        return "vector";
+        return "vectorFromFile";
     }
 
     private void associateStyle(Layer layer) {
         log.debug("Add style: {} to layer: {}", layer.getStyleName(), layer.getTableName());
+
+        Long orgId = authenticationFacade.getOrganizationId();
+
         try {
             ResponseModel<Object> response = new StyleService(crgAuthHandler.getRootAccessToken())
-                    .associate(layer.getDataStoreName() + ":" + layer.getTableName(), layer.getStyleName());
+                    .associate(getScratchWorkspaceName(orgId) + ":" + layer.getTableName(), layer.getStyleName());
             if (!response.isSuccessful()) {
                 log.warn("Style not associated: {}", response);
             }
         } catch (Exception e) {
-            String msg = "Не удалось прикрепить стиль к слою: " + layer.getTableName();
-            log.error(msg, e);
+            log.warn("Не удалось прикрепить стиль к слою: {}", layer.getTableName(), e);
         }
     }
 }

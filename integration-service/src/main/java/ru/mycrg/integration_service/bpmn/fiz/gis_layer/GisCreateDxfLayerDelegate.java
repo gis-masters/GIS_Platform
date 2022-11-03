@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
+import ru.mycrg.integration_service.bpmn.fiz.geosever_store.CreateGeoserverStoreDto;
 
 import java.net.URL;
 
@@ -37,6 +38,9 @@ public class GisCreateDxfLayerDelegate implements JavaDelegate {
         try {
             String token = (String) execution.getVariable(TOKEN_VAR_NAME);
             DxfLayer dto = (DxfLayer) execution.getVariable("DxfLayer");
+            CreateGeoserverStoreDto storeDto =
+                    (CreateGeoserverStoreDto) execution.getVariable("CreateGeoserverStoreDto");
+            dto.setDataStoreName(storeDto.getStoreName());
 
             Request request = new Request.Builder()
                     .addHeader("Authorization", "Bearer " + token)

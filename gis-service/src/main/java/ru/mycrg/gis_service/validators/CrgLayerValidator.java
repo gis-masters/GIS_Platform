@@ -48,6 +48,9 @@ public class CrgLayerValidator implements Validator {
             case "vector":
                 validateAsVector(errors, dto);
                 break;
+            case "vectorFromFile":
+                validateAsVectorFromFile(errors, dto);
+                break;
             case "raster":
                 validateAsRaster(errors, dto);
                 break;
@@ -87,6 +90,32 @@ public class CrgLayerValidator implements Validator {
 
         if (dto.getDataset() == null) {
             errors.rejectValue("dataset", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+    }
+
+    private void validateAsVectorFromFile(@NotNull Errors errors, LayerCreateDto dto) {
+        if (dto.getTitle() == null) {
+            errors.rejectValue("title", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+
+        if (dto.getTableName() == null) {
+            errors.rejectValue("tableName", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+
+        if (dto.getNativeCRS() == null) {
+            errors.rejectValue("nativeCRS", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+
+        if (dto.getSchemaId() == null) {
+            errors.rejectValue("schemaId", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+
+        if (dto.getStyleName() == null) {
+            errors.rejectValue("styleName", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+
+        if (dto.getDataStoreName() == null) {
+            errors.rejectValue("dataStoreName", REQUIRED, DEFAULT_V_MESSAGE);
         }
     }
 

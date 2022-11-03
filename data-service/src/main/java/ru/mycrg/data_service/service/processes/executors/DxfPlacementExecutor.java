@@ -26,11 +26,11 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.UUID;
 
-import static org.springframework.util.StringUtils.*;
+import static org.springframework.util.StringUtils.stripFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.service.processes.FileType.DXF;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 
@@ -89,7 +89,9 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
                                                  join(getDefaultStoreName("dfx"), featureName),
                                                  featureName,
                                                  file.getPath(),
-                                                 payload.getCrs()));
+                                                 payload.getCrs(),
+                                                 "dxf_schema_v1",
+                                                 "dxf_style"));
 
         return importReport;
     }

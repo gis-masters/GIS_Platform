@@ -13,9 +13,13 @@ public class DxfLayer implements Serializable {
     private String libraryId;
     private Long recordId;
     private boolean enabled;
+    private String schemaId;
+    private String styleName;
+    private String dataStoreName;
 
-    public DxfLayer(Long projectId, String tableName, String title, String nativeCRS, String libraryId, Long recordId) {
-        this.type = "raster";
+    public DxfLayer(Long projectId, String tableName, String title, String nativeCRS, String libraryId, Long recordId,
+                    String schemaId, String styleName, String dataStoreName) {
+        this.type = "vectorFromFile";
         this.mode = "gis-service";
         this.enabled = true;
 
@@ -26,6 +30,10 @@ public class DxfLayer implements Serializable {
         this.nativeCRS = nativeCRS;
         this.libraryId = libraryId;
         this.recordId = recordId;
+
+        this.schemaId = schemaId;
+        this.styleName = styleName;
+        this.dataStoreName = dataStoreName;
     }
 
     public Long getProjectId() {
@@ -100,6 +108,30 @@ public class DxfLayer implements Serializable {
         this.tableName = tableName;
     }
 
+    public String getSchemaId() {
+        return schemaId;
+    }
+
+    public void setSchemaId(String schemaId) {
+        this.schemaId = schemaId;
+    }
+
+    public String getStyleName() {
+        return styleName;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
+    }
+
+    public String getDataStoreName() {
+        return dataStoreName;
+    }
+
+    public void setDataStoreName(String dataStoreName) {
+        this.dataStoreName = dataStoreName;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -111,7 +143,10 @@ public class DxfLayer implements Serializable {
                 "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
                 "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
                 "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") + ", " +
-                "\"enabled\":\"" + enabled + "\"" +
+                "\"enabled\":\"" + enabled + "\"" + ", " +
+                "\"schemaId\":" + (schemaId == null ? "null" : "\"" + schemaId + "\"") + ", " +
+                "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") + ", " +
+                "\"dataStoreName\":" + (dataStoreName == null ? "null" : "\"" + dataStoreName + "\"") +
                 "}";
     }
 }

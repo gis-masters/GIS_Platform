@@ -331,6 +331,10 @@ class MapService {
   }
 
   async addLayers(layers: CrgLayer[], zIndex: number, opacity: number) {
+    if (!layers.length) {
+      return;
+    }
+
     const resultName = this.calcLayerName(layers);
     const layerOnMap = this.getLayerByName(resultName);
 

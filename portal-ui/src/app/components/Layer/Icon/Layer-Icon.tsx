@@ -28,6 +28,8 @@ export const LayerIcon: FC<LayerIconProps> = ({ data, isGroup, isError, expanded
     iconType = 'raster';
   } else if ((data as CrgLayer).type === CrgLayerType.VECTOR) {
     iconType = 'vector';
+  } else if ((data as CrgLayer).type === CrgLayerType.VECTOR_FROM_FILE) {
+    iconType = 'vectorFromFile';
   } else {
     iconType = 'unknown';
   }
