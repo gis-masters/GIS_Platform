@@ -38,7 +38,7 @@ class FormControlTypeString extends Component<FormControlProps> {
     const { display, name } = property as PropertySchemaString;
 
     return (
-      <div className={cnFormControl({ inSet, fullWidthForOldForm, labelInTextField }, [className])}>
+      <div className={cnFormControl({ inSet, fullWidthForOldForm, labelInTextField, display }, [className])}>
         {display === 'phone' ? (
           <InputMask
             mask='9 (999) 999 99 99'

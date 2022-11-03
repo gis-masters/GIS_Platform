@@ -1,6 +1,15 @@
 import { cloneDeep } from 'lodash';
 
-import { OldSchema, OldPropertySchema, OldContentType, ValueType } from './schemaOld.models';
+import {
+  OldSchema,
+  OldPropertySchema,
+  OldContentType,
+  ValueType,
+  OldPropertySchemaDouble,
+  OldPropertySchemaDatetime,
+  OldPropertySchemaChoice,
+  OldPropertySchemaUrl
+} from './schemaOld.models';
 import {
   PropertyType,
   PropertySchema,
@@ -70,9 +79,10 @@ export function applyContentType(schema: Schema, contentTypeId: string): Schema 
   return clonedSchema;
 }
 
-export function convertSchema<T extends Record<string, unknown>>({
+export function convertOldToNewSchema<T extends Record<string, unknown>>({
   name,
   title,
+  tableName,
   description,
   geometryType,
   readOnly,
@@ -86,6 +96,7 @@ export function convertSchema<T extends Record<string, unknown>>({
   return {
     name,
     title,
+    tableName,
     description,
     geometryType,
     readOnly,
@@ -93,16 +104,50 @@ export function convertSchema<T extends Record<string, unknown>>({
     childOnly,
     printTemplates,
     relations,
-    properties: convertProperties(properties),
-    contentTypes: contentTypes.map(convertContentType)
+    properties: convertOldToNewProperties(properties),
+    contentTypes: contentTypes.map(convertOldToNewContentType)
   };
 }
 
-function convertContentType(contentType: OldContentType): ContentType {
-  return { ...contentType, properties: convertProperties(contentType.attributes) };
+export function convertNewToOldSchema<T extends Record<string, unknown>>({
+  name,
+  title,
+  tableName,
+  description,
+  geometryType,
+  readOnly,
+  children,
+  childOnly,
+  printTemplates,
+  relations,
+  properties,
+  contentTypes
+}: Schema<T>): OldSchema<T> {
+  return {
+    name,
+    title,
+    tableName,
+    description,
+    geometryType,
+    readOnly,
+    children,
+    childOnly,
+    printTemplates,
+    relations,
+    properties: convertNewToOldProperties(properties),
+    contentTypes: contentTypes.map(convertNewToOldContentType)
+  };
 }
 
-export function convertProperties<T extends Record<string, unknown>>(
+function convertOldToNewContentType(contentType: OldContentType): ContentType {
+  return { ...contentType, properties: convertOldToNewProperties(contentType.attributes) };
+}
+
+function convertNewToOldContentType(contentType: ContentType): OldContentType {
+  return { ...contentType, attributes: convertNewToOldProperties(contentType.properties) };
+}
+
+export function convertOldToNewProperties<T extends Record<string, unknown>>(
   oldFields: OldPropertySchema<T>[]
 ): PropertySchema<T>[] {
   return oldFields.map(oldField => {
@@ -179,6 +224,88 @@ export function convertProperties<T extends Record<string, unknown>>(
     delete (field as Partial<OldPropertySchema>).valueType;
 
     return field as PropertySchema<T>;
+  });
+}
+
+export function convertNewToOldProperties<T extends Record<string, unknown>>(
+  newFields: PropertySchema<T>[]
+): OldPropertySchema<T>[] {
+  return newFields.map(newField => {
+    const field: Partial<OldPropertySchema<T>> = { ...newField } as Partial<OldPropertySchema<T>>;
+
+    if (newField.propertyType === PropertyType.STRING) {
+      field.valueType = ValueType.STRING;
+
+      field.description = String(newField.description);
+    }
+
+    field.objectIdentityOnUi = newField.asTitle;
+
+    if (newField.propertyType === PropertyType.FLOAT) {
+      field.valueType = ValueType.DOUBLE;
+
+      (field as Partial<OldPropertySchemaDouble>).fractionDigits = newField.precision;
+    }
+
+    if (newField.propertyType === PropertyType.INT) {
+      field.valueType = ValueType.INT;
+    }
+
+    if (newField.propertyType === PropertyType.BOOL) {
+      field.valueType = ValueType.CHECKBOX;
+    }
+
+    if (newField.propertyType === PropertyType.BOOL) {
+      field.valueType = ValueType.BOOLEAN;
+    }
+
+    if (newField.propertyType === PropertyType.DATETIME) {
+      field.valueType = ValueType.DATETIME;
+
+      (field as Partial<OldPropertySchemaDatetime>).dateFormat = newField.format;
+    }
+
+    if (newField.propertyType === PropertyType.CHOICE) {
+      field.valueType = ValueType.CHOICE;
+
+      (field as Partial<OldPropertySchemaChoice>).isMultiple = newField.multiple;
+
+      (field as Partial<OldPropertySchemaChoice>).enumerations = newField.options;
+    }
+
+    if (newField.propertyType === PropertyType.URL) {
+      field.valueType = ValueType.URL;
+
+      (field as Partial<OldPropertySchemaUrl>).displayMode = 'in_popup';
+    }
+
+    if (newField.propertyType === PropertyType.LOOKUP) {
+      field.valueType = ValueType.LOOKUP;
+    }
+
+    if (newField.propertyType === PropertyType.BINARY) {
+      field.valueType = ValueType.BINARY;
+    }
+
+    if (newField.propertyType === PropertyType.SET) {
+      field.valueType = ValueType.SET;
+    }
+
+    if (newField.propertyType === PropertyType.FIAS) {
+      field.valueType = ValueType.FIAS;
+    }
+
+    if (newField.propertyType === PropertyType.FILE) {
+      field.valueType = ValueType.FILE;
+    }
+
+    if (newField.propertyType === PropertyType.DOCUMENT) {
+      field.valueType = ValueType.DOCUMENT;
+    }
+
+    delete (field as Partial<PropertySchema>).propertyType;
+
+    return field as OldPropertySchema<T>;
   });
 }
 

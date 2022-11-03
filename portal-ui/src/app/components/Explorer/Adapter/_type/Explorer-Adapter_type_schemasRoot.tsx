@@ -1,12 +1,14 @@
 import React, { ReactNode } from 'react';
 import { SchemaOutlined } from '@mui/icons-material';
 
-import { OldSchema } from '../../../../services/data/schemaOld.models';
+import { communicationService } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { schemaService } from '../../../../services/data/schema.service';
 import { filterObjects } from '../../../../services/util/filterObjects';
-import { sortObjects } from '../../../../services/util/sortObjects';
+import { OldSchema } from '../../../../services/data/schemaOld.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
+import { sortObjects } from '../../../../services/util/sortObjects';
+import { Emitter } from '../../../../services/common/Emitter';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 
@@ -110,5 +112,9 @@ export class ExplorerAdapterTypeSchemasRoot {
 
   static getChildrenFilterLabel(): string {
     return 'Фильтр по идентификатору';
+  }
+
+  static getRefreshEmitters(): Emitter[] {
+    return [communicationService.schemasUpdated];
   }
 }

@@ -10,7 +10,7 @@ import { AxiosError } from 'axios';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
 import { getDefaultValues, validateFormValue } from '../../services/formValidation.service';
-import { convertProperties, applyContentTypeOld } from '../../services/data/schema.utils';
+import { convertOldToNewProperties, applyContentTypeOld } from '../../services/data/schema.utils';
 import { PropertySchema, PropertyType } from '../../services/data/schema.models';
 import { communicationService } from '../../services/communication.service';
 import { CrgVectorLayer } from '../../services/gis/projects.models';
@@ -60,7 +60,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
       });
     }
     const featureSchema = await schemaService.getOldSchema(layer.schemaId);
-    this.setFields(convertProperties(featureSchema.properties));
+    this.setFields(convertOldToNewProperties(featureSchema.properties));
 
     communicationService.libraryItemsUpdated.on(async () => {
       if (this.document?.id) {
@@ -210,7 +210,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
   @boundMethod
   private async createDocument(value: Omit<LibraryRecord, 'schemaId' | 'libraryId'>) {
     const librarySchema = await schemaService.getOldSchema(this.library.schemaId);
-    const libraryFields = convertProperties(applyContentTypeOld(librarySchema, 'base_extract').properties);
+    const libraryFields = convertOldToNewProperties(applyContentTypeOld(librarySchema, 'base_extract').properties);
     const errors = validateFormValue(value, libraryFields);
 
     if (errors.length) {

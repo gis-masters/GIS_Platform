@@ -13,7 +13,8 @@ import { CrgVectorLayer } from '../gis/projects.models';
 import { BugObject } from './validation.service';
 import { OldSchema, OldPropertySchema, OldPropertySchemaChoice, ValueType } from './schemaOld.models';
 import { Schema } from './schema.models';
-import { convertSchema } from './schema.utils';
+import { convertOldToNewSchema } from './schema.utils';
+import { communicationService } from '../communication.service';
 
 class SchemaService {
   private static _instance: SchemaService;
@@ -50,7 +51,7 @@ class SchemaService {
 
   @boundMethod
   async getSchema(name: string): Promise<Schema> {
-    return convertSchema(await this.getOldSchema(name));
+    return convertOldToNewSchema(await this.getOldSchema(name));
   }
 
   async getCurrentProjectSchemas(): Promise<OldSchema[]> {
@@ -240,10 +241,21 @@ class SchemaService {
   private checkForsakenResolvers() {
     if (!this.fetchingPool.length && !this.fetchingNow) {
       Object.entries(this.schemasRejecters).forEach(([schemaName, reject]) => {
+        delete this.schemas[schemaName];
+        delete this.schemasResolvers[schemaName];
+        delete this.schemasRejecters[schemaName];
         reject();
         throw new Error('Не найдена схема ' + schemaName);
       });
     }
+  }
+
+  async updateSchema(schema: OldSchema) {
+    this.schemas = {};
+    this.fetchingAllSchemas = null;
+    await http.put<OldSchema>(await getSchemaUrl(), schema);
+
+    communicationService.schemasUpdated.emit();
   }
 }
 

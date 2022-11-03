@@ -12,7 +12,7 @@ import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { EditFeatureMode, EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
 import { isFeaturesUpdateAllowed } from '../../services/data/permissions.service';
-import { convertProperties, convertSchema, getFieldRelations } from '../../services/data/schema.utils';
+import { convertOldToNewProperties, convertOldToNewSchema, getFieldRelations } from '../../services/data/schema.utils';
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
 import { deleteFeatures, updateVectorTableRecord } from '../../services/data/data.service';
@@ -141,7 +141,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                 property,
                 value: currentValue === null ? currentValue : String(currentValue),
                 isFgistpProperty: true,
-                relations: getFieldRelations(key, convertSchema(this.featureDescription))
+                relations: getFieldRelations(key, convertOldToNewSchema(this.featureDescription))
               });
 
               const formControl = new UntypedFormControl(
@@ -170,7 +170,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                 },
                 value: currentValue === null ? currentValue : String(currentValue),
                 isFgistpProperty: false,
-                relations: getFieldRelations(key, convertSchema(this.featureDescription))
+                relations: getFieldRelations(key, convertOldToNewSchema(this.featureDescription))
               });
 
               const formControl = new UntypedFormControl(currentValue);
@@ -318,7 +318,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   private getFieldByKey(key: string): PropertySchema {
-    const fields = convertProperties(this.featureDescription.properties);
+    const fields = convertOldToNewProperties(this.featureDescription.properties);
 
     return fields.find(({ name }) => name === key);
   }

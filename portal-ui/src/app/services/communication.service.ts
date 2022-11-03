@@ -23,6 +23,7 @@ class CommunicationService {
   featuresUpdated = new Emitter();
   permissionsUpdated = new Emitter();
   datasetsUpdated = new Emitter();
+  schemasUpdated = new Emitter();
   vectorTablesUpdated = new Emitter();
   projectCreated = new Emitter<CrgProject>();
   projectsUpdated = new Emitter();

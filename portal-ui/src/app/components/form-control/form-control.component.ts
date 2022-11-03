@@ -18,7 +18,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { OldPropertySchema } from '../../services/data/schemaOld.models';
 import { FormControl } from '../Form/Control/Form-Control.composed';
-import { convertProperties } from '../../services/data/schema.utils';
+import { convertOldToNewProperties } from '../../services/data/schema.utils';
 import { PropertyType } from '../../services/data/schema.models';
 import { FormView } from '../Form/View/Form-View.composed';
 import { registry } from '../../services/di-registry';
@@ -64,7 +64,7 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
   }
 
   private renderReactElement() {
-    const [convertedProperty] = convertProperties([this.property]);
+    const [convertedProperty] = convertOldToNewProperties([this.property]);
     let value = this.value;
     if (typeof this.value === 'string' && convertedProperty.propertyType === PropertyType.FILE) {
       value = JSON.parse(this.value);

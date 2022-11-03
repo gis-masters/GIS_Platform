@@ -1,8 +1,9 @@
 import React, { ReactNode } from 'react';
 import { SchemaOutlined } from '@mui/icons-material';
 
-import { OldSchema } from '../../../../services/data/schemaOld.models';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { OldSchema } from '../../../../services/data/schemaOld.models';
+import SchemaActions from '../../../SchemaActions/SchemaActions.async';
 
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 
@@ -36,5 +37,9 @@ export class ExplorerAdapterTypeSchema {
 
   static isFolder(): boolean {
     return false;
+  }
+
+  static getActions(item: ExplorerItemData<OldSchema>): ReactNode {
+    return <SchemaActions schema={item.payload} as='iconButton' />;
   }
 }

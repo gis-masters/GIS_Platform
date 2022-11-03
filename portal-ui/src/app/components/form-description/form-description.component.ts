@@ -6,7 +6,7 @@ import { createElement } from 'react';
 import { registry } from '../../services/di-registry';
 import { FormDescription } from '../Form/Description/Form-Description';
 import { OldPropertySchema } from '../../services/data/schemaOld.models';
-import { convertProperties } from '../../services/data/schema.utils';
+import { convertOldToNewProperties } from '../../services/data/schema.utils';
 
 const FormDescriptionWithRegistry = withRegistry(registry)(FormDescription);
 
@@ -35,7 +35,7 @@ export class FormDescriptionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const [convertedProperty] = convertProperties([this.property]);
+    const [convertedProperty] = convertOldToNewProperties([this.property]);
     const reactElement = createElement(FormDescriptionWithRegistry, { children: convertedProperty.description });
 
     this.root?.render(reactElement);
