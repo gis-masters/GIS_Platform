@@ -55,7 +55,7 @@ export interface OldContentType {
   children?: { library?: string; contentType: string }[];
   printTemplates?: string[];
   relations?: Relation[];
-  attributes: OldPropertySchema[];
+  attributes: Partial<OldPropertySchema>[];
 }
 
 export type PropertyEnumeration = { title: string; value: string | number };
@@ -73,6 +73,7 @@ interface OldBasePropertySchema<T extends Record<string, unknown> = Record<strin
   sequenceNumber?: number;
   minWidth?: number;
   readOnly?: boolean;
+  defaultValue?: unknown;
 
   // хз
   choice?: unknown;
@@ -89,6 +90,7 @@ export interface OldPropertySchemaStringText<T extends Record<string, unknown> =
   maxLength?: number;
   pattern?: string;
   patternDescription?: string;
+  defaultValue?: string;
 }
 
 interface OldPropertySchemaBaseNumber {
@@ -102,6 +104,7 @@ export interface OldPropertySchemaInt<T extends Record<string, unknown> = Record
   extends OldBasePropertySchema<T>,
     OldPropertySchemaBaseNumber {
   valueType: ValueType.INT;
+  defaultValue?: number;
 }
 
 export interface OldPropertySchemaDouble<T extends Record<string, unknown> = Record<string, unknown>>
@@ -109,6 +112,7 @@ export interface OldPropertySchemaDouble<T extends Record<string, unknown> = Rec
     OldPropertySchemaBaseNumber {
   valueType: ValueType.DOUBLE;
   fractionDigits?: number;
+  defaultValue?: number;
 }
 
 export interface OldPropertySchemaDatetime<T extends Record<string, unknown> = Record<string, unknown>>
@@ -128,12 +132,14 @@ export interface OldPropertySchemaChoice<T extends Record<string, unknown> = Rec
 export interface OldPropertySchemaBoolean<T extends Record<string, unknown> = Record<string, unknown>>
   extends OldBasePropertySchema<T> {
   valueType: ValueType.BOOLEAN;
+  defaultValue?: boolean;
 }
 
 export interface OldPropertySchemaSet<T extends Record<string, unknown> = Record<string, unknown>>
   extends OldBasePropertySchema<T> {
   valueType: ValueType.SET;
   properties: OldPropertySchema[];
+  defaultValue?: Record<string, unknown>;
 }
 
 export interface OldPropertySchemaUrl<T extends Record<string, unknown> = Record<string, unknown>>

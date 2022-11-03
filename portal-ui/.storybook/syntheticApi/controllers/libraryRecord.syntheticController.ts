@@ -1,0 +1,30 @@
+import { AxiosRequestConfig } from 'axios';
+
+import { LibraryRecordRaw } from '../../../src/app/services/data/doc-library.service';
+import { Role } from '../../../src/app/services/data/permissions.models';
+import { libraryRecords } from '../data/libraryRecords';
+import { SyntheticController } from './_master';
+import { err404 } from '../utils';
+
+class LibraryRecordSyntheticController implements SyntheticController {
+  pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)\/records\/(\d*)$/;
+
+  get(config: AxiosRequestConfig): LibraryRecordRaw {
+    const match = config.url?.match(this.pattern);
+    const libraryIdentifier = match?.at(1) || '';
+    const recordId = Number(match?.at(2));
+    const record = libraryRecords[libraryIdentifier]?.find(({ id }) => id === recordId);
+
+    if (!record) {
+      throw err404(config);
+    }
+
+    return {
+      ...record,
+      role: record._role || Role.VIEWER,
+      _role: undefined
+    };
+  }
+}
+
+export const libraryRecordSyntheticController = new LibraryRecordSyntheticController();

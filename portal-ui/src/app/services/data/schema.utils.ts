@@ -8,7 +8,8 @@ import {
   OldPropertySchemaDouble,
   OldPropertySchemaDatetime,
   OldPropertySchemaChoice,
-  OldPropertySchemaUrl
+  OldPropertySchemaUrl,
+  OldPropertySchemaSet
 } from './schemaOld.models';
 import {
   PropertyType,
@@ -20,7 +21,8 @@ import {
   Schema,
   ContentType,
   ValueFormula,
-  Relation
+  Relation,
+  PropertySchemaSet
 } from './schema.models';
 import { LibraryRecord } from './doc-library.service';
 import { DocumentInfo } from '../../components/Documents/Documents';
@@ -37,7 +39,7 @@ export function applyContentTypeOld(schema: OldSchema, contentTypeId?: string): 
     const actualProperties: OldPropertySchema[] = attributes.map(contentTypeDescription => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeDescription.name);
 
-      return { ...schemaProperty, ...contentTypeDescription };
+      return { ...schemaProperty, ...contentTypeDescription } as OldPropertySchema;
     });
 
     Object.assign(clonedSchema, { properties: actualProperties, children, childOnly, printTemplates });
@@ -79,7 +81,7 @@ export function applyContentType(schema: Schema, contentTypeId: string): Schema 
   return clonedSchema;
 }
 
-export function convertOldToNewSchema<T extends Record<string, unknown>>({
+export function convertOldToNewSchema({
   name,
   title,
   tableName,
@@ -92,7 +94,7 @@ export function convertOldToNewSchema<T extends Record<string, unknown>>({
   relations,
   properties,
   contentTypes
-}: OldSchema<T>): Schema<T> {
+}: OldSchema): Schema {
   return {
     name,
     title,
@@ -109,7 +111,7 @@ export function convertOldToNewSchema<T extends Record<string, unknown>>({
   };
 }
 
-export function convertNewToOldSchema<T extends Record<string, unknown>>({
+export function convertNewToOldSchema({
   name,
   title,
   tableName,
@@ -122,7 +124,7 @@ export function convertNewToOldSchema<T extends Record<string, unknown>>({
   relations,
   properties,
   contentTypes
-}: Schema<T>): OldSchema<T> {
+}: Schema): OldSchema {
   return {
     name,
     title,
@@ -140,18 +142,19 @@ export function convertNewToOldSchema<T extends Record<string, unknown>>({
 }
 
 function convertOldToNewContentType(contentType: OldContentType): ContentType {
-  return { ...contentType, properties: convertOldToNewProperties(contentType.attributes) };
+  return {
+    ...contentType,
+    properties: convertOldToNewProperties(contentType.attributes as OldPropertySchema[])
+  };
 }
 
 function convertNewToOldContentType(contentType: ContentType): OldContentType {
-  return { ...contentType, attributes: convertNewToOldProperties(contentType.properties) };
+  return { ...contentType, attributes: convertNewToOldProperties(contentType.properties as PropertySchema[]) };
 }
 
-export function convertOldToNewProperties<T extends Record<string, unknown>>(
-  oldFields: OldPropertySchema<T>[]
-): PropertySchema<T>[] {
+export function convertOldToNewProperties(oldFields: OldPropertySchema[]): PropertySchema[] {
   return oldFields.map(oldField => {
-    const field: Partial<PropertySchema<T>> = { ...oldField };
+    const field: Partial<PropertySchema> = { ...oldField } as OldPropertySchema;
 
     if (oldField.valueType === ValueType.STRING || oldField.valueType === ValueType.TEXT) {
       field.propertyType = PropertyType.STRING;
@@ -206,7 +209,10 @@ export function convertOldToNewProperties<T extends Record<string, unknown>>(
     }
 
     if (oldField.valueType === ValueType.SET) {
-      field.propertyType = PropertyType.SET;
+      (field as PropertySchema as PropertySchemaSet).propertyType = PropertyType.SET;
+      (field as PropertySchema as PropertySchemaSet).properties = convertOldToNewProperties(
+        (oldField as OldPropertySchema as OldPropertySchemaSet).properties
+      );
     }
 
     if (oldField.valueType === ValueType.FIAS) {
@@ -223,7 +229,7 @@ export function convertOldToNewProperties<T extends Record<string, unknown>>(
 
     delete (field as Partial<OldPropertySchema>).valueType;
 
-    return field as PropertySchema<T>;
+    return field as PropertySchema;
   });
 }
 

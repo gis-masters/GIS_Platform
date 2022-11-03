@@ -46,7 +46,7 @@ export default class Documents extends Component<DocumentsProps> {
                 <DocumentsItem
                   item={item}
                   onDelete={this.deleteHandler}
-                  key={`${item.id}_${i}`}
+                  key={`${item.libraryId}_${item.id}_${i}`}
                   editable={editable}
                   numerous={numerous}
                   multiple={multiple}

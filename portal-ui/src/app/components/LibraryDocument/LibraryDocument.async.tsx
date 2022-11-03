@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
+import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
 import { currentUser } from '../../stores/CurrentUser.store';
@@ -21,7 +22,7 @@ import '!style-loader!css-loader!sass-loader!./LibraryDocument.scss';
 
 const cnLibraryDocument = cn('LibraryDocument');
 
-export interface LibraryDocumentProps {
+export interface LibraryDocumentProps extends IClassNameProps {
   document: LibraryRecord;
 }
 
@@ -46,10 +47,10 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
   }
 
   render() {
-    const { document } = this.props;
+    const { document, className } = this.props;
 
     return (
-      <div className={cnLibraryDocument()}>
+      <div className={cnLibraryDocument(null, [className])}>
         <Breadcrumbs className={cnLibraryDocument('Breadcrumbs')} itemsType='link' items={this.breadcrumbsItems} />
 
         <div className={cnLibraryDocument('DocumentCard')}>

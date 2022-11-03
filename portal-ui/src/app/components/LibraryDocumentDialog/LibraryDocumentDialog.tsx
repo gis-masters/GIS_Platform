@@ -30,7 +30,9 @@ export const LibraryDocumentDialog: FC<LibraryDocumentDialogProps> = ({ document
 
     <DialogContent>
       <RegistryConsumer id='common'>
-        {({ LibraryDocument }: CommonDiRegistry) => <LibraryDocument document={document} />}
+        {({ LibraryDocument }: CommonDiRegistry) => (
+          <LibraryDocument document={document} className={cnLibraryDocumentDialog('Document')} />
+        )}
       </RegistryConsumer>
     </DialogContent>
 

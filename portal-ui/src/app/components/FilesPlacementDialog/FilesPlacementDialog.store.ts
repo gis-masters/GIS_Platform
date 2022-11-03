@@ -109,7 +109,7 @@ export class FilesPlacementReportStore {
   }
 
   @action
-  public setCommonProgress(inProgress: boolean): void {
+  setCommonProgress(inProgress: boolean): void {
     this.commonProgress = inProgress;
   }
 

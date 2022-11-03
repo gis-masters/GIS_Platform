@@ -25,7 +25,7 @@ class EventService {
   private EVENTS_KEY = 'events';
 
   private _events$: BehaviorSubject<IEvent[]> = new BehaviorSubject<IEvent[]>([]);
-  public events$: Observable<IEvent[]> = this._events$.asObservable().pipe(
+  events$: Observable<IEvent[]> = this._events$.asObservable().pipe(
     // компоненты при подписке должны видеть одно последнее значение в потоке
     publishReplay(1),
     refCount()

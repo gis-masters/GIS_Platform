@@ -23,11 +23,6 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-p {
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-
 .mat-button:focus {
   outline: none;
 }
@@ -66,10 +61,6 @@ p {
   border: outset;
   border-width: thin;
   border-radius: 5px;
-}
-
-.without-outline {
-  outline: none;
 }
 
 .mat-icon-button:focus {

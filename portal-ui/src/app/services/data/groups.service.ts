@@ -12,7 +12,7 @@ export interface CrgGroup {
   name: string;
   description?: string;
   createdAt: string;
-  users: Pick<CrgUser, 'id' | '_links'>[];
+  users: Pick<CrgUser, 'id'>[];
   _links?: { [key: string]: ApiLink }[];
 }
 

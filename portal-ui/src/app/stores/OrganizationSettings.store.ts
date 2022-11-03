@@ -16,7 +16,7 @@ export class OrganizationSettings {
   @observable systemSettings: OrgSettings[];
   @observable availableOrgsSettings: Record<string, string>;
 
-  public static get instance(): OrganizationSettings {
+  static get instance(): OrganizationSettings {
     return this._instance || (this._instance = new this());
   }
 

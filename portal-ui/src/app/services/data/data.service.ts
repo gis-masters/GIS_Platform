@@ -25,6 +25,7 @@ export enum DataEntityType {
 }
 
 export interface DataEntity {
+  id?: number;
   title: string;
   identifier: string;
   details?: string;

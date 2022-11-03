@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { AssignmentOutlined, FolderOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
@@ -14,8 +13,6 @@ import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
 import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
 import { LookupItem } from '../../Lookup/Item/Lookup-Item';
 import { LookupIcon } from '../../Lookup/Icon/Lookup-Icon';
-import { Loading } from '../../Loading/Loading';
-import { Toast } from '../../Toast/Toast';
 
 import { DocumentsName } from '../Name/Documents-Name';
 import { DocumentInfo } from '../Documents';
@@ -32,11 +29,9 @@ interface DocumentsItemProps {
 
 @observer
 export class DocumentsItem extends Component<DocumentsItemProps> {
-  @observable private loading = false;
   @observable private dialogOpen = false;
-  @observable private disabled = false;
   @observable private status: LookupStatusType = 'normal';
-  @observable private errorText = '';
+  @observable private statusText = '';
   @observable private document: LibraryRecord;
 
   constructor(props: DocumentsItemProps) {
@@ -50,20 +45,22 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
 
   render() {
     const { item, editable, numerous, multiple, onDelete } = this.props;
+    const Icon = this.document?.is_folder ? FolderOutlined : AssignmentOutlined;
 
     return (
       <>
         <LookupItem className={cnDocumentsItem({ numerous })}>
           <LookupIcon>
-            {this.document?.is_folder ? (
-              <FolderOutlined color={this.errorText ? 'error' : 'action'} />
-            ) : (
-              <AssignmentOutlined color={this.errorText ? 'error' : 'action'} />
-            )}
+            <Icon color='action' />
           </LookupIcon>
-          <DocumentsName item={item} disabled={this.disabled} numerous={numerous} onClick={this.open} />
+          <DocumentsName
+            item={item}
+            disabled={this.status !== 'normal'}
+            numerous={numerous}
+            onClick={this.openDialog}
+          />
           {editable && (numerous || multiple) && <LookupNameGap />}
-          {this.status !== 'normal' && <LookupStatus status={this.status} statusText={this.errorText} />}
+          {this.status !== 'normal' && <LookupStatus status={this.status} statusText={this.statusText} />}
           {editable && (
             <LookupActions>
               <LookupDelete<DocumentInfo> item={item} onDelete={onDelete} />
@@ -74,8 +71,6 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
         {this.document && (
           <LibraryDocumentDialog document={this.document} open={this.dialogOpen} onClose={this.closeDialog} />
         )}
-
-        <Loading visible={this.loading} global noBackdrop />
       </>
     );
   }
@@ -86,13 +81,14 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
   }
 
   @action
-  private openDialog() {
-    this.dialogOpen = true;
+  private setStatus(status: LookupStatusType, statusText: string) {
+    this.status = status;
+    this.statusText = statusText;
   }
 
-  @action
-  private setLoading(loading: boolean) {
-    this.loading = loading;
+  @action.bound
+  private openDialog() {
+    this.dialogOpen = true;
   }
 
   @action.bound
@@ -100,22 +96,21 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
     this.dialogOpen = false;
   }
 
-  @boundMethod
-  private async open() {
-    await this.load();
-    this.openDialog();
-  }
-
   private async load() {
-    this.setLoading(true);
     const { item } = this.props;
     try {
       const document = await getLibraryRecord(item.libraryId, item.id);
       this.setDocument(document);
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
-      Toast.warn(`Ошибка получения документа. ${err.response.data.message || err.message}`);
+      const axiosError = error as AxiosError<{ message?: string }>;
+      if (axiosError?.response?.status === 403) {
+        this.setStatus('forbidden', 'Ошибка доступа');
+      } else {
+        this.setStatus(
+          'error',
+          `Ошибка получения документа. ${axiosError?.response?.data?.message || axiosError?.message}`
+        );
+      }
     }
-    this.setLoading(false);
   }
 }

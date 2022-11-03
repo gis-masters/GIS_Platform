@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { CircularProgress, Tooltip } from '@mui/material';
-import { CheckOutlined, ReportGmailerrorredOutlined } from '@mui/icons-material';
+import { CheckOutlined, LockOutlined, ReportGmailerrorredOutlined } from '@mui/icons-material';
 
 import '!style-loader!css-loader!sass-loader!./Lookup-Status.scss';
 
@@ -22,8 +22,11 @@ export const LookupStatus: FC<LookupStatusProps> = ({ status, statusText }) => (
       ((status === 'success' || status === 'successFadeOut') && (
         <CheckOutlined color='success' className={cnLookupStatus({ fadeOut: status === 'successFadeOut', status })} />
       )) ||
-      (status === 'error' && <ReportGmailerrorredOutlined color='error' className={cnLookupStatus({ status })} />) || (
-        <span className={cnLookupStatus({ status })} />
-      )}
+      (status === 'forbidden' && (
+        <LockOutlined color='info' fontSize='small' className={cnLookupStatus({ status })} />
+      )) ||
+      (status === 'error' && (
+        <ReportGmailerrorredOutlined color='error' fontSize='small' className={cnLookupStatus({ status })} />
+      )) || <span className={cnLookupStatus({ status })} />}
   </Tooltip>
 );

@@ -18,6 +18,7 @@ export interface ApiLink {
 export interface CrgUser {
   id: number;
   email: string;
+  geoserverLogin: string;
   name: string;
   surname: string;
   middleName?: string;
@@ -29,7 +30,10 @@ export interface CrgUser {
   authorities: BuiltInRole[];
   createdAt: string;
   password?: string;
-  _links?: { [key: string]: ApiLink }[];
+}
+
+export interface BackCrgUser extends Omit<CrgUser, 'authorities'> {
+  authorities: { authority: BuiltInRole }[];
 }
 
 export type NewUserData = Pick<
@@ -68,7 +72,7 @@ class UsersService {
       const userInfo = await http.get<OrgInfo>(await getUserUrl('current'));
       if (userInfo.id !== currentUser.id) currentUser.setOrgInfo(userInfo);
     } catch {
-      currentUser.setOrgInfo();
+      currentUser.reset();
     }
 
     if (autoLogin) {
@@ -83,7 +87,16 @@ class UsersService {
   }
 
   async getAll(): Promise<CrgUser[]> {
-    return await http.getPaged<CrgUser>(await getUsersUrl());
+    const rawUsers = await http.getPaged<BackCrgUser>(await getUsersUrl());
+
+    return rawUsers.map(this.fixAuthorities);
+  }
+
+  private fixAuthorities(user: BackCrgUser): CrgUser {
+    return {
+      ...user,
+      authorities: user.authorities.map(({ authority }) => authority)
+    };
   }
 
   async create(userData: NewUserData) {

@@ -47,7 +47,7 @@ export interface ContentType {
   type: string;
   title?: string;
   icon?: string;
-  properties: PropertySchema[];
+  properties: Partial<PropertySchema>[];
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];
   printTemplates?: string[];
@@ -145,20 +145,6 @@ export interface PropertySchemaDatetime<T = Record<string, unknown>> extends Bas
   defaultValue?: string;
 }
 
-export interface PropertySchemaTime<T = Record<string, unknown>> extends BasePropertySchema<T> {
-  propertyType: PropertyType.TIME;
-  maxValue?: string;
-  minValue?: string;
-  defaultValue?: string;
-}
-
-export interface PropertySchemaDuration<T = Record<string, unknown>> extends BasePropertySchema<T> {
-  propertyType: PropertyType.DURATION;
-  maxValue?: string;
-  minValue?: string;
-  defaultValue?: number;
-}
-
 export type PropertyOption = { title: string; value: string | number };
 
 export interface PropertySchemaChoice<T = Record<string, unknown>> extends BasePropertySchema<T> {
@@ -173,8 +159,8 @@ export interface PropertySchemaChoice<T = Record<string, unknown>> extends BaseP
 
 export interface PropertySchemaUrl<T = Record<string, unknown>> extends BasePropertySchema<T> {
   propertyType: PropertyType.URL;
-  openIn: 'popup' | 'newTab';
-  multiple: boolean;
+  openIn?: 'popup' | 'newTab';
+  multiple?: boolean;
   enablePreview?: boolean;
   regex?: string;
   wellKnownRegex?: string;
@@ -196,14 +182,6 @@ export interface PropertySchemaCustom<T = Record<string, unknown>> extends BaseP
   ControlComponent: ComponentType<FormControlProps>;
   ViewComponent?: ComponentType<FormControlProps>;
   defaultValue?: unknown;
-}
-
-export interface PropertySchemaIdentities<T = Record<string, unknown>> extends BasePropertySchema<T> {
-  propertyType: PropertyType.IDENTITIES;
-  allowMultipleValues?: boolean;
-  tableName?: string;
-  lookupFieldName?: string;
-  additionalFields?: string;
 }
 
 export interface PropertySchemaFias<T = Record<string, unknown>> extends BasePropertySchema<T> {
@@ -240,8 +218,6 @@ export type PropertySchema<T = Record<string, unknown>> =
   | PropertySchemaFloat<T>
   | PropertySchemaBool<T>
   | PropertySchemaDatetime<T>
-  | PropertySchemaTime<T>
-  | PropertySchemaDuration<T>
   | PropertySchemaChoice<T>
   | PropertySchemaUrl<T>
   | PropertySchemaLookup<T>

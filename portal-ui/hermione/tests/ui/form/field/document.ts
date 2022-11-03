@@ -10,7 +10,6 @@ interface TestDefinitionWithOnly extends TestDefinition {
 declare const it: TestDefinitionWithOnly;
 
 describe('Форма', () => {
-  hermione.skip.in('chrome');
   describe('Поле document', () => {
     /**
      * Scenario: Внешний вид

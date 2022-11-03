@@ -75,7 +75,7 @@ class CurrentImport implements ImportInfo {
     makeObservable(this);
   }
 
-  public static get instance() {
+  static get instance() {
     return this._instance || (this._instance = new this());
   }
 

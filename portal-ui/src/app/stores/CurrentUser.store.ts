@@ -9,6 +9,7 @@ const emptyOrgInfo: OrgInfo = {
   name: '',
   surname: '',
   login: '',
+  geoserverLogin: '',
   enabled: false,
   authorities: [],
   createdAt: '',
@@ -24,13 +25,14 @@ class CurrentUser implements OrgInfo {
   @observable name: string;
   @observable surname: string;
   @observable login: string;
+  @observable geoserverLogin: string;
   @observable enabled: boolean;
   @observable authorities: BuiltInRole[];
   @observable createdAt: string;
   @observable orgName: string;
   @observable orgId: number;
 
-  public static get instance() {
+  static get instance() {
     return this._instance || (this._instance = new this());
   }
 

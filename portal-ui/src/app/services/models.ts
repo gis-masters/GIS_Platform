@@ -4,11 +4,6 @@ import { OldSchema } from './data/schemaOld.models';
 import { GeometryType } from './geoserver/wfs.models';
 import { FilterQuery } from './util/filterObjects';
 
-interface PageableLink {
-  href: string;
-  templated?: boolean;
-}
-
 export interface PageablePage {
   number: number;
   size: number;
@@ -18,7 +13,6 @@ export interface PageablePage {
 
 export interface PageableResponse<T> {
   _embedded?: Record<string, T[]>;
-  _links: PageableLink[] | { [key: string]: PageableLink };
   page: PageablePage;
 }
 

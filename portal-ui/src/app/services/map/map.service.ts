@@ -78,7 +78,7 @@ class MapService {
 
   private readonly debouncedZoomEvent: () => void;
 
-  public static get instance() {
+  static get instance() {
     return this._instance || (this._instance = new this());
   }
 

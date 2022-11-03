@@ -19,7 +19,8 @@ const fieldsSingle: PropertySchema[] = [
   {
     propertyType: PropertyType.DOCUMENT,
     name: 'permissive_document',
-    title: 'Разрешение'
+    title: 'Разрешение',
+    library: 'dl_data_section3'
   }
 ];
 
@@ -28,22 +29,22 @@ const fieldsMultiple: PropertySchema[] = [
     propertyType: PropertyType.DOCUMENT,
     name: 'reglaments',
     title: 'Регламенты',
-    library: 'dl_default',
+    library: 'dl_data_section3',
     multiple: true,
     maxDocuments: 6
   }
 ];
 
 const singleFileData: [DocumentInfo] = [
-  { id: 290, libraryId: 'dl_data_section3', title: 'Разрешение на строительство №333 от 32.05.2000' }
+  { id: 12_353, libraryId: 'dl_data_section3', title: 'Разрешение на строительство №333 от 32.05.2000' }
 ];
 const multipleFilesData: DocumentInfo[] = [
-  { id: 288, libraryId: 'dl_data_section3', title: 'Ж1' },
-  { id: 290, libraryId: 'dl_data_section3', title: 'Ж2' },
-  { id: 257, libraryId: 'dl_data_section3', title: 'Ж3' },
+  { id: 12_352, libraryId: 'dl_data_section3', title: 'Ж1' },
+  { id: 12_351, libraryId: 'dl_data_section3', title: 'Ж2' },
+  { id: 12_350, libraryId: 'dl_data_section3', title: 'Ж3' },
   {
-    id: 317,
-    libraryId: 'dl_data_section333',
+    id: 12_349,
+    libraryId: 'dl_data_section3',
     title:
       'Документ с длинным-предлинным никуда не помещающимся названием с множеством разных никому не интересных и всё же абсолютно обязательных к написанию слов'
   }

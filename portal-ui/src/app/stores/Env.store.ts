@@ -44,7 +44,7 @@ class Env implements Environment {
   @observable registration?: string;
   @observable background?: string;
 
-  public static get instance(): Env {
+  static get instance(): Env {
     return this._instance || (this._instance = new this());
   }
 

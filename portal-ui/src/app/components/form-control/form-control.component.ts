@@ -47,7 +47,7 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
 
   private onChange: (value: unknown) => void;
   private value: unknown;
-  public editFeatureForm: UntypedFormGroup;
+  editFeatureForm: UntypedFormGroup;
   private root: Root;
 
   ngOnInit() {
