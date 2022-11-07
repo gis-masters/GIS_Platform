@@ -14,6 +14,7 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.entity.DocumentLibrary;
 import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
@@ -147,13 +148,20 @@ public class DocumentLibraryService {
                              .collect(Collectors.toList());
 
         for (DocumentLibrary documentLibrary: documentLibrariesWithSchemas) {
-            List<String> contentTypes = new ArrayList<>();
-            Optional<SchemaDto> schema = schemaService.getSchemaByName(documentLibrary.getSchemaId());
+            String schemaId = documentLibrary.getSchemaId();
+            if (schemaId == null) {
+                throw new DataServiceException("Не задана схема для библиотеки: " + documentLibrary.getTitle());
+            }
+
+            List<String> contentTypes;
+            Optional<SchemaDto> schema = schemaService.getSchemaByName(schemaId);
             if (schema.isPresent()) {
                 contentTypes = schema.get()
                                      .getContentTypes()
                                      .stream().map(ContentTypes::getId)
                                      .collect(Collectors.toList());
+            } else {
+                throw new NotFoundException("Не найдена схема: " + schemaId);
             }
 
             String filter = "is_folder = false and content_type_id in (" + joinAndQuoteMark(contentTypes) + ")";

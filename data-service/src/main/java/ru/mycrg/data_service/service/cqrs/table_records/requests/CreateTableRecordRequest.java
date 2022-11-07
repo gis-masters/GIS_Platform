@@ -85,7 +85,7 @@ public class CreateTableRecordRequest implements IRequest<Feature>, Auditable, I
     public void setFeature(Feature feature) {
         this.feature = feature;
 
-        rQualifier = new ResourceQualifier(rQualifier, Long.valueOf(feature.getId()), FEATURE);
+        rQualifier = new ResourceQualifier(rQualifier, feature.getId(), FEATURE);
     }
 
     public void setRecord(@Nullable IRecord record) {

@@ -2,6 +2,8 @@ package ru.mycrg.data_service.dto.styles;
 
 import org.jetbrains.annotations.NotNull;
 
+import static ru.mycrg.data_service.dto.styles.SpacialRuleOperator.INTERSECTS;
+
 public class SpatialRuleFilter implements RuleFilter {
 
     @NotNull
@@ -14,7 +16,9 @@ public class SpatialRuleFilter implements RuleFilter {
     private SpatialLiteral literal;
 
     public SpatialRuleFilter() {
-        // Required
+        this.operator = INTERSECTS;
+        this.propertyName = "";
+        this.literal = new SpatialLiteral();
     }
 
     public SpacialRuleOperator getOperator() {

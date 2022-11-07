@@ -84,11 +84,7 @@ public class EsiaController {
 
                            if (!userService.isExist(esiaUser.getEmail())) {
                                createUser(orgId, esiaUser).ifPresent(newUser -> {
-                                   try {
-                                       sleep(1111);
-                                   } catch (InterruptedException e) {
-                                       e.printStackTrace();
-                                   }
+                                   waitUserCreation();
 
                                    joinToGroup(orgId, groupId, newUser);
                                });
@@ -111,6 +107,17 @@ public class EsiaController {
         }
 
         return redirectTo(redirect);
+    }
+
+    private void waitUserCreation() {
+        try {
+            sleep(1111);
+        } catch (InterruptedException e) {
+            log.warn("Interrupted!", e);
+
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
+        }
     }
 
     @NotNull
