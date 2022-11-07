@@ -48,18 +48,22 @@ public class RasterLayerHandler implements ILayerHandler {
     @Override
     public Optional<Layer> create(Project project, LayerCreateDto dto) throws HttpClientException {
         log.debug("Try create raster layer");
-        String accessToken = crgAuthHandler.getRootAccessToken();
 
         if (FULL_MODE.equals(dto.getMode()) || GEOSERVER_MODE.equals(dto.getMode())) {
             String tableName = dto.getTableName();
             String workspaceName = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
             String storeName = buildRasterStoreName(tableName);
-            // TODO: Наверное это не очень создавать все хранилища для растров в проекции 28406
-            CoverageModel coverage = new CoverageModel(dto.getTableName(), dto.getTitle(), "28406", dto.getNativeCRS());
+            String nativeCRS = dto.getNativeCRS() != null ? dto.getNativeCRS() : "28406";
+            CoverageModel coverage = new CoverageModel(dto.getTableName(),
+                                                       dto.getTitle(),
+                                                       nativeCRS,
+                                                       dto.getNativeCRS());
 
-            createRasterStore(accessToken, workspaceName, storeName, dto.getDataSourceUri());
-            createRasterLayer(accessToken, workspaceName, storeName, coverage);
-            setTransparentColorByDefault(accessToken, workspaceName, storeName, coverage.getName());
+            createRasterStore(workspaceName, storeName, dto.getDataSourceUri());
+            createRasterLayer(workspaceName, storeName, coverage);
+
+            // Ждём принятия решения: нужно ли по-умолчанию ставить белый цвет или нет
+            // setTransparentColorByDefault(accessToken, workspaceName, storeName, coverage.getName());
         }
 
         if (GEOSERVER_MODE.equals(dto.getMode())) {
@@ -71,22 +75,22 @@ public class RasterLayerHandler implements ILayerHandler {
         }
     }
 
-    private void createRasterStore(String accessToken,
-                                   String workspaceName,
+    private void createRasterStore(String workspaceName,
                                    String store,
                                    String path) throws HttpClientException {
-        ResponseModel<Object> response = new RasterStorage(accessToken).createGeoTIFF(workspaceName, store, path);
+        String accessToken = crgAuthHandler.getRootAccessToken();
 
+        ResponseModel<Object> response = new RasterStorage(accessToken).createGeoTIFF(workspaceName, store, path);
         if (!response.isSuccessful() && !response.getBody().toString().contains("already exists in workspace")) {
             throw new IllegalStateException("Не удалось создать хранилище на геосервере");
         }
     }
 
-    private void createRasterLayer(String accessToken, String workspaceName, String store, CoverageModel coverage)
+    private void createRasterLayer(String workspaceName, String store, CoverageModel coverage)
             throws HttpClientException {
-        ResponseModel<Object> response = new CoverageHandler(accessToken)
-                .create(workspaceName, store, coverage);
+        String accessToken = crgAuthHandler.getRootAccessToken();
 
+        ResponseModel<Object> response = new CoverageHandler(accessToken).create(workspaceName, store, coverage);
         if (!response.isSuccessful() && !response.getBody().toString().contains("already exists in store")) {
             throw new IllegalStateException("Не удалось создать растровый слой на геосервере");
         }
