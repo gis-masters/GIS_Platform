@@ -9,12 +9,17 @@ import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
 import ru.mycrg.wrapper.config.CrgProperties;
 import ru.mycrg.wrapper.exceptions.ExportException;
+import ru.mycrg.wrapper.exceptions.ImportException;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -22,6 +27,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class GDALService implements IExporter {
 
     private static final Logger log = LoggerFactory.getLogger(GDALService.class);
+    private final static int TIMEOUT = 20;
 
     private final Environment environment;
     private final CrgProperties crgProperties;
@@ -53,6 +59,64 @@ public class GDALService implements IExporter {
             log.warn("Not supported format: {}", payload.getFormat());
 
             throw new ExportException("Not supported format: " + payload.getFormat());
+        }
+    }
+
+    public void importGeometryFromShape(String filePath, String dbName, String tableName, String srs) {
+        try {
+            String rootPath = crgProperties.getExportStoragePath();
+            log.debug("Root path for import is: {}", rootPath);
+
+            String randomDirName = UUID.randomUUID().toString();
+            String cdDir = String.format("cd %s;", rootPath);
+            String mkDir = String.format("mkdir %s;", randomDirName);
+            String unzipFile = String.format("unzip %s -d %s", filePath, randomDirName);
+            String allInOneCommand = cdDir + mkDir + unzipFile;
+
+            log.debug("Execute unzip archive console command: {}", allInOneCommand);
+
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.directory(new File(rootPath));
+            processBuilder.command("sh", "-c", allInOneCommand);
+            Process unzipProcess = processBuilder.start();
+
+            boolean isSuccess = unzipProcess.waitFor(TIMEOUT, SECONDS);
+            if (!isSuccess) {
+                logStream(unzipProcess.getErrorStream());
+
+                throw new ImportException("Unzip failed by timeout");
+            }
+            unzipProcess.destroy();
+
+            Path unzipDir = Path.of(String.format("%s/%s", rootPath, randomDirName));
+            List<String> shpPaths = getFilePathByExtension(unzipDir, "shp");
+            if (shpPaths.size() != 1) {
+                throw new ImportException("Архив содержит неверное количество shape файлов: " + shpPaths.size());
+            }
+
+            String importShpToTable = getOgr2OgrImportFromSHPToTableCommand(dbName, tableName, srs, shpPaths.get(0));
+            String cleanUpAll = String.format(" rm -rf %s;", randomDirName);
+
+            String importWithClean = importShpToTable + cleanUpAll;
+
+            log.debug("Execute import geometry from SHP and clean up console command: {}", importWithClean);
+
+            processBuilder.command("sh", "-c", importWithClean);
+            Process importProcess = processBuilder.start();
+
+            isSuccess = importProcess.waitFor(TIMEOUT, SECONDS);
+            if (!isSuccess) {
+                logStream(importProcess.getErrorStream());
+
+                throw new ImportException("Import of geometry shape failed by timeout");
+            }
+
+            logStream(importProcess.getInputStream());
+        } catch (IOException | InterruptedException e) {
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
+
+            throw new ImportException(e.getMessage(), e);
         }
     }
 
@@ -126,7 +190,7 @@ public class GDALService implements IExporter {
             processBuilder.directory(new File(rootPath));
             processBuilder.command("sh", "-c", allInOneCommand);
             Process process = processBuilder.start();
-            final boolean isSuccess = process.waitFor(20, SECONDS);
+            final boolean isSuccess = process.waitFor(TIMEOUT, SECONDS);
             if (!isSuccess) {
                 logStream(process.getErrorStream());
 
@@ -158,6 +222,11 @@ public class GDALService implements IExporter {
                              tableName, host, port, userName, password, dbName, schemaName, tableName);
     }
 
+    private String getOgr2OgrImportFromSHPToTableCommand(String dbName, String tableName, String srs, String filePath) {
+        return String.format("ogr2ogr -f \"PostgreSQL\" PG:\"host=postgis user=fiz password=314 port=5432 " +
+                                     "dbname=%s\" -nln %s -a_srs \"%s\" %s;", dbName, tableName, srs, filePath);
+    }
+
     private void logStream(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
@@ -182,5 +251,25 @@ public class GDALService implements IExporter {
                 .split("/")[0];
 
         return hostWithPort.split(":")[1];
+    }
+
+    private List<String> getFilePathByExtension(Path path, String extension) {
+        if (!Files.isDirectory(path)) {
+            throw new IllegalArgumentException("Path must be a directory!");
+        }
+
+        List<String> result = new ArrayList<>();
+
+        try (Stream<Path> walk = Files.walk(path)) {
+            result = walk
+                    .filter(p -> !Files.isDirectory(p))
+                    .map(p -> p.toString().toLowerCase())
+                    .filter(f -> f.endsWith(extension))
+                    .collect(Collectors.toList());
+        } catch (IOException ex) {
+            log.error("Error while getting files with {} extension from directory {}", extension, path.toUri());
+        }
+
+        return result;
     }
 }

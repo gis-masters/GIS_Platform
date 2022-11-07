@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Optional;
 
 public class JsonConverter {
 
@@ -41,6 +42,16 @@ public class JsonConverter {
             log.error("Failed convert to jsonNode: {}", e.getMessage());
 
             return JacksonUtil.toJsonNode("");
+        }
+    }
+
+    public static <T> Optional<T> fromJson(String stringJson, Class<T> classOfT) {
+        try {
+            return Optional.of(mapper.readValue(stringJson, classOfT));
+        } catch (IOException e) {
+            log.error("Failed convert from string to JSON: {}", e.getMessage());
+
+            return Optional.of(null);
         }
     }
 

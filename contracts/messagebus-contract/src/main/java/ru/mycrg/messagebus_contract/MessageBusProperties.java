@@ -62,6 +62,8 @@ public class MessageBusProperties {
     // Common
     public static final String DATA_TO_INTEGRATION_QUEUE = "dataToIntegrationQueue";
     public static final String INTEGRATION_TO_DATA_QUEUE = "IntegrationToDataQueue";
+    public static final String DATA_TO_GEO_WRAPPER_QUEUE = "dataToGeoWrapperQueue";
+    public static final String GEO_WRAPPER_TO_DATA_QUEUE = "GeoWrapperToDataQueue";
 
     // Auth publish/subscribe
     public static final String AUTH_TO_DATA_QUEUE = "authToDataQueue";

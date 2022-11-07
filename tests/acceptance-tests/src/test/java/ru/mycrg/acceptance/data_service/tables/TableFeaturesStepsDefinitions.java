@@ -229,6 +229,16 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         properties.forEach(property -> assertEquals("Updated title", property.get("title").toString()));
     }
 
+    @And("В слой добавлены новые записи из shape файла")
+    public void checkCreationOfFeaturesWithGeometry() {
+        getFeatures(List.of(1, 2, 3, 4, 5), currentDatasetIdentifier, anotherTableName);
+
+        jsonPath = response.jsonPath();
+
+        List<Map<String, Object>> features = jsonPath.getList("");
+        assertEquals(5, features.size());
+    }
+
     @And("Калькулируемые поля пересчитаны в связи с редактированием")
     public void checkCalculatedFields() {
         List<Map<String, Object>> properties = jsonPath.getList("properties");

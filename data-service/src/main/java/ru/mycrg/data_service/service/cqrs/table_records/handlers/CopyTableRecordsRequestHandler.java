@@ -57,19 +57,19 @@ public class CopyTableRecordsRequestHandler implements IRequestHandler<CopyTable
             String message = format("Недостаточно прав для записи в таблицу: %s", targetQualifier.getTableQualifier());
 
             throw new ForbiddenException(message);
-        } else {
-            checkIsTableColumnsExist(schemaSource, schemaTarget, sourceQualifier, targetQualifier);
-
-            List<Long> copiedIds = spatialRecordsDao.copyRecords(targetQualifier.getTableQualifier(),
-                                                                 sourceQualifier.getTableQualifier(),
-                                                                 schemaTarget, schemaSource, featureIds);
-
-            if (nonNull(schemaTarget.getCalcFiledFunction())) {
-                updateCalculatedFiled(copiedIds, schemaTarget, targetQualifier);
-            }
-
-            return new Voidy();
         }
+
+        checkIsTableColumnsExist(schemaSource, schemaTarget, sourceQualifier, targetQualifier);
+
+        List<Long> copiedIds = spatialRecordsDao.copyRecords(targetQualifier.getTableQualifier(),
+                                                             sourceQualifier.getTableQualifier(),
+                                                             schemaTarget, schemaSource, featureIds);
+
+        if (nonNull(schemaTarget.getCalcFiledFunction())) {
+            updateCalculatedFiled(copiedIds, schemaTarget, targetQualifier);
+        }
+
+        return new Voidy();
     }
 
     private void checkIsTableColumnsExist(SchemaDto schemaSource, SchemaDto schemaTarget,

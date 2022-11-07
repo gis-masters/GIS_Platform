@@ -57,7 +57,7 @@ public class CrgDaoGeometryHelper {
 
             jdbcTemplate.execute(sql);
         } catch (Exception e) {
-            String msg = "Ошибка трансформации колекции. Тип геометрии: " + geometryType;
+            String msg = "Ошибка трансформации коллекции. Тип геометрии: " + geometryType;
 
             throw new DaoException(msg, e.getCause());
         }

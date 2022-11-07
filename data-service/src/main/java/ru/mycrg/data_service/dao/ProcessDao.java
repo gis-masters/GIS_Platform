@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.mappers.ProcessRowMapper;
 import ru.mycrg.data_service.entity.Process;
-import ru.mycrg.data_service.repository.ProcessRepository;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 
 import java.sql.SQLException;
@@ -19,16 +18,9 @@ import java.util.Optional;
 public class ProcessDao {
 
     private final DatasourceFactory datasourceFactory;
-    private final ProcessRepository processRepository;
 
-    public ProcessDao(ProcessRepository processRepository,
-                      DatasourceFactory datasourceFactory) {
+    public ProcessDao(DatasourceFactory datasourceFactory) {
         this.datasourceFactory = datasourceFactory;
-        this.processRepository = processRepository;
-    }
-
-    public Process save(Process process) {
-        return processRepository.save(process);
     }
 
     public Optional<Process> findById(Long id, String dbName) {

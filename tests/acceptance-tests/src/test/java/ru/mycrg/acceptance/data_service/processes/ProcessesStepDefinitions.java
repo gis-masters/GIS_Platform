@@ -3,18 +3,23 @@ package ru.mycrg.acceptance.data_service.processes;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 
+import java.io.File;
 import java.time.LocalTime;
 
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.Thread.sleep;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileId;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
     public static Integer currentProcessId;
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -52,22 +57,51 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         placeFile(dxfPlacementModel);
     }
 
-    @When("процесс завершается успешно")
-    public void waitUntilCurrentProcessIsDone() {
-        waitUntilProcessDone(currentProcessId);
+    @When("Пользователь импортирует геометрию из shape файла в существующий слой")
+    public void tryImportGeometryShapeAsProcessAsUser() {
+        authorizationBase.loginAsCurrentUser();
+
+        GeometryShapePlacementModel shapePlacementModel = new GeometryShapePlacementModel();
+        shapePlacementModel.setDatasetId(currentDatasetIdentifier);
+        shapePlacementModel.setTableName(anotherTableName);
+        shapePlacementModel.setFileType("GEOMETRY_FROM_SHAPE");
+
+        placeGeometryFromShape(shapePlacementModel, "transplogisticobj_point.zip");
     }
 
-    public void waitUntilProcessDone(Integer processId) {
+    @When("Администратор импортирует геометрию из shape файла в существующий слой")
+    public void tryImportGeometryShapeAsProcessAsAdmin() {
+        authorizationBase.loginAsOwner();
+
+        GeometryShapePlacementModel shapePlacementModel = new GeometryShapePlacementModel();
+        shapePlacementModel.setDatasetId(currentDatasetIdentifier);
+        shapePlacementModel.setTableName(anotherTableName);
+        shapePlacementModel.setFileType("GEOMETRY_FROM_SHAPE");
+
+        placeGeometryFromShape(shapePlacementModel, "transplogisticobj_point.zip");
+    }
+
+    @When("процесс завершается успешно")
+    public void waitUntilCurrentProcessIsDone() {
+        waitUntilProcessCompleteWithStatus(currentProcessId, "DONE");
+    }
+
+    @When("Процесс завершается с ошибкой")
+    public void waitUntilCurrentProcessIsCompleteWithError() {
+        waitUntilProcessCompleteWithStatus(currentProcessId, "ERROR");
+    }
+
+    public void waitUntilProcessCompleteWithStatus(Integer processId, String status) {
         try {
             int currentAttempt = 0;
             do {
                 currentAttempt++;
-                System.out.printf("Time: '%s' Attempt: '%d'. Check process with id: '%d' is DONE%n",
-                                  LocalTime.now(), currentAttempt, processId);
+                System.out.printf("Time: '%s' Attempt: '%d'. Check process with id: '%d' is %s %n",
+                                  LocalTime.now(), currentAttempt, processId, status);
 
                 getProcess(processId);
 
-                if ("DONE".equals(response.jsonPath().get("status"))) {
+                if (status.equals(response.jsonPath().get("status"))) {
                     return;
                 }
 
@@ -86,6 +120,16 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         processableModel.setPayload(dxfPlacementModel);
 
         initProcess(processableModel);
+
+        currentProcessId = extractId(response.jsonPath().get("_links.self.href"));
+    }
+
+    private void placeGeometryFromShape(GeometryShapePlacementModel shapePlacementModel, String filename) {
+        ProcessableModel processableModel = new ProcessableModel();
+        processableModel.setType("IMPORT_GEOMETRY");
+        processableModel.setPayload(shapePlacementModel);
+
+        initProcessWithFile(processableModel, filename);
 
         currentProcessId = extractId(response.jsonPath().get("_links.self.href"));
     }
@@ -111,5 +155,21 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
                         body(gson.toJson(payload))
                 .when().
                         post();
+    }
+
+    private void initProcessWithFile(ProcessableModel processableModel, String fileName) {
+        File file = new File("src/test/resources/ru/mycrg/acceptance/resources/" + fileName);
+        if (!file.exists()) {
+            throw new IllegalStateException("Not exist test resource: " + fileName);
+        }
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType("multipart/form-data").
+                        multiPart("file", file).
+                        multiPart("processModelJson", gson.toJson(processableModel))
+                .when().
+                        log().all().
+                        post("/file");
     }
 }

@@ -65,6 +65,9 @@ public class RabbitConfiguration {
     @Bean public Queue dataToIntegrationQueue() { return new Queue(DATA_TO_INTEGRATION_QUEUE);}
     @Bean public Queue integrationToDataQueue() { return new Queue(INTEGRATION_TO_DATA_QUEUE);}
 
+    @Bean public Queue dataToGeoWrapperQueue() { return new Queue(DATA_TO_GEO_WRAPPER_QUEUE);}
+    @Bean public Queue geoWrapperToDataQueue() { return new Queue(GEO_WRAPPER_TO_DATA_QUEUE);}
+
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
         return new Jackson2JsonMessageConverter();

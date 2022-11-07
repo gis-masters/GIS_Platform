@@ -48,9 +48,9 @@ public class ImportRequestHandler implements IEventHandler {
         this.initialImportService = dataServiceHandler;
 
         // Задаем цепочку обработчиков
-        this.initialImportService.setHandlers(geometryHandler, null);
-        geometryHandler.setHandlers(copyDataService, initialImportService);
-        copyDataService.setHandlers(gisServiceLayerHandler, geometryHandler);
+        this.initialImportService.setHandlers(copyDataService, null);
+        copyDataService.setHandlers(geometryHandler, initialImportService);
+        geometryHandler.setHandlers(gisServiceLayerHandler, copyDataService);
         gisServiceLayerHandler.setHandlers(postImporter, geometryHandler);
         postImporter.setHandlers(importCleaner, gisServiceLayerHandler);
         importCleaner.setHandlers(null, postImporter);

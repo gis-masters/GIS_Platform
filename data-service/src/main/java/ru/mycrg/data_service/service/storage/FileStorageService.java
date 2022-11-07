@@ -49,10 +49,14 @@ public class FileStorageService {
      * @throws DataServiceException в случае если не удается сохранить файл
      */
     public String storeFile(MultipartFile file, String fileName) {
+        return storeFile(file, fileStoragePath, fileName);
+    }
+
+    public String storeFile(MultipartFile file, Path storagePath, String fileName) {
         Path targetLocation = null;
         try {
             // Copy file to the target location (Replacing existing file with the same name)
-            targetLocation = fileStoragePath.resolve(fileName);
+            targetLocation = storagePath.resolve(fileName);
 
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 

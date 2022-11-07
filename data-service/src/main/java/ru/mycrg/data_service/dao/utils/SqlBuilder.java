@@ -158,6 +158,16 @@ public class SqlBuilder {
         return insertTo + data + from + where + returnIds;
     }
 
+    @NotNull
+    public static String buildCopyGeometryQuery(ResourceQualifier sourceTable, ResourceQualifier targetTable) {
+        String insertTo = "INSERT INTO " + targetTable.getQualifier();
+        String shapeCopy = "(shape) SELECT \"wkb_geometry\"";
+
+        String from = " FROM " + sourceTable.getQualifier();
+
+        return String.format("WITH rows AS (%s RETURNING 1) SELECT count(*) FROM rows;", insertTo + shapeCopy + from);
+    }
+
     private static String mappingColumns(SchemaDto sourceSchema, SchemaDto targetSchema) {
         String pre = " (";
         String post = ") ";

@@ -19,7 +19,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
-import static ru.mycrg.data_service.util.JsonConverter.*;
+import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 
 @Component
 public class ProcessHandler {
