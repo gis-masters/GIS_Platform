@@ -60,7 +60,7 @@ class SchemaService {
     return Promise.all(names.map(this.getOldSchema));
   }
 
-  async getAllSchemas(): Promise<OldSchema[]> {
+  async getAllOldSchemas(): Promise<OldSchema[]> {
     if (!this.fetchingAllSchemas) {
       this.fetchingAllSchemas = this.fetch(true);
     }
@@ -68,6 +68,12 @@ class SchemaService {
     await this.fetchingAllSchemas;
 
     return Promise.all(Object.values(this.schemas));
+  }
+
+  async getAllSchemas(): Promise<Schema[]> {
+    const oldSchemas = await this.getAllOldSchemas();
+
+    return oldSchemas.map(convertOldToNewSchema);
   }
 
   /**
@@ -78,7 +84,7 @@ class SchemaService {
       return;
     }
 
-    const schemas = await this.getAllSchemas();
+    const schemas = await this.getAllOldSchemas();
 
     return (
       schemas.find(schema => schema.name.toLowerCase() === schemaId.toLowerCase()) ||

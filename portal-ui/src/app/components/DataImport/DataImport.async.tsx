@@ -51,7 +51,7 @@ export default class DataImport extends Component {
 
   async componentDidMount() {
     // прогреем схемы, понадобятся на следующем шаге
-    void schemaService.getAllSchemas();
+    void schemaService.getAllOldSchemas();
     const urlImportId = route.params.importId;
 
     if (urlImportId) {

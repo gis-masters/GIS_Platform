@@ -50,7 +50,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    this.schemas = await schemaService.getAllSchemas();
+    this.schemas = await schemaService.getAllOldSchemas();
 
     const { projectId, importId } = this.route.snapshot.params as Record<string, string>;
     this.prevLink = `/projects/${projectId}/import/${importId}`;

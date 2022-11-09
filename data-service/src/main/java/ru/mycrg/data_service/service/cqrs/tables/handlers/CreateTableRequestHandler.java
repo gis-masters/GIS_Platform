@@ -22,6 +22,7 @@ import ru.mycrg.mediator.IRequestHandler;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Objects.isNull;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
@@ -72,6 +73,8 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         SchemaDto schema = schemaByName.get();
 
         throwIfNoGeometryInSchema(schema);
+        String tableName = buildTableName(schema.getTableName(), dataset.getId(), dto.getName());
+        dto.setName(tableName);
 
         try {
             ddlTables.create(datasetId, dto, schema.getProperties());
@@ -93,7 +96,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
                 : null;
 
         String path = dataset.getPath() + "/" + dataset.getId();
-        SchemasAndTables table = new SchemasAndTables(TABLE, dto, tQualifier.getTable(), path);
+        SchemasAndTables table = new SchemasAndTables(TABLE, dto, tableName, path);
         table.setCrs(dto.getCrs());
         table.setSchemaId(dto.getSchemaId());
         table.setStatus(dto.getStatus());
@@ -111,6 +114,14 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         permissionsService.addOwnerPermission(SCHEMAS_AND_TABLES_QUALIFIER, newEntity.getId());
 
         return new TableModel(newEntity, OWNER.name());
+    }
+
+    private String buildTableName(String sTableName, long datasetId, String nameFromDto) {
+        if (nameFromDto == null || nameFromDto.isEmpty()) {
+            return String.format("%s_%d_%s", sTableName, datasetId, UUID.randomUUID().toString().substring(0, 4));
+        } else {
+            return nameFromDto;
+        }
     }
 
     private void throwIfNoGeometryInSchema(SchemaDto schema) {

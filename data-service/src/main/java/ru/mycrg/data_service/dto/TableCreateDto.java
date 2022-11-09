@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,10 +13,6 @@ import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATE_PATTERN;
 
 public class TableCreateDto extends ResourceCreateDto {
 
-    @NotBlank
-    @Size(min = 3, max = 60)
-    @Pattern(regexp = "^[a-z].[a-z0-9_]*$", message = "Название некорректно. Может содержать только: буквы " +
-            "латинского алфавита в нижнем регистре, цифры и символ '_'. Должно начинаться с букв.")
     private String name;
 
     @NotBlank

@@ -48,7 +48,7 @@ export class ExplorerAdapterTypeSchemasRoot {
     item: ExplorerItemData<null>,
     { page, pageSize, sort, sortOrder, filter }: PageOptions
   ): Promise<[ExplorerItemData<OldSchema>[], number]> {
-    const all = await schemaService.getAllSchemas();
+    const all = await schemaService.getAllOldSchemas();
     const filtered = filter.name ? filterObjects(all, { name: { $ilike: `%${String(filter.name)}%` } }) : all;
     const sorted = sortObjects<OldSchema>(filtered, sort as keyof OldSchema, sortOrder === SortOrder.ASC, 'name');
     const paged = sorted.slice(page * pageSize, page * pageSize + pageSize);
@@ -62,7 +62,7 @@ export class ExplorerAdapterTypeSchemasRoot {
     { pageSize, sort, sortOrder, filter }: PageOptions,
     id: string
   ): Promise<[ExplorerItemData<OldSchema>[], number, number]> | undefined {
-    const all = await schemaService.getAllSchemas();
+    const all = await schemaService.getAllOldSchemas();
     const filtered = filterObjects(all, filter);
     const sorted = sortObjects<OldSchema>(filtered, sort as keyof OldSchema, sortOrder === SortOrder.ASC, 'name');
     const index = sorted.findIndex(({ name }) => name === id);

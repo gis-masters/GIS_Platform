@@ -153,6 +153,11 @@
         "id": "00gmlImport(ENU_NED)",
         "title": "Размещение gml файлов в проект",
         "contentUrl": "/assets/help/map/dataManagement/09gmlImport(ENU_NED).html"
+      },
+      {
+        "id": "11layerInDataset",
+        "title": "Создание пустого векторого слоя",
+        "contentUrl": "/assets/help/map/dataManagement/11layerInDataset.html"
       }
     ]
   },

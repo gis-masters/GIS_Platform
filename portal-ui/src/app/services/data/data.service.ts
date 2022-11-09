@@ -17,6 +17,8 @@ import { preparePageOptions } from '../http.utils';
 import { Role } from './permissions.models';
 import { http } from '../http.service';
 import { Coordinate } from 'ol/coordinate';
+import { SchemasSelect } from '../../components/SchemasSelect/SchemasSelect';
+import { viewedProjections } from '../geoserver/projections.service';
 
 export enum DataEntityType {
   DATASET = 'SCHEMA',
@@ -75,11 +77,13 @@ export interface VectorTable extends DataEntity {
   isPublic?: boolean;
 }
 
+const title = 'Наименование';
+
 export const datasetSchema: Schema<Dataset> = {
   properties: [
     {
       name: 'title',
-      title: 'Наименование',
+      title,
       propertyType: PropertyType.STRING
     },
     {
@@ -90,21 +94,17 @@ export const datasetSchema: Schema<Dataset> = {
   ]
 };
 
-export const vectorTableSchema: Schema<VectorTable> = {
+const statusOptions = [
+  { title: 'Проектный', value: 'Проектный' },
+  { title: 'Утвержденный', value: 'Утвержденный' },
+  { title: 'Архивный', value: 'Архивный' }
+];
+
+const vectorTableSchemaBase: Schema<VectorTable> = {
   properties: [
     {
-      name: 'title',
-      title: 'Наименование слоя',
-      propertyType: PropertyType.STRING
-    },
-    {
       name: 'details',
-      title: 'Описание слоя',
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'crs',
-      title: 'Координатная система',
+      title: 'Описание',
       propertyType: PropertyType.STRING
     },
     {
@@ -142,11 +142,7 @@ export const vectorTableSchema: Schema<VectorTable> = {
       name: 'status',
       title: 'Статус слоя',
       propertyType: PropertyType.CHOICE,
-      options: [
-        { title: 'Проектный', value: 'Проектный' },
-        { title: 'Утвержденный', value: 'Утвержденный' },
-        { title: 'Архивный', value: 'Архивный' }
-      ]
+      options: statusOptions
     },
     {
       name: 'fias',
@@ -169,6 +165,50 @@ export const vectorTableSchema: Schema<VectorTable> = {
       title: 'Публичный',
       propertyType: PropertyType.BOOL
     }
+  ]
+};
+
+export const vectorTableSchema: Schema<VectorTable> = {
+  properties: [
+    {
+      name: 'title',
+      title,
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'crs',
+      title: 'Координатная система',
+      readOnly: true,
+      propertyType: PropertyType.CHOICE,
+      options: viewedProjections.map(({ id, title }) => ({ title: title, value: id }))
+    },
+    ...vectorTableSchemaBase.properties
+  ]
+};
+
+export const emptyVectorTableSchema: Schema<VectorTable> = {
+  properties: [
+    {
+      name: 'title',
+      title,
+      required: true,
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'crs',
+      title: 'Координатная система',
+      required: true,
+      propertyType: PropertyType.CHOICE,
+      options: viewedProjections.map(({ id, title }) => ({ title: title, value: id }))
+    },
+    {
+      name: 'schemaId',
+      title: 'Схема',
+      required: true,
+      propertyType: PropertyType.CUSTOM,
+      ControlComponent: SchemasSelect
+    },
+    ...vectorTableSchemaBase.properties
   ]
 };
 
@@ -252,6 +292,13 @@ export async function getAllDatasetTables(dataset: Dataset): Promise<VectorTable
     ...table,
     dataset: dataset.identifier
   }));
+}
+
+export async function createVectorTable(dataset: Dataset, layer: VectorTable): Promise<VectorTable[]> {
+  const response = await http.post<VectorTable[]>(await getDatasetTablesUrl(dataset.identifier), layer);
+  communicationService.vectorTablesUpdated.emit();
+
+  return response;
 }
 
 export async function getVectorTable(datasetId: string, identifier: string): Promise<VectorTable> {

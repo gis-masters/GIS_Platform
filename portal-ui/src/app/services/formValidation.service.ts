@@ -58,7 +58,7 @@ const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
   [PropertyType.FILE]: [filesRequired, filesLoaded],
   [PropertyType.DOCUMENT]: [jsonArrayRequired],
   [PropertyType.SET]: [],
-  [PropertyType.CUSTOM]: []
+  [PropertyType.CUSTOM]: [simpleRequired]
 };
 
 export function validateFieldValue(

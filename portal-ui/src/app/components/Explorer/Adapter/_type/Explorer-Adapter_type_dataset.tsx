@@ -6,18 +6,22 @@ import {
   VectorTable,
   getDatasetTables,
   getDatasetTablesWithParticularOne,
-  getVectorTable
+  getVectorTable,
+  getDataset
 } from '../../../../services/data/data.service';
 import { Emitter } from '../../../../services/common/Emitter';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
+import { CreateVectorTable } from '../../../CreateVectorTable/CreateVectorTable';
 import { formatDate } from '../../../../services/util/date.util';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { DatasetActions } from '../../../DatasetActions/DatasetActions';
+import { currentUser } from '../../../../stores/CurrentUser.store';
+import { Role } from '../../../../services/data/permissions.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -141,6 +145,13 @@ export class ExplorerAdapterTypeDataset {
 
   static getChildrenFilterLabel(): string {
     return 'Фильтр по названию';
+  }
+
+  static async getToolbarActions(item: ExplorerItemData<Dataset>): Promise<ReactNode> {
+    const currentItem = await getDataset(item.payload.identifier);
+    const createEnabled = currentUser.isAdmin || [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role);
+
+    return createEnabled && <CreateVectorTable dataset={item.payload} />;
   }
 
   static getRefreshEmitters(): Emitter[] {

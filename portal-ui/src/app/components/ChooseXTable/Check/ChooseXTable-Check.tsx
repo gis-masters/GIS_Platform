@@ -22,7 +22,8 @@ export class ChooseXTableCheck<T> extends Component<ChooseXTableCheckProps<T>> {
   }
 
   render() {
-    const Check = this.props.single ? Radio : Checkbox;
+    const { single } = this.props;
+    const Check = single ? Radio : Checkbox;
 
     return <Check className={cnChooseXTableCheck()} checked={this.selected} onChange={this.changeHandler} />;
   }
