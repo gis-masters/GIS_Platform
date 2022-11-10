@@ -52,7 +52,9 @@ function _getXTableColumnsFromSchema<T>(
   keysToLowerCase: boolean,
   overrides: XTableColumn<T>[] = []
 ): XTableColumn<Record<string, unknown> | T>[] {
-  return schema.properties.map(property => {
+  const allowedProperties = schema.properties.filter(property => property.propertyType !== PropertyType.LOOKUP);
+
+  return allowedProperties.map(property => {
     const relations = getFieldRelations<T>(property.name, schema);
     const override = overrides.find(({ field }) =>
       keysToLowerCase ? property.name.toLowerCase() === String(field).toLowerCase() : property.name === field
