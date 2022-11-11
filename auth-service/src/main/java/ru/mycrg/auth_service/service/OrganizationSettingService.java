@@ -63,8 +63,17 @@ public class OrganizationSettingService {
         Set<OrgSettingsRequestDto> systemSettings = readSystemSettings(systemOrganization.getSettings());
 
         Set<OrgSettingsResponseDto> result = new HashSet<>();
-        systemSettings.forEach(dto -> {
-            result.add(new OrgSettingsResponseDto(dto.getId(), dto.getSettings()));
+        List<Long> ids = systemSettings.stream()
+                                       .map(OrgSettingsRequestDto::getId)
+                                       .collect(Collectors.toList());
+
+        Iterable<Organization> allExistOrg = organizationRepository.findAllById(ids);
+        allExistOrg.forEach(o -> {
+            systemSettings.stream().filter(org -> org.getId().equals(o.getId()))
+                          .findFirst()
+                          .ifPresent(orgS -> {
+                              result.add(new OrgSettingsResponseDto(o.getId(), o.getName(), orgS.getSettings()));
+                          });
         });
 
         return result;

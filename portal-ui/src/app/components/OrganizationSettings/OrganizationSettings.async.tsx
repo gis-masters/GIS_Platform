@@ -31,7 +31,8 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   @observable private busy = false;
   @observable private schema: Schema<Record<string, unknown>>;
 
-  private reactionDisposer: IReactionDisposer;
+  private reactionDisposerOrganizationSettings: IReactionDisposer;
+  private reactionDisposerSystemSettings: IReactionDisposer;
 
   constructor(props: OrganizationSettingsProps) {
     super(props);
@@ -39,11 +40,24 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   }
 
   componentDidMount() {
-    const settings = organizationSettings.orgSettings || this.props.orgSettings;
-    this.reactionDisposer = reaction(
-      () => cloneDeep(settings),
+    this.reactionDisposerOrganizationSettings = reaction(
+      () => cloneDeep(organizationSettings.orgSettings),
       () => {
-        this.setFormValue(cloneDeep(this.props.systemManagement ? settings.system : settings.organization));
+        if (organizationSettings.orgSettings?.organization) {
+          this.setFormValue(cloneDeep(organizationSettings.orgSettings.organization));
+        }
+      },
+      {
+        fireImmediately: true
+      }
+    );
+
+    this.reactionDisposerSystemSettings = reaction(
+      () => cloneDeep(this.props.orgSettings),
+      () => {
+        if (this.props.orgSettings?.system) {
+          this.setFormValue(cloneDeep(this.props.orgSettings.system));
+        }
       },
       {
         fireImmediately: true
@@ -56,7 +70,8 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   }
 
   componentWillUnmount() {
-    this.reactionDisposer();
+    this.reactionDisposerOrganizationSettings();
+    this.reactionDisposerSystemSettings();
   }
 
   render() {
@@ -70,7 +85,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
           <>
             {this.formValue && (
               <>
-                <h1 className={cnOrganizationSettings('Title')}>Управление организациями</h1>
+                <h1 className={cnOrganizationSettings('Title')}>Управление организацией</h1>
                 <Form
                   id={htmlId}
                   actionFunction={this.save}

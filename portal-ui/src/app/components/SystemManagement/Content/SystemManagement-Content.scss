@@ -1,11 +1,7 @@
-.SystemManagement-Content {
-  & .MuiTabs-flexContainer {
-    overflow: auto;
-  }
+body .SystemManagement-Content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 
-  & .MuiTabs-fixed {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  padding-top: 25px;
 }

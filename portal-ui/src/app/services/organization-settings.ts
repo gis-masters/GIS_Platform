@@ -45,8 +45,7 @@ class OrganizationSettingsService {
 
   async setOrganizationSettings(settings: OrgSettings): Promise<void> {
     await http.patch<OrgSettings>(await getOrganizationSettingsUrl(), settings);
-
-    organizationSettings.setSettings(settings);
+    await this.fetch();
   }
 
   orgSchema(settings: Record<string, boolean>, systemManagement: boolean): Schema<Record<string, unknown>> {
@@ -59,7 +58,7 @@ class OrganizationSettingsService {
             name: item,
             title: organizationSettings.availableOrgsSettings[item],
             propertyType: PropertyType.BOOL,
-            readOnly: systemManagement ? false : !organizationSettings.orgSettings.system[item]
+            hidden: systemManagement ? false : !organizationSettings.orgSettings.system[item]
           };
         }
       })

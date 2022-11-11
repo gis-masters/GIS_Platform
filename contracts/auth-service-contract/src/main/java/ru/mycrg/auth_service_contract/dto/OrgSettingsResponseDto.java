@@ -5,6 +5,7 @@ import java.util.Map;
 public class OrgSettingsResponseDto {
 
     private Long id;
+    private String name;
     private Map<String, Object> system;
     private Map<String, Object> organization;
 
@@ -12,9 +13,10 @@ public class OrgSettingsResponseDto {
         // Required
     }
 
-    public OrgSettingsResponseDto(Long id, Map<String, Object> system) {
+    public OrgSettingsResponseDto(Long id, String name, Map<String, Object> system) {
         this.id = id;
         this.system = system;
+        this.name = name;
     }
 
     public OrgSettingsResponseDto(Long id, Map<String, Object> system, Map<String, Object> organization) {
@@ -45,5 +47,13 @@ public class OrgSettingsResponseDto {
 
     public void setOrganization(Map<String, Object> organization) {
         this.organization = organization;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

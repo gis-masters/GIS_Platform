@@ -4,6 +4,7 @@ import { currentUser } from './CurrentUser.store';
 
 export interface OrgSettings {
   id: string;
+  name?: string;
   system?: Record<string, boolean>;
   organization?: Record<string, boolean>;
 }
