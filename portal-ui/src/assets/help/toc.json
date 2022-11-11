@@ -21,18 +21,13 @@
       },
       {
         "id": "registration",
-        "title": "Регистрация пользователя",
+        "title": "Регистрация предприятия",
         "contentUrl": "/assets/help/login/01registration.html"
       },
       {
         "id": "signOut",
         "title": "Выход из системы",
         "contentUrl": "/assets/help/login/02signOut.html"
-      },
-      {
-        "id": "accountChange",
-        "title": "Смена учётной записи",
-        "contentUrl": "/assets/help/map/03accountChange.html"
       },
       {
         "id": "restorePassword",
@@ -46,14 +41,14 @@
     "title": "Управление проектами",
     "children": [
       {
-        "id": "create",
-        "title": "Создание проекта",
-        "contentUrl": "/assets/help/projects/01create.html"
-      },
-      {
         "id": "projects-page",
         "title": "Страница с проектами",
         "contentUrl": "/assets/help/projects/00projects.html"
+      },
+      {
+        "id": "create",
+        "title": "Создание проекта",
+        "contentUrl": "/assets/help/projects/01create.html"
       },
       {
         "id": "delete",
@@ -96,6 +91,21 @@
         "id": "org-admin-control",
         "title": "Управление организацией",
         "contentUrl": "/assets/help/map/orgManagement/00orgManagement.html"
+      },
+      {
+        "id": "1orgManagement",
+        "title": "Пользователи",
+        "contentUrl": "/assets/help/map/orgManagement/01orgManagement.html"
+      },
+      {
+        "id": "2orgManagement",
+        "title": "Группы",
+        "contentUrl": "/assets/help/map/orgManagement/02orgManagement.html"
+      },
+      {
+        "id": "3orgManagement",
+        "title": "Настройка организации",
+        "contentUrl": "/assets/help/map/orgManagement/03orgManagement.html"
       }
     ]
   },
@@ -151,24 +161,18 @@
       },
       {
         "id": "00gmlImport(ENU_NED)",
-        "title": "Размещение gml файлов в проект",
+        "title": "Размещение gml файлов  в проект",
         "contentUrl": "/assets/help/map/dataManagement/09gmlImport(ENU_NED).html"
       },
       {
         "id": "11layerInDataset",
         "title": "Создание пустого векторого слоя",
         "contentUrl": "/assets/help/map/dataManagement/11layerInDataset.html"
-      }
-    ]
-  },
-  {
-    "id": "registry",
-    "title": "Реестр документов",
-    "children": [
+      },
       {
-        "id": "registry",
-        "title": "Реестр документов",
-        "contentUrl": "/assets/help/registry/05registry.html"
+        "id": "dxf",
+        "title": "Размещение DXF",
+        "contentUrl": "/assets/help/map/dataManagement/10DXF.html"
       }
     ]
   },
@@ -271,11 +275,6 @@
             "id": "punctureObject",
             "title": "Получение дополнительной информации об объекте (прокол)",
             "contentUrl": "/assets/help/map/04punctureObject.html"
-          },
-          {
-            "id": "attributeTable",
-            "title": "Атрибутивная таблица(с фильтрацией объектов)",
-            "contentUrl": "/assets/help/map/05attributeTable.html"
           },
           {
             "id": "allEditObjects",
