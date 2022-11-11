@@ -3,10 +3,16 @@ package ru.mycrg.data_service.dao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class BaseTemplateDao {
 
     public <T> T queryForObject(JdbcTemplate jdbcTemplate, String query, Class<T> requiredType) {
         return jdbcTemplate.queryForObject(query, requiredType);
+    }
+
+    public <T> List<T> queryForList(JdbcTemplate jdbcTemplate, String query, Class<T> requiredType) {
+        return jdbcTemplate.queryForList(query, requiredType);
     }
 }

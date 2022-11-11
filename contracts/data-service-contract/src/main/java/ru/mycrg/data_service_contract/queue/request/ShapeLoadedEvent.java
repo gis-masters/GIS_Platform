@@ -15,13 +15,14 @@ public class ShapeLoadedEvent extends DefaultMessageBusRequestEvent {
     private String targetTableName;
     private String datasetId;
     private String sourceTableName;
+    private String geometryType;
 
     public ShapeLoadedEvent() {
         super();
     }
 
     public ShapeLoadedEvent(Long processId, String dbName, String filePath, String srs,
-                            String targetTableName, String datasetId) {
+                            String targetTableName, String datasetId, String geometryType) {
         super(UUID.randomUUID(), DATA_TO_GEO_WRAPPER_QUEUE);
 
         this.processId = processId;
@@ -30,6 +31,7 @@ public class ShapeLoadedEvent extends DefaultMessageBusRequestEvent {
         this.srs = srs;
         this.targetTableName = targetTableName;
         this.datasetId = datasetId;
+        this.geometryType = geometryType;
     }
 
     public Long getProcessId() {
@@ -88,6 +90,14 @@ public class ShapeLoadedEvent extends DefaultMessageBusRequestEvent {
         this.sourceTableName = sourceTableName;
     }
 
+    public String getGeometryType() {
+        return geometryType;
+    }
+
+    public void setGeometryType(String geometryType) {
+        this.geometryType = geometryType;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -97,7 +107,8 @@ public class ShapeLoadedEvent extends DefaultMessageBusRequestEvent {
                 "\"srs\":" + (srs == null ? "null" : "\"" + srs + "\"") + ", " +
                 "\"targetTableName\":" + (targetTableName == null ? "null" : "\"" + targetTableName + "\"") + ", " +
                 "\"datasetId\":" + (datasetId == null ? "null" : "\"" + datasetId + "\"") + ", " +
-                "\"sourceTableName\":" + (sourceTableName == null ? "null" : "\"" + sourceTableName + "\"") +
+                "\"sourceTableName\":" + (sourceTableName == null ? "null" : "\"" + sourceTableName + "\"") + ", " +
+                "\"geometryType\":" + (geometryType == null ? "null" : "\"" + geometryType + "\"") +
                 "}";
     }
 }

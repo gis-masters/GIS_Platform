@@ -168,6 +168,11 @@ public class SqlBuilder {
         return String.format("WITH rows AS (%s RETURNING 1) SELECT count(*) FROM rows;", insertTo + shapeCopy + from);
     }
 
+    @NotNull
+    public static String buildGetGeometryTypeQuery(ResourceQualifier table, String geometryField) {
+        return String.format("SELECT public.st_geometrytype(%s) FROM %s LIMIT 1;", geometryField, table.getQualifier());
+    }
+
     private static String mappingColumns(SchemaDto sourceSchema, SchemaDto targetSchema) {
         String pre = " (";
         String post = ") ";

@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.util;
+package ru.mycrg.data_service.dto;
 
 public class GeometryProjection {
 

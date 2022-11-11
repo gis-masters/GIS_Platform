@@ -9,18 +9,19 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
+import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.import_.model.GeometryFromShapePlacementPayloadModel;
 import ru.mycrg.data_service.service.processes.FileType;
 import ru.mycrg.data_service.service.processes.IExecutor;
 import ru.mycrg.data_service.service.processes.IFilePlacer;
-import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service.service.resources.protectors.TableProtector;
 import ru.mycrg.data_service.service.storage.FileStorageService;
-import ru.mycrg.data_service.util.JsonConverter;
-import ru.mycrg.data_service_contract.dto.ImportReport;
+import ru.mycrg.data_service_contract.dto.ImportGeometryShapeReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.data_service_contract.queue.request.ShapeLoadedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
@@ -34,7 +35,7 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT_GEOMETRY;
 
 @Component
-public class GeometryShapeExecutor implements IExecutor<ImportReport>, IFilePlacer {
+public class GeometryShapeExecutor implements IExecutor<ImportGeometryShapeReport>, IFilePlacer {
 
     private final Logger log = LoggerFactory.getLogger(GeometryShapeExecutor.class);
 
@@ -43,27 +44,26 @@ public class GeometryShapeExecutor implements IExecutor<ImportReport>, IFilePlac
     private final FileStorageService fileStorageService;
     private final Path exportStoragePath;
 
-    private ImportReport importReport;
+    private ImportGeometryShapeReport importReport;
     private ProcessModel processModel;
     private GeometryFromShapePlacementPayloadModel payload;
     private final IAuthenticationFacade authenticationFacade;
     private final TableService tableService;
+    private final SchemaService schemaService;
     private final TableProtector tableProtector;
-    private final ProcessService processService;
 
     public GeometryShapeExecutor(IMessageBusProducer messageBus,
                                  FileStorageService fileStorageService,
                                  Environment environment,
                                  IAuthenticationFacade authenticationFacade,
                                  TableService tableService,
-                                 TableProtector tableProtector,
-                                 ProcessService processService) {
+                                 SchemaService schemaService, TableProtector tableProtector) {
         this.messageBus = messageBus;
         this.fileStorageService = fileStorageService;
         this.authenticationFacade = authenticationFacade;
         this.tableService = tableService;
+        this.schemaService = schemaService;
         this.tableProtector = tableProtector;
-        this.processService = processService;
 
         String path = environment.getRequiredProperty("crg-options.exportStoragePath");
 
@@ -71,40 +71,48 @@ public class GeometryShapeExecutor implements IExecutor<ImportReport>, IFilePlac
     }
 
     @Override
-    public ImportReport execute() {
+    public ImportGeometryShapeReport execute() {
+        importReport = new ImportGeometryShapeReport();
+
         log.debug("Начало публикации импорта геометрии из SHAPE файла: {}", this.payload);
 
         long orgId = authenticationFacade.getOrganizationId();
         String dbName = getDefaultDatabaseName(orgId);
-        ResourceQualifier tQualifier = new ResourceQualifier(payload.getDatasetId(), payload.getTableName());
+
+        String datasetId = payload.getDatasetId();
+        String tableName = payload.getTableName();
+        ResourceQualifier tQualifier = new ResourceQualifier(datasetId, tableName);
 
         if (!tableProtector.isEditAllowed(tQualifier)) {
             String msg = String.format("Таблица: '%s' не доступна для обновления.", tQualifier.getTableQualifier());
 
-            processService.error(dbName,
-                                 processModel.getId(),
-                                 JsonConverter.toJsonNode("{\"error\"}: \"" + msg + "\""));
-
             log.error(msg);
+
+            importReport.setSuccess(false);
+            importReport.setReason(msg);
+            importReport.setMessage(msg);
+            importReport.setDatasetIdentifier(datasetId);
+            importReport.setTableIdentifier(tableName);
 
             throw new ForbiddenException(msg);
         }
 
         IResourceModel table = tableService.getInfo(tQualifier);
 
+        SchemaDto schemaByName = schemaService.getSchemaByName(table.getSchemaId())
+                                              .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
         messageBus.produce(
                 new ShapeLoadedEvent(processModel.getId(), dbName, payload.getFilePath(),
-                                     table.getCrs(), payload.getTableName(), payload.getDatasetId()));
+                                     table.getCrs(), tableName, datasetId, schemaByName.getGeometryType().getType()));
 
-        importReport = new ImportReport();
-        importReport.setDatasetIdentifier(payload.getDatasetId());
-        importReport.setProjectIsNew(false);
+        importReport.setDatasetIdentifier(datasetId);
+        importReport.setTableIdentifier(tableName);
 
         return importReport;
     }
 
     @Override
-    public ImportReport getReport() {
+    public ImportGeometryShapeReport getReport() {
         return this.importReport;
     }
 
@@ -113,14 +121,14 @@ public class GeometryShapeExecutor implements IExecutor<ImportReport>, IFilePlac
     }
 
     @Override
-    public IExecutor<ImportReport> setPayload(ProcessModel processModel) {
+    public IExecutor<ImportGeometryShapeReport> setPayload(ProcessModel processModel) {
         this.processModel = processModel;
 
         return this;
     }
 
     @Override
-    public IExecutor<ImportReport> initialize(Object data) {
+    public IExecutor<ImportGeometryShapeReport> initialize(Object data) {
         MultipartFile file;
         try {
             LinkedHashMap<String, Object> geometryShapeModel = mapper.convertValue(data, LinkedHashMap.class);
@@ -144,7 +152,7 @@ public class GeometryShapeExecutor implements IExecutor<ImportReport>, IFilePlac
     }
 
     @Override
-    public IExecutor<ImportReport> validate() {
+    public IExecutor<ImportGeometryShapeReport> validate() {
         // Nothing to do
 
         return this;

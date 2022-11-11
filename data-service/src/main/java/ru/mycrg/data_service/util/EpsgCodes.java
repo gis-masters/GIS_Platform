@@ -3,6 +3,7 @@ package ru.mycrg.data_service.util;
 import org.geotools.referencing.CRS;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import ru.mycrg.data_service.dto.GeometryProjection;
 
 import java.util.Arrays;
 import java.util.List;

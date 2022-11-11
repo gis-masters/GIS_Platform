@@ -12,7 +12,7 @@ import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.util.EpsgCodes;
-import ru.mycrg.data_service.util.GeometryProjection;
+import ru.mycrg.data_service.dto.GeometryProjection;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.INITIAL_SCHEMA_NAME;
 

@@ -5,7 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.queue.request.ShapeLoadedEvent;
-import ru.mycrg.data_service_contract.queue.response.ShapeImportedEvent;
+import ru.mycrg.data_service_contract.queue.response.ShapeImportedFailedEvent;
+import ru.mycrg.data_service_contract.queue.response.ShapeImportedSucceededEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
@@ -41,11 +42,13 @@ public class ImportGeometryShapeRequestHandler implements IEventHandler {
 
             gdalService.importGeometryFromShape(event.getFilePath(), event.getDbName(), tableName, event.getSrs());
 
-            messageBus.produce(new ShapeImportedEvent(event, PENDING, "Промежуточная таблица создана",
-                                                      50, ""));
+            messageBus.produce(
+                    new ShapeImportedSucceededEvent(event, PENDING, "Промежуточная таблица создана", 50, ""));
         } catch (Exception e) {
-            log.error("Ошибка при импорте геометрии из shape файла: {}", e.getMessage());
-            messageBus.produce(new ShapeImportedEvent(event, ERROR, e.getMessage(), 0, ""));
+            String msg = "Ошибка при импорте геометрии из shape файла: " + e.getMessage();
+            log.error(msg);
+
+            messageBus.produce(new ShapeImportedFailedEvent(event, ERROR, e.getMessage(), 0, "", msg));
         }
     }
 }

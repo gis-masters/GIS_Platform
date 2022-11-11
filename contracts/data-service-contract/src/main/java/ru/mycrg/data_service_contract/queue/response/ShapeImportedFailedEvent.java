@@ -1,0 +1,84 @@
+package ru.mycrg.data_service_contract.queue.response;
+
+import ru.mycrg.data_service_contract.enums.ProcessStatus;
+import ru.mycrg.data_service_contract.queue.request.ShapeLoadedEvent;
+import ru.mycrg.messagebus_contract.events.DefaultMessageBusResponseEvent;
+
+import static ru.mycrg.messagebus_contract.MessageBusProperties.GEO_WRAPPER_TO_DATA_QUEUE;
+
+public class ShapeImportedFailedEvent extends DefaultMessageBusResponseEvent {
+
+    private ShapeLoadedEvent importGeometryShapeEvent;
+    private ProcessStatus status;
+    private String description;
+    private int progress;
+    private String payload;
+    private String error;
+
+    public ShapeImportedFailedEvent() {
+        super();
+    }
+
+    public ShapeImportedFailedEvent(ShapeLoadedEvent event,
+                                    ProcessStatus status,
+                                    String description,
+                                    int progress,
+                                    String payload,
+                                    String error) {
+        super(event, GEO_WRAPPER_TO_DATA_QUEUE);
+        this.status = status;
+        this.description = description;
+        this.payload = payload;
+        this.progress = progress;
+        this.importGeometryShapeEvent = event;
+        this.error = error;
+    }
+
+    public ShapeLoadedEvent getImportGeometryShapeEvent() {
+        return importGeometryShapeEvent;
+    }
+
+    public void setImportGeometryShapeEvent(ShapeLoadedEvent importGeometryShapeEvent) {
+        this.importGeometryShapeEvent = importGeometryShapeEvent;
+    }
+
+    public ProcessStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProcessStatus status) {
+        this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    public String getPayload() {
+        return payload;
+    }
+
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+}

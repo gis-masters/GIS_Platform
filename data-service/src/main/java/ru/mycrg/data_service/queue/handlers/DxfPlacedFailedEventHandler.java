@@ -52,7 +52,7 @@ public class DxfPlacedFailedEventHandler implements IEventHandler {
                     requestEvent.getWsUiId()
             );
 
-            log.error("Выполненение процесса потерпело неудачу. Причина: {}", event.getReason());
+            log.error("Выполнение процесса потерпело неудачу. Причина: {}", event.getReason());
 
             ProcessModel processModel = requestEvent.getProcessModel();
             processService.error(processModel.getDbName(), processModel.getId(), toJsonNode(event));
