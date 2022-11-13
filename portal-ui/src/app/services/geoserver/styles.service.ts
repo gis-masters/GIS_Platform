@@ -1,3 +1,5 @@
+import { cloneDeep } from 'lodash';
+
 import { getActualLegendUrl, getGeoServerUrl, getWmsUrl } from '../server-urls.service';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { CrgVectorLayer } from '../gis/projects.models';
@@ -216,6 +218,7 @@ async function loadStyleSld(complexStyleName: string): Promise<string> {
 
 export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): Promise<FilteredStylesResponse[]> {
   const [x1, y1, x2, y2] = mapService.view.calculateExtent();
+  const filterDisabled = cloneDeep(attributesTableStore.filterDisabled);
 
   return http.post<FilteredStylesResponse[]>(
     await getActualLegendUrl(),
@@ -223,7 +226,9 @@ export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): P
       layers.map(async layer => ({
         dataset: layer.dataset,
         identifier: layer.tableName,
-        ecqlFilter: buildCqlFilter(attributesTableStore.getLayerFilter(layer.tableName)),
+        ecqlFilter: !filterDisabled[layer.tableName]
+          ? buildCqlFilter(attributesTableStore.getLayerFilter(layer.tableName))
+          : null,
         filter: {
           operator: 'Intersects',
           propertyName: 'shape',
@@ -245,6 +250,8 @@ export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): P
         rules: await getLayerStyleRules(layer)
       }))
     ),
-    { cache: { disabled: false, clear: false } }
+    {
+      cache: { disabled: false, clear: false }
+    }
   );
 }
