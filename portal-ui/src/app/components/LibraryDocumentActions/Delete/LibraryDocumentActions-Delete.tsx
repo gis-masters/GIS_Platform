@@ -169,13 +169,15 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
     const connections: FilesConnections[] = [];
 
     for (const field of fields) {
-      connections.push(
-        ...(await Promise.all(
-          field.map(async file => {
-            return await this.fetchConnections(file, field);
-          })
-        ))
-      );
+      if (field?.length) {
+        connections.push(
+          ...(await Promise.all(
+            field.map(async file => {
+              return await this.fetchConnections(file, field);
+            })
+          ))
+        );
+      }
     }
 
     this.setConnections(connections);
