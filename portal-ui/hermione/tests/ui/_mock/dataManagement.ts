@@ -1143,27 +1143,25 @@ export async function mockDataManagement(browser: WebdriverIO.Browser) {
     url: /.*users$/,
     status: 200,
     response: JSON.stringify({
-      _embedded: {
-        users: [
-          {
-            enabled: true,
-            email: 'arh_grad_rk@mail.ru',
-            surname: 'РИСОГД',
-            login: 'arh_grad_rk@mail.ru',
-            middleName: null,
-            job: null,
-            phone: null,
-            createdAt: '2020-02-10T06:44:14.08',
-            authorities: [
-              {
-                authority: 'ORG_ADMIN'
-              }
-            ],
-            name: 'РИСОГД',
-            id: 2
-          }
-        ]
-      },
+      content: [
+        {
+          enabled: true,
+          email: 'arh_grad_rk@mail.ru',
+          surname: 'РИСОГД',
+          login: 'arh_grad_rk@mail.ru',
+          middleName: null,
+          job: null,
+          phone: null,
+          createdAt: '2020-02-10T06:44:14.08',
+          authorities: [
+            {
+              authority: 'ORG_ADMIN'
+            }
+          ],
+          name: 'РИСОГД',
+          id: 2
+        }
+      ],
       page: {
         size: 1000,
         totalElements: 369,
@@ -1178,31 +1176,29 @@ export async function mockDataManagement(browser: WebdriverIO.Browser) {
     url: /.*groups$/,
     status: 200,
     response: JSON.stringify({
-      _embedded: {
-        groups: [
-          {
-            description: null,
-            users: [{ id: 922 }],
-            createdAt: '2020-09-09T08:40:54.679706',
-            name: 'OkunevskoeSP',
-            id: 1078
-          },
-          {
-            description: null,
-            users: [{ id: 8 }, { id: 19 }],
-            createdAt: '2020-06-22T12:56:50.415',
-            name: 'readonly_Aromatnoe',
-            id: 3
-          },
-          {
-            description: null,
-            users: [{ id: 684 }],
-            createdAt: '2020-09-01T12:54:41.59982',
-            name: 'BotanicheskoeSP',
-            id: 844
-          }
-        ]
-      },
+      content: [
+        {
+          description: null,
+          users: [{ id: 922 }],
+          createdAt: '2020-09-09T08:40:54.679706',
+          name: 'OkunevskoeSP',
+          id: 1078
+        },
+        {
+          description: null,
+          users: [{ id: 8 }, { id: 19 }],
+          createdAt: '2020-06-22T12:56:50.415',
+          name: 'readonly_Aromatnoe',
+          id: 3
+        },
+        {
+          description: null,
+          users: [{ id: 684 }],
+          createdAt: '2020-09-01T12:54:41.59982',
+          name: 'BotanicheskoeSP',
+          id: 844
+        }
+      ],
       page: {
         size: 1000,
         totalElements: 283,

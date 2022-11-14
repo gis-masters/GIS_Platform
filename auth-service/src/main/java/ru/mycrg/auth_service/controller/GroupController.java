@@ -3,7 +3,6 @@ package ru.mycrg.auth_service.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -20,8 +19,9 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 
 @RepositoryRestController
 public class GroupController {
@@ -36,12 +36,9 @@ public class GroupController {
 
     private final GroupService groupService;
     private final IAuthenticationFacade authenticationFacade;
-    private final PagedResourcesAssembler<GroupProjection> assembler;
 
-    public GroupController(PagedResourcesAssembler<GroupProjection> assembler,
-                           IAuthenticationFacade authenticationFacade,
+    public GroupController(IAuthenticationFacade authenticationFacade,
                            GroupService groupService) {
-        this.assembler = assembler;
         this.groupService = groupService;
         this.authenticationFacade = authenticationFacade;
     }
@@ -57,9 +54,9 @@ public class GroupController {
     @GetMapping("/groups")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> getAllGroups(Pageable pageable) {
-        Page<GroupProjection> groupProjection = groupService.findAll(pageable);
+        Page<GroupProjection> groups = groupService.findAll(pageable);
 
-        return ResponseEntity.ok(assembler.toResource(groupProjection));
+        return ResponseEntity.ok(pageFromList(groups, pageable));
     }
 
     @GetMapping("/groups/{id}")

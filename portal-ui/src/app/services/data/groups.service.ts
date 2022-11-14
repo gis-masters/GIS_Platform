@@ -4,7 +4,6 @@ import { allGroups } from '../../stores/AllGroups.store';
 import { getGroupsUrl, getGroupUrl, getGroupUserUrl } from '../server-urls.service';
 import { communicationService } from '../communication.service';
 import { ApiLink, CrgUser } from './users.service';
-import { PageableResponse } from '../models';
 import { http } from '../http.service';
 
 export interface CrgGroup {
@@ -39,11 +38,7 @@ class GroupsService {
   }
 
   async getAll(): Promise<CrgGroup[]> {
-    const url = await getGroupsUrl();
-    const params = { size: '10000' };
-    const response = await http.get<PageableResponse<CrgGroup>>(url, { params });
-
-    return response._embedded ? response._embedded.groups : [];
+    return await http.getPaged<CrgGroup>(await getGroupsUrl());
   }
 
   async create(groupData: GroupData) {

@@ -3,7 +3,6 @@ package ru.mycrg.auth_service.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +23,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 import static ru.mycrg.auth_service_contract.Authorities.*;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 
 @RepositoryRestController
 public class UserController {
@@ -37,13 +37,10 @@ public class UserController {
     }
 
     private final UserService userService;
-    private final PagedResourcesAssembler<UserProjection> assembler;
     private final IAuthenticationFacade authenticationFacade;
 
     public UserController(UserService userService,
-                          IAuthenticationFacade authenticationFacade,
-                          PagedResourcesAssembler<UserProjection> assembler) {
-        this.assembler = assembler;
+                          IAuthenticationFacade authenticationFacade) {
         this.userService = userService;
         this.authenticationFacade = authenticationFacade;
     }
@@ -60,7 +57,7 @@ public class UserController {
     public ResponseEntity<Object> getUsers(Pageable pageable) {
         Page<UserProjection> users = userService.findAll(pageable);
 
-        return ResponseEntity.ok(assembler.toResource(users));
+        return ResponseEntity.ok(pageFromList(users, pageable));
     }
 
     @PostMapping("/users")

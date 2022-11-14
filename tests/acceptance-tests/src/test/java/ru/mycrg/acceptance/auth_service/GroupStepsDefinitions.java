@@ -104,9 +104,9 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
         super.getAllEntitiesSorted(sortingFactor, sortingDirection);
     }
 
-    @When("Администратор делает постраничный запрос на группы {string}")
-    public void getUsersGroupCount(String entity) {
-        super.getAllAndFillEntityCount(entity);
+    @When("Администратор делает постраничный запрос на группы")
+    public void getUsersGroupCount() {
+        super.getAllAndFillEntityCount();
     }
 
     @When("Администратор изменяет поля группы {string}, {string}")
@@ -189,21 +189,20 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    @And("Количество страниц групп {string} пропорционально {string}")
-    public void checkUsersGroupPagesCount(String checkType, String entitiesPerPage) {
-        super.checkPagesCount(checkType, entitiesPerPage);
+    @And("Количество страниц групп пропорционально {string}")
+    public void checkUsersGroupPagesCount(String entitiesPerPage) {
+        super.checkPagesCount(entitiesPerPage);
     }
 
-    @And("На всех страницах групп {string} есть {string}")
-    public void checkUsersGroupOnPages(String checkType, String entitiesPerPage) {
-        super.checkSomethingOnPages(checkType, entitiesPerPage);
+    @And("На всех страницах групп есть {string}")
+    public void checkUsersGroupOnPages(String entitiesPerPage) {
+        super.checkSomethingOnPages(entitiesPerPage);
     }
 
     private void createUserGroupAsOwner(List<String> group) {
         usersGroupDto = new GroupCreateDto(generateString(group.get(0)), generateString(group.get(1)));
-        String payload = gson.toJson(usersGroupDto);
 
-        super.createEntity(payload);
+        super.createEntity(usersGroupDto);
     }
 
     private boolean isUsersGroupExistInPool(String groupName) {

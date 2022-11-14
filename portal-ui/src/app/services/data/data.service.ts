@@ -236,7 +236,7 @@ export async function getDatasetsWithParticularOne(
 }
 
 export async function getAllDatasets(): Promise<Dataset[]> {
-  return await http.getPaged<Dataset>(await getDatasetsUrl());
+  return await http.getPagedOld<Dataset>(await getDatasetsUrl());
 }
 
 export async function getDataset(datasetId: string): Promise<Dataset> {
@@ -281,7 +281,7 @@ export async function getDatasetTablesWithParticularOne(
 }
 
 export async function getAllDatasetTables(dataset: Dataset): Promise<VectorTable[]> {
-  const vectorTables = await http.getPaged<Omit<VectorTable, 'dataset'>>(
+  const vectorTables = await http.getPagedOld<Omit<VectorTable, 'dataset'>>(
     await getDatasetTablesUrl(dataset.identifier),
     {
       params: { sort: 'title,asc' }

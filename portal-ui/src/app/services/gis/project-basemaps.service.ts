@@ -34,7 +34,7 @@ export async function fetchBasemaps(): Promise<void> {
     const params = { ids: projectBasemaps.map(item => String(item.baseMapId)).join(', ') };
     const url = await getBasemapsByIdsUrl();
 
-    const basemaps = handleBasemaps(projectBasemaps, await http.getPaged<Basemap>(url, { params }));
+    const basemaps = handleBasemaps(projectBasemaps, await http.getPagedOld<Basemap>(url, { params }));
 
     basemapsStore.initBasemaps(basemaps);
 

@@ -198,6 +198,21 @@ public class BaseStepsDefinitions {
         assertEquals(totalPages, estimatedPages);
     }
 
+    public void checkPagesCount(String entitiesPerPage) {
+        getAllAndFillEntityCount();
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/?size=" + entitiesPerPage);
+        jsonPath = response.jsonPath();
+
+        double entitiesPerPageDouble = Integer.parseInt(entitiesPerPage);
+        int estimatedPages = (int) Math.ceil(entityCount / entitiesPerPageDouble);
+        totalPages = jsonPath.get("page.totalPages");
+
+        assertEquals(totalPages, estimatedPages);
+    }
+
     public void checkSomethingOnPages(String checkType, String entitiesPerPage) {
         for (int i = 0; i < totalPages; i++) {
             response = getBaseRequestWithCurrentCookie()
@@ -206,6 +221,19 @@ public class BaseStepsDefinitions {
 
             jsonPath = response.jsonPath();
             List<String> entitiesIds = response.jsonPath().getList(String.format("_embedded.%s.id", checkType));
+
+            assertNotEquals(0, entitiesIds.size());
+        }
+    }
+
+    public void checkSomethingOnPages(String entitiesPerPage) {
+        for (int i = 0; i < totalPages; i++) {
+            response = getBaseRequestWithCurrentCookie()
+                    .when().
+                            get(String.format("/?size=%s&page=%s", entitiesPerPage, i));
+
+            jsonPath = response.jsonPath();
+            List<String> entitiesIds = response.jsonPath().getList("content");
 
             assertNotEquals(0, entitiesIds.size());
         }
@@ -307,6 +335,11 @@ public class BaseStepsDefinitions {
         entityCount = getEntitiesCount(entity);
     }
 
+    public void getAllAndFillEntityCount() {
+        getAllEntities();
+        entityCount = getEntitiesCount();
+    }
+
     public int getEntitiesCount(String entity) {
         jsonPath = response.jsonPath();
 
@@ -316,6 +349,14 @@ public class BaseStepsDefinitions {
 
             return 0;
         }
+
+        return list.size();
+    }
+
+    public int getEntitiesCount() {
+        jsonPath = response.jsonPath();
+
+        List<Object> list = jsonPath.getList("content");
 
         return list.size();
     }

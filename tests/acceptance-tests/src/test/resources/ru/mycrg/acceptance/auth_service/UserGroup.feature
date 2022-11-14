@@ -35,7 +35,7 @@ Feature: Действия с пользовательскими группами
   Scenario Outline: Выборка всех пользовательских групп
     Given Существует пользовательская группа "<groupName>", "<groupDescription>"
     When Администратор делает запрос на все группы
-    Then В ответе есть пункт "groups"
+    Then В ответе есть контент
     Examples:
       | groupName | groupDescription |
       | STRING_15 | STRING_15        |
@@ -49,8 +49,7 @@ Feature: Действия с пользовательскими группами
       | STRING_15 | STRING_15 |
       | STRING_15 | STRING_15 |
     When Администратор делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" на все пользовательские группы
-    Then В ответе есть пункт "groups"
-    And Данные отсортированы по "<sorting factor>" и "<sorting direction>" в "groups"
+    And Данные отсортированы по "<sorting factor>" и "<sorting direction>"
     Examples:
       | sorting factor | sorting direction |
       | createdAt      | asc               |
@@ -68,10 +67,10 @@ Feature: Действия с пользовательскими группами
       | STRING_15 | STRING_15 |
       | STRING_15 | STRING_15 |
       | STRING_15 | STRING_15 |
-    When Администратор делает постраничный запрос на группы "groups"
+    When Администратор делает постраничный запрос на группы
     Then Сервер отвечает со статус-кодом 200
-    And Количество страниц групп "groups" пропорционально "<groupsPerPage>"
-    And На всех страницах групп "groups" есть "<groupsPerPage>"
+    And Количество страниц групп пропорционально "<groupsPerPage>"
+    And На всех страницах групп есть "<groupsPerPage>"
     Examples:
       | groupsPerPage |
       | 1             |

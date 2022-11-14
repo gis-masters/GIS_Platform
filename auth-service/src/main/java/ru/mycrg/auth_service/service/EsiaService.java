@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static ru.mycrg.auth_service.util.AccessTokenHandler.extractUserSbjId;
+import static ru.mycrg.common_utils.MediaTypes.APPLICATION_X_WWW_FORM_URLENCODED;
 
 @Service
 public class EsiaService {
@@ -137,7 +138,7 @@ public class EsiaService {
 
         Request request = new Request.Builder()
                 .url(getUserEmail)
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("Content-Type", APPLICATION_X_WWW_FORM_URLENCODED)
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .get()
                 .build();
@@ -164,7 +165,7 @@ public class EsiaService {
 
         Request request = new Request.Builder()
                 .url(getUserId)
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("Content-Type", APPLICATION_X_WWW_FORM_URLENCODED)
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .get()
                 .build();
@@ -194,7 +195,7 @@ public class EsiaService {
 
         Request request = new Request.Builder()
                 .url(getUserFioUrl)
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("Content-Type", APPLICATION_X_WWW_FORM_URLENCODED)
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .get()
                 .build();

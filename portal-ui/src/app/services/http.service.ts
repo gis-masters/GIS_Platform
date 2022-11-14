@@ -8,6 +8,7 @@ import { Emitter } from './common/Emitter';
 import { Mime } from './util/Mime';
 
 import { getPayloadFromPageableResponse, stringifyParams } from './http.utils';
+import { PageableResources } from '../../server-types/common-contracts';
 
 const ITEMS_PER_PAGE = 300;
 
@@ -85,7 +86,7 @@ export class Http {
     }
   }
 
-  async getPaged<T>(url: string, config: RequestConfigWithCache = {}): Promise<T[]> {
+  async getPagedOld<T>(url: string, config: RequestConfigWithCache = {}): Promise<T[]> {
     let result: T[] = [];
     let totalPages = 0;
     let page = 0;
@@ -102,6 +103,26 @@ export class Http {
       if (response._embedded) {
         result = [...result, ...getPayloadFromPageableResponse(response)];
       }
+    } while (page < totalPages);
+
+    return result;
+  }
+
+  async getPaged<T>(url: string, config: RequestConfigWithCache = {}): Promise<T[]> {
+    let result: T[] = [];
+    let totalPages = 0;
+    let page = 0;
+
+    config.params = config.params || {};
+    config.params.size = config.params.size || ITEMS_PER_PAGE;
+
+    do {
+      config.params.page = page;
+      const response = await this.get<PageableResources<T>>(url, config);
+      totalPages = response.page.totalPages;
+      page = response.page.number + 1;
+
+      result = [...result, ...response.content];
     } while (page < totalPages);
 
     return result;

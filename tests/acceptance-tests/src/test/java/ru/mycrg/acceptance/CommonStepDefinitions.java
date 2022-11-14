@@ -37,6 +37,14 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         assertTrue(entities.size() >= 2);
     }
 
+    @And("В ответе есть контент")
+    public void isThereContentExist() {
+        jsonPath = response.jsonPath();
+        List<String> entities = jsonPath.get("content");
+
+        assertTrue(entities.size() >= 2);
+    }
+
     @Then("Ответ имеет стандартное тело с паджинацией")
     public void isPagingStructureCorrect() {
         jsonPath = response.jsonPath();
@@ -67,6 +75,26 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         List<Object> sorted;
         try {
             sorted = jsonPath.getList(String.format("_embedded.%s.%s", entity, sortingType));
+            if (sorted.isEmpty()) {
+                sorted = jsonPath.get(sortingType);
+            }
+        } catch (NullPointerException e) {
+            sorted = jsonPath.get(sortingType);
+        }
+
+        sorted.removeIf(Objects::isNull);
+
+        assertThat(sorted, not(sorted.isEmpty()));
+
+        checkSorting(sortingDirection, sorted);
+    }
+
+    @And("Данные отсортированы по {string} и {string}")
+    public void isDataSorted(String sortingType, String sortingDirection) {
+        jsonPath = response.jsonPath();
+        List<Object> sorted;
+        try {
+            sorted = jsonPath.getList("content");
             if (sorted.isEmpty()) {
                 sorted = jsonPath.get(sortingType);
             }

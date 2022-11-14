@@ -125,7 +125,7 @@ export async function getAllLibraryRecords(
 ): Promise<LibraryRecord[]> {
   const url = await getDocLibrariesRecords2Url(libraryId);
   const requestOptions = { params: preparePageOptions({ ...pageOptions, pageSize: null }, true) };
-  const response = await http.getPaged<{ content: LibraryRecordRaw }>(url, requestOptions);
+  const response = await http.getPagedOld<{ content: LibraryRecordRaw }>(url, requestOptions);
 
   return enrichLibraryRecordsResponse(response, libraryId, schemaId);
 }
@@ -220,7 +220,7 @@ function prepareFormData(data: LibraryRecordRaw): FormData {
 export async function getDocumentPermissions(item: LibraryRecord): Promise<RoleAssignmentBody[]> {
   const url = await getDocumentLibraryRecordRoleAssignmentUrl(item.libraryId, item.id);
 
-  return await http.getPaged<RoleAssignmentBody>(url);
+  return await http.getPagedOld<RoleAssignmentBody>(url);
 }
 
 export async function setDocumentPermission(item: LibraryRecord, payload: RoleAssignmentBody): Promise<void> {

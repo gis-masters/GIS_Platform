@@ -18,12 +18,12 @@ export async function getProjectPermissions(url: string): Promise<RoleAssignment
 }
 
 export async function getTablePermissions(url: string): Promise<RoleAssignmentBody[]> {
-  return http.getPaged<RoleAssignmentBody>(url);
+  return http.getPagedOld<RoleAssignmentBody>(url);
 }
 
 export async function getAllTablesAndDatasetsPermissions(): Promise<ResourcePermissions[]> {
   try {
-    const response = await http.getPaged<ResourcePermissions>(await getAllPermissionsUrl());
+    const response = await http.getPagedOld<ResourcePermissions>(await getAllPermissionsUrl());
 
     return response.filter(({ permissions }) => permissions?.length);
   } catch {

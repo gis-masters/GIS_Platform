@@ -189,9 +189,9 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         super.getAllEntities();
     }
 
-    @And("Количество страниц пользователей {string} пропорционально {string}")
-    public void checkUserPagesCount(String checkType, String entitiesPerPage) {
-        super.checkPagesCount(checkType, entitiesPerPage);
+    @And("Количество страниц пользователей пропорционально {string}")
+    public void checkUserPagesCount(String entitiesPerPage) {
+        super.checkPagesCount(entitiesPerPage);
     }
 
     @Then("Поля пользователя совпадают с переданными")
@@ -205,9 +205,9 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         userPool.put(userId, userDto);
     }
 
-    @And("На всех страницах пользователей {string} есть {string}")
-    public void areUsersOnPages(String checkType, String entitiesPerPage) {
-        super.checkSomethingOnPages(checkType, entitiesPerPage);
+    @And("На всех страницах пользователей есть {string}")
+    public void areUsersOnPages(String entitiesPerPage) {
+        super.checkSomethingOnPages(entitiesPerPage);
     }
 
     @Given("Существуют пользователи")
@@ -220,9 +220,9 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    @When("Администратор делает постраничный запрос на пользователей {string}")
-    public void getUsersCount(String entity) {
-        getAllAndFillEntityCount(entity);
+    @When("Администратор делает постраничный запрос на пользователей")
+    public void getUsersCount() {
+        getAllAndFillEntityCount();
     }
 
     @When("Эндпоинт на выборку инфы текущего пользователя доступен и тело имеет корректное представление")
