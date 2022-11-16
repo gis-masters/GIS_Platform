@@ -52,10 +52,7 @@
           <div class="col">
             <mat-form-field class="full-width">
               <input matInput placeholder="Фамилия" formControlName="lastName"
-                     maxlength="100" minlength="2">
-              <mat-error *ngIf="registrationForm.controls['lastName'].hasError('minlength')">
-                Поле должно содержать не менее 2 символов
-              </mat-error>
+                     maxlength="100">
               <mat-error *ngIf="registrationForm.controls['lastName'].hasError('maxlength')">
                 Поле должно содержать не более 100 символов
               </mat-error>
@@ -64,12 +61,9 @@
           <div class="col">
             <mat-form-field class="full-width">
               <input matInput placeholder="Имя" formControlName="firstName"
-                     maxlength="50" minlength="2">
+                     maxlength="50">
               <mat-error *ngIf="registrationForm.controls['firstName'].hasError('required')">
                 Обязательное для заполнения поле
-              </mat-error>
-              <mat-error *ngIf="registrationForm.controls['firstName'].hasError('minlength')">
-                Поле должно содержать не менее 2 символов
               </mat-error>
               <mat-error *ngIf="registrationForm.controls['firstName'].hasError('maxlength')">
                 Поле должно содержать не более 50 символов

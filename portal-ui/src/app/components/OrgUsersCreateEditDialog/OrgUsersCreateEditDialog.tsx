@@ -54,22 +54,18 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
       {
         name: 'surname',
         title: 'Фамилия',
-        minLength: 3,
         required: true,
         propertyType: PropertyType.STRING
       },
       {
         name: 'name',
         title: 'Имя',
-        minLength: 3,
         required: true,
         propertyType: PropertyType.STRING
       },
       {
         name: 'middleName',
         title: 'Отчество',
-        minLength: 3,
-        required: true,
         propertyType: PropertyType.STRING
       },
       {

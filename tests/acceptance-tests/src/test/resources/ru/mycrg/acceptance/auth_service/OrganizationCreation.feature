@@ -45,7 +45,6 @@ Feature: Регистрация новой организации
       | STRING_501 | 1234567890 | testName  | testSurname  | admin3@email.com  | testtestQ1    | Длинное название организации       |
       | testOrg    | NUMBER_21  | testName  | testSurname  | admin4@email.com  | testtestQ1    | Длинный номер телефона организации |
       | testOrg    | 1234567890 | STRING_0  | testSurname  | admin5@email.com  | testtestQ1    | Пустое имя админа                  |
-      | testOrg    | 1234567890 | STRING_2  | testSurname  | admin6@email.com  | testtestQ1    | Короткое имя админа                |
       | testOrg    | 1234567890 | STRING_61 | testSurname  | admin7@email.com  | testtestQ1    | Длинное имя админа                 |
       | testOrg    | 1234567890 | testName  | STRING_0     | admin8@email.com  | testtestQ1    | Пустая фамилия админа              |
       | testOrg    | 1234567890 | testName  | STRING_101   | admin9@email.com  | testtestQ1    | Длинная фамилия админа             |

@@ -36,7 +36,6 @@ Feature: Действия с пользователями
       | userName     | userSurname     | userEmail              | userPassword | middleName | job        | phone     | department | reason                        |
       | testUserName | testUserSurname | invalidUser1           | testtestQ1   |            |            |           |            | Невалидный email пользователя |
       | STRING_0     | testUserSurname | invalidUser2@user.com  | testtestQ1   |            |            |           |            | Пустое имя пользователя       |
-      | STRING_2     | testUserSurname | invalidUser3@user.com  | testtestQ1   |            |            |           |            | Короткое имя пользователя     |
       | STRING_61    | testUserSurname | invalidUser4@user.com  | testtestQ1   |            |            |           |            | Длинное имя пользователя      |
       | testUserName | STRING_101      | invalidUser5@user.com  | testtestQ1   |            |            |           |            | Длинная фамилия пользователя  |
       | testUserName | STRING_0        | invalidUser6@user.com  | testtestQ1   |            |            |           |            | Пустая фамилия пользователя   |

@@ -6,29 +6,29 @@ import javax.validation.constraints.Size;
 
 public class UserCreateDto extends PasswordModel {
 
-    @NotBlank(message = "Please provide user name")
-    @Size(min = 3, max = 50, message = "No less 3 and no more than 50 characters")
+    @NotBlank(message = "Пожалуйста, заполните имя пользователя")
+    @Size(max = 50, message = "Не более 50 символов")
     private String name;
 
-    @Size(min = 3, max = 50, message = "No less 3 and no more than 50 characters")
+    @Size(max = 50, message = "Не более 50 символов")
     private String middleName;
 
-    @NotBlank(message = "Please provide user surname")
-    @Size(max = 100, message = "No more than 100 characters")
+    @NotBlank(message = "Пожалуйста, заполните фамилию")
+    @Size(max = 100, message = "Не более 100 символов")
     private String surname;
 
-    @Size(max = 250, message = "No more than 250 characters")
+    @Size(max = 250, message = "Не более 250 символов")
     private String job;
 
-    @Size(max = 20, message = "No more than 20 characters")
+    @Size(max = 20, message = "Не более 20 символов")
     private String phone;
 
     @Email
     @NotBlank
-    @Size(max = 60, message = "No more than 60 characters")
+    @Size(max = 60, message = "Не более 60 символов")
     private String email;
 
-    @Size(max = 200, message = "No more than 200 characters")
+    @Size(max = 200, message = "Не более 200 символов")
     private String department;
 
     public UserCreateDto() {
