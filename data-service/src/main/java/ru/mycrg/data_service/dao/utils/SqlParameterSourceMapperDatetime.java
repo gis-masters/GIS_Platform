@@ -11,7 +11,6 @@ import ru.mycrg.data_service_contract.enums.ValueType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
@@ -43,15 +42,19 @@ public class SqlParameterSourceMapperDatetime implements SqlParameterSourceMappe
 
         LocalDateTime dateTime;
         String asString = value.toString();
-        try {
-            dateTime = LocalDateTime.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN));
-        } catch (Exception e) {
-            String msg = String.format("Datetime '{}' does not match format: '%s'. Try without time as '%s'",
-                                       SYSTEM_DATETIME_PATTERN, SYSTEM_DATE_PATTERN);
-            log.debug(msg, value);
+        if (asString.isEmpty()) {
+            dateTime = null;
+        } else {
+            try {
+                dateTime = LocalDateTime.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN));
+            } catch (Exception e) {
+                String msg = String.format("Datetime '{}' does not match format: '%s'. Try without time as '%s'",
+                                           SYSTEM_DATETIME_PATTERN, SYSTEM_DATE_PATTERN);
+                log.debug(msg, value);
 
-            dateTime = LocalDate.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATE_PATTERN))
-                                .atTime(0, 0, 0);
+                dateTime = LocalDate.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATE_PATTERN))
+                                    .atTime(0, 0, 0);
+            }
         }
 
         parameterSource.addValue(name, dateTime);

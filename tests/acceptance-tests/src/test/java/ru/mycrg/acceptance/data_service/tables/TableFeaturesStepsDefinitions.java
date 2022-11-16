@@ -11,6 +11,7 @@ import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.acceptance.data_service.dto.GeoJsonModel;
 import ru.mycrg.acceptance.data_service.dto.QualifierDto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +77,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void createSomeFeatureInCurrentTable() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("title", "some feature");
+        properties.put("created_at", "2022-11-08 00:00:00");
 
         createFeature(new GeoJsonModel(properties));
     }
@@ -186,6 +188,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void updateFeatureInCurrentTable() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("title", "new title");
+        properties.put("created_at", "");
 
         updateFeature(new GeoJsonModel(properties));
     }
