@@ -21,8 +21,8 @@ export class Breadcrumbs extends Block {
   }
 
   async setWidthInStory(width: number) {
-    const input = await this.getElement('widthControlInStory');
-    await input.setValue(width);
+    const $input = await this.getElement('widthControlInStory');
+    await $input.setValue(width);
     await this.browser.pause(300);
   }
 }

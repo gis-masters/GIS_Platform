@@ -28,7 +28,7 @@ export interface RegData {
   password_: string;
 }
 
-interface AuthenticationResult {
+export interface AuthenticationResult {
   ok: boolean;
   userDisabled?: boolean;
   wrongPassword?: boolean;
@@ -141,12 +141,13 @@ class AuthService {
   }
 
   async checkIsTokenExpired(token: string) {
-    const params = {
-      token: token
-    };
+    const params = { token };
 
     return http.get(await getChangePasswordUrl(), { params });
   }
 }
 
 export const authService = AuthService.instance;
+
+// for autotests
+Object.assign(window, { authService });

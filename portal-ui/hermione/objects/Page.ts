@@ -2,6 +2,8 @@ import { assert } from 'chai';
 
 import { Block } from './Block';
 
+declare const window: { navigate(url: string): void };
+
 export class Page extends Block {
   url = '';
 
@@ -21,7 +23,6 @@ export class Page extends Block {
 
   navigate(urlExtras: string = ''): Promise<void> {
     return this.browser.execute(url => {
-      // @ts-ignore
       window.navigate(url);
     }, this.url + urlExtras);
   }

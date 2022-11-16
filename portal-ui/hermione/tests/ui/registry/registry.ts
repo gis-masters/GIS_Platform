@@ -4,7 +4,7 @@ import { assert } from 'chai';
 import { DataManagementPage } from '../../../objects/pages/DataManagement.page';
 import { LibraryRegistry } from '../../../objects/blocks/Registry/Registry';
 import { RegisterPage } from '../../../objects/pages/Register.page';
-import { login } from '../../../objects/commands/login';
+import { mockedLogin } from '../../../objects/commands/mockedLogin';
 import { mockDataManagement } from '../_mock/dataManagement';
 
 interface TestDefinitionWithOnly extends TestDefinition {
@@ -22,7 +22,7 @@ describe('Управление данными (табличное предста
      *   Given Пользователь находится на странице управления данными (табличное представление)
      */
     beforeEach(async function () {
-      await login(this.browser);
+      await mockedLogin(this.browser);
 
       const registerPage = new RegisterPage(this.browser);
       const libraryRegistry = new LibraryRegistry(this.browser);

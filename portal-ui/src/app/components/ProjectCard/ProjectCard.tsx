@@ -18,7 +18,7 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard: FC<ProjectCardProps> = ({ className, project, cardRef }) => (
-  <div className={cnProjectCard(null, [className])} ref={cardRef}>
+  <div className={cnProjectCard(null, [className])} ref={cardRef} data-id={project.id}>
     <ProjectCardInner>
       <ProjectCardCard project={project} />
       <ProjectCardDelete project={project} />

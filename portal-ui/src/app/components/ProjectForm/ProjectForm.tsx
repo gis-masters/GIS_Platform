@@ -60,11 +60,11 @@ export class ProjectForm extends Component<ProjectFormProps> {
           <Button
             type='submit'
             disabled={!this.newProjectName}
-            className={cnProjectForm('Button')}
+            className={cnProjectForm('Button', { action: 'submit' })}
             color='primary'
             {...buttonProps}
           />
-          <Button type='button' onClick={onClose} className={cnProjectForm('Button')}>
+          <Button type='button' onClick={onClose} className={cnProjectForm('Button', { action: 'cancel' })}>
             Отмена
           </Button>
         </div>

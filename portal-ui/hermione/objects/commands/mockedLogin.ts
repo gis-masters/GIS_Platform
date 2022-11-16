@@ -8,7 +8,7 @@ import { LoginForm } from '../blocks/LoginForm/LoginForm';
 import { HomePage } from '../pages/Home.page';
 import { ProjectsPage } from '../pages/Projects.page';
 
-export async function login(browser: WebdriverIO.Browser): Promise<void> {
+export async function mockedLogin(browser: WebdriverIO.Browser): Promise<void> {
   const homePage = new HomePage(browser);
 
   await homePage.open();
@@ -22,7 +22,7 @@ export async function login(browser: WebdriverIO.Browser): Promise<void> {
   await mockOrganizationSettings(browser);
 
   const loginForm = new LoginForm(browser);
-  await loginForm.login('hermione@test', 'Avadakedavra1');
+  await loginForm.login('hermione@admin', 'Avadakedavra1');
   const projectsPage = new ProjectsPage(browser);
   await projectsPage.waitForVisible();
 }

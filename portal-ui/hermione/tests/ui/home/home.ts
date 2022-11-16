@@ -34,7 +34,6 @@ describe('Начальная страница', () => {
   it('Переход на страницу регистрации', async function () {
     const header = new Header(this.browser);
     const registerPage = new RegisterPage(this.browser);
-    const a: string = 'bb';
 
     await header.clickRegButton();
     await registerPage.waitForVisible();

@@ -1,9 +1,10 @@
 const config = {
   sets: {
     ui: { files: ['hermione/tests/ui'] },
-    stage58: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/stage58'] },
-    stage98: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/stage98'] },
-    stage172: { files: ['hermione/tests/e2e/common', 'hermione/tests/e2e/stage172'] }
+    e2e: { files: ['hermione/tests/e2e'] },
+    stage58: { files: ['hermione/tests/deployment/common', 'hermione/tests/deployment/stage58'] },
+    stage98: { files: ['hermione/tests/deployment/common', 'hermione/tests/deployment/stage98'] },
+    stage172: { files: ['hermione/tests/deployment/common', 'hermione/tests/deployment/stage172'] }
   },
 
   baseUrl: 'http://localhost:4200/',

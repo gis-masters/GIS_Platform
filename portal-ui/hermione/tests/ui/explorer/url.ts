@@ -3,7 +3,7 @@ import { assert } from 'chai';
 
 import { DataManagementPage } from '../../../objects/pages/DataManagement.page';
 import { Explorer } from '../../../objects/blocks/Explorer/Explorer';
-import { login } from '../../../objects/commands/login';
+import { mockedLogin } from '../../../objects/commands/mockedLogin';
 import { mockDataManagement } from '../_mock/dataManagement';
 import { Toast } from '../../../objects/blocks/Toast/Toast';
 
@@ -22,7 +22,7 @@ describe('Управление данными', () => {
      *   Given Пользователь находится на странице управления данными
      */
     beforeEach(async function () {
-      await login(this.browser);
+      await mockedLogin(this.browser);
       const dataManagementPage = new DataManagementPage(this.browser);
       await mockDataManagement(this.browser);
       await dataManagementPage.navigate();
@@ -177,7 +177,7 @@ describe('Управление данными', () => {
         '?explorerPath_DataManagement=%5B%5B%22root%22,%22root%22%5D,%5B%22datasetRoot%22,%22dataSetRoot%22%5D,%5B%22dataset%22,%22workspace_823%22,2%5D%5D&explorerOptions_DataManagement=%5B10,%22created_at%22,%22asc%22,%7B%7D%5D';
       const etalonTitle = 'Железнодорожненское сельское поселение';
 
-      await login(this.browser);
+      await mockedLogin(this.browser);
       const dataManagementPage = new DataManagementPage(this.browser);
       await mockDataManagement(this.browser);
       await dataManagementPage.navigate(etalonUrl);
@@ -206,7 +206,7 @@ describe('Управление данными', () => {
         '?explorerPath_DataManagement=%5B%5B%22root%22,%22root%22%5D,%5B%22datasetRoot%22,%22dataSetRoot%22%5D,%5B%22dataset%22,%22workspace_823%22,9999%5D%5D&explorerOptions_DataManagement=%5B10,%22created_at%22,%22asc%22,%7B%7D%5D';
       const etalonTitle = 'Железнодорожненское сельское поселение';
 
-      await login(this.browser);
+      await mockedLogin(this.browser);
       const dataManagementPage = new DataManagementPage(this.browser);
       await mockDataManagement(this.browser);
       await dataManagementPage.navigate(etalonUrl);
@@ -235,7 +235,7 @@ describe('Управление данными', () => {
       const etalonSortDir = 'По убыванию';
       const etalonPageSize = '5';
 
-      await login(this.browser);
+      await mockedLogin(this.browser);
       const dataManagementPage = new DataManagementPage(this.browser);
       await mockDataManagement(this.browser);
       await dataManagementPage.navigate(etalonUrl);
