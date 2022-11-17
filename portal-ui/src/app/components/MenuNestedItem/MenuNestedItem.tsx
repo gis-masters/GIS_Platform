@@ -1,9 +1,10 @@
 import React, { Component, createRef, FC, forwardRef, ReactNode, RefObject } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Menu, MenuItem, MenuItemProps, MenuProps } from '@mui/material';
+import { ListItemIcon, ListItemText, Menu, MenuItem, MenuItemProps, MenuProps } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { ChevronRight } from '@mui/icons-material';
 
 import '!style-loader!css-loader!sass-loader!./MenuNestedItem.scss';
 
@@ -15,6 +16,8 @@ interface MenuNestedItemProps extends Omit<MenuItemProps, 'ref'> {
   innerRef?: RefObject<HTMLLIElement>;
   ContainerProps?: React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement | null>;
   submenu: ReactNode[];
+  icon: ReactNode;
+  title: string;
 }
 
 @observer
@@ -30,7 +33,8 @@ class MenuNestedItemComponent extends Component<MenuNestedItemProps> {
   }
 
   render() {
-    const { ContainerProps, tabIndex, className, innerRef, submenu, children, parentMenuOpen, ...props } = this.props;
+    const { ContainerProps, tabIndex, icon, title, className, innerRef, submenu, children, parentMenuOpen, ...props } =
+      this.props;
 
     return (
       <div
@@ -43,7 +47,9 @@ class MenuNestedItemComponent extends Component<MenuNestedItemProps> {
         onKeyDown={this.handleKeyDown}
       >
         <MenuItem className={cnMenuNestedItem(null, [className])} ref={innerRef} {...props}>
-          {children}
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText>{title}</ListItemText>
+          <ChevronRight color='action' />
           <span className={cnMenuNestedItem('Anchor')} ref={this.anchorRef} />
         </MenuItem>
 

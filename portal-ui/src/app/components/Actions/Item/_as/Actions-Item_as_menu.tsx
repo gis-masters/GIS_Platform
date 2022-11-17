@@ -1,7 +1,6 @@
 import React, { createContext, FC } from 'react';
 import { observer } from 'mobx-react';
 import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
-import { ChevronRight } from '@mui/icons-material';
 import { withBemMod } from '@bem-react/core';
 
 import { MenuNestedItem } from '../../../MenuNestedItem/MenuNestedItem';
@@ -20,11 +19,9 @@ const ActionsItemAsMenu: FC<ActionsItemProps> = observer(
             className={cnActionsItem(null, [className])}
             parentMenuOpen={parentMenuOpen}
             submenu={submenu}
-          >
-            <ListItemIcon>{icon}</ListItemIcon>
-            <ListItemText>{title}</ListItemText>
-            <ChevronRight color='action' />
-          </MenuNestedItem>
+            icon={icon}
+            title={title}
+          />
         )}
       </ActionsMenuOpenContext.Consumer>
     ) : (

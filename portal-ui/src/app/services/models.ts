@@ -23,6 +23,7 @@ export interface Process {
   status: ProcessStatus;
   type: ProcessType;
   extra: any;
+  message?: string;
   details: ProcessTasks[];
 }
 
@@ -38,6 +39,7 @@ export enum ProcessType {
   IMPORT_GML = 'IMPORT_GML',
   IMPORT_DXF = 'IMPORT_DXF',
   IMPORT_RASTER = 'IMPORT_RASTER',
+  IMPORT_GEOMETRY = 'IMPORT_GEOMETRY',
   VALIDATION = 'VALIDATION',
   VALIDATION_REPORT = 'VALIDATION_REPORT',
   EXPORT = 'EXPORT'

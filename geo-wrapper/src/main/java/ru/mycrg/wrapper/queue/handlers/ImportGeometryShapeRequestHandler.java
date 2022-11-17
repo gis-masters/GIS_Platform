@@ -35,11 +35,12 @@ public class ImportGeometryShapeRequestHandler implements IEventHandler {
     @Override
     public void handle(IMessageBusEvent mqEvent) {
         final ShapeLoadedEvent event = (ShapeLoadedEvent) mqEvent;
+        log.debug("Start import of geometry shape: {}", event.getProcessId());
         try {
-            String tableName = String.format("temporaryTable_%s", RandomStringUtils.random(5, true, true));
-            log.debug("Start import of geometry shape: {}", event.getProcessId());
+            String tableName = String.format("temporaryTable_%s", RandomStringUtils.random(5, true, true))
+                                     .toLowerCase();
             event.setSourceTableName(tableName);
-
+            log.debug("Table name : {}", tableName);
             gdalService.importGeometryFromShape(event.getFilePath(), event.getDbName(), tableName, event.getSrs());
 
             messageBus.produce(

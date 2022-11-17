@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.BaseTemplateDao;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
-import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.JsonConverter;
@@ -19,8 +19,7 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import java.util.List;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.INITIAL_SCHEMA_NAME;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCopyGeometryQuery;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildGetGeometryTypeQuery;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
 import static ru.mycrg.data_service.util.GeometryHandler.isGeometryTypeMatch;
 
 @Service
@@ -52,13 +51,15 @@ public class ImportGeometryShapeSucceededEventHandler implements IEventHandler {
         ImportGeometryShapeReport importGeometryReport = new ImportGeometryShapeReport();
 
         log.debug("In ShapeImportedSucceededEvent! {}", requestEvent);
-        try {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(requestEvent.getDbName()));
-            ResourceQualifier sourceTable = new ResourceQualifier(INITIAL_SCHEMA_NAME,
-                                                                  requestEvent.getSourceTableName());
-            ResourceQualifier targetTable = new ResourceQualifier(requestEvent.getDatasetId(),
-                                                                  requestEvent.getTargetTableName());
 
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(requestEvent.getDbName()));
+
+        ResourceQualifier sourceTable = new ResourceQualifier(INITIAL_SCHEMA_NAME,
+                                                              requestEvent.getSourceTableName());
+        ResourceQualifier targetTable = new ResourceQualifier(requestEvent.getDatasetId(),
+                                                              requestEvent.getTargetTableName());
+
+        try {
             importGeometryReport.setDatasetIdentifier(targetTable.getSchema());
             importGeometryReport.setTableIdentifier(targetTable.getTableQualifier());
 
@@ -87,19 +88,34 @@ public class ImportGeometryShapeSucceededEventHandler implements IEventHandler {
                                  requestEvent.getProcessId(),
                                  JsonConverter.toJsonNode(importGeometryReport));
         }
+
+        String deleteTableQuery = buildDeleteTableQuery(sourceTable);
+        log.debug("SQL Delete temporary table Query: {}", deleteTableQuery);
+        baseTemplateDao.execute(jdbcTemplate, deleteTableQuery);
+        log.debug("Временная таблица {} удалена.", sourceTable.getQualifier());
     }
 
     private void throwsIfGeometryIsNotMatching(JdbcTemplate jdbcTemplate,
                                                ResourceQualifier sourceTable,
                                                String targetGeomType) {
-        String sourceGeomTypeQuery = buildGetGeometryTypeQuery(sourceTable, "wkb_geometry");
+        List<String> sourceGeomTypes;
 
-        List<String> sourceGeomTypes = baseTemplateDao.queryForList(jdbcTemplate, sourceGeomTypeQuery, String.class);
+        try {
+            String sourceGeomTypeQuery = buildGetGeometryTypeQuery(sourceTable, "wkb_geometry");
+            log.debug("SQL get geometry type of table: {}", sourceGeomTypeQuery);
+            sourceGeomTypes = baseTemplateDao.queryForList(jdbcTemplate, sourceGeomTypeQuery, String.class);
+        } catch (Exception e) {
+            String msg = "Не удалось вычислить тип геометрии в таблице: " + sourceTable.getQualifier();
+            log.error("{}. Причина: {}", msg, e.getMessage());
+
+            throw new DataServiceException(msg);
+        }
+
         if (sourceGeomTypes.isEmpty()) {
             String msg = "В Shape файле отсутствуют объекты!";
             log.error(msg);
 
-            throw new BadRequestException(msg);
+            throw new DataServiceException(msg);
         }
 
         String sourceGeomType = sourceGeomTypes.get(0);
@@ -109,7 +125,7 @@ public class ImportGeometryShapeSucceededEventHandler implements IEventHandler {
             String msg = "Тип импортируемой геометрии не совпадает с типом геометрии в слое!";
             log.error(msg);
 
-            throw new BadRequestException(msg);
+            throw new DataServiceException(msg);
         }
     }
 }

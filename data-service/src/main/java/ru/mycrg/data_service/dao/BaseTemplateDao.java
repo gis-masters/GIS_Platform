@@ -15,4 +15,8 @@ public class BaseTemplateDao {
     public <T> List<T> queryForList(JdbcTemplate jdbcTemplate, String query, Class<T> requiredType) {
         return jdbcTemplate.queryForList(query, requiredType);
     }
+
+    public void execute(JdbcTemplate jdbcTemplate, String query) {
+        jdbcTemplate.execute(query);
+    }
 }

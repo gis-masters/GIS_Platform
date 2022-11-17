@@ -36,7 +36,8 @@ import { services } from '../../../services/services';
 import {
   isTableExportAllowed,
   isLayersManagementAllowed,
-  isUpdateAllowed
+  isUpdateAllowed,
+  isShapeImportAllowed
 } from '../../../services/data/permissions.service';
 import { ImportOutlined } from '../../Icons/ImportOutlined';
 import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
@@ -50,6 +51,8 @@ import { Toast } from '../../Toast/Toast';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { TextBadge } from '../../TextBadge/TextBadge';
 import { crgLayerSchema } from '../../../services/gis/layers.service';
+import { ImportShapeDialog } from '../../ImportShapeDialog/ImportShapeDialog';
+import { MenuNestedItem } from '../../MenuNestedItem/MenuNestedItem';
 import { getEmptyFeature } from '../../../services/geoserver/wfs.util';
 
 interface LayerMenuProps {
@@ -72,6 +75,8 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @observable private layersDeleteAllowed = false;
   @observable private geometryType?: GeometryType;
   @observable private importXmlDialogOpen = false;
+  @observable private importShapeDialogOpen = false;
+  @observable private importShapeAllowed = false;
   @observable private rasterDocument: LibraryRecord;
   @observable private vectorTable: VectorTable;
   @observable private dialogOpen = false;
@@ -90,7 +95,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   render() {
-    const { open, x, y, onClose, anchor, entity, isGroup, editMode, layerWithError } = this.props;
+    const { open, x, y, anchor, entity, isGroup, onClose, editMode, layerWithError } = this.props;
 
     return (
       <>
@@ -159,17 +164,26 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!editMode &&
-            this.isVectorLayer &&
-            this.featuresCreateAllowed &&
-            (this.geometryType === GeometryType.MULTI_POLYGON || this.geometryType === GeometryType.POLYGON) && (
-              <MenuItem onClick={this.openImportXmlDialog}>
-                <ListItemIcon>
-                  <ImportOutlined />
-                </ListItemIcon>
-                Импорт межевого плана из XML
-              </MenuItem>
-            )}
+          {!editMode && this.isVectorLayer && (this.featuresCreateAllowed || this.importShapeAllowed) && (
+            <MenuNestedItem
+              parentMenuOpen={open}
+              submenu={[
+                this.featuresCreateAllowed &&
+                  (this.geometryType === GeometryType.MULTI_POLYGON || this.geometryType === GeometryType.POLYGON) && (
+                    <MenuItem key='xml' onClick={this.openImportXmlDialog}>
+                      Импорт межевого плана из XML
+                    </MenuItem>
+                  ),
+                this.importShapeAllowed && (
+                  <MenuItem key='shp' onClick={this.openImportShapeDialog}>
+                    Импорт геометрии из Shape-файла
+                  </MenuItem>
+                )
+              ]}
+              icon={<ImportOutlined />}
+              title='Импорт'
+            />
+          )}
 
           {!editMode && this.isVectorLayer && this.layerExportAllowed && (
             <MenuItem onClick={this.export}>
@@ -226,6 +240,15 @@ export class LayerMenu extends Component<LayerMenuProps> {
               complexName={(entity as CrgLayer).complexName}
             />
           )}
+
+        {!editMode && this.isVectorLayer && (
+          <ImportShapeDialog
+            open={this.importShapeDialogOpen}
+            onClose={this.closeImportShapeDialog}
+            datasetId={(entity as CrgVectorLayer).dataset}
+            tableId={(entity as CrgLayer).tableName}
+          />
+        )}
 
         {this.vectorTable && (
           <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='md'>
@@ -303,6 +326,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
       const { dataset, tableName } = this.props.entity as CrgVectorLayer;
       const allowed = await Promise.all([
         isUpdateAllowed(this.props.entity),
+        isShapeImportAllowed(dataset, tableName),
         isTableExportAllowed(dataset, tableName),
         isLayersManagementAllowed()
       ]);
@@ -312,8 +336,14 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @action
-  private setPermissions(featuresCreateAllowed: boolean, layerExportAllowed: boolean, layersDeleteAllowed: boolean) {
+  private setPermissions(
+    featuresCreateAllowed: boolean,
+    importShapeAllowed: boolean,
+    layerExportAllowed: boolean,
+    layersDeleteAllowed: boolean
+  ) {
     this.featuresCreateAllowed = featuresCreateAllowed;
+    this.importShapeAllowed = importShapeAllowed;
     this.layerExportAllowed = layerExportAllowed;
     this.setLayersDeleteAllowed(layersDeleteAllowed);
   }
@@ -417,6 +447,17 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @action.bound
   private closeImportXmlDialog() {
     this.importXmlDialogOpen = false;
+  }
+
+  @action.bound
+  private openImportShapeDialog() {
+    this.importShapeDialogOpen = true;
+    this.props.onClose();
+  }
+
+  @action.bound
+  private closeImportShapeDialog() {
+    this.importShapeDialogOpen = false;
   }
 
   @action

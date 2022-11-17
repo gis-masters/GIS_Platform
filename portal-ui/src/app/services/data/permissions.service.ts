@@ -31,6 +31,23 @@ export async function isReadAllowed(layer: CrgLayer): Promise<boolean> {
   return false;
 }
 
+export async function isShapeImportAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
+  let table: VectorTable;
+  try {
+    table = await getVectorTable(datasetIdentifier, tableIdentifier);
+  } catch (error) {
+    const err = error as AxiosError;
+
+    if (err.response.status !== 403) {
+      throw err;
+    }
+  }
+
+  const role = table?.role;
+
+  return !!(currentUser.isAdmin || role === Role.OWNER || role === Role.CONTRIBUTOR);
+}
+
 export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
   const schema: Schema = await schemaService.getSchema(layer.schemaId);
   if (!schema) {

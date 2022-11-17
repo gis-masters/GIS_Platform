@@ -190,6 +190,17 @@ public class BaseDaoService {
         });
     }
 
+    public boolean isTableExist(JdbcTemplate jdbcTemplate, String tableName) {
+        String isTableExistQuery = String.format("SELECT EXISTS(" +
+                                                         " SELECT" +
+                                                         " FROM information_schema.tables" +
+                                                         " WHERE table_name = '%s' );", tableName);
+
+        log.debug("SQL isTableExist query: {}", isTableExistQuery);
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(isTableExistQuery, Boolean.class));
+    }
+
     private String handleInsertMappingColumns(ImportMqTask request) {
         List<MatchingPair> mapping = request.getPairs();
 

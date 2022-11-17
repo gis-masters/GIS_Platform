@@ -173,6 +173,11 @@ public class SqlBuilder {
         return String.format("SELECT public.st_geometrytype(%s) FROM %s LIMIT 1;", geometryField, table.getQualifier());
     }
 
+    @NotNull
+    public static String buildDeleteTableQuery(ResourceQualifier table) {
+        return String.format("DROP TABLE IF EXISTS %s;", table.getQualifier());
+    }
+
     private static String mappingColumns(SchemaDto sourceSchema, SchemaDto targetSchema) {
         String pre = " (";
         String post = ") ";

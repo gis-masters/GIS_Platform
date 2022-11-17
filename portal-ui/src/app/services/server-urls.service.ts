@@ -238,6 +238,10 @@ export async function getProcessesUrl(): Promise<string> {
   return `${await getDataUrl()}/processes`;
 }
 
+export async function getFileProcessesUrl(): Promise<string> {
+  return `${await getDataUrl()}/processes/file`;
+}
+
 export async function getApiImportUrl(projectId: number): Promise<string> {
   return `${await getDataUrl()}/import/${projectId}`;
 }

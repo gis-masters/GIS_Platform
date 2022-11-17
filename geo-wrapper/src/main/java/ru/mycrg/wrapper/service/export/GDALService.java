@@ -3,11 +3,14 @@ package ru.mycrg.wrapper.service.export;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
 import ru.mycrg.wrapper.config.CrgProperties;
+import ru.mycrg.wrapper.dao.BaseDaoService;
+import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.exceptions.ExportException;
 import ru.mycrg.wrapper.exceptions.ImportException;
 
@@ -31,10 +34,17 @@ public class GDALService implements IExporter {
 
     private final Environment environment;
     private final CrgProperties crgProperties;
+    private final BaseDaoService baseDaoService;
+    private final DatasourceFactory datasourceFactory;
 
-    public GDALService(CrgProperties crgProperties, Environment environment) {
+    public GDALService(CrgProperties crgProperties,
+                       Environment environment,
+                       BaseDaoService baseDaoService,
+                       DatasourceFactory datasourceFactory) {
         this.crgProperties = crgProperties;
         this.environment = environment;
+        this.baseDaoService = baseDaoService;
+        this.datasourceFactory = datasourceFactory;
     }
 
     @Override
@@ -63,6 +73,8 @@ public class GDALService implements IExporter {
     }
 
     public void importGeometryFromShape(String filePath, String dbName, String tableName, String srs) {
+        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(dbName);
+
         try {
             String rootPath = crgProperties.getExportStoragePath();
             log.debug("Root path for import is: {}", rootPath);
@@ -109,6 +121,14 @@ public class GDALService implements IExporter {
                 logStream(importProcess.getErrorStream());
 
                 throw new ImportException("Import of geometry shape failed by timeout");
+            }
+            log.debug("ErrorStream: ");
+            logStream(importProcess.getErrorStream());
+            log.debug("InputStream: ");
+            logStream(importProcess.getInputStream());
+
+            if (!baseDaoService.isTableExist(jdbcTemplate, tableName)) {
+                throw new ImportException("Невалидный shape файл!");
             }
 
             logStream(importProcess.getInputStream());
@@ -263,7 +283,7 @@ public class GDALService implements IExporter {
         try (Stream<Path> walk = Files.walk(path)) {
             result = walk
                     .filter(p -> !Files.isDirectory(p))
-                    .map(p -> p.toString().toLowerCase())
+                    .map(Path::toString)
                     .filter(f -> f.endsWith(extension))
                     .collect(Collectors.toList());
         } catch (IOException ex) {

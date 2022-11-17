@@ -1,10 +1,10 @@
 import { http } from '../http.service';
 import { Process, ProcessStatus, ProcessType } from '../models';
-import { getProcessesUrl, getProcessUrl } from '../server-urls.service';
+import { getFileProcessesUrl, getProcessesUrl, getProcessUrl } from '../server-urls.service';
 import { sleep } from '../util/sleep';
 import { Mime } from '../util/Mime';
 
-import { DfxPlacementModel, GmlPlacementModel } from './file-placement.service';
+import { DfxPlacementModel, GmlPlacementModel, ImportFeaturesFromShapeFileModel } from './file-placement.service';
 
 export interface ImportLayerReport {
   schemaId: string;
@@ -43,12 +43,23 @@ export interface ProcessResponse {
 
 export interface ProcessableModel {
   type: ProcessType;
-  payload: GmlPlacementModel | DfxPlacementModel;
+  payload: GmlPlacementModel | DfxPlacementModel | ImportFeaturesFromShapeFileModel;
+}
+
+export interface ShapeProcessableModel {
+  file: File;
+  processModelJson: ProcessableModel;
 }
 
 export async function createProcess(model: ProcessableModel): Promise<ProcessResponse> {
   return http.post<ProcessResponse>(await getProcessesUrl(), JSON.stringify(model), {
     headers: { 'Content-Type': Mime.JSON }
+  });
+}
+
+export async function createFileProcess(model: FormData): Promise<ProcessResponse> {
+  return http.post<ProcessResponse>(await getFileProcessesUrl(), model, {
+    headers: { 'Content-Type': Mime.FORM_DATA }
   });
 }
 
@@ -75,6 +86,10 @@ export async function awaitProcess(url: string, i = 0): Promise<void> {
 
   if (res.status === ProcessStatus.DONE) {
     return;
+  }
+
+  if (res.status === ProcessStatus.ERROR) {
+    throw res;
   }
 
   i++;

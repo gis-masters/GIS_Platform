@@ -77,6 +77,10 @@ export function getDocumentFiles(libraryRecord: LibraryRecord): FileInfo[] {
     .flat() as FileInfo[];
 }
 
+export function isZipFile(file: File): boolean {
+  return file.type === 'application/zip';
+}
+
 function isFileInfo(object: Partial<FileInfo>): boolean {
   // используем утиную типизацию, чтобы не делать асинхронный запрос схемы
   return (
