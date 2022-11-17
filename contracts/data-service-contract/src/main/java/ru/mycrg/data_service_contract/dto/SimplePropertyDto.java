@@ -37,13 +37,14 @@ public class SimplePropertyDto {
     private String patternDescription = "";
     private String accept;
     private String library;
-    
+    private List<String> libraries;
+
     private String dateFormat;
     private String displayMode;
     private String display;
-    
+
     private String searchMode;
-    
+
     private int sequenceNumber;
 
     private String calculatedValueFormula;
@@ -352,12 +353,12 @@ public class SimplePropertyDto {
         this.accept = accept;
     }
 
-    public String getLibrary() {
-        return library;
+    public List<String> getLibraries() {
+        return libraries;
     }
 
-    public void setLibrary(String library) {
-        this.library = library;
+    public void setLibraries(List<String> libraries) {
+        this.libraries = libraries;
     }
 
     public Integer getMaxSize() {
@@ -370,22 +371,30 @@ public class SimplePropertyDto {
 
     public Integer getMaxFiles() {
         return maxFiles;
-    }    
+    }
 
     public void setMaxFiles(Integer maxFiles) {
         this.maxFiles = maxFiles;
-    }    
+    }
 
     public Integer getMaxDocuments() {
         return maxDocuments;
-    }    
+    }
 
     public void setMaxDocuments(Integer maxDocuments) {
         this.maxDocuments = maxDocuments;
-    }    
+    }
 
     @JsonIgnore
     public boolean isGeometry() {
         return this.valueType == ValueType.GEOMETRY;
+    }
+
+    public String getLibrary() {
+        return library;
+    }
+
+    public void setLibrary(String library) {
+        this.library = library;
     }
 }
