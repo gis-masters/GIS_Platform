@@ -138,6 +138,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
       featureIds,
       filterBySelection === FilterBySelection.ONLY_NOT_SELECTED
     );
+
     const tableRecords: AttributesTableRecord[] = features.map(feature => ({
       cutId: feature.id.split('.')[1],
       feature,

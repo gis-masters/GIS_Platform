@@ -98,8 +98,7 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
     this.testSelectionAllnessOperationId = operationId;
 
     const allFeatures = await this.getAllFeatures();
-
-    if (this.testSelectionAllnessOperationId !== operationId) {
+    if (!allFeatures || this.testSelectionAllnessOperationId !== operationId) {
       return;
     }
 

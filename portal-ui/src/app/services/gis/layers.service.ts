@@ -111,7 +111,7 @@ export function getLayerByFeatureInCurrentProject(
 ): CrgVectorLayer | undefined {
   const [tableName] = feature.id.split('.');
 
-  return currentProject.vectorLayers.find(l => l.tableName === tableName);
+  return currentProject.vectorableLayers.find(l => l.tableName === tableName);
 }
 
 export function generateNextLayerId(): number {

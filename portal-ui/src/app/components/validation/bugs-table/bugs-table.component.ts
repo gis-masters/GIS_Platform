@@ -18,7 +18,7 @@ import { mapService } from '../../../services/map/map.service';
 import { ValidationResultsResponse, validationService } from '../../../services/data/validation.service';
 import { ProcessStatus } from '../../../services/models';
 import { CrgVectorLayer } from '../../../services/gis/projects.models';
-import { isFeaturesUpdateAllowed } from '../../../services/data/permissions.service';
+import { isUpdateAllowed } from '../../../services/data/permissions.service';
 
 @Component({
   selector: 'crg-bugs-table',
@@ -69,7 +69,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
       await this.getValidation();
     }, this);
 
-    await this.checkPermissions();
+    this.updatingAllowed = await isUpdateAllowed(this.crgLayer);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -163,11 +163,5 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
     } else {
       this.logger.warn('Incorrect response: ', response);
     }
-  }
-
-  private async checkPermissions() {
-    const { dataset, tableName, schemaId } = this.crgLayer;
-
-    this.updatingAllowed = await isFeaturesUpdateAllowed(dataset, tableName, schemaId);
   }
 }

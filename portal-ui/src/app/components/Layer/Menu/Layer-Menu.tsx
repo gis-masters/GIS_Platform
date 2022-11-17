@@ -34,9 +34,9 @@ import { schemaService } from '../../../services/data/schema.service';
 import { exportService } from '../../../services/data/export.service';
 import { services } from '../../../services/services';
 import {
-  isFeaturesUpdateAllowed,
   isTableExportAllowed,
-  isLayersManagementAllowed
+  isLayersManagementAllowed,
+  isUpdateAllowed
 } from '../../../services/data/permissions.service';
 import { ImportOutlined } from '../../Icons/ImportOutlined';
 import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
@@ -50,6 +50,7 @@ import { Toast } from '../../Toast/Toast';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { TextBadge } from '../../TextBadge/TextBadge';
 import { crgLayerSchema } from '../../../services/gis/layers.service';
+import { getEmptyFeature } from '../../../services/geoserver/wfs.util';
 
 interface LayerMenuProps {
   entity: TreeItemPayload;
@@ -113,7 +114,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!editMode && this.isVectorLayer && (
+          {!editMode && (this.isVectorLayer || this.isVectorFromFileLayer) && (
             <MenuItem onClick={this.openAttributeTable}>
               <ListItemIcon>
                 <ListAlt />
@@ -299,9 +300,9 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   private async fetchPermissions() {
     if (this.isVectorLayer) {
-      const { dataset, tableName, schemaId } = this.props.entity as CrgVectorLayer;
+      const { dataset, tableName } = this.props.entity as CrgVectorLayer;
       const allowed = await Promise.all([
-        isFeaturesUpdateAllowed(dataset, tableName, schemaId),
+        isUpdateAllowed(this.props.entity),
         isTableExportAllowed(dataset, tableName),
         isLayersManagementAllowed()
       ]);
@@ -329,7 +330,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @boundMethod
   private async addFeature() {
     const { entity, onClose } = this.props;
-    const emptyFeature = (await schemaService.getEmptyFeature(entity as CrgVectorLayer)) as WfsFeature;
+    const emptyFeature = (await getEmptyFeature(entity as CrgVectorLayer)) as WfsFeature;
     sidebars.openEdit({
       features: [emptyFeature],
       mode: EditFeatureMode.single,

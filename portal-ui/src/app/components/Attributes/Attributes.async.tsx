@@ -76,7 +76,7 @@ export default class Attributes extends Component<IClassNameProps> {
 
   @computed
   private get hardTabs(): CrgVectorLayer[] {
-    return this.causedByUserLayers.filter(layer => currentProject.vectorLayers.some(({ id }) => layer.id === id));
+    return this.causedByUserLayers.filter(layer => currentProject.vectorableLayers.some(({ id }) => layer.id === id));
   }
 
   @computed

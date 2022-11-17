@@ -28,6 +28,7 @@ import { LibraryRecord } from './doc-library.service';
 import { DocumentInfo } from '../../components/Documents/Documents';
 import { formatDate } from '../util/date.util';
 import { FileInfo } from './files.service';
+import { schemaService } from './schema.service';
 
 export function applyContentTypeOld(schema: OldSchema, contentTypeId?: string): OldSchema {
   const clonedSchema = cloneDeep(schema);
@@ -227,6 +228,10 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
       field.propertyType = PropertyType.DOCUMENT;
     }
 
+    if (oldField.valueType === ValueType.GEOMETRY) {
+      field.propertyType = PropertyType.GEOMETRY;
+    }
+
     delete (field as Partial<OldPropertySchema>).valueType;
 
     return field as PropertySchema;
@@ -307,6 +312,10 @@ export function convertNewToOldProperties<T extends Record<string, unknown>>(
 
     if (newField.propertyType === PropertyType.DOCUMENT) {
       field.valueType = ValueType.DOCUMENT;
+    }
+
+    if (newField.propertyType === PropertyType.GEOMETRY) {
+      field.valueType = ValueType.GEOMETRY;
     }
 
     delete (field as Partial<PropertySchema>).propertyType;
@@ -425,4 +434,14 @@ export function getReadablePropertyValue(value: unknown, property: PropertySchem
   }
 
   return String(value ?? '');
+}
+
+export async function getGeometryFieldName(schemaId: string): Promise<string> {
+  const schema = await schemaService.getSchema(schemaId);
+  const gProperty = schema.properties.find(prop => prop.propertyType === PropertyType.GEOMETRY);
+  if (!gProperty) {
+    throw new Error(`В схеме: '${schemaId}' не найдено свойство с геометрией`);
+  }
+
+  return gProperty.name || 'shape';
 }

@@ -153,7 +153,7 @@ export class Layer extends Component<LayerProps> {
 
     const { schemaId, type } = data as CrgVectorLayer;
 
-    if (type === CrgLayerType.VECTOR) {
+    if (type === CrgLayerType.VECTOR || type === CrgLayerType.VECTOR_FROM_FILE) {
       try {
         await schemaService.getOldSchema(schemaId);
       } catch {

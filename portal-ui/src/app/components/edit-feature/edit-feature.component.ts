@@ -11,7 +11,7 @@ import { isNumber } from 'lodash';
 import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { EditFeatureMode, EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
-import { isFeaturesUpdateAllowed } from '../../services/data/permissions.service';
+import { isUpdateAllowed } from '../../services/data/permissions.service';
 import { convertOldToNewProperties, convertOldToNewSchema, getFieldRelations } from '../../services/data/schema.utils';
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
@@ -191,7 +191,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         delete this.changedGeometry;
         this.isGeometryValid = false;
         this.isGeometryChanged = false;
-        await this.checkPermissions();
+        this.updatingAllowed = await isUpdateAllowed(this.layer);
 
         if (this.updatingAllowed && this.mode === EditFeatureMode.single && !this.features[0].geometry) {
           this.features[0].geometry = getEmptyGeometry(this.featureDescription.geometryType);
@@ -373,7 +373,9 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   isShowTemplate(property: OldPropertySchema): boolean {
-    return this.editFeatureForm.controls[property.name.toLowerCase()].disabled;
+    const control = this.editFeatureForm.controls[property.name.toLowerCase()];
+
+    return control ? control.disabled : false;
   }
 
   @boundMethod
@@ -399,12 +401,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
   getDateTime(value: string | number): string {
     return formatDate(value);
-  }
-
-  private async checkPermissions() {
-    const { dataset, tableName, schemaId } = this.layer;
-
-    this.updatingAllowed = await isFeaturesUpdateAllowed(dataset, tableName, schemaId);
   }
 
   private async batchUpdateFeatures(

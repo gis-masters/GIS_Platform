@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Badge } from '@mui/material';
-import { EditLocationOutlined, PinDropOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { EditLocationOutlined, PinDropOutlined } from '@mui/icons-material';
+import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
 
 import { mapStore } from '../../stores/Map.store';
-import { sidebars } from '../../stores/Sidebars.store';
-import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
-import { isFeaturesUpdateAllowed } from '../../services/data/permissions.service';
-import { IconButton } from '../IconButton/IconButton';
 import { ViewLocation } from '../Icons/ViewLocation';
+import { IconButton } from '../IconButton/IconButton';
+import { sidebars } from '../../stores/Sidebars.store';
+import { isUpdateAllowed } from '../../services/data/permissions.service';
+import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesSidebarTeaser.scss';
 
@@ -86,8 +86,9 @@ export class FeaturesSidebarTeaser extends Component {
     const feature = mapStore.selectedFeatures[0];
     const operationId = Symbol();
     this.testingFeatureUpdateabilityOperationId = operationId;
+
     const layer = getLayerByFeatureInCurrentProject(feature);
-    const updatingAllowed = await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, layer.schemaId);
+    const updatingAllowed = await isUpdateAllowed(layer);
 
     if (this.testingFeatureUpdateabilityOperationId === operationId) {
       this.setFeatureUpdateability(updatingAllowed);

@@ -256,8 +256,8 @@ class MapSelectionService {
     mapService.showSelectionMarker(buffer.getCoordinates());
     const collections = await Promise.all(
       Object.entries(visibleLayersComplexNamesByCrs).flatMap(([srsName, complexNames]) => {
-        return complexNames.map(complexName => {
-          const xml = makeXmlPolygonIntersect(complexName, buffer, srsName, selectionType);
+        return complexNames.map(async complexName => {
+          const xml = await makeXmlPolygonIntersect(complexName, buffer, srsName, selectionType);
 
           return getFeaturesCollectionByXmlFilter(xml);
         });

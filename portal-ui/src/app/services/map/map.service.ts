@@ -46,6 +46,7 @@ import { getFeatureExtent, mergeExtents } from '../geoserver/wfs.util';
 import { getMap } from '../geoserver/wms.service';
 import { buildCqlFilter } from '../util/cql';
 import { sleep } from '../util/sleep';
+import { services } from '../services';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -404,11 +405,6 @@ class MapService {
     return layers.map(layer => layer.complexName).join(',');
   }
 
-  deleteLayerFromMap(complexLayerName: string) {
-    const layerByName = this.getLayerByName(complexLayerName);
-    this.map.removeLayer(layerByName);
-  }
-
   /**
    * @param complexLayerName Название слоя в формате 'workspace:layerName'
    */
@@ -450,7 +446,16 @@ class MapService {
 
     this.clearDraft();
 
-    const olFeatures = featuresInOlProjection.map(feature => wfsFeatureToFeature(feature));
+    const olFeatures = featuresInOlProjection
+      .map(feature => {
+        try {
+          return wfsFeatureToFeature(feature);
+        } catch (error) {
+          services.logger.error(`Can't highlight feature: '${feature.id}'`, error);
+        }
+      })
+      .filter(Boolean);
+
     this.draftSource.addFeatures(olFeatures);
   }
 

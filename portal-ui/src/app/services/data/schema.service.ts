@@ -1,20 +1,17 @@
 import { boundMethod } from 'autobind-decorator';
 import { debounce, DebouncedFunc } from 'lodash';
 
-import { Toast } from '../../components/Toast/Toast';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { ImportLayerItem } from '../geoserver/import/models';
-import { CoordinateEdited, WfsFeature } from '../geoserver/wfs.models';
-import { getEmptyGeometry } from '../geoserver/wfs.util';
 import { http } from '../http.service';
-import { getSchemaUrl } from '../server-urls.service';
-import { FeatureUtil } from '../util/FeatureUtil';
-import { CrgVectorLayer } from '../gis/projects.models';
-import { BugObject } from './validation.service';
-import { OldSchema, OldPropertySchema, OldPropertySchemaChoice, ValueType } from './schemaOld.models';
 import { Schema } from './schema.models';
+import { BugObject } from './validation.service';
+import { FeatureUtil } from '../util/FeatureUtil';
+import { Toast } from '../../components/Toast/Toast';
+import { getSchemaUrl } from '../server-urls.service';
 import { convertOldToNewSchema } from './schema.utils';
+import { CrgVectorLayer } from '../gis/projects.models';
+import { ImportLayerItem } from '../geoserver/import/models';
 import { communicationService } from '../communication.service';
+import { OldSchema, OldPropertySchema, OldPropertySchemaChoice, ValueType } from './schemaOld.models';
 
 class SchemaService {
   private static _instance: SchemaService;
@@ -52,12 +49,6 @@ class SchemaService {
   @boundMethod
   async getSchema(name: string): Promise<Schema> {
     return convertOldToNewSchema(await this.getOldSchema(name));
-  }
-
-  async getCurrentProjectSchemas(): Promise<OldSchema[]> {
-    const names = currentProject.vectorLayers.map(layer => layer.schemaId);
-
-    return Promise.all(names.map(this.getOldSchema));
   }
 
   async getAllOldSchemas(): Promise<OldSchema[]> {
@@ -158,21 +149,6 @@ class SchemaService {
    */
   getPropertySchemaByName(key: string, propertySchemas: OldPropertySchema[]) {
     return propertySchemas.find(({ name }) => name.toLowerCase() === key.toLowerCase());
-  }
-
-  async getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature<CoordinateEdited>> {
-    const { tableName, schemaId } = layer;
-    const schema = await this.getOldSchema(schemaId);
-
-    const properties = Object.fromEntries(schema.properties.map(({ name }) => [name.toLowerCase(), null]));
-
-    return {
-      type: 'Feature',
-      id: tableName, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
-      geometry: getEmptyGeometry(schema.geometryType),
-      geometry_name: 'shape', // TODO нужно добавить в схему и брать оттуда
-      properties
-    };
   }
 
   /**

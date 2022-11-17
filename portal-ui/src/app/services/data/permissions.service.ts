@@ -2,53 +2,89 @@ import { AxiosError } from 'axios';
 
 import { currentUser } from '../../stores/CurrentUser.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { PrincipalType, Role, RoleAssignmentBody, roles } from './permissions.models';
-import { CrgProject } from '../gis/projects.models';
+import { CrgLayer, CrgLayerType, CrgProject } from '../gis/projects.models';
+import {
+  ProjectPermissionPoint,
+  projectRolesPermissionPoints,
+  Role,
+  roles,
+  TablePermissionPoint,
+  tableRolesPermissionPoints
+} from './permissions.models';
+
 import { schemaService } from './schema.service';
-import { VectorTable, getVectorTable } from './data.service';
 import { getLibraryRecord } from './doc-library.service';
+import { VectorTable, getVectorTable } from './data.service';
+import { Schema } from './schema.models';
 
-enum TablePermissionPoint {
-  READ_FEATURES,
-  UPDATE_FEATURES,
-  EXPORT,
-  DELETE
+export async function isReadAllowed(layer: CrgLayer): Promise<boolean> {
+  if (currentUser.isAdmin || layer.type === CrgLayerType.EXTERNAL || layer.type === CrgLayerType.EXTERNAL_GEOSERVER) {
+    return true;
+  }
+
+  if (layer.type === CrgLayerType.VECTOR) {
+    return await isFeaturesReadAllowed(layer.dataset, layer.tableName);
+  } else if (layer.type === CrgLayerType.RASTER) {
+    return await isRasterReadAllowed(layer.libraryId, layer.recordId);
+  }
+
+  return false;
 }
 
-const tableRolesPermissionPoints = new Map<Role, TablePermissionPoint[]>([
-  [
-    Role.OWNER,
-    [
-      TablePermissionPoint.READ_FEATURES,
-      TablePermissionPoint.UPDATE_FEATURES,
-      TablePermissionPoint.EXPORT,
-      TablePermissionPoint.DELETE
-    ]
-  ],
-  [Role.CONTRIBUTOR, [TablePermissionPoint.READ_FEATURES, TablePermissionPoint.UPDATE_FEATURES]],
-  [Role.VIEWER, [TablePermissionPoint.READ_FEATURES]]
-]);
+export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
+  const schema: Schema = await schemaService.getSchema(layer.schemaId);
+  if (!schema) {
+    return false;
+  }
 
-enum ProjectPermissionPoint {
-  READ,
-  UPDATE,
-  DELETE,
-  MANAGE_LAYERS
+  if (schema.readOnly) {
+    return false;
+  }
+
+  if (layer.type === CrgLayerType.VECTOR) {
+    return await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, layer.schemaId);
+  } else if (layer.type === CrgLayerType.RASTER || layer.type === CrgLayerType.VECTOR_FROM_FILE) {
+    return await isRasterReadAllowed(layer.libraryId, layer.recordId);
+  }
+
+  return false;
 }
 
-const projectRolesPermissionPoints = new Map<Role, ProjectPermissionPoint[]>([
-  [
-    Role.OWNER,
-    [
-      ProjectPermissionPoint.READ,
-      ProjectPermissionPoint.UPDATE,
-      ProjectPermissionPoint.DELETE,
-      ProjectPermissionPoint.MANAGE_LAYERS
-    ]
-  ],
-  [Role.CONTRIBUTOR, [ProjectPermissionPoint.READ, ProjectPermissionPoint.MANAGE_LAYERS]],
-  [Role.VIEWER, [ProjectPermissionPoint.READ]]
-]);
+export async function isRasterReadAllowed(libraryId: string, recordId: number): Promise<boolean> {
+  try {
+    const raster = await getLibraryRecord(libraryId, recordId);
+
+    return Boolean(raster.role);
+  } catch {
+    return false;
+  }
+}
+
+export function isLayersManagementAllowed(project: CrgProject = currentProject): boolean {
+  return isAllowedWithProject(project, ProjectPermissionPoint.MANAGE_LAYERS);
+}
+
+export function isTableExportAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
+  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.EXPORT);
+}
+
+export function isTableDeletionAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
+  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.DELETE);
+}
+
+async function isFeaturesReadAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
+  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.READ_FEATURES);
+}
+
+function isFeaturesUpdateAllowed(dataset: string, table: string, schemaId: string): Promise<boolean> {
+  return isAllowedWithTable(dataset, table, TablePermissionPoint.UPDATE_FEATURES, schemaId);
+}
+
+function isAllowedWithProject(project: CrgProject, targetPoint: ProjectPermissionPoint): boolean {
+  const role = currentUser.isAdmin ? Role.OWNER : project.role;
+
+  return Boolean(role) && projectRolesPermissionPoints.get(role).includes(targetPoint);
+}
 
 async function isAllowedWithTable(
   datasetIdentifier: string,
@@ -79,64 +115,4 @@ async function isAllowedWithTable(
   }
 
   return Boolean(role) && tableRolesPermissionPoints.get(role).includes(targetPoint);
-}
-
-function isAllowedWithProject(project: CrgProject, targetPoint: ProjectPermissionPoint): boolean {
-  const role = currentUser.isAdmin ? Role.OWNER : project.role;
-
-  return Boolean(role) && projectRolesPermissionPoints.get(role).includes(targetPoint);
-}
-
-export function isFeaturesReadAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
-  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.READ_FEATURES);
-}
-
-export async function isRasterReadAllowed(libraryId: string, recordId: number): Promise<boolean> {
-  try {
-    const raster = await getLibraryRecord(libraryId, recordId);
-
-    return Boolean(raster.role);
-  } catch {
-    return false;
-  }
-}
-
-export function isFeaturesUpdateAllowed(
-  datasetIdentifier: string,
-  tableIdentifier: string,
-  schemaId: string
-): Promise<boolean> {
-  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.UPDATE_FEATURES, schemaId);
-}
-
-export function isTableExportAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
-  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.EXPORT);
-}
-
-export function isTableDeletionAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
-  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.DELETE);
-}
-
-export function isLayersManagementAllowed(project: CrgProject = currentProject): boolean {
-  return isAllowedWithProject(project, ProjectPermissionPoint.MANAGE_LAYERS);
-}
-
-export function filterOutPrincipal(
-  filteringPrincipalId: number,
-  filteringPrincipalType: PrincipalType,
-  permissions: RoleAssignmentBody[]
-): RoleAssignmentBody[] {
-  return permissions.filter(
-    ({ principalId, principalType }) => principalId !== filteringPrincipalId || principalType !== filteringPrincipalType
-  );
-}
-
-export function filterByPrincipal(
-  filteringPrincipalId: number,
-  filteringPrincipalType: PrincipalType,
-  permissions: RoleAssignmentBody[]
-): RoleAssignmentBody[] {
-  return permissions.filter(
-    ({ principalId, principalType }) => principalId === filteringPrincipalId && principalType === filteringPrincipalType
-  );
 }

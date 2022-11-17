@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 
 import { Role, PrincipalType, roles, projectRoles, rolesTitles } from '../../../services/data/permissions.models';
 import { PermissionsListItem } from '../../../services/data/allPermissions.service';
-import { filterOutPrincipal } from '../../../services/data/permissions.service';
+import { filterOutPrincipal } from '../../../services/data/permissions.utils';
 
 import { PermissionsListItemType } from '../PermissionsListDialog.models';
 

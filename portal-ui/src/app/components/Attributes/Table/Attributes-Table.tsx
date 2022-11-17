@@ -4,25 +4,25 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
-import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { FilterBySelection, MapSelectionTypes, mapStore } from '../../../stores/Map.store';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { communicationService } from '../../../services/communication.service';
+import { attributesTableStore } from '../../../stores/AttributesTable.store';
+import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
+import { XTable, XTableColumn, XTableInvoke } from '../../XTable/XTable';
 import { CrgVectorLayer } from '../../../services/gis/projects.models';
 import { WfsFeature } from '../../../services/geoserver/wfs.models';
+import { FilterQuery } from '../../../services/util/filterObjects';
+import { SortParams } from '../../../services/util/sortObjects';
 import { mapService } from '../../../services/map/map.service';
 import { Schema } from '../../../services/data/schema.models';
 import { PageOptions } from '../../../services/models';
 import { sleep } from '../../../services/util/sleep';
-import { XTable, XTableColumn, XTableInvoke } from '../../XTable/XTable';
 import { Loading } from '../../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Table.scss';
-import '!style-loader!css-loader!sass-loader!../TableContainer/Attributes-TableContainer.scss';
 import '!style-loader!css-loader!sass-loader!../CheckCell/Attributes-CheckCell.scss';
-import { FilterQuery } from '../../../services/util/filterObjects';
-import { SortParams } from '../../../services/util/sortObjects';
+import '!style-loader!css-loader!sass-loader!../TableContainer/Attributes-TableContainer.scss';
 
 const cnAttributesTable = cn('Attributes', 'Table');
 const cnAttributesTableContainer = cn('Attributes', 'TableContainer');
@@ -44,6 +44,7 @@ interface AttributesTableProps {
 @observer
 export class AttributesTable extends Component<AttributesTableProps> {
   @observable private pageOptions?: PageOptions;
+
   private tableInvoke: XTableInvoke = {};
   private selectionReactionDisposer?: IReactionDisposer;
 

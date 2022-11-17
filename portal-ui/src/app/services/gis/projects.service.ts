@@ -3,12 +3,11 @@ import { debounce } from 'lodash';
 import { AxiosError } from 'axios';
 
 import { route } from '../../stores/Route.store';
-import { currentUser } from '../../stores/CurrentUser.store';
 import { allProjects } from '../../stores/AllProjects.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgProject } from './projects.models';
+import { CrgLayer, CrgLayersGroup, CrgProject } from './projects.models';
 import { PageableResponse, PageOptions, Process } from '../models';
-import { isRasterReadAllowed, isFeaturesReadAllowed } from '../data/permissions.service';
+import { isReadAllowed } from '../data/permissions.service';
 import { TaskImport } from '../geoserver/import/taskImport';
 import { wsService } from '../ws.service';
 import { services } from '../services';
@@ -32,9 +31,11 @@ import { mapStore } from '../../stores/Map.store';
 
 class ProjectsService {
   private static _instance: ProjectsService;
+
   private fetchingCurrentProject?: Promise<CrgProject | void>;
   private fetchingAllProjectsRequest?: Promise<CrgProject[]>;
-  private debouncedFetchAllProjects: () => Promise<void>;
+
+  private readonly debouncedFetchAllProjects: () => Promise<void>;
 
   private constructor() {
     this.debouncedFetchAllProjects = debounce(this.fetchAllProjects, 300);
@@ -144,21 +145,7 @@ class ProjectsService {
     await usersService.fetchCurrentUser();
     const layers = await this.getLayers(project.id);
     const layersErrors: Record<string, string[]> = {};
-    const layersPermissions = await Promise.all(
-      layers.map(async layer => {
-        if (currentUser.isAdmin || layer.type === CrgLayerType.EXTERNAL) {
-          return true;
-        }
-
-        if (layer.type === CrgLayerType.VECTOR) {
-          return await isFeaturesReadAllowed(layer.dataset, layer.tableName);
-        }
-
-        if (layer.type === CrgLayerType.RASTER) {
-          return await isRasterReadAllowed(layer.libraryId, layer.recordId);
-        }
-      })
-    );
+    const layersPermissions = await Promise.all(layers.map(async layer => await isReadAllowed(layer)));
 
     const allowedLayers = layers.filter((layer, i) => layersPermissions[i]);
     const groups = await this.getGroups(project.id);

@@ -107,7 +107,7 @@ export async function getFeatures(
     featuresTotal = totalResponse.totalFeatures;
   }
 
-  return [collection.features, totalPages, collection.numberMatched, featuresTotal];
+  return [collection.features || [], totalPages, collection.numberMatched, featuresTotal];
 }
 
 /**

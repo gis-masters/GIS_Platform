@@ -212,6 +212,10 @@ export interface PropertySchemaDocument<T = Record<string, unknown>> extends Bas
   maxDocuments?: number;
 }
 
+export interface PropertySchemaGeometry<T = Record<string, unknown>> extends BasePropertySchema<T> {
+  propertyType: PropertyType.GEOMETRY;
+}
+
 export type PropertySchema<T = Record<string, unknown>> =
   | PropertySchemaString<T>
   | PropertySchemaInt<T>
@@ -226,4 +230,5 @@ export type PropertySchema<T = Record<string, unknown>> =
   | PropertySchemaFias<T>
   | PropertySchemaFile<T>
   | PropertySchemaDocument<T>
-  | PropertySchemaCustom<T>;
+  | PropertySchemaCustom<T>
+  | PropertySchemaGeometry<T>;

@@ -7,9 +7,9 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
-import { addEntityPermission, removeEntityPermission } from '../../services/data/permissions.client';
+import { filterByPrincipal, filterOutPrincipal } from '../../services/data/permissions.utils';
 import { PrincipalType, Role, RoleAssignmentBody } from '../../services/data/permissions.models';
-import { filterByPrincipal, filterOutPrincipal } from '../../services/data/permissions.service';
+import { addEntityPermission, removeEntityPermission } from '../../services/data/permissions.client';
 import { CrgGroup, groupsService } from '../../services/data/groups.service';
 import { communicationService } from '../../services/communication.service';
 import { CrgUser, usersService } from '../../services/data/users.service';

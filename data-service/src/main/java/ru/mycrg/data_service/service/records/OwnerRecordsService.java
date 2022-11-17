@@ -29,8 +29,10 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.ROLE;
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
 
 @Service
@@ -97,8 +99,12 @@ public class OwnerRecordsService implements IRecordsService {
     public IRecord getById(ResourceQualifier rQualifier, Long recordId) {
         SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
 
-        return recordsDao.findById(new ResourceQualifier(rQualifier, recordId, LIBRARY_RECORD), schema)
-                         .orElseThrow(() -> new NotFoundException(recordId));
+        IRecord record = recordsDao.findById(new ResourceQualifier(rQualifier, recordId, LIBRARY_RECORD), schema)
+                                    .orElseThrow(() -> new NotFoundException(recordId));
+
+        record.getContent().put(ROLE.getName(), OWNER.name());
+
+        return record;
     }
 
     @Override

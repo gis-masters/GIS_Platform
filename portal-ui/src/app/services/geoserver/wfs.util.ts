@@ -17,12 +17,31 @@ import {
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
+import { CrgVectorLayer } from '../gis/projects.models';
+import { schemaService } from '../data/schema.service';
 import { olProjection } from './projections.service';
 import { PageOptions, SortOrder } from '../models';
 import { buildCqlFilter } from '../util/cql';
 import { cql2ol } from '../util/cql2ol';
 import { services } from '../services';
 import { Mime } from '../util/Mime';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { getGeometryFieldName } from '../data/schema.utils';
+
+export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature<CoordinateEdited>> {
+  const { tableName, schemaId } = layer;
+  const schema = await schemaService.getOldSchema(schemaId);
+
+  const properties = Object.fromEntries(schema.properties.map(({ name }) => [name.toLowerCase(), null]));
+
+  return {
+    type: 'Feature',
+    id: tableName, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
+    geometry: getEmptyGeometry(schema.geometryType),
+    geometry_name: await getGeometryFieldName(schemaId),
+    properties
+  };
+}
 
 export function getEmptyGeometry(type: GeometryType): WfsGeometry<CoordinateEdited> {
   if (type === GeometryType.POINT) {
@@ -162,17 +181,20 @@ export function mergeExtents(extents: Extent[]): Extent {
   return resultExtent;
 }
 
-export function makeXmlPolygonIntersect(
+export async function makeXmlPolygonIntersect(
   complexName: string,
   polygon: MultiPolygon,
   srsName: string,
   selectionType: MapSelectionTypes
-): string {
+): Promise<string> {
   const tableName = complexName.split(':')[1];
+
+  const layer = currentProject.getLayerByTableName(tableName);
+  const geometryFieldName = await getGeometryFieldName(layer.schemaId);
   const cqlFilter: string = buildCqlFilter(attributesTableStore.getLayerFilter(tableName));
   const olFilter = cqlFilter
-    ? and(intersects('shape', polygon, olProjection.id), cql2ol(cqlFilter))
-    : intersects('shape', polygon, olProjection.id);
+    ? and(intersects(geometryFieldName, polygon, olProjection.id), cql2ol(cqlFilter))
+    : intersects(geometryFieldName, polygon, olProjection.id);
 
   const featureRequest = new WFS().writeGetFeature({
     srsName,

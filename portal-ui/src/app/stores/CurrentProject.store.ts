@@ -197,13 +197,18 @@ class CurrentProject implements CrgProjectData {
   }
 
   @computed
+  get vectorableLayers(): CrgVectorLayer[] {
+    return [...this.vectorLayers, ...this.vectorFromFileLayers];
+  }
+
+  @computed
   get rasterLayers(): CrgRasterLayer[] {
     return (this.layers?.filter(l => l.type === CrgLayerType.RASTER) || []) as CrgRasterLayer[];
   }
 
   @computed
-  get vectorFromFileLayers(): CrgRasterLayer[] {
-    return (this.layers?.filter(l => l.type === CrgLayerType.VECTOR_FROM_FILE) || []) as CrgRasterLayer[];
+  get vectorFromFileLayers(): CrgVectorLayer[] {
+    return (this.layers?.filter(l => l.type === CrgLayerType.VECTOR_FROM_FILE) || []) as CrgVectorLayer[];
   }
 
   @computed
@@ -286,6 +291,14 @@ class CurrentProject implements CrgProjectData {
         )
         .map(({ id }) => id)
     };
+  }
+
+  public getLayerByTableName(tableName: string): CrgLayer {
+    return currentProject.visibleLayersWithoutRasters
+      .filter(item => {
+        return item.payload.tableName === tableName;
+      })
+      .map(item => item.payload)[0];
   }
 
   private hasDeletedAncestor(entity: CrgLayer | CrgLayersGroup): boolean {

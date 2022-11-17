@@ -12,6 +12,7 @@
     "experimentalDecorators": true,
     "useDefineForClassFields": true,
     "strictBindCallApply": true,
+    "strictNullChecks": false,
     "importHelpers": true,
     "target": "es2020",
     "jsx": "react",

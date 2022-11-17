@@ -95,7 +95,7 @@ export interface WfsFeature<T extends Coordinate | CoordinateEdited = Coordinate
 
 export interface WfsFeatureCollection extends GeoJSONObject {
   type: 'FeatureCollection';
-  features: WfsFeature[];
+  features?: WfsFeature[];
   totalFeatures: number;
   numberMatched: number;
   numberReturned: number;

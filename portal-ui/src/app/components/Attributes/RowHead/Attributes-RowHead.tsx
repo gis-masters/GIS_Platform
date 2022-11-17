@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 
 import { sidebars } from '../../../stores/Sidebars.store';
 import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers.service';
-import { isFeaturesUpdateAllowed } from '../../../services/data/permissions.service';
+import { isUpdateAllowed } from '../../../services/data/permissions.service';
 import { CrgVectorLayer } from '../../../services/gis/projects.models';
 import { FilterQuery } from '../../../services/util/filterObjects';
 
@@ -61,7 +61,7 @@ export class AttributesRowHead extends Component<AttributesRowHeadProps> {
   }
 
   @computed
-  private get layer(): CrgVectorLayer {
+  private get layer(): CrgVectorLayer | undefined {
     return getLayerByFeatureInCurrentProject(this.props.rowData.feature);
   }
 
@@ -69,7 +69,13 @@ export class AttributesRowHead extends Component<AttributesRowHeadProps> {
     const operationId = Symbol();
     this.fetchingPermissionOperationId = operationId;
 
-    const editable = await isFeaturesUpdateAllowed(this.layer.dataset, this.layer.tableName, this.layer.schemaId);
+    if (!this.layer) {
+      this.setEditable(false);
+
+      return;
+    }
+
+    const editable = await isUpdateAllowed(this.layer);
 
     if (this.fetchingPermissionOperationId === operationId) {
       this.setEditable(editable);

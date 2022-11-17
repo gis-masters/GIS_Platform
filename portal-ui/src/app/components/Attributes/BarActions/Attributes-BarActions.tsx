@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { action, computed, makeObservable, observable } from 'mobx';
+import { AxiosError } from 'axios';
 import { observer } from 'mobx-react';
+import { pluralize } from 'numeralize-ru';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { ContentCopyOutlined, DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogContentText, Tooltip } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { pluralize } from 'numeralize-ru';
-import { AxiosError } from 'axios';
 
-import { isFeaturesUpdateAllowed } from '../../../services/data/permissions.service';
 import { copyFeatures, deleteFeatures } from '../../../services/data/data.service';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { CrgLayer, CrgVectorLayer } from '../../../services/gis/projects.models';
+import { isUpdateAllowed } from '../../../services/data/permissions.service';
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
 import { schemaService } from '../../../services/data/schema.service';
@@ -205,8 +205,8 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
       const err = error as AxiosError<{ errors: CopyErrors[]; message?: string }>;
 
       Toast.error({
-        message: err.response.data.message,
-        details: err.response.data.errors.map(item => item.message).join('. ')
+        message: err?.response?.data?.message,
+        details: err?.response?.data?.errors?.map(item => item.message).join('. ')
       });
     }
   }
@@ -215,11 +215,13 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
     const schemas = await Promise.all(
       currentProject.vectorLayers.map(({ schemaId }) => schemaService.getSchema(schemaId))
     );
-    const currentSchema = await schemaService.getSchema(this.props.layer.schemaId);
+
+    const currentLayer = this.props.layer;
+    const currentSchema = await schemaService.getSchema(currentLayer.schemaId);
 
     const layersUpdatePermissions = [];
-    for (const layer of currentProject.vectorLayers) {
-      layersUpdatePermissions.push(await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, layer.schemaId));
+    for (const layer of currentProject.vectorableLayers) {
+      layersUpdatePermissions.push(await isUpdateAllowed(layer));
     }
 
     this.setLayersAvailableForCopy(
@@ -231,8 +233,8 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
         const { geometryType } = schemas[i];
 
         return (
-          this.props.layer.complexName !== layer.complexName &&
-          this.props.layer.nativeCRS === layer.nativeCRS &&
+          currentLayer.complexName !== layer.complexName &&
+          currentLayer.nativeCRS === layer.nativeCRS &&
           currentSchema.geometryType === geometryType &&
           layersUpdatePermissions[i]
         );
@@ -244,9 +246,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const { layer } = this.props;
-
-    const updateAllowed = await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, layer.schemaId);
+    const updateAllowed = await isUpdateAllowed(this.props.layer);
 
     if (this.operationId === operationId) {
       this.setFeaturesUpdateAllowed(updateAllowed);

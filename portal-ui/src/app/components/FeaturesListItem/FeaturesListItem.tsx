@@ -6,14 +6,13 @@ import { IconButton, Tooltip } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
-import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgLayerType, CrgVectorLayer } from '../../services/gis/projects.models';
-import { WFS_FEATURE_ID_DELIMITER } from '../../services/geoserver/wfs.service';
-import { FeatureError } from '../../services/map/map-link-following.service';
-import { schemaService } from '../../services/data/schema.service';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { ValueType } from '../../services/data/schemaOld.models';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
+import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { PropertyType } from '../../services/data/schema.models';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { schemaService } from '../../services/data/schema.service';
+import { FeatureError } from '../../services/map/map-link-following.service';
+import { WFS_FEATURE_ID_DELIMITER } from '../../services/geoserver/wfs.service';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 
@@ -38,7 +37,9 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
     super(props);
     makeObservable(this);
 
-    if (!props.errorData) void this.fetchSchema();
+    if (!props.errorData) {
+      void this.defineAndFillTitles();
+    }
   }
 
   render() {
@@ -71,33 +72,31 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
     );
   }
 
-  private async fetchSchema() {
+  private async defineAndFillTitles() {
     const { properties, id } = this.props.feature;
+
     const tableName = this.extractTableName(id);
-    const { schemaId } = currentProject.layers.find(
-      layer => layer.type === CrgLayerType.VECTOR && layer.tableName === tableName
-    ) as CrgVectorLayer;
-    const schema = await schemaService.getOldSchema(schemaId);
-
-    if (schema) {
-      let title = '';
-
-      const property = schema.properties.find(prop => prop.objectIdentityOnUi);
-
-      if (property) {
-        if (property.valueType !== ValueType.CHOICE) {
-          title = String(properties[property.name.toLowerCase()]);
-        } else if (property.enumerations) {
-          // eslint-disable-next-line eqeqeq -- тут так надо
-          const valueTitleProjection = property.enumerations.find(item => item.value == properties[property.name]);
-          title = valueTitleProjection ? valueTitleProjection.title : '';
-        }
-      } else {
-        title = String(properties.name);
-      }
-
-      this.setTitles(title, schema.title);
+    const layer = currentProject.getLayerByTableName(tableName);
+    const schema = await schemaService.getSchema(layer.schemaId);
+    if (!schema) {
+      throw new Error(`Не удалось найти схему: ${layer.schemaId}`);
     }
+
+    let title = '';
+    const property = schema.properties.find(prop => prop.asTitle);
+    if (property) {
+      if (property.propertyType !== PropertyType.CHOICE) {
+        title = String(properties[property.name.toLowerCase()]);
+      } else if (property.options) {
+        // eslint-disable-next-line eqeqeq -- тут так надо
+        const valueTitleProjection = property.options.find(item => item.value == properties[property.name]);
+        title = valueTitleProjection ? valueTitleProjection.title : '';
+      }
+    } else {
+      title = String(properties.name);
+    }
+
+    this.setTitles(title, schema.title);
   }
 
   @action
