@@ -12,6 +12,7 @@ public class CrgGlobalProperties {
     private static final String DEFAULT_DB_NAME = "database";
     private static final String SCRATCH_DB_PREFIX = "scratch";
     private static final String DEFAULT_PROJECT_NAME = "workspace";
+    private static final String DEFAULT_ORGANIZATION_NAME = "organization";
     private static final String DEFAULT_STORE_POSTFIX = "store";
     private static final String DEFAULT_ROLE_NAME = "admin";
     private static final String DEFAULT_SCHEMA_PREFIX = "dataset";
@@ -39,6 +40,11 @@ public class CrgGlobalProperties {
     @NotNull
     public static String getDefaultDatabaseName(Long orgId) {
         return join(DEFAULT_DB_NAME, orgId.toString());
+    }
+
+    @NotNull
+    public static String getDefaultOrganizationName(Long orgId) {
+        return join(DEFAULT_ORGANIZATION_NAME, orgId.toString());
     }
 
     @NotNull

@@ -18,6 +18,7 @@ import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
+import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
@@ -50,6 +51,9 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         List<UUID> ids = createFiles(new File[]{firstFile});
 
         firstFileId = ids.get(0);
+
+        getFile(firstFileId);
+        currentFilePath = jsonPath.getString("path");
     }
 
     @Given("Пользователем создано три файла")
@@ -111,6 +115,11 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertNotNull(firstObj.get("createdBy"));
         assertNotNull(firstObj.get("id"));
         assertNotNull(firstObj.get("size"));
+    }
+
+    @And("Файл лежит во временном хранилище")
+    public void checkFilePlaceInTrashDirectory() {
+        assertTrue(currentFilePath.toLowerCase().contains("trash"));
     }
 
     @And("Количество возвращенных сущностей файлов: {string}")
@@ -202,6 +211,35 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
         getFile(currentFileId);
         currentFilePath = jsonPath.getString("path");
+    }
+
+    @Given("Файл доступен")
+    public void createFile() {
+        getFile(currentFileId);
+        currentFilePath = jsonPath.getString("path");
+
+        assertEquals(currentFileId.toString(), jsonPath.get("id"));
+    }
+
+    @Given("Файл перемещён из временного хранилища в соответствующую директорию")
+    public void checkFilePlaceInCorrectDirectory() {
+        String organizationDir = "organization_" + orgId;
+
+        assertTrue(currentFilePath.toLowerCase().contains(organizationDir));
+        assertTrue(currentFilePath.toLowerCase().contains("feature"));
+        assertTrue(currentFilePath.toLowerCase().contains(currentTableName));
+    }
+
+    @Given("Первый файл перемещён из временного хранилища в соответствующую директорию")
+    public void checkFirstFilePlaceInCorrectDirectory() {
+        getFile(firstFileId);
+        String firstFilePath = jsonPath.getString("path");
+
+        String organizationDir = "organization_" + orgId;
+
+        assertTrue(firstFilePath.toLowerCase().contains(organizationDir));
+        assertTrue(firstFilePath.toLowerCase().contains("library_record"));
+        assertTrue(firstFilePath.toLowerCase().contains(DEFAULT_LIBRARY));
     }
 
     @Given("Существует GML файл")

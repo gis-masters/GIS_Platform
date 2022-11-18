@@ -9,6 +9,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import ru.mycrg.data_service.entity.File;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,4 +22,12 @@ public interface FileRepository extends PagingAndSortingRepository<File, UUID> {
     void setQualifier(@Param("type") String type,
                       @Param("qualifier") JsonNode qualifier,
                       @Param("fileIds") Set<UUID> fileIds);
+
+    @Modifying
+    @Query("UPDATE File f SET f.path = :path WHERE f.id =:fileId")
+    @RestResource(exported = false)
+    void setPathById(@Param("path") String path,
+                     @Param("fileId") UUID fileId);
+
+    List<File> findAllByIdIn(Set<UUID> fileIds);
 }

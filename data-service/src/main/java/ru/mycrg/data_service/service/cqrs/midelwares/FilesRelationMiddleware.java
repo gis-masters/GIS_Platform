@@ -2,9 +2,11 @@ package ru.mycrg.data_service.service.cqrs.midelwares;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -28,12 +30,17 @@ import ru.mycrg.mediator.IRequestMiddleware;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultOrganizationName;
+import static ru.mycrg.common_utils.CrgGlobalProperties.join;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
-import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.SchemaUtil.isFilePropertyExist;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 
@@ -47,14 +54,21 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
     private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
 
-    public FilesRelationMiddleware(FileRepository fileRepository,
-                                   FileStorageService fileStorageService,
+    private final Path fileStoragePath;
+
+    public FilesRelationMiddleware(Environment environment,
+                                   FileRepository fileRepository,
                                    IMessageBusProducer messageBus,
+                                   FileStorageService fileStorageService,
                                    IAuthenticationFacade authenticationFacade) {
         this.fileRepository = fileRepository;
         this.fileStorageService = fileStorageService;
         this.messageBus = messageBus;
         this.authenticationFacade = authenticationFacade;
+
+        String path = environment.getRequiredProperty("crg-options.fileStoragePath");
+
+        fileStoragePath = Paths.get(path).toAbsolutePath().normalize();
     }
 
     @Transactional
@@ -112,7 +126,10 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
                 JsonNode jsonNode = toJsonNode(fileResQualifier);
 
                 ResourceQualifier lrQualifier = new ResourceQualifier(rQualifier, newRecord.getId());
-                fileRepository.setQualifier(lrQualifier.getType().name(), jsonNode, ids);
+                String type = lrQualifier.getType().name();
+                fileRepository.setQualifier(type, jsonNode, ids);
+
+                transferFilesFromTempDirectory(ids, lrQualifier, type);
             }
         } catch (Exception e) {
             logError("Не удалось выполнить привязку файлов к сущности при создании", e);
@@ -163,6 +180,25 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
               .forEach(this::deleteFile);
     }
 
+    private void transferFilesFromTempDirectory(Set<UUID> ids, ResourceQualifier lrQualifier, String type) {
+        fileRepository.findAllByIdIn(ids).forEach(file -> {
+            String currentFileName = FilenameUtils.getName(file.getPath());
+            String resultFileName = nonNull(lrQualifier.getRecord())
+                    ? join(lrQualifier.getRecord().toString(), currentFileName)
+                    : currentFileName;
+
+            Path targetPath = fileStoragePath.resolve(
+                    String.format("%s/%s/%s/%s",
+                                  getDefaultOrganizationName(authenticationFacade.getOrganizationId()),
+                                  type.toLowerCase(),
+                                  lrQualifier.getTable(),
+                                  resultFileName));
+
+            fileStorageService.moveFile(Path.of(file.getPath()), targetPath);
+            fileRepository.setPathById(targetPath.toString(), file.getId());
+        });
+    }
+
     private void deleteFile(UUID id) {
         log.debug("Try to delete file by id: '{}'", id);
 
@@ -195,7 +231,10 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
                                                                            rQualifier.getRecord());
         JsonNode jsonNode = toJsonNode(fileResQualifier);
 
-        fileRepository.setQualifier(rQualifier.getType().name(), jsonNode, ids);
+        String type = rQualifier.getType().name();
+        fileRepository.setQualifier(type, jsonNode, ids);
+
+        transferFilesFromTempDirectory(ids, rQualifier, type);
     }
 
     private boolean isChangeNeeded(IRecord newRecord, List<String> fileFieldNames) {

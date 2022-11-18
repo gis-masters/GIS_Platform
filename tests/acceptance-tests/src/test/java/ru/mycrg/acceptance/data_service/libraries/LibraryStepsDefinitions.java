@@ -25,8 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.CommonStepDefinitions.checkSorting;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
-import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileId;
-import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.folder11Id;
 
@@ -117,6 +116,18 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
         DefaultDocumentModel recordModel = new DefaultDocumentModel("new_title");
         recordModel.setSome_files(new ArrayList<>());
+
+        updateDocument(currentDocumentId, gson.toJson(recordModel));
+    }
+
+    @When("Пользователь обновляет запись библиотеки - добавляет первый файл")
+    public void updateLibraryDocumentWithNewFile() {
+        List<FileDescriptionModel> descriptions = new ArrayList<>();
+        descriptions.add(new FileDescriptionModel(firstFileId, 314L, "First file"));
+        descriptions.add(new FileDescriptionModel(secondFileId, 314L, "Second file"));
+
+        DefaultDocumentModel recordModel = new DefaultDocumentModel(generateString("STRING_4"));
+        recordModel.setSome_files(descriptions);
 
         updateDocument(currentDocumentId, gson.toJson(recordModel));
     }

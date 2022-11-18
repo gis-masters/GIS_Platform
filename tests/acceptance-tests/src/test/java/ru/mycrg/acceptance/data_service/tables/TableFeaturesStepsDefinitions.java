@@ -11,7 +11,6 @@ import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.acceptance.data_service.dto.GeoJsonModel;
 import ru.mycrg.acceptance.data_service.dto.QualifierDto;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +23,7 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
-import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.firstFileId;
-import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.secondFileId;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
@@ -50,6 +48,17 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void currentUserCreateFeatureWithFile() {
         List<FileDescriptionModel> filesDescription = new ArrayList<>();
         filesDescription.add(new FileDescriptionModel(secondFileId, 314L, "Second file"));
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("some_files", filesDescription);
+
+        createFeature(new GeoJsonModel(properties));
+    }
+
+    @When("Пользователь создаёт запись в слое с отсылкой на текущий файл")
+    public void currentUserCreateFeatureWithCurrentFile() {
+        List<FileDescriptionModel> filesDescription = new ArrayList<>();
+        filesDescription.add(new FileDescriptionModel(currentFileId, 314L, "Current file"));
 
         Map<String, Object> properties = new HashMap<>();
         properties.put("some_files", filesDescription);

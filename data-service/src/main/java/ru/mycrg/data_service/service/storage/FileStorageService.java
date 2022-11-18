@@ -1,6 +1,8 @@
 package ru.mycrg.data_service.service.storage;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
@@ -23,16 +25,20 @@ import static ru.mycrg.data_service.util.DetailedLogger.logError;
 @Service
 public class FileStorageService {
 
+    private final Logger log = LoggerFactory.getLogger(FileStorageService.class);
+
     private final Path fileStoragePath;
+    private final Path fileTrashPath;
 
     @Autowired
     public FileStorageService(Environment environment) {
         String path = environment.getRequiredProperty("crg-options.fileStoragePath");
 
         fileStoragePath = Paths.get(path).toAbsolutePath().normalize();
+        fileTrashPath = Paths.get(path + "/trash").toAbsolutePath().normalize();
 
         try {
-            Files.createDirectories(fileStoragePath);
+            Files.createDirectories(fileTrashPath);
         } catch (Exception e) {
             throw new DataServiceException("Could not create the directory for the uploaded documents.", e);
         }
@@ -40,6 +46,8 @@ public class FileStorageService {
 
     /**
      * Сохранить файл.
+     * <p>
+     * Сохраняем файл во временную папку trash
      *
      * @param file     Файл
      * @param fileName Имя файла под которым хотим сохранить файл
@@ -49,7 +57,7 @@ public class FileStorageService {
      * @throws DataServiceException в случае если не удается сохранить файл
      */
     public String storeFile(MultipartFile file, String fileName) {
-        return storeFile(file, fileStoragePath, fileName);
+        return storeFile(file, fileTrashPath, fileName);
     }
 
     public String storeFile(MultipartFile file, Path storagePath, String fileName) {
@@ -102,6 +110,28 @@ public class FileStorageService {
         return String.format("%s.%s",
                              UUID.randomUUID().toString().substring(0, 13),
                              StringUtils.getFilenameExtension(file.getOriginalFilename()));
+    }
+
+    /**
+     * Перемещение файла.
+     * <p>
+     *
+     * @param sourcePath Путь откуда перемещаем файл
+     * @param targetPath Путь куда перемещаем файл
+     *
+     * @throws DataServiceException в случае если не удается переместить файл
+     */
+    public void moveFile(Path sourcePath, Path targetPath) {
+        try {
+            Files.createDirectories(targetPath);
+            Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            String msg = String.format("Не удалось переместить файл из: '%s' в: '%s'. Возникла ошибка: %s",
+                                       sourcePath, targetPath, e.getMessage());
+            log.error(msg);
+
+            throw new DataServiceException(msg);
+        }
     }
 
     @NotNull
