@@ -81,3 +81,6 @@ class AllProjects {
 }
 
 export const allProjects = AllProjects.instance;
+
+// for autotests
+Object.assign(window, { allProjects });

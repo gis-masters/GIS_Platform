@@ -1,0 +1,12 @@
+{
+  "globals": {
+    "WebdriverIO": true,
+    "browser": true,
+    "expect": true,
+    "$$": true,
+    "$": true
+  },
+  "parserOptions": {
+    "project": "./tests/tsconfig.json"
+  }
+}

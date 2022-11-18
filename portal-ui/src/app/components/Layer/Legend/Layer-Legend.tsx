@@ -32,8 +32,8 @@ export class LayerLegend extends Component<LayerLegendProps> {
   @observable private legend?: StyleRule[] = [];
   @observable private filteredLegend?: StyleRule[];
   @observable private filterEnabled = true;
-  private pagedDataReactionDisposer: IReactionDisposer;
-  private legendRequestId?: symbol;
+  private reactionDisposer: IReactionDisposer;
+  private operationId?: symbol;
 
   constructor(props: LayerLegendProps) {
     super(props);
@@ -41,15 +41,11 @@ export class LayerLegend extends Component<LayerLegendProps> {
   }
 
   async componentDidMount() {
-    this.setLegend(await getLayerStyleRules(this.props.layer));
-
-    await this.filterLegend();
-
     mapService.mapMoved.on(async () => {
       await this.filterLegend();
     }, this);
 
-    this.pagedDataReactionDisposer = reaction(
+    this.reactionDisposer = reaction(
       () => [cloneDeep(attributesTableStore.filter), cloneDeep(attributesTableStore.filterDisabled)],
       () => {
         void this.filterLegend();
@@ -58,10 +54,14 @@ export class LayerLegend extends Component<LayerLegendProps> {
         fireImmediately: true
       }
     );
+
+    this.setLegend(await getLayerStyleRules(this.props.layer));
+
+    await this.filterLegend();
   }
 
   componentWillUnmount() {
-    this.pagedDataReactionDisposer();
+    this.reactionDisposer();
     Emitter.scopeOff(this);
   }
 
@@ -89,13 +89,13 @@ export class LayerLegend extends Component<LayerLegendProps> {
     const { layer } = this.props;
 
     const legendRequestId = Symbol();
-    this.legendRequestId = legendRequestId;
+    this.operationId = legendRequestId;
 
     try {
       const filteredStylesResponse = await filterLegendForCurrentMapView([layer]);
 
       // если за время обращения к api случился следующий запрос
-      if (this.legendRequestId !== legendRequestId) {
+      if (this.operationId !== legendRequestId) {
         return;
       }
 

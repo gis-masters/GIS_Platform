@@ -306,3 +306,6 @@ class ProjectsService {
 }
 
 export const projectsService = ProjectsService.instance;
+
+// for autotests
+Object.assign(window, { projectsService });

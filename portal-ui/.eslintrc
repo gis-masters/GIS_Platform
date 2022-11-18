@@ -35,11 +35,11 @@
     "__DEV__": true,
     "ClipboardItem": true,
     "navigator": true,
-    "ExplorerItemType": true,
-    "ExplorerItemPayloads": true
+    "ExplorerItemPayloads": true,
+    "ExplorerItemType": true
   },
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2020,
     "project": "tsconfig.json",
     "sourceType": "module",
     "ecmaFeatures": { "jsx": true },
@@ -48,7 +48,7 @@
   "settings": {
     "react": {
       "pragma": "React",
-      "version": "17.0"
+      "version": "18.0"
     }
   },
   "rules": {

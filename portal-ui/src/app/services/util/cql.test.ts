@@ -29,7 +29,7 @@ describe('cql builder', () => {
     );
   });
 
-  test('свойство фильтра с оператором $in, содержащим null преобразуется в связку IN и IS null через OR', () => {
+  test('свойство фильтра с оператором $in, содержащим null, преобразуется в связку IN и IS null через OR', () => {
     expect(buildCqlFilter({ propertyName: { $in: ['value1', 'value2', null] } })).toBe(
       "((propertyName IN('value1','value2') OR propertyName IS null))"
     );
