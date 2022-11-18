@@ -12,8 +12,15 @@
     width: auto;
   }
 
-  &_fullWidthForOldForm,
   &_labelInTextField {
     width: 100%;
+  }
+
+  &_fullWidthForOldForm {
+    width: 100%;
+
+    & .MuiInputBase-input {
+      padding: 10px;
+    }
   }
 }

@@ -12,6 +12,7 @@ describe('Начальная страница', () => {
 
     await homePage.open();
     await homePage.waitForVisible();
+    await this.browser.pause(500);
   });
 
   /**

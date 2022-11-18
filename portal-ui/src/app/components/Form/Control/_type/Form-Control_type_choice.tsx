@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { MenuItem, Select, SelectChangeEvent, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
@@ -9,6 +10,8 @@ import { PropertyType, PropertySchemaChoice } from '../../../../services/data/sc
 import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormErrors } from '../../Errors/Form-Errors';
 
+export const cnChoiceMenuItem = cn('Form', 'ChoiceMenuItem');
+
 import '!style-loader!css-loader!sass-loader!./Form-Control_type_choice.scss';
 
 const EMPTY = '~~~empty_value~~~';
@@ -16,7 +19,7 @@ const EMPTY = '~~~empty_value~~~';
 @observer
 class FormControlTypeChoice extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, property, errors, variant = 'standard' } = this.props;
+    const { htmlId, className, property, errors, fullWidthForOldForm, variant = 'standard' } = this.props;
     const { options, name, display = 'select', defaultValue } = property as PropertySchemaChoice;
     let { fieldValue } = this.props;
 
@@ -28,7 +31,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
       fieldValue !== EMPTY && (typeof fieldValue === 'number' || typeof fieldValue === 'string');
 
     return (
-      <div className={cnFormControl(null, [className])}>
+      <div className={cnFormControl({ fullWidthForOldForm }, [className])}>
         {display === 'select' && !!options && (
           <>
             <Select
@@ -41,13 +44,13 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               variant={variant}
             >
               {!valueIsAllowed && (
-                <MenuItem value={fieldValue as string | number} color='#666'>
+                <MenuItem className={cnChoiceMenuItem()} value={fieldValue as string | number} color='#666'>
                   <em>{valueCanBeDisplayed ? (fieldValue as string) : 'Не выбрано'}</em>
                 </MenuItem>
               )}
               {options.map((item, i) => {
                 return (
-                  <MenuItem key={i} value={item.value}>
+                  <MenuItem className={cnChoiceMenuItem()} key={i} value={item.value}>
                     {item.title}
                   </MenuItem>
                 );
