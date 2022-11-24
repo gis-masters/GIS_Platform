@@ -15,8 +15,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.parseBoolean;
 import static java.lang.Thread.sleep;
 import static java.util.Objects.nonNull;
 import static java.util.stream.IntStream.range;
@@ -98,6 +100,24 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                 .when().
                         log().ifValidationFails().
                         get(url);
+    }
+
+    @When("пользователь делает выборку всех документов в виде реестра")
+    public void fetchAsRegistry() {
+        getRecordsAsRegistry("((is_folder+IN(false)+OR+is_folder+IS+null))+AND+(path+ILIKE+%27%2Froot%25%27)");
+
+        assertEquals(200, response.statusCode());
+    }
+
+    @When("в выборке отсутствуют недоступные пользователю файлы")
+    public void checkAllowedFiles() {
+        List<Map<String, Object>> records = response.jsonPath().getList("_embedded.records.content");
+
+        boolean isFileExist = records
+                .stream()
+                .anyMatch(stringObjectMap -> !parseBoolean(stringObjectMap.get("is_folder").toString()));
+
+        assertFalse(isFileExist);
     }
 
     @And("В ответе передаётся содержимое файла")
@@ -530,6 +550,14 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                                    DEFAULT_LIBRARY,
                                    ecqlFilter,
                                    recordId);
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(url);
+    }
+
+    private void getRecordsAsRegistry(String ecqlFilter) {
+        String url = String.format("/%s/records/as_registry?filer=%s", DEFAULT_LIBRARY, ecqlFilter);
 
         response = getBaseRequestWithCurrentCookie()
                 .when().

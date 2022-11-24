@@ -102,7 +102,7 @@ public class UserRecordsService implements IRecordsService {
             String id = String.valueOf(record.getContent().get(ID.getName()));
             ids.add(id);
 
-            String pathToMeAndChildren = MessageFormat.format("{0}/{1}%", record.getContent().get(PATH.getName()), id);
+            String pathToMeAndChildren = MessageFormat.format("{0}/{1}/%", record.getContent().get(PATH.getName()), id);
             paths.add(pathToMeAndChildren);
         });
 

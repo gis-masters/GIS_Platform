@@ -26,3 +26,18 @@
 #          -> folder_4                             | -                   | VIEWER        | 7  |
 #                      -> folder_5                 | -                   | VIEWER        | 8  |
 #                                  -> folder_6     | -                   | VIEWER        | 9  |
+
+# Вариант 3
+#                           | ID |
+# folder_1                  | 1  |
+#           -> folder_1_1   | 2  |
+#           -> folder_1_2   | 3  |
+#           -> folder_1_3   | 4  |
+#           -> folder_1_4   | 5  |
+#           -> folder_1_5   | 6  |
+#           -> folder_1_6   | 7  |
+#           -> folder_1_7   | 8  |
+#           -> folder_1_8   | 9  |
+#           -> folder_1_9   | 10 |
+# folder_2                  | 11 |
+#           -> file_2_1     | 12 |
