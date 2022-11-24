@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
@@ -25,12 +26,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 
 @Service
 public class GDALService implements IExporter {
 
     private static final Logger log = LoggerFactory.getLogger(GDALService.class);
-    private final static int TIMEOUT = 20;
+    private static final int TIMEOUT = 600;
 
     private final Environment environment;
     private final CrgProperties crgProperties;
@@ -72,22 +74,42 @@ public class GDALService implements IExporter {
         }
     }
 
-    public void importGeometryFromShape(String filePath, String dbName, String tableName, String srs) {
+    public ErrorReport importGeometryFromShape(String filePath, String dbName, String tableName, String srs) {
+        ErrorReport errorReport;
+        ProcessBuilder processBuilder = new ProcessBuilder();
+
         JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(dbName);
 
-        try {
-            String rootPath = crgProperties.getExportStoragePath();
-            log.debug("Root path for import is: {}", rootPath);
+        String rootPath = crgProperties.getExportStoragePath();
+        log.debug("Root path for import is: {}", rootPath);
 
-            String randomDirName = UUID.randomUUID().toString();
+        String randomDirName = UUID.randomUUID().toString();
+
+        String shpPath = unzipFile(processBuilder, rootPath, randomDirName, filePath);
+
+        errorReport = importShapeWithSourceSrs(processBuilder, dbName, tableName, srs, shpPath);
+        if (!errorReport.isShpFileHasProjection()) {
+            errorReport = importShapeWithoutSourceSrs(processBuilder, dbName, tableName, srs, shpPath);
+        }
+
+        if (!baseDaoService.isTableExist(jdbcTemplate, tableName)) {
+            throw new ImportException("Невалидный shape файл!");
+        }
+        cleanUp(processBuilder, randomDirName);
+
+        return errorReport;
+    }
+
+    private String unzipFile(ProcessBuilder processBuilder, String rootPath, String randomDirName, String filePath) {
+        try {
             String cdDir = String.format("cd %s;", rootPath);
+
             String mkDir = String.format("mkdir %s;", randomDirName);
             String unzipFile = String.format("unzip %s -d %s", filePath, randomDirName);
             String allInOneCommand = cdDir + mkDir + unzipFile;
 
             log.debug("Execute unzip archive console command: {}", allInOneCommand);
 
-            ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.directory(new File(rootPath));
             processBuilder.command("sh", "-c", allInOneCommand);
             Process unzipProcess = processBuilder.start();
@@ -106,32 +128,92 @@ public class GDALService implements IExporter {
                 throw new ImportException("Архив содержит неверное количество shape файлов: " + shpPaths.size());
             }
 
-            String importShpToTable = getOgr2OgrImportFromSHPToTableCommand(dbName, tableName, srs, shpPaths.get(0));
-            String cleanUpAll = String.format(" rm -rf %s;", randomDirName);
+            return shpPaths.get(0);
+        } catch (IOException | InterruptedException e) {
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
 
-            String importWithClean = importShpToTable + cleanUpAll;
+            throw new ImportException(e.getMessage(), e);
+        }
+    }
 
-            log.debug("Execute import geometry from SHP and clean up console command: {}", importWithClean);
+    private ErrorReport importShapeWithSourceSrs(ProcessBuilder processBuilder,
+                                                 String dbName,
+                                                 String tableName,
+                                                 String srs,
+                                                 String shpPath) {
+        String importShpToTable = getOgr2OgrImportFromSHPToTableCommand(dbName, tableName, srs, shpPath);
 
-            processBuilder.command("sh", "-c", importWithClean);
+        log.debug("Execute import geometry from SHP console command: {}", importShpToTable);
+        try {
+            processBuilder.command("sh", "-c", importShpToTable);
             Process importProcess = processBuilder.start();
 
-            isSuccess = importProcess.waitFor(TIMEOUT, SECONDS);
+            boolean isSuccess = importProcess.waitFor(TIMEOUT, SECONDS);
             if (!isSuccess) {
                 logStream(importProcess.getErrorStream());
+                importProcess.destroy();
 
                 throw new ImportException("Import of geometry shape failed by timeout");
             }
-            log.debug("ErrorStream: ");
-            logStream(importProcess.getErrorStream());
-            log.debug("InputStream: ");
-            logStream(importProcess.getInputStream());
 
-            if (!baseDaoService.isTableExist(jdbcTemplate, tableName)) {
-                throw new ImportException("Невалидный shape файл!");
+            return getErrorsFromInputStream(importProcess.getErrorStream());
+        } catch (IOException | InterruptedException e) {
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
+
+            throw new ImportException(e.getMessage(), e);
+        }
+    }
+
+    private ErrorReport importShapeWithoutSourceSrs(ProcessBuilder processBuilder,
+                                                    String dbName,
+                                                    String tableName,
+                                                    String srs,
+                                                    String shpPath) {
+        String importShpToTable = getOgr2OgrImportFromSHPToTableWithoutSourceSrs(dbName, tableName, srs, shpPath);
+
+        log.debug("Execute import geometry from SHP without source SRS console command: {}", importShpToTable);
+        try {
+            processBuilder.command("sh", "-c", importShpToTable);
+            Process importProcess = processBuilder.start();
+
+            boolean isSuccess = importProcess.waitFor(TIMEOUT, SECONDS);
+            if (!isSuccess) {
+                logStream(importProcess.getErrorStream());
+                importProcess.destroy();
+
+                throw new ImportException("Import of geometry shape failed by timeout");
             }
 
-            logStream(importProcess.getInputStream());
+            ErrorReport errorReport = getErrorsFromInputStream(importProcess.getErrorStream());
+            errorReport.setShpFileHasProjection(false);
+            importProcess.destroy();
+
+            return errorReport;
+        } catch (IOException | InterruptedException e) {
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
+
+            throw new ImportException(e.getMessage(), e);
+        }
+    }
+
+    private void cleanUp(ProcessBuilder processBuilder, String randomDirName) {
+        String cleanUpAll = String.format(" rm -rf %s;", randomDirName);
+        log.debug("Execute clean up directory with command : {}", cleanUpAll);
+        try {
+            processBuilder.command("sh", "-c", cleanUpAll);
+            Process cleanUpProcess = processBuilder.start();
+
+            boolean isSuccess = cleanUpProcess.waitFor(TIMEOUT, SECONDS);
+            if (!isSuccess) {
+                logStream(cleanUpProcess.getErrorStream());
+
+                throw new ImportException("Clean up failed by timeout");
+            }
+
+            cleanUpProcess.destroy();
         } catch (IOException | InterruptedException e) {
             // Restore interrupted state...
             Thread.currentThread().interrupt();
@@ -243,8 +325,16 @@ public class GDALService implements IExporter {
     }
 
     private String getOgr2OgrImportFromSHPToTableCommand(String dbName, String tableName, String srs, String filePath) {
-        return String.format("ogr2ogr -f \"PostgreSQL\" PG:\"host=postgis user=fiz password=314 port=5432 " +
-                                     "dbname=%s\" -nln %s -a_srs \"%s\" %s;", dbName, tableName, srs, filePath);
+        return String.format("ogr2ogr -skipfailures -f \"PostgreSQL\" PG:\"host=postgis user=fiz password=314 " +
+                                     "port=5432 dbname=%s\" -nln %s -t_srs \"%s\" %s;", dbName, tableName, srs,
+                             filePath);
+    }
+
+    private String getOgr2OgrImportFromSHPToTableWithoutSourceSrs(String dbName, String tableName, String srs,
+                                                                  String filePath) {
+        return String.format("ogr2ogr -skipfailures -f \"PostgreSQL\" PG:\"host=postgis user=fiz password=314 " +
+                                     "port=5432 dbname=%s\" -nln %s -s_srs \"%s\" -t_srs \"%s\" %s;",
+                             dbName, tableName, srs, srs, filePath);
     }
 
     private void logStream(InputStream inputStream) throws IOException {
@@ -253,6 +343,28 @@ public class GDALService implements IExporter {
         while ((line = reader.readLine()) != null) {
             log.debug("export console output: {}", line);
         }
+    }
+
+    private ErrorReport getErrorsFromInputStream(InputStream inputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        ErrorReport errorReport = new ErrorReport();
+        int failedRecordCount = 0;
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            log.debug("ErrorStream. Export console output: {}", line);
+            if (containsIgnoreCase(line, "COPY statement failed")) {
+                failedRecordCount++;
+            }
+            if (containsIgnoreCase(line, "Can't transform coordinates, source layer has no")) {
+                log.debug("No CRS in shape file {}", line);
+                errorReport.setShpFileHasProjection(false);
+            }
+        }
+        errorReport.setFailedRecordCount(failedRecordCount);
+        log.debug("ErrorStream: failed records count {}", failedRecordCount);
+
+        return errorReport;
     }
 
     private String getPortGisHost() {

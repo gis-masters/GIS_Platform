@@ -10,6 +10,7 @@ import ru.mycrg.data_service_contract.queue.response.ShapeImportedSucceededEvent
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
+import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.wrapper.service.export.GDALService;
 
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
@@ -41,10 +42,17 @@ public class ImportGeometryShapeRequestHandler implements IEventHandler {
                                      .toLowerCase();
             event.setSourceTableName(tableName);
             log.debug("Table name : {}", tableName);
-            gdalService.importGeometryFromShape(event.getFilePath(), event.getDbName(), tableName, event.getSrs());
+            ErrorReport errorReport = gdalService.importGeometryFromShape(event.getFilePath(),
+                                                                          event.getDbName(),
+                                                                          tableName,
+                                                                          event.getSrs());
 
             messageBus.produce(
-                    new ShapeImportedSucceededEvent(event, PENDING, "Промежуточная таблица создана", 50, ""));
+                    new ShapeImportedSucceededEvent(event, PENDING,
+                                                    "Промежуточная таблица создана",
+                                                    50,
+                                                    "",
+                                                    errorReport));
         } catch (Exception e) {
             String msg = "Ошибка при импорте геометрии из shape файла: " + e.getMessage();
             log.error(msg);

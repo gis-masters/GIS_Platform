@@ -20,9 +20,9 @@ import static io.restassured.http.ContentType.JSON;
 import static java.lang.String.join;
 import static java.util.stream.Collectors.toList;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
+import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
@@ -249,6 +249,35 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
         List<Map<String, Object>> features = jsonPath.getList("");
         assertEquals(5, features.size());
+    }
+
+    @And("координаты были трансформированы из координатной системы \"EPSG:7829\" в \"EPSG:28406\"")
+    public void checkThatCRSWasTransformed() {
+        String geoserverPath = String.format("geoserver/wfs?service=wfs&version=2.0.0&request=GetFeature" +
+                                                     "&typeNames=scratch_database_%s:%s" +
+                                                     "&featureID=%s" +
+                                                     "&outputFormat=application/json", orgId, anotherTableName, 1);
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        basePath("/")
+                .get(geoserverPath);
+
+        jsonPath = response.jsonPath();
+        assertNotNull(jsonPath);
+
+        List<Map<String, Object>> featuresList = jsonPath.get("features");
+        assertFalse(featuresList.isEmpty());
+
+        Map<String, Object> firstFeature = featuresList.get(0);
+        assertTrue(firstFeature.containsKey("geometry"));
+
+        HashMap<String, Object> geometry = (HashMap<String, Object>) firstFeature.get("geometry");
+        List<Float> coordinates = (List<Float>) geometry.get("coordinates");
+
+        assertEquals(2, coordinates.size());
+        assertEquals("6581310.5", String.valueOf(coordinates.get(0)));
+        assertEquals("4971794.0", String.valueOf(coordinates.get(1)));
     }
 
     @And("Калькулируемые поля пересчитаны в связи с редактированием")

@@ -1,5 +1,6 @@
 package ru.mycrg.data_service_contract.queue.response;
 
+import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.queue.request.ShapeLoadedEvent;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusResponseEvent;
@@ -13,6 +14,7 @@ public class ShapeImportedSucceededEvent extends DefaultMessageBusResponseEvent 
     private String description;
     private int progress;
     private String payload;
+    private ErrorReport errorReport;
 
     public ShapeImportedSucceededEvent() {
         super();
@@ -22,7 +24,8 @@ public class ShapeImportedSucceededEvent extends DefaultMessageBusResponseEvent 
                                        ProcessStatus status,
                                        String description,
                                        int progress,
-                                       String payload) {
+                                       String payload,
+                                       ErrorReport errorReport) {
         super(event, GEO_WRAPPER_TO_DATA_QUEUE);
 
         this.status = status;
@@ -30,6 +33,7 @@ public class ShapeImportedSucceededEvent extends DefaultMessageBusResponseEvent 
         this.payload = payload;
         this.progress = progress;
         this.importGeometryShapeEvent = event;
+        this.errorReport = errorReport;
     }
 
     public ShapeLoadedEvent getImportGeometryShapeEvent() {
@@ -70,5 +74,13 @@ public class ShapeImportedSucceededEvent extends DefaultMessageBusResponseEvent 
 
     public void setPayload(String payload) {
         this.payload = payload;
+    }
+
+    public ErrorReport getErrorReport() {
+        return errorReport;
+    }
+
+    public void setErrorReport(ErrorReport errorReport) {
+        this.errorReport = errorReport;
     }
 }

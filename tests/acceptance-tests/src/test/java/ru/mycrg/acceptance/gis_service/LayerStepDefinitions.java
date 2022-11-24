@@ -29,6 +29,7 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileI
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFilePath;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
@@ -205,6 +206,24 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerCreateDto.setRecordId(currentDocumentId.longValue());
         String tableName = format("%s_%s__%s", layerCreateDto.getLibraryId(), currentDocumentId, currentFileId);
         layerCreateDto.setTableName(tableName);
+
+        super.createEntity(layerCreateDto);
+
+        layerId = extractEntityIdFromResponse(response);
+        layerComplexName = response.jsonPath().get("complexName");
+    }
+
+    @Given("существует векторный слой, на основе созданной таблицы, размещенный в проекте")
+    public void createVectorLayerOnCurrentTable() {
+        layerCreateDto = new LayerCreateDto("Тестовый вектор", "vector");
+
+        layerCreateDto.setSchemaId("advertising_point_simf_2022");
+        layerCreateDto.setStyleName("advertising_point_simf_2022");
+        layerCreateDto.setDataStoreName("scratch_database_" + orgId);
+        layerCreateDto.setDataset(currentDatasetIdentifier);
+        layerCreateDto.setMode("full");
+        layerCreateDto.setNativeCRS("EPSG:28406");
+        layerCreateDto.setTableName(anotherTableName);
 
         super.createEntity(layerCreateDto);
 

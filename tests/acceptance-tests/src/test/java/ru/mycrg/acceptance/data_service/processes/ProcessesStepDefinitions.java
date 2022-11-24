@@ -80,6 +80,17 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
         placeGeometryFromShape(shapePlacementModel, "transplogisticobj_point.zip");
     }
+    @When("администратор импортирует геометрию из shape файла, имеющую \"EPSG:7829\" в существующий слой")
+    public void tryImportGeometryShapeWithEPSG_7829AsProcessAsAdmin() {
+        authorizationBase.loginAsOwner();
+
+        GeometryShapePlacementModel shapePlacementModel = new GeometryShapePlacementModel();
+        shapePlacementModel.setDatasetId(currentDatasetIdentifier);
+        shapePlacementModel.setTableName(anotherTableName);
+        shapePlacementModel.setFileType("GEOMETRY_FROM_SHAPE");
+
+        placeGeometryFromShape(shapePlacementModel, "z_5_point.zip");
+    }
 
     @When("процесс завершается успешно")
     public void waitUntilCurrentProcessIsDone() {

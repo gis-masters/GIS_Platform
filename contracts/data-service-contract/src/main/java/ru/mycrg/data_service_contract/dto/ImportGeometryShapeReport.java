@@ -8,6 +8,9 @@ public class ImportGeometryShapeReport {
     private String reason;
     private String message;
     private Long quantityOfImportedRecords;
+    private Integer quantityOfFailedRecords;
+    private boolean shapeFileHasProjection;
+    private String sourceSrs;
 
     public ImportGeometryShapeReport() {
         // Required
@@ -59,5 +62,29 @@ public class ImportGeometryShapeReport {
 
     public void setQuantityOfImportedRecords(Long quantityOfImportedRecords) {
         this.quantityOfImportedRecords = quantityOfImportedRecords;
+    }
+
+    public Integer getQuantityOfFailedRecords() {
+        return quantityOfFailedRecords;
+    }
+
+    public void setQuantityOfFailedRecords(Integer quantityOfFailedRecords) {
+        this.quantityOfFailedRecords = quantityOfFailedRecords;
+    }
+
+    public boolean isShapeFileHasProjection() {
+        return shapeFileHasProjection;
+    }
+
+    public void setShapeFileHasProjection(boolean shapeFileHasProjection) {
+        this.shapeFileHasProjection = shapeFileHasProjection;
+    }
+
+    public String getSourceSrs() {
+        return sourceSrs;
+    }
+
+    public void setSourceSrs(String sourceSrs) {
+        this.sourceSrs = sourceSrs;
     }
 }

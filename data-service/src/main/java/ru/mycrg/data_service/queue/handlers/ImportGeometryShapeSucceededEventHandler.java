@@ -10,6 +10,7 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.JsonConverter;
+import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.dto.ImportGeometryShapeReport;
 import ru.mycrg.data_service_contract.queue.request.ShapeLoadedEvent;
 import ru.mycrg.data_service_contract.queue.response.ShapeImportedSucceededEvent;
@@ -48,6 +49,7 @@ public class ImportGeometryShapeSucceededEventHandler implements IEventHandler {
     public void handle(IMessageBusEvent mqEvent) {
         ShapeImportedSucceededEvent event = (ShapeImportedSucceededEvent) mqEvent;
         ShapeLoadedEvent requestEvent = event.getImportGeometryShapeEvent();
+        ErrorReport errorReport = event.getErrorReport();
         ImportGeometryShapeReport importGeometryReport = new ImportGeometryShapeReport();
 
         log.debug("In ShapeImportedSucceededEvent! {}", requestEvent);
@@ -70,6 +72,9 @@ public class ImportGeometryShapeSucceededEventHandler implements IEventHandler {
 
             importGeometryReport.setSuccess(true);
             importGeometryReport.setQuantityOfImportedRecords(insertedQuantity);
+            importGeometryReport.setQuantityOfFailedRecords(errorReport.getFailedRecordCount());
+            importGeometryReport.setShapeFileHasProjection(errorReport.isShpFileHasProjection());
+            importGeometryReport.setSourceSrs(requestEvent.getSrs());
 
             processService.complete(requestEvent.getDbName(),
                                     requestEvent.getProcessId(),
