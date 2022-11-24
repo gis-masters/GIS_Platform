@@ -1,12 +1,17 @@
 {
+  "env": { "node": true, "browser": true },
   "globals": {
     "WebdriverIO": true,
     "browser": true,
     "expect": true,
     "$$": true,
-    "$": true
+    "$": true,
+    "process": true
   },
   "parserOptions": {
     "project": "./tests/tsconfig.json"
+  },
+  "rules": {
+    "unicorn/prefer-node-protocol": 0
   }
 }

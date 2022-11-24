@@ -45,3 +45,6 @@ Thumbs.db
 # hermione
 .hermione.my-conf.js
 /my
+
+# tests
+tests/_screens/.tmp

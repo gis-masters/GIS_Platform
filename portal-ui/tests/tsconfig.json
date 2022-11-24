@@ -2,7 +2,14 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "types": ["node", "webdriverio/async", "@wdio/cucumber-framework", "expect-webdriverio"],
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "node",
+      "webdriverio/async",
+      "expect-webdriverio",
+      "@wdio/cucumber-framework",
+      "wdio-image-comparison-service"
+    ],
     "target": "es2020"
   }
 }

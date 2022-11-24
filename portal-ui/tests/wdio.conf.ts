@@ -1,4 +1,28 @@
 import type { Options } from '@wdio/types';
+import { networkInterfaces } from 'os';
+
+export function getMyOfficeIp(): string | undefined {
+  const nets = networkInterfaces();
+  const officeSubnet = /^(?:10\.){3}\d{1,3}$/;
+  const vpnSubnet = /^192.168.40.\d{1,3}$/;
+
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+      // 'IPv4' is in Node <= 17, from 18 it's a number 4 or 6
+      const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4;
+      const isNotInternalV4 = net.family === familyV4Value && !net.internal;
+
+      if (isNotInternalV4 && officeSubnet.test(net.address)) {
+        return net.address;
+      }
+
+      if (isNotInternalV4 && vpnSubnet.test(net.address)) {
+        return net.address;
+      }
+    }
+  }
+}
 
 export const config: Options.Testrunner = {
   //
@@ -99,8 +123,9 @@ export const config: Options.Testrunner = {
       //
       browserName: 'chrome',
       acceptInsecureCerts: true,
+      setWindowRect: true,
       'goog:chromeOptions': {
-        args: ['--headless']
+        args: ['--headless', 'window-size=1300,900']
       }
       // If outputDir is provided WebdriverIO can capture driver session logs
       // it is possible to configure which logTypes to include/exclude.
@@ -155,7 +180,21 @@ export const config: Options.Testrunner = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: ['image-comparison'],
+  services: [
+    [
+      'image-comparison',
+      {
+        baselineFolder: './tests/_screens/',
+        formatImageName: '{tag}',
+        screenshotPath: './tests/_screens/.tmp/',
+        clearRuntimeFolder: true,
+        savePerInstance: true,
+        autoSaveBaseline: true,
+        blockOutStatusBar: true,
+        blockOutToolBar: true
+      }
+    ]
+  ],
 
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
@@ -183,7 +222,7 @@ export const config: Options.Testrunner = {
   // If you are using Cucumber you need to specify the location of your step definitions.
   cucumberOpts: {
     // <string[]> (file/dir) require files before executing features
-    require: ['./tests/objects/**/*.ts'],
+    require: ['./tests/_objects/**/*.ts'],
     // <boolean> show full backtrace for errors
     backtrace: false,
     // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)

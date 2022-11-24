@@ -2,7 +2,7 @@
   "platform": "conv",
   "production": false,
   "server": {
-    "host": "localhost",
+    "host": "",
     "port": "8100",
     "wsPort": "8084",
     "path": "",
