@@ -27,7 +27,7 @@ export class PermissionsEditDialogRoleSelect extends Component<PermissionsEditDi
     return (
       <Select
         className={cnPermissionsEditDialogRoleSelect()}
-        value={this.getPrincipalRole}
+        value={this.principalRole}
         onChange={this.changeHandler}
         variant='standard'
       >
@@ -41,7 +41,7 @@ export class PermissionsEditDialogRoleSelect extends Component<PermissionsEditDi
   }
 
   @computed
-  private get getPrincipalRole(): Role {
+  private get principalRole(): Role {
     const { principalId, principalType, currentPermissions } = this.props;
 
     return currentPermissions.reduce((role: Role, permission: RoleAssignmentBody) => {

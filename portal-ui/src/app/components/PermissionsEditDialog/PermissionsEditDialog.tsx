@@ -51,7 +51,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
       title: 'Разрешения',
       cellProps: { padding: 'checkbox' },
       align: 'right',
-      CellContent: this.renderUserRoleSelect
+      CellContent: observer(this.renderUserRoleSelect)
     },
     {
       title: 'Действия',
@@ -85,7 +85,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
       title: 'Разрешения',
       cellProps: { padding: 'checkbox' },
       align: 'right',
-      CellContent: this.renderGroupRoleSelect
+      CellContent: observer(this.renderGroupRoleSelect)
     },
     {
       title: 'Действия',
