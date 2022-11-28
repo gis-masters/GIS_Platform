@@ -24,7 +24,26 @@ export async function isReadAllowed(layer: CrgLayer): Promise<boolean> {
 
   if (layer.type === CrgLayerType.VECTOR) {
     return await isFeaturesReadAllowed(layer.dataset, layer.tableName);
-  } else if (layer.type === CrgLayerType.RASTER) {
+  } else if (layer.type === CrgLayerType.RASTER || layer.type === CrgLayerType.VECTOR_FROM_FILE) {
+    return await isRasterReadAllowed(layer.libraryId, layer.recordId);
+  }
+
+  return false;
+}
+
+export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
+  const schema: Schema = await schemaService.getSchema(layer.schemaId);
+  if (!schema) {
+    return false;
+  }
+
+  if (schema.readOnly) {
+    return false;
+  }
+
+  if (layer.type === CrgLayerType.VECTOR) {
+    return await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, layer.schemaId);
+  } else if (layer.type === CrgLayerType.RASTER || layer.type === CrgLayerType.VECTOR_FROM_FILE) {
     return await isRasterReadAllowed(layer.libraryId, layer.recordId);
   }
 
@@ -46,25 +65,6 @@ export async function isShapeImportAllowed(datasetIdentifier: string, tableIdent
   const role = table?.role;
 
   return !!(currentUser.isAdmin || role === Role.OWNER || role === Role.CONTRIBUTOR);
-}
-
-export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
-  const schema: Schema = await schemaService.getSchema(layer.schemaId);
-  if (!schema) {
-    return false;
-  }
-
-  if (schema.readOnly) {
-    return false;
-  }
-
-  if (layer.type === CrgLayerType.VECTOR) {
-    return await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, layer.schemaId);
-  } else if (layer.type === CrgLayerType.RASTER || layer.type === CrgLayerType.VECTOR_FROM_FILE) {
-    return await isRasterReadAllowed(layer.libraryId, layer.recordId);
-  }
-
-  return false;
 }
 
 export async function isRasterReadAllowed(libraryId: string, recordId: number): Promise<boolean> {

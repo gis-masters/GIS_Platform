@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { IClassNameProps } from '@bem-react/core';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { Share } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
@@ -10,8 +10,7 @@ import { copyToClipboard } from '../../services/util/clipboard.util';
 import { getFeatureUrl } from '../../services/map/map-url.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { Toast } from '../Toast/Toast';
-
-import '!style-loader!css-loader!sass-loader!./CopyUrlButton.scss';
+import { IconButton } from '../IconButton/IconButton';
 
 const cnCopyUrlButton = cn('CopyUrlButton');
 
@@ -34,7 +33,7 @@ export class CopyUrlButton extends Component<CopyUrlButtonProps> {
         <IconButton
           className={cnCopyUrlButton({ in: inHeader ? 'header' : 'sidebar' })}
           onClick={this.clickHandler}
-          color={inHeader ? 'inherit' : 'default'}
+          color={inHeader ? 'inherit' : undefined}
         >
           <Share />
         </IconButton>

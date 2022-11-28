@@ -1,10 +1,10 @@
 import React, { Component, CSSProperties } from 'react';
-import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { IconButton, Tooltip } from '@mui/material';
-import { ArrowForward } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
+import { ArrowForward } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
+import { observable, action, makeObservable } from 'mobx';
 
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
@@ -58,7 +58,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
           {errorData ? errorData.message : this.title}
         </div>
         <div className={cnFeaturesListItem('Layer')}>{errorData ? errorData.layerTitle : this.layerTitle}</div>
-        {!errorData ? (
+        {!errorData && (
           <div className={cnFeaturesListItem('Buttons')}>
             <ZoomToFeature feature={feature} onClick={this.zoomHandler} />
             <Tooltip title='Открыть'>
@@ -67,7 +67,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
               </IconButton>
             </Tooltip>
           </div>
-        ) : null}
+        )}
       </div>
     );
   }

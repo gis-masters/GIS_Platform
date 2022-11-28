@@ -3,19 +3,19 @@ import { createRoot, Root } from 'react-dom/client';
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
-import { FeatureExtract } from '../FeatureExtract/FeatureExtract';
+import { registry } from '../../services/di-registry';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { CrgVectorLayer } from '../../services/gis/projects.models';
-import { registry } from '../../services/di-registry';
+import { EditFeatureActions } from '../EditFeatureActions/EditFeatureActions';
 
-const FeatureExtractWithRegistry = withRegistry(registry)(FeatureExtract);
+const EditFeatureActionsName = withRegistry(registry)(EditFeatureActions);
 
 @Component({
-  selector: 'crg-feature-extract',
-  template: '<div class="feature-extract" #react></div>',
-  styleUrls: ['./feature-extract.component.scss']
+  selector: 'crg-edit-feature-actions',
+  template: '<div class="edit-feature-actions" #react></div>',
+  styleUrls: ['./edit-feature-actions.component.scss']
 })
-export class FeatureExtractComponent implements OnInit, OnDestroy, OnChanges {
+export class EditFeatureActionsComponent implements OnInit, OnDestroy, OnChanges {
   @Input() feature: WfsFeature;
   @Input() layer: CrgVectorLayer;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
@@ -35,7 +35,7 @@ export class FeatureExtractComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(FeatureExtractWithRegistry, {
+    const reactElement = createElement(EditFeatureActionsName, {
       feature: this.feature,
       layer: this.layer
     });

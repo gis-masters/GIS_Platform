@@ -337,7 +337,7 @@ export async function updateVectorTable(
   communicationService.vectorTablesUpdated.emit();
 }
 
-export async function copyFeatures(
+export async function copyFeaturesBetweenLayers(
   sourceLayer: CrgLayer,
   targetLayer: CrgLayer,
   features: WfsFeature[]
@@ -357,6 +357,7 @@ export async function copyFeatures(
   };
 
   await http.post(await getRecordsCopyUrl(), copyTablesInfo);
+
   communicationService.featuresUpdated.emit();
 }
 

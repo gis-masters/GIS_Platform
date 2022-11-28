@@ -20,8 +20,6 @@ import {
   WfsPointGeometry
 } from '../../services/geoserver/wfs.models';
 
-import '!style-loader!css-loader!sass-loader!./XmlDownload.scss';
-
 const cnXmlDownload = cn('XmlDownload');
 
 export interface XmlDownloadProps {

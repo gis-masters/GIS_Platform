@@ -129,12 +129,12 @@ public class DocumentLibraryRecordsController {
 
         Map<String, Object> body = deserializeBody(jsonBody);
         SchemaDto schema = libraryService.getSchema(docLibId);
-        schemaService.throwIfNotMatchSchema(schema, body);
+        Map<String, Object> props = schemaService.excludeUnknownProperties(schema, body);
 
         IRecord record = mediator.execute(
                 new CreateLibraryRecordRequest(schema,
                                                new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY),
-                                               new RecordEntity(body),
+                                               new RecordEntity(props),
                                                file));
 
         return new ResponseEntity<>(record.getContent(), CREATED);
@@ -175,10 +175,11 @@ public class DocumentLibraryRecordsController {
     }
 
     private void checkSortedFields(String docLibId, Pageable pageable) {
-        HashMap<String, Object> body = new HashMap<>();
+        Map<String, Object> body = new HashMap<>();
         pageable.getSort().forEach(order -> body.put(order.getProperty(), ""));
 
         String schemaId = libraryService.getInfo(docLibId).getSchemaId();
+
         schemaService.throwIfNotMatchSchema(schemaId, body);
     }
 

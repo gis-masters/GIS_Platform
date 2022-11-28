@@ -1,41 +1,31 @@
 import React, { Component } from 'react';
-import { AxiosError } from 'axios';
 import { observer } from 'mobx-react';
 import { pluralize } from 'numeralize-ru';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { action, computed, makeObservable, observable } from 'mobx';
-import { ContentCopyOutlined, DeleteOutlined, EditOutlined } from '@mui/icons-material';
+import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogContentText, Tooltip } from '@mui/material';
 
-import { copyFeatures, deleteFeatures } from '../../../services/data/data.service';
+import { AttributesBarActionExport } from '../BarActionExport/Attributes-BarActionExport';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { CrgLayer, CrgVectorLayer } from '../../../services/gis/projects.models';
+import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton';
 import { isUpdateAllowed } from '../../../services/data/permissions.service';
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
-import { schemaService } from '../../../services/data/schema.service';
-import { currentProject } from '../../../stores/CurrentProject.store';
+import { CrgVectorLayer } from '../../../services/gis/projects.models';
+import { deleteFeatures } from '../../../services/data/data.service';
 import { WfsFeature } from '../../../services/geoserver/wfs.models';
-import { ChooseXTable } from '../../ChooseXTable/ChooseXTable';
+import { AttributesTableRecord } from '../Table/Attributes-Table';
 import { mapService } from '../../../services/map/map.service';
 import { IconButton } from '../../IconButton/IconButton';
 import { PageOptions } from '../../../services/models';
 import { XTableColumn } from '../../XTable/XTable';
 import { Button } from '../../Button/Button';
-import { Toast } from '../../Toast/Toast';
-
-import { AttributesBarActionExport } from '../BarActionExport/Attributes-BarActionExport';
-import { AttributesTableRecord } from '../Table/Attributes-Table';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-BarActions.scss';
 
 const cnAttributesBarActions = cn('Attributes', 'BarActions');
-
-interface CopyErrors {
-  field: string;
-  message: string[];
-}
 
 interface AttributesBarActionsProps {
   layer: CrgVectorLayer;
@@ -47,20 +37,10 @@ interface AttributesBarActionsProps {
 
 @observer
 export class AttributesBarActions extends Component<AttributesBarActionsProps> {
-  @observable private multipleCopyDialogOpen = false;
   @observable private multipleDeleteDialogOpen = false;
   @observable private featuresUpdateAllowed = false;
-  @observable private multipleCopyTargetLayer: CrgVectorLayer;
-  @observable private layersAvailableForCopy: CrgVectorLayer[];
-  private operationId: symbol;
 
-  private readonly layerDialogCols: XTableColumn<CrgLayer>[] = [
-    {
-      field: 'title',
-      title: 'Название',
-      filterable: true
-    }
-  ];
+  private operationId: symbol;
 
   constructor(props: AttributesBarActionsProps) {
     super(props);
@@ -83,7 +63,6 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
     const { layer, cols, pageOptions, featuresTotal, getData } = this.props;
     const count = this.selectedFeatures.length;
     const objLabel = ` ${count} объект${pluralize(count, '', 'а', 'ов')}`;
-    const objToOtherLabel = objLabel + ' в другой слой';
 
     return (
       <div className={cnAttributesBarActions()}>
@@ -97,11 +76,11 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
               </Tooltip>
             )}
 
-            <Tooltip title={`Копировать${objToOtherLabel}`}>
-              <IconButton size='small' onClick={this.openMultipleCopyDialog}>
-                <ContentCopyOutlined fontSize='small' />
-              </IconButton>
-            </Tooltip>
+            <CopyFeaturesButton
+              tooltipTitle={`Копировать${objLabel} в другой слой`}
+              layer={layer}
+              features={this.selectedFeatures}
+            />
 
             {this.featuresUpdateAllowed && (
               <Tooltip title={`Удалить${objLabel}`}>
@@ -112,7 +91,6 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
             )}
           </>
         )}
-
         {!!featuresTotal && (
           <AttributesBarActionExport
             layer={layer}
@@ -122,7 +100,6 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
             getData={getData}
           />
         )}
-
         <Dialog open={this.multipleDeleteDialogOpen} onClose={this.closeMultipleDeleteDialog}>
           <DialogContent>
             <DialogContentText>Вы действительно хотите удалить {objLabel}?</DialogContentText>
@@ -132,28 +109,6 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
               Удалить
             </Button>
             <Button onClick={this.closeMultipleDeleteDialog}>Отмена</Button>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog open={this.multipleCopyDialogOpen} onClose={this.closeMultipleCopyDialog} maxWidth='lg'>
-          <DialogContent>
-            <DialogContentText>
-              Для копирования доступны только слои с тем же типом геометрии, что исходный слой и в той же проекции{' '}
-              {layer.nativeCRS}
-            </DialogContentText>
-            <ChooseXTable<CrgLayer>
-              data={this.layersAvailableForCopy}
-              cols={this.layerDialogCols}
-              onSelect={this.onSelect}
-              single
-              filterable
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.multipleCopy} color='primary'>
-              Копировать
-            </Button>
-            <Button onClick={this.closeMultipleCopyDialog}>Отмена</Button>
           </DialogActions>
         </Dialog>
       </div>
@@ -188,60 +143,6 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
     mapService.refreshAllLayers();
   }
 
-  @boundMethod
-  private async multipleCopy() {
-    try {
-      const features: WfsFeature[] = mapStore.selectedFeaturesByTableName[this.props.layer.tableName];
-
-      await copyFeatures(this.props.layer, this.multipleCopyTargetLayer, features);
-      this.closeMultipleCopyDialog();
-
-      Toast.success(
-        `Успешно ${pluralize(features.length, 'скопирован', 'скопировано', 'скопировано')} ${
-          features.length
-        } ${pluralize(features.length, 'объект', 'объекта', 'объектов')}`
-      );
-    } catch (error) {
-      const err = error as AxiosError<{ errors: CopyErrors[]; message?: string }>;
-
-      Toast.error({
-        message: err?.response?.data?.message,
-        details: err?.response?.data?.errors?.map(item => item.message).join('. ')
-      });
-    }
-  }
-
-  private async fetchAvailableForCopyingLayers() {
-    const schemas = await Promise.all(
-      currentProject.vectorLayers.map(({ schemaId }) => schemaService.getSchema(schemaId))
-    );
-
-    const currentLayer = this.props.layer;
-    const currentSchema = await schemaService.getSchema(currentLayer.schemaId);
-
-    const layersUpdatePermissions = [];
-    for (const layer of currentProject.vectorableLayers) {
-      layersUpdatePermissions.push(await isUpdateAllowed(layer));
-    }
-
-    this.setLayersAvailableForCopy(
-      currentProject.vectorLayers.filter((layer, i) => {
-        if (!schemas[i]) {
-          return false;
-        }
-
-        const { geometryType } = schemas[i];
-
-        return (
-          currentLayer.complexName !== layer.complexName &&
-          currentLayer.nativeCRS === layer.nativeCRS &&
-          currentSchema.geometryType === geometryType &&
-          layersUpdatePermissions[i]
-        );
-      })
-    );
-  }
-
   private async init() {
     const operationId = Symbol();
     this.operationId = operationId;
@@ -251,27 +152,6 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
     if (this.operationId === operationId) {
       this.setFeaturesUpdateAllowed(updateAllowed);
     }
-  }
-
-  @action.bound
-  private setLayersAvailableForCopy(layersAvailableForCopy: CrgVectorLayer[]) {
-    this.layersAvailableForCopy = layersAvailableForCopy;
-  }
-
-  @action.bound
-  private onSelect([layer]: CrgVectorLayer[]) {
-    this.multipleCopyTargetLayer = layer;
-  }
-
-  @action.bound
-  private async openMultipleCopyDialog() {
-    await this.fetchAvailableForCopyingLayers();
-    this.multipleCopyDialogOpen = true;
-  }
-
-  @action.bound
-  private closeMultipleCopyDialog() {
-    this.multipleCopyDialogOpen = false;
   }
 
   @action.bound

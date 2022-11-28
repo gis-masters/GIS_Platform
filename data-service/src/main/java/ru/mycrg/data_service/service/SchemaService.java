@@ -9,6 +9,7 @@ import ru.mycrg.data_service.mappers.SchemaMapper;
 import ru.mycrg.data_service.repository.DataSchemaRepository;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -61,22 +62,31 @@ public class SchemaService {
                                .isPresent();
     }
 
-    public void throwIfNotMatchSchema(String schemaName, Map<String, Object> body) {
-        getSchemaByName(schemaName)
-                .ifPresentOrElse(
-                        schema -> throwIfNotMatchSchema(schema, body),
-                        () -> {
-                            throw new BadRequestException("Не найдена схема: " + schemaName);
-                        });
+    public void throwIfNotMatchSchema(String schemaName, Map<String, Object> props) {
+        SchemaDto schema = getSchemaByName(schemaName)
+                .orElseThrow(() -> new BadRequestException("Не найдена схема: " + schemaName));
+
+        throwIfNotMatchSchema(schema, props);
     }
 
-    public void throwIfNotMatchSchema(SchemaDto schema, Map<String, Object> body) {
-        body.keySet().forEach(key -> {
+    public void throwIfNotMatchSchema(SchemaDto schema, Map<String, Object> props) {
+        props.keySet().forEach(key -> {
             if (!isPropertyExist(schema, key)) {
                 throw new BadRequestException("Свойства не соответствуют схеме",
                                               new ErrorInfo(key, "Данное свойство отсутствует в схеме"));
             }
         });
+    }
+
+    public Map<String, Object> excludeUnknownProperties(SchemaDto schema, Map<String, Object> props) {
+        Map<String, Object> result = new HashMap<>();
+        props.forEach((key, value) -> {
+            if (isPropertyExist(schema, key)) {
+                result.put(key, value);
+            }
+        });
+
+        return result;
     }
 
     /**

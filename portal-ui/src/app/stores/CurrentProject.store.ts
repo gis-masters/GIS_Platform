@@ -78,13 +78,7 @@ class CurrentProject implements CrgProjectData {
         payload: group,
         isGroup: true
       })),
-      ...this.vectorLayers.map(layer => ({
-        id: layer.id,
-        payload: layer,
-        isGroup: false,
-        errors: this.layersErrors[layer.complexName]
-      })),
-      ...this.vectorFromFileLayers.map(layer => ({
+      ...this.vectorableLayers.map(layer => ({
         id: layer.id,
         payload: layer,
         isGroup: false,

@@ -119,7 +119,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!editMode && (this.isVectorLayer || this.isVectorFromFileLayer) && (
+          {!editMode && this.isVectorLayer && (
             <MenuItem onClick={this.openAttributeTable}>
               <ListItemIcon>
                 <ListAlt />

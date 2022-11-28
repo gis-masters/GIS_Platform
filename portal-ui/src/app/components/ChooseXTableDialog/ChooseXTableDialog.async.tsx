@@ -3,7 +3,7 @@ import { isEqual } from 'lodash';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, computed, observable, makeObservable } from 'mobx';
-import { Dialog, DialogActions, DialogContent } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
@@ -22,6 +22,7 @@ const cnChooseXTableDialog = cn('ChooseXTableDialog');
 
 export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   title: string;
+  description?: string;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   open: boolean;
   data: T[];
@@ -60,6 +61,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
     const {
       className,
       title,
+      description,
       open,
       data,
       defaultSort,
@@ -76,6 +78,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
     return (
       <Dialog PaperProps={{ className: cnChooseXTableDialog(null, [className]) }} open={open} onClose={this.close}>
         <DialogContent>
+          <DialogContentText>{description}</DialogContentText>
           <ChooseXTable<T>
             className={cnChooseXTableDialog('Table')}
             title={title}

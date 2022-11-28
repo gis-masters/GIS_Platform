@@ -12,8 +12,6 @@ import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { CrgProject } from '../../services/gis/projects.models';
 import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
 
-import '!style-loader!css-loader!sass-loader!./OpenInAnotherProject.scss';
-
 const cnOpenInAnotherProject = cn('OpenInAnotherProject');
 
 interface OpenInAnotherProjectProps {

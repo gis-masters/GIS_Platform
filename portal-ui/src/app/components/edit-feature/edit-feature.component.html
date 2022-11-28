@@ -50,31 +50,10 @@
       </mat-tab-group>
     </ng-container>
 
-    <crg-copy-url-button [feature]="features" class="copy-url-button"> </crg-copy-url-button>
-
-    <crg-zoom-to-feature
-      class="zoom-to-feature"
-      [feature]="features[0]"
-      *ngIf="mode === 'single' && !isNew && features"
-    >
-    </crg-zoom-to-feature>
-
-    <crg-open-in-another-project
-      *ngIf="mode === 'single' && !isNew && features"
-      [features]="features"
-    ></crg-open-in-another-project>
-
-    <crg-xml-download
-      *ngIf="mode === 'single' && !isNew && features"
+    <crg-edit-feature-actions
       [feature]="features[0]"
       [layer]="layer"
-    ></crg-xml-download>
-
-    <crg-feature-extract
-      *ngIf="mode === 'single' && !isNew && features"
-      [feature]="features[0]"
-      [layer]="layer"
-    ></crg-feature-extract>
+    ></crg-edit-feature-actions>
   </div>
 </div>
 

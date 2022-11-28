@@ -340,7 +340,9 @@ export default class XTable<T> extends Component<XTableProps<T>> {
       data = filterObjects(data, this.filterQuery);
     }
 
-    return field ? sortObjects(data, field, asc, secondarySortField) : data;
+    const result = field ? sortObjects(data, field, asc, secondarySortField) : data;
+
+    return result || [];
   }
 
   @computed

@@ -21,7 +21,7 @@ const cnChooseXTable = cn('ChooseXTable');
 interface ChooseXTableBaseProps<T> extends IClassNameProps {
   title?: string;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
-  data: T[];
+  data?: T[];
   selectedItems?: T[];
   disabledItems?: T[];
   cols: XTableColumn<T>[];
@@ -34,7 +34,7 @@ interface ChooseXTableBaseProps<T> extends IClassNameProps {
 }
 
 interface ChooseXTableSyncProps<T> extends ChooseXTableBaseProps<T> {
-  data: T[];
+  data?: T[];
 }
 
 interface ChooseXTableAsyncProps<T> extends ChooseXTableBaseProps<T> {
@@ -52,7 +52,7 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
     super(props);
     makeObservable(this);
 
-    this.setViewed([...props.data]);
+    this.setViewed([...(props.data || [])]);
     this.setSelected([...(props.selectedItems || [])]);
   }
 

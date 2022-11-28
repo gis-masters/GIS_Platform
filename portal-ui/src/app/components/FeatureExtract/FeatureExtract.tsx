@@ -1,30 +1,28 @@
 import React, { Component } from 'react';
 import { action, computed, observable, makeObservable } from 'mobx';
-import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
 import { NoteAddOutlined } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
 
-import { currentProject } from '../../stores/CurrentProject.store';
 import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
-import { getDefaultValues, validateFormValue } from '../../services/formValidation.service';
 import { convertOldToNewProperties, applyContentTypeOld } from '../../services/data/schema.utils';
+import { getDefaultValues, validateFormValue } from '../../services/formValidation.service';
+import { LibraryDocumentDialog } from '../LibraryDocumentDialog/LibraryDocumentDialog';
 import { PropertySchema, PropertyType } from '../../services/data/schema.models';
 import { communicationService } from '../../services/communication.service';
 import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { getFeatureUrl } from '../../services/map/map-url.service';
 import { schemaService } from '../../services/data/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { Role } from '../../services/data/permissions.models';
-import { LibraryDocumentDialog } from '../LibraryDocumentDialog/LibraryDocumentDialog';
 import { FormDialog } from '../FormDialog/FormDialog';
-import { Toast } from '../Toast/Toast';
 
+import { services } from '../../services/services';
 import { FeatureExtractMapSelector } from './MapSelector/FeatureExtract-MapSelector';
-
-import '!style-loader!css-loader!sass-loader!./FeatureExtract.scss';
 
 const cnFeatureExtract = cn('FeatureExtract');
 
@@ -54,10 +52,8 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
       this.setLibrary(await getLibrary(libraryIdentifier));
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
-      Toast.error({
-        message: `Ошибка доступа к библиотеке документов ${libraryIdentifier}. [${err.message}]`,
-        details: err.response.data?.message
-      });
+
+      services.logger.warn(`Ошибка доступа к библиотеке документов ${libraryIdentifier}. [${err.message}]`, error);
     }
     const featureSchema = await schemaService.getOldSchema(layer.schemaId);
     this.setFields(convertOldToNewProperties(featureSchema.properties));

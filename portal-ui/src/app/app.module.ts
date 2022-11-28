@@ -52,7 +52,6 @@ import { EditFeatureFieldComponent } from './components/edit-feature-field/edit-
 import { EditFeatureGeometryComponent } from './components/edit-feature-geometry/edit-feature-geometry.component';
 import { FeaturesListSidebarComponent } from './components/features-list-sidebar/features-list-sidebar.component';
 import { ReValidateButtonComponent } from './components/reValidateButton/reValidateButton.component';
-import { ZoomToFeatureComponent } from './components/zoom-to-feature/zoom-to-feature.component';
 import { OrgAdminComponent } from './components/org-admin/org-admin.component';
 import { EditFeatureConfirmComponent } from './components/edit-feature-confirm/edit-feature-confirm.component';
 import { BasemapsSelectComponent } from './components/basemaps-select/basemaps-select.component';
@@ -63,21 +62,19 @@ import { CopyUrlButtonComponent } from './components/copy-url-button/copy-url-bu
 import { ExportValidationReportButtonComponent } from './components/export-validation-report-button/export-validation-report-button.component';
 import { LoginFormDialogComponent } from './components/login-form-dialog/login-form-dialog.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
-import { OpenInAnotherProjectComponent } from './components/open-in-another-project/open-in-another-project.component';
 import { ImportGmlResultButtonComponent } from './components/import-gml-results-button/import-gml-result-button';
 import { LibraryRegistryComponent } from './components/library-registry/library-registry.component';
-import { XmlDownloadComponent } from './components/xml-download/xml-download.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { FormControlComponent } from './components/form-control/form-control.component';
 import { LibraryDocumentPageContainerComponent } from './components/library-document-page-container/library-document-page-container.component';
 import { ServicesCalculatorComponent } from './components/services-calculator/services-calculator.component';
-import { FeatureExtractComponent } from './components/feature-extract/feature-extract.component';
 import { FormDescriptionComponent } from './components/form-description/form-description.component';
 import { RestorePasswordFormComponent } from './components/restore-password-form/restore-password-form.component';
 import { ChangePasswordFormComponent } from './components/change-password-form/change-password-form.component';
 import { RelationsButtonComponent } from './components/relations-button/relations-button.component';
 import { FeaturesSidebarTeaserComponent } from './components/features-sidebar-teaser/features-sidebar-teaser.component';
 import { SystemManagementComponent } from './components/system-management/system-management.component';
+import { EditFeatureActionsComponent } from './components/edit-feature-actions/edit-feature-actions.component';
 
 @NgModule({
   declarations: [
@@ -117,7 +114,6 @@ import { SystemManagementComponent } from './components/system-management/system
     FeaturesListSidebarComponent,
     ReValidateButtonComponent,
     EditFeatureGeometryComponent,
-    ZoomToFeatureComponent,
     OrgAdminComponent,
     EditFeatureConfirmComponent,
     BasemapsSelectComponent,
@@ -128,21 +124,19 @@ import { SystemManagementComponent } from './components/system-management/system
     ExportValidationReportButtonComponent,
     LoginFormComponent,
     RestorePasswordFormComponent,
-    OpenInAnotherProjectComponent,
     FooterComponent,
     ImportGmlResultButtonComponent,
     LibraryRegistryComponent,
     LibraryDocumentPageContainerComponent,
-    XmlDownloadComponent,
     FormControlComponent,
     ServicesCalculatorComponent,
-    FeatureExtractComponent,
     FormDescriptionComponent,
     ChangePasswordFormComponent,
     FormDescriptionComponent,
     RelationsButtonComponent,
     FeaturesSidebarTeaserComponent,
-    SystemManagementComponent
+    SystemManagementComponent,
+    EditFeatureActionsComponent
   ],
   imports: [
     HttpClientModule,

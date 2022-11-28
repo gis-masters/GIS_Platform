@@ -69,7 +69,8 @@ public class TableRecordsController {
                                         .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
 
         feature.setSrs(table.getCrs());
-        schemaService.throwIfNotMatchSchema(schema, feature.getProperties());
+        Map<String, Object> props = schemaService.excludeUnknownProperties(schema, feature.getProperties());
+        feature.setProperties(props);
 
         Feature newFeature = mediator.execute(
                 new CreateTableRecordRequest(schema,
@@ -89,9 +90,11 @@ public class TableRecordsController {
         IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
         SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
                                         .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
-        schemaService.throwIfNotMatchSchema(schema, feature.getProperties());
+        Map<String, Object> props = schemaService.excludeUnknownProperties(schema, feature.getProperties());
 
         feature.setSrs(table.getCrs());
+        feature.setProperties(props);
+
         mediator.execute(
                 new UpdateTableRecordRequest(schema,
                                              new ResourceQualifier(datasetId, tableId, recordId, FEATURE),
@@ -110,11 +113,11 @@ public class TableRecordsController {
         IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
         SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
                                         .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
-        schemaService.throwIfNotMatchSchema(schema, properties);
+        Map<String, Object> props = schemaService.excludeUnknownProperties(schema, properties);
 
         mediator.execute(
                 new UpdateMultipleTableRecordRequest(new ResourceQualifier(datasetId, tableId),
-                                                     properties,
+                                                     props,
                                                      schema,
                                                      recordIds));
 
