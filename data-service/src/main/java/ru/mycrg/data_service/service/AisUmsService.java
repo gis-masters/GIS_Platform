@@ -51,14 +51,15 @@ public class AisUmsService {
     }
 
     // Обновляем данные в таблицах конкретного датасета - "СТП Крыма" - workspace_789
-    // Слои из "СТП Крыма" подключены в  остальные проекты
+    // Слои из "СТП Крыма" подключены в остальные проекты
     public void updateAisUmsColumnsInStpDataset(List<AisUmsDto> aisUmsData) {
         String datasetName = "workspace_789";
-        List<String> schemasName = Arrays.asList("oks_building",
-                                                 "oks_constructions",
+        List<String> schemasName = Arrays.asList("oks_constructions",
                                                  "oks_constructions_polyline",
-                                                 "oks_unfinished",
-                                                 "zu2");
+                                                 "oks_polyline_pro",
+                                                 "zu_pro",
+                                                 "oks_constructions_points",
+                                                 "oks_pro");
         try {
             aisUmsDao.getAllTablesNameBySchemas(datasetName, schemasName).stream()
                      .map(tableName -> new ResourceQualifier(datasetName, tableName))
