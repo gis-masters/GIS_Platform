@@ -1,7 +1,7 @@
 import escapeStringRegexp from 'escape-string-regexp';
 import sift from 'sift';
 
-export type FilterQueryValue = string | number | boolean | (string | number | boolean)[] | RegExp;
+export type FilterQueryValue = string | number | boolean | (string | number | boolean)[] | RegExp | string[];
 
 export interface FilterQuery {
   [key: string]: FilterQueryValue | FilterQuery | FilterQuery[];

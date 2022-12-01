@@ -17,7 +17,15 @@ import { Loading } from '../Loading/Loading';
 
 import { ExplorerStore } from './Explorer.store';
 import { ExplorerService } from './Explorer.service';
-import { emptyItem, ExplorerItemData, ExplorerItemType, KeyAction, keyActions, loadingItem } from './Explorer.models';
+import {
+  CustomFilters,
+  emptyItem,
+  ExplorerItemData,
+  ExplorerItemType,
+  KeyAction,
+  keyActions,
+  loadingItem
+} from './Explorer.models';
 import {
   getChildById,
   getChildrenSortDefaultOrder,
@@ -59,6 +67,7 @@ export interface ExplorerProps extends IClassNameProps {
   fixedHeight?: boolean;
   urlChangeEnabled?: boolean;
   libraryViewSwitch?: ReactNode;
+  customFilters?: CustomFilters;
   onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   onOpen?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   disabledTester?(item: ExplorerItemData): Promise<boolean> | boolean;
@@ -79,6 +88,7 @@ export default class Explorer extends Component<ExplorerProps> {
     super(props);
     this.store = new ExplorerStore(props.id);
     this.service = new ExplorerService(this.store);
+    this.store.setCustomFilters(props.customFilters || {});
     this.init(props);
   }
 

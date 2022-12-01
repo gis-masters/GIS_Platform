@@ -86,14 +86,16 @@ export class ExplorerAdapterTypeFolder {
 
   static async getChildren(
     explorerItem: ExplorerItemData<LibraryRecord>,
-    { filter, ...options }: PageOptions
+    { filter, ...options }: PageOptions,
+    store: ExplorerStore,
+    service: ExplorerService
   ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
     const result: ExplorerItemData<LibraryRecord>[] = [];
     const { libraryId, schemaId, id } = explorerItem.payload;
 
     const [libraryRecords, pagesCount] = await getLibraryRecords(libraryId, schemaId, {
       ...options,
-      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
+      filter: service.mergeCustomFilter(filter, explorerItem, store),
       queryParams: { parent: id }
     });
 
@@ -117,11 +119,13 @@ export class ExplorerAdapterTypeFolder {
   static async getChildrenWithParticularOne(
     item: ExplorerItemData<LibraryRecord>,
     { filter, page, ...options }: PageOptions,
-    id: string
+    id: string,
+    store: ExplorerStore,
+    service: ExplorerService
   ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
     const response = await getLibraryRecordsWithParticularOne(item.payload.libraryId, item.payload.schemaId, id, {
       ...options,
-      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
+      filter: service.mergeCustomFilter(filter, item, store),
       page,
       queryParams: { parent: item.payload.id }
     });

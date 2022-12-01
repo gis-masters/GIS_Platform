@@ -9,6 +9,8 @@ import { communicationService } from '../../../../services/communication.service
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { ExplorerStore } from '../../Explorer.store';
+import { ExplorerService } from '../../Explorer.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -53,10 +55,15 @@ export class ExplorerAdapterTypeBasemapsRoot {
 
   static async getChildrenWithParticularOne(
     item: ExplorerItemData,
-    pageOptions: PageOptions,
-    id: string
+    { filter, ...options }: PageOptions,
+    id: string,
+    store: ExplorerStore,
+    service: ExplorerService
   ): Promise<[ExplorerItemData<Basemap>[], number, number]> | undefined {
-    const response = await getBasemapsWithParticularOne(Number(id), pageOptions);
+    const response = await getBasemapsWithParticularOne(Number(id), {
+      ...options,
+      filter: service.mergeCustomFilter(filter, item, store)
+    });
 
     if (!response) {
       return;

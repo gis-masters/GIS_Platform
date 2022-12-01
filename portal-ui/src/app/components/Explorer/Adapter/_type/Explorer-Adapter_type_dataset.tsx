@@ -15,13 +15,15 @@ import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
 import { CreateVectorTable } from '../../../CreateVectorTable/CreateVectorTable';
 import { formatDate } from '../../../../services/util/date.util';
+import { Role } from '../../../../services/data/permissions.models';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { DatasetActions } from '../../../DatasetActions/DatasetActions';
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { Role } from '../../../../services/data/permissions.models';
+import { ExplorerStore } from '../../Explorer.store';
+import { ExplorerService } from '../../Explorer.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -79,11 +81,13 @@ export class ExplorerAdapterTypeDataset {
 
   static async getChildren(
     item: ExplorerItemData<Dataset>,
-    { filter, ...options }: PageOptions
+    { filter, ...options }: PageOptions,
+    store: ExplorerStore,
+    service: ExplorerService
   ): Promise<[ExplorerItemData<VectorTable>[], number]> {
     const [tables, totalPages] = await getDatasetTables(item.payload.identifier, {
       ...options,
-      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined
+      filter: service.mergeCustomFilter(filter, item, store)
     });
 
     return [tables.map(payload => ({ type: ExplorerItemType.TABLE, payload })), totalPages];
@@ -92,11 +96,13 @@ export class ExplorerAdapterTypeDataset {
   static async getChildrenWithParticularOne(
     item: ExplorerItemData<Dataset>,
     { filter, page, ...options }: PageOptions,
-    identifier: string
+    identifier: string,
+    store: ExplorerStore,
+    service: ExplorerService
   ): Promise<[ExplorerItemData<VectorTable>[], number, number]> | undefined {
     const response = await getDatasetTablesWithParticularOne(item.payload.identifier, identifier, {
       ...options,
-      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
+      filter: service.mergeCustomFilter(filter, item, store),
       page
     });
 

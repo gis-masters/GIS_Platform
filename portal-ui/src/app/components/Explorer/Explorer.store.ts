@@ -2,7 +2,7 @@ import { action, computed, observable, makeObservable } from 'mobx';
 
 import { SortOrder } from '../../services/models';
 
-import { ExplorerItemData, pageSizeVariants, SortItem } from './Explorer.models';
+import { CustomFilters, ExplorerItemData, pageSizeVariants, SortItem } from './Explorer.models';
 
 export class ExplorerStore {
   readonly id: string;
@@ -13,6 +13,7 @@ export class ExplorerStore {
   @observable private _page = 0;
   @observable totalPages = 0;
   @observable sortItems: SortItem[] = [];
+  @observable customFilters: CustomFilters = {};
   @observable sort = '';
   @observable sortOrder: SortOrder = SortOrder.ASC;
   @observable filter: Record<string, string> = {};
@@ -53,6 +54,11 @@ export class ExplorerStore {
     }
 
     return this._page;
+  }
+
+  @action
+  setCustomFilters(customFilters: CustomFilters): void {
+    this.customFilters = customFilters;
   }
 
   @action

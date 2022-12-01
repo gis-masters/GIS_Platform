@@ -9,6 +9,8 @@ import { IconButton, ListItemIcon, ListItemButton, ListItemSecondaryAction, List
 import { ExplorerItemData } from '../Explorer.models';
 import { ExplorerStore } from '../Explorer.store';
 
+import '!style-loader!css-loader!sass-loader!./Explorer-Item.scss';
+
 const cnExplorerItem = cn('Explorer', 'Item');
 
 export interface ExplorerItemProps {

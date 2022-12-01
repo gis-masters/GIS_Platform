@@ -75,11 +75,13 @@ export function isFolder(item: ExplorerItemData): boolean {
 
 export async function getChildren(
   item: ExplorerItemData,
-  pageOptions: PageOptions
+  pageOptions: PageOptions,
+  store: ExplorerStore,
+  service: ExplorerService
 ): Promise<[ExplorerItemData[], number] | undefined> {
   if (isFolder(item) && adapters[item.type].getChildren) {
     try {
-      return await adapters[item.type].getChildren(item, pageOptions);
+      return await adapters[item.type].getChildren(item, pageOptions, store, service);
     } catch (error) {
       const err = error as AxiosError;
 
@@ -106,11 +108,13 @@ export async function getChildren(
 export async function getChildrenWithParticularOne(
   item: ExplorerItemData,
   pageOptions: PageOptions,
-  id: string
+  id: string,
+  store: ExplorerStore,
+  service: ExplorerService
 ): Promise<[ExplorerItemData[], number, number]> | undefined {
   if (adapters[item.type].getChildrenWithParticularOne) {
     try {
-      return await adapters[item.type].getChildrenWithParticularOne(item, pageOptions, id);
+      return await adapters[item.type].getChildrenWithParticularOne(item, pageOptions, id, store, service);
     } catch (error) {
       const err = error as AxiosError;
 

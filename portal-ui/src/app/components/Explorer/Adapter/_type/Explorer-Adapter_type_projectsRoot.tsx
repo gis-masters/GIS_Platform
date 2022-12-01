@@ -9,6 +9,8 @@ import { PageOptions, SortOrder } from '../../../../services/models';
 import { Emitter } from '../../../../services/common/Emitter';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { ExplorerStore } from '../../Explorer.store';
+import { ExplorerService } from '../../Explorer.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -40,19 +42,29 @@ export class ExplorerAdapterTypeProjectsRoot {
 
   static async getChildren(
     item: ExplorerItemData,
-    options: PageOptions
+    { filter, ...options }: PageOptions,
+    store: ExplorerStore,
+    service: ExplorerService
   ): Promise<[ExplorerItemData<CrgProject>[], number]> {
-    const [projects, pagesCount] = await projectsService.getProjects(options);
+    const [projects, pagesCount] = await projectsService.getProjects({
+      ...options,
+      filter: service.mergeCustomFilter(filter, item, store)
+    });
 
     return [projects.map(payload => ({ type: ExplorerItemType.PROJECT, payload })), pagesCount];
   }
 
   static async getChildrenWithParticularOne(
     item: ExplorerItemData,
-    options: PageOptions,
-    id: string
+    { filter, ...options }: PageOptions,
+    id: string,
+    store: ExplorerStore,
+    service: ExplorerService
   ): Promise<[ExplorerItemData<CrgProject>[], number, number]> | undefined {
-    const response = await projectsService.getProjectsWithParticularOne(id, options);
+    const response = await projectsService.getProjectsWithParticularOne(id, {
+      ...options,
+      filter: service.mergeCustomFilter(filter, item, store)
+    });
 
     if (!response) {
       return;

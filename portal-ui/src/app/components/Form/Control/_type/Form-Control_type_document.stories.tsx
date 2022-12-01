@@ -29,7 +29,7 @@ const fieldsMultiple: PropertySchema[] = [
     propertyType: PropertyType.DOCUMENT,
     name: 'reglaments',
     title: 'Регламенты',
-    library: 'dl_data_section3',
+    libraries: ['dl_default', 'dl_data_section3'],
     multiple: true,
     maxDocuments: 6
   }

@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 
 import { PageOptions, SortOrder } from '../../services/models';
 import { Emitter } from '../../services/common/Emitter';
+import { FilterQuery } from '../../services/util/filterObjects';
 
 import { ExplorerStore } from './Explorer.store';
 import { ExplorerService } from './Explorer.service';
@@ -46,6 +47,8 @@ export interface ExplorerItemData<T = ExplorerItemPayloads[ExplorerItemType]> {
   payload: T;
 }
 
+export type CustomFilters = Partial<Record<ExplorerItemType, FilterQuery>>;
+
 export const emptyItem: ExplorerItemData = { type: ExplorerItemType.EMPTY, payload: {} };
 export const loadingItem: ExplorerItemData = { type: ExplorerItemType.EMPTY, payload: { loading: true } };
 
@@ -83,12 +86,16 @@ export interface Adapter {
   isFolder: (item: ExplorerItemData) => boolean;
   getChildren?: (
     item: ExplorerItemData,
-    pageOptions: PageOptions
+    pageOptions: PageOptions,
+    store: ExplorerStore,
+    service: ExplorerService
   ) => [ExplorerItemData[], number] | Promise<[ExplorerItemData[], number]>;
   getChildrenWithParticularOne?: (
     item: ExplorerItemData,
     pageOptions: PageOptions,
-    id: string
+    id: string,
+    store: ExplorerStore,
+    service: ExplorerService
   ) => [ExplorerItemData[], number, number] | Promise<[ExplorerItemData[], number, number]> | undefined;
   getChildrenSortItems?: (item: ExplorerItemData) => SortItem[];
   getChildById?: (

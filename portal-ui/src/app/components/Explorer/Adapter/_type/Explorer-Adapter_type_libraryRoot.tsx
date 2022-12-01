@@ -12,6 +12,8 @@ import {
 } from '../../../../services/data/doc-library.service';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { ExplorerStore } from '../../Explorer.store';
+import { ExplorerService } from '../../Explorer.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -43,11 +45,13 @@ export class ExplorerAdapterTypeLibraryRoot {
 
   static async getChildren(
     item: ExplorerItemData,
-    { filter, ...options }: PageOptions
+    { filter, ...options }: PageOptions,
+    store: ExplorerStore,
+    service: ExplorerService
   ): Promise<[ExplorerItemData<DocumentLibrary>[], number]> {
     const [libraries, pagesCount] = await getLibraries({
       ...options,
-      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined
+      filter: service.mergeCustomFilter(filter, item, store)
     });
 
     return [libraries.map(payload => ({ type: ExplorerItemType.LIBRARY, payload })), pagesCount];
@@ -56,11 +60,13 @@ export class ExplorerAdapterTypeLibraryRoot {
   static async getChildrenWithParticularOne(
     item: ExplorerItemData,
     { filter, page, ...options }: PageOptions,
-    identifier: string
+    identifier: string,
+    store: ExplorerStore,
+    service: ExplorerService
   ): Promise<[ExplorerItemData<DocumentLibrary>[], number, number]> | undefined {
     const response = await getLibrariesWithParticularOne(identifier, {
       ...options,
-      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
+      filter: service.mergeCustomFilter(filter, item, store),
       page
     });
 

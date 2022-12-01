@@ -1,5 +1,6 @@
 import { boundMethod } from 'autobind-decorator';
-import { debounce } from 'lodash';
+import { cloneDeep, debounce } from 'lodash';
+import { FilterQuery } from '../../services/util/filterObjects';
 
 import { getChildren, getChildrenWithParticularOne, getId } from './Adapter/Explorer-Adapter';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from './Explorer.models';
@@ -27,30 +28,42 @@ export class ExplorerService {
     this.gettingChildrenOperationId = gettingChildrenToken;
 
     if (selectedItem.type === ExplorerItemType.EMPTY) {
-      [children = [], totalPages = 0] = await getChildren(openedItem, {
-        page,
-        pageSize,
-        sort,
-        sortOrder,
-        filter
-      });
+      [children = [], totalPages = 0] = await getChildren(
+        openedItem,
+        {
+          page,
+          pageSize,
+          sort,
+          sortOrder,
+          filter
+        },
+        this.store,
+        this
+      );
     } else {
       const response = await getChildrenWithParticularOne(
         openedItem,
         { page, pageSize, sort, sortOrder, filter },
-        getId(selectedItem)
+        getId(selectedItem),
+        this.store,
+        this
       );
 
       if (response) {
         [children = [], totalPages = 0, page = 0] = response;
       } else {
-        [children = [], totalPages = 0] = await getChildren(openedItem, {
-          page,
-          pageSize,
-          sort,
-          sortOrder: sortOrder,
-          filter
-        });
+        [children = [], totalPages = 0] = await getChildren(
+          openedItem,
+          {
+            page,
+            pageSize,
+            sort,
+            sortOrder: sortOrder,
+            filter
+          },
+          this.store,
+          this
+        );
       }
     }
 
@@ -77,5 +90,21 @@ export class ExplorerService {
 
   itemsEqual(a: ExplorerItemData, b: ExplorerItemData): boolean {
     return a && b && getId(a) === getId(b) && a.type === b.type;
+  }
+
+  mergeCustomFilter(filter: FilterQuery, item: ExplorerItemData, store: ExplorerStore): FilterQuery {
+    let filters = cloneDeep(filter);
+
+    if (filters?.title) {
+      filters.title = { $ilike: `%${String(filter.title)}%` };
+    } else if (!filters?.title) {
+      delete filters.title;
+    }
+
+    if (store.customFilters[item.type]) {
+      filters = { ...filters, ...store.customFilters[item.type] };
+    }
+
+    return filters || undefined;
   }
 }

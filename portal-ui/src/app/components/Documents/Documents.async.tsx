@@ -34,7 +34,7 @@ export default class Documents extends Component<DocumentsProps> {
 
   render() {
     const { value, property, editable } = this.props;
-    const { multiple, library, maxDocuments } = property;
+    const { multiple, maxDocuments } = property;
     const numerous = value.length > 1;
 
     return (
@@ -61,7 +61,7 @@ export default class Documents extends Component<DocumentsProps> {
             onChange={this.addHandler}
             value={value}
             maxDocuments={multiple ? maxDocuments : 1}
-            libraryIdentifier={library}
+            librariesIdentifiers={this.librariesIdentifiers}
           />
         )}
       </Lookup>
@@ -73,6 +73,12 @@ export default class Documents extends Component<DocumentsProps> {
     const { multiple, maxDocuments } = this.props.property;
 
     return multiple ? maxDocuments || defaultMaxDocuments : 1;
+  }
+
+  private get librariesIdentifiers(): string[] {
+    const { library, libraries } = this.props.property;
+
+    return libraries || [library] || [];
   }
 
   @boundMethod

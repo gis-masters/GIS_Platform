@@ -6,13 +6,14 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip 
 import { boundMethod } from 'autobind-decorator';
 import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
+import { AxiosError } from 'axios';
 
 import { CommonDiRegistry } from '../../services/di-registry';
-import { DocumentLibrary, LibraryRecord } from '../../services/data/doc-library.service';
+import { DocumentLibrary, getLibrary, LibraryRecord } from '../../services/data/doc-library.service';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { DocumentInfo } from '../Documents/Documents';
-import { route } from '../../stores/Route.store';
 import { Button } from '../Button/Button';
+import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./DocumentsSelectDialog.scss';
 
@@ -20,10 +21,9 @@ const cnDocumentsSelectDialog = cn('DocumentsSelectDialog');
 
 interface DocumentsSelectDialogProps {
   addedDocuments: DocumentInfo[];
-  libraryIdentifier: string;
   maxDocuments: number;
   dialogOpen: boolean;
-  limitingLibrary?: DocumentLibrary;
+  librariesIdentifiers?: string[];
   onChange(selectedItems: DocumentInfo[]): void;
   onClose: () => void;
 }
@@ -33,14 +33,23 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
   @observable private selectedDocuments?: LibraryRecord[] = [];
   @observable private libraryView = false;
   @observable private error = false;
+  @observable private limitingLibrary?: DocumentLibrary;
+  @observable private selectedItem?: ExplorerItemData[];
+  private limitingLibraryRequest?: Promise<DocumentLibrary>;
 
   constructor(props: DocumentsSelectDialogProps) {
     super(props);
     makeObservable(this);
   }
 
+  async componentDidUpdate(prevProps: DocumentsSelectDialogProps) {
+    if (!this.limitingLibraryRequest && !prevProps.dialogOpen && this.props.dialogOpen) {
+      await this.handleDialogOpen();
+    }
+  }
+
   render() {
-    const { libraryIdentifier, maxDocuments, dialogOpen, addedDocuments } = this.props;
+    const { maxDocuments, dialogOpen, addedDocuments, librariesIdentifiers } = this.props;
 
     return (
       <Dialog
@@ -51,29 +60,39 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
       >
         <DialogTitle>Выберите документ</DialogTitle>
 
-        <div className={cnDocumentsSelectDialog('Switcher')}>
-          <Tooltip title={this.libraryView ? 'Вложенный список документов' : 'Таблица документов'}>
-            <IconButton onClick={this.toggleRegisterView}>
-              {this.libraryView ? <StorageOutlined /> : <TableViewOutlined />}
-            </IconButton>
-          </Tooltip>
-        </div>
+        {(this.limitingLibrary || this.showRegistryBtn) && (
+          <div className={cnDocumentsSelectDialog('Switcher')}>
+            <Tooltip title={this.libraryView ? 'Вложенный список документов' : 'Таблица документов'}>
+              <IconButton onClick={this.toggleRegisterView}>
+                {this.libraryView ? <StorageOutlined /> : <TableViewOutlined />}
+              </IconButton>
+            </Tooltip>
+          </div>
+        )}
 
         <DialogContent>
           {!this.libraryView ? (
-            <RegistryConsumer id='common'>
-              {({ Explorer }: CommonDiRegistry) => (
-                <Explorer
-                  id='DocumentsAdd'
-                  className={cnDocumentsSelectDialog('Explorer')}
-                  preset={!this.path && ExplorerItemType.LIBRARY_ROOT}
-                  path={this.path}
-                  onSelect={this.handleSelect}
-                  onOpen={this.handleOpen}
-                  disabledTester={this.testForDisabled}
-                />
-              )}
-            </RegistryConsumer>
+            this.ready && (
+              <RegistryConsumer id='common'>
+                {({ Explorer }: CommonDiRegistry) => (
+                  <Explorer
+                    id='DocumentsAdd'
+                    className={cnDocumentsSelectDialog('Explorer')}
+                    path={this.path}
+                    onSelect={this.handleSelect}
+                    onOpen={this.handleOpen}
+                    customFilters={
+                      librariesIdentifiers.length > 1
+                        ? {
+                            [ExplorerItemType.LIBRARY_ROOT]: { table_name: { $in: librariesIdentifiers } }
+                          }
+                        : undefined
+                    }
+                    disabledTester={this.testForDisabled}
+                  />
+                )}
+              </RegistryConsumer>
+            )
           ) : (
             <RegistryConsumer id='common'>
               {({ LibraryRegistry }: CommonDiRegistry) => (
@@ -81,7 +100,9 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
                   id='DocumentsAdd'
                   onSelect={this.handleMultipleSelect}
                   checkedLibraryDocuments={this.selectedDocuments || []}
-                  libraryId={libraryIdentifier || route.params.libraryId}
+                  libraryId={
+                    this.limitingLibrary?.identifier || (this.selectedItem[1].payload as DocumentLibrary).identifier
+                  }
                   addedDocuments={addedDocuments}
                   inDialog
                 />
@@ -106,10 +127,15 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
   }
 
   @computed
+  private get ready(): boolean {
+    return !!this.limitingLibrary || this.props.librariesIdentifiers.length !== 1;
+  }
+
+  @computed
   private get path(): ExplorerItemData[] | undefined {
-    if (this.props.limitingLibrary) {
-      return [{ type: ExplorerItemType.LIBRARY, payload: this.props.limitingLibrary }, emptyItem];
-    }
+    return this.limitingLibrary
+      ? [{ type: ExplorerItemType.LIBRARY, payload: this.limitingLibrary }, emptyItem]
+      : [{ type: ExplorerItemType.LIBRARY_ROOT, payload: null }, emptyItem];
   }
 
   @boundMethod
@@ -138,10 +164,22 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
 
   @boundMethod
   private handleOpen(item: ExplorerItemData<LibraryRecord>, path: ExplorerItemData[]) {
+    this.setSelectedItem(path);
+
     if (item.type === ExplorerItemType.DOCUMENT) {
       this.handleSelect(item, path);
       this.submitDialog();
     }
+  }
+
+  @computed
+  private get showRegistryBtn(): boolean {
+    return this.selectedItem?.some(item => item.type === ExplorerItemType.LIBRARY);
+  }
+
+  @action
+  private setSelectedItem(selectedItem: ExplorerItemData[]) {
+    this.selectedItem = selectedItem;
   }
 
   @action
@@ -184,12 +222,38 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
 
   @boundMethod
   private testForDisabled({ payload, type }: ExplorerItemData<LibraryRecord>): boolean {
+    const { addedDocuments } = this.props;
+
     if (type === ExplorerItemType.DOCUMENT) {
-      return this.props.addedDocuments.some(
-        ({ libraryId, id }) => payload.libraryId === libraryId && payload.id === id
-      );
+      return addedDocuments.some(({ libraryId, id }) => payload.libraryId === libraryId && payload.id === id);
     }
 
     return false;
+  }
+
+  @boundMethod
+  private async handleDialogOpen() {
+    const { librariesIdentifiers } = this.props;
+
+    if (!this.limitingLibraryRequest && librariesIdentifiers.length === 1) {
+      try {
+        this.limitingLibraryRequest = getLibrary(librariesIdentifiers[0]);
+        this.setLimitingLibrary(await this.limitingLibraryRequest);
+      } catch (error) {
+        const err = error as AxiosError;
+        Toast.warn(`Ошибка доступа к библиотеке документов ${librariesIdentifiers[0]}. [${err.message}]`);
+
+        return;
+      }
+    }
+
+    if (!librariesIdentifiers.length) {
+      this.setLimitingLibrary();
+    }
+  }
+
+  @action
+  private setLimitingLibrary(library?: DocumentLibrary) {
+    this.limitingLibrary = library;
   }
 }

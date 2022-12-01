@@ -209,6 +209,7 @@ export interface PropertySchemaDocument<T = Record<string, unknown>> extends Bas
   propertyType: PropertyType.DOCUMENT;
   multiple?: boolean;
   library?: string;
+  libraries?: string[];
   maxDocuments?: number;
 }
 

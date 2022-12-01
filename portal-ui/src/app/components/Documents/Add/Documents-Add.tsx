@@ -4,13 +4,10 @@ import { observer } from 'mobx-react';
 import { AddCircle, AddCircleOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
 
 import { DocumentsSelectDialog } from '../../DocumentsSelectDialog/DocumentsSelectDialog';
-import { DocumentLibrary, getLibrary } from '../../../services/data/doc-library.service';
 import { LookupAdd } from '../../Lookup/Add/Lookup-Add';
 import { Button } from '../../Button/Button';
-import { Toast } from '../../Toast/Toast';
 
 import { DocumentInfo } from '../Documents';
 
@@ -19,7 +16,7 @@ const cnDocumentsAdd = cn('Documents', 'Add');
 interface DocumentsAddProps {
   filled: boolean;
   value: DocumentInfo[];
-  libraryIdentifier: string;
+  librariesIdentifiers: string[];
   maxDocuments: number;
   onChange(selectedItems: DocumentInfo[]): void;
 }
@@ -27,7 +24,6 @@ interface DocumentsAddProps {
 @observer
 export class DocumentsAdd extends Component<DocumentsAddProps> {
   @observable private dialogOpen = false;
-  @observable private limitingLibrary?: DocumentLibrary;
 
   constructor(props: DocumentsAddProps) {
     super(props);
@@ -35,7 +31,7 @@ export class DocumentsAdd extends Component<DocumentsAddProps> {
   }
 
   render() {
-    const { filled, libraryIdentifier, maxDocuments, value, onChange } = this.props;
+    const { filled, maxDocuments, value, librariesIdentifiers, onChange } = this.props;
 
     return (
       <LookupAdd className={cnDocumentsAdd()} filled={filled}>
@@ -50,11 +46,10 @@ export class DocumentsAdd extends Component<DocumentsAddProps> {
 
         <DocumentsSelectDialog
           addedDocuments={value}
-          libraryIdentifier={libraryIdentifier}
+          librariesIdentifiers={librariesIdentifiers}
           maxDocuments={maxDocuments}
           onChange={onChange}
           dialogOpen={this.dialogOpen}
-          limitingLibrary={this.limitingLibrary}
           onClose={this.closeDialog}
         />
       </LookupAdd>
@@ -62,22 +57,8 @@ export class DocumentsAdd extends Component<DocumentsAddProps> {
   }
 
   @boundMethod
-  private async handleAddClick() {
-    const { libraryIdentifier } = this.props;
-    try {
-      if (libraryIdentifier && !this.limitingLibrary) {
-        this.setLimitingLibrary(await getLibrary(libraryIdentifier));
-      }
-      this.openDialog();
-    } catch (error) {
-      const err = error as AxiosError;
-      Toast.warn(`Ошибка доступа к библиотеке документов ${libraryIdentifier}. [${err.message}]`);
-    }
-  }
-
-  @action
-  private setLimitingLibrary(library: DocumentLibrary) {
-    this.limitingLibrary = library;
+  private handleAddClick() {
+    this.openDialog();
   }
 
   @action

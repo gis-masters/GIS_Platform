@@ -9,6 +9,8 @@ import { CreateDatasetElement } from '../../../CreateDatasetElement/CreateDatase
 import { Database } from '../../../Icons/Database';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { ExplorerStore } from '../../Explorer.store';
+import { ExplorerService } from '../../Explorer.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -44,11 +46,13 @@ export class ExplorerAdapterTypeDatasetRoot {
 
   static async getChildren(
     item: ExplorerItemData,
-    { filter, ...options }: PageOptions
+    { filter, ...options }: PageOptions,
+    store: ExplorerStore,
+    service: ExplorerService
   ): Promise<[ExplorerItemData<Dataset>[], number]> {
     const [dataSets, pagesCount] = await getDatasets({
       ...options,
-      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined
+      filter: service.mergeCustomFilter(filter, item, store)
     });
 
     return [dataSets.map(payload => ({ type: ExplorerItemType.DATASET, payload })), pagesCount];
@@ -57,11 +61,13 @@ export class ExplorerAdapterTypeDatasetRoot {
   static async getChildrenWithParticularOne(
     item: ExplorerItemData,
     { filter, page, ...options }: PageOptions,
-    identifier: string
+    identifier: string,
+    store: ExplorerStore,
+    service: ExplorerService
   ): Promise<[ExplorerItemData<Dataset>[], number, number]> | undefined {
     const response = await getDatasetsWithParticularOne(identifier, {
       ...options,
-      filter: filter?.title ? { title: { $ilike: `%${String(filter.title)}%` } } : undefined,
+      filter: service.mergeCustomFilter(filter, item, store),
       page
     });
 
