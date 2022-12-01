@@ -5,7 +5,7 @@ import { getGeoServerUrl, getWfsUrl } from '../server-urls.service';
 import { WfsFeature, WfsFeatureCollection } from './wfs.models';
 import { PageOptions } from '../models';
 import { CrgVectorLayer } from '../gis/projects.models';
-import { buildCqlFilter } from '../util/cql';
+import { cqlBuild } from '../util/cqlBuild';
 import { cql2ol } from '../util/cql2ol';
 import { http } from '../http.service';
 import { Mime } from '../util/Mime';
@@ -75,7 +75,7 @@ export async function getFeatures(
     count: String(pageOptions.pageSize)
   };
 
-  const cqlFilter = buildCqlFilter(pageOptions.filter);
+  const cqlFilter = cqlBuild(pageOptions.filter);
   const filter = cqlFilter ? cql2ol(cqlFilter) : undefined;
 
   const featureRequest = new WFS().writeGetFeature({

@@ -1,8 +1,7 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
+import { cqlParse } from '../../src/app/services/util/cqlParse';
 import { PageOptions, SortOrder } from '../../src/app/services/models';
-import { FilterQuery } from '../../src/app/services/util/filterObjects';
-import { cql2ol } from '../../src/app/services/util/cql2ol';
 
 export function err404(config: AxiosRequestConfig) {
   return new AxiosError('not found', 'forbidden', config, null, {
@@ -33,7 +32,7 @@ export function parsePageOptions(config: AxiosRequestConfig): PageOptions {
     }
 
     if (key === 'filter') {
-      pageOptions.filter = parseCql(String(value));
+      pageOptions.filter = cqlParse(String(value));
     }
 
     if (!pageOptions.queryParams) {
@@ -43,14 +42,4 @@ export function parsePageOptions(config: AxiosRequestConfig): PageOptions {
   }
 
   return pageOptions as PageOptions;
-}
-
-function parseCql(cql: string): FilterQuery | undefined {
-  if (!cql) {
-    return;
-  }
-
-  console.log(cql2ol(cql));
-
-  throw new Error('Function not implemented.');
 }

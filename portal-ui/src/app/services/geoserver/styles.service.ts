@@ -4,7 +4,7 @@ import { getActualLegendUrl, getGeoServerUrl, getWmsUrl } from '../server-urls.s
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { CrgVectorLayer } from '../gis/projects.models';
 import { mapService } from '../map/map.service';
-import { buildCqlFilter } from '../util/cql';
+import { cqlBuild } from '../util/cqlBuild';
 import { WfsGeometry } from './wfs.models';
 import { http } from '../http.service';
 import { Mime } from '../util/Mime';
@@ -227,7 +227,7 @@ export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): P
         dataset: layer.dataset,
         identifier: layer.tableName,
         ecqlFilter: !filterDisabled[layer.tableName]
-          ? buildCqlFilter(attributesTableStore.getLayerFilter(layer.tableName))
+          ? cqlBuild(attributesTableStore.getLayerFilter(layer.tableName))
           : null,
         filter: {
           operator: 'Intersects',

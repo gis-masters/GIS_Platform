@@ -27,7 +27,7 @@ const jestConfig: JestConfigWithTsJest = {
       }
     ]
   },
-  transformIgnorePatterns: ['/node_modules/(?!escape-string-regexp)']
+  transformIgnorePatterns: ['node_modules/(?!@ngrx|(?!deck.gl)|ng-dynamic)']
 };
 
 export default jestConfig;

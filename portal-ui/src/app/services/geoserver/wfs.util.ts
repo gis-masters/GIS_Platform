@@ -21,7 +21,7 @@ import { CrgVectorLayer } from '../gis/projects.models';
 import { schemaService } from '../data/schema.service';
 import { olProjection } from './projections.service';
 import { PageOptions, SortOrder } from '../models';
-import { buildCqlFilter } from '../util/cql';
+import { cqlBuild } from '../util/cqlBuild';
 import { cql2ol } from '../util/cql2ol';
 import { services } from '../services';
 import { Mime } from '../util/Mime';
@@ -191,7 +191,7 @@ export async function makeXmlPolygonIntersect(
 
   const layer = currentProject.getLayerByTableName(tableName);
   const geometryFieldName = await getGeometryFieldName(layer.schemaId);
-  const cqlFilter: string = buildCqlFilter(attributesTableStore.getLayerFilter(tableName));
+  const cqlFilter: string = cqlBuild(attributesTableStore.getLayerFilter(tableName));
   const olFilter = cqlFilter
     ? and(intersects(geometryFieldName, polygon, olProjection.id), cql2ol(cqlFilter))
     : intersects(geometryFieldName, polygon, olProjection.id);

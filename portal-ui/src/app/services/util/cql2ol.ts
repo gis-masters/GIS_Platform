@@ -158,7 +158,7 @@ function nextToken(text: string, tokens: (keyof typeof patterns)[]): TokenInfo {
       return {
         type: token,
         text: match,
-        remainder: remainder
+        remainder
       };
     }
   }

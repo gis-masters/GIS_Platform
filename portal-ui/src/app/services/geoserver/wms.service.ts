@@ -1,7 +1,7 @@
 import { currentProject } from '../../stores/CurrentProject.store';
 import { getWmsUrl } from '../server-urls.service';
 import { getStyleSld } from './styles.service';
-import { buildCqlFilter } from '../util/cql';
+import { cqlBuild } from '../util/cqlBuild';
 import { cql2ol } from '../util/cql2ol';
 import { http } from '../http.service';
 import { Mime } from '../util/Mime';
@@ -15,7 +15,7 @@ export async function getMap(url: string): Promise<Blob> {
 
   if (featureIdParam) {
     const ids = featureIdParam.split(',').map(fid => Number(fid.split('.')[1]));
-    const idCqlFragment = buildCqlFilter({ id: { [featureIdsNegative ? '$nin' : '$in']: ids } });
+    const idCqlFragment = cqlBuild({ id: { [featureIdsNegative ? '$nin' : '$in']: ids } });
     const newCql = cqlFilter ? `(${idCqlFragment}) AND (${cqlFilter})` : idCqlFragment;
     parsedUrl.searchParams.set('CQL_FILTER', newCql);
   }

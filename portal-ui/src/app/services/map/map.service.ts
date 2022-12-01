@@ -44,7 +44,7 @@ import {
 } from '../geoserver/projections.service';
 import { getFeatureExtent, mergeExtents } from '../geoserver/wfs.util';
 import { getMap } from '../geoserver/wms.service';
-import { buildCqlFilter } from '../util/cql';
+import { cqlBuild } from '../util/cqlBuild';
 import { sleep } from '../util/sleep';
 import { services } from '../services';
 
@@ -352,7 +352,7 @@ class MapService {
       const { tableName } = layers[0];
       const { filterBySelection, ...filter } = attributesTableStore.getLayerFilter(tableName);
       if (Object.keys(filter).length) {
-        params.CQL_FILTER = buildCqlFilter(filter);
+        params.CQL_FILTER = cqlBuild(filter);
       }
 
       if (

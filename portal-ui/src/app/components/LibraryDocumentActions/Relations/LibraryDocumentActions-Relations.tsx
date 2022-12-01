@@ -5,7 +5,7 @@ import { FileOpenOutlined, LinkOutlined, MapOutlined, OpenInNewOutlined } from '
 import { cn } from '@bem-react/classname';
 
 import { LibraryRecord } from '../../../services/data/doc-library.service';
-import { buildCqlFilter } from '../../../services/util/cql';
+import { cqlBuild } from '../../../services/util/cqlBuild';
 import { Schema } from '../../../services/data/schema.models';
 import { Link } from '../../Link/Link';
 
@@ -43,7 +43,7 @@ export class LibraryDocumentActionsRelations extends Component<LibraryDocumentAc
           }
 
           if (relation.type === 'feature') {
-            const cqlFilter = buildCqlFilter({ [targetProperty]: String(document[relation.property]) });
+            const cqlFilter = cqlBuild({ [targetProperty]: String(document[relation.property]) });
             url = `/projects/${relation.projectId}/map?queryLayers=${relation.layers.join(
               ','
             )}&queryFilter=${cqlFilter}`;

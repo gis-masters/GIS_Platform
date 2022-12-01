@@ -5,7 +5,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
-import { buildCqlFilter } from '../../services/util/cql';
+import { cqlBuild } from '../../services/util/cqlBuild';
 import { Relation } from '../../services/data/schema.models';
 import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
 import { Link } from '../Link/Link';
@@ -36,7 +36,7 @@ export const RelationsButton: FC<RelationsButtonProps> = observer(({ className, 
         }
 
         if (relation.type === 'feature') {
-          const cqlFilter = buildCqlFilter({ [targetProperty]: String(obj[relation.property]) });
+          const cqlFilter = cqlBuild({ [targetProperty]: String(obj[relation.property]) });
           url = `/projects/${relation.projectId}/map?queryLayers=${relation.layers.join(',')}&queryFilter=${cqlFilter}`;
         }
 
