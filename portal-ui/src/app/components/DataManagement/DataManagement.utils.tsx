@@ -123,5 +123,5 @@ export function getIdsFromPath(path: string): number[] {
 }
 
 export function getPathFromIds(path: number[]): string {
-  return `/root${path.length ? '/' : ''}${path.join('/')}%`;
+  return `/root${path.length ? '/' : ''}${path.join('/')}/%`;
 }
