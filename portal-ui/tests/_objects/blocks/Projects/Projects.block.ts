@@ -14,10 +14,42 @@ class Projects extends Block implements BlockModel {
     return $('.Projects-Add');
   }
 
+  get $firstCard(): Promise<WebdriverIO.Element> {
+    return $('.Projects-Card:first-child');
+  }
+
+  get $firstCardDelete(): Promise<WebdriverIO.Element> {
+    return $('.Projects-Card:first-child .ProjectCard-Delete');
+  }
+
+  get $cardDeleteYesButton(): Promise<WebdriverIO.Element> {
+    return $('.ProjectCard-DeleteDialogYes');
+  }
+
   @when(/^я нажимаю кнопку `Создать проект`$/)
   async clickAddButton(): Promise<void> {
     const $add = await this.$add;
     await $add.click();
+  }
+
+  @when(/^я навожу курсор на первый в списке проект$/)
+  async hoverFirstCard(): Promise<void> {
+    const $firstCard = await this.$firstCard;
+    await $firstCard.moveTo();
+  }
+
+  @when(/^я нажимаю кнопку удаления первого проекта$/)
+  async clickFirstProjectDeleteButton(): Promise<void> {
+    const $firstCardDelete = await this.$firstCardDelete;
+    await $firstCardDelete.click();
+  }
+
+  @when(/^нажимаю на кнопку подтверждения удаления проекта в появившемся диалоговом окне$/)
+  async clickDeleteYesButton(): Promise<void> {
+    const $cardDeleteYesButton = await this.$cardDeleteYesButton;
+    await $cardDeleteYesButton.waitForDisplayed();
+    await browser.pause(300);
+    await $cardDeleteYesButton.click();
   }
 
   @when(/^я открываю форму создания проекта$/)
@@ -30,6 +62,17 @@ class Projects extends Block implements BlockModel {
   async waitForProjectFormVisible(): Promise<void> {
     await projectForm.waitForVisible();
     await browser.pause(400);
+  }
+
+  @then(/^список проектов пуст$/)
+  async checkProjectListIsEmpty(): Promise<void> {
+    const $firstCard = await this.$firstCard;
+    await $firstCard.waitForDisplayed({ reverse: true });
+  }
+
+  @then(/^кнопка удаления проекта отсутствует$/)
+  async checkDeleteButtonNotExist(): Promise<void> {
+    await expect(this.$firstCardDelete).not.toBeDisplayed();
   }
 
   @when(/^я создаю проект с названием "(.*)"$/)

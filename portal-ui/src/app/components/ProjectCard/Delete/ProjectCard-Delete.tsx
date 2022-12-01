@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
@@ -15,6 +15,8 @@ import { Button } from '../../Button/Button';
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Delete.scss';
 
 const cnProjectCardDelete = cn('ProjectCard', 'Delete');
+const cnProjectCardDeleteDialog = cn('ProjectCard', 'DeleteDialog');
+const cnProjectCardDeleteDialogYes = cn('ProjectCard', 'DeleteDialogYes');
 
 interface ProjectCardDeleteProps {
   project: CrgProject;
@@ -40,12 +42,16 @@ export class ProjectCardDelete extends Component<ProjectCardDeleteProps> {
           <Delete />
         </IconButton>
 
-        <Dialog open={this.dialogOpen} onClose={this.closeDeleteDialog}>
+        <Dialog
+          open={this.dialogOpen}
+          onClose={this.closeDeleteDialog}
+          PaperProps={{ className: cnProjectCardDeleteDialog() }}
+        >
           <DialogContent>
             <DialogContentText>Вы действительно хотите удалить проект?</DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.deleteProject} color='primary'>
+            <Button onClick={this.deleteProject} color='primary' className={cnProjectCardDeleteDialogYes()}>
               Да
             </Button>
             <Button onClick={this.closeDeleteDialog}>Нет</Button>

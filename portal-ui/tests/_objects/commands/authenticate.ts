@@ -61,18 +61,22 @@ export async function authenticateAsAdmin(thenPage?: Page): Promise<void> {
 }
 
 export async function authenticateAsOwner(thenPage?: Page): Promise<void> {
-  await authenticateAsUser(testUsers.owner, thenPage);
+  await authenticateAs(testUsers.owner, thenPage);
 }
 
 export async function authenticateAsContributor(thenPage?: Page): Promise<void> {
-  await authenticateAsUser(testUsers.contributor, thenPage);
+  await authenticateAs(testUsers.contributor, thenPage);
 }
 
 export async function authenticateAsViewer(thenPage?: Page): Promise<void> {
-  await authenticateAsUser(testUsers.viewer, thenPage);
+  await authenticateAs(testUsers.viewer, thenPage);
 }
 
-async function authenticateAsUser(
+export async function authenticateAsUser(thenPage?: Page): Promise<void> {
+  await authenticateAs(testUsers.user, thenPage);
+}
+
+async function authenticateAs(
   { email, password }: typeof testUsers[keyof typeof testUsers],
   thenPage?: Page
 ): Promise<void> {
@@ -85,5 +89,5 @@ async function authenticateAsUser(
 }
 
 Given(/я авторизован как "(.*)"/, async (user: keyof typeof testUsers) => {
-  await authenticateAsUser(testUsers[user]);
+  await authenticateAs(testUsers[user]);
 });

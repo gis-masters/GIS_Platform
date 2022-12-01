@@ -144,3 +144,6 @@ function handleSavingError(
   Toast.warn(errText);
   services.logger.error(errText, e);
 }
+
+// for autotests
+Object.assign(window, { addProjectPermission });

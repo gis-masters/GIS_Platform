@@ -1,6 +1,6 @@
-import { RegData } from '../../../src/app/services/auth.service';
+import {RegData} from '../../../src/app/services/auth.service';
 
-export const testUsers: Record<'admin' | 'owner' | 'contributor' | 'viewer', RegData> = {
+export const testUsers: Record<'admin' | 'owner' | 'contributor' | 'viewer' | 'user', RegData> = {
   admin: {
     company: 'Hogwarts',
     contactPhone: '7777777777',
@@ -34,7 +34,16 @@ export const testUsers: Record<'admin' | 'owner' | 'contributor' | 'viewer', Reg
     firstName: 'Ronald',
     lastName: 'Weasley',
     email: 'ron@viewer',
-    password: 'Avadakedavra3',
-    password_: 'Avadakedavra3'
+    password: 'Avadakedavra4',
+    password_: 'Avadakedavra4'
+  },
+  user: {
+    company: 'Hogwarts',
+    contactPhone: '7777777777',
+    firstName: 'Ginny',
+    lastName: 'Weasley',
+    email: 'ginny@user',
+    password: 'Avadakedavra5',
+    password_: 'Avadakedavra5'
   }
 };
