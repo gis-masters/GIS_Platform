@@ -425,7 +425,10 @@ const valueToReadableTransformers: Partial<Record<PropertyType, (value: unknown,
   };
 
 export function getReadablePropertyValue(value: unknown, property: PropertySchema): string {
-  if (value === null || value === undefined || property === undefined) {
+  if (
+    property.propertyType !== PropertyType.BOOL &&
+    (value === null || value === undefined || property === undefined)
+  ) {
     return '';
   }
 
