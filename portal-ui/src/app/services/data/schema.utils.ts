@@ -162,11 +162,13 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
     }
 
     field.asTitle = oldField.objectIdentityOnUi;
+    delete (field as Partial<OldPropertySchemaDouble>).objectIdentityOnUi;
 
     if (oldField.valueType === ValueType.DOUBLE) {
       field.propertyType = PropertyType.FLOAT;
 
       (field as Partial<PropertySchemaFloat>).precision = oldField.fractionDigits;
+      delete (field as Partial<OldPropertySchemaDouble>).fractionDigits;
     }
 
     if (oldField.valueType === ValueType.INT) {
@@ -185,20 +187,23 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
       field.propertyType = PropertyType.DATETIME;
 
       (field as Partial<PropertySchemaDatetime>).format = oldField.dateFormat;
+      delete (field as Partial<OldPropertySchemaDatetime>).dateFormat;
     }
 
     if (oldField.valueType === ValueType.CHOICE) {
       field.propertyType = PropertyType.CHOICE;
 
       (field as Partial<PropertySchemaChoice>).multiple = oldField.isMultiple;
-
+      delete (field as Partial<OldPropertySchemaChoice>).isMultiple;
       (field as Partial<PropertySchemaChoice>).options = oldField.enumerations;
+      delete (field as Partial<OldPropertySchemaChoice>).enumerations;
     }
 
     if (oldField.valueType === ValueType.URL) {
       field.propertyType = PropertyType.URL;
 
       (field as Partial<PropertySchemaUrl>).openIn = oldField.displayMode === 'in_popup' ? 'popup' : 'newTab';
+      delete (field as Partial<OldPropertySchemaUrl>).displayMode;
     }
 
     if (oldField.valueType === ValueType.LOOKUP) {
@@ -244,18 +249,18 @@ export function convertNewToOldProperties<T extends Record<string, unknown>>(
   return newFields.map(newField => {
     const field: Partial<OldPropertySchema<T>> = { ...newField } as Partial<OldPropertySchema<T>>;
 
+    field.objectIdentityOnUi = newField.asTitle;
+    delete (field as Partial<PropertySchema>).asTitle;
+
     if (newField.propertyType === PropertyType.STRING) {
       field.valueType = ValueType.STRING;
-
-      field.description = String(newField.description);
     }
-
-    field.objectIdentityOnUi = newField.asTitle;
 
     if (newField.propertyType === PropertyType.FLOAT) {
       field.valueType = ValueType.DOUBLE;
 
       (field as Partial<OldPropertySchemaDouble>).fractionDigits = newField.precision;
+      delete (field as Partial<PropertySchemaFloat>).precision;
     }
 
     if (newField.propertyType === PropertyType.INT) {
@@ -274,20 +279,23 @@ export function convertNewToOldProperties<T extends Record<string, unknown>>(
       field.valueType = ValueType.DATETIME;
 
       (field as Partial<OldPropertySchemaDatetime>).dateFormat = newField.format;
+      delete (field as Partial<PropertySchemaDatetime>).format;
     }
 
     if (newField.propertyType === PropertyType.CHOICE) {
       field.valueType = ValueType.CHOICE;
 
       (field as Partial<OldPropertySchemaChoice>).isMultiple = newField.multiple;
-
       (field as Partial<OldPropertySchemaChoice>).enumerations = newField.options;
+      delete (field as Partial<PropertySchemaChoice>).multiple;
+      delete (field as Partial<PropertySchemaChoice>).options;
     }
 
     if (newField.propertyType === PropertyType.URL) {
       field.valueType = ValueType.URL;
 
-      (field as Partial<OldPropertySchemaUrl>).displayMode = 'in_popup';
+      (field as Partial<OldPropertySchemaUrl>).displayMode = newField.openIn === 'popup' ? 'in_popup' : undefined;
+      delete (field as Partial<PropertySchemaUrl>).openIn;
     }
 
     if (newField.propertyType === PropertyType.LOOKUP) {

@@ -5,6 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { FilterBySelection, mapStore } from '../../../stores/Map.store';
+import { calculateValues } from '../../../services/formValidation.service';
 import { CrgVectorLayer } from '../../../services/gis/projects.models';
 import { schemaService } from '../../../services/data/schema.service';
 import { getFeatures } from '../../../services/geoserver/wfs.service';
@@ -142,7 +143,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
     const tableRecords: AttributesTableRecord[] = features.map(feature => ({
       cutId: feature.id.split('.')[1],
       feature,
-      ...feature.properties
+      ...calculateValues(feature.properties, this.schema.properties)
     }));
 
     this.setFeaturesTotal(featuresTotal);

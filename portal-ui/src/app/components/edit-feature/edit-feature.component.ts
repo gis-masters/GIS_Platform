@@ -37,6 +37,7 @@ import { sleep } from '../../services/util/sleep';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { BaseEdit } from '../edit-bug-object/base-edit';
 import { Toast } from '../Toast/Toast';
+import { calculateValues } from '../../services/formValidation.service';
 
 export interface Properties {
   [key: string]: unknown;
@@ -94,6 +95,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.editFeatureForm = this.formBuilder.group({});
 
         this.featureDescription = await schemaService.getOldSchema(this.layer.schemaId);
+        const schema = await schemaService.getSchema(this.layer.schemaId);
+
+        this.features = this.features.map(feature => ({
+          ...feature,
+          properties: feature.properties && calculateValues(feature.properties, schema.properties)
+        }));
 
         this.editFeatureData = [];
 
