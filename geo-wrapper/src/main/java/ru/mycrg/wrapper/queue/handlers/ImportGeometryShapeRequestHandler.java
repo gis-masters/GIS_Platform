@@ -4,13 +4,14 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_contracts.exceptions.ClientException;
+import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.queue.request.ShapeLoadedEvent;
 import ru.mycrg.data_service_contract.queue.response.ShapeImportedFailedEvent;
 import ru.mycrg.data_service_contract.queue.response.ShapeImportedSucceededEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
-import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.wrapper.service.export.GDALService;
 
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
@@ -53,11 +54,16 @@ public class ImportGeometryShapeRequestHandler implements IEventHandler {
                                                     50,
                                                     "",
                                                     errorReport));
+        } catch (ClientException e) {
+            String msg = "Ошибка при импорте геометрии из shape файла: " + e.getMessage();
+            log.error(msg);
+
+            messageBus.produce(new ShapeImportedFailedEvent(event, ERROR, e.getMessage(), 0, "", msg, null));
         } catch (Exception e) {
             String msg = "Ошибка при импорте геометрии из shape файла: " + e.getMessage();
             log.error(msg);
 
-            messageBus.produce(new ShapeImportedFailedEvent(event, ERROR, e.getMessage(), 0, "", msg));
+            messageBus.produce(new ShapeImportedFailedEvent(event, ERROR, e.getMessage(), 0, "", null, msg));
         }
     }
 }

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_contracts.exceptions.ClientException;
 import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
@@ -94,7 +95,7 @@ public class GDALService implements IExporter {
         }
 
         if (!baseDaoService.isTableExist(jdbcTemplate, tableName)) {
-            throw new ImportException("Невалидный shape файл!");
+            throw new ClientException("Невалидный shape файл!");
         }
         cleanUp(processBuilder, randomDirName);
 
@@ -126,7 +127,7 @@ public class GDALService implements IExporter {
             Path unzipDir = Path.of(String.format("%s/%s", rootPath, randomDirName));
             List<String> shpPaths = getFilePathByExtension(unzipDir, "shp");
             if (shpPaths.size() != 1) {
-                throw new ImportException("Архив содержит неверное количество shape файлов: " + shpPaths.size());
+                throw new ClientException("Архив содержит неверное количество shape файлов: " + shpPaths.size());
             }
 
             return shpPaths.get(0);

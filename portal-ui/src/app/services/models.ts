@@ -24,13 +24,22 @@ export interface Process {
   type: ProcessType;
   extra: any;
   message?: string;
-  details: ProcessTasks[];
+  details: ProcessTasks | ImportShapeProcess;
 }
 
 export interface ProcessTasks {
   layerName: string;
   status: ProcessStatus;
   error: string;
+}
+
+export interface ImportShapeProcess extends ProcessTasks {
+  errorMessage: string;
+  warningMessage: string;
+  quantityOfImportedRecords: number;
+  quantityOfFailedRecords: number;
+  shapeFileHasProjection: boolean;
+  targetCrs: string;
 }
 
 // Править в соответствии с: src/main/java/ru/mycrg/data_service_contract/enums/ProcessType.java

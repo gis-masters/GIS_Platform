@@ -7,10 +7,12 @@ public class ImportGeometryShapeReport {
     private boolean success;
     private String reason;
     private String message;
+    private String warningMessage;
+    private String errorMessage;
     private Long quantityOfImportedRecords;
     private Integer quantityOfFailedRecords;
     private boolean shapeFileHasProjection;
-    private String sourceSrs;
+    private String targetCrs;
 
     public ImportGeometryShapeReport() {
         // Required
@@ -80,11 +82,27 @@ public class ImportGeometryShapeReport {
         this.shapeFileHasProjection = shapeFileHasProjection;
     }
 
-    public String getSourceSrs() {
-        return sourceSrs;
+    public String getTargetCrs() {
+        return targetCrs;
     }
 
-    public void setSourceSrs(String sourceSrs) {
-        this.sourceSrs = sourceSrs;
+    public void setTargetCrs(String targetCrs) {
+        this.targetCrs = targetCrs;
+    }
+
+    public String getWarningMessage() {
+        return warningMessage;
+    }
+
+    public void setWarningMessage(String warningMessage) {
+        this.warningMessage = warningMessage;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

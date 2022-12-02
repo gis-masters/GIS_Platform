@@ -10,6 +10,8 @@ import ru.mycrg.data_service_contract.queue.response.ShapeImportedFailedEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
+import static java.util.Objects.nonNull;
+
 @Service
 public class ImportGeometryShapeFailedEventHandler implements IEventHandler {
 
@@ -33,7 +35,8 @@ public class ImportGeometryShapeFailedEventHandler implements IEventHandler {
 
         log.debug("In ShapeImportedFailedEvent! {}", requestEvent);
 
-        log.error("Выполнение процесса потерпело неудачу. Причина: {}", event.getError());
+        String error = nonNull(event.getWarningMessage()) ? event.getWarningMessage() : event.getErrorMessage();
+        log.error("Выполнение процесса потерпело неудачу. Причина: {}", error);
 
         processService.error(requestEvent.getDbName(),
                              requestEvent.getProcessId(),

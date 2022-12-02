@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_contracts.exceptions.ClientException;
 import ru.mycrg.data_service.dao.BaseTemplateDao;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
-import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.JsonConverter;
@@ -74,20 +74,31 @@ public class ImportGeometryShapeSucceededEventHandler implements IEventHandler {
             importGeometryReport.setQuantityOfImportedRecords(insertedQuantity);
             importGeometryReport.setQuantityOfFailedRecords(errorReport.getFailedRecordCount());
             importGeometryReport.setShapeFileHasProjection(errorReport.isShpFileHasProjection());
-            importGeometryReport.setSourceSrs(requestEvent.getSrs());
+            importGeometryReport.setTargetCrs(requestEvent.getSrs());
 
             processService.complete(requestEvent.getDbName(),
                                     requestEvent.getProcessId(),
                                     JsonConverter.toJsonNode(importGeometryReport));
 
             log.debug("Процесс успешно завершен");
-        } catch (Exception e) {
-            String msg = "Не удалось корректно обработать ShapeImportedSucceededEvent. Причина: " + e.getMessage();
-            log.error(msg);
+        } catch (ClientException e) {
+            String msg = "Не удалось заимпортировать геометрию. Причина: " + e.getMessage();
+            log.error("Не удалось корректно обработать ShapeImportedSucceededEvent. {}", msg);
 
             importGeometryReport.setSuccess(false);
             importGeometryReport.setQuantityOfImportedRecords(0L);
-            importGeometryReport.setMessage(msg);
+            importGeometryReport.setWarningMessage(msg);
+
+            processService.error(requestEvent.getDbName(),
+                                 requestEvent.getProcessId(),
+                                 JsonConverter.toJsonNode(importGeometryReport));
+        } catch (Exception e) {
+            String msg = "Не удалось заимпортировать геометрию. Причина: " + e.getMessage();
+            log.error("Не удалось корректно обработать ShapeImportedSucceededEvent. {}", msg);
+
+            importGeometryReport.setSuccess(false);
+            importGeometryReport.setQuantityOfImportedRecords(0L);
+            importGeometryReport.setErrorMessage(msg);
 
             processService.error(requestEvent.getDbName(),
                                  requestEvent.getProcessId(),
@@ -113,24 +124,26 @@ public class ImportGeometryShapeSucceededEventHandler implements IEventHandler {
             String msg = "Не удалось вычислить тип геометрии в таблице: " + sourceTable.getQualifier();
             log.error("{}. Причина: {}", msg, e.getMessage());
 
-            throw new DataServiceException(msg);
+            throw new ClientException(msg);
         }
 
         if (sourceGeomTypes.isEmpty()) {
             String msg = "В Shape файле отсутствуют объекты!";
             log.error(msg);
 
-            throw new DataServiceException(msg);
+            throw new ClientException(msg);
         }
 
         String sourceGeomType = sourceGeomTypes.get(0);
         log.debug("Geometry type: source  {}, target {}", sourceGeomType, targetGeomType);
 
         if (!isGeometryTypeMatch(sourceGeomType, targetGeomType)) {
-            String msg = "Тип импортируемой геометрии не совпадает с типом геометрии в слое!";
+            String msg = String.format("Тип импортируемой геометрии не совпадает с типом геометрии в слое! " +
+                                               "Исходный тип геометрии: %s, тип геометрии в слое: %s",
+                                       sourceGeomType, targetGeomType);
             log.error(msg);
 
-            throw new DataServiceException(msg);
+            throw new ClientException(msg);
         }
     }
 }

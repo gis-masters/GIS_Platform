@@ -13,7 +13,8 @@ public class ShapeImportedFailedEvent extends DefaultMessageBusResponseEvent {
     private String description;
     private int progress;
     private String payload;
-    private String error;
+    private String warningMessage;
+    private String errorMessage;
 
     public ShapeImportedFailedEvent() {
         super();
@@ -24,14 +25,16 @@ public class ShapeImportedFailedEvent extends DefaultMessageBusResponseEvent {
                                     String description,
                                     int progress,
                                     String payload,
-                                    String error) {
+                                    String warningMessage,
+                                    String errorMessage) {
         super(event, GEO_WRAPPER_TO_DATA_QUEUE);
         this.status = status;
         this.description = description;
         this.payload = payload;
         this.progress = progress;
         this.importGeometryShapeEvent = event;
-        this.error = error;
+        this.warningMessage = warningMessage;
+        this.errorMessage = errorMessage;
     }
 
     public ShapeLoadedEvent getImportGeometryShapeEvent() {
@@ -74,11 +77,19 @@ public class ShapeImportedFailedEvent extends DefaultMessageBusResponseEvent {
         this.payload = payload;
     }
 
-    public String getError() {
-        return error;
+    public String getWarningMessage() {
+        return warningMessage;
     }
 
-    public void setError(String error) {
-        this.error = error;
+    public void setWarningMessage(String warningMessage) {
+        this.warningMessage = warningMessage;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

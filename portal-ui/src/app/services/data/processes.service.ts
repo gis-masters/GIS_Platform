@@ -71,7 +71,7 @@ export async function getProcess(id: number): Promise<Process> {
   });
 }
 
-export async function awaitProcess(url: string, i = 0): Promise<void> {
+export async function awaitProcess(url: string, i = 0): Promise<void | Process> {
   if (i === 600) {
     // ждем 10 минут для предотвращения бесконечной загрузки
 
@@ -85,7 +85,7 @@ export async function awaitProcess(url: string, i = 0): Promise<void> {
   });
 
   if (res.status === ProcessStatus.DONE) {
-    return;
+    return res;
   }
 
   if (res.status === ProcessStatus.ERROR) {
@@ -93,5 +93,6 @@ export async function awaitProcess(url: string, i = 0): Promise<void> {
   }
 
   i++;
-  await awaitProcess(url, i);
+
+  return await awaitProcess(url, i);
 }

@@ -90,7 +90,7 @@ public class GeometryShapeExecutor implements IExecutor<ImportGeometryShapeRepor
 
             importReport.setSuccess(false);
             importReport.setReason(msg);
-            importReport.setMessage(msg);
+            importReport.setWarningMessage(msg);
             importReport.setDatasetIdentifier(datasetId);
             importReport.setTableIdentifier(tableName);
 
