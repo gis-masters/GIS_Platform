@@ -1,12 +1,8 @@
 package unit;
 
 import org.junit.Test;
-import org.springframework.util.StringUtils;
-import ru.mycrg.data_service.exceptions.TransformationException;
-import ru.mycrg.data_service.util.CrsHandler;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;

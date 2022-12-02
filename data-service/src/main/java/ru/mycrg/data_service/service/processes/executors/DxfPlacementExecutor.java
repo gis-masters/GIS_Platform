@@ -1,13 +1,16 @@
 package ru.mycrg.data_service.service.processes.executors;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.mappers.FileResourceQualifierMapper;
 import ru.mycrg.data_service.repository.FileRepository;
@@ -17,6 +20,9 @@ import ru.mycrg.data_service.service.import_.model.WsImportModel;
 import ru.mycrg.data_service.service.processes.FileType;
 import ru.mycrg.data_service.service.processes.IExecutor;
 import ru.mycrg.data_service.service.processes.IFilePlacer;
+import ru.mycrg.data_service.service.storage.FileStorageService;
+import ru.mycrg.data_service.service.storage.exceptions.StorageException;
+import ru.mycrg.data_service.util.FileConverter;
 import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
@@ -24,8 +30,11 @@ import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.data_service_contract.queue.request.PlaceDxfFileEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
+import java.io.IOException;
 import java.util.UUID;
 
+import static java.nio.charset.Charset.defaultCharset;
+import static java.nio.charset.Charset.forName;
 import static org.springframework.util.StringUtils.stripFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 import static ru.mycrg.data_service.service.processes.FileType.DXF;
@@ -41,6 +50,7 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
 
     private final FileRepository fileRepository;
     private final IMessageBusProducer messageBus;
+    private final FileStorageService fileStorageService;
     private final IAuthenticationFacade authenticationFacade;
     private final WsNotificationService wsNotificationService;
 
@@ -51,10 +61,12 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
 
     public DxfPlacementExecutor(FileRepository fileRepository,
                                 IMessageBusProducer messageBus,
+                                FileStorageService fileStorageService,
                                 IAuthenticationFacade authenticationFacade,
                                 WsNotificationService wsNotificationService) {
         this.fileRepository = fileRepository;
         this.messageBus = messageBus;
+        this.fileStorageService = fileStorageService;
         this.authenticationFacade = authenticationFacade;
         this.wsNotificationService = wsNotificationService;
     }
@@ -69,10 +81,12 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
 
         File file = fileRepository.findById(payload.getFileId())
                                   .orElseThrow(() -> new NotFoundException("Файл не найден"));
-        FileResourceQualifier frQualifier = FileResourceQualifierMapper.map(file.getResourceQualifier());
+
+        String resultFilePath = changeFileEncoding(file);
 
         sendWsMsg(PENDING, importReport, "Размещение файла: " + file.getTitle());
 
+        FileResourceQualifier frQualifier = FileResourceQualifierMapper.map(file.getResourceQualifier());
         String featureName = join(frQualifier.getTable(),
                                   file.getId().toString(),
                                   extractCrsNumber(payload.getCrs()).toString());
@@ -88,7 +102,7 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
                                                  getScratchWorkspaceName(authenticationFacade.getOrganizationId()),
                                                  join(getDefaultStoreName("dfx"), featureName),
                                                  featureName,
-                                                 file.getPath(),
+                                                 resultFilePath,
                                                  payload.getCrs(),
                                                  "dxf_schema_v1",
                                                  "dxf_style"));
@@ -144,6 +158,29 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
     @Override
     public boolean notDetached() {
         return false;
+    }
+
+    @NotNull
+    private String changeFileEncoding(File file) {
+        String filePath = file.getPath();
+        String striped = StringUtils.stripFilenameExtension(filePath);
+        String resultFilePath = striped + "_as1251.dxf";
+        try {
+            FileConverter.convert(filePath, resultFilePath, defaultCharset(), forName("windows-1251"));
+            fileStorageService.deleteIfExists(filePath);
+        } catch (IOException e) {
+            String msg = "Failed to convert to encoding 1251";
+            log.error(msg, e.getMessage(), e);
+
+            throw new DataServiceException("Не удалось обработать файл");
+        } catch (StorageException e) {
+            String msg = "Failed to delete temp file";
+            log.error(msg, e.getMessage(), e);
+
+            throw new DataServiceException("Не удалось обработать файл");
+        }
+
+        return resultFilePath;
     }
 
     private void sendWsMsg(ProcessStatus status, ImportReport payload, String msg) {

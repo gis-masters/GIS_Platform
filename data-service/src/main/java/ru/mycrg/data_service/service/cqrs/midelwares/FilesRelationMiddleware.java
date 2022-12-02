@@ -162,10 +162,10 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
                               log.debug("old ids: {}", oldIds);
                               log.debug("new ids: {}", newIds);
 
-                              HashSet<UUID> unionIds = new HashSet<>(oldIds);
-                              unionIds.addAll(newIds);
+                              Set<UUID> some = new HashSet<>(newIds);
+                              some.removeAll(oldIds);
 
-                              updateFilesInfo(unionIds, qualifier);
+                              updateFilesInfo(some, qualifier);
                               deleteFiles(oldIds, newIds);
                           });
         } catch (Exception e) {
