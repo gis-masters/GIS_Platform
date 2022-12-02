@@ -29,14 +29,14 @@ public class AisUmsDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(DATA_SOURCE_NAME));
 
         for (AisUmsDto aisUmsDto: aisUmsData) {
-            String updateAisUmsColumns = "UPDATE " + tQualifier.getQualifier() +
+            String query = "UPDATE " + tQualifier.getQualifier() +
                     " SET aisums_property_type = '" + aisUmsDto.getPropertyType() + "'," +
                     "     aisums_number = '" + aisUmsDto.getRegNum() + "'" +
                     " WHERE cad_num = '" + aisUmsDto.getCadNum() + "'";
 
-            log.debug("Update query with AIS UMS data: [{}]", updateAisUmsColumns);
+            log.debug("Update query with AIS UMS data: [{}]", query);
 
-            jdbcTemplate.update(updateAisUmsColumns);
+            jdbcTemplate.update(query);
         }
     }
 

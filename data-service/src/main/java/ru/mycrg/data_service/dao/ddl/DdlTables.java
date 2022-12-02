@@ -18,6 +18,7 @@ import ru.mycrg.data_service_contract.enums.ValueType;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
 import static ru.mycrg.data_service.dao.config.DaoProperties.*;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 
@@ -166,7 +167,7 @@ public class DdlTables {
                 break;
             case STRING:
                 Integer maxLength = attrDescription.getMaxLength();
-                if (maxLength < 255) {
+                if (isNull(maxLength) || maxLength < 255) {
                     maxLength = 255;
                 }
 

@@ -34,7 +34,7 @@ public class SimplePropertyDto {
     private String folderId;
     private String whiteSpace;
     private String pattern;
-    private String patternDescription = "";
+    private String patternDescription;
     private String accept;
     private String library;
     private List<String> libraries;
@@ -44,6 +44,7 @@ public class SimplePropertyDto {
     private String display;
 
     private String searchMode;
+    private String defaultValue;
 
     private int sequenceNumber;
 
@@ -51,14 +52,14 @@ public class SimplePropertyDto {
     private String calculatedValueWellKnownFormula;
     private Object valueFormulaParams;
 
-    private Integer length = -1;
-    private Integer minLength = -1;
-    private Integer maxLength = -1;
-    private Integer minInclusive = -1;
-    private Integer maxInclusive = -1;
-    private Integer totalDigits = -1;
-    private Integer fractionDigits = -1;
-    private Integer minWidth = 0;
+    private Integer length;
+    private Integer minLength;
+    private Integer maxLength;
+    private Integer minInclusive;
+    private Integer maxInclusive;
+    private Integer totalDigits;
+    private Integer fractionDigits;
+    private Integer minWidth;
     private Integer maxSize;
     private Integer maxFiles;
     private Integer maxDocuments;
@@ -396,5 +397,13 @@ public class SimplePropertyDto {
 
     public void setLibrary(String library) {
         this.library = library;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 }

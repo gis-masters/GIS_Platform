@@ -10,7 +10,7 @@ public class TotalDigitsValidation implements CrgConstraintValidator {
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
-        if (value == null || context.getTotalDigits() == -1) {
+        if (value == null || context.getTotalDigits() == null) {
             return true;
         }
 

@@ -10,7 +10,7 @@ public class MinInclusiveValidation extends IsLongTypeValidation implements CrgC
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
-        if (value == null || context.getMinInclusive() == -1) {
+        if (value == null || context.getMinInclusive() == null) {
             return true;
         }
 

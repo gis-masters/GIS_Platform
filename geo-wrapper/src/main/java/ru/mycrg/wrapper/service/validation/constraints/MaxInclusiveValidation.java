@@ -10,7 +10,7 @@ public class MaxInclusiveValidation extends IsLongTypeValidation implements CrgC
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
-        if (value == null || context.getMaxInclusive() == -1) {
+        if (value == null || context.getMaxInclusive() == null) {
             return true;
         }
 

@@ -10,7 +10,7 @@ public class MinLengthValidation implements CrgConstraintValidator {
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
-        if (value == null || context.getMinLength() == -1) {
+        if (value == null || context.getMinLength() == null) {
             return true;
         }
 
