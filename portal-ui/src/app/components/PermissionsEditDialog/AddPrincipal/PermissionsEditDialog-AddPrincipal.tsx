@@ -43,20 +43,23 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
   @observable private role: Role = Role.VIEWER;
   @observable private selectedPrincipals: (CrgUser | CrgGroup)[] = [];
 
-  private cols: XTableColumn<CrgUser | CrgGroup>[] = [
-    {
-      title: (
-        <Checkbox
-          indeterminate={this.selectedPrincipals.length > 0 && !this.selectedAll}
-          checked={this.selectedAll}
-          onChange={this.handleSelectAll}
-        />
-      ),
-      cellProps: { padding: 'checkbox' },
-      CellContent: this.renderCheckbox
-    },
-    ...this.getColumns()
-  ];
+  @computed
+  private get cols(): XTableColumn<CrgUser | CrgGroup>[] {
+    return [
+      {
+        title: (
+          <Checkbox
+            indeterminate={this.selectedPrincipals.length > 0 && !this.selectedAll}
+            checked={this.selectedAll}
+            onChange={this.handleSelectAll}
+          />
+        ),
+        cellProps: { padding: 'checkbox' },
+        CellContent: this.renderCheckbox
+      },
+      ...this.getColumns()
+    ];
+  }
 
   constructor(props: PermissionsEditDialogAddPrincipalProps) {
     super(props);

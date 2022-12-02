@@ -26,14 +26,15 @@ export class XTableHeadCellTitle<T> extends Component<XTableHeadCellTitleProps<T
 
   render() {
     const { col, singleLineContent } = this.props;
+    const { title } = col;
 
     const inner = (
       <span className={cnXTableHeadCellTitle({ singleLineContent })} onMouseEnter={this.handleMouseEnter}>
-        {col.title}
+        {title}
       </span>
     );
 
-    return this.needTooltip ? <Tooltip title={col.title}>{inner}</Tooltip> : inner;
+    return this.needTooltip ? <Tooltip title={title}>{inner}</Tooltip> : inner;
   }
 
   @action.bound
