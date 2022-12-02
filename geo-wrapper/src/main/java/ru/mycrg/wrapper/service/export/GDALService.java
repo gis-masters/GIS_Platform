@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
 import ru.mycrg.wrapper.config.CrgProperties;
 import ru.mycrg.wrapper.dao.BaseDaoService;
@@ -265,14 +266,16 @@ public class GDALService implements IExporter {
             String randomDirName = UUID.randomUUID().toString();
             String host = getPortGisHost();
             String port = getPortGisPort();
-            String userName = environment.getProperty("spring.datasource.username");
-            String password = environment.getProperty("spring.datasource.password");
+            String usrName = environment.getProperty("spring.datasource.username");
+            String pswd = environment.getProperty("spring.datasource.password");
             String dbName = resource.getDbName();
             String schemaName = resource.getSchemaName();
             String tableName = resource.getTableName();
+            SchemaDto schema = resource.getSchema();
+            String geomType = schema.getGeometryType().getType().toUpperCase();
 
             String mkdirAndCd = String.format("mkdir %s; cd %s;", randomDirName, randomDirName);
-            String exportAShp = getOgr2OgrExportCommand(host, port, userName, password, dbName, schemaName, tableName);
+            String exportAShp = getOgr2OgrExportCmd(host, port, usrName, pswd, dbName, schemaName, tableName, geomType);
             String getTheHead = String.format(" head -c 29 %s.dbf > head.ext;", tableName);
             String getTheTail = String.format(" tail -c +31 %s.dbf > tail.ext;", tableName);
             String fillHead1b = " dd if=tail.ext bs=1 count=1 >> head.ext;";
@@ -316,12 +319,12 @@ public class GDALService implements IExporter {
         }
     }
 
-    private String getOgr2OgrExportCommand(String host, String port, String userName, String password, String dbName,
-                                           String schemaName, String tableName) {
+    private String getOgr2OgrExportCmd(String host, String port, String userName, String password, String dbName,
+                                       String schemaName, String tableName, String geomType) {
         return String.format("ogr2ogr -f \"ESRi Shapefile\" %s.shp " +
                                      "PG:\"host=%s port=%s user=%s password=%s dbname=%s\" " +
-                                     "-sql \"SELECT * from %s.%s\" --config SHAPE_ENCODING UTF-8;",
-                             tableName, host, port, userName, password, dbName, schemaName, tableName);
+                                     "-nlt %s -sql \"SELECT * from %s.%s\" --config SHAPE_ENCODING UTF-8;",
+                             tableName, host, port, userName, password, dbName, geomType, schemaName, tableName);
     }
 
     private String getOgr2OgrImportFromSHPToTableCommand(String dbName, String tableName, String srs, String filePath) {
