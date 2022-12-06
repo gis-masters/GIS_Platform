@@ -1,6 +1,5 @@
 package ru.mycrg.acceptance.data_service.libraries;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -22,8 +21,6 @@ import static java.lang.Boolean.parseBoolean;
 import static java.lang.Thread.sleep;
 import static java.util.Objects.nonNull;
 import static java.util.stream.IntStream.range;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.CommonStepDefinitions.checkSorting;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
@@ -35,8 +32,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     public static Integer currentDocumentId;
     public static DefaultDocumentModel currentDocument;
-    public static String fileName;
-    public static File file;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
     private final DatasetsStepsDefinitions datasetsStepsDefinitions = new DatasetsStepsDefinitions();
@@ -49,57 +44,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
         return super.getBaseRequestWithCurrentCookie().basePath("/api/data/document-libraries");
-    }
-
-    @When("Пользователь делает запрос на добавление файла")
-    public void createDocument(DataTable dataTable) {
-        fileName = dataTable.asList().get(0);
-
-        file = new File(String.format("src/test/resources/ru/mycrg/acceptance/resources/%s", fileName));
-
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType("multipart/form-data").
-                        multiPart("file", file).
-                        multiPart("body",
-                                  String.format("{\"title\":\"%s\",\"size\":%d}", file.getName(), file.length()))
-                .when().
-                        log().ifValidationFails().
-                        post(String.format("/%s/records", DEFAULT_LIBRARY));
-    }
-
-    @And("Сервер передаёт ID файла в ответе")
-    public void extractDocumentIdFromResponse() {
-        currentDocumentId = response.jsonPath().get("id");
-
-        assertThat(currentDocumentId, is(not(equalTo(null))));
-
-        documentPool.put(fileName, currentDocumentId);
-    }
-
-    @When("Существует файл")
-    public void initFile(DataTable dataTable) {
-        String fileName = dataTable.asList().get(0);
-
-        if (documentPool.containsKey(fileName)) {
-            makeExactDocumentAsCurrent(fileName);
-        } else {
-            createDocument(dataTable);
-
-            extractDocumentIdFromResponse();
-        }
-    }
-
-    @When("Пользователь делает запрос на скачивание файла")
-    public void downloadFile() {
-        final String tempBinaryFieldNameOfDefaultLibrarySchema = "inner_path";
-        final String url = String.format("/%s/records/%s/%s/download",
-                                         DEFAULT_LIBRARY, currentDocumentId, tempBinaryFieldNameOfDefaultLibrarySchema);
-
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        log().ifValidationFails().
-                        get(url);
     }
 
     @When("пользователь делает выборку всех документов в виде реестра")
@@ -118,11 +62,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                 .anyMatch(stringObjectMap -> !parseBoolean(stringObjectMap.get("is_folder").toString()));
 
         assertFalse(isFileExist);
-    }
-
-    @And("В ответе передаётся содержимое файла")
-    public void checkFileLength() {
-        assertThat((long) response.getBody().asByteArray().length, equalTo(file.length()));
     }
 
     @When("Пользователь удаляет запись в библиотеке")
@@ -150,11 +89,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         recordModel.setSome_files(descriptions);
 
         updateDocument(currentDocumentId, gson.toJson(recordModel));
-    }
-
-    @When("Пользователь делает запрос на удаление файла")
-    public void deleteDocument() {
-        deleteRecord(currentDocumentId);
     }
 
     @Given("В библиотеке по-умолчанию существует запись")
@@ -458,17 +392,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                                             .collect(Collectors.toList());
 
         checkSorting(sortingDirection, recordsSorted);
-    }
-
-    private void makeExactDocumentAsCurrent(String fName) {
-        documentPool.entrySet().stream()
-                    .filter(entry -> entry.getKey().equals(fName))
-                    .findFirst()
-                    .ifPresent(entry -> {
-                        fileName = entry.getKey();
-                        currentDocumentId = entry.getValue();
-                        file = new File("src/test/resources/ru/mycrg/acceptance/resources/" + fileName);
-                    });
     }
 
     private void createRecordWithSecondFile() {

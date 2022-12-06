@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
@@ -123,7 +122,6 @@ public class DocumentLibraryRecordsController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/document-libraries/{docLibId}/records")
     public ResponseEntity<Map<String, Object>> createObject(@PathVariable String docLibId,
-                                                            @RequestParam(required = false) MultipartFile file,
                                                             @RequestParam(value = "body") String jsonBody) {
         orgSettingsKeeper.throwIfCreateLibraryItemNotAllowed();
 
@@ -134,8 +132,7 @@ public class DocumentLibraryRecordsController {
         IRecord record = mediator.execute(
                 new CreateLibraryRecordRequest(schema,
                                                new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY),
-                                               new RecordEntity(props),
-                                               file));
+                                               new RecordEntity(props)));
 
         return new ResponseEntity<>(record.getContent(), CREATED);
     }

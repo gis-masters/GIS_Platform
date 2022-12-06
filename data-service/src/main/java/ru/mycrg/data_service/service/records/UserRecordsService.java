@@ -205,11 +205,10 @@ public class UserRecordsService implements IRecordsService {
     @Transactional
     public IRecord createRecord(ResourceQualifier lQualifier,
                                 IRecord record,
-                                MultipartFile file,
                                 SchemaDto schema) {
         throwIfCreateNotAllowed(lQualifier, record);
 
-        return ownerRecordsService.createRecord(lQualifier, record, file, schema);
+        return ownerRecordsService.createRecord(lQualifier, record, schema);
     }
 
     @Override

@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.ddl.DdlTables;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
@@ -19,7 +18,6 @@ import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.ArrayList;
@@ -40,25 +38,22 @@ public class OwnerRecordsService implements IRecordsService {
 
     private final Logger log = LoggerFactory.getLogger(OwnerRecordsService.class);
 
+    private final DdlTables ddlTables;
     private final RecordsDao recordsDao;
-    private final FileStorageService fileStorageService;
     private final PermissionsService permissionsService;
     private final DocumentLibraryService librariesService;
     private final SystemAttributeHandler systemAttributeHandler;
-    private final DdlTables ddlTables;
 
-    public OwnerRecordsService(RecordsDao recordsDao,
-                               FileStorageService fileStorageService,
+    public OwnerRecordsService(DdlTables ddlTables,
+                               RecordsDao recordsDao,
                                PermissionsService permissionsService,
                                DocumentLibraryService librariesService,
-                               SystemAttributeHandler systemAttributeHandler,
-                               DdlTables ddlTables) {
-        this.recordsDao = recordsDao;
-        this.fileStorageService = fileStorageService;
-        this.permissionsService = permissionsService;
-        this.librariesService = librariesService;
-        this.systemAttributeHandler = systemAttributeHandler;
+                               SystemAttributeHandler systemAttributeHandler) {
         this.ddlTables = ddlTables;
+        this.recordsDao = recordsDao;
+        this.librariesService = librariesService;
+        this.permissionsService = permissionsService;
+        this.systemAttributeHandler = systemAttributeHandler;
     }
 
     @Override
@@ -100,7 +95,7 @@ public class OwnerRecordsService implements IRecordsService {
         SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
 
         IRecord record = recordsDao.findById(new ResourceQualifier(rQualifier, recordId, LIBRARY_RECORD), schema)
-                                    .orElseThrow(() -> new NotFoundException(recordId));
+                                   .orElseThrow(() -> new NotFoundException(recordId));
 
         record.getContent().put(ROLE.getName(), OWNER.name());
 
@@ -108,7 +103,7 @@ public class OwnerRecordsService implements IRecordsService {
     }
 
     @Override
-    public IRecord createRecord(ResourceQualifier lQualifier, IRecord record, MultipartFile file, SchemaDto schema) {
+    public IRecord createRecord(ResourceQualifier lQualifier, IRecord record, SchemaDto schema) {
         try {
             log.debug("try create record: {}", record);
 
@@ -119,19 +114,6 @@ public class OwnerRecordsService implements IRecordsService {
                                   .fillCreator(props)
                                   .updateModifiedTime(record)
                                   .prepareJsonb(record);
-
-            if (file != null) {
-                if (file.isEmpty()) {
-                    throw new BadRequestException("File is empty");
-                }
-
-                String path = fileStorageService.storeFile(file, fileStorageService.generateFileName(file));
-
-                systemAttributeHandler.initSchema(schema)
-                                      .fillFileInfo(props, file)
-                                      .prepareJsonb(record)
-                                      .fillFileInnerPath(props, path);
-            }
 
             props.putAll(systemAttributeHandler.customRulesCalculation(props));
 

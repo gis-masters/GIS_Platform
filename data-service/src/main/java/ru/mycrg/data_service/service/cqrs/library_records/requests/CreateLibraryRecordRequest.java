@@ -2,7 +2,6 @@ package ru.mycrg.data_service.service.cqrs.library_records.requests;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.data_service.entity.IRecord;
@@ -20,17 +19,14 @@ public class CreateLibraryRecordRequest implements IRequest<IRecord>, Auditable,
 
     private final ResourceQualifier rQualifier;
     private final RecordEntity record;
-    private final MultipartFile file;
     private final SchemaDto schema;
 
     public CreateLibraryRecordRequest(SchemaDto schemaDto,
                                       ResourceQualifier rQualifier,
-                                      RecordEntity record,
-                                      MultipartFile file) {
+                                      RecordEntity record) {
         this.schema = schemaDto;
         this.rQualifier = rQualifier;
         this.record = record;
-        this.file = file;
     }
 
     @Override
@@ -65,9 +61,5 @@ public class CreateLibraryRecordRequest implements IRequest<IRecord>, Auditable,
     @Override
     public Feature getFeature() {
         return null;
-    }
-
-    public MultipartFile getFile() {
-        return file;
     }
 }
