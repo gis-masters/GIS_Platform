@@ -22,7 +22,7 @@ import {
 } from 'ol/format/filter';
 import Filter from 'ol/format/filter/Filter';
 import { Geometry } from 'ol/geom';
-import Units from 'ol/proj/Units';
+import { Units } from 'ol/proj/Units';
 
 type FilterFunc = (...args: Filter[]) => Filter;
 

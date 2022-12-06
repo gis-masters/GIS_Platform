@@ -169,6 +169,7 @@ class CurrentProject implements CrgProjectData {
     return (
       currentTransparency === previousTransparency &&
       currentType === previousType &&
+      currentType !== CrgLayerType.RASTER &&
       lastBatch.length < MAX_LAYERS_IN_BATCH &&
       !attributesTableStore.isLayerFiltered(currentItem.payload) &&
       !attributesTableStore.isLayerFiltered(previousItem.payload)

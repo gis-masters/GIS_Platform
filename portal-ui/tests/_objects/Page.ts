@@ -14,11 +14,12 @@ export abstract class Page extends Block {
     await expect(browser).toHaveUrlContaining(this.url);
   }
 
-  async open(): Promise<void> {
-    await browser.url(this.url);
+  async open(urlExtras = ''): Promise<void> {
+    await browser.url(this.url + urlExtras);
     await this.waitForVisible();
   }
 
+  // перейти на данную страницу с другой страницы приложения, используя роутер приложения
   navigate(urlExtras = ''): Promise<void> {
     return browser.execute(url => {
       window.navigate(url);

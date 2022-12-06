@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { MyLocation } from '@mui/icons-material';
 import { IconButton, ListItem, ListItemSecondaryAction, ListItemText } from '@mui/material';
-import IconAnchorUnits from 'ol/style/IconAnchorUnits';
 import { SimpleGeometry } from 'ol/geom';
 import { Icon, Style } from 'ol/style';
 import { fromLonLat } from 'ol/proj';
@@ -67,8 +66,8 @@ export class SearchResultListItem extends Component<SearchResultListItemProps> {
 
     const iconStyle = new Style({
       image: new Icon({
-        anchorXUnits: IconAnchorUnits.FRACTION,
-        anchorYUnits: IconAnchorUnits.PIXELS,
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'pixels',
         src: '/assets/images/map-marker.png'
       })
     });

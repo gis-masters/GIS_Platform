@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { MyLocation } from '@mui/icons-material';
 import { IconButton, ListItem, ListItemSecondaryAction, ListItemText } from '@mui/material';
-import IconAnchorUnits from 'ol/style/IconAnchorUnits';
 import { SimpleGeometry } from 'ol/geom';
 import { Icon, Style } from 'ol/style';
 import { Extent } from 'ol/extent';
@@ -86,8 +85,8 @@ export class SearchResultKadListItem extends Component<SearchResultKadListItemPr
   private drawMarker(pos: number[]) {
     const iconStyle = new Style({
       image: new Icon({
-        anchorXUnits: IconAnchorUnits.FRACTION,
-        anchorYUnits: IconAnchorUnits.PIXELS,
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'pixels',
         src: '/assets/images/map-marker.png'
       })
     });
