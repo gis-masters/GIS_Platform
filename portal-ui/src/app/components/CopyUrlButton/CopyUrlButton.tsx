@@ -16,18 +16,20 @@ const cnCopyUrlButton = cn('CopyUrlButton');
 
 interface CopyUrlButtonProps extends IClassNameProps {
   inHeader?: boolean;
-  feature?: [WfsFeature];
+  features?: WfsFeature[];
   onClick?: () => void;
 }
 
 export class CopyUrlButton extends Component<CopyUrlButtonProps> {
   render() {
-    const { inHeader, feature } = this.props;
+    const { inHeader, features } = this.props;
 
     return (
       <Tooltip
         title={
-          feature ? `Копировать ссылку на ${pluralize(2, 'объект', 'объекты', 'объекты')}` : 'Копировать текущую ссылку'
+          features
+            ? `Копировать ссылку на ${pluralize(features.length, 'объект', 'объекты', 'объекты')}`
+            : 'Копировать текущую ссылку'
         }
       >
         <IconButton
@@ -43,7 +45,8 @@ export class CopyUrlButton extends Component<CopyUrlButtonProps> {
 
   @boundMethod
   private clickHandler() {
-    const urlForClipboard = this.props.feature ? getFeatureUrl(this.props.feature[0]) : location.href;
+    /* количество объектов может быть больше одного; сейчас это сломано, но уже есть задача на починку #5229 */
+    const urlForClipboard = this.props.features ? getFeatureUrl(this.props.features[0]) : location.href;
 
     copyToClipboard(urlForClipboard);
 

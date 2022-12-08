@@ -58,7 +58,6 @@ import { BasemapsSelectComponent } from './components/basemaps-select/basemaps-s
 import { DataManagementComponent } from './components/data-management/data-management.component';
 import { LogoComponent } from './components/logo/logo.component';
 import { MapToolbarComponent } from './components/map-toolbar/map-toolbar.component';
-import { CopyUrlButtonComponent } from './components/copy-url-button/copy-url-button.component';
 import { ExportValidationReportButtonComponent } from './components/export-validation-report-button/export-validation-report-button.component';
 import { LoginFormDialogComponent } from './components/login-form-dialog/login-form-dialog.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
@@ -120,7 +119,6 @@ import { EditFeatureActionsComponent } from './components/edit-feature-actions/e
     DataManagementComponent,
     LogoComponent,
     MapToolbarComponent,
-    CopyUrlButtonComponent,
     ExportValidationReportButtonComponent,
     LoginFormComponent,
     RestorePasswordFormComponent,

@@ -115,6 +115,18 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
         Object.keys(this.features[0].properties)
           .filter(key => key !== 'bbox')
+          .sort((a, b) => {
+            let indexA = schema.properties.findIndex(({ name }) => name === a);
+            if (indexA === -1) {
+              indexA = schema.properties.length;
+            }
+            let indexB = schema.properties.findIndex(({ name }) => name === b);
+            if (indexB === -1) {
+              indexB = schema.properties.length;
+            }
+
+            return indexA - indexB;
+          })
           .forEach(key => {
             let currentValue = this.getFieldByKey(key)
               ? convertToComplexField(this.getFieldByKey(key), this.features[0].properties)

@@ -143,14 +143,25 @@ export function convertNewToOldSchema({
 }
 
 function convertOldToNewContentType(contentType: OldContentType): ContentType {
-  return {
+  const newContentType = {
     ...contentType,
     properties: convertOldToNewProperties(contentType.attributes as OldPropertySchema[])
   };
+
+  delete newContentType.attributes;
+
+  return newContentType;
 }
 
 function convertNewToOldContentType(contentType: ContentType): OldContentType {
-  return { ...contentType, attributes: convertNewToOldProperties(contentType.properties as PropertySchema[]) };
+  const oldContentType = {
+    ...contentType,
+    attributes: convertNewToOldProperties(contentType.properties as PropertySchema[])
+  };
+
+  delete oldContentType.properties;
+
+  return oldContentType;
 }
 
 export function convertOldToNewProperties(oldFields: OldPropertySchema[]): PropertySchema[] {

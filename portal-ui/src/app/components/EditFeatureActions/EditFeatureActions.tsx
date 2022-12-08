@@ -31,7 +31,7 @@ export class EditFeatureActions extends Component<EditFeatureActionsProps> {
         {layer && <FeatureExtract feature={feature} layer={layer} />}
         {layer && <XmlDownload feature={feature} layer={layer} />}
         <OpenInAnotherProject feature={feature} />
-        <CopyUrlButton />
+        <CopyUrlButton features={[feature]} />
         <ZoomToFeature feature={feature} />
       </div>
     );

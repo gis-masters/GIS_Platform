@@ -164,6 +164,12 @@ const vectorTableSchemaBase: Schema<VectorTable> = {
       name: 'isPublic',
       title: 'Публичный',
       propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'schemaId',
+      title: 'Схема',
+      propertyType: PropertyType.STRING,
+      readOnly: true
     }
   ]
 };
