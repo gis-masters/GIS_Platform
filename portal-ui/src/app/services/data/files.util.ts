@@ -77,8 +77,16 @@ export function getDocumentFiles(libraryRecord: LibraryRecord): FileInfo[] {
     .flat() as FileInfo[];
 }
 
+const zipFileTypes = new Set([
+  'application/x-zip',
+  'application/zip',
+  'application/x-zip-compressed',
+  'application/s-compressed',
+  'multipart/x-zip'
+]);
+
 export function isZipFile(file: File): boolean {
-  return file.type === 'application/zip';
+  return zipFileTypes.has(file.type);
 }
 
 function isFileInfo(object: Partial<FileInfo>): boolean {
