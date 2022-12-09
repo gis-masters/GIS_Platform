@@ -80,6 +80,9 @@ public class Layer implements Identifiable<Long> {
     @ManyToOne
     private Group parent;
 
+    @Column(name = "content_type")
+    private String contentType;
+
     public Layer() {
         // Required
     }
@@ -105,6 +108,7 @@ public class Layer implements Identifiable<Long> {
 
         createdAt = LocalDateTime.now();
         lastModified = LocalDateTime.now();
+        contentType = dto.getContentType();
     }
 
     public Layer(LayerCreateDto dto, Project project) {
@@ -280,6 +284,14 @@ public class Layer implements Identifiable<Long> {
 
     public void setRecordId(Long recordId) {
         this.recordId = recordId;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     @Override

@@ -51,8 +51,8 @@ Feature: Обновление проектов
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
     When Администратор даёт доступ: "VIEWER" для текущего пользователя на текущий проект
     When Пользователь делает запрос на обновление полей слоя проекта
-      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> |
+      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> | <newContentType> |
     Then Сервер отвечает со статус-кодом 403
     Examples:
-      | userName  | userSurname | userEmail | userPassword | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs |
-      | STRING_10 | STRING_10   | EMAIL_10  | testtestQ1   | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   |
+      | userName  | userSurname | userEmail | userPassword | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs | newContentType    |
+      | STRING_10 | STRING_10   | EMAIL_10  | testtestQ1   | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   | test_content_type |

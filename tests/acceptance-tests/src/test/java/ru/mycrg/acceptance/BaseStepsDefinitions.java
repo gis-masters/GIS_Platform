@@ -30,6 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static io.restassured.RestAssured.given;
+import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -133,6 +134,9 @@ public class BaseStepsDefinitions {
     }
 
     public String generateString(String controlKey) {
+        if (isNull(controlKey)) {
+            return null;
+        }
         if (controlKey.equals("NULL")) {
             return null;
         }

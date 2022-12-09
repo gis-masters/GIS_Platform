@@ -62,8 +62,12 @@ public class LayerCreateDto {
 
     private Long recordId;
 
-    @Pattern(regexp = "^(full|geoserver|gis-service)$", message = "Допустимые значения поля role: full, geoserver, gis-service")
+    @Pattern(regexp = "^(full|geoserver|gis-service)$",
+             message = "Допустимые значения поля role: full, geoserver, gis-service")
     private String mode = "full";
+
+    @Length(max = 50)
+    private String contentType;
 
     public LayerCreateDto() {
         //Required by framework
@@ -213,6 +217,14 @@ public class LayerCreateDto {
         this.mode = mode;
     }
 
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -233,7 +245,8 @@ public class LayerCreateDto {
                 "\"dataSourceUri\":" + (dataSourceUri == null ? "null" : "\"" + dataSourceUri + "\"") + ", " +
                 "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
                 "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") + ", " +
-                "\"mode\":\"" + mode + "\"" +
+                "\"mode\":" + (mode == null ? "null" : "\"" + mode + "\"") + ", " +
+                "\"contentType\":" + (contentType == null ? "null" : "\"" + contentType + "\"") +
                 "}";
     }
 }

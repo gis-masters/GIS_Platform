@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 
 @Service
@@ -79,8 +80,8 @@ public class ImportService {
 
             ImportMqTask importMqTask = new ImportMqTask(
                     layerName,
-                    schemaDto.getName(),
-                    "scratch_database_" + orgId,
+                    schemaDto.getStyleName(),
+                    getScratchWorkspaceName(orgId),
                     projectId,
                     schemaDto,
                     new ResourceProjection(dbName, "public", uiTask.getLayerName()),

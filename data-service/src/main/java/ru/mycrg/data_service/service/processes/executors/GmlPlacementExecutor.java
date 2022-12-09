@@ -50,8 +50,8 @@ import java.util.UUID;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.service.processes.FileType.GML;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.validators.GmlPlacementModelValidator.throwIfNotValid;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
@@ -274,7 +274,7 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
                             "    \"parentId\": \"" + groupId + "\"," +
                             "    \"enabled\": true," +
                             "    \"schemaId\": \"" + layerReport.getSchemaId() + "\"," +
-                            "    \"styleName\": \"" + layerReport.getSchemaId() + "\"" +
+                            "    \"styleName\": \"" + layerReport.getStyleName() + "\"" +
                             "}");
 
             Request request = new Request.Builder()

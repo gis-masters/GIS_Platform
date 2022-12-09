@@ -10,6 +10,7 @@ public class ImportLayerReport {
     private String tableIdentifier;
     private String tableTitle;
     private String crs;
+    private String styleName;
 
     public ImportLayerReport() {
         // Required
@@ -95,6 +96,14 @@ public class ImportLayerReport {
         this.crs = crs;
     }
 
+    public String getStyleName() {
+        return styleName;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -105,7 +114,8 @@ public class ImportLayerReport {
                 "\"reason\":" + (reason == null ? "null" : "\"" + reason + "\"") + ", " +
                 "\"tableIdentifier\":" + (tableIdentifier == null ? "null" : "\"" + tableIdentifier + "\"") + ", " +
                 "\"tableTitle\":" + (tableTitle == null ? "null" : "\"" + tableTitle + "\"") + ", " +
-                "\"crs\":" + (crs == null ? "null" : "\"" + crs + "\"") +
+                "\"crs\":" + (crs == null ? "null" : "\"" + crs + "\"") + ", " +
+                "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") +
                 "}";
     }
 }

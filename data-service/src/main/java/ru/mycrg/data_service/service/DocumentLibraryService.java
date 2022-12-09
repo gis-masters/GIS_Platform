@@ -19,7 +19,7 @@ import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service_contract.dto.ContentTypes;
+import ru.mycrg.data_service_contract.dto.ContentType;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.time.LocalDateTime;
@@ -158,7 +158,7 @@ public class DocumentLibraryService {
             if (schema.isPresent()) {
                 contentTypes = schema.get()
                                      .getContentTypes()
-                                     .stream().map(ContentTypes::getId)
+                                     .stream().map(ContentType::getId)
                                      .collect(Collectors.toList());
             } else {
                 throw new NotFoundException("Не найдена схема: " + schemaId);

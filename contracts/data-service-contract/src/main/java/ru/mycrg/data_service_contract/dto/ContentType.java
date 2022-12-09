@@ -3,18 +3,19 @@ package ru.mycrg.data_service_contract.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContentTypes {
+public class ContentType {
 
     private String id;
     private String type;
     private String title;
     private String icon;
     private Boolean childOnly;
+    private String styleName;
     private List<Object> children = new ArrayList<>();
     private List<Object> attributes = new ArrayList<>();
     private List<String> printTemplates = new ArrayList<>();
 
-    public ContentTypes() {
+    public ContentType() {
         // Required
     }
 
@@ -80,5 +81,13 @@ public class ContentTypes {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public String getStyleName() {
+        return styleName;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
     }
 }

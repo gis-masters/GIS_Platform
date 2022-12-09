@@ -8,7 +8,7 @@ Feature: Создание растровых слоёв
   Scenario Outline: Создание растрового слоя на гис-сервисе
     Given Существует проект "STRING_10"
     Given Существует запись в библиотеке на основе растрового файла "raster test"
-    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>"
+    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type"
     Then Сервер отвечает со статус-кодом 201
     And Сервер передаёт ID слоя проекта в ответе
     When Пользователь делает запрос на текущий слой
@@ -21,7 +21,7 @@ Feature: Создание растровых слоёв
     Given Существует проект "STRING_10"
     Given Существует набор
     Given Существует таблица
-    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>"
+    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type"
     Then Сервер отвечает со статус-кодом 400
     Examples:
       | type   | nativeCRS  | libraryId  | recordId | mode        | reason                     |

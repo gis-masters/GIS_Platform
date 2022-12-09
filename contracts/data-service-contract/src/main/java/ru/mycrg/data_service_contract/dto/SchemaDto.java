@@ -5,6 +5,8 @@ import ru.mycrg.data_service_contract.enums.GeometryType;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Objects.nonNull;
+
 public class SchemaDto {
 
     private String name;
@@ -16,9 +18,10 @@ public class SchemaDto {
     private String calcFiledFunction = "";
     private String originName;
     private String type;
+    private String styleName;
     private boolean readOnly;
     private GeometryType geometryType;
-    private List<ContentTypes> contentTypes = new ArrayList<>();
+    private List<ContentType> contentTypes = new ArrayList<>();
     private List<String> printTemplates = new ArrayList<>();
     private List<SchemaRelation> relations = new ArrayList<>();
 
@@ -106,11 +109,11 @@ public class SchemaDto {
         this.geometryType = geometryType;
     }
 
-    public List<ContentTypes> getContentTypes() {
+    public List<ContentType> getContentTypes() {
         return contentTypes;
     }
 
-    public void setContentTypes(List<ContentTypes> contentTypes) {
+    public void setContentTypes(List<ContentType> contentTypes) {
         this.contentTypes = contentTypes;
     }
 
@@ -136,6 +139,14 @@ public class SchemaDto {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getStyleName() {
+        return nonNull(styleName) ? styleName : name;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
     }
 
     public boolean isCompatibleByGeometry(SchemaDto otherSchema) {

@@ -39,6 +39,9 @@ public class LayerUpdateDto {
     @Length(min = 6, max = 255)
     private String nativeCRS;
 
+    @Length(max = 50)
+    private String contentType;
+
     public LayerUpdateDto() {
         // Required by framework
     }
@@ -113,5 +116,13 @@ public class LayerUpdateDto {
 
     public void setNativeCRS(String nativeCRS) {
         this.nativeCRS = nativeCRS;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }

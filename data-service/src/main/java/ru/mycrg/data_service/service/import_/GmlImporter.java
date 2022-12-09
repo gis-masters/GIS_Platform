@@ -98,6 +98,7 @@ public class GmlImporter {
                 if (oEpsg.isEmpty() && isNull(defaultCrs)) {
                     ImportLayerReport importLayerReport = new ImportLayerReport();
                     importLayerReport.setSchemaId(schema.getName());
+                    importLayerReport.setStyleName(schema.getStyleName());
                     importLayerReport.setTableTitle(schema.getTableName());
                     importLayerReport.setReason("Не удалось выполнить импорт. Неверно указана система координат");
                     importLayerReports.add(importLayerReport);
@@ -119,6 +120,7 @@ public class GmlImporter {
                 }
                 String epsg = oEpsg.orElse(defaultCrs);
                 ImportLayerReport importLayerReport = importLayer(featureData, epsg, schema, datasetIdentifier);
+                importLayerReport.setStyleName(schema.getStyleName());
 
                 importLayerReports.add(importLayerReport);
             });

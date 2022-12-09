@@ -9,7 +9,7 @@ Feature: При изменении слоя, осуществляется зап
     Given Существует проект "STRING_10"
     Given Существует набор
     Given Существует таблица
-    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>"
+    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type"
     And Создан аудит лог о создании слоя, с корректным телом
     Examples:
       | title                             | styleName    | type   | schemaId     | nativeCRS  | dataSourceUri |
@@ -21,11 +21,11 @@ Feature: При изменении слоя, осуществляется зап
     Given Существует таблица
     Given Существует слой проекта
     When Владелец делает запрос на обновление полей слоя проекта
-      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> |
+      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> | <newContentType> |
     And Создан аудит лог об изменении слоя, с корректным телом
     Examples:
-      | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs |
-      | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   |
+      | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs | newContentType    |
+      | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   | test_content_type |
 
   Scenario: Удаление слоя заносится в аудит лог
     Given Существует проект "STRING_10"

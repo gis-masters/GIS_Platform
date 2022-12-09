@@ -16,6 +16,7 @@ public class SchemaDto {
     private String type;
     private boolean readOnly;
     private String geometryType;
+    private String styleName;
     private List<Object> contentTypes = new ArrayList<>();
     private List<Object> printTemplates = new ArrayList<>();
     private List<Object> relations = new ArrayList<>();
@@ -130,5 +131,13 @@ public class SchemaDto {
 
     public void setRelations(List<Object> relations) {
         this.relations = relations;
+    }
+
+    public String getStyleName() {
+        return styleName;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
     }
 }
