@@ -12,7 +12,12 @@ import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { EditFeatureMode, EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
 import { isUpdateAllowed } from '../../services/data/permissions.service';
-import { convertOldToNewProperties, convertOldToNewSchema, getFieldRelations } from '../../services/data/schema.utils';
+import {
+  changeSchemaNamesCaseByFeature,
+  convertOldToNewProperties,
+  convertOldToNewSchema,
+  getFieldRelations
+} from '../../services/data/schema.utils';
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
 import { deleteFeatures, updateVectorTableRecord } from '../../services/data/data.service';
@@ -94,8 +99,14 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
         this.editFeatureForm = this.formBuilder.group({});
 
-        this.featureDescription = await schemaService.getOldSchema(this.layer.schemaId);
-        const schema = await schemaService.getSchema(this.layer.schemaId);
+        this.featureDescription = changeSchemaNamesCaseByFeature(
+          await schemaService.getOldSchema(this.layer.schemaId),
+          this.features[0]
+        );
+        const schema = changeSchemaNamesCaseByFeature(
+          await schemaService.getSchema(this.layer.schemaId),
+          this.features[0]
+        );
 
         this.features = this.features.map(feature => ({
           ...feature,
@@ -105,10 +116,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.editFeatureData = [];
 
         this.featureDescription.properties.forEach(({ name, valueType }) => {
-          if (
-            !Object.keys(this.features[0].properties).some(property => property.toLowerCase() === name.toLowerCase()) &&
-            valueType !== ValueType.GEOMETRY
-          ) {
+          if (!Object.keys(this.features[0].properties).includes(name) && valueType !== ValueType.GEOMETRY) {
             this.features[0].properties[name] = null;
           }
         });
@@ -179,7 +187,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
               this.editFeatureForm.addControl(key, formControl);
             } else {
-              // TODO: надо бы запрашивать DescribeFeatureType по WFS и брать тип лишних атрибутов там.
               this.editFeatureData.push({
                 name: key,
                 property: {
@@ -383,16 +390,15 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   switchControl(property: OldPropertySchema): void {
-    if (this.editFeatureForm.controls[property.name.toLowerCase()].disabled) {
-      // formControl.setValue('Оставить как есть');
-      this.editFeatureForm.controls[property.name.toLowerCase()].enable();
+    if (this.editFeatureForm.controls[property.name].disabled) {
+      this.editFeatureForm.controls[property.name].enable();
     } else {
-      this.editFeatureForm.controls[property.name.toLowerCase()].disable();
+      this.editFeatureForm.controls[property.name].disable();
     }
   }
 
   isShowTemplate(property: OldPropertySchema): boolean {
-    const control = this.editFeatureForm.controls[property.name.toLowerCase()];
+    const control = this.editFeatureForm.controls[property.name];
 
     return control ? control.disabled : false;
   }

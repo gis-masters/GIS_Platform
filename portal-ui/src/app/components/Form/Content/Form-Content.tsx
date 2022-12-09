@@ -29,8 +29,8 @@ interface FormContentProps<T extends Record<string, unknown>> extends IClassName
   formValue: Partial<T>;
   errors?: FieldErrors[];
   onFormChange?: (changedValue: Partial<T>) => void;
-  onFieldChange?: (value: T[keyof T], propertyName: keyof T, prevValue: T[keyof T]) => void;
-  onFieldNeedValidate?: (value: T[keyof T], propertyName: keyof T) => void;
+  onFieldChange?: (value: T[keyof T & string], propertyName: keyof T & string, prevValue: T[keyof T & string]) => void;
+  onFieldNeedValidate?: (value: T[keyof T & string], propertyName: keyof T & string) => void;
   readonly?: boolean;
   labelInTextField?: boolean;
 }
@@ -116,7 +116,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   }
 
   @boundMethod
-  private fieldChangeHandler({ value, propertyName }: { value: T[keyof T & string]; propertyName: keyof T }) {
+  private fieldChangeHandler({ value, propertyName }: { value: T[keyof T & string]; propertyName: keyof T & string }) {
     const { formValue, onFormChange, onFieldChange, schema } = this.props;
     const propertySchema: PropertySchema<T> = schema.properties.find(({ name }) => name === propertyName);
     const prevValue = formValue[propertyName];
@@ -132,7 +132,13 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   }
 
   @boundMethod
-  private fieldNeedValidateHandler({ value, propertyName }: { value: T[keyof T]; propertyName: keyof T }) {
+  private fieldNeedValidateHandler({
+    value,
+    propertyName
+  }: {
+    value: T[keyof T & string];
+    propertyName: keyof T & string;
+  }) {
     const { onFieldNeedValidate } = this.props;
 
     if (onFieldNeedValidate) {

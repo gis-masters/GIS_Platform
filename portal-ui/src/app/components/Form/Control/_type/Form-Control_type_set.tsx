@@ -54,12 +54,12 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
   }
 
   @boundMethod
-  private fieldChanged({ value, propertyName }: { value: T[keyof T]; propertyName: string }) {
+  private fieldChanged({ value, propertyName }: { value: T[keyof T & string]; propertyName: string }) {
     const { onChange, property, fieldValue } = this.props;
     const valueTyped = fieldValue as unknown as Record<string, unknown>;
 
     onChange({
-      value: { ...valueTyped, [propertyName]: value },
+      value: { ...valueTyped, [propertyName]: value } as T[keyof T & string],
       propertyName: property.name
     });
   }

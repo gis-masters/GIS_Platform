@@ -29,6 +29,8 @@ import { DocumentInfo } from '../../components/Documents/Documents';
 import { formatDate } from '../util/date.util';
 import { FileInfo } from './files.service';
 import { schemaService } from './schema.service';
+import { CoordinateEdited, WfsFeature } from '../geoserver/wfs.models';
+import { Coordinate } from 'ol/coordinate';
 
 export function applyContentTypeOld(schema: OldSchema, contentTypeId?: string): OldSchema {
   const clonedSchema = cloneDeep(schema);
@@ -466,4 +468,35 @@ export async function getGeometryFieldName(schemaId: string): Promise<string> {
   }
 
   return gProperty.name || 'shape';
+}
+
+export function changeSchemaNamesCaseByFeature<T extends Schema | OldSchema>(
+  schema: T,
+  feature?: WfsFeature<Coordinate | CoordinateEdited>
+): T {
+  return {
+    ...schema,
+    properties: schema.properties.map((property: PropertySchema | OldPropertySchema) => ({
+      ...property,
+      name: getNameFromFeatureKeys(property.name, feature)
+    })),
+    contentTypes: schema.contentTypes.map((contentType: ContentType | OldContentType) => ({
+      ...contentType,
+      properties: (
+        ((contentType as ContentType).properties || (contentType as OldContentType).attributes) as (
+          | PropertySchema
+          | OldPropertySchema
+        )[]
+      ).map(property => ({
+        ...property,
+        name: getNameFromFeatureKeys(property.name, feature)
+      }))
+    }))
+  };
+}
+
+function getNameFromFeatureKeys(name: string, feature?: WfsFeature<Coordinate | CoordinateEdited>): string {
+  return (
+    Object.keys(feature?.properties || {}).find(key => key.toLowerCase() === name.toLowerCase()) || name.toLowerCase()
+  );
 }

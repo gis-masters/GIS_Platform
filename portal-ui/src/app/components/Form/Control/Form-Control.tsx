@@ -22,8 +22,8 @@ export interface FormControlProps<T extends Record<string, unknown> = Record<str
   variant?: 'standard' | 'outlined';
   fullWidthForOldForm?: boolean;
   labelInTextField?: boolean;
-  onChange?: ({ value: T, propertyName: string }) => void;
-  onNeedValidate?: ({ value: T, propertyName: string }) => void;
+  onChange?(params: { value: T[keyof T & string]; propertyName: keyof T & string }): void;
+  onNeedValidate?(params: { value: T[keyof T & string]; propertyName: keyof T & string }): void;
 }
 
 export const FormControl: FC<FormControlProps> = ({ children, className }) => (
