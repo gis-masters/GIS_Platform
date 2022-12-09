@@ -5,6 +5,7 @@ import { cn } from '@bem-react/classname';
 
 import { allGroups } from '../../stores/AllGroups.store';
 import { CrgGroup, groupsService } from '../../services/data/groups.service';
+import { PropertyType } from '../../services/data/schema.models';
 import { XTable, XTableColumn } from '../XTable/XTable';
 
 import { OrgGroupsCreate } from './Create/OrgGroups-Create';
@@ -39,6 +40,7 @@ export class OrgGroups extends Component {
     {
       title: 'Пользователей',
       field: 'usersCount',
+      type: PropertyType.INT,
       filterable: true,
       sortable: true,
       align: 'right'
