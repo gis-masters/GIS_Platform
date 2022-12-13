@@ -1,19 +1,33 @@
 package ru.mycrg.data_service_contract.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import ru.mycrg.data_service_contract.enums.GeometryType;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Objects.nonNull;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class SchemaDto {
 
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String title;
-    private String description;
+
+    @NotBlank
     private String tableName;
+
+    @Valid
+    @NotEmpty
     private List<SimplePropertyDto> properties = new ArrayList<>();
+
+    private String description;
     private String customRuleFunction = "";
     private String calcFiledFunction = "";
     private String originName;

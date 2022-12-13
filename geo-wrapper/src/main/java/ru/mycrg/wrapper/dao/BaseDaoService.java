@@ -205,7 +205,7 @@ public class BaseDaoService {
         List<MatchingPair> mapping = request.getPairs();
 
         List<String> propsWithFileType = request.getFeatureDescription().getProperties().stream()
-                                                .filter(property -> FILE.equals(property.getValueType()))
+                                                .filter(property -> FILE.equals(property.getValueTypeAsEnum()))
                                                 .map(SimplePropertyDto::getName)
                                                 .collect(Collectors.toList());
         String pre = " (";

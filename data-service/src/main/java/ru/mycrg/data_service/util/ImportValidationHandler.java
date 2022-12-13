@@ -22,7 +22,7 @@ public class ImportValidationHandler {
         for (SimplePropertyDto propertyBySchema: propertiesBySchema) {
             Object valueForValidation = dataForValidation.get(propertyBySchema.getName());
             if (Objects.nonNull(valueForValidation)) {
-                ValueType valueType = propertyBySchema.getValueType();
+                ValueType valueType = propertyBySchema.getValueTypeAsEnum();
                 try {
                     if (valueType.equals(ValueType.DOUBLE)) {
                         Double.parseDouble(valueForValidation.toString());

@@ -28,7 +28,8 @@ export interface FieldErrors {
   field: string;
   hidden?: boolean;
   title?: string;
-  messages: string[];
+  messages?: string[];
+  message?: string;
 }
 
 export interface ServerFieldError {

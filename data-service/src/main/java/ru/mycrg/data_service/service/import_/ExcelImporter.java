@@ -101,17 +101,17 @@ public class ExcelImporter implements Importer<List<ImportRecordReport>> {
             if (record.containsKey(propName)) {
                 Object value = record.get(propName);
 
-                if (BOOLEAN.equals(property.getValueType())) {
+                if (BOOLEAN.equals(property.getValueTypeAsEnum())) {
                     booleanConversion(record, propName);
                 } else if (isNull(value)) {
                     record.put(propName, null);
-                } else if (INT.equals(property.getValueType())) {
+                } else if (INT.equals(property.getValueTypeAsEnum())) {
                     int intValue = Integer.parseInt(value.toString());
                     record.put(propName, intValue);
-                } else if (DOUBLE.equals(property.getValueType())) {
+                } else if (DOUBLE.equals(property.getValueTypeAsEnum())) {
                     double doubleValue = Double.parseDouble(value.toString());
                     record.put(propName, doubleValue);
-                } else if (!STRING.equals(property.getValueType()) && !TEXT.equals(property.getValueType())
+                } else if (!STRING.equals(property.getValueTypeAsEnum()) && !TEXT.equals(property.getValueTypeAsEnum())
                         && value.equals("")) {
                     record.put(propName, null);
                 }

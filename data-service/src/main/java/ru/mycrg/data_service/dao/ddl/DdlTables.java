@@ -158,7 +158,7 @@ public class DdlTables {
     @NotNull
     private String generatePropertySqlString(@NotNull SimplePropertyDto attrDescription) {
         String result;
-        switch (attrDescription.getValueType()) {
+        switch (attrDescription.getValueTypeAsEnum()) {
             case INT:
                 result = attrDescription.getName() + " integer";
                 break;
@@ -192,7 +192,7 @@ public class DdlTables {
                 result = attrDescription.getName() + " jsonb";
                 break;
             default:
-                log.warn("Not supported attribute type: {}", attrDescription.getValueType());
+                log.warn("Not supported attribute type: {}", attrDescription.getValueTypeAsEnum());
 
                 result = attrDescription.getName() + " character varying";
         }

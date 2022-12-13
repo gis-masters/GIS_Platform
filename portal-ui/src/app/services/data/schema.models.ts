@@ -15,7 +15,7 @@ export enum PropertyType {
   URL = 'url',
   CALCULATED = 'calculated',
   CHOICE = 'choice',
-  GEOMETRY = 'Geometry',
+  GEOMETRY = 'geometry',
   LOOKUP = 'lookup',
   UUID = 'uuid',
   BINARY = 'binary',

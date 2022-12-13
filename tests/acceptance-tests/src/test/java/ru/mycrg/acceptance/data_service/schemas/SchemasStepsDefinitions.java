@@ -103,11 +103,15 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         List<SimplePropertyDto> properties = new ArrayList<>();
         SimplePropertyDto firstProperty = new SimplePropertyDto();
         firstProperty.setName("firstProperty");
+        firstProperty.setTitle("firstPropertyTitle");
+        firstProperty.setValueType("STRING");
 
         properties.add(firstProperty);
 
         SchemaDto dto = new SchemaDto();
         dto.setName(name);
+        dto.setTitle("someTitle");
+        dto.setTableName("someTableName");
         dto.setProperties(properties);
         dto.setReadOnly(true);
 

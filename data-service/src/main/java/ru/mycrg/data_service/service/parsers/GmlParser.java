@@ -529,12 +529,12 @@ public class GmlParser {
 
     private ValueType defineValueType(SimplePropertyDto schemaProperty) {
         ValueType vType;
-        if (CHOICE.equals(schemaProperty.getValueType())) {
+        if (CHOICE.equals(schemaProperty.getValueTypeAsEnum())) {
             if (schemaProperty.getForeignKeyType() == null) {
                 log.warn("Не задан параметр: foreignKeyType для свойства типа CHOICE: '{}'. " +
                                  "По дефолту будет использован STRING", schemaProperty.getName());
 
-                vType = schemaProperty.getValueType();
+                vType = schemaProperty.getValueTypeAsEnum();
             } else {
                 switch (schemaProperty.getForeignKeyType()) {
                     case LONG:
@@ -546,7 +546,7 @@ public class GmlParser {
                 }
             }
         } else {
-            vType = schemaProperty.getValueType();
+            vType = schemaProperty.getValueTypeAsEnum();
         }
 
         return vType;

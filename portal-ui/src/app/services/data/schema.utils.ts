@@ -110,7 +110,7 @@ export function convertOldToNewSchema({
     printTemplates,
     relations,
     properties: convertOldToNewProperties(properties),
-    contentTypes: contentTypes.map(convertOldToNewContentType)
+    contentTypes: contentTypes?.map(convertOldToNewContentType)
   };
 }
 
@@ -140,7 +140,7 @@ export function convertNewToOldSchema({
     printTemplates,
     relations,
     properties: convertNewToOldProperties(properties),
-    contentTypes: contentTypes.map(convertNewToOldContentType)
+    contentTypes: contentTypes?.map(convertNewToOldContentType)
   };
 }
 
@@ -167,7 +167,7 @@ function convertNewToOldContentType(contentType: ContentType): OldContentType {
 }
 
 export function convertOldToNewProperties(oldFields: OldPropertySchema[]): PropertySchema[] {
-  return oldFields.map(oldField => {
+  return oldFields?.map(oldField => {
     const field: Partial<PropertySchema> = { ...oldField } as OldPropertySchema;
 
     if (oldField.valueType === ValueType.STRING || oldField.valueType === ValueType.TEXT) {

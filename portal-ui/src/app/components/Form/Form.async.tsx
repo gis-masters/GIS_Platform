@@ -236,12 +236,16 @@ export default class Form<T extends Record<string, unknown> = Record<string, unk
             fieldsErrors.push(err);
           }
 
-          if (field.hidden) {
+          if (field?.hidden) {
             generalErrors.push(`${field.title}: ${err.messages.join(err.messages.length > 1 ? ', ' : '')}`);
           }
 
           if (!field && err.messages) {
             generalErrors.push(...err.messages);
+          }
+
+          if (!field && err.message) {
+            generalErrors.push(`Ошибка: ${err.field} — ${err.message}`);
           }
         });
       }
@@ -253,11 +257,11 @@ export default class Form<T extends Record<string, unknown> = Record<string, unk
 
         if (!axiosError.response?.data?.message) {
           if (axiosError.message) {
-            generalErrors.push(`Ошибка сервера ${axiosError.message}`);
+            generalErrors.push(`Ошибка: ${axiosError.message}`);
           }
 
           if (!axiosError.message && axiosError.response?.status) {
-            generalErrors.push(`Ошибка сервера ${axiosError.response?.status}`);
+            generalErrors.push(`Ошибка: ${axiosError.response?.status}`);
           }
 
           if (!axiosError.message && !axiosError.response?.status) {

@@ -7,17 +7,15 @@ public class SimplePropertyDto {
 
     private String name;
     private String title;
-    private String description;
+    private String valueType;
 
     private boolean required;
     private boolean hidden;
-
     private boolean objectIdentityOnUi;
-
     private boolean readOnly;
-
     private boolean multiple;
 
+    private String description;
     private String resourcePath;
     private String folderId;
     private String whiteSpace;
@@ -301,5 +299,13 @@ public class SimplePropertyDto {
 
     public void setMaxDocuments(Integer maxDocuments) {
         this.maxDocuments = maxDocuments;
+    }
+
+    public String getValueType() {
+        return valueType;
+    }
+
+    public void setValueType(String valueType) {
+        this.valueType = valueType;
     }
 }

@@ -135,7 +135,7 @@ public class GisogdRfIntegrator {
 
         List<SimplePropertyDto> propsWithDatetime = properties
                 .stream()
-                .filter(property -> DATETIME.equals(property.getValueType()))
+                .filter(property -> DATETIME.equals(property.getValueTypeAsEnum()))
                 .collect(Collectors.toList());
 
         if (propsWithDatetime.isEmpty()) {

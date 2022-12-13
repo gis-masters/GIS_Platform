@@ -59,7 +59,7 @@ public class SchemaUtil {
 
     public static Optional<String> getPropertyNameByType(ValueType type, List<SimplePropertyDto> properties) {
         return properties.stream()
-                         .filter(simplePropertyDto -> simplePropertyDto.getValueType().equals(type))
+                         .filter(simplePropertyDto -> simplePropertyDto.getValueTypeAsEnum().equals(type))
                          .map(SimplePropertyDto::getName)
                          .findFirst();
     }
@@ -86,11 +86,11 @@ public class SchemaUtil {
     public static boolean isComplexField(List<SimplePropertyDto> properties, String propertyName) {
         return properties.stream()
                          .filter(property -> property.getName().equalsIgnoreCase(propertyName))
-                         .anyMatch(property -> FILE.equals(property.getValueType()));
+                         .anyMatch(property -> FILE.equals(property.getValueTypeAsEnum()));
     }
 
     private static boolean isPropertyExistByType(SchemaDto schema, ValueType type) {
         return schema.getProperties().stream()
-                     .anyMatch(property -> property.getValueType().equals(type));
+                     .anyMatch(property -> property.getValueTypeAsEnum().equals(type));
     }
 }

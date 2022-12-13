@@ -191,12 +191,12 @@ public class SqlBuilder {
             if (isNull(sourceProperty.getCalculatedValueWellKnownFormula())
                     || sourceProperty.getCalculatedValueWellKnownFormula().isEmpty()) {
                 String name = sourceProperty.getName().toLowerCase();
-                ValueType valueType = sourceProperty.getValueType();
+                ValueType valueType = sourceProperty.getValueTypeAsEnum();
 
                 long countOfFoundProperty = targetProps
                         .stream()
                         .filter(targetProperty -> targetProperty.getName().equalsIgnoreCase(name))
-                        .filter(targetProperty -> targetProperty.getValueType().equals(valueType))
+                        .filter(targetProperty -> targetProperty.getValueTypeAsEnum().equals(valueType))
                         .count();
                 if (countOfFoundProperty > 0) {
                     targetColumns.append(name).append(", ");

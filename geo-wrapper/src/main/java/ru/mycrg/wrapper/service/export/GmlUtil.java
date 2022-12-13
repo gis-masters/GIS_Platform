@@ -45,11 +45,11 @@ public class GmlUtil {
 
     @NotNull
     public static String getDefaultValue(SimplePropertyDto property) {
-        if (property.getValueType() == ValueType.INT || property.getValueType() == ValueType.CHOICE) {
+        if (property.getValueTypeAsEnum() == ValueType.INT || property.getValueTypeAsEnum() == ValueType.CHOICE) {
             return "0";
         }
 
-        if (property.getValueType() == ValueType.DOUBLE) {
+        if (property.getValueTypeAsEnum() == ValueType.DOUBLE) {
             return "0.0000";
         }
 

@@ -35,7 +35,7 @@ public class BySchemaRowMapper {
             Optional<SimplePropertyDto> oProperty = getPropertyByName(schema, columnName);
             if (oProperty.isPresent()) {
                 SimplePropertyDto property = oProperty.get();
-                ValueType valueType = property.getValueType();
+                ValueType valueType = property.getValueTypeAsEnum();
                 if (valueType.equals(FILE)) {
                     List<FileDescription> descriptions = mapper.readValue(object.toString(),
                                                                           new TypeReference<List<FileDescription>>() {

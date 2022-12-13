@@ -79,24 +79,24 @@ public class ValidatorImpl implements IValidator {
 
         requiredValidation.validate(value, propertySchema, violations);
 
-        if (propertySchema.getValueType() == ValueType.STRING) {
+        if (propertySchema.getValueTypeAsEnum() == ValueType.STRING) {
             minLengthValidation.validate(value, propertySchema, violations);
             maxLengthValidation.validate(value, propertySchema, violations);
             patternValidation.validate(value, propertySchema, violations);
-        } else if (propertySchema.getValueType() == ValueType.INT) {
+        } else if (propertySchema.getValueTypeAsEnum() == ValueType.INT) {
             if (isLongTypeValidation.isValid(value, propertySchema)) {
                 minInclusiveValidation.validate(value, propertySchema, violations);
                 maxInclusiveValidation.validate(value, propertySchema, violations);
             } else {
                 isLongTypeValidation.validate(value, propertySchema, violations);
             }
-        } else if (propertySchema.getValueType() == ValueType.DOUBLE) {
+        } else if (propertySchema.getValueTypeAsEnum() == ValueType.DOUBLE) {
             if (isDoubleTypeValidation.isValid(value, propertySchema)) {
                 totalDigitsValidation.validate(value, propertySchema, violations);
             } else {
                 isDoubleTypeValidation.validate(value, propertySchema, violations);
             }
-        } else if (propertySchema.getValueType() == ValueType.CHOICE) {
+        } else if (propertySchema.getValueTypeAsEnum() == ValueType.CHOICE) {
             enumerationValidation.validate(value, propertySchema, violations);
         }
 

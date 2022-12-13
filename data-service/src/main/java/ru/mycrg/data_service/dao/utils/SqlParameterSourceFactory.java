@@ -35,7 +35,7 @@ public class SqlParameterSourceFactory {
                 parameterSource.addValue(paramName, null);
             } else {
                 getPropertyByName(schema, paramName).ifPresentOrElse(property -> {
-                    sourceMappers.getOrDefault(property.getValueType(), defaultSqlParameterSourceMapper)
+                    sourceMappers.getOrDefault(property.getValueTypeAsEnum(), defaultSqlParameterSourceMapper)
                                  .map(parameterSource, property, value);
                 }, () -> {
                     parameterSource.addValue(paramName, value);

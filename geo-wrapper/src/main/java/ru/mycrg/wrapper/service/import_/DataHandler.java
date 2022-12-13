@@ -54,7 +54,7 @@ public class DataHandler {
             if (value instanceof String) {
                 Optional<SimplePropertyDto> oProperty = getPropertyByName(schema.getProperties(), key);
                 if (oProperty.isPresent() &&
-                        oProperty.get().getValueType().equals(ValueType.CHOICE) &&
+                        oProperty.get().getValueTypeAsEnum().equals(ValueType.CHOICE) &&
                         isNotValueExist(oProperty.get().getEnumerations(), (String) value)) {
                     decodedRow.put(key, NULL_MARKER);
                 }
@@ -74,7 +74,7 @@ public class DataHandler {
                 decodedRow.put(key, NULL_MARKER);
 
                 Optional<SimplePropertyDto> oProperty = getPropertyByName(schema.getProperties(), key);
-                if (oProperty.isPresent() && ValueType.DATETIME.equals(oProperty.get().getValueType())) {
+                if (oProperty.isPresent() && ValueType.DATETIME.equals(oProperty.get().getValueTypeAsEnum())) {
                     decodedRow.put(key, value == null ? NULL_MARKER : value);
                 }
             }

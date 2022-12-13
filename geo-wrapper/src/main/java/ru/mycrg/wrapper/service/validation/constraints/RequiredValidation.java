@@ -10,7 +10,11 @@ public class RequiredValidation implements CrgConstraintValidator {
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
-        if (context.isRequired()) {
+        if (context.isRequired() == null) {
+            return true;
+        }
+
+        if (context.isRequired().booleanValue()) {
             return value != null;
         } else {
             return true;

@@ -9,6 +9,7 @@ import ru.mycrg.data_service.service.cqrs.schemas.requests.UpdateSchemaRequest;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -41,7 +42,7 @@ public class SchemasController {
 
     @PostMapping("/schemas")
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> createSchema(@RequestBody SchemaDto schemaDto) {
+    public ResponseEntity<Object> createSchema(@Valid @RequestBody SchemaDto schemaDto) {
         mediator.execute(new CreateSchemaRequest(schemaDto));
 
         return ResponseEntity.status(CREATED).build();
@@ -49,7 +50,7 @@ public class SchemasController {
 
     @PutMapping("/schemas")
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> updateSchema(@RequestBody SchemaDto schemaDto) {
+    public ResponseEntity<Object> updateSchema(@Valid @RequestBody SchemaDto schemaDto) {
         mediator.execute(new UpdateSchemaRequest(schemaDto));
 
         return ResponseEntity.status(OK).build();

@@ -267,7 +267,7 @@ public class SystemAttributeHandler {
         }
 
         schema.getProperties().stream()
-              .filter(property -> FILE.equals(property.getValueType()))
+              .filter(property -> FILE.equals(property.getValueTypeAsEnum()))
               .forEach(property -> {
                   Object value = properties.get(property.getName());
                   if (value != null) {

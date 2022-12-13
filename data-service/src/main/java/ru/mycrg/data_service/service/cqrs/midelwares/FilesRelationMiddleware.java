@@ -283,7 +283,7 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
     @NotNull
     private List<String> getFileFieldNames(SchemaDto schema) {
         return schema.getProperties().stream()
-                     .filter(property -> property.getValueType().equals(FILE))
+                     .filter(property -> property.getValueTypeAsEnum().equals(FILE))
                      .map(SimplePropertyDto::getName)
                      .collect(Collectors.toList());
     }

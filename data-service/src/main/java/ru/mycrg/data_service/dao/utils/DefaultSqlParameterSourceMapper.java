@@ -18,7 +18,7 @@ public class DefaultSqlParameterSourceMapper implements SqlParameterSourceMapper
                     @NotNull SimplePropertyDto property,
                     @NotNull Object value) {
         log.debug("Use default parameter source mapper for property: '{}' with type: '{}'",
-                  property.getName(), property.getValueType());
+                  property.getName(), property.getValueTypeAsEnum());
 
         parameterSource.addValue(property.getName().toLowerCase(), value);
     }

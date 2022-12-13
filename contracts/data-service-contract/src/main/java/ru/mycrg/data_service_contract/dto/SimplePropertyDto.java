@@ -7,27 +7,35 @@ import ru.mycrg.data_service_contract.enums.ForeignKeyType;
 import ru.mycrg.data_service_contract.enums.Updateability;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class SimplePropertyDto {
 
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String title;
+
+    @NotBlank
+    @Pattern(regexp = "^(BOOLEAN|INT|STRING|TEXT|DOUBLE|CHOICE|GEOMETRY|URL|DATETIME|LOOKUP|UUID|FIAS|DOCUMENT)$",
+             message = "Допустимые значения поля type: BOOLEAN|INT|STRING|TEXT|DOUBLE|CHOICE|GEOMETRY|URL|DATETIME" +
+                     "|LOOKUP|UUID|FIAS|DOCUMENT")
+    private String valueType;
+
+    private Boolean required;
+    private Boolean hidden;
+    private Boolean objectIdentityOnUi;
+    private Boolean readOnly;
+    private Boolean multiple;
+
     private String description;
-
-    private boolean required;
-    private boolean hidden;
-
-    private boolean objectIdentityOnUi;
-
-    private boolean readOnly;
-
     private Updateability updateability;
-    private boolean multiple;
     private ChoiceType choice;
-    private ValueType valueType;
     private ForeignKeyType foreignKeyType;
 
     private String resourcePath;
@@ -46,7 +54,7 @@ public class SimplePropertyDto {
     private String searchMode;
     private String defaultValue;
 
-    private int sequenceNumber;
+    private Integer sequenceNumber;
 
     private String calculatedValueFormula;
     private String calculatedValueWellKnownFormula;
@@ -90,27 +98,27 @@ public class SimplePropertyDto {
         this.description = description;
     }
 
-    public boolean isRequired() {
+    public Boolean isRequired() {
         return required;
     }
 
-    public void setRequired(boolean required) {
+    public void setRequired(Boolean required) {
         this.required = required;
     }
 
-    public boolean isHidden() {
+    public Boolean isHidden() {
         return hidden;
     }
 
-    public void setHidden(boolean hidden) {
+    public void setHidden(Boolean hidden) {
         this.hidden = hidden;
     }
 
-    public boolean isReadOnly() {
+    public Boolean isReadOnly() {
         return readOnly;
     }
 
-    public void setReadOnly(boolean readOnly) {
+    public void setReadOnly(Boolean readOnly) {
         this.readOnly = readOnly;
     }
 
@@ -122,11 +130,11 @@ public class SimplePropertyDto {
         this.updateability = updateability;
     }
 
-    public boolean isMultiple() {
+    public Boolean isMultiple() {
         return multiple;
     }
 
-    public void setMultiple(boolean multiple) {
+    public void setMultiple(Boolean multiple) {
         this.multiple = multiple;
     }
 
@@ -138,11 +146,24 @@ public class SimplePropertyDto {
         this.choice = choice;
     }
 
-    public ValueType getValueType() {
-        return valueType;
+    @JsonIgnore
+    public ValueType getValueTypeAsEnum() {
+        if (valueType != null) {
+            return ValueType.valueOf(valueType);
+        }
+
+        return null;
     }
 
     public void setValueType(ValueType valueType) {
+        this.valueType = valueType.name();
+    }
+
+    public String getValueType() {
+        return valueType;
+    }
+
+    public void setValueType(String valueType) {
         this.valueType = valueType;
     }
 
@@ -218,11 +239,11 @@ public class SimplePropertyDto {
         this.patternDescription = patternDescription;
     }
 
-    public int getSequenceNumber() {
+    public Integer getSequenceNumber() {
         return sequenceNumber;
     }
 
-    public void setSequenceNumber(int sequenceNumber) {
+    public void setSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
     }
 
@@ -274,11 +295,11 @@ public class SimplePropertyDto {
         this.fractionDigits = fractionDigits;
     }
 
-    public boolean isObjectIdentityOnUi() {
+    public Boolean isObjectIdentityOnUi() {
         return objectIdentityOnUi;
     }
 
-    public void setObjectIdentityOnUi(boolean objectIdentityOnUi) {
+    public void setObjectIdentityOnUi(Boolean objectIdentityOnUi) {
         this.objectIdentityOnUi = objectIdentityOnUi;
     }
 
@@ -388,7 +409,7 @@ public class SimplePropertyDto {
 
     @JsonIgnore
     public boolean isGeometry() {
-        return this.valueType == ValueType.GEOMETRY;
+        return this.getValueTypeAsEnum() == ValueType.GEOMETRY;
     }
 
     public String getLibrary() {
