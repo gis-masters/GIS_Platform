@@ -27,6 +27,7 @@ import { LayerAdd } from '../../Icons/LayerAdd';
 import { Loading } from '../../Loading/Loading';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
+import { schemaService } from '../../../services/data/schema.service';
 
 const cnDatasetActionsAddToProject = cn('DatasetActions', 'AddToProject');
 
@@ -118,8 +119,10 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
 
     const vectorDefaults = vectorLayerDefaults();
 
-    this.setVectorTablesLayers(
-      vectorTables.map((table, index) => {
+    const vectorTablesLayers = await Promise.all(
+      vectorTables.map(async (table, index) => {
+        const schema = await schemaService.getSchema(table.schemaId);
+
         return {
           ...vectorDefaults,
           parentId: group.id,
@@ -130,10 +133,12 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
           position: index,
           nativeCRS: table.crs,
           schemaId: table.schemaId,
-          styleName: table.schemaId
+          styleName: schema.styleName || table.schemaId
         };
       })
     );
+
+    this.setVectorTablesLayers(vectorTablesLayers);
 
     for (const layer of this.vectorTablesLayers) {
       try {

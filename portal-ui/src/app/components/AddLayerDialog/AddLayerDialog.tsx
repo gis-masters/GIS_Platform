@@ -25,6 +25,7 @@ import { services } from '../../services/services';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
 import { Form } from '../Form/Form';
+import { schemaService } from '../../services/data/schema.service';
 
 const cnAddLayerDialog = cn('AddLayerDialog');
 
@@ -306,6 +307,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     const { datasource = {}, title, minZoom, dataSourceUri, tableName, layerType } = this.formValue;
     const { dataset, vectorTable, library } = datasource;
     const vectorDefaults = vectorLayerDefaults();
+    const schema = await schemaService.getSchema(vectorTable.schemaId);
 
     e.preventDefault();
     const dataStoreName = currentUser.workspaceName;
@@ -320,7 +322,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         nativeCRS: vectorTable.crs,
         schemaId: vectorTable.schemaId,
         minZoom,
-        styleName: vectorTable.schemaId
+        styleName: /* contentType.styleName || */ schema.styleName || vectorTable.schemaId
       } as CrgLayer);
       this.close();
 

@@ -33,6 +33,7 @@ export interface Schema<T = Record<string, unknown>> {
   description?: string;
   properties?: PropertySchema<T>[];
   tableName?: string;
+  styleName?: string;
   geometryType?: SupportedGeometryType;
   readOnly?: boolean;
   contentTypes?: ContentType[];
@@ -47,6 +48,7 @@ export interface ContentType {
   type: string;
   title?: string;
   icon?: string;
+  styleName?: string;
   properties: Partial<PropertySchema>[];
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];

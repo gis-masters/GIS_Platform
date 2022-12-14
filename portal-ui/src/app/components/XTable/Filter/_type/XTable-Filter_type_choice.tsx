@@ -5,6 +5,7 @@ import { Checkbox, Divider, ListItemText, MenuItem, Select } from '@mui/material
 import { boundMethod } from 'autobind-decorator';
 import { withBemMod } from '@bem-react/core';
 import { isEqual } from 'lodash';
+import { cn } from '@bem-react/classname';
 
 import { PropertyOption, PropertyType } from '../../../../services/data/schema.models';
 import { FilterQuery } from '../../../../services/util/filterObjects';
@@ -12,6 +13,8 @@ import { FilterQuery } from '../../../../services/util/filterObjects';
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_choice.scss';
+
+const cnXTableChoiceFilterPopover = cn('XTable', 'ChoiceFilterPopover');
 
 const EMPTY = '~~~empty_value~~~';
 
@@ -28,6 +31,7 @@ class XTableFilterTypeChoice extends Component<XTableFilterProps> {
     return (
       <Select
         className={cnXTableFilter(null, [className])}
+        MenuProps={{ PaperProps: { className: cnXTableChoiceFilterPopover() } }}
         onChange={this.handleChange}
         value={this.value}
         renderValue={this.renderSelectValue}
