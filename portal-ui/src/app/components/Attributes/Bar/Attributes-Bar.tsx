@@ -115,11 +115,14 @@ export class AttributesBar extends Component<AttributesBarProps> {
         CustomFilterComponent: AttributesCheckFilter,
         filterable: !!mapStore.selectedFeaturesByTableName[layer.tableName]?.length,
         CellContent: AttributesRowHead,
+        cellContentProps: { style: { overflow: 'visible' } },
         align: 'left',
+        width: 74,
+        minWidth: 74,
         headerCellProps: { padding: 'checkbox', size: 'small', align: 'center', className: cnAttributesCheckCell() },
         cellProps: { padding: 'checkbox' }
       },
-      { field: 'cutId', title: 'ID' },
+      { field: 'cutId', title: 'ID', minWidth: 50 },
       ...(getXTableColumnsFromSchemaWithLowerCaseKeys(this.schema) as XTableColumn<Partial<AttributesTableRecord>>[])
     ] as XTableColumn<AttributesTableRecord>[];
   }

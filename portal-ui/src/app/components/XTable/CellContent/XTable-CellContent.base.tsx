@@ -11,7 +11,7 @@ import '!style-loader!css-loader!sass-loader!./XTable-CellContent.scss';
 
 export const cnXTableCellContent = cn('XTable', 'CellContent');
 
-export interface XTableCellContentProps extends ChildrenProps, IClassNameProps {
+export interface XTableCellContentProps extends ChildrenProps, IClassNameProps, React.HTMLAttributes<HTMLSpanElement> {
   singleLineContent: boolean;
   unspecifiedWidth: boolean;
   col: XTableColumn<unknown>;
@@ -23,9 +23,11 @@ export const XTableCellContentBase: FC<XTableCellContentProps> = ({
   children,
   singleLineContent,
   unspecifiedWidth,
-  className
+  className,
+  cellData,
+  ...spanProps
 }) => (
-  <span className={cnXTableCellContent({ singleLineContent, unspecifiedWidth }, [className])}>
+  <span className={cnXTableCellContent({ singleLineContent, unspecifiedWidth }, [className])} {...spanProps}>
     {children !== null && children !== undefined ? children : ''}
   </span>
 );

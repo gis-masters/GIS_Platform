@@ -5,8 +5,10 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import '!style-loader!css-loader!sass-loader!./XTable-HeadCellBorder.scss';
+import '!style-loader!css-loader!sass-loader!../ColResizing/XTable-ColResizing.scss';
 
 const cnXTableHeadCellBorder = cn('XTable', 'HeadCellBorder');
+const cnXTableColResizing = cn('XTable', 'ColResizing');
 
 interface XTableHeadCellBorderProps {
   onResizeStart(): void;
@@ -28,35 +30,36 @@ export class XTableHeadCellBorder extends Component<XTableHeadCellBorderProps> {
     return (
       <span
         className={cnXTableHeadCellBorder({ dragging: this.dragging })}
-        onDrag={this.dragHandler}
-        onDragStart={this.dragStartHandler}
-        onDragEnd={this.dragEndHandler}
-        draggable
+        onMouseDownCapture={this.dragStartHandler}
       />
     );
   }
 
   @boundMethod
-  private dragStartHandler(e: React.DragEvent<HTMLSpanElement>) {
-    e.dataTransfer.setDragImage(document.createElement('div'), 0, 0);
+  private dragStartHandler(e: React.MouseEvent<HTMLSpanElement>) {
     this.lastX = e.clientX;
     this.startX = e.clientX;
     this.props.onResizeStart();
     this.setDragging(true);
+    document.body.addEventListener('mousemove', this.dragHandler);
+    document.body.addEventListener('mouseup', this.dragEndHandler);
+    document.body.classList.add(cnXTableColResizing());
   }
 
   @boundMethod
-  private dragHandler(e: React.DragEvent<HTMLSpanElement>) {
-    if (e.clientX > 0) {
+  private dragHandler(e: MouseEvent) {
+    if (this.dragging && e.clientX > 0) {
       this.lastX = e.clientX;
       this.props.onResize(this.lastX - this.startX);
     }
   }
 
   @boundMethod
-  private dragEndHandler(e: React.DragEvent<HTMLSpanElement>) {
-    e.preventDefault();
+  private dragEndHandler() {
     this.setDragging(false);
+    document.body.removeEventListener('mousemove', this.dragHandler);
+    document.body.removeEventListener('mouseup', this.dragEndHandler);
+    document.body.classList.remove(cnXTableColResizing());
   }
 
   @action

@@ -3,7 +3,7 @@ import { SchemaOutlined } from '@mui/icons-material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { OldSchema } from '../../../../services/data/schemaOld.models';
-import SchemaActions from '../../../SchemaActions/SchemaActions.async';
+import { SchemaActions } from '../../../SchemaActions/SchemaActions';
 
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 

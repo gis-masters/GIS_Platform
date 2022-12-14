@@ -187,6 +187,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
       {
         CellContent: this.props.inDialog ? this.renderCheck : this.renderActions,
         align: 'center',
+        minWidth: 60,
         cellProps: { padding: 'checkbox' }
       },
       ...getXTableColumnsFromSchema<LibraryRecord>(this.schema, [

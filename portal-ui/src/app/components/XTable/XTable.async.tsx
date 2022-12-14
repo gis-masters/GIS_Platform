@@ -32,6 +32,7 @@ import { XTableTitleBar } from './TitleBar/XTable-TitleBar';
 import { XTableHeadCell } from './HeadCell/XTable-HeadCell';
 import { XTableFilterProps } from './Filter/XTable-Filter.base';
 import { XTableFilterPanel } from './FilterPanel/XTable-FilterPanel';
+import { XTableCellContentProps } from './CellContent/XTable-CellContent.base';
 import { XTableTitleBarActions } from './TitleBarActions/XTable-TitleBarActions';
 import { XTableContainer, XTableContainerProps } from './Container/XTable-Container';
 import { XTableFilterPanelItemContentProps } from './FilterPanelItemContent/XTable-FilterPanelItemContent.base';
@@ -55,6 +56,7 @@ export interface XTableColumn<T> {
   >;
   sortable?: boolean;
   CellContent?: ComponentType<{ rowData: T; field: keyof T; filterActive: boolean; filterParams: FilterQuery }>;
+  cellContentProps?: XTableCellContentProps;
   AfterCellContent?: ComponentType<{
     rowData: T;
     col: XTableColumn<T>;
@@ -67,6 +69,7 @@ export interface XTableColumn<T> {
   align?: TableCellProps['align'];
   hidden?: boolean;
   width?: number;
+  minWidth?: number;
 }
 
 interface XTablePropsBase<T> extends IClassNameProps {
@@ -258,7 +261,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
                 {this.cols.map((col, i) => (
                   <XTableHeadCell
                     col={col}
-                    width={this.colsSettings[col.field]?.width || col.width}
+                    width={this.getColWidth(col)}
                     hidden={this.colsSettings[col.field]?.hidden}
                     key={`${i}_${String(col.field)}`}
                     sortParams={this.sortParams}
@@ -291,7 +294,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
                         filterActive={(filterable && this.filterActive) || filtersAlwaysEnabled}
                         filterQuery={this.filterQuery}
                         singleLineContent={singleLineContent}
-                        width={this.colsSettings[col.field]?.width || col.width}
+                        width={this.getColWidth(col)}
                         hidden={this.colsSettings[col.field]?.hidden}
                         key={`${i}_${String(col.field)}`}
                         align={col.align || colsTypesAlign[col.type]}
@@ -522,6 +525,10 @@ export default class XTable<T> extends Component<XTableProps<T>> {
   @action.bound
   private setSortParams(sort: SortParams<T>) {
     this.sortParams = sort;
+  }
+
+  private getColWidth(col: XTableColumn<T>) {
+    return Math.max(this.colsSettings[col.field]?.width || col.width || 0, col.minWidth || 0) || undefined;
   }
 
   private fillInvoke() {

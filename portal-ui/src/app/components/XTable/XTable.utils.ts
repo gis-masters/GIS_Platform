@@ -74,7 +74,7 @@ function _getXTableColumnsFromSchema<T>(
       filterable: filterableTypes.has(property.propertyType),
       hidden: property.hidden,
       sortable: sortableTypes.has(property.propertyType),
-      headerCellProps: { style: property.minWidth ? { minWidth: String(property.minWidth) + 'px' } : null },
+      minWidth: property.minWidth,
       AfterCellContent: relations?.length ? (XTableRelationsButton as XTableColumn<T>['AfterCellContent']) : undefined,
       cellProps: { padding: smallPaddingTypes.has(property.propertyType) ? 'checkbox' : undefined },
 

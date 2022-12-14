@@ -35,7 +35,7 @@ export const XTableCell = observer((({
   align,
   hidden: hiddenBySettings
 }) => {
-  const { CellContent, cellProps, field, getIdBadge, AfterCellContent, hidden, type, settings } = col;
+  const { CellContent, cellContentProps, cellProps, field, getIdBadge, AfterCellContent, hidden, type, settings } = col;
 
   return (
     <TableCell
@@ -54,9 +54,16 @@ export const XTableCell = observer((({
         type={type}
         col={col as XTableColumn<unknown>}
         cellData={rowData[field]}
+        {...cellContentProps}
       >
         {CellContent ? (
-          <CellContent rowData={rowData} field={field} filterActive={filterActive} filterParams={filterQuery} />
+          <CellContent
+            rowData={rowData}
+            field={field}
+            filterActive={filterActive}
+            filterParams={filterQuery}
+            {...cellContentProps}
+          />
         ) : (
           <>
             <Highlight word={filterQuery[field as string]} enabled={filterActive}>

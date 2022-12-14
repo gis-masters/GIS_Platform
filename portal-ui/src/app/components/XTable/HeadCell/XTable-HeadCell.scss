@@ -1,8 +1,6 @@
 body .XTable-HeadCell {
   width: calc(var(--XTableCellWidth) * 1px);
 
-  cursor: default;
-
   &_filterable {
     padding-bottom: 30px;
   }

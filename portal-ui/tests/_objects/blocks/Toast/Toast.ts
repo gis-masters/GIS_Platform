@@ -26,16 +26,14 @@ class Toast extends Block implements BlockModel {
   @when(/^я нажимаю на псевдоссылку Подробнее\/Скрыть в уведомлении$/)
   async clickMoar(): Promise<void> {
     const $moar = await this.$moar;
-
     await $moar.click();
-
     await this.mockErrorFile();
   }
 
+  @when(/^я нажимаю на крестик в уведомлении$/)
   async clickClose(): Promise<void> {
     const $close = await this.$close;
-
-    return await $close.click();
+    await $close.click();
   }
 
   @given(/^произошла искусственная ошибка и присутствует уведомление о ней$/)
@@ -87,9 +85,9 @@ class Toast extends Block implements BlockModel {
     return await $container.isDisplayed();
   }
 
+  @then(/^уведомление исчезает$/)
   async waitForHidden(): Promise<void> {
     const $container = await this.$container;
-
     await $container.waitForDisplayed({ timeout: 2000, reverse: true, timeoutMsg: 'Не скрывается уведомление' });
     await browser.pause(300); // animation
   }
@@ -97,14 +95,12 @@ class Toast extends Block implements BlockModel {
   @then(/^появляются подробности уведомления$/)
   async waitForDetails(): Promise<void> {
     const $details = await this.$details;
-
     await $details.waitForDisplayed();
   }
 
   @then(/^исчезают подробности уведомления$/)
   async waitForDetailsHidden(): Promise<void> {
     const $details = await this.$details;
-
     await $details.waitForDisplayed({ reverse: true });
   }
 }

@@ -159,6 +159,6 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
   @action.bound
   private resizeHandler(deltaX: number) {
     const { col, onWidthChange } = this.props;
-    onWidthChange(col.field, Math.max(this.initialWidth + deltaX, MIN_CELL_WIDTH));
+    onWidthChange(col.field, Math.max(this.initialWidth + deltaX, col.minWidth || MIN_CELL_WIDTH));
   }
 }

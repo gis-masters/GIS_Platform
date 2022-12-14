@@ -3,11 +3,11 @@ import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { schemaService } from '../../services/data/schema.service';
-import { FormControlProps } from '../Form/Control/Form-Control';
 import { PropertyType, Schema } from '../../services/data/schema.models';
-import { XTableColumn } from '../XTable/XTable.async';
+import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
+import { FormControlProps } from '../Form/Control/Form-Control';
+import { XTableColumn } from '../XTable/XTable';
 import { Button } from '../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./SchemasSelect.scss';
