@@ -35,7 +35,7 @@ import { Coordinate } from 'ol/coordinate';
 export function applyContentTypeOld(schema: OldSchema, contentTypeId?: string): OldSchema {
   const clonedSchema = cloneDeep(schema);
 
-  const contentType = clonedSchema.contentTypes.find(cType => cType.id === contentTypeId);
+  const contentType = clonedSchema.contentTypes?.find(cType => cType.id === contentTypeId);
 
   if (contentType) {
     const { attributes, children, childOnly, printTemplates } = contentType;
@@ -54,7 +54,7 @@ export function applyContentTypeOld(schema: OldSchema, contentTypeId?: string): 
 export function applyContentType(schema: Schema, contentTypeId: string): Schema {
   const clonedSchema = cloneDeep(schema);
 
-  const contentType = clonedSchema.contentTypes.find(cType => cType.id === contentTypeId);
+  const contentType = clonedSchema.contentTypes?.find(cType => cType.id === contentTypeId);
 
   if (contentType) {
     const {
@@ -445,9 +445,9 @@ const valueToReadableTransformers: Partial<Record<PropertyType, (value: unknown,
     }
   };
 
-export function getReadablePropertyValue(value: unknown, property: PropertySchema): string {
+export function getReadablePropertyValue(value: unknown, property?: PropertySchema): string {
   if (
-    property.propertyType !== PropertyType.BOOL &&
+    property?.propertyType !== PropertyType.BOOL &&
     (value === null || value === undefined || property === undefined)
   ) {
     return '';
@@ -480,7 +480,7 @@ export function changeSchemaNamesCaseByFeature<T extends Schema | OldSchema>(
       ...property,
       name: getNameFromFeatureKeys(property.name, feature)
     })),
-    contentTypes: schema.contentTypes.map((contentType: ContentType | OldContentType) => ({
+    contentTypes: schema.contentTypes?.map((contentType: ContentType | OldContentType) => ({
       ...contentType,
       properties: (
         ((contentType as ContentType).properties || (contentType as OldContentType).attributes) as (

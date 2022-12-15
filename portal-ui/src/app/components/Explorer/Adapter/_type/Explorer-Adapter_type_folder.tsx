@@ -140,7 +140,7 @@ export class ExplorerAdapterTypeFolder {
 
     return [
       records.map(payload => {
-        const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
+        const contentType = contentTypes?.find(cType => cType.id === payload.content_type_id);
 
         return {
           type:
