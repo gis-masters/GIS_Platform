@@ -17,4 +17,7 @@ public interface SchemasAndTablesRepository extends PagingAndSortingRepository<S
 
     @Query("SELECT crs FROM SchemasAndTables WHERE identifier = :identifier")
     Optional<String> findCrsByIdentifier(@Param("identifier") String identifier);
+
+    @Query("SELECT schemaId FROM SchemasAndTables WHERE identifier = :identifier")
+    Optional<String> findSchemaIdByIdentifier(@Param("identifier") String identifier);
 }

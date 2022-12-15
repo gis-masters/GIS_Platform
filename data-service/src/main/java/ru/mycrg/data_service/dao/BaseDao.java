@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -52,6 +53,13 @@ public class BaseDao {
                                String ecqlFilter,
                                Pageable pageable,
                                Class<T> clazz) {
+        return findAll(qualifier, ecqlFilter, pageable, new BeanPropertyRowMapper<>(clazz));
+    }
+
+    public <T> List<T> findAll(ResourceQualifier qualifier,
+                               String ecqlFilter,
+                               Pageable pageable,
+                               RowMapper<T> rowMapper) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("offset", pageable.getOffset())
                 .addValue("limit", pageable.getPageSize());
@@ -63,7 +71,7 @@ public class BaseDao {
 
         log.debug("Request find all with filter and pageable and class: [{}]", query);
 
-        return pJdbcTemplate.query(query, params, new BeanPropertyRowMapper<>(clazz));
+        return pJdbcTemplate.query(query, params, rowMapper);
     }
 
     public Long getTotal(ResourceQualifier qualifier, String ecqlFilter) {
