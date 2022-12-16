@@ -6,8 +6,15 @@ export interface PageModel extends BlockModel {
   url: string;
 }
 
+export const pagesRegistry: Record<string, Page> = {};
+
 export abstract class Page extends Block {
   url?: string;
+
+  constructor() {
+    super();
+    pagesRegistry[this.constructor.name] = this;
+  }
 
   async testUrl(): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/await-thenable -- типы врут

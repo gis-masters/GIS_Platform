@@ -26,6 +26,7 @@ export interface RegData {
   lastName: string;
   password: string;
   password_: string;
+  enabled?: boolean;
 }
 
 export interface AuthenticationResult {

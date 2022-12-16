@@ -1,21 +1,21 @@
-import {testUsers} from './testUsers';
-import {NewUserData, usersService} from '../../../src/app/services/data/users.service';
+import { testUsers } from './testUsers';
+import { NewUserData, usersService } from '../../../src/app/services/data/users.service';
 
 declare const window: { usersService: typeof usersService };
 
 export async function createUser({
-                                   email,
-                                   enabled,
-                                   name,
-                                   middleName,
-                                   surname,
-                                   department,
-                                   job,
-                                   phone,
-                                   password
-                                 }: NewUserData): Promise<void> {
+  email,
+  enabled,
+  name,
+  middleName,
+  surname,
+  department,
+  job,
+  phone,
+  password
+}: NewUserData): Promise<void> {
   await browser.executeAsync(
-    async ({email, enabled, name, middleName, surname, department, job, phone, password}, callback) => {
+    async ({ email, enabled, name, middleName, surname, department, job, phone, password }, callback) => {
       callback(
         await window.usersService.create({
           email,
@@ -30,12 +30,12 @@ export async function createUser({
         })
       );
     },
-    {email, enabled, name, middleName, surname, department, job, phone, password}
+    { email, enabled, name, middleName, surname, department, job, phone, password }
   );
 }
 
 export async function createTestUsers(): Promise<void> {
-  const {owner, contributor, viewer, user} = testUsers;
+  const { owner, contributor, viewer, user, disabled } = testUsers;
 
   await createUser({
     enabled: true,
@@ -83,5 +83,17 @@ export async function createTestUsers(): Promise<void> {
     department: 'Gryffindor',
     phone: user.contactPhone,
     password: user.password
+  });
+
+  await createUser({
+    enabled: false,
+    email: disabled.email,
+    name: disabled.firstName,
+    surname: disabled.lastName,
+    middleName: 'Gideon',
+    job: 'Мертвец',
+    department: 'Gryffindor',
+    phone: disabled.contactPhone,
+    password: disabled.password
   });
 }

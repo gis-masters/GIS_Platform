@@ -76,6 +76,13 @@ export async function authenticateAsUser(thenPage?: Page): Promise<void> {
   await authenticateAs(testUsers.user, thenPage);
 }
 
+export async function logout(): Promise<void> {
+  await browser.executeAsync(async callback => {
+    await window.authService.logout();
+    callback();
+  });
+}
+
 async function authenticateAs(
   { email, password }: typeof testUsers[keyof typeof testUsers],
   thenPage?: Page
@@ -90,4 +97,9 @@ async function authenticateAs(
 
 Given(/я авторизован как "(.*)"/, async (user: keyof typeof testUsers) => {
   await authenticateAs(testUsers[user]);
+});
+
+Given(/существует пользователь "(.*)"/, async (user: keyof typeof testUsers) => {
+  await authenticateAs(testUsers[user]);
+  await logout();
 });

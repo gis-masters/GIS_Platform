@@ -355,8 +355,9 @@ export const config: Options.Testrunner = {
    * @param {number}                 result.duration  duration of scenario in milliseconds
    * @param {Object}                 context          Cucumber World object
    */
-  // afterScenario: function (world, result, context) {
-  // },
+  // afterScenario: async function () {
+  //   await browser.reloadSession();
+  // }
   /**
    *
    * Runs after a Cucumber Feature.

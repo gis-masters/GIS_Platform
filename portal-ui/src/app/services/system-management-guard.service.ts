@@ -23,7 +23,7 @@ export class SystemManagementGuardService implements CanActivate {
       return true;
     }
 
-    void this.router.navigate(['/']);
+    void this.router.navigate(['/projects']);
 
     return false;
   }

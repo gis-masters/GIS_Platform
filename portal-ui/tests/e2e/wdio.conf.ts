@@ -7,5 +7,9 @@ export const config: Options.Testrunner = {
 
   maxInstances: 1,
 
-  specs: ['./tests/e2e/**/*.feature']
+  specs: ['./tests/e2e/**/*.feature'],
+
+  afterScenario: async function () {
+    await browser.reloadSession();
+  }
 };
