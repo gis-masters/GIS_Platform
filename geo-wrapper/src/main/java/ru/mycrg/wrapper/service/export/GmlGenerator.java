@@ -2,8 +2,6 @@ package ru.mycrg.wrapper.service.export;
 
 import org.jetbrains.annotations.NotNull;
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKBReader;
 import org.slf4j.Logger;
@@ -23,6 +21,7 @@ import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.exceptions.ExportException;
 import ru.mycrg.wrapper.service.FileService;
+import ru.mycrg.wrapper.service.export.gml_generator.IGmlGeometryGenerator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,14 +32,13 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 
 import static java.io.File.separator;
 import static java.math.RoundingMode.HALF_UP;
 import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
 import static ru.mycrg.wrapper.service.export.GmlUtil.*;
@@ -65,14 +63,20 @@ public class GmlGenerator implements IExporter {
     private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
+    private final Map<String, IGmlGeometryGenerator> gmlGeometryGenerators;
+
     public GmlGenerator(FileService fileService,
                         IMessageBusProducer messageBus,
                         DatasourceFactory datasourceFactory,
-                        BaseDaoService baseDaoService) {
+                        BaseDaoService baseDaoService,
+                        List<IGmlGeometryGenerator> generators) {
         this.messageBus = messageBus;
         this.fileService = fileService;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
+
+        this.gmlGeometryGenerators = generators.stream()
+                                               .collect(toMap(IGmlGeometryGenerator::getType, Function.identity()));
     }
 
     /**
@@ -287,68 +291,21 @@ public class GmlGenerator implements IExporter {
 
     private void generateGeometry(Geometry geometry,
                                   Document document,
-                                  Element featureMember,
+                                  Element parent,
                                   ExportProcessModel payload) {
-        String geometryType = geometry.getGeometryType();
-
-        final String geometrySRSName = "srsName";
-        final String geometrySRSValue = "urn:ogc:def:crs:EPSG:" + payload.getEpsg();
-        final String gmlCoordinates = "gml:coordinates";
+        String geometrySRSName = "srsName";
+        String geometrySRSValue = "urn:ogc:def:crs:EPSG:" + payload.getEpsg();
         boolean invertedCoordinates = payload.isInvertedCoordinates();
 
-        if ("Point".equals(geometryType) || "MultiPoint".equals(geometryType)) {
-            Element geometryElement = document.createElement("gml:Point");
-            geometryElement.setAttribute(geometrySRSName, geometrySRSValue);
-            geometryElement.setAttribute(GML_ID, generateId());
-            featureMember.appendChild(geometryElement);
-
-            Element coordinate = document.createElement(gmlCoordinates);
-            coordinate.setTextContent(convertToString(geometry.getCoordinates(), invertedCoordinates));
-            geometryElement.appendChild(coordinate);
-        } else if ("MultiLineString".equals(geometryType)) {
-            Element geometryElement = document.createElement("gml:LineString");
-            geometryElement.setAttribute(geometrySRSName, geometrySRSValue);
-            geometryElement.setAttribute(GML_ID, generateId());
-            featureMember.appendChild(geometryElement);
-
-            Element coordinate = document.createElement(gmlCoordinates);
-            coordinate.setTextContent(convertToString(geometry.getCoordinates(), invertedCoordinates));
-            geometryElement.appendChild(coordinate);
-        } else if ("MultiPolygon".equals(geometryType)) {
-            Element geometryElement = document.createElement("gml:Polygon");
-            geometryElement.setAttribute(geometrySRSName, geometrySRSValue);
-            geometryElement.setAttribute(GML_ID, generateId());
-            featureMember.appendChild(geometryElement);
-
-            Polygon onlyFirstGeometry = (Polygon) geometry.getGeometryN(0);
-            LineString exteriorRing = onlyFirstGeometry.getExteriorRing();
-            if (exteriorRing != null) {
-                Element exterior = document.createElement("gml:exterior");
-                geometryElement.appendChild(exterior);
-
-                Element linearRing = document.createElement("gml:LinearRing");
-                exterior.appendChild(linearRing);
-
-                Element coordinate = document.createElement(gmlCoordinates);
-                coordinate.setTextContent(convertToString(exteriorRing.getCoordinates(), invertedCoordinates));
-                linearRing.appendChild(coordinate);
-            }
-
-            int numInteriorRing = onlyFirstGeometry.getNumInteriorRing();
-            if (numInteriorRing > 0) {
-                for (int i = 0; i < numInteriorRing - 1; i++) {
-                    LineString hole = onlyFirstGeometry.getInteriorRingN(i);
-
-                    Element interior = document.createElement("gml:interior");
-                    geometryElement.appendChild(interior);
-
-                    Element linearRing = document.createElement("gml:LinearRing");
-                    interior.appendChild(linearRing);
-
-                    Element coordinate = document.createElement(gmlCoordinates);
-                    coordinate.setTextContent(convertToString(hole.getCoordinates(), invertedCoordinates));
-                    linearRing.appendChild(coordinate);
-                }
+        String geometryType = geometry.getGeometryType();
+        IGmlGeometryGenerator gmlGenerator = gmlGeometryGenerators.get(geometryType);
+        if (gmlGenerator != null) {
+            Optional<Element> oElement = gmlGenerator.generate(document, geometry, invertedCoordinates);
+            if (oElement.isPresent()) {
+                Element element = oElement.get();
+                element.setAttribute(geometrySRSName, geometrySRSValue);
+                element.setAttribute(GML_ID, generateId());
+                parent.appendChild(element);
             }
         } else {
             log.warn("Unsupported geometry type: {}", geometryType);
@@ -423,7 +380,7 @@ public class GmlGenerator implements IExporter {
     private String generateId() {
         idCounter++;
 
-        return "ID" + idCounter;
+        return "ID-" + idCounter;
     }
 
     /**

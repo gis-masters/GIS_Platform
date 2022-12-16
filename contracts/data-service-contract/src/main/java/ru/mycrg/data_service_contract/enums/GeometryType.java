@@ -7,11 +7,23 @@ public enum GeometryType {
     @JsonProperty("Point")
     POINT("Point"),
 
+    @JsonProperty("MultiPoint")
+    MULTI_POINT("MultiPoint"),
+
     @JsonProperty("MultiLineString")
     MULTI_LINE_STRING("MultiLineString"),
 
+    @JsonProperty("LineString")
+    LINE_STRING("LineString"),
+
+    @JsonProperty("Polygon")
+    POLYGON("Polygon"),
+
     @JsonProperty("MultiPolygon")
-    MULTI_POLYGON("MultiPolygon");
+    MULTI_POLYGON("MultiPolygon"),
+
+    @JsonProperty("GeometryCollection")
+    GEOMETRY_COLLECTION("GeometryCollection");
 
     private final String geometryType;
 
