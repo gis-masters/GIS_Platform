@@ -6,6 +6,7 @@ import { Check, Close } from '@mui/icons-material';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema.models';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 
@@ -42,8 +43,9 @@ class XTableFilterTypeBool extends Component<XTableFilterProps> {
   @computed
   private get value(): boolean {
     const { filterQuery, field } = this.props;
+    const value = getFieldFilterValue(filterQuery, field);
 
-    return filterQuery[field] ? filterQuery[field] === true : null;
+    return value === undefined ? null : value === true;
   }
 
   @action.bound
@@ -52,11 +54,7 @@ class XTableFilterTypeBool extends Component<XTableFilterProps> {
 
     onBeforeFilterChange();
 
-    if (filterQuery[field] === value || value === null) {
-      delete filterQuery[field];
-    } else {
-      filterQuery[field] = value || { $in: [null, false] };
-    }
+    modifyFieldFilterValue(filterQuery, field, value === null ? undefined : value || { $in: [null, false] });
 
     onFilterChange();
   }

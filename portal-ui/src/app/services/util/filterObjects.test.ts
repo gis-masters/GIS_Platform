@@ -4,9 +4,29 @@ import { prepareLike, filterObjects } from './filterObjects';
 
 describe('утилита фильтрации объектов', () => {
   test('функция prepareLike заменяет нестандартные операторы $like и $ilike на $regex', () => {
-    const input = { property1: { $like: '%someValue%' }, property2: { $ilike: '%oth..Value%' } };
+    const input = { property1: { $like: '%myValue%' }, property2: { $ilike: '%ot...Value%' } };
     // eslint-disable-next-line unicorn/better-regex
-    const output = { property1: { $regex: /^.*someValue.*$/ }, property2: { $regex: /^.*oth..Value.*$/i } };
+    const output = { property1: { $regex: /^.*myValue.*$/ }, property2: { $regex: /^.*ot...Value.*$/i } };
+
+    expect(prepareLike(input)).toStrictEqual(output);
+  });
+
+  test('функция prepareLike работает также c вложенными в операторы $and операторами $like и $ilike', () => {
+    const input = { $and: [{ property1: { $like: '%someValue%' } }, { property2: { $ilike: '%oth..Value%' } }] };
+    const output = {
+      // eslint-disable-next-line unicorn/better-regex
+      $and: [{ property1: { $regex: /^.*someValue.*$/ } }, { property2: { $regex: /^.*oth..Value.*$/i } }]
+    };
+
+    expect(prepareLike(input)).toStrictEqual(output);
+  });
+
+  test('функция prepareLike работает также c вложенными в операторы $or операторами $like и $ilike', () => {
+    const input = { $or: [{ property1: { $like: '%someValue%' } }, { property2: { $ilike: '%oth..Value%' } }] };
+    const output = {
+      // eslint-disable-next-line unicorn/better-regex
+      $or: [{ property1: { $regex: /^.*someValue.*$/ } }, { property2: { $regex: /^.*oth..Value.*$/i } }]
+    };
 
     expect(prepareLike(input)).toStrictEqual(output);
   });

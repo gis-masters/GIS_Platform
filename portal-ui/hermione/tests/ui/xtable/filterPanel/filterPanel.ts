@@ -51,7 +51,7 @@ describe('XTable', () => {
       assert.isTrue(await xTableFilterPanel.isFilterShow(), 'Фильтр в панель фильтров отсутствует, хотя должен быть');
 
       const title = await xTableFilterPanel.getFilterTitle();
-      assert.equal('Название', title);
+      assert.equal('Название:', title);
 
       const value = await xTableFilterPanel.getFirstFilterValue();
       assert.equal('%бу%', value);
@@ -118,7 +118,7 @@ describe('XTable', () => {
       await xTableFilterPanel.setStringFieldValue('бу');
 
       const title = await xTableFilterPanel.getFilterTitle();
-      assert.equal('Название', title);
+      assert.equal('Название:', title);
 
       const firstValue = await xTableFilterPanel.getFirstFilterValue();
       assert.equal('%бу%', firstValue);
@@ -131,8 +131,8 @@ describe('XTable', () => {
     });
 
     /**
-     * Scenario: При изменении введённого значения у поля типа Document в фильтре в панели фильтров изменяется содержимое фильтра
-     *   When пользователь изменяет текст и тип фильтрации в поле типа Document
+     * Scenario: При изменении введённого значения у поля типа document в фильтре в панели фильтров изменяется содержимое фильтра
+     *   When пользователь изменяет текст и тип фильтрации в поле типа document
      *   Then в панели фильтров изменяется указанный фильтр
      */
     it('При изменении введённого значения у поля типа Document в фильтре в панели фильтров изменяется содержимое фильтра', async function () {
@@ -141,13 +141,12 @@ describe('XTable', () => {
       await xTableFilterPanel.setDocumentFieldValue('документ');
 
       const title = await xTableFilterPanel.getFilterTitle();
-      assert.equal('Документы', title);
+      assert.equal('Документы:', title);
 
       const firstValue = await xTableFilterPanel.getFirstFilterValue();
       assert.equal('%документ%', firstValue);
 
       await xTableFilterPanel.setDocumentFieldValue('678');
-      await xTableFilterPanel.toggleStrictness();
 
       const value = await xTableFilterPanel.getFirstFilterValue();
       assert.equal('%документ678%', value);
@@ -164,7 +163,7 @@ describe('XTable', () => {
       await xTableFilterPanel.setFloatFieldValue(1, 2);
 
       const title = await xTableFilterPanel.getFilterTitle();
-      assert.equal('Вес', title);
+      assert.equal('Вес:', title);
 
       const firstValue = await xTableFilterPanel.getFirstFilterValue();
       assert.equal('от 1 до 2', firstValue);
@@ -199,7 +198,7 @@ describe('XTable', () => {
       await xTableFilterPanel.setBoolFieldValue(true);
 
       const title = await xTableFilterPanel.getFilterTitle();
-      assert.equal('Решает', title);
+      assert.equal('Решает:', title);
 
       const firstValue = await xTableFilterPanel.getFirstFilterValue();
       assert.equal('да', firstValue);

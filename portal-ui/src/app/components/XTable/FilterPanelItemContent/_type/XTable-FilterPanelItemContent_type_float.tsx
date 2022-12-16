@@ -8,10 +8,9 @@ import {
 } from '../XTable-FilterPanelItemContent.base';
 import { FilterPanelItemContentTypeInterval } from './XTable-FilterPanelItemContent_type_interval';
 
-export const withTypeFloat = withBemMod<XTableFilterPanelItemContentProps, XTableFilterPanelItemContentProps>(
-  cnXTableFilterPanelItemContent(),
-  { type: PropertyType.FLOAT },
-  () => props => {
-    return <FilterPanelItemContentTypeInterval {...props} />;
-  }
-);
+export const withTypeFloat = withBemMod<
+  XTableFilterPanelItemContentProps<unknown>,
+  XTableFilterPanelItemContentProps<unknown>
+>(cnXTableFilterPanelItemContent(), { type: PropertyType.FLOAT }, () => props => {
+  return <FilterPanelItemContentTypeInterval {...props} />;
+});

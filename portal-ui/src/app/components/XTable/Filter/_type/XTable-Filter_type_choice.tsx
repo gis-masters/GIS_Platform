@@ -8,7 +8,7 @@ import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
 
 import { PropertyOption, PropertyType } from '../../../../services/data/schema.models';
-import { FilterQuery } from '../../../../services/util/filterObjects';
+import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 
@@ -64,12 +64,13 @@ class XTableFilterTypeChoice extends Component<XTableFilterProps> {
   @computed
   private get value(): string[] {
     const { filterQuery, field } = this.props;
+    const value = getFieldFilterValue(filterQuery, field);
 
-    if ((filterQuery[field] as FilterQuery) === null) {
+    if (value === null) {
       return [EMPTY];
     }
 
-    return ((filterQuery[field] as FilterQuery)?.$in as string[]) || [];
+    return ((value as FilterQuery)?.$in as string[]) || [];
   }
 
   @action.bound
@@ -78,16 +79,15 @@ class XTableFilterTypeChoice extends Component<XTableFilterProps> {
 
     onBeforeFilterChange();
 
-    if (Array.isArray(e.target.value) && e.target.value.length) {
-      const val: string[] = e.target.value;
+    const value: string[] | undefined =
+      Array.isArray(e.target.value) && e.target.value.length ? e.target.value : undefined;
 
-      if (e.target.value.includes(EMPTY) && !isEqual(this.value, [EMPTY])) {
-        filterQuery[field] = null;
-      } else {
-        filterQuery[field] = { $in: val.filter(item => item !== EMPTY) };
-      }
+    if (value === undefined) {
+      modifyFieldFilterValue(filterQuery, field);
     } else {
-      delete filterQuery[field];
+      const filterValue =
+        value?.includes(EMPTY) && !isEqual(this.value, [EMPTY]) ? null : { $in: value.filter(item => item !== EMPTY) };
+      modifyFieldFilterValue(filterQuery, field, filterValue);
     }
 
     onFilterChange();

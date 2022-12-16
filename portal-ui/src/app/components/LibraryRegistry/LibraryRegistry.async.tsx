@@ -15,7 +15,7 @@ import { PropertySchema, PropertyType, Schema } from '../../services/data/schema
 import { communicationService } from '../../services/communication.service';
 import { calculateValues } from '../../services/formValidation.service';
 import { schemaService } from '../../services/data/schema.service';
-import { FilterQuery } from '../../services/util/filterObjects';
+import { addFilterPart, FilterQuery, getFilterRootAnd, removeFieldFilter } from '../../services/util/filterObjects';
 import { PageOptions, SortOrder } from '../../services/models';
 import { SortParams } from '../../services/util/sortObjects';
 import { services } from '../../services/services';
@@ -26,7 +26,7 @@ import {
   getLibraryRecords2,
   LibraryRecord
 } from '../../services/data/doc-library.service';
-import { getIdsFromPath, getPathFromIds, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
+import { getIdsFromPath, getPathFilter, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
 import { XTable, XTableColumn, XTableProps } from '../XTable/XTable';
@@ -176,7 +176,20 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
   @computed
   private get breadcrumbsPath(): number[] {
-    return getIdsFromPath((this.tablePageOptions?.filter?.path as FilterQuery)?.$ilike as string);
+    const filter: FilterQuery = this.tablePageOptions?.filter || {};
+    let path: string;
+
+    const [and, index] = getFilterRootAnd(this.tablePageOptions?.filter || {}, 'path');
+
+    if (index !== -1) {
+      path = (((and[index].$or as FilterQuery)[0] as FilterQuery).path as FilterQuery).$like as string;
+    }
+
+    if (filter.$or && (filter.$or[0] as FilterQuery).path) {
+      path = ((filter.$or[0] as FilterQuery).path as FilterQuery)?.$like as string;
+    }
+
+    return getIdsFromPath(path);
   }
 
   @computed
@@ -258,14 +271,13 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
     return Boolean(this.library && this.schema);
   }
 
-  @boundMethod
+  @action.bound
   private handleBreadcrumbsItemClick(path: number[]) {
     const filter = { ...this.tablePageOptions?.filter };
 
+    removeFieldFilter(filter, 'path');
     if (path.length) {
-      filter.path = { $ilike: getPathFromIds(path) };
-    } else {
-      delete filter.path;
+      addFilterPart(filter, getPathFilter(path));
     }
     this.tableInvoke.setFilter(filter);
   }

@@ -47,7 +47,7 @@ export interface XTableColumn<T> {
   description?: ReactNode;
   filterable?: boolean;
   CustomFilterComponent?: ComponentType<XTableFilterProps>;
-  CustomFilterPanelItemComponent?: ComponentType<XTableFilterPanelItemContentProps>;
+  CustomFilterPanelItemComponent?: ComponentType<XTableFilterPanelItemContentProps<T>>;
   type?: PropertyType;
   settings?: Partial<
     Pick<PropertySchemaChoice, 'options'> &
@@ -160,7 +160,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
     this.pageOptionsReactionDisposer = reaction(
       () => [
         { ...this.sortParams },
-        { ...this.filterQuery },
+        cloneDeep(this.filterQuery),
         this.filterActive,
         this.page,
         this.pageSize,

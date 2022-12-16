@@ -2,19 +2,19 @@ import React from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema.models';
+import { getFieldFilterValue } from '../../../../services/util/filterObjects';
 
 import {
   cnXTableFilterPanelItemContent,
   XTableFilterPanelItemContentProps
 } from '../XTable-FilterPanelItemContent.base';
 
-export const withTypeBool = withBemMod<XTableFilterPanelItemContentProps, XTableFilterPanelItemContentProps>(
-  cnXTableFilterPanelItemContent(),
-  { type: PropertyType.BOOL },
-  XTableFilterPanelItemContentBase => props => {
-    const { filter, col } = props;
-    const value = <>{(filter[String(col.field)] as boolean) === true ? 'да' : 'нет'}</>;
+export const withTypeBool = withBemMod<
+  XTableFilterPanelItemContentProps<unknown>,
+  XTableFilterPanelItemContentProps<unknown>
+>(cnXTableFilterPanelItemContent(), { type: PropertyType.BOOL }, XTableFilterPanelItemContentBase => props => {
+  const { filter, col } = props;
+  const value = getFieldFilterValue(filter, col.field);
 
-    return <XTableFilterPanelItemContentBase {...props} value={value} />;
-  }
-);
+  return <XTableFilterPanelItemContentBase {...props} value={<>{value === true ? 'да' : 'нет'}</>} />;
+});

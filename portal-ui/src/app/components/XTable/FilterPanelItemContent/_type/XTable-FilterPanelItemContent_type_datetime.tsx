@@ -8,10 +8,9 @@ import {
 } from '../XTable-FilterPanelItemContent.base';
 import { FilterPanelItemContentTypeInterval } from './XTable-FilterPanelItemContent_type_interval';
 
-export const withTypeDate = withBemMod<XTableFilterPanelItemContentProps, XTableFilterPanelItemContentProps>(
-  cnXTableFilterPanelItemContent(),
-  { type: PropertyType.DATETIME },
-  () => props => {
-    return <FilterPanelItemContentTypeInterval {...props} />;
-  }
-);
+export const withTypeDate = withBemMod<
+  XTableFilterPanelItemContentProps<unknown>,
+  XTableFilterPanelItemContentProps<unknown>
+>(cnXTableFilterPanelItemContent(), { type: PropertyType.DATETIME }, () => props => {
+  return <FilterPanelItemContentTypeInterval {...props} />;
+});

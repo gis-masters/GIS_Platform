@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { PropertyOption, PropertyType } from '../../services/data/schema.models';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
-import { filterObjects } from '../../services/util/filterObjects';
+import { filterObjects, prepareLike } from '../../services/util/filterObjects';
 import { PageOptions, SortOrder } from '../../services/models';
 import { sleep } from '../../services/util/sleep';
 
@@ -332,7 +332,7 @@ async function getData({
 }: PageOptions): Promise<[TestData[], number]> {
   await sleep(Math.random() * 1000);
 
-  const filtered = filterObjects(data, filter);
+  const filtered = filterObjects(data, prepareLike(filter));
   const sorted = sortObjects(filtered, sort as keyof TestData, sortDir === SortOrder.ASC, 'id');
   const paged = sorted.slice(page * pageSize, page * pageSize + pageSize);
 

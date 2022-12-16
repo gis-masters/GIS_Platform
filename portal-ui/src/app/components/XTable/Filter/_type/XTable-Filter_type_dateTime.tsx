@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 
-import { FilterQuery } from '../../../../services/util/filterObjects';
+import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
 import { PropertyType } from '../../../../services/data/schema.models';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
@@ -46,32 +46,35 @@ class XTableFilterTypeDateTime extends Component<XTableFilterProps> {
   @computed
   private get from(): string {
     const { filterQuery, field } = this.props;
+    const value = getFieldFilterValue(filterQuery, field);
 
-    return ((filterQuery[field] as FilterQuery)?.$gte as string) || '';
+    return ((value as FilterQuery)?.$gte as string) || '';
   }
 
   @computed
   private get to(): string {
     const { filterQuery, field } = this.props;
+    const value = getFieldFilterValue(filterQuery, field);
 
-    return ((filterQuery[field] as FilterQuery)?.$lte as string) || '';
+    return ((value as FilterQuery)?.$lte as string) || '';
   }
 
   @action.bound
   private handleFromChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
+    const currentValue = getFieldFilterValue(filterQuery, field) as { $lte: string; $gte: string };
 
     onBeforeFilterChange();
 
     if (e.target.value) {
-      filterQuery[field] = {
-        ...(filterQuery[field] as { $lte: string; $gte: string }),
+      modifyFieldFilterValue(filterQuery, field, {
+        ...currentValue,
         $gte: e.target.value
-      };
+      });
     } else if (this.to) {
-      filterQuery[field] = { $lte: (filterQuery[field] as { $lte: string }).$lte };
+      modifyFieldFilterValue(filterQuery, field, { $lte: currentValue.$lte });
     } else {
-      delete filterQuery[field];
+      modifyFieldFilterValue(filterQuery, field);
     }
 
     onFilterChange();
@@ -80,18 +83,19 @@ class XTableFilterTypeDateTime extends Component<XTableFilterProps> {
   @action.bound
   private handleToChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
+    const currentValue = getFieldFilterValue(filterQuery, field) as { $lte: string; $gte: string };
 
     onBeforeFilterChange();
 
     if (e.target.value) {
-      filterQuery[field] = {
-        ...(filterQuery[field] as { $lte: string; $gte: string }),
+      modifyFieldFilterValue(filterQuery, field, {
+        ...currentValue,
         $lte: e.target.value
-      };
+      });
     } else if (this.from) {
-      filterQuery[field] = { $gte: (filterQuery[field] as { $gte: string }).$gte };
+      modifyFieldFilterValue(filterQuery, field, { $gte: currentValue.$gte });
     } else {
-      delete filterQuery[field];
+      modifyFieldFilterValue(filterQuery, field);
     }
 
     onFilterChange();

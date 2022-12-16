@@ -4,12 +4,12 @@ import { observer } from 'mobx-react';
 import { Chip, Tooltip } from '@mui/material';
 import { Clear } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
-import { makeObservable, observable } from 'mobx';
+import { computed, makeObservable, observable } from 'mobx';
 
 import { XTableColumn } from '../XTable';
 import { cnXTableFilterPanelItem, XTableFilterPanelItem } from '../FilterPanelItem/XTable-FilterPanelItem';
 
-import { FilterQuery } from '../../../services/util/filterObjects';
+import { FilterQuery, getFieldFilterPart } from '../../../services/util/filterObjects';
 import { PropertyType } from '../../../services/data/schema.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-FilterPanel.scss';
@@ -34,11 +34,11 @@ export class XTableFilterPanel<T> extends Component<XTableFilterPanelProps<T>> {
   }
 
   render() {
-    const { filterQuery, cols, onUpdateFilter, onBeforeFilterChange, onFilterChange } = this.props;
+    const { filterQuery, onUpdateFilter, onBeforeFilterChange, onFilterChange } = this.props;
 
     return (
       <div className={cnXTableFilterPanel()}>
-        {!!Object.keys(filterQuery).length && (
+        {!!this.filteredColumns.length && (
           <Chip
             className={cnXTableFilterPanelItem()}
             color='secondary'
@@ -53,25 +53,28 @@ export class XTableFilterPanel<T> extends Component<XTableFilterPanelProps<T>> {
           />
         )}
 
-        {Object.keys(filterQuery).map((filter, i) => {
-          const item = cols.find(col => col.field === filter && this.allowedToShow(col));
-
+        {this.filteredColumns.map(col => {
           return (
-            item && (
-              <XTableFilterPanelItem
-                key={i}
-                filter={filterQuery}
-                col={item}
-                onUpdateFilter={onUpdateFilter}
-                onFilterChange={onFilterChange}
-                onBeforeFilterChange={onBeforeFilterChange}
-                updateFilters={this.updateFilters}
-              />
-            )
+            <XTableFilterPanelItem<T>
+              key={col.field}
+              filter={filterQuery}
+              col={col}
+              onUpdateFilter={onUpdateFilter}
+              onFilterChange={onFilterChange}
+              onBeforeFilterChange={onBeforeFilterChange}
+              updateFilters={this.updateFilters}
+            />
           );
         })}
       </div>
     );
+  }
+
+  @computed
+  private get filteredColumns(): XTableColumn<T>[] {
+    const { filterQuery, cols } = this.props;
+
+    return cols.filter(col => getFieldFilterPart(filterQuery, col.field) !== undefined && this.allowedToShow(col));
   }
 
   @boundMethod
@@ -83,17 +86,16 @@ export class XTableFilterPanel<T> extends Component<XTableFilterPanelProps<T>> {
     onFilterChange();
   }
 
-  private allowedToShow(item: XTableColumn<T>) {
-    if (item.CustomFilterPanelItemComponent) {
-      return true;
-    }
-
-    return !(
-      item.type === PropertyType.BINARY ||
-      item.type === PropertyType.FIAS ||
-      item.type === PropertyType.LOOKUP ||
-      item.type === PropertyType.CUSTOM ||
-      item.type === PropertyType.URL
+  private allowedToShow(item: XTableColumn<T>): boolean {
+    return (
+      Boolean(item.CustomFilterPanelItemComponent) ||
+      !(
+        item.type === PropertyType.BINARY ||
+        item.type === PropertyType.LOOKUP ||
+        item.type === PropertyType.CUSTOM ||
+        item.type === PropertyType.FIAS ||
+        item.type === PropertyType.URL
+      )
     );
   }
 }

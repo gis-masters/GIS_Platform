@@ -1,5 +1,6 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 
+import { FilterQuery, getFieldFilterValue } from '../../../../services/util/filterObjects';
 import { PropertyType } from '../../../../services/data/schema.models';
 import { formatDate } from '../../../../services/util/date.util';
 
@@ -8,23 +9,23 @@ import {
   XTableFilterPanelItemContentProps
 } from '../XTable-FilterPanelItemContent.base';
 
-interface DateIntFloatFilter {
-  $gte: number | string;
-  $lte: number | string;
-}
-
-export const FilterPanelItemContentTypeInterval: FC<XTableFilterPanelItemContentProps> = props => {
+export const FilterPanelItemContentTypeInterval = ((props: XTableFilterPanelItemContentProps<unknown>) => {
   const { filter, col } = props;
-  const fieldFilter = filter[String(col.field)] as unknown as DateIntFloatFilter;
+  const filterValue = getFieldFilterValue(filter, col.field) as FilterQuery;
   const from =
-    col.type === PropertyType.DATETIME ? formatDate(fieldFilter.$gte, col.settings?.format) : fieldFilter.$gte;
-  const to = col.type === PropertyType.DATETIME ? formatDate(fieldFilter.$lte, col.settings?.format) : fieldFilter.$lte;
+    col.type === PropertyType.DATETIME
+      ? formatDate(filterValue.$gte as string, col.settings?.format)
+      : filterValue.$gte;
+  const to =
+    col.type === PropertyType.DATETIME
+      ? formatDate(filterValue.$lte as string, col.settings?.format)
+      : filterValue.$lte;
 
   const value = (
     <>
-      {fieldFilter.$gte && 'от'} {from} {fieldFilter.$lte && 'до'} {to}
+      {filterValue.$gte && 'от'} {from} {filterValue.$lte && 'до'} {to}
     </>
   );
 
   return <XTableFilterPanelItemContentBase {...props} value={value} />;
-};
+}) as <T>(p: XTableFilterPanelItemContentProps<T>) => ReactElement;

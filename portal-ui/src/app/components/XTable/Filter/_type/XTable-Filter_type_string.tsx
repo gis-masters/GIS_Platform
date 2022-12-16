@@ -5,7 +5,7 @@ import { TextField } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema.models';
-import { FilterQuery } from '../../../../services/util/filterObjects';
+import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 import { XTableFilterStrictness } from '../../FilterStrictness/XTable-FilterStrictness';
@@ -44,14 +44,15 @@ class XTableFilterTypeString extends Component<XTableFilterProps> {
   @computed
   private get value(): string {
     const { filterQuery, field } = this.props;
-    const value = ((filterQuery[field] as FilterQuery)?.$ilike as string) || '';
+    const value = ((getFieldFilterValue(filterQuery, field) as FilterQuery)?.$ilike as string) || '';
 
     return this.strictFiltering ? value : value.replace(/^%|%$/g, '');
   }
 
   @computed
   private get strictFiltering(): boolean {
-    const filter = this.props.filterQuery[this.props.field] as FilterQuery;
+    const { filterQuery, field } = this.props;
+    const filter = getFieldFilterValue(filterQuery, field) as FilterQuery;
     const filterValue = filter?.$ilike || filter?.$in;
 
     return filterValue === undefined ? false : !/^%.*%$/.test(String(filterValue));
@@ -64,11 +65,15 @@ class XTableFilterTypeString extends Component<XTableFilterProps> {
     onBeforeFilterChange();
 
     if (e.target.value?.length) {
-      filterQuery[field] = this.strictFiltering ? { $ilike: e.target.value } : { $ilike: `%${e.target.value}%` };
+      modifyFieldFilterValue(
+        filterQuery,
+        field,
+        this.strictFiltering ? { $ilike: e.target.value } : { $ilike: `%${e.target.value}%` }
+      );
     } else if (this.strictFiltering) {
-      filterQuery[field] = { $in: ['', null] };
+      modifyFieldFilterValue(filterQuery, field, { $in: ['', null] });
     } else {
-      delete filterQuery[field];
+      modifyFieldFilterValue(filterQuery, field);
     }
 
     onFilterChange();
@@ -79,14 +84,19 @@ class XTableFilterTypeString extends Component<XTableFilterProps> {
     const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
 
     onBeforeFilterChange();
+
     if (!this.value) {
       if (this.strictFiltering) {
-        delete filterQuery[field];
+        modifyFieldFilterValue(filterQuery, field);
       } else {
-        filterQuery[field] = { $in: ['', null] };
+        modifyFieldFilterValue(filterQuery, field, { $in: ['', null] });
       }
     } else {
-      filterQuery[field] = this.strictFiltering ? { $ilike: `%${this.value}%` } : { $ilike: this.value };
+      modifyFieldFilterValue(
+        filterQuery,
+        field,
+        this.strictFiltering ? { $ilike: `%${this.value}%` } : { $ilike: this.value }
+      );
     }
 
     onFilterChange();

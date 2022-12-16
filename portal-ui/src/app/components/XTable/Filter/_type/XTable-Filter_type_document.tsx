@@ -5,7 +5,7 @@ import { TextField } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema.models';
-import { FilterQuery } from '../../../../services/util/filterObjects';
+import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 
@@ -35,9 +35,9 @@ class XTableFilterTypeDocument extends Component<XTableFilterProps> {
   @computed
   private get value(): string {
     const { filterQuery, field } = this.props;
-    const value = ((filterQuery[field] as FilterQuery)?.$ilike as string) || '';
+    const value = getFieldFilterValue(filterQuery, field);
 
-    return value.replace(/^%|%$/g, '');
+    return (((value as FilterQuery)?.$ilike as string) || '').replace(/^%|%$/g, '');
   }
 
   @action.bound
@@ -46,11 +46,7 @@ class XTableFilterTypeDocument extends Component<XTableFilterProps> {
 
     onBeforeFilterChange();
 
-    if (e.target.value?.length) {
-      filterQuery[field] = { $ilike: `%${e.target.value}%` };
-    } else {
-      delete filterQuery[field];
-    }
+    modifyFieldFilterValue(filterQuery, field, e.target.value?.length ? { $ilike: `%${e.target.value}%` } : undefined);
 
     onFilterChange();
   }

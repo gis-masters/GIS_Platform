@@ -1,11 +1,12 @@
 import React from 'react';
-import { AxiosError } from 'axios';
 import { HomeOutlined } from '@mui/icons-material';
+import { AxiosError } from 'axios';
+import { cloneDeep } from 'lodash';
 
 import { services } from '../../services/services';
 import { getLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
-import { FilterQuery } from '../../services/util/filterObjects';
+import { addFilterPart, FilterQuery } from '../../services/util/filterObjects';
 import { Toast } from '../Toast/Toast';
 
 const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];
@@ -110,10 +111,8 @@ export function getRegistryUrlWithPath(
   pathIds: number[],
   filter: FilterQuery = registryDefaultFilter
 ): string {
-  const filterWithPath = {
-    ...filter,
-    path: { $ilike: getPathFromIds(pathIds) }
-  };
+  const filterWithPath = cloneDeep(filter);
+  addFilterPart(filterWithPath, getPathFilter(pathIds));
 
   return getRegistryUrlWithFilter(libraryIdentifier, filterWithPath);
 }
@@ -122,6 +121,14 @@ export function getIdsFromPath(path: string): number[] {
   return (path || '').replace(/%/g, '').split('/').map(Number).filter(Boolean);
 }
 
-export function getPathFromIds(path: number[]): string {
-  return `/root${path.length ? '/' : ''}${path.join('/')}/%`;
+export function getPathFilter(pathIds: number[]): FilterQuery {
+  return { $or: [{ path: { $like: getPathPatternFromIds(pathIds) } }, { path: { $eq: getPathFromIds(pathIds) } }] };
+}
+
+function getPathPatternFromIds(path: number[]): string {
+  return `${getPathFromIds(path)}/%`;
+}
+
+function getPathFromIds(path: number[]): string {
+  return `/root${path.length ? '/' : ''}${path.join('/')}`;
 }

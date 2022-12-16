@@ -2,23 +2,21 @@ import React from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema.models';
+import { FilterQuery, getFieldFilterValue } from '../../../../services/util/filterObjects';
 
 import {
   cnXTableFilterPanelItemContent,
   XTableFilterPanelItemContentProps
 } from '../XTable-FilterPanelItemContent.base';
 
-interface StringFilter {
-  $ilike: string;
-}
+export const withTypeString = withBemMod<
+  XTableFilterPanelItemContentProps<unknown>,
+  XTableFilterPanelItemContentProps<unknown>
+>(cnXTableFilterPanelItemContent(), { type: PropertyType.STRING }, XTableFilterPanelItemContentBase => props => {
+  const { filter, col } = props;
+  const filterValue = getFieldFilterValue(filter, col.field) as FilterQuery;
 
-export const withTypeString = withBemMod<XTableFilterPanelItemContentProps, XTableFilterPanelItemContentProps>(
-  cnXTableFilterPanelItemContent(),
-  { type: PropertyType.STRING },
-  XTableFilterPanelItemContentBase => props => {
-    const { filter, col } = props;
-    const value = <>{(filter[String(col.field)] as unknown as StringFilter).$ilike}</>;
+  const value = <>{filterValue.$ilike}</>;
 
-    return <XTableFilterPanelItemContentBase {...props} value={value} />;
-  }
-);
+  return <XTableFilterPanelItemContentBase {...props} value={value} />;
+});

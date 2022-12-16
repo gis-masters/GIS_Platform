@@ -1,24 +1,24 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
+import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 import { Chip } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { Clear } from '@mui/icons-material';
 import { cloneDeep } from 'lodash';
 
-import { FilterQuery } from '../../../services/util/filterObjects';
+import { FilterQuery, getFieldFilterPart, modifyFieldFilterValue } from '../../../services/util/filterObjects';
 import { PropertyType } from '../../../services/data/schema.models';
 
-import { XTableColumn } from '../XTable';
 import { XTableFilterPanelItemContent } from '../FilterPanelItemContent/XTable-FilterPanelItemContent.composed';
+import { XTableColumn } from '../XTable';
 
 import '!style-loader!css-loader!sass-loader!../FilterPanelItem/XTable-FilterPanelItem.scss';
 
 export const cnXTableFilterPanelItem = cn('XTable', 'FilterPanelItem');
 
-export interface XTableFilterPanelItemProps {
+export interface XTableFilterPanelItemProps<T> {
   filter: FilterQuery;
-  col: XTableColumn<any>;
+  col: XTableColumn<T>;
   updateFilters: boolean;
   onUpdateFilter: (filter: FilterQuery) => void;
   onBeforeFilterChange(): void;
@@ -26,7 +26,12 @@ export interface XTableFilterPanelItemProps {
 }
 
 @observer
-export class XTableFilterPanelItem extends Component<XTableFilterPanelItemProps> {
+export class XTableFilterPanelItem<T> extends Component<XTableFilterPanelItemProps<T>> {
+  constructor(props: XTableFilterPanelItemProps<T>) {
+    super(props);
+    makeObservable(this);
+  }
+
   render() {
     const { filter, col } = this.props;
     const ContentComponent = col.CustomFilterPanelItemComponent || XTableFilterPanelItemContent;
@@ -44,13 +49,13 @@ export class XTableFilterPanelItem extends Component<XTableFilterPanelItemProps>
     );
   }
 
-  @boundMethod
+  @action.bound
   private handleDelete() {
     const { filter, col, onUpdateFilter, onBeforeFilterChange, onFilterChange } = this.props;
-    const title = String(col.field);
+    const field = String(col.field);
 
-    if (filter[title]) {
-      delete filter[title];
+    if (getFieldFilterPart(filter, field)) {
+      modifyFieldFilterValue(filter, field);
       onBeforeFilterChange();
       onUpdateFilter(filter);
       onFilterChange();

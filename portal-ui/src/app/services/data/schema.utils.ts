@@ -396,54 +396,53 @@ export function getFieldRelations<T>(field: string | number, schema: Schema<T>):
   return schema?.relations?.filter(relation => relation.property === field) || [];
 }
 
-const valueToReadableTransformers: Partial<Record<PropertyType, (value: unknown, property: PropertySchema) => string>> =
-  {
-    [PropertyType.BOOL](value: unknown) {
-      return ['true', '1'].includes(String(value).toLowerCase()) ? 'да' : 'нет';
-    },
+const valueToReadableTransformers: Partial<Record<PropertyType, (val: unknown, prop: PropertySchema) => string>> = {
+  [PropertyType.BOOL](value: unknown) {
+    return ['true', '1'].includes(String(value).toLowerCase()) ? 'да' : 'нет';
+  },
 
-    [PropertyType.CHOICE](value: unknown, property: PropertySchema) {
-      return (property as PropertySchemaChoice).options.find(option => option.value === value)?.title || String(value);
-    },
+  [PropertyType.CHOICE](value: unknown, property: PropertySchema) {
+    return (property as PropertySchemaChoice).options.find(option => option.value === value)?.title || String(value);
+  },
 
-    [PropertyType.DATETIME](value: unknown, property: PropertySchema) {
-      return typeof value === 'number' || typeof value === 'string' || value instanceof Date
-        ? formatDate(value, (property as PropertySchemaDatetime).format)
-        : '';
-    },
+  [PropertyType.DATETIME](value: unknown, property: PropertySchema) {
+    return typeof value === 'number' || typeof value === 'string' || value instanceof Date
+      ? formatDate(value, (property as PropertySchemaDatetime).format)
+      : '';
+  },
 
-    [PropertyType.DOCUMENT](value: unknown) {
-      try {
-        if (typeof value === 'string' || Array.isArray(value)) {
-          const documents = Array.isArray(value) ? (value as DocumentInfo[]) : (JSON.parse(value) as DocumentInfo[]);
+  [PropertyType.DOCUMENT](value: unknown) {
+    try {
+      if (typeof value === 'string' || Array.isArray(value)) {
+        const documents = Array.isArray(value) ? (value as DocumentInfo[]) : (JSON.parse(value) as DocumentInfo[]);
 
-          return documents.map(({ title }) => title).join(', ');
-        }
-      } catch {}
-
-      return '';
-    },
-
-    [PropertyType.FILE](value: unknown) {
-      try {
-        if (typeof value === 'string' || Array.isArray(value)) {
-          const files = Array.isArray(value) ? (value as FileInfo[]) : (JSON.parse(value) as FileInfo[]);
-
-          return files.map(({ title }) => title).join(', ');
-        }
-      } catch {}
-
-      return '';
-    },
-
-    [PropertyType.FLOAT](value: unknown, property: PropertySchemaFloat) {
-      if (value && typeof property.precision === 'number') {
-        value = Number(value).toFixed(property.precision);
+        return documents.map(({ title }) => title).join(', ');
       }
+    } catch {}
 
-      return String(value).replace('.', ',');
+    return '';
+  },
+
+  [PropertyType.FILE](value: unknown) {
+    try {
+      if (typeof value === 'string' || Array.isArray(value)) {
+        const files = Array.isArray(value) ? (value as FileInfo[]) : (JSON.parse(value) as FileInfo[]);
+
+        return files.map(({ title }) => title).join(', ');
+      }
+    } catch {}
+
+    return '';
+  },
+
+  [PropertyType.FLOAT](value: unknown, property: PropertySchemaFloat) {
+    if (value && typeof property.precision === 'number') {
+      value = Number(value).toFixed(property.precision);
     }
-  };
+
+    return String(value).replace('.', ',');
+  }
+};
 
 export function getReadablePropertyValue(value: unknown, property?: PropertySchema): string {
   if (
