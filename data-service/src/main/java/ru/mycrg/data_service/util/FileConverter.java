@@ -7,13 +7,18 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static java.nio.charset.Charset.defaultCharset;
+import static java.nio.charset.Charset.forName;
+
 public class FileConverter {
+
+    private static final char[] BUFFER = new char[4096];
+    private static final Charset DEFAULT_CHARSET_FROM = defaultCharset();
+    private static final Charset DEFAULT_CHARSET_TO = forName("windows-1251");
 
     private FileConverter() {
         throw new IllegalStateException("Utility class");
     }
-
-    protected static final char[] BUFFER = new char[4096];
 
     /**
      * Перекодируем DXF файл.
@@ -48,5 +53,17 @@ public class FileConverter {
                 }
             }
         }
+    }
+
+    /**
+     * Перекодируем DXF файл.
+     * <p>
+     * По-умолчанию перекодируется из defaultCharset() в "windows-1251".
+     *
+     * @param infile  Путь к файлу
+     * @param outfile Путь к выходному файлу
+     */
+    public static void convert(@NotNull String infile, @NotNull String outfile) throws IOException {
+        convert(infile, outfile, DEFAULT_CHARSET_FROM, DEFAULT_CHARSET_TO);
     }
 }

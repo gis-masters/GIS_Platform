@@ -130,8 +130,15 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на скачивание загруженного файла")
-    public void downloadCurrentFile() {
+    public void downloadFirstFile() {
         downloadFile(firstFileId);
+    }
+
+    @When("DXF файл скачивается")
+    public void downloadCurrentFile() {
+        downloadFile(currentFileId);
+
+        assertEquals(200, response.getStatusCode());
     }
 
     @When("Пользователь делает запрос на скачивание файла с ID: {string}")
@@ -271,10 +278,8 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
                 .given().
                         contentType("multipart/form-data");
 
-        if (files != null && files.length > 0) {
-            for (File file: files) {
-                requestSpecification.multiPart("files", file);
-            }
+        for (File file: files) {
+            requestSpecification.multiPart("files", file);
         }
 
         response = requestSpecification

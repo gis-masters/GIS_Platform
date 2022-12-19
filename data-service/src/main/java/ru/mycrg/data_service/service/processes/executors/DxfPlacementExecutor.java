@@ -33,8 +33,6 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import java.io.IOException;
 import java.util.UUID;
 
-import static java.nio.charset.Charset.defaultCharset;
-import static java.nio.charset.Charset.forName;
 import static org.springframework.util.StringUtils.stripFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 import static ru.mycrg.data_service.service.processes.FileType.DXF;
@@ -83,6 +81,8 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
                                   .orElseThrow(() -> new NotFoundException("Файл не найден"));
 
         String resultFilePath = changeFileEncoding(file);
+        file.setPath(resultFilePath);
+        fileRepository.save(file);
 
         sendWsMsg(PENDING, importReport, "Размещение файла: " + file.getTitle());
 
@@ -166,7 +166,7 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
         String striped = StringUtils.stripFilenameExtension(filePath);
         String resultFilePath = striped + "_as1251.dxf";
         try {
-            FileConverter.convert(filePath, resultFilePath, defaultCharset(), forName("windows-1251"));
+            FileConverter.convert(filePath, resultFilePath);
             fileStorageService.deleteIfExists(filePath);
         } catch (IOException e) {
             String msg = "Failed to convert to encoding 1251";
