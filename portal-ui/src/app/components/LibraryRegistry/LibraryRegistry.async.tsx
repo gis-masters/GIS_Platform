@@ -23,9 +23,10 @@ import {
   DocumentLibrary,
   getLibrary,
   getLibraryRecord,
-  getLibraryRecords2,
+  getLibraryRecordsAsRegistry,
   LibraryRecord
 } from '../../services/data/doc-library.service';
+import { convertToComplexField } from '../Form/Form.utils';
 import { getIdsFromPath, getPathFilter, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
@@ -318,13 +319,26 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
     if (!this.library || !this.schema) {
       return [[], 1];
     }
-    const [documents, totalPages] = await getLibraryRecords2(this.library.identifier, this.schema.name, pageOptions);
+    const [documents, totalPages] = await getLibraryRecordsAsRegistry(
+      this.library.identifier,
+      this.schema.name,
+      pageOptions
+    );
     if (this.props.inDialog) {
       this.setLibraryDocuments(documents);
     }
 
     return [
-      documents.map(document => calculateValues<LibraryRecord>(document, this.schema?.properties || [])),
+      documents.map(document => {
+        const properties = this.schema?.properties || [];
+        const documentCalculated = calculateValues<LibraryRecord>(document, properties);
+
+        for (const property of properties) {
+          documentCalculated[property.name] = convertToComplexField(property, document);
+        }
+
+        return documentCalculated;
+      }),
       totalPages
     ];
   }

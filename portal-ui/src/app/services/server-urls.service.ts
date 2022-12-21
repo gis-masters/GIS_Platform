@@ -277,7 +277,7 @@ export async function getDocLibrariesRecordsUrl(libraryIdentifier: string): Prom
   return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records`;
 }
 
-export async function getDocLibrariesRecords2Url(libraryIdentifier: string): Promise<string> {
+export async function getDocLibrariesRecordsAsRegistryUrl(libraryIdentifier: string): Promise<string> {
   return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records/as_registry`;
 }
 

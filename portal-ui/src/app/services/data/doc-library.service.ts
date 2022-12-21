@@ -2,7 +2,7 @@ import { http } from '../http.service';
 import { PageableResponse, PageOptions } from '../models';
 import { DataEntity, DataEntityType } from './data.service';
 import {
-  getDocLibrariesRecords2Url,
+  getDocLibrariesRecordsAsRegistryUrl,
   getDocLibrariesRecordsUrl,
   getDocLibrariesRecordUrl,
   getDocLibrariesUrl,
@@ -103,12 +103,12 @@ export async function getLibraryRecords(
   return [libraryRecords, response.page.totalPages];
 }
 
-export async function getLibraryRecords2(
+export async function getLibraryRecordsAsRegistry(
   libraryId: string,
   schemaId: string,
   pageOptions: PageOptions
 ): Promise<[LibraryRecord[], number]> {
-  const url = await getDocLibrariesRecords2Url(libraryId);
+  const url = await getDocLibrariesRecordsAsRegistryUrl(libraryId);
   const requestOptions = { params: preparePageOptions(pageOptions, true) };
 
   const response = await http.get<PageableResponse<{ content: LibraryRecordRaw }>>(url, requestOptions);
@@ -118,12 +118,12 @@ export async function getLibraryRecords2(
   return [libraryRecords, response.page.totalPages];
 }
 
-export async function getAllLibraryRecords(
+export async function getAllLibraryRecordsAsRegistry(
   libraryId: string,
   schemaId: string,
   pageOptions: PageOptions
 ): Promise<LibraryRecord[]> {
-  const url = await getDocLibrariesRecords2Url(libraryId);
+  const url = await getDocLibrariesRecordsAsRegistryUrl(libraryId);
   const requestOptions = { params: preparePageOptions({ ...pageOptions, pageSize: null }, true) };
   const response = await http.getPagedOld<{ content: LibraryRecordRaw }>(url, requestOptions);
 

@@ -6,7 +6,11 @@ import { ArchiveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { DocumentLibrary, getAllLibraryRecords, LibraryRecord } from '../../../services/data/doc-library.service';
+import {
+  DocumentLibrary,
+  getAllLibraryRecordsAsRegistry,
+  LibraryRecord
+} from '../../../services/data/doc-library.service';
 import { getReadablePropertyValue } from '../../../services/data/schema.utils';
 import { PropertySchema, Schema } from '../../../services/data/schema.models';
 import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
@@ -80,7 +84,7 @@ export class LibraryRegistryExport extends Component<LibraryRegistryExportProps>
   private async getData(): Promise<unknown[][]> {
     const { tablePageOptions, library, schema, properties, cols } = this.props;
 
-    const records = await getAllLibraryRecords(library.identifier, schema.name, tablePageOptions);
+    const records = await getAllLibraryRecordsAsRegistry(library.identifier, schema.name, tablePageOptions);
     const fields = cols.filter(({ field }) => field);
     const data: unknown[][] = [fields.map(({ title }) => title)];
 
