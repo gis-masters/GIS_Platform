@@ -69,8 +69,8 @@ export function validateFieldValue(
   allProperties: PropertySchema[]
 ): FieldErrors {
   const validatorsList = [...(fieldValidators[property.propertyType] || [])];
-  if (property.customValidationFunction) {
-    validatorsList.push(property.customValidationFunction);
+  if (property.validationFormula) {
+    validatorsList.push(property.validationFormula);
   }
 
   return {

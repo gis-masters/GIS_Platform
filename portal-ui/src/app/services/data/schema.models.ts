@@ -89,7 +89,7 @@ interface BasePropertySchema<T = Record<string, unknown>> {
   calculatedValueFormula?: string | ValueFormula;
   calculatedValueWellKnownFormula?: string;
   valueFormulaParams?: Record<string, unknown>;
-  customValidationFunction?: FieldValidator;
+  validationFormula?: FieldValidator;
 }
 
 export interface PropertySchemaString<T = Record<string, unknown>> extends BasePropertySchema<T> {

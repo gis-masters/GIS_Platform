@@ -214,7 +214,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           title: 'Источник данных',
           defaultValue: true,
           ControlComponent: props => <SelectVectorTable {...props} usedVectorTables={this.usedVectorTables} />,
-          customValidationFunction: validateLayer
+          validationFormula: validateLayer
         }
       ];
     }
@@ -252,7 +252,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           title: 'Документ',
           defaultValue: true,
           ControlComponent: SelectFileInLibraryRecord,
-          customValidationFunction: validateLayer
+          validationFormula: validateLayer
         }
       ];
     }

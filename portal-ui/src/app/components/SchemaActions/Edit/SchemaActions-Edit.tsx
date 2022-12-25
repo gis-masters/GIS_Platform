@@ -26,7 +26,7 @@ const schemaForSchema: Schema = {
       propertyType: PropertyType.STRING,
       display: 'code',
       name: 'schema',
-      customValidationFunction: (value: string) => {
+      validationFormula: (value: string) => {
         try {
           JSON.parse(value);
         } catch {

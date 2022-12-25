@@ -13,6 +13,7 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/data/schema.service';
 import { FeatureError } from '../../services/map/map-link-following.service';
 import { WFS_FEATURE_ID_DELIMITER } from '../../services/geoserver/wfs.service';
+import { changeSchemaNamesCaseByFeature } from '../../services/data/schema.utils';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 
@@ -36,9 +37,11 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   constructor(props: FeaturesListItemProps) {
     super(props);
     makeObservable(this);
+  }
 
-    if (!props.errorData) {
-      void this.defineAndFillTitles();
+  async componentDidMount() {
+    if (!this.props.errorData) {
+      await this.defineAndFillTitles();
     }
   }
 
@@ -73,30 +76,31 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   }
 
   private async defineAndFillTitles() {
-    const { properties, id } = this.props.feature;
+    const { feature } = this.props;
 
-    const tableName = this.extractTableName(id);
+    const tableName = this.extractTableName(feature.id);
     const layer = currentProject.getLayerByTableName(tableName);
-    const schema = await schemaService.getSchema(layer.schemaId);
-    if (!schema) {
+    const rawSchema = await schemaService.getSchema(layer.schemaId);
+    if (!rawSchema) {
       throw new Error(`Не удалось найти схему: ${layer.schemaId}`);
     }
+    const schema = changeSchemaNamesCaseByFeature(rawSchema, feature);
 
     let title = '';
     const property = schema.properties.find(prop => prop.asTitle);
     if (property) {
       if (property.propertyType !== PropertyType.CHOICE) {
-        title = String(properties[property.name.toLowerCase()]);
+        title = String(feature.properties[property.name]);
       } else if (property.options) {
         // eslint-disable-next-line eqeqeq -- тут так надо
-        const valueTitleProjection = property.options.find(item => item.value == properties[property.name]);
+        const valueTitleProjection = property.options.find(item => item.value == feature.properties[property.name]);
         title = valueTitleProjection ? valueTitleProjection.title : '';
       }
     } else {
-      title = String(properties.name);
+      title = String(feature.properties.name || feature.properties.title);
     }
 
-    this.setTitles(title, schema.title);
+    this.setTitles(title, layer.title || schema.title);
   }
 
   @action
@@ -127,11 +131,11 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   }
 
   private extractTableName(id: string) {
-    const string = id.split(WFS_FEATURE_ID_DELIMITER)[0];
-    if (!string) {
+    const [tableName] = id.split(WFS_FEATURE_ID_DELIMITER);
+    if (!tableName) {
       throw new Error('Incorrect wfs feature id: ' + id);
     }
 
-    return string;
+    return tableName;
   }
 }
