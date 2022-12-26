@@ -4,6 +4,7 @@ import org.geotools.gml.GMLException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.FileSystemResource;
+import ru.mycrg.data_service.service.import_.gml_geometry_handlers.*;
 import ru.mycrg.data_service.service.parsers.GmlParser;
 import ru.mycrg.data_service.service.parsers.model.FeatureData;
 import ru.mycrg.data_service.service.parsers.model.FeatureObject;
@@ -12,17 +13,38 @@ import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.GeometryType;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GmlParserTest {
 
-    private final GmlParser gmlParser = new GmlParser();
     private SchemaDto schema;
 
+    private final GmlParser gmlParser;
+
     public GmlParserTest() throws ParserConfigurationException {
-        // Required
+        GmlPointHandler gmlPointHandler = new GmlPointHandler();
+        GmlPolygonHandler gmlPolygonHandler = new GmlPolygonHandler();
+        GmlCurveHandler gmlCurveHandler = new GmlCurveHandler();
+        GmlSurfaceHandler gmlSurfaceHandler = new GmlSurfaceHandler();
+        GmlLineStringHandler gmlLineStringHandler = new GmlLineStringHandler();
+        GmlMultiCurveHandler gmlMultiCurveHandler = new GmlMultiCurveHandler(gmlLineStringHandler);
+        GmlMultiPointHandler gmlMultiPointHandler = new GmlMultiPointHandler();
+        GmlMultiSurfaceHandler gmlMultiSurfaceHandler = new GmlMultiSurfaceHandler(gmlPolygonHandler);
+
+        List<IGmlImportGeometryHandler> geomHandlers = new ArrayList<>(Arrays.asList(gmlPolygonHandler,
+                                                                                     gmlCurveHandler,
+                                                                                     gmlPointHandler,
+                                                                                     gmlSurfaceHandler,
+                                                                                     gmlLineStringHandler,
+                                                                                     gmlMultiCurveHandler,
+                                                                                     gmlMultiPointHandler,
+                                                                                     gmlMultiSurfaceHandler));
+
+        gmlParser = new GmlParser(geomHandlers);
     }
 
     @Before

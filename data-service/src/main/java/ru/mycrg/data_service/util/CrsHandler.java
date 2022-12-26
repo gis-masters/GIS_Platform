@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.TransformationException;
+import ru.mycrg.data_service.service.parsers.exceptions.EpsgParserException;
 
 public class CrsHandler {
 
@@ -20,12 +21,19 @@ public class CrsHandler {
 
     public static Integer extractCrsNumber(String crs) {
         try {
-            String[] splitCrs = crs.split(":");
+            String[] splitCrs = crs.split("EPSG:");
+            if (splitCrs.length >= 2) {
+                return Integer.valueOf(splitCrs[1].replaceAll("[^0-9]", ""));
+            } else {
+                String errorMsg = "Ошибка при получении EPSG кода. Некорректно указан формат системы координат";
+                log.error(errorMsg);
 
-            return Integer.valueOf(splitCrs[1].trim());
+                throw new EpsgParserException(errorMsg);
+            }
         } catch (Exception ex) {
-            String errorMsg = "Error while getting crs number(srid)." + ex.getMessage();
-            log.error(errorMsg);
+            String errorMsg = "Ошибка при получении EPSG кода from: " + crs;
+            log.error("{}. Reason: {}", errorMsg, ex.getMessage());
+
             throw new DataServiceException(errorMsg);
         }
     }

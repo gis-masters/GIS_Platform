@@ -233,9 +233,14 @@ public class SqlBuilder {
                    .append(":").append(paramName.trim()).append(", ");
         });
 
-        String setPartSection = setPart.substring(0, setPart.length() - 2);
-        String updateQuery = "UPDATE " + qualifier.getTableQualifier() + " SET ";
+        if (setPart.length() > 0) {
+            String setPartSection = setPart.substring(0, setPart.length() - 2);
 
-        return updateQuery + setPartSection + whereSection;
+            String updateQuery = "UPDATE " + qualifier.getTableQualifier() + " SET ";
+
+            return updateQuery + setPartSection + whereSection;
+        } else {
+            return "";
+        }
     }
 }

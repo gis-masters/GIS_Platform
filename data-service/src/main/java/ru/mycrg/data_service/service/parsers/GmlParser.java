@@ -8,7 +8,6 @@ import org.geotools.wfs.GML;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.referencing.ReferenceIdentifier;
-import org.postgis.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -18,12 +17,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.service.import_.gml_geometry_handlers.IGmlImportGeometryHandler;
 import ru.mycrg.data_service.service.parsers.exceptions.EpsgParserException;
 import ru.mycrg.data_service.service.parsers.exceptions.GmlParserException;
 import ru.mycrg.data_service.service.parsers.model.FeatureData;
 import ru.mycrg.data_service.service.parsers.model.FeatureObject;
 import ru.mycrg.data_service.service.parsers.model.FeatureProperty;
 import ru.mycrg.data_service.service.parsers.model.SimpleFeatureData;
+import ru.mycrg.data_service.service.parsers.utils.GmlParserUtils;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.GeometryType;
@@ -34,14 +35,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 
 import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toMap;
 import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
 import static javax.xml.XMLConstants.ACCESS_EXTERNAL_SCHEMA;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
+import static ru.mycrg.data_service_contract.enums.GeometryType.GEOMETRY_COLLECTION;
 import static ru.mycrg.data_service_contract.enums.ValueType.*;
 
 @Service
@@ -52,8 +54,9 @@ public class GmlParser {
 
     private final GML gml;
     private final DocumentBuilder documentBuilder;
+    private final Map<String, IGmlImportGeometryHandler> gmlImportGeometryHandlers;
 
-    public GmlParser() throws ParserConfigurationException {
+    public GmlParser(List<IGmlImportGeometryHandler> geomHandlers) throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         factory.setAttribute(ACCESS_EXTERNAL_DTD, "");
@@ -62,6 +65,10 @@ public class GmlParser {
         this.documentBuilder = factory.newDocumentBuilder();
 
         this.gml = new GML(GML.Version.GML3);
+
+        gmlImportGeometryHandlers = geomHandlers
+                .stream()
+                .collect(toMap(IGmlImportGeometryHandler::getType, Function.identity()));
     }
 
     public List<SimpleFeatureData> parseFeatures(Resource file) throws GMLException {
@@ -75,7 +82,7 @@ public class GmlParser {
         }
     }
 
-    public String getDefaultCrs(Resource file) throws GMLException {
+    public String getBboxCrs(Resource file) throws GMLException {
         try (InputStream inputStream = file.getInputStream()) {
             Document doc = documentBuilder.parse(inputStream);
             doc.getDocumentElement().normalize();
@@ -227,8 +234,9 @@ public class GmlParser {
 
     private boolean isSchemaWithAppropriateGeometryType(SchemaDto schemaDto, String geometryType) {
         String schemaType = schemaDto.getGeometryType().getType();
-
-        if (schemaType.equals("MultiPolygon")) {
+        if (geometryType.equalsIgnoreCase(GEOMETRY_COLLECTION.getType())) {
+            return true;
+        } else if (schemaType.equals("MultiPolygon")) {
             return "polygon".equalsIgnoreCase(geometryType);
         } else if (schemaType.equals("MultiLineString")) {
             return "line".equalsIgnoreCase(geometryType);
@@ -238,26 +246,30 @@ public class GmlParser {
     }
 
     private String getGeometryType(Element element) {
-        if ((element.getElementsByTagName("gml:posList").getLength() > 0)
-                || (element.getElementsByTagName("gml:pos").getLength() > 0)
-                || (element.getElementsByTagName("gml:coordinates").getLength() > 0)) {
-
-            if (element.getElementsByTagName("gml:Point").getLength() > 0) {
-                return "point";
-            } else if (element.getElementsByTagName("gml:Polygon").getLength() > 0) {
-                return "polygon";
-            } else if (element.getElementsByTagName("gml:PolygonPatch").getLength() > 0) {
-                return "polygon";
-            } else if (element.getElementsByTagName("gml:LineString").getLength() > 0) {
-                return "line";
-            } else if (element.getElementsByTagName("gml:Curve").getLength() > 0) {
-                return "line";
-            } else {
-                throw new GmlParserException("Undefined geometry type!");
-            }
-        } else {
+        if (isElementContainsGeometry(element)) {
             throw new GmlParserException("There is no geometry in object!");
         }
+        if (element.getElementsByTagName("gml:GeometryCollection").getLength() > 0) {
+            return "GeometryCollection";
+        } else if (element.getElementsByTagName("gml:Point").getLength() > 0) {
+            return "point";
+        } else if (element.getElementsByTagName("gml:Polygon").getLength() > 0) {
+            return "polygon";
+        } else if (element.getElementsByTagName("gml:PolygonPatch").getLength() > 0) {
+            return "polygon";
+        } else if (element.getElementsByTagName("gml:LineString").getLength() > 0) {
+            return "line";
+        } else if (element.getElementsByTagName("gml:Curve").getLength() > 0) {
+            return "line";
+        } else {
+            throw new GmlParserException("Undefined geometry type!");
+        }
+    }
+
+    private static boolean isElementContainsGeometry(Element element) {
+        return (element.getElementsByTagName("gml:posList").getLength() <= 0)
+                && (element.getElementsByTagName("gml:pos").getLength() <= 0)
+                && (element.getElementsByTagName("gml:coordinates").getLength() <= 0);
     }
 
     private void parsingElement(Element element,
@@ -290,9 +302,9 @@ public class GmlParser {
                                  List<FeatureProperty> objectProperties,
                                  boolean invertCoordinates,
                                  String defaultEpsg) {
-        if ((element.getElementsByTagName("gml:posList").getLength() <= 0)
-                && (element.getElementsByTagName("gml:pos").getLength() <= 0)
-                && (element.getElementsByTagName("gml:coordinates").getLength() <= 0)) {
+        if (isElementContainsGeometry(element)) {
+            log.warn("Элемент не содержит геометрию! '{}'", element.getTextContent());
+
             return;
         }
 
@@ -302,229 +314,16 @@ public class GmlParser {
                 .findFirst()
                 .orElseThrow();
 
-        if (element.getElementsByTagName("gml:MultiCurve").getLength() > 0) {
-            Element attributeElement = (Element) element.getElementsByTagName("gml:MultiCurve").item(0);
-            Integer srid = getCrs(defaultEpsg, attributeElement);
+        IGmlImportGeometryHandler geometryHandler = gmlImportGeometryHandlers
+                .get(GmlParserUtils.getGeometryType(element));
+        if (Objects.isNull(geometryHandler)) {
+            log.warn("Не удалось обработать геометрию у элемента '{}'", element.getTextContent());
 
-            List<Point> coordinatesFromElement = getCoordinatesFromElement(attributeElement, invertCoordinates);
-
-            LineString lineString = new LineString(coordinatesFromElement.toArray(Point[]::new));
-            MultiLineString multiLineString = new MultiLineString(List.of(lineString).toArray(LineString[]::new));
-            multiLineString.setSrid(srid);
-
-            PGgeometry pGgeometry = new PGgeometry(multiLineString);
-            shape.setValue(pGgeometry);
-        } else if (element.getElementsByTagName("gml:MultiSurface").getLength() > 0) {
-            Element multiSurfaceElement = (Element) element.getElementsByTagName("gml:MultiSurface").item(0);
-            Integer srid = getCrs(defaultEpsg, multiSurfaceElement);
-
-            NodeList allLineStrings = multiSurfaceElement.getElementsByTagName("gml:LinearRing");
-
-            List<LinearRing> linearRingList = new ArrayList<>();
-            for (int i = 0; i < allLineStrings.getLength(); i++) {
-                Element linearRingElement = (Element) allLineStrings.item(i);
-
-                List<Point> coordinateList = getCoordinatesFromElement(linearRingElement, invertCoordinates);
-
-                LinearRing linearRing = new LinearRing(coordinateList.toArray(Point[]::new));
-                linearRingList.add(linearRing);
-            }
-            Polygon polygon = new Polygon(linearRingList.toArray(LinearRing[]::new));
-            MultiPolygon multiPolygon = new MultiPolygon(List.of(polygon).toArray(Polygon[]::new));
-            multiPolygon.setSrid(srid);
-
-            PGgeometry pGgeometry = new PGgeometry(multiPolygon);
-            shape.setValue(pGgeometry);
-        } else if (element.getElementsByTagName("gml:MultiPoint").getLength() > 0) {
-            Element multiPointElement = (Element) element.getElementsByTagName("gml:MultiPoint").item(0);
-            Integer srid = getCrs(defaultEpsg, multiPointElement);
-
-            Point point = getCoordinatesFromElement(multiPointElement, invertCoordinates).get(0);
-            point.setSrid(srid);
-
-            PGgeometry pGgeometry = new PGgeometry(point);
-            shape.setValue(pGgeometry);
-        } else if (element.getElementsByTagName("gml:Point").getLength() > 0) {
-            Element attributeElement = (Element) element.getElementsByTagName("gml:Point").item(0);
-            Integer srid = getCrs(defaultEpsg, attributeElement);
-
-            Point point = getCoordinatesFromElement(attributeElement, invertCoordinates).get(0);
-            point.setSrid(srid);
-
-            PGgeometry pGgeometry = new PGgeometry(point);
-            shape.setValue(pGgeometry);
-        } else if (element.getElementsByTagName("gml:Polygon").getLength() > 0) {
-            Element polygonElement = (Element) element.getElementsByTagName("gml:Polygon").item(0);
-            Integer srid = getCrs(defaultEpsg, polygonElement);
-
-            NodeList allLinearRing = polygonElement.getElementsByTagName("gml:LinearRing");
-            List<LinearRing> linearRingList = new ArrayList<>();
-            for (int i = 0; i < allLinearRing.getLength(); i++) {
-                Element linearRingElement = (Element) allLinearRing.item(i);
-
-                List<Point> coordinateList = getCoordinatesFromElement(linearRingElement, invertCoordinates);
-
-                LinearRing linearRing = new LinearRing(coordinateList.toArray(Point[]::new));
-                linearRingList.add(linearRing);
-            }
-            Polygon polygon = new Polygon(linearRingList.toArray(LinearRing[]::new));
-            MultiPolygon multiPolygon = new MultiPolygon(List.of(polygon).toArray(Polygon[]::new));
-            multiPolygon.setSrid(srid);
-
-            PGgeometry pGgeometry = new PGgeometry(multiPolygon);
-            shape.setValue(pGgeometry);
-        } else if (element.getElementsByTagName("gml:Surface").getLength() > 0) {
-            Element surfaceElement = (Element) element.getElementsByTagName("gml:Surface").item(0);
-            Integer srid = getCrs(defaultEpsg, surfaceElement);
-
-            NodeList allPolygonPatches = surfaceElement.getElementsByTagName("gml:PolygonPatch");
-            List<Polygon> allPolygons = new ArrayList<>();
-            for (int i = 0; i < allPolygonPatches.getLength(); i++) {
-                Element polygonPatchElement = (Element) allPolygonPatches.item(i);
-
-                NodeList allLinearRings = polygonPatchElement.getElementsByTagName("gml:LinearRing");
-                List<LinearRing> linearRingsByPolygon = new ArrayList<>();
-                for (int j = 0; j < allLinearRings.getLength(); j++) {
-                    Element linearRingElement = (Element) allLinearRings.item(j);
-
-                    List<Point> coordinateList = getCoordinatesFromElement(linearRingElement, invertCoordinates);
-
-                    LinearRing linearRing = new LinearRing(coordinateList.toArray(Point[]::new));
-                    linearRingsByPolygon.add(linearRing);
-                }
-                Polygon polygon = new Polygon(linearRingsByPolygon.toArray(LinearRing[]::new));
-                allPolygons.add(polygon);
-            }
-
-            MultiPolygon multiPolygon = new MultiPolygon(allPolygons.toArray(Polygon[]::new));
-            multiPolygon.setSrid(srid);
-
-            PGgeometry pGgeometry = new PGgeometry(multiPolygon);
-            shape.setValue(pGgeometry);
-        } else if (element.getElementsByTagName("gml:LineString").getLength() > 0) {
-            Element attributeElement = (Element) element.getElementsByTagName("gml:LineString").item(0);
-            Integer srid = getCrs(defaultEpsg, attributeElement);
-
-            List<Point> coordinateList = getCoordinatesFromElement(attributeElement, invertCoordinates);
-
-            LineString lineString = new LineString(coordinateList.toArray(Point[]::new));
-            MultiLineString multiLineString = new MultiLineString(List.of(lineString).toArray(LineString[]::new));
-            multiLineString.setSrid(srid);
-
-            PGgeometry pGgeometry = new PGgeometry(multiLineString);
-            shape.setValue(pGgeometry);
-        } else if (element.getElementsByTagName("gml:Curve").getLength() > 0) {
-            Element attributeElement = (Element) element.getElementsByTagName("gml:Curve").item(0);
-            Integer srid = getCrs(defaultEpsg, attributeElement);
-
-            int quantityOfPosList = element.getElementsByTagName("gml:posList").getLength();
-            List<LineString> lineStrings = new ArrayList<>();
-            for (int i = 0; i < quantityOfPosList; i++) {
-                List<Point> coordinateList = getCoordinatesFromPosList(attributeElement, i, invertCoordinates);
-                LineString lineString = new LineString(coordinateList.toArray(Point[]::new));
-                lineStrings.add(lineString);
-            }
-
-            MultiLineString multiLineString = new MultiLineString(lineStrings.toArray(LineString[]::new));
-            multiLineString.setSrid(srid);
-
-            PGgeometry pGgeometry = new PGgeometry(multiLineString);
-            shape.setValue(pGgeometry);
-        }
-    }
-
-    private Integer getCrs(String defaultEpsg, Element attributeElement) {
-        return attributeElement.getAttribute("srsName").isEmpty()
-                ? getCrsFromString(defaultEpsg)
-                : getCrsFromString(attributeElement.getAttribute("srsName"));
-    }
-
-    private List<Point> getCoordinatesFromElement(Element element, boolean invertCoordinates) {
-        NodeList coordinateElement = element.getElementsByTagName("gml:coordinates");
-        List<Point> coordinateList = new ArrayList<>();
-        if (coordinateElement.getLength() > 0) {
-            String coordinates = coordinateElement.item(0).getTextContent();
-            coordinates = coordinates.trim();
-            String[] points = coordinates.split("\\s+");
-            for (String pointCoordinate: points) {
-                String[] pointXY = pointCoordinate.split(",");
-                if (pointXY.length == 2) {
-                    double pointX = Double.parseDouble(pointXY[0]);
-                    double pointY = Double.parseDouble(pointXY[1]);
-                    Point point = invertCoordinates
-                            ? new Point(pointY, pointX)
-                            : new Point(pointX, pointY);
-                    coordinateList.add(point);
-                }
-            }
-        } else {
-            coordinateList = getCoordinatesFromPosList(element, 0, invertCoordinates);
+            return;
         }
 
-        return coordinateList;
-    }
-
-    private List<Point> getCoordinatesFromPosList(Element element, int posListNumber, boolean invertCoordinates) {
-        String coordinates = "";
-
-        if (element.getElementsByTagName("gml:posList").getLength() > 0) {
-            coordinates = element.getElementsByTagName("gml:posList").item(posListNumber).getTextContent();
-        } else if (element.getElementsByTagName("gml:pos").getLength() > 0) {
-            return getPointsFromPos(element, invertCoordinates);
-        }
-        coordinates = coordinates.trim();
-        String[] splitCoordinates = coordinates.split("\\s+");
-
-        List<Point> coordinateList = new ArrayList<>();
-        if (splitCoordinates.length % 2 == 0) {
-            for (int i = 0; i < splitCoordinates.length; i = i + 2) {
-                double pointX = Double.parseDouble(splitCoordinates[i]);
-                double pointY = Double.parseDouble(splitCoordinates[i + 1]);
-                Point point = invertCoordinates
-                        ? new Point(pointY, pointX)
-                        : new Point(pointX, pointY);
-                coordinateList.add(point);
-            }
-        } else {
-            String msg = "Element has incorrect geometry!";
-            log.error(msg);
-
-            throw new GmlParserException(msg);
-        }
-
-        return coordinateList;
-    }
-
-    private List<Point> getPointsFromPos(Element element, boolean invertCoordinates) {
-        List<Point> coordinateList = new ArrayList<>();
-
-        for (int i = 0; i < element.getElementsByTagName("gml:pos").getLength(); i++) {
-            String coordinates = element.getElementsByTagName("gml:pos").item(i).getTextContent();
-            coordinates = coordinates.trim();
-            String[] splitCoordinates = coordinates.split("\\s+");
-            if (splitCoordinates.length == 2) {
-                double pointX = Double.parseDouble(splitCoordinates[0]);
-                double pointY = Double.parseDouble(splitCoordinates[1]);
-                Point point = invertCoordinates
-                        ? new Point(pointY, pointX)
-                        : new Point(pointX, pointY);
-                coordinateList.add(point);
-            }
-        }
-
-        return coordinateList;
-    }
-
-    private Integer getCrsFromString(String srsName) {
-        String[] epsg = srsName.split("EPSG:");
-        if (epsg.length >= 2) {
-            return Integer.parseInt(epsg[1]);
-        } else {
-            String errorMsg = "Ошибка при получении EPSG кода. Некорректно указан формат системы координат";
-            log.error(errorMsg);
-
-            throw new EpsgParserException(errorMsg);
-        }
+        geometryHandler.generate(element, invertCoordinates, defaultEpsg)
+                       .ifPresent(shape::setValue);
     }
 
     private ValueType defineValueType(SimplePropertyDto schemaProperty) {

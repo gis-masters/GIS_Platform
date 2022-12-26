@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.parsers;
+package ru.mycrg.data_service.service.parsers.utils;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;

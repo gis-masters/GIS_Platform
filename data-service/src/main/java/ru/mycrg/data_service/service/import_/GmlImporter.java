@@ -2,6 +2,8 @@ package ru.mycrg.data_service.service.import_;
 
 import net.bytebuddy.utility.RandomString;
 import org.geotools.gml.GMLException;
+import org.jetbrains.annotations.Nullable;
+import org.postgis.PGgeometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -36,6 +38,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service_contract.enums.ValueType.STRING;
 
 @Service
@@ -89,26 +93,20 @@ public class GmlImporter {
 
             importResult.setDatasetIdentifier(datasetIdentifier);
 
-            String defaultCrs = gmlParser.getDefaultCrs(file);
+            String bboxCrs = gmlParser.getBboxCrs(file);
             List<SimpleFeatureData> features = gmlParser.parseFeatures(file);
             List<ImportLayerReport> importLayerReports = new ArrayList<>();
 
             getExistingSchemas(features, importLayerReports).forEach(schema -> {
-                Optional<String> oEpsg = getEpsg(features, schema);
-                if (oEpsg.isEmpty() && isNull(defaultCrs)) {
-                    ImportLayerReport importLayerReport = new ImportLayerReport();
-                    importLayerReport.setSchemaId(schema.getName());
-                    importLayerReport.setStyleName(schema.getStyleName());
-                    importLayerReport.setTableTitle(schema.getTableName());
-                    importLayerReport.setReason("Не удалось выполнить импорт. Неверно указана система координат");
-                    importLayerReports.add(importLayerReport);
-
-                    return;
-                }
+                Optional<String> oLayerEpsg = getEpsgForLayer(features, schema);
 
                 FeatureData featureData;
+                String epsgFromLayer;
                 try {
+                    String defaultCrs = nonNull(bboxCrs) ? bboxCrs : "EPSG:3857";
+
                     featureData = gmlParser.parseAttributes(file, schema, invertedCoordinates, defaultCrs);
+                    epsgFromLayer = getEpsgFromFeature(oLayerEpsg, featureData);
                 } catch (Exception e) {
                     ImportLayerReport importLayerReport = new ImportLayerReport();
                     importLayerReport.setSchemaId(schema.getName());
@@ -118,7 +116,8 @@ public class GmlImporter {
 
                     return;
                 }
-                String epsg = oEpsg.orElse(defaultCrs);
+
+                String epsg = nonNull(epsgFromLayer) && !epsgFromLayer.isEmpty() ? epsgFromLayer : bboxCrs;
                 ImportLayerReport importLayerReport = importLayer(featureData, epsg, schema, datasetIdentifier);
                 importLayerReport.setStyleName(schema.getStyleName());
 
@@ -135,7 +134,28 @@ public class GmlImporter {
         }
     }
 
-    private Optional<String> getEpsg(List<SimpleFeatureData> features, SchemaDto schema) {
+    @Nullable
+    private static String getEpsgFromFeature(Optional<String> oLayerEpsg, FeatureData featureData) {
+        if (oLayerEpsg.isPresent()) {
+            return oLayerEpsg.get();
+        } else {
+            Optional<FeatureProperty> shapeOpt = featureData
+                    .getObjects().get(0).getProperties()
+                    .stream()
+                    .filter(property ->
+                                    DEFAULT_GEOMETRY_COLUMN_NAME.equalsIgnoreCase(property.getName()))
+                    .findFirst();
+            if (shapeOpt.isEmpty()) {
+                return null;
+            } else {
+                PGgeometry geometry = (PGgeometry) shapeOpt.get().getValue();
+                int srid = geometry.getGeometry().getSrid();
+                return (srid != 0) ? "EPSG:" + srid : null;
+            }
+        }
+    }
+
+    private Optional<String> getEpsgForLayer(List<SimpleFeatureData> features, SchemaDto schema) {
         return features.stream()
                        .filter(tableDto -> schema.getName().toLowerCase()
                                                  .startsWith(tableDto.getSchemaName().toLowerCase()))

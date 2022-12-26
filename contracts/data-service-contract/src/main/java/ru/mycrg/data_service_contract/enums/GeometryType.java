@@ -23,7 +23,19 @@ public enum GeometryType {
     MULTI_POLYGON("MultiPolygon"),
 
     @JsonProperty("GeometryCollection")
-    GEOMETRY_COLLECTION("GeometryCollection");
+    GEOMETRY_COLLECTION("GeometryCollection"),
+
+    @JsonProperty("MultiCurve")
+    MULTI_CURVE("MultiCurve"),
+
+    @JsonProperty("Curve")
+    CURVE("Curve"),
+
+    @JsonProperty("MultiSurface")
+    MULTI_SURFACE("MultiSurface"),
+
+    @JsonProperty("Surface")
+    SURFACE("Surface");
 
     private final String geometryType;
 
