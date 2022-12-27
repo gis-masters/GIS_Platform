@@ -173,6 +173,11 @@
         "id": "dxf",
         "title": "Размещение DXF",
         "contentUrl": "/assets/help/map/dataManagement/10DXF.html"
+      },
+      {
+        "id": "representation",
+        "title": "Представления векторной таблицы",
+        "contentUrl": "/assets/help/map/dataManagement/12representation.html"
       }
     ]
   },
