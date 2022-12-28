@@ -43,6 +43,7 @@ export class CopyFeatureButton extends Component<CopyFeatureButtonProps> {
 
         <SelectSuitableVectorLayerDialog
           currentLayer={this.props.layer}
+          features={[this.props.feature]}
           open={this.dialogOpen}
           onClose={this.closeDialog}
           onSelect={this.copy}

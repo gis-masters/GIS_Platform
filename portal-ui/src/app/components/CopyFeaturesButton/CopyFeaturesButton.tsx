@@ -35,7 +35,7 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
   }
 
   render() {
-    const { tooltipTitle, layer } = this.props;
+    const { tooltipTitle, layer, features } = this.props;
 
     return (
       <>
@@ -48,6 +48,7 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
         <SelectSuitableVectorLayerDialog
           currentLayer={layer}
           open={this.dialogOpen}
+          features={features}
           onClose={this.closeDialog}
           onSelect={this.copy}
         />

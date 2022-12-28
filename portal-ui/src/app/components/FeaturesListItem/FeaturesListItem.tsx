@@ -14,6 +14,7 @@ import { schemaService } from '../../services/data/schema.service';
 import { FeatureError } from '../../services/map/map-link-following.service';
 import { WFS_FEATURE_ID_DELIMITER } from '../../services/geoserver/wfs.service';
 import { changeSchemaNamesCaseByFeature } from '../../services/data/schema.utils';
+import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 
@@ -56,6 +57,9 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
           onClick={this.highlightIt}
         >
           {errorData ? errorData.id : feature.id.split('.')[1]}
+        </div>
+        <div className={cnFeaturesListItem('Icon')}>
+          <FeatureIcon geometryType={feature?.geometry?.type} className={cnFeaturesListItem('Svg')} />
         </div>
         <div className={cnFeaturesListItem('Title', { disabled: !!errorData })}>
           {errorData ? errorData.message : this.title}

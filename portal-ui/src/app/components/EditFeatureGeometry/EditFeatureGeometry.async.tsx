@@ -3,12 +3,14 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { SimpleGeometry } from 'ol/geom';
 import { boundMethod } from 'autobind-decorator';
+import { Tooltip } from '@mui/material';
 
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { olProjection, transformGeometry } from '../../services/geoserver/projections.service';
+import { GeometryType, supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs.models';
 import { mapService } from '../../services/map/map.service';
-import { supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs.models';
 import { Emitter } from '../../services/common/Emitter';
+import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 
 import { EditFeatureGeometryError } from './Error/EditFeatureGeometry-Error';
 import { EditFeatureGeometryHeader } from './Header/EditFeatureGeometry-Header';
@@ -54,6 +56,14 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
         <EditFeatureGeometryHeader>
           <EditFeatureGeometryProjSel store={store} />
         </EditFeatureGeometryHeader>
+        <div className={cnEditFeatureGeometry('Field')}>
+          Тип геометрии:
+          <Tooltip title={this.getFeatureIconGeometryType(geometryType)}>
+            <span>
+              <FeatureIcon geometryType={geometryType} className={cnEditFeatureGeometry('Svg')} />
+            </span>
+          </Tooltip>
+        </div>
         {!readOnly && <EditFeatureGeometryForm type={geometryType} store={store} />}
         {readOnly && <EditFeatureGeometryView type={geometryType} store={store} />}
       </div>
@@ -75,5 +85,28 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
       : geometry.coordinates;
 
     setGeometry({ ...geometry, coordinates } as WfsGeometry);
+  }
+
+  private getFeatureIconGeometryType(geometryType: GeometryType): string {
+    if (!geometryType) {
+      return;
+    }
+
+    switch (geometryType) {
+      case GeometryType.POLYGON: {
+        return 'полигон';
+      }
+      case GeometryType.MULTI_POLYGON: {
+        return 'мультиполигон';
+      }
+      case GeometryType.LINE_STRING:
+      case GeometryType.MULTI_LINE_STRING: {
+        return 'линия';
+      }
+      case GeometryType.POINT:
+      case GeometryType.MULTI_POINT: {
+        return 'точка';
+      }
+    }
   }
 }

@@ -9,11 +9,13 @@ import { schemaService } from '../../services/data/schema.service';
 import { isUpdateAllowed } from '../../services/data/permissions.service';
 import { CrgVectorLayer } from '../../services/gis/projects.models';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
+import { WfsFeature } from '../../services/geoserver/wfs.models';
 
 const cnSelectSuitableVectorLayerDialog = cn('SelectSuitableVectorLayerDialog');
 
 interface SelectSuitableVectorLayerDialogProps {
   currentLayer: CrgVectorLayer;
+  features?: WfsFeature[];
   open: boolean;
   onClose(): void;
   onSelect(layer: CrgVectorLayer[]): void;
@@ -21,7 +23,6 @@ interface SelectSuitableVectorLayerDialogProps {
 
 @observer
 export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVectorLayerDialogProps> {
-  @observable private targetLayer: CrgVectorLayer;
   @observable private layersAvailableForCopy: CrgVectorLayer[];
 
   private fetchingOperation: Promise<void>;
@@ -40,9 +41,8 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
   }
 
   async componentDidUpdate(prevProps: Readonly<SelectSuitableVectorLayerDialogProps>): Promise<void> {
-    const { open, currentLayer } = this.props;
-
-    if (currentLayer && currentLayer.id !== prevProps.currentLayer.id) {
+    const { open, currentLayer, features } = this.props;
+    if ((currentLayer && currentLayer.id !== prevProps.currentLayer.id) || features !== prevProps.features) {
       delete this.fetchingOperation;
 
       this.fetchingOperation = this.fetchAvailableForCopyingLayers();
@@ -85,8 +85,6 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
     );
 
     const currentLayer = this.props.currentLayer;
-    const currentSchema = await schemaService.getSchema(currentLayer.schemaId);
-
     const layersUpdatePermissions = [];
     for (const layer of currentProject.vectorableLayers) {
       layersUpdatePermissions.push(await isUpdateAllowed(layer));
@@ -102,7 +100,7 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
       return (
         currentLayer.complexName !== layer.complexName &&
         currentLayer.nativeCRS === layer.nativeCRS &&
-        currentSchema.geometryType === geometryType &&
+        this.props.features.every(item => item.geometry.type === geometryType) &&
         layersUpdatePermissions[i]
       );
     });
