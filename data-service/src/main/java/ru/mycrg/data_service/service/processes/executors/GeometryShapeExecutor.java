@@ -101,6 +101,21 @@ public class GeometryShapeExecutor implements IExecutor<ImportGeometryShapeRepor
 
         SchemaDto schemaByName = schemaService.getSchemaByName(table.getSchemaId())
                                               .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
+
+        if (schemaByName.isReadOnly()) {
+            String msg = String.format("Таблица: '%s' не доступна для редактирования.", tQualifier.getTableQualifier());
+
+            log.error(msg);
+
+            importReport.setSuccess(false);
+            importReport.setReason(msg);
+            importReport.setWarningMessage(msg);
+            importReport.setDatasetIdentifier(datasetId);
+            importReport.setTableIdentifier(tableName);
+
+            throw new ForbiddenException(msg);
+        }
+
         messageBus.produce(
                 new ShapeLoadedEvent(processModel.getId(), dbName, payload.getFilePath(),
                                      table.getCrs(), tableName, datasetId, schemaByName.getGeometryType().getType()));

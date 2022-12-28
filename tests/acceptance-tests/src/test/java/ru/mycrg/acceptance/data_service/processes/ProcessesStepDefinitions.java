@@ -78,7 +78,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         shapePlacementModel.setTableName(anotherTableName);
         shapePlacementModel.setFileType("GEOMETRY_FROM_SHAPE");
 
-        placeGeometryFromShape(shapePlacementModel, "transplogisticobj_point.zip");
+        placeGeometryFromShape(shapePlacementModel, "z_5_functionalzone.zip");
     }
     @When("администратор импортирует геометрию из shape файла, имеющую \"EPSG:7829\" в существующий слой")
     public void tryImportGeometryShapeWithEPSG_7829AsProcessAsAdmin() {
@@ -89,7 +89,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         shapePlacementModel.setTableName(anotherTableName);
         shapePlacementModel.setFileType("GEOMETRY_FROM_SHAPE");
 
-        placeGeometryFromShape(shapePlacementModel, "z_5_point.zip");
+        placeGeometryFromShape(shapePlacementModel, "z_5_functionalzone.zip");
     }
 
     @When("процесс завершается успешно")

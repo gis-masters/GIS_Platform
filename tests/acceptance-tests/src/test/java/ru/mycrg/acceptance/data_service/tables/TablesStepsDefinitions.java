@@ -47,6 +47,18 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         super.createEntity(currentTableDto);
     }
 
+    public void createAnotherTablesRequest(String nameKey, String titleKey, String descriptionKey, String crs,
+                                           String schema) {
+        anotherTableName = generateString(nameKey);
+        anotherTableDto = new TableCreateDto(anotherTableName,
+                                             generateString(titleKey),
+                                             generateString(descriptionKey),
+                                             generateString(crs),
+                                             generateString(schema));
+
+        super.createEntity(anotherTableDto);
+    }
+
     @When("Пользователь делает запрос на выборку таблиц из 'набора данных'")
     public void getAllTables() {
         authorizationBase.loginAsCurrentUser();
@@ -101,7 +113,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Существует таблица, имеющая код EPSG {string}")
     public void initTableWithEpsg(String codeEpsg) {
-        String schemaId = "advertising_point_simf_2022";
+        String schemaId = TEST_TABLE_SCHEMA;
         anotherTableName = schemaId + "_" + generateString("STRING_5");
 
         createTablesRequest((anotherTableName),
@@ -109,6 +121,17 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                             "some description",
                             codeEpsg,
                             schemaId);
+    }
+
+    @When("Существует другая таблица, имеющая код EPSG {string}")
+    public void initAnotherTableWithEpsg(String codeEpsg) {
+        anotherTableName = TEST_TABLE_SCHEMA + "_" + generateString("STRING_5");
+
+        createAnotherTablesRequest((anotherTableName),
+                                   "Искусственные дорожные сооружения",
+                                   "some description",
+                                   codeEpsg,
+                                   TEST_TABLE_SCHEMA);
     }
 
     @When("Пользователь делает запрос на создание новой таблицы")

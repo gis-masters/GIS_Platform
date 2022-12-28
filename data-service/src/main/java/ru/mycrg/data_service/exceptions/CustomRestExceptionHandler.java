@@ -229,6 +229,8 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, ex.getMessage(), ex.getErrors());
 
+        log.error("BAD REQUEST: {}", errorModel.getMessage());
+
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
 

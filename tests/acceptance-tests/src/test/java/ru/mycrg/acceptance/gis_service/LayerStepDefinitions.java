@@ -221,8 +221,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     public void createVectorLayerOnCurrentTable() {
         layerCreateDto = new LayerCreateDto("Тестовый вектор", "vector");
 
-        layerCreateDto.setSchemaId("advertising_point_simf_2022");
-        layerCreateDto.setStyleName("advertising_point_simf_2022");
+        layerCreateDto.setSchemaId("schema_for_test_table");
+        layerCreateDto.setStyleName("schema_for_test_table");
         layerCreateDto.setDataStoreName("scratch_database_" + orgId);
         layerCreateDto.setDataset(currentDatasetIdentifier);
         layerCreateDto.setMode("full");

@@ -243,12 +243,12 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     @And("В слой добавлены новые записи из shape файла")
     public void checkCreationOfFeaturesWithGeometry() {
-        getFeatures(List.of(1, 2, 3, 4, 5), currentDatasetIdentifier, anotherTableName);
+        getFeatures(List.of(1), currentDatasetIdentifier, anotherTableName);
 
         jsonPath = response.jsonPath();
 
         List<Map<String, Object>> features = jsonPath.getList("");
-        assertEquals(5, features.size());
+        assertEquals(1, features.size());
     }
 
     @And("координаты были трансформированы из координатной системы \"EPSG:7829\" в \"EPSG:28406\"")
@@ -273,11 +273,13 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertTrue(firstFeature.containsKey("geometry"));
 
         HashMap<String, Object> geometry = (HashMap<String, Object>) firstFeature.get("geometry");
-        List<Float> coordinates = (List<Float>) geometry.get("coordinates");
+        List<Object> coordinates = (List<Object>) geometry.get("coordinates");
+        assertEquals(1, coordinates.size());
 
-        assertEquals(2, coordinates.size());
-        assertEquals("6581310.5", String.valueOf(coordinates.get(0)));
-        assertEquals("4971794.0", String.valueOf(coordinates.get(1)));
+        List<Object> polygon = (List<Object>) coordinates.get(0);
+        List<Object> firstPointOfPolygon = (List<Object>) polygon.get(0);
+        assertEquals("6694769.5", String.valueOf(firstPointOfPolygon.get(0)));
+        assertEquals("4967093.0", String.valueOf(firstPointOfPolygon.get(1)));
     }
 
     @And("Калькулируемые поля пересчитаны в связи с редактированием")
@@ -399,7 +401,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                 given().
                         basePath("/api/data/records/copy").
                         body(gson.toJson(copyModel))
-                        .contentType(JSON)
+                        .contentType(JSON).log().all()
                 .when().
                         post();
     }
