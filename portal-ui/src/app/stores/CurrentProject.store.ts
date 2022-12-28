@@ -138,7 +138,7 @@ class CurrentProject implements CrgProjectData {
 
   @computed
   get visibleLayersBatched(): TreeItem<CrgLayer>[][] {
-    return this.visibleOnMapLayers.reduce((acc: TreeItem<CrgLayer>[][], currentItem: TreeItem<CrgLayer>) => {
+    return cloneDeep(this.visibleOnMapLayers).reduce((acc: TreeItem<CrgLayer>[][], currentItem: TreeItem<CrgLayer>) => {
       if (!acc.length) {
         return [[currentItem]];
       }
@@ -172,7 +172,9 @@ class CurrentProject implements CrgProjectData {
       currentType !== CrgLayerType.RASTER &&
       lastBatch.length < MAX_LAYERS_IN_BATCH &&
       !attributesTableStore.isLayerFiltered(currentItem.payload) &&
-      !attributesTableStore.isLayerFiltered(previousItem.payload)
+      !attributesTableStore.isLayerFiltered(previousItem.payload) &&
+      !previousItem.payload.styleName &&
+      !currentItem.payload.styleName
     );
   }
 
@@ -242,6 +244,8 @@ class CurrentProject implements CrgProjectData {
       'position',
       'title',
       'transparency',
+      'view',
+      'styleName',
       'minZoom',
       'maxZoom'
     ];

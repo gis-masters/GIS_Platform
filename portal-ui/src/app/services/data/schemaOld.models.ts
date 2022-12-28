@@ -33,6 +33,7 @@ export interface OldSchema<T extends Record<string, unknown> = Record<string, un
   description?: string;
   properties: OldPropertySchema<T>[];
   tableName: string;
+  styleName?: string;
   originName?: string;
   geometryType?: SupportedGeometryType;
   customRuleFunction?: string;
@@ -42,6 +43,7 @@ export interface OldSchema<T extends Record<string, unknown> = Record<string, un
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];
   contentTypes?: OldContentType[];
+  views?: OldContentType[];
   printTemplates?: string[];
   relations?: Relation[];
 }

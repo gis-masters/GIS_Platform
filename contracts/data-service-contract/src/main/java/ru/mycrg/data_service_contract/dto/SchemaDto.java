@@ -36,6 +36,7 @@ public class SchemaDto {
     private boolean readOnly;
     private GeometryType geometryType;
     private List<ContentType> contentTypes = new ArrayList<>();
+    private List<ContentType> views = new ArrayList<>();
     private List<String> printTemplates = new ArrayList<>();
     private List<SchemaRelation> relations = new ArrayList<>();
 
@@ -129,6 +130,14 @@ public class SchemaDto {
 
     public void setContentTypes(List<ContentType> contentTypes) {
         this.contentTypes = contentTypes;
+    }
+
+    public List<ContentType> getViews() {
+        return views;
+    }
+
+    public void setViews(List<ContentType> views) {
+        this.views = views;
     }
 
     public List<String> getPrintTemplates() {

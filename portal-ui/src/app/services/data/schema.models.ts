@@ -37,6 +37,7 @@ export interface Schema<T = Record<string, unknown>> {
   geometryType?: SupportedGeometryType;
   readOnly?: boolean;
   contentTypes?: ContentType[];
+  views?: ContentType[];
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];
   printTemplates?: string[];

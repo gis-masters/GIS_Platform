@@ -1,7 +1,14 @@
 import { isEqual } from 'lodash';
 import { action } from 'mobx';
 
-import { PropertySchema, PropertySchemaUrl, PropertyType, Schema } from '../../services/data/schema.models';
+import {
+  ContentType,
+  PropertyOption,
+  PropertySchema,
+  PropertySchemaUrl,
+  PropertyType,
+  Schema
+} from '../../services/data/schema.models';
 import { UrlInfo } from './Control/_type/Form-Control_type_url';
 import { Fias } from '../../services/data/fias.service';
 import { services } from '../../services/services';
@@ -128,4 +135,13 @@ export function isEqualExceptCalculated<T>(a: Partial<T> = {}, b: Partial<T> = {
   }
 
   return true;
+}
+
+export function getViewChoiceOptions(views: ContentType[]): PropertyOption[] | undefined {
+  return [
+    { title: 'Вид по умолчанию', value: '' },
+    ...(views?.map(type => {
+      return { title: type.title, value: type.id };
+    }) || [])
+  ];
 }

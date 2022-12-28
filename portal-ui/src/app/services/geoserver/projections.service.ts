@@ -118,10 +118,10 @@ export function getProjection(projectionStr: string): CrgProjection {
   return projection;
 }
 
-export function getFeatureProjection(feature: WfsFeature<Coordinate | CoordinateEdited>): CrgProjection {
+export function getFeatureProjection(feature: WfsFeature<Coordinate | CoordinateEdited>): CrgProjection | undefined {
   const layer = getLayerByFeatureInCurrentProject(feature);
 
-  return getProjection(layer.nativeCRS);
+  return getProjection(layer?.nativeCRS);
 }
 
 export const olProjection = projections.find(({ id }) => id === 'EPSG:3857');

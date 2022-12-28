@@ -3,7 +3,10 @@ package ru.mycrg.gis_service.dto;
 import org.hibernate.validator.constraints.Length;
 import ru.mycrg.gis_service.validators.CrgParentGroup;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 public class LayerCreateDto {
 
@@ -68,6 +71,8 @@ public class LayerCreateDto {
 
     @Length(max = 50)
     private String contentType;
+
+    private String view;
 
     public LayerCreateDto() {
         //Required by framework
@@ -225,6 +230,14 @@ public class LayerCreateDto {
         this.contentType = contentType;
     }
 
+    public String getView() {
+        return view;
+    }
+
+    public void setView(String view) {
+        this.view = view;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -246,7 +259,8 @@ public class LayerCreateDto {
                 "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
                 "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") + ", " +
                 "\"mode\":" + (mode == null ? "null" : "\"" + mode + "\"") + ", " +
-                "\"contentType\":" + (contentType == null ? "null" : "\"" + contentType + "\"") +
+                "\"contentType\":" + (contentType == null ? "null" : "\"" + contentType + "\"") + ", " +
+                "\"view\":" + (view == null ? "null" : "\"" + view + "\"") +
                 "}";
     }
 }

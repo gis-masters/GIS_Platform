@@ -42,6 +42,11 @@ public class LayerUpdateDto {
     @Length(max = 50)
     private String contentType;
 
+    private String view;
+
+    @Length(min = 1, max = 255)
+    private String styleName;
+
     public LayerUpdateDto() {
         // Required by framework
     }
@@ -124,5 +129,21 @@ public class LayerUpdateDto {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public String getStyleName() {
+        return styleName;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    public void setView(String view) {
+        this.view = view;
     }
 }

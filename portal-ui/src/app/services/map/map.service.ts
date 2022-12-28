@@ -52,6 +52,7 @@ import { services } from '../services';
 interface CrgWmsParams {
   LAYERS: string;
   FORMAT?: string;
+  STYLES?: string;
   CQL_FILTER?: string;
   featureId?: string;
   featureIdsNegative?: string;
@@ -336,15 +337,17 @@ class MapService {
       return;
     }
 
+    const styleName = layers[0]?.styleName;
     const resultName = this.calcLayerName(layers);
     const layerOnMap = this.getLayerByName(resultName);
 
-    if (layerOnMap && this.isNotFilteredLayer(layers)) {
+    if (layerOnMap && this.isNotFilteredLayer(layers) && !styleName) {
       layerOnMap.setVisible(true);
       layerOnMap.setOpacity(opacity);
       layerOnMap.setZIndex(zIndex);
     } else {
       const params: CrgWmsParams = {
+        STYLES: styleName,
         LAYERS: resultName,
         FORMAT: imageFormat
       };

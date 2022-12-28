@@ -12,6 +12,8 @@ import { getFeatures } from '../../../services/geoserver/wfs.service';
 import { Schema } from '../../../services/data/schema.models';
 import { PageOptions } from '../../../services/models';
 import { getXTableColumnsFromSchemaWithLowerCaseKeys } from '../../XTable/XTable.utils';
+import { applyView } from '../../../services/data/schema.utils';
+import { currentProject } from '../../../stores/CurrentProject.store';
 import { XTableColumn, XTableInvoke } from '../../XTable/XTable';
 
 import { AttributesRowHead } from '../RowHead/Attributes-RowHead';
@@ -44,7 +46,7 @@ interface AttributesBarProps {
 @observer
 export class AttributesBar extends Component<AttributesBarProps> {
   @observable private pageOptions?: PageOptions;
-  @observable private schema?: Schema;
+  @observable private _schema?: Schema;
   @observable featuresMatched = 0;
   @observable featuresTotal = 0;
   private fetchingSchemaOperationId: symbol;
@@ -96,6 +98,15 @@ export class AttributesBar extends Component<AttributesBarProps> {
         />
       </div>
     );
+  }
+
+  @computed
+  private get schema(): Schema | undefined {
+    if (this._schema) {
+      const currentLayer = currentProject.vectorLayers.find(item => item.id === this.props.layer.id);
+
+      return applyView(this._schema, currentLayer?.view);
+    }
   }
 
   @computed
@@ -158,6 +169,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
   private async fetchSchema() {
     const operationId = Symbol();
     this.fetchingSchemaOperationId = operationId;
+
     const schema = await schemaService.getSchema(this.props.layer.schemaId);
     if (this.fetchingSchemaOperationId === operationId) {
       this.setSchema(schema);
@@ -176,7 +188,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
 
   @action
   private setSchema(schema: Schema) {
-    this.schema = schema;
+    this._schema = schema;
   }
 
   @action.bound

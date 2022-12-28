@@ -83,6 +83,8 @@ public class Layer implements Identifiable<Long> {
     @Column(name = "content_type")
     private String contentType;
 
+    private String view;
+
     public Layer() {
         // Required
     }
@@ -109,6 +111,7 @@ public class Layer implements Identifiable<Long> {
         createdAt = LocalDateTime.now();
         lastModified = LocalDateTime.now();
         contentType = dto.getContentType();
+        view = dto.getView();
     }
 
     public Layer(LayerCreateDto dto, Project project) {
@@ -292,6 +295,14 @@ public class Layer implements Identifiable<Long> {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    public void setView(String view) {
+        this.view = view;
     }
 
     @Override

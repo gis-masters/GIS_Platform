@@ -21,29 +21,33 @@ interface AttributesTabsProps {
 }
 
 export const AttributesTabs: FC<AttributesTabsProps> = observer(
-  ({ hard, soft, currentLayer, onTabClose, onTabMinimize }) => (
-    <Tabs className={cnAttributesTabs()} variant='scrollable' scrollButtons='auto' value={currentLayer?.id || 0}>
-      <AttributesZeroTab value={0} />
-      {hard.map(layer => (
-        <AttributesTab
-          layer={layer}
-          grade='hard'
-          key={layer.id}
-          onClose={onTabClose}
-          onMinimize={onTabMinimize}
-          value={layer.id}
-        />
-      ))}
-      {soft.map(layer => (
-        <AttributesTab
-          layer={layer}
-          grade='soft'
-          key={layer.id}
-          onClose={onTabClose}
-          onMinimize={onTabMinimize}
-          value={layer.id}
-        />
-      ))}
-    </Tabs>
-  )
+  ({ hard, soft, currentLayer, onTabClose, onTabMinimize }) => {
+    const value = [...hard, ...soft].some(item => item.id === currentLayer?.id) ? currentLayer?.id : 0;
+
+    return (
+      <Tabs className={cnAttributesTabs()} variant='scrollable' scrollButtons='auto' value={value}>
+        <AttributesZeroTab value={0} />
+        {hard.map(layer => (
+          <AttributesTab
+            layer={layer}
+            grade='hard'
+            key={layer.id}
+            onClose={onTabClose}
+            onMinimize={onTabMinimize}
+            value={layer.id}
+          />
+        ))}
+        {soft.map(layer => (
+          <AttributesTab
+            layer={layer}
+            grade='soft'
+            key={layer.id}
+            onClose={onTabClose}
+            onMinimize={onTabMinimize}
+            value={layer.id}
+          />
+        ))}
+      </Tabs>
+    );
+  }
 );

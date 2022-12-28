@@ -39,6 +39,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               name={name}
               fullWidth
               value={fieldValue}
+              displayEmpty
               onChange={this.handleChangeSelect}
               error={!!errors?.length}
               variant={variant}
@@ -48,6 +49,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
                   <em>{valueCanBeDisplayed ? (fieldValue as string) : 'Не выбрано'}</em>
                 </MenuItem>
               )}
+
               {options.map((item, i) => {
                 return (
                   <MenuItem className={cnChoiceMenuItem()} key={i} value={item.value}>

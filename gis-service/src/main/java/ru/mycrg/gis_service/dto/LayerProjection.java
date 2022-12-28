@@ -24,6 +24,7 @@ public class LayerProjection {
     private final Long recordId;
     private final String dataStoreName;
     private final String contentType;
+    private final String view;
 
     public LayerProjection(Layer layer, String orgWorkspaceName) {
         this.id = layer.getId();
@@ -46,6 +47,7 @@ public class LayerProjection {
         this.dataStoreName = layer.getDataStoreName();
         this.complexName = orgWorkspaceName + ":" + tableName;
         this.contentType = layer.getContentType();
+        this.view = layer.getView();
     }
 
     public Long getId() {
@@ -126,5 +128,9 @@ public class LayerProjection {
 
     public String getContentType() {
         return contentType;
+    }
+
+    public String getView() {
+        return view;
     }
 }

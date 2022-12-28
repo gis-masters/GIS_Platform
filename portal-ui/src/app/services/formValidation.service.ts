@@ -306,7 +306,7 @@ export function getDefaultValues<T extends Record<string, unknown>>(
   const values: Partial<T> = {};
 
   for (const property of properties) {
-    if (property.defaultValue) {
+    if (property.defaultValue !== undefined) {
       values[property.name] = property.defaultValue as T[keyof T & string];
     }
 

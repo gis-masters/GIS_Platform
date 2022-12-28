@@ -5,6 +5,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
 import { Schema } from '../../services/data/schema.models';
 import { CommonDiRegistry } from '../../services/di-registry';
@@ -13,10 +14,11 @@ import { getDefaultValues } from '../../services/formValidation.service';
 import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
 import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
 import { Button, ButtonProps } from '../Button/Button';
+import { FormProps } from '../Form/Form';
 
 const cnFormDialog = cn('FormDialog');
 
-export interface FormDialogProps<T extends Record<string, unknown>> {
+export interface FormDialogProps<T extends Record<string, unknown>> extends IClassNameProps {
   title?: ReactNode;
   schema: Schema<T>;
   value?: Partial<T>;
@@ -36,7 +38,7 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
   FormDialogProps<T>
 > {
   @observable private busy = false;
-  private formInvoke: { reset?(): void } = {};
+  private formInvoke: FormProps<T>['invoke'] = {};
 
   constructor(props: FormDialogProps<T>) {
     super(props);
@@ -46,6 +48,7 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
   render() {
     const {
       title,
+      className,
       open,
       unclosable = false,
       schema,
@@ -58,7 +61,13 @@ export class FormDialog<T extends Record<string, unknown> = Record<string, unkno
     const htmlId = generateRandomId();
 
     return (
-      <Dialog PaperProps={{ className: cnFormDialog() }} open={open} onClose={this.close} fullWidth maxWidth='md'>
+      <Dialog
+        PaperProps={{ className: cnFormDialog(null, [className]) }}
+        open={open}
+        onClose={this.close}
+        fullWidth
+        maxWidth='md'
+      >
         {title && <DialogTitle>{title}</DialogTitle>}
         <DialogContent className='scroll'>
           <RegistryConsumer id='common'>

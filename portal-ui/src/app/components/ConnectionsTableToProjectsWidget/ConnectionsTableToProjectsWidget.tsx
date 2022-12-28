@@ -10,6 +10,8 @@ import { CrgLayerType, CrgProject } from '../../services/gis/projects.models';
 import { FileConnection } from '../../services/data/files.service';
 import { createLayer } from '../../services/gis/layers.service';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
+import { Schema } from '../../services/data/schema.models';
+import { schemaService } from '../../services/data/schema.service';
 
 const cnConnectionsTableToProjectsWidget = cn('ConnectionsTableToProjectsWidget');
 
@@ -21,8 +23,11 @@ interface ConnectionsTableToProjectsWidgetProps {
 export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTableToProjectsWidgetProps> {
   private currentVectorTableId = '';
 
+  @observable private selectContentTypeDialogOpen = false;
+  @observable private schema?: Schema;
   @observable private connections?: FileConnection[] = [];
   @observable private loading = true;
+  @observable private project: CrgProject;
 
   constructor(props: ConnectionsTableToProjectsWidgetProps) {
     super(props);
@@ -44,9 +49,10 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
     return (
       <ConnectionsToProjectsWidget
         className={cnConnectionsTableToProjectsWidget()}
-        onConnect={this.connectHandler}
+        onConnect={this.save}
         connections={this.connections}
         loading={this.loading}
+        schema={this.schema}
         showAsExtendList
         dialogTitle='Проекты, в которые подключен векторный слой'
       />
@@ -61,6 +67,10 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
     if (vectorTableConnections.length && this.currentVectorTableId === vectorTable.identifier) {
       this.setConnections(vectorTableConnections);
     }
+
+    const schema = await schemaService.getSchema(vectorTable?.schemaId);
+    this.setSchema(schema);
+
     this.setLoading(false);
   }
 
@@ -80,13 +90,15 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
   }
 
   @boundMethod
-  private async connectHandler(project: CrgProject) {
+  private async save(project: CrgProject, view: string) {
     const { vectorTable } = this.props;
-    await this.createLayer(vectorTable, vectorTable.dataset, project);
+    await this.createLayer(vectorTable, vectorTable.dataset, project, view);
     await this.fetchConnections();
   }
 
-  private async createLayer(table: VectorTable, dataset: string, project: CrgProject) {
+  private async createLayer(table: VectorTable, dataset: string, project: CrgProject, view: string) {
+    const newStyleName = this.schema.views?.find(type => type.id === view)?.styleName;
+
     const newLayer = {
       dataStoreName: currentUser.workspaceName,
       dataset: dataset,
@@ -98,10 +110,16 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
       schemaId: table.schemaId,
       position: -42,
       transparency: 70,
-      styleName: table.schemaId,
+      view,
+      styleName: newStyleName || this.schema.styleName || table.schemaId,
       type: CrgLayerType.VECTOR
     };
 
     await createLayer(newLayer, project.id);
+  }
+
+  @action
+  private setSchema(schema: Schema) {
+    this.schema = schema;
   }
 }

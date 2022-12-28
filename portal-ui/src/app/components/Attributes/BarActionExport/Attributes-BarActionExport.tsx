@@ -6,7 +6,7 @@ import { FileUploadOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { getReadablePropertyValue } from '../../../services/data/schema.utils';
+import { applyView, getReadablePropertyValue } from '../../../services/data/schema.utils';
 import { CrgVectorLayer } from '../../../services/gis/projects.models';
 import { schemaService } from '../../../services/data/schema.service';
 import { PropertySchema, PropertyType } from '../../../services/data/schema.models';
@@ -75,7 +75,7 @@ export class AttributesBarActionExport extends Component<AttributesBarActionExpo
 
   private async prepareFeatures(records: AttributesTableRecord[]): Promise<unknown[][]> {
     const { layer, cols } = this.props;
-    const schema = await schemaService.getSchema(layer.schemaId);
+    const schema = applyView(await schemaService.getSchema(layer.schemaId), layer.view);
     const properties: PropertySchema<AttributesTableRecord>[] = [
       { name: 'cutId', title: 'ID', propertyType: PropertyType.INT },
       ...cols

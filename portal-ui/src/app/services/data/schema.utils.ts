@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash';
+import { Coordinate } from 'ol/coordinate';
 
 import {
   OldSchema,
@@ -30,15 +31,24 @@ import { formatDate } from '../util/date.util';
 import { FileInfo } from './files.service';
 import { schemaService } from './schema.service';
 import { CoordinateEdited, WfsFeature } from '../geoserver/wfs.models';
-import { Coordinate } from 'ol/coordinate';
+
+export function applyViewOld(schema: OldSchema, viewId?: string): OldSchema {
+  const view = schema.views?.find(cType => cType.id === viewId);
+
+  return applyTypeToSchemaOld(schema, view);
+}
 
 export function applyContentTypeOld(schema: OldSchema, contentTypeId?: string): OldSchema {
+  const contentType = schema.contentTypes?.find(cType => cType.id === contentTypeId);
+
+  return applyTypeToSchemaOld(schema, contentType);
+}
+
+function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType): OldSchema {
   const clonedSchema = cloneDeep(schema);
 
-  const contentType = clonedSchema.contentTypes?.find(cType => cType.id === contentTypeId);
-
-  if (contentType) {
-    const { attributes, children, childOnly, printTemplates } = contentType;
+  if (type) {
+    const { attributes, children, childOnly, printTemplates } = type;
     const actualProperties: OldPropertySchema[] = attributes.map(contentTypeDescription => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeDescription.name);
 
@@ -51,20 +61,31 @@ export function applyContentTypeOld(schema: OldSchema, contentTypeId?: string): 
   return clonedSchema;
 }
 
+export function applyView(schema: Schema, viewId: string): Schema {
+  const view = schema.views?.find(cType => cType.id === viewId);
+
+  return applyTypeToSchema(schema, view);
+}
+
 export function applyContentType(schema: Schema, contentTypeId: string): Schema {
+  const contentType = schema.contentTypes?.find(cType => cType.id === contentTypeId);
+
+  return applyTypeToSchema(schema, contentType);
+}
+
+function applyTypeToSchema(schema: Schema, type: ContentType): Schema {
   const clonedSchema = cloneDeep(schema);
 
-  const contentType = clonedSchema.contentTypes?.find(cType => cType.id === contentTypeId);
-
-  if (contentType) {
+  if (type) {
     const {
       title,
       properties,
+      styleName,
       children = schema.children,
       childOnly = schema.childOnly,
       printTemplates = schema.printTemplates,
       relations = schema.relations
-    } = contentType;
+    } = type;
     const actualProperties: PropertySchema[] = properties.map(contentTypeProperty => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeProperty.name);
 
@@ -74,6 +95,7 @@ export function applyContentType(schema: Schema, contentTypeId: string): Schema 
     Object.assign(clonedSchema, {
       title,
       properties: actualProperties,
+      styleName,
       children,
       childOnly,
       printTemplates,
@@ -88,6 +110,7 @@ export function convertOldToNewSchema({
   name,
   title,
   tableName,
+  styleName,
   description,
   geometryType,
   readOnly,
@@ -96,12 +119,14 @@ export function convertOldToNewSchema({
   printTemplates,
   relations,
   properties,
-  contentTypes
+  contentTypes,
+  views
 }: OldSchema): Schema {
   return {
     name,
     title,
     tableName,
+    styleName,
     description,
     geometryType,
     readOnly,
@@ -110,7 +135,8 @@ export function convertOldToNewSchema({
     printTemplates,
     relations,
     properties: convertOldToNewProperties(properties),
-    contentTypes: contentTypes?.map(convertOldToNewContentType)
+    contentTypes: contentTypes?.map(convertOldToNewContentType),
+    views: views?.map(convertOldToNewContentType)
   };
 }
 
@@ -126,7 +152,8 @@ export function convertNewToOldSchema({
   printTemplates,
   relations,
   properties,
-  contentTypes
+  contentTypes,
+  views
 }: Schema): OldSchema {
   return {
     name,
@@ -140,7 +167,8 @@ export function convertNewToOldSchema({
     printTemplates,
     relations,
     properties: convertNewToOldProperties(properties),
-    contentTypes: contentTypes?.map(convertNewToOldContentType)
+    contentTypes: contentTypes?.map(convertNewToOldContentType),
+    views: views?.map(convertNewToOldContentType)
   };
 }
 

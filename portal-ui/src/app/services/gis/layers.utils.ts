@@ -1,5 +1,5 @@
 import { currentUser } from '../../stores/CurrentUser.store';
-import { CrgLayerType, CrgVectorLayer, NewCrgLayer } from './projects.models';
+import { CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './projects.models';
 
 const defaultProps = {
   enabled: true,
@@ -18,6 +18,19 @@ export function vectorLayerDefaults(): Pick<
     dataStoreName: currentUser.workspaceName,
     complexName: undefined,
     type: CrgLayerType.VECTOR
+  };
+}
+
+export function rasterLayerDefaults(): Pick<
+  CrgRasterLayer,
+  'id' | 'nativeCRS' | 'mode' | 'enabled' | 'position' | 'transparency' | 'minZoom' | 'maxZoom' | 'type'
+> {
+  return {
+    ...defaultProps,
+    nativeCRS: 'EPSG:3857',
+    mode: 'gis-service',
+    enabled: true,
+    type: CrgLayerType.RASTER
   };
 }
 

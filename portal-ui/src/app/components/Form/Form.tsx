@@ -5,6 +5,7 @@ import { FormProps } from './Form.async';
 export { FormField } from './Field/Form-Field';
 export { FormLabel } from './Label/Form-Label';
 export { FormControl } from './Control/Form-Control.composed';
+export { FormProps } from './Form.async';
 
 const FormAsync = lazy(() => import('./Form.async')) as <T extends Record<string, unknown>>(
   p: FormProps<T>

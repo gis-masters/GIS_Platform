@@ -304,4 +304,6 @@ export class Http {
 export const http = Http.instance;
 
 // for autotests
-Object.assign(window, { http, axios });
+if (typeof window !== 'undefined') {
+  Object.assign(window, { http, axios });
+}

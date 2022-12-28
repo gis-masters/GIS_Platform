@@ -55,4 +55,6 @@ export async function getEnvironment(): Promise<Environment> {
 }
 
 // for autotests
-Object.assign(window, { env });
+if (typeof window !== 'undefined') {
+  Object.assign(window, { env });
+}

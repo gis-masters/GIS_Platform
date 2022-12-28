@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, observable, makeObservable, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { Skeleton, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@mui/material';
 import { AddCircle, AddCircleOutlineOutlined } from '@mui/icons-material';
@@ -16,11 +16,17 @@ import { FileConnection } from '../../services/data/files.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { ConnectionsToProjects } from '../ConnectionsToProjects/ConnectionsToProjects';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
+import { PropertyType, Schema } from '../../services/data/schema.models';
+import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
+import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
+import { getViewChoiceOptions } from '../Form/Form.utils';
 import { Button } from '../Button/Button';
+import { Form } from '../Form/Form';
 
 import '!style-loader!css-loader!sass-loader!./ConnectionsToProjectsWidget.scss';
 import '!style-loader!css-loader!sass-loader!./Dialog/ConnectionsToProjectsWidget-Dialog.scss';
 import '!style-loader!css-loader!sass-loader!./Explorer/ConnectionsToProjectsWidget-Explorer.scss';
+import '!style-loader!css-loader!sass-loader!./ViewSelector/ConnectionsToProjectsWidget-ViewSelector.scss';
 
 const cnConnectionsToProjectsWidget = cn('ConnectionsToProjectsWidget');
 
@@ -28,8 +34,13 @@ interface ConnectionsToProjectsWidgetProps extends IClassNameProps {
   connections?: FileConnection[];
   loading: boolean;
   dialogTitle: string;
+  schema?: Schema;
   showAsExtendList?: boolean;
-  onConnect: (project: CrgProject) => void;
+  onConnect: (project: CrgProject, view: string) => void;
+}
+
+interface ViewFormValue extends Record<string, unknown> {
+  view: string;
 }
 
 @observer
@@ -37,6 +48,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
   @observable private currentProjectsDialogOpen = false;
   @observable private selectProjectDialogOpen = false;
   @observable private selectedProject?: CrgProject;
+  @observable private view = '';
 
   constructor(props: ConnectionsToProjectsWidgetProps) {
     super(props);
@@ -91,10 +103,32 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
                   </RegistryConsumer>
                 </DialogContent>
                 <DialogActions>
-                  <Button color='primary' disabled={!this.selectedProject} onClick={this.submitProjectSelection}>
-                    Подключить
-                  </Button>
-                  <Button onClick={this.closeSelectProjectDialog}>Отмена</Button>
+                  {this.options.length > 1 && (
+                    <DialogActionsLeft>
+                      <Form<ViewFormValue>
+                        className={cnConnectionsToProjectsWidget('ViewSelector')}
+                        schema={{
+                          properties: [
+                            {
+                              name: 'view',
+                              title: 'Представление',
+                              options: this.options,
+                              defaultValue: '',
+                              propertyType: PropertyType.CHOICE
+                            }
+                          ]
+                        }}
+                        value={{ view: this.view }}
+                        onFormChange={this.handleChange}
+                      />
+                    </DialogActionsLeft>
+                  )}
+                  <DialogActionsRight>
+                    <Button color='primary' disabled={!this.selectedProject} onClick={this.submitProjectSelection}>
+                      Подключить
+                    </Button>
+                    <Button onClick={this.closeSelectProjectDialog}>Отмена</Button>
+                  </DialogActionsRight>
                 </DialogActions>
               </Dialog>
             </>
@@ -124,11 +158,17 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
   @action.bound
   private closeSelectProjectDialog() {
     this.selectProjectDialogOpen = false;
+    this.view = '';
   }
 
   @action
   private setSelectedProject(project: CrgProject | null) {
     this.selectedProject = project;
+  }
+
+  @action.bound
+  private handleChange(value: ViewFormValue) {
+    this.view = value.view;
   }
 
   @boundMethod
@@ -151,9 +191,9 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
   @boundMethod
   private submitProjectSelection() {
     const { onConnect } = this.props;
-    this.closeSelectProjectDialog();
-    onConnect(this.selectedProject);
+    onConnect(this.selectedProject, this.view);
     this.setSelectedProject(null);
+    this.closeSelectProjectDialog();
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -171,5 +211,10 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
     }
 
     return selectedItem;
+  }
+
+  @computed
+  private get options() {
+    return getViewChoiceOptions(this.props.schema?.views);
   }
 }
