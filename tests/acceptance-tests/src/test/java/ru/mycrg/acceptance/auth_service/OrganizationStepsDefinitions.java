@@ -28,6 +28,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     public static final int RETRY_DELAY = 6000;
 
     public static Integer orgId;
+    public static String emailForFeature;
     public static OrganizationCreateDto orgDto;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
@@ -117,6 +118,35 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             makeFirstAvailableOrgAsCurrent();
         } else {
             sendCreateOrganizationRequest(dataTable);
+
+            assertEquals(SC_ACCEPTED, response.getStatusCode());
+
+            checkOrgIdInLocationSetAsCurrentPutInPool();
+
+            waitUntilOrganizationSuccessfullyCreated(orgId);
+        }
+    }
+
+    @Given("Существует новая организация")
+    public void createOrgForFeature(DataTable dataTable) throws InterruptedException {
+        List<String> data = dataTable.asList();
+
+
+        if (emailForFeature == null) {
+            emailForFeature = generateString(data.get(4));
+        }
+        if (isOrgExistInPool(emailForFeature)) {
+            makeExactOrgAsCurrent(emailForFeature);
+        } else {
+            UserCreateDto owner = new UserCreateDto(generateString(data.get(2)), generateString(data.get(3)),
+                                                    emailForFeature, generateString(data.get(5)));
+
+            System.out.println("Org. Owner: " + emailForFeature);
+
+            userPool.put(-1, owner);
+            orgDto = new OrganizationCreateDto(generateString(data.get(0)), generateString(data.get(1)), owner);
+
+            createOrganization(orgDto);
 
             assertEquals(SC_ACCEPTED, response.getStatusCode());
 
@@ -257,7 +287,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     private void checkStatusCodeIs(Response response, int code) {
         response.then()
                 .assertThat().
-                        statusCode(code);
+                statusCode(code);
     }
 
     private void createOrganization(OrganizationCreateDto dto) {

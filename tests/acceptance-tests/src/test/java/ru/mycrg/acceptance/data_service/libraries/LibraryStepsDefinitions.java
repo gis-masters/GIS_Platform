@@ -2,6 +2,7 @@ package ru.mycrg.acceptance.data_service.libraries;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
@@ -327,7 +328,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     public void getCurrentRecordInLibrary() {
         authorizationBase.loginAsCurrentUser();
 
-        getDocumentById(folder11Id);
+        getRecordById(folder11Id);
     }
 
     @And("Папки находятся в начале списка")
@@ -394,6 +395,28 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         checkSorting(sortingDirection, recordsSorted);
     }
 
+    @When("Пользователь пытается перенести каталог с id: {int}")
+    public void tryToMoveFolder(int folderId) {
+        moveRecord((long) folderId, (long) folderId);
+    }
+
+    @When("Отправляется запрос на перенос записи {int} в каталог {int}")
+    public void moveRecord(int recordId, int folderId) {
+        moveRecord((long) recordId, (long) folderId);
+    }
+
+    @Then("Перенос записи {int} выполнен успешно")
+    public void checkFilePath(int recordId) {
+        getRecordById(recordId);
+
+        checkResponseValue("path", "/root/4/10/11/13");
+    }
+
+    @When("Сообщение об ошибке соответствует ожидаемому: {string}")
+    public void checkErrorMsg(String msg) {
+        checkResponseValue("message", msg);
+    }
+
     private void createRecordWithSecondFile() {
         List<FileDescriptionModel> descriptions = new ArrayList<>();
         descriptions.add(new FileDescriptionModel(secondFileId, 314L, "Second file"));
@@ -407,10 +430,10 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     }
 
     private void getCurrentDocument() {
-        getDocumentById(currentDocumentId);
+        getRecordById(currentDocumentId);
     }
 
-    private void getDocumentById(Integer id) {
+    private void getRecordById(Integer id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get(String.format("/%s/records/%d", DEFAULT_LIBRARY, id));
@@ -426,6 +449,12 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         post(String.format("/%s/records", DEFAULT_LIBRARY));
 
         currentDocumentId = extractEntityIdFromResponse(response);
+    }
+
+    private void moveRecord(Long recordId, Long parentId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        post(String.format("/%s/records/%d/move/%d", DEFAULT_LIBRARY, recordId, parentId));
     }
 
     private void updateDocument(Integer docId, String payload) {

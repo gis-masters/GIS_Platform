@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +21,7 @@ import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.CreateLibraryRecordRequest;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.DeleteLibraryRecordRequest;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.UpdateLibraryRecordRequest;
+import ru.mycrg.data_service.service.cqrs.table_records.requests.MoveRecordToNewParentRequest;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.EcqlRecordIdHandler;
@@ -168,7 +168,19 @@ public class DocumentLibraryRecordsController {
         mediator.execute(
                 new DeleteLibraryRecordRequest(qualifier, record, schema));
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PostMapping("/document-libraries/{docLibId}/records/{recId}/move/{parentId}")
+    public ResponseEntity<Object> moveRecord(@PathVariable String docLibId,
+                                             @PathVariable Long recId,
+                                             @PathVariable Long parentId) {
+        ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
+
+        mediator.execute(new MoveRecordToNewParentRequest(qualifier, parentId));
+
+        return ResponseEntity.ok().build();
     }
 
     private void checkSortedFields(String docLibId, Pageable pageable) {
