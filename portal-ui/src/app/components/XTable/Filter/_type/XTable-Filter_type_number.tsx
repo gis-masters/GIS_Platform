@@ -44,19 +44,19 @@ export class XTableFilterTypeNumber extends Component<XTableFilterProps> {
   }
 
   @computed
-  private get from(): string {
+  private get from(): string | number {
     const { filterQuery, field } = this.props;
     const value = getFieldFilterValue(filterQuery, field);
 
-    return ((value as FilterQuery)?.$gte as string) || '';
+    return ((value as FilterQuery)?.$gte as string) ?? '';
   }
 
   @computed
-  private get to(): string {
+  private get to(): string | number {
     const { filterQuery, field } = this.props;
     const value = getFieldFilterValue(filterQuery, field);
 
-    return ((value as FilterQuery)?.$lte as string) || '';
+    return ((value as FilterQuery)?.$lte as string) ?? '';
   }
 
   @action.bound

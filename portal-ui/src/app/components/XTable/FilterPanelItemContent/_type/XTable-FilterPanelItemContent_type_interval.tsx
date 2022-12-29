@@ -23,7 +23,8 @@ export const FilterPanelItemContentTypeInterval = ((props: XTableFilterPanelItem
 
   const value = (
     <>
-      {filterValue.$gte && 'от'} {from} {filterValue.$lte && 'до'} {to}
+      {(filterValue.$gte || filterValue.$gte === 0) && 'от'} {from}{' '}
+      {(filterValue.$lte || filterValue.$lte === 0) && 'до'} {to}
     </>
   );
 
