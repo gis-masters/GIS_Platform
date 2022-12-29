@@ -51,6 +51,7 @@
     </ng-container>
 
     <crg-edit-feature-actions
+      *ngIf="mode === 'single'"
       [feature]="features[0]"
       [layer]="layer"
     ></crg-edit-feature-actions>
