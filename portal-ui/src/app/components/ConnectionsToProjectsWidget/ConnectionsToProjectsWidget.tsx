@@ -27,6 +27,7 @@ import '!style-loader!css-loader!sass-loader!./ConnectionsToProjectsWidget.scss'
 import '!style-loader!css-loader!sass-loader!./Dialog/ConnectionsToProjectsWidget-Dialog.scss';
 import '!style-loader!css-loader!sass-loader!./Explorer/ConnectionsToProjectsWidget-Explorer.scss';
 import '!style-loader!css-loader!sass-loader!./ViewSelector/ConnectionsToProjectsWidget-ViewSelector.scss';
+import { isLayersManagementAllowed } from '../../services/data/permissions.service';
 
 const cnConnectionsToProjectsWidget = cn('ConnectionsToProjectsWidget');
 
@@ -173,7 +174,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
 
   @boundMethod
   private handleSelect({ type, payload }: ExplorerItemData<CrgProject>) {
-    if (type === ExplorerItemType.PROJECT && !this.selectedItem(payload)) {
+    if (type === ExplorerItemType.PROJECT && !this.selectedItem(payload) && isLayersManagementAllowed(payload)) {
       this.setSelectedProject(payload);
     } else {
       this.setSelectedProject(null);
@@ -196,9 +197,8 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
     this.closeSelectProjectDialog();
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   @boundMethod
-  private async testForDisabled({ payload }: ExplorerItemData<CrgProject>): Promise<boolean> {
+  private testForDisabled({ payload }: ExplorerItemData<CrgProject>): boolean {
     return payload.role !== Role.OWNER || this.selectedItem(payload);
   }
 
