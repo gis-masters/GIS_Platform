@@ -236,7 +236,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
         if (this.updatingAllowed) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          fromMobx(() => this.editGeometryStore.geometry?.coordinates.flat(5), false)
+          fromMobx(() => this.editGeometryStore.geometry?.coordinates?.flat(5), false)
             .pipe(first())
             .pipe(takeUntil(this.unsubscribe$))
             .pipe(takeUntil(this.unsubscribeFromMobx$))
@@ -346,7 +346,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     } else {
       let geometry: WfsGeometry<Coordinate>;
 
-      if (this.features.length === 1) {
+      if (this.features.length === 1 && this.isGeometryChanged) {
         geometry = this.features[0].geometry as WfsGeometry<Coordinate>;
       }
 

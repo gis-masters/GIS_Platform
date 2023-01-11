@@ -69,7 +69,7 @@ export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry<Coordinate>): Sim
       return new MultiPolygon(wfsGeometry.coordinates);
     }
     default: {
-      throw new Error(`Not supported geometry type: ${wfsGeometry.type}`);
+      throw new Error(`Неподдерживаемый тип геометрии: ${wfsGeometry.type}`);
     }
   }
 }
