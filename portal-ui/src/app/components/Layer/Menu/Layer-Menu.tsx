@@ -167,16 +167,15 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!editMode && this.isVectorLayer && (this.featuresCreateAllowed || this.importShapeAllowed) && (
+          {!editMode && this.isVectorLayer && this.featuresCreateAllowed && (
             <MenuNestedItem
               parentMenuOpen={open}
               submenu={[
-                this.featuresCreateAllowed &&
-                  (this.geometryType === GeometryType.MULTI_POLYGON || this.geometryType === GeometryType.POLYGON) && (
-                    <MenuItem key='xml' onClick={this.openImportXmlDialog}>
-                      Импорт межевого плана из XML
-                    </MenuItem>
-                  ),
+                (this.geometryType === GeometryType.MULTI_POLYGON || this.geometryType === GeometryType.POLYGON) && (
+                  <MenuItem key='xml' onClick={this.openImportXmlDialog}>
+                    Импорт межевого плана из XML
+                  </MenuItem>
+                ),
                 this.importShapeAllowed && (
                   <MenuItem key='shp' onClick={this.openImportShapeDialog}>
                     Импорт геометрии из Shape-файла
