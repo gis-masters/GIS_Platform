@@ -178,6 +178,11 @@
         "id": "representation",
         "title": "Представления векторной таблицы",
         "contentUrl": "/assets/help/map/dataManagement/12representation.html"
+      },
+      {
+        "id": "moveDocument",
+        "title": "Перемещение документов",
+        "contentUrl": "/assets/help/map/dataManagement/13moveDocument.html"
       }
     ]
   },

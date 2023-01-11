@@ -12,14 +12,16 @@ import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.MoveRecordToNewParentRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.resources.protectors.DocLibraryRecordsProtector;
-import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
+import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
+import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 @Component
@@ -28,9 +30,9 @@ public class MoveRecordToNewParentHandler implements IRequestHandler<MoveRecordT
     private final Logger log = LoggerFactory.getLogger(MoveRecordToNewParentHandler.class);
 
     private final SchemableRecordsDao recordsDao;
-    private final IResourceProtector resourceProtector;
+    private final IMasterResourceProtector resourceProtector;
 
-    public MoveRecordToNewParentHandler(DocLibraryRecordsProtector resourceProtector,
+    public MoveRecordToNewParentHandler(MasterResourceProtector resourceProtector,
                                         SchemableRecordsDao recordsDao) {
         this.recordsDao = recordsDao;
         this.resourceProtector = resourceProtector;
@@ -39,8 +41,6 @@ public class MoveRecordToNewParentHandler implements IRequestHandler<MoveRecordT
     @Override
     public Voidy handle(MoveRecordToNewParentRequest request) {
         ResourceQualifier recordQualifier = request.getRecordQualifier();
-        ResourceQualifier parentQualifier = new ResourceQualifier(recordQualifier, request.getParentId());
-
         if (!resourceProtector.isEditAllowed(recordQualifier)) {
             String msg = "Нет прав на перенос записи: " + recordQualifier.getRecord();
             log.warn(msg);
@@ -48,29 +48,45 @@ public class MoveRecordToNewParentHandler implements IRequestHandler<MoveRecordT
             throw new ForbiddenException(msg);
         }
 
-        if (!resourceProtector.isEditAllowed(parentQualifier)) {
-            String msg = "Нет прав на редактирование каталога: " + parentQualifier.getRecord();
-            log.warn(msg);
-
-            throw new ForbiddenException(msg);
-        }
-
-        IRecord resource = recordsDao
-                .findById(recordQualifier)
-                .orElseThrow(() -> new NotFoundException(recordQualifier.getRecord()));
-
-        if (resource.isFolder()) {
-            throw new BadRequestException("Перемещение каталогов не доступно");
-        }
-
-        String parentPath = recordsDao
-                .findById(parentQualifier)
-                .orElseThrow(() -> new NotFoundException(parentQualifier.getRecord()))
-                .getAsString(PATH.getName());
-
         Map<String, Object> properties = new HashMap<>();
-        properties.put(PATH.getName(),
-                       parentPath + "/" + parentQualifier.getRecord());
+        if (request.getParentId() == null) {
+            ResourceQualifier lQualifier = new ResourceQualifier(recordQualifier.getSchema(),
+                                                                 recordQualifier.getTable(),
+                                                                 LIBRARY);
+
+            if (!resourceProtector.isEditAllowed(lQualifier)) {
+                String msg = "Нет прав на редактирование библиотеки: " + lQualifier.getTable();
+                log.warn(msg);
+
+                throw new ForbiddenException(msg);
+            }
+
+            properties.put(PATH.getName(), ROOT_FOLDER_PATH);
+        } else {
+            ResourceQualifier parentQualifier = new ResourceQualifier(recordQualifier, request.getParentId());
+            if (!resourceProtector.isEditAllowed(parentQualifier)) {
+                String msg = "Нет прав на редактирование каталога: " + parentQualifier.getRecord();
+                log.warn(msg);
+
+                throw new ForbiddenException(msg);
+            }
+
+            IRecord resource = recordsDao
+                    .findById(recordQualifier)
+                    .orElseThrow(() -> new NotFoundException(recordQualifier.getRecord()));
+
+            if (resource.isFolder()) {
+                throw new BadRequestException("Перемещение каталогов не доступно");
+            }
+
+            String parentPath = recordsDao
+                    .findById(parentQualifier)
+                    .orElseThrow(() -> new NotFoundException(parentQualifier.getRecord()))
+                    .getAsString(PATH.getName());
+
+            properties.put(PATH.getName(),
+                           parentPath + "/" + parentQualifier.getRecord());
+        }
 
         try {
             recordsDao.updateRecordById(recordQualifier, properties);

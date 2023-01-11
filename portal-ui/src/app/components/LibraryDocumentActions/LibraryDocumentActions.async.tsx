@@ -22,6 +22,7 @@ import { LibraryDocumentActionsSed } from './Sed/LibraryDocumentActions-Sed';
 import { LibraryDocumentActionsSave } from './Save/LibraryDocumentActions-Save';
 import { LibraryDocumentActionsOpen } from './Open/LibraryDocumentActions-Open';
 import { LibraryDocumentActionsEdit } from './Edit/LibraryDocumentActions-Edit';
+import { LibraryDocumentActionsMove } from './Move/LibraryDocumentActions-Move';
 import { LibraryDocumentActionsPrint } from './Print/LibraryDocumentActions-Print';
 import { LibraryDocumentActionsShare } from './Share/LibraryDocumentActions-Share';
 import { LibraryDocumentActionsClose } from './Close/LibraryDocumentActions-Close';
@@ -89,6 +90,9 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
         {canPrint && <LibraryDocumentActionsPrint document={this.document || document} schema={this.schema} as={as} />}
         {this.canBePlaced && (
           <LibraryDocumentActionsFilesPlacement document={this.document || document} schema={this.schema} as={as} />
+        )}
+        {!isNew && canEdit && !isFolder && (
+          <LibraryDocumentActionsMove document={this.document || document} schema={this.schema} as={as} />
         )}
         {!isNew && <LibraryDocumentActionsShare document={this.document || document} as={as} />}
         {!isNew && this.canBeRegistered() && (

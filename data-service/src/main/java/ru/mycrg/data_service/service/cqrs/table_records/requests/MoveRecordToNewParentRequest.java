@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.table_records.requests;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.jetbrains.annotations.Nullable;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -44,6 +45,7 @@ public class MoveRecordToNewParentRequest implements IRequest<Voidy>, Auditable 
         return rQualifier;
     }
 
+    @Nullable
     public Long getParentId() {
         return parentId;
     }

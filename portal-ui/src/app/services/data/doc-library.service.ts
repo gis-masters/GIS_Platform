@@ -2,6 +2,8 @@ import { http } from '../http.service';
 import { PageableResponse, PageOptions } from '../models';
 import { DataEntity, DataEntityType } from './data.service';
 import {
+  getDocLibrariesRecordMoveToFolderUrl,
+  getDocLibrariesRecordMoveUrl,
   getDocLibrariesRecordsAsRegistryUrl,
   getDocLibrariesRecordsUrl,
   getDocLibrariesRecordUrl,
@@ -10,11 +12,11 @@ import {
   getDocRegisterUrl,
   getDocumentLibraryRecordRoleAssignmentUrl
 } from '../server-urls.service';
+import { ExplorerItemEntityTypeTitle } from '../../components/Explorer/Explorer.models';
+import { addEntityPermission, removeEntityPermission } from './permissions.client';
 import { Role, RoleAssignmentBody } from './permissions.models';
 import { communicationService } from '../communication.service';
 import { preparePageOptions } from '../http.utils';
-import { addEntityPermission, removeEntityPermission } from './permissions.client';
-import { ExplorerItemEntityTypeTitle } from '../../components/Explorer/Explorer.models';
 
 export enum ContentTypeTypes {
   FOLDER = 'FOLDER'
@@ -202,6 +204,13 @@ export async function updateLibraryRecord(
   patch: Partial<LibraryRecord>
 ): Promise<void> {
   await http.patch(await getDocLibrariesRecordUrl(libraryId, recordId), patch);
+  communicationService.libraryItemsUpdated.emit();
+}
+
+export async function moveLibraryRecord(libraryId: string, recordId: number, parentId?: number): Promise<void> {
+  await (parentId
+    ? http.post(await getDocLibrariesRecordMoveToFolderUrl(libraryId, recordId, parentId))
+    : http.post(await getDocLibrariesRecordMoveUrl(libraryId, recordId)));
   communicationService.libraryItemsUpdated.emit();
 }
 

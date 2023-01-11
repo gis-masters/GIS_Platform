@@ -285,6 +285,18 @@ export async function getDocLibrariesRecordUrl(libraryIdentifier: string, record
   return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records/${recordId}`;
 }
 
+export async function getDocLibrariesRecordMoveUrl(libraryIdentifier: string, recordId: number): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records/${recordId}/move`;
+}
+
+export async function getDocLibrariesRecordMoveToFolderUrl(
+  libraryIdentifier: string,
+  recordId: number,
+  newParentId?: number
+): Promise<string> {
+  return `${await getDocLibrariesRecordMoveUrl(libraryIdentifier, recordId)}/${newParentId}`;
+}
+
 export async function getDocRegisterUrl(libraryIdentifier: string, recordId: number): Promise<string> {
   return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records/${recordId}/register`;
 }

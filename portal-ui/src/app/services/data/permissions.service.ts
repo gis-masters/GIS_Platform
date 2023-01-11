@@ -13,7 +13,7 @@ import {
 } from './permissions.models';
 
 import { schemaService } from './schema.service';
-import { getLibraryRecord } from './doc-library.service';
+import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from './doc-library.service';
 import { VectorTable, getVectorTable } from './data.service';
 import { Schema } from './schema.models';
 
@@ -29,6 +29,22 @@ export async function isReadAllowed(layer: CrgLayer): Promise<boolean> {
   }
 
   return false;
+}
+
+export async function isRecordUpdateAllowed(record: LibraryRecord): Promise<boolean> {
+  const libraryRecord = record.role ? record : await getLibraryRecord(record.libraryId, record.id);
+
+  return checkIsUpdateAllowed(libraryRecord.role);
+}
+
+export async function isLibraryUpdateAllowed(library: DocumentLibrary): Promise<boolean> {
+  const documentLibrary = library.role ? library : await getLibrary(library.identifier);
+
+  return checkIsUpdateAllowed(documentLibrary.role);
+}
+
+function checkIsUpdateAllowed(role: Role) {
+  return currentUser.isAdmin || role === Role.OWNER || role === Role.CONTRIBUTOR;
 }
 
 export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {

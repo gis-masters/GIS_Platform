@@ -183,6 +183,13 @@ public class DocumentLibraryRecordsController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PostMapping("/document-libraries/{docLibId}/records/{recId}/move")
+    public ResponseEntity<Object> moveRecord(@PathVariable String docLibId,
+                                             @PathVariable Long recId) {
+        return moveRecord(docLibId, recId, null);
+    }
+
     private void checkSortedFields(String docLibId, Pageable pageable) {
         Map<String, Object> body = new HashMap<>();
         pageable.getSort().forEach(order -> body.put(order.getProperty(), ""));
