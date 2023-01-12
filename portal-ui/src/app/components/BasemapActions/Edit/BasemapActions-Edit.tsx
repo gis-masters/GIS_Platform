@@ -10,7 +10,6 @@ import { communicationService } from '../../../services/communication.service';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Basemap } from '../../../services/data/basemaps.models';
-import { Schema } from '../../../services/data/schema.models';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { getPatch } from '../../../services/util/patch';
 import { TextBadge } from '../../TextBadge/TextBadge';
@@ -44,10 +43,10 @@ export class BasemapActionsEdit extends Component<BasemapActionsEditProps> {
           icon={this.dialogOpen ? <Edit /> : <EditOutlined />}
         />
 
-        <FormDialog
+        <FormDialog<Basemap>
           open={this.dialogOpen}
-          schema={basemapEditSchema as unknown as Schema}
-          value={basemap as unknown as Partial<Basemap>}
+          schema={basemapEditSchema}
+          value={basemap}
           actionFunction={this.save}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}
           onClose={this.closeDialog}
@@ -73,8 +72,8 @@ export class BasemapActionsEdit extends Component<BasemapActionsEditProps> {
   }
 
   @boundMethod
-  private async save(value: Basemap | Record<string, unknown>) {
+  private async save(value: Basemap) {
     await updateBasemap(this.props.basemap, getPatch(value, this.props.basemap));
-    communicationService.basemapsUpdated.emit();
+    communicationService.basemapUpdated.emit({ type: 'update', data: value });
   }
 }

@@ -78,7 +78,7 @@ interface GeoserverCoverage {
   };
 }
 
-export const crgLayerSchema: Schema<CrgLayer> = {
+export const crgLayerSchema: Schema = {
   properties: [
     {
       name: 'title',

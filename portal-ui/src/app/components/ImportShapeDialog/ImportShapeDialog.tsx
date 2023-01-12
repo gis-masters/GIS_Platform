@@ -138,7 +138,7 @@ export class ImportShapeDialog extends Component<ImportShapeDialogProps> {
         this.openImportDetailDialog();
       }
 
-      communicationService.featuresUpdated.emit();
+      communicationService.featuresUpdated.emit({ type: 'create', data: null });
     } catch (error) {
       const err = error as ImportShapeDetails;
 

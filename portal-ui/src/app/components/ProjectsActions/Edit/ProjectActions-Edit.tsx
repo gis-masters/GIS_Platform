@@ -6,7 +6,6 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
 
-import { communicationService } from '../../../services/communication.service';
 import { projectsService } from '../../../services/gis/projects.service';
 import { CrgProject } from '../../../services/gis/projects.models';
 import { Schema } from '../../../services/data/schema.models';
@@ -19,7 +18,7 @@ const cnProjectActionsEdit = cn('ProjectActionsEdit', 'Edit');
 
 interface ProjectActionsProps {
   project: CrgProject;
-  schema: Schema<CrgProject>;
+  schema: Schema;
 }
 
 @observer
@@ -73,6 +72,5 @@ export class ProjectActionsEdit extends Component<ProjectActionsProps> {
   @boundMethod
   private async updateDocumentPage(value: CrgProject) {
     await projectsService.update(this.props.project.id, getPatch(value, this.props.project));
-    communicationService.projectsUpdated.emit();
   }
 }

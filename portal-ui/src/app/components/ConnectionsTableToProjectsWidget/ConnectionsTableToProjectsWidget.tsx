@@ -6,12 +6,13 @@ import { cn } from '@bem-react/classname';
 
 import { currentUser } from '../../stores/CurrentUser.store';
 import { VectorTable, getVectorTableConnections } from '../../services/data/data.service';
-import { CrgLayerType, CrgProject } from '../../services/gis/projects.models';
+import { CrgProject } from '../../services/gis/projects.models';
+import { vectorLayerDefaults } from '../../services/gis/layers.utils';
 import { FileConnection } from '../../services/data/files.service';
-import { createLayer } from '../../services/gis/layers.service';
-import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
-import { Schema } from '../../services/data/schema.models';
 import { schemaService } from '../../services/data/schema.service';
+import { createLayer } from '../../services/gis/layers.service';
+import { Schema } from '../../services/data/schema.models';
+import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
 
 const cnConnectionsTableToProjectsWidget = cn('ConnectionsTableToProjectsWidget');
 
@@ -97,22 +98,18 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
   }
 
   private async createLayer(table: VectorTable, dataset: string, project: CrgProject, view: string) {
-    const newStyleName = this.schema.views?.find(type => type.id === view)?.styleName;
+    const newStyleName = this.schema.views?.find(({ id }) => id === view)?.styleName;
 
     const newLayer = {
-      dataStoreName: currentUser.workspaceName,
+      ...vectorLayerDefaults(),
       dataset: dataset,
       tableName: table.identifier,
       complexName: `${currentUser.workspaceName}:${table.identifier}`,
       title: table.title,
-      enabled: true,
       nativeCRS: table.crs,
       schemaId: table.schemaId,
-      position: -42,
-      transparency: 70,
       view,
-      styleName: newStyleName || this.schema.styleName || table.schemaId,
-      type: CrgLayerType.VECTOR
+      styleName: newStyleName || this.schema.styleName || table.schemaId
     };
 
     await createLayer(newLayer, project.id);

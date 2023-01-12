@@ -106,6 +106,6 @@ export class BasemapActionsDelete extends Component<BasemapActionsDeleteProps> {
 
   @boundMethod
   private async doDeletion() {
-    await deleteBasemap(this.props.basemap.id);
+    await deleteBasemap(this.props.basemap);
   }
 }

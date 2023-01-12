@@ -6,14 +6,14 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AddBoxOutlined } from '@mui/icons-material';
 
+import { allProjects } from '../../stores/AllProjects.store';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
-import { communicationService } from '../../services/communication.service';
+import { communicationService, DataChangeEvent } from '../../services/communication.service';
 import { projectsService } from '../../services/gis/projects.service';
 import { CrgProject } from '../../services/gis/projects.models';
-import { allProjects } from '../../stores/AllProjects.store';
+import { sleep } from '../../services/util/sleep';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { ProjectsAdd } from '../ProjectAdd/ProjectsAdd';
-import { sleep } from '../../services/util/sleep';
 import { Toast } from '../Toast/Toast';
 
 import { ProjectsList } from './List/Projects-List';
@@ -46,7 +46,11 @@ export default class Projects extends Component {
   async componentDidMount() {
     await projectsService.initAllProjectsStore();
 
-    communicationService.projectCreated.on(this.scrollTo, this);
+    communicationService.projectUpdated.on(async ({ type, data }: DataChangeEvent<CrgProject>) => {
+      if (type === 'create') {
+        await this.scrollTo(data);
+      }
+    }, this);
   }
 
   componentWillUnmount() {
@@ -98,11 +102,21 @@ export default class Projects extends Component {
     );
   }
 
-  @boundMethod
   private async scrollTo(project: CrgProject) {
     this.setNewProjectId(project.id);
 
-    await sleep(200);
+    const waitForRefTimeout = 2500;
+    const waitForRefStep = 50;
+    for (let i = 0; i < waitForRefTimeout; i += waitForRefStep) {
+      await sleep(50);
+      if (this.newProjectRef.current) {
+        break;
+      }
+    }
+
+    if (!this.newProjectRef.current) {
+      return;
+    }
 
     const containerElem = this.thisRef.current;
     const projectElem = this.newProjectRef.current;
@@ -113,6 +127,9 @@ export default class Projects extends Component {
     if (containerElem.scrollTop > projectElem.offsetTop) {
       containerElem.scrollTo({ top: projectElem.offsetTop - projectElem.offsetHeight, behavior: 'smooth' });
     }
+
+    await sleep(2000);
+    this.setNewProjectId(null);
   }
 
   @action
@@ -132,7 +149,7 @@ export default class Projects extends Component {
     try {
       const newProject = await projectsService.create(name);
       communicationService.allProjectsFetched.once(() => {
-        communicationService.projectCreated.emit(newProject);
+        communicationService.projectUpdated.emit({ type: 'create', data: newProject });
       });
       Toast.success('Проект создан');
 

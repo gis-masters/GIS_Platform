@@ -2,32 +2,32 @@ import React, { ReactNode } from 'react';
 import { SchemaOutlined } from '@mui/icons-material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { OldSchema } from '../../../../services/data/schemaOld.models';
+import { Schema } from '../../../../services/data/schema.models';
 import { SchemaActions } from '../../../SchemaActions/SchemaActions';
 
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
-    [ExplorerItemType.SCHEMA]: OldSchema;
+    [ExplorerItemType.SCHEMA]: Schema;
   }
 }
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeSchema {
-  static getId(item: ExplorerItemData<OldSchema>): string {
+  static getId(item: ExplorerItemData<Schema>): string {
     return item.payload.name;
   }
 
-  static getTitle(item: ExplorerItemData<OldSchema>): string {
+  static getTitle(item: ExplorerItemData<Schema>): string {
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<OldSchema>): ReactNode {
+  static getDescription(item: ExplorerItemData<Schema>): ReactNode {
     return item.payload.description;
   }
 
-  static getMeta(item: ExplorerItemData<OldSchema>): string {
+  static getMeta(item: ExplorerItemData<Schema>): string {
     return item.payload.name;
   }
 
@@ -39,7 +39,7 @@ export class ExplorerAdapterTypeSchema {
     return false;
   }
 
-  static getActions(item: ExplorerItemData<OldSchema>): ReactNode {
+  static getActions(item: ExplorerItemData<Schema>): ReactNode {
     return <SchemaActions schema={item.payload} as='iconButton' />;
   }
 }

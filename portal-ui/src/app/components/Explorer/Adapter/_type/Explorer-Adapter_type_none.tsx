@@ -4,14 +4,14 @@ import { Adapter, ExplorerItemData } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
-    [ExplorerItemType.EMPTY]: {
+    [ExplorerItemType.NONE]: {
       loading?: boolean;
     };
   }
 }
 
 @staticImplements<Adapter>()
-export class ExplorerAdapterTypeEmpty {
+export class ExplorerAdapterTypeNone {
   static getId(item: ExplorerItemData<{ loading: boolean }>): string {
     return item.type;
   }

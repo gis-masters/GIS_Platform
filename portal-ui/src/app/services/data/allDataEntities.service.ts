@@ -29,7 +29,7 @@ class AllDataEntitiesService {
 
     await this.fetchAllDataEntitiesStore();
 
-    communicationService.datasetsUpdated.on(() => {
+    communicationService.datasetUpdated.on(() => {
       void this.debouncedFetchAllDataEntitiesStore();
     }, this);
   }

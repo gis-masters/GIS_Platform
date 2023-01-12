@@ -43,9 +43,9 @@ import { ExplorerInfo } from './Info/Explorer-Info';
 
 import '!style-loader!css-loader!sass-loader!./Explorer.scss';
 
-export type ExplorerUrlItem = [ExplorerItemType, string];
+type ExplorerUrlItem = [ExplorerItemType, string];
 // page, pageSize, sort, sortOrder, filter
-export type ExplorerUrlOptions = [number, number, string, SortOrder, Record<string, string>];
+type ExplorerUrlOptions = [number, number, string, SortOrder, Record<string, string>];
 
 const cnExplorer = cn('Explorer');
 
@@ -153,6 +153,11 @@ export default class Explorer extends Component<ExplorerProps> {
           Record<string, string>
         ]) => {
           if (!isEqual(path, prevPath)) {
+            // отписка
+            for (const channel of this.channels) {
+              channel.off(this.service.refreshItems, this);
+            }
+            this.channels = [];
             // подписка на обновление
             for (const item of path) {
               for (const channel of getRefreshEmitters(item)) {
@@ -355,7 +360,7 @@ export default class Explorer extends Component<ExplorerProps> {
 
       for (let i = 1; i < pathUrlItems.length; i++) {
         const [type, id] = pathUrlItems[i];
-        const child = type !== ExplorerItemType.EMPTY ? await getChildById(path[i - 1], id, type) : emptyItem;
+        const child = type !== ExplorerItemType.NONE ? await getChildById(path[i - 1], id, type) : emptyItem;
         if (child) {
           path[i] = child;
         } else {

@@ -38,6 +38,10 @@ class AllProjects {
     return Boolean(this._list);
   }
 
+  getById(id: number): CrgProject {
+    return this._list.find(project => project.id === id);
+  }
+
   @action
   setList(list?: CrgProject[]) {
     this._list = list;
@@ -46,7 +50,7 @@ class AllProjects {
   @action
   update(id: number, patchData: Partial<CrgProject>) {
     if (this._list) {
-      const project = this._list.find(project => project.id === id);
+      const project = this.getById(id);
       patch(project, patchData);
     }
   }

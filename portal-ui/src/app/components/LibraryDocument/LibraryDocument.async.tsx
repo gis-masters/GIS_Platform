@@ -28,7 +28,7 @@ export interface LibraryDocumentProps extends IClassNameProps {
 
 @observer
 export default class LibraryDocument extends Component<LibraryDocumentProps> {
-  @observable private schema: Schema<LibraryRecord>;
+  @observable private schema: Schema;
   @observable private documentRoleAssignmentUrl: string;
   @observable private breadcrumbsItems: BreadcrumbsItemData[] = [];
 
@@ -54,7 +54,7 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
         <Breadcrumbs className={cnLibraryDocument('Breadcrumbs')} itemsType='link' items={this.breadcrumbsItems} />
 
         <div className={cnLibraryDocument('DocumentCard')}>
-          {this.schema && <ViewContentWidget schema={this.schema as Schema} data={document} />}
+          {this.schema && <ViewContentWidget schema={this.schema} data={document} title='Карточка документа' />}
         </div>
 
         <div className={cnLibraryDocument('Date')}>
@@ -91,7 +91,7 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
   }
 
   @action.bound
-  private setSchema(schema: Schema<LibraryRecord>) {
+  private setSchema(schema: Schema) {
     this.schema = schema;
   }
 

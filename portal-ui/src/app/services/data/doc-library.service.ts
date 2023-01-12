@@ -184,34 +184,32 @@ export async function createLibraryRecord(
     prepareFormData(data)
   );
 
-  communicationService.libraryItemsUpdated.emit();
+  const result = { schemaId, libraryId: libraryIdentifier, ...record };
 
-  return { schemaId, libraryId: libraryIdentifier, ...record };
+  communicationService.libraryRecordUpdated.emit({ type: 'create', data: result });
+
+  return result;
 }
 
 export async function registerDocument(libraryId: string, recordId: number): Promise<void> {
   await http.post<void>(await getDocRegisterUrl(libraryId, recordId));
 }
 
-export async function deleteLibraryRecord(libraryId: string, recordId: number): Promise<void> {
-  await http.delete(await getDocLibrariesRecordUrl(libraryId, recordId));
-  communicationService.libraryItemsUpdated.emit();
+export async function deleteLibraryRecord(record: LibraryRecord): Promise<void> {
+  await http.delete(await getDocLibrariesRecordUrl(record.libraryId, record.id));
+  communicationService.libraryRecordUpdated.emit({ type: 'delete', data: record });
 }
 
-export async function updateLibraryRecord(
-  libraryId: string,
-  recordId: number,
-  patch: Partial<LibraryRecord>
-): Promise<void> {
-  await http.patch(await getDocLibrariesRecordUrl(libraryId, recordId), patch);
-  communicationService.libraryItemsUpdated.emit();
+export async function updateLibraryRecord(record: LibraryRecord, patch: Partial<LibraryRecord>): Promise<void> {
+  await http.patch(await getDocLibrariesRecordUrl(record.libraryId, record.id), patch);
+  communicationService.libraryRecordUpdated.emit({ type: 'update', data: record });
 }
 
-export async function moveLibraryRecord(libraryId: string, recordId: number, parentId?: number): Promise<void> {
-  await (parentId
-    ? http.post(await getDocLibrariesRecordMoveToFolderUrl(libraryId, recordId, parentId))
-    : http.post(await getDocLibrariesRecordMoveUrl(libraryId, recordId)));
-  communicationService.libraryItemsUpdated.emit();
+export async function moveLibraryRecord(record: LibraryRecord, newParentId?: number): Promise<void> {
+  await (newParentId
+    ? http.post(await getDocLibrariesRecordMoveToFolderUrl(record.libraryId, record.id, newParentId))
+    : http.post(await getDocLibrariesRecordMoveUrl(record.libraryId, record.id)));
+  communicationService.libraryRecordUpdated.emit({ type: 'update', data: record });
 }
 
 function prepareFormData(data: LibraryRecordRaw): FormData {
@@ -244,4 +242,9 @@ export async function setDocumentPermission(item: LibraryRecord, payload: RoleAs
   }
 
   await addEntityPermission(payload, url, '', ExplorerItemEntityTypeTitle.DOCUMENT);
+}
+
+// for autotests
+if (typeof window !== undefined) {
+  Object.assign(window, { createLibraryRecord });
 }

@@ -52,7 +52,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
   async componentDidMount() {
     await this._fetchDatasets();
 
-    communicationService.datasetsUpdated.on(async () => {
+    communicationService.datasetUpdated.on(async () => {
       this.setCurrentPage(1);
       this.setFilterValue('');
       await this.fetchDatasets();

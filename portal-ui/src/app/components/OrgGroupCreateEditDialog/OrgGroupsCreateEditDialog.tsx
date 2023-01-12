@@ -39,7 +39,7 @@ export class OrgGroupsCreateEditDialog extends Component<OrgGroupsCreateEditDial
   }
 
   @computed
-  private get groupProperties(): PropertySchema<Partial<CrgGroup>>[] {
+  private get groupProperties(): PropertySchema[] {
     const userInfo = [
       {
         name: 'name',
@@ -54,7 +54,7 @@ export class OrgGroupsCreateEditDialog extends Component<OrgGroupsCreateEditDial
       }
     ];
 
-    return userInfo as PropertySchema<Partial<CrgGroup>>[];
+    return userInfo as PropertySchema[];
   }
 
   @boundMethod

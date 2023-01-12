@@ -60,7 +60,7 @@ interface DialogFileInfo extends FileInfo {
 
 export interface FilesPlacementDialogProps {
   document: LibraryRecord;
-  schema: Schema<LibraryRecord>;
+  schema: Schema;
   open: boolean;
   onClose(): void;
 }
@@ -305,7 +305,7 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
     await Promise.allSettled(apiActions);
     this.store.setCommonProgress(false);
 
-    communicationService.fileConnectionsUpdated.emit(files);
+    communicationService.fileConnectionsUpdated.emit({ type: 'create', data: files });
   }
 
   @boundMethod

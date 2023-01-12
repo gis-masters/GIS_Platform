@@ -35,6 +35,9 @@ export interface DocumentsListProps {
   modifyCallback: (payload: DocumentListItemData[]) => void;
 }
 
+/**
+ * @deprecated
+ */
 @observer
 export default class DocumentsList extends Component<DocumentsListProps> {
   @observable private loading = false;

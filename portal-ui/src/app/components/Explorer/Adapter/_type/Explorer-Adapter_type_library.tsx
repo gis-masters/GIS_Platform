@@ -17,7 +17,7 @@ import { Role } from '../../../../services/data/permissions.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { schemaService } from '../../../../services/data/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { communicationService } from '../../../../services/communication.service';
+import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
 import { formatDate } from '../../../../services/util/date.util';
@@ -184,7 +184,6 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static getChildrenSortDefaultValue(): string {
-    // На самом деле это не должно быть захардкожено, а должно браться из схемы.
     return 'created_at';
   }
 
@@ -217,7 +216,7 @@ export class ExplorerAdapterTypeLibrary {
     return full && enabled && <CreateLibraryRecord library={item.payload} onCreate={createHandler} />;
   }
 
-  static getRefreshEmitters(): Emitter[] {
-    return [communicationService.libraryItemsUpdated];
+  static getRefreshEmitters(): Emitter<DataChangeEvent<LibraryRecord>>[] {
+    return [communicationService.libraryRecordUpdated];
   }
 }

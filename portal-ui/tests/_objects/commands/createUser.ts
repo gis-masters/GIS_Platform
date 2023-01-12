@@ -43,7 +43,7 @@ export async function createTestUsers(): Promise<void> {
     name: owner.firstName,
     surname: owner.lastName,
     middleName: 'James',
-    job: 'Писец',
+    job: 'Владелец',
     department: 'Ravenclaw',
     phone: owner.contactPhone,
     password: owner.password
@@ -55,7 +55,7 @@ export async function createTestUsers(): Promise<void> {
     name: contributor.firstName,
     surname: contributor.lastName,
     middleName: 'Lucius',
-    job: 'Владелец',
+    job: 'Писец',
     department: 'Slytherin',
     phone: contributor.contactPhone,
     password: contributor.password

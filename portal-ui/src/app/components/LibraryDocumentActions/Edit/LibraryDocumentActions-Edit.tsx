@@ -18,7 +18,7 @@ const cnLibraryDocumentActionsEdit = cn('LibraryDocumentActions', 'Edit');
 
 interface LibraryDocumentActionsEditProps {
   document: LibraryRecord;
-  schema: Schema<LibraryRecord>;
+  schema: Schema;
   as: ActionsItemVariant;
 }
 
@@ -63,7 +63,7 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
   }
 
   @computed
-  private get fieldsWithoutBinary(): PropertySchema<LibraryRecord>[] {
+  private get fieldsWithoutBinary(): PropertySchema[] {
     const { properties = [] } = this.props.schema || {};
 
     return properties.filter(({ propertyType }) => propertyType !== PropertyType.BINARY);
@@ -81,10 +81,6 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
 
   @boundMethod
   private async updateDocument(value: LibraryRecord) {
-    await updateLibraryRecord(
-      this.props.document.libraryId,
-      this.props.document.id,
-      getPatch(value, this.props.document)
-    );
+    await updateLibraryRecord(this.props.document, getPatch(value, this.props.document));
   }
 }

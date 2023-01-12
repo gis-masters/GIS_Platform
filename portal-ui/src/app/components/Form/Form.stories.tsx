@@ -19,7 +19,7 @@ export default {
   component: Form
 } as ComponentMeta<typeof Form>;
 
-interface TestData extends Record<string, unknown> {
+interface TestData {
   name: string;
   email: string;
   age: number;
@@ -44,7 +44,7 @@ interface TestData extends Record<string, unknown> {
   custom: boolean;
 }
 
-const testFields: PropertySchema<TestData>[] = [
+const testFields: PropertySchema[] = [
   {
     propertyType: PropertyType.STRING,
     name: 'name',
@@ -269,12 +269,12 @@ function setErrorData() {
 }
 
 const validate = action(() => {
-  errors.splice(0, errors.length, ...validateFormValue(value, testFields as PropertySchema[]));
+  errors.splice(0, errors.length, ...validateFormValue(value, testFields));
 });
 
 const actionFunction = async (formValue: TestData) => {
   await sleep(2000 * Math.random());
-  const errors = validateFormValue(formValue, testFields as PropertySchema[]);
+  const errors = validateFormValue(formValue, testFields);
 
   if (errors.length) {
     throw { errors };
@@ -328,7 +328,7 @@ ContentOnly.args = {
 
 export const OutsideControl = Template.bind({});
 OutsideControl.args = {
-  schema: { properties: testFields as PropertySchema[] },
+  schema: { properties: testFields },
   value,
   onFormChange: setFormValue,
   errors,
@@ -337,7 +337,7 @@ OutsideControl.args = {
 
 export const ReadOnly = Template.bind({});
 ReadOnly.args = {
-  schema: { properties: testFields as PropertySchema[] },
+  schema: { properties: testFields },
   value,
   errors,
   readonly: true,
@@ -348,7 +348,7 @@ export const Auto = Template.bind({});
 Auto.args = {
   id: 'autoForm',
   auto: true,
-  schema: { properties: testFields as PropertySchema[] },
+  schema: { properties: testFields },
   value,
   actionFunction,
   onActionSuccess: () => {

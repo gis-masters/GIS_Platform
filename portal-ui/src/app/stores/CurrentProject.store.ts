@@ -33,7 +33,6 @@ const emptyProject: CrgProjectData = {
   name: '',
   order: 0,
   organizationId: 0,
-  internalName: '',
   layers: [],
   layersErrors: {},
   groups: [],
@@ -47,7 +46,6 @@ class CurrentProject implements CrgProjectData {
   @observable createdAt: string;
   @observable description: string;
   @observable id: number;
-  @observable internalName: string;
   @observable name: string;
   @observable order: number;
   @observable organizationId: number;

@@ -14,20 +14,9 @@ import { Fias } from '../../services/data/fias.service';
 import { services } from '../../services/services';
 
 const fromComplex: Partial<
-  Record<
-    PropertyType,
-    <T extends Record<string, unknown>>(
-      propertySchema: PropertySchema<T>,
-      formValue: Partial<T>,
-      fieldValue: unknown
-    ) => Partial<T>
-  >
+  Record<PropertyType, <T>(propertySchema: PropertySchema, formValue: Partial<T>, fieldValue: unknown) => Partial<T>>
 > = {
-  [PropertyType.FIAS]: <T extends Record<string, unknown>>(
-    field: PropertySchema<T>,
-    formValue: Partial<T>,
-    fieldValue: unknown = {}
-  ): Partial<T> => {
+  [PropertyType.FIAS]: <T>(field: PropertySchema, formValue: Partial<T>, fieldValue: unknown = {}): Partial<T> => {
     const fias = fieldValue as Fias;
     const name = String(field.name);
 
@@ -40,40 +29,35 @@ const fromComplex: Partial<
   }
 };
 
-const toComplex: Partial<
-  Record<PropertyType, <T extends Record<string, unknown>>(field: PropertySchema<T>, formValue: Partial<T>) => unknown>
-> = {
-  [PropertyType.FIAS]: <T extends Record<string, unknown>>(field: PropertySchema<T>, formValue: Partial<T>) => {
+const toComplex: Partial<Record<PropertyType, <T>(field: PropertySchema, formValue: Partial<T>) => unknown>> = {
+  [PropertyType.FIAS]: <T>(field: PropertySchema, formValue: Partial<T>) => {
     const name = String(field.name);
 
     return {
-      fullAddress: formValue[name + '__address'],
-      objectId: formValue[name + '__id'],
-      oktmo: formValue[name + '__oktmo']
-    } as unknown;
+      fullAddress: formValue[name + '__address'] as string,
+      objectId: formValue[name + '__id'] as number,
+      oktmo: formValue[name + '__oktmo'] as string
+    };
   }
 };
 
-export const applyFieldValue = action(
-  <T extends Record<string, unknown>>(
-    propertySchema: PropertySchema<T>,
-    formValue: Partial<T>,
-    fieldValue: T[keyof T & string]
-  ): Partial<T> => {
-    if (fromComplex[propertySchema.propertyType]) {
-      return fromComplex[propertySchema.propertyType]<T>(propertySchema, formValue, fieldValue);
-    }
-
-    formValue[propertySchema.name] = fieldValue;
-
-    return formValue;
+const _applyFieldValue = <T>(
+  propertySchema: PropertySchema,
+  formValue: Partial<T>,
+  fieldValue: T[keyof T & string]
+): Partial<T> => {
+  if (fromComplex[propertySchema.propertyType]) {
+    return fromComplex[propertySchema.propertyType]<T>(propertySchema, formValue, fieldValue);
   }
-);
 
-export function convertToComplexField<T extends Record<string, unknown>>(
-  field: PropertySchema<T>,
-  formValue: Partial<T>
-): unknown {
+  formValue[propertySchema.name] = fieldValue;
+
+  return formValue;
+};
+
+export const applyFieldValue = action(_applyFieldValue);
+
+export function convertToComplexField<T>(field: PropertySchema, formValue: Partial<T>): unknown {
   if (toComplex[field.propertyType]) {
     return toComplex[field.propertyType]<T>(field, formValue);
   }
@@ -109,7 +93,7 @@ export function parseUrlValue(value: string, multiple: boolean, editable?: boole
   return multiple ? [] : [{ url: '', text: '' }];
 }
 
-export function getEditUrlFormSchema(field: PropertySchemaUrl): PropertySchema<UrlInfo>[] {
+export function getEditUrlFormSchema(field: PropertySchemaUrl): PropertySchema[] {
   return [
     {
       name: 'url',
@@ -126,7 +110,7 @@ export function getEditUrlFormSchema(field: PropertySchemaUrl): PropertySchema<U
   ];
 }
 
-export function isEqualExceptCalculated<T>(a: Partial<T> = {}, b: Partial<T> = {}, schema: Schema<T>): boolean {
+export function isEqualExceptCalculated<T>(a: Partial<T> = {}, b: Partial<T> = {}, schema: Schema): boolean {
   for (const key of Object.keys({ ...a, ...b })) {
     const property = schema?.properties?.find(({ name }) => name === key);
     if (!property?.calculatedValueFormula && !property?.calculatedValueWellKnownFormula && !isEqual(a[key], b[key])) {

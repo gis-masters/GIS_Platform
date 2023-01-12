@@ -93,7 +93,7 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
   }
 
   @computed
-  private get mainFields(): PropertySchema<MainFormValues>[] {
+  private get mainFields(): PropertySchema[] {
     return [
       {
         name: 'pageFormatId',
@@ -158,7 +158,7 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
     ];
   }
 
-  private get extraFields(): PropertySchema<ExtraFormValues>[] {
+  private get extraFields(): PropertySchema[] {
     return [
       {
         name: 'resolution',

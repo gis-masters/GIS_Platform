@@ -5,38 +5,18 @@ import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { convertNewToOldSchema, convertOldToNewSchema } from '../../../services/data/schema.utils';
-import { PropertyType, Schema } from '../../../services/data/schema.models';
+import { Schema, schemaForSchema } from '../../../services/data/schema.models';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { schemaService } from '../../../services/data/schema.service';
-import { OldSchema } from '../../../services/data/schemaOld.models';
 import { FormDialog } from '../../FormDialog/FormDialog';
 
 const cnLibraryDocumentActionsEdit = cn('LibraryDocumentActions', 'Edit');
 
 interface SchemaActionsEditProps {
-  schema: OldSchema;
+  schema: Schema;
   as: ActionsItemVariant;
 }
-
-const schemaForSchema: Schema = {
-  properties: [
-    {
-      propertyType: PropertyType.STRING,
-      display: 'code',
-      name: 'schema',
-      validationFormula: (value: string) => {
-        try {
-          JSON.parse(value);
-        } catch {
-          return ['Некорректное значение'];
-        }
-      },
-      title: 'Схема'
-    }
-  ]
-};
 
 @observer
 export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
@@ -48,7 +28,7 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
   }
 
   render() {
-    const { as } = this.props;
+    const { as, schema } = this.props;
 
     return (
       <>
@@ -63,7 +43,7 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
         <FormDialog
           open={this.dialogOpen}
           schema={schemaForSchema}
-          value={{ schema: JSON.stringify(this.newSchema, null, 2) }}
+          value={{ schema: JSON.stringify(schema, null, 2) }}
           actionFunction={this.save}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}
           onClose={this.closeDialog}
@@ -71,10 +51,6 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
         />
       </>
     );
-  }
-
-  private get newSchema() {
-    return convertOldToNewSchema(this.props.schema);
   }
 
   @action.bound
@@ -88,8 +64,8 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
   }
 
   @boundMethod
-  private async save(value: Record<string, string>) {
-    const parsedSchema = JSON.parse(value.schema) as Schema;
-    await schemaService.updateSchema(convertNewToOldSchema(parsedSchema));
+  private async save({ schema }: { schema: string }) {
+    const parsedSchema = JSON.parse(schema) as Schema;
+    await schemaService.updateSchema(parsedSchema);
   }
 }

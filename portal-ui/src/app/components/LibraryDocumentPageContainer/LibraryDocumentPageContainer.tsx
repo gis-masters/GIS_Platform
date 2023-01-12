@@ -36,7 +36,7 @@ export class LibraryDocumentPageContainer extends Component {
 
   async componentDidMount() {
     await this.init();
-    communicationService.libraryItemsUpdated.on(this.init, this);
+    communicationService.libraryRecordUpdated.on(this.init, this);
   }
 
   componentWillUnmount() {

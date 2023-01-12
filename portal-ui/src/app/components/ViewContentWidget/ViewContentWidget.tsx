@@ -12,12 +12,13 @@ const cnViewContentWidget = cn('ViewContentWidget');
 
 interface ViewContentWidgetProps {
   schema: Schema;
-  data: Record<string, unknown>;
+  data: unknown;
+  title: string;
 }
 
-export const ViewContentWidget: FC<ViewContentWidgetProps> = ({ data, schema }) => (
+export const ViewContentWidget: FC<ViewContentWidgetProps> = ({ data, schema, title }) => (
   <>
-    <span className={cnViewContentWidget('Title')}>Карточка {!data?.dataset && 'документа'}:</span>
+    <span className={cnViewContentWidget('Title')}>{title}:</span>
     <Paper className={cnViewContentWidget(null, ['scroll'])} variant='outlined' square>
       <RegistryConsumer id='common'>
         {({ Form }: CommonDiRegistry) => <Form schema={schema} value={data} readonly />}

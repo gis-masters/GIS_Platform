@@ -6,7 +6,7 @@ import { Basemap } from './basemaps.models';
 import { http } from '../http.service';
 import { PropertyType, Schema } from './schema.models';
 
-export const basemapEditSchema: Schema<Basemap> = {
+export const basemapEditSchema: Schema = {
   properties: [
     {
       name: 'pluggableToNewProject',
@@ -44,9 +44,9 @@ export async function getBasemap(basemapId: string): Promise<Basemap> {
   return await http.get(await getBasemapUrl(Number(basemapId)));
 }
 
-export async function deleteBasemap(basemapId: number): Promise<void> {
-  await http.delete(await getBasemapUrl(basemapId));
-  communicationService.basemapsUpdated.emit();
+export async function deleteBasemap(basemap: Basemap): Promise<void> {
+  await http.delete(await getBasemapUrl(basemap.id));
+  communicationService.basemapUpdated.emit({ type: 'delete', data: basemap });
 }
 
 export async function updateBasemap(basemap: Basemap, payload: Partial<Basemap>): Promise<void> {

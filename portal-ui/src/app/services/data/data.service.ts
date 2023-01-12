@@ -46,22 +46,6 @@ export interface Dataset extends DataEntity {
 
 export type NewDataset = Pick<Dataset, 'title' | 'details'>;
 
-export const dataEntitySchema: Schema<NewDataset> = {
-  properties: [
-    {
-      propertyType: PropertyType.STRING,
-      title: 'Название',
-      name: 'title',
-      required: true
-    },
-    {
-      propertyType: PropertyType.STRING,
-      title: 'Описание',
-      name: 'details'
-    }
-  ]
-};
-
 export interface VectorTable extends DataEntity {
   type: DataEntityType.TABLE;
   crs: string;
@@ -79,7 +63,7 @@ export interface VectorTable extends DataEntity {
 
 const title = 'Наименование';
 
-export const datasetSchema: Schema<Dataset> = {
+export const datasetSchema: Schema = {
   properties: [
     {
       name: 'title',
@@ -100,7 +84,7 @@ const statusOptions = [
   { title: 'Архивный', value: 'Архивный' }
 ];
 
-const vectorTableSchemaBase: Schema<VectorTable> = {
+const vectorTableSchemaBase: Schema = {
   properties: [
     {
       name: 'details',
@@ -174,7 +158,7 @@ const vectorTableSchemaBase: Schema<VectorTable> = {
   ]
 };
 
-export const vectorTableSchema: Schema<VectorTable> = {
+export const vectorTableSchema: Schema = {
   properties: [
     {
       name: 'title',
@@ -192,7 +176,7 @@ export const vectorTableSchema: Schema<VectorTable> = {
   ]
 };
 
-export const emptyVectorTableSchema: Schema<VectorTable> = {
+export const emptyVectorTableSchema: Schema = {
   properties: [
     {
       name: 'title',
@@ -300,9 +284,9 @@ export async function getAllDatasetTables(dataset: Dataset): Promise<VectorTable
   }));
 }
 
-export async function createVectorTable(dataset: Dataset, layer: VectorTable): Promise<VectorTable[]> {
-  const response = await http.post<VectorTable[]>(await getDatasetTablesUrl(dataset.identifier), layer);
-  communicationService.vectorTablesUpdated.emit();
+export async function createVectorTable(dataset: Dataset, table: VectorTable): Promise<VectorTable> {
+  const response = await http.post<VectorTable>(await getDatasetTablesUrl(dataset.identifier), table);
+  communicationService.vectorTableUpdated.emit({ type: 'create', data: response });
 
   return response;
 }
@@ -319,7 +303,7 @@ export async function createVectorTableRecord(
   feature: WfsFeature
 ): Promise<WfsFeature> {
   const response = await http.post<WfsFeature>(await getDatasetTableRecordsUrl(datasetId, vectorTableId), feature);
-  communicationService.vectorTablesUpdated.emit();
+  communicationService.featuresUpdated.emit({ type: 'create', data: response });
 
   return response;
 }
@@ -331,16 +315,13 @@ export async function updateVectorTableRecord(
   patch: Partial<WfsFeature>
 ): Promise<void> {
   await http.patch(await getDatasetTableRecordUrl(datasetId, vectorTableId, recordId), patch);
-  communicationService.vectorTablesUpdated.emit();
+  communicationService.featuresUpdated.emit({ type: 'update', data: null });
 }
 
-export async function updateVectorTable(
-  datasetId: string,
-  vectorTableId: string,
-  patch: Partial<WfsFeature>
-): Promise<void> {
-  await http.put(await getDatasetTableUrl(datasetId, vectorTableId), patch);
-  communicationService.vectorTablesUpdated.emit();
+export async function updateVectorTable(vectorTable: VectorTable, patch: Partial<VectorTable>): Promise<void> {
+  await http.put(await getDatasetTableUrl(vectorTable.dataset, vectorTable.identifier), patch);
+  // api возвращает болт #5349
+  communicationService.vectorTableUpdated.emit({ type: 'update', data: { ...vectorTable, ...patch } });
 }
 
 export async function copyFeaturesBetweenLayers(
@@ -364,7 +345,7 @@ export async function copyFeaturesBetweenLayers(
 
   await http.post(await getRecordsCopyUrl(), copyTablesInfo);
 
-  communicationService.featuresUpdated.emit();
+  communicationService.featuresUpdated.emit({ type: 'create', data: null });
 }
 
 export async function deleteFeatures(
@@ -375,22 +356,22 @@ export async function deleteFeatures(
   const featureIds = features.map(feature => feature.id.split('.')[1]).join(',');
 
   await http.delete(await getDatasetTableRecordUrl(datasetId, vectorTableId, featureIds));
-  communicationService.featuresUpdated.emit();
+  communicationService.featuresUpdated.emit({ type: 'delete', data: null });
 }
 
-export async function deleteVectorTable(datasetId: string, vectorTableId: string): Promise<void> {
-  await http.delete(await getDatasetTableUrl(datasetId, vectorTableId));
-  communicationService.vectorTablesUpdated.emit();
+export async function deleteVectorTable(vectorTable: VectorTable): Promise<void> {
+  await http.delete(await getDatasetTableUrl(vectorTable.dataset, vectorTable.identifier));
+  communicationService.vectorTableUpdated.emit({ type: 'delete', data: vectorTable });
 }
 
-export async function deleteDataset(identifier: string): Promise<void> {
-  await http.delete(await getDatasetUrl(identifier));
-  communicationService.datasetsUpdated.emit();
+export async function deleteDataset(dataset: Dataset): Promise<void> {
+  await http.delete(await getDatasetUrl(dataset.identifier));
+  communicationService.datasetUpdated.emit({ type: 'delete', data: dataset });
 }
 
-export async function updateDataset(identifier: string, patch: Partial<Dataset>): Promise<void> {
-  await http.patch(await getDatasetUrl(identifier), patch);
-  communicationService.datasetsUpdated.emit();
+export async function updateDataset(dataset: Dataset, patch: Partial<Dataset>): Promise<void> {
+  await http.patch(await getDatasetUrl(dataset.identifier), patch);
+  communicationService.datasetUpdated.emit({ type: 'update', data: dataset });
 }
 
 export async function getVectorTableConnections(vectorTableId: string): Promise<VectorTableConnection[]> {
@@ -403,8 +384,10 @@ export async function getVectorTableConnections(vectorTableId: string): Promise<
 }
 
 export async function createDataset(newDataset: NewDataset): Promise<void> {
-  await http.post(await getDatasetsUrl(), newDataset);
-  communicationService.datasetsUpdated.emit();
+  await http.post<Dataset>(await getDatasetsUrl(), newDataset);
+
+  // api возвращает болт :( #5349
+  communicationService.datasetUpdated.emit({ type: 'create', data: newDataset as Dataset });
 }
 
 export function tablesEqual(firstTable: VectorTable, ...otherTables: VectorTable[]): boolean {

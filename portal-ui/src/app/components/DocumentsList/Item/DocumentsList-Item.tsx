@@ -11,7 +11,6 @@ import { http } from '../../../services/http.service';
 import { services } from '../../../services/services';
 import { EditedField } from '../../../services/data/schemaOld.models';
 import { getBaseUrl } from '../../../services/server-urls.service';
-import { communicationService } from '../../../services/communication.service';
 import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
@@ -33,6 +32,9 @@ interface DocumentItemProps {
   deleteCallback: (id: string) => void;
 }
 
+/**
+ * @deprecated
+ */
 @observer
 export class DocumentsListItem extends Component<DocumentItemProps> {
   @observable private isDeleteDocumentDialogOpen = false;
@@ -124,8 +126,6 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
 
     try {
       await http.delete(this.deleteUrl);
-
-      communicationService.libraryItemsUpdated.emit();
     } catch (error) {
       Toast.error('Не удалось удалить файл');
       services.logger.error('Не удалось удалить файл: ', (error as AxiosError).message);

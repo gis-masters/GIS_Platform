@@ -24,8 +24,8 @@ import '!style-loader!css-loader!sass-loader!../Relations/Form-Relations.scss';
 const cnFormContent = cn('Form', 'Content');
 const cnFormRelations = cn('Form', 'Relations');
 
-interface FormContentProps<T extends Record<string, unknown>> extends IClassNameProps {
-  schema: Schema<T>;
+interface FormContentProps<T> extends IClassNameProps {
+  schema: Schema;
   formValue: Partial<T>;
   errors?: FieldErrors[];
   onFormChange?: (changedValue: Partial<T>) => void;
@@ -36,9 +36,7 @@ interface FormContentProps<T extends Record<string, unknown>> extends IClassName
 }
 
 @observer
-export class FormContent<T extends Record<string, unknown> = Record<string, unknown>> extends Component<
-  FormContentProps<T>
-> {
+export class FormContent<T> extends Component<FormContentProps<T>> {
   render() {
     const { schema, formValue, className, errors = [], readonly, labelInTextField } = this.props;
 
@@ -50,7 +48,11 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
 
           if (propertySchema.hidden) {
             return (
-              <FormHiddenField key={i} name={String(propertySchema.name)} value={formValue[propertySchema.name]} />
+              <FormHiddenField
+                key={i}
+                name={String(propertySchema.name)}
+                value={formValue[propertySchema.name] as unknown}
+              />
             );
           }
 
@@ -113,7 +115,7 @@ export class FormContent<T extends Record<string, unknown> = Record<string, unkn
   @boundMethod
   private fieldChangeHandler({ value, propertyName }: { value: T[keyof T & string]; propertyName: keyof T & string }) {
     const { formValue, onFormChange, onFieldChange, schema } = this.props;
-    const propertySchema: PropertySchema<T> = schema.properties.find(({ name }) => name === propertyName);
+    const propertySchema: PropertySchema = schema.properties.find(({ name }) => name === propertyName);
     const prevValue = formValue[propertyName];
 
     if (onFormChange) {

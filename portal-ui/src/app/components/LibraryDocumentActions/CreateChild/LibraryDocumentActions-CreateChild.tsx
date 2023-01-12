@@ -27,7 +27,7 @@ const cnLibraryDocumentActionsCreateChild = cn('LibraryDocumentActions', 'Create
 
 interface ChildData {
   document: LibraryRecord;
-  schema: Schema<LibraryRecord>;
+  schema: Schema;
   library: DocumentLibrary;
   contentType: string;
   onClick?(): void;
@@ -36,7 +36,7 @@ interface ChildData {
 interface LibraryDocumentActionsCreateChildProps {
   document: LibraryRecord;
   as: ActionsItemVariant;
-  schema: Schema<LibraryRecord>;
+  schema: Schema;
 }
 
 @observer

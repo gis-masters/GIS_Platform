@@ -19,7 +19,7 @@ const cnLibraryDocumentActionsPrint = cn('LibraryDocumentActions', 'Print');
 
 interface LibraryDocumentActionsPrintProps {
   document: LibraryRecord;
-  schema: Schema<LibraryRecord>;
+  schema: Schema;
   as: ActionsItemVariant;
 }
 

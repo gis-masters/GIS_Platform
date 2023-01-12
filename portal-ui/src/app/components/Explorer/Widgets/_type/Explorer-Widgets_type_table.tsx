@@ -7,11 +7,10 @@ import { currentUser } from '../../../../stores/CurrentUser.store';
 import { getVectorTable, VectorTable, vectorTableSchema } from '../../../../services/data/data.service';
 import { getTableRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { Role } from '../../../../services/data/permissions.models';
-import { Schema } from '../../../../services/data/schema.models';
 import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
-import { communicationService } from '../../../../services/communication.service';
+import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
@@ -39,8 +38,10 @@ class ExplorerWidgetsTypeTable extends Component<ExplorerWidgetsProps> {
       await this.fetchData();
     }
 
-    communicationService.vectorTablesUpdated.on(async () => {
-      await this.fetchData();
+    communicationService.vectorTableUpdated.on(async ({ type, data }: DataChangeEvent<VectorTable>) => {
+      if (getId({ type: ExplorerItemType.TABLE, payload: data }) === getId(item) && type !== 'delete') {
+        await this.fetchData();
+      }
     }, this);
   }
 
@@ -57,8 +58,9 @@ class ExplorerWidgetsTypeTable extends Component<ExplorerWidgetsProps> {
           <>
             <ExplorerInfoDescItem multiline>
               <ViewContentWidget
-                schema={vectorTableSchema as unknown as Schema}
-                data={this.currentTable as unknown as Record<string, unknown>}
+                schema={vectorTableSchema}
+                data={this.currentTable}
+                title='Свойства источника данных'
               />
             </ExplorerInfoDescItem>
 

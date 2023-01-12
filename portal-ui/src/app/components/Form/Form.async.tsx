@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { PropertySchema, Schema } from '../../services/data/schema.models';
+import { Schema } from '../../services/data/schema.models';
 import {
   calculateValues,
   cleanCalculatedValues,
@@ -27,15 +27,15 @@ import '!style-loader!css-loader!sass-loader!./Form.scss';
 
 const cnForm = cn('Form');
 
-export interface FormProps<T extends Record<string, unknown>>
+export interface FormProps<T>
   extends Omit<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'ref'> {
-  schema?: Schema<T>;
+  schema?: Schema;
   value?: Partial<T>;
   errors?: FieldErrors[];
   onFormChange?(changedValue: T): void;
   onFormSubmit?(changedValue: T): void;
   onFieldChange?(value: T[keyof T], propertyName: string, prevValue: T[keyof T]): void;
-  onFieldNeedValidate?(value: T[keyof T], propertyName: keyof T): void;
+  onFieldNeedValidate?(value: T[keyof T], propertyName: keyof T | string): void;
   onActionSuccess?(changedValue: T): void;
   onActionError?(error: Error | { errors: FieldErrors[] }): void;
   actions?: ReactNode;
@@ -51,7 +51,7 @@ export interface FormProps<T extends Record<string, unknown>>
 }
 
 @observer
-export default class Form<T extends Record<string, unknown> = Record<string, unknown>> extends Component<FormProps<T>> {
+export default class Form<T> extends Component<FormProps<T>> {
   private initialValue: Partial<T>;
   @observable private value?: Partial<T>;
   @observable private errors?: FieldErrors[];
@@ -144,7 +144,7 @@ export default class Form<T extends Record<string, unknown> = Record<string, unk
   }
 
   @boundMethod
-  private changeHandler(changedValue: T) {
+  private changeHandler(changedValue: Partial<T>) {
     const { onFormChange, auto, schema } = this.props;
     const value = calculateValues(changedValue, schema.properties);
 
@@ -206,7 +206,7 @@ export default class Form<T extends Record<string, unknown> = Record<string, unk
   @boundMethod
   private validate() {
     const { schema } = this.props;
-    const errors = validateFormValue(this.value, schema.properties as PropertySchema[]);
+    const errors = validateFormValue(this.value, schema.properties);
     this.setErrors(errors);
 
     return errors;
@@ -320,14 +320,11 @@ export default class Form<T extends Record<string, unknown> = Record<string, unk
   @boundMethod
   private fieldValidate(value: T[keyof T], fieldName: string) {
     const { auto, schema, onFieldNeedValidate } = this.props;
-    const field = schema.properties?.find(({ name }) => name === fieldName) as PropertySchema;
+    const field = schema.properties?.find(({ name }) => name === fieldName);
 
     if (auto) {
       this.filterFieldErrors(fieldName);
-      this.setErrors([
-        ...this.errors,
-        validateFieldValue(value, field, this.value, schema.properties as PropertySchema[])
-      ]);
+      this.setErrors([...this.errors, validateFieldValue(value, field, this.value, schema.properties)]);
     }
 
     if (onFieldNeedValidate) {

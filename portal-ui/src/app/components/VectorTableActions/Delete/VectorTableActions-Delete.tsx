@@ -83,7 +83,7 @@ export class VectorTableActionsDelete extends Component<VectorTableActionsDelete
     this.setBtnLoading(true);
 
     try {
-      await deleteVectorTable(vectorTable.dataset, vectorTable.identifier);
+      await deleteVectorTable(vectorTable);
     } catch (error) {
       const err = error as AxiosError;
       this.setErrorMessage(err.message);

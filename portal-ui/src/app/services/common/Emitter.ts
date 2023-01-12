@@ -8,7 +8,7 @@ interface Scoped<T = unknown> {
   listener: Listener<T>;
 }
 
-export class Emitter<T = undefined> {
+export class Emitter<T = unknown> {
   private static counter = 0;
   private static ee = ee();
   private static scoped: Scoped[] = [];

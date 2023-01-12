@@ -11,10 +11,9 @@ import { Role } from '../../../../services/data/permissions.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { schemaService } from '../../../../services/data/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { communicationService } from '../../../../services/communication.service';
+import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import {
   ContentTypeTypes,
-  deleteLibraryRecord,
   DocumentLibrary,
   getLibraryRecord,
   getLibraryRecords,
@@ -227,11 +226,7 @@ export class ExplorerAdapterTypeFolder {
     );
   }
 
-  static getRefreshEmitters(): Emitter[] {
-    return [communicationService.libraryItemsUpdated];
-  }
-
-  static async deleteItem(item: ExplorerItemData<LibraryRecord>): Promise<void> {
-    await deleteLibraryRecord(item.payload.libraryId, item.payload.id);
+  static getRefreshEmitters(): Emitter<DataChangeEvent<LibraryRecord>>[] {
+    return [communicationService.libraryRecordUpdated];
   }
 }

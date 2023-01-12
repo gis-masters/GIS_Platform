@@ -28,7 +28,7 @@ const sortableTypes = new Set([
 
 const smallPaddingTypes = new Set([PropertyType.FILE, PropertyType.DOCUMENT, PropertyType.URL]);
 
-export function getXTableColumnsFromSchema<T>(schema: Schema<T>, overrides?: XTableColumn<T>[]): XTableColumn<T>[] {
+export function getXTableColumnsFromSchema<T>(schema: Schema, overrides?: XTableColumn<T>[]): XTableColumn<T>[] {
   return _getXTableColumnsFromSchema(schema, false, overrides) as XTableColumn<T>[];
 }
 
@@ -48,14 +48,14 @@ export function getXTableColumnsFromSchemaWithLowerCaseKeys(
 }
 
 function _getXTableColumnsFromSchema<T>(
-  schema: Schema<T>,
+  schema: Schema,
   keysToLowerCase: boolean,
   overrides: XTableColumn<T>[] = []
 ): XTableColumn<Record<string, unknown> | T>[] {
   const allowedProperties = schema.properties.filter(property => property.propertyType !== PropertyType.LOOKUP);
 
   return allowedProperties.map(property => {
-    const relations = getFieldRelations<T>(property.name, schema);
+    const relations = getFieldRelations(property.name, schema);
     const override = overrides.find(({ field }) =>
       keysToLowerCase ? property.name.toLowerCase() === String(field).toLowerCase() : property.name === field
     );

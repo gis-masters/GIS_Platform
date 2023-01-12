@@ -46,7 +46,7 @@ export interface InvoiceInfo {
   accountant: string;
 }
 
-const properties: PropertySchema<InvoiceInfo>[] = [
+const properties: PropertySchema[] = [
   {
     name: 'bank',
     title: 'Банк получателя',

@@ -14,13 +14,10 @@ import { FormErrors } from '../../Errors/Form-Errors';
 import '!style-loader!css-loader!sass-loader!./Form-Control_type_set.scss';
 
 @observer
-class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unknown>> extends Component<
-  FormControlProps<T>
-> {
+class FormControlTypeSet extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, property, fieldValue = '', errors, variant = 'standard' } = this.props;
+    const { htmlId, className, property, fieldValue = {}, errors, variant = 'standard' } = this.props;
     const { properties } = property as PropertySchemaSet;
-    const valueTyped = fieldValue as unknown as Record<string, unknown>;
 
     return (
       <div className={cnFormControl()}>
@@ -36,12 +33,16 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
                       property={subProperty}
                       type={subProperty.propertyType}
                       onChange={this.fieldChanged}
-                      fieldValue={valueTyped[subProperty.name]}
+                      fieldValue={fieldValue[subProperty.name] as Record<string, unknown>}
                       variant={variant}
                       inSet
                     />
                   ) : (
-                    <FormHiddenField key={i} name={String(subProperty.name)} value={valueTyped[subProperty.name]} />
+                    <FormHiddenField
+                      key={i}
+                      name={String(subProperty.name)}
+                      value={fieldValue[subProperty.name] as Record<string, unknown>}
+                    />
                   )
                 )}
               </>
@@ -54,12 +55,11 @@ class FormControlTypeSet<T extends Record<string, unknown> = Record<string, unkn
   }
 
   @boundMethod
-  private fieldChanged({ value, propertyName }: { value: T[keyof T & string]; propertyName: string }) {
+  private fieldChanged({ value, propertyName }: { value: unknown; propertyName: string }) {
     const { onChange, property, fieldValue } = this.props;
-    const valueTyped = fieldValue as unknown as Record<string, unknown>;
 
     onChange({
-      value: { ...valueTyped, [propertyName]: value } as T[keyof T & string],
+      value: { ...(fieldValue as Record<string, unknown>), [propertyName]: value },
       propertyName: property.name
     });
   }

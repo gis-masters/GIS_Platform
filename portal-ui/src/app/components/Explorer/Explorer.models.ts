@@ -1,14 +1,15 @@
 import { ReactNode } from 'react';
 
+import { DataChangeEvent } from '../../services/communication.service';
+import { FilterQuery } from '../../services/util/filterObjects';
 import { PageOptions, SortOrder } from '../../services/models';
 import { Emitter } from '../../services/common/Emitter';
-import { FilterQuery } from '../../services/util/filterObjects';
 
 import { ExplorerStore } from './Explorer.store';
 import { ExplorerService } from './Explorer.service';
 
 export enum ExplorerItemType {
-  EMPTY = 'empty',
+  NONE = 'none',
 
   DATASET = 'dataset',
   TABLE = 'table',
@@ -49,8 +50,8 @@ export interface ExplorerItemData<T = ExplorerItemPayloads[ExplorerItemType]> {
 
 export type CustomFilters = Partial<Record<ExplorerItemType, FilterQuery>>;
 
-export const emptyItem: ExplorerItemData = { type: ExplorerItemType.EMPTY, payload: {} };
-export const loadingItem: ExplorerItemData = { type: ExplorerItemType.EMPTY, payload: { loading: true } };
+export const emptyItem: ExplorerItemData = { type: ExplorerItemType.NONE, payload: {} };
+export const loadingItem: ExplorerItemData = { type: ExplorerItemType.NONE, payload: { loading: true } };
 
 export interface SortItem {
   label: string;
@@ -113,6 +114,6 @@ export interface Adapter {
     service: ExplorerService,
     full: boolean
   ) => Promise<ReactNode> | ReactNode;
-  getRefreshEmitters?: (item: ExplorerItemData) => Emitter[];
+  getRefreshEmitters?: (item: ExplorerItemData) => Emitter<DataChangeEvent<unknown>>[];
   getActions?: (item: ExplorerItemData) => ReactNode;
 }

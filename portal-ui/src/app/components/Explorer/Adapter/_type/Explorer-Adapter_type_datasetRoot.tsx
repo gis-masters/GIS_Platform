@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react';
 
 import { Dataset, getDataset, getDatasets, getDatasetsWithParticularOne } from '../../../../services/data/data.service';
-import { communicationService } from '../../../../services/communication.service';
+import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { Emitter } from '../../../../services/common/Emitter';
-import { CreateDatasetElement } from '../../../CreateDatasetElement/CreateDatasetElement';
+import { CreateDataset } from '../../../CreateDataset/CreateDataset';
 import { Database } from '../../../Icons/Database';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
@@ -116,10 +116,10 @@ export class ExplorerAdapterTypeDatasetRoot {
   }
 
   static getToolbarActions(): ReactNode {
-    return <CreateDatasetElement />;
+    return <CreateDataset />;
   }
 
-  static getRefreshEmitters(): Emitter[] {
-    return [communicationService.datasetsUpdated];
+  static getRefreshEmitters(): Emitter<DataChangeEvent<Dataset>>[] {
+    return [communicationService.datasetUpdated];
   }
 }

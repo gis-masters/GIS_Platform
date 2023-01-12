@@ -17,8 +17,9 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { deleteLibraryRecord, getLibraryRecords, LibraryRecord } from '../../../services/data/doc-library.service';
-import { FileConnection, FileInfo, getFileConnections } from '../../../services/data/files.service';
-import { PropertyType, Schema } from '../../../services/data/schema.models';
+import { FileConnection, getFileConnections } from '../../../services/data/files.service';
+import { Schema } from '../../../services/data/schema.models';
+import { getDocumentFiles } from '../../../services/data/files.util';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { Button } from '../../Button/Button';
 
@@ -29,12 +30,12 @@ const cnLibraryDocumentActionsDelete = cn('LibraryDocumentActions', 'Delete');
 
 interface LibraryDocumentActionsDeleteProps {
   document: LibraryRecord;
-  schema: Schema<LibraryRecord>;
+  schema: Schema;
   as: ActionsItemVariant;
   onDelete?(): void;
 }
 
-interface FilesConnections {
+interface FileConnections {
   fileTitle: string;
   connections: FileConnection[];
 }
@@ -46,7 +47,7 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
   @observable private deleteAllowed: boolean;
   @observable private btnLoading: boolean;
   @observable private errorMessage: string;
-  @observable private connections?: FilesConnections[];
+  @observable private connections?: FileConnections[];
 
   constructor(props: LibraryDocumentActionsDeleteProps) {
     super(props);
@@ -141,7 +142,7 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
     const { document, onDelete } = this.props;
 
     this.setBtnLoading(true);
-    await deleteLibraryRecord(document.libraryId, document.id);
+    await deleteLibraryRecord(document);
     this.setErrorMessage('');
     this.setDeleteAllowed(false);
     this.setBtnLoading(false);
@@ -152,31 +153,13 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
   }
 
   private async showFilesConnections() {
-    const { document, schema } = this.props;
+    const { document } = this.props;
+    const connections: FileConnections[] = [];
 
-    const fileFields = schema.properties
-      .map(property => {
-        if (property.propertyType === PropertyType.FILE) {
-          return property.name;
-        }
-      })
-      .filter(Boolean);
-
-    const fields = fileFields.map(field => {
-      return document[field] as FileInfo[];
-    });
-
-    const connections: FilesConnections[] = [];
-
-    for (const field of fields) {
-      if (field?.length) {
-        connections.push(
-          ...(await Promise.all(
-            field.map(async file => {
-              return await this.fetchConnections(file, field);
-            })
-          ))
-        );
+    for (const file of getDocumentFiles(document)) {
+      const fileConnections = await getFileConnections(file.id);
+      if (fileConnections.length) {
+        connections.push({ fileTitle: file.title, connections: fileConnections });
       }
     }
 
@@ -212,15 +195,7 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
   }
 
   @action
-  private setConnections(connections: FilesConnections[]) {
+  private setConnections(connections: FileConnections[]) {
     this.connections = connections.filter(Boolean);
-  }
-
-  private async fetchConnections(currentFile: FileInfo, files: FileInfo[]) {
-    const fileId = currentFile.id;
-    const connections = await getFileConnections(fileId);
-    if (connections.length && files.some(file => file.id === fileId)) {
-      return { fileTitle: currentFile.title, connections };
-    }
   }
 }

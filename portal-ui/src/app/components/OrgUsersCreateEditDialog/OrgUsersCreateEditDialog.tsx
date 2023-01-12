@@ -7,7 +7,7 @@ import { AxiosError } from 'axios';
 import { Toast } from '../Toast/Toast';
 import { getPatch } from '../../services/util/patch';
 import { FormDialog } from '../FormDialog/FormDialog';
-import { PropertySchema, PropertyType } from '../../services/data/schema.models';
+import { PropertySchema, PropertySchemaString, PropertyType } from '../../services/data/schema.models';
 import { usersService, NewUserData, CrgUser } from '../../services/data/users.service';
 
 import '!style-loader!css-loader!sass-loader!./OrgUsersCreateEditDialog.scss';
@@ -42,8 +42,8 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
   }
 
   @computed
-  private get userProperties(): PropertySchema<NewUserData>[] {
-    const userInfo = [
+  private get userProperties(): PropertySchema[] {
+    const userInfo: PropertySchema[] = [
       {
         name: 'email',
         title: 'E-mail:',
@@ -96,7 +96,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
     ];
 
     if (this.props.create) {
-      const password = {
+      const password: PropertySchemaString = {
         name: 'password',
         title: 'Пароль',
         display: 'password',
@@ -107,7 +107,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
       userInfo.push(password);
     }
 
-    return userInfo as PropertySchema<NewUserData>[];
+    return userInfo;
   }
 
   @boundMethod

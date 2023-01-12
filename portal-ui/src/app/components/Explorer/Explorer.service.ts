@@ -1,5 +1,7 @@
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, debounce } from 'lodash';
+
+import { DataChangeEvent } from '../../services/communication.service';
 import { FilterQuery } from '../../services/util/filterObjects';
 
 import { getChildren, getChildrenWithParticularOne, getId } from './Adapter/Explorer-Adapter';
@@ -16,7 +18,17 @@ export class ExplorerService {
     this.refreshItems = debounce(this.refreshItems.bind(this), 50);
   }
 
-  async refreshItems(): Promise<void> {
+  async refreshItems(e?: DataChangeEvent<unknown>): Promise<void> {
+    if (e?.type === 'delete') {
+      const deletingItemId = getId({ type: this.store.selectedItem.type, payload: e.data });
+      if (deletingItemId === getId(this.store.selectedItem)) {
+        const selectedItemIndex = this.store.items.findIndex(item => getId(item) === deletingItemId);
+        this.store.selectItem(
+          this.store.items[selectedItemIndex + 1] || this.store.items[selectedItemIndex - 1] || emptyItem
+        );
+      }
+    }
+
     const { selectedItem, openedItem, pageSize, sort, sortOrder, filter } = this.store;
     let { page } = this.store;
     let children: ExplorerItemData[];
@@ -27,7 +39,7 @@ export class ExplorerService {
     const gettingChildrenToken = Symbol();
     this.gettingChildrenOperationId = gettingChildrenToken;
 
-    if (selectedItem.type === ExplorerItemType.EMPTY) {
+    if (selectedItem.type === ExplorerItemType.NONE) {
       [children = [], totalPages = 0] = await getChildren(
         openedItem,
         {
@@ -70,7 +82,7 @@ export class ExplorerService {
     if (this.gettingChildrenOperationId === gettingChildrenToken) {
       this.store.setItems(children);
       this.store.setTotalPages(totalPages);
-      if (selectedItem.type === ExplorerItemType.EMPTY || !children.some(item => this.itemsEqual(item, selectedItem))) {
+      if (selectedItem.type === ExplorerItemType.NONE || !children.some(item => this.itemsEqual(item, selectedItem))) {
         this.store.selectItem(children[0] || emptyItem);
       } else {
         this.store.setPage(page);

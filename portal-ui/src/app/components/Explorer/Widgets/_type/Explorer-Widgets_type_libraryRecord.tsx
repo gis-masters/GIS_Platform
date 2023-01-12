@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
 import { getLibraryRecord, LibraryRecord } from '../../../../services/data/doc-library.service';
-import { communicationService } from '../../../../services/communication.service';
+import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { applyContentType } from '../../../../services/data/schema.utils';
@@ -40,8 +40,10 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
       await this.fetchData();
     }
 
-    communicationService.libraryItemsUpdated.on(async () => {
-      await this.fetchData();
+    communicationService.libraryRecordUpdated.on(async ({ type, data }: DataChangeEvent<LibraryRecord>) => {
+      if (getId({ type: ExplorerItemType.DOCUMENT, payload: data }) === getId(item) && type !== 'delete') {
+        await this.fetchData();
+      }
     }, this);
   }
 
@@ -57,7 +59,7 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
         {this.currentRecord && (
           <>
             <ExplorerInfoDescItem multiline>
-              <ViewContentWidget schema={this.schema} data={this.currentRecord} />
+              <ViewContentWidget schema={this.schema} data={this.currentRecord} title='Карточка документа' />
             </ExplorerInfoDescItem>
 
             <PermissionsWidget

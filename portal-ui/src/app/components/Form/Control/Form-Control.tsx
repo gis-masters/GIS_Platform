@@ -9,21 +9,19 @@ import '!style-loader!css-loader!sass-loader!./Form-Control.scss';
 
 export const cnFormControl = cn('Form', 'Control');
 
-export interface FormControlProps<T extends Record<string, unknown> = Record<string, unknown>>
-  extends IClassNameProps,
-    ChildrenProps {
+export interface FormControlProps extends IClassNameProps, ChildrenProps {
   htmlId?: string;
   type?: PropertyType;
-  property?: PropertySchema<T>;
-  fieldValue?: T[keyof T];
-  formValue?: T;
+  property?: PropertySchema;
+  fieldValue?: unknown;
+  formValue?: unknown;
   inSet?: boolean;
   errors?: string[];
   variant?: 'standard' | 'outlined';
   fullWidthForOldForm?: boolean;
   labelInTextField?: boolean;
-  onChange?(params: { value: T[keyof T & string]; propertyName: keyof T & string }): void;
-  onNeedValidate?(params: { value: T[keyof T & string]; propertyName: keyof T & string }): void;
+  onChange?(params: { value: unknown; propertyName: string }): void;
+  onNeedValidate?(params: { value: unknown; propertyName: string }): void;
 }
 
 export const FormControl: FC<FormControlProps> = ({ children, className }) => (

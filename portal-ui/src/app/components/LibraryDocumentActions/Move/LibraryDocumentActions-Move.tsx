@@ -25,7 +25,7 @@ const cnLibraryDocumentActionsFilesPlacement = cn('LibraryDocumentActions', 'Fil
 
 interface LibraryDocumentActionsFilesPlacementProps {
   document: LibraryRecord;
-  schema: Schema<LibraryRecord>;
+  schema: Schema;
   as: ActionsItemVariant;
 }
 
@@ -117,11 +117,7 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
 
   @boundMethod
   private async submitFolderSelection() {
-    await moveLibraryRecord(
-      this.props.document.libraryId,
-      this.props.document.id,
-      this.openedFolder?.is_folder ? this.openedFolder.id : null
-    );
+    await moveLibraryRecord(this.props.document, this.openedFolder?.is_folder ? this.openedFolder.id : null);
 
     this.closeDocumentMoveDialog();
   }

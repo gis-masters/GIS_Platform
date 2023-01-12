@@ -82,6 +82,6 @@ export class ProjectActionsDelete extends Component<ProjectActionsDeleteProps> {
     const { project } = this.props;
 
     await projectsService.delete(project.id);
-    communicationService.projectsUpdated.emit();
+    communicationService.projectUpdated.emit({ type: 'delete', data: project });
   }
 }

@@ -7,6 +7,7 @@ import { generateRandomId } from './util/randomId';
 import { IWsMessage, wsService } from './ws.service';
 import { WsImportModel } from './data/processes.service';
 import { communicationService } from './communication.service';
+import { Role } from './data/permissions.models';
 
 // Пока события будут завязаны на IWsMessage
 export interface IEvent {
@@ -129,7 +130,14 @@ class EventService {
       ) {
         const importGml = payload as WsImportModel;
         if (importGml.payload.projectIsNew) {
-          communicationService.projectsUpdated.emit();
+          communicationService.projectUpdated.emit({
+            type: 'create',
+            data: {
+              id: importGml.payload.projectId,
+              name: importGml.payload.projectName,
+              role: Role.OWNER
+            }
+          });
         }
       }
     });

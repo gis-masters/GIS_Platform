@@ -24,7 +24,7 @@ const errors = observable([]);
 const errorsField = observable([]);
 const emptyField = observable([]);
 
-const testFields: PropertySchema<TestData>[] = [
+const testFields: PropertySchema[] = [
   {
     propertyType: PropertyType.URL,
     name: 'documents',
@@ -55,7 +55,7 @@ const testFields: PropertySchema<TestData>[] = [
   }
 ];
 
-const errorTestFields: PropertySchema<TestData>[] = [
+const errorTestFields: PropertySchema[] = [
   {
     propertyType: PropertyType.URL,
     name: 'requiredDocuments',
@@ -90,7 +90,7 @@ const errorTestFields: PropertySchema<TestData>[] = [
   }
 ];
 
-const emptyFields: PropertySchema<TestData>[] = [
+const emptyFields: PropertySchema[] = [
   {
     propertyType: PropertyType.URL,
     name: 'emptyDocuments1',
@@ -146,16 +146,16 @@ const value = observable({
 } as Record<string, unknown>);
 
 const validate = action(() => {
-  errorsField.splice(0, errorsField.length, ...validateFormValue(value, errorTestFields as PropertySchema[]));
+  errorsField.splice(0, errorsField.length, ...validateFormValue(value, errorTestFields));
 });
 
 const validateEmptyFields = action(() => {
-  emptyField.splice(0, emptyField.length, ...validateFormValue(value, emptyFields as PropertySchema[]));
+  emptyField.splice(0, emptyField.length, ...validateFormValue(value, emptyFields));
 });
 
 const actionFunction = async (formValue: TestData) => {
   await sleep(2000 * Math.random());
-  const errors = validateFormValue(formValue, testFields as PropertySchema[]);
+  const errors = validateFormValue(formValue, testFields);
 
   if (errors.length) {
     throw { errors };
@@ -170,7 +170,7 @@ const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
 export const EditableUrl = Template.bind({});
 EditableUrl.args = {
-  schema: { properties: testFields as PropertySchema[] },
+  schema: { properties: testFields },
   value,
   errors,
   actionFunction,
@@ -180,7 +180,7 @@ EditableUrl.args = {
 export const ReadonlyUrl = Template.bind({});
 ReadonlyUrl.args = {
   readonly: true,
-  schema: { properties: testFields as PropertySchema[] },
+  schema: { properties: testFields },
   value,
   errors,
   onFormChange: setFormValue
@@ -200,7 +200,7 @@ const validateEmptyFieldsActions = (
 
 export const ErrorsUrl = Template.bind({});
 ErrorsUrl.args = {
-  schema: { properties: errorTestFields as PropertySchema[] },
+  schema: { properties: errorTestFields },
   value,
   errors: errorsField,
   onFormChange: setFormValue,
@@ -209,7 +209,7 @@ ErrorsUrl.args = {
 
 export const EmptyUrl = Template.bind({});
 EmptyUrl.args = {
-  schema: { properties: emptyFields as PropertySchema[] },
+  schema: { properties: emptyFields },
   value,
   errors: emptyField,
   onFormChange: setFormValue,
@@ -219,7 +219,7 @@ EmptyUrl.args = {
 export const ReadOnlyEmptyUrl = Template.bind({});
 ReadOnlyEmptyUrl.args = {
   readonly: true,
-  schema: { properties: emptyFields as PropertySchema[] },
+  schema: { properties: emptyFields },
   value,
   errors: emptyField,
   onFormChange: setFormValue

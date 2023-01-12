@@ -18,9 +18,9 @@ import { FormProps } from '../Form/Form';
 
 const cnFormDialog = cn('FormDialog');
 
-export interface FormDialogProps<T extends Record<string, unknown>> extends IClassNameProps {
+export interface FormDialogProps<T> extends IClassNameProps {
   title?: ReactNode;
-  schema: Schema<T>;
+  schema: Schema;
   value?: Partial<T>;
   open: boolean;
   unclosable?: boolean;
@@ -34,9 +34,7 @@ export interface FormDialogProps<T extends Record<string, unknown>> extends ICla
 }
 
 @observer
-export class FormDialog<T extends Record<string, unknown> = Record<string, unknown>> extends Component<
-  FormDialogProps<T>
-> {
+export class FormDialog<T> extends Component<FormDialogProps<T>> {
   @observable private busy = false;
   private formInvoke: FormProps<T>['invoke'] = {};
 

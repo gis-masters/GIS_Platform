@@ -29,7 +29,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
     organizationSettings.orgSettings?.organization || this.props.orgSettings?.system
   );
   @observable private busy = false;
-  @observable private schema: Schema<Record<string, unknown>>;
+  @observable private schema: Schema;
 
   private reactionDisposerOrganizationSettings: IReactionDisposer;
   private reactionDisposerSystemSettings: IReactionDisposer;
@@ -121,7 +121,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   }
 
   @action
-  private setSchema(schema: Schema<Record<string, unknown>>) {
+  private setSchema(schema: Schema) {
     this.schema = schema;
   }
 

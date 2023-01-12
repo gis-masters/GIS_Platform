@@ -19,7 +19,7 @@ interface TestData extends Record<string, unknown> {
 
 const emptyValue: Partial<TestData> = {};
 
-const testFields: PropertySchema<TestData>[] = [
+const testFields: PropertySchema[] = [
   {
     propertyType: PropertyType.FIAS,
     name: 'fullAddress',
@@ -41,7 +41,7 @@ const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
 export const PlainControl = Template.bind({});
 PlainControl.args = {
-  schema: { properties: testFields as PropertySchema[] },
+  schema: { properties: testFields },
   value,
   onFormChange: setFormValue
 };

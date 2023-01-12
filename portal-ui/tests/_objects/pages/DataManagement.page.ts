@@ -6,7 +6,7 @@ import { Page } from '../Page';
 class DataManagementPage extends Page {
   url = 'data-management';
   libraryRootUrl =
-    '?path_dm=%5B%22r%22,%22root%22,%22lr%22,%22libraryRoot%22,%22empty%22,%22empty%22%5D&opts_dm=%5B0,10,%22title%22,%22asc%22,%7B%7D%5D';
+    '?path_dm=%5B%22r%22,%22root%22,%22lr%22,%22libraryRoot%22,%22none%22,%22none%22%5D&opts_dm=%5B0,10,%22title%22,%22asc%22,%7B%7D%5D';
 
   get $container(): Promise<WebdriverIO.Element> {
     return $('.DataManagement');

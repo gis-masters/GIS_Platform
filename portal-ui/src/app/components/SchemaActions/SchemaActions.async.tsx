@@ -3,15 +3,16 @@ import { observer } from 'mobx-react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
+import { Schema } from '../../services/data/schema.models';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
-import { OldSchema } from '../../services/data/schemaOld.models';
-import { SchemaActionsEdit } from './Edit/SchemaActions-Edit';
 import { Actions } from '../Actions/Actions.composed';
+
+import { SchemaActionsEdit } from './Edit/SchemaActions-Edit';
 
 export const cnSchemaActions = cn('SchemaActions');
 
 export interface SchemaActionsProps extends IClassNameProps {
-  schema: OldSchema;
+  schema: Schema;
   as: ActionsItemVariant;
   forDialog?: boolean;
 }

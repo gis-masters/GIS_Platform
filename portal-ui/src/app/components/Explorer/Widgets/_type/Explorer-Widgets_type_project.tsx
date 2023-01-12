@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { getProjectPermissionsUrl } from '../../../../services/server-urls.service';
-import { communicationService } from '../../../../services/communication.service';
+import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
@@ -13,7 +13,6 @@ import { crgProjectSchema } from '../../../ProjectsActions/ProjectsActions';
 import { CrgProject } from '../../../../services/gis/projects.models';
 import { Role } from '../../../../services/data/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { Schema } from '../../../../services/data/schema.models';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
@@ -22,7 +21,7 @@ import { getId } from '../../Adapter/Explorer-Adapter';
 @observer
 class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
   @observable private url?: string;
-  @observable private currentProject?: Record<string, unknown>;
+  @observable private currentProject?: CrgProject;
   private operationId: symbol;
 
   constructor(props: ExplorerWidgetsProps) {
@@ -41,8 +40,10 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
       await this.fetchData();
     }
 
-    communicationService.projectsUpdated.on(async () => {
-      await this.fetchData();
+    communicationService.projectUpdated.on(async ({ type, data }: DataChangeEvent<CrgProject>) => {
+      if (getId({ type: ExplorerItemType.PROJECT, payload: data }) === getId(item) && type !== 'delete') {
+        await this.fetchData();
+      }
     }, this);
   }
 
@@ -58,12 +59,12 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
         {this.currentProject && (
           <>
             <ExplorerInfoDescItem multiline>
-              <ViewContentWidget schema={crgProjectSchema as unknown as Schema} data={this.currentProject} />
+              <ViewContentWidget schema={crgProjectSchema} data={this.currentProject} title='Свойства проекта' />
             </ExplorerInfoDescItem>
 
             <PermissionsWidget
               url={this.url}
-              title={this.currentProject.name as string}
+              title={this.currentProject.name}
               itemEntityType={ExplorerItemEntityTypeTitle.PROJECT}
               disabled={!(currentUser.isAdmin || this.currentProject.role === Role.OWNER)}
             />
@@ -81,7 +82,7 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
     this.operationId = operationId;
 
     const url = await getProjectPermissionsUrl(payload.id);
-    const currentProject = (await projectsService.getById(payload.id)) as unknown as Record<string, unknown>;
+    const currentProject = await projectsService.getById(payload.id);
 
     if (this.operationId === operationId) {
       this.setUrl(url);
@@ -95,7 +96,7 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
   }
 
   @action
-  private setCurrentProject(project: Record<string, unknown>) {
+  private setCurrentProject(project: CrgProject) {
     this.currentProject = project;
   }
 }

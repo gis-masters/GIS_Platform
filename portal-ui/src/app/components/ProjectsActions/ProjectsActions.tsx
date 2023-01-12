@@ -16,7 +16,7 @@ interface ProjectsActionsProps {
   project: CrgProject;
 }
 
-export const crgProjectSchema: Schema<CrgProject> = {
+export const crgProjectSchema: Schema = {
   properties: [
     {
       name: 'name',

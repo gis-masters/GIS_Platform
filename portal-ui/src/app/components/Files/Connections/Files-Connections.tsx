@@ -30,7 +30,7 @@ interface ConnectionsProps {
   connections: FileConnection[];
 }
 
-const fileInfoSchema: Schema<RasterLayerInfo> = {
+const fileInfoSchema: Schema = {
   properties: [
     {
       name: 'transparentColor',
@@ -152,10 +152,7 @@ export class FilesConnections extends Component<ConnectionsProps> {
   }
 
   @boundMethod
-  private async update(value: Record<string, unknown>) {
-    await updateFileTransparentColor(
-      this.props.connections[0].layer.tableName,
-      (value as unknown as RasterLayerInfo).transparentColor
-    );
+  private async update(value: RasterLayerInfo) {
+    await updateFileTransparentColor(this.props.connections[0].layer.tableName, value.transparentColor);
   }
 }

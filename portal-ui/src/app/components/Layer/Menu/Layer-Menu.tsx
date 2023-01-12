@@ -289,7 +289,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @computed
-  private get layerSchema(): Schema<CrgLayer> {
+  private get layerSchema(): Schema {
     const { entity } = this.props;
 
     if (this.views && (entity as CrgLayer).type === CrgLayerType.VECTOR) {

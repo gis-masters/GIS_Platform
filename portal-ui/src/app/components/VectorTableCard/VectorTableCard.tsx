@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { Schema } from '../../services/data/schema.models';
 import { formatDate } from '../../services/util/date.util';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { VectorTable, vectorTableSchema } from '../../services/data/data.service';
@@ -31,10 +30,7 @@ export class VectorTableCard extends Component<VectorTableCardProps> {
 
             <div className={cnVectorTableCard('Card')}>
               {vectorTable && (
-                <ViewContentWidget
-                  schema={vectorTableSchema as unknown as Schema}
-                  data={vectorTable as unknown as Record<string, unknown>}
-                />
+                <ViewContentWidget schema={vectorTableSchema} data={vectorTable} title='Свойства источника данных' />
               )}
             </div>
           </>

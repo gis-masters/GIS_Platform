@@ -33,7 +33,7 @@ interface AddLayerDialogProps {
   onAdd: (layer: CrgLayer) => void;
 }
 
-interface FormValue extends CrgLayer, Record<string, unknown> {
+interface FormValue extends CrgLayer {
   datasource?: Datasource;
   layerType?: string;
 }
@@ -139,21 +139,21 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
       <>
         Скрывает слой при отдалении карты, начиная указанного уровня:
         <br />
-        10 - 1:250 000
+        10 — 1:250 000
         <br />
-        12 - 1:100 000
+        12 — 1:100 000
         <br />
-        15 - 1:10 000
+        15 — 1:10 000
         <br />
-        20 - 1:500
+        20 — 1:500
         <br />
-        25 - 1:10
+        25 — 1:10
       </>
     );
   }
 
   @computed
-  private get fields(): PropertySchema<FormValue>[] {
+  private get fields(): PropertySchema[] {
     if (!this.formValue?.layerType || this.formValue?.layerType === CrgLayerType.VECTOR) {
       const options = getViewChoiceOptions(this.views);
 
@@ -292,14 +292,13 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   private async add() {
     const { datasource = {}, title, minZoom, dataSourceUri, tableName, layerType, view } = this.formValue;
     const { dataset, vectorTable, library } = datasource;
-    const vectorDefaults = vectorLayerDefaults();
     const schema = await schemaService.getSchema(vectorTable.schemaId);
-    const styleName = schema?.views?.find(type => type.id === view)?.styleName;
+    const styleName = schema?.views?.find(({ id }) => id === view)?.styleName;
 
     const dataStoreName = currentUser.workspaceName;
     if (this.valid && (!layerType || layerType === CrgLayerType.VECTOR)) {
       this.props.onAdd({
-        ...vectorDefaults,
+        ...vectorLayerDefaults(),
         id: generateNextLayerId(),
         dataset: dataset?.identifier,
         tableName: vectorTable?.identifier,

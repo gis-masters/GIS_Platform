@@ -143,4 +143,6 @@ class UsersService {
 export const usersService = UsersService.instance;
 
 // for autotests
-Object.assign(window, { usersService });
+if (typeof window !== undefined) {
+  Object.assign(window, { usersService });
+}

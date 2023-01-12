@@ -14,7 +14,7 @@ import {
   isTifFile
 } from '../../../services/data/files.util';
 import { FileConnection, FileInfo, getFileConnections } from '../../../services/data/files.service';
-import { communicationService } from '../../../services/communication.service';
+import { communicationService, DataChangeEvent } from '../../../services/communication.service';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
@@ -57,8 +57,8 @@ export class FilesItem extends Component<FilesItemProps> {
 
   async componentDidMount() {
     if (isTifFile(this.props.item)) {
-      communicationService.fileConnectionsUpdated.on(async (filesInfo: FileInfo[]) => {
-        if (filesInfo.some(file => file.id === this.currentFileId)) {
+      communicationService.fileConnectionsUpdated.on(async ({ data }: DataChangeEvent<FileInfo[]>) => {
+        if (data.some(file => file.id === this.currentFileId)) {
           this.dropConnections();
           await this.fetchConnections();
         }

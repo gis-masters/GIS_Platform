@@ -284,11 +284,9 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
   });
 }
 
-export function convertNewToOldProperties<T extends Record<string, unknown>>(
-  newFields: PropertySchema<T>[]
-): OldPropertySchema<T>[] {
+export function convertNewToOldProperties(newFields: PropertySchema[]): OldPropertySchema[] {
   return newFields.map(newField => {
-    const field: Partial<OldPropertySchema<T>> = { ...newField } as Partial<OldPropertySchema<T>>;
+    const field: Partial<OldPropertySchema> = { ...newField } as Partial<OldPropertySchema>;
 
     field.objectIdentityOnUi = newField.asTitle;
     delete (field as Partial<PropertySchema>).asTitle;
@@ -369,7 +367,7 @@ export function convertNewToOldProperties<T extends Record<string, unknown>>(
 
     delete (field as Partial<PropertySchema>).propertyType;
 
-    return field as OldPropertySchema<T>;
+    return field as OldPropertySchema;
   });
 }
 
@@ -420,7 +418,7 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
   }
 };
 
-export function getFieldRelations<T>(field: string | number, schema: Schema<T>): Relation[] {
+export function getFieldRelations(field: string | number, schema: Schema): Relation[] {
   return schema?.relations?.filter(relation => relation.property === field) || [];
 }
 

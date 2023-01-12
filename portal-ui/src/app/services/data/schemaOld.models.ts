@@ -27,11 +27,11 @@ export enum ValueType {
   CUSTOM = 'CUSTOM' // frontend only
 }
 
-export interface OldSchema<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface OldSchema {
   name: string;
   title: string;
   description?: string;
-  properties: OldPropertySchema<T>[];
+  properties: OldPropertySchema[];
   tableName: string;
   styleName?: string;
   originName?: string;
@@ -62,8 +62,8 @@ export interface OldContentType {
 
 export type PropertyEnumeration = { title: string; value: string | number };
 
-interface OldBasePropertySchema<T extends Record<string, unknown> = Record<string, unknown>> {
-  name: keyof T & string;
+interface OldBasePropertySchema {
+  name: string;
   title: string;
   valueType: ValueType;
   description?: string;
@@ -84,8 +84,7 @@ interface OldBasePropertySchema<T extends Record<string, unknown> = Record<strin
   folderId?: string;
 }
 
-export interface OldPropertySchemaStringText<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T> {
+export interface OldPropertySchemaStringText extends OldBasePropertySchema {
   valueType: ValueType.STRING | ValueType.TEXT;
   length?: number;
   minLength?: number;
@@ -102,62 +101,51 @@ interface OldPropertySchemaBaseNumber {
   measureUnit?: string;
 }
 
-export interface OldPropertySchemaInt<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T>,
-    OldPropertySchemaBaseNumber {
+export interface OldPropertySchemaInt extends OldBasePropertySchema, OldPropertySchemaBaseNumber {
   valueType: ValueType.INT;
   defaultValue?: number;
 }
 
-export interface OldPropertySchemaDouble<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T>,
-    OldPropertySchemaBaseNumber {
+export interface OldPropertySchemaDouble extends OldBasePropertySchema, OldPropertySchemaBaseNumber {
   valueType: ValueType.DOUBLE;
   fractionDigits?: number;
   defaultValue?: number;
 }
 
-export interface OldPropertySchemaDatetime<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T> {
+export interface OldPropertySchemaDatetime extends OldBasePropertySchema {
   valueType: ValueType.DATETIME;
   dateFormat?: string;
 }
 
-export interface OldPropertySchemaChoice<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T> {
+export interface OldPropertySchemaChoice extends OldBasePropertySchema {
   valueType: ValueType.CHOICE;
   isMultiple?: boolean;
   enumerations?: PropertyEnumeration[];
   foreignKeyType?: string;
 }
 
-export interface OldPropertySchemaBoolean<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T> {
+export interface OldPropertySchemaBoolean extends OldBasePropertySchema {
   valueType: ValueType.BOOLEAN;
   defaultValue?: boolean;
 }
 
-export interface OldPropertySchemaSet<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T> {
+export interface OldPropertySchemaSet extends OldBasePropertySchema {
   valueType: ValueType.SET;
   properties: OldPropertySchema[];
   defaultValue?: Record<string, unknown>;
 }
 
-export interface OldPropertySchemaUrl<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T> {
+export interface OldPropertySchemaUrl extends OldBasePropertySchema {
   valueType: ValueType.URL;
   displayMode?: 'in_popup';
 }
 
-export interface OldPropertyFiasSchema<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T> {
+export interface OldPropertyFiasSchema extends OldBasePropertySchema {
   valueType: ValueType.FIAS;
   searchMode?: 'address' | 'oktmo';
 }
 
-export interface OldPropertyFileSchema<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T> {
+export interface OldPropertyFileSchema extends OldBasePropertySchema {
   valueType: ValueType.FILE;
   accept?: string;
   maxFiles?: number;
@@ -165,37 +153,34 @@ export interface OldPropertyFileSchema<T extends Record<string, unknown> = Recor
   multiple?: boolean;
 }
 
-export interface OldPropertyDocumentSchema<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T> {
+export interface OldPropertyDocumentSchema extends OldBasePropertySchema {
   valueType: ValueType.DOCUMENT;
   multiple?: boolean;
 }
 
-export interface OldPropertySchemaCustom<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T> {
+export interface OldPropertySchemaCustom extends OldBasePropertySchema {
   valueType: ValueType.CUSTOM;
   ControlComponent: ComponentType<FormControlProps>;
 }
 
-export interface OldPropertySchemaOther<T extends Record<string, unknown> = Record<string, unknown>>
-  extends OldBasePropertySchema<T> {
+export interface OldPropertySchemaOther extends OldBasePropertySchema {
   valueType: ValueType.LOOKUP | ValueType.GEOMETRY | ValueType.CHECKBOX | ValueType.BINARY | ValueType.UUID;
 }
 
-export type OldPropertySchema<T extends Record<string, unknown> = Record<string, unknown>> =
-  | OldPropertySchemaStringText<T>
-  | OldPropertySchemaInt<T>
-  | OldPropertySchemaDouble<T>
-  | OldPropertySchemaDatetime<T>
-  | OldPropertySchemaBoolean<T>
-  | OldPropertySchemaSet<T>
-  | OldPropertySchemaChoice<T>
-  | OldPropertySchemaOther<T>
-  | OldPropertySchemaUrl<T>
-  | OldPropertySchemaCustom<T>
-  | OldPropertyFiasSchema<T>
-  | OldPropertyFileSchema<T>
-  | OldPropertyDocumentSchema<T>;
+export type OldPropertySchema =
+  | OldPropertySchemaStringText
+  | OldPropertySchemaInt
+  | OldPropertySchemaDouble
+  | OldPropertySchemaDatetime
+  | OldPropertySchemaBoolean
+  | OldPropertySchemaSet
+  | OldPropertySchemaChoice
+  | OldPropertySchemaOther
+  | OldPropertySchemaUrl
+  | OldPropertySchemaCustom
+  | OldPropertyFiasSchema
+  | OldPropertyFileSchema
+  | OldPropertyDocumentSchema;
 
 export enum Updateability {
   CREATE_ONLY = 'CREATE_ONLY',

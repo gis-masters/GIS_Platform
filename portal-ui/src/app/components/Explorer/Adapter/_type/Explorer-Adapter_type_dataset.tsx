@@ -12,7 +12,7 @@ import {
 import { Emitter } from '../../../../services/common/Emitter';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { communicationService } from '../../../../services/communication.service';
+import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { CreateVectorTable } from '../../../CreateVectorTable/CreateVectorTable';
 import { formatDate } from '../../../../services/util/date.util';
 import { Role } from '../../../../services/data/permissions.models';
@@ -160,7 +160,7 @@ export class ExplorerAdapterTypeDataset {
     return createEnabled && <CreateVectorTable dataset={item.payload} />;
   }
 
-  static getRefreshEmitters(): Emitter[] {
-    return [communicationService.vectorTablesUpdated];
+  static getRefreshEmitters(): Emitter<DataChangeEvent<VectorTable>>[] {
+    return [communicationService.vectorTableUpdated];
   }
 }

@@ -49,7 +49,7 @@ class ProjectsService {
       }
     );
 
-    communicationService.projectsUpdated.on(async () => {
+    communicationService.projectUpdated.on(async () => {
       await this.debouncedFetchAllProjects();
     });
 
@@ -211,7 +211,7 @@ class ProjectsService {
     const payload = { projectName: name };
     const result = await http.post<CrgProject>(url, payload);
 
-    communicationService.projectsUpdated.emit();
+    communicationService.projectUpdated.emit({ type: 'create', data: result });
 
     return result;
   }
@@ -239,6 +239,7 @@ class ProjectsService {
     const url = await getProjectUrl(id);
     await http.patch(url, patch);
     allProjects.update(id, patch);
+    communicationService.projectUpdated.emit({ type: 'update', data: allProjects.getById(id) });
   }
 
   async delete(id: number) {

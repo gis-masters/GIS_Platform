@@ -16,7 +16,7 @@ const cnLibraryDocumentActionsRelations = cn('LibraryDocumentActions', 'Relation
 
 interface LibraryDocumentActionsPrintRelations {
   document: LibraryRecord;
-  schema: Schema<LibraryRecord>;
+  schema: Schema;
   as: ActionsItemVariant;
 }
 

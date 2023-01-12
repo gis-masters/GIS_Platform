@@ -7,7 +7,6 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { VectorTable, vectorTableSchema, updateVectorTable } from '../../../services/data/data.service';
-import { Schema } from '../../../services/data/schema.models';
 import { getPatch } from '../../../services/util/patch';
 import { FormDialog } from '../../FormDialog/FormDialog';
 
@@ -37,8 +36,8 @@ export class VectorTableActionsEdit extends Component<VectorTableActionsEditProp
 
         <FormDialog
           open={this.dialogOpen}
-          schema={vectorTableSchema as unknown as Schema}
-          value={this.props.vectorTable as Partial<VectorTable>}
+          schema={vectorTableSchema}
+          value={this.props.vectorTable}
           actionFunction={this.update}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}
           onClose={this.closeDialog}
@@ -49,9 +48,9 @@ export class VectorTableActionsEdit extends Component<VectorTableActionsEditProp
   }
 
   @boundMethod
-  private async update(value: VectorTable | Record<string, unknown>) {
-    const patch: Record<string, unknown> = getPatch(value, this.props.vectorTable, Object.keys(value));
-    await updateVectorTable(this.props.vectorTable.dataset, this.props.vectorTable.identifier, patch);
+  private async update(value: VectorTable) {
+    const patch: Partial<VectorTable> = getPatch(value, this.props.vectorTable, Object.keys(value));
+    await updateVectorTable(this.props.vectorTable, patch);
   }
 
   @action.bound

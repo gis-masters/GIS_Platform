@@ -48,7 +48,7 @@ class OrganizationSettingsService {
     await this.fetch();
   }
 
-  orgSchema(settings: Record<string, boolean>, systemManagement: boolean): Schema<Record<string, unknown>> {
+  orgSchema(settings: Record<string, boolean>, systemManagement: boolean): Schema {
     const settingsKeys = Object.keys(settings);
 
     return {

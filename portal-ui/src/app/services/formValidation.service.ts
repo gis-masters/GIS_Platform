@@ -199,7 +199,7 @@ function urlRegex(value: string, property: PropertySchemaUrl): string[] {
   const fields = getEditUrlFormSchema(property);
 
   const errors = urlValue.flatMap(item => {
-    const fieldsErrors = validateFormValue(item, fields as PropertySchemaString<Record<string, unknown>>[]);
+    const fieldsErrors = validateFormValue(item, fields as PropertySchemaString[]);
 
     return fieldsErrors.flatMap(({ messages }) => messages);
   });
@@ -299,15 +299,12 @@ export function normalizeServerErrors(errors: ServerFieldError[]): FieldErrors[]
   }));
 }
 
-export function getDefaultValues<T extends Record<string, unknown>>(
-  properties: PropertySchema<T>[],
-  parent: Record<string, unknown> = {}
-): Partial<T> {
+export function getDefaultValues<T>(properties: PropertySchema[], parent: Record<string, unknown> = {}): Partial<T> {
   const values: Partial<T> = {};
 
   for (const property of properties) {
     if (property.defaultValue !== undefined) {
-      values[property.name] = property.defaultValue as T[keyof T & string];
+      values[property.name] = property.defaultValue;
     }
 
     if (property.defaultValueFormula) {
@@ -318,7 +315,7 @@ export function getDefaultValues<T extends Record<string, unknown>>(
               (new Function('obj', 'property', 'parent', property.defaultValueFormula) as ValueFormula)
             : property.defaultValueFormula;
 
-        values[property.name] = formula(values, property as PropertySchema, parent) as T[keyof T & string];
+        values[property.name] = formula(values, property, parent);
       } catch (error) {
         throw new Error(`Ошибка при попытке вычислить значение по-умолчанию: ${String(error)}`);
       }
@@ -328,7 +325,7 @@ export function getDefaultValues<T extends Record<string, unknown>>(
       try {
         const formula = valueWellKnownFormulas[property.defaultValueWellKnownFormula];
 
-        values[property.name] = formula(values, property as PropertySchema, parent) as T[keyof T & string];
+        values[property.name] = formula(values, property, parent);
       } catch (error) {
         throw new Error(
           `Ошибка при попытке вычислить значение по-умолчанию [${property.defaultValueWellKnownFormula}]: ${String(
@@ -342,20 +339,17 @@ export function getDefaultValues<T extends Record<string, unknown>>(
   return values;
 }
 
-export function calculateValues<T extends Record<string, unknown>>(
-  obj: Partial<T>,
-  properties: PropertySchema<T>[]
-): T {
+export function calculateValues<T>(obj: Partial<T>, properties: PropertySchema[]): T {
   const value = cloneDeep(obj);
 
   for (const property of properties) {
-    value[property.name] = getCalculatedValue(value, property as PropertySchema) as T[keyof T & string];
+    value[property.name] = getCalculatedValue(value, property) as T[keyof T & string];
   }
 
   return value as T;
 }
 
-export function cleanCalculatedValues<T extends Record<string, unknown>>(obj: T, properties: PropertySchema<T>[]): T {
+export function cleanCalculatedValues<T>(obj: T, properties: PropertySchema[]): T {
   const value = cloneDeep(obj);
 
   for (const property of properties) {
@@ -367,10 +361,7 @@ export function cleanCalculatedValues<T extends Record<string, unknown>>(obj: T,
   return value;
 }
 
-export function getCalculatedValue<T extends Record<string, unknown>>(
-  obj: Record<string, unknown>,
-  property: PropertySchema
-): unknown {
+export function getCalculatedValue<T>(obj: Record<string, unknown>, property: PropertySchema): unknown {
   if (property.calculatedValueFormula) {
     try {
       const formula =

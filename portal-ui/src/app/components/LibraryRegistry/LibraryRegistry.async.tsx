@@ -80,7 +80,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   async componentDidMount() {
     await this.getInfo();
 
-    communicationService.libraryItemsUpdated.on(async () => {
+    communicationService.libraryRecordUpdated.on(async () => {
       if (this.tableInvoke.reload) {
         await this.tableInvoke.reload();
       }

@@ -1,10 +1,20 @@
 import { CrgProject, CrgVectorLayer } from './gis/projects.models';
-import { Emitter } from './common/Emitter';
+import { LibraryRecord } from './data/doc-library.service';
+import { Dataset, VectorTable } from './data/data.service';
+import { WfsFeature } from './geoserver/wfs.models';
+import { Basemap } from './data/basemaps.models';
 import { FileInfo } from './data/files.service';
+import { Schema } from './data/schema.models';
+import { Emitter } from './common/Emitter';
 
 export interface ObjectDto {
   id: string;
   crgLayer: CrgVectorLayer;
+}
+
+export interface DataChangeEvent<T> {
+  type: 'create' | 'update' | 'delete';
+  data: T;
 }
 
 class CommunicationService {
@@ -20,22 +30,22 @@ class CommunicationService {
   needUpdateValidationResults = new Emitter<boolean>();
   authDialogOpen = new Emitter();
   authDialogSuccess = new Emitter();
-  featuresUpdated = new Emitter();
-  permissionsUpdated = new Emitter();
-  datasetsUpdated = new Emitter();
-  schemasUpdated = new Emitter();
-  vectorTablesUpdated = new Emitter();
-  projectCreated = new Emitter<CrgProject>();
-  projectsUpdated = new Emitter();
   allProjectsFetched = new Emitter();
   editBugObject = new Emitter<ObjectDto[]>();
-  libraryItemsUpdated = new Emitter();
   beforeMapDestroy = new Emitter();
   logout = new Emitter();
-  basemapsUpdated = new Emitter();
   drawOff = new Emitter();
-  fileConnectionsUpdated = new Emitter<FileInfo[]>();
   openAttributesBar = new Emitter<CrgVectorLayer>();
+
+  basemapUpdated = new Emitter<DataChangeEvent<Basemap>>();
+  datasetUpdated = new Emitter<DataChangeEvent<Dataset>>();
+  featuresUpdated = new Emitter<DataChangeEvent<WfsFeature | null>>();
+  fileConnectionsUpdated = new Emitter<DataChangeEvent<FileInfo[]>>();
+  libraryRecordUpdated = new Emitter<DataChangeEvent<LibraryRecord>>();
+  permissionsUpdated = new Emitter();
+  projectUpdated = new Emitter<DataChangeEvent<CrgProject>>();
+  schemaUpdated = new Emitter<DataChangeEvent<Schema>>();
+  vectorTableUpdated = new Emitter<DataChangeEvent<VectorTable>>();
 
   off(scope: unknown) {
     Emitter.scopeOff(scope);

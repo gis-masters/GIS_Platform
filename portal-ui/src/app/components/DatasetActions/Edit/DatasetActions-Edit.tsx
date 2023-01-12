@@ -8,7 +8,6 @@ import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { AxiosError } from 'axios';
 
 import { Dataset, datasetSchema, updateDataset } from '../../../services/data/data.service';
-import { Schema } from '../../../services/data/schema.models';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { getPatch } from '../../../services/util/patch';
 import { services } from '../../../services/services';
@@ -40,8 +39,8 @@ export class DatasetActionsEdit extends Component<DatasetActionsEditProps> {
 
         <FormDialog
           open={this.dialogOpen}
-          schema={datasetSchema as unknown as Schema}
-          value={this.props.dataset as Partial<Dataset>}
+          schema={datasetSchema}
+          value={this.props.dataset}
           actionFunction={this.update}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}
           onClose={this.closeDialog}
@@ -52,10 +51,10 @@ export class DatasetActionsEdit extends Component<DatasetActionsEditProps> {
   }
 
   @boundMethod
-  private async update(value: Dataset | Record<string, unknown>) {
+  private async update(value: Dataset) {
     try {
-      const patch: Record<string, unknown> = getPatch(value, this.props.dataset, Object.keys(value));
-      await updateDataset(String(this.props.dataset?.identifier), patch);
+      const patch = getPatch(value, this.props.dataset, Object.keys(value));
+      await updateDataset(this.props.dataset, patch);
     } catch (error) {
       const err = error as AxiosError<{ message?: string[] }>;
 

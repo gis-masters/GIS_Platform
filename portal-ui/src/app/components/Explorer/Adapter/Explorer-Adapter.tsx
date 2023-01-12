@@ -2,9 +2,10 @@ import React, { ReactNode } from 'react';
 import { InsertDriveFileOutlined } from '@mui/icons-material';
 import { AxiosError } from 'axios';
 
-import { services } from '../../../services/services';
+import { DataChangeEvent } from '../../../services/communication.service';
 import { PageOptions, SortOrder } from '../../../services/models';
 import { Emitter } from '../../../services/common/Emitter';
+import { services } from '../../../services/services';
 import { Toast } from '../../Toast/Toast';
 
 import { ExplorerStore } from '../Explorer.store';
@@ -17,7 +18,7 @@ import { ExplorerAdapterTypeLibrary } from './_type/Explorer-Adapter_type_librar
 import { ExplorerAdapterTypeLibraryRoot } from './_type/Explorer-Adapter_type_libraryRoot';
 import { ExplorerAdapterTypeRoot } from './_type/Explorer-Adapter_type_root';
 import { ExplorerAdapterTypeTable } from './_type/Explorer-Adapter_type_table';
-import { ExplorerAdapterTypeEmpty } from './_type/Explorer-Adapter_type_empty';
+import { ExplorerAdapterTypeNone } from './_type/Explorer-Adapter_type_none';
 import { ExplorerAdapterTypeProject } from './_type/Explorer-Adapter_type_project';
 import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_projectsRoot';
 import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basemap';
@@ -28,7 +29,7 @@ import { ExplorerAdapterTypeFile } from './_type/Explorer-Adapter_type_file';
 import { ExplorerService } from '../Explorer.service';
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
-  [ExplorerItemType.EMPTY]: ExplorerAdapterTypeEmpty,
+  [ExplorerItemType.NONE]: ExplorerAdapterTypeNone,
   [ExplorerItemType.DATASET]: ExplorerAdapterTypeDataset,
   [ExplorerItemType.TABLE]: ExplorerAdapterTypeTable,
   [ExplorerItemType.LIBRARY]: ExplorerAdapterTypeLibrary,
@@ -198,7 +199,7 @@ export function getToolbarActions(
   return adapters[item.type].getToolbarActions && adapters[item.type].getToolbarActions(item, store, service, full);
 }
 
-export function getRefreshEmitters(item: ExplorerItemData): Emitter[] {
+export function getRefreshEmitters(item: ExplorerItemData): Emitter<DataChangeEvent<unknown>>[] {
   return (adapters[item.type].getRefreshEmitters && adapters[item.type].getRefreshEmitters(item)) || [];
 }
 

@@ -74,7 +74,7 @@ export class LibraryDocumentActionsRegister extends Component<LibraryDocumentAct
     const { libraryId, id } = this.props.document;
     try {
       await registerDocument(libraryId, id);
-      communicationService.libraryItemsUpdated.emit();
+      communicationService.libraryRecordUpdated.emit({ type: 'update', data: this.props.document });
     } catch (error) {
       const err = error as AxiosError<ServerError>;
       const msg = `Не удалось зарегистрировать документ по причине: ${err?.response?.data?.message}`;

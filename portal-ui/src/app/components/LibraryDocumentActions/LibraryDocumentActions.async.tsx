@@ -47,7 +47,7 @@ export interface LibraryDocumentActionsProps extends IClassNameProps {
 @observer
 export default class LibraryDocumentActions extends Component<LibraryDocumentActionsProps> {
   @observable private document: LibraryRecord;
-  @observable private schema: Schema<LibraryRecord>;
+  @observable private schema: Schema;
   private operationId: symbol;
 
   constructor(props: LibraryDocumentActionsProps) {

@@ -7,7 +7,7 @@ import { BugObject } from './validation.service';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { Toast } from '../../components/Toast/Toast';
 import { getSchemaUrl } from '../server-urls.service';
-import { convertOldToNewSchema } from './schema.utils';
+import { convertNewToOldSchema, convertOldToNewSchema } from './schema.utils';
 import { CrgVectorLayer } from '../gis/projects.models';
 import { ImportLayerItem } from '../geoserver/import/models';
 import { communicationService } from '../communication.service';
@@ -232,12 +232,20 @@ class SchemaService {
     }
   }
 
-  async updateSchema(schema: OldSchema) {
+  async createSchema(schema: Schema) {
     this.schemas = {};
     this.fetchingAllSchemas = null;
-    await http.put<OldSchema>(await getSchemaUrl(), schema);
+    await http.post<OldSchema>(await getSchemaUrl(), convertNewToOldSchema(schema));
 
-    communicationService.schemasUpdated.emit();
+    communicationService.schemaUpdated.emit({ type: 'create', data: schema });
+  }
+
+  async updateSchema(schema: Schema) {
+    this.schemas = {};
+    this.fetchingAllSchemas = null;
+    await http.put<OldSchema>(await getSchemaUrl(), convertNewToOldSchema(schema));
+
+    communicationService.schemaUpdated.emit({ type: 'update', data: schema });
   }
 }
 

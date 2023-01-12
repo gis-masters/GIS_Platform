@@ -58,7 +58,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
     const featureSchema = await schemaService.getOldSchema(layer.schemaId);
     this.setFields(convertOldToNewProperties(featureSchema.properties));
 
-    communicationService.libraryItemsUpdated.on(async () => {
+    communicationService.libraryRecordUpdated.on(async () => {
       if (this.document?.id) {
         this.setDocument(await getLibraryRecord(this.document.libraryId, this.document.id));
       }
@@ -99,7 +99,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
   }
 
   @computed
-  private get documentFields(): PropertySchema<LibraryRecord>[] {
+  private get documentFields(): PropertySchema[] {
     if (!currentProject.vectorLayers.length) {
       return [];
     }

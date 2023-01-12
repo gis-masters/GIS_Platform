@@ -101,7 +101,7 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
     const { dataset } = this.props;
     this.setBtnLoading(true);
     try {
-      await deleteDataset(dataset.identifier);
+      await deleteDataset(dataset);
       this.setErrorMessage('');
       this.closeDialog();
     } catch (error) {

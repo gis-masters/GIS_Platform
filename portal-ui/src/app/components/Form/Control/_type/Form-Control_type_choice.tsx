@@ -21,7 +21,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
   render() {
     const { htmlId, className, property, errors, fullWidthForOldForm, variant = 'standard' } = this.props;
     const { options, name, display = 'select', defaultValue } = property as PropertySchemaChoice;
-    let { fieldValue } = this.props;
+    let fieldValue = this.props.fieldValue as string;
 
     if ((display === 'select' && fieldValue === undefined) || fieldValue === null) {
       fieldValue = EMPTY;
@@ -46,7 +46,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
             >
               {!valueIsAllowed && (
                 <MenuItem className={cnChoiceMenuItem()} value={fieldValue as string | number} color='#666'>
-                  <em>{valueCanBeDisplayed ? (fieldValue as string) : 'Не выбрано'}</em>
+                  <em>{valueCanBeDisplayed ? fieldValue : 'Не выбрано'}</em>
                 </MenuItem>
               )}
 

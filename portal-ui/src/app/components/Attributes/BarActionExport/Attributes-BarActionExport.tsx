@@ -76,7 +76,7 @@ export class AttributesBarActionExport extends Component<AttributesBarActionExpo
   private async prepareFeatures(records: AttributesTableRecord[]): Promise<unknown[][]> {
     const { layer, cols } = this.props;
     const schema = applyView(await schemaService.getSchema(layer.schemaId), layer.view);
-    const properties: PropertySchema<AttributesTableRecord>[] = [
+    const properties: PropertySchema[] = [
       { name: 'cutId', title: 'ID', propertyType: PropertyType.INT },
       ...cols
         .filter(({ field, hidden }) => field && !hidden)

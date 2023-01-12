@@ -1,13 +1,14 @@
 import React, { ReactNode } from 'react';
 import { SchemaOutlined } from '@mui/icons-material';
 
-import { communicationService } from '../../../../services/communication.service';
+import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { schemaService } from '../../../../services/data/schema.service';
 import { filterObjects } from '../../../../services/util/filterObjects';
-import { OldSchema } from '../../../../services/data/schemaOld.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { sortObjects } from '../../../../services/util/sortObjects';
+import { CreateSchema } from '../../../CreateSchema/CreateSchema';
+import { Schema } from '../../../../services/data/schema.models';
 import { Emitter } from '../../../../services/common/Emitter';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
@@ -47,10 +48,10 @@ export class ExplorerAdapterTypeSchemasRoot {
   static async getChildren(
     item: ExplorerItemData<null>,
     { page, pageSize, sort, sortOrder, filter }: PageOptions
-  ): Promise<[ExplorerItemData<OldSchema>[], number]> {
-    const all = await schemaService.getAllOldSchemas();
+  ): Promise<[ExplorerItemData<Schema>[], number]> {
+    const all = await schemaService.getAllSchemas();
     const filtered = filter.name ? filterObjects(all, { name: { $ilike: `%${String(filter.name)}%` } }) : all;
-    const sorted = sortObjects<OldSchema>(filtered, sort as keyof OldSchema, sortOrder === SortOrder.ASC, 'name');
+    const sorted = sortObjects<Schema>(filtered, sort as keyof Schema, sortOrder === SortOrder.ASC, 'name');
     const paged = sorted.slice(page * pageSize, page * pageSize + pageSize);
     const wrapped = paged.map(schema => ({ type: ExplorerItemType.SCHEMA, payload: schema }));
 
@@ -61,10 +62,10 @@ export class ExplorerAdapterTypeSchemasRoot {
     item: ExplorerItemData<null>,
     { pageSize, sort, sortOrder, filter }: PageOptions,
     id: string
-  ): Promise<[ExplorerItemData<OldSchema>[], number, number]> | undefined {
-    const all = await schemaService.getAllOldSchemas();
+  ): Promise<[ExplorerItemData<Schema>[], number, number]> | undefined {
+    const all = await schemaService.getAllSchemas();
     const filtered = filterObjects(all, filter);
-    const sorted = sortObjects<OldSchema>(filtered, sort as keyof OldSchema, sortOrder === SortOrder.ASC, 'name');
+    const sorted = sortObjects<Schema>(filtered, sort as keyof Schema, sortOrder === SortOrder.ASC, 'name');
     const index = sorted.findIndex(({ name }) => name === id);
 
     if (index === -1) {
@@ -78,10 +79,10 @@ export class ExplorerAdapterTypeSchemasRoot {
     return [wrapped, Math.floor(sorted.length / pageSize) + Number(Boolean(sorted.length / pageSize)), page];
   }
 
-  static async getChildById(item: ExplorerItemData<null>, id: string): Promise<ExplorerItemData<OldSchema>> {
+  static async getChildById(item: ExplorerItemData<null>, id: string): Promise<ExplorerItemData<Schema>> {
     return {
       type: ExplorerItemType.SCHEMA,
-      payload: await schemaService.getOldSchema(id)
+      payload: await schemaService.getSchema(id)
     };
   }
 
@@ -114,7 +115,11 @@ export class ExplorerAdapterTypeSchemasRoot {
     return 'Фильтр по идентификатору';
   }
 
-  static getRefreshEmitters(): Emitter[] {
-    return [communicationService.schemasUpdated];
+  static getToolbarActions(): ReactNode {
+    return <CreateSchema />;
+  }
+
+  static getRefreshEmitters(): Emitter<DataChangeEvent<Schema>>[] {
+    return [communicationService.schemaUpdated];
   }
 }

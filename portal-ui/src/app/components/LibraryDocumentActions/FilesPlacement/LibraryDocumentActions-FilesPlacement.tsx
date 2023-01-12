@@ -15,7 +15,7 @@ const cnLibraryDocumentActionsFilesPlacement = cn('LibraryDocumentActions', 'Fil
 
 interface LibraryDocumentActionsFilesPlacementProps {
   document: LibraryRecord;
-  schema: Schema<LibraryRecord>;
+  schema: Schema;
   as: ActionsItemVariant;
 }
 

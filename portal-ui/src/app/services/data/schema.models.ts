@@ -27,11 +27,29 @@ export enum PropertyType {
   CUSTOM = 'custom' // frontend only
 }
 
-export interface Schema<T = Record<string, unknown>> {
+export const schemaForSchema: Schema = {
+  properties: [
+    {
+      propertyType: PropertyType.STRING,
+      display: 'code',
+      name: 'schema',
+      validationFormula: (value: string): string[] | undefined => {
+        try {
+          JSON.parse(value);
+        } catch {
+          return ['Некорректное значение'];
+        }
+      },
+      title: 'Схема'
+    }
+  ]
+};
+
+export interface Schema {
   name?: string;
   title?: string;
   description?: string;
-  properties?: PropertySchema<T>[];
+  properties?: PropertySchema[];
   tableName?: string;
   styleName?: string;
   geometryType?: SupportedGeometryType;
@@ -93,7 +111,7 @@ interface BasePropertySchema<T = Record<string, unknown>> {
   validationFormula?: FieldValidator;
 }
 
-export interface PropertySchemaString<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaString extends BasePropertySchema {
   propertyType: PropertyType.STRING;
   display?: 'singleline' | 'multiline' | 'reachtext' | 'password' | 'phone' | 'code' | 'email';
   mask?: string;
@@ -114,16 +132,12 @@ interface PropertySchemaBaseNumber {
   step?: number;
 }
 
-export interface PropertySchemaInt<T = Record<string, unknown>>
-  extends BasePropertySchema<T>,
-    PropertySchemaBaseNumber {
+export interface PropertySchemaInt extends BasePropertySchema, PropertySchemaBaseNumber {
   propertyType: PropertyType.INT;
   defaultValue?: number;
 }
 
-export interface PropertySchemaFloat<T = Record<string, unknown>>
-  extends BasePropertySchema<T>,
-    PropertySchemaBaseNumber {
+export interface PropertySchemaFloat extends BasePropertySchema, PropertySchemaBaseNumber {
   propertyType: PropertyType.FLOAT;
   precision?: number;
   defaultValue?: number;
@@ -131,7 +145,7 @@ export interface PropertySchemaFloat<T = Record<string, unknown>>
 
 export type PropertySchemaNumber = PropertySchemaInt | PropertySchemaFloat;
 
-export interface PropertySchemaBool<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaBool extends BasePropertySchema {
   propertyType: PropertyType.BOOL;
   display?: 'checkbox' | 'switch';
   trueLabel?: string;
@@ -139,7 +153,7 @@ export interface PropertySchemaBool<T = Record<string, unknown>> extends BasePro
   defaultValue?: boolean;
 }
 
-export interface PropertySchemaDatetime<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaDatetime extends BasePropertySchema {
   propertyType: PropertyType.DATETIME;
   display?: 'date' | 'datetime';
   format?: string;
@@ -150,7 +164,7 @@ export interface PropertySchemaDatetime<T = Record<string, unknown>> extends Bas
 
 export type PropertyOption = { title: string; value: string | number };
 
-export interface PropertySchemaChoice<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaChoice extends BasePropertySchema {
   propertyType: PropertyType.CHOICE;
   display?: 'select' | 'radiogroup' | 'buttongroup';
   multiple?: boolean;
@@ -160,7 +174,7 @@ export interface PropertySchemaChoice<T = Record<string, unknown>> extends BaseP
   options: PropertyOption[];
 }
 
-export interface PropertySchemaUrl<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaUrl extends BasePropertySchema {
   propertyType: PropertyType.URL;
   openIn?: 'popup' | 'newTab';
   multiple?: boolean;
@@ -170,29 +184,29 @@ export interface PropertySchemaUrl<T = Record<string, unknown>> extends BaseProp
   defaultValue?: string;
 }
 
-export interface PropertySchemaLookup<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaLookup extends BasePropertySchema {
   propertyType: PropertyType.LOOKUP;
 }
 
-export interface PropertySchemaSet<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaSet extends BasePropertySchema {
   propertyType: PropertyType.SET;
   properties: PropertySchema[];
   defaultValue?: Record<string, unknown>;
 }
 
-export interface PropertySchemaCustom<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaCustom extends BasePropertySchema {
   propertyType: PropertyType.CUSTOM;
   ControlComponent: ComponentType<FormControlProps>;
   ViewComponent?: ComponentType<FormControlProps>;
   defaultValue?: unknown;
 }
 
-export interface PropertySchemaFias<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaFias extends BasePropertySchema {
   propertyType: PropertyType.FIAS;
   searchMode?: 'address' | 'oktmo';
 }
 
-export interface PropertySchemaBinary<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaBinary extends BasePropertySchema {
   propertyType: PropertyType.BINARY;
   accept?: string;
   maxSize?: number;
@@ -200,7 +214,7 @@ export interface PropertySchemaBinary<T = Record<string, unknown>> extends BaseP
   isEmbedded?: boolean;
 }
 
-export interface PropertySchemaFile<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaFile extends BasePropertySchema {
   propertyType: PropertyType.FILE;
   accept?: string;
   maxSize?: number;
@@ -208,7 +222,7 @@ export interface PropertySchemaFile<T = Record<string, unknown>> extends BasePro
   multiple?: boolean;
 }
 
-export interface PropertySchemaDocument<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaDocument extends BasePropertySchema {
   propertyType: PropertyType.DOCUMENT;
   multiple?: boolean;
   library?: string;
@@ -216,23 +230,23 @@ export interface PropertySchemaDocument<T = Record<string, unknown>> extends Bas
   maxDocuments?: number;
 }
 
-export interface PropertySchemaGeometry<T = Record<string, unknown>> extends BasePropertySchema<T> {
+export interface PropertySchemaGeometry extends BasePropertySchema {
   propertyType: PropertyType.GEOMETRY;
 }
 
-export type PropertySchema<T = Record<string, unknown>> =
-  | PropertySchemaString<T>
-  | PropertySchemaInt<T>
-  | PropertySchemaFloat<T>
-  | PropertySchemaBool<T>
-  | PropertySchemaDatetime<T>
-  | PropertySchemaChoice<T>
-  | PropertySchemaUrl<T>
-  | PropertySchemaLookup<T>
-  | PropertySchemaSet<T>
-  | PropertySchemaBinary<T>
-  | PropertySchemaFias<T>
-  | PropertySchemaFile<T>
-  | PropertySchemaDocument<T>
-  | PropertySchemaCustom<T>
-  | PropertySchemaGeometry<T>;
+export type PropertySchema =
+  | PropertySchemaString
+  | PropertySchemaInt
+  | PropertySchemaFloat
+  | PropertySchemaBool
+  | PropertySchemaDatetime
+  | PropertySchemaChoice
+  | PropertySchemaUrl
+  | PropertySchemaLookup
+  | PropertySchemaSet
+  | PropertySchemaBinary
+  | PropertySchemaFias
+  | PropertySchemaFile
+  | PropertySchemaDocument
+  | PropertySchemaCustom
+  | PropertySchemaGeometry;

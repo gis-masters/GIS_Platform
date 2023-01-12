@@ -82,12 +82,11 @@ export interface TreeItem<T = TreeItemPayload> {
 export interface CrgProject {
   id: number;
   name: string;
-  internalName: string;
   description?: string;
   bbox?: string;
-  default: boolean;
+  default?: boolean;
   order?: number;
-  organizationId: number;
-  createdAt: string;
+  organizationId?: number;
+  createdAt?: string;
   role: Role;
 }
