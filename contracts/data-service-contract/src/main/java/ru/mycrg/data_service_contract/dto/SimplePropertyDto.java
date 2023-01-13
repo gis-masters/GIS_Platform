@@ -22,9 +22,9 @@ public class SimplePropertyDto {
     private String title;
 
     @NotBlank
-    @Pattern(regexp = "^(BOOLEAN|INT|STRING|TEXT|DOUBLE|CHOICE|GEOMETRY|URL|DATETIME|LOOKUP|UUID|FIAS|DOCUMENT)$",
+    @Pattern(regexp = "^(BOOLEAN|INT|STRING|TEXT|DOUBLE|CHOICE|GEOMETRY|URL|DATETIME|LOOKUP|UUID|FIAS|DOCUMENT|FILE)$",
              message = "Допустимые значения поля type: BOOLEAN|INT|STRING|TEXT|DOUBLE|CHOICE|GEOMETRY|URL|DATETIME" +
-                     "|LOOKUP|UUID|FIAS|DOCUMENT")
+                     "|LOOKUP|UUID|FIAS|DOCUMENT|FILE")
     private String valueType;
 
     private Boolean required;
