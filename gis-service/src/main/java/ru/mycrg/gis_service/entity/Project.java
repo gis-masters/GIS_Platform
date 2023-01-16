@@ -26,9 +26,6 @@ public class Project implements Identifiable<Long> {
     private String description;
 
     @Column
-    private String internalName;
-
-    @Column
     private long organizationId;
 
     @Column
@@ -81,14 +78,6 @@ public class Project implements Identifiable<Long> {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getInternalName() {
-        return internalName;
-    }
-
-    public void setInternalName(String internalName) {
-        this.internalName = internalName;
     }
 
     public String getName() {
@@ -204,12 +193,11 @@ public class Project implements Identifiable<Long> {
                 getOrganizationId() == project.getOrganizationId() &&
                 isDefault() == project.isDefault() &&
                 getName().equals(project.getName()) &&
-                getInternalName().equals(project.getInternalName()) &&
                 Objects.equals(getBbox(), project.getBbox());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getInternalName(), getOrganizationId(), getBbox(), isDefault());
+        return Objects.hash(getId(), getName(), getOrganizationId(), getBbox(), isDefault());
     }
 }

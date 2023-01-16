@@ -19,7 +19,7 @@ public class ProjectProjectionFactory {
     }
 
     public ProjectProjectionImpl setRoleAndCreateProjection(Project project) {
-        final ProjectProjectionImpl projection = new ProjectProjectionImpl(project);
+        ProjectProjectionImpl projection = new ProjectProjectionImpl(project);
 
         if (authenticationFacade.isOrganizationAdmin()) {
             projection.setRole(OWNER.name());

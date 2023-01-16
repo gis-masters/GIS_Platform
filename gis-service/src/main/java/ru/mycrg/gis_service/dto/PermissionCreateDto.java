@@ -1,5 +1,7 @@
 package ru.mycrg.gis_service.dto;
 
+import ru.mycrg.gis_service.entity.Permission;
+
 import javax.validation.constraints.*;
 
 public class PermissionCreateDto {
@@ -19,6 +21,10 @@ public class PermissionCreateDto {
 
     public PermissionCreateDto() {
         //Required by framework
+    }
+
+    public PermissionCreateDto(Permission permission) {
+        this(permission.getId(), permission.getPrincipalType(), permission.getRole().getName());
     }
 
     public PermissionCreateDto(Long principalId, String principalType, String role) {

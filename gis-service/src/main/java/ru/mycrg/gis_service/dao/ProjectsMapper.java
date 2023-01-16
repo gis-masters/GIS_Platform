@@ -15,16 +15,21 @@ public class ProjectsMapper implements RowMapper<ProjectProjection> {
         ProjectProjectionImpl project = new ProjectProjectionImpl();
         project.setId(rs.getLong("id"));
         project.setName(rs.getString("name"));
-        project.setInternalName(rs.getString("internal_name"));
         project.setOrganizationId(rs.getLong("organization_id"));
         project.setBbox(rs.getString("bbox"));
         project.setDefault(rs.getBoolean("is_default"));
-        project.setRole(rs.getString("role"));
         project.setDescription(rs.getString("description"));
 
         Timestamp createdAt = rs.getTimestamp("created_at");
         if (createdAt != null) {
             project.setCreatedAt(createdAt.toLocalDateTime());
+        }
+
+        long roleId = rs.getLong("role");
+        if (roleId == 10) {
+            project.setRole("VIEWER");
+        } else if (roleId == 30) {
+            project.setRole("OWNER");
         }
 
         return project;

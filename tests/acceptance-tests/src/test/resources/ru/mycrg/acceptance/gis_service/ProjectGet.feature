@@ -26,8 +26,6 @@ Feature: Выборка проектов
     And Данные отсортированы по "<sorting factor>" и "<sorting direction>" в "projects"
     Examples:
       | sorting factor | sorting direction |
-      | internalName   | asc               |
-      | internalName   | desc              |
       | baseMaps       | asc               |
       | baseMaps       | desc              |
       | organizationId | asc               |

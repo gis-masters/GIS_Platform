@@ -1,7 +1,6 @@
 package ru.mycrg.gis_service.service;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,14 +8,16 @@ import ru.mycrg.gis_service.dto.PermissionCreateDto;
 import ru.mycrg.gis_service.dto.PermissionProjection;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
+import ru.mycrg.gis_service.entity.Role;
+import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
-import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.PermissionRepository;
+import ru.mycrg.gis_service.repository.RoleRepository;
 
 import javax.json.JsonMergePatch;
-import java.time.LocalDateTime;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +25,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ru.mycrg.gis_service.mappers.PermissionMapper.permissionMapper;
+import static java.time.LocalDateTime.now;
+import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 
 @Service
 @Transactional
@@ -33,19 +35,19 @@ public class PermissionsService {
     private final PermissionRepository permissionRepository;
     private final ProjectionFactory projectionFactory;
     private final ProjectService projectService;
-    private final JsonPatcher jsonPatcher;
     private final ResourceProtector resourceProtector;
+    private final RoleRepository roleRepository;
 
     public PermissionsService(PermissionRepository permissionRepository,
                               ProjectionFactory projectionFactory,
                               ProjectService projectService,
-                              JsonPatcher jsonPatcher,
-                              ResourceProtector resourceProtector) {
-        this.jsonPatcher = jsonPatcher;
+                              ResourceProtector resourceProtector,
+                              RoleRepository roleRepository) {
         this.projectService = projectService;
         this.projectionFactory = projectionFactory;
         this.permissionRepository = permissionRepository;
         this.resourceProtector = resourceProtector;
+        this.roleRepository = roleRepository;
     }
 
     public Map<Long, List<PermissionProjection>> getAll() {
@@ -80,27 +82,53 @@ public class PermissionsService {
 
         isOwnerOrAdmin(project);
 
-        checkPermission(dto, projectId, null);
+        Role role = roleRepository.findByNameIgnoreCase(dto.getRole())
+                                  .orElseThrow(() -> new NotFoundException("Не найдена роль: " + dto.getRole()));
 
-        final Permission savedPermission = permissionRepository.save(new Permission(dto, project));
+        throwIfIdentical(dto, projectId, role.getId());
+
+        Permission permission = new Permission(dto, project);
+        permission.setRole(role);
+
+        Permission savedPermission = permissionRepository.save(permission);
 
         return mapToProjection(savedPermission);
     }
 
     public void update(long projectId, long permissionId, JsonMergePatch patchDto) {
-        final Permission permissionForUpdate = getPermissionById(projectId, permissionId);
+        Permission permissionForUpdate = getPermissionById(projectId, permissionId);
 
-        PermissionCreateDto permissionDto = permissionMapper.toDto(permissionForUpdate);
-        final PermissionCreateDto patchedPermission =
-                jsonPatcher.mergePatch(patchDto, permissionDto, PermissionCreateDto.class);
+        patchPermission(permissionForUpdate, patchDto);
 
-        checkPermission(patchedPermission, projectId, permissionId);
-
-        permissionMapper.update(permissionForUpdate, patchedPermission);
-
-        permissionForUpdate.setLastModified(LocalDateTime.now());
+        PermissionCreateDto dto = new PermissionCreateDto(permissionForUpdate);
+        throwIfIdentical(dto, projectId, permissionForUpdate.getRole().getId());
+        throwIfOverlapped(dto, projectId, permissionForUpdate.getId());
 
         permissionRepository.save(permissionForUpdate);
+    }
+
+    private void patchPermission(Permission permissionForUpdate, JsonMergePatch patchDto) {
+        PermissionCreateDto dto;
+        try {
+            dto = objectMapper.readValue(patchDto.toJsonValue().toString(), PermissionCreateDto.class);
+        } catch (IOException e) {
+            throw new BadRequestException("Передано не корректное тело. " + e.getMessage());
+        }
+
+        if (dto.getPrincipalId() != null) {
+            permissionForUpdate.setPrincipalId(dto.getPrincipalId());
+        }
+
+        if (dto.getPrincipalType() != null) {
+            permissionForUpdate.setPrincipalType(dto.getPrincipalType());
+        }
+
+        if (dto.getRole() != null) {
+            roleRepository.findByNameIgnoreCase(dto.getRole())
+                          .ifPresent(permissionForUpdate::setRole);
+        }
+
+        permissionForUpdate.setLastModified(now());
     }
 
     public void delete(long projectId, long permissionId) {
@@ -124,27 +152,30 @@ public class PermissionsService {
                 && permission.getPrincipalId().equals(principalId);
     }
 
-    private void checkPermission(PermissionCreateDto patchedPermission,
-                                 Long projectId,
-                                 @Nullable Long originPermissionId) {
-        String principalType = patchedPermission.getPrincipalType();
-        Long principalId = patchedPermission.getPrincipalId();
-        String role = patchedPermission.getRole();
+    private void throwIfIdentical(PermissionCreateDto permission,
+                                  Long projectId,
+                                  Long roleId) {
+        String principalType = permission.getPrincipalType();
+        Long principalId = permission.getPrincipalId();
 
-        final List<Permission> identicalPermissions =
-                permissionRepository.findIdentical(principalType, principalId, role, projectId);
+        List<Permission> identicalPermissions =
+                permissionRepository.findIdentical(principalType, principalId, roleId, projectId);
         if (!identicalPermissions.isEmpty()) {
-            throw new ConflictException(
-                    "Permission already exist: " + identicalPermissions.get(0).toString());
+            throw new ConflictException("Такое правило уже существует: " + identicalPermissions.get(0).toString());
         }
+    }
 
-        if (originPermissionId != null) {
-            final List<Permission> overlappingPermissions =
-                    permissionRepository.findOverlapping(principalType, principalId, projectId, originPermissionId);
-            if (!overlappingPermissions.isEmpty()) {
-                throw new ConflictException(
-                        "Overlapping permissions, edit old permission: " + overlappingPermissions.get(0).toString());
-            }
+    private void throwIfOverlapped(PermissionCreateDto permission,
+                                   Long projectId,
+                                   Long originPermissionId) {
+        String principalType = permission.getPrincipalType();
+        Long principalId = permission.getPrincipalId();
+
+        List<Permission> overlappingPermissions =
+                permissionRepository.findOverlapping(principalType, principalId, projectId, originPermissionId);
+        if (!overlappingPermissions.isEmpty()) {
+            throw new ConflictException("Переопределение правила. Отредактируйте существующее правило: "
+                                                + overlappingPermissions.get(0).toString());
         }
     }
 

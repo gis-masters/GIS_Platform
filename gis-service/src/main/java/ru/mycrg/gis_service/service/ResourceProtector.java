@@ -25,17 +25,17 @@ public class ResourceProtector {
     }
 
     public Optional<String> defineBestRole(Set<Permission> permissions) {
-        final UserDetails userDetails = authenticationFacade.getUserDetails();
-        final List<Long> userIds = userDetails.getGroups();
+        UserDetails userDetails = authenticationFacade.getUserDetails();
+        List<Long> userIds = userDetails.getGroups();
         userIds.add(userDetails.getUserId());
 
         AtomicReference<String> bestRole = new AtomicReference<>();
         permissions.stream()
                    .filter(permission -> userIds.contains(permission.getPrincipalId()))
                    .forEach(permission -> {
-                       if (permission.getRole().equals(OWNER.name())) {
+                       if (permission.getRole().getName().equals(OWNER.name())) {
                            bestRole.set(OWNER.name());
-                       } else if (permission.getRole().equals(VIEWER.name())) {
+                       } else if (permission.getRole().getName().equals(VIEWER.name())) {
                            bestRole.set(VIEWER.name());
                        }
                    });
@@ -59,7 +59,7 @@ public class ResourceProtector {
     }
 
     private boolean isUserHasOwnPermission(Project project) {
-        final Optional<String> oRole = defineBestRole(project.getPermissions());
+        Optional<String> oRole = defineBestRole(project.getPermissions());
         if (oRole.isEmpty()) {
             return false;
         }

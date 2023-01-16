@@ -255,8 +255,10 @@ public class GmlImporter {
             } else {
                 List<SchemaDto> tableByPostfixAndName = findSchemasByPostfixAndName(geometryTypes, schemaName);
                 if (tableByPostfixAndName.isEmpty()) {
-                    String msg = String.format("Схемы для таблицы %s не существует.", schemaName);
-                    log.warn(msg);
+                    log.warn("Не найдена схемы для таблицы: '{}'", schemaName);
+
+                    String msg = String.format("Название таблицы: '%s' не соответствует предусмотренному " +
+                                                       "приказом №10 Минэкономразвития России", schemaName);
 
                     importLayerReports.add(new ImportLayerReport(schemaName, false, msg));
                 } else {

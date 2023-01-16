@@ -12,19 +12,19 @@ import java.util.List;
 @RepositoryRestResource(exported = false)
 public interface PermissionRepository extends PagingAndSortingRepository<Permission, Long> {
 
-    @Query("from Permission where principalType = :principalType " +
-            "and principalId = :principalId " +
-            "and role = :role " +
-            "and project.id = :projectId")
+    @Query("FROM Permission WHERE  principalType = :principalType " +
+            "AND principalId = :principalId " +
+            "AND role.id = :roleId " +
+            "AND project.id = :projectId")
     List<Permission> findIdentical(@Param("principalType") String principalType,
                                    @Param("principalId") Long principalId,
-                                   @Param("role") String role,
+                                   @Param("roleId") Long roleId,
                                    @Param("projectId") Long projectId);
 
-    @Query("from Permission where id <> :originPermissionId " +
-            "and principalType = :principalType " +
-            "and principalId = :principalId " +
-            "and project.id = :projectId")
+    @Query("FROM Permission WHERE id <> :originPermissionId " +
+            "AND principalType = :principalType " +
+            "AND principalId = :principalId " +
+            "AND project.id = :projectId")
     List<Permission> findOverlapping(@Param("principalType") String principalType,
                                      @Param("principalId") Long principalId,
                                      @Param("projectId") Long projectId,

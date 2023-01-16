@@ -8,6 +8,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static java.time.LocalDateTime.*;
+
 @Entity
 @Table(name = "permissions")
 public class Permission {
@@ -23,8 +25,8 @@ public class Permission {
     @Column
     private Long principalId;
 
-    @Column
-    private String role;
+    @ManyToOne
+    private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
@@ -41,14 +43,23 @@ public class Permission {
         // Required
     }
 
+    public Permission(String principalType, Long principalId, Role role, Project project) {
+        this.principalType = principalType;
+        this.principalId = principalId;
+        this.role = role;
+        this.project = project;
+
+        this.createdAt = now();
+        this.lastModified = now();
+    }
+
     public Permission(PermissionCreateDto dto, Project project) {
         this.principalId = dto.getPrincipalId();
         this.principalType = dto.getPrincipalType();
-        this.role = dto.getRole();
         this.project = project;
 
-        this.createdAt = LocalDateTime.now();
-        this.lastModified = LocalDateTime.now();
+        this.createdAt = now();
+        this.lastModified = now();
     }
 
     public Long getId() {
@@ -75,11 +86,11 @@ public class Permission {
         this.principalId = principalId;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -132,7 +143,7 @@ public class Permission {
         return "{id=" + id +
                 ", principalType='" + principalType + '\'' +
                 ", principalId=" + principalId +
-                ", role='" + role + '\'' +
+                ", role='" + role.getName() + '\'' +
                 ", project=" + project.getId() +
                 ", createdAt=" + createdAt +
                 ", lastModified=" + lastModified +

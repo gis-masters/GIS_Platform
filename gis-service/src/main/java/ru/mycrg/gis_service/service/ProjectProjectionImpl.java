@@ -11,7 +11,6 @@ public class ProjectProjectionImpl implements ProjectProjection {
 
     private long id;
     private String name;
-    private String internalName;
     private long organizationId;
     private String bbox;
     private boolean isDefault;
@@ -26,7 +25,6 @@ public class ProjectProjectionImpl implements ProjectProjection {
     public ProjectProjectionImpl(Project project) {
         this.id = project.getId();
         this.name = project.getName();
-        this.internalName = project.getInternalName();
         this.organizationId = project.getOrganizationId();
         this.bbox = project.getBbox();
         this.isDefault = project.isDefault();
@@ -42,11 +40,6 @@ public class ProjectProjectionImpl implements ProjectProjection {
     @Override
     public String getName() {
         return this.name;
-    }
-
-    @Override
-    public String getInternalName() {
-        return this.internalName;
     }
 
     @Override
@@ -83,10 +76,6 @@ public class ProjectProjectionImpl implements ProjectProjection {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setInternalName(String internalName) {
-        this.internalName = internalName;
     }
 
     public void setOrganizationId(long organizationId) {

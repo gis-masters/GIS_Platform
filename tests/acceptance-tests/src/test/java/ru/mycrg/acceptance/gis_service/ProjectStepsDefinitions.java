@@ -85,7 +85,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                         extract().jsonPath().
                         getMap("");
 
-        assertTrue(presentedData.containsKey("internalName"));
         assertTrue(presentedData.containsKey("organizationId"));
         assertTrue(presentedData.containsKey("createdAt"));
         assertTrue(presentedData.containsKey("name"));
@@ -365,6 +364,13 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         final Map<String, String> result = (Map<String, String>) response.jsonPath().getList("").get(0);
 
         assertEquals("OWNER", result.get("role"));
+    }
+
+    @And("Пользователь имеет роль {string} для текущего проекта")
+    public void checkUserRoleForCurrentProject(String expectedRole) {
+        String result = response.jsonPath().get("_embedded.projects[0].role");
+
+        assertEquals(expectedRole, result);
     }
 
     @And("Сервер отвечает со статус-кодом 204, проект успешно удален")

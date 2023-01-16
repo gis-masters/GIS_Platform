@@ -13,29 +13,27 @@ import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.gis_service.dao.ProjectsDao;
-import ru.mycrg.gis_service.dto.PermissionCreateDto;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.gis_service.dto.ProjectUpdateDto;
 import ru.mycrg.gis_service.entity.BaseMap;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
+import ru.mycrg.gis_service.entity.Role;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.BaseMapRepository;
 import ru.mycrg.gis_service.repository.PermissionRepository;
 import ru.mycrg.gis_service.repository.ProjectRepository;
+import ru.mycrg.gis_service.repository.RoleRepository;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
-import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultProjectName;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 import static ru.mycrg.gis_service.security.Roles.OWNER;
 
@@ -53,6 +51,7 @@ public class ProjectService {
     private final ProjectsDao projectsDao;
     private final BaseMapRepository baseMapRepository;
     private final DataServiceBasemapsClient dataServiceBasemapsClient;
+    private final RoleRepository roleRepository;
 
     public ProjectService(ProjectProjectionFactory projectionFactory,
                           ProjectRepository projectRepository,
@@ -61,7 +60,8 @@ public class ProjectService {
                           MessageBusProducer messageBus,
                           ProjectsDao projectsDao,
                           BaseMapRepository baseMapRepository,
-                          DataServiceBasemapsClient dataServiceBasemapsClient) {
+                          DataServiceBasemapsClient dataServiceBasemapsClient,
+                          RoleRepository roleRepository) {
         this.projectionFactory = projectionFactory;
         this.projectRepository = projectRepository;
         this.permissionRepository = permissionRepository;
@@ -70,6 +70,7 @@ public class ProjectService {
         this.projectsDao = projectsDao;
         this.baseMapRepository = baseMapRepository;
         this.dataServiceBasemapsClient = dataServiceBasemapsClient;
+        this.roleRepository = roleRepository;
     }
 
     public Page<ProjectProjection> getPaged(String name, Pageable pageable) {
@@ -104,8 +105,6 @@ public class ProjectService {
      */
     @NotNull
     public Project getById(@NotNull Long id) {
-        final UserDetails userDetails = authenticationFacade.getUserDetails();
-
         if (authenticationFacade.isRoot()) {
             return projectRepository
                     .findById(id)
@@ -121,8 +120,8 @@ public class ProjectService {
             return project;
         }
 
-        final List<Project> filteredProjects = filterByPermissions(Collections.singletonList(project), userDetails);
-        if (!filteredProjects.isEmpty()) {
+        UserDetails userDetails = authenticationFacade.getUserDetails();
+        if (isAllowedForUser(project, userDetails)) {
             return project;
         } else {
             throw new ForbiddenException("Недостаточно прав для просмотра проекта: " + id);
@@ -130,7 +129,9 @@ public class ProjectService {
     }
 
     public ProjectProjection getProjectionById(Long id) {
-        return projectionFactory.setRoleAndCreateProjection(getById(id));
+        Project project = getById(id);
+
+        return projectionFactory.setRoleAndCreateProjection(project);
     }
 
     public ProjectProjection getProjectionByIdUnsafe(Long id) {
@@ -192,10 +193,11 @@ public class ProjectService {
         Project newProject = new Project(dto.getProjectName(), orgId);
         Project savedProject = projectRepository.save(newProject);
 
-        savedProject.setInternalName(getDefaultProjectName(savedProject.getId()));
+        Role role = roleRepository.findByNameIgnoreCase(OWNER.name())
+                                  .orElseThrow(() -> new NotFoundException("Не найдена роль: " + OWNER.name()));
 
         projectRepository.save(savedProject);
-        permissionRepository.save(new Permission(new PermissionCreateDto(userId, "user", OWNER.name()), savedProject));
+        permissionRepository.save(new Permission("user", userId, role, savedProject));
 
         plugInBaseMapToNewProject(savedProject);
 
@@ -211,16 +213,18 @@ public class ProjectService {
 
     public void delete(Long projectId) {
         Project project = getById(projectId);
-        if (isOwner(project)) {
-            projectRepository.delete(project);
-            messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                                 "DELETE",
-                                                 project.getName(),
-                                                 "PROJECT",
-                                                 projectId));
-        } else {
+        if (!isOwner(project)) {
             throw new ForbiddenException("Недостаточно прав для удаления проекта: " + projectId);
         }
+
+        projectRepository.delete(project);
+
+        messageBus.produce(
+                new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                  "DELETE",
+                                  project.getName(),
+                                  "PROJECT",
+                                  projectId));
     }
 
     private void plugInBaseMapToNewProject(Project project) {
@@ -239,38 +243,33 @@ public class ProjectService {
             return true;
         }
 
-        final Long userId = authenticationFacade.getUserDetails().getUserId();
+        Long userId = authenticationFacade.getUserDetails().getUserId();
 
         return project.getPermissions().stream()
                       .filter(permission -> Objects.equals(permission.getPrincipalId(), userId))
-                      .anyMatch(permission -> permission.getRole().equals(OWNER.name()));
+                      .anyMatch(permission -> permission.getRole().getName().equals(OWNER.name()));
     }
 
-    private List<Project> filterByPermissions(List<Project> projects, UserDetails userDetails) {
-        final Long userId = userDetails.getUserId();
-        final List<Long> groupsIds = userDetails.getGroups();
+    private boolean isAllowedForUser(Project project, UserDetails userDetails) {
+        Long userId = userDetails.getUserId();
+        List<Long> groupsIds = userDetails.getGroups();
 
-        // Нужно просмотреть все пермишены проекта, там должны быть какието касательно пользователя или его группы,
-        // если таковых нет то нет доступа, отфильтровываем
-        return projects
-                .stream()
-                .filter(project -> {
-                    final Set<Permission> permissions = project.getPermissions();
-                    boolean isExist = false;
-                    for (Permission permission: permissions) {
-                        if (permission.getPrincipalType().equals("user")) {
-                            if (permission.getPrincipalId().equals(userId)) {
-                                isExist = true;
-                            }
-                        } else if (permission.getPrincipalType().equals("group")) {
-                            if (groupsIds.contains(permission.getPrincipalId())) {
-                                isExist = true;
-                            }
-                        }
-                    }
+        // Нужно просмотреть все разрешения проекта, там должны быть какие-то касательно пользователя или его группы,
+        // если таковых нет - то доступа нет!
+        Set<Permission> permissions = project.getPermissions();
+        boolean isExist = false;
+        for (Permission permission: permissions) {
+            if (permission.getPrincipalType().equals("user")) {
+                if (permission.getPrincipalId().equals(userId)) {
+                    isExist = true;
+                }
+            } else if (permission.getPrincipalType().equals("group")) {
+                if (groupsIds.contains(permission.getPrincipalId())) {
+                    isExist = true;
+                }
+            }
+        }
 
-                    return isExist;
-                })
-                .collect(Collectors.toList());
+        return isExist;
     }
 }

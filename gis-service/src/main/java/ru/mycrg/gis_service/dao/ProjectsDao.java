@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static java.lang.String.join;
 
 @Repository
@@ -44,9 +43,8 @@ public class ProjectsDao {
 
         String queryTemplate = "" +
                 "SELECT " +
-                " " + buildDistinctOnSection(pageable.getSort()) +
                 "  proj.*, " +
-                "  per.role " +
+                "  max(per.role_id) AS role " +
                 "FROM " +
                 "  projects AS proj " +
                 "  JOIN permissions AS per ON proj.id = per.project_id " +
@@ -59,7 +57,8 @@ public class ProjectsDao {
                 "      AND per.principal_type = 'user'" +
                 "    ) " +
                 " " + buildWhereByUserGroupSection(groupIds) +
-                "  )" +
+                "  ) " +
+                "GROUP BY proj.id " +
                 " " + buildOrderBySection(pageable.getSort()) +
                 "LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset();
 
@@ -80,6 +79,7 @@ public class ProjectsDao {
                                            .collect(Collectors.toList());
 
         String queryTemplate = "" +
+                "SELECT count(*) FROM ( " +
                 "SELECT " +
                 "  count(proj.*)" +
                 "FROM " +
@@ -94,7 +94,9 @@ public class ProjectsDao {
                 "      AND per.principal_type = 'user'" +
                 "    ) " +
                 " " + buildWhereByUserGroupSection(groupIds) +
-                "  )";
+                "  ) " +
+                "GROUP BY proj.id" +
+                ") sub;";
 
         log.debug("Query get total allowed projects: [{}]", queryTemplate);
 
@@ -119,30 +121,17 @@ public class ProjectsDao {
             return "";
         }
 
-        final List<String> orderItems = sort.stream()
-                                            .map(order -> getProperty(order.getProperty()) + " " + order.getDirection())
-                                            .collect(Collectors.toList());
+        List<String> orderItems = sort.stream()
+                                      .map(order -> getProperty(order.getProperty()) + " " + order.getDirection())
+                                      .collect(Collectors.toList());
 
         return " ORDER BY " + join(",", orderItems) + " ";
     }
 
-    @NotNull
-    public static String buildDistinctOnSection(Sort sort) {
-        if (sort.isUnsorted()) {
-            return "DISTINCT ON (proj.name)";
-        }
-
-        final List<String> propertiesForSorting = sort.stream()
-                                                      .map(order -> getProperty(order.getProperty()))
-                                                      .collect(Collectors.toList());
-
-        return format("DISTINCT ON (proj.name, %s) ", join(",", propertiesForSorting));
-    }
-
     public static String buildInSection(Collection<String> ids) {
-        final List<String> asString = ids.stream()
-                                         .map(s -> "'" + s + "'")
-                                         .collect(Collectors.toList());
+        List<String> asString = ids.stream()
+                                   .map(s -> "'" + s + "'")
+                                   .collect(Collectors.toList());
 
         return join(",", asString);
     }
