@@ -17,8 +17,8 @@ export function getLibraryFolderExplorerUrl(libraryIdentifier: string, path: num
     'library',
     libraryIdentifier,
     ...path.flatMap(id => ['folder', id]),
-    'empty',
-    'empty'
+    'none',
+    'none'
   ];
 
   return `/data-management?path_dm=${JSON.stringify(urlPath)}`;
@@ -29,8 +29,8 @@ export async function getLibraryRecordBreadcrumbs(
   includeSelf?: boolean
 ): Promise<BreadcrumbsItemData[]> {
   const { libraryId, path, id, title, is_folder: isFolder } = item;
-  const libraryRootPath = JSON.stringify([...libraryRootUrlItems, 'empty', 'empty']);
-  const libraryPath = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, 'empty', 'empty']);
+  const libraryRootPath = JSON.stringify([...libraryRootUrlItems, 'none', 'none']);
+  const libraryPath = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, 'none', 'none']);
   const library = await getLibrary(libraryId);
   const currentItem = isFolder ? ['folder', id] : ['doc', id];
 
@@ -64,7 +64,7 @@ export async function getLibraryRecordBreadcrumbs(
         folders.push('folder', parentsInfo[i].id);
       }
 
-      const folderPath = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, ...folders, 'empty', 'empty']);
+      const folderPath = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, ...folders, 'none', 'none']);
 
       if (includeSelf) {
         pathWithoutCurrent = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, ...folders, ...currentItem]);

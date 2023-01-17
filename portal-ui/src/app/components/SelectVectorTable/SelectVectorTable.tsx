@@ -142,7 +142,7 @@ export class SelectVectorTable extends Component<SelectVectorTableProps> {
       }
 
       try {
-        const schema = await schemaService.getOldSchema(table.schemaId);
+        const schema = await schemaService.getSchema(table.schemaId);
         if (!schema) {
           return true;
         }

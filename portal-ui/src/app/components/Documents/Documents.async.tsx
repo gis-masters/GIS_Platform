@@ -78,7 +78,7 @@ export default class Documents extends Component<DocumentsProps> {
   private get librariesIdentifiers(): string[] {
     const { library, libraries } = this.props.property;
 
-    return libraries || [library] || [];
+    return libraries || (library ? [library] : []);
   }
 
   @boundMethod

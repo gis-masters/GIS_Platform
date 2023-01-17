@@ -30,7 +30,7 @@ import { getGeometryFieldName } from '../data/schema.utils';
 
 export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature<CoordinateEdited>> {
   const { tableName, schemaId } = layer;
-  const schema = await schemaService.getOldSchema(schemaId);
+  const schema = await schemaService.getSchema(schemaId);
 
   const properties = Object.fromEntries(schema.properties.map(({ name }) => [name.toLowerCase(), null]));
 

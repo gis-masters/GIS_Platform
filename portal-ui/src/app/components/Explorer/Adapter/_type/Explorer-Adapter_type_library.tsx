@@ -99,7 +99,7 @@ export class ExplorerAdapterTypeLibrary {
       }
     );
 
-    const { contentTypes } = await schemaService.getOldSchema(explorerItem.payload.schemaId);
+    const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schemaId);
 
     libraryRecords.forEach(record => {
       const contentType = contentTypes.find(cType => cType.id === record.content_type_id);
@@ -134,7 +134,7 @@ export class ExplorerAdapterTypeLibrary {
     recordId: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
     const payload = await getLibraryRecord(item.payload.identifier, Number(recordId));
-    const { contentTypes } = await schemaService.getOldSchema(item.payload.schemaId);
+    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 
     return {
@@ -164,7 +164,7 @@ export class ExplorerAdapterTypeLibrary {
     }
 
     const [records, totalPages, pageNumber] = response;
-    const { contentTypes } = await schemaService.getOldSchema(item.payload.schemaId);
+    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
 
     return [
       records.map(payload => {

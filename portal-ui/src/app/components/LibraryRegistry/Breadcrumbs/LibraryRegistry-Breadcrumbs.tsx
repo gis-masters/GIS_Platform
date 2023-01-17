@@ -72,7 +72,7 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
 
     if (fromHome) {
       const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];
-      const libraryRootPath = JSON.stringify([...libraryRootUrlItems, 'empty', 'empty']);
+      const libraryRootPath = JSON.stringify([...libraryRootUrlItems, 'none', 'none']);
 
       items.push(
         { title: <HomeOutlined />, url: '/data-management' },

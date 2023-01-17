@@ -55,8 +55,8 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
 
       services.logger.warn(`Ошибка доступа к библиотеке документов ${libraryIdentifier}. [${err.message}]`, error);
     }
-    const featureSchema = await schemaService.getOldSchema(layer.schemaId);
-    this.setFields(convertOldToNewProperties(featureSchema.properties));
+    const featureSchema = await schemaService.getSchema(layer.schemaId);
+    this.setFields(featureSchema.properties);
 
     communicationService.libraryRecordUpdated.on(async () => {
       if (this.document?.id) {
