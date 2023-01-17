@@ -94,7 +94,7 @@ async function loadLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> 
 
   return await Promise.all(
     rulesWithoutLegend.map(async rule => {
-      const blob = await getLegendGraphicByRuleName(layer.complexName, rule.name);
+      const blob = await getLegendGraphicByRuleName(layer.complexName, rule.name, layer.styleName);
       const img = await createImageFromBlob(blob);
 
       return {
@@ -170,7 +170,7 @@ function createImageFromBlob(image: Blob): Promise<string> {
  * @param complexLayerName  Название слоя в формате 'workspace:layerName'
  * @param ruleName          Название правила в стиле.
  */
-async function getLegendGraphicByRuleName(complexLayerName: string, ruleName: string): Promise<Blob> {
+async function getLegendGraphicByRuleName(complexLayerName: string, ruleName: string, style: string): Promise<Blob> {
   const params = {
     REQUEST: 'GetLegendGraphic',
     VERSION: '1.3.0',
@@ -178,6 +178,7 @@ async function getLegendGraphicByRuleName(complexLayerName: string, ruleName: st
     WIDTH: '40',
     HEIGHT: '20',
     LAYER: complexLayerName,
+    STYLE: style,
     RULE: ruleName
   };
 
