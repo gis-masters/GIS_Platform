@@ -43,6 +43,8 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                                              generateString(descriptionKey),
                                              generateString(crs),
                                              generateString(schema));
+        tableName = currentTableName;
+        schemaId = schema;
 
         super.createEntity(currentTableDto);
     }

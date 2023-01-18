@@ -70,6 +70,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void createFeatureInCurrentTable() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("title", "some title here");
+        properties.put("name", "test");
 
         createFeature(new GeoJsonModel(properties));
     }
@@ -86,6 +87,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void createSomeFeatureInCurrentTable() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("title", "some feature");
+        properties.put("name", "testName");
         properties.put("created_at", "2022-11-08 00:00:00");
 
         createFeature(new GeoJsonModel(properties));
@@ -213,6 +215,38 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertNotNull(jsonPath.get("id"));
     }
 
+    @And("Калькулируемые поля пересчитаны согласно calculated Value Formula")
+    public void checkCalculatedFieldsByFormula() {
+        jsonPath = response.jsonPath();
+
+        assertEquals("Feature", jsonPath.get("type").toString());
+        assertNotNull(jsonPath.get("properties"));
+        assertNotNull(jsonPath.get("properties.name"));
+
+        String name = jsonPath.get("properties.name");
+        assertEquals("test!!!", name);
+    }
+
+    @And("Поля провалидированы согласно validationFormula")
+    public void checkValidatedFieldsByValidationFormula() {
+        jsonPath = response.jsonPath();
+
+        assertNotNull(jsonPath.get("results"));
+        assertNotNull(jsonPath.get("results.objectViolations"));
+        List<List<Object>> objectViolations = jsonPath.get("results.objectViolations");
+        assertFalse(objectViolations.isEmpty());
+
+        List<Object> objectViolation = objectViolations.get(0);
+        assertFalse(objectViolation.isEmpty());
+
+        Map<String, Object> result = (Map<String, Object>) objectViolation.get(0);
+
+        assertTrue(result.containsKey("error"));
+        assertEquals("error", result.get("error"));
+        assertTrue(result.containsKey("attribute"));
+        assertEquals("name", result.get("attribute"));
+    }
+
     @Then("Запись сохранена и поле title корректно заполнено {string}")
     public void checkCreatedFeatureTitle(String expectedTitle) {
         jsonPath = response.jsonPath();
@@ -261,7 +295,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         basePath("/")
-                .get(geoserverPath);
+                        .get(geoserverPath);
 
         jsonPath = response.jsonPath();
         assertNotNull(jsonPath);

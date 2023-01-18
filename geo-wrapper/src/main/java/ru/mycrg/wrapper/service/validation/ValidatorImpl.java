@@ -1,19 +1,18 @@
 package ru.mycrg.wrapper.service.validation;
 
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.common_utils.CrgScriptEngine;
+import ru.mycrg.data_service_contract.dto.*;
 import ru.mycrg.data_service_contract.enums.ValueType;
-import ru.mycrg.data_service_contract.dto.ErrorDescription;
-import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
-import ru.mycrg.data_service_contract.dto.PropertyViolation;
-import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import ru.mycrg.wrapper.service.validation.constraints.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import static java.util.Objects.nonNull;
 
 @Service
 public class ValidatorImpl implements IValidator {
@@ -55,6 +54,17 @@ public class ValidatorImpl implements IValidator {
                   return result;
               })
               .forEach(errorDescriptions -> errorDescriptions.forEach(validationResult::addObjectViolation));
+
+        Map<String, String> propsWithValidationFormula = getPropertiesWithValidationFormula(schemaDto);
+        List<ErrorDescription> errorDescriptions = new ArrayList<>();
+
+        propsWithValidationFormula.forEach((key, formula) -> {
+            String error = validatePropertiesByFormula(fObject, key, formula);
+
+            errorDescriptions.add(new ErrorDescription(key, error));
+        });
+
+        errorDescriptions.forEach(validationResult::addObjectViolation);
 
         schemaDto.getProperties().forEach(propertySchema -> {
             String name = propertySchema.getName();
@@ -101,5 +111,29 @@ public class ValidatorImpl implements IValidator {
         }
 
         return violations;
+    }
+
+    private Map<String, String> getPropertiesWithValidationFormula(SchemaDto schema) {
+        Map<String, String> propsWithValidationFormula = new HashMap<>();
+        schema.getProperties().forEach(simplePropertyDto -> {
+            if (nonNull(simplePropertyDto.getValidationFormula())) {
+                propsWithValidationFormula.put(simplePropertyDto.getName().toLowerCase(),
+                                               simplePropertyDto.getValidationFormula());
+            }
+        });
+
+        return propsWithValidationFormula;
+    }
+
+    private String validatePropertiesByFormula(Map<String, Object> fullProperties,
+                                               String fieldName,
+                                               String validationFormula) {
+        String result = "";
+
+        if (fullProperties.containsKey(fieldName)) {
+            result = scriptEngine.invokeFunctionAsString(fullProperties, validationFormula);
+        }
+
+        return result;
     }
 }

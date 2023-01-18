@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.common_utils.CrgScriptEngine;
+import ru.mycrg.common_utils.ScriptCalculator;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.util.CrgScriptEngine;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+import static ru.mycrg.data_service.util.SchemaUtil.getPropertiesWithCalculatedFunctions;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 
@@ -29,13 +31,16 @@ public class SystemAttributeHandler {
     private final Logger log = LoggerFactory.getLogger(SystemAttributeHandler.class);
 
     private final CrgScriptEngine scriptEngine;
+    private final ScriptCalculator scriptCalculator;
     private final IAuthenticationFacade authenticationFacade;
 
     private SchemaDto schema;
 
     public SystemAttributeHandler(CrgScriptEngine scriptEngine,
+                                  ScriptCalculator scriptCalculator,
                                   IAuthenticationFacade authenticationFacade) {
         this.scriptEngine = scriptEngine;
+        this.scriptCalculator = scriptCalculator;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -154,6 +159,12 @@ public class SystemAttributeHandler {
                         result.put(key, value);
                     });
         }
+
+        Map<String, String> propsWithFunctions = getPropertiesWithCalculatedFunctions(schema);
+        propsWithFunctions.forEach((key, value) -> {
+            String formula = propsWithFunctions.get(key);
+            result.putAll(scriptCalculator.calculate(fullProperties, key, formula));
+        });
 
         return result;
     }

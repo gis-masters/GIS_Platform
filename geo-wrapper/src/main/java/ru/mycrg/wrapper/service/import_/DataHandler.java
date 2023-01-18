@@ -2,36 +2,43 @@ package ru.mycrg.wrapper.service.import_;
 
 import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_utils.CrgScriptEngine;
+import ru.mycrg.common_utils.ScriptCalculator;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.ValueTitleProjection;
 import ru.mycrg.data_service_contract.enums.ValueType;
-import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import ru.mycrg.wrapper.service.util.StringDecoder;
 
 import java.math.BigDecimal;
 import java.util.*;
 
+import static java.util.Objects.nonNull;
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
 @Service
 public class DataHandler {
 
-    private final CrgScriptEngine scriptEngine;
+    private final CrgScriptEngine crgScriptEngine;
+    private final ScriptCalculator scriptCalculator;
 
-    public DataHandler(CrgScriptEngine scriptEngine) {
-        this.scriptEngine = scriptEngine;
+    public DataHandler(ScriptCalculator scriptCalculator,
+                       CrgScriptEngine crgScriptEngine) {
+        this.crgScriptEngine = crgScriptEngine;
+        this.scriptCalculator = scriptCalculator;
     }
 
     /**
-     * Обработка подразумевает <br>
-     * Перекодировку строк (Импорт плагин геосервера кодирует в ISO_8859_1) <br>
-     * Добавление globalid всем обьектам у которых его нет <br>
-     * Просчет калькулируемых полей <br>
-     * Установка в null тех значений которые были изковерканы shape форматом
+     * Обработка подразумевает.
+     *
+     * <br> Перекодировку строк (Импорт плагин геосервера кодирует в ISO_8859_1)
+     * <br> Добавление globalid всем обьектам у которых его нет
+     * <br> Просчет калькулируемых полей
+     * <br> Установка в null тех значений которые были изковерканы shape форматом
      *
      * @param dbRow  Строка из БД.
      * @param schema Схема данных
+     *
      * @return возвращает только те данные что были изменены
      */
     public Map<String, Object> handle(Map<String, Object> dbRow, SchemaDto schema) {
@@ -39,9 +46,15 @@ public class DataHandler {
         decodedRow.remove("crg_b_geometry");
 
         if (schema.getCalcFiledFunction() != null) {
-            Object functionResult = scriptEngine.invokeFunction(decodedRow, schema.getCalcFiledFunction());
+            Object functionResult = crgScriptEngine.invokeFunction(decodedRow, schema.getCalcFiledFunction());
             ((Map<String, Object>) functionResult).forEach((k, v) -> decodedRow.put(k, v.toString()));
         }
+
+        Map<String, String> propsWithFunctions = getPropertiesWithCalculatedFunctions(schema);
+
+        propsWithFunctions.forEach((key, formula) -> {
+            decodedRow.putAll(scriptCalculator.calculate(decodedRow, key, formula));
+        });
 
         decodedRow.forEach((key, value) -> {
             if (GLOBAL_ID.equals(key)) {
@@ -109,5 +122,17 @@ public class DataHandler {
 
     private static Optional<SimplePropertyDto> getPropertyByName(List<SimplePropertyDto> properties, String name) {
         return properties.stream().filter(sProp -> sProp.getName().equalsIgnoreCase(name)).findFirst();
+    }
+
+    private static Map<String, String> getPropertiesWithCalculatedFunctions(SchemaDto schema) {
+        Map<String, String> propsWithFunctions = new HashMap<>();
+        schema.getProperties().forEach(simplePropertyDto -> {
+            if (nonNull(simplePropertyDto.getCalculatedValueFormula())) {
+                propsWithFunctions.put(simplePropertyDto.getName().toLowerCase(),
+                                       simplePropertyDto.getCalculatedValueFormula());
+            }
+        });
+
+        return propsWithFunctions;
     }
 }

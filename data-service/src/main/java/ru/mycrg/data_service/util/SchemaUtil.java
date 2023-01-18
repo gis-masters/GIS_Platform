@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 
@@ -87,6 +88,18 @@ public class SchemaUtil {
         return properties.stream()
                          .filter(property -> property.getName().equalsIgnoreCase(propertyName))
                          .anyMatch(property -> FILE.equals(property.getValueTypeAsEnum()));
+    }
+
+    public static Map<String, String> getPropertiesWithCalculatedFunctions(SchemaDto schema) {
+        Map<String, String> propsWithFunctions = new HashMap<>();
+        schema.getProperties().forEach(simplePropertyDto -> {
+            if (nonNull(simplePropertyDto.getCalculatedValueFormula())) {
+                propsWithFunctions.put(simplePropertyDto.getName().toLowerCase(),
+                                       simplePropertyDto.getCalculatedValueFormula());
+            }
+        });
+
+        return propsWithFunctions;
     }
 
     private static boolean isPropertyExistByType(SchemaDto schema, ValueType type) {

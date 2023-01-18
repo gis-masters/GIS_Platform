@@ -30,6 +30,11 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         createSchema();
     }
 
+    @When("Существует схема с калькулируемыми формулами")
+    public void createSchemaWithCalculatedValueFormula() {
+        createSchema(prepareFunctionalZoneWithCalculatedFields());
+    }
+
     @When("Пользователь отправляет POST запрос на создание новой схемы")
     public void createNewSchemaPost() {
         createSchema();
@@ -87,6 +92,12 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         super.createEntity(dto);
     }
 
+    private void createSchema(SchemaDto dto) {
+        currentSchemaName = generateString("STRING_8");
+
+        super.createEntity(dto);
+    }
+
     public void updateCurrentSchema(SchemaDto dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -114,6 +125,54 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         dto.setTableName("someTableName");
         dto.setProperties(properties);
         dto.setReadOnly(true);
+
+        return dto;
+    }
+
+    private SchemaDto prepareFunctionalZoneWithCalculatedFields() {
+        currentSchemaName = "functionalzone_test";
+
+        List<SimplePropertyDto> properties = new ArrayList<>();
+        SimplePropertyDto globalid = new SimplePropertyDto();
+        globalid.setName("globalid");
+        globalid.setTitle("Идентификатор объекта");
+        globalid.setValueType("STRING");
+
+        SimplePropertyDto name = new SimplePropertyDto();
+        name.setName("name");
+        name.setTitle("Наименование объекта");
+        name.setValueType("STRING");
+        name.setCalculatedValueFormula("return obj.name + '!!!'");
+        name.setValidationFormula("return 'error'");
+
+        SimplePropertyDto area = new SimplePropertyDto();
+        area.setName("area");
+        area.setTitle("Площадь, га");
+        area.setValueType("DOUBLE");
+
+        SimplePropertyDto population = new SimplePropertyDto();
+        population.setName("population");
+        population.setTitle("Численность населения, чел.");
+        population.setValueType("INT");
+
+        SimplePropertyDto shape = new SimplePropertyDto();
+        shape.setName("shape");
+        shape.setTitle("Геометрия");
+        shape.setValueType("GEOMETRY");
+
+        properties.add(globalid);
+        properties.add(name);
+        properties.add(area);
+        properties.add(population);
+        properties.add(shape);
+
+        SchemaDto dto = new SchemaDto();
+        dto.setName(currentSchemaName);
+        dto.setTitle("Функциональные зоны тест");
+        dto.setTableName("functionalzone_test");
+        dto.setGeometryType("MultiPolygon");
+        dto.setReadOnly(false);
+        dto.setProperties(properties);
 
         return dto;
     }

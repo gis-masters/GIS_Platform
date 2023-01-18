@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_utils.CrgScriptEngine;
 import ru.mycrg.data_service.dao.GeometryDao;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
@@ -27,7 +28,6 @@ import ru.mycrg.data_service.service.parsers.model.SimpleFeatureData;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.validation.ValidationService;
-import ru.mycrg.data_service.util.CrgScriptEngine;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
 import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
+import static ru.mycrg.data_service.util.SchemaUtil.getPropertiesWithCalculatedFunctions;
 import static ru.mycrg.data_service_contract.enums.ValueType.STRING;
 
 @Service
@@ -52,7 +53,7 @@ public class GmlImporter {
     private final GeometryDao geometryDao;
     private final GmlParser gmlParser;
     private final ValidationService validationService;
-    private final CrgScriptEngine scriptEngine;
+    private final CrgScriptEngine crgScriptEngine;
     private final Mediator mediator;
     private final FileStorageService fileStorageService;
 
@@ -61,7 +62,7 @@ public class GmlImporter {
                        GeometryDao geometryDao,
                        GmlParser gmlParser,
                        ValidationService validationService,
-                       CrgScriptEngine scriptEngine,
+                       CrgScriptEngine crgScriptEngine,
                        Mediator mediator,
                        FileStorageService fileStorageService) {
         this.recordsDao = recordsDao;
@@ -69,7 +70,7 @@ public class GmlImporter {
         this.geometryDao = geometryDao;
         this.gmlParser = gmlParser;
         this.validationService = validationService;
-        this.scriptEngine = scriptEngine;
+        this.crgScriptEngine = crgScriptEngine;
         this.mediator = mediator;
         this.fileStorageService = fileStorageService;
     }
@@ -178,6 +179,11 @@ public class GmlImporter {
             if (schema.getCalcFiledFunction() != null) {
                 calculateFieldsByCustomRules(featureData, schema.getCalcFiledFunction());
             }
+
+            Map<String, String> propsWithFunctions = getPropertiesWithCalculatedFunctions(schema);
+            propsWithFunctions.forEach((key, formula) -> {
+                calculatePropertiesByFormula(featureData, key, formula);
+            });
 
             if (!featureData.getObjects().isEmpty()) {
                 ResourceQualifier tableQualifier = new ResourceQualifier(datasetIdentifier, table.getName());
@@ -357,10 +363,30 @@ public class GmlImporter {
             properties.forEach(featureProperty -> props.put(featureProperty.getName(),
                                                             featureProperty.getValue()));
 
-            var calculatedFields = (Map<String, Object>) scriptEngine.invokeFunction(props, calcFieldFunction);
+            var calculatedFields = (Map<String, Object>) crgScriptEngine.invokeFunction(props, calcFieldFunction);
             calculatedFields.forEach((key, value) -> {
                 properties.add(new FeatureProperty(key, value, STRING));
             });
+        });
+    }
+
+    private void calculatePropertiesByFormula(FeatureData featureData,
+                                              String fieldName,
+                                              String calcFieldFunction) {
+        featureData.getObjects().forEach(featureObject -> {
+            Map<String, Object> props = new HashMap<>();
+            final List<FeatureProperty> properties = featureObject.getProperties();
+            long fieldNameCount = properties.stream()
+                                            .filter(property -> property.getName().equalsIgnoreCase(fieldName))
+                                            .count();
+            if (fieldNameCount > 0) {
+                properties.forEach(featureProperty -> props.put(featureProperty.getName(),
+                                                                featureProperty.getValue()));
+
+                String result = crgScriptEngine.invokeFunctionAsString(props, calcFieldFunction);
+
+                properties.add(new FeatureProperty(fieldName, result, STRING));
+            }
         });
     }
 }

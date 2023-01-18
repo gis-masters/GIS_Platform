@@ -57,6 +57,7 @@ public class SimplePropertyDto {
     private Integer sequenceNumber;
 
     private String calculatedValueFormula;
+    private String validationFormula;
     private String calculatedValueWellKnownFormula;
     private Object valueFormulaParams;
 
@@ -426,5 +427,13 @@ public class SimplePropertyDto {
 
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
+    }
+
+    public String getValidationFormula() {
+        return validationFormula;
+    }
+
+    public void setValidationFormula(String validationFormula) {
+        this.validationFormula = validationFormula;
     }
 }

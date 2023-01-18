@@ -1,14 +1,12 @@
-package ru.mycrg.data_service.util;
+package ru.mycrg.common_utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import javax.script.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
 public class CrgScriptEngine {
 
     private final Logger log = LoggerFactory.getLogger(CrgScriptEngine.class);
@@ -42,5 +40,20 @@ public class CrgScriptEngine {
         } else {
             return new HashMap<>();
         }
+    }
+
+    public String invokeFunctionAsString(Map<String, Object> data, String function) {
+        String result = "";
+
+        try {
+            String statement = "function someFiz(obj) {" + function + "}";
+            compilable.compile(statement).eval();
+
+            result = (String) invocable.invokeFunction("someFiz", data);
+        } catch (ScriptException | NoSuchMethodException e) {
+            log.error("Ошибка при анализе доп. правил, {} ", e.getLocalizedMessage());
+        }
+
+        return result;
     }
 }

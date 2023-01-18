@@ -45,6 +45,9 @@ public class SimplePropertyDto {
     private Integer maxDocuments;
     private List<String> allowedValues = new ArrayList<>();
 
+    private String calculatedValueFormula;
+    private String validationFormula;
+
     public String getName() {
         return name;
     }
@@ -307,5 +310,21 @@ public class SimplePropertyDto {
 
     public void setValueType(String valueType) {
         this.valueType = valueType;
+    }
+
+    public String getCalculatedValueFormula() {
+        return calculatedValueFormula;
+    }
+
+    public void setCalculatedValueFormula(String calculatedValueFormula) {
+        this.calculatedValueFormula = calculatedValueFormula;
+    }
+
+    public String getValidationFormula() {
+        return validationFormula;
+    }
+
+    public void setValidationFormula(String validationFormula) {
+        this.validationFormula = validationFormula;
     }
 }

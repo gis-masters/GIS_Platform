@@ -7,9 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.postgresql.util.PGobject;
+import ru.mycrg.common_utils.CrgScriptEngine;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.wrapper.service.import_.DataHandler;
-import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 
 import java.io.File;
 import java.io.IOException;

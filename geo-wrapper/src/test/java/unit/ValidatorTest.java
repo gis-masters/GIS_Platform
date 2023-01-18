@@ -1,13 +1,9 @@
 package unit;
 
 import org.junit.Test;
-import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
-import ru.mycrg.data_service_contract.dto.ValueTitleProjection;
+import ru.mycrg.common_utils.CrgScriptEngine;
+import ru.mycrg.data_service_contract.dto.*;
 import ru.mycrg.data_service_contract.enums.ValueType;
-import ru.mycrg.data_service_contract.dto.ErrorDescription;
-import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
-import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import ru.mycrg.wrapper.service.validation.IValidator;
 import ru.mycrg.wrapper.service.validation.ValidatorImpl;
 import ru.mycrg.wrapper.service.validation.constraints.MaxLengthValidation;

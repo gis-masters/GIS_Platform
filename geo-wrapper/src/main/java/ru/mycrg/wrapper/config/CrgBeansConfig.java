@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.config;
+package ru.mycrg.wrapper.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,14 +6,7 @@ import ru.mycrg.common_utils.CrgScriptEngine;
 import ru.mycrg.common_utils.ScriptCalculator;
 
 @Configuration
-public class CrgCommonConfig {
-
-    public static final String ROOT_FOLDER_PATH = "/root";
-
-    public static final String SYSTEM_DATE_PATTERN = "yyyy-MM-dd";
-
-    public static final String SYSTEM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
-
+public class CrgBeansConfig {
     @Bean
     public CrgScriptEngine crgScriptEngine() {
         return new CrgScriptEngine();
