@@ -292,11 +292,12 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   private async add() {
     const { datasource = {}, title, minZoom, dataSourceUri, tableName, layerType, view } = this.formValue;
     const { dataset, vectorTable, library } = datasource;
-    const schema = await schemaService.getSchema(vectorTable.schemaId);
-    const styleName = schema?.views?.find(({ id }) => id === view)?.styleName;
-
     const dataStoreName = currentUser.workspaceName;
+
     if (this.valid && (!layerType || layerType === CrgLayerType.VECTOR)) {
+      const schema = await schemaService.getSchema(vectorTable.schemaId);
+      const styleName = schema?.views?.find(({ id }) => id === view)?.styleName;
+
       this.props.onAdd({
         ...vectorLayerDefaults(),
         id: generateNextLayerId(),
