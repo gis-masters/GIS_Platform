@@ -18,10 +18,11 @@ import {
   moveLibraryRecord
 } from '../../../services/data/doc-library.service';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
-import { isLibraryUpdateAllowed, isRecordUpdateAllowed } from '../../../services/data/permissions.service';
+import { isRecordUpdateAllowed } from '../../../services/data/permissions.service';
+import { DialogActionsRight } from '../../DialogActionsRight/DialogActionsRight';
 import { Button } from '../../Button/Button';
 
-const cnLibraryDocumentActionsFilesPlacement = cn('LibraryDocumentActions', 'FilesPlacement');
+const cnLibraryDocumentActionsMove = cn('LibraryDocumentActions', 'Move');
 
 interface LibraryDocumentActionsFilesPlacementProps {
   document: LibraryRecord;
@@ -32,9 +33,9 @@ interface LibraryDocumentActionsFilesPlacementProps {
 @observer
 export class LibraryDocumentActionsMove extends Component<LibraryDocumentActionsFilesPlacementProps> {
   @observable private documentMoveDialogOpen = false;
-  @observable private disabled = false;
+  @observable private disabled = true;
   @observable private currentLibrary?: DocumentLibrary;
-  @observable private openedFolder?: LibraryRecord;
+  @observable private selectedFolder?: LibraryRecord;
 
   constructor(props: LibraryDocumentActionsFilesPlacementProps) {
     super(props);
@@ -43,7 +44,6 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
 
   async componentDidMount(): Promise<void> {
     const library = await getLibrary(this.props.document?.libraryId);
-    this.setDisabled(!(await isLibraryUpdateAllowed(library)));
     this.setCurrentLibrary(library);
   }
 
@@ -52,7 +52,7 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
 
     const moveButton = (
       <Button
-        children='Переместить сюда'
+        children='Выбрать'
         onClick={this.submitFolderSelection}
         color='primary'
         startIcon={<DriveFileMoveOutlined />}
@@ -63,37 +63,41 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
     return (
       <>
         <ActionsItem
-          className={cnLibraryDocumentActionsFilesPlacement()}
           title='Переместить'
+          className={cnLibraryDocumentActionsMove()}
           icon={this.documentMoveDialogOpen ? <DriveFileMove /> : <DriveFileMoveOutlined />}
           onClick={this.openDocumentMoveDialog}
           as={as}
         />
 
         <Dialog open={this.documentMoveDialogOpen} onClose={this.closeDocumentMoveDialog}>
-          <DialogTitle>Выбор проекта</DialogTitle>
-          <DialogContent>
+          <DialogTitle>Укажите папку для перемещения</DialogTitle>
+          <DialogContent className='scroll'>
             <RegistryConsumer id='common'>
               {({ Explorer }: CommonDiRegistry) => (
                 <Explorer
                   id='DocumentMove'
-                  className={cnLibraryDocumentActionsFilesPlacement('Explorer')}
                   path={this.path}
-                  onOpen={this.handleOpen}
+                  onSelect={this.handleSelect}
                   disabledTester={this.testForDisabled}
+                  customFilters={{
+                    [ExplorerItemType.LIBRARY]: { is_folder: { $in: [true] } }
+                  }}
                 />
               )}
             </RegistryConsumer>
           </DialogContent>
           <DialogActions>
-            {this.disabled ? (
-              <Tooltip title='Недостаточно прав для перемещения'>
-                <span>{moveButton}</span>
-              </Tooltip>
-            ) : (
-              moveButton
-            )}
-            <Button onClick={this.closeDocumentMoveDialog}>Отмена</Button>
+            <DialogActionsRight>
+              {this.disabled ? (
+                <Tooltip title={this.selectedFolder?.id ? 'Недостаточно прав для перемещения' : ''}>
+                  <span>{moveButton}</span>
+                </Tooltip>
+              ) : (
+                moveButton
+              )}
+              <Button onClick={this.closeDocumentMoveDialog}>Отмена</Button>
+            </DialogActionsRight>
           </DialogActions>
         </Dialog>
       </>
@@ -106,18 +110,20 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
   }
 
   @boundMethod
-  private async handleOpen(item: ExplorerItemData<LibraryRecord>) {
-    this.setOpenedFolder(item.payload);
-    this.setDisabled(!(await isLibraryUpdateAllowed(this.currentLibrary)));
+  private async handleSelect(item: ExplorerItemData<LibraryRecord>) {
+    this.setSelectedFolder(item.payload);
+    if (this.selectedFolder?.is_folder) {
+      this.setDisabled(!(await isRecordUpdateAllowed(this.selectedFolder)));
+    }
 
-    if (this.openedFolder?.is_folder) {
-      this.setDisabled(!(await isRecordUpdateAllowed(this.openedFolder)));
+    if (!this.selectedFolder?.is_folder && !this.selectedFolder.loading) {
+      this.setDisabled(true);
     }
   }
 
   @boundMethod
   private async submitFolderSelection() {
-    await moveLibraryRecord(this.props.document, this.openedFolder?.is_folder ? this.openedFolder.id : null);
+    await moveLibraryRecord(this.props.document, this.selectedFolder?.is_folder ? this.selectedFolder.id : null);
 
     this.closeDocumentMoveDialog();
   }
@@ -138,8 +144,8 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
   }
 
   @action.bound
-  private setOpenedFolder(openedFolder: LibraryRecord) {
-    this.openedFolder = openedFolder;
+  private setSelectedFolder(selectedFolder: LibraryRecord) {
+    this.selectedFolder = selectedFolder;
   }
 
   @action.bound
