@@ -5,8 +5,8 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
-import { CrgGroup, groupsService } from '../../services/data/groups.service';
-import { CrgUser, usersService } from '../../services/data/users.service';
+import { CrgGroup, groupsService } from '../../services/auth/groups.service';
+import { CrgUser, usersService } from '../../services/auth/users.service';
 import { XTable, XTableColumn } from '../XTable/XTable';
 
 import { OrgUsersCreate } from './Create/OrgUsers-Create';

@@ -8,8 +8,8 @@ import { cloneDeep } from 'lodash';
 
 import { PropertyType, Schema } from '../../services/data/schema.models';
 import { generateRandomId } from '../../services/util/randomId';
-import { usersService } from '../../services/data/users.service';
-import { authService } from '../../services/auth.service';
+import { usersService } from '../../services/auth/users.service';
+import { authService } from '../../services/auth/auth.service';
 import { services } from '../../services/services';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';

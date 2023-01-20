@@ -6,12 +6,12 @@ import {
   getLogoutUrl,
   getOrganizationsUrl,
   getRestorePasswordUrl
-} from './server-urls.service';
-import { communicationService } from './communication.service';
-import { getEnvironment } from './environment';
-import { services } from './services';
-import { http } from './http.service';
-import { Mime } from './util/Mime';
+} from '../server-urls.service';
+import { communicationService } from '../communication.service';
+import { getEnvironment } from '../environment';
+import { services } from '../services';
+import { http } from '../http.service';
+import { Mime } from '../util/Mime';
 
 export interface AuthCredentials {
   username: string;

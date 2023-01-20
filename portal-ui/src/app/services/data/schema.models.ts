@@ -85,11 +85,7 @@ export interface Relation {
   layers?: string[];
 }
 
-export type ValueFormula = (
-  obj: Record<string, unknown>,
-  property: PropertySchema,
-  parent?: Record<string, unknown>
-) => unknown;
+export type ValueFormula = (obj: unknown, property: PropertySchema, parent?: unknown) => unknown;
 
 interface BasePropertySchema<T = Record<string, unknown>> {
   name: keyof T & string;

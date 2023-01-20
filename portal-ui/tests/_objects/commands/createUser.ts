@@ -1,5 +1,5 @@
 import { testUsers } from './testUsers';
-import { NewUserData, usersService } from '../../../src/app/services/data/users.service';
+import { NewUserData, usersService } from '../../../src/app/services/auth/users.service';
 
 declare const window: { usersService: typeof usersService };
 

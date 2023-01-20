@@ -1,4 +1,4 @@
-import { authService, RegData } from '../../../src/app/services/auth.service';
+import { authService, RegData } from '../../../src/app/services/auth/auth.service';
 import { testUsers } from './testUsers';
 
 declare const window: { authService: typeof authService };

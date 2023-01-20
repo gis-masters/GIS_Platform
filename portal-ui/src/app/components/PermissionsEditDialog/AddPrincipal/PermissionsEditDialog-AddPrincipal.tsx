@@ -20,8 +20,8 @@ import { allUsers } from '../../../stores/AllUsers.store';
 import { allGroups } from '../../../stores/AllGroups.store';
 import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../../services/data/permissions.models';
 import { DialogActionsRight } from '../../DialogActionsRight/DialogActionsRight';
-import { CrgGroup } from '../../../services/data/groups.service';
-import { CrgUser } from '../../../services/data/users.service';
+import { CrgGroup } from '../../../services/auth/groups.service';
+import { CrgUser } from '../../../services/auth/users.service';
 import { XTable, XTableColumn } from '../../XTable/XTable';
 import { Button } from '../../Button/Button';
 

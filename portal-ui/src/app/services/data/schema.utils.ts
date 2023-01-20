@@ -372,7 +372,7 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
 }
 
 export const valueWellKnownFormulas: Record<string, ValueFormula> = {
-  inherit: (obj, property, parent) => parent[property.name],
+  inherit: (obj, property, parent) => parent[property.name] as unknown,
 
   parentDocument: (obj, property, parent: LibraryRecord) => {
     const value: DocumentInfo[] = [{ id: parent.id, libraryId: parent.libraryId, title: parent.title }];

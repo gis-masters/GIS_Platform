@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { CrgGroup } from '../../../services/data/groups.service';
-import { CrgUser } from '../../../services/data/users.service';
+import { CrgGroup } from '../../../services/auth/groups.service';
+import { CrgUser } from '../../../services/auth/users.service';
 
 const cnPermissionsEditDialogCheckPrincipal = cn('PermissionsEditDialog', 'CheckPrincipal');
 

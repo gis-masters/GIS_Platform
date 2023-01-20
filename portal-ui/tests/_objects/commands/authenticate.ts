@@ -1,6 +1,6 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { AuthenticationResult, authService } from '../../../src/app/services/auth.service';
+import { AuthenticationResult, authService } from '../../../src/app/services/auth/auth.service';
 import { createTestOrganization } from './createOrganization';
 import { sleep } from '../../../src/app/services/util/sleep';
 import { createTestUsers } from './createUser';

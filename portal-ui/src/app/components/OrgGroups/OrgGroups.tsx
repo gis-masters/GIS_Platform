@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { allGroups } from '../../stores/AllGroups.store';
-import { CrgGroup, groupsService } from '../../services/data/groups.service';
+import { CrgGroup, groupsService } from '../../services/auth/groups.service';
 import { PropertyType } from '../../services/data/schema.models';
 import { XTable, XTableColumn } from '../XTable/XTable';
 

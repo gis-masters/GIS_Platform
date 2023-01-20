@@ -2,8 +2,8 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { PrincipalType } from '../../services/data/permissions.models';
-import { CrgGroup } from '../../services/data/groups.service';
-import { CrgUser } from '../../services/data/users.service';
+import { CrgGroup } from '../../services/auth/groups.service';
+import { CrgUser } from '../../services/auth/users.service';
 
 import { OrgActionsListPermissions } from './ListPermissions/OrgActions-ListPermissions';
 import { OrgActionsGroups } from './Groups/OrgActions-Groups';

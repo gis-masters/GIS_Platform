@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { BackCrgUser } from '../../../src/app/services/data/users.service';
+import { BackCrgUser } from '../../../src/app/services/auth/users.service';
 import { queryObjects } from '../../../src/app/services/util/queryObjects';
 import { users } from '../data/users';
 import { SyntheticController } from './_master';

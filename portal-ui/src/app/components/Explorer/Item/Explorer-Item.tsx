@@ -12,6 +12,7 @@ import { ExplorerStore } from '../Explorer.store';
 import '!style-loader!css-loader!sass-loader!./Explorer-Item.scss';
 
 const cnExplorerItem = cn('Explorer', 'Item');
+const cnExplorerItemTitle = cn('Explorer', 'ItemTitle');
 
 export interface ExplorerItemProps {
   item: ExplorerItemData;
@@ -55,7 +56,7 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
         ref={itemRef}
       >
         <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText primary={title} secondary={meta} />
+        <ListItemText classes={{ primary: cnExplorerItemTitle() }} primary={title} secondary={meta} />
         {isFolder && (
           <ListItemSecondaryAction>
             <IconButton edge='end' onClick={this.openHandler} disabled={this.disabled}>

@@ -1,5 +1,5 @@
 import { BuiltInRole } from '../../../src/app/services/data/permissions.models';
-import { BackCrgUser } from '../../../src/app/services/data/users.service';
+import { BackCrgUser } from '../../../src/app/services/auth/users.service';
 
 export const users: BackCrgUser[] = [
   {

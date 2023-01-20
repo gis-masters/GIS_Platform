@@ -8,7 +8,7 @@ import { Toast } from '../Toast/Toast';
 import { getPatch } from '../../services/util/patch';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { PropertySchema, PropertySchemaString, PropertyType } from '../../services/data/schema.models';
-import { usersService, NewUserData, CrgUser } from '../../services/data/users.service';
+import { usersService, NewUserData, CrgUser } from '../../services/auth/users.service';
 
 import '!style-loader!css-loader!sass-loader!./OrgUsersCreateEditDialog.scss';
 

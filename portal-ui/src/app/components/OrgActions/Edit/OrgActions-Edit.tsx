@@ -7,8 +7,8 @@ import { Edit } from '@mui/icons-material';
 
 import { OrgGroupsCreateEditDialog } from '../../OrgGroupCreateEditDialog/OrgGroupsCreateEditDialog';
 import { OrgUsersCreateEditDialog } from '../../OrgUsersCreateEditDialog/OrgUsersCreateEditDialog';
-import { CrgGroup } from '../../../services/data/groups.service';
-import { CrgUser } from '../../../services/data/users.service';
+import { CrgGroup } from '../../../services/auth/groups.service';
+import { CrgUser } from '../../../services/auth/users.service';
 
 const cnOrgActionsEdit = cn('OrgActions', 'Edit');
 

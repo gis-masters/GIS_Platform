@@ -25,7 +25,7 @@ import {
 import { Toast } from '../../components/Toast/Toast';
 import { communicationService } from '../communication.service';
 import { preparePageOptions } from '../http.utils';
-import { usersService } from '../data/users.service';
+import { usersService } from '../auth/users.service';
 import { Mime } from '../util/Mime';
 import { mapStore } from '../../stores/Map.store';
 

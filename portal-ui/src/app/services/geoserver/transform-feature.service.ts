@@ -9,7 +9,7 @@ import { OldSchema } from '../data/schemaOld.models';
 import { getFeatureProjection } from './projections.service';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { createVectorTableRecord } from '../data/data.service';
-import { usersService } from '../data/users.service';
+import { usersService } from '../auth/users.service';
 import { getDatasetTableMultipleRecordsUrl, getWfsUrl } from '../server-urls.service';
 import { CrgLayer } from '../gis/projects.models';
 import { FeatureUtil } from '../util/FeatureUtil';

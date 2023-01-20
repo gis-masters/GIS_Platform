@@ -1,7 +1,7 @@
 import { observable, action, makeObservable } from 'mobx';
 
 import { currentUser } from './CurrentUser.store';
-import { CrgUser } from '../services/data/users.service';
+import { CrgUser } from '../services/auth/users.service';
 
 class AllUsers {
   @observable fetching = false;

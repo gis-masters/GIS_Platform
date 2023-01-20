@@ -6,7 +6,7 @@ import { libraries } from '../data/libraries';
 import { SyntheticController } from './_master';
 import { err404 } from '../utils';
 
-class LibrariesSyntheticController implements SyntheticController {
+class LibrarySyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)$/;
 
   get(config: AxiosRequestConfig): DocumentLibrary {
@@ -24,4 +24,4 @@ class LibrariesSyntheticController implements SyntheticController {
   }
 }
 
-export const librarySyntheticController = new LibrariesSyntheticController();
+export const librarySyntheticController = new LibrarySyntheticController();

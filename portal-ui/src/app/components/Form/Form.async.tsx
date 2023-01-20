@@ -216,7 +216,7 @@ export default class Form<T> extends Component<FormProps<T>> {
     const { actionFunction, onActionSuccess, onActionError, schema } = this.props;
 
     try {
-      await actionFunction(cleanCalculatedValues(this.value as T, schema.properties));
+      await actionFunction(cleanCalculatedValues<T>(this.value, schema.properties));
       if (onActionSuccess) {
         onActionSuccess(this.value as T);
       }
@@ -324,7 +324,7 @@ export default class Form<T> extends Component<FormProps<T>> {
 
     if (auto) {
       this.filterFieldErrors(fieldName);
-      this.setErrors([...this.errors, validateFieldValue(value, field, this.value, schema.properties)]);
+      this.setErrors([...this.errors, validateFieldValue(value, field, this.value)]);
     }
 
     if (onFieldNeedValidate) {

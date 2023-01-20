@@ -3,6 +3,7 @@ import { AxiosRequestConfig } from 'axios';
 import { libraryRecordPermissionsSyntheticController } from './libraryRecordPermissions.syntheticController';
 import { libraryRecordsSyntheticController } from './libraryRecords.syntheticController';
 import { libraryRecordSyntheticController } from './libraryRecord.syntheticController';
+import { librariesSyntheticController } from './libraries.syntheticController';
 import { projectsSyntheticController } from './projects.syntheticController';
 import { librarySyntheticController } from './library.syntheticController';
 import { schemasSyntheticController } from './schemas.syntheticController';
@@ -20,6 +21,7 @@ export interface SyntheticController {
 
 const controllers: SyntheticController[] = [
   librarySyntheticController,
+  librariesSyntheticController,
   libraryRecordSyntheticController,
   libraryRecordPermissionsSyntheticController,
   libraryRecordsSyntheticController,

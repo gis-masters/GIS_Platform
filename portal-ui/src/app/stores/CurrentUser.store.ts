@@ -1,7 +1,7 @@
 import { observable, computed, action, makeObservable } from 'mobx';
 
 import { BuiltInRole } from '../services/data/permissions.models';
-import { OrgInfo } from '../services/data/users.service';
+import { OrgInfo } from '../services/auth/users.service';
 
 const emptyOrgInfo: OrgInfo = {
   id: 0,

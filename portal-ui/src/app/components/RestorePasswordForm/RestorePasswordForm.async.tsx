@@ -9,7 +9,7 @@ import { Dialog, DialogActions, DialogContent } from '@mui/material';
 
 import { PropertyType, Schema } from '../../services/data/schema.models';
 import { generateRandomId } from '../../services/util/randomId';
-import { authService } from '../../services/auth.service';
+import { authService } from '../../services/auth/auth.service';
 import { services } from '../../services/services';
 import { env } from '../../stores/Env.store';
 import { Button } from '../Button/Button';

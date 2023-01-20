@@ -6,7 +6,7 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { organizationSettingsService } from '../organization-settings';
 import { getUsersUrl, getUserUrl } from '../server-urls.service';
 import { communicationService } from '../communication.service';
-import { BuiltInRole } from './permissions.models';
+import { BuiltInRole } from '../data/permissions.models';
 import { http } from '../http.service';
 import { services } from '../services';
 

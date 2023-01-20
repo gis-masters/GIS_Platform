@@ -84,7 +84,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
                     customFilters={
                       librariesIdentifiers.length > 1
                         ? {
-                            [ExplorerItemType.LIBRARY_ROOT]: { table_name: { $in: librariesIdentifiers } }
+                            [ExplorerItemType.LIBRARY_ROOT]: { identifier: { $in: librariesIdentifiers } }
                           }
                         : undefined
                     }

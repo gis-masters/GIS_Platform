@@ -20,7 +20,7 @@ import {
 } from './models';
 import { currentImport } from '../../../stores/CurrentImport.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { usersService } from '../../data/users.service';
+import { usersService } from '../../auth/users.service';
 import { http } from '../../http.service';
 
 interface ImportRequestData {

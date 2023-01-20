@@ -4,7 +4,7 @@ import { projectsService } from '../../../src/app/services/gis/projects.service'
 import { allProjects } from '../../../src/app/stores/AllProjects.store';
 import { authenticateAsOwner } from './authenticate';
 import { deleteAllProjects } from './deleteAllProjects';
-import { usersService } from '../../../src/app/services/data/users.service';
+import { usersService } from '../../../src/app/services/auth/users.service';
 import { addProjectPermission } from '../../../src/app/services/data/permissions.client';
 
 declare const window: {

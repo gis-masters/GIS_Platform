@@ -7,8 +7,8 @@ import { Delete, DeleteOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
 import { Button } from '../../Button/Button';
-import { usersService, CrgUser } from '../../../services/data/users.service';
-import { groupsService, CrgGroup } from '../../../services/data/groups.service';
+import { usersService, CrgUser } from '../../../services/auth/users.service';
+import { groupsService, CrgGroup } from '../../../services/auth/groups.service';
 
 import { Loading } from '../../Loading/Loading';
 

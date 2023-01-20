@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 
-import { authService } from '../../services/auth.service';
+import { authService } from '../../services/auth/auth.service';
 import { Toast } from '../../components/Toast/Toast';
 
 @Component({

@@ -39,12 +39,7 @@ export interface ServerFieldError {
   defaultMessage?: string;
 }
 
-export type FieldValidator = (
-  value: unknown,
-  property: PropertySchema,
-  formValue: unknown,
-  allProperties: PropertySchema[]
-) => string[] | undefined;
+export type FieldValidator = (value: unknown, property: PropertySchema, formValue: unknown) => string[] | undefined;
 
 const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
   [PropertyType.STRING]: [simpleRequired, stringLength, stringRegex, stringWellKnownRegex, stringPassword, stringEmail],
@@ -62,12 +57,7 @@ const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
   [PropertyType.CUSTOM]: [simpleRequired]
 };
 
-export function validateFieldValue(
-  value: unknown,
-  property: PropertySchema,
-  formValue: unknown,
-  allProperties: PropertySchema[]
-): FieldErrors {
+export function validateFieldValue(value: unknown, property: PropertySchema, formValue: unknown): FieldErrors {
   const validatorsList = [...(fieldValidators[property.propertyType] || [])];
   if (property.validationFormula) {
     validatorsList.push(property.validationFormula);
@@ -77,13 +67,13 @@ export function validateFieldValue(
     field: property.name,
     hidden: property.hidden,
     title: property.title,
-    messages: validatorsList?.flatMap(validator => validator(value, property, formValue, allProperties)).filter(Boolean)
+    messages: validatorsList?.flatMap(validator => validator(value, property, formValue)).filter(Boolean)
   };
 }
 
 export function validateFormValue(formValue: unknown, fields: PropertySchema[]): FieldErrors[] {
   return fields
-    .map(field => validateFieldValue(formValue[field.name], field, formValue, fields))
+    .map(field => validateFieldValue(formValue[field.name], field, formValue))
     .filter(({ messages }) => messages?.length);
 }
 
@@ -339,17 +329,17 @@ export function getDefaultValues<T>(properties: PropertySchema[], parent: Record
   return values;
 }
 
-export function calculateValues<T>(obj: Partial<T>, properties: PropertySchema[]): T {
+export function calculateValues<T>(obj: T | Partial<T>, properties: PropertySchema[]): T {
   const value = cloneDeep(obj);
 
   for (const property of properties) {
-    value[property.name] = getCalculatedValue(value, property) as T[keyof T & string];
+    value[property.name] = getCalculatedValue(value, property);
   }
 
   return value as T;
 }
 
-export function cleanCalculatedValues<T>(obj: T, properties: PropertySchema[]): T {
+export function cleanCalculatedValues<T>(obj: T | Partial<T>, properties: PropertySchema[]): T {
   const value = cloneDeep(obj);
 
   for (const property of properties) {
@@ -358,10 +348,10 @@ export function cleanCalculatedValues<T>(obj: T, properties: PropertySchema[]): 
     }
   }
 
-  return value;
+  return value as T;
 }
 
-export function getCalculatedValue<T>(obj: Record<string, unknown>, property: PropertySchema): unknown {
+export function getCalculatedValue<T>(obj: T | Partial<T>, property: PropertySchema): unknown {
   if (property.calculatedValueFormula) {
     try {
       const formula =

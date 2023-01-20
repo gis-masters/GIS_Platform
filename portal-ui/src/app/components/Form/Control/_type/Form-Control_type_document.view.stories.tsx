@@ -6,7 +6,7 @@ import { DocumentInfo } from '../../../Documents/Documents';
 import { Form } from '../../Form';
 
 export default {
-  title: 'Form/Field/document',
+  title: 'Form/Field/document/view',
   component: Form
 } as ComponentMeta<typeof Form>;
 
@@ -19,8 +19,7 @@ const fieldsSingle: PropertySchema[] = [
   {
     propertyType: PropertyType.DOCUMENT,
     name: 'permissive_document',
-    title: 'Разрешение',
-    library: 'dl_data_section3'
+    title: 'Разрешение'
   }
 ];
 
@@ -29,16 +28,15 @@ const fieldsMultiple: PropertySchema[] = [
     propertyType: PropertyType.DOCUMENT,
     name: 'reglaments',
     title: 'Регламенты',
-    libraries: ['dl_default', 'dl_data_section3'],
     multiple: true,
     maxDocuments: 6
   }
 ];
 
-const singleFileData: [DocumentInfo] = [
+const singleDocumentData: [DocumentInfo] = [
   { id: 12_353, libraryId: 'dl_data_section3', title: 'Разрешение на строительство №333 от 32.05.2000' }
 ];
-const multipleFilesData: DocumentInfo[] = [
+const multipleDocumentsData: DocumentInfo[] = [
   { id: 12_352, libraryId: 'dl_data_section3', title: 'Ж1' },
   { id: 12_351, libraryId: 'dl_data_section3', title: 'Ж2' },
   { id: 12_350, libraryId: 'dl_data_section3', title: 'Ж3' },
@@ -49,9 +47,11 @@ const multipleFilesData: DocumentInfo[] = [
       'Документ с длинным-предлинным никуда не помещающимся названием с множеством разных никому не интересных и всё же абсолютно обязательных к написанию слов'
   }
 ];
-const valueSingle: TestData = { permissive_document: JSON.stringify(singleFileData) };
-const valueMultiple: TestData = { reglaments: JSON.stringify(multipleFilesData) };
-const valueMultipleScroll: TestData = { reglaments: JSON.stringify([...multipleFilesData, ...multipleFilesData]) };
+const valueSingle: TestData = { permissive_document: JSON.stringify(singleDocumentData) };
+const valueMultiple: TestData = { reglaments: JSON.stringify(multipleDocumentsData) };
+const valueMultipleScroll: TestData = {
+  reglaments: JSON.stringify([...multipleDocumentsData, ...multipleDocumentsData])
+};
 
 const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 

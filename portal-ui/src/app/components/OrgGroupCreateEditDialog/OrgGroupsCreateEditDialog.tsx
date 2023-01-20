@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { CrgGroup, groupsService } from '../../services/data/groups.service';
+import { CrgGroup, groupsService } from '../../services/auth/groups.service';
 import { PropertySchema, PropertyType } from '../../services/data/schema.models';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { Toast } from '../Toast/Toast';
