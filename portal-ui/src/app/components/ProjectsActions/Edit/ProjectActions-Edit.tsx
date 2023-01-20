@@ -71,6 +71,6 @@ export class ProjectActionsEdit extends Component<ProjectActionsProps> {
 
   @boundMethod
   private async updateDocumentPage(value: CrgProject) {
-    await projectsService.update(this.props.project.id, getPatch(value, this.props.project));
+    await projectsService.update(this.props.project, getPatch(value, this.props.project));
   }
 }

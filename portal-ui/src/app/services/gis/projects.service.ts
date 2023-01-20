@@ -235,11 +235,13 @@ class ProjectsService {
     );
   }
 
-  async update(id: number, patch: Partial<CrgProject>) {
-    const url = await getProjectUrl(id);
+  async update(project: CrgProject, patch: Partial<CrgProject>) {
+    const url = await getProjectUrl(project.id);
     await http.patch(url, patch);
-    allProjects.update(id, patch);
-    communicationService.projectUpdated.emit({ type: 'update', data: allProjects.getById(id) });
+    if (allProjects.inited) {
+      allProjects.update(project.id, patch);
+    }
+    communicationService.projectUpdated.emit({ type: 'update', data: { ...project, ...patch } });
   }
 
   async delete(id: number) {
