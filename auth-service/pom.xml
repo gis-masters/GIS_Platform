@@ -182,6 +182,12 @@
             <artifactId>auth-facade</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>ru.mycrg</groupId>
+            <artifactId>audit-service-contract</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <distributionManagement>

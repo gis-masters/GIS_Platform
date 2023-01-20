@@ -8,7 +8,8 @@ public enum AuditEventActionsType {
     SIGN_OUT("SIGN_OUT"),
     MULTIPLE_DELETION("MULTIPLE_DELETION"),
     MULTIPLE_UPDATE("MULTIPLE_UPDATE"),
-    COPYING("COPYING");
+    COPYING("COPYING"),
+    INVITE("INVITE");
 
     String value;
 

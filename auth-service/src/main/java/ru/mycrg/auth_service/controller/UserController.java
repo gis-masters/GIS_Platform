@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_service.dto.UserProjection;
+import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.service.UserService;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
@@ -140,5 +141,14 @@ public class UserController {
     @PutMapping("/users/{id}")
     public ResponseEntity<Object> updateUsers(@PathVariable String id) {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @PostMapping("/users/invite")
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> inviteUser(@RequestParam(name = "email") String email) {
+        Long organizationId = authenticationFacade.getOrganizationId();
+        userService.invite(email, authenticationFacade.getAccessToken(), organizationId);
+
+        return ResponseEntity.ok().build();
     }
 }

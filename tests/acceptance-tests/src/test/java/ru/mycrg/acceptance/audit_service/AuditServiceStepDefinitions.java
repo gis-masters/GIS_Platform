@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.audit_service.dto.AuditEventActionsType.*;
 import static ru.mycrg.acceptance.audit_service.dto.AuditEventEntityType.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
+import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
@@ -264,6 +265,11 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     @Then("Создана запись в журнале аудита о создании таблицы")
     public void checkTableCreate() {
         checkAuditEvent(CREATE.name(), TABLE, currentTableName);
+    }
+
+    @Then("Создана запись в журнале аудита о приглашении пользователя в другую организацию")
+    public void checkUserWasInvite() {
+        checkAuditEvent(INVITE.name(), USER, userDto.getEmail());
     }
 
     @Then("Создана запись в журнале аудита об обновлении таблицы")

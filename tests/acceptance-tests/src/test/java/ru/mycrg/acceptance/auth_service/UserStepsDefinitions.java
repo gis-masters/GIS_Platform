@@ -13,6 +13,7 @@ import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -225,6 +226,38 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         getAllAndFillEntityCount();
     }
 
+    @When("Администратор отправляет приглашение несуществующему пользователю")
+    public void inviteNonExistingUser() {
+        authorizationBase.loginAsOwner();
+        inviteUserByEmail(generateString("EMAIL_8"));
+    }
+
+    @When("Администратор отправляет приглашение существующему пользователю")
+    public void inviteExistingUser() {
+        authorizationBase.loginAsOwner();
+        inviteUserByEmail(userDto.getEmail());
+    }
+
+    @And("Пользователь состоит в данной организации")
+    public void userPresentInOrganization() {
+        Map<String, Object> presentedData = response
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK).
+                        extract().jsonPath().
+                        getMap("");
+
+        List<HashMap<String, Object>> users = (List<HashMap<String, Object>>) presentedData.get("users");
+        assertFalse(users.isEmpty());
+
+        long countOfUsersWithEmail = users
+                .stream()
+                .filter(user -> userDto.getEmail().equalsIgnoreCase(String.valueOf(user.get("email"))))
+                .count();
+
+        assertEquals(1, countOfUsersWithEmail);
+    }
+
     @When("Эндпоинт на выборку инфы текущего пользователя доступен и тело имеет корректное представление")
     public void checkCurrentUserEndpointAndResponseBody() {
         final UserInfoModel userInfoModel = getBaseRequestWithCurrentCookie()
@@ -309,6 +342,14 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         getExactUser();
 
         assertThat(response.jsonPath().get("enabled"), is(Boolean.parseBoolean(userStatus)));
+    }
+
+    @And("Тело ответа содержит ошибку о том что такого пользователя не существует")
+    public void checkErrorMessage() {
+        String error = response.jsonPath().get("message");
+
+        assertNotNull(error);
+        assertTrue(error.contains("Пользователь не найден(а) по идентификатору:"));
     }
 
     public static void getGeoserverLoginFromResponse() {
@@ -425,5 +466,16 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                        .basePath("geoserver/rest/security")
                 .when().
                        get(format("/roles/user/%s.json", login));
+    }
+
+    private void inviteUserByEmail(String email) {
+        Map<String, String> queryParams = new HashMap<String, String>() {{
+            put("email", email);
+        }};
+
+        response = getBaseRequestWithCurrentCookie()
+                .formParams(queryParams)
+                .when().
+                       post("/invite");
     }
 }

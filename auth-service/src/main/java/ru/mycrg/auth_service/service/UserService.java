@@ -9,6 +9,7 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_service.dto.UserProjection;
 import ru.mycrg.auth_service.entity.Authorities;
@@ -189,6 +190,29 @@ public class UserService {
             messageBus.produce(
                     new UserDeletedEvent(user.getLogin(), authenticationFacade.getAccessToken(), id));
         });
+    }
+
+    public void invite(String email, String accessToken, Long orgId) {
+        log.debug("Try to invite user: {} in organization: {}", email, orgId);
+
+        User userFromDB = userRepository.findByEmail(email)
+                                        .orElseThrow(() -> new NotFoundException("Пользователь", email));
+
+        Organization organization = orgRepository.findById(orgId)
+                                                 .orElseThrow(() -> new NotFoundException(orgId));
+
+        Set<User> organizationUsers = organization.getUsers();
+        if (organizationUsers.contains(userFromDB)) {
+            String msg = "Пользователь " + email + " уже добавлен в данную организацию!";
+            log.debug(msg);
+
+            throw new ConflictException(msg);
+        } else {
+            organization.addUser(userFromDB);
+
+            messageBus.produce(
+                    new CrgAuditEvent(accessToken, "INVITE", email, "USER", userFromDB.getId()));
+        }
     }
 
     public void addAuthority(Long id, String authority) {
