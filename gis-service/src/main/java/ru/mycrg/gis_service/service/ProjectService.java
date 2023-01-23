@@ -244,10 +244,24 @@ public class ProjectService {
         }
 
         Long userId = authenticationFacade.getUserDetails().getUserId();
+        List<Long> groupIds = authenticationFacade.getUserDetails().getGroups();
 
-        return project.getPermissions().stream()
-                      .filter(permission -> Objects.equals(permission.getPrincipalId(), userId))
-                      .anyMatch(permission -> permission.getRole().getName().equals(OWNER.name()));
+        return project
+                .getPermissions().stream()
+                .filter(permission -> isUserPermission(userId, permission) || isGroupPermission(groupIds, permission))
+                .anyMatch(permission -> permission.getRole().getName().equals(OWNER.name()));
+    }
+
+    private boolean isGroupPermission(List<Long> groupIds, Permission permission) {
+        if ("group".equals(permission.getPrincipalType())) {
+            return groupIds.contains(permission.getPrincipalId());
+        }
+
+        return false;
+    }
+
+    private static boolean isUserPermission(Long userId, Permission permission) {
+        return "user".equals(permission.getPrincipalType()) && Objects.equals(permission.getPrincipalId(), userId);
     }
 
     private boolean isAllowedForUser(Project project, UserDetails userDetails) {

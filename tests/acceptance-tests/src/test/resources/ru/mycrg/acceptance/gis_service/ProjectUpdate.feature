@@ -56,3 +56,12 @@ Feature: Обновление проектов
     Examples:
       | userName  | userSurname | userEmail | userPassword | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs | newContentType    |
       | STRING_10 | STRING_10   | EMAIL_10  | testtestQ1   | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   | test_content_type |
+
+  Scenario: Редактирование проекта доступно пользователю через права выданные на группу
+    Given Существует проект "PermissionTest2"
+    *     Существует некий пользователь
+    *     Существует пользовательская группа "SomeGroup_Owners", "STRING_10"
+    *     Администратор добавляет пользователя в пользовательскую группу
+    *     Администратор присваивает текущей группе роль "OWNER"
+    When Пользователь делает запрос на обновление полей проекта "newProjectName"
+    Then Сервер отвечает со статус-кодом 200
