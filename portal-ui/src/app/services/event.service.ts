@@ -36,6 +36,25 @@ class EventService {
     return this._instance || (this._instance = new this());
   }
 
+  /**
+   * Delete event by Id
+   * @param id Event Id
+   */
+  delete(id: string) {
+    const events = this._events$.getValue();
+    remove(events, (event: IEvent) => event.id === id);
+
+    this.update(events);
+  }
+
+  /**
+   * Обновляем события во всех нужных местах :)
+   */
+  update(events: IEvent[]) {
+    this._events$.next(events);
+    this.saveToLocalStorage(events);
+  }
+
   private constructor() {
     const savedEvents: IEvent[] = this.getFromLocalStorage();
     if (savedEvents && savedEvents.length > 0) {
@@ -64,17 +83,6 @@ class EventService {
   }
 
   /**
-   * Delete event by Id
-   * @param id Event Id
-   */
-  delete(id: string) {
-    const events = this._events$.getValue();
-    remove(events, (event: IEvent) => event.id === id);
-
-    this.update(events);
-  }
-
-  /**
    * Обрабатываем сообщение. (добавляем в общий список, персистим в локал сторадж)
    * @param wsMessage Сообщение от сервера
    */
@@ -91,14 +99,6 @@ class EventService {
 
     this.update(events);
     this.analyzeEvents(events);
-  }
-
-  /**
-   * Обновляем события во всех нужных местах :)
-   */
-  private update(events: IEvent[]) {
-    this._events$.next(events);
-    this.saveToLocalStorage(events);
   }
 
   private findSameEvent(wsMessage: IWsMessage, events: IEvent[]) {

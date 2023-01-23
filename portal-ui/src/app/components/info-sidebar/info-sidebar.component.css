@@ -35,9 +35,20 @@
 }
 
 .crg-sidebar-header {
+  display: flex;
+  align-items: center;
+
   padding: 20px;
 
   font-size: larger;
+}
+
+.crg-sidebar-header__title {
+  flex-grow: 1;
+}
+
+.crg-sidebar-header__button {
+  color: var(--gray);
 }
 
 .no-events {
@@ -56,12 +67,4 @@
   height: 50px;
 
   font-size: xxx-large;
-}
-
-.crg-close-icon {
-  float: right;
-
-  cursor: pointer;
-
-  color: grey;
 }

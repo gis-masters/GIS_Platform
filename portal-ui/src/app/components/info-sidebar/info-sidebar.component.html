@@ -1,7 +1,17 @@
 <div [ngClass]="isActive? 'crg-info-sidebar' : 'crg-info-sidebar_hidden'">
   <div class="crg-sidebar-header">
-    <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
-    Уведомления
+      <span class="crg-sidebar-header__title">
+      Уведомления
+    </span>
+
+    <button mat-icon-button (click)="clearAll()" class="crg-sidebar-header__button"
+            matTooltip="Очистить все уведомления">
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+
+    <button mat-icon-button (click)="closeMe()" class="crg-sidebar-header__button">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
   <div class="crg-sidebar-content scroll">
     <div *ngFor="let event of events">

@@ -35,4 +35,8 @@ export class InfoSidebarComponent implements OnInit, OnDestroy {
   closeMe(): void {
     sidebars.closeInfo();
   }
+
+  clearAll(): void {
+    eventService.update([]);
+  }
 }
