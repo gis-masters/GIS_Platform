@@ -168,7 +168,7 @@ public class ProjectService {
         if (nonNull(updateDto.getDescription()) && !updateDto.getDescription().isEmpty()) {
             project.setDescription(updateDto.getDescription());
         }
-        if (nonNull(updateDto.getBbox()) && !updateDto.getBbox().isEmpty()) {
+        if (nonNull(updateDto.getBbox())) {
             project.setBbox(updateDto.getBbox());
         }
 

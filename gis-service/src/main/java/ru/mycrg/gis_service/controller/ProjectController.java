@@ -1,5 +1,6 @@
 package ru.mycrg.gis_service.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -11,12 +12,17 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.gis_service.dto.ProjectUpdateDto;
+import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.security.OrgSettingsKeeper;
 import ru.mycrg.gis_service.service.ProjectService;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.List;
 
+import static java.util.Objects.nonNull;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 
 @RestController
 @RequestMapping(value = "/projects")
@@ -64,6 +70,7 @@ public class ProjectController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> updateProject(@PathVariable long projectId,
                                                 @Valid @RequestBody ProjectUpdateDto projectDto) {
+        throwsIfBboxIsNotValid(projectDto.getBbox());
         projectService.update(projectId, projectDto);
 
         return ResponseEntity.ok().build();
@@ -75,5 +82,20 @@ public class ProjectController {
         projectService.delete(projectId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    private void throwsIfBboxIsNotValid(String bbox) {
+        if (nonNull(bbox) && !bbox.isEmpty()) {
+            try {
+                TypeReference<List<Double>> type = new TypeReference<>() {
+                };
+                List<Double> coordinates = objectMapper.readValue(bbox, type);
+                if (!coordinates.isEmpty() && coordinates.size() != 4 ) {
+                    throw new BadRequestException("Невалидный bbox! Поле bbox должно состоять из 4 чисел.");
+                }
+            } catch (IOException e) {
+                throw new BadRequestException("Невалидный bbox! Поле bbox должно состоять из 4 чисел.");
+            }
+        }
     }
 }

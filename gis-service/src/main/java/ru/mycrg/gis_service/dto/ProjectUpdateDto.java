@@ -11,9 +11,6 @@ public class ProjectUpdateDto {
     private String name;
     private String description;
     // field bbox should be like "[3788517.6,5579665.7,3848968.7,5614937.0]"
-    @Pattern(regexp = "^\\[\\d*[.]\\d+,\\d*[.]\\d+,\\d*[.]\\d+,\\d*[.]\\d+]$",
-             message = "Должно быть в квадратных скобках [], содержать 4-е дробных числа разделённых запятой, " +
-                     "пробелов между числами быть не должно")
     private String bbox;
 
     public ProjectUpdateDto() {
