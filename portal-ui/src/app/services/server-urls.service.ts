@@ -162,6 +162,10 @@ export async function getUsersUrl(): Promise<string> {
   return (await getBaseUrl()) + '/users';
 }
 
+export async function getUsersInviteUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/users/invite';
+}
+
 export async function getUserUrl(userId: number | string): Promise<string> {
   return `${await getBaseUrl()}/users/${userId}`;
 }

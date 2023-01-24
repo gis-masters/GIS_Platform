@@ -7,8 +7,8 @@ import { CrgUser } from '../../services/auth/users.service';
 
 import { OrgActionsListPermissions } from './ListPermissions/OrgActions-ListPermissions';
 import { OrgActionsGroups } from './Groups/OrgActions-Groups';
-import { OrgActionsDel } from './Del/OrgActions-Del';
 import { OrgActionsEdit } from './Edit/OrgActions-Edit';
+import { OrgActionsDel } from './Del/OrgActions-Del';
 
 import '!style-loader!css-loader!sass-loader!./OrgActions.scss';
 
@@ -27,6 +27,6 @@ export const OrgActions: FC<OrgActionsProps> = ({ user, userGroups, group, class
       principalName={user ? user.name : group.name}
     />
     <OrgActionsEdit user={user} group={group} />
-    <OrgActionsDel group={group} user={user} />
+    {group && <OrgActionsDel group={group} user={user} />}
   </div>
 );

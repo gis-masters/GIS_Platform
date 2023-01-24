@@ -9,6 +9,7 @@ import { CrgGroup, groupsService } from '../../services/auth/groups.service';
 import { CrgUser, usersService } from '../../services/auth/users.service';
 import { XTable, XTableColumn } from '../XTable/XTable';
 
+import { OrgUsersInvite } from './Invite/OrgUsers-Invite';
 import { OrgUsersCreate } from './Create/OrgUsers-Create';
 import { OrgUsersEnabled } from './Enabled/OrgUsers-Enabled';
 import { OrgUsersUserEmail } from './UserEmail/OrgUsers-UserEmail';
@@ -110,7 +111,12 @@ export class OrgUsers extends Component {
     return (
       <XTable
         className={cnOrgUsers()}
-        headerActions={<OrgUsersCreate />}
+        headerActions={
+          <>
+            <OrgUsersInvite />
+            <OrgUsersCreate />
+          </>
+        }
         data={this.users}
         cols={this.xTableCols}
         defaultSort={{ field: 'surname', asc: true }}

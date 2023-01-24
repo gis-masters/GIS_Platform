@@ -4,7 +4,7 @@ import { AxiosError } from 'axios';
 import { allUsers } from '../../stores/AllUsers.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { organizationSettingsService } from '../organization-settings';
-import { getUsersUrl, getUserUrl } from '../server-urls.service';
+import { getUsersInviteUrl, getUsersUrl, getUserUrl } from '../server-urls.service';
 import { communicationService } from '../communication.service';
 import { BuiltInRole } from '../data/permissions.models';
 import { http } from '../http.service';
@@ -34,6 +34,10 @@ export interface CrgUser {
 
 export interface BackCrgUser extends Omit<CrgUser, 'authorities'> {
   authorities: { authority: BuiltInRole }[];
+}
+
+export interface UserInvite {
+  email?: string;
 }
 
 export type NewUserData = Pick<
@@ -97,6 +101,14 @@ class UsersService {
       ...user,
       authorities: user.authorities.map(({ authority }) => authority)
     };
+  }
+
+  async invite(userData: UserInvite) {
+    const params = new URLSearchParams();
+    params.append('email', userData.email);
+
+    await http.post(await getUsersInviteUrl(), params.toString());
+    void this.debouncedFetchUsersListStore();
   }
 
   async create(userData: NewUserData) {
