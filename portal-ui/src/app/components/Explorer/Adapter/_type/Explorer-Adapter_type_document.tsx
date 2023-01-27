@@ -4,7 +4,7 @@ import { RegistryConsumer } from '@bem-react/di';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { LibraryRecord } from '../../../../services/data/doc-library.service';
-import { getDocumentFiles } from '../../../../services/data/files.util';
+import { getLibraryRecordFiles } from '../../../../services/data/files.util';
 import { FileInfo } from '../../../../services/data/files.service';
 import { CommonDiRegistry } from '../../../../services/di-registry';
 import { formatDate } from '../../../../services/util/date.util';
@@ -57,7 +57,7 @@ export class ExplorerAdapterTypeDocument {
   }
 
   static isFolder(item: ExplorerItemData<LibraryRecord>): boolean {
-    return !!getDocumentFiles(item.payload).length;
+    return !!getLibraryRecordFiles(item.payload).length;
   }
 
   static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
@@ -74,7 +74,7 @@ export class ExplorerAdapterTypeDocument {
     explorerItem: ExplorerItemData<LibraryRecord>,
     pageOptions: PageOptions
   ): [ExplorerItemData<FileInfo>[], number] {
-    const files: FileInfo[] = getDocumentFiles(explorerItem.payload);
+    const files: FileInfo[] = getLibraryRecordFiles(explorerItem.payload);
     const pagesCount = Math.ceil(files.length / pageOptions.pageSize);
     const pageStart =
       files.length > pageOptions.page * pageOptions.pageSize ? pageOptions.page * pageOptions.pageSize : 0;
@@ -84,7 +84,7 @@ export class ExplorerAdapterTypeDocument {
   }
 
   static getChildById(explorerItem: ExplorerItemData<LibraryRecord>, fileId: string): ExplorerItemData<FileInfo> {
-    const files: FileInfo[] = getDocumentFiles(explorerItem.payload);
+    const files: FileInfo[] = getLibraryRecordFiles(explorerItem.payload);
 
     return { type: ExplorerItemType.FILE, payload: files.find(file => file.id === fileId) };
   }
@@ -94,7 +94,7 @@ export class ExplorerAdapterTypeDocument {
     { page, ...options }: PageOptions,
     fileId: string
   ): [ExplorerItemData<FileInfo>[], number, number] | undefined {
-    const files: FileInfo[] = getDocumentFiles(explorerItem.payload);
+    const files: FileInfo[] = getLibraryRecordFiles(explorerItem.payload);
     const fileIndex = files.findIndex(file => file.id === fileId);
     const totalPages = Math.round(files.length / options.pageSize);
     const filePage = Math.round(fileIndex / options.pageSize);

@@ -1,7 +1,7 @@
 import { FileInfo } from './files.service';
 import { LibraryRecord } from './doc-library.service';
 
-export function getFileExtension(name: string): string {
+export function getFileExtension(name = ''): string {
   const pos = name.lastIndexOf('.');
   const ext = name === '' || pos < 1 ? '' : name.slice(pos + 1);
 
@@ -71,8 +71,17 @@ export function isDxfFile(file: FileInfo): boolean {
   return normalizeExtension(getFileExtension(file.title)) === 'dxf';
 }
 
-export function getDocumentFiles(libraryRecord: LibraryRecord): FileInfo[] {
+export function getLibraryRecordFiles(libraryRecord: LibraryRecord): FileInfo[] {
   return Object.values(libraryRecord)
+    .map(value => {
+      if (typeof value === 'string') {
+        try {
+          value = JSON.parse(value) as unknown;
+        } catch {}
+      }
+
+      return value;
+    })
     .filter(value => Array.isArray(value) && value.every(isFileInfo))
     .flat() as FileInfo[];
 }

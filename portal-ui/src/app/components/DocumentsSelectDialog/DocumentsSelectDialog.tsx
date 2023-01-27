@@ -76,7 +76,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
               <RegistryConsumer id='common'>
                 {({ Explorer }: CommonDiRegistry) => (
                   <Explorer
-                    id='DocumentsAdd'
+                    id='DocumentsSelectDialog'
                     className={cnDocumentsSelectDialog('Explorer')}
                     path={this.path}
                     onSelect={this.handleSelect}
@@ -139,12 +139,12 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
   }
 
   @boundMethod
-  private handleSelect(item: ExplorerItemData<LibraryRecord>, path: ExplorerItemData[]) {
+  private handleSelect(item: ExplorerItemData<LibraryRecord>) {
     if (
       (item.type === ExplorerItemType.DOCUMENT || item.type === ExplorerItemType.FOLDER) &&
       !this.testForDisabled(item)
     ) {
-      this.select([path[path.length - 1].payload as LibraryRecord]);
+      this.select([item.payload]);
     } else {
       this.select();
     }
@@ -167,7 +167,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
     this.setSelectedItem(path);
 
     if (item.type === ExplorerItemType.DOCUMENT) {
-      this.handleSelect(item, path);
+      this.handleSelect(item);
       this.submitDialog();
     }
   }

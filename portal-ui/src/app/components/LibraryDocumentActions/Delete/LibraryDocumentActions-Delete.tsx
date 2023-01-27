@@ -19,7 +19,7 @@ import { cn } from '@bem-react/classname';
 import { deleteLibraryRecord, getLibraryRecords, LibraryRecord } from '../../../services/data/doc-library.service';
 import { FileConnection, getFileConnections } from '../../../services/data/files.service';
 import { Schema } from '../../../services/data/schema.models';
-import { getDocumentFiles } from '../../../services/data/files.util';
+import { getLibraryRecordFiles } from '../../../services/data/files.util';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { Button } from '../../Button/Button';
 
@@ -156,7 +156,7 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
     const { document } = this.props;
     const connections: FileConnections[] = [];
 
-    for (const file of getDocumentFiles(document)) {
+    for (const file of getLibraryRecordFiles(document)) {
       const fileConnections = await getFileConnections(file.id);
       if (fileConnections.length) {
         connections.push({ fileTitle: file.title, connections: fileConnections });
