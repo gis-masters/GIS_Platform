@@ -19,7 +19,7 @@ import {
 } from '../../../services/data/doc-library.service';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
 import { isRecordUpdateAllowed } from '../../../services/data/permissions.service';
-import { DialogActionsRight } from '../../DialogActionsRight/DialogActionsRight';
+import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';
 
 const cnLibraryDocumentActionsMove = cn('LibraryDocumentActions', 'Move');
@@ -88,7 +88,7 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
             </RegistryConsumer>
           </DialogContent>
           <DialogActions>
-            <DialogActionsRight>
+            <ActionsRight>
               {this.disabled ? (
                 <Tooltip title={this.selectedFolder?.id ? 'Недостаточно прав для перемещения' : ''}>
                   <span>{moveButton}</span>
@@ -97,7 +97,7 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
                 moveButton
               )}
               <Button onClick={this.closeDocumentMoveDialog}>Отмена</Button>
-            </DialogActionsRight>
+            </ActionsRight>
           </DialogActions>
         </Dialog>
       </>

@@ -26,9 +26,9 @@ import { PropertyType } from '../../services/data/schema.models';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgVectorLayer } from '../../services/gis/projects.models';
-import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
+import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
-import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
+import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { XTableNumberFilter } from '../XTable/NumberFilter/XTable-NumberFilter';
 import { ExportResourceModel, exportService } from '../../services/data/export.service';
 import { CrgProjection, Projection, viewedProjections } from '../../services/geoserver/projections.service';
@@ -137,7 +137,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
           </DialogContent>
 
           <DialogActions>
-            <DialogActionsLeft>
+            <ActionsLeft>
               <CoordinateAxes onSelect={this.handleSelect} invertedCoordinates={this.invertedCoordinates} />
 
               <FormControl className={cnExportGmlDialog('EpsgSelector')} size='small'>
@@ -156,14 +156,14 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
                   ))}
                 </Select>
               </FormControl>
-            </DialogActionsLeft>
+            </ActionsLeft>
 
-            <DialogActionsRight>
+            <ActionsRight>
               <Button type='submit' form='exportGmlForm' color='primary' disabled={this.exportNotAllowed}>
                 Экспорт
               </Button>
               <Button onClick={this.closeDialog}>Отмена</Button>
-            </DialogActionsRight>
+            </ActionsRight>
           </DialogActions>
         </Dialog>
 

@@ -1,5 +1,5 @@
 import { binding, then, when } from 'cucumber-tsflow/dist';
-import { breadcrumbs } from '../blocks/Breadcrumbs/Breadcrumbs';
+import { breadcrumbs } from '../blocks/Breadcrumbs/Breadcrumbs.block';
 import { Page } from '../Page';
 
 @binding()

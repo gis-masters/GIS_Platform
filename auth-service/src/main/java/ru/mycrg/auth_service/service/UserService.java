@@ -15,6 +15,7 @@ import ru.mycrg.auth_service.dto.UserProjection;
 import ru.mycrg.auth_service.entity.Authorities;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
+import ru.mycrg.auth_service.exceptions.AuthServiceException;
 import ru.mycrg.auth_service.exceptions.ConflictException;
 import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
@@ -65,7 +66,7 @@ public class UserService {
 
     @NotNull
     public UserInfoModel getByLogin(String login) {
-        User user = userRepository.findByLogin(login)
+        User user = userRepository.findByLoginIgnoreCase(login)
                                   .orElseThrow(() -> new NotFoundException(login));
 
         Set<String> authorities = user.getAuthorities().stream()
@@ -87,10 +88,17 @@ public class UserService {
                                          .createdAt(user.getCreatedAt())
                                          .build();
 
-        Set<Organization> organizations = user.getOrganizations();
-        if (!organizations.isEmpty()) {
-            Organization organization = organizations.iterator().next();
+        if (!authenticationFacade.isRoot()) {
+            Long orgId = authenticationFacade.getOrganizationId();
+            Set<Organization> organizations = user.getOrganizations();
+            Optional<Organization> orgById = organizations.stream()
+                                                          .filter(organization -> orgId.equals(organization.getId()))
+                                                          .findFirst();
+            if (orgById.isEmpty()) {
+                throw new AuthServiceException("Не удалось найти организацию по id: " + orgId);
+            }
 
+            Organization organization = orgById.get();
             dto.setOrgId(organization.getId());
             dto.setOrgName(organization.getName());
         }
@@ -99,7 +107,7 @@ public class UserService {
     }
 
     public boolean isExist(String login) {
-        return userRepository.findByLogin(login).isPresent();
+        return userRepository.findByLoginIgnoreCase(login).isPresent();
     }
 
     public UserProjection create(UserCreateDto dto, Long orgId, String accessToken) {
@@ -286,7 +294,7 @@ public class UserService {
         } else if (authenticationFacade.isOrganizationAdmin()) {
             String ownerName = authenticationFacade.getLogin();
 
-            User owner = userRepository.findByLogin(ownerName)
+            User owner = userRepository.findByLoginIgnoreCase(ownerName)
                                        .orElseThrow(() -> new NotFoundException(ownerName));
 
             Set<Organization> organizations = owner.getOrganizations();

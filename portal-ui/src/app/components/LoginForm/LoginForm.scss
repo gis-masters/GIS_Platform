@@ -1,27 +1,9 @@
 body .LoginForm {
+  position: relative;
+
+  min-height: 214px;
+
   &_inDialog {
     box-shadow: none;
-  }
-
-  &-Error {
-    text-align: center;
-
-    color: var(--danger);
-  }
-
-  &-Recovery {
-    color: gray;
-  }
-
-  &-Actions {
-    display: flex;
-    justify-content: space-between;
-
-    width: 100%;
-    padding-top: 20px;
-  }
-
-  &-ActionsLogin {
-    margin-right: 10px;
   }
 }

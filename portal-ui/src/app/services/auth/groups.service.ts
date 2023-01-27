@@ -2,7 +2,6 @@ import { debounce } from 'lodash';
 
 import { allGroups } from '../../stores/AllGroups.store';
 import { getGroupsUrl, getGroupUrl, getGroupUserUrl } from '../server-urls.service';
-import { communicationService } from '../communication.service';
 import { ApiLink, CrgUser } from './users.service';
 import { http } from '../http.service';
 
@@ -25,12 +24,6 @@ class GroupsService {
 
   private constructor() {
     this.debouncedFetchGroupsListStore = debounce(this.fetchGroupsListStore, 300);
-
-    communicationService.logout.on(() => {
-      allGroups.reset();
-      this.allGroupsStoreInited = false;
-      delete this.allGroupsFetching;
-    });
   }
 
   static get instance() {

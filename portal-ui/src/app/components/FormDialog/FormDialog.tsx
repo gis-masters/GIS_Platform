@@ -11,8 +11,8 @@ import { Schema } from '../../services/data/schema.models';
 import { CommonDiRegistry } from '../../services/di-registry';
 import { generateRandomId } from '../../services/util/randomId';
 import { getDefaultValues } from '../../services/formValidation.service';
-import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
-import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
+import { ActionsRight } from '../ActionsRight/ActionsRight';
+import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { Button, ButtonProps } from '../Button/Button';
 import { FormProps } from '../Form/Form';
 
@@ -87,13 +87,13 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
           </RegistryConsumer>
         </DialogContent>
         <DialogActions>
-          <DialogActionsLeft>{additionalAction}</DialogActionsLeft>
-          <DialogActionsRight>
+          <ActionsLeft>{additionalAction}</ActionsLeft>
+          <ActionsRight>
             <Button form={htmlId} color='primary' loading={this.busy} type='submit' {...actionButtonProps}>
               {actionButtonProps.children || 'Отправить'}
             </Button>
             {!unclosable && <Button onClick={this.close}>Отмена</Button>}
-          </DialogActionsRight>
+          </ActionsRight>
         </DialogActions>
       </Dialog>
     );

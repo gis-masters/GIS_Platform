@@ -1,13 +1,13 @@
-import { RegData } from '../../../src/app/services/auth/auth.service';
+import { RegData } from '../../../../src/app/services/auth/auth.service';
 
 export const testUsers: Record<
-  'superadmin' | 'admin' | 'owner' | 'contributor' | 'viewer' | 'user' | 'disabled',
+  'superadmin' | 'admin' | 'owner' | 'contributor' | 'viewer' | 'user' | 'disabled' | 'otherAdmin' | 'collaborator',
   RegData
 > = {
   superadmin: {
     company: 'Hogwarts',
     contactPhone: '7777777777',
-    firstName: 'Hermione',
+    firstName: 'Albus',
     lastName: 'Dumbledore',
     email: 'admin@mail.ru',
     password: 'Esterhazy2022',
@@ -63,9 +63,26 @@ export const testUsers: Record<
     contactPhone: '7777777777',
     firstName: 'Fred',
     lastName: 'Weasley',
-    email: 'fred@user',
-    enabled: false,
+    email: 'fred@dead',
     password: 'Avadakedavra6',
     password_: 'Avadakedavra6'
+  },
+  otherAdmin: {
+    company: 'Другая организация',
+    contactPhone: '7777777777',
+    firstName: 'Tom',
+    lastName: 'Riddle',
+    email: 'dark_lord@other',
+    password: 'Avadakedavra666',
+    password_: 'Avadakedavra666'
+  },
+  collaborator: {
+    company: 'Другая организация',
+    contactPhone: '7777777777',
+    firstName: 'Peter',
+    lastName: 'Pettigrew',
+    email: 'scabbers@other',
+    password: 'Avadakedavra0',
+    password_: 'Avadakedavra0'
   }
 };

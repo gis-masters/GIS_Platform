@@ -1,7 +1,19 @@
+import { CrgUser, NewUserData, usersService } from '../../../../src/app/services/auth/users.service';
+import { sleep } from '../../../../src/app/services/util/sleep';
+import { getUserByEmail } from './getUserByEmail';
 import { testUsers } from './testUsers';
-import { NewUserData, usersService } from '../../../src/app/services/auth/users.service';
 
 declare const window: { usersService: typeof usersService };
+
+async function editUser(patch: Partial<CrgUser>, id: number) {
+  return await browser.executeAsync(
+    async (serializedPatch, id, callback) => {
+      callback(await window.usersService.edit(JSON.parse(serializedPatch) as Partial<CrgUser>, id));
+    },
+    JSON.stringify(patch),
+    id
+  );
+}
 
 export async function createUser({
   email,
@@ -16,7 +28,7 @@ export async function createUser({
 }: NewUserData): Promise<void> {
   await browser.executeAsync(
     async ({ email, enabled, name, middleName, surname, department, job, phone, password }, callback) => {
-      callback(
+      try {
         await window.usersService.create({
           email,
           enabled,
@@ -27,8 +39,9 @@ export async function createUser({
           job,
           phone,
           password
-        })
-      );
+        });
+      } catch {}
+      callback();
     },
     { email, enabled, name, middleName, surname, department, job, phone, password }
   );
@@ -95,5 +108,25 @@ export async function createTestUsers(): Promise<void> {
     department: 'Gryffindor',
     phone: disabled.contactPhone,
     password: disabled.password
+  });
+
+  await sleep(5000); // wait for users ready
+  const deadUser = await getUserByEmail('fred@dead');
+  await editUser({ enabled: false }, deadUser.id);
+}
+
+export async function createTestUsersInOtherOrganization(): Promise<void> {
+  const { collaborator } = testUsers;
+
+  await createUser({
+    enabled: true,
+    email: collaborator.email,
+    name: collaborator.firstName,
+    surname: collaborator.lastName,
+    middleName: 'Wormtail',
+    job: 'Предатель',
+    department: 'Death Eaters',
+    phone: collaborator.contactPhone,
+    password: collaborator.password
   });
 }

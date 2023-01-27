@@ -12,8 +12,8 @@ import { PageOptions } from '../../services/models';
 import { Button, ButtonProps } from '../Button/Button';
 import { ChooseXTable } from '../ChooseXTable/ChooseXTable';
 import { SortParams } from '../../services/util/sortObjects';
-import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
-import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
+import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
+import { ActionsRight } from '../ActionsRight/ActionsRight';
 
 import '!style-loader!css-loader!sass-loader!./ChooseXTableDialog.scss';
 import '!style-loader!css-loader!sass-loader!./Table/ChooseXTableDialog-Table.scss';
@@ -95,15 +95,15 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
           />
         </DialogContent>
         <DialogActions>
-          <DialogActionsLeft>{additionalAction}</DialogActionsLeft>
-          <DialogActionsRight>
+          <ActionsLeft>{additionalAction}</ActionsLeft>
+          <ActionsRight>
             {this.changed && (
               <Button disabled={!this.selected.length} onClick={this.submit} color='primary' {...actionButtonProps}>
                 {actionButtonProps.children || 'Выбрать'}
               </Button>
             )}
             <Button onClick={this.close}>{this.changed ? 'Отмена' : 'Закрыть'}</Button>
-          </DialogActionsRight>
+          </ActionsRight>
         </DialogActions>
       </Dialog>
     );

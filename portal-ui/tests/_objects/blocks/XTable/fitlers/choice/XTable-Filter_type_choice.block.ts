@@ -1,7 +1,7 @@
 import { binding, then, when } from 'cucumber-tsflow/dist';
 
 import { Block, BlockModel } from '../../../../Block';
-import { xTable } from '../../XTable';
+import { xTable } from '../../XTable.block';
 
 @binding()
 class XTableFilterTypeChoice extends Block implements BlockModel {

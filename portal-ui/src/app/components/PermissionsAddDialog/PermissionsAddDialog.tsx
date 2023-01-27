@@ -16,7 +16,7 @@ import {
   PermissionsListItemType,
   PermissionsXTablePropsSet
 } from '../PermissionsListDialog/PermissionsListDialog.models';
-import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
+import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { XTable, XTableColumn } from '../XTable/XTable';
 import { Button } from '../Button/Button';
 
@@ -63,7 +63,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
           <XTable<any> title='Добавление разрешений' {...this.tableProps[type]} data={this.availableItems} filterable />
         </DialogContent>
         <DialogActions>
-          <DialogActionsRight>
+          <ActionsRight>
             <Select value={this.role} onChange={this.handleRoleChange} variant='standard'>
               {(type === PermissionsListItemType.PROJECT ? projectRoles : roles).map(roleName => (
                 <MenuItem value={roleName} key={roleName}>
@@ -75,7 +75,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
               Добавить
             </Button>
             <Button onClick={this.close}>Отмена</Button>
-          </DialogActionsRight>
+          </ActionsRight>
         </DialogActions>
       </Dialog>
     );

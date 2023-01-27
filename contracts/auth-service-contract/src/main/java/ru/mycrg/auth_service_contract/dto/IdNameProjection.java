@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.dto;
+package ru.mycrg.auth_service_contract.dto;
 
 public class IdNameProjection {
 
@@ -6,6 +6,7 @@ public class IdNameProjection {
     private String name;
 
     public IdNameProjection() {
+        // Required
     }
 
     public IdNameProjection(Long id, String name) {

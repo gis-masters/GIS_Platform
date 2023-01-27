@@ -1,7 +1,10 @@
 package ru.mycrg.oauth_client;
 
+import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
-import ru.mycrg.http_client.*;
+import ru.mycrg.auth_service_contract.dto.IdNameProjection;
+import ru.mycrg.http_client.HttpClient;
+import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.config.RetryConfig;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.http_client.handlers.BaseRequestHandler;
@@ -10,6 +13,7 @@ import ru.mycrg.http_client.handlers.RetryableRequestHandler;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 public class OAuthClient {
 
@@ -43,12 +47,17 @@ public class OAuthClient {
     }
 
     public JwtToken getToken(String userName, String password) throws HttpClientException {
+        return getToken(userName, password, null);
+    }
+
+    public JwtToken getToken(String userName, String password, String orgId) throws HttpClientException {
         try {
             RequestBody body = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("grant_type", "password")
                     .addFormDataPart("username", userName)
                     .addFormDataPart("password", password)
+                    .addFormDataPart("orgId", orgId != null ? orgId : "")
                     .build();
 
             Request request = new Request.Builder()
@@ -91,6 +100,25 @@ public class OAuthClient {
                              .getBody();
         } catch (HttpClientException | IOException e) {
             throw new HttpClientException("Ошибка рефреша токена: " + e.getMessage(), e.getCause());
+        }
+    }
+
+    public List<IdNameProjection> getUserOrganizations(String username) throws HttpClientException {
+        try {
+            Request request = new Request.Builder()
+                    .url(new URL(baseUrl, "/users/organizations?login=" + username))
+                    .addHeader("Content-Type", "application/json")
+                    .get()
+                    .build();
+
+            ResponseModel<List<IdNameProjection>> response = httpClient
+                    .handleRequest(request,
+                                   new TypeToken<List<IdNameProjection>>() {
+                                   }.getType());
+
+            return response.getBody();
+        } catch (HttpClientException | IOException e) {
+            throw new HttpClientException("Ошибка выборки организаций для пользователя: " + username);
         }
     }
 

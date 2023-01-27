@@ -17,8 +17,8 @@ import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models'
 import { ConnectionsToProjects } from '../ConnectionsToProjects/ConnectionsToProjects';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { PropertyType, Schema } from '../../services/data/schema.models';
-import { DialogActionsLeft } from '../DialogActionsLeft/DialogActionsLeft';
-import { DialogActionsRight } from '../DialogActionsRight/DialogActionsRight';
+import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
+import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { getViewChoiceOptions } from '../Form/Form.utils';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
@@ -105,7 +105,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
                 </DialogContent>
                 <DialogActions>
                   {this.options.length > 1 && (
-                    <DialogActionsLeft>
+                    <ActionsLeft>
                       <Form<ViewFormValue>
                         className={cnConnectionsToProjectsWidget('ViewSelector')}
                         schema={{
@@ -122,14 +122,14 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
                         value={{ view: this.view }}
                         onFormChange={this.handleChange}
                       />
-                    </DialogActionsLeft>
+                    </ActionsLeft>
                   )}
-                  <DialogActionsRight>
+                  <ActionsRight>
                     <Button color='primary' disabled={!this.selectedProject} onClick={this.submitProjectSelection}>
                       Подключить
                     </Button>
                     <Button onClick={this.closeSelectProjectDialog}>Отмена</Button>
-                  </DialogActionsRight>
+                  </ActionsRight>
                 </DialogActions>
               </Dialog>
             </>

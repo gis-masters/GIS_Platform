@@ -61,7 +61,7 @@ public class AuthorizationBase extends BaseStepsDefinitions {
                 System.out.println("authorize as " + user + ". Attempt: " + currentAttempt);
                 currentAttempt++;
 
-                Map<String, String> queryParams = new HashMap<String, String>() {{
+                Map<String, String> queryParams = new HashMap<>() {{
                     put("username", login);
                     put("password", password);
                     put("grant_type", "password");

@@ -187,7 +187,6 @@ export const config: Options.Testrunner = {
         baselineFolder: './tests/_screens/',
         formatImageName: '{tag}',
         screenshotPath: './tests/_screens/.tmp/',
-        clearRuntimeFolder: true,
         savePerInstance: true,
         autoSaveBaseline: true,
         blockOutStatusBar: true,

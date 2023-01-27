@@ -19,7 +19,7 @@ import { cn } from '@bem-react/classname';
 import { allUsers } from '../../../stores/AllUsers.store';
 import { allGroups } from '../../../stores/AllGroups.store';
 import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../../services/data/permissions.models';
-import { DialogActionsRight } from '../../DialogActionsRight/DialogActionsRight';
+import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { CrgGroup } from '../../../services/auth/groups.service';
 import { CrgUser } from '../../../services/auth/users.service';
 import { XTable, XTableColumn } from '../../XTable/XTable';
@@ -33,8 +33,8 @@ const cnPermissionsEditDialog = cn('PermissionsEditDialog');
 
 interface PermissionsEditDialogAddPrincipalProps {
   principalType: PrincipalType;
-  onAdd: (permissions: RoleAssignmentBody[]) => void;
   currentPrincipals: (CrgUser | CrgGroup)[];
+  onAdd: (permissions: RoleAssignmentBody[]) => void;
 }
 
 @observer
@@ -92,7 +92,7 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
             />
           </DialogContent>
           <DialogActions>
-            <DialogActionsRight>
+            <ActionsRight>
               <Select value={this.role} onChange={this.handleRoleChange} variant='standard'>
                 {roles.map(roleName => (
                   <MenuItem value={roleName} key={roleName}>
@@ -104,7 +104,7 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
                 Добавить
               </Button>
               <Button onClick={this.close}>Отмена</Button>
-            </DialogActionsRight>
+            </ActionsRight>
           </DialogActions>
         </Dialog>
       </>

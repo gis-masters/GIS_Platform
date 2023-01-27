@@ -1,7 +1,7 @@
 import { binding, then, when } from 'cucumber-tsflow/dist';
 
 import { Block, BlockModel } from '../../Block';
-import { testUsers } from '../../commands/testUsers';
+import { testUsers } from '../../commands/auth/testUsers';
 
 @binding()
 class LoginForm extends Block implements BlockModel {
@@ -22,7 +22,15 @@ class LoginForm extends Block implements BlockModel {
   }
 
   get $loginBtn(): Promise<WebdriverIO.Element> {
-    return $('.LoginForm-ActionsLogin');
+    return $('.LoginForm button[type="submit"]');
+  }
+
+  get $organizationsList(): Promise<WebdriverIO.Element> {
+    return $('.LoginForm-OrgSelectList');
+  }
+
+  get $$organizationsListItems(): Promise<WebdriverIO.Element[]> {
+    return $$('.LoginForm-OrgSelectListItem');
   }
 
   @when(/^я авторизуюсь в форме авторизации как "(.*)"$/)
@@ -51,11 +59,47 @@ class LoginForm extends Block implements BlockModel {
     await $loginBtn.click();
   }
 
-  @then(/^появляется сообщение об ошибке "(.*)"$/)
+  @then(/^на форме входа появляется сообщение об ошибке "(.*)"$/)
   async checkErrorMessage(errorMessage: string) {
     const $errorMessage = await this.$errorMessage;
-    const error = await $errorMessage.getText();
-    expect(error === errorMessage);
+    await $errorMessage.waitForDisplayed();
+    expect(await $errorMessage.getText()).toEqual(errorMessage);
+  }
+
+  @then(/^на форме входа появляется выбор организации$/)
+  async checkOrganizationsListVisibility() {
+    await expect(this.$organizationsList).toBeDisplayedInViewport();
+  }
+
+  @when(/^я нажимаю на пункт "(.*)" в списке организаций в форме авторизации$/)
+  async clickOrganization(orgTitle: string) {
+    const $organizationsList = await this.$organizationsList;
+    await $organizationsList.waitForDisplayed();
+    const $$organizationsListItems = await this.$$organizationsListItems;
+
+    for (const $item of $$organizationsListItems) {
+      const title = await $item.getText();
+
+      if (title === orgTitle) {
+        await $item.click();
+
+        return;
+      }
+    }
+
+    throw new Error('Не найдена организация ' + orgTitle);
+  }
+
+  @then(/^в списке организаций на форме входа перечислены: (".+"[ ,]*)+$/)
+  async checkOrganizationsList(dirty: string) {
+    const titles = dirty.slice(1, -1).split('", "');
+    expect(titles).toEqual(await this.getOrganizations());
+  }
+
+  async getOrganizations(): Promise<string[]> {
+    const $$organizationsListItems = await this.$$organizationsListItems;
+
+    return await Promise.all($$organizationsListItems.map(async $item => await $item.getText()));
   }
 }
 

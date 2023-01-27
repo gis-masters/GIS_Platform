@@ -10,11 +10,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_service_contract.dto.IdNameProjection;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.oauth_client.JwtToken;
 import ru.mycrg.oauth_client.OAuthClient;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -84,9 +86,9 @@ public class Authenticator {
         }
     }
 
-    public Optional<JwtToken> requestToken(String username, String password) {
+    public Optional<JwtToken> requestToken(String username, String password, String orgId) {
         try {
-            final JwtToken token = authClient.getToken(username, password);
+            JwtToken token = authClient.getToken(username, password, orgId);
             if (token != null) {
                 return Optional.of(token);
             } else {
@@ -95,6 +97,23 @@ public class Authenticator {
         } catch (HttpClientException e) {
             return Optional.empty();
         }
+    }
+
+    public List<IdNameProjection> getOrganizations(String username) {
+        List<IdNameProjection> result = null;
+
+        try {
+            log.debug("Try to get organizations for user: {}", username);
+
+            List<IdNameProjection> projections = authClient.getUserOrganizations(username);
+            if (projections != null) {
+                result = projections;
+            }
+        } catch (HttpClientException e) {
+            log.warn("Failed to fetch user organizations. Reason: {}", e.getMessage());
+        }
+
+        return result;
     }
 
     @NotNull

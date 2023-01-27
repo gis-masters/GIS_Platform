@@ -7,15 +7,14 @@ import {
   getOrganizationsUrl,
   getRestorePasswordUrl
 } from '../server-urls.service';
-import { communicationService } from '../communication.service';
 import { getEnvironment } from '../environment';
-import { services } from '../services';
 import { http } from '../http.service';
 import { Mime } from '../util/Mime';
 
 export interface AuthCredentials {
   username: string;
   password: string;
+  orgId?: number;
 }
 
 export interface RegData {
@@ -29,10 +28,16 @@ export interface RegData {
   enabled?: boolean;
 }
 
+export interface OrganizationsListItemInfo {
+  id: number;
+  name: string;
+}
+
 export interface AuthenticationResult {
   ok: boolean;
   userDisabled?: boolean;
   wrongPassword?: boolean;
+  organizations?: OrganizationsListItemInfo[];
 }
 
 http.axios.interceptors.request.use((config: { headers: Record<string, string> }) => {
@@ -70,13 +75,15 @@ class AuthService {
     params.append('username', credentials.username);
     params.append('password', credentials.password);
     params.append('grant_type', 'password');
+    if (credentials.orgId) {
+      params.append('orgId', String(credentials.orgId));
+    }
 
     const headers = {
       'Content-Type': Mime.FORM_URLENCODED
     };
 
     const options = { withCredentials: true, isAuthenticate: true, headers };
-    const authUrl = await getAuthUrl();
     try {
       const environment = await getEnvironment();
       const sameOrigin =
@@ -84,10 +91,19 @@ class AuthService {
         (!environment.server.port || environment.server.port === location.port) &&
         (!environment.server.wsPort || environment.server.wsPort === location.port);
 
-      const token = await http.post<string>(authUrl, params.toString(), options);
+      const result = await http.post<string | OrganizationsListItemInfo[]>(
+        await getAuthUrl(),
+        params.toString(),
+        options
+      );
+
+      if (Array.isArray(result)) {
+        return { ok: false, organizations: result };
+      }
+
       if (!sameOrigin) {
-        this.token = token;
-        localStorage.setItem(TOKEN_KEY, token);
+        this.token = result;
+        localStorage.setItem(TOKEN_KEY, this.token);
       } else {
         delete this.token;
         localStorage.removeItem(TOKEN_KEY);
@@ -103,13 +119,8 @@ class AuthService {
 
   async logout() {
     await http.post(await getLogoutUrl(), {}, { withCredentials: true });
-    this.token = '';
     localStorage.removeItem(TOKEN_KEY);
-    http.cache.clear();
-    services.ngZone.run(() => {
-      void services.router.navigate(['/']);
-    });
-    communicationService.logout.emit();
+    location.href = '/';
   }
 
   // TODO: Создание новой орг в модуле аутентификации???

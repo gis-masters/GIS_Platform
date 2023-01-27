@@ -19,7 +19,7 @@ import { alertLayerOperationError, createLayer } from '../../../services/gis/lay
 import { Dataset, VectorTable, getAllDatasetTables } from '../../../services/data/data.service';
 import { CrgProject, CrgVectorLayer, NewCrgLayer } from '../../../services/gis/projects.models';
 import { SelectProjectsDialog } from '../../SelectProjectDialog/SelectProjectDialog';
-import { DialogActionsRight } from '../../DialogActionsRight/DialogActionsRight';
+import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { projectsService } from '../../../services/gis/projects.service';
 import { vectorLayerDefaults } from '../../../services/gis/layers.utils';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
@@ -77,12 +77,12 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <DialogActionsRight>
+            <ActionsRight>
               <Button href={`/projects/${this.projectId}/map`} color='primary'>
                 Перейти к проекту
               </Button>
               <Button onClick={this.closeDialog}>Закрыть</Button>
-            </DialogActionsRight>
+            </ActionsRight>
           </DialogActions>
         </Dialog>
 

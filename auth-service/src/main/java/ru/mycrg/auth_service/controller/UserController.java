@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_service.dto.UserProjection;
-import ru.mycrg.auth_service.exceptions.NotFoundException;
+import ru.mycrg.auth_service.entity.User;
+import ru.mycrg.auth_service.exceptions.BadRequestException;
+import ru.mycrg.auth_service.repository.UserRepository;
 import ru.mycrg.auth_service.service.UserService;
+import ru.mycrg.auth_service_contract.dto.IdNameProjection;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 import ru.mycrg.auth_service_contract.dto.UserUpdateDto;
@@ -22,6 +25,9 @@ import ru.mycrg.auth_service_contract.dto.UserUpdateDto;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.mycrg.auth_service_contract.Authorities.*;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
@@ -38,11 +44,14 @@ public class UserController {
     }
 
     private final UserService userService;
+    private final UserRepository userRepository;
     private final IAuthenticationFacade authenticationFacade;
 
     public UserController(UserService userService,
+                          UserRepository userRepository,
                           IAuthenticationFacade authenticationFacade) {
         this.userService = userService;
+        this.userRepository = userRepository;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -51,6 +60,23 @@ public class UserController {
         String login = authenticationFacade.getLogin();
 
         return ResponseEntity.ok(userService.getByLogin(login));
+    }
+
+    @GetMapping("/users/organizations")
+    public ResponseEntity<List<IdNameProjection>> getUserOrganization(@RequestParam String login) {
+        if (login.isBlank()) {
+            throw new BadRequestException("Не задан login");
+        }
+
+        User user = userRepository.findByLoginIgnoreCase(login)
+                                  .orElseThrow(() -> new BadRequestException("Не найден пользователь: " + login));
+
+        List<IdNameProjection> result = user.getOrganizations().stream()
+                                            .map(org -> new IdNameProjection(org.getId(), org.getName()))
+                                            .sorted(Comparator.comparing(IdNameProjection::getName))
+                                            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/users")

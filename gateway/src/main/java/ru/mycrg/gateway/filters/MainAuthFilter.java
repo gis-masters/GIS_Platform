@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
+import ru.mycrg.auth_service_contract.dto.IdNameProjection;
 import ru.mycrg.gateway.domain.AuthConclusion;
 import ru.mycrg.gateway.domain.Authenticator;
 import ru.mycrg.gateway.domain.CookieProducer;
@@ -16,6 +17,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+
+import static ru.mycrg.gateway.GatewayApplication.objectMapper;
 
 @Log4j2
 public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
@@ -41,6 +45,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                                     @NotNull FilterChain chain) {
         if (isLogoutRequest(request)) {
             messageBus.produce(new CrgAuditEvent(getToken(request), "SIGN_OUT", "user", "USER", -1L));
+
             response.addCookie(cookieProducer.makeDeletionCookie());
         } else if (isGetTokenRequest(request)) {
             log.debug("isGetTokenRequest");
@@ -50,14 +55,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             if (username == null || password == null) {
                 sendUnauthorized(response);
             } else {
-                authenticator.requestToken(username, password)
-                             .ifPresentOrElse(token -> {
-                                 prepareResponse(response, token);
-                                 messageBus.produce(
-                                         new CrgAuditEvent(token.getAccess_token(), "SIGN_IN", "user", "USER", -1L));
-                             }, () -> {
-                                 sendUnauthorized(response);
-                             });
+                authorize(request, response, username, password);
             }
         } else if (isAllowedPaths(request)) {
             log.debug("Request to: {} Method: {}. Allow without auth", request.getServletPath(), request.getMethod());
@@ -74,6 +72,69 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
 
             tryAuthorize(request, response, chain);
         }
+    }
+
+    private void authorize(@NotNull HttpServletRequest request,
+                           @NotNull HttpServletResponse response,
+                           String usernameRaw,
+                           String password) {
+        response.setContentType(request.getContentType());
+        response.setCharacterEncoding("UTF-8");
+
+        String username = usernameRaw.trim();
+        if (isNotCorrectLoginPass(username, password)) {
+            sendUnauthorized(response);
+
+            return;
+        }
+
+        String orgId = request.getParameter("orgId");
+        log.debug("orgId: '{}'", orgId);
+
+        if (orgId == null) {
+            List<IdNameProjection> orgs = authenticator.getOrganizations(username);
+            if (orgs == null) { // Не удалось получить ничего, по причине невалидного пользователя, например.
+                log.debug("Unauthorized: '{}'", username);
+
+                sendUnauthorized(response);
+            } else if (orgs.isEmpty()) { // Пустой список организаций отдаётся сейчас супер пользователю!
+                log.debug("Is root? '{}'", username);
+
+                authWithOrgId(response, username, password, null);
+            } else if (orgs.size() == 1) { // Когда пользователь состоит только в одной организации
+                log.debug("Only one organization");
+
+                orgId = orgs.get(0).getId().toString();
+
+                authWithOrgId(response, username, password, orgId);
+            } else { // Когда пользователь состоит в нескольких организациях
+                log.debug("Many organizations");
+                orgs.forEach(org -> log.debug("id: '{}' Title: '{}'", org.getId(), org.getName()));
+
+                addOrgInfoToResponse(response, orgs);
+            }
+        } else {
+            authWithOrgId(response, username, password, orgId);
+        }
+    }
+
+    private void authWithOrgId(@NotNull HttpServletResponse response, String username, String password, String orgId) {
+        log.debug("auth with orgId: {}", orgId);
+
+        authenticator.requestToken(username, password, orgId)
+                     .ifPresentOrElse(token -> {
+                         addCookieAndTokenToResponse(response, token);
+
+                         messageBus.produce(
+                                 new CrgAuditEvent(token.getAccess_token(), "SIGN_IN", "user", "USER", -1L));
+                     }, () -> {
+                         sendUnauthorized(response);
+                     });
+    }
+
+    private boolean isNotCorrectLoginPass(String username, String password) {
+        return authenticator.requestToken(username, password, null)
+                            .isEmpty();
     }
 
     private String getToken(HttpServletRequest request) {
@@ -145,7 +206,17 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
         return request.getMethod().equals("POST") && request.getServletPath().contains("/integration/");
     }
 
-    private void prepareResponse(@NotNull HttpServletResponse response, JwtToken jwtToken) {
+    private void addOrgInfoToResponse(HttpServletResponse response, List<IdNameProjection> orgs) {
+        try {
+            String jsonString = objectMapper.writeValueAsString(orgs);
+
+            response.getWriter().write(jsonString);
+        } catch (IOException e) {
+            log.error("Error prepare response: {}", e.getMessage());
+        }
+    }
+
+    private void addCookieAndTokenToResponse(@NotNull HttpServletResponse response, JwtToken jwtToken) {
         response.addCookie(cookieProducer.makeFromJwtToken(jwtToken));
 
         try {

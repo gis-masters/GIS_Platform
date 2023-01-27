@@ -2,7 +2,7 @@ import { Given } from '@wdio/cucumber-framework';
 
 import { projectsService } from '../../../src/app/services/gis/projects.service';
 import { allProjects } from '../../../src/app/stores/AllProjects.store';
-import { authenticateAsAdmin } from './authenticate';
+import { authenticateAsAdmin } from './auth/authenticate';
 
 declare const window: { projectsService: typeof projectsService; allProjects: typeof allProjects };
 

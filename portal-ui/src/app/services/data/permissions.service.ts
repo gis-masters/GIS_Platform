@@ -11,7 +11,6 @@ import {
   TablePermissionPoint,
   tableRolesPermissionPoints
 } from './permissions.models';
-
 import { schemaService } from './schema.service';
 import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from './doc-library.service';
 import { VectorTable, getVectorTable } from './data.service';

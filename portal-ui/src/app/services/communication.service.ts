@@ -33,7 +33,6 @@ class CommunicationService {
   allProjectsFetched = new Emitter();
   editBugObject = new Emitter<ObjectDto[]>();
   beforeMapDestroy = new Emitter();
-  logout = new Emitter();
   drawOff = new Emitter();
   openAttributesBar = new Emitter<CrgVectorLayer>();
 

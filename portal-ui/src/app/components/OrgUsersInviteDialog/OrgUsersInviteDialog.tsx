@@ -8,7 +8,11 @@ import { Toast } from '../Toast/Toast';
 import { services } from '../../services/services';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { PropertySchema, PropertyType } from '../../services/data/schema.models';
-import { UserInvite, usersService } from '../../services/auth/users.service';
+import { usersService } from '../../services/auth/users.service';
+
+interface UserInvite {
+  email?: string;
+}
 
 interface OrgUsersInviteDialogProps {
   open: boolean;
@@ -26,7 +30,7 @@ export class OrgUsersInviteDialog extends Component<OrgUsersInviteDialogProps> {
     const { open, onClose } = this.props;
 
     return (
-      <FormDialog
+      <FormDialog<UserInvite>
         title='Приглашение пользователя в организацию'
         open={open}
         schema={{ properties: this.userProperties }}
@@ -54,7 +58,7 @@ export class OrgUsersInviteDialog extends Component<OrgUsersInviteDialogProps> {
   @boundMethod
   private async invite(value: UserInvite) {
     try {
-      await usersService.invite(value);
+      await usersService.invite(value.email);
 
       Toast.success('Пользователь успешно добавлен в организацию');
       this.props.onClose();

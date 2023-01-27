@@ -32,7 +32,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     void deleteByLogin(@Param("login") String login);
 
     @RestResource(exported = false)
-    Optional<User> findByLogin(@Param("login") String login);
+    Optional<User> findByLoginIgnoreCase(@Param("login") String login);
 
     @RestResource(exported = false)
     Optional<User> findByEmail(@Param("email") String email);

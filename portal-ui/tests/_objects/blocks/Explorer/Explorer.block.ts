@@ -40,17 +40,15 @@ class Explorer extends Block implements BlockModel {
     return await Promise.all($$titles.map(async $title => await $title.getText()));
   }
 
-  // eslint-disable-next-line regexp/no-super-linear-backtracking -- тут нам атаки не страшны
-  @then(/^список названий в explorer: (`.+`[ ,]*)+$/)
+  @then(/^список названий в explorer: (".+"[ ,]*)+$/)
   async testTitles(dirty: string) {
-    const titles = dirty.slice(1, -1).split('`, `');
+    const titles = dirty.slice(1, -1).split('", "');
     expect(titles).toEqual(await this.getListTitles());
   }
 
   @then(/^список в explorer пуст$/)
   async testEmptiness() {
-    // eslint-disable-next-line @typescript-eslint/await-thenable -- типы врут
-    await expect(await this.$empty).toBeDisplayedInViewport();
+    await expect(this.$empty).toBeDisplayedInViewport();
   }
 }
 

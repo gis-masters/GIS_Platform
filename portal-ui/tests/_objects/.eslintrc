@@ -1,0 +1,6 @@
+{
+  "rules": {
+    // regexp
+    "regexp/no-super-linear-backtracking": "off" // в тестах нам атаки не страшны
+  }
+}

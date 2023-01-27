@@ -20,12 +20,6 @@ class AllPermissionsService {
 
   private constructor() {
     this.debouncedFetchPermissionsListStore = debounce(this.fetchPermissionsListStore, 300);
-
-    communicationService.logout.on(() => {
-      allPermissions.reset();
-      this.allPermissionsStoreInited = false;
-      delete this.fetchingOperationId;
-    });
   }
 
   static get instance() {

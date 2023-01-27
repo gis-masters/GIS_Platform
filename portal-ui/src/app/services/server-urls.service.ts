@@ -163,11 +163,11 @@ export async function getUsersUrl(): Promise<string> {
 }
 
 export async function getUsersInviteUrl(): Promise<string> {
-  return (await getBaseUrl()) + '/users/invite';
+  return (await getUsersUrl()) + '/invite';
 }
 
 export async function getUserUrl(userId: number | string): Promise<string> {
-  return `${await getBaseUrl()}/users/${userId}`;
+  return `${await getUsersUrl()}/${userId}`;
 }
 
 export async function getGroupsUrl(): Promise<string> {

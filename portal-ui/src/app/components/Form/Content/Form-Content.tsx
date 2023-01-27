@@ -61,6 +61,9 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
           }
 
           const propertyReadonly = Boolean(readonly || propertySchema.readOnly);
+          const propertyErrors = errors
+            .filter(({ field }) => field === propertySchema.name)
+            .flatMap(({ messages }) => messages);
 
           return (
             <FormField key={i} withRelations={!!relations.length}>
@@ -80,9 +83,7 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
                   property={propertySchema}
                   type={propertySchema.propertyType}
                   fieldValue={convertToComplexField(propertySchema, formValue)}
-                  errors={errors
-                    .filter(({ field }) => field === propertySchema.name)
-                    .flatMap(({ messages }) => messages)}
+                  errors={propertyErrors}
                 />
               ) : (
                 <FormControl
@@ -94,9 +95,7 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
                   fieldValue={convertToComplexField(propertySchema, formValue)}
                   formValue={formValue}
                   labelInTextField={labelInTextField}
-                  errors={errors
-                    .filter(({ field }) => field === propertySchema.name)
-                    .flatMap(({ messages }) => messages)}
+                  errors={propertyErrors}
                 >
                   {String(formValue[propertySchema.name])}
                 </FormControl>

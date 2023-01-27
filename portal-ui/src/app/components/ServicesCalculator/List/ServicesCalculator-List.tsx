@@ -9,7 +9,7 @@ import { Button } from '../../Button/Button';
 import { XTable } from '../../XTable/XTable';
 
 import { ServicesInfo } from '../ServicesCalculator';
-import { DialogActionsRight } from '../../DialogActionsRight/DialogActionsRight';
+import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { ServicesCalculatorCheckbox } from '../Checkbox/ServicesCalculator-Checkbox';
 
 import '!style-loader!css-loader!sass-loader!./ServicesCalculator-List.scss';
@@ -72,12 +72,12 @@ export class ServicesCalculatorList extends Component<ServicesCalculatorListProp
           />
         </DialogContent>
         <DialogActions>
-          <DialogActionsRight>
+          <ActionsRight>
             <Button onClick={this.handleAdd} color='primary'>
               Выбрать
             </Button>
             <Button onClick={this.props.closeServicesDialog}>Отмена</Button>
-          </DialogActionsRight>
+          </ActionsRight>
         </DialogActions>
       </Dialog>
     );

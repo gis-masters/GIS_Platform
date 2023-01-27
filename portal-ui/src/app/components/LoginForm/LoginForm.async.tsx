@@ -1,59 +1,35 @@
 import React, { Component } from 'react';
 import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cloneDeep } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
-import { env } from '../../stores/Env.store';
 import { route, Pages } from '../../stores/Route.store';
-import { communicationService } from '../../services/communication.service';
-import { PropertyType, Schema } from '../../services/data/schema.models';
-import { FieldErrors } from '../../services/formValidation.service';
-import { usersService } from '../../services/auth/users.service';
-import { generateRandomId } from '../../services/util/randomId';
-import { getEsiaUrl } from '../../services/server-urls.service';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { authService } from '../../services/auth/auth.service';
+import { authService, OrganizationsListItemInfo } from '../../services/auth/auth.service';
+import { communicationService } from '../../services/communication.service';
+import { usersService } from '../../services/auth/users.service';
 import { services } from '../../services/services';
-import { http } from '../../services/http.service';
 import { Loading } from '../Loading/Loading';
-import { Button } from '../Button/Button';
-import { Form } from '../Form/Form';
+
+import { LoginFormOrgSelect } from './OrgSelect/LoginForm-OrgSelect';
+import { LoginFormForm } from './Form/LoginForm-Form';
 
 import '!style-loader!css-loader!sass-loader!./LoginForm.scss';
 import '!style-loader!css-loader!sass-loader!../HomePageForm/HomePageForm.scss';
 
 const cnLoginForm = cn('LoginForm');
 
-interface AuthUserData {
+export interface AuthUserData {
   username: string;
   password: string;
+  orgId?: number;
 }
 
 const defaultData: AuthUserData = {
   username: '',
   password: ''
-};
-
-const schema = {
-  properties: [
-    {
-      name: 'username',
-      title: 'E-mail',
-      required: true,
-      display: 'email',
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'password',
-      title: 'Пароль',
-      required: true,
-      display: 'password',
-      propertyType: PropertyType.STRING
-    }
-  ]
 };
 
 export interface LoginFormProps {
@@ -62,10 +38,9 @@ export interface LoginFormProps {
 
 @observer
 export default class LoginForm extends Component<LoginFormProps> {
-  @observable private userData: AuthUserData = cloneDeep(defaultData);
-  @observable private loading: boolean;
-  @observable private esiaLoading: boolean;
-  @observable private errors: FieldErrors[] = [];
+  @observable private userData: AuthUserData = { ...defaultData };
+  @observable private loading = false;
+  @observable private organizations: OrganizationsListItemInfo[] = [];
 
   constructor(props: LoginFormProps) {
     super(props);
@@ -78,13 +53,15 @@ export default class LoginForm extends Component<LoginFormProps> {
 
     const guestName = queryParams.guestName;
     const guestPass = queryParams.guestPass;
+    const guestOrgId = queryParams.guestOrgId ? Number(queryParams.guestOrgId) : undefined;
 
     if (guestName && guestPass) {
       this.setUserData(guestName, guestPass);
-      await this.login({ username: guestName, password: guestPass });
+      await this.login({ username: guestName, password: guestPass, orgId: guestOrgId });
 
       queryParams.guestName = null;
       queryParams.guestPass = null;
+      queryParams.orgId = null;
 
       await services.ngZone.run(async () => {
         await services.router.navigate([location.pathname], {
@@ -108,49 +85,21 @@ export default class LoginForm extends Component<LoginFormProps> {
 
   render() {
     const { inDialog } = this.props;
-    const htmlId = generateRandomId();
 
     return (
-      <>
-        {!this.loading ? (
-          <Form<Partial<AuthUserData>>
-            id={htmlId}
-            className={cnLoginForm({ inDialog }, ['HomePageForm'])}
-            schema={schema as unknown as Schema}
-            value={this.userData}
-            auto
-            labelInTextField
-            errors={this.errors}
-            onFieldChange={this.formFieldChanged}
-            actionFunction={this.login}
-            actions={
-              <div className={cnLoginForm('Actions')}>
-                <span className={cnLoginForm('ActionsLeft')}>
-                  <Button
-                    className={cnLoginForm('ActionsLogin')}
-                    form={htmlId}
-                    type='submit'
-                    color='primary'
-                    disabled={this.esiaLoading}
-                  >
-                    Войти
-                  </Button>
-                  {!!env.esia?.length && (
-                    <Button onClick={this.authWithEsia} loading={this.esiaLoading}>
-                      Войти с помощью ГОСУСЛУГ
-                    </Button>
-                  )}
-                </span>
-                <Button href='/restore-password' disabled={this.esiaLoading}>
-                  Восстановить пароль
-                </Button>
-              </div>
-            }
+      <div className={cnLoginForm({ inDialog }, ['HomePageForm'])}>
+        {!this.organizations.length && <LoginFormForm actionFunction={this.login} userData={this.userData} />}
+
+        {!!this.organizations.length && (
+          <LoginFormOrgSelect
+            organizations={this.organizations}
+            onSelect={this.loginWithOrgId}
+            onClose={this.dropOrganizations}
           />
-        ) : (
-          <Loading visible={this.loading} />
         )}
-      </>
+
+        {this.loading && <Loading visible={this.loading} />}
+      </div>
     );
   }
 
@@ -163,70 +112,68 @@ export default class LoginForm extends Component<LoginFormProps> {
   }
 
   @action.bound
-  private async authWithEsia() {
-    this.esiaLoading = true;
-
-    window.location.href = await http.get<string>(await getEsiaUrl(), { cache: { disabled: true } });
-  }
-
-  @action.bound
-  private handleLoading(isLoading: boolean): void {
-    this.loading = isLoading;
-  }
-
-  @action
-  private setError(errors: FieldErrors[] = []) {
-    this.errors = errors;
-  }
-
-  @boundMethod
-  private formFieldChanged() {
-    this.setError();
+  private setLoading(loading: boolean) {
+    this.loading = loading;
   }
 
   @boundMethod
   private async login(value: AuthUserData) {
-    this.handleLoading(true);
-
+    this.setUserData(value.username, value.password);
+    this.setLoading(true);
     const result = await authService.authenticate(value);
-    this.handleLoading(false);
+    this.setLoading(false);
 
-    try {
-      if (result.ok) {
+    if (result.ok) {
+      try {
+        this.setLoading(true);
         await usersService.fetchCurrentUser();
+      } catch (error) {
+        const err = error as AxiosError<{ errors?: Record<string, string>[] }>;
+        throw err.response?.data?.errors || [];
+      } finally {
+        this.setLoading(false);
+      }
 
-        if (currentUser.isSystemAdmin) {
-          services.ngZone.run(() => {
-            void services.router.navigateByUrl('/system-management');
-          });
-
-          if (this.props.inDialog) {
-            communicationService.authDialogSuccess.emit();
-          }
-
-          return;
-        }
+      if (currentUser.isSystemAdmin) {
+        services.ngZone.run(() => {
+          void services.router.navigateByUrl('/system-management');
+        });
 
         if (this.props.inDialog) {
           communicationService.authDialogSuccess.emit();
-        } else {
-          services.ngZone.run(() => {
-            void services.router.navigateByUrl('/projects/default');
-          });
         }
-      } else if (result.userDisabled) {
-        throw [{ field: 'password', messages: 'Запрос на создание принят и обрабатывается. Попробуйте позже' }];
-      } else if (result.wrongPassword) {
-        this.setError([
-          { field: 'password', messages: ['Неверное имя пользователя или пароль'] },
-          { field: 'username', messages: [''] }
-        ]);
 
-        throw [{ field: 'password', messages: 'Неверное имя пользователя или пароль' }];
+        return;
       }
-    } catch (error) {
-      const err = error as AxiosError<{ errors?: Record<string, string>[] }>;
-      throw err.response?.data?.errors || [];
+
+      if (this.props.inDialog) {
+        communicationService.authDialogSuccess.emit();
+      } else {
+        services.ngZone.run(() => {
+          void services.router.navigateByUrl('/projects/default');
+        });
+      }
+    } else if (result.userDisabled) {
+      throw [{ field: 'password', messages: 'Запрос на создание принят и обрабатывается. Попробуйте позже' }];
+    } else if (result.wrongPassword) {
+      throw [{ field: 'password', messages: 'Неверное имя пользователя или пароль' }];
+    } else if (result.organizations) {
+      this.setOrganizations(result.organizations);
     }
+  }
+
+  @action
+  private setOrganizations(organizations: OrganizationsListItemInfo[]) {
+    this.organizations = organizations;
+  }
+
+  @boundMethod
+  private dropOrganizations() {
+    this.setOrganizations([]);
+  }
+
+  @boundMethod
+  private async loginWithOrgId(orgId: number) {
+    await this.login({ ...this.userData, orgId });
   }
 }

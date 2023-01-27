@@ -5,7 +5,6 @@ import { allUsers } from '../../stores/AllUsers.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { organizationSettingsService } from '../organization-settings';
 import { getUsersInviteUrl, getUsersUrl, getUserUrl } from '../server-urls.service';
-import { communicationService } from '../communication.service';
 import { BuiltInRole } from '../data/permissions.models';
 import { http } from '../http.service';
 import { services } from '../services';
@@ -36,10 +35,6 @@ export interface BackCrgUser extends Omit<CrgUser, 'authorities'> {
   authorities: { authority: BuiltInRole }[];
 }
 
-export interface UserInvite {
-  email?: string;
-}
-
 export type NewUserData = Pick<
   CrgUser,
   'email' | 'name' | 'surname' | 'middleName' | 'job' | 'department' | 'phone' | 'password' | 'enabled'
@@ -58,13 +53,6 @@ class UsersService {
 
   private constructor() {
     this.debouncedFetchUsersListStore = debounce(this.fetchUsersListStore, 300);
-
-    communicationService.logout.on(() => {
-      allUsers.reset();
-      currentUser.reset();
-      this.usersListStoreInited = false;
-      delete this.allUsersRequest;
-    });
   }
 
   static get instance() {
@@ -103,9 +91,15 @@ class UsersService {
     };
   }
 
-  async invite(userData: UserInvite) {
+  async getByEmail(requestedEmail: string): Promise<CrgUser | undefined> {
+    await this.initUsersListStore();
+
+    return allUsers.list.find(({ email }) => email === requestedEmail);
+  }
+
+  async invite(email: string) {
     const params = new URLSearchParams();
-    params.append('email', userData.email);
+    params.append('email', email);
 
     await http.post(await getUsersInviteUrl(), params.toString());
     void this.debouncedFetchUsersListStore();

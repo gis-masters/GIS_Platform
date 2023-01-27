@@ -53,12 +53,6 @@ class ProjectsService {
       await this.debouncedFetchAllProjects();
     });
 
-    communicationService.logout.on(() => {
-      allProjects.reset();
-      delete this.fetchingCurrentProject;
-      delete this.fetchingAllProjectsRequest;
-    });
-
     // при выделении фичи включать её слой
     reaction(
       () => Object.keys(mapStore.selectedFeaturesByTableName),

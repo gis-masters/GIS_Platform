@@ -2,7 +2,7 @@ import { Given } from '@wdio/cucumber-framework';
 
 import { projectsService } from '../../../src/app/services/gis/projects.service';
 import { allProjects } from '../../../src/app/stores/AllProjects.store';
-import { authenticateAsOwner } from './authenticate';
+import { authenticateAsOwner } from './auth/authenticate';
 import { deleteAllProjects } from './deleteAllProjects';
 import { usersService } from '../../../src/app/services/auth/users.service';
 import { addProjectPermission } from '../../../src/app/services/data/permissions.client';
