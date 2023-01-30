@@ -6,33 +6,33 @@
       {
         "id": "about-description",
         "title": "Описание программы",
-        "contentUrl": "/assets/help/about/00about.html"
+        "contentUrl": "/assets/help/1about/0about/00about.html"
       }
     ]
   },
   {
     "id": "login",
-    "title": "Вход с систему",
+    "title": "Вход в систему",
     "children": [
       {
         "id": "login-description",
         "title": "Запуск и авторизация в системе",
-        "contentUrl": "/assets/help/login/00login.html"
+        "contentUrl": "/assets/help/2login/0login/00login.html"
       },
       {
         "id": "registration",
         "title": "Регистрация предприятия",
-        "contentUrl": "/assets/help/login/01registration.html"
+        "contentUrl": "/assets/help/2login/1registration/01registration.html"
       },
       {
         "id": "signOut",
         "title": "Выход из системы",
-        "contentUrl": "/assets/help/login/02signOut.html"
+        "contentUrl": "/assets/help/2login/2signOut/02signOut.html"
       },
       {
         "id": "restorePassword",
         "title": "Восстановление пароля",
-        "contentUrl": "/assets/help/login/03restorePassword.html"
+        "contentUrl": "/assets/help/2login/3restorePassword/03restorePassword.html"
       }
     ]
   },
@@ -43,154 +43,26 @@
       {
         "id": "projects-page",
         "title": "Страница с проектами",
-        "contentUrl": "/assets/help/projects/00projects.html"
+        "contentUrl": "/assets/help/3projects/0projects/00projects.html"
       },
       {
         "id": "create",
         "title": "Создание проекта",
-        "contentUrl": "/assets/help/projects/01create.html"
+        "contentUrl": "/assets/help/3projects/1create/01create.html"
       },
       {
         "id": "delete",
         "title": "Удаление проекта",
-        "contentUrl": "/assets/help/projects/02delete.html"
+        "contentUrl": "/assets/help/3projects/2delete/02delete.html"
       },
       {
         "id": "select",
         "title": "Выбор проекта",
-        "contentUrl": "/assets/help/projects/03select.html"
+        "contentUrl": "/assets/help/3projects/3select/03select.html"
       }
     ]
   },
-  {
-    "id": "import",
-    "title": "Загрузка данных",
-    "children": [
-      {
-        "id": "import-data",
-        "title": "Загрузка векторных данных в формате shp",
-        "contentUrl": "/assets/help/import/00import.html"
-      },
-      {
-        "id": "upload",
-        "title": "Этап I: Загрузка zip архива со слоями.",
-        "contentUrl": "/assets/help/import/01upload.html"
-      },
-      {
-        "id": "mapping",
-        "title": "Этап II: Преобразование слоёв в формат GML и импортирование в проект.",
-        "contentUrl": "/assets/help/import/02mapping.html"
-      }
-    ]
-  },
-  {
-    "id": "org-admin",
-    "title": "Управление организацией",
-    "children": [
-      {
-        "id": "org-admin-control",
-        "title": "Управление организацией",
-        "contentUrl": "/assets/help/map/orgManagement/00orgManagement.html"
-      },
-      {
-        "id": "1orgManagement",
-        "title": "Пользователи",
-        "contentUrl": "/assets/help/map/orgManagement/01orgManagement.html"
-      },
-      {
-        "id": "2orgManagement",
-        "title": "Группы",
-        "contentUrl": "/assets/help/map/orgManagement/02orgManagement.html"
-      },
-      {
-        "id": "3orgManagement",
-        "title": "Настройка организации",
-        "contentUrl": "/assets/help/map/orgManagement/03orgManagement.html"
-      },
-      {
-        "id": "04addUser",
-        "title": "Приглашение пользователя",
-        "contentUrl": "/assets/help/map/orgManagement/04addUser.html"
-      }
-    ]
-  },
-  {
-    "id": "data-management",
-    "title": "Управление данными",
-    "children": [
-      {
-        "id": "dataSets",
-        "title": "Наборы данных",
-        "contentUrl": "/assets/help/map/dataManagement/01dataSets.html"
-      },
-
-      {
-        "id": "editDataset",
-        "title": "Редактирование набора данных",
-        "contentUrl": "/assets/help/map/dataManagement/08editDataset.html"
-      },
-      {
-        "id": "substrate",
-        "title": "Картографическая подоснова",
-        "contentUrl": "/assets/help/map/dataManagement/03substrate.html"
-      },
-      {
-        "id": "libraryDocs",
-        "title": "Библиотека документов",
-        "contentUrl": "/assets/help/map/dataManagement/02libraryDocs.html"
-      },
-      {
-        "id": "documentCard",
-        "title": "Карточка документа",
-        "contentUrl": "/assets/help/map/dataManagement/04documentCard.html"
-      },
-      {
-        "id": "registry",
-        "title": "Реестр документов",
-        "contentUrl": "/assets/help/registry/05registry.html"
-      },
-      {
-        "id": "placement_project",
-        "title": "Размещение растровых файлов в проект",
-        "contentUrl": "/assets/help/map/dataManagement/06placement_project.html"
-      },
-      {
-        "id": "print_information",
-        "title": "Печать документа",
-        "contentUrl": "/assets/help/map/dataManagement/07print_information.html"
-      },
-      {
-        "id": "related_doc",
-        "title": "Связность документов",
-        "contentUrl": "/assets/help/map/dataManagement/08related_doc.html"
-      },
-      {
-        "id": "00gmlImport(ENU_NED)",
-        "title": "Размещение gml файлов  в проект",
-        "contentUrl": "/assets/help/map/dataManagement/09gmlImport(ENU_NED).html"
-      },
-      {
-        "id": "11layerInDataset",
-        "title": "Создание пустого векторого слоя",
-        "contentUrl": "/assets/help/map/dataManagement/11layerInDataset.html"
-      },
-      {
-        "id": "dxf",
-        "title": "Размещение DXF",
-        "contentUrl": "/assets/help/map/dataManagement/10DXF.html"
-      },
-      {
-        "id": "representation",
-        "title": "Представления векторной таблицы",
-        "contentUrl": "/assets/help/map/dataManagement/12representation.html"
-      },
-      {
-        "id": "moveDocument",
-        "title": "Перемещение документов",
-        "contentUrl": "/assets/help/map/dataManagement/13moveDocument.html"
-      }
-    ]
-  },
+  
   {
     "id": "map",
     "title": "Карта",
@@ -198,7 +70,7 @@
       {
         "id": "map-desription",
         "title": "Управление пространственными данными",
-        "contentUrl": "/assets/help/map/00map.html"
+        "contentUrl": "/assets/help/map/0map/00map.html"
       },
       {
         "id": "dataVerification",
@@ -207,12 +79,12 @@
           {
             "id": "changeOrderLayers",
             "title": "Проверка ошибок по приказу",
-            "contentUrl": "/assets/help/map/dataVerification/01validateLayers.html"
+            "contentUrl": "/assets/help/map/dataVerification/1validateLayers/01validateLayers.html"
           },
           {
-            "id": "createGroup",
+            "id": "chek_erors",
             "title": "Просмотр ошибок",
-            "contentUrl": "/assets/help/map/dataVerification/03objectsList.html"
+            "contentUrl": "/assets/help/map/dataVerification/3objectsList/03objectsList.html"
           }
         ]
       },
@@ -221,59 +93,59 @@
         "title": "Настройка структуры проекта",
         "children": [
           {
-            "id": "changeOrderLayers",
+            "id": "changeOrderLayers1",
             "title": "Изменение порядка слоев/групп",
-            "contentUrl": "/assets/help/map/projectManagement/01changeOrderLayers.html"
+            "contentUrl": "/assets/help/map/2projectManagement/1changeOrderLayers/01changeOrderLayers.html"
           },
           {
             "id": "createGroup",
             "title": "Создание группы",
-            "contentUrl": "/assets/help/map/projectManagement/02createGroup.html"
+            "contentUrl": "/assets/help/map/2projectManagement/2createGroup/02createGroup.html"
           },
           {
             "id": "renameGroup",
             "title": "Переименование группы",
-            "contentUrl": "/assets/help/map/projectManagement/03renameGroup.html"
+            "contentUrl": "/assets/help/map/2projectManagement/3renameGroup/03renameGroup.html"
           },
           {
             "id": "visual_max_min",
             "title": "Настройка слоя",
-            "contentUrl": "/assets/help/map/projectManagement/09visual_max_min.html"
+            "contentUrl": "/assets/help/map/2projectManagement/9visual_max_min/09visual_max_min.html"
           },
           {
             "id": "deleteGroup",
             "title": "Удаление группы",
-            "contentUrl": "/assets/help/map/projectManagement/04deleteGroup.html"
+            "contentUrl": "/assets/help/map/2projectManagement/4deleteGroup/04deleteGroup.html"
           },
           {
             "id": "clearGroup",
             "title": "Пустая группа",
-            "contentUrl": "/assets/help/map/projectManagement/05clearGroup.html"
+            "contentUrl": "/assets/help/map/2projectManagement/5clearGroup/05clearGroup.html"
           },
           {
             "id": "changeDisplayLayers",
             "title": "Изменение отображения слоев и групп по умолчанию",
-            "contentUrl": "/assets/help/map/projectManagement/06changeDisplayLayers.html"
+            "contentUrl": "/assets/help/map/2projectManagement/6changeDisplayLayers/06changeDisplayLayers.html"
           },
           {
             "id": "createLayer",
             "title": "Создание слоя",
-            "contentUrl": "/assets/help/map/projectManagement/07createLayer.html"
+            "contentUrl": "/assets/help/map/2projectManagement/7createLayer/07createLayer.html"
           },
           {
             "id": "saveAbortChanges",
             "title": "Сохранение и отмена изменений",
-            "contentUrl": "/assets/help/map/projectManagement/08saveAbortChanges.html"
+            "contentUrl": "/assets/help/map/2projectManagement/8saveAbortChanges/08saveAbortChanges.html"
           },
           {
             "id": "controlLayers",
             "title": "Управление слоями",
-            "contentUrl": "/assets/help/map/01controlLayers.html"
+            "contentUrl": "/assets/help/map/2projectManagement/1controlLayers/01controlLayers.html"
           },
           {
             "id": "listProjects",
             "title": "Переход к списку проектов",
-            "contentUrl": "/assets/help/map/07listProjects.html"
+            "contentUrl": "/assets/help/map/2projectManagement/7listProjects/07listProjects.html"
           }
         ]
       },
@@ -284,34 +156,34 @@
           {
             "id": "new_atribut_table",
             "title": "Работа с данными слоя",
-            "contentUrl": "/assets/help/map/12new_atribut_table.html"
+            "contentUrl": "/assets/help/map/dataWork/12new_atribut_table/12new_atribut_table.html"
           },
           {
             "id": "punctureObject",
             "title": "Получение дополнительной информации об объекте (прокол)",
-            "contentUrl": "/assets/help/map/04punctureObject.html"
+            "contentUrl": "/assets/help/map/dataWork/4punctureObject/04punctureObject.html"
           },
           {
             "id": "allEditObjects",
             "title": "Множественное редактирование/удаление объектов на карте через атрибутивную таблицу",
-            "contentUrl": "/assets/help/map/fullEditObject/08allEditObjects.html"
+            "contentUrl": "/assets/help/map/dataWork/8allEditObjects/08allEditObjects.html"
           },
           {
             "id": "copy",
             "title": "Копирование и перенос векторных данных между слоями",
-            "contentUrl": "/assets/help/map/fullEditObject/09copy.html"
+            "contentUrl": "/assets/help/map/dataWork/9copy/09copy.html"
           },
           {
             "id": "edit",
             "title": "Внесение изменений в требуемую Приказом информацию",
             "platforms": ["conv"],
-            "contentUrl": "/assets/help/map/fullEditObject/10edit.html"
+            "contentUrl": "/assets/help/map/dataWork/10edit/10edit.html"
           },
           {
             "id": "copyUrl",
             "title": "Копирование ссылки на объект",
             "platforms": ["conv"],
-            "contentUrl": "/assets/help/map/08copy.html"
+            "contentUrl": "/assets/help/map/dataWork/8copy/08copy.html"
           }
         ]
       },
@@ -322,42 +194,42 @@
           {
             "id": "createObjectMap",
             "title": "Создание объекта путем рисования на карте",
-            "contentUrl": "/assets/help/map/fullEditObject/01createObjectMap.html"
+            "contentUrl": "/assets/help/map/dataEdit/1createObjectMap/01createObjectMap.html"
           },
           {
             "id": "createObjectNotepad",
             "title": "Создание объекта по координатам путем вставки их из блокнота",
-            "contentUrl": "/assets/help/map/fullEditObject/02createObjectNotepad.html"
+            "contentUrl": "/assets/help/map/dataEdit/2createObjectNotepad/02createObjectNotepad.html"
           },
           {
             "id": "createObjectCSV",
             "title": "Создание объекта по координатам путем вставки их из файла CSV",
-            "contentUrl": "/assets/help/map/fullEditObject/03createObjectCSV.html"
+            "contentUrl": "/assets/help/map/dataEdit/3createObjectCSV/03createObjectCSV.html"
           },
           {
             "id": "editObject",
             "title": "Редактирование объекта",
-            "contentUrl": "/assets/help/map/fullEditObject/04editObject.html"
+            "contentUrl": "/assets/help/map/dataEdit/4editObject/04editObject.html"
           },
           {
             "id": "addDocumentObject",
             "title": "Прикрепление документов (файлов) к объектам",
-            "contentUrl": "/assets/help/map/fullEditObject/05addDocumentObject.html"
+            "contentUrl": "/assets/help/map/dataEdit/5addDocumentObject/05addDocumentObject.html"
           },
           {
             "id": "featureExtract",
             "title": "Создание документа-выписки об объекте",
-            "contentUrl": "/assets/help/map/fullEditObject/12excerpt.html"
+            "contentUrl": "/assets/help/map/dataEdit/12excerpt/12excerpt.html"
           },
           {
             "id": "deleteObject",
             "title": "Удаление объекта",
-            "contentUrl": "/assets/help/map/fullEditObject/06deleteObject.html"
+            "contentUrl": "/assets/help/map/dataEdit/6deleteObject/06deleteObject.html"
           },
           {
             "id": "downloadCoordinates",
             "title": "Выгрузка координат существующего объекта в файл CSV",
-            "contentUrl": "/assets/help/map/fullEditObject/07downloadCoordinates.html"
+            "contentUrl": "/assets/help/map/dataEdit/7downloadCoordinates/07downloadCoordinates.html"
           }
         ]
       },
@@ -368,43 +240,65 @@
           {
             "id": "areaMeasurement",
             "title": "Измерение площади",
-            "contentUrl": "/assets/help/map/ruler/01areaMeasurement.html"
+            "contentUrl": "/assets/help/map/mapTools/areaMeasurement/01areaMeasurement.html"
           },
           {
             "id": "lengthMeasurement",
             "title": "Измерение длины",
-            "contentUrl": "/assets/help/map/ruler/02lengthMeasurement.html"
+            "contentUrl": "/assets/help/map/mapTools/lengthMeasurement/02lengthMeasurement.html"
           },
           {
             "id": "print",
             "title": "Печать фрагмента карты",
-            "contentUrl": "/assets/help/map/print/00print.html"
+            "contentUrl": "/assets/help/map/mapTools/print/00print.html"
           },
           {
             "id": "selectObjects",
             "title": "Выбор объектов",
-            "contentUrl": "/assets/help/map/11multipleSampling.html"
+            "contentUrl": "/assets/help/map/mapTools/multipleSampling/11multipleSampling.html"
           },
           {
             "id": "unloadingGML",
             "title": "Выгрузка GML",
-            "contentUrl": "/assets/help/map/ruler/03unloadingGML.html"
+            "contentUrl": "/assets/help/map/mapTools/unloadingGML/03unloadingGML.html"
           }
         ]
       },
       {
-        "id": "edit-object",
+        "id": "edit-object1",
         "title": "Управление данными",
         "children": [
           {
-            "id": "dataManagement",
+            "id": "dataManagement1",
             "title": "Управление данными",
-            "contentUrl": "/assets/help/map/dataManagement/00dataManagement.html"
+            "contentUrl": "/assets/help/map/MapDataManagement/00dataManagement.html"
           }
         ]
       }
     ]
   },
+  {
+    "id": "import",
+    "title": "Загрузка данных",
+    "children": [
+      {
+        "id": "import-data",
+        "title": "Загрузка векторных данных в формате shp",
+        "contentUrl": "/assets/help/4import/0import/00import.html"
+      },
+      {
+        "id": "upload",
+        "title": "Этап I: Загрузка zip архива со слоями.",
+        "contentUrl": "/assets/help/4import/1upload/01upload.html"
+      },
+      {
+        "id": "mapping",
+        "title": "Этап II: Преобразование слоёв в формат GML и импортирование в проект.",
+        "contentUrl": "/assets/help/4import/2mapping/02mapping.html"
+      }
+    ]
+  },
+
   {
     "id": "export",
     "title": "Выгрузка данных",
@@ -414,25 +308,156 @@
         "id": "data-export",
         "title": "Выгрузка данных",
         "platforms": ["conv"],
-        "contentUrl": "/assets/help/export/00export.html"
+        "contentUrl": "/assets/help/7export/00export/00export.html"
       },
       {
         "id": "exportShp",
         "title": "Выгрузка векторных данных в формате shp с атрибутами согласно требованиям приказа.",
         "platforms": ["conv"],
-        "contentUrl": "/assets/help/export/01exportShp.html"
+        "contentUrl": "/assets/help/7export/01exportShp/01exportShp.html"
       },
       {
         "id": "exportGml",
         "title": "Выгрузка документа территориального планирования в формате GML в соответствии с требованиями приказа.",
         "platforms": ["conv"],
-        "contentUrl": "/assets/help/export/02exportGml.html"
+        "contentUrl": "/assets/help/7export/02exportGml/02exportGml.html"
+      }
+    ]
+  },
+  {
+    "id": "data-management",
+    "title": "Управление данными",
+    "children": 
+    [
+      {
+        "id": "dataSetsMain",
+        "title": "Наборы данных",
+        "children": [
+      {
+        "id": "dataSets",
+        "title": "Наборы данных",
+        "contentUrl": "/assets/help/5dataManagement/1dataSets/01dataSets.html"
+      },
+
+      {
+        "id": "editDataset",
+        "title": "Редактирование набора данных",
+        "contentUrl": "/assets/help/5dataManagement/8editDataset/08editDataset.html"
+      },
+
+      {
+        "id": "11layerInDataset",
+        "title": "Создание пустого векторого слоя",
+        "contentUrl": "/assets/help/5dataManagement/11layerInDataset/11layerInDataset.html"
+      },
+
+      {
+        "id": "representation",
+        "title": "Представления векторной таблицы",
+        "contentUrl": "/assets/help/5dataManagement/12representation/12representation.html"
+      }
+    ]},
+    {
+      "id": "libraryDocsMain",
+      "title": "Библиотеки документов",
+      "children": [
+      {
+        "id": "libraryDocs",
+        "title": "Библиотека документов",
+        "contentUrl": "/assets/help/5dataManagement/2libraryDocs/02libraryDocs.html"
+      },
+
+      {
+        "id": "documentCard",
+        "title": "Карточка документа",
+        "contentUrl": "/assets/help/5dataManagement/4documentCard/04documentCard.html"
+      },
+
+      {
+        "id": "registry",
+        "title": "Реестр документов",
+        "contentUrl": "/assets/help/5dataManagement/5registry/05registry.html"
+      },
+
+      {
+        "id": "placement_project",
+        "title": "Размещение растровых файлов в проект",
+        "contentUrl": "/assets/help/5dataManagement/6placement_project/06placement_project.html"
+      },
+    
+
+      {
+        "id": "00gmlImport(ENU_NED)",
+        "title": "Размещение файлов GML в проекте",
+        "contentUrl": "/assets/help/5dataManagement/9gmlImport(ENU_NED)/09gmlImport(ENU_NED).html"
+      },
+
+      {
+        "id": "dxf",
+        "title": "Размещение файлов DXF в проекте",
+        "contentUrl": "/assets/help/5dataManagement/10dxf/10dxf.html"
+      },
+
+      {
+        "id": "print_information",
+        "title": "Печать документа",
+        "contentUrl": "/assets/help/5dataManagement/7print_information/07print_information.html"
+      },
+
+      {
+        "id": "related_doc",
+        "title": "Связность документов",
+        "contentUrl": "/assets/help/5dataManagement/8related_doc/08related_doc.html"
+      },
+
+      {
+        "id": "moveDocument",
+        "title": "Перемещение документов",
+        "contentUrl": "/assets/help/5dataManagement/13moveDocument/13moveDocument.html"
+      }
+    ]},
+      {
+        "id": "substrate",
+        "title": "Картографические подосновы",
+        "contentUrl": "/assets/help/5dataManagement/3substrate/03substrate.html"
+      }
+    ]
+  },
+  
+  {
+    "id": "org-admin",
+    "title": "Управление организацией",
+    "children": [
+      {
+        "id": "org-admin-control",
+        "title": "Управление организацией",
+        "contentUrl": "/assets/help/8orgManagement/00orgManagement/00orgManagement.html"
+      },
+      {
+        "id": "1orgManagement",
+        "title": "Пользователи",
+        "contentUrl": "/assets/help/8orgManagement/01orgManagement/01orgManagement.html"
+      },
+      {
+        "id": "2orgManagement",
+        "title": "Группы",
+        "contentUrl": "/assets/help/8orgManagement/02orgManagement/02orgManagement.html"
+      },
+      {
+        "id": "3orgManagement",
+        "title": "Настройка организации",
+        "contentUrl": "/assets/help/8orgManagement/03orgManagement/03orgManagement.html"
+      },
+      {
+        "id": "04addUser",
+        "title": "Приглашение пользователя",
+        "contentUrl": "/assets/help/8orgManagement/04addUser/04addUser.html"
       }
     ]
   },
   {
     "id": "services-calculator",
     "title": "Калькулятор услуг",
-    "contentUrl": "/assets/help/calculator/calculated.html"
+    "contentUrl": "/assets/help/9calculator/calculated.html"
   }
 ]
