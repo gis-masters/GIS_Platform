@@ -4,8 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_utils.CrgScriptEngine;
 import ru.mycrg.common_utils.ScriptCalculator;
@@ -73,28 +71,6 @@ public class SystemAttributeHandler {
 
         if (attributeDefined(CREATED_BY)) {
             body.put(CREATED_BY.getName(), authenticationFacade.getLogin());
-        }
-
-        return this;
-    }
-
-    public SystemAttributeHandler fillFileInfo(@NotNull Map<String, Object> body, MultipartFile file) {
-        if (file != null) {
-            if (attributeDefined(SIZE)) {
-                body.put(SIZE.getName(), file.getSize());
-            }
-
-            if (attributeDefined(FILE_TYPE)) {
-                body.put(FILE_TYPE.getName(), StringUtils.getFilenameExtension(file.getOriginalFilename()));
-            }
-        }
-
-        return this;
-    }
-
-    public SystemAttributeHandler fillFileInnerPath(@NotNull Map<String, Object> body, String innerPath) {
-        if (attributeDefined(INNER_PATH)) {
-            body.put(INNER_PATH.getName(), innerPath);
         }
 
         return this;

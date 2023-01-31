@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.controller;
+package ru.mycrg.data_service.controller.dataset;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;

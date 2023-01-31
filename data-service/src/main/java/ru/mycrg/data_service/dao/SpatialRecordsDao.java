@@ -88,7 +88,7 @@ public class SpatialRecordsDao {
     public Feature save(@NotNull ResourceQualifier qualifier,
                         @NotNull Feature feature,
                         @NotNull SchemaDto schema) throws CrgDaoException {
-        String query = buildParameterizedInsertQuery(qualifier, feature);
+        String query = buildParameterizedInsertQuery(qualifier, feature, true);
         MapSqlParameterSource parameterSource =
                 sqlParameterSourceFactory.buildParameterizedSource(feature, schema);
 

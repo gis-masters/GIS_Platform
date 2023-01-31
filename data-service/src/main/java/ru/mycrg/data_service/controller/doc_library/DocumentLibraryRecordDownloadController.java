@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.controller;
+package ru.mycrg.data_service.controller.doc_library;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import ru.mycrg.data_service.controller.BaseController;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;

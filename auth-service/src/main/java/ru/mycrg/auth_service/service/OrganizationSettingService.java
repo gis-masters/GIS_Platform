@@ -50,6 +50,9 @@ public class OrganizationSettingService {
         this.authenticationFacade = authenticationFacade;
         this.messageBus = messageBus;
         this.knownSettings = knownSettings;
+
+        log.debug("Known settings is: ");
+        this.knownSettings.forEach((k, v) -> log.debug("Key: '{}' Description: '{}'", k, v));
     }
 
     public Map<String, String> getKnownSetting() {

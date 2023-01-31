@@ -24,20 +24,23 @@ public class OrgSettingsKeeper {
     }
 
     public void throwIfCreateLibraryItemNotAllowed() {
-        Object createLibraryItem = serviceSettings.get("createLibraryItem");
-        if (createLibraryItem != null && !Boolean.parseBoolean(createLibraryItem.toString())) {
-            log.info("CreateLibraryItemNotAllowed by settings");
-
-            throw new NotFoundException("");
-        }
+        throwIfNotAllowed("createLibraryItem");
     }
 
     public void throwIfDownloadFileNotAllowed() {
-        Object downloadFiles = serviceSettings.get("downloadFiles");
-        if (downloadFiles != null && !Boolean.parseBoolean(downloadFiles.toString())) {
-            log.info("DownloadFileNotAllowed by settings");
+        throwIfNotAllowed("downloadFiles");
+    }
 
-            throw new NotFoundException("");
+    public void throwIfReestrsNotAllowed() {
+        throwIfNotAllowed("reestrs");
+    }
+
+    public void throwIfNotAllowed(String setting) {
+        Object oSetting = serviceSettings.get(setting);
+        if (oSetting != null && !Boolean.parseBoolean(oSetting.toString())) {
+            log.info("{} notAllowed by settings", oSetting);
+
+            throw new NotFoundException("No message available", new RuntimeException());
         }
     }
 }

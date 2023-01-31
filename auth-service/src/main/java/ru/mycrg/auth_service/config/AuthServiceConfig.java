@@ -20,6 +20,7 @@ public class AuthServiceConfig {
         knownSettings.put("createProject", "Создание проекта");
         knownSettings.put("editProjectLayer", "Настройка слоев проекта");
         knownSettings.put("sedDialog", "СЭД Диалог");
+        knownSettings.put("reestrs", "Реестры");
 
         return knownSettings;
     }

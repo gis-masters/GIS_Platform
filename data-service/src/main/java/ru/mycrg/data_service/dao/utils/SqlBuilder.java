@@ -103,7 +103,8 @@ public class SqlBuilder {
 
     @NotNull
     public static String buildParameterizedInsertQuery(@NotNull ResourceQualifier qualifier,
-                                                       @NotNull Feature feature) {
+                                                       @NotNull Feature feature,
+                                                       boolean withLastVal) {
         String insertQuery = "INSERT INTO " + qualifier.getTableQualifier();
         StringBuilder params = new StringBuilder();
         StringBuilder values = new StringBuilder(" VALUES (");
@@ -124,7 +125,9 @@ public class SqlBuilder {
         String valueSection = values.substring(0, values.length() - 2) + ")";
         String paramSection = " (" + params.substring(0, params.length() - 2) + ")";
 
-        return insertQuery + paramSection + valueSection + lastValSection;
+        return withLastVal
+                ? insertQuery + paramSection + valueSection + lastValSection
+                : insertQuery + paramSection + valueSection;
     }
 
     @NotNull

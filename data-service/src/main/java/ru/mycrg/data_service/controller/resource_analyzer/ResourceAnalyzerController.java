@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.controller;
+package ru.mycrg.data_service.controller.resource_analyzer;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

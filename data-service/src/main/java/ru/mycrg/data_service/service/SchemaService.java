@@ -78,6 +78,7 @@ public class SchemaService {
         });
     }
 
+    @NotNull
     public Map<String, Object> excludeUnknownProperties(SchemaDto schema, Map<String, Object> props) {
         Map<String, Object> result = new HashMap<>();
         props.forEach((key, value) -> {

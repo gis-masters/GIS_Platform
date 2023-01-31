@@ -17,7 +17,7 @@ public class BaseController {
     private final Logger log = LoggerFactory.getLogger(BaseController.class);
 
     @NotNull
-    HttpHeaders createHeadersWithLinkToProcess(Process process) {
+    public HttpHeaders createHeadersWithLinkToProcess(Process process) {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/api/data/processes/{processId}")
@@ -30,7 +30,7 @@ public class BaseController {
     }
 
     @NotNull
-    String defineFileContentType(HttpServletRequest request, Resource resource) {
+    public String defineFileContentType(HttpServletRequest request, Resource resource) {
         String contentType = null;
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());

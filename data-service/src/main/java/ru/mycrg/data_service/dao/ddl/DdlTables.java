@@ -162,6 +162,9 @@ public class DdlTables {
             case INT:
                 result = attrDescription.getName() + " integer";
                 break;
+            case LONG:
+                result = attrDescription.getName() + " bigint";
+                break;
             case CHOICE:
                 result = handleChoice(attrDescription);
                 break;
@@ -177,6 +180,8 @@ public class DdlTables {
                 result = attrDescription.getName() + " numeric(38,8)";
                 break;
             case URL:
+            case TEXT:
+            case LOOKUP:
                 result = attrDescription.getName() + " text";
                 break;
             case GEOMETRY:
@@ -184,9 +189,6 @@ public class DdlTables {
                 break;
             case DATETIME:
                 result = attrDescription.getName() + " timestamp";
-                break;
-            case LOOKUP:
-                result = attrDescription.getName() + " text";
                 break;
             case FILE:
                 result = attrDescription.getName() + " jsonb";

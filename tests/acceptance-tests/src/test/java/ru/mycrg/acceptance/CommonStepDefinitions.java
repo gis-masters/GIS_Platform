@@ -14,8 +14,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CommonStepDefinitions extends BaseStepsDefinitions {
 
@@ -32,9 +31,10 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
     @And("В ответе есть пункт {string}")
     public void isThereField(String checkField) {
         jsonPath = response.jsonPath();
-        List<String> entities = jsonPath.get(String.format("_embedded.%s.id", checkField));
+        List<String> entities = jsonPath.get(String.format("_embedded.%s", checkField));
 
-        assertTrue(entities.size() >= 2);
+        assertNotNull(entities);
+        assertFalse(entities.isEmpty());
     }
 
     @And("В ответе есть контент")

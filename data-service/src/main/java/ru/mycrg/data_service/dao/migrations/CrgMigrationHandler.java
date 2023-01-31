@@ -68,6 +68,7 @@ public class CrgMigrationHandler {
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M16__updateBaseMaps.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M17__addDxfSchema.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M18__fixSchemas.sql"));
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M19__addReestrSchemas.sql"));
             }
 
             tempDataSource.close();

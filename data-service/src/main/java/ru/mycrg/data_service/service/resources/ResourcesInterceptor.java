@@ -57,7 +57,6 @@ public class ResourcesInterceptor implements HandlerInterceptor {
     @NotNull
     private Optional<String> getAttribute(@NotNull HttpServletRequest request, String attrName) {
         try {
-            log.debug("Request get attr {}", request.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE));
             var attributes = (Map<String, String>) request.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
             return Optional.ofNullable(attributes.get(attrName));

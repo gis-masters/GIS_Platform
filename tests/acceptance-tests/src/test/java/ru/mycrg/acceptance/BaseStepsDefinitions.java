@@ -322,16 +322,16 @@ public class BaseStepsDefinitions {
     }
 
     // TODO: Временно дублирую метод: getCurrentEntityByFilter пока проекты не работают с полным фильтром
-    public void getProjectsByTitle(String field, String value) {
+    public void getEntitiesWithFilterByField(String field, String value) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get(String.format("?%s=%s", field, value));
     }
 
-    public void getAllEntitiesSorted(String sortingType, String sortingDirection) {
+    public void getAllEntitiesSorted(String field, String direction) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(String.format("/?sort=%s,%s&%s", sortingType, sortingDirection, "size=1000"));
+                        get(String.format("/?sort=%s,%s&%s", field, direction, "size=1000"));
     }
 
     public void getAllAndFillEntityCount(String entity) {

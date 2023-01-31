@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.controller;
+package ru.mycrg.data_service.controller.doc_library;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

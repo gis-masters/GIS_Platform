@@ -11,6 +11,10 @@ public class NotFoundException extends RuntimeException {
         super("Ресурс не найден по идентификатору: " + id.toString());
     }
 
+    public NotFoundException(String msg, Object o) {
+        super(String.format("%s: '%s'", msg, o.toString()));
+    }
+
     public NotFoundException(ResourceQualifier tableQualifier, Long recordId) {
         super(String.format("В таблице '%s' не найден объект по идентификатору: '%d'",
                             tableQualifier.getQualifier(), recordId));

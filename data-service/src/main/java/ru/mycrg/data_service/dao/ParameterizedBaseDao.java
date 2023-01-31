@@ -41,6 +41,20 @@ public class ParameterizedBaseDao {
         }
     }
 
+    public void update(@NotNull String query,
+                       @NotNull MapSqlParameterSource parameterSource) throws CrgDaoException {
+        try {
+            log.debug("UPDATE QUERY: [{}]", query);
+
+            pJdbcTemplate.update(query, parameterSource);
+        } catch (Exception e) {
+            String msg = "Не удалось выполнить обновление";
+            logError(msg, e);
+
+            throw new CrgDaoException(msg, extractDetails(e));
+        }
+    }
+
     public void updateById(@NotNull String query,
                            @NotNull MapSqlParameterSource parameterSource) throws CrgDaoException {
         try {
