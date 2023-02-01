@@ -1,6 +1,6 @@
-import { allProjects } from '../../../src/app/stores/AllProjects.store';
-import { projectsService } from '../../../src/app/services/gis/projects.service';
-import { authenticateAsAdmin } from './auth/authenticate';
+import { allProjects } from '../../../../src/app/stores/AllProjects.store';
+import { projectsService } from '../../../../src/app/services/gis/projects.service';
+import { authenticateAsAdmin } from '../auth/authenticate';
 
 declare const window: { projectsService: typeof projectsService; allProjects: typeof allProjects };
 

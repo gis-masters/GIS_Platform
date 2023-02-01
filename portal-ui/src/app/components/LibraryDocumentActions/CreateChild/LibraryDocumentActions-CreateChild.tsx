@@ -13,10 +13,10 @@ import {
   LibraryRecord
 } from '../../../services/data/doc-library.service';
 import { sleep } from '../../../services/util/sleep';
+import { getDefaultValues } from '../../Form/Form.utils';
 import { Schema } from '../../../services/data/schema.models';
 import { schemaService } from '../../../services/data/schema.service';
 import { applyContentType } from '../../../services/data/schema.utils';
-import { getDefaultValues } from '../../../services/formValidation.service';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 import { FormDialog } from '../../FormDialog/FormDialog';
 

@@ -9,7 +9,7 @@ import { AxiosError } from 'axios';
 
 import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
 import { convertOldToNewProperties, applyContentTypeOld } from '../../services/data/schema.utils';
-import { getDefaultValues, validateFormValue } from '../../services/formValidation.service';
+import { validateFormValue } from '../../services/formValidation.service';
 import { LibraryDocumentDialog } from '../LibraryDocumentDialog/LibraryDocumentDialog';
 import { PropertySchema, PropertyType } from '../../services/data/schema.models';
 import { communicationService } from '../../services/communication.service';
@@ -19,6 +19,7 @@ import { getFeatureUrl } from '../../services/map/map-url.service';
 import { schemaService } from '../../services/data/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { Role } from '../../services/data/permissions.models';
+import { getDefaultValues } from '../Form/Form.utils';
 import { FormDialog } from '../FormDialog/FormDialog';
 
 import { services } from '../../services/services';

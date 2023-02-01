@@ -32,7 +32,7 @@ export default class FormControlTypeFias extends Component<FormControlProps> {
 
   render() {
     const { htmlId, className, fieldValue = {}, inSet, fullWidthForOldForm } = this.props;
-    const { objectId, oktmo } = (fieldValue as { oktmo: string; objectId: number }) || {};
+    const { id, oktmo } = (fieldValue as { oktmo: string; id: number }) || {};
 
     return (
       <div className={cnFormControl({ inSet, fullWidthForOldForm }, [className])}>
@@ -52,7 +52,7 @@ export default class FormControlTypeFias extends Component<FormControlProps> {
         />
 
         {oktmo && <FormInfo title='ОКТМО' text={String(oktmo)} />}
-        {objectId && <FormInfo title='Код ФИАС' text={String(objectId)} />}
+        {id && <FormInfo title='Код ФИАС' text={String(id)} />}
       </div>
     );
   }
@@ -65,7 +65,7 @@ export default class FormControlTypeFias extends Component<FormControlProps> {
 
     const { onChange, property } = this.props;
     const fias = this.optionsList.find(option => {
-      const address = option.fullAddress || option.locality;
+      const address = option.address || option.locality;
 
       return address === value;
     });
@@ -73,9 +73,9 @@ export default class FormControlTypeFias extends Component<FormControlProps> {
     if (onChange) {
       onChange({
         value: {
-          fullAddress: value,
+          address: value,
           oktmo: fias?.oktmo,
-          objectId: fias?.objectId
+          id: fias?.id
         },
         propertyName: property.name
       });
@@ -143,6 +143,6 @@ export default class FormControlTypeFias extends Component<FormControlProps> {
   }
 
   private getOptionLabel(option: Fias): string {
-    return option?.fullAddress || option?.locality || '';
+    return option?.address || option?.locality || '';
   }
 }

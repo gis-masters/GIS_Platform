@@ -1,11 +1,11 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { projectsService } from '../../../src/app/services/gis/projects.service';
-import { allProjects } from '../../../src/app/stores/AllProjects.store';
-import { authenticateAsOwner } from './auth/authenticate';
+import { projectsService } from '../../../../src/app/services/gis/projects.service';
+import { allProjects } from '../../../../src/app/stores/AllProjects.store';
+import { authenticateAsOwner } from '../auth/authenticate';
 import { deleteAllProjects } from './deleteAllProjects';
-import { usersService } from '../../../src/app/services/auth/users.service';
-import { addProjectPermission } from '../../../src/app/services/data/permissions.client';
+import { usersService } from '../../../../src/app/services/auth/users.service';
+import { addProjectPermission } from '../../../../src/app/services/data/permissions.client';
 
 declare const window: {
   projectsService: typeof projectsService;

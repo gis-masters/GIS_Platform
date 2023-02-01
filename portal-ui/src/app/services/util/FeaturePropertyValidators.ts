@@ -70,7 +70,7 @@ export class FeaturePropertyValidators {
 
       if (
         propertySchema.valueType === ValueType.FIAS &&
-        isEmpty((currentValue as Fias)?.fullAddress) &&
+        isEmpty((currentValue as Fias)?.address) &&
         propertySchema.required
       ) {
         errors.required = 'Поле обязательно к заполнению';

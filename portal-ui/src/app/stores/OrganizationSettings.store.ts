@@ -48,27 +48,27 @@ export class OrganizationSettings {
 
   @computed
   get createProject(): boolean {
-    return this.allowedToUse(this.orgSettings.system?.createProject, this.orgSettings.organization?.createProject);
+    return this.allowedToUse(this.orgSettings?.system?.createProject, this.orgSettings.organization?.createProject);
   }
 
   @computed
   get dataManagement(): boolean {
-    return this.allowedToUse(this.orgSettings.system?.dataManagement, this.orgSettings.organization?.dataManagement);
+    return this.allowedToUse(this.orgSettings?.system?.dataManagement, this.orgSettings.organization?.dataManagement);
   }
 
   @computed
   get editProjectLayer(): boolean {
     return this.allowedToUse(
-      this.orgSettings.system?.editProjectLayer,
-      this.orgSettings.organization?.editProjectLayer
+      this.orgSettings?.system?.editProjectLayer,
+      this.orgSettings?.organization?.editProjectLayer
     );
   }
 
   @computed
   get createLibraryItem(): boolean {
     return this.allowedToUse(
-      this.orgSettings.system?.createLibraryItem,
-      this.orgSettings.organization?.createLibraryItem
+      this.orgSettings?.system?.createLibraryItem,
+      this.orgSettings?.organization?.createLibraryItem
     );
   }
 

@@ -11,10 +11,9 @@ interface FiasViewProps {
 
 export const FiasView: FC<FiasViewProps> = ({ value }) => (
   <div className={cnFiasView()}>
-    {value?.fullAddress ? (
+    {value?.address ? (
       <>
-        {value.fullAddress} {value.oktmo ? `ОКТМО: ${value.oktmo}` : ''}{' '}
-        {value.objectId ? `Код фиас: ${value.objectId}` : ''}
+        {value.address} {value.oktmo ? `ОКТМО: ${value.oktmo}` : ''} {value.id ? `Код фиас: ${value.id}` : ''}
       </>
     ) : (
       '—'

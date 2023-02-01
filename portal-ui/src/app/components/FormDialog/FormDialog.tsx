@@ -7,10 +7,10 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
-import { Schema } from '../../services/data/schema.models';
-import { CommonDiRegistry } from '../../services/di-registry';
 import { generateRandomId } from '../../services/util/randomId';
-import { getDefaultValues } from '../../services/formValidation.service';
+import { CommonDiRegistry } from '../../services/di-registry';
+import { Schema } from '../../services/data/schema.models';
+import { getDefaultValues } from '../Form/Form.utils';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { Button, ButtonProps } from '../Button/Button';

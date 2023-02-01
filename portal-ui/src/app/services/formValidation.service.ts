@@ -289,46 +289,6 @@ export function normalizeServerErrors(errors: ServerFieldError[]): FieldErrors[]
   }));
 }
 
-export function getDefaultValues<T>(properties: PropertySchema[], parent: Record<string, unknown> = {}): Partial<T> {
-  const values: Partial<T> = {};
-
-  for (const property of properties) {
-    if (property.defaultValue !== undefined) {
-      values[property.name] = property.defaultValue;
-    }
-
-    if (property.defaultValueFormula) {
-      try {
-        const formula: ValueFormula =
-          typeof property.defaultValueFormula === 'string'
-            ? // eslint-disable-next-line @typescript-eslint/no-implied-eval
-              (new Function('obj', 'property', 'parent', property.defaultValueFormula) as ValueFormula)
-            : property.defaultValueFormula;
-
-        values[property.name] = formula(values, property, parent);
-      } catch (error) {
-        throw new Error(`Ошибка при попытке вычислить значение по-умолчанию: ${String(error)}`);
-      }
-    }
-
-    if (property.defaultValueWellKnownFormula && valueWellKnownFormulas[property.defaultValueWellKnownFormula]) {
-      try {
-        const formula = valueWellKnownFormulas[property.defaultValueWellKnownFormula];
-
-        values[property.name] = formula(values, property, parent);
-      } catch (error) {
-        throw new Error(
-          `Ошибка при попытке вычислить значение по-умолчанию [${property.defaultValueWellKnownFormula}]: ${String(
-            error
-          )}`
-        );
-      }
-    }
-  }
-
-  return values;
-}
-
 export function calculateValues<T>(obj: T | Partial<T>, properties: PropertySchema[]): T {
   const value = cloneDeep(obj);
 

@@ -11,17 +11,16 @@ import {
   calculateValues,
   cleanCalculatedValues,
   FieldErrors,
-  getDefaultValues,
   normalizeServerErrors,
   validateFieldValue,
   validateFormValue
 } from '../../services/formValidation.service';
 import { services } from '../../services/services';
 
-import { FormErrors } from './Errors/Form-Errors';
+import { getDefaultValues, isEqualExceptCalculated } from './Form.utils';
 import { FormContent } from './Content/Form-Content';
 import { FormActions } from './Actions/Form-Actions';
-import { isEqualExceptCalculated } from './Form.utils';
+import { FormErrors } from './Errors/Form-Errors';
 
 import '!style-loader!css-loader!sass-loader!./Form.scss';
 

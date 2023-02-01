@@ -58,7 +58,7 @@ class OrganizationSettingsService {
             name: item,
             title: organizationSettings.availableOrgsSettings[item],
             propertyType: PropertyType.BOOL,
-            hidden: systemManagement ? false : !organizationSettings.orgSettings.system[item]
+            hidden: systemManagement ? false : !organizationSettings.orgSettings?.system[item]
           };
         }
       })

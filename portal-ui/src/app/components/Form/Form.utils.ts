@@ -7,8 +7,10 @@ import {
   PropertySchema,
   PropertySchemaUrl,
   PropertyType,
-  Schema
+  Schema,
+  ValueFormula
 } from '../../services/data/schema.models';
+import { valueWellKnownFormulas } from '../../services/data/schema.utils';
 import { UrlInfo } from './Control/_type/Form-Control_type_url';
 import { Fias } from '../../services/data/fias.service';
 import { services } from '../../services/services';
@@ -22,8 +24,8 @@ const fromComplex: Partial<
 
     return {
       ...formValue,
-      [name + '__address']: fias.fullAddress,
-      [name + '__id']: fias.objectId,
+      [name + '__address']: fias.address,
+      [name + '__id']: fias.id,
       [name + '__oktmo']: fias.oktmo
     };
   }
@@ -34,8 +36,8 @@ const toComplex: Partial<Record<PropertyType, <T>(field: PropertySchema, formVal
     const name = String(field.name);
 
     return {
-      fullAddress: formValue[name + '__address'] as string,
-      objectId: formValue[name + '__id'] as number,
+      address: formValue[name + '__address'] as string,
+      id: formValue[name + '__id'] as number,
       oktmo: formValue[name + '__oktmo'] as string
     };
   }
@@ -128,4 +130,58 @@ export function getViewChoiceOptions(views: ContentType[]): PropertyOption[] | u
       return { title: type.title, value: type.id };
     }) || [])
   ];
+}
+
+export function getDefaultValues<T>(properties: PropertySchema[], parent: unknown = {}): Partial<T> {
+  const values: Partial<T> = {};
+  for (const property of properties) {
+    if (property.defaultValue !== undefined) {
+      Object.assign(
+        values,
+        fromComplex[property.propertyType]
+          ? fromComplex[property.propertyType](property, values, property.defaultValue)
+          : { [property.name]: property.defaultValue }
+      );
+    }
+
+    if (property.defaultValueFormula) {
+      try {
+        const formula: ValueFormula =
+          typeof property.defaultValueFormula === 'string'
+            ? // eslint-disable-next-line @typescript-eslint/no-implied-eval
+              (new Function('obj', 'property', 'parent', property.defaultValueFormula) as ValueFormula)
+            : property.defaultValueFormula;
+
+        Object.assign(
+          values,
+          fromComplex[property.propertyType]
+            ? fromComplex[property.propertyType](property, values, formula(values, property, parent))
+            : { [property.name]: formula(values, property, parent) }
+        );
+      } catch (error) {
+        throw new Error(`Ошибка при попытке вычислить значение по-умолчанию: ${String(error)}`);
+      }
+    }
+
+    if (property.defaultValueWellKnownFormula && valueWellKnownFormulas[property.defaultValueWellKnownFormula]) {
+      try {
+        const formula = valueWellKnownFormulas[property.defaultValueWellKnownFormula];
+
+        Object.assign(
+          values,
+          fromComplex[property.propertyType]
+            ? fromComplex[property.propertyType](property, values, formula(values, property, parent))
+            : { [property.name]: formula(values, property, parent) }
+        );
+      } catch (error) {
+        throw new Error(
+          `Ошибка при попытке вычислить значение по-умолчанию [${property.defaultValueWellKnownFormula}]: ${String(
+            error
+          )}`
+        );
+      }
+    }
+  }
+
+  return values;
 }

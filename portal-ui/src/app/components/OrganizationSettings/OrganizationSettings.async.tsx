@@ -56,7 +56,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
       () => cloneDeep(this.props.orgSettings),
       () => {
         if (this.props.orgSettings?.system) {
-          this.setFormValue(cloneDeep(this.props.orgSettings.system));
+          this.setFormValue(cloneDeep(this.props.orgSettings?.system));
         }
       },
       {

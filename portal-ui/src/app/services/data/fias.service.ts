@@ -2,9 +2,9 @@ import { http } from '../http.service';
 import { getFiasAddresses, getFiasOktmo } from '../server-urls.service';
 
 export interface Fias {
-  fullAddress?: string;
+  address?: string;
   locality?: string;
-  objectId?: number;
+  id?: number;
   oktmo?: string;
 }
 

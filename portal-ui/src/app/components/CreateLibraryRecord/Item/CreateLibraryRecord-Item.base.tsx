@@ -13,9 +13,10 @@ import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
+import { getDefaultValues } from '../../Form/Form.utils';
 import { applyContentType } from '../../../services/data/schema.utils';
 import { ContentType, Schema } from '../../../services/data/schema.models';
-import { cleanCalculatedValues, getDefaultValues } from '../../../services/formValidation.service';
+import { cleanCalculatedValues } from '../../../services/formValidation.service';
 import { createLibraryRecord, DocumentLibrary, LibraryRecord } from '../../../services/data/doc-library.service';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { DocHome } from '../../Icons/DocHome';

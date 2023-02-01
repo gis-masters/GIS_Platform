@@ -6,13 +6,14 @@ import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutlin
 
 import { sleep } from '../../services/util/sleep';
 import { PropertyType, PropertySchema, Schema } from '../../services/data/schema.models';
-import { getDefaultValues, validateFormValue } from '../../services/formValidation.service';
+import { validateFormValue } from '../../services/formValidation.service';
 import { Mime } from '../../services/util/Mime';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
 
 import { Form, FormControl, FormField, FormLabel } from './Form';
 import { FormActions } from './Actions/Form-Actions';
+import { getDefaultValues } from './Form.utils';
 
 export default {
   title: 'Form',

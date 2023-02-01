@@ -52,7 +52,7 @@ public class SimplePropertyDto {
     private String display;
 
     private String searchMode;
-    private String defaultValue;
+    private Object defaultValue;
 
     private Integer sequenceNumber;
 
@@ -421,11 +421,11 @@ public class SimplePropertyDto {
         this.library = library;
     }
 
-    public String getDefaultValue() {
+    public Object getDefaultValue() {
         return defaultValue;
     }
 
-    public void setDefaultValue(String defaultValue) {
+    public void setDefaultValue(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
 
