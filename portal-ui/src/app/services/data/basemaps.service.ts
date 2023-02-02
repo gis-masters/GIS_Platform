@@ -36,7 +36,9 @@ export async function getBasemapsWithParticularOne(
   return await http.getPageWithObject<Basemap>(
     await getBasemapsUrl(),
     preparePageOptions(pageOptions),
-    (item: Basemap) => item.id === id
+    (item: Basemap) => item.id === id,
+    {},
+    true
   );
 }
 

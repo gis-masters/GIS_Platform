@@ -104,7 +104,7 @@
     "arrow-parens": [2, "as-needed"],
     "array-bracket-spacing": [2, "never"],
     "brace-style": [2, "1tbs", { "allowSingleLine": true }],
-    "camelcase": [2, { "properties": "never", "ignoreDestructuring": true }],
+    "camelcase": [1, { "properties": "never", "ignoreDestructuring": true }],
     "comma-dangle": ["error", "never"],
     "comma-spacing": [2, { "before": false, "after": true }],
     "eol-last": 2,

@@ -16,7 +16,7 @@ const cnDocumentsAdd = cn('Documents', 'Add');
 interface DocumentsAddProps {
   filled: boolean;
   value: DocumentInfo[];
-  librariesIdentifiers: string[];
+  librariesTableNames: string[];
   maxDocuments: number;
   onChange(selectedItems: DocumentInfo[]): void;
 }
@@ -31,7 +31,7 @@ export class DocumentsAdd extends Component<DocumentsAddProps> {
   }
 
   render() {
-    const { filled, maxDocuments, value, librariesIdentifiers, onChange } = this.props;
+    const { filled, maxDocuments, value, librariesTableNames, onChange } = this.props;
 
     return (
       <LookupAdd className={cnDocumentsAdd()} filled={filled}>
@@ -46,7 +46,7 @@ export class DocumentsAdd extends Component<DocumentsAddProps> {
 
         <DocumentsSelectDialog
           addedDocuments={value}
-          librariesIdentifiers={librariesIdentifiers}
+          librariesTableNames={librariesTableNames}
           maxDocuments={maxDocuments}
           onChange={onChange}
           dialogOpen={this.dialogOpen}

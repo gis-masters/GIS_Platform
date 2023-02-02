@@ -71,9 +71,9 @@ export class LibraryDocumentActionsRegister extends Component<LibraryDocumentAct
   private async registerDocument() {
     this.setBtnLoading(true);
 
-    const { libraryId, id } = this.props.document;
+    const { libraryTableName, id } = this.props.document;
     try {
-      await registerDocument(libraryId, id);
+      await registerDocument(libraryTableName, id);
       communicationService.libraryRecordUpdated.emit({ type: 'update', data: this.props.document });
     } catch (error) {
       const err = error as AxiosError<ServerError>;

@@ -37,7 +37,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeLibrary {
   static getId(item: ExplorerItemData<DocumentLibrary>): string {
-    return item.payload.identifier;
+    return item.payload.table_name;
   }
 
   static getTitle(item: ExplorerItemData<DocumentLibrary>): string {
@@ -71,7 +71,7 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static getMeta(item: ExplorerItemData<DocumentLibrary>): string {
-    return String(item.payload.identifier);
+    return String(item.payload.table_name);
   }
 
   static getIcon(): ReactNode {
@@ -91,7 +91,7 @@ export class ExplorerAdapterTypeLibrary {
     const result: ExplorerItemData<LibraryRecord>[] = [];
 
     const [libraryRecords, pagesCount] = await getLibraryRecords(
-      explorerItem.payload.identifier,
+      explorerItem.payload.table_name,
       explorerItem.payload.schemaId,
       {
         ...options,
@@ -133,7 +133,7 @@ export class ExplorerAdapterTypeLibrary {
     item: ExplorerItemData<DocumentLibrary>,
     recordId: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
-    const payload = await getLibraryRecord(item.payload.identifier, Number(recordId));
+    const payload = await getLibraryRecord(item.payload.table_name, Number(recordId));
     const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 
@@ -153,7 +153,7 @@ export class ExplorerAdapterTypeLibrary {
     store: ExplorerStore,
     service: ExplorerService
   ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
-    const response = await getLibraryRecordsWithParticularOne(item.payload.identifier, item.payload.schemaId, id, {
+    const response = await getLibraryRecordsWithParticularOne(item.payload.table_name, item.payload.schemaId, id, {
       ...options,
       filter: service.mergeCustomFilter(filter, item, store),
       page
@@ -205,7 +205,7 @@ export class ExplorerAdapterTypeLibrary {
     service: ExplorerService,
     full: boolean
   ): Promise<ReactNode> {
-    const currentItem = await getLibrary(item.payload.identifier);
+    const currentItem = await getLibrary(item.payload.table_name);
     const enabled =
       currentUser.isAdmin ||
       (organizationSettings.createLibraryItem && currentItem.role && currentItem.role !== Role.VIEWER);

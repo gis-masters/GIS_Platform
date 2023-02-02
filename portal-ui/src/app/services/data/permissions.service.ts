@@ -31,13 +31,13 @@ export async function isReadAllowed(layer: CrgLayer): Promise<boolean> {
 }
 
 export async function isRecordUpdateAllowed(record: LibraryRecord): Promise<boolean> {
-  const libraryRecord = record.role ? record : await getLibraryRecord(record.libraryId, record.id);
+  const libraryRecord = record.role ? record : await getLibraryRecord(record.libraryTableName, record.id);
 
   return checkIsUpdateAllowed(libraryRecord.role);
 }
 
 export async function isLibraryUpdateAllowed(library: DocumentLibrary): Promise<boolean> {
-  const documentLibrary = library.role ? library : await getLibrary(library.identifier);
+  const documentLibrary = library.role ? library : await getLibrary(library.table_name);
 
   return checkIsUpdateAllowed(documentLibrary.role);
 }
@@ -82,9 +82,9 @@ export async function isShapeImportAllowed(datasetIdentifier: string, tableIdent
   return !!(currentUser.isAdmin || role === Role.OWNER || role === Role.CONTRIBUTOR);
 }
 
-export async function isRasterReadAllowed(libraryId: string, recordId: number): Promise<boolean> {
+export async function isRasterReadAllowed(libraryTableName: string, recordId: number): Promise<boolean> {
   try {
-    const raster = await getLibraryRecord(libraryId, recordId);
+    const raster = await getLibraryRecord(libraryTableName, recordId);
 
     return Boolean(raster.role);
   } catch {

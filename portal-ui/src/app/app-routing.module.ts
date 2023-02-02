@@ -172,7 +172,7 @@ const routes: AppRoutes = [
     data: { page: Pages.DATA_MANAGEMENT }
   },
   {
-    path: 'data-management/library/:libraryId/registry',
+    path: 'data-management/library/:libraryTableName/registry',
     component: LibraryRegistryPageComponent,
     canActivate: [SystemAdminGuardService],
     resolve: {
@@ -181,7 +181,7 @@ const routes: AppRoutes = [
     data: { page: Pages.REGISTRY }
   },
   {
-    path: 'data-management/library/:libraryId/document/:documentId',
+    path: 'data-management/library/:libraryTableName/document/:documentId',
     component: LibraryDocumentPageComponent,
     canActivate: [SystemAdminGuardService],
     resolve: {

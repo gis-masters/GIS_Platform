@@ -44,9 +44,9 @@ export async function placeFile(
     type: CrgLayerType.RASTER,
     mode: fileOptions.mode,
     nativeCRS: fileOptions.crs,
-    tableName: `${document.libraryId}_${document.id}__${id}`,
+    tableName: `${document.libraryTableName}_${document.id}__${id}`,
     dataSourceUri: 'file://' + path,
-    libraryId: document.libraryId,
+    libraryId: document.libraryTableName,
     recordId: document.id,
     parentId: group?.id,
     enabled: true

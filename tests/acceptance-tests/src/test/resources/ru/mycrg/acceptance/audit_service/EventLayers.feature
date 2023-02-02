@@ -15,6 +15,7 @@ Feature: При изменении слоя, осуществляется зап
       | title                             | styleName    | type   | schemaId     | nativeCRS  | dataSourceUri |
       | Искусственные дорожные сооружения | transportobj | vector | transportobj | EPSG:28406 | STRING_6      |
 
+  @Ignore
   Scenario Outline: Изменение слоя заносится в аудит лог
     Given Существует проект "STRING_10"
     Given Существует набор

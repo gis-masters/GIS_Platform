@@ -14,7 +14,7 @@ import { DocumentsAdd } from './Add/Documents-Add';
 
 const cnDocuments = cn('Documents');
 
-export type DocumentInfo = Pick<LibraryRecord, 'id' | 'title' | 'libraryId'>;
+export type DocumentInfo = Pick<LibraryRecord, 'id' | 'title' | 'libraryTableName'>;
 
 export interface DocumentsProps {
   value: DocumentInfo[];
@@ -46,7 +46,7 @@ export default class Documents extends Component<DocumentsProps> {
                 <DocumentsItem
                   item={item}
                   onDelete={this.deleteHandler}
-                  key={`${item.libraryId}_${item.id}_${i}`}
+                  key={`${item.libraryTableName}_${item.id}_${i}`}
                   editable={editable}
                   numerous={numerous}
                   multiple={multiple}
@@ -61,7 +61,7 @@ export default class Documents extends Component<DocumentsProps> {
             onChange={this.addHandler}
             value={value}
             maxDocuments={multiple ? maxDocuments : 1}
-            librariesIdentifiers={this.librariesIdentifiers}
+            librariesTableNames={this.librariesTableNames}
           />
         )}
       </Lookup>
@@ -75,7 +75,7 @@ export default class Documents extends Component<DocumentsProps> {
     return multiple ? maxDocuments || defaultMaxDocuments : 1;
   }
 
-  private get librariesIdentifiers(): string[] {
+  private get librariesTableNames(): string[] {
     const { library, libraries } = this.props.property;
 
     return libraries || (library ? [library] : []);
@@ -84,7 +84,11 @@ export default class Documents extends Component<DocumentsProps> {
   @boundMethod
   private deleteHandler(deletingItem: DocumentInfo) {
     const { onChange, value } = this.props;
-    onChange(value.filter(({ id, libraryId }) => !(id === deletingItem.id && libraryId === deletingItem.libraryId)));
+    onChange(
+      value.filter(
+        ({ id, libraryTableName }) => !(id === deletingItem.id && libraryTableName === deletingItem.libraryTableName)
+      )
+    );
   }
 
   @boundMethod

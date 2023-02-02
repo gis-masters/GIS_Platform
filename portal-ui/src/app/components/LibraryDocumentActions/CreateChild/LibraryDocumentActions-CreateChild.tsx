@@ -114,8 +114,8 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
     this.operationId = operationId;
     const childrenData: ChildData[] = [];
 
-    for (const { library: libraryId = document.libraryId, contentType } of schema.children) {
-      const library = await getLibrary(libraryId);
+    for (const { library: libraryTableName = document.libraryTableName, contentType } of schema.children) {
+      const library = await getLibrary(libraryTableName);
       const schema = applyContentType(await schemaService.getSchema(library.schemaId), contentType);
 
       childrenData.push({
@@ -185,7 +185,7 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
   @boundMethod
   private async createDocument(value: LibraryRecord) {
     const { library, schema } = this.currentChild;
-    this.setCreatedDocument(await createLibraryRecord(value, library.identifier, schema.name));
+    this.setCreatedDocument(await createLibraryRecord(value, library.table_name, schema.name));
     this.openCreatedDocumentDialog();
   }
 }

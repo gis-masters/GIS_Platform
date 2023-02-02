@@ -90,9 +90,9 @@ export class ExplorerAdapterTypeFolder {
     service: ExplorerService
   ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
     const result: ExplorerItemData<LibraryRecord>[] = [];
-    const { libraryId, schemaId, id } = explorerItem.payload;
+    const { libraryTableName, schemaId, id } = explorerItem.payload;
 
-    const [libraryRecords, pagesCount] = await getLibraryRecords(libraryId, schemaId, {
+    const [libraryRecords, pagesCount] = await getLibraryRecords(libraryTableName, schemaId, {
       ...options,
       filter: service.mergeCustomFilter(filter, explorerItem, store),
       queryParams: { parent: id }
@@ -122,12 +122,17 @@ export class ExplorerAdapterTypeFolder {
     store: ExplorerStore,
     service: ExplorerService
   ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
-    const response = await getLibraryRecordsWithParticularOne(item.payload.libraryId, item.payload.schemaId, id, {
-      ...options,
-      filter: service.mergeCustomFilter(filter, item, store),
-      page,
-      queryParams: { parent: item.payload.id }
-    });
+    const response = await getLibraryRecordsWithParticularOne(
+      item.payload.libraryTableName,
+      item.payload.schemaId,
+      id,
+      {
+        ...options,
+        filter: service.mergeCustomFilter(filter, item, store),
+        page,
+        queryParams: { parent: item.payload.id }
+      }
+    );
 
     if (!response) {
       return;
@@ -171,7 +176,7 @@ export class ExplorerAdapterTypeFolder {
     item: ExplorerItemData<LibraryRecord>,
     recordId: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
-    const payload = await getLibraryRecord(item.payload.libraryId, Number(recordId));
+    const payload = await getLibraryRecord(item.payload.libraryTableName, Number(recordId));
     const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
     const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
 
@@ -206,7 +211,7 @@ export class ExplorerAdapterTypeFolder {
     service: ExplorerService,
     full: boolean
   ): Promise<ReactNode> {
-    const currentItem = await getLibraryRecord(item.payload.libraryId, item.payload.id);
+    const currentItem = await getLibraryRecord(item.payload.libraryTableName, item.payload.id);
     const createEnabled =
       currentUser.isAdmin ||
       (organizationSettings.createLibraryItem && [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role));

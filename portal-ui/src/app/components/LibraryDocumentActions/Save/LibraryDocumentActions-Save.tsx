@@ -50,8 +50,8 @@ export class LibraryDocumentActionsSave extends Component<LibraryDocumentActions
     this.setBusy(true);
 
     const created = await createLibraryRecord(
-      { ...document, libraryId: undefined, schemaId: undefined, role: undefined },
-      document.libraryId,
+      { ...document, libraryTableName: undefined, schemaId: undefined, role: undefined },
+      document.libraryTableName,
       document.schemaId
     );
 

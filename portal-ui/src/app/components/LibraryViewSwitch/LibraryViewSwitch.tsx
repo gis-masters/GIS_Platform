@@ -44,8 +44,8 @@ export class LibraryViewSwitch extends Component<LibraryViewSwitchProps> {
     const tip = `Перейти к ${to === 'explorer' ? 'иерархическому' : 'табличному'} виду ${title}`;
     const [Icon, href] =
       to === 'explorer'
-        ? [ExplorerView, getLibraryFolderExplorerUrl(library.identifier, path)]
-        : [TableView, getRegistryUrlWithPath(library.identifier, path)];
+        ? [ExplorerView, getLibraryFolderExplorerUrl(library.table_name, path)]
+        : [TableView, getRegistryUrlWithPath(library.table_name, path)];
 
     return (
       <Tooltip title={tip}>
@@ -67,7 +67,7 @@ export class LibraryViewSwitch extends Component<LibraryViewSwitchProps> {
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const { title } = await getLibraryRecord(library.identifier, path.at(-1));
+    const { title } = await getLibraryRecord(library.table_name, path.at(-1));
 
     if (operationId === this.operationId) {
       this.setCurrentFolderTitle(title);

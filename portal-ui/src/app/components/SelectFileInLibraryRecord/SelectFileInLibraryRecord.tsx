@@ -76,7 +76,7 @@ export class SelectFileInLibraryRecord extends Component<FormControlProps> {
       const { libraryRecord, library, file } = fieldValue as Datasource;
 
       return [
-        { title: library.title, subtitle: library.identifier },
+        { title: library.title, subtitle: library.table_name },
         { title: libraryRecord.title, subtitle: libraryRecord.id },
         { title: file.title, subtitle: file.id }
       ];

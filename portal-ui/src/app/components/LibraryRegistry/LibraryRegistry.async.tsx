@@ -45,7 +45,7 @@ const cnLibraryRegistry = cn('LibraryRegistry');
 
 export interface LibraryRegistryProps {
   id: string;
-  libraryId: string;
+  libraryTableName: string;
   inDialog?: boolean;
   urlChangeEnabled?: boolean;
   addedDocuments?: DocumentInfo[];
@@ -164,7 +164,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   }
 
   private getId(): string {
-    return this.props.id + '_LibraryRegistry_' + this.library.identifier;
+    return this.props.id + '_LibraryRegistry_' + this.library.table_name;
   }
 
   @computed
@@ -225,8 +225,8 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
               useEffect(() => {
                 void (async () => {
-                  if (this.library?.identifier && id) {
-                    const result = await getLibraryRecord(this.library?.identifier, id);
+                  if (this.library?.table_name && id) {
+                    const result = await getLibraryRecord(this.library?.table_name, id);
                     setData(result);
                   }
                 })();
@@ -320,7 +320,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
       return [[], 1];
     }
     const [documents, totalPages] = await getLibraryRecordsAsRegistry(
-      this.library.identifier,
+      this.library.table_name,
       this.schema.name,
       pageOptions
     );
@@ -369,7 +369,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   }
 
   private getStorageKey(): string {
-    return `registrySettings_${currentUser.id}_${this.library.identifier}_${this.props.id}`;
+    return `registrySettings_${currentUser.id}_${this.library.table_name}_${this.props.id}`;
   }
 
   private storeSettings() {
@@ -387,7 +387,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
   private async getInfo() {
     try {
-      this.setLibrary(await getLibrary(this.props.libraryId));
+      this.setLibrary(await getLibrary(this.props.libraryTableName));
       this.setSchema(await schemaService.getSchema(this.library.schemaId));
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;

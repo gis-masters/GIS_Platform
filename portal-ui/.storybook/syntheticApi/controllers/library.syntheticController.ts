@@ -10,8 +10,8 @@ class LibrarySyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)$/;
 
   get(config: AxiosRequestConfig): DocumentLibrary {
-    const requestedIdentifier = config.url?.match(this.pattern)?.at(1);
-    const library = libraries.find(({ identifier }) => identifier === requestedIdentifier);
+    const requestedTableName = config.url?.match(this.pattern)?.at(1);
+    const library = libraries.find(({ table_name }) => table_name === requestedTableName);
 
     if (!library) {
       throw err404(config);

@@ -55,7 +55,7 @@ export class LibraryDocumentActionsDownload extends Component<LibraryDocumentAct
   private async buildUrl() {
     const { document } = this.props;
 
-    this.setUrl(`${await getDocLibrariesRecordsUrl(document.libraryId)}/${document.id}/inner_path/download`);
+    this.setUrl(`${await getDocLibrariesRecordsUrl(document.libraryTableName)}/${document.id}/inner_path/download`);
   }
 
   @action

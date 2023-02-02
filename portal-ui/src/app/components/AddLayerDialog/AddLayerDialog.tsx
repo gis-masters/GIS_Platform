@@ -323,9 +323,9 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
       const { libraryRecord, file } = this.formValue.datasource;
 
       try {
-        const record = await getLibraryRecord(library.identifier, libraryRecord.id);
+        const record = await getLibraryRecord(library.table_name, libraryRecord.id);
         const { path } = await getFile(file.id);
-        const fileTableName = `${record.libraryId}_${record.id}__${file.id}`;
+        const fileTableName = `${record.libraryTableName}_${record.id}__${file.id}`;
 
         await placeFile(file, { crs: 'EPSG:3857', mode: 'geoserver' }, currentProject, record);
 
@@ -337,7 +337,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           tableName: fileTableName, // name слоя не геосервере
           complexName: `${dataStoreName}:${fileTableName}`,
           dataSourceUri: 'file://' + path,
-          libraryId: record.libraryId,
+          libraryId: record.libraryTableName,
           recordId: record.id
         });
       } catch (error) {

@@ -273,48 +273,51 @@ export async function getRecordsCopyUrl(): Promise<string> {
   return `${await getDataUrl()}/records/copy`;
 }
 
-export async function getDocLibraryUrl(id: string): Promise<string> {
-  return `${await getDocLibrariesUrl()}/${id}`;
+export async function getDocLibraryUrl(tableName: string): Promise<string> {
+  return `${await getDocLibrariesUrl()}/${tableName}`;
 }
 
-export async function getDocLibrariesRecordsUrl(libraryIdentifier: string): Promise<string> {
-  return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records`;
+export async function getDocLibrariesRecordsUrl(tableName: string): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${tableName}/records`;
 }
 
-export async function getDocLibrariesRecordsAsRegistryUrl(libraryIdentifier: string): Promise<string> {
-  return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records/as_registry`;
+export async function getDocLibrariesRecordsAsRegistryUrl(tableName: string): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${tableName}/records/as_registry`;
 }
 
-export async function getDocLibrariesRecordUrl(libraryIdentifier: string, recordId: number): Promise<string> {
-  return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records/${recordId}`;
+export async function getDocLibrariesRecordUrl(libraryTableName: string, recordId: number): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${libraryTableName}/records/${recordId}`;
 }
 
-export async function getDocLibrariesRecordMoveUrl(libraryIdentifier: string, recordId: number): Promise<string> {
-  return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records/${recordId}/move`;
+export async function getDocLibrariesRecordMoveUrl(libraryTableName: string, recordId: number): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${libraryTableName}/records/${recordId}/move`;
 }
 
 export async function getDocLibrariesRecordMoveToFolderUrl(
-  libraryIdentifier: string,
+  libraryTableName: string,
   recordId: number,
   newParentId?: number
 ): Promise<string> {
-  return `${await getDocLibrariesRecordMoveUrl(libraryIdentifier, recordId)}/${newParentId}`;
+  return `${await getDocLibrariesRecordMoveUrl(libraryTableName, recordId)}/${newParentId}`;
 }
 
-export async function getDocRegisterUrl(libraryIdentifier: string, recordId: number): Promise<string> {
-  return `${await getDataUrl()}/document-libraries/${libraryIdentifier}/records/${recordId}/register`;
+export async function getDocRegisterUrl(libraryTableName: string, recordId: number): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${libraryTableName}/records/${recordId}/register`;
 }
 
-export async function getDocumentLibraryRoleAssignmentUrl(id: string): Promise<string> {
-  return `${await getDocLibrariesUrl()}/${id}/roleAssignment`;
+export async function getDocumentLibraryRoleAssignmentUrl(tableName: string): Promise<string> {
+  return `${await getDocLibrariesUrl()}/${tableName}/roleAssignment`;
 }
 
-export async function getDocumentLibraryRecordRoleAssignmentUrl(libraryId: string, recordId: number): Promise<string> {
-  return `${await getDocLibrariesUrl()}/${libraryId}/records/${recordId}/roleAssignment`;
+export async function getDocumentLibraryRecordRoleAssignmentUrl(
+  libraryTableName: string,
+  recordId: number
+): Promise<string> {
+  return `${await getDocLibrariesUrl()}/${libraryTableName}/records/${recordId}/roleAssignment`;
 }
 
-export async function getDocumentLibraryIntegrationUrl(libraryId: string, recordId: number): Promise<string> {
-  return `${await getDocLibrariesUrl()}/${libraryId}/records/${recordId}/integration`;
+export async function getDocumentLibraryIntegrationUrl(libraryTableName: string, recordId: number): Promise<string> {
+  return `${await getDocLibrariesUrl()}/${libraryTableName}/records/${recordId}/integration`;
 }
 
 export async function getDatasetUrl(datasetId: string): Promise<string> {

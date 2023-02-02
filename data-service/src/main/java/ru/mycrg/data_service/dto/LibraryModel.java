@@ -1,16 +1,18 @@
 package ru.mycrg.data_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.springframework.hateoas.core.Relation;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.mycrg.data_service.entity.DocumentLibrary;
 
 import java.util.Map;
 
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 
-@Relation(collectionRelation = "libraries")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class LibraryModel extends ResourceModel {
+
+    @JsonProperty("table_name")
+    private String tableName;
 
     public LibraryModel() {
         super();
@@ -21,12 +23,14 @@ public class LibraryModel extends ResourceModel {
               String.valueOf(library.get("title")),
               String.valueOf(library.get("details")),
               LIBRARY.name(),
-              String.valueOf(library.get("table_name")),
               null,
               null,
-              library.get("schema_id") != null ? String.valueOf(library.get("schema_id")): null,
+              null,
+              library.get("schema_id") != null ? String.valueOf(library.get("schema_id")) : null,
               library.get("created_at") != null ? library.get("created_at").toString() : null,
               null);
+
+        this.tableName = String.valueOf(library.get("table_name"));
     }
 
     public LibraryModel(DocumentLibrary dl) {
@@ -34,12 +38,14 @@ public class LibraryModel extends ResourceModel {
               dl.getTitle(),
               dl.getDetails(),
               LIBRARY.name(),
-              dl.getTableName(),
+              null,
               null,
               null,
               dl.getSchemaId(),
               dl.getCreatedAt() == null ? null : dl.getCreatedAt().toString(),
               null);
+
+        this.tableName = dl.getTableName();
     }
 
     public LibraryModel(DocumentLibrary dl, String role) {
@@ -47,11 +53,17 @@ public class LibraryModel extends ResourceModel {
               dl.getTitle(),
               dl.getDetails(),
               LIBRARY.name(),
-              dl.getTableName(),
+              null,
               null,
               null,
               dl.getSchemaId(),
               dl.getCreatedAt() == null ? null : dl.getCreatedAt().toString(),
               role);
+
+        this.tableName = dl.getTableName();
+    }
+
+    public String getTableName() {
+        return tableName;
     }
 }

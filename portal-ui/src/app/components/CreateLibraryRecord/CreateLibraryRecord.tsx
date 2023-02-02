@@ -117,7 +117,7 @@ export class CreateLibraryRecord extends Component<CreateLibraryRecordProps> {
         ({ childOnly, id }) =>
           !childOnly ||
           parentContentType?.children?.some(childInfo => {
-            return childInfo.contentType === id && (!childInfo.library || childInfo.library === library.identifier);
+            return childInfo.contentType === id && (!childInfo.library || childInfo.library === library.table_name);
           })
       ) || []
     );

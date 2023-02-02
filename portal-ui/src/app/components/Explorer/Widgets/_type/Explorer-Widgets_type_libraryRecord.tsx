@@ -84,9 +84,9 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const url = await getDocumentLibraryRecordRoleAssignmentUrl(payload.libraryId, payload.id);
+    const url = await getDocumentLibraryRecordRoleAssignmentUrl(payload.libraryTableName, payload.id);
     const schema = await schemaService.getSchema(payload.schemaId);
-    const record = await getLibraryRecord(payload.libraryId, payload.id);
+    const record = await getLibraryRecord(payload.libraryTableName, payload.id);
 
     if (this.operationId === operationId) {
       this.setUrl(url);

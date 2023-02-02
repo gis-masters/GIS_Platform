@@ -61,8 +61,8 @@ class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const url = await getDocumentLibraryRoleAssignmentUrl(payload.identifier);
-    const library = await getLibrary(payload.identifier);
+    const url = await getDocumentLibraryRoleAssignmentUrl(payload.table_name);
+    const library = await getLibrary(payload.table_name);
 
     if (this.operationId === operationId) {
       this.setUrl(url);

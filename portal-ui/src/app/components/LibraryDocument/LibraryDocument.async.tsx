@@ -86,7 +86,7 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
 
   private async fetchDocumentPermissionUrl(): Promise<void> {
     const { document } = this.props;
-    const url = await getDocumentLibraryRecordRoleAssignmentUrl(document.libraryId, document.id);
+    const url = await getDocumentLibraryRecordRoleAssignmentUrl(document.libraryTableName, document.id);
     this.setDocumentRoleAssignmentUrl(url);
   }
 

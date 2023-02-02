@@ -39,7 +39,7 @@ export class LibraryDocumentActionsShare extends Component<LibraryDocumentAction
   private clickHandler() {
     const { document } = this.props;
     copyToClipboard(
-      `${location.protocol}//${location.host}/data-management/library/${document.libraryId}/document/${document.id}`
+      `${location.protocol}//${location.host}/data-management/library/${document.libraryTableName}/document/${document.id}`
     );
     Toast.success('Сохранено в буфер обмена');
   }

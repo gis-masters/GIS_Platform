@@ -11,9 +11,9 @@ class LibraryRecordSyntheticController implements SyntheticController {
 
   get(config: AxiosRequestConfig): LibraryRecordRaw {
     const match = config.url?.match(this.pattern);
-    const libraryIdentifier = match?.at(1) || '';
+    const libraryTableName = match?.at(1) || '';
     const recordId = Number(match?.at(2));
-    const record = libraryRecords[libraryIdentifier]?.find(({ id }) => id === recordId);
+    const record = libraryRecords[libraryTableName]?.find(({ id }) => id === recordId);
 
     if (!record) {
       throw err404(config);

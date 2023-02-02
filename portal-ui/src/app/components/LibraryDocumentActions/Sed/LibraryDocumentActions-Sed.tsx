@@ -69,7 +69,7 @@ export class LibraryDocumentActionsSed extends Component<LibraryDocumentActionsS
     const { document } = this.props;
 
     try {
-      await sendToSed(document.libraryId, document.id);
+      await sendToSed(document.libraryTableName, document.id);
     } catch (error) {
       const status = (error as AxiosError)?.response?.status;
 

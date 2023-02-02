@@ -375,7 +375,7 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
   inherit: (obj, property, parent) => parent[property.name] as unknown,
 
   parentDocument: (obj, property, parent: LibraryRecord) => {
-    const value: DocumentInfo[] = [{ id: parent.id, libraryId: parent.libraryId, title: parent.title }];
+    const value: DocumentInfo[] = [{ id: parent.id, libraryTableName: parent.libraryTableName, title: parent.title }];
 
     return JSON.stringify(value);
   },
@@ -403,9 +403,9 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
       text?: string;
     };
     const pathname = `/projects/${projectId}/map`;
-    const filter = `${property}%20LIKE%20%27%25{%22id%22:${obj.id},%25%22libraryId%22:%22${obj.libraryId}%22%25%27`;
+    const filter = `${property}%20LIKE%20%27%25{%22id%22:${obj.id},%25%22libraryTableName%22:%22${obj.libraryTableName}%22%25%27`;
 
-    if (!obj.id || !obj.libraryId) {
+    if (!obj.id || !obj.libraryTableName) {
       return [];
     }
 

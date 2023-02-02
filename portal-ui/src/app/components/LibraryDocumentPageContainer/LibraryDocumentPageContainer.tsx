@@ -84,14 +84,14 @@ export class LibraryDocumentPageContainer extends Component {
   }
 
   private async fetchDocument() {
-    const libraryId = route.params.libraryId;
+    const libraryTableName = route.params.libraryTableName;
     const documentId = Number(route.params.documentId);
 
     const operationId = Symbol();
     this.operationId = operationId;
 
     try {
-      const document = await getLibraryRecord(libraryId, documentId);
+      const document = await getLibraryRecord(libraryTableName, documentId);
 
       if (this.operationId !== operationId) {
         return;

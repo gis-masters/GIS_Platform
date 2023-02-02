@@ -221,7 +221,9 @@ export async function getDatasetsWithParticularOne(
   return await http.getPageWithObject<Dataset>(
     await getDatasetsUrl(),
     preparePageOptions(pageOptions, true),
-    (item: Dataset) => item.identifier === identifier
+    (item: Dataset) => item.identifier === identifier,
+    {},
+    true
   );
 }
 
@@ -255,7 +257,9 @@ export async function getDatasetTablesWithParticularOne(
   const response = await http.getPageWithObject<VectorTable>(
     await getDatasetTablesUrl(datasetId),
     preparePageOptions(pageOptions, true),
-    (item: VectorTable) => item.identifier === identifier
+    (item: VectorTable) => item.identifier === identifier,
+    {},
+    true
   );
 
   if (response) {

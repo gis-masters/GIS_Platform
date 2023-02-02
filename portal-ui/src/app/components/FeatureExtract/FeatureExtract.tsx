@@ -32,7 +32,7 @@ interface FeatureExtractProps {
   layer: CrgVectorLayer;
 }
 
-const libraryIdentifier = 'dl_feature_extract';
+const libraryTableName = 'dl_feature_extract';
 
 @observer
 export class FeatureExtract extends Component<FeatureExtractProps> {
@@ -50,18 +50,18 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
   async componentDidMount() {
     const { layer } = this.props;
     try {
-      this.setLibrary(await getLibrary(libraryIdentifier));
+      this.setLibrary(await getLibrary(libraryTableName));
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
 
-      services.logger.warn(`Ошибка доступа к библиотеке документов ${libraryIdentifier}. [${err.message}]`, error);
+      services.logger.warn(`Ошибка доступа к библиотеке документов ${libraryTableName}. [${err.message}]`, error);
     }
     const featureSchema = await schemaService.getSchema(layer.schemaId);
     this.setFields(featureSchema.properties);
 
     communicationService.libraryRecordUpdated.on(async () => {
       if (this.document?.id) {
-        this.setDocument(await getLibraryRecord(this.document.libraryId, this.document.id));
+        this.setDocument(await getLibraryRecord(this.document.libraryTableName, this.document.id));
       }
     }, this);
   }
@@ -205,7 +205,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
   }
 
   @boundMethod
-  private async createDocument(value: Omit<LibraryRecord, 'schemaId' | 'libraryId'>) {
+  private async createDocument(value: Omit<LibraryRecord, 'schemaId' | 'libraryTableName'>) {
     const librarySchema = await schemaService.getOldSchema(this.library.schemaId);
     const libraryFields = convertOldToNewProperties(applyContentTypeOld(librarySchema, 'base_extract').properties);
     const errors = validateFormValue(value, libraryFields);
@@ -216,7 +216,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
 
     this.setDocument({
       ...value,
-      libraryId: this.library.identifier,
+      libraryTableName: this.library.table_name,
       schemaId: this.library.schemaId,
       role: Role.OWNER
     });

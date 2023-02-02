@@ -32,9 +32,9 @@ export class LibraryRegistryComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const libraryId = route.params.libraryId;
+    const libraryTableName = route.params.libraryTableName;
     const reactElement = createElement(LibraryRegistryWithRegistry, {
-      libraryId,
+      libraryTableName,
       id: 'registryPage',
       urlChangeEnabled: true
     });

@@ -101,7 +101,7 @@ export class Http {
       page = response.page.number + 1;
 
       if (response._embedded) {
-        result = [...result, ...getPayloadFromPageableResponse(response)];
+        result = [...result, ...getPayloadFromPageableResponse(response, true)];
       }
     } while (page < totalPages);
 
@@ -132,15 +132,16 @@ export class Http {
     url: string,
     pageParams: PageQueryParams,
     objectRecognizer: (o: T) => boolean,
-    config: RequestConfigWithCache = {}
+    config: RequestConfigWithCache = {},
+    withOldPageableResponse: boolean
   ): Promise<[T[], number /* totalPages */, number /* pageNumber */]> | undefined {
+    const optimisticConfig = { ...config, params: { ...config.params, ...pageParams } };
     // поначалу попытаемся найти объект на указанной странице
-    const optimisticResponse = await this.get<PageableResponse<T>>(url, {
-      ...config,
-      params: { ...config.params, ...pageParams }
-    });
+    const optimisticResponse = withOldPageableResponse
+      ? await this.get<PageableResponse<T>>(url, optimisticConfig)
+      : await this.get<PageableResources<T>>(url, optimisticConfig);
     const { number: pageNumber, totalElements, totalPages } = optimisticResponse.page;
-    const optimisticPage = getPayloadFromPageableResponse(optimisticResponse);
+    const optimisticPage = getPayloadFromPageableResponse(optimisticResponse, withOldPageableResponse);
 
     if (optimisticPage.some(objectRecognizer)) {
       return [optimisticPage, totalPages, pageNumber];
@@ -162,7 +163,7 @@ export class Http {
         ...config,
         params: { ...config.params, ...scanPageParams }
       });
-      const currentScanPage = getPayloadFromPageableResponse(scanResponse);
+      const currentScanPage = getPayloadFromPageableResponse(scanResponse, withOldPageableResponse);
       const foundIndex = currentScanPage.findIndex(objectRecognizer);
 
       if (foundIndex === -1) {
@@ -181,7 +182,7 @@ export class Http {
           ...config,
           params: { ...config.params, ...scanPageParams }
         });
-        nextPage.push(...getPayloadFromPageableResponse(nextScanPageResponse));
+        nextPage.push(...getPayloadFromPageableResponse(nextScanPageResponse, withOldPageableResponse));
       }
       const resultPage = [...previousScanPage, ...currentScanPage, ...nextPage].slice(
         previousScanPage.length + foundIndex - positionOnPage,

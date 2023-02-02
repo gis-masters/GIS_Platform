@@ -124,7 +124,7 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
     this.operationId = operationId;
     let { document } = this.props;
 
-    document = document.role ? document : await getLibraryRecord(document.libraryId, document.id);
+    document = document.role ? document : await getLibraryRecord(document.libraryTableName, document.id);
 
     const schema = applyContentType(await schemaService.getSchema(document.schemaId), document.content_type_id);
 

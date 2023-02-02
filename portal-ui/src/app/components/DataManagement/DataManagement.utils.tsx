@@ -11,11 +11,11 @@ import { Toast } from '../Toast/Toast';
 
 const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];
 
-export function getLibraryFolderExplorerUrl(libraryIdentifier: string, path: number[]): string {
+export function getLibraryFolderExplorerUrl(libraryTableName: string, path: number[]): string {
   const urlPath = [
     ...libraryRootUrlItems,
     'library',
-    libraryIdentifier,
+    libraryTableName,
     ...path.flatMap(id => ['folder', id]),
     'none',
     'none'
@@ -28,10 +28,10 @@ export async function getLibraryRecordBreadcrumbs(
   item: LibraryRecord,
   includeSelf?: boolean
 ): Promise<BreadcrumbsItemData[]> {
-  const { libraryId, path, id, title, is_folder: isFolder } = item;
+  const { libraryTableName, path, id, title, is_folder: isFolder } = item;
   const libraryRootPath = JSON.stringify([...libraryRootUrlItems, 'none', 'none']);
-  const libraryPath = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, 'none', 'none']);
-  const library = await getLibrary(libraryId);
+  const libraryPath = JSON.stringify([...libraryRootUrlItems, 'library', libraryTableName, 'none', 'none']);
+  const library = await getLibrary(libraryTableName);
   const currentItem = isFolder ? ['folder', id] : ['doc', id];
 
   const breadcrumbs = [
@@ -49,7 +49,7 @@ export async function getLibraryRecordBreadcrumbs(
   try {
     let parentsInfo = await Promise.all(
       getIdsFromPath(path).map(async pathId => {
-        const { id, title } = await getLibraryRecord(libraryId, pathId);
+        const { id, title } = await getLibraryRecord(libraryTableName, pathId);
 
         return { id, title };
       })
@@ -64,10 +64,23 @@ export async function getLibraryRecordBreadcrumbs(
         folders.push('folder', parentsInfo[i].id);
       }
 
-      const folderPath = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, ...folders, 'none', 'none']);
+      const folderPath = JSON.stringify([
+        ...libraryRootUrlItems,
+        'library',
+        libraryTableName,
+        ...folders,
+        'none',
+        'none'
+      ]);
 
       if (includeSelf) {
-        pathWithoutCurrent = JSON.stringify([...libraryRootUrlItems, 'library', libraryId, ...folders, ...currentItem]);
+        pathWithoutCurrent = JSON.stringify([
+          ...libraryRootUrlItems,
+          'library',
+          libraryTableName,
+          ...folders,
+          ...currentItem
+        ]);
       }
 
       return {
@@ -80,7 +93,7 @@ export async function getLibraryRecordBreadcrumbs(
       itemParentsBreadcrumbs.push({
         title: <b>{title}</b>,
         url: `/data-management?path_dm=${
-          pathWithoutCurrent ?? JSON.stringify([...libraryRootUrlItems, 'library', libraryId, ...currentItem])
+          pathWithoutCurrent ?? JSON.stringify([...libraryRootUrlItems, 'library', libraryTableName, ...currentItem])
         }`
       });
     }
@@ -97,24 +110,24 @@ export async function getLibraryRecordBreadcrumbs(
 
 export const registryDefaultFilter = { is_folder: { $in: [null, false] } };
 
-export function getRegistryUrlWithFilter(libraryIdentifier: string, filter: FilterQuery): string {
+export function getRegistryUrlWithFilter(libraryTableName: string, filter: FilterQuery): string {
   const url = new URL(location.href);
   const sortParamValue = url.searchParams.get('sort');
   const sortParam = sortParamValue ? `&sort=${sortParamValue}` : '';
   const filterParamValue = encodeURIComponent(JSON.stringify(filter));
 
-  return `/data-management/library/${libraryIdentifier}/registry?filter=${filterParamValue}${sortParam}`;
+  return `/data-management/library/${libraryTableName}/registry?filter=${filterParamValue}${sortParam}`;
 }
 
 export function getRegistryUrlWithPath(
-  libraryIdentifier: string,
+  libraryTableName: string,
   pathIds: number[],
   filter: FilterQuery = registryDefaultFilter
 ): string {
   const filterWithPath = cloneDeep(filter);
   addFilterPart(filterWithPath, getPathFilter(pathIds));
 
-  return getRegistryUrlWithFilter(libraryIdentifier, filterWithPath);
+  return getRegistryUrlWithFilter(libraryTableName, filterWithPath);
 }
 
 export function getIdsFromPath(path: string): number[] {

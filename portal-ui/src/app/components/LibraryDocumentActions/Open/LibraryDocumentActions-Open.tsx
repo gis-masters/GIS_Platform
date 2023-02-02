@@ -35,7 +35,7 @@ export class LibraryDocumentActionsOpen extends Component<LibraryDocumentActions
           className={cnLibraryDocumentActionsOpen()}
           title='Открыть'
           as={as}
-          url={`/data-management/library/${document.libraryId}/document/${document.id}`}
+          url={`/data-management/library/${document.libraryTableName}/document/${document.id}`}
           icon={<FileOpenOutlined />}
           onClick={this.openDialog}
         />

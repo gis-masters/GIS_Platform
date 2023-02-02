@@ -225,7 +225,9 @@ class ProjectsService {
     return await http.getPageWithObject<CrgProject>(
       await getProjectsUrl(),
       preparePageOptions(pageOptions),
-      (item: CrgProject) => item.id === Number(id)
+      (item: CrgProject) => item.id === Number(id),
+      {},
+      true
     );
   }
 

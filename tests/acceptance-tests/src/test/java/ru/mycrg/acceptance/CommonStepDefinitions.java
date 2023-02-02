@@ -64,6 +64,22 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         assertTrue(page.containsKey("number"));
     }
 
+    @Then("Ответ имеет стандартное тело с пагинацией")
+    public void isNewPagingStructureCorrect() {
+        jsonPath = response.jsonPath();
+
+        Map<String, String> presentedData = jsonPath.getMap("");
+
+        assertTrue(presentedData.containsKey("content"));
+        assertTrue(presentedData.containsKey("page"));
+
+        Map<String, String> page = jsonPath.getMap("page");
+        assertTrue(page.containsKey("size"));
+        assertTrue(page.containsKey("totalElements"));
+        assertTrue(page.containsKey("totalPages"));
+        assertTrue(page.containsKey("number"));
+    }
+
     @Then("В выборке присутствуют определённое кол-во элементов: {string}")
     public void checkTotalElements(String count) {
         assertEquals(Integer.valueOf(count), response.jsonPath().get("page.totalElements"));

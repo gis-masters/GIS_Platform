@@ -62,9 +62,9 @@ public class DocumentLibraryService {
         this.permissionsRepository = permissionsRepository;
     }
 
-    public Page<IResourceModel> getPaged(String ecqlFilter, Pageable pageable) {
+    public Page<LibraryModel> getPaged(String ecqlFilter, Pageable pageable) {
         long totalLibraries;
-        List<IResourceModel> libraries;
+        List<LibraryModel> libraries;
 
         if (authenticationFacade.isOrganizationAdmin()) {
             libraries = libraryDao.findAll(ecqlFilter, pageable).stream()
@@ -82,12 +82,7 @@ public class DocumentLibraryService {
             totalLibraries = permissionsRepository.getTotalByParent(dlQualifier, ROOT_FOLDER_PATH, ecqlFilter);
         }
 
-        List<IResourceModel> allowedLibraries = libraries
-                .stream()
-                .filter(libraryModel -> !libraryModel.getTitle().equals("System root directory"))
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(allowedLibraries, pageable, totalLibraries);
+        return new PageImpl<>(libraries, pageable, totalLibraries);
     }
 
     /**

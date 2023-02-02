@@ -60,11 +60,11 @@ export class ExplorerAdapterTypeLibraryRoot {
   static async getChildrenWithParticularOne(
     item: ExplorerItemData,
     { filter, page, ...options }: PageOptions,
-    identifier: string,
+    tableName: string,
     store: ExplorerStore,
     service: ExplorerService
   ): Promise<[ExplorerItemData<DocumentLibrary>[], number, number]> | undefined {
-    const response = await getLibrariesWithParticularOne(identifier, {
+    const response = await getLibrariesWithParticularOne(tableName, {
       ...options,
       filter: service.mergeCustomFilter(filter, item, store),
       page

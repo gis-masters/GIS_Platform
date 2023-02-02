@@ -32,12 +32,10 @@ export function getXTableColumnsFromSchema<T>(schema: Schema, overrides?: XTable
   return _getXTableColumnsFromSchema(schema, false, overrides) as XTableColumn<T>[];
 }
 
-export function defaultRowIdGetter<T extends { id?: string | number; identifier?: string; name?: string }>({
-  id,
-  identifier,
-  name
-}: T): string | number {
-  return id || identifier || name;
+export function defaultRowIdGetter<
+  T extends { id?: string | number; identifier?: string; table_name?: string; name?: string }
+>({ id, identifier, table_name, name }: T): string | number {
+  return id || identifier || table_name || name;
 }
 
 export function getXTableColumnsFromSchemaWithLowerCaseKeys(

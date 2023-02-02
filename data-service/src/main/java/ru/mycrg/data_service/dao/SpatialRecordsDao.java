@@ -190,15 +190,14 @@ public class SpatialRecordsDao {
         }
     }
 
-    @Transactional
-    public List<Long> copyRecords(String targetTable, String sourceTable, SchemaDto sourceSchema,
-                                  SchemaDto targetSchema,
+    public List<Long> copyRecords(String sourceTable, SchemaDto sourceSchema,
+                                  String targetTable, SchemaDto targetSchema,
                                   List<Long> featureIds) {
-
         String copyQuery = buildCopyQuery(sourceTable, targetTable, sourceSchema, targetSchema, featureIds);
 
-        log.debug("SQL copy records query: {}", copyQuery);
+        log.debug("SQL copy records query: [{}]", copyQuery);
 
-        return pJdbcTemplate.getJdbcTemplate().queryForList(copyQuery, Long.class);
+        return pJdbcTemplate.getJdbcTemplate()
+                            .queryForList(copyQuery, Long.class);
     }
 }

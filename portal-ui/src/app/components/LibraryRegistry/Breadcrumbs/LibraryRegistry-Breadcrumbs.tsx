@@ -99,7 +99,7 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
               {library.title}
             </>
           ),
-          url: getRegistryUrlWithFilter(library.identifier, filterWithoutPath),
+          url: getRegistryUrlWithFilter(library.table_name, filterWithoutPath),
           onClick: onItemClick,
           payload: []
         },
@@ -113,7 +113,7 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
                 {title}
               </>
             ),
-            url: getRegistryUrlWithPath(library.identifier, pathIds, filterWithoutPath),
+            url: getRegistryUrlWithPath(library.table_name, pathIds, filterWithoutPath),
             onClick: onItemClick,
             payload: pathIds
           };
@@ -132,7 +132,7 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
     const records: LibraryRecord[] = [];
 
     for (const id of path) {
-      records.push(await getLibraryRecord(library.identifier, id));
+      records.push(await getLibraryRecord(library.table_name, id));
     }
 
     if (this.operationId === operationId) {

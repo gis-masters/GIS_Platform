@@ -61,9 +61,9 @@ public class CopyTableRecordsRequestHandler implements IRequestHandler<CopyTable
 
         checkIsTableColumnsExist(schemaSource, schemaTarget, sourceQualifier, targetQualifier);
 
-        List<Long> copiedIds = spatialRecordsDao.copyRecords(targetQualifier.getTableQualifier(),
-                                                             sourceQualifier.getTableQualifier(),
-                                                             schemaTarget, schemaSource, featureIds);
+        List<Long> copiedIds = spatialRecordsDao.copyRecords(sourceQualifier.getTableQualifier(), schemaSource,
+                                                             targetQualifier.getTableQualifier(), schemaTarget,
+                                                             featureIds);
 
         if (nonNull(schemaTarget.getCalcFiledFunction())) {
             updateCalculatedFiled(copiedIds, schemaTarget, targetQualifier);

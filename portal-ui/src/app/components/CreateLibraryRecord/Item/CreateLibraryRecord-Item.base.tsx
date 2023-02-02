@@ -108,7 +108,7 @@ export class CreateLibraryRecordItemBase extends Component<CreateLibraryRecordIt
     this.setLoading(true);
 
     try {
-      const createdRecord = await createLibraryRecord(newRecord, library.identifier, schema.name);
+      const createdRecord = await createLibraryRecord(newRecord, library.table_name, schema.name);
       onCreate(createdRecord, contentType.type === 'FOLDER');
       this.closeDialog();
     } catch {}

@@ -23,7 +23,7 @@ interface DocumentsSelectDialogProps {
   addedDocuments: DocumentInfo[];
   maxDocuments: number;
   dialogOpen: boolean;
-  librariesIdentifiers?: string[];
+  librariesTableNames?: string[];
   onChange(selectedItems: DocumentInfo[]): void;
   onClose: () => void;
 }
@@ -49,7 +49,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
   }
 
   render() {
-    const { maxDocuments, dialogOpen, addedDocuments, librariesIdentifiers } = this.props;
+    const { maxDocuments, dialogOpen, addedDocuments, librariesTableNames } = this.props;
 
     return (
       <Dialog
@@ -82,9 +82,9 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
                     onSelect={this.handleSelect}
                     onOpen={this.handleOpen}
                     customFilters={
-                      librariesIdentifiers.length > 1
+                      librariesTableNames.length > 1
                         ? {
-                            [ExplorerItemType.LIBRARY_ROOT]: { identifier: { $in: librariesIdentifiers } }
+                            [ExplorerItemType.LIBRARY_ROOT]: { table_name: { $in: librariesTableNames } }
                           }
                         : undefined
                     }
@@ -100,8 +100,8 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
                   id='DocumentsAdd'
                   onSelect={this.handleMultipleSelect}
                   checkedLibraryDocuments={this.selectedDocuments || []}
-                  libraryId={
-                    this.limitingLibrary?.identifier || (this.selectedItem[1].payload as DocumentLibrary).identifier
+                  libraryTableName={
+                    this.limitingLibrary?.table_name || (this.selectedItem[1].payload as DocumentLibrary).table_name
                   }
                   addedDocuments={addedDocuments}
                   inDialog
@@ -128,7 +128,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
 
   @computed
   private get ready(): boolean {
-    return !!this.limitingLibrary || this.props.librariesIdentifiers.length !== 1;
+    return !!this.limitingLibrary || this.props.librariesTableNames.length !== 1;
   }
 
   @computed
@@ -202,12 +202,8 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
     this.props.onClose();
 
     this.props.onChange(
-      this.selectedDocuments.map(item => {
-        return {
-          id: item.id,
-          title: item.title,
-          libraryId: item.libraryId
-        };
+      this.selectedDocuments.map(({ id, title, libraryTableName }) => {
+        return { id, title, libraryTableName };
       })
     );
 
@@ -225,7 +221,9 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
     const { addedDocuments } = this.props;
 
     if (type === ExplorerItemType.DOCUMENT) {
-      return addedDocuments.some(({ libraryId, id }) => payload.libraryId === libraryId && payload.id === id);
+      return addedDocuments.some(
+        ({ libraryTableName, id }) => payload.libraryTableName === libraryTableName && payload.id === id
+      );
     }
 
     return false;
@@ -233,21 +231,21 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
 
   @boundMethod
   private async handleDialogOpen() {
-    const { librariesIdentifiers } = this.props;
+    const { librariesTableNames } = this.props;
 
-    if (!this.limitingLibraryRequest && librariesIdentifiers.length === 1) {
+    if (!this.limitingLibraryRequest && librariesTableNames.length === 1) {
       try {
-        this.limitingLibraryRequest = getLibrary(librariesIdentifiers[0]);
+        this.limitingLibraryRequest = getLibrary(librariesTableNames[0]);
         this.setLimitingLibrary(await this.limitingLibraryRequest);
       } catch (error) {
         const err = error as AxiosError;
-        Toast.warn(`Ошибка доступа к библиотеке документов ${librariesIdentifiers[0]}. [${err.message}]`);
+        Toast.warn(`Ошибка доступа к библиотеке документов ${librariesTableNames[0]}. [${err.message}]`);
 
         return;
       }
     }
 
-    if (!librariesIdentifiers.length) {
+    if (!librariesTableNames.length) {
       this.setLimitingLibrary();
     }
   }

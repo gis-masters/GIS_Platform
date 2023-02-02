@@ -1,8 +1,8 @@
 import { http } from '../http.service';
 import { getDocumentLibraryIntegrationUrl } from '../server-urls.service';
 
-export async function sendToSed(libraryId: string, recordId: number): Promise<void> {
-  await http.post(await getDocumentLibraryIntegrationUrl(libraryId, recordId), {
+export async function sendToSed(libraryTableName: string, recordId: number): Promise<void> {
+  await http.post(await getDocumentLibraryIntegrationUrl(libraryTableName, recordId), {
     type: 'SED'
   });
 }

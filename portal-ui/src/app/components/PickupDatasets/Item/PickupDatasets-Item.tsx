@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
-import { ListItem, ListItemSecondaryAction, ListItemText } from '@mui/material';
+import { ListItemButton, ListItemSecondaryAction, ListItemText } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { pluralize } from 'numeralize-ru';
@@ -23,7 +23,7 @@ export class PickupDatasetsItem extends Component<PickupDatasetsItemProps> {
     const { item } = this.props;
 
     return (
-      <ListItem className={cnPickupDatasetsItem()} button key={item.identifier}>
+      <ListItemButton className={cnPickupDatasetsItem()} key={item.identifier}>
         <ListItemText
           primary={item.title}
           secondary={`${item.itemsCount} ${pluralize(item.itemsCount, 'таблица', 'таблицы', 'таблиц')}`}
@@ -33,7 +33,7 @@ export class PickupDatasetsItem extends Component<PickupDatasetsItemProps> {
             Выбрать
           </Button>
         </ListItemSecondaryAction>
-      </ListItem>
+      </ListItemButton>
     );
   }
 

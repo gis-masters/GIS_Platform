@@ -43,7 +43,7 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
   }
 
   async componentDidMount(): Promise<void> {
-    const library = await getLibrary(this.props.document?.libraryId);
+    const library = await getLibrary(this.props.document?.libraryTableName);
     this.setCurrentLibrary(library);
   }
 

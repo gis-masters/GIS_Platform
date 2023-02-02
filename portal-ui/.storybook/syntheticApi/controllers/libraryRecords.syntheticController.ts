@@ -12,9 +12,9 @@ class LibraryRecordsSyntheticController implements SyntheticController {
 
   get(config: AxiosRequestConfig): PageableResponse<LibraryRecordRaw> {
     const match = config.url?.match(this.pattern);
-    const libraryIdentifier = match?.at(1) || '';
+    const libraryTableName = match?.at(1) || '';
     const pageOptions = parsePageOptions(config);
-    const records = queryObjects(libraryRecords[libraryIdentifier], pageOptions);
+    const records = queryObjects(libraryRecords[libraryTableName], pageOptions);
     const totalPages =
       Math.floor(records.length / pageOptions.pageSize) + Number(Boolean(records.length % pageOptions.pageSize));
 
