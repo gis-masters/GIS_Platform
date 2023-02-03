@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType, PropertySchemaChoice } from '../../../../services/data/schema.models';
+import { TextOverflow } from '../../../TextOverflow/TextOverflow';
 
 import { cnFormView } from '../Form-View';
 import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
@@ -16,17 +17,17 @@ const EMPTY = '~~~empty_value~~~';
 @observer
 class FormViewTypeChoice extends Component<FormControlProps> {
   render() {
-    const { className, fieldValue = EMPTY, property, errors, inSet } = this.props;
+    const { className, property, fullWidthForOldForm, fieldValue = EMPTY, errors, inSet } = this.props;
     const { options } = property as PropertySchemaChoice;
     const title = options.find(({ value }) => String(value) === String(fieldValue))?.title;
     const valueCanBeDisplayed =
       fieldValue !== EMPTY && (typeof fieldValue === 'number' || typeof fieldValue === 'string');
 
     return (
-      <div className={cnFormView({ inSet, empty: !title && !valueCanBeDisplayed }, [className])}>
+      <div className={cnFormView({ inSet, fullWidthForOldForm, empty: !title && !valueCanBeDisplayed }, [className])}>
         <>
           {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
-          {title || (valueCanBeDisplayed ? fieldValue : '—')}
+          <TextOverflow value={title || (valueCanBeDisplayed ? fieldValue : '—')} />
           <FormViewErrors errors={errors} />
         </>
       </div>
