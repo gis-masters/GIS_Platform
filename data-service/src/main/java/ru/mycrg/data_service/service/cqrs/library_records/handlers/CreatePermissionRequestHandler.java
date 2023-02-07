@@ -49,8 +49,7 @@ public class CreatePermissionRequestHandler implements IRequestHandler<CreatePer
     }
 
     @Override
-    public PermissionProjection handle(
-            ru.mycrg.data_service.service.cqrs.library_records.requests.CreatePermissionRequest request) {
+    public PermissionProjection handle(CreatePermissionRequest request) {
         ResourceQualifier rQualifier = request.getrQualifier();
         PermissionCreateDto dto = request.getDto();
 

@@ -2,6 +2,7 @@ package ru.mycrg.data_service.service;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.data_service.entity.Principal;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class PrincipalService {
 
     private final IAuthenticationFacade authenticationFacade;
@@ -37,9 +39,13 @@ public class PrincipalService {
 
         UserDetails userDetails = authenticationFacade.getUserDetails();
 
-        allPrincipalIds.add(getOrCreate(userDetails.getUserId(), "user"));
+        principalRepository.findByIdentifierAndType(userDetails.getUserId(), "user")
+                           .ifPresent(allPrincipalIds::add);
         userDetails.getGroups()
-                   .forEach(groupId -> allPrincipalIds.add(getOrCreate(groupId, "group")));
+                   .forEach(groupId -> {
+                       principalRepository.findByIdentifierAndType(groupId, "group")
+                                          .ifPresent(allPrincipalIds::add);
+                   });
 
         return allPrincipalIds;
     }
@@ -65,11 +71,11 @@ public class PrincipalService {
 
     @NotNull
     public Principal getOrCreate(Long id, String type) {
-        Optional<Principal> oUser = principalRepository.findByIdentifierAndType(id, type);
-        if (oUser.isEmpty()) {
+        Optional<Principal> oPrincipal = principalRepository.findByIdentifierAndType(id, type);
+        if (oPrincipal.isEmpty()) {
             return principalRepository.save(new Principal(id, type));
         } else {
-            return oUser.get();
+            return oPrincipal.get();
         }
     }
 }

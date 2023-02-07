@@ -14,6 +14,7 @@ import ru.mycrg.data_service.service.PrincipalService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -43,6 +44,9 @@ public class BasePermissionsRepository {
         String tableName = rQualifier.getTable();
 
         List<String> allPrincipalIds = principalService.getAllIds();
+        if (allPrincipalIds.isEmpty()) {
+            return new ArrayList<>();
+        }
 
         String query = "" +
                 " SELECT " +
@@ -71,6 +75,9 @@ public class BasePermissionsRepository {
         String tableName = rQualifier.getTable();
 
         List<String> allPrincipalIds = principalService.getAllIds();
+        if (allPrincipalIds.isEmpty()) {
+            return new ArrayList<>();
+        }
 
         String requestTemplate = "" +
                 "SELECT n2.* FROM " +
@@ -120,6 +127,9 @@ public class BasePermissionsRepository {
         String tableName = targetTable.getTable();
 
         List<String> allPrincipalIds = principalService.getAllIds();
+        if (allPrincipalIds.isEmpty()) {
+            return false;
+        }
 
         String requestTemplate = "" +
                 "SELECT exists (" +
@@ -143,6 +153,9 @@ public class BasePermissionsRepository {
         String tableName = targetTable.getTable();
 
         List<String> allPrincipalIds = principalService.getAllIds();
+        if (allPrincipalIds.isEmpty()) {
+            return 0L;
+        }
 
         String requestTemplate = "" +
                 "SELECT " +
@@ -203,6 +216,9 @@ public class BasePermissionsRepository {
         String schemaName = tableQualifier.getSchema();
 
         List<String> allPrincipalIds = principalService.getAllIds();
+        if (allPrincipalIds.isEmpty()) {
+            return Optional.empty();
+        }
 
         String requestTemplate = "" +
                 "SELECT max(p.role_id) FROM data.schemas_and_tables AS res " +
@@ -231,6 +247,9 @@ public class BasePermissionsRepository {
         String tableName = tableQualifier.getTable();
 
         List<String> allPrincipalIds = principalService.getAllIds();
+        if (allPrincipalIds.isEmpty()) {
+            return false;
+        }
 
         String queryTemplate = "" +
                 "SELECT " +
@@ -261,6 +280,9 @@ public class BasePermissionsRepository {
         String tableName = tableQualifier.getTable();
 
         List<String> allPrincipalIds = principalService.getAllIds();
+        if (allPrincipalIds.isEmpty()) {
+            return Optional.empty();
+        }
 
         String queryTemplate = "" +
                 "SELECT " +
@@ -284,6 +306,9 @@ public class BasePermissionsRepository {
 
     public Optional<String> getRoleForLibrary(String tableName) {
         List<String> allPrincipalIds = principalService.getAllIds();
+        if (allPrincipalIds.isEmpty()) {
+            return Optional.empty();
+        }
 
         String queryTemplate = "" +
                 "SELECT " +
@@ -307,6 +332,9 @@ public class BasePermissionsRepository {
 
     public Optional<String> getRoleForDataset(ResourceQualifier dQualifier) {
         List<String> allPrincipalIds = principalService.getAllIds();
+        if (allPrincipalIds.isEmpty()) {
+            return Optional.empty();
+        }
 
         String identifier = dQualifier.getTable() != null ? dQualifier.getTable() : dQualifier.getSchema();
 
@@ -345,6 +373,9 @@ public class BasePermissionsRepository {
         Long recordId = rQualifier.getRecord();
 
         List<String> allPrincipalIds = principalService.getAllIds();
+        if (allPrincipalIds.isEmpty()) {
+            return Optional.empty();
+        }
 
         String queryTemplate = "" +
                 "SELECT " +

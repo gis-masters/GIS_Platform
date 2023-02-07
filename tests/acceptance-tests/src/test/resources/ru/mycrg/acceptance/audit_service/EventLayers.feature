@@ -15,18 +15,18 @@ Feature: При изменении слоя, осуществляется зап
       | title                             | styleName    | type   | schemaId     | nativeCRS  | dataSourceUri |
       | Искусственные дорожные сооружения | transportobj | vector | transportobj | EPSG:28406 | STRING_6      |
 
-  @Ignore
-  Scenario Outline: Изменение слоя заносится в аудит лог
-    Given Существует проект "STRING_10"
-    Given Существует набор
-    Given Существует таблица
-    Given Существует слой проекта
-    When Владелец делает запрос на обновление полей слоя проекта
-      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> | <newContentType> |
-    And Создан аудит лог об изменении слоя, с корректным телом
-    Examples:
-      | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs | newContentType    |
-      | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   | test_content_type |
+#  Тест очень часто даёт ложное срабатывание
+#  Scenario Outline: Изменение слоя заносится в аудит лог
+#    Given Существует проект "STRING_10"
+#    Given Существует набор
+#    Given Существует таблица
+#    Given Существует слой проекта
+#    When Владелец делает запрос на обновление полей слоя проекта
+#      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> | <newContentType> |
+#    And Создан аудит лог об изменении слоя, с корректным телом
+#    Examples:
+#      | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs | newContentType    |
+#      | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   | test_content_type |
 
   Scenario: Удаление слоя заносится в аудит лог
     Given Существует проект "STRING_10"
