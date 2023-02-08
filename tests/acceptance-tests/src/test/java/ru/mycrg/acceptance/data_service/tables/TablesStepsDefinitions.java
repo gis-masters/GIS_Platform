@@ -11,8 +11,10 @@ import ru.mycrg.acceptance.data_service.dto.PermissionCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.schemaId;
 import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.tableName;
@@ -148,6 +150,12 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         initTable();
     }
 
+    @When("Администратор делает запрос на создание новой таблицы по схеме {string}")
+    public void createNewTableAsAdminBySchemaName(String schemaName) {
+        authorizationBase.loginAsOwner();
+        initTable(schemaName);
+    }
+
     @When("Администратор делает запрос на создание новой таблицы по схеме, не имеющей поле для геометрии")
     public void createNewTableWithoutGeometryAsAdmin() {
         authorizationBase.loginAsOwner();
@@ -201,6 +209,36 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         String message = response.jsonPath().get("message");
 
         assertTrue(message.contains("Причина: отсутствует поле для геометрии"));
+    }
+
+    @And("Тело ответа содержит ошибку о том что для калькуляции ruleid по wellKnown формуле отсутсвует поле classid")
+    public void checkErrorMessageContainsErrorThatShapeFieldIsMissingForWellKnownCalculation() {
+        String message = response.jsonPath().get("message");
+        assertTrue(message.contains("Argument validation exception"));
+
+        List<Map<String, Object>> errors = response.jsonPath().getList("errors");
+
+        assertFalse(errors.isEmpty());
+
+        Map<String, Object> errorFirst = errors.get(0);
+
+        assertEquals("Для калькуляции по wellKnown формуле отсутсвуют следующие поля: classid.",
+                     errorFirst.get("message"));
+    }
+
+    @And("Тело ответа содержит ошибку о том что для калькуляции ruleid по wellKnown формуле поле classid должно быть типа choice, string или int")
+    public void checkErrorMessageContainsErrorThatFieldIsNotAllowedType() {
+        String message = response.jsonPath().get("message");
+        assertTrue(message.contains("Argument validation exception"));
+
+        List<Map<String, Object>> errors = response.jsonPath().getList("errors");
+
+        assertFalse(errors.isEmpty());
+
+        Map<String, Object> errorFirst = errors.get(0);
+
+        assertEquals("Для калькуляции по wellKnown формуле поле classid должно быть типа: [CHOICE, STRING, INT, LONG]. ",
+                     errorFirst.get("message"));
     }
 
     @When("Пользователь делает запрос на обновление информации о текущей таблице")

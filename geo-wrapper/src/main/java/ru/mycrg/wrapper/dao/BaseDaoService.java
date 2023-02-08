@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
@@ -204,10 +205,13 @@ public class BaseDaoService {
     private String handleInsertMappingColumns(ImportMqTask request) {
         List<MatchingPair> mapping = request.getPairs();
 
-        List<String> propsWithFileType = request.getFeatureDescription().getProperties().stream()
-                                                .filter(property -> FILE.equals(property.getValueTypeAsEnum()))
-                                                .map(SimplePropertyDto::getName)
-                                                .collect(Collectors.toList());
+        List<SimplePropertyDto> properties = request.getFeatureDescription().getProperties();
+
+        List<String> propsWithFileType = properties.stream()
+                                                   .filter(property -> FILE.equals(property.getValueTypeAsEnum()))
+                                                   .map(SimplePropertyDto::getName)
+                                                   .collect(Collectors.toList());
+
         String pre = " (";
         String post = ") ";
 
@@ -216,6 +220,9 @@ public class BaseDaoService {
         for (MatchingPair matchingPair: mapping) {
             TargetAttribute target = matchingPair.getTarget();
             if (target.getType().equals("serial") || target.getType().equals(DaoProperties.NOT_IMPORT)) {
+                continue;
+            }
+            if (checkIfPropertiesIsGenerated(properties, matchingPair)) {
                 continue;
             }
 
@@ -251,6 +258,17 @@ public class BaseDaoService {
         sourceColumns = new StringBuilder(sourceColumns.substring(0, sourceColumns.length() - 2));
 
         return targetColumns + sourceColumns.toString();
+    }
+
+    private boolean checkIfPropertiesIsGenerated(List<SimplePropertyDto> properties, MatchingPair matchingPair) {
+        String tName = matchingPair.getTarget().getName();
+
+        return properties
+                .stream()
+                .filter(property -> property.getName().equalsIgnoreCase(tName))
+                .anyMatch(property -> nonNull(
+                        property.getCalculatedValueWellKnownFormula())
+                        && !property.getCalculatedValueWellKnownFormula().isEmpty());
     }
 
     private boolean isValid(@NotNull ObjectValidationResult result) {

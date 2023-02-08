@@ -1,4 +1,4 @@
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'thermalpipeline_line',
        '{
         "name": "thermalpipeline_line",
@@ -8,11 +8,16 @@ SELECT 'thermalpipeline_line',
         "originName": "ThermalPipeline",
         "properties": [
           {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
+          {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "choice": null,
             "hidden": false,
-            "length": -1,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "multiple": false,
             "required": true,
@@ -21,18 +26,12 @@ SELECT 'thermalpipeline_line',
             "valueType": "STRING",
             "whiteSpace": "preserve",
             "description": "",
-            "totalDigits": -1,
-            "enumerations": [],
-            "maxInclusive": -1,
-            "minInclusive": -1,
-            "allowedValues": [],
-            "updateability": null,
             "fractionDigits": -1,
             "sequenceNumber": 1,
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "«Сети теплоснабжения»",
             "choice": null,
             "hidden": false,
@@ -426,7 +425,7 @@ SELECT 'thermalpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Справочник: Статус объекта",
             "choice": null,
             "hidden": false,
@@ -467,7 +466,7 @@ SELECT 'thermalpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Справочник: Значение объекта",
             "choice": null,
             "hidden": false,
@@ -563,36 +562,11 @@ SELECT 'thermalpipeline_line',
            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
        }
  
-       return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'thermalpipeline_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'oilpipeline_line',
        '{
         "name": "oilpipeline_line",
@@ -601,6 +575,13 @@ SELECT 'oilpipeline_line',
         "tableName": "oilpipeline_line",
         "originName": "OilPipeline",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -626,7 +607,7 @@ SELECT 'oilpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
       "title": "Код объекта ",
             "choice": null,
             "hidden": false,
@@ -1024,7 +1005,7 @@ SELECT 'oilpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
       "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -1065,7 +1046,7 @@ SELECT 'oilpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -1161,36 +1142,11 @@ SELECT 'oilpipeline_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oilpipeline_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'telecomnetworkline_line',
        '{
         "name": "telecomnetworkline_line",
@@ -1199,6 +1155,13 @@ SELECT 'telecomnetworkline_line',
         "tableName": "telecomnetworkline_line",
         "originName": "TelecomNetworkLine",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -1224,7 +1187,7 @@ SELECT 'telecomnetworkline_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Сети электросвязи»",
             "choice": null,
             "hidden": false,
@@ -1641,7 +1604,7 @@ SELECT 'telecomnetworkline_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
       "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -1682,7 +1645,7 @@ SELECT 'telecomnetworkline_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -1795,36 +1758,11 @@ SELECT 'telecomnetworkline_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'telecomnetworkline_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'electrictransformer_point',
        '{
         "name": "electrictransformer_point",
@@ -1833,6 +1771,13 @@ SELECT 'electrictransformer_point',
         "tableName": "electrictransformer_point",
         "originName": "ElectricTransformer",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -1858,7 +1803,7 @@ SELECT 'electrictransformer_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Электрические подстанции»",
             "choice": null,
             "hidden": false,
@@ -2502,7 +2447,7 @@ SELECT 'electrictransformer_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
       "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -2543,7 +2488,7 @@ SELECT 'electrictransformer_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -2621,55 +2566,12 @@ SELECT 'electrictransformer_point',
         "description": "Класс объектов «Электрические подстанции»",
         "geometryType": "Point",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
+      }'
 
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electrictransformer_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'railwayfacility_point',
        '{
         "name": "railwayfacility_point",
@@ -2678,6 +2580,13 @@ SELECT 'railwayfacility_point',
         "tableName": "railwayfacility_point",
         "originName": "RailwayFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -2703,7 +2612,7 @@ SELECT 'railwayfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты железнодорожного транспорта»",
             "choice": null,
             "hidden": false,
@@ -3338,7 +3247,7 @@ SELECT 'railwayfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -3379,7 +3288,7 @@ SELECT 'railwayfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -3500,54 +3409,11 @@ SELECT 'railwayfacility_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'railwayfacility_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule )
 SELECT 'admesrf',
        '{
         "name": "admesrf",
@@ -3556,6 +3422,13 @@ SELECT 'admesrf',
         "tableName": "admesrf",
         "originName": "AdmeSRF",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -3581,7 +3454,7 @@ SELECT 'admesrf',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "Код объекта",
             "choice": null,
             "hidden": false,
@@ -3760,37 +3633,11 @@ SELECT 'admesrf',
         "description": "Класс объектов «Территория субъекта Российской Федерации»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admesrf');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'wastefacility_point',
        '{
         "name": "wastefacility_point",
@@ -3799,6 +3646,13 @@ SELECT 'wastefacility_point',
         "tableName": "wastefacility_point",
         "originName": "WasteFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -3824,7 +3678,7 @@ SELECT 'wastefacility_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты утилизации, обезвреживания, размещения отходов производства и потребления»",
             "choice": null,
             "hidden": false,
@@ -4488,7 +4342,7 @@ SELECT 'wastefacility_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -4529,7 +4383,7 @@ SELECT 'wastefacility_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -4666,54 +4520,11 @@ SELECT 'wastefacility_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wastefacility_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'waterfacility_point',
        '{
         "name": "waterfacility_point",
@@ -4722,6 +4533,13 @@ SELECT 'waterfacility_point',
         "tableName": "waterfacility_point",
         "originName": "WaterFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -4747,7 +4565,7 @@ SELECT 'waterfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты водоснабжения»",
             "choice": null,
             "hidden": false,
@@ -5226,7 +5044,7 @@ SELECT 'waterfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -5267,7 +5085,7 @@ SELECT 'waterfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -5372,54 +5190,11 @@ SELECT 'waterfacility_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterfacility_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'publictransportservice_point',
        '{
         "name": "publictransportservice_point",
@@ -5428,6 +5203,13 @@ SELECT 'publictransportservice_point',
         "tableName": "publictransportservice_point",
         "originName": "PublicTransportService",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -5453,7 +5235,7 @@ SELECT 'publictransportservice_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты хранения и обслуживания общественного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
@@ -5787,7 +5569,7 @@ SELECT 'publictransportservice_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -5828,7 +5610,7 @@ SELECT 'publictransportservice_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -5925,54 +5707,11 @@ SELECT 'publictransportservice_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportservice_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'airtransportobj_point',
        '{
         "name": "airtransportobj_point",
@@ -5981,6 +5720,13 @@ SELECT 'airtransportobj_point',
         "tableName": "airtransportobj_point",
         "originName": "AirTransportObj",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -6006,7 +5752,7 @@ SELECT 'airtransportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты воздушного транспорта»",
             "choice": null,
             "hidden": false,
@@ -6519,7 +6265,7 @@ SELECT 'airtransportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -6560,7 +6306,7 @@ SELECT 'airtransportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -6663,54 +6409,11 @@ SELECT 'airtransportobj_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'airtransportobj_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'autoservice_point',
        '{
         "name": "autoservice_point",
@@ -6719,6 +6422,13 @@ SELECT 'autoservice_point',
         "tableName": "autoservice_point",
         "originName": "AutoService",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -6744,7 +6454,7 @@ SELECT 'autoservice_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты обслуживания и хранения автомобильного транспорта»",
             "choice": null,
             "hidden": false,
@@ -7233,7 +6943,7 @@ SELECT 'autoservice_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -7274,7 +6984,7 @@ SELECT 'autoservice_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -7427,54 +7137,11 @@ SELECT 'autoservice_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'autoservice_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'heritage_point',
        '{
         "name": "heritage_point",
@@ -7483,6 +7150,13 @@ SELECT 'heritage_point',
         "tableName": "heritage_point",
         "originName": "Heritage",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -7508,7 +7182,7 @@ SELECT 'heritage_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты культурного наследия (ОКН)»",
             "choice": null,
             "hidden": false,
@@ -8022,7 +7696,7 @@ SELECT 'heritage_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -8108,54 +7782,11 @@ SELECT 'heritage_point',
           errors.push({attribute: ''status'', error: ''Значение заполняется только для объектов "Достопримечательное место", "Историко-культурный заповедник"''});
       }
       }
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'heritage_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'resort_point',
        '{
         "name": "resort_point",
@@ -8164,6 +7795,13 @@ SELECT 'resort_point',
         "tableName": "resort_point",
         "originName": "Resort",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -8189,7 +7827,7 @@ SELECT 'resort_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты санаторно-курортного назначения»",
             "choice": null,
             "hidden": false,
@@ -8563,7 +8201,7 @@ SELECT 'resort_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -8604,7 +8242,7 @@ SELECT 'resort_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -8701,54 +8339,11 @@ SELECT 'resort_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resort_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'servicefacility_point',
        '{
         "name": "servicefacility_point",
@@ -8757,6 +8352,13 @@ SELECT 'servicefacility_point',
         "tableName": "servicefacility_point",
         "originName": "ServiceFacility",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -8782,7 +8384,7 @@ SELECT 'servicefacility_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Прочие объекты, связанные с производственной деятельностью»",
             "choice": null,
             "hidden": false,
@@ -9404,7 +9006,7 @@ SELECT 'servicefacility_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -9445,7 +9047,7 @@ SELECT 'servicefacility_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -9542,54 +9144,11 @@ SELECT 'servicefacility_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'servicefacility_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'sewerfacility_point',
        '{
         "name": "sewerfacility_point",
@@ -9598,6 +9157,13 @@ SELECT 'sewerfacility_point',
         "tableName": "sewerfacility_point",
         "originName": "SewerFacility",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -9623,7 +9189,7 @@ SELECT 'sewerfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты водоотведения»",
             "choice": null,
             "hidden": false,
@@ -10067,7 +9633,7 @@ SELECT 'sewerfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -10108,7 +9674,7 @@ SELECT 'sewerfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -10213,54 +9779,11 @@ SELECT 'sewerfacility_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sewerfacility_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'culture_point',
        '{
         "name": "culture_point",
@@ -10269,6 +9792,13 @@ SELECT 'culture_point',
         "tableName": "culture_point",
         "originName": "Culture",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -10294,7 +9824,7 @@ SELECT 'culture_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты культуры и искусства»",
             "choice": null,
             "hidden": false,
@@ -10778,7 +10308,7 @@ SELECT 'culture_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -10819,7 +10349,7 @@ SELECT 'culture_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -10956,54 +10486,11 @@ SELECT 'culture_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'culture_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'mineraldep_point',
        '{
         "name": "mineraldep_point",
@@ -11012,6 +10499,13 @@ SELECT 'mineraldep_point',
         "tableName": "mineraldep_point",
         "originName": "MineralDep",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -11037,7 +10531,7 @@ SELECT 'mineraldep_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Месторождения и проявления полезных ископаемых»",
             "choice": null,
             "hidden": false,
@@ -11353,7 +10847,7 @@ SELECT 'mineraldep_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -11450,54 +10944,11 @@ SELECT 'mineraldep_point',
           errors.push({attribute: ''min_ntype'', error: ''Значение заполняется только для объекта "Месторождения неметаллических полезных ископаемых"''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mineraldep_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'transplogisticobj_point',
        '{
         "name": "transplogisticobj_point",
@@ -11506,6 +10957,13 @@ SELECT 'transplogisticobj_point',
         "tableName": "transplogisticobj_point",
         "originName": "TranspLogisticObj",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -11531,7 +10989,7 @@ SELECT 'transplogisticobj_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Комплексные объекты транспортной инфраструктуры»",
             "choice": null,
             "hidden": false,
@@ -11793,7 +11251,7 @@ SELECT 'transplogisticobj_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -11834,7 +11292,7 @@ SELECT 'transplogisticobj_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -11931,54 +11389,11 @@ SELECT 'transplogisticobj_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transplogisticobj_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'publictransportobj_point',
        '{
         "name": "publictransportobj_point",
@@ -11987,6 +11402,13 @@ SELECT 'publictransportobj_point',
         "tableName": "publictransportobj_point",
         "originName": "PublicTransportObj",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -12012,7 +11434,7 @@ SELECT 'publictransportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты автомобильного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
@@ -12261,7 +11683,7 @@ SELECT 'publictransportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -12302,7 +11724,7 @@ SELECT 'publictransportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -12399,54 +11821,11 @@ SELECT 'publictransportobj_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportobj_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'envmonitoring_point',
        '{
         "name": "envmonitoring_point",
@@ -12455,6 +11834,13 @@ SELECT 'envmonitoring_point',
         "tableName": "envmonitoring_point",
         "originName": "EnvMonitoring",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -12480,7 +11866,7 @@ SELECT 'envmonitoring_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты государственной системы наблюдений за состоянием окружающей среды»",
             "choice": null,
             "hidden": false,
@@ -12749,7 +12135,7 @@ SELECT 'envmonitoring_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -12790,7 +12176,7 @@ SELECT 'envmonitoring_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -12887,54 +12273,11 @@ SELECT 'envmonitoring_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envmonitoring_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'hydro_point',
        '{
         "name": "hydro_point",
@@ -12943,6 +12286,13 @@ SELECT 'hydro_point',
         "tableName": "hydro_point",
         "originName": "Hydro",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -12968,7 +12318,7 @@ SELECT 'hydro_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Поверхностные водные объекты»",
             "choice": null,
             "hidden": false,
@@ -13233,7 +12583,7 @@ SELECT 'hydro_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -13303,54 +12653,11 @@ SELECT 'hydro_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydro_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'engprotectionobj_point',
        '{
         "name": "engprotectionobj_point",
@@ -13359,6 +12666,13 @@ SELECT 'engprotectionobj_point',
         "tableName": "engprotectionobj_point",
         "originName": "EngProtectionObj",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -13384,7 +12698,7 @@ SELECT 'engprotectionobj_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты инженерной защиты от опасных геологических процессов»",
             "choice": null,
             "hidden": false,
@@ -13662,7 +12976,7 @@ SELECT 'engprotectionobj_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -13703,7 +13017,7 @@ SELECT 'engprotectionobj_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -13800,54 +13114,11 @@ SELECT 'engprotectionobj_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engprotectionobj_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'waterpipeline_line',
        '{
         "name": "waterpipeline_line",
@@ -13856,6 +13127,13 @@ SELECT 'waterpipeline_line',
         "tableName": "waterpipeline_line",
         "originName": "WaterPipeline",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -13881,7 +13159,7 @@ SELECT 'waterpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "«Сети водоснабжения»",
             "choice": null,
             "hidden": false,
@@ -14231,7 +13509,7 @@ SELECT 'waterpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Справочник: Статус объекта",
             "choice": null,
             "hidden": false,
@@ -14272,7 +13550,7 @@ SELECT 'waterpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Справочник: Значение объекта",
             "choice": null,
             "hidden": false,
@@ -14377,36 +13655,11 @@ SELECT 'waterpipeline_line',
            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
        }
  
-       return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterpipeline_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'culture',
        '{
         "name": "culture",
@@ -14415,6 +13668,13 @@ SELECT 'culture',
         "tableName": "culture",
         "originName": "Culture",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -14440,7 +13700,7 @@ SELECT 'culture',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты культуры и искусства»",
             "choice": null,
             "hidden": false,
@@ -14924,7 +14184,7 @@ SELECT 'culture',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -14965,7 +14225,7 @@ SELECT 'culture',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -15102,36 +14362,11 @@ SELECT 'culture',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'culture');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'manufacturing',
        '{
         "name": "manufacturing",
@@ -15140,6 +14375,13 @@ SELECT 'manufacturing',
         "tableName": "manufacturing",
         "originName": "Manufacturing",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -15165,7 +14407,7 @@ SELECT 'manufacturing',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Предприятия и объекты добывающей и обрабатывающей промышленности»",
             "choice": null,
             "hidden": false,
@@ -15759,7 +15001,7 @@ SELECT 'manufacturing',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -15800,7 +15042,7 @@ SELECT 'manufacturing',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -15911,36 +15153,11 @@ SELECT 'manufacturing',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'manufacturing');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'authorityservice',
        '{
         "name": "authorityservice",
@@ -15949,6 +15166,13 @@ SELECT 'authorityservice',
         "tableName": "authorityservice",
         "originName": "AuthorityService",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -15974,7 +15198,7 @@ SELECT 'authorityservice',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Прочие объекты обслуживания»",
             "choice": null,
             "hidden": false,
@@ -16556,7 +15780,7 @@ SELECT 'authorityservice',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -16597,7 +15821,7 @@ SELECT 'authorityservice',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -16758,36 +15982,11 @@ SELECT 'authorityservice',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'authorityservice');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'sport',
        '{
         "name": "sport",
@@ -16796,6 +15995,13 @@ SELECT 'sport',
         "tableName": "sport",
         "originName": "Sport",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -16821,7 +16027,7 @@ SELECT 'sport',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "Объекты физической культуры и массового спорта",
             "choice": null,
             "hidden": false,
@@ -17295,7 +16501,7 @@ SELECT 'sport',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -17336,7 +16542,7 @@ SELECT 'sport',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -17441,36 +16647,11 @@ SELECT 'sport',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sport');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'naturalriskzone',
        '{
         "name": "naturalriskzone",
@@ -17479,6 +16660,13 @@ SELECT 'naturalriskzone',
         "tableName": "naturalriskzone",
         "originName": "NaturalRiskZone",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -17504,7 +16692,7 @@ SELECT 'naturalriskzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "Код объекта",
             "choice": null,
             "hidden": false,
@@ -17869,37 +17057,11 @@ SELECT 'naturalriskzone',
         "description": "Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'naturalriskzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'natureprotectarea',
        '{
         "name": "natureprotectarea",
@@ -17908,6 +17070,13 @@ SELECT 'natureprotectarea',
         "tableName": "natureprotectarea",
         "originName": "NatureProtectArea",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -17933,7 +17102,7 @@ SELECT 'natureprotectarea',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Особо охраняемые природные территории»",
             "choice": null,
             "hidden": false,
@@ -18178,7 +17347,7 @@ SELECT 'natureprotectarea',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -18219,7 +17388,7 @@ SELECT 'natureprotectarea',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -18316,36 +17485,11 @@ SELECT 'natureprotectarea',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'natureprotectarea');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'gasfacility',
        '{
         "name": "gasfacility",
@@ -18354,6 +17498,13 @@ SELECT 'gasfacility',
         "tableName": "gasfacility",
         "originName": "GasFacility",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -18379,7 +17530,7 @@ SELECT 'gasfacility',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты добычи и транспортировки газа»",
             "choice": null,
             "hidden": false,
@@ -18858,7 +18009,7 @@ SELECT 'gasfacility',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -18899,7 +18050,7 @@ SELECT 'gasfacility',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -18996,36 +18147,11 @@ SELECT 'gasfacility',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'gasfacility');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'gasfacility_point',
        '{
         "name": "gasfacility_point",
@@ -19034,6 +18160,13 @@ SELECT 'gasfacility_point',
         "tableName": "gasfacility_point",
         "originName": "GasFacility",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -19059,7 +18192,7 @@ SELECT 'gasfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты добычи и транспортировки газа»",
             "choice": null,
             "hidden": false,
@@ -19538,7 +18671,7 @@ SELECT 'gasfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -19579,7 +18712,7 @@ SELECT 'gasfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -19676,54 +18809,11 @@ SELECT 'gasfacility_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'gasfacility_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'publictransportobj',
        '{
         "name": "publictransportobj",
@@ -19732,6 +18822,13 @@ SELECT 'publictransportobj',
         "tableName": "publictransportobj",
         "originName": "PublicTransportObj",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -19757,7 +18854,7 @@ SELECT 'publictransportobj',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты автомобильного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
@@ -20006,7 +19103,7 @@ SELECT 'publictransportobj',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -20047,7 +19144,7 @@ SELECT 'publictransportobj',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -20144,36 +19241,11 @@ SELECT 'publictransportobj',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportobj');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'thermalfacility',
        '{
         "name": "thermalfacility",
@@ -20182,6 +19254,13 @@ SELECT 'thermalfacility',
         "tableName": "thermalfacility",
         "originName": "ThermalFacility",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -20207,7 +19286,7 @@ SELECT 'thermalfacility',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты теплоснабжения»",
             "choice": null,
             "hidden": false,
@@ -20735,7 +19814,7 @@ SELECT 'thermalfacility',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -20776,7 +19855,7 @@ SELECT 'thermalfacility',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -20881,36 +19960,11 @@ SELECT 'thermalfacility',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'thermalfacility');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'envmonitoring',
        '{
         "name": "envmonitoring",
@@ -20919,6 +19973,13 @@ SELECT 'envmonitoring',
         "tableName": "envmonitoring",
         "originName": "EnvMonitoring",
         "properties": [
+        {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -20944,7 +20005,7 @@ SELECT 'envmonitoring',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты государственной системы наблюдений за состоянием окружающей среды»",
             "choice": null,
             "hidden": false,
@@ -21213,7 +20274,7 @@ SELECT 'envmonitoring',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -21254,7 +20315,7 @@ SELECT 'envmonitoring',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -21351,36 +20412,11 @@ SELECT 'envmonitoring',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envmonitoring');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'thermalfacility_point',
        '{
         "name": "thermalfacility_point",
@@ -21389,6 +20425,13 @@ SELECT 'thermalfacility_point',
         "tableName": "thermalfacility_point",
         "originName": "ThermalFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -21414,7 +20457,7 @@ SELECT 'thermalfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты теплоснабжения»",
             "choice": null,
             "hidden": false,
@@ -21942,7 +20985,7 @@ SELECT 'thermalfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -21983,7 +21026,7 @@ SELECT 'thermalfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -22088,54 +21131,11 @@ SELECT 'thermalfacility_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'thermalfacility_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'road_line',
        '{
         "name": "road_line",
@@ -22144,6 +21144,13 @@ SELECT 'road_line',
         "tableName": "road_line",
         "originName": "Road",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -22169,7 +21176,7 @@ SELECT 'road_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Автомобильные дороги»",
             "choice": null,
             "hidden": false,
@@ -22791,7 +21798,7 @@ SELECT 'road_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -22832,7 +21839,7 @@ SELECT 'road_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -22983,36 +21990,11 @@ SELECT 'road_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'road_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'telecomfacility',
        '{
         "name": "telecomfacility",
@@ -23021,6 +22003,13 @@ SELECT 'telecomfacility',
         "tableName": "telecomfacility",
         "originName": "TelecomFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -23046,7 +22035,7 @@ SELECT 'telecomfacility',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты связи»",
             "choice": null,
             "hidden": false,
@@ -23524,7 +22513,7 @@ SELECT 'telecomfacility',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -23565,7 +22554,7 @@ SELECT 'telecomfacility',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -23670,36 +22659,11 @@ SELECT 'telecomfacility',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'telecomfacility');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'customcontrol',
        '{
         "name": "customcontrol",
@@ -23708,6 +22672,13 @@ SELECT 'customcontrol',
         "tableName": "customcontrol",
         "originName": "CustomControl",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -23733,7 +22704,7 @@ SELECT 'customcontrol',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Пункт пропуска через Государственную границу»",
             "choice": null,
             "hidden": false,
@@ -24118,7 +23089,7 @@ SELECT 'customcontrol',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -24159,7 +23130,7 @@ SELECT 'customcontrol',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -24256,36 +23227,11 @@ SELECT 'customcontrol',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'customcontrol');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'education',
        '{
         "name": "education",
@@ -24294,6 +23240,13 @@ SELECT 'education',
         "tableName": "education",
         "originName": "Education",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -24305,7 +23258,7 @@ SELECT 'education',
             "sequenceNumber": 1
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты образования и науки»",
             "hidden": false,
             "multiple": false,
@@ -24721,7 +23674,7 @@ SELECT 'education',
             "sequenceNumber": 19
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "hidden": false,
             "length": -1,
@@ -24750,7 +23703,7 @@ SELECT 'education',
             "sequenceNumber": 20
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "hidden": false,
             "multiple": false,
@@ -24859,36 +23812,11 @@ SELECT 'education',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'education');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'publictransportline_line',
        '{
         "name": "publictransportline_line",
@@ -24897,6 +23825,13 @@ SELECT 'publictransportline_line',
         "tableName": "publictransportline_line",
         "originName": "PublicTransportLine",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -24922,7 +23857,7 @@ SELECT 'publictransportline_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Линии общественного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
@@ -25237,7 +24172,7 @@ SELECT 'publictransportline_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -25278,7 +24213,7 @@ SELECT 'publictransportline_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -25375,36 +24310,11 @@ SELECT 'publictransportline_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportline_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'telecomfacility_point',
        '{
         "name": "telecomfacility_point",
@@ -25413,6 +24323,13 @@ SELECT 'telecomfacility_point',
         "tableName": "telecomfacility_point",
         "originName": "TelecomFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -25438,7 +24355,7 @@ SELECT 'telecomfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты связи»",
             "choice": null,
             "hidden": false,
@@ -25916,7 +24833,7 @@ SELECT 'telecomfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -25957,7 +24874,7 @@ SELECT 'telecomfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -26062,54 +24979,11 @@ SELECT 'telecomfacility_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'telecomfacility_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'resort',
        '{
         "name": "resort",
@@ -26118,6 +24992,13 @@ SELECT 'resort',
         "tableName": "resort",
         "originName": "Resort",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -26143,7 +25024,7 @@ SELECT 'resort',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты санаторно-курортного назначения»",
             "choice": null,
             "hidden": false,
@@ -26517,7 +25398,7 @@ SELECT 'resort',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -26558,7 +25439,7 @@ SELECT 'resort',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -26655,36 +25536,11 @@ SELECT 'resort',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resort');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'servicefacility',
        '{
         "name": "servicefacility",
@@ -26693,6 +25549,13 @@ SELECT 'servicefacility',
         "tableName": "servicefacility",
         "originName": "ServiceFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -26718,7 +25581,7 @@ SELECT 'servicefacility',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Прочие объекты, связанные с производственной деятельностью»",
             "choice": null,
             "hidden": false,
@@ -27340,7 +26203,7 @@ SELECT 'servicefacility',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -27381,7 +26244,7 @@ SELECT 'servicefacility',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -27478,36 +26341,11 @@ SELECT 'servicefacility',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'servicefacility');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'admenp',
        '{
         "name": "admenp",
@@ -27516,6 +26354,13 @@ SELECT 'admenp',
         "tableName": "admenp",
         "originName": "AdmeNP",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_terr_mo_np"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -27541,7 +26386,7 @@ SELECT 'admenp',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "Код объекта",
             "choice": null,
             "hidden": false,
@@ -28078,37 +26923,11 @@ SELECT 'admenp',
         "description": "Класс объектов «Территория населенного пункта»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admenp');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'transportobj',
        '{
         "name": "transportobj",
@@ -28117,6 +26936,13 @@ SELECT 'transportobj',
         "tableName": "transportobj",
         "originName": "TransportObj",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -28142,7 +26968,7 @@ SELECT 'transportobj',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Искусственные дорожные сооружения»",
             "choice": null,
             "hidden": false,
@@ -28539,7 +27365,7 @@ SELECT 'transportobj',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -28580,7 +27406,7 @@ SELECT 'transportobj',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -28701,36 +27527,11 @@ SELECT 'transportobj',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transportobj');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'transportobj_line',
        '{
         "name": "transportobj_line",
@@ -28739,6 +27540,13 @@ SELECT 'transportobj_line',
         "tableName": "transportobj_line",
         "originName": "TransportObj",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -28764,7 +27572,7 @@ SELECT 'transportobj_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Искусственные дорожные сооружения»",
             "choice": null,
             "hidden": false,
@@ -29161,7 +27969,7 @@ SELECT 'transportobj_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -29202,7 +28010,7 @@ SELECT 'transportobj_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -29323,36 +28131,11 @@ SELECT 'transportobj_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transportobj_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'transportobj_point',
        '{
         "name": "transportobj_point",
@@ -29361,6 +28144,13 @@ SELECT 'transportobj_point',
         "tableName": "transportobj_point",
         "originName": "TransportObj",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -29386,7 +28176,7 @@ SELECT 'transportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Искусственные дорожные сооружения»",
             "choice": null,
             "hidden": false,
@@ -29783,7 +28573,7 @@ SELECT 'transportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -29824,7 +28614,7 @@ SELECT 'transportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -29945,54 +28735,11 @@ SELECT 'transportobj_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transportobj_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'wastefacility',
        '{
         "name": "wastefacility",
@@ -30001,6 +28748,13 @@ SELECT 'wastefacility',
         "tableName": "wastefacility",
         "originName": "WasteFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -30026,7 +28780,7 @@ SELECT 'wastefacility',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты утилизации, обезвреживания, размещения отходов производства и потребления»",
             "choice": null,
             "hidden": false,
@@ -30690,7 +29444,7 @@ SELECT 'wastefacility',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -30731,7 +29485,7 @@ SELECT 'wastefacility',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -30868,36 +29622,11 @@ SELECT 'wastefacility',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wastefacility');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'waterfacility',
        '{
         "name": "waterfacility",
@@ -30906,6 +29635,13 @@ SELECT 'waterfacility',
         "tableName": "waterfacility",
         "originName": "WaterFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -30931,7 +29667,7 @@ SELECT 'waterfacility',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты водоснабжения»",
             "choice": null,
             "hidden": false,
@@ -31410,7 +30146,7 @@ SELECT 'waterfacility',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -31451,7 +30187,7 @@ SELECT 'waterfacility',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -31556,36 +30292,11 @@ SELECT 'waterfacility',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterfacility');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'otherobject',
        '{
         "name": "otherobject",
@@ -31594,6 +30305,13 @@ SELECT 'otherobject',
         "tableName": "otherobject",
         "originName": "OtherObject",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -31619,7 +30337,7 @@ SELECT 'otherobject',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Иные объекты федерального значения, объекты регионального значения, объекты местного значения»",
             "choice": null,
             "hidden": false,
@@ -32022,7 +30740,7 @@ SELECT 'otherobject',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -32063,7 +30781,7 @@ SELECT 'otherobject',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -32160,36 +30878,11 @@ SELECT 'otherobject',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherobject');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'forest',
        '{
         "name": "forest",
@@ -32198,6 +30891,13 @@ SELECT 'forest',
         "tableName": "forest",
         "originName": "Forest",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -32223,7 +30923,7 @@ SELECT 'forest',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Леса»",
             "choice": null,
             "hidden": false,
@@ -32560,7 +31260,7 @@ SELECT 'forest',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -32650,36 +31350,11 @@ SELECT 'forest',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
       }
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'forest');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'education_point',
        '{
         "name": "education_point",
@@ -32688,6 +31363,13 @@ SELECT 'education_point',
         "tableName": "education_point",
         "originName": "Education",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -32713,7 +31395,7 @@ SELECT 'education_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты образования и науки»",
             "choice": null,
             "hidden": false,
@@ -33335,7 +32017,7 @@ SELECT 'education_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -33376,7 +32058,7 @@ SELECT 'education_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -33511,54 +32193,11 @@ SELECT 'education_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'education_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'electricpowerstation',
        '{
         "name": "electricpowerstation",
@@ -33567,6 +32206,13 @@ SELECT 'electricpowerstation',
         "tableName": "electricpowerstation",
         "originName": "ElectricPowerStation",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -33592,7 +32238,7 @@ SELECT 'electricpowerstation',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Электростанции»",
             "choice": null,
             "hidden": false,
@@ -34249,7 +32895,7 @@ SELECT 'electricpowerstation',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -34290,7 +32936,7 @@ SELECT 'electricpowerstation',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -34387,36 +33033,11 @@ SELECT 'electricpowerstation',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electricpowerstation');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'publictransportservice',
        '{
         "name": "publictransportservice",
@@ -34425,6 +33046,13 @@ SELECT 'publictransportservice',
         "tableName": "publictransportservice",
         "originName": "PublicTransportService",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -34450,7 +33078,7 @@ SELECT 'publictransportservice',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты хранения и обслуживания общественного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
@@ -34784,7 +33412,7 @@ SELECT 'publictransportservice',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -34825,7 +33453,7 @@ SELECT 'publictransportservice',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -34922,36 +33550,11 @@ SELECT 'publictransportservice',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportservice');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'airtransportobj',
        '{
         "name": "airtransportobj",
@@ -34960,6 +33563,13 @@ SELECT 'airtransportobj',
         "tableName": "airtransportobj",
         "originName": "AirTransportObj",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -34985,7 +33595,7 @@ SELECT 'airtransportobj',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты воздушного транспорта»",
             "choice": null,
             "hidden": false,
@@ -35498,7 +34108,7 @@ SELECT 'airtransportobj',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -35539,7 +34149,7 @@ SELECT 'airtransportobj',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -35642,36 +34252,11 @@ SELECT 'airtransportobj',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'airtransportobj');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'electricpowerstation_point',
        '{
         "name": "electricpowerstation_point",
@@ -35680,6 +34265,13 @@ SELECT 'electricpowerstation_point',
         "tableName": "electricpowerstation_point",
         "originName": "ElectricPowerStation",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -35705,7 +34297,7 @@ SELECT 'electricpowerstation_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Электростанции»",
             "choice": null,
             "hidden": false,
@@ -36362,7 +34954,7 @@ SELECT 'electricpowerstation_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -36403,7 +34995,7 @@ SELECT 'electricpowerstation_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -36500,54 +35092,11 @@ SELECT 'electricpowerstation_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electricpowerstation_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'autoservice',
        '{
         "name": "autoservice",
@@ -36556,6 +35105,13 @@ SELECT 'autoservice',
         "tableName": "autoservice",
         "originName": "AutoService",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -36581,7 +35137,7 @@ SELECT 'autoservice',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты обслуживания и хранения автомобильного транспорта»",
             "choice": null,
             "hidden": false,
@@ -37070,7 +35626,7 @@ SELECT 'autoservice',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -37111,7 +35667,7 @@ SELECT 'autoservice',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -37264,36 +35820,11 @@ SELECT 'autoservice',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'autoservice');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'hydraulicstructures_line',
        '{
         "name": "hydraulicstructures_line",
@@ -37302,6 +35833,13 @@ SELECT 'hydraulicstructures_line',
         "tableName": "hydraulicstructures_line",
         "originName": "HydraulicStructures",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -37327,7 +35865,7 @@ SELECT 'hydraulicstructures_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Гидротехнические сооружения»",
             "choice": null,
             "hidden": false,
@@ -37754,7 +36292,7 @@ SELECT 'hydraulicstructures_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -37795,7 +36333,7 @@ SELECT 'hydraulicstructures_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -37892,36 +36430,11 @@ SELECT 'hydraulicstructures_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydraulicstructures_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'gaspipeline_line',
        '{
         "name": "gaspipeline_line",
@@ -37930,6 +36443,13 @@ SELECT 'gaspipeline_line',
         "tableName": "gaspipeline_line",
         "originName": "GasPipeline",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -37955,7 +36475,7 @@ SELECT 'gaspipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Распределительные трубопроводы для транспортировки газа»",
             "choice": null,
             "hidden": false,
@@ -38414,7 +36934,7 @@ SELECT 'gaspipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -38455,7 +36975,7 @@ SELECT 'gaspipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -38552,36 +37072,11 @@ SELECT 'gaspipeline_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'gaspipeline_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'street_line',
        '{
         "name": "street_line",
@@ -38590,6 +37085,13 @@ SELECT 'street_line',
         "tableName": "street_line",
         "originName": "Street",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -38615,7 +37117,7 @@ SELECT 'street_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Улично-дорожная сеть городского поселения»",
             "choice": null,
             "hidden": false,
@@ -38996,7 +37498,7 @@ SELECT 'street_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -39037,7 +37539,7 @@ SELECT 'street_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -39167,36 +37669,11 @@ SELECT 'street_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'street_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'hydraulicstructures_point',
        '{
         "name": "hydraulicstructures_point",
@@ -39205,6 +37682,13 @@ SELECT 'hydraulicstructures_point',
         "tableName": "hydraulicstructures_point",
         "originName": "HydraulicStructures",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -39230,7 +37714,7 @@ SELECT 'hydraulicstructures_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Гидротехнические сооружения»",
             "choice": null,
             "hidden": false,
@@ -39657,7 +38141,7 @@ SELECT 'hydraulicstructures_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -39698,7 +38182,7 @@ SELECT 'hydraulicstructures_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -39795,54 +38279,11 @@ SELECT 'hydraulicstructures_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydraulicstructures_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'health',
        '{
         "name": "health",
@@ -39851,6 +38292,13 @@ SELECT 'health',
         "tableName": "health",
         "originName": "Health",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -39876,7 +38324,7 @@ SELECT 'health',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты здравоохранения»",
             "choice": null,
             "hidden": false,
@@ -40575,7 +39023,7 @@ SELECT 'health',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -40616,7 +39064,7 @@ SELECT 'health',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -40791,36 +39239,11 @@ SELECT 'health',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'health');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'customcontrol_point',
        '{
         "name": "customcontrol_point",
@@ -40829,6 +39252,13 @@ SELECT 'customcontrol_point',
         "tableName": "customcontrol_point",
         "originName": "CustomControl",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -40854,7 +39284,7 @@ SELECT 'customcontrol_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Пункт пропуска через Государственную границу»",
             "choice": null,
             "hidden": false,
@@ -41239,7 +39669,7 @@ SELECT 'customcontrol_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -41280,7 +39710,7 @@ SELECT 'customcontrol_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -41377,54 +39807,11 @@ SELECT 'customcontrol_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'customcontrol_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'health_point',
        '{
         "name": "health_point",
@@ -41433,6 +39820,13 @@ SELECT 'health_point',
         "tableName": "health_point",
         "originName": "Health",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -41458,7 +39852,7 @@ SELECT 'health_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты здравоохранения»",
             "choice": null,
             "hidden": false,
@@ -42157,7 +40551,7 @@ SELECT 'health_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -42198,7 +40592,7 @@ SELECT 'health_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -42373,54 +40767,11 @@ SELECT 'health_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'health_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'railwayline_line',
        '{
         "name": "railwayline_line",
@@ -42429,6 +40780,13 @@ SELECT 'railwayline_line',
         "tableName": "railwayline_line",
         "originName": "RailwayLine",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -42454,7 +40812,7 @@ SELECT 'railwayline_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Железнодорожный путь»",
             "choice": null,
             "hidden": false,
@@ -42989,7 +41347,7 @@ SELECT 'railwayline_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -43030,7 +41388,7 @@ SELECT 'railwayline_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -43127,36 +41485,11 @@ SELECT 'railwayline_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'railwayline_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'pipeline_line',
        '{
         "name": "pipeline_line",
@@ -43165,6 +41498,13 @@ SELECT 'pipeline_line',
         "tableName": "pipeline_line",
         "originName": "Pipeline",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -43190,7 +41530,7 @@ SELECT 'pipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов»",
             "choice": null,
             "hidden": false,
@@ -43625,7 +41965,7 @@ SELECT 'pipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -43666,7 +42006,7 @@ SELECT 'pipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -43768,36 +42108,11 @@ SELECT 'pipeline_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
       }
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'pipeline_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'cemetery_point',
        '{
         "name": "cemetery_point",
@@ -43806,6 +42121,13 @@ SELECT 'cemetery_point',
         "tableName": "cemetery_point",
         "originName": "Cemetery",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -43831,7 +42153,7 @@ SELECT 'cemetery_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Места погребения»",
             "choice": null,
             "hidden": false,
@@ -44253,7 +42575,7 @@ SELECT 'cemetery_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Справочник: Статус объекта",
             "choice": null,
             "hidden": false,
@@ -44294,7 +42616,7 @@ SELECT 'cemetery_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Справочник: Значение объекта",
             "choice": null,
             "hidden": false,
@@ -44417,54 +42739,11 @@ SELECT 'cemetery_point',
            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
        }
  
-       return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'cemetery_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'cemetery',
        '{
         "name": "cemetery",
@@ -44473,6 +42752,13 @@ SELECT 'cemetery',
         "tableName": "cemetery",
         "originName": "Cemetery",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -44498,7 +42784,7 @@ SELECT 'cemetery',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Места погребения»",
             "choice": null,
             "hidden": false,
@@ -44920,7 +43206,7 @@ SELECT 'cemetery',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -44961,7 +43247,7 @@ SELECT 'cemetery',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -45090,36 +43376,11 @@ SELECT 'cemetery',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'cemetery');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'investmentzone',
        '{
         "name": "investmentzone",
@@ -45128,6 +43389,13 @@ SELECT 'investmentzone',
         "tableName": "investmentzone",
         "originName": "InvestmentZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -45153,7 +43421,7 @@ SELECT 'investmentzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Территории и зоны, на которых устанавливается особый юридический статус, и/или действуют особые финансовые и нефинансовые механизмы поддержки инвестиционной и инновационной деятельности»",
             "choice": null,
             "hidden": false,
@@ -45414,7 +43682,7 @@ SELECT 'investmentzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -45455,7 +43723,7 @@ SELECT 'investmentzone',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -45541,36 +43809,11 @@ SELECT 'investmentzone',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
         }
       }
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'investmentzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'watertransportobj',
        '{
         "name": "watertransportobj",
@@ -45579,6 +43822,13 @@ SELECT 'watertransportobj',
         "tableName": "watertransportobj",
         "originName": "WaterTransportObj",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -45604,7 +43854,7 @@ SELECT 'watertransportobj',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты водного транспорта»",
             "choice": null,
             "hidden": false,
@@ -46170,7 +44420,7 @@ SELECT 'watertransportobj',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -46211,7 +44461,7 @@ SELECT 'watertransportobj',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -46356,36 +44606,11 @@ SELECT 'watertransportobj',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'watertransportobj');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'electricline_line',
        '{
         "name": "electricline_line",
@@ -46394,6 +44619,13 @@ SELECT 'electricline_line',
         "tableName": "electricline_line",
         "originName": "ElectricLine",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -46419,7 +44651,7 @@ SELECT 'electricline_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Линии электропередачи (ЛЭП)»",
             "choice": null,
             "hidden": false,
@@ -47021,7 +45253,7 @@ SELECT 'electricline_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -47062,7 +45294,7 @@ SELECT 'electricline_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -47159,36 +45391,11 @@ SELECT 'electricline_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electricline_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'watertransportobj_point',
        '{
         "name": "watertransportobj_point",
@@ -47197,6 +45404,13 @@ SELECT 'watertransportobj_point',
         "tableName": "watertransportobj_point",
         "originName": "WaterTransportObj",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -47222,7 +45436,7 @@ SELECT 'watertransportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты водного транспорта»",
             "choice": null,
             "hidden": false,
@@ -47788,7 +46002,7 @@ SELECT 'watertransportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -47829,7 +46043,7 @@ SELECT 'watertransportobj_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -47974,54 +46188,11 @@ SELECT 'watertransportobj_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'watertransportobj_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'historicsettlement',
        '{
         "name": "historicsettlement",
@@ -48030,6 +46201,13 @@ SELECT 'historicsettlement',
         "tableName": "historicsettlement",
         "originName": "HistoricSettlement",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -48055,7 +46233,7 @@ SELECT 'historicsettlement',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Границы территории исторического поселения»",
             "choice": null,
             "hidden": false,
@@ -48218,37 +46396,11 @@ SELECT 'historicsettlement',
         "description": "Класс объектов «Границы территории исторического поселения»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'historicsettlement');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'public',
        '{
         "name": "public",
@@ -48257,6 +46409,13 @@ SELECT 'public',
         "tableName": "public",
         "originName": "Public",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -48282,7 +46441,7 @@ SELECT 'public',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Общественные пространства»",
             "choice": null,
             "hidden": false,
@@ -48780,7 +46939,7 @@ SELECT 'public',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -48821,7 +46980,7 @@ SELECT 'public',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -48950,36 +47109,11 @@ SELECT 'public',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'public');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'sewerfacility',
        '{
         "name": "sewerfacility",
@@ -48988,6 +47122,13 @@ SELECT 'sewerfacility',
         "tableName": "sewerfacility",
         "originName": "SewerFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -49013,7 +47154,7 @@ SELECT 'sewerfacility',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты водоотведения»",
             "choice": null,
             "hidden": false,
@@ -49457,7 +47598,7 @@ SELECT 'sewerfacility',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -49498,7 +47639,7 @@ SELECT 'sewerfacility',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -49603,36 +47744,11 @@ SELECT 'sewerfacility',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sewerfacility');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'functionalzone',
        '{
         "name": "functionalzone",
@@ -49641,6 +47757,13 @@ SELECT 'functionalzone',
         "tableName": "functionalzone",
         "originName": "FunctionalZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -49666,7 +47789,7 @@ SELECT 'functionalzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Функциональные зоны»",
             "choice": null,
             "hidden": false,
@@ -50406,7 +48529,7 @@ SELECT 'functionalzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -50439,7 +48562,7 @@ SELECT 'functionalzone',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -50620,36 +48743,11 @@ SELECT 'functionalzone',
         errors.push({attribute: ''reg_status'', error: ''Значение заполняется только для планируемых функциональных зон''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'functionalzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'technoriskarea',
        '{
         "name": "technoriskarea",
@@ -50658,6 +48756,13 @@ SELECT 'technoriskarea',
         "tableName": "technoriskarea",
         "originName": "TechnoRiskArea",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -50683,7 +48788,7 @@ SELECT 'technoriskarea',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
             "choice": null,
             "hidden": false,
@@ -50993,37 +49098,11 @@ SELECT 'technoriskarea',
         "description": "Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'technoriskarea');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'coastalprotectionzone',
        '{
         "name": "coastalprotectionzone",
@@ -51032,6 +49111,13 @@ SELECT 'coastalprotectionzone',
         "tableName": "coastalprotectionzone",
         "originName": "CoastalProtectionZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -51057,7 +49143,7 @@ SELECT 'coastalprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Прибрежные защитные полосы»",
             "choice": null,
             "hidden": false,
@@ -51158,7 +49244,7 @@ SELECT 'coastalprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -51220,37 +49306,11 @@ SELECT 'coastalprotectionzone',
         "description": "Класс объектов «Прибрежные защитные полосы»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'coastalprotectionzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'publictransportstops',
        '{
         "name": "publictransportstops",
@@ -51259,6 +49319,13 @@ SELECT 'publictransportstops',
         "tableName": "publictransportstops",
         "originName": "PublicTransportStops",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -51284,7 +49351,7 @@ SELECT 'publictransportstops',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Остановочные пункты общественного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
@@ -51684,7 +49751,7 @@ SELECT 'publictransportstops',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -51725,7 +49792,7 @@ SELECT 'publictransportstops',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -51830,36 +49897,11 @@ SELECT 'publictransportstops',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportstops');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'hazardarea',
        '{
         "name": "hazardarea",
@@ -51868,6 +49910,13 @@ SELECT 'hazardarea',
         "tableName": "hazardarea",
         "originName": "HazardArea",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "",
@@ -51893,7 +49942,7 @@ SELECT 'hazardarea',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Зона экстренного оповещения»",
             "choice": null,
             "hidden": false,
@@ -51975,37 +50024,11 @@ SELECT 'hazardarea',
         "description": "Класс объектов «Зона экстренного оповещения»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hazardarea');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'publictransportstops_point',
        '{
         "name": "publictransportstops_point",
@@ -52014,6 +50037,13 @@ SELECT 'publictransportstops_point',
         "tableName": "publictransportstops_point",
         "originName": "PublicTransportStops",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -52039,7 +50069,7 @@ SELECT 'publictransportstops_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Остановочные пункты общественного пассажирского транспорта»",
             "choice": null,
             "hidden": false,
@@ -52439,7 +50469,7 @@ SELECT 'publictransportstops_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -52480,7 +50510,7 @@ SELECT 'publictransportstops_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -52585,54 +50615,11 @@ SELECT 'publictransportstops_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportstops_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'otherobject_point',
        '{
         "name": "otherobject_point",
@@ -52641,6 +50628,13 @@ SELECT 'otherobject_point',
         "tableName": "otherobject_point",
         "originName": "OtherObject",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -52666,7 +50660,7 @@ SELECT 'otherobject_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Иные объекты федерального значения, объекты регионального значения, объекты местного значения»",
             "choice": null,
             "hidden": false,
@@ -53069,7 +51063,7 @@ SELECT 'otherobject_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -53110,7 +51104,7 @@ SELECT 'otherobject_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -53207,54 +51201,11 @@ SELECT 'otherobject_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherobject_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'resortarea',
        '{
         "name": "resortarea",
@@ -53263,6 +51214,13 @@ SELECT 'resortarea',
         "tableName": "resortarea",
         "originName": "ResortArea",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -53288,7 +51246,7 @@ SELECT 'resortarea',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Лечебно-оздоровительные местности и курорты»",
             "choice": null,
             "hidden": false,
@@ -53509,7 +51467,7 @@ SELECT 'resortarea',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -53550,7 +51508,7 @@ SELECT 'resortarea',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -53644,36 +51602,11 @@ SELECT 'resortarea',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortarea');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'social',
        '{
         "name": "social",
@@ -53682,6 +51615,13 @@ SELECT 'social',
         "tableName": "social",
         "originName": "Social",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -53707,7 +51647,7 @@ SELECT 'social',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты социального обслуживания»",
             "choice": null,
             "hidden": false,
@@ -54288,7 +52228,7 @@ SELECT 'social',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -54329,7 +52269,7 @@ SELECT 'social',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -54482,36 +52422,11 @@ SELECT 'social',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'social');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'agriculture',
        '{
         "name": "agriculture",
@@ -54520,6 +52435,13 @@ SELECT 'agriculture',
         "tableName": "agriculture",
         "originName": "Agriculture",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -54545,7 +52467,7 @@ SELECT 'agriculture',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства»",
             "choice": null,
             "hidden": false,
@@ -55328,7 +53250,7 @@ SELECT 'agriculture',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -55369,7 +53291,7 @@ SELECT 'agriculture',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -55466,36 +53388,11 @@ SELECT 'agriculture',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'agriculture');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'social_point',
        '{
         "name": "social_point",
@@ -55504,6 +53401,13 @@ SELECT 'social_point',
         "tableName": "social_point",
         "originName": "Social",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -55529,7 +53433,7 @@ SELECT 'social_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты социального обслуживания»",
             "choice": null,
             "hidden": false,
@@ -56110,7 +54014,7 @@ SELECT 'social_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -56151,7 +54055,7 @@ SELECT 'social_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -56304,54 +54208,11 @@ SELECT 'social_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'social_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'agriculture_point',
        '{
         "name": "agriculture_point",
@@ -56360,6 +54221,13 @@ SELECT 'agriculture_point',
         "tableName": "agriculture_point",
         "originName": "Agriculture",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -56385,7 +54253,7 @@ SELECT 'agriculture_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства»",
             "choice": null,
             "hidden": false,
@@ -57168,7 +55036,7 @@ SELECT 'agriculture_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -57209,7 +55077,7 @@ SELECT 'agriculture_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -57306,54 +55174,11 @@ SELECT 'agriculture_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'agriculture_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'wildlifeprotection',
        '{
         "name": "wildlifeprotection",
@@ -57362,6 +55187,13 @@ SELECT 'wildlifeprotection',
         "tableName": "wildlifeprotection",
         "originName": "WildlifeProtection",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -57387,7 +55219,7 @@ SELECT 'wildlifeprotection',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты государственной системы наблюдений за состоянием окружающей среды»",
             "choice": null,
             "hidden": false,
@@ -57681,7 +55513,7 @@ SELECT 'wildlifeprotection',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -57722,7 +55554,7 @@ SELECT 'wildlifeprotection',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -57819,36 +55651,11 @@ SELECT 'wildlifeprotection',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wildlifeprotection');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'heritagearea',
        '{
         "name": "heritagearea",
@@ -57857,6 +55664,13 @@ SELECT 'heritagearea',
         "tableName": "heritagearea",
         "originName": "HeritageArea",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -57882,7 +55696,7 @@ SELECT 'heritagearea',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Границы территорий объектов культурного наследия и историко-культурных заповедников»",
             "choice": null,
             "hidden": false,
@@ -58198,7 +56012,7 @@ SELECT 'heritagearea',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -58268,37 +56082,11 @@ SELECT 'heritagearea',
         "description": "Класс объектов «Границы территорий объектов культурного наследия и историко-культурных заповедников»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'heritagearea');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'mineraldep',
        '{
         "name": "mineraldep",
@@ -58307,6 +56095,13 @@ SELECT 'mineraldep',
         "tableName": "mineraldep",
         "originName": "MineralDep",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -58332,7 +56127,7 @@ SELECT 'mineraldep',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Месторождения и проявления полезных ископаемых»",
             "choice": null,
             "hidden": false,
@@ -58648,7 +56443,7 @@ SELECT 'mineraldep',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -58745,36 +56540,11 @@ SELECT 'mineraldep',
           errors.push({attribute: ''min_ntype'', error: ''Значение заполняется только для объекта "Месторождения неметаллических полезных ископаемых"''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mineraldep');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'transplogisticobj',
        '{
         "name": "transplogisticobj",
@@ -58783,6 +56553,13 @@ SELECT 'transplogisticobj',
         "tableName": "transplogisticobj",
         "originName": "TranspLogisticObj",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -58808,7 +56585,7 @@ SELECT 'transplogisticobj',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Комплексные объекты транспортной инфраструктуры»",
             "choice": null,
             "hidden": false,
@@ -59070,7 +56847,7 @@ SELECT 'transplogisticobj',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -59111,7 +56888,7 @@ SELECT 'transplogisticobj',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -59208,36 +56985,11 @@ SELECT 'transplogisticobj',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transplogisticobj');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'heritageprotectionzone',
        '{
         "name": "heritageprotectionzone",
@@ -59246,6 +56998,13 @@ SELECT 'heritageprotectionzone',
         "tableName": "heritageprotectionzone",
         "originName": "HeritageProtectionZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -59271,7 +57030,7 @@ SELECT 'heritageprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Зоны охраны объектов культурного наследия (памятников истории и культуры) народов Российской Федерации»\"",
             "choice": null,
             "hidden": false,
@@ -59412,7 +57171,7 @@ SELECT 'heritageprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -59474,37 +57233,11 @@ SELECT 'heritageprotectionzone',
         "description": "Класс объектов «Зоны охраны объектов культурного наследия (памятников истории и культуры) народов Российской Федерации»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'heritageprotectionzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'engprotectionzone',
        '{
         "name": "engprotectionzone",
@@ -59513,6 +57246,13 @@ SELECT 'engprotectionzone',
         "tableName": "engprotectionzone",
         "originName": "EngProtectionZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -59538,7 +57278,7 @@ SELECT 'engprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Охранная зона инженерных коммуникаций»",
             "choice": null,
             "hidden": false,
@@ -59687,7 +57427,7 @@ SELECT 'engprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -59749,37 +57489,11 @@ SELECT 'engprotectionzone',
         "description": "Класс объектов «Охранная зона инженерных коммуникаций»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engprotectionzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'foreshore',
        '{
         "name": "foreshore",
@@ -59788,6 +57502,13 @@ SELECT 'foreshore',
         "tableName": "foreshore",
         "originName": "Foreshore",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -59813,7 +57534,7 @@ SELECT 'foreshore',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Береговые полосы»",
             "choice": null,
             "hidden": false,
@@ -59914,7 +57635,7 @@ SELECT 'foreshore',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -59976,37 +57697,11 @@ SELECT 'foreshore',
         "description": "Класс объектов «Береговые полосы»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'foreshore');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'transpprotectionzone',
        '{
         "name": "transpprotectionzone",
@@ -60015,6 +57710,13 @@ SELECT 'transpprotectionzone',
         "tableName": "transpprotectionzone",
         "originName": "TranspProtectionZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -60040,7 +57742,7 @@ SELECT 'transpprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Охранная зона транспортных коммуникаций»",
             "choice": null,
             "hidden": false,
@@ -60173,7 +57875,7 @@ SELECT 'transpprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -60235,37 +57937,11 @@ SELECT 'transpprotectionzone',
         "description": "Класс объектов «Охранная зона транспортных коммуникаций»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transpprotectionzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'recreation',
        '{
         "name": "recreation",
@@ -60274,6 +57950,13 @@ SELECT 'recreation',
         "tableName": "recreation",
         "originName": "Recreation",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -60299,7 +57982,7 @@ SELECT 'recreation',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты отдыха и туризма»",
             "choice": null,
             "hidden": false,
@@ -60937,7 +58620,7 @@ SELECT 'recreation',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -60978,7 +58661,7 @@ SELECT 'recreation',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -61149,36 +58832,11 @@ SELECT 'recreation',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'recreation');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'natureprotectionzone',
        '{
         "name": "natureprotectionzone",
@@ -61187,6 +58845,13 @@ SELECT 'natureprotectionzone',
         "tableName": "natureprotectionzone",
         "originName": "NatureProtectionZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -61212,7 +58877,7 @@ SELECT 'natureprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Охранная зона особо охраняемых природных территорий»",
             "choice": null,
             "hidden": false,
@@ -61390,7 +59055,7 @@ SELECT 'natureprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -61452,37 +59117,11 @@ SELECT 'natureprotectionzone',
         "description": "Класс объектов «Охранная зона особо охраняемых природных территорий»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'natureprotectionzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'traditionalarea',
        '{
         "name": "traditionalarea",
@@ -61491,6 +59130,13 @@ SELECT 'traditionalarea',
         "tableName": "traditionalarea",
         "originName": "TraditionalArea",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -61516,7 +59162,7 @@ SELECT 'traditionalarea',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Территории традиционного природопользования коренных малочисленных народов Севера, Сибири и Дальнего Востока РФ»",
             "choice": null,
             "hidden": false,
@@ -61665,7 +59311,7 @@ SELECT 'traditionalarea',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -61698,7 +59344,7 @@ SELECT 'traditionalarea',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -61784,36 +59430,11 @@ SELECT 'traditionalarea',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'traditionalarea');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'specialeconomicarea',
        '{
         "name": "specialeconomicarea",
@@ -61822,6 +59443,13 @@ SELECT 'specialeconomicarea',
         "tableName": "specialeconomicarea",
         "originName": "SpecialEconomicArea",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -61847,7 +59475,7 @@ SELECT 'specialeconomicarea',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Особые экономические зоны»",
             "choice": null,
             "hidden": false,
@@ -62176,7 +59804,7 @@ SELECT 'specialeconomicarea',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -62209,7 +59837,7 @@ SELECT 'specialeconomicarea',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -62306,36 +59934,11 @@ SELECT 'specialeconomicarea',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'specialeconomicarea');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'emergencyprotectionobj',
        '{
         "name": "emergencyprotectionobj",
@@ -62344,6 +59947,13 @@ SELECT 'emergencyprotectionobj',
         "tableName": "emergencyprotectionobj",
         "originName": "EmergencyProtectionObj",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -62369,7 +59979,7 @@ SELECT 'emergencyprotectionobj',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "Код объекта",
             "choice": null,
             "hidden": false,
@@ -62896,7 +60506,7 @@ SELECT 'emergencyprotectionobj',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -62937,7 +60547,7 @@ SELECT 'emergencyprotectionobj',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -63090,36 +60700,11 @@ SELECT 'emergencyprotectionobj',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'emergencyprotectionobj');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'electrictransformer',
        '{
         "name": "electrictransformer",
@@ -63128,6 +60713,13 @@ SELECT 'electrictransformer',
         "tableName": "electrictransformer",
         "originName": "ElectricTransformer",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -63153,7 +60745,7 @@ SELECT 'electrictransformer',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Электрические подстанции»",
             "choice": null,
             "hidden": false,
@@ -63797,7 +61389,7 @@ SELECT 'electrictransformer',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -63838,7 +61430,7 @@ SELECT 'electrictransformer',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -63916,37 +61508,11 @@ SELECT 'electrictransformer',
         "description": "Класс объектов «Электрические подстанции»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electrictransformer');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'railwayfacility',
        '{
         "name": "railwayfacility",
@@ -63955,6 +61521,13 @@ SELECT 'railwayfacility',
         "tableName": "railwayfacility",
         "originName": "RailwayFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -63980,7 +61553,7 @@ SELECT 'railwayfacility',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты железнодорожного транспорта»",
             "choice": null,
             "hidden": false,
@@ -64615,7 +62188,7 @@ SELECT 'railwayfacility',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -64656,7 +62229,7 @@ SELECT 'railwayfacility',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -64777,36 +62350,11 @@ SELECT 'railwayfacility',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'railwayfacility');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'admemo',
        '{
         "name": "admemo",
@@ -64815,6 +62363,13 @@ SELECT 'admemo',
         "tableName": "admemo",
         "originName": "AdmeMO",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_terr_mo_np"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -64840,7 +62395,7 @@ SELECT 'admemo',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "Код объекта",
             "choice": null,
             "hidden": false,
@@ -65051,37 +62606,11 @@ SELECT 'admemo',
         "description": "Класс объектов «Территория муниципального образования»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admemo');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'oilfacility',
        '{
         "name": "oilfacility",
@@ -65090,6 +62619,13 @@ SELECT 'oilfacility',
         "tableName": "oilfacility",
         "originName": "OilFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -65115,7 +62651,7 @@ SELECT 'oilfacility',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "Код объекта",
             "choice": null,
             "hidden": false,
@@ -65602,7 +63138,7 @@ SELECT 'oilfacility',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -65643,7 +63179,7 @@ SELECT 'oilfacility',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -65740,36 +63276,11 @@ SELECT 'oilfacility',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oilfacility');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'emergencyprotectionobj_point',
        '{
         "name": "emergencyprotectionobj_point",
@@ -65778,6 +63289,13 @@ SELECT 'emergencyprotectionobj_point',
         "tableName": "emergencyprotectionobj_point",
         "originName": "EmergencyProtectionObj",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -65803,7 +63321,7 @@ SELECT 'emergencyprotectionobj_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "Код объекта",
             "choice": null,
             "hidden": false,
@@ -66330,7 +63848,7 @@ SELECT 'emergencyprotectionobj_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Справочник: Статус объекта",
             "choice": null,
             "hidden": false,
@@ -66371,7 +63889,7 @@ SELECT 'emergencyprotectionobj_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Справочник: Значение объекта",
             "choice": null,
             "hidden": false,
@@ -66524,54 +64042,11 @@ SELECT 'emergencyprotectionobj_point',
            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
        }
  
-       return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'emergencyprotectionobj_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'manufacturing_point',
        '{
         "name": "manufacturing_point",
@@ -66580,6 +64055,13 @@ SELECT 'manufacturing_point',
         "tableName": "manufacturing_point",
         "originName": "Manufacturing",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -66605,7 +64087,7 @@ SELECT 'manufacturing_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Предприятия и объекты добывающей и обрабатывающей промышленности»",
             "choice": null,
             "hidden": false,
@@ -67199,7 +64681,7 @@ SELECT 'manufacturing_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -67240,7 +64722,7 @@ SELECT 'manufacturing_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -67351,54 +64833,11 @@ SELECT 'manufacturing_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'manufacturing_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'authorityservice_point',
        '{
         "name": "authorityservice_point",
@@ -67407,6 +64846,13 @@ SELECT 'authorityservice_point',
         "tableName": "authorityservice_point",
         "originName": "AuthorityService",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -67432,7 +64878,7 @@ SELECT 'authorityservice_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Прочие объекты обслуживания»",
             "choice": null,
             "hidden": false,
@@ -68014,7 +65460,7 @@ SELECT 'authorityservice_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -68055,7 +65501,7 @@ SELECT 'authorityservice_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -68216,54 +65662,11 @@ SELECT 'authorityservice_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'authorityservice_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'sport_point',
        '{
         "name": "sport_point",
@@ -68272,6 +65675,13 @@ SELECT 'sport_point',
         "tableName": "sport_point",
         "originName": "Sport",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -68297,7 +65707,7 @@ SELECT 'sport_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты физкультурного и спортивного назначения»",
             "choice": null,
             "hidden": false,
@@ -68771,7 +66181,7 @@ SELECT 'sport_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -68812,7 +66222,7 @@ SELECT 'sport_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -68917,54 +66327,11 @@ SELECT 'sport_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sport_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'recreation_point',
        '{
         "name": "recreation_point",
@@ -68973,6 +66340,13 @@ SELECT 'recreation_point',
         "tableName": "recreation_point",
         "originName": "Recreation",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -68998,7 +66372,7 @@ SELECT 'recreation_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты отдыха и туризма»",
             "choice": null,
             "hidden": false,
@@ -69636,7 +67010,7 @@ SELECT 'recreation_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -69677,7 +67051,7 @@ SELECT 'recreation_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -69848,54 +67222,11 @@ SELECT 'recreation_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'recreation_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'public_point',
        '{
         "name": "public_point",
@@ -69904,6 +67235,13 @@ SELECT 'public_point',
         "tableName": "public_point",
         "originName": "Public",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -69929,7 +67267,7 @@ SELECT 'public_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "«Общественные пространства»",
             "choice": null,
             "hidden": false,
@@ -70427,7 +67765,7 @@ SELECT 'public_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -70468,7 +67806,7 @@ SELECT 'public_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -70597,54 +67935,11 @@ SELECT 'public_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'public_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'waterprotectionzone',
        '{
         "name": "waterprotectionzone",
@@ -70653,6 +67948,13 @@ SELECT 'waterprotectionzone',
         "tableName": "waterprotectionzone",
         "originName": "WaterProtectionZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -70678,7 +67980,7 @@ SELECT 'waterprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Водоохранные зоны»",
             "choice": null,
             "hidden": false,
@@ -70779,7 +68081,7 @@ SELECT 'waterprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -70841,37 +68143,11 @@ SELECT 'waterprotectionzone',
         "description": "Класс объектов «Водоохранные зоны»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterprotectionzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'envdanger_point',
        '{
         "name": "envdanger_point",
@@ -70880,6 +68156,13 @@ SELECT 'envdanger_point',
         "tableName": "envdanger_point",
         "originName": "EnvDanger",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -70905,7 +68188,7 @@ SELECT 'envdanger_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
             "choice": null,
             "hidden": false,
@@ -71159,55 +68442,11 @@ SELECT 'envdanger_point',
         "description": "Класс объектов «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
         "geometryType": "Point",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envdanger_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'prison',
        '{
         "name": "prison",
@@ -71216,6 +68455,13 @@ SELECT 'prison',
         "tableName": "prison",
         "originName": "Prison",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -71241,7 +68487,7 @@ SELECT 'prison',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты ФСИН России»",
             "choice": null,
             "hidden": false,
@@ -71527,7 +68773,7 @@ SELECT 'prison',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -71576,7 +68822,7 @@ SELECT 'prison',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -71665,36 +68911,11 @@ SELECT 'prison',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'prison');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'greeneryplanting',
        '{
         "name": "greeneryplanting",
@@ -71703,6 +68924,13 @@ SELECT 'greeneryplanting',
         "tableName": "greeneryplanting",
         "originName": "GreeneryPlanting",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -71728,7 +68956,7 @@ SELECT 'greeneryplanting',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Территории зеленого фонда городских и сельских поселений»",
             "choice": null,
             "hidden": false,
@@ -71986,7 +69214,7 @@ SELECT 'greeneryplanting',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -72059,36 +69287,11 @@ SELECT 'greeneryplanting',
         errors.push({attribute: ''ozsn_type'', error: ''Значение заполняется только для объекта "Озелененные территории специального назначения"''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'greeneryplanting');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'forestpark',
        '{
         "name": "forestpark",
@@ -72097,6 +69300,13 @@ SELECT 'forestpark',
         "tableName": "forestpark",
         "originName": "ForestPark",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -72122,7 +69332,7 @@ SELECT 'forestpark',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Лесопарковый зеленый пояс»",
             "choice": null,
             "hidden": false,
@@ -72319,7 +69529,7 @@ SELECT 'forestpark',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -72381,37 +69591,11 @@ SELECT 'forestpark',
         "description": "Класс объектов «Лесопарковый зеленый пояс»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'forestpark');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'oilfacility_point',
        '{
         "name": "oilfacility_point",
@@ -72420,6 +69604,13 @@ SELECT 'oilfacility_point',
         "tableName": "oilfacility_point",
         "originName": "OilFacility",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -72445,7 +69636,7 @@ SELECT 'oilfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "Код объекта",
             "choice": null,
             "hidden": false,
@@ -72932,7 +70123,7 @@ SELECT 'oilfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -72973,7 +70164,7 @@ SELECT 'oilfacility_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -73070,54 +70261,11 @@ SELECT 'oilfacility_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oilfacility_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'transpsanitarygapzone',
        '{
         "name": "transpsanitarygapzone",
@@ -73126,6 +70274,13 @@ SELECT 'transpsanitarygapzone',
         "tableName": "transpsanitarygapzone",
         "originName": "TranspSanitaryGapZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -73151,7 +70306,7 @@ SELECT 'transpsanitarygapzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций»",
             "choice": null,
             "hidden": false,
@@ -73292,7 +70447,7 @@ SELECT 'transpsanitarygapzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -73354,37 +70509,11 @@ SELECT 'transpsanitarygapzone',
         "description": "Класс объектов «Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transpsanitarygapzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'sanitaryprotectionzone',
        '{
         "name": "sanitaryprotectionzone",
@@ -73393,6 +70522,13 @@ SELECT 'sanitaryprotectionzone',
         "tableName": "sanitaryprotectionzone",
         "originName": "SanitaryProtectionZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -73418,7 +70554,7 @@ SELECT 'sanitaryprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Санитарно-защитная зона»",
             "choice": null,
             "hidden": false,
@@ -73666,7 +70802,7 @@ SELECT 'sanitaryprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -73728,37 +70864,11 @@ SELECT 'sanitaryprotectionzone',
         "description": "Класс объектов «Санитарно-защитная зона»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sanitaryprotectionzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'drinkwaterprotectionzone',
        '{
         "name": "drinkwaterprotectionzone",
@@ -73767,6 +70877,13 @@ SELECT 'drinkwaterprotectionzone',
         "tableName": "drinkwaterprotectionzone",
         "originName": "DrinkWaterProtectionZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -73792,7 +70909,7 @@ SELECT 'drinkwaterprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения»",
             "choice": null,
             "hidden": false,
@@ -73929,7 +71046,7 @@ SELECT 'drinkwaterprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -73991,37 +71108,11 @@ SELECT 'drinkwaterprotectionzone',
         "description": "Класс объектов «Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'drinkwaterprotectionzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'admerf',
        '{
         "name": "admerf",
@@ -74030,6 +71121,13 @@ SELECT 'admerf',
         "tableName": "admerf",
         "originName": "AdmeRF",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -74055,7 +71153,7 @@ SELECT 'admerf',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "Код объекта",
             "choice": null,
             "hidden": false,
@@ -74185,37 +71283,11 @@ SELECT 'admerf',
         "description": "Класс объектов «Территория Российской Федерации»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admerf');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'resortprotectionzone',
        '{
         "name": "resortprotectionzone",
@@ -74224,6 +71296,13 @@ SELECT 'resortprotectionzone',
         "tableName": "resortprotectionzone",
         "originName": "ResortProtectionZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -74249,7 +71328,7 @@ SELECT 'resortprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Зоны округов санитарной (горно-санитарной) охраны»",
             "choice": null,
             "hidden": false,
@@ -74382,7 +71461,7 @@ SELECT 'resortprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -74444,37 +71523,11 @@ SELECT 'resortprotectionzone',
         "description": "Класс объектов «Зоны округов санитарной (горно-санитарной) охраны»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortprotectionzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'landuse',
        '{
         "name": "landuse",
@@ -74483,6 +71536,13 @@ SELECT 'landuse',
         "tableName": "landuse",
         "originName": "LandUse",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -74508,7 +71568,7 @@ SELECT 'landuse',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Земли по категориям»",
             "choice": null,
             "hidden": false,
@@ -74561,7 +71621,7 @@ SELECT 'landuse',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -74623,37 +71683,11 @@ SELECT 'landuse',
         "description": "Класс объектов «Земли по категориям»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'landuse');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'mineralarea',
        '{
         "name": "mineralarea",
@@ -74662,6 +71696,13 @@ SELECT 'mineralarea',
         "tableName": "mineralarea",
         "originName": "MineralArea",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -74687,7 +71728,7 @@ SELECT 'mineralarea',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Участки недр, предоставленных для добычи полезных ископаемых, а также в целях, не связанных с их добычей»",
             "choice": null,
             "hidden": false,
@@ -74985,37 +72026,11 @@ SELECT 'mineralarea',
         "description": "Класс объектов «Участки недр, предоставленных для добычи полезных ископаемых, а также в целях,не связанных с их добычей»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mineralarea');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'engsanitarygapzone',
        '{
         "name": "engsanitarygapzone",
@@ -75024,6 +72039,13 @@ SELECT 'engsanitarygapzone',
         "tableName": "engsanitarygapzone",
         "originName": "EngSanitaryGapZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -75049,7 +72071,7 @@ SELECT 'engsanitarygapzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций»",
             "choice": null,
             "hidden": false,
@@ -75182,7 +72204,7 @@ SELECT 'engsanitarygapzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -75244,37 +72266,11 @@ SELECT 'engsanitarygapzone',
         "description": "Класс объектов «Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engsanitarygapzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'otherzone',
        '{
         "name": "otherzone",
@@ -75283,6 +72279,13 @@ SELECT 'otherzone',
         "tableName": "otherzone",
         "originName": "OtherZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -75308,7 +72311,7 @@ SELECT 'otherzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Иные зоны с особыми условиями использования»",
             "choice": null,
             "hidden": false,
@@ -75498,7 +72501,7 @@ SELECT 'otherzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -75571,36 +72574,11 @@ SELECT 'otherzone',
           errors.push({attribute: ''aeroszone'', error: ''Значение заполняется только для объекта "Приаэродромная территория"''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'envdanger',
        '{
         "name": "envdanger",
@@ -75609,6 +72587,13 @@ SELECT 'envdanger',
         "tableName": "envdanger",
         "originName": "EnvDanger",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -75634,7 +72619,7 @@ SELECT 'envdanger',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
             "choice": null,
             "hidden": false,
@@ -75888,37 +72873,11 @@ SELECT 'envdanger',
         "description": "Класс объектов «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envdanger');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'streetv_line',
        '{
         "name": "streetv_line",
@@ -75927,6 +72886,13 @@ SELECT 'streetv_line',
         "tableName": "streetv_line",
         "originName": "StreetV",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -75952,7 +72918,7 @@ SELECT 'streetv_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Улично-дорожная сеть сельского поселения»",
             "choice": null,
             "hidden": false,
@@ -76280,7 +73246,7 @@ SELECT 'streetv_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -76321,7 +73287,7 @@ SELECT 'streetv_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -76435,36 +73401,11 @@ SELECT 'streetv_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'streetv_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'otherprotectionzone',
        '{
         "name": "otherprotectionzone",
@@ -76473,6 +73414,13 @@ SELECT 'otherprotectionzone',
         "tableName": "otherprotectionzone",
         "originName": "OtherProtectionZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -76498,7 +73446,7 @@ SELECT 'otherprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Охранная зона иного назначения»",
             "choice": null,
             "hidden": false,
@@ -76627,7 +73575,7 @@ SELECT 'otherprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -76689,37 +73637,11 @@ SELECT 'otherprotectionzone',
         "description": "Класс объектов «Охранная зона иного назначения»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherprotectionzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'protectionzone',
        '{
         "name": "protectionzone",
@@ -76728,6 +73650,13 @@ SELECT 'protectionzone',
         "tableName": "protectionzone",
         "originName": "ProtectionZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -76753,7 +73682,7 @@ SELECT 'protectionzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "",
             "choice": null,
             "hidden": false,
@@ -76890,7 +73819,7 @@ SELECT 'protectionzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -76952,37 +73881,11 @@ SELECT 'protectionzone',
         "description": "Класс объектов «Зоны охраняемых объектов»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'protectionzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'hydro',
        '{
         "name": "hydro",
@@ -76991,6 +73894,13 @@ SELECT 'hydro',
         "tableName": "hydro",
         "originName": "Hydro",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -77016,7 +73926,7 @@ SELECT 'hydro',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Поверхностные водные объекты»",
             "choice": null,
             "hidden": false,
@@ -77281,7 +74191,7 @@ SELECT 'hydro',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -77351,36 +74261,11 @@ SELECT 'hydro',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
       }
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydro');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'floodarea',
        '{
         "name": "floodarea",
@@ -77389,6 +74274,13 @@ SELECT 'floodarea',
         "tableName": "floodarea",
         "originName": "FloodArea",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -77414,7 +74306,7 @@ SELECT 'floodarea',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Зоны затопления и подтопления»",
             "choice": null,
             "hidden": false,
@@ -77597,7 +74489,7 @@ SELECT 'floodarea',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -77678,36 +74570,11 @@ SELECT 'floodarea',
           errors.push({attribute: ''uderfl_t'', error: ''Значение заполняется только для объекта "Зона подтопления"''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'floodarea');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'areabasedevelopment',
        '{
         "name": "areabasedevelopment",
@@ -77716,6 +74583,13 @@ SELECT 'areabasedevelopment',
         "tableName": "areabasedevelopment",
         "originName": "AreaBaseDevelopment",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -77741,7 +74615,7 @@ SELECT 'areabasedevelopment',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Комплексное развитие территорий»",
             "choice": null,
             "hidden": false,
@@ -77950,7 +74824,7 @@ SELECT 'areabasedevelopment',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -77991,7 +74865,7 @@ SELECT 'areabasedevelopment',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -78077,36 +74951,11 @@ SELECT 'areabasedevelopment',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
       }
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'areabasedevelopment');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'fishprotectionzone',
        '{
         "name": "fishprotectionzone",
@@ -78115,6 +74964,13 @@ SELECT 'fishprotectionzone',
         "tableName": "fishprotectionzone",
         "originName": "FishProtectionZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -78140,7 +74996,7 @@ SELECT 'fishprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Рыбоохранная и рыбохозяйственная заповедная зоны»",
             "choice": null,
             "hidden": false,
@@ -78269,7 +75125,7 @@ SELECT 'fishprotectionzone',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -78331,37 +75187,11 @@ SELECT 'fishprotectionzone',
         "description": "Класс объектов «Рыбоохранная и рыбохозяйственная заповедная зоны»",
         "geometryType": "MultiPolygon",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'fishprotectionzone');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'waterways_line',
        '{
         "name": "waterways_line",
@@ -78370,6 +75200,13 @@ SELECT 'waterways_line',
         "tableName": "waterways_line",
         "originName": "WaterWays",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -78395,7 +75232,7 @@ SELECT 'waterways_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Водные пути»",
             "choice": null,
             "hidden": false,
@@ -78692,7 +75529,7 @@ SELECT 'waterways_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -78733,7 +75570,7 @@ SELECT 'waterways_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -78830,36 +75667,11 @@ SELECT 'waterways_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterways_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'admborder_line',
        '{
         "name": "admborder_line",
@@ -78868,6 +75680,13 @@ SELECT 'admborder_line',
         "tableName": "admborder_line",
         "originName": "AdmBorder",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -78893,7 +75712,7 @@ SELECT 'admborder_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "Код объекта",
             "choice": null,
             "hidden": false,
@@ -79044,37 +75863,11 @@ SELECT 'admborder_line',
         "description": "Границы единиц административно-территориального деления Российской Федерации",
         "geometryType": "MultiLineString",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admborder_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'hydro_line',
        '{
         "name": "hydro_line",
@@ -79083,6 +75876,13 @@ SELECT 'hydro_line',
         "tableName": "hydro_line",
         "originName": "Hydro",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -79108,7 +75908,7 @@ SELECT 'hydro_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Поверхностные водные объекты»",
             "choice": null,
             "hidden": false,
@@ -79373,7 +76173,7 @@ SELECT 'hydro_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -79444,36 +76244,11 @@ SELECT 'hydro_line',
       }
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydro_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'sewerpipeline_line',
        '{
         "name": "sewerpipeline_line",
@@ -79482,6 +76257,13 @@ SELECT 'sewerpipeline_line',
         "tableName": "sewerpipeline_line",
         "originName": "SewerPipeline",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -79507,7 +76289,7 @@ SELECT 'sewerpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Сети водоотведения»",
             "choice": null,
             "hidden": false,
@@ -79849,7 +76631,7 @@ SELECT 'sewerpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -79890,7 +76672,7 @@ SELECT 'sewerpipeline_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -79987,36 +76769,11 @@ SELECT 'sewerpipeline_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sewerpipeline_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'engprotectionobj_line',
        '{
         "name": "engprotectionobj_line",
@@ -80025,6 +76782,13 @@ SELECT 'engprotectionobj_line',
         "tableName": "engprotectionobj_line",
         "originName": "EngProtectionObj",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -80050,7 +76814,7 @@ SELECT 'engprotectionobj_line',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты инженерной защиты от опасных геологических процессов»",
             "choice": null,
             "hidden": false,
@@ -80328,7 +77092,7 @@ SELECT 'engprotectionobj_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -80369,7 +77133,7 @@ SELECT 'engprotectionobj_line',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -80466,36 +77230,11 @@ SELECT 'engprotectionobj_line',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = obj.classid + ''0'' + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engprotectionobj_line');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'naturalriskzone_point',
        '{
         "name": "naturalriskzone_point",
@@ -80504,6 +77243,13 @@ SELECT 'naturalriskzone_point',
         "tableName": "naturalriskzone_point",
         "originName": "NaturalRiskZone",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -80529,7 +77275,7 @@ SELECT 'naturalriskzone_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": "Код объекта",
             "choice": null,
             "hidden": false,
@@ -80894,55 +77640,11 @@ SELECT 'naturalriskzone_point',
         "description": "Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера»",
         "geometryType": "Point",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'naturalriskzone_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'natureprotectarea_point',
        '{
         "name": "natureprotectarea_point",
@@ -80951,6 +77653,13 @@ SELECT 'natureprotectarea_point',
         "tableName": "natureprotectarea_point",
         "originName": "NatureProtectArea",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -80976,7 +77685,7 @@ SELECT 'natureprotectarea_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Особо охраняемые природные территории»",
             "choice": null,
             "hidden": false,
@@ -81221,7 +77930,7 @@ SELECT 'natureprotectarea_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -81262,7 +77971,7 @@ SELECT 'natureprotectarea_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -81359,54 +78068,11 @@ SELECT 'natureprotectarea_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'natureprotectarea_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'technoriskarea_point',
        '{
         "name": "technoriskarea_point",
@@ -81415,6 +78081,13 @@ SELECT 'technoriskarea_point',
         "tableName": "technoriskarea_point",
         "originName": "TechnoRiskArea",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -81440,7 +78113,7 @@ SELECT 'technoriskarea_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
             "choice": null,
             "hidden": false,
@@ -81750,55 +78423,11 @@ SELECT 'technoriskarea_point',
         "description": "Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
         "geometryType": "Point",
         "customRuleFunction": null
-      }',
-       NULL,
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'technoriskarea_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'resortarea_point',
        '{
         "name": "resortarea_point",
@@ -81807,6 +78436,13 @@ SELECT 'resortarea_point',
         "tableName": "resortarea_point",
         "originName": "ResortArea",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -81832,7 +78468,7 @@ SELECT 'resortarea_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Лечебно-оздоровительные местности и курорты»",
             "choice": null,
             "hidden": false,
@@ -82053,7 +78689,7 @@ SELECT 'resortarea_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -82094,7 +78730,7 @@ SELECT 'resortarea_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -82188,54 +78824,11 @@ SELECT 'resortarea_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortarea_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'prison_point',
        '{
         "name": "prison_point",
@@ -82244,6 +78837,13 @@ SELECT 'prison_point',
         "tableName": "prison_point",
         "originName": "Prison",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -82269,7 +78869,7 @@ SELECT 'prison_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты ФСИН России»",
             "choice": null,
             "hidden": false,
@@ -82555,7 +79155,7 @@ SELECT 'prison_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -82604,7 +79204,7 @@ SELECT 'prison_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -82693,54 +79293,11 @@ SELECT 'prison_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'prison_point');
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule, custom_rule)
 SELECT 'wildlifeprotection_point',
        '{
         "name": "wildlifeprotection_point",
@@ -82749,6 +79306,13 @@ SELECT 'wildlifeprotection_point',
         "tableName": "wildlifeprotection_point",
         "originName": "WildlifeProtection",
         "properties": [
+          {
+            "name": "ruleid",
+            "title": "Идентификатор стиля",
+            "hidden": true,
+            "valueType": "STRING",
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+          },
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
@@ -82774,7 +79338,7 @@ SELECT 'wildlifeprotection_point',
             "patternDescription": ""
           },
           {
-            "name": "CLASSID",
+            "name": "classid",
             "title": " «Объекты государственной системы наблюдений за состоянием окружающей среды»",
             "choice": null,
             "hidden": false,
@@ -83068,7 +79632,7 @@ SELECT 'wildlifeprotection_point',
             "patternDescription": ""
           },
           {
-            "name": "STATUS",
+            "name": "status",
             "title": "Статус объекта",
             "choice": null,
             "hidden": false,
@@ -83109,7 +79673,7 @@ SELECT 'wildlifeprotection_point',
             "patternDescription": ""
           },
           {
-            "name": "REG_STATUS",
+            "name": "reg_status",
             "title": "Значение объекта",
             "choice": null,
             "hidden": false,
@@ -83206,50 +79770,7 @@ SELECT 'wildlifeprotection_point',
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      return errors;',
-       'var results = {};
-
-      var regStatus;
-      if (!obj.reg_status) {
-        regStatus = 0;
-      } else {
-        var nRegStatus = Number(obj.reg_status);
-        if (!nRegStatus) {
-          regStatus = 0;
-        } else {
-          if (nRegStatus < 1 || nRegStatus > 6) {
-            regStatus = 0;
-          } else if (nRegStatus > 3) {
-            regStatus = 3;
-          } else {
-            regStatus = nRegStatus;
-          }
-        }
-      }
-
-      var status;
-      if (!obj.status) {
-        status = 0;
-      } else {
-        var nStatus = Number(obj.status);
-        if (!nStatus) {
-          status = 0;
-        } else {
-          if (nStatus > 0 && nStatus <= 4) {
-            status = obj.status;
-          } else {
-            status = 0;
-          }
-        }
-      }
-
-      if (!obj.classid) {
-        results.ruleid = '''';
-      } else {
-        results.ruleid = String(obj.classid) + regStatus + status;
-      }
-
-      return results;'
+      return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wildlifeprotection_point');
 
 INSERT INTO data.schemas (name, class_rule)
@@ -83564,26 +80085,8 @@ SELECT 'mp',
             {
               "name": "ruleid",
               "title": "Идентификатор стиля",
-              "choice": null,
               "hidden": true,
-              "length": -1,
-              "pattern": null,
-              "multiple": false,
-              "required": false,
-              "maxLength": -1,
-              "minLength": -1,
-              "valueType": "INT",
-              "whiteSpace": "collapse",
-              "description": "",
-              "totalDigits": -1,
-              "enumerations": [],
-              "maxInclusive": -1,
-              "minInclusive": -1,
-              "allowedValues": [],
-              "updateability": null,
-              "fractionDigits": -1,
-              "sequenceNumber": 12,
-              "patternDescription": ""
+              "valueType": "STRING"
             }
           ],
           "description": "Образуемые земельные участки",

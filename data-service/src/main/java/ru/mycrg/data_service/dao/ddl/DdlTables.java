@@ -7,6 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.data_service.dao.wellknown_formula_generator.IWellKnownFormulaGenerator;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -16,9 +17,13 @@ import ru.mycrg.data_service_contract.enums.ForeignKeyType;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.data_service.dao.config.DaoProperties.*;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 
@@ -29,11 +34,16 @@ public class DdlTables {
 
     private final JdbcTemplate jdbcTemplate;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
+    private final Map<String, IWellKnownFormulaGenerator> wellKnownFormulaGenerators;
 
     public DdlTables(JdbcTemplate jdbcTemplate,
-                     SchemasAndTablesRepository schemasAndTablesRepository) {
+                     SchemasAndTablesRepository schemasAndTablesRepository,
+                     List<IWellKnownFormulaGenerator> generators) {
         this.jdbcTemplate = jdbcTemplate;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
+        this.wellKnownFormulaGenerators = generators.stream()
+                                                    .collect(toMap(IWellKnownFormulaGenerator::getType,
+                                                                   Function.identity()));
     }
 
     public void create(String targetSchema, TableCreateDto dto, List<SimplePropertyDto> schemaProperties) {
@@ -199,14 +209,13 @@ public class DdlTables {
                 result = attrDescription.getName() + " character varying";
         }
 
-        String formula = attrDescription.getCalculatedValueWellKnownFormula();
-        if (formula != null) {
-            if (formula.equals("st_area")) {
-                result = result + " GENERATED ALWAYS AS (public.st_area(shape)) STORED";
-            } else if (formula.equals("st_length")) {
-                result = result + " GENERATED ALWAYS AS (public.st_length(shape)) STORED";
+        String formulaName = attrDescription.getCalculatedValueWellKnownFormula();
+        if (formulaName != null) {
+            IWellKnownFormulaGenerator formulaGenerator = wellKnownFormulaGenerators.get(formulaName);
+            if (nonNull(formulaGenerator)) {
+                result += formulaGenerator.generate();
             } else {
-                log.warn("Unknown valueWellKnownFormula: {}", formula);
+                log.warn("Unknown valueWellKnownFormula: {}", formulaName);
             }
         }
 

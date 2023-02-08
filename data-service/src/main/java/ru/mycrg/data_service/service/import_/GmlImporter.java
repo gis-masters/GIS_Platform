@@ -190,7 +190,7 @@ public class GmlImporter {
 
                 mediator.execute(new CreateTableRequest(table, tableQualifier));
 
-                int countOfAddedRecords = addRecordsToTable(tableQualifier, featureData);
+                int countOfAddedRecords = addRecordsToTable(tableQualifier, featureData, schema);
 
                 geometryDao.makeValid(tableQualifier.getSchema(), tableQualifier.getTable());
 
@@ -291,12 +291,13 @@ public class GmlImporter {
     }
 
     private int addRecordsToTable(ResourceQualifier tableQualifier,
-                                  FeatureData propertiesBySchema) throws CrgDaoException {
+                                  FeatureData propertiesBySchema,
+                                  SchemaDto schema) throws CrgDaoException {
         List<FeatureObject> objects = propertiesBySchema.getObjects();
 
         Map<String, Object>[] objectList = preparePropsToDB(objects);
 
-        recordsDao.addRecordsAsBatch(tableQualifier, objectList);
+        recordsDao.addRecordsAsBatch(tableQualifier, objectList, schema);
 
         return objectList.length;
     }

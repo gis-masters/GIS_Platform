@@ -16,11 +16,13 @@ import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.geo_json.Feature;
 
 import java.util.*;
 
 import static com.google.common.primitives.Longs.asList;
+import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
 import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
@@ -48,8 +50,16 @@ public class RecordsDao {
     public IRecord addRecord(@NotNull ResourceQualifier qualifier,
                              @NotNull IRecord record,
                              @NotNull SchemaDto schema) throws CrgDaoException {
+        Map<String, Object> recordWithoutGeneratedFields = new HashMap<>();
+
+        record.getContent().forEach((key, value) -> {
+            if (!checkIfPropertiesIsGenerated(schema.getProperties(), key)) {
+                recordWithoutGeneratedFields.put(key, value);
+            }
+        });
+
         Feature savedFeature = spatialRecordsDao.save(qualifier,
-                                                      new Feature(record.getContent()),
+                                                      new Feature(recordWithoutGeneratedFields),
                                                       schema);
         record.getContent().put(ID.getName(), savedFeature.getId());
 
@@ -64,18 +74,24 @@ public class RecordsDao {
     }
 
     public void addRecordsAsBatch(@NotNull ResourceQualifier rIdentifier,
-                                  @NotNull Map<String, Object>[] body) throws CrgDaoException {
+                                  @NotNull Map<String, Object>[] body,
+                                  SchemaDto schema) throws CrgDaoException {
         try {
             Set<String> columnNames = body[0].keySet();
             StringBuilder queryColumns = new StringBuilder();
             StringBuilder queryValues = new StringBuilder();
             for (int i = 0; i < columnNames.size(); i++) {
-                if (i == columnNames.size() - 1) {
-                    queryColumns.append(columnNames.toArray()[i]);
-                    queryValues.append(" :").append(columnNames.toArray()[i]);
+                String currentName = columnNames.toArray(String[]::new)[i];
+                if (!checkIfPropertiesIsGenerated(schema.getProperties(), currentName)) {
+                    if (i == columnNames.size() - 1) {
+                        queryColumns.append(currentName);
+                        queryValues.append(" :").append(currentName);
+                    } else {
+                        queryColumns.append(currentName).append(", ");
+                        queryValues.append(" :").append(currentName).append(",");
+                    }
                 } else {
-                    queryColumns.append(columnNames.toArray()[i]).append(", ");
-                    queryValues.append(" :").append(columnNames.toArray()[i]).append(",");
+                    log.debug("Поле {} было пропущено, т.к. оно генерируемое.", currentName);
                 }
             }
 
@@ -278,5 +294,14 @@ public class RecordsDao {
 
     public void removeRecord(ResourceQualifier rQualifier, Long id) throws CrgDaoException {
         baseDao.removeRecord(rQualifier, ID.getName(), id);
+    }
+
+    private boolean checkIfPropertiesIsGenerated(List<SimplePropertyDto> properties, String tName) {
+        return properties
+                .stream()
+                .filter(property -> property.getName().equalsIgnoreCase(tName))
+                .anyMatch(property -> nonNull(
+                        property.getCalculatedValueWellKnownFormula())
+                        && !property.getCalculatedValueWellKnownFormula().isEmpty());
     }
 }

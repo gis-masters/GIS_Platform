@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.IResourceModel;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.*;
@@ -14,9 +15,12 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.Mediator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
@@ -68,6 +72,8 @@ public class TableRecordsController {
         SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
                                         .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
 
+        throwIfPropertiesIsGenerated(schema, feature.getProperties());
+
         feature.setSrs(table.getCrs());
         Map<String, Object> props = schemaService.excludeUnknownProperties(schema, feature.getProperties());
         feature.setProperties(props);
@@ -90,6 +96,9 @@ public class TableRecordsController {
         IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
         SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
                                         .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
+
+        throwIfPropertiesIsGenerated(schema, feature.getProperties());
+
         Map<String, Object> props = schemaService.excludeUnknownProperties(schema, feature.getProperties());
 
         feature.setSrs(table.getCrs());
@@ -113,6 +122,9 @@ public class TableRecordsController {
         IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
         SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
                                         .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
+
+        throwIfPropertiesIsGenerated(schema, properties);
+
         Map<String, Object> props = schemaService.excludeUnknownProperties(schema, properties);
 
         mediator.execute(
@@ -146,5 +158,29 @@ public class TableRecordsController {
         }
 
         return ResponseEntity.noContent().build();
+    }
+
+    private void throwIfPropertiesIsGenerated(SchemaDto schema, Map<String, Object> properties) {
+        List<String> generatedFields = new ArrayList<>();
+
+        List<String> propertiesWithWellKnownFormula = schema
+                .getProperties().stream()
+                .filter(property -> nonNull(property.getCalculatedValueWellKnownFormula())
+                        && !property.getCalculatedValueWellKnownFormula().isEmpty())
+                .map(property -> property.getName().toLowerCase())
+                .collect(Collectors.toList());
+
+        properties.forEach((key, value) -> {
+            if (propertiesWithWellKnownFormula.contains(key.toLowerCase())) {
+                generatedFields.add(key);
+            }
+        });
+
+        if (!generatedFields.isEmpty()) {
+            String msg = String.format("Свойства: %s не могут быть созданы, так как они генерируемые.",
+                                       String.join(",", generatedFields));
+
+            throw new BadRequestException(msg);
+        }
     }
 }

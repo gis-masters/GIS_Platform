@@ -3,10 +3,12 @@ package ru.mycrg.data_service.service.cqrs.tables.handlers;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.ddl.DdlTables;
+import ru.mycrg.data_service.dao.wellknown_formula_generator.IWellKnownFormulaGenerator;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
@@ -20,11 +22,12 @@ import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.mediator.IRequestHandler;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
@@ -38,17 +41,22 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     private final PermissionsService permissionsService;
     private final SchemaService schemaService;
     private final IResourceProtector datasetProtector;
+    private final Map<String, IWellKnownFormulaGenerator> wellKnownFormulaGenerators;
 
     public CreateTableRequestHandler(DdlTables ddlTables,
                                      SchemasAndTablesRepository schemasAndTablesRepository,
                                      PermissionsService permissionsService,
                                      SchemaService schemaService,
-                                     IResourceProtector datasetProtector) {
+                                     IResourceProtector datasetProtector,
+                                     List<IWellKnownFormulaGenerator> generators) {
         this.ddlTables = ddlTables;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
         this.schemaService = schemaService;
         this.datasetProtector = datasetProtector;
+        this.wellKnownFormulaGenerators = generators.stream()
+                                                    .collect(toMap(IWellKnownFormulaGenerator::getType,
+                                                                   Function.identity()));
     }
 
     @Override
@@ -75,6 +83,35 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         throwIfNoGeometryInSchema(schema);
         String tableName = buildTableName(schema.getTableName(), dataset.getId(), dto.getName());
         dto.setName(tableName);
+
+        List<ErrorInfo> errors = new ArrayList<>();
+        schema.getProperties().forEach(property -> {
+            String formulaName = property.getCalculatedValueWellKnownFormula();
+            if (formulaName != null) {
+                IWellKnownFormulaGenerator formulaGenerator = wellKnownFormulaGenerators.get(formulaName);
+                if (nonNull(formulaGenerator)) {
+                    String message = formulaGenerator.validate(schema);
+                    if (!message.isEmpty()) {
+                        ErrorInfo error = new ErrorInfo();
+                        error.setField(property.getName());
+                        error.setMessage(message);
+
+                        errors.add(error);
+                    }
+                } else {
+                    ErrorInfo error = new ErrorInfo();
+                    error.setField(property.getName());
+                    error.setMessage("Неизвестная valueWellKnownFormula: " + formulaName);
+
+                    errors.add(error);
+                }
+            }
+        });
+        if (!errors.isEmpty()) {
+            String msg = "Argument validation exception";
+
+            throw new BadRequestException(msg, errors);
+        }
 
         try {
             ddlTables.create(datasetId, dto, schema.getProperties());

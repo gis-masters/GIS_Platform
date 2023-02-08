@@ -35,6 +35,21 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         createSchema(prepareFunctionalZoneWithCalculatedFields());
     }
 
+    @When("Существует схема с wellKnownFormula - rule_id_terr_Rf_subRf без требуемых полей")
+    public void createSchemaWithStAreaFormulaWithoutRequiredField() {
+        createSchema(prepareFunctionalZoneWithTerrRfFormulaWithoutRequiredField());
+    }
+
+    @When("Существует схема с wellKnownFormula - rule_id_terr_Rf_subRf с неподходящими типами полей")
+    public void createSchemaWithStAreaFormulaWithNotAllowedTypes() {
+        createSchema(prepareFunctionalZoneWithTerrRf_SubRfFormulaWithNotAllowedFieldType());
+    }
+
+    @When("Существует схема с wellKnownFormula - rule_id_terr_Rf_subRf")
+    public void createSchemaWithStAreaFormulaWithRequiredField() {
+        createSchema(prepareFunctionalZoneWithTerrRf_SubRfFormulaWithRequiredField());
+    }
+
     @When("Пользователь отправляет POST запрос на создание новой схемы")
     public void createNewSchemaPost() {
         createSchema();
@@ -175,5 +190,84 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         dto.setProperties(properties);
 
         return dto;
+    }
+
+    private SchemaDto prepareFunctionalZoneWithTerrRfFormulaWithoutRequiredField() {
+        currentSchemaName = "fun_zone_wellknownformula_without_required_field";
+
+        List<SimplePropertyDto> properties = new ArrayList<>();
+        SimplePropertyDto globalid = new SimplePropertyDto();
+        globalid.setName("globalid");
+        globalid.setTitle("Идентификатор объекта");
+        globalid.setValueType("STRING");
+
+        SimplePropertyDto ruleid = new SimplePropertyDto();
+        ruleid.setName("ruleid");
+        ruleid.setTitle("Идентификатор стиля");
+        ruleid.setValueType("STRING");
+        ruleid.setCalculatedValueWellKnownFormula("rule_id_terr_Rf_subRf");
+
+        SimplePropertyDto area = new SimplePropertyDto();
+        area.setName("area");
+        area.setTitle("Площадь, га");
+        area.setValueType("DOUBLE");
+
+        SimplePropertyDto shape = new SimplePropertyDto();
+        shape.setName("shape");
+        shape.setTitle("Геометрия");
+        shape.setValueType("GEOMETRY");
+
+        properties.add(globalid);
+        properties.add(ruleid);
+        properties.add(area);
+        properties.add(shape);
+
+        SchemaDto dto = new SchemaDto();
+        dto.setName(currentSchemaName);
+        dto.setTitle("Функциональные зоны тест");
+        dto.setTableName(currentSchemaName);
+        dto.setGeometryType("MultiPolygon");
+        dto.setReadOnly(false);
+        dto.setProperties(properties);
+
+        return dto;
+    }
+
+    private SchemaDto prepareFunctionalZoneWithTerrRf_SubRfFormulaWithRequiredField() {
+        String schemaName = "functionalzone_wellknownformula";
+
+        SchemaDto schemaDto = prepareFunctionalZoneWithTerrRfFormulaWithoutRequiredField();
+        List<SimplePropertyDto> properties = schemaDto.getProperties();
+
+        SimplePropertyDto classid = new SimplePropertyDto();
+        classid.setName("classid");
+        classid.setTitle("Класс данных");
+        classid.setValueType("INT");
+
+        properties.add(classid);
+
+        schemaDto.setName(schemaName);
+        schemaDto.setTableName(schemaName);
+
+        return schemaDto;
+    }
+
+    private SchemaDto prepareFunctionalZoneWithTerrRf_SubRfFormulaWithNotAllowedFieldType() {
+        String schemaName = "fz_wellknownformula_with_not_allowed_types";
+
+        SchemaDto schemaDto = prepareFunctionalZoneWithTerrRfFormulaWithoutRequiredField();
+        List<SimplePropertyDto> properties = schemaDto.getProperties();
+
+        SimplePropertyDto classid = new SimplePropertyDto();
+        classid.setName("classid");
+        classid.setTitle("Класс данных");
+        classid.setValueType("DOUBLE");
+
+        properties.add(classid);
+
+        schemaDto.setName(schemaName);
+        schemaDto.setTableName(schemaName);
+
+        return schemaDto;
     }
 }
