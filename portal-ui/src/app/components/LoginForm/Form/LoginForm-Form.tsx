@@ -73,7 +73,7 @@ export class LoginFormForm extends Component<LoginFormFormProps> {
               )}
             </ActionsLeft>
             <ActionsRight>
-              <Button href='/restore-password' disabled={this.esiaLoading}>
+              <Button routerLink='/restore-password' disabled={this.esiaLoading}>
                 Восстановить пароль
               </Button>
             </ActionsRight>

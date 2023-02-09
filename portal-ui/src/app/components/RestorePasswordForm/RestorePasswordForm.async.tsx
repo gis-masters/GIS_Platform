@@ -76,6 +76,7 @@ export default class RestorePasswordForm extends Component {
         >
           <div className={cnRestorePassword('Title')}>Восстановление пароля</div>
         </Form>
+
         <Dialog open={this.successMessage} onClose={this.onClose} maxWidth='sm' fullWidth>
           <DialogContent>
             {this.successMessage && (

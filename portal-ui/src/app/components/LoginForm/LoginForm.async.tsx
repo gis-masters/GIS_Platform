@@ -98,7 +98,7 @@ export default class LoginForm extends Component<LoginFormProps> {
           />
         )}
 
-        {this.loading && <Loading visible={this.loading} />}
+        <Loading visible={this.loading} />
       </div>
     );
   }

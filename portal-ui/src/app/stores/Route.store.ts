@@ -67,6 +67,8 @@ class Route {
   private async subscribe() {
     await services.provided;
 
+    this.setRoute(this.getDeepestChildren(services.router.routerState.snapshot.root));
+
     services.router.events.subscribe((e: RouterEvent) => {
       this.setRoute(this.getDeepestChildren(services.router.routerState.snapshot.root));
 

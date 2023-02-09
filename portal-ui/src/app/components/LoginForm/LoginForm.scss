@@ -4,6 +4,8 @@ body .LoginForm {
   min-height: 214px;
 
   &_inDialog {
+    position: static;
+
     box-shadow: none;
   }
 }
