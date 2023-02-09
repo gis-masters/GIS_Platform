@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
 
 import { Toast } from '../Toast/Toast';
-import { services } from '../../services/services';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { PropertySchema, PropertyType } from '../../services/data/schema.models';
 import { usersService } from '../../services/auth/users.service';
@@ -57,22 +55,8 @@ export class OrgUsersInviteDialog extends Component<OrgUsersInviteDialogProps> {
 
   @boundMethod
   private async invite(value: UserInvite) {
-    try {
-      await usersService.invite(value.email);
+    await usersService.invite(value.email);
 
-      Toast.success('Пользователь успешно добавлен в организацию');
-      this.props.onClose();
-    } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-
-      if (err.status === 409 || err.status === 404) {
-        Toast.warn(err.response.data.message);
-
-        return;
-      }
-
-      Toast.error(err);
-      services.logger.error(error);
-    }
+    Toast.success('Пользователь успешно добавлен в организацию');
   }
 }
