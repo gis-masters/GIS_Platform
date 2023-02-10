@@ -14,6 +14,7 @@ public class ContentType {
     private List<Object> children = new ArrayList<>();
     private List<Object> attributes = new ArrayList<>();
     private List<String> printTemplates = new ArrayList<>();
+    private List<SchemaRelation> relations = new ArrayList<>();
 
     public ContentType() {
         // Required
@@ -57,6 +58,14 @@ public class ContentType {
 
     public void setPrintTemplates(List<String> printTemplates) {
         this.printTemplates = printTemplates;
+    }
+
+    public List<SchemaRelation> getRelations() {
+        return relations;
+    }
+
+    public void setRelations(List<SchemaRelation> relations) {
+        this.relations = relations;
     }
 
     public List<Object> getChildren() {

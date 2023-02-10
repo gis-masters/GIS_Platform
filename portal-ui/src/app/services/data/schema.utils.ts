@@ -48,14 +48,21 @@ function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType): OldSchem
   const clonedSchema = cloneDeep(schema);
 
   if (type) {
-    const { attributes, children, childOnly, printTemplates } = type;
+    const { attributes, children, childOnly, printTemplates, styleName, relations } = type;
     const actualProperties: OldPropertySchema[] = attributes.map(contentTypeDescription => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeDescription.name);
 
       return { ...schemaProperty, ...contentTypeDescription } as OldPropertySchema;
     });
 
-    Object.assign(clonedSchema, { properties: actualProperties, children, childOnly, printTemplates });
+    Object.assign(clonedSchema, {
+      properties: actualProperties,
+      children,
+      childOnly,
+      printTemplates,
+      styleName,
+      relations
+    });
   }
 
   return clonedSchema;
@@ -144,6 +151,7 @@ export function convertNewToOldSchema({
   name,
   title,
   tableName,
+  styleName,
   description,
   geometryType,
   readOnly,
@@ -159,6 +167,7 @@ export function convertNewToOldSchema({
     name,
     title,
     tableName,
+    styleName,
     description,
     geometryType,
     readOnly,
@@ -287,9 +296,6 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
 export function convertNewToOldProperties(newFields: PropertySchema[]): OldPropertySchema[] {
   return newFields.map(newField => {
     const field: Partial<OldPropertySchema> = { ...newField } as Partial<OldPropertySchema>;
-
-    field.objectIdentityOnUi = newField.asTitle;
-    delete (field as Partial<PropertySchema>).asTitle;
 
     if (newField.propertyType === PropertyType.STRING) {
       field.valueType = ValueType.STRING;

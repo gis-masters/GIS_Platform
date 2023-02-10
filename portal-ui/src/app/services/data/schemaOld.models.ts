@@ -53,6 +53,7 @@ export interface OldContentType {
   type: string;
   title?: string;
   icon?: string;
+  styleName?: string;
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];
   printTemplates?: string[];
