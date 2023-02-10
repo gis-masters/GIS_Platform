@@ -7,7 +7,15 @@ import { boundMethod } from 'autobind-decorator';
 
 import { sleep } from '../../../services/util/sleep';
 
-import { getIcon, getId, getMeta, getTitle, isFolder } from '../Adapter/Explorer-Adapter';
+import {
+  getIcon,
+  getId,
+  getMeta,
+  getTitle,
+  isFolder,
+  customOpenActionIcon,
+  customOpenAction
+} from '../Adapter/Explorer-Adapter';
 import { ExplorerItem, ExplorerItemProps } from '../Item/Explorer-Item';
 import { ExplorerEmpty } from '../Empty/Explorer-Empty';
 import { ExplorerItemData } from '../Explorer.models';
@@ -89,6 +97,8 @@ export class ExplorerList extends Component<ExplorerListProps> {
       selected: selectedItem,
       isFolder: isFolder(item),
       itemRef: selectedItem ? this.selectedItemRef : undefined,
+      customOpenActionIcon: customOpenActionIcon(item),
+      customOpenAction,
       onOpen,
       store,
       disabledTester

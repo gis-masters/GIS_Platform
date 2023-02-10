@@ -29,7 +29,7 @@ public class DeleteTableRequest implements IRequest<Voidy>, Auditable {
                                  "DELETE",
                                  tQualifier.getTable(),
                                  TABLE.name(),
-                                 tQualifier.getRecord());
+                                 tQualifier.getRecordIdAsLong());
     }
 
     public ResourceQualifier gettQualifier() {

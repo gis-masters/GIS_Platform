@@ -1,0 +1,157 @@
+import React, { Component, ReactElement } from 'react';
+import { action, computed, observable, makeObservable } from 'mobx';
+import { observer } from 'mobx-react';
+import { boundMethod } from 'autobind-decorator';
+import { HomeOutlined } from '@mui/icons-material';
+import { AxiosError } from 'axios';
+import { cn } from '@bem-react/classname';
+
+import {
+  getMessagesRegistriesData,
+  getMessagesRegistriesSchema,
+  MessagesRegistriesMessages
+} from '../../services/data/messagesRegistries.service';
+import { MessagesRegistryOpenAction } from './OpenAction/MessagesRegistry-OpenAction';
+import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
+import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
+import { FilterQuery } from '../../services/util/filterObjects';
+import { EmptyListView } from '../EmptyListView/EmptyListView';
+import { SortParams } from '../../services/util/sortObjects';
+import { Schema } from '../../services/data/schema.models';
+import { PageOptions } from '../../services/models';
+import { XTableColumn } from '../XTable/XTable';
+import { Loading } from '../Loading/Loading';
+
+import Registry from '../Registry/Registry';
+
+import '!style-loader!css-loader!sass-loader!./MessagesRegistry.scss';
+
+const cnMessagesRegistry = cn('MessagesRegistry');
+
+export interface MessagesRegistryProps {
+  id: string;
+  urlChangeEnabled?: boolean;
+  messagesRegistryTableName: string;
+  onSelect?: (items: MessagesRegistriesMessages[]) => void;
+}
+
+@observer
+export default class MessagesRegistry extends Component<MessagesRegistryProps> {
+  @observable private schema?: Schema;
+  @observable private error: string;
+  private defaultSort: SortParams<MessagesRegistriesMessages> = { field: 'system', asc: true };
+  private defaultFilter: FilterQuery;
+
+  constructor(props: MessagesRegistryProps) {
+    super(props);
+    makeObservable(this);
+  }
+
+  async componentDidMount() {
+    await this.getSchema();
+  }
+
+  render() {
+    return (
+      <div className={cnMessagesRegistry()}>
+        {this.ready && (
+          <>
+            <Breadcrumbs items={this.items} itemsType='link' size='medium' />
+
+            <Registry<MessagesRegistriesMessages>
+              className={cnMessagesRegistry('Table')}
+              cols={this.cols}
+              id={this.getId()}
+              getData={this.getData}
+              defaultSort={this.defaultSort}
+              filtersAlwaysEnabled
+              showFiltersPanel
+              defaultFilter={this.defaultFilter}
+            />
+          </>
+        )}
+        {!this.ready && !this.error && <Loading noBackdrop />}
+
+        {this.error && <EmptyListView text={this.error} />}
+      </div>
+    );
+  }
+
+  private getId(): string {
+    return this.props.id + '_MessagesRegistryRegistry_' + this.props.messagesRegistryTableName;
+  }
+
+  @computed
+  private get items(): BreadcrumbsItemData[] {
+    const items: BreadcrumbsItemData[] = [];
+
+    const messagesRegistryRootUrlItems = ['r', 'root', 'mrr', 'messagesRegistries'];
+    const messagesRegistryRootPath = JSON.stringify([...messagesRegistryRootUrlItems, 'none', 'none']);
+
+    items.push(
+      { title: <HomeOutlined />, url: '/data-management' },
+      {
+        title: 'Реестры сообщений',
+        url: `/data-management?path_dm=${messagesRegistryRootPath}`
+      },
+      {
+        title: this.schema?.title,
+        itemType: 'none'
+      }
+    );
+
+    return items;
+  }
+
+  @computed
+  private get cols(): XTableColumn<MessagesRegistriesMessages>[] {
+    return [
+      {
+        CellContent: this.renderActions,
+        align: 'center',
+        minWidth: 60,
+        filterable: false,
+        cellProps: { padding: 'checkbox' }
+      },
+      ...getXTableColumnsFromSchema<MessagesRegistriesMessages>(this.schema)
+    ].map((item: XTableColumn<MessagesRegistriesMessages>) => ({
+      ...item,
+      filterable: item.filterable
+    }));
+  }
+
+  @boundMethod
+  private renderActions({ rowData }: { rowData: MessagesRegistriesMessages }): ReactElement {
+    return <MessagesRegistryOpenAction schema={this.schema} message={rowData} />;
+  }
+
+  @computed
+  private get ready(): boolean {
+    return Boolean(this.schema);
+  }
+
+  @action
+  private async getSchema() {
+    try {
+      this.schema = await getMessagesRegistriesSchema(this.props.messagesRegistryTableName);
+    } catch (error) {
+      const err = error as AxiosError<{ message: string }>;
+
+      this.setError(err?.response?.data?.message || err?.message);
+    }
+  }
+
+  @boundMethod
+  private async getData(pageOptions: PageOptions): Promise<[MessagesRegistriesMessages[], number]> {
+    if (!this.schema) {
+      return [[], 1];
+    }
+
+    return await getMessagesRegistriesData(this.props.messagesRegistryTableName, pageOptions);
+  }
+
+  @action
+  private setError(error: string) {
+    this.error = error;
+  }
+}

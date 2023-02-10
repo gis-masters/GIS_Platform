@@ -49,12 +49,12 @@ public class SpatialRecordsDao {
     public Optional<Feature> findById(ResourceQualifier qualifier, SchemaDto schema) {
         try {
             String query = format("SELECT * FROM %s WHERE %s = %d",
-                                  qualifier.getTableQualifier(), PRIMARY_KEY, qualifier.getRecord());
+                                  qualifier.getTableQualifier(), PRIMARY_KEY, qualifier.getRecordIdAsLong());
 
             log.debug("find feature by id: [{}]", query);
 
             List<Feature> features = pJdbcTemplate.query(query,
-                                                         new MapSqlParameterSource("id", qualifier.getRecord()),
+                                                         new MapSqlParameterSource("id", qualifier.getRecordIdAsLong()),
                                                          new RowMapperResultSetExtractor<>(
                                                                  new FeatureRowMapper(schema)
                                                          ));
@@ -147,7 +147,7 @@ public class SpatialRecordsDao {
             throw new CrgDaoException(msg);
         } catch (Exception e) {
             String msg = format("Что то пошло не так при обновлении записи: '%s' в таблице: '%s'",
-                                qualifier.getRecord(), qualifier.getTableQualifier());
+                                qualifier.getRecordIdAsLong(), qualifier.getTableQualifier());
             logError(msg, e);
 
             throw new CrgDaoException(msg);
@@ -161,7 +161,7 @@ public class SpatialRecordsDao {
             log.debug("Query is feature exist by id: [{}]", query);
 
             Boolean result = pJdbcTemplate.queryForObject(query,
-                                                          new MapSqlParameterSource("id", qualifier.getRecord()),
+                                                          new MapSqlParameterSource("id", qualifier.getRecordIdAsLong()),
                                                           Boolean.class);
 
             return Boolean.TRUE.equals(result);

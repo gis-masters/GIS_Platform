@@ -112,7 +112,7 @@ public class UserRecordsService implements IRecordsService {
     }
 
     @Override
-    public IRecord getById(ResourceQualifier rQualifier, Long recordId) {
+    public IRecord getById(ResourceQualifier rQualifier, Object recordId) {
         String definedRole = null;
 
         // Создаю новый - переходное решение пока некоторые квалификаторы не включают в себя идентификатор записи

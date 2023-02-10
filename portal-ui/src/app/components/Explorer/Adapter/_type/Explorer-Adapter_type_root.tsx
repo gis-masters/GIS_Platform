@@ -29,6 +29,10 @@ function getChildren(): ExplorerItemData[] {
     {
       type: ExplorerItemType.PROJECTS_ROOT,
       payload: null
+    },
+    {
+      type: ExplorerItemType.MESSAGES_REGISTRIES_ROOT,
+      payload: null
     }
   ];
 
@@ -99,6 +103,12 @@ export class ExplorerAdapterTypeRoot {
     if (id === 'schemasRoot') {
       return {
         type: ExplorerItemType.SCHEMAS_ROOT,
+        payload: null
+      };
+    }
+    if (id === 'messagesRegistries') {
+      return {
+        type: ExplorerItemType.MESSAGES_REGISTRIES_ROOT,
         payload: null
       };
     }

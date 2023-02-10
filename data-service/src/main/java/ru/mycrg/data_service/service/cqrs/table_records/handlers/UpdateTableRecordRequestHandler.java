@@ -46,7 +46,7 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
         throwIfNotMatchTableColumns(newFeature.getPropertyNames(), ddlTables.getAllColumnNames(rQualifier.getTable()));
 
         Feature oldFeature = spatialRecordsDao.findById(rQualifier, schema)
-                                              .orElseThrow(() -> new NotFoundException(rQualifier.getRecord()));
+                                              .orElseThrow(() -> new NotFoundException(rQualifier.getRecordIdAsLong()));
         request.setOldFeature(new Feature(new HashMap<>(oldFeature.getProperties())));
 
         systemAttributeHandler.initSchema(schema)
@@ -62,7 +62,8 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
                               .forEach(newFeature::setProperty);
 
         try {
-            spatialRecordsDao.updateByIds(rQualifier, newFeature, PRIMARY_KEY, schema, asList(rQualifier.getRecord()));
+            spatialRecordsDao.updateByIds(rQualifier, newFeature, PRIMARY_KEY, schema,
+                                          asList(rQualifier.getRecordIdAsLong()));
         } catch (CrgDaoException e) {
             String msg = "Не удалось обновить фичу в таблице: " + rQualifier.getTable();
             logError(msg, e);

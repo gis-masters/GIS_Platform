@@ -58,7 +58,7 @@ public class RegistrarDocumentRequestHandler implements IRequestHandler<Register
         SchemaDto schema = librariesService.getSchema(libraryId);
 
         IRecordsService recordsService = recordServiceFactory.get();
-        IRecord record = recordsService.getById(rQualifier, rQualifier.getRecord());
+        IRecord record = recordsService.getById(rQualifier, rQualifier.getRecordIdAsLong());
         String oktmo = extractOktmo(record).orElseThrow(() -> new BadRequestException("Не заполнено поле oktmo."));
 
         String regNumber = String.format("%s-%s-%d-%d",

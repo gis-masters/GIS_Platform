@@ -2,13 +2,10 @@ package ru.mycrg.data_service.controller.reestr;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common_contracts.page.PageableResources;
-import ru.mycrg.data_service.controller.dataset.DatasetsController;
-import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.dto.reestrs.ReestrProjection;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
@@ -18,17 +15,14 @@ import ru.mycrg.data_service.service.OrgSettingsKeeper;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.reestrs.requests.CreateReestrRecordRequest;
 import ru.mycrg.data_service.service.reestrs.ReestrService;
+import ru.mycrg.data_service.service.reestrs.ReestrsService;
 import ru.mycrg.data_service.validators.ecql.EcqlFilter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.mediator.Mediator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
@@ -38,15 +32,18 @@ public class ReestrsController {
 
     private final Mediator mediator;
     private final ReestrService reestrService;
+    private final ReestrsService reestrsService;
     private final SchemaService schemaService;
     private final OrgSettingsKeeper orgSettingsKeeper;
 
     public ReestrsController(Mediator mediator,
                              ReestrService reestrService,
+                             ReestrsService reestrsService,
                              SchemaService schemaService,
                              OrgSettingsKeeper orgSettingsKeeper) {
         this.mediator = mediator;
         this.reestrService = reestrService;
+        this.reestrsService = reestrsService;
         this.schemaService = schemaService;
         this.orgSettingsKeeper = orgSettingsKeeper;
     }
@@ -56,7 +53,7 @@ public class ReestrsController {
     public ResponseEntity<PageableResources<ReestrProjection>> getReestrs(Pageable pageable) {
         orgSettingsKeeper.throwIfReestrsNotAllowed();
 
-        Page<ReestrProjection> reestrs = reestrService.getAll(pageable);
+        Page<ReestrProjection> reestrs = reestrsService.getAll(pageable);
 
         return ResponseEntity.ok(pageFromList(reestrs, pageable));
     }
@@ -66,7 +63,7 @@ public class ReestrsController {
     public ResponseEntity<SchemaDto> getReestrsSchemas() {
         orgSettingsKeeper.throwIfReestrsNotAllowed();
 
-        SchemaDto schema = reestrService.getSchema();
+        SchemaDto schema = reestrsService.getSchema();
 
         return ResponseEntity.ok(schema);
     }
@@ -76,35 +73,49 @@ public class ReestrsController {
     public ResponseEntity<SchemaDto> getReestrSchema(@PathVariable String tableName) {
         orgSettingsKeeper.throwIfReestrsNotAllowed();
 
-        SchemaDto schema = reestrService.getSchema(tableName);
+        SchemaDto schema = reestrsService.getSchema(tableName);
 
         return ResponseEntity.ok(schema);
     }
 
     @GetMapping("/reestrs/{tableName}")
     @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> getReestrData(@PathVariable String tableName,
-                                                @RequestParam(required = false) @EcqlFilter String filter,
-                                                Pageable pageable,
-                                                PagedResourcesAssembler<RecordDto> pageAssembler) {
+    public ResponseEntity<ReestrProjection> getReestrInfo(@PathVariable String tableName) {
         orgSettingsKeeper.throwIfReestrsNotAllowed();
 
-        Page<RecordDto> result = reestrService.getAll(tableName, pageable, filter);
+        ReestrProjection reestrProjection = reestrsService.get(tableName);
 
-        var pagedResources = pageAssembler.toResource(
-                result,
-                linkTo(DatasetsController.class)
-                        .slash("reestrs/" + tableName)
-                        .withSelfRel());
-
-        return ResponseEntity.ok(pagedResources);
+        return ResponseEntity.ok(reestrProjection);
     }
 
-    @PostMapping("/reestrs/{tableName}")
+    @GetMapping("/reestrs/{tableName}/records")
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> getReestrData(@PathVariable String tableName,
+                                                @RequestParam(required = false) @EcqlFilter String filter,
+                                                Pageable pageable) {
+        orgSettingsKeeper.throwIfReestrsNotAllowed();
+
+        Page<Map<String, Object>> result = reestrsService.getAll(tableName, pageable, filter);
+
+        return ResponseEntity.ok(pageFromList(result, pageable));
+    }
+
+    @GetMapping("/reestrs/{tableName}/records/{id}")
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Map<String, Object>> getReestrRecordById(@PathVariable String tableName,
+                                                                   @PathVariable UUID id) {
+        orgSettingsKeeper.throwIfReestrsNotAllowed();
+
+        Map<String, Object> result = reestrService.getById(tableName, id);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/reestrs/{tableName}/records")
     @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> create(@PathVariable String tableName,
                                          @RequestBody Map<String, Object> body) {
-        SchemaDto schema = reestrService.getSchema(tableName);
+        SchemaDto schema = reestrsService.getSchema(tableName);
         Map<String, Object> props = schemaService.excludeUnknownProperties(schema, body);
 
         validateRequired(schema.getProperties(), props);

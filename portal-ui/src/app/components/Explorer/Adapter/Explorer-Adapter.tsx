@@ -26,6 +26,8 @@ import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_b
 import { ExplorerAdapterTypeSchema } from './_type/Explorer-Adapter_type_schema';
 import { ExplorerAdapterTypeSchemasRoot } from './_type/Explorer-Adapter_type_schemasRoot';
 import { ExplorerAdapterTypeFile } from './_type/Explorer-Adapter_type_file';
+import { ExplorerAdapterTypeMessagesRegistriesRoot } from './_type/Explorer-Adapter_type_messagesRegistriesRoot';
+import { ExplorerAdapterTypeMessagesRegistry } from './_type/Explorer-Adapter_type_messagesRegistries';
 import { ExplorerService } from '../Explorer.service';
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
@@ -43,6 +45,8 @@ const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.PROJECTS_ROOT]: ExplorerAdapterTypeProjectsRoot,
   [ExplorerItemType.BASEMAP]: ExplorerAdapterTypeBasemap,
   [ExplorerItemType.BASEMAPS_ROOT]: ExplorerAdapterTypeBasemapsRoot,
+  [ExplorerItemType.MESSAGES_REGISTRIES_ROOT]: ExplorerAdapterTypeMessagesRegistriesRoot,
+  [ExplorerItemType.MESSAGES_REGISTRY]: ExplorerAdapterTypeMessagesRegistry,
   [ExplorerItemType.SCHEMA]: ExplorerAdapterTypeSchema,
   [ExplorerItemType.SCHEMAS_ROOT]: ExplorerAdapterTypeSchemasRoot
 };
@@ -72,6 +76,14 @@ export function getIcon(item: ExplorerItemData): ReactNode {
 
 export function isFolder(item: ExplorerItemData): boolean {
   return adapters[item.type].isFolder(item);
+}
+
+export function customOpenActionIcon(item: ExplorerItemData): ReactNode {
+  return adapters[item.type].customOpenActionIcon && adapters[item.type].customOpenActionIcon(item);
+}
+
+export function customOpenAction(item: ExplorerItemData): void {
+  return adapters[item.type].customOpenAction && adapters[item.type].customOpenAction(item);
 }
 
 export async function getChildren(

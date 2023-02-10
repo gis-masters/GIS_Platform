@@ -42,7 +42,7 @@ public class MoveRecordToNewParentHandler implements IRequestHandler<MoveRecordT
     public Voidy handle(MoveRecordToNewParentRequest request) {
         ResourceQualifier recordQualifier = request.getRecordQualifier();
         if (!resourceProtector.isEditAllowed(recordQualifier)) {
-            String msg = "Нет прав на перенос записи: " + recordQualifier.getRecord();
+            String msg = "Нет прав на перенос записи: " + recordQualifier.getRecordIdAsLong();
             log.warn(msg);
 
             throw new ForbiddenException(msg);
@@ -65,7 +65,7 @@ public class MoveRecordToNewParentHandler implements IRequestHandler<MoveRecordT
         } else {
             ResourceQualifier parentQualifier = new ResourceQualifier(recordQualifier, request.getParentId());
             if (!resourceProtector.isEditAllowed(parentQualifier)) {
-                String msg = "Нет прав на редактирование каталога: " + parentQualifier.getRecord();
+                String msg = "Нет прав на редактирование каталога: " + parentQualifier.getRecordIdAsLong();
                 log.warn(msg);
 
                 throw new ForbiddenException(msg);
@@ -73,7 +73,7 @@ public class MoveRecordToNewParentHandler implements IRequestHandler<MoveRecordT
 
             IRecord resource = recordsDao
                     .findById(recordQualifier)
-                    .orElseThrow(() -> new NotFoundException(recordQualifier.getRecord()));
+                    .orElseThrow(() -> new NotFoundException(recordQualifier.getRecordIdAsLong()));
 
             if (resource.isFolder()) {
                 throw new BadRequestException("Перемещение каталогов не доступно");
@@ -81,17 +81,17 @@ public class MoveRecordToNewParentHandler implements IRequestHandler<MoveRecordT
 
             String parentPath = recordsDao
                     .findById(parentQualifier)
-                    .orElseThrow(() -> new NotFoundException(parentQualifier.getRecord()))
+                    .orElseThrow(() -> new NotFoundException(parentQualifier.getRecordIdAsLong()))
                     .getAsString(PATH.getName());
 
             properties.put(PATH.getName(),
-                           parentPath + "/" + parentQualifier.getRecord());
+                           parentPath + "/" + parentQualifier.getRecordIdAsLong());
         }
 
         try {
             recordsDao.updateRecordById(recordQualifier, properties);
         } catch (CrgDaoException e) {
-            String msg = "Не удалось обновить path для записи: " + recordQualifier.getRecord();
+            String msg = "Не удалось обновить path для записи: " + recordQualifier.getRecordIdAsLong();
             log.error(msg, e);
 
             throw new DataServiceException(msg);

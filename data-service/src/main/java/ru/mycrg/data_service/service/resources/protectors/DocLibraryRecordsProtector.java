@@ -76,7 +76,7 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
 
         SchemaDto schema = librariesService.getSchema(recordQualifier.getTable());
         IRecord record = recordsDao.findById(recordQualifier, schema)
-                                   .orElseThrow(() -> new NotFoundException(recordQualifier.getRecord()));
+                                   .orElseThrow(() -> new NotFoundException(recordQualifier.getRecordIdAsLong()));
 
         // Если запись имеет родителей - получим роль наследуемую от них
         String path = String.valueOf(record.getContent().get(PATH.getName()));
@@ -113,7 +113,7 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
     private boolean isUserHasOwnPermission(ResourceQualifier rQualifier) {
         SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
         IRecord record = recordsDao.findById(rQualifier, schema)
-                                   .orElseThrow(() -> new NotFoundException(rQualifier.getRecord()));
+                                   .orElseThrow(() -> new NotFoundException(rQualifier.getRecordIdAsLong()));
 
         // Если запись имеет родителей - получим роль наследуемую от них
         String path = String.valueOf(record.getContent().get(PATH.getName()));
@@ -138,7 +138,7 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
     private boolean isUserHasEditPermission(ResourceQualifier rQualifier) {
         SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
         IRecord record = recordsDao.findById(rQualifier, schema)
-                                   .orElseThrow(() -> new NotFoundException(rQualifier.getRecord()));
+                                   .orElseThrow(() -> new NotFoundException(rQualifier.getRecordIdAsLong()));
 
         // Если запись имеет родителей - получим роль наследуемую от них
         String path = String.valueOf(record.getContent().get(PATH.getName()));

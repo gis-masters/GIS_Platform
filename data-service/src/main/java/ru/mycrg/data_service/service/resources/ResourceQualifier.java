@@ -16,11 +16,11 @@ public class ResourceQualifier {
 
     private final String schema;
     private final String table;
-    private final Long record;
+    private final Object recordId;
     private final ResourceType type;
     private final Map<ResourceType, String> resourceTables = new EnumMap<>(ResourceType.class);
 
-    public ResourceQualifier(ResourceQualifier rQualifier, Long recordId, ResourceType type) {
+    public ResourceQualifier(ResourceQualifier rQualifier, Object recordId, ResourceType type) {
         this(rQualifier.getSchema(), rQualifier.getTable(), recordId, type);
     }
 
@@ -45,11 +45,11 @@ public class ResourceQualifier {
 
     public ResourceQualifier(@NotNull String schema,
                              @Nullable String table,
-                             Long record,
+                             Object recordId,
                              @NotNull ResourceType type) {
         this.schema = schema;
         this.table = table;
-        this.record = record;
+        this.recordId = recordId;
         this.type = type;
 
         this.resourceTables.put(LIBRARY, "doc_libraries");
@@ -72,8 +72,17 @@ public class ResourceQualifier {
         return schema;
     }
 
-    public Long getRecord() {
-        return record;
+    public Long getRecordIdAsLong() {
+        if (recordId != null) {
+            return Long.parseLong(recordId.toString());
+        }
+
+        return -1L;
+    }
+
+    @Nullable
+    public Object getRecordId() {
+        return recordId;
     }
 
     public ResourceType getType() {
@@ -87,13 +96,13 @@ public class ResourceQualifier {
 
     @NotNull
     public String getQualifier() {
-        if (record == null && table == null) {
+        if (recordId == null && table == null) {
             return schema;
         } else {
-            if (record == null) {
+            if (recordId == null) {
                 return schema + SEPARATOR.charAt(1) + table;
             } else {
-                return schema + SEPARATOR.charAt(1) + table + SEPARATOR.charAt(1) + record;
+                return schema + SEPARATOR.charAt(1) + table + SEPARATOR.charAt(1) + recordId;
             }
         }
     }
@@ -105,7 +114,7 @@ public class ResourceQualifier {
         } else if (Objects.equals(type, TABLE) || Objects.equals(type, LIBRARY)) {
             return table;
         } else {
-            return record.toString();
+            return recordId.toString();
         }
     }
 }

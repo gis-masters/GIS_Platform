@@ -32,6 +32,7 @@ export interface BreadcrumbsItemData<T = unknown> extends ChildrenProps {
   url?: string;
   nestingLevel?: number;
   payload?: T;
+  itemType?: BreadcrumbsItemsType;
   style?: CSSProperties;
   onClick?: (payload: T) => void;
 }
@@ -101,7 +102,7 @@ export default class Breadcrumbs<T> extends Component<BreadcrumbsProps<T>> {
                   <BreadcrumbsDivider />
                 </>
               )}
-              <BreadcrumbsItem {...item} type={itemsType} />
+              <BreadcrumbsItem {...item} type={item.itemType || itemsType} />
               {i !== this.visibleItems.length - 1 && <BreadcrumbsDivider />}
             </Fragment>
           ))}

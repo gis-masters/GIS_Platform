@@ -29,7 +29,7 @@ public class DeleteDatasetRequest implements IRequest<Voidy>, Auditable {
                                  "DELETE",
                                  datasetQualifier.getQualifier(),
                                  DATASET.name(),
-                                 datasetQualifier.getRecord());
+                                 datasetQualifier.getRecordIdAsLong());
     }
 
     public ResourceQualifier getDatasetQualifier() {

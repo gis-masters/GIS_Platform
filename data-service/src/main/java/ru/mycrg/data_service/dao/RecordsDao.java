@@ -70,7 +70,7 @@ public class RecordsDao {
                                  @NotNull Map<String, Object> data,
                                  @NotNull SchemaDto schema) throws CrgDaoException {
         spatialRecordsDao.updateByIds(qualifier, new Feature(data), ID.getName(), schema,
-                                      asList(qualifier.getRecord()));
+                                      asList(qualifier.getRecordIdAsLong()));
     }
 
     public void addRecordsAsBatch(@NotNull ResourceQualifier rIdentifier,
@@ -115,15 +115,15 @@ public class RecordsDao {
         }
     }
 
-    public Optional<IRecord> findById(ResourceQualifier recordQualifier,
+    public Optional<IRecord> findById(ResourceQualifier qualifier,
                                       SchemaDto schema) {
         try {
-            String query = String.format("SELECT * FROM %s WHERE id = :id", recordQualifier.getTableQualifier());
+            String query = String.format("SELECT * FROM %s WHERE id = :id", qualifier.getTableQualifier());
 
             log.debug("find record by id: [{}]", query);
 
             List<IRecord> records = pJdbcTemplate.query(query,
-                                                        new MapSqlParameterSource("id", recordQualifier.getRecord()),
+                                                        new MapSqlParameterSource("id", qualifier.getRecordId()),
                                                         new RowMapperResultSetExtractor<>(
                                                                 new RecordRowMapper(schema)
                                                         ));

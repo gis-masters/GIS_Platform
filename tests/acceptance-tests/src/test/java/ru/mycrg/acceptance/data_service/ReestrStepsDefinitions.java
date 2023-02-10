@@ -70,14 +70,14 @@ public class ReestrStepsDefinitions extends BaseStepsDefinitions {
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(String.format("/reestr_incoming?sort=%s,%s&%s", field, direction, "size=1000"));
+                        get(String.format("/reestr_incoming/records?sort=%s,%s&%s", field, direction, "size=1000"));
     }
 
     @When("Администратор делает запрос на выборку из реестра входящих с фильтрацией по полю {string} и значению {string}")
     public void getItemsByFilter(String field, String value) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(String.format("/reestr_incoming?filter=%s like '%s'", field, value));
+                        get(String.format("/reestr_incoming/records?filter=%s like '%s'", field, value));
     }
 
     private void createRecordInReestr(String tableName, ReestrItemDto item) {
@@ -86,6 +86,6 @@ public class ReestrStepsDefinitions extends BaseStepsDefinitions {
                         body(gson.toJson(item)).
                         contentType(ContentType.JSON)
                 .when().
-                        post("/" + tableName);
+                        post("/" + tableName + "/records");
     }
 }

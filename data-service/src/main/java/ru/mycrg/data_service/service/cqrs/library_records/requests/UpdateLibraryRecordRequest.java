@@ -51,7 +51,7 @@ public class UpdateLibraryRecordRequest implements IRequest<Voidy>, Auditable, I
                                  "UPDATE",
                                  newRecord.getTitle() == null ? "unknown" : newRecord.getTitle(),
                                  LIBRARY_RECORD.name(),
-                                 rQualifier.getRecord());
+                                 rQualifier.getRecordIdAsLong());
     }
 
     @Override

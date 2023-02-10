@@ -162,6 +162,22 @@ export async function getUsersUrl(): Promise<string> {
   return (await getBaseUrl()) + '/users';
 }
 
+export async function getMessagesRegistriesUrl(): Promise<string> {
+  return (await getDataUrl()) + '/reestrs';
+}
+
+export async function getMessagesRegistryUrl(tableName: string): Promise<string> {
+  return (await getDataUrl()) + `/reestrs/${tableName}`;
+}
+
+export async function getMessagesRegistriesDataUrl(tableName: string): Promise<string> {
+  return (await getMessagesRegistryUrl(tableName)) + '/records';
+}
+
+export async function getMessagesRegistriesSchemaUrl(tableName: string): Promise<string> {
+  return (await getMessagesRegistryUrl(tableName)) + '/schemas';
+}
+
 export async function getUsersInviteUrl(): Promise<string> {
   return (await getUsersUrl()) + '/invite';
 }

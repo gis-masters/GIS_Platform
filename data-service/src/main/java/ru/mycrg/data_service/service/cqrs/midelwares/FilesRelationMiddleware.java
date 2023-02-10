@@ -183,8 +183,8 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
     private void transferFilesFromTempDirectory(Set<UUID> ids, ResourceQualifier lrQualifier, String type) {
         fileRepository.findAllByIdIn(ids).forEach(file -> {
             String currentFileName = FilenameUtils.getName(file.getPath());
-            String resultFileName = nonNull(lrQualifier.getRecord())
-                    ? join(lrQualifier.getRecord().toString(), currentFileName)
+            String resultFileName = nonNull(lrQualifier.getRecordIdAsLong())
+                    ? join(lrQualifier.getRecordIdAsLong().toString(), currentFileName)
                     : currentFileName;
 
             Path targetPath = fileStoragePath.resolve(
@@ -228,7 +228,7 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
 
         FileResourceQualifier fileResQualifier = new FileResourceQualifier(rQualifier.getSchema(),
                                                                            rQualifier.getTable(),
-                                                                           rQualifier.getRecord());
+                                                                           rQualifier.getRecordIdAsLong());
         JsonNode jsonNode = toJsonNode(fileResQualifier);
 
         String type = rQualifier.getType().name();

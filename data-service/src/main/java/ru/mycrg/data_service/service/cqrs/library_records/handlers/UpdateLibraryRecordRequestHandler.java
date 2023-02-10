@@ -29,7 +29,7 @@ public class UpdateLibraryRecordRequestHandler implements IRequestHandler<Update
         IRecord newRecord = request.getNewRecord();
 
         IRecordsService recordsService = recordServiceFactory.get();
-        IRecord currentRecordState = recordsService.getById(recordQualifier, recordQualifier.getRecord());
+        IRecord currentRecordState = recordsService.getById(recordQualifier, recordQualifier.getRecordIdAsLong());
         request.setOldRecord(currentRecordState);
 
         SchemaDto schema = librariesService.getSchema(recordQualifier.getTable());

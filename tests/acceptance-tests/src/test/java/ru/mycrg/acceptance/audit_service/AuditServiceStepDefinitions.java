@@ -238,7 +238,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
         checkAuditEvent(CREATE.name(), DATASET, currentDatasetIdentifier);
     }
 
-    @Then("Создана запись в журнале аудита об удалении датасета")
+    @Then("Создана запись в журнале аудита об удалении набора данных")
     public void checkDatasetDelete() {
         checkAuditEvent(DELETE.name(), DATASET, currentDatasetIdentifier);
     }

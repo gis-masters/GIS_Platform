@@ -74,6 +74,7 @@ import { RelationsButtonComponent } from './components/relations-button/relation
 import { FeaturesSidebarTeaserComponent } from './components/features-sidebar-teaser/features-sidebar-teaser.component';
 import { SystemManagementComponent } from './components/system-management/system-management.component';
 import { EditFeatureActionsComponent } from './components/edit-feature-actions/edit-feature-actions.component';
+import { MessagesRegistryComponent } from './components/messages-registry/messages-registry.component';
 
 @NgModule({
   declarations: [
@@ -134,7 +135,8 @@ import { EditFeatureActionsComponent } from './components/edit-feature-actions/e
     RelationsButtonComponent,
     FeaturesSidebarTeaserComponent,
     SystemManagementComponent,
-    EditFeatureActionsComponent
+    EditFeatureActionsComponent,
+    MessagesRegistryComponent
   ],
   imports: [
     HttpClientModule,

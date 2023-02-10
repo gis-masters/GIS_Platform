@@ -91,6 +91,7 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
     if (library) {
       const filterWithoutPath = { ...filter };
       delete filterWithoutPath.path;
+
       items.push(
         {
           title: (

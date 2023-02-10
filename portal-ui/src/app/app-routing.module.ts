@@ -24,6 +24,7 @@ import { ChangePasswordFormPageComponent } from './pages/change-password-form/ch
 import { SystemManagementPageComponent } from './pages/system-management/system-management-page.component';
 import { SystemManagementGuardService } from './services/system-management-guard.service';
 import { SystemAdminGuardService } from './services/system-admin-guard.service';
+import { MessagesRegistryPageComponent } from './pages/messages-registry/messages-registry-page.component';
 
 export interface AppRouteData extends Data {
   page: Pages;
@@ -181,6 +182,15 @@ const routes: AppRoutes = [
     data: { page: Pages.REGISTRY }
   },
   {
+    path: 'data-management/messages-registries/:tableName/registry',
+    component: MessagesRegistryPageComponent,
+    canActivate: [SystemAdminGuardService],
+    resolve: {
+      user: CurrentUserResolver
+    },
+    data: { page: Pages.REGISTRY }
+  },
+  {
     path: 'data-management/library/:libraryTableName/document/:documentId',
     component: LibraryDocumentPageComponent,
     canActivate: [SystemAdminGuardService],
@@ -218,5 +228,6 @@ export const routingComponents = [
   LibraryDocumentPageComponent,
   ServicesCalculatorPageComponent,
   RestorePasswordFormPageComponent,
-  ChangePasswordFormPageComponent
+  ChangePasswordFormPageComponent,
+  MessagesRegistryPageComponent
 ];

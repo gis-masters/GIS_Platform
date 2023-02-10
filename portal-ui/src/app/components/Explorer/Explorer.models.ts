@@ -15,6 +15,7 @@ export enum ExplorerItemType {
   TABLE = 'table',
   PROJECT = 'project',
 
+  MESSAGES_REGISTRY = 'msg',
   LIBRARY = 'lib',
   FOLDER = 'folder',
   DOCUMENT = 'doc',
@@ -29,6 +30,7 @@ export enum ExplorerItemType {
   PROJECTS_ROOT = 'pr',
   BASEMAPS_ROOT = 'br',
   SCHEMAS_ROOT = 'sr',
+  MESSAGES_REGISTRIES_ROOT = 'mrr',
   ROOT = 'r'
 }
 
@@ -85,6 +87,8 @@ export interface Adapter {
   getDescription?: (item: ExplorerItemData) => ReactNode;
   getIcon?: (item: ExplorerItemData) => ReactNode;
   isFolder: (item: ExplorerItemData) => boolean;
+  customOpenActionIcon?: (item: ExplorerItemData) => ReactNode;
+  customOpenAction?: (item: ExplorerItemData) => void;
   getChildren?: (
     item: ExplorerItemData,
     pageOptions: PageOptions,

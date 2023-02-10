@@ -1,4 +1,4 @@
-Feature: Выборка из реестров
+Feature: Управление реестрами
 
   Background:
     Given Существует организация
@@ -18,8 +18,7 @@ Feature: Выборка из реестров
       | System 1 | fiz | ERROR       | some incredible body |
       | System 1 | fiz | IN_PROGRESS | some available body  |
     When Администратор делает запрос на выборку из реестра входящих с сортировкой по "<field>" и "<direction>"
-    Then В ответе есть пункт "records"
-    And Данные отсортированы по "<field>" и "<direction>" в "records"
+    Then Данные отсортированы по "<field>" и "<direction>"
     Examples:
       | field       | direction |
       | system      | asc       |

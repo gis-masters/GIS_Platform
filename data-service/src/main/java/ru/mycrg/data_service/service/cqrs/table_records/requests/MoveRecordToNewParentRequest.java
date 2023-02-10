@@ -38,7 +38,7 @@ public class MoveRecordToNewParentRequest implements IRequest<Voidy>, Auditable 
                                  "MOVE",
                                  entityName,
                                  FEATURE.name(),
-                                 rQualifier.getRecord());
+                                 rQualifier.getRecordIdAsLong());
     }
 
     public ResourceQualifier getRecordQualifier() {

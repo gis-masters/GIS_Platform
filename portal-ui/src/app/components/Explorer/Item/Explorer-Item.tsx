@@ -21,6 +21,8 @@ export interface ExplorerItemProps {
   icon: ReactNode;
   selected: boolean;
   isFolder: boolean;
+  customOpenActionIcon?: ReactNode;
+  customOpenAction?: (item: ExplorerItemData) => void;
   store: ExplorerStore;
   itemRef?: RefObject<HTMLDivElement>;
   onOpen: (item: ExplorerItemData) => void;
@@ -44,7 +46,7 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
   }
 
   render() {
-    const { title, meta, selected, isFolder, icon, itemRef } = this.props;
+    const { title, meta, selected, isFolder, customOpenActionIcon, icon, itemRef } = this.props;
 
     return (
       <ListItemButton
@@ -59,8 +61,8 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
         <ListItemText classes={{ primary: cnExplorerItemTitle() }} primary={title} secondary={meta} />
         {isFolder && (
           <ListItemSecondaryAction>
-            <IconButton edge='end' onClick={this.openHandler} disabled={this.disabled}>
-              <ChevronRight />
+            <IconButton edge='end' onClick={this.buttonClickHandler} disabled={this.disabled}>
+              {customOpenActionIcon || <ChevronRight />}
             </IconButton>
           </ListItemSecondaryAction>
         )}
@@ -70,7 +72,18 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
 
   @boundMethod
   private openHandler() {
-    this.props.onOpen(this.props.item);
+    const { customOpenActionIcon, customOpenAction, onOpen, item } = this.props;
+
+    if (customOpenActionIcon) {
+      customOpenAction(item);
+    } else {
+      onOpen(item);
+    }
+  }
+
+  @boundMethod
+  private buttonClickHandler() {
+    this.openHandler();
   }
 
   @boundMethod

@@ -25,7 +25,7 @@ public interface IRecordsService {
      * @param recordId   Идентификатор записи
      */
     IRecord getById(ResourceQualifier rQualifier,
-                    Long recordId);
+                    Object recordId);
 
     IRecord createRecord(ResourceQualifier lQualifier,
                          IRecord record,

@@ -15,12 +15,12 @@ public interface PermissionRepository extends PagingAndSortingRepository<Permiss
 
     void deleteByResourceTableAndResourceId(String table, Long id);
 
-    Page<PermissionProjection> findAllByResourceTableAndResourceId(String table, Long resId, Pageable pageable);
+    Page<PermissionProjection> findAllByResourceTableAndResourceId(String table, Object resId, Pageable pageable);
 
     List<PermissionProjection> findAllByResourceTableAndResourceId(String table, Long resId);
 
     Page<PermissionProjection> findAllByResourceTableAndResourceIdAndPrincipalIn(String table,
-                                                                                 Long resId,
+                                                                                 Object resId,
                                                                                  List<Principal> principals,
                                                                                  Pageable pageable);
 }

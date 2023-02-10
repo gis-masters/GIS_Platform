@@ -58,7 +58,7 @@ public class UpdateTableRecordRequest implements IRequest<Voidy>, Auditable, IUp
                                  "UPDATE",
                                  entityName,
                                  FEATURE.name(),
-                                 rQualifier.getRecord());
+                                 rQualifier.getRecordIdAsLong());
     }
 
     @Override

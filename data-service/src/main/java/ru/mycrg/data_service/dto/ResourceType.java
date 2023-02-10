@@ -8,5 +8,6 @@ public enum ResourceType {
     TABLE,
     FEATURE,
     SCHEMA,
-    BASEMAP
+    BASEMAP,
+    REESTR
 }

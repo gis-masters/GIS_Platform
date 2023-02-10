@@ -28,7 +28,7 @@ public class RegisterDocumentRequest implements IRequest<String>, Auditable {
                                  "REGISTER",
                                  "unknown",
                                  LIBRARY_RECORD.name(),
-                                 dQualifier.getRecord());
+                                 dQualifier.getRecordIdAsLong());
     }
 
     public ResourceQualifier getQualifier() {

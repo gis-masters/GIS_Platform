@@ -17,6 +17,7 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.SchemaUtil.getPropertyByName;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
+import static ru.mycrg.data_service_contract.enums.ValueType.UUID;
 
 public class BySchemaRowMapper {
 
@@ -42,6 +43,8 @@ public class BySchemaRowMapper {
                                                                           });
 
                     properties.put(columnName, descriptions);
+                } else if (valueType.equals(UUID)) {
+                    properties.put(columnName, object.toString());
                 } else {
                     log.warn("Unknown property type: {}", valueType);
                 }

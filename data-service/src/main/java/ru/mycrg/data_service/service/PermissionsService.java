@@ -81,11 +81,11 @@ public class PermissionsService {
     public Page<PermissionProjection> getAllByResourceId(ResourceQualifier rQualifier, Pageable pageable) {
         if (resourceProtector.isOwner(rQualifier)) {
             return permissionRepository.findAllByResourceTableAndResourceId(rQualifier.getResourceTable(),
-                                                                            rQualifier.getRecord(),
+                                                                            rQualifier.getRecordIdAsLong(),
                                                                             pageable);
         } else {
             return permissionRepository.findAllByResourceTableAndResourceIdAndPrincipalIn(rQualifier.getResourceTable(),
-                                                                                          rQualifier.getRecord(),
+                                                                                          rQualifier.getRecordIdAsLong(),
                                                                                           principalService.getAll(),
                                                                                           pageable);
         }

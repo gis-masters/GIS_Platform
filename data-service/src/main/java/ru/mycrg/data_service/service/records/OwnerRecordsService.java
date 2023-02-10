@@ -91,7 +91,7 @@ public class OwnerRecordsService implements IRecordsService {
     }
 
     @Override
-    public IRecord getById(ResourceQualifier rQualifier, Long recordId) {
+    public IRecord getById(ResourceQualifier rQualifier, Object recordId) {
         SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
 
         IRecord record = recordsDao.findById(new ResourceQualifier(rQualifier, recordId, LIBRARY_RECORD), schema)
@@ -150,7 +150,7 @@ public class OwnerRecordsService implements IRecordsService {
 
             recordsDao.updateRecordById(recordQualifier, clearedData, schema);
 
-            log.debug("Record: '{}' successfully patched", recordQualifier.getRecord());
+            log.debug("Record: '{}' successfully patched", recordQualifier.getRecordIdAsLong());
         } catch (CrgDaoException e) {
             throw new DataServiceException("Failed to update record: " + recordQualifier.getQualifier(), e.getCause());
         }

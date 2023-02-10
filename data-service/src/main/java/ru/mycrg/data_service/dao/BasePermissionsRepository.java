@@ -204,7 +204,7 @@ public class BasePermissionsRepository {
                 "  role_id = 10 " +
                 "WHERE " +
                 "  resource_table = '" + rQualifier.getTable() + "' " +
-                "  AND resource_id = " + rQualifier.getRecord();
+                "  AND resource_id = " + rQualifier.getRecordIdAsLong();
 
         log.debug("Query decrease permissions to viewer for all: [{}]", query);
 
@@ -370,7 +370,7 @@ public class BasePermissionsRepository {
 
         String tableQualifier = rQualifier.getTableQualifier();
         String tableName = rQualifier.getTable();
-        Long recordId = rQualifier.getRecord();
+        Object recordId = rQualifier.getRecordIdAsLong();
 
         List<String> allPrincipalIds = principalService.getAllIds();
         if (allPrincipalIds.isEmpty()) {
@@ -402,7 +402,7 @@ public class BasePermissionsRepository {
             throw new IllegalStateException("Qualifier must contain table");
         }
 
-        if (rQualifier.getRecord() == null) {
+        if (rQualifier.getRecordIdAsLong() == null) {
             throw new IllegalStateException("Qualifier must contain record");
         }
     }
