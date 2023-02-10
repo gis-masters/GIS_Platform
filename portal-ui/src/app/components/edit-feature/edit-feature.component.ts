@@ -279,7 +279,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         });
       });
 
-    fromMobx<CrgVectorLayer[]>(() => cloneDeep(currentProject.vectorLayers))
+    fromMobx<CrgVectorLayer[]>(() => cloneDeep(currentProject.vectorableLayers))
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(async layers => {
         const currentLayer = layers.find(item => item.id === this.layer.id);
