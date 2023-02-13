@@ -37,7 +37,7 @@ const singleDocumentData: [DocumentInfo] = [
   { id: 12_353, libraryTableName: 'dl_data_section3', title: 'Разрешение на строительство №333 от 32.05.2000' }
 ];
 const multipleDocumentsData: DocumentInfo[] = [
-  { id: 12_352, libraryTableName: 'dl_data_section3', title: 'Ж1' },
+  { id: 12_352, libraryId: 'dl_data_section3', title: 'Ж1' },
   { id: 12_351, libraryTableName: 'dl_data_section3', title: 'Ж2' },
   { id: 12_350, libraryTableName: 'dl_data_section3', title: 'Ж3' },
   {

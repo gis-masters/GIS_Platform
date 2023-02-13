@@ -99,7 +99,7 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
   private async load() {
     const { item } = this.props;
     try {
-      const document = await getLibraryRecord(item.libraryTableName, item.id);
+      const document = await getLibraryRecord(item.libraryTableName || item.libraryId, item.id);
       this.setDocument(document);
     } catch (error) {
       const axiosError = error as AxiosError<{ message?: string }>;

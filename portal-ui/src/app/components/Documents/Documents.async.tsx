@@ -14,7 +14,10 @@ import { DocumentsAdd } from './Add/Documents-Add';
 
 const cnDocuments = cn('Documents');
 
-export type DocumentInfo = Pick<LibraryRecord, 'id' | 'title' | 'libraryTableName'>;
+export interface DocumentInfo extends Pick<LibraryRecord, 'id' | 'title'> {
+  libraryId?: string;
+  libraryTableName?: string;
+}
 
 export interface DocumentsProps {
   value: DocumentInfo[];
