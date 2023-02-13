@@ -1,0 +1,23 @@
+import type { Options } from '@wdio/types';
+
+import { config as baseConfig } from './wdio.conf';
+
+export const config: Options.Testrunner = {
+  ...baseConfig,
+
+  baseUrl: `http://localhost:4200`,
+  hostname: null,
+  port: null,
+  path: null,
+  capabilities: [
+    {
+      maxInstances: 1,
+      browserName: 'chrome',
+      acceptInsecureCerts: true,
+      setWindowRect: true,
+      'goog:chromeOptions': {
+        args: ['window-size=1300,900']
+      }
+    }
+  ]
+};

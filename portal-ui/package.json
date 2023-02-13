@@ -18,6 +18,7 @@
     "test:ui:dev": "rm -rf tests/_screens/.tmp/* && npm run wdio -- run tests/ui/wdio.dev.conf.ts",
     "test:e2e": "rm -rf tests/_screens/.tmp/* && npm run wdio -- run tests/e2e/wdio.conf.ts",
     "test:e2e:dev": "rm -rf tests/_screens/.tmp/* && npm run wdio -- run tests/e2e/wdio.dev.conf.ts",
+    "test:e2e:devLocal": "rm -rf tests/_screens/.tmp/* && npm run wdio -- run tests/e2e/wdio.devLocal.conf.ts",
     "test:stage58": "rm -rf tests/_screens/.tmp/* && npm run wdio -- run tests/deployment/stage58/wdio.conf.ts",
     "test:stage98": "rm -rf tests/_screens/.tmp/* && npm run wdio -- run tests/deployment/stage98/wdio.conf.ts",
     "test:stage172": "rm -rf tests/_screens/.tmp/* && npm run wdio -- run tests/deployment/stage172/wdio.conf.ts",

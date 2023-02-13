@@ -13,7 +13,7 @@ declare const window: { authService: typeof authService };
 
 async function authenticate(login: string, password: string, thenPage?: Page): Promise<AuthenticationResult> {
   const currentUrl = await browser.getUrl();
-  if (!currentUrl || currentUrl === 'data:,') {
+  if (!currentUrl || currentUrl === 'data:,' || currentUrl === 'about:blank') {
     await homePage.open();
   }
 
