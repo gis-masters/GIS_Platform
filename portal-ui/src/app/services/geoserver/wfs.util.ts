@@ -16,7 +16,9 @@ import {
 } from './wfs.models';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
+import { getGeometryFieldName } from '../data/schema.utils';
 import { CrgVectorLayer } from '../gis/projects.models';
 import { schemaService } from '../data/schema.service';
 import { olProjection } from './projections.service';
@@ -25,8 +27,6 @@ import { cqlBuild } from '../util/cqlBuild';
 import { cql2ol } from '../util/cql2ol';
 import { services } from '../services';
 import { Mime } from '../util/Mime';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { getGeometryFieldName } from '../data/schema.utils';
 
 export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature<CoordinateEdited>> {
   const { tableName, schemaId } = layer;
@@ -38,7 +38,7 @@ export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature
     type: 'Feature',
     id: tableName, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
     geometry: getEmptyGeometry(schema.geometryType),
-    geometry_name: await getGeometryFieldName(schemaId),
+    geometry_name: getGeometryFieldName(schema),
     properties
   };
 }
@@ -188,9 +188,9 @@ export async function makeXmlPolygonIntersect(
   selectionType: MapSelectionTypes
 ): Promise<string> {
   const tableName = complexName.split(':')[1];
-
   const layer = currentProject.getLayerByTableName(tableName);
-  const geometryFieldName = await getGeometryFieldName(layer.schemaId);
+  const schema = await schemaService.getSchema(layer.schemaId);
+  const geometryFieldName = getGeometryFieldName(schema);
   const cqlFilter: string = cqlBuild(attributesTableStore.getLayerFilter(tableName));
   const olFilter = cqlFilter
     ? and(intersects(geometryFieldName, polygon, olProjection.id), cql2ol(cqlFilter))

@@ -1,4 +1,5 @@
 import { binding, then, when } from 'cucumber-tsflow/dist';
+import { sleep } from '../../../../src/app/services/util/sleep';
 
 import { Block, BlockModel } from '../../Block';
 
@@ -22,6 +23,50 @@ class Explorer extends Block implements BlockModel {
 
   get $empty(): Promise<WebdriverIO.Element> {
     return $('.Explorer-Empty');
+  }
+
+  get $firstItemTitle(): Promise<WebdriverIO.Element> {
+    return $('.Explorer-List .Explorer-Item:first-child .MuiListItemText-primary');
+  }
+
+  get $secondItemTitle(): Promise<WebdriverIO.Element> {
+    return $('.Explorer-List .Explorer-Item:last-child .MuiListItemText-primary');
+  }
+
+  get $connectionToProject(): Promise<WebdriverIO.Element> {
+    return $('.Explorer .ConnectionsToProjectsWidget button');
+  }
+
+  @when(/^выбираю векторную таблицу `админ деление с представлениями`$/)
+  async selectedVectorTableWithViews(): Promise<void> {
+    const $firstDataset = await this.$firstItemTitle;
+
+    const vectorTableTitle = await $firstDataset.getText();
+    expect(vectorTableTitle).toEqual('админ деление с представлениями');
+  }
+
+  @when(/^я захожу в первый набор данных$/)
+  async authWithError(): Promise<void> {
+    const $firstItemTitle = await this.$firstItemTitle;
+    await $firstItemTitle.doubleClick();
+
+    await sleep(500); // ждем анимации перехода
+  }
+
+  @when(/^выбираю векторную таблицу `админ деление без представлений`$/)
+  async selectedVectorTableWithoutViews(): Promise<void> {
+    const $secondDataset = await this.$secondItemTitle;
+    await $secondDataset.waitForDisplayed({ timeout: 1000 });
+
+    const vectorTableTitle = await $secondDataset.getText();
+    expect(vectorTableTitle).toEqual('админ деление без представлений');
+    await $secondDataset.click();
+  }
+
+  @when(/^нажимаю кнопку `Подключить в проект` в правой панели векторной таблицы$/)
+  async addToProject(): Promise<void> {
+    const $connectionToProject = await this.$connectionToProject;
+    await $connectionToProject.click();
   }
 
   @when(/^я дожидаюсь окончания загрузки в explorer$/)

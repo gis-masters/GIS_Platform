@@ -181,3 +181,8 @@ export function alertLayerOperationError(
   Toast.error({ message, details });
   services.logger.error(message, e);
 }
+
+// for autotests
+if (typeof window !== 'undefined') {
+  Object.assign(window, { createLayer });
+}

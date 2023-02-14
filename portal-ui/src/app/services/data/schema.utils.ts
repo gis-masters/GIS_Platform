@@ -29,7 +29,6 @@ import { LibraryRecord } from './doc-library.service';
 import { DocumentInfo } from '../../components/Documents/Documents';
 import { formatDate } from '../util/date.util';
 import { FileInfo } from './files.service';
-import { schemaService } from './schema.service';
 import { CoordinateEdited, WfsFeature } from '../geoserver/wfs.models';
 
 export function applyViewOld(schema: OldSchema, viewId?: string): OldSchema {
@@ -491,11 +490,10 @@ export function getReadablePropertyValue(value: unknown, property?: PropertySche
   return String(value ?? '');
 }
 
-export async function getGeometryFieldName(schemaId: string): Promise<string> {
-  const schema = await schemaService.getSchema(schemaId);
+export function getGeometryFieldName(schema: Schema): string {
   const gProperty = schema.properties.find(prop => prop.propertyType === PropertyType.GEOMETRY);
   if (!gProperty) {
-    throw new Error(`В схеме: '${schemaId}' не найдено свойство с геометрией`);
+    throw new Error(`В схеме: '${schema.name}' не найдено свойство с геометрией`);
   }
 
   return gProperty.name || 'shape';

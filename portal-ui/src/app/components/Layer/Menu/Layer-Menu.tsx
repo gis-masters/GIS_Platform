@@ -15,6 +15,7 @@ import {
 } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
+import { cn } from '@bem-react/classname';
 
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
@@ -56,6 +57,8 @@ import { MenuNestedItem } from '../../MenuNestedItem/MenuNestedItem';
 import { getEmptyFeature } from '../../../services/geoserver/wfs.util';
 import { ContentType, PropertyType, Schema } from '../../../services/data/schema.models';
 import { getViewChoiceOptions } from '../../Form/Form.utils';
+
+export const cnLayerMenuLayerProperties = cn('LayerMenu', 'LayerProperties');
 
 interface LayerMenuProps {
   entity: TreeItemPayload;
@@ -270,6 +273,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
         {!isGroup && editMode && (
           <FormDialog<Partial<CrgLayer>>
+            className={cnLayerMenuLayerProperties()}
             open={this.layerEditDialog}
             schema={this.layerSchema}
             value={entity as CrgLayer}

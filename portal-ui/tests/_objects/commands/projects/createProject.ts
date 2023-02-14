@@ -30,6 +30,6 @@ export async function createProject(title: string): Promise<void> {
   }, title);
 }
 
-Given(/^существует только проект с названием "(.*)"$/, async (title: string) => {
+Given(/^существует единственный проект с названием "(.*)"$/, async (title: string) => {
   await createProject(title);
 });

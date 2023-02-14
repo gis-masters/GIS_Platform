@@ -51,7 +51,12 @@ export class SelectVectorTable extends Component<SelectVectorTableProps> {
         >
           {vectorTable ? <Breadcrumbs items={this.breadcrumbsItems} itemsType='none' /> : 'Не выбрано'}
         </ButtonBase>
-        <Dialog open={this.dialogOpen} onClose={this.closeDialog} maxWidth='md'>
+        <Dialog
+          className={cnSelectVectorTable('Dialog')}
+          open={this.dialogOpen}
+          onClose={this.closeDialog}
+          maxWidth='md'
+        >
           <DialogTitle>Выберите источник данных</DialogTitle>
           <DialogContent>
             <Explorer

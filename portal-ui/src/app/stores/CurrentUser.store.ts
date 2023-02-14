@@ -73,3 +73,8 @@ class CurrentUser implements OrgInfo {
 }
 
 export const currentUser = CurrentUser.instance;
+
+// for autotests
+if (typeof window !== 'undefined') {
+  Object.assign(window, { currentUser });
+}

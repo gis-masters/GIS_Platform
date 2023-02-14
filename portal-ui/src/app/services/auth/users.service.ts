@@ -62,7 +62,9 @@ class UsersService {
   async fetchCurrentUser(autoLogin?: boolean) {
     try {
       const userInfo = await http.get<OrgInfo>(await getUserUrl('current'));
-      if (userInfo.id !== currentUser.id) currentUser.setOrgInfo(userInfo);
+      if (userInfo.id !== currentUser.id) {
+        currentUser.setOrgInfo(userInfo);
+      }
     } catch {
       currentUser.reset();
     }

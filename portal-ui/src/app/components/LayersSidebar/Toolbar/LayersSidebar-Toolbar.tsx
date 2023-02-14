@@ -25,6 +25,8 @@ import { LayersSidebarToolbarRight } from '../ToolbarRight/LayersSidebar-Toolbar
 import '!style-loader!css-loader!sass-loader!./LayersSidebar-Toolbar.scss';
 
 const cnLayersSidebarToolbar = cn('LayersSidebar', 'Toolbar');
+const cnLayersSidebarEditBtn = cn('LayersSidebar', 'EditBtn');
+const cnLayersSidebarAddLayerBtn = cn('LayersSidebar', 'AddLayerBtn');
 
 interface LayersSidebarToolbarProps {
   above: boolean;
@@ -73,7 +75,7 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
           <LayersSidebarToolbarRight>
             {editMode && (
               <Tooltip title='Подключить слой'>
-                <IconButton onClick={this.openAddLayerDialog}>
+                <IconButton className={cnLayersSidebarAddLayerBtn()} onClick={this.openAddLayerDialog}>
                   {this.addLayerDialogOpen ? <LayerAdd /> : <LayerAddOutlined />}
                 </IconButton>
               </Tooltip>
@@ -89,7 +91,7 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
 
             {organizationSettings.editProjectLayer && (
               <Tooltip title='Настроить слои проекта'>
-                <IconButton onClick={this.handleEditModeClick}>
+                <IconButton className={cnLayersSidebarEditBtn()} onClick={this.handleEditModeClick}>
                   {editMode ? <LayersSettings /> : <LayersSettingsOutline />}
                 </IconButton>
               </Tooltip>

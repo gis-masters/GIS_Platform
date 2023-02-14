@@ -15,6 +15,7 @@ import { CrgProject } from '../../services/gis/projects.models';
 import { FileConnection } from '../../services/data/files.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { ConnectionsToProjects } from '../ConnectionsToProjects/ConnectionsToProjects';
+import { isLayersManagementAllowed } from '../../services/data/permissions.service';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { PropertyType, Schema } from '../../services/data/schema.models';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
@@ -27,7 +28,6 @@ import '!style-loader!css-loader!sass-loader!./ConnectionsToProjectsWidget.scss'
 import '!style-loader!css-loader!sass-loader!./Dialog/ConnectionsToProjectsWidget-Dialog.scss';
 import '!style-loader!css-loader!sass-loader!./Explorer/ConnectionsToProjectsWidget-Explorer.scss';
 import '!style-loader!css-loader!sass-loader!./ViewSelector/ConnectionsToProjectsWidget-ViewSelector.scss';
-import { isLayersManagementAllowed } from '../../services/data/permissions.service';
 
 const cnConnectionsToProjectsWidget = cn('ConnectionsToProjectsWidget');
 
@@ -86,7 +86,11 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
                   <Button onClick={this.closeCurrentProjectsDialog}>Закрыть</Button>
                 </DialogActions>
               </Dialog>
-              <Dialog open={this.selectProjectDialogOpen} onClose={this.closeSelectProjectDialog}>
+              <Dialog
+                open={this.selectProjectDialogOpen}
+                className={cnConnectionsToProjectsWidget('Dialog')}
+                onClose={this.closeSelectProjectDialog}
+              >
                 <DialogTitle>Выбор проекта</DialogTitle>
                 <DialogContent>
                   <RegistryConsumer id='common'>

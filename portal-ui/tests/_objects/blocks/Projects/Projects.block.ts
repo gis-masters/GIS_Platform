@@ -1,7 +1,7 @@
 import { binding, then, when } from 'cucumber-tsflow/dist';
 
 import { Block, BlockModel } from '../../Block';
-import { projectForm } from '../ProjectForm/ProjectForm.block';
+import { projectForm } from '../ProjectsForm/ProjectsForm.block';
 import { loading } from '../Loading/Loading.block';
 
 @binding()

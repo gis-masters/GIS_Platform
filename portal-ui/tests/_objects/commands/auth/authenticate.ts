@@ -8,8 +8,13 @@ import { createTestUsers, createTestUsersInOtherOrganization } from './createUse
 import { homePage } from '../../pages/Home.page';
 import { testUsers } from './testUsers';
 import { Page } from '../../Page';
+import { usersService } from '../../../../src/app/services/auth/users.service';
+import { projectsPage } from '../../pages/Projects.page';
 
-declare const window: { authService: typeof authService };
+declare const window: {
+  authService: typeof authService;
+  usersService: typeof usersService;
+};
 
 async function authenticate(login: string, password: string, thenPage?: Page): Promise<AuthenticationResult> {
   const currentUrl = await browser.getUrl();
@@ -26,7 +31,7 @@ async function authenticate(login: string, password: string, thenPage?: Page): P
   );
 
   if (result.ok) {
-    await (thenPage ? thenPage.open() : browser.refresh());
+    await (thenPage ? thenPage.open() : projectsPage.open());
   }
 
   return result;
@@ -93,7 +98,7 @@ export async function logout(): Promise<void> {
 }
 
 export async function authenticateAs(
-  { email, password }: (typeof testUsers)[keyof typeof testUsers],
+  { email, password }: typeof testUsers[keyof typeof testUsers],
   thenPage?: Page
 ): Promise<void> {
   const { ok } = await authenticate(email, password, thenPage);

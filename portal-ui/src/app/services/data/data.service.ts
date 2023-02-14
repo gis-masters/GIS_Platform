@@ -399,3 +399,8 @@ export function tablesEqual(firstTable: VectorTable, ...otherTables: VectorTable
 
   return otherTables.every(table => table.identifier === identifier && table.dataset === dataset);
 }
+
+// for autotests
+if (typeof window !== 'undefined') {
+  Object.assign(window, { createDataset, createVectorTable, getDatasets, getDatasetTables });
+}

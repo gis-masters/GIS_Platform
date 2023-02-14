@@ -11,11 +11,14 @@ Then(/^блок "([\dA-Za-z]*)" вариант "([\dA-Za-z-]*)" выглядит
 });
 
 export abstract class Block {
+  parentSelector: string;
+
   get name(): string {
     return this.constructor.name;
   }
 
-  constructor() {
+  constructor(parentSelector = '') {
+    this.parentSelector = parentSelector;
     blocksRegistry[this.constructor.name] = this;
   }
 
