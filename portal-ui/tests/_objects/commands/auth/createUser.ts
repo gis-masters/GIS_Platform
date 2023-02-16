@@ -48,7 +48,13 @@ export async function createUser({
 }
 
 export async function createTestUsers(): Promise<void> {
-  const { owner, contributor, viewer, user, disabled } = testUsers;
+  const {
+    'Владелец данных': owner,
+    'Редактор данных': contributor,
+    'Читатель данных': viewer,
+    'Пользователь без прав': user,
+    'Деактивированный пользователь': disabled
+  } = testUsers;
 
   await createUser({
     enabled: true,
@@ -112,11 +118,13 @@ export async function createTestUsers(): Promise<void> {
 
   await sleep(5000); // wait for users ready
   const deadUser = await getUserByEmail('fred@dead');
-  await editUser({ enabled: false }, deadUser.id);
+  if (deadUser) {
+    await editUser({ enabled: false }, deadUser.id);
+  }
 }
 
 export async function createTestUsersInOtherOrganization(): Promise<void> {
-  const { collaborator } = testUsers;
+  const collaborator = testUsers['Член обоих организаций'];
 
   await createUser({
     enabled: true,

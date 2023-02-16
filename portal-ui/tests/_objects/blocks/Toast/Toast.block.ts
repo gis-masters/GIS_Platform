@@ -27,7 +27,6 @@ class Toast extends Block implements BlockModel {
   async clickMoar(): Promise<void> {
     const $moar = await this.$moar;
     await $moar.click();
-    await this.mockErrorFile();
   }
 
   @when(/^я нажимаю на крестик в уведомлении$/)
@@ -56,20 +55,7 @@ class Toast extends Block implements BlockModel {
     });
 
     await this.waitForVisible();
-    await browser.pause(300); // animation
-  }
-
-  async mockErrorFile(): Promise<void> {
-    await browser.execute(() => {
-      const fileNameEl = document.querySelector('.Toast-Source');
-      if (fileNameEl) {
-        fileNameEl.innerHTML = '/fakeFileName.js';
-      }
-      const fileNumsEl = document.querySelector('.Toast-FileNums');
-      if (fileNumsEl) {
-        fileNumsEl.innerHTML = '13:13';
-      }
-    });
+    await browser.pause(300); // анимация появления уведомления
   }
 
   async waitForVisible(): Promise<void> {

@@ -223,6 +223,11 @@ export async function createSchema(schema: Schema): Promise<void> {
   await authenticateAsAdmin();
   await browser.executeAsync(async (schema, callback) => {
     const parsedSchema = JSON.parse(schema) as Schema;
+
+    if (!parsedSchema.name) {
+      return;
+    }
+
     try {
       await window.schemaService.getSchema(parsedSchema.name);
     } catch {

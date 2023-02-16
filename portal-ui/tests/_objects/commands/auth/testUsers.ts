@@ -1,11 +1,19 @@
 import { RegData } from '../../../../src/app/services/auth/auth.service';
 
 export const testUsers: Record<
-  'superadmin' | 'admin' | 'owner' | 'contributor' | 'viewer' | 'user' | 'disabled' | 'otherAdmin' | 'collaborator',
+  | 'Администратор системы'
+  | 'Администратор организации'
+  | 'Владелец данных'
+  | 'Редактор данных'
+  | 'Читатель данных'
+  | 'Пользователь без прав'
+  | 'Деактивированный пользователь'
+  | 'Администратор другой организации'
+  | 'Член обоих организаций',
   RegData
 > = {
-  superadmin: {
-    company: 'Hogwarts',
+  'Администратор системы': {
+    company: 'Order of the Phoenix',
     contactPhone: '7777777777',
     firstName: 'Albus',
     lastName: 'Dumbledore',
@@ -13,7 +21,7 @@ export const testUsers: Record<
     password: 'Esterhazy2022',
     password_: 'Esterhazy2022'
   },
-  admin: {
+  'Администратор организации': {
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Hermione',
@@ -22,7 +30,7 @@ export const testUsers: Record<
     password: 'Avadakedavra1',
     password_: 'Avadakedavra1'
   },
-  owner: {
+  'Владелец данных': {
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Harry',
@@ -31,7 +39,7 @@ export const testUsers: Record<
     password: 'Avadakedavra2',
     password_: 'Avadakedavra2'
   },
-  contributor: {
+  'Редактор данных': {
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Draco',
@@ -40,7 +48,7 @@ export const testUsers: Record<
     password: 'Avadakedavra3',
     password_: 'Avadakedavra3'
   },
-  viewer: {
+  'Читатель данных': {
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Ronald',
@@ -49,7 +57,7 @@ export const testUsers: Record<
     password: 'Avadakedavra4',
     password_: 'Avadakedavra4'
   },
-  user: {
+  'Пользователь без прав': {
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Ginny',
@@ -58,7 +66,7 @@ export const testUsers: Record<
     password: 'Avadakedavra5',
     password_: 'Avadakedavra5'
   },
-  disabled: {
+  'Деактивированный пользователь': {
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Fred',
@@ -67,7 +75,7 @@ export const testUsers: Record<
     password: 'Avadakedavra6',
     password_: 'Avadakedavra6'
   },
-  otherAdmin: {
+  'Администратор другой организации': {
     company: 'Другая организация',
     contactPhone: '7777777777',
     firstName: 'Tom',
@@ -76,7 +84,7 @@ export const testUsers: Record<
     password: 'Avadakedavra666',
     password_: 'Avadakedavra666'
   },
-  collaborator: {
+  'Член обоих организаций': {
     company: 'Другая организация',
     contactPhone: '7777777777',
     firstName: 'Peter',

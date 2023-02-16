@@ -2,10 +2,10 @@ import { CrgUser, usersService } from '../../../../src/app/services/auth/users.s
 
 declare const window: { usersService: typeof usersService };
 
-export async function getUserByEmail(email: string): Promise<CrgUser> {
-  const result = await browser.executeAsync<string, [string]>(async (email, callback) => {
+export async function getUserByEmail(email: string): Promise<CrgUser | undefined> {
+  const result = await browser.executeAsync<string | undefined, [string]>(async (email, callback) => {
     callback(JSON.stringify(await window.usersService.getByEmail(email)));
   }, email);
 
-  return JSON.parse(result) as CrgUser;
+  return typeof result !== 'string' ? result : (JSON.parse(result) as CrgUser);
 }

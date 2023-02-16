@@ -22,6 +22,12 @@ export abstract class Block {
     blocksRegistry[this.constructor.name] = this;
   }
 
+  async waitForExist(): Promise<true | void> {
+    const $container = await (this as unknown as BlockModel).$container;
+
+    return $container.waitForExist({ timeout: 5000 });
+  }
+
   async waitForVisible(): Promise<true | void> {
     const $container = await (this as unknown as BlockModel).$container;
 
@@ -31,10 +37,7 @@ export abstract class Block {
   async waitForHidden(): Promise<void> {
     const $container = await (this as unknown as BlockModel).$container;
 
-    await $container.waitForDisplayed({
-      reverse: true,
-      timeout: 5000
-    });
+    await $container.waitForDisplayed({ reverse: true, timeout: 5000 });
   }
 
   async assertSelfie(tag = 'plain'): Promise<void> {

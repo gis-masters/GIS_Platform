@@ -9,7 +9,8 @@ export interface PageModel extends BlockModel {
 export const pagesRegistry: Record<string, Page> = {};
 
 export abstract class Page extends Block {
-  url?: string;
+  abstract url: string;
+  abstract title: string;
 
   constructor() {
     super();

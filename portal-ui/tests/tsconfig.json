@@ -2,6 +2,7 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "experimentalDecorators": true,
+    "strict": true,
     "allowSyntheticDefaultImports": true,
     "types": [
       "node",

@@ -12,7 +12,8 @@ export class MuiSelect extends Block implements BlockModel {
     const $parent = await $(this.parentSelector);
 
     return $parent.$(function (): HTMLElement {
-      return (this as HTMLElement).querySelector('.MuiInputBase-root div[class*="MuiSelect"]');
+      // @ts-expect-error потерялся контекст в типах
+      return (this as HTMLElement).querySelector('.MuiInputBase-root div[class*="MuiSelect"]') as HTMLElement;
     });
   }
 

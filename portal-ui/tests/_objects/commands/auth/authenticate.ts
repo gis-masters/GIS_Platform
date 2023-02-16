@@ -16,7 +16,11 @@ declare const window: {
   usersService: typeof usersService;
 };
 
-async function authenticate(login: string, password: string, thenPage?: Page): Promise<AuthenticationResult> {
+async function authenticate(
+  login: string,
+  password: string,
+  thenPage: Page = projectsPage
+): Promise<AuthenticationResult> {
   const currentUrl = await browser.getUrl();
   if (!currentUrl || currentUrl === 'data:,' || currentUrl === 'about:blank') {
     await homePage.open();
@@ -31,7 +35,7 @@ async function authenticate(login: string, password: string, thenPage?: Page): P
   );
 
   if (result.ok) {
-    await (thenPage ? thenPage.open() : projectsPage.open());
+    await thenPage.open();
   }
 
   return result;
@@ -66,39 +70,39 @@ async function authenticateAsSomeAdmin(admin: RegData, thenPage?: Page): Promise
 }
 
 export async function authenticateAsAdmin(thenPage?: Page): Promise<void> {
-  await authenticateAsSomeAdmin(testUsers.admin, thenPage);
+  await authenticateAsSomeAdmin(testUsers['Администратор организации'], thenPage);
 }
 
 export async function authenticateAsOtherAdmin(thenPage?: Page): Promise<void> {
-  await authenticateAsSomeAdmin(testUsers.otherAdmin, thenPage);
+  await authenticateAsSomeAdmin(testUsers['Администратор другой организации'], thenPage);
 }
 
 export async function authenticateAsOwner(thenPage?: Page): Promise<void> {
-  await authenticateAs(testUsers.owner, thenPage);
+  await authenticateAs(testUsers['Владелец данных'], thenPage);
 }
 
 export async function authenticateAsContributor(thenPage?: Page): Promise<void> {
-  await authenticateAs(testUsers.contributor, thenPage);
+  await authenticateAs(testUsers['Редактор данных'], thenPage);
 }
 
 export async function authenticateAsViewer(thenPage?: Page): Promise<void> {
-  await authenticateAs(testUsers.viewer, thenPage);
+  await authenticateAs(testUsers['Читатель данных'], thenPage);
 }
 
 export async function authenticateAsUser(thenPage?: Page): Promise<void> {
-  await authenticateAs(testUsers.user, thenPage);
+  await authenticateAs(testUsers['Пользователь без прав'], thenPage);
 }
 
 export async function logout(): Promise<void> {
   await browser.execute(() => {
     void window.authService.logout();
   });
-  await browser.pause(500);
+  await browser.pause(500); // перезагрузка страницы после logout
   await homePage.waitForVisible();
 }
 
 export async function authenticateAs(
-  { email, password }: typeof testUsers[keyof typeof testUsers],
+  { email, password }: (typeof testUsers)[keyof typeof testUsers],
   thenPage?: Page
 ): Promise<void> {
   const { ok } = await authenticate(email, password, thenPage);
@@ -113,12 +117,17 @@ Given(/^я авторизован как "(.*)"$/, async (user: keyof typeof tes
   await authenticateAs(testUsers[user]);
 });
 
-Given(/^существует пользователь "(.*)"$/, async (user: keyof typeof testUsers) => {
+Given(/^существуют тестовая организация и тестовые пользователи$/, async () => {
   await authenticateAsAdmin();
-  const result = await getUserByEmail(testUsers[user]?.email);
 
-  if (!result) {
-    await createTestUsers();
+  for (const user of Object.values(testUsers)) {
+    if (user.company === 'Hogwarts') {
+      const result = await getUserByEmail(user.email);
+
+      if (!result) {
+        await createTestUsers();
+      }
+    }
   }
 
   await logout();

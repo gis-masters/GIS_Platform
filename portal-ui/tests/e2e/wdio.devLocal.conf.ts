@@ -6,9 +6,9 @@ export const config: Options.Testrunner = {
   ...baseConfig,
 
   baseUrl: `http://localhost:4200`,
-  hostname: null,
-  port: null,
-  path: null,
+  hostname: undefined,
+  port: undefined,
+  path: undefined,
   capabilities: [
     {
       maxInstances: 1,

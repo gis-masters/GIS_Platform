@@ -4,6 +4,7 @@ import { Page, PageModel } from '../Page';
 
 @binding()
 class BLPage extends Page implements PageModel {
+  title = 'Библиотека блоков';
   url = '';
 
   get $container(): Promise<WebdriverIO.Element> {

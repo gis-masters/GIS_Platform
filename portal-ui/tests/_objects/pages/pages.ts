@@ -1,22 +1,45 @@
 import { Given, Then, When } from '@wdio/cucumber-framework';
 
-import { pagesRegistry } from '../Page';
+import { root } from '../blocks/Root/Root';
+import { testUsers } from '../commands/auth/testUsers';
+import { Page, pagesRegistry } from '../Page';
 
-Then(/^открылась страница "([\dA-Za-z]*)"$/, async (name: string) => {
-  await pagesRegistry[name].waitForVisible();
-  await pagesRegistry[name].testUrl();
+function findPage(title: string): Page {
+  const page = Object.values(pagesRegistry).find(page => page.title === title);
+  if (!page) {
+    throw new Error(`Нет страницы "${title}"${JSON.stringify(Object.keys(pagesRegistry))}`);
+  }
+
+  return page;
+}
+
+Then(/^открылась страница "([^"]*)"$/, async (title: string) => {
+  const page = findPage(title);
+  await page.waitForVisible();
+  await page.testUrl();
 });
 
-Given(/^я на странице "(.*)"$/, async (name: string) => {
-  await pagesRegistry[name].open();
+Given(/^я на странице "([^"]*)"$/, async (title: string) => {
+  const page = findPage(title);
+  await page.open();
 });
 
-When(/^я открываю страницу "(.*)"$/, async (name: string) => {
-  await browser.url(pagesRegistry[name].url);
-  await browser.pause(5000);
+When(/^я открываю страницу "([^"]*)"$/, async (title: string) => {
+  const page = findPage(title);
+  await browser.url(page.url);
+  await root.waitForExist();
 });
 
-When(/^я открываю страницу "(.*)" с гостевыми логином-паролем$/, async (name: string) => {
-  await browser.url(pagesRegistry[name].url + '/?guestName=ron@viewer&guestPass=Avadakedavra4');
-  await browser.pause(5000);
-});
+When(
+  /^я открываю страницу "([^"]*)" с гостевыми логином-паролем пользователя "([^"]*)"$/,
+  async (pageTitle: string, user: keyof typeof testUsers) => {
+    if (!testUsers[user]) {
+      throw new Error(`Нет пользователя "${user}"`);
+    }
+
+    const { email, password } = testUsers[user];
+
+    await browser.url(findPage(pageTitle).url + `/?guestName=${email}&guestPass=${password}`);
+    await root.waitForExist();
+  }
+);

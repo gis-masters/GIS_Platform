@@ -1,6 +1,7 @@
 import { Page } from '../Page';
 
 class ProjectsPage extends Page {
+  title = 'Проекты';
   url = 'projects';
 
   get $container(): Promise<WebdriverIO.Element> {

@@ -3,10 +3,12 @@ import { Given } from '@wdio/cucumber-framework';
 import {
   createDataset,
   createVectorTable,
+  DataEntityType,
   getDatasets,
   getDatasetTables,
   VectorTable
 } from '../../../src/app/services/data/data.service';
+import { Role } from '../../../src/app/services/data/permissions.models';
 import { authenticateAsOwner } from './auth/authenticate';
 
 declare const window: {
@@ -28,17 +30,17 @@ export async function createTestVectorTable(title: string, schemaId: string): Pr
       });
 
       if (!vectorTables.length) {
-        const table1: VectorTable = {
+        const table: VectorTable = {
           title,
           crs: 'EPSG:28407',
           schemaId,
-          type: undefined,
-          dataset: undefined,
-          role: undefined,
-          identifier: undefined
+          type: 'TABLE' as DataEntityType.TABLE,
+          dataset: '',
+          role: 'OWNER' as Role,
+          identifier: ''
         };
 
-        await window.createVectorTable(datasets[0], table1);
+        await window.createVectorTable(datasets[0], table);
       }
 
       callback();

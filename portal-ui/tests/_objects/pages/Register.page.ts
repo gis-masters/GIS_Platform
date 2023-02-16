@@ -1,6 +1,7 @@
 import { Page, PageModel } from '../Page';
 
 class RegisterPage extends Page implements PageModel {
+  title = 'Регистрация';
   url = 'register';
 
   get $container(): Promise<WebdriverIO.Element> {

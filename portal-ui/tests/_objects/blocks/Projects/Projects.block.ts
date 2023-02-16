@@ -92,8 +92,12 @@ class Projects extends Block implements BlockModel {
         ?.getAttribute('data-id');
     }, name);
 
-    const $projectCard = await browser.$(`.ProjectCard[data-id="${id}"]`);
-    await $projectCard.waitForClickable({ timeout: 5000, timeoutMsg: `Не появился проект ${name}[${id}]` });
+    if (id) {
+      const $projectCard = await browser.$(`.ProjectCard[data-id="${id}"]`);
+      await $projectCard.waitForClickable({ timeout: 5000, timeoutMsg: `Не появился проект ${name}[${id}]` });
+    } else {
+      throw new Error(`Не найден проект "${name}"`);
+    }
   }
 }
 

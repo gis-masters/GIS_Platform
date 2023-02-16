@@ -21,21 +21,24 @@ export async function createLayerWIthView(layerTitle: string, viewId: string): P
   await browser.executeAsync(
     async (title, id, callback) => {
       const [datasets] = await window.getDatasets({ page: 0, pageSize: 10 });
-
       const [vectorTables] = await window.getDatasetTables(datasets[0].identifier, { page: 0, pageSize: 10 });
       const vectorTable = vectorTables.find(item => item.title === title);
-
       const [projects] = await window.projectsService.getProjects({ page: 0, pageSize: 10 });
+
+      if (!vectorTable) {
+        return;
+      }
+
       const layer = {
         dataStoreName: window.currentUser.workspaceName,
         type: 'vector' as CrgLayerType,
         dataset: datasets[0].identifier,
-        tableName: vectorTable?.identifier,
-        complexName: `${window.currentUser.workspaceName}:${vectorTable?.identifier}`,
+        tableName: vectorTable.identifier,
+        complexName: `${window.currentUser.workspaceName}:${vectorTable.identifier}`,
         title: title,
-        nativeCRS: vectorTable?.crs,
-        schemaId: vectorTable?.schemaId,
-        styleName: vectorTable?.schemaId,
+        nativeCRS: vectorTable.crs,
+        schemaId: vectorTable.schemaId,
+        styleName: vectorTable.schemaId,
         view: id,
         enabled: true,
         position: -42,

@@ -16,8 +16,16 @@ async function selectVectorTable(tableTitle: string, datasetTitle: string): Prom
       const [datasets] = await window.getDatasets({ page: 0, pageSize: 10 });
       const dataset = datasets.find(item => item.title === datasetTitle);
 
+      if (!dataset) {
+        return;
+      }
+
       const [vectorTables] = await window.getDatasetTables(dataset.identifier, { page: 0, pageSize: 10 });
       const vectorTable = vectorTables.find(item => item.title === tableTitle);
+
+      if (!vectorTable) {
+        return;
+      }
 
       const url = `/data-management?path_dm=%5B"r","root","dr","datasetRoot","dataset","${dataset.identifier}","table","${vectorTable.identifier}"%5D&opts_dm=%5B0,10,"created_at","desc",%7B%7D%5D`;
       callback(url);
