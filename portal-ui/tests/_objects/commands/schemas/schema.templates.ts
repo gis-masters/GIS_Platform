@@ -1,13 +1,8 @@
-import { Given } from '@wdio/cucumber-framework';
-
-import { schemaService } from '../../../src/app/services/data/schema.service';
-import { PropertyType, Schema } from '../../../src/app/services/data/schema.models';
-import { GeometryType } from '../../../src/app/services/geoserver/wfs.models';
-import { convertNewToOldSchema } from '../../../src/app/services/data/schema.utils';
-import { authenticateAsAdmin } from './auth/authenticate';
+import { PropertyType, Schema } from '../../../../src/app/services/data/schema.models';
+import { GeometryType } from '../../../../src/app/services/geoserver/wfs.models';
 
 const schemaWithViews: Schema = {
-  name: 'border1',
+  name: 'schemaWithViews',
   title: 'Административное деление с представлениями',
   readOnly: false,
   tableName: 'border1',
@@ -126,8 +121,8 @@ const schemaWithViews: Schema = {
   geometryType: GeometryType.MULTI_POLYGON
 };
 
-const schema: Schema = {
-  name: 'border2',
+const schemaWithoutViews: Schema = {
+  name: 'schemaWithoutViews',
   title: 'Административное деление',
   readOnly: false,
   tableName: 'border2',
@@ -214,40 +209,45 @@ const schema: Schema = {
   geometryType: GeometryType.MULTI_POLYGON
 };
 
-declare const window: {
-  schemaService: typeof schemaService;
-  convertNewToOldSchema: typeof convertNewToOldSchema;
+const testSortingSchema: Schema = {
+  name: 'test_sorting__schema',
+  title: 'Схема для тестирования сортировки',
+  description: 'Схема для тестирования сортировки в атрибутивной таблице. Версия 1',
+  readOnly: false,
+  tableName: 'test_sorting__v1',
+  styleName: 'generic',
+  geometryType: GeometryType.MULTI_POLYGON,
+  properties: [
+    {
+      name: 'number_int',
+      title: 'Целое число int',
+      propertyType: PropertyType.INT
+    },
+    {
+      name: 'number_double',
+      title: 'Дробное число double',
+      propertyType: PropertyType.FLOAT
+    },
+    {
+      name: 'some_string',
+      title: 'Строка',
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'some_date',
+      title: 'Дата',
+      propertyType: PropertyType.DATETIME
+    },
+    {
+      name: 'shape',
+      title: 'Поле для геометрии',
+      propertyType: PropertyType.GEOMETRY
+    }
+  ]
 };
 
-export async function createSchema(schema: Schema): Promise<void> {
-  await authenticateAsAdmin();
-  await browser.executeAsync(async (schema, callback) => {
-    const parsedSchema = JSON.parse(schema) as Schema;
-
-    if (!parsedSchema.name) {
-      return;
-    }
-
-    try {
-      await window.schemaService.getSchema(parsedSchema.name);
-    } catch {
-      await window.schemaService.createSchema(parsedSchema);
-    }
-
-    callback();
-  }, JSON.stringify(schema));
-}
-
-Given(/^существует заготовленная схема "(.*)" без представлений$/, async (title: string) => {
-  schema.name = title;
-  schema.tableName = title;
-
-  await createSchema(schema);
-});
-
-Given(/^существует заготовленная схема "(.*)" с представлениями$/, async (title: string) => {
-  schemaWithViews.name = title;
-  schemaWithViews.tableName = title;
-
-  await createSchema(schemaWithViews);
-});
+export const testSchemas: { [key: string]: Schema } = {
+  'Схема с представлениями': schemaWithViews,
+  'Схема без представлений': schemaWithoutViews,
+  'Схема для тестирования сортировки': testSortingSchema
+};

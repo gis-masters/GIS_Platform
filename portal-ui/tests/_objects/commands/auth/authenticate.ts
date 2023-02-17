@@ -114,7 +114,12 @@ export async function authenticateAs(
 }
 
 Given(/^я авторизован как "(.*)"$/, async (user: keyof typeof testUsers) => {
-  await authenticateAs(testUsers[user]);
+  const testUser = testUsers[user];
+  if (!testUser) {
+    throw new Error(`Used unknown user: '${user}'`);
+  }
+
+  await authenticateAs(testUser);
 });
 
 Given(/^существуют тестовая организация и тестовые пользователи$/, async () => {
