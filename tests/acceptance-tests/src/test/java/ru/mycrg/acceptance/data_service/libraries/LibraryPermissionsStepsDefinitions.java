@@ -353,8 +353,8 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         baseRecords.deleteRecord(folder11Id);
     }
 
-    @Then("пользователь пытается создать новый каталог в библиотеке: {string}")
-    public void tryCreateNewFolderInFolder1(String folder) {
+    @Then("пользователь пытается создать новый каталог в тестовой библиотеке")
+    public void createNewFolderInDefaultLibrary() {
         authorizationBase.loginAsCurrentUser();
 
         baseRecords.createRecord(DEFAULT_LIBRARY, new RecordDto("someNewFolder"));

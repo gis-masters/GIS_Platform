@@ -32,6 +32,7 @@ public class SimplePropertyDto {
     private Boolean objectIdentityOnUi;
     private Boolean readOnly;
     private Boolean multiple;
+    private Boolean asTitle;
 
     private String description;
     private Updateability updateability;
@@ -444,5 +445,13 @@ public class SimplePropertyDto {
 
     public void setDefaultValueWellKnownFormula(String defaultValueWellKnownFormula) {
         this.defaultValueWellKnownFormula = defaultValueWellKnownFormula;
+    }
+
+    public Boolean getAsTitle() {
+        return asTitle;
+    }
+
+    public void setAsTitle(Boolean asTitle) {
+        this.asTitle = asTitle;
     }
 }
