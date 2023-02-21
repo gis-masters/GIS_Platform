@@ -1,9 +1,7 @@
-import { binding, then, when } from 'cucumber-tsflow/dist';
 import { sleep } from '../../../../src/app/services/util/sleep';
 
 import { Block, BlockModel } from '../../Block';
 
-@binding()
 class Explorer extends Block implements BlockModel {
   get $container(): Promise<WebdriverIO.Element> {
     return $('.Explorer');
@@ -37,7 +35,6 @@ class Explorer extends Block implements BlockModel {
     return $('.Explorer .ConnectionsToProjectsWidget button');
   }
 
-  @when(/^выбираю векторную таблицу `админ деление с представлениями`$/)
   async selectedVectorTableWithViews(): Promise<void> {
     const $firstDataset = await this.$firstItemTitle;
 
@@ -45,7 +42,6 @@ class Explorer extends Block implements BlockModel {
     expect(vectorTableTitle).toEqual('админ деление с представлениями');
   }
 
-  @when(/^я захожу в первый набор данных$/)
   async authWithError(): Promise<void> {
     const $firstItemTitle = await this.$firstItemTitle;
     await $firstItemTitle.doubleClick();
@@ -53,7 +49,6 @@ class Explorer extends Block implements BlockModel {
     await sleep(500); // ждем анимации перехода
   }
 
-  @when(/^выбираю векторную таблицу `админ деление без представлений`$/)
   async selectedVectorTableWithoutViews(): Promise<void> {
     const $secondDataset = await this.$secondItemTitle;
     await $secondDataset.waitForDisplayed({ timeout: 1000 });
@@ -63,13 +58,11 @@ class Explorer extends Block implements BlockModel {
     await $secondDataset.click();
   }
 
-  @when(/^нажимаю кнопку `Подключить в проект` в правой панели векторной таблицы$/)
   async addToProject(): Promise<void> {
     const $connectionToProject = await this.$connectionToProject;
     await $connectionToProject.click();
   }
 
-  @when(/^я дожидаюсь окончания загрузки в explorer$/)
   async waitForLoading(): Promise<void> {
     await browser.pause(300);
     const $loader = await this.$loader;
@@ -85,13 +78,11 @@ class Explorer extends Block implements BlockModel {
     return await Promise.all($$titles.map(async $title => await $title.getText()));
   }
 
-  @then(/^список названий в explorer: (".+"[ ,]*)+$/)
   async testTitles(dirty: string) {
     const titles = dirty.slice(1, -1).split('", "');
     expect(titles).toEqual(await this.getListTitles());
   }
 
-  @then(/^список в explorer пуст$/)
   async testEmptiness() {
     await expect(this.$empty).toBeDisplayedInViewport();
   }

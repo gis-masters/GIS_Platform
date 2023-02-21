@@ -84,7 +84,7 @@ SELECT 'reestr_common_schema',
     }
   ]
 }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'reestrs');
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'reestr_common_schema');
 
 
 -- Incoming

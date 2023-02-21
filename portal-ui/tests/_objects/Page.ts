@@ -8,7 +8,7 @@ export interface PageModel extends BlockModel {
 
 export const pagesRegistry: Record<string, Page> = {};
 
-export abstract class Page extends Block {
+export abstract class Page extends Block implements BlockModel {
   abstract url: string;
   abstract title: string;
 
@@ -16,6 +16,8 @@ export abstract class Page extends Block {
     super();
     pagesRegistry[this.constructor.name] = this;
   }
+
+  abstract $container: Promise<WebdriverIO.Element>;
 
   async testUrl(): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/await-thenable -- типы врут

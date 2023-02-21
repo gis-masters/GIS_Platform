@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
-import { PlaylistAdd } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
+import { PlaylistAdd } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
+import { action, observable, makeObservable } from 'mobx';
 
 import { createDataset, Dataset, datasetSchema, NewDataset } from '../../services/data/data.service';
 
 import { FormDialog } from '../FormDialog/FormDialog';
+
+const cnCreateDataset = cn('CreateDataset');
 
 @observer
 export class CreateDataset extends Component {
@@ -22,12 +25,13 @@ export class CreateDataset extends Component {
     return (
       <>
         <Tooltip title='Создать набор данных'>
-          <IconButton onClick={this.openDialog}>
+          <IconButton className={cnCreateDataset()} onClick={this.openDialog}>
             <PlaylistAdd />
           </IconButton>
         </Tooltip>
 
         <FormDialog<Dataset>
+          className={cnCreateDataset('Form')}
           open={this.dialogOpen}
           value={{}}
           schema={datasetSchema}
@@ -51,9 +55,8 @@ export class CreateDataset extends Component {
 
   @boundMethod
   private async create(formValue: NewDataset) {
-    try {
-      await createDataset(formValue);
-    } catch {}
+    await createDataset(formValue);
+
     this.closeDialog();
   }
 }
