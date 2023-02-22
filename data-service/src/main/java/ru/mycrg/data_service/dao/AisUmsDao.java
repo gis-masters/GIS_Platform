@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
-import ru.mycrg.data_service.dto.AisUmsDto;
+import ru.mycrg.data_service.entity.AisUms;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.util.List;
@@ -25,14 +25,15 @@ public class AisUmsDao {
         this.datasourceFactory = datasourceFactory;
     }
 
-    public void updateTable(ResourceQualifier tQualifier, List<AisUmsDto> aisUmsData) {
+    public void updateTable(ResourceQualifier tQualifier, List<AisUms> aisUmsData) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(DATA_SOURCE_NAME));
 
-        for (AisUmsDto aisUmsDto: aisUmsData) {
+        for (AisUms aisUms: aisUmsData) {
             String query = "UPDATE " + tQualifier.getQualifier() +
-                    " SET aisums_property_type = '" + aisUmsDto.getPropertyType() + "'," +
-                    "     aisums_number = '" + aisUmsDto.getRegNum() + "'" +
-                    " WHERE cad_num = '" + aisUmsDto.getCadNum() + "'";
+                    " SET aisums_property_type = '" + aisUms.getPropertyType() + "'," +
+                    "     aisums_number = '" + aisUms.getRegNum() + "'," +
+                    "     acsept_at = '" + aisUms.getCreatedAt() + "'" +
+                    " WHERE cad_num = '" + aisUms.getCadNum() + "'";
 
             log.debug("Update query with AIS UMS data: [{}]", query);
 

@@ -11,6 +11,7 @@ import ru.mycrg.data_service.service.AisUmsService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -33,8 +34,8 @@ public class AisUmsController {
             return new ResponseEntity<>(UNAUTHORIZED);
         }
 
-        aisUmsService.saveAisUms(aisUmsModel);
-        aisUmsService.updateAisUmsColumnsInStpDataset(aisUmsModel.getContent());
+        List<AisUms> aisUmsSaved = aisUmsService.saveAisUms(aisUmsModel);
+        aisUmsService.updateAisUmsColumnsInStpDataset(aisUmsSaved);
 
         return ResponseEntity.status(CREATED).build();
     }

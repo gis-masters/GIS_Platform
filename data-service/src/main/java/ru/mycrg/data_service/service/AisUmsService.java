@@ -9,7 +9,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.AisUmsDao;
-import ru.mycrg.data_service.dto.AisUmsDto;
 import ru.mycrg.data_service.dto.AisUmsModel;
 import ru.mycrg.data_service.entity.AisUms;
 import ru.mycrg.data_service.entity.IntegrationTokens;
@@ -41,18 +40,20 @@ public class AisUmsService {
         return aisUmsRepository.findAll(pageable);
     }
 
-    public void saveAisUms(AisUmsModel aisUmsModel) {
+    public List<AisUms> saveAisUms(AisUmsModel aisUmsModel) {
         log.debug("Request create aisUms, total: {}", aisUmsModel.getContent().size());
 
         List<AisUms> aisUms = aisUmsModel.getContent().stream()
                                          .map(AisUms::new)
                                          .collect(Collectors.toList());
         aisUmsRepository.saveAll(aisUms);
+
+        return aisUms;
     }
 
     // Обновляем данные в таблицах конкретного датасета - "СТП Крыма" - workspace_789
     // Слои из "СТП Крыма" подключены в остальные проекты
-    public void updateAisUmsColumnsInStpDataset(List<AisUmsDto> aisUmsData) {
+    public void updateAisUmsColumnsInStpDataset(List<AisUms> aisUmsData) {
         String datasetName = "workspace_789";
         List<String> schemasName = Arrays.asList("oks_constructions",
                                                  "oks_constructions_polyline",

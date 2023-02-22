@@ -32,6 +32,8 @@ public class AuthorizationBase extends BaseStepsDefinitions {
     }
 
     public void loginAsCurrentUser() {
+        System.out.println("login as current user: " + userDto.getEmail());
+
         Response response = authorizeUser(userDto.getEmail(), userDto.getPassword(), "current_user");
 
         checkCookieAndWriteAsCurrent(response);
@@ -50,6 +52,8 @@ public class AuthorizationBase extends BaseStepsDefinitions {
         assertNotNull(cookie);
         assertNotNull(accessToken);
         assertTrue(cookie.getValue().contains(AUTH_COOKIE_VALUE_SEPARATOR));
+
+        System.out.println("current auth cookie: " + cookie);
     }
 
     private Response authorizeUser(String login, String password, String user) {
