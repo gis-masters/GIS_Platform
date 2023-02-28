@@ -1,12 +1,12 @@
-import { Page, PageModel } from '../Page';
+import { Page } from '../Page';
 
-class RegisterPage extends Page implements PageModel {
+class RegisterPage extends Page {
   title = 'Регистрация';
   url = 'register';
 
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('crg-register .container');
-  }
+  selectors = {
+    container: 'crg-register .container'
+  };
 }
 
 export const registerPage = new RegisterPage();

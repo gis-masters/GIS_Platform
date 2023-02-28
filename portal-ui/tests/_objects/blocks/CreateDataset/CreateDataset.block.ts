@@ -1,15 +1,12 @@
-import { binding } from 'cucumber-tsflow/dist';
+import { Block } from '../../Block';
 
-import { Block, BlockModel } from '../../Block';
-
-@binding()
-class CreateDataset extends Block implements BlockModel {
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('.CreateDataset');
-  }
+class CreateDataset extends Block {
+  selectors = {
+    container: '.CreateDataset'
+  };
 
   async click() {
-    const $container = await this.$container;
+    const $container = await this.$('container');
     await $container.click();
   }
 }

@@ -1,31 +1,19 @@
-import { binding } from 'cucumber-tsflow/dist';
+import { Block } from '../../Block';
 
-import { Block, BlockModel } from '../../Block';
+export class MuiSelect extends Block {
+  selectors = {
+    container: '.MuiInputBase-root div[class*="MuiSelect"]'
+  };
 
-@binding()
-export class MuiSelect extends Block implements BlockModel {
-  get $container(): Promise<WebdriverIO.Element> {
-    return this.getContainer();
-  }
-
-  private async getContainer(): Promise<WebdriverIO.Element> {
-    const $parent = await $(this.parentSelector);
-
-    return $parent.$(function (): HTMLElement {
-      // @ts-expect-error потерялся контекст в типах
-      return (this as HTMLElement).querySelector('.MuiInputBase-root div[class*="MuiSelect"]') as HTMLElement;
-    });
-  }
-
-  $getSecondSelectOption(i: number): Promise<WebdriverIO.Element> {
+  $getSelectOption(i: number): Promise<WebdriverIO.Element> {
     return $(`.MuiMenu-root.MuiModal-root .MuiMenu-list .MuiMenuItem-root:nth-child(${i})`);
   }
 
   async selectOption(i: number): Promise<void> {
-    const $container = await this.$container;
+    const $container = await this.$('container');
     await $container.click();
 
-    const option = await this.$getSecondSelectOption(i);
+    const option = await this.$getSelectOption(i);
     await option.waitForDisplayed();
     await option.click();
 
@@ -33,7 +21,7 @@ export class MuiSelect extends Block implements BlockModel {
   }
 
   async getText(): Promise<string> {
-    const $container = await this.$container;
+    const $container = await this.$('container');
     const $select = await $container.$('.MuiSelect-select');
 
     return $select.getText();

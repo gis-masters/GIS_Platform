@@ -21,6 +21,9 @@ export interface PickupDatasetsProps {
   onDatasetSelected: (dataset: Dataset) => void;
 }
 
+/**
+ * @deprecated
+ */
 @observer
 export default class PickupDatasets extends Component<PickupDatasetsProps> {
   @observable private open = false;

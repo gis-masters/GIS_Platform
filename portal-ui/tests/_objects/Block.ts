@@ -1,16 +1,12 @@
-import { Then } from '@wdio/cucumber-framework';
+export const blocksRegistry: Record<string, Block> = {};
 
-export interface BlockModel {
-  $container: Promise<WebdriverIO.Element>;
+interface Selectors {
+  [key: string]: string;
+  container: string;
 }
 
-const blocksRegistry: Record<string, Block> = {};
-
-Then(/^блок "([\dA-Za-z]*)" вариант "([\dA-Za-z-]*)" выглядит как положено$/, async (name: string, variant: string) => {
-  await blocksRegistry[name].assertSelfie(variant);
-});
-
-export abstract class Block {
+export abstract class Block<S extends Selectors = Selectors> {
+  abstract selectors: S;
   parentSelector: string;
 
   get name(): string {
@@ -22,26 +18,38 @@ export abstract class Block {
     blocksRegistry[this.constructor.name] = this;
   }
 
+  protected async $(key: keyof this['selectors']): Promise<WebdriverIO.Element> {
+    const $parent = this.parentSelector ? await $(this.parentSelector) : browser;
+
+    return await $parent.$(this.selectors[key]);
+  }
+
+  protected async $$(key: keyof this['selectors']): Promise<WebdriverIO.Element[]> {
+    const $parent = this.parentSelector ? await $(this.parentSelector) : browser;
+
+    return await $parent.$$(this.selectors[key]);
+  }
+
   async waitForExist(): Promise<true | void> {
-    const $container = await (this as unknown as BlockModel).$container;
+    const $container = await this.$('container');
 
     return $container.waitForExist({ timeout: 5000 });
   }
 
   async waitForVisible(): Promise<true | void> {
-    const $container = await (this as unknown as BlockModel).$container;
+    const $container = await this.$('container');
 
     return $container.waitForDisplayed({ timeout: 5000 });
   }
 
   async waitForHidden(): Promise<void> {
-    const $container = await (this as unknown as BlockModel).$container;
+    const $container = await this.$('container');
 
     await $container.waitForDisplayed({ reverse: true, timeout: 5000 });
   }
 
   async assertSelfie(tag = 'plain'): Promise<void> {
-    const $container = await (this as unknown as BlockModel).$container;
+    const $container = await this.$('container');
 
     expect(await browser.checkElement($container, `${this.name}-${tag}`, {})).toEqual(0);
   }

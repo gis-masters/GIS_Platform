@@ -1,33 +1,22 @@
-import { binding, when } from 'cucumber-tsflow/dist';
-
-import { Block, BlockModel } from '../../Block';
+import { Block } from '../../Block';
 import { editFeature } from '../EditFeature/EditFeature.block';
 
-@binding()
-class EditFeatureGeometryAsTextDialog extends Block implements BlockModel {
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('.EditFeatureGeometry-AsTextDialog');
-  }
+class EditFeatureGeometryAsTextDialog extends Block {
+  selectors = {
+    container: '.EditFeatureGeometry-AsTextDialog',
+    editFeatureGeometryAsTextDialogTextarea:
+      '.EditFeatureGeometry-AsTextDialog .MuiInputBase-inputMultiline:first-child',
+    editFeatureGeometryAsTextDialogSaveBtn: '.EditFeatureGeometry-AsTextDialog .MuiButton-outlinedPrimary'
+  };
 
-  get $editFeatureGeometryAsTextDialogTextarea(): Promise<WebdriverIO.Element> {
-    return $('.EditFeatureGeometry-AsTextDialog .MuiInputBase-inputMultiline:first-child');
-  }
+  async setObjectDummyCoordinates(): Promise<void> {
+    await editFeature.clickGeometryAsTextButton();
 
-  get $editFeatureGeometryAsTextDialogSaveBtn(): Promise<WebdriverIO.Element> {
-    return $('.EditFeatureGeometry-AsTextDialog .MuiButton-outlinedPrimary');
-  }
-
-  @when(/^в правом сайдбаре на карте заполняю координаты объекта$/)
-  async setObjectCoordinates(): Promise<void> {
-    const $editFeatureGeometryAsText = await editFeature.$editFeatureGeometryAsTextBtn;
-    await $editFeatureGeometryAsText.waitForDisplayed();
-    await $editFeatureGeometryAsText.click();
-
-    const $editFeatureGeometryAsTextDialogTextarea = await this.$editFeatureGeometryAsTextDialogTextarea;
+    const $editFeatureGeometryAsTextDialogTextarea = await this.$('editFeatureGeometryAsTextDialogTextarea');
     await $editFeatureGeometryAsTextDialogTextarea.waitForDisplayed();
     await $editFeatureGeometryAsTextDialogTextarea.setValue('1 1');
 
-    const $editFeatureGeometryAsTextDialogSaveBtn = await this.$editFeatureGeometryAsTextDialogSaveBtn;
+    const $editFeatureGeometryAsTextDialogSaveBtn = await this.$('editFeatureGeometryAsTextDialogSaveBtn');
     await $editFeatureGeometryAsTextDialogSaveBtn.click();
   }
 }

@@ -1,12 +1,9 @@
-import { binding } from 'cucumber-tsflow/dist';
+import { Block } from '../../Block';
 
-import { Block, BlockModel } from '../../Block';
-
-@binding()
-class Map extends Block implements BlockModel {
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('.map');
-  }
+class Map extends Block {
+  selectors = {
+    container: '.map'
+  };
 }
 
 export const map = new Map();

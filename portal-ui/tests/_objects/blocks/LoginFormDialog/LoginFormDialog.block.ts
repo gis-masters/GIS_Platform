@@ -1,12 +1,9 @@
-import { binding } from 'cucumber-tsflow/dist';
+import { Block } from '../../Block';
 
-import { Block, BlockModel } from '../../Block';
-
-@binding()
-class LoginFormDialog extends Block implements BlockModel {
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('.LoginFormDialog');
-  }
+class LoginFormDialog extends Block {
+  selectors = {
+    container: '.LoginFormDialog'
+  };
 }
 
 export const loginFormDialog = new LoginFormDialog();

@@ -1,8 +1,10 @@
 import { Given, Then, When } from '@wdio/cucumber-framework';
 
-import { root } from '../blocks/Root/Root';
-import { testUsers } from '../commands/auth/testUsers';
-import { Page, pagesRegistry } from '../Page';
+import { root } from './blocks/Root/Root';
+import { testUsers } from './commands/auth/testUsers';
+import { Page, pagesRegistry } from './Page';
+import { blPage } from './pages/BL.page';
+import { dataManagementPage } from './pages/DataManagement.page';
 
 function findPage(title: string): Page {
   const page = Object.values(pagesRegistry).find(page => page.title === title);
@@ -43,3 +45,19 @@ When(
     await root.waitForExist();
   }
 );
+
+Given(/^я на странице "(.*)" библиотеки блоков$/, async (story: string) => {
+  await blPage.openExample(story);
+});
+
+When(/^я открываю страницу библиотек в управлении данными$/, async () => {
+  await dataManagementPage.openLibraryRootPage();
+});
+
+When(/^я открываю страницу наборов данных в управлении данными$/, async () => {
+  await dataManagementPage.openDatasetRootPage();
+});
+
+Then(/^открыта страница библиотек в управлении данными$/, async () => {
+  await dataManagementPage.testLibraryRootPage();
+});

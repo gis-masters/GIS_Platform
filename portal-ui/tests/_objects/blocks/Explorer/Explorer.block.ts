@@ -1,56 +1,35 @@
 import { sleep } from '../../../../src/app/services/util/sleep';
 
-import { Block, BlockModel } from '../../Block';
+import { Block } from '../../Block';
 
-class Explorer extends Block implements BlockModel {
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('.Explorer');
-  }
-
-  get $oneTitle(): Promise<WebdriverIO.Element> {
-    return $('.Explorer-ItemTitle');
-  }
-
-  get $$titles(): Promise<WebdriverIO.Element[]> {
-    return $$('.Explorer-ItemTitle');
-  }
-
-  get $loader(): Promise<WebdriverIO.Element> {
-    return $('.Explorer .Loading');
-  }
-
-  get $empty(): Promise<WebdriverIO.Element> {
-    return $('.Explorer-Empty');
-  }
-
-  get $firstItemTitle(): Promise<WebdriverIO.Element> {
-    return $('.Explorer-List .Explorer-Item:first-child .MuiListItemText-primary');
-  }
-
-  get $secondItemTitle(): Promise<WebdriverIO.Element> {
-    return $('.Explorer-List .Explorer-Item:last-child .MuiListItemText-primary');
-  }
-
-  get $connectionToProject(): Promise<WebdriverIO.Element> {
-    return $('.Explorer .ConnectionsToProjectsWidget button');
-  }
+class Explorer extends Block {
+  selectors = {
+    container: '.Explorer',
+    oneTitle: '.Explorer-ItemTitle',
+    titles: '.Explorer-ItemTitle',
+    loader: '.Explorer .Loading',
+    empty: '.Explorer-Empty',
+    firstItemTitle: '.Explorer-List .Explorer-Item:first-child .MuiListItemText-primary',
+    secondItemTitle: '.Explorer-List .Explorer-Item:last-child .MuiListItemText-primary',
+    connectionToProject: '.Explorer .ConnectionsToProjectsWidget button'
+  };
 
   async selectedVectorTableWithViews(): Promise<void> {
-    const $firstDataset = await this.$firstItemTitle;
+    const $firstDataset = await this.$('firstItemTitle');
 
     const vectorTableTitle = await $firstDataset.getText();
     expect(vectorTableTitle).toEqual('админ деление с представлениями');
   }
 
   async authWithError(): Promise<void> {
-    const $firstItemTitle = await this.$firstItemTitle;
+    const $firstItemTitle = await this.$('firstItemTitle');
     await $firstItemTitle.doubleClick();
 
     await sleep(500); // ждем анимации перехода
   }
 
   async selectedVectorTableWithoutViews(): Promise<void> {
-    const $secondDataset = await this.$secondItemTitle;
+    const $secondDataset = await this.$('secondItemTitle');
     await $secondDataset.waitForDisplayed({ timeout: 1000 });
 
     const vectorTableTitle = await $secondDataset.getText();
@@ -59,21 +38,21 @@ class Explorer extends Block implements BlockModel {
   }
 
   async addToProject(): Promise<void> {
-    const $connectionToProject = await this.$connectionToProject;
+    const $connectionToProject = await this.$('connectionToProject');
     await $connectionToProject.click();
   }
 
   async waitForLoading(): Promise<void> {
     await browser.pause(300);
-    const $loader = await this.$loader;
+    const $loader = await this.$('loader');
     await $loader.waitForDisplayed({ reverse: true });
     await browser.pause(300);
   }
 
   async getListTitles(): Promise<string[]> {
-    const $title = await this.$oneTitle;
+    const $title = await this.$('oneTitle');
     await $title.waitForDisplayed();
-    const $$titles = await this.$$titles;
+    const $$titles = await this.$$('titles');
 
     return await Promise.all($$titles.map(async $title => await $title.getText()));
   }
@@ -84,7 +63,7 @@ class Explorer extends Block implements BlockModel {
   }
 
   async testEmptiness() {
-    await expect(this.$empty).toBeDisplayedInViewport();
+    await expect(this.$('empty')).toBeDisplayedInViewport();
   }
 }
 

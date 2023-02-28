@@ -1,14 +1,10 @@
-import { Block, BlockModel } from './Block';
+import { Block } from './Block';
 
 declare const window: { navigate(url: string): void };
 
-export interface PageModel extends BlockModel {
-  url: string;
-}
-
 export const pagesRegistry: Record<string, Page> = {};
 
-export abstract class Page extends Block implements BlockModel {
+export abstract class Page extends Block {
   abstract url: string;
   abstract title: string;
 
@@ -16,8 +12,6 @@ export abstract class Page extends Block implements BlockModel {
     super();
     pagesRegistry[this.constructor.name] = this;
   }
-
-  abstract $container: Promise<WebdriverIO.Element>;
 
   async testUrl(): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/await-thenable -- типы врут

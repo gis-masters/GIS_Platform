@@ -91,7 +91,7 @@ const data: TestData[] = [
   },
   {
     id: 22,
-    title: 'Эвкалиптовая кровать'
+    title: 'Двуспальная кровать'
   }
 ];
 
@@ -99,7 +99,6 @@ const cols: XTableColumn<TestData>[] = [
   {
     title: 'Название',
     field: 'title',
-    getIdBadge: ({ id }) => id,
     filterable: true,
     sortable: true,
     hidden: false

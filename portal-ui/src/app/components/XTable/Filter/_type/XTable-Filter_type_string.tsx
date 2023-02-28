@@ -23,21 +23,22 @@ class XTableFilterTypeString extends Component<XTableFilterProps> {
     const { className } = this.props;
 
     return (
-      <>
-        <TextField
-          variant='filled'
-          size='small'
-          className={cnXTableFilter(null, [className])}
-          onChange={this.handleChange}
-          value={this.value}
-        />
-
-        <XTableFilterStrictness
-          onClick={this.toggleStrictFiltering}
-          strict={this.strictFiltering}
-          filtered={this.strictFiltering || !!this.value}
-        />
-      </>
+      <TextField
+        variant='filled'
+        size='small'
+        className={cnXTableFilter(null, [className])}
+        onChange={this.handleChange}
+        value={this.value}
+        InputProps={{
+          endAdornment: (
+            <XTableFilterStrictness
+              onClick={this.toggleStrictFiltering}
+              strict={this.strictFiltering}
+              filtered={this.strictFiltering || !!this.value}
+            />
+          )
+        }}
+      />
     );
   }
 

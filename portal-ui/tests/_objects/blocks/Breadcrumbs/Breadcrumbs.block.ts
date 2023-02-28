@@ -1,16 +1,13 @@
-import { Block, BlockModel } from '../../Block';
+import { Block } from '../../Block';
 
-class Breadcrumbs extends Block implements BlockModel {
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('.Breadcrumbs');
-  }
-
-  get $$items(): Promise<WebdriverIO.Element[]> {
-    return $$('.Breadcrumbs-Item');
-  }
+class Breadcrumbs extends Block {
+  selectors = {
+    container: '.Breadcrumbs',
+    items: '.Breadcrumbs-Item'
+  };
 
   async getItemsText(): Promise<string[]> {
-    const $$items = await this.$$items;
+    const $$items = await this.$$('items');
     const res: string[] = [];
     for (const $item of $$items) {
       res.push(await $item.getText());

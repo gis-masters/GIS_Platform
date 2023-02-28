@@ -1,81 +1,41 @@
-import { binding, then, when } from 'cucumber-tsflow/dist';
+import { Block } from '../../Block';
 
-import { Block, BlockModel } from '../../Block';
-import { testUsers } from '../../commands/auth/testUsers';
+class LoginForm extends Block {
+  selectors = {
+    container: '.LoginForm',
+    login: '.LoginForm .Form-Control_display_email input',
+    password: '.LoginForm .Form-Control_display_password input',
+    errorMessage: '.LoginForm .Form-Control_display_password .MuiFormHelperText-root',
+    loginBtn: '.LoginForm button[type="submit"]',
+    organizationsList: '.LoginForm-OrgSelectList',
+    organizationsListItem: '.LoginForm-OrgSelectListItem'
+  };
 
-@binding()
-class LoginForm extends Block implements BlockModel {
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('.LoginForm');
-  }
+  async fillAndSubmit(login: string, password: string) {
+    const $login = await this.$('login');
+    await $login.setValue(login);
 
-  get $login(): Promise<WebdriverIO.Element> {
-    return $('.LoginForm .Form-Control_display_email input');
-  }
+    const $password = await this.$('password');
+    await $password.setValue(password);
 
-  get $password(): Promise<WebdriverIO.Element> {
-    return $('.LoginForm .Form-Control_display_password input');
-  }
-
-  get $errorMessage(): Promise<WebdriverIO.Element> {
-    return $('.LoginForm .Form-Control_display_password .MuiFormHelperText-root');
-  }
-
-  get $loginBtn(): Promise<WebdriverIO.Element> {
-    return $('.LoginForm button[type="submit"]');
-  }
-
-  get $organizationsList(): Promise<WebdriverIO.Element> {
-    return $('.LoginForm-OrgSelectList');
-  }
-
-  get $$organizationsListItems(): Promise<WebdriverIO.Element[]> {
-    return $$('.LoginForm-OrgSelectListItem');
-  }
-
-  @when(/^я авторизуюсь в форме авторизации как "(.*)"$/)
-  async authAs(user: keyof typeof testUsers): Promise<void> {
-    const userInfo = testUsers[user];
-
-    const $login = await this.$login;
-    await $login.setValue(userInfo.email);
-
-    const $password = await this.$password;
-    await $password.setValue(userInfo.password);
-
-    const $loginBtn = await this.$loginBtn;
+    const $loginBtn = await this.$('loginBtn');
     await $loginBtn.click();
   }
 
-  @when(/^я ввожу неправильные данные в форму входа$/)
-  async authWithError(): Promise<void> {
-    const $login = await this.$login;
-    await $login.setValue('snape@email');
-
-    const $password = await this.$password;
-    await $password.setValue('SnapePasss123');
-
-    const $loginBtn = await this.$loginBtn;
-    await $loginBtn.click();
-  }
-
-  @then(/^на форме входа появляется сообщение об ошибке "(.*)"$/)
   async checkErrorMessage(errorMessage: string) {
-    const $errorMessage = await this.$errorMessage;
+    const $errorMessage = await this.$('errorMessage');
     await $errorMessage.waitForDisplayed();
     expect(await $errorMessage.getText()).toEqual(errorMessage);
   }
 
-  @then(/^на форме входа появляется выбор организации$/)
   async checkOrganizationsListVisibility() {
-    await expect(this.$organizationsList).toBeDisplayedInViewport();
+    await expect(this.$('organizationsList')).toBeDisplayedInViewport();
   }
 
-  @when(/^я нажимаю на пункт "(.*)" в списке организаций в форме авторизации$/)
   async clickOrganization(orgTitle: string) {
-    const $organizationsList = await this.$organizationsList;
+    const $organizationsList = await this.$('organizationsList');
     await $organizationsList.waitForDisplayed();
-    const $$organizationsListItems = await this.$$organizationsListItems;
+    const $$organizationsListItems = await this.$$('organizationsListItem');
 
     for (const $item of $$organizationsListItems) {
       const title = await $item.getText();
@@ -90,14 +50,8 @@ class LoginForm extends Block implements BlockModel {
     throw new Error('Не найдена организация ' + orgTitle);
   }
 
-  @then(/^в списке организаций на форме входа перечислены: (".+"[ ,]*)+$/)
-  async checkOrganizationsList(dirty: string) {
-    const titles = dirty.slice(1, -1).split('", "');
-    expect(titles).toEqual(await this.getOrganizations());
-  }
-
   async getOrganizations(): Promise<string[]> {
-    const $$organizationsListItems = await this.$$organizationsListItems;
+    const $$organizationsListItems = await this.$$('organizationsListItem');
 
     return await Promise.all($$organizationsListItems.map(async $item => await $item.getText()));
   }

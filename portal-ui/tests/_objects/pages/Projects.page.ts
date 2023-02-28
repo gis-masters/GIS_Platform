@@ -4,9 +4,9 @@ class ProjectsPage extends Page {
   title = 'Проекты';
   url = 'projects';
 
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('.Projects');
-  }
+  selectors = {
+    container: '.Projects'
+  };
 }
 
 export const projectsPage = new ProjectsPage();

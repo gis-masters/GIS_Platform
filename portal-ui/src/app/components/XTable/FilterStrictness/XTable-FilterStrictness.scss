@@ -1,12 +1,8 @@
 body .XTable-FilterStrictness {
-  position: absolute;
-  right: 2px;
-  bottom: 2px;
-
   width: 28px;
   height: 28px;
 
-  font-size: 1.5em;
+  font-size: 1.3em;
 
   &_filtered {
     background: var(--yellow);

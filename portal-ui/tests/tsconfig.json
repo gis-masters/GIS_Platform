@@ -6,7 +6,7 @@
     "allowSyntheticDefaultImports": true,
     "types": [
       "node",
-      "webdriverio/async",
+      "@wdio/globals/types",
       "expect-webdriverio",
       "@wdio/cucumber-framework",
       "wdio-image-comparison-service"

@@ -21,6 +21,9 @@ interface CreateDatasetDialogProps {
   onCreated: () => void;
 }
 
+/**
+ * @deprecated
+ */
 @observer
 export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
   @observable private busy = false;

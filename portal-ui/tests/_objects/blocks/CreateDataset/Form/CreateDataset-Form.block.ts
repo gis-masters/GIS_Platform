@@ -1,25 +1,19 @@
-import { Block, BlockModel } from '../../../Block';
+import { Block } from '../../../Block';
 
-class CreateDatasetForm extends Block implements BlockModel {
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('.CreateDataset-Form');
-  }
-
-  get $title(): Promise<WebdriverIO.Element> {
-    return $('.CreateDataset-Form input[name="title"]');
-  }
-
-  get $submit(): Promise<WebdriverIO.Element> {
-    return $('.CreateDataset-Form .MuiButton-outlinedPrimary');
-  }
+class CreateDatasetForm extends Block {
+  selectors = {
+    container: '.CreateDataset-Form',
+    title: '.CreateDataset-Form input[name="title"]',
+    submit: '.CreateDataset-Form .MuiButton-outlinedPrimary'
+  };
 
   async setTitleValue(title: string): Promise<void> {
-    const $title = await this.$title;
+    const $title = await this.$('title');
     await $title.setValue(title);
   }
 
   async submit(): Promise<void> {
-    const $submit = await this.$submit;
+    const $submit = await this.$('submit');
     await $submit.click();
     await $submit.waitForDisplayed({ reverse: true });
   }

@@ -1,12 +1,9 @@
-import { binding } from 'cucumber-tsflow/dist';
+import { Block } from '../../../Block';
 
-import { Block, BlockModel } from '../../../Block';
-
-@binding()
-class FormControlTypeChoice extends Block implements BlockModel {
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('.Form-Control_type_choice');
-  }
+class FormControlTypeChoice extends Block {
+  selectors = {
+    container: '.Form-Control_type_choice'
+  };
 }
 
 export const formControlTypeChoice = new FormControlTypeChoice();

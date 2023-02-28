@@ -1,12 +1,12 @@
-import { Page, PageModel } from '../Page';
+import { Page } from '../Page';
 
-class HomePage extends Page implements PageModel {
+class HomePage extends Page {
   title = 'Домашняя';
   url = '/';
 
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('crg-home-page .container');
-  }
+  selectors = {
+    container: 'crg-home-page .container'
+  };
 }
 
 export const homePage = new HomePage();

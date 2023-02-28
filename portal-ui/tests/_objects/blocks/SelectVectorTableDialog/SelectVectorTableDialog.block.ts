@@ -1,20 +1,13 @@
-import { binding, when } from 'cucumber-tsflow/dist';
+import { Block } from '../../Block';
 
-import { Block, BlockModel } from '../../Block';
+class SelectVectorTableDialog extends Block {
+  selectors = {
+    container: '.SelectVectorTable-Dialog',
+    datasourceDialogAddBtn: '.SelectVectorTable-Dialog .MuiButton-outlinedPrimary'
+  };
 
-@binding()
-class SelectVectorTableDialog extends Block implements BlockModel {
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('.SelectVectorTable-Dialog');
-  }
-
-  get $datasourceDialogAddBtn(): Promise<WebdriverIO.Element> {
-    return $('.SelectVectorTable-Dialog .MuiButton-outlinedPrimary');
-  }
-
-  @when(/^в диалоге выбора источника данных в проекте нажимаю `Выбрать`$/)
   async selectVectorTableBtn(): Promise<void> {
-    const $datasourceDialogAddBtn = await this.$datasourceDialogAddBtn;
+    const $datasourceDialogAddBtn = await this.$('datasourceDialogAddBtn');
     await $datasourceDialogAddBtn.waitForDisplayed({ timeout: 3000 });
 
     await $datasourceDialogAddBtn.click();

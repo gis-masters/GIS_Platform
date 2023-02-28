@@ -1,16 +1,12 @@
-import { binding, when } from 'cucumber-tsflow/dist';
+import { Block } from '../../Block';
 
-import { Block, BlockModel } from '../../Block';
+class ToastStoryButton extends Block {
+  selectors = {
+    container: '.ToastStoryButton'
+  };
 
-@binding()
-class ToastStoryButton extends Block implements BlockModel {
-  get $container(): Promise<WebdriverIO.Element> {
-    return $('.ToastStoryButton');
-  }
-
-  @when(/^я нажимаю кнопку, вызывающую уведомление в библиотеке блоков$/)
   async emitToast(): Promise<void> {
-    const $container = await this.$container;
+    const $container = await this.$('container');
     await $container.click();
     await browser.pause(500); // анимация появления уведомления (да, она долгая)
   }

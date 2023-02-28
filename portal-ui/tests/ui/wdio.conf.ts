@@ -2,10 +2,14 @@ import type { Options } from '@wdio/types';
 
 import { config as baseConfig } from '../wdio.conf';
 
+if (!baseConfig.baseUrl) {
+  throw new Error('Не указан baseUrl');
+}
+
 export const config: Options.Testrunner = {
   ...baseConfig,
 
   baseUrl: baseConfig.baseUrl + '/bl/',
 
-  specs: ['./tests/ui/**/*.feature']
+  specs: ['./**/*.feature']
 };

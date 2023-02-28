@@ -6,5 +6,5 @@ export const config: Options.Testrunner = {
   ...baseConfig,
 
   baseUrl: 'http://10.10.10.58',
-  specs: ['./tests/deployment/stage58/**/*.feature']
+  specs: ['./**/*.feature']
 };
