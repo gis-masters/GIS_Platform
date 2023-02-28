@@ -1,8 +1,10 @@
 package ru.mycrg.data_service.service.processes.executors;
 
 import org.jetbrains.annotations.NotNull;
+import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -33,6 +35,7 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import java.io.IOException;
 import java.util.UUID;
 
+import static java.util.Objects.nonNull;
 import static org.springframework.util.StringUtils.stripFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 import static ru.mycrg.data_service.service.processes.FileType.DXF;
@@ -164,23 +167,37 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
     private String changeFileEncoding(File file) {
         String filePath = file.getPath();
         String striped = StringUtils.stripFilenameExtension(filePath);
-        String resultFilePath = striped + "_as1251.dxf";
-        try {
-            FileConverter.convert(filePath, resultFilePath);
-            fileStorageService.deleteIfExists(filePath);
-        } catch (IOException e) {
-            String msg = "Failed to convert to encoding 1251";
-            log.error(msg, e.getMessage(), e);
+        String filename = StringUtils.getFilename(filePath);
+        String encoding = "_as1251";
+        if (nonNull(filename) && !filename.contains(encoding)) {
+            String fileEncoding = getFileEncoding(filePath);
+            try {
+                if ("UTF-8".equalsIgnoreCase(fileEncoding)) {
+                    String resultFilePath = striped + encoding + ".dxf";
 
-            throw new DataServiceException("Не удалось обработать файл");
-        } catch (StorageException e) {
-            String msg = "Failed to delete temp file";
-            log.error(msg, e.getMessage(), e);
+                    FileConverter.convert(filePath, resultFilePath);
+                    fileStorageService.deleteIfExists(filePath);
 
-            throw new DataServiceException("Не удалось обработать файл");
+                    return resultFilePath;
+                } else {
+                    log.debug("Нет необходимости в конвертации к кодировке 1251");
+                }
+            } catch (IOException e) {
+                String msg = "Failed to convert to encoding 1251";
+                log.error(msg, e.getMessage(), e);
+
+                throw new DataServiceException("Не удалось обработать файл");
+            } catch (StorageException e) {
+                String msg = "Failed to delete temp file";
+                log.error(msg, e.getMessage(), e);
+
+                throw new DataServiceException("Не удалось обработать файл");
+            }
+
+            return filePath;
         }
 
-        return resultFilePath;
+        return filePath;
     }
 
     private void sendWsMsg(ProcessStatus status, ImportReport payload, String msg) {
@@ -189,5 +206,18 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
                                    new WsImportModel(wsMsgId, status, payload, msg)),
                 this.payload.getWsUiId()
         );
+    }
+
+    private String getFileEncoding(String path) {
+        FileSystemResource fileR = new FileSystemResource(path);
+        java.io.File file = fileR.getFile();
+        try {
+            return UniversalDetector.detectCharset(file);
+        } catch (IOException e) {
+            String msg = "Не удалось распознать кодировку dxf файла.";
+            log.error(msg);
+
+            throw new DataServiceException(msg);
+        }
     }
 }
