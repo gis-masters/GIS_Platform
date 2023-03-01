@@ -2,9 +2,11 @@ import { Given, Then, When } from '@wdio/cucumber-framework';
 
 import { root } from './blocks/Root/Root';
 import { testUsers } from './commands/auth/testUsers';
+import { getProjectsByTitle } from './commands/projects/getProjectsByTitle';
 import { Page, pagesRegistry } from './Page';
 import { blPage } from './pages/BL.page';
 import { dataManagementPage } from './pages/DataManagement.page';
+import { MapPage } from './pages/Map.page';
 
 function findPage(title: string): Page {
   const page = Object.values(pagesRegistry).find(page => page.title === title);
@@ -19,6 +21,18 @@ Then(/^открылась страница "([^"]*)"$/, async (title: string) =>
   const page = findPage(title);
   await page.waitForVisible();
   await page.testUrl();
+});
+
+Then(/^открылась страница карты проекта "([^"]*)"$/, async (title: string) => {
+  const projects = await getProjectsByTitle(title);
+  if (projects.length !== 1) {
+    throw new Error(`Ошибка получения проекта "${title}"`);
+  }
+
+  const mapPage = new MapPage(projects[0].id);
+
+  await mapPage.waitForVisible();
+  await mapPage.testUrl();
 });
 
 Given(/^я на странице "([^"]*)"$/, async (title: string) => {

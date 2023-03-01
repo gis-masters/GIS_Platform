@@ -21,3 +21,7 @@ Given(/^существует проект "(.*)"$/, async (title: string) => {
 Given(/^отсутствует проект с названием "(.*)"$/, async (title: string) => {
   await deleteProjectsByTitleAsAdmin(title);
 });
+
+Given(/^удалены все проекты$/, async () => {
+  await deleteAllProjectsAsAdmin();
+});

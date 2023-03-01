@@ -2,7 +2,7 @@ import { Page } from '../Page';
 
 class HomePage extends Page {
   title = 'Домашняя';
-  url = '/';
+  url = '';
 
   selectors = {
     container: 'crg-home-page .container'

@@ -8,9 +8,11 @@ export abstract class Page extends Block {
   abstract url: string;
   abstract title: string;
 
-  constructor() {
+  constructor(isPageNotGoInRegistry = false) {
     super();
-    pagesRegistry[this.constructor.name] = this;
+    if (!isPageNotGoInRegistry) {
+      pagesRegistry[this.constructor.name] = this;
+    }
   }
 
   async testUrl(): Promise<void> {
