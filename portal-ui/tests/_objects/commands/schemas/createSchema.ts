@@ -1,6 +1,7 @@
 import { schemaService } from '../../../../src/app/services/data/schema.service';
 import { Schema } from '../../../../src/app/services/data/schema.models';
 import { convertNewToOldSchema } from '../../../../src/app/services/data/schema.utils';
+import { authenticateAsAdmin } from '../auth/authenticate';
 
 declare const window: {
   schemaService: typeof schemaService;
@@ -8,6 +9,7 @@ declare const window: {
 };
 
 export async function createSchema(schema: Schema): Promise<void> {
+  await authenticateAsAdmin();
   await browser.executeAsync(async (schema, callback) => {
     const parsedSchema = JSON.parse(schema) as Schema;
 

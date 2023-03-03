@@ -60,6 +60,8 @@ import { getViewChoiceOptions } from '../../Form/Form.utils';
 
 export const cnLayerPropertiesDialog = cn('Layer', 'PropertiesDialog');
 
+const cnLayerMenu = cn('Layer', 'Menu');
+
 interface LayerMenuProps {
   entity: TreeItemPayload;
   open: boolean;
@@ -106,6 +108,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     return (
       <>
         <Menu
+          PaperProps={{ className: cnLayerMenu() }}
           open={open}
           anchorReference={anchor ? 'anchorEl' : 'anchorPosition'}
           anchorEl={anchor}

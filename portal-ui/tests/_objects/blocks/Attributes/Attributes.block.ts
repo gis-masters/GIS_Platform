@@ -4,7 +4,8 @@ class Attributes extends Block {
   selectors = {
     container: '.Attributes',
     attributeTableHead: '.Attributes-Table .XTable-Head',
-    attributeTableCols: '.Attributes-Table .XTable-Head .XTable-CellContent'
+    attributeTableCols: '.Attributes-Table .XTable-Head .XTable-CellContent',
+    barTitle: '.Attributes-BarTitle'
   };
 
   async checkTableSingleColTitle(title: string): Promise<void> {
@@ -25,6 +26,15 @@ class Attributes extends Block {
     }
 
     return contents;
+  }
+
+  async checkTableWithTitle(title: string): Promise<void> {
+    const $barTitle = await this.$('barTitle');
+    await $barTitle.waitForDisplayed({ timeout: 13_000 });
+
+    const barTitle = await $barTitle.getText();
+
+    expect(barTitle).toEqual(title);
   }
 }
 
