@@ -37,17 +37,18 @@ export function applyViewOld(schema: OldSchema, viewId?: string): OldSchema {
   return applyTypeToSchemaOld(schema, view);
 }
 
-export function applyContentTypeOld(schema: OldSchema, contentTypeId?: string): OldSchema {
-  const contentType = schema.contentTypes?.find(cType => cType.id === contentTypeId);
-
-  return applyTypeToSchemaOld(schema, contentType);
-}
-
 function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType): OldSchema {
   const clonedSchema = cloneDeep(schema);
 
   if (type) {
-    const { attributes, children, childOnly, printTemplates, styleName, relations } = type;
+    const {
+      attributes,
+      styleName = clonedSchema.styleName,
+      children = clonedSchema.children,
+      childOnly = clonedSchema.childOnly,
+      printTemplates = clonedSchema.printTemplates,
+      relations = clonedSchema.relations
+    } = type;
     const actualProperties: OldPropertySchema[] = attributes.map(contentTypeDescription => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeDescription.name);
 
@@ -62,6 +63,15 @@ function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType): OldSchem
       styleName,
       relations
     });
+
+    delete clonedSchema.views;
+    delete clonedSchema.contentTypes;
+
+    for (const [key, value] of Object.entries(clonedSchema)) {
+      if (value === undefined) {
+        delete clonedSchema[key];
+      }
+    }
   }
 
   return clonedSchema;
@@ -86,11 +96,11 @@ function applyTypeToSchema(schema: Schema, type: ContentType): Schema {
     const {
       title,
       properties,
-      styleName,
-      children = schema.children,
-      childOnly = schema.childOnly,
-      printTemplates = schema.printTemplates,
-      relations = schema.relations
+      styleName = clonedSchema.styleName,
+      children = clonedSchema.children,
+      childOnly = clonedSchema.childOnly,
+      printTemplates = clonedSchema.printTemplates,
+      relations = clonedSchema.relations
     } = type;
     const actualProperties: PropertySchema[] = properties.map(contentTypeProperty => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeProperty.name);
@@ -107,6 +117,15 @@ function applyTypeToSchema(schema: Schema, type: ContentType): Schema {
       printTemplates,
       relations
     });
+
+    delete clonedSchema.views;
+    delete clonedSchema.contentTypes;
+
+    for (const [key, value] of Object.entries(clonedSchema)) {
+      if (value === undefined) {
+        delete clonedSchema[key];
+      }
+    }
   }
 
   return clonedSchema;

@@ -8,7 +8,7 @@ import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
 
 import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
-import { convertOldToNewProperties, applyContentTypeOld } from '../../services/data/schema.utils';
+import { applyContentType } from '../../services/data/schema.utils';
 import { validateFormValue } from '../../services/formValidation.service';
 import { LibraryDocumentDialog } from '../LibraryDocumentDialog/LibraryDocumentDialog';
 import { PropertySchema, PropertyType } from '../../services/data/schema.models';
@@ -206,8 +206,8 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
 
   @boundMethod
   private async createDocument(value: Omit<LibraryRecord, 'schemaId' | 'libraryTableName'>) {
-    const librarySchema = await schemaService.getOldSchema(this.library.schemaId);
-    const libraryFields = convertOldToNewProperties(applyContentTypeOld(librarySchema, 'base_extract').properties);
+    const librarySchema = await schemaService.getSchema(this.library.schemaId);
+    const libraryFields = applyContentType(librarySchema, 'base_extract').properties;
     const errors = validateFormValue(value, libraryFields);
 
     if (errors.length) {
