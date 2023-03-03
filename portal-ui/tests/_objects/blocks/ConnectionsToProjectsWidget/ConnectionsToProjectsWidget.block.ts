@@ -16,6 +16,7 @@ class ConnectionsToProjectsWidget extends Block {
     await muiSelect.selectOption(2);
 
     await $connectionToProjectDialogAccept.click();
+    await $connectionToProjectDialogAccept.waitForDisplayed({ reverse: true });
   }
 
   async projectSelectDialogViewSelector(): Promise<void> {

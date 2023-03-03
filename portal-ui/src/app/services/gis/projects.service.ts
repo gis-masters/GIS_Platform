@@ -261,11 +261,11 @@ class ProjectsService {
     return http.post<Process>(url, payload);
   }
 
-  private async getLayers(projectId: number): Promise<CrgLayer[]> {
+  async getLayers(projectId: number): Promise<CrgLayer[]> {
     return await http.get<CrgLayer[]>(await getProjectLayersUrl(projectId));
   }
 
-  private async getGroups(projectId: number): Promise<CrgLayersGroup[]> {
+  async getGroups(projectId: number): Promise<CrgLayersGroup[]> {
     return await http.get<CrgLayersGroup[]>(await getProjectGroupsUrl(projectId));
   }
 

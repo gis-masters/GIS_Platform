@@ -5,8 +5,8 @@ const defaultProps = {
   enabled: true,
   position: -42,
   transparency: 75,
-  minZoom: 10,
-  maxZoom: 26
+  minZoom: 3,
+  maxZoom: 25
 };
 
 export function vectorLayerDefaults(): Pick<

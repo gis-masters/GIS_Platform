@@ -29,3 +29,7 @@ When(/^в списке слоёв на карте в открывшемся ме
 When(/^в списке слоёв на карте я открыл диалог `Добавить слой`$/, async () => {
   await layersSidebar.openAddLayerDialog();
 });
+
+When(/^в панели слоёв я нажимаю на иконку глаза рядом с элементом с названием "(.*)"$/, async (layerName: string) => {
+  await layersSidebar.clickVisibilityBtn(layerName);
+});

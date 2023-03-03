@@ -797,3 +797,8 @@ class MapService {
 }
 
 export const mapService = MapService.instance;
+
+// for autotests
+if (typeof window !== 'undefined') {
+  Object.assign(window, { mapService });
+}

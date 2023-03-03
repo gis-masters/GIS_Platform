@@ -6,6 +6,7 @@ const schemaWithViews: Schema = {
   title: 'Административное деление с представлениями',
   readOnly: false,
   tableName: 'border1',
+  styleName: 'admemo',
   properties: [
     {
       name: 'classid',
@@ -126,6 +127,7 @@ const schemaWithoutViews: Schema = {
   title: 'Административное деление',
   readOnly: false,
   tableName: 'border2',
+  styleName: 'admemo',
   properties: [
     {
       name: 'classid',

@@ -10,6 +10,7 @@ import {
 } from '../../../src/app/services/data/data.service';
 import { Role } from '../../../src/app/services/data/permissions.models';
 import { authenticateAsOwner } from './auth/authenticate';
+import { testSchemas } from './schemas/schema.templates';
 
 declare const window: {
   createVectorTable: typeof createVectorTable;
@@ -51,5 +52,10 @@ export async function createTestVectorTable(title: string, schemaId: string): Pr
 }
 
 Given(/^внутри набора данных существует таблица "(.*)" по схеме "(.*)"$/, async (title: string, schemaId: string) => {
-  await createTestVectorTable(title, schemaId);
+  const schema = testSchemas[schemaId];
+  if (!schema || !schema.name) {
+    throw new Error(`Used unknown schema: '${title}'! Add it to tests schemas first.`);
+  }
+
+  await createTestVectorTable(title, schema.name);
 });

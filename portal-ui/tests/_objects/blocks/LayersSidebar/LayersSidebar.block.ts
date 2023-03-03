@@ -59,6 +59,34 @@ class LayersSidebar extends Block {
     await layersSidebar.clickEditButton();
     await layersSidebar.addLayerBtn();
   }
+
+  async clickVisibilityBtn(layerName: string): Promise<void> {
+    const $layerCard = await this.getLayerByName(layerName);
+
+    if ($layerCard) {
+      await $layerCard.waitForDisplayed();
+      await $layerCard.moveTo();
+
+      const $firstCardEyeBtn = await $layerCard.$('.Layer-Eye');
+      await $firstCardEyeBtn.waitForDisplayed();
+      await $firstCardEyeBtn.click();
+    }
+  }
+
+  async getLayerByName(layerName: string): Promise<WebdriverIO.Element | undefined> {
+    const $container = await this.$('container');
+    await $container.waitForDisplayed();
+
+    const $$layerCard = await this.$$('layerCard');
+
+    for (const $layerCard of $$layerCard) {
+      const layerCardName = await $layerCard.getText();
+
+      if (layerCardName === layerName) {
+        return $layerCard;
+      }
+    }
+  }
 }
 
 export const layersSidebar = new LayersSidebar();

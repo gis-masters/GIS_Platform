@@ -402,5 +402,14 @@ export function tablesEqual(firstTable: VectorTable, ...otherTables: VectorTable
 
 // for autotests
 if (typeof window !== 'undefined') {
-  Object.assign(window, { createDataset, createVectorTable, getDatasets, getDatasetTables });
+  Object.assign(window, {
+    createDataset,
+    createVectorTable,
+    getDatasets,
+    getDatasetTables,
+    deleteVectorTable,
+    deleteDataset,
+    getAllDatasetTables,
+    createVectorTableRecord
+  });
 }

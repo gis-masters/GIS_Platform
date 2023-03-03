@@ -526,3 +526,8 @@ class CurrentProject implements CrgProjectData {
 }
 
 export const currentProject = CurrentProject.instance;
+
+// for autotests
+if (typeof window !== 'undefined') {
+  Object.assign(window, { currentProject });
+}

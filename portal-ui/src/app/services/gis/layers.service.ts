@@ -184,5 +184,5 @@ export function alertLayerOperationError(
 
 // for autotests
 if (typeof window !== 'undefined') {
-  Object.assign(window, { createLayer });
+  Object.assign(window, { createLayer, updateLayer });
 }

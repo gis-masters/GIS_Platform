@@ -40,6 +40,17 @@ Given(/^я на странице "([^"]*)"$/, async (title: string) => {
   await page.open();
 });
 
+Given(/^я на странице карты проекта "([^"]*)"$/, async (title: string) => {
+  const projects = await getProjectsByTitle(title);
+  if (projects.length === 1) {
+    const mapPage = new MapPage(projects[0].id);
+
+    await mapPage.open();
+  } else {
+    throw new Error(`Ошибка получения проекта "${title}"`);
+  }
+});
+
 When(/^я открываю страницу "([^"]*)"$/, async (title: string) => {
   const page = findPage(title);
   await browser.url(page.url);
@@ -70,6 +81,17 @@ When(/^я открываю страницу библиотек в управле
 
 When(/^я открываю страницу наборов данных в управлении данными$/, async () => {
   await dataManagementPage.openDatasetRootPage();
+});
+
+When(/^я открываю страницу карты проекта "([^"]*)"$/, async (title: string) => {
+  const projects = await getProjectsByTitle(title);
+  if (projects.length === 1) {
+    const mapPage = new MapPage(projects[0].id);
+
+    await mapPage.open();
+  } else {
+    throw new Error(`Ошибка получения проекта "${title}"`);
+  }
 });
 
 Then(/^открыта страница библиотек в управлении данными$/, async () => {

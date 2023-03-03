@@ -6,6 +6,7 @@ class EditFeature extends Block {
     editFeatureSidebarSaveNewObjectBtn: '.edit-feature .save-feature-edit-btn',
     editFeatureForm: '.edit-feature .edit-feature__form',
     editFeatureFormTitles: '.edit-feature .edit-feature__form .edit-item-title',
+    editFeatureLoading: '.edit-feature .loading',
     editFeatureGeometryAsTextBtn: '.edit-feature .EditFeatureGeometry-AsText'
   };
 
@@ -15,6 +16,9 @@ class EditFeature extends Block {
   }
 
   async checkObjectAttributeFields(title: string): Promise<void> {
+    const $editFeatureLoader = await this.$('editFeatureLoading');
+    await $editFeatureLoader.waitForDisplayed({ reverse: true });
+
     const $editFeatureForm = await this.$('editFeatureForm');
     await $editFeatureForm.waitForDisplayed({ timeout: 4000 });
 
