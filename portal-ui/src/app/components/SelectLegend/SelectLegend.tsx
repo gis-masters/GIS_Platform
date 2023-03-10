@@ -55,7 +55,8 @@ export class SelectLegend extends Component<FormControlProps> {
       () => currentProject.visibleLayersWithoutRasters,
       async () => {
         await loadAllLayersStyles();
-      }
+      },
+      { fireImmediately: true }
     );
   }
 

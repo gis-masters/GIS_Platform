@@ -386,17 +386,19 @@ async function autoFilterLegend() {
     }
 
     printSettings.setLegendItems(
-      filteredLegendResponse.flatMap(({ dataset, identifier, rules: rulesNames }) =>
-        rulesNames.map(ruleName => {
-          const layer = printSettings.layers.find(
-            l => l.type === CrgLayerType.VECTOR && l.tableName === identifier && l.dataset === dataset
-          );
+      filteredLegendResponse
+        .flatMap(({ dataset, identifier, rules: rulesNames }) =>
+          rulesNames.map(ruleName => {
+            const layer = printSettings.layers.find(
+              l => l.type === CrgLayerType.VECTOR && l.tableName === identifier && l.dataset === dataset
+            );
 
-          return printSettings.allLegend.find(
-            legendRule => legendRule.layerId === layer.id && legendRule.name === ruleName
-          );
-        })
-      )
+            return printSettings.allLegend.find(
+              legendRule => legendRule.layerId === layer.id && legendRule.name === ruleName
+            );
+          })
+        )
+        .filter(Boolean)
     );
   } catch {
     printSettings.setLegendItems(printSettings.allLegend);
