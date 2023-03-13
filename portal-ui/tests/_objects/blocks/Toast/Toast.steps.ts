@@ -1,27 +1,27 @@
 import { Given, Then, When } from '@wdio/cucumber-framework';
 
-import { toast } from './Toast.block';
+import { toastBlock } from './Toast.block';
 
 When(/^я нажимаю на псевдоссылку Подробнее\/Скрыть в уведомлении$/, async () => {
-  await toast.clickMoar();
+  await toastBlock.clickMoar();
 });
 
 When(/^я нажимаю на крестик в уведомлении$/, async () => {
-  await toast.clickClose();
+  await toastBlock.clickClose();
 });
 
 Given(/^произошла искусственная ошибка и присутствует уведомление о ней$/, async () => {
-  await toast.produceError();
+  await toastBlock.produceError();
 });
 
 Then(/^уведомление исчезает$/, async () => {
-  await toast.waitForHidden();
+  await toastBlock.waitForHidden();
 });
 
 Then(/^появляются подробности уведомления$/, async () => {
-  await toast.waitForDetails();
+  await toastBlock.waitForDetails();
 });
 
 Then(/^исчезают подробности уведомления$/, async () => {
-  await toast.waitForDetailsHidden();
+  await toastBlock.waitForDetailsHidden();
 });

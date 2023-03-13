@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-export class MuiSelect extends Block {
+export class MuiSelectBlock extends Block {
   selectors = {
     container: '.MuiInputBase-root div[class*="MuiSelect"]'
   };

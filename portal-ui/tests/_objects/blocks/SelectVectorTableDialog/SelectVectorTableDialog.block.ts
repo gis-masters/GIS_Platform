@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class SelectVectorTableDialog extends Block {
+class SelectVectorTableDialogBlock extends Block {
   selectors = {
     container: '.SelectVectorTable-Dialog',
     datasourceDialogAddBtn: '.SelectVectorTable-Dialog .MuiButton-outlinedPrimary'
@@ -14,4 +14,4 @@ class SelectVectorTableDialog extends Block {
   }
 }
 
-export const selectVectorTableDialog = new SelectVectorTableDialog();
+export const selectVectorTableDialogBlock = new SelectVectorTableDialogBlock();

@@ -1,31 +1,31 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { projectForm } from './ProjectsForm.block';
+import { projectFormBlock } from './ProjectsForm.block';
 
 When(/^ввожу в поле ввода названия проекта "(.*)"$/, async (title: string) => {
-  await projectForm.setInputValue(title);
+  await projectFormBlock.setInputValue(title);
 });
 
 Then(/^значение поля ввода "(.*)"/, async (title: string) => {
-  await projectForm.testInputValue(title);
+  await projectFormBlock.testInputValue(title);
 });
 
 Then(/^фокус находится в текстовом поле формы создания проекта$/, async () => {
-  await projectForm.inputIsFocused();
+  await projectFormBlock.inputIsFocused();
 });
 
 Then(/^на форме появляются ошибки$/, async () => {
-  await projectForm.waitForErrors();
+  await projectFormBlock.waitForErrors();
 });
 
 Then(/^на форме отсутствуют ошибки$/, async () => {
-  await projectForm.errorsAreEmpty();
+  await projectFormBlock.errorsAreEmpty();
 });
 
 When(/^нажимаю кнопку `Создать`$/, async () => {
-  await projectForm.submit();
+  await projectFormBlock.submit();
 });
 
 When(/^нажимаю кнопку `Отмена`$/, async () => {
-  await projectForm.cancel();
+  await projectFormBlock.cancel();
 });

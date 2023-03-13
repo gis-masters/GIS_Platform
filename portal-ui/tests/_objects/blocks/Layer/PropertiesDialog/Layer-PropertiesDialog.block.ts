@@ -1,8 +1,8 @@
 import { Block } from '../../../Block';
 import { saveScreenshot } from '../../../commands/saveScreenshot';
-import { MuiSelect } from '../../MuiSelect/MuiSelect.block';
+import { MuiSelectBlock } from '../../MuiSelect/MuiSelect.block';
 
-class LayerPropertiesDialog extends Block {
+class LayerPropertiesDialogBlock extends Block {
   selectors = {
     container: '.Layer-PropertiesDialog',
     layerPropertyFormDialogViewSelect: '.Layer-PropertiesDialog .Form-Field:first-child .MuiSelect-select',
@@ -20,7 +20,7 @@ class LayerPropertiesDialog extends Block {
   }
 
   async layerPropertyDialogSelectViewThirdOption(): Promise<void> {
-    const muiSelect = new MuiSelect(this.selectors.container);
+    const muiSelect = new MuiSelectBlock(this.selectors.container);
     await muiSelect.selectOption(3);
   }
 
@@ -31,4 +31,4 @@ class LayerPropertiesDialog extends Block {
   }
 }
 
-export const layerPropertiesDialog = new LayerPropertiesDialog();
+export const layerPropertiesDialogBlock = new LayerPropertiesDialogBlock();

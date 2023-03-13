@@ -1,63 +1,74 @@
-import { Then, When } from '@wdio/cucumber-framework';
+import { DataTable, Then, When } from '@wdio/cucumber-framework';
 
-import { projects } from './Projects.block';
+import { projectsBlock } from './Projects.block';
 
 When(/^я нажимаю кнопку `Создать проект`$/, async () => {
-  await projects.clickAddButton();
+  await projectsBlock.clickAddButton();
 });
 
-When(/^я навожу курсор на первый в списке проект$/, async () => {
-  await projects.hoverFirstCard();
+When(/^я навожу курсор на проект "(.*)"$/, async (title: string) => {
+  await projectsBlock.hoverProjectCard(title);
 });
 
-When(/^я нажимаю кнопку удаления первого проекта$/, async () => {
-  await projects.clickFirstProjectDeleteButton();
+When(/^я нажимаю кнопку удаления проекта "(.*)"$/, async (title: string) => {
+  await projectsBlock.clickProjectDeleteButton(title);
 });
 
 When(/^нажимаю на кнопку подтверждения удаления проекта в появившемся диалоговом окне$/, async () => {
-  await projects.clickDeleteYesButton();
+  await projectsBlock.clickDeleteYesButton();
 });
 
 When(/^я открываю форму создания проекта$/, async () => {
-  await projects.openAddForm();
+  await projectsBlock.openAddForm();
 });
 
 Then(/^появляется форма создания проекта$/, async () => {
-  await projects.waitForProjectFormVisible();
+  await projectsBlock.waitForProjectFormVisible();
 });
 
 Then(/^список проектов пуст$/, async () => {
-  await projects.checkProjectListIsEmpty();
+  await projectsBlock.checkProjectListIsEmpty();
 });
 
-Then(/^кнопка удаления проекта отсутствует$/, async () => {
-  await projects.checkDeleteButtonNotExist();
+Then(/^кнопка удаления проекта "(.*)" отсутствует$/, async (title: string) => {
+  const deleteBtn = await projectsBlock.isProjectCardDeleteButtonNotDisplayed(title);
+
+  expect(deleteBtn).toEqual(true);
 });
 
 When(/^я создаю проект с названием "(.*)"$/, async (title: string) => {
-  await projects.createProject(title);
+  await projectsBlock.createProject(title);
 });
 
 When(/^я нажимаю на карточку проекта "(.*)" в списке проектов$/, async (title: string) => {
-  await projects.clickCard(title);
+  await projectsBlock.clickCard(title);
 });
 
-When(/^в диалоговом окне создания проекта я нажимаю кнопку `Создать`$/, async () => {
-  await projects.createProjectBtn();
+When(/^в форме создания проекта я нажимаю кнопку `Создать`$/, async () => {
+  await projectsBlock.createProjectBtn();
+});
+
+When(/^на странице проектов в поле `Фильтр по названию` я ввожу значение "(.*)"$/, async (value: string) => {
+  await projectsBlock.setProjectsFilerValue(value);
 });
 
 Then(/^в списке проектов появляется "(.*)" и он доступен для взаимодействия$/, async (name: string) => {
-  await projects.waitForProjectCardVisible(name);
+  await projectsBlock.waitForProjectCardVisible(name);
 });
 
-Then(/^в списке проектов отображается только один проект "(.*)"$/, async (name: string) => {
-  await projects.singleVisibleProject(name);
+Then(/^в списке проектов отображается один проект "(.*)"$/, async (name: string) => {
+  const projectName = await projectsBlock.singleVisibleProject();
+
+  expect(projectName).toEqual(name);
 });
 
-Then(/^в диалоговом окне создания проекта появляется сообщение об ошибке валидации$/, async () => {
-  await projects.projectValidationError();
+Then(/^в списке проектов отображаются проекты:$/, async (names: DataTable) => {
+  const currentProjectsNames = await projectsBlock.multipleVisibleProject();
+  const projectsNames = names.raw().map(name => name[0]);
+
+  expect(currentProjectsNames).toEqual(projectsNames);
 });
 
-Then(/^проект "(.*)" удален$/, async (projectName: string) => {
-  await projects.projectIsDeleted(projectName);
+Then(/^в форме создания проекта появляется сообщение об ошибке валидации$/, async () => {
+  await projectsBlock.projectValidationError();
 });

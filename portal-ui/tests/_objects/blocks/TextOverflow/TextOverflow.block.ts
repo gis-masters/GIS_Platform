@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class TextOverflow extends Block {
+class TextOverflowBlock extends Block {
   selectors = {
     container: '.TextOverflow',
     link: '.TextOverflow-PseudoLink'
@@ -17,4 +17,4 @@ class TextOverflow extends Block {
   }
 }
 
-export const textOverflow = new TextOverflow();
+export const textOverflowBlock = new TextOverflowBlock();

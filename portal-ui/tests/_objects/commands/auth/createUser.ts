@@ -49,10 +49,10 @@ export async function createUser({
 
 export async function createTestUsers(): Promise<void> {
   const {
-    'Владелец данных': owner,
-    'Редактор данных': contributor,
-    'Читатель данных': viewer,
-    'Пользователь без прав': user,
+    Гарри: owner,
+    Драко: contributor,
+    Рональд: viewer,
+    Джинни: user,
     'Деактивированный пользователь': disabled
   } = testUsers;
 
@@ -124,7 +124,7 @@ export async function createTestUsers(): Promise<void> {
 }
 
 export async function createTestUsersInOtherOrganization(): Promise<void> {
-  const collaborator = testUsers['Член обоих организаций'];
+  const collaborator = testUsers['Питер'];
 
   await createUser({
     enabled: true,

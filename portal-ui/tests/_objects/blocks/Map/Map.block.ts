@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 import { getLayerVisibility } from '../../commands/getLayerVisibility';
 
-class Map extends Block {
+class MapBlock extends Block {
   selectors = {
     container: '.map'
   };
@@ -20,4 +20,4 @@ class Map extends Block {
   }
 }
 
-export const map = new Map();
+export const mapBlock = new MapBlock();

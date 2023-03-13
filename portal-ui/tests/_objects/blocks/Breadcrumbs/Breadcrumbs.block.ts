@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class Breadcrumbs extends Block {
+class BreadcrumbsBlock extends Block {
   selectors = {
     container: '.Breadcrumbs',
     items: '.Breadcrumbs-Item'
@@ -17,4 +17,4 @@ class Breadcrumbs extends Block {
   }
 }
 
-export const breadcrumbs = new Breadcrumbs();
+export const breadcrumbsBlock = new BreadcrumbsBlock();

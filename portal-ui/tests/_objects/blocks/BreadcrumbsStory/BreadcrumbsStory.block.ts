@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class BreadcrumbsStory extends Block {
+class BreadcrumbsStoryBlock extends Block {
   selectors = {
     container: '.BreadcrumbsStory',
     input: '.BreadcrumbsStory-InputControl'
@@ -13,4 +13,4 @@ class BreadcrumbsStory extends Block {
   }
 }
 
-export const breadcrumbsStory = new BreadcrumbsStory();
+export const breadcrumbsStoryBlock = new BreadcrumbsStoryBlock();

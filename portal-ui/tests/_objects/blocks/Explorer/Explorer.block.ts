@@ -2,7 +2,7 @@ import { sleep } from '../../../../src/app/services/util/sleep';
 
 import { Block } from '../../Block';
 
-class Explorer extends Block {
+class ExplorerBlock extends Block {
   selectors = {
     container: '.Explorer',
     oneTitle: '.Explorer-ItemTitle',
@@ -67,4 +67,4 @@ class Explorer extends Block {
   }
 }
 
-export const explorer = new Explorer();
+export const explorerBlock = new ExplorerBlock();

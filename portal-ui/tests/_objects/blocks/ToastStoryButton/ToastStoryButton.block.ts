@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class ToastStoryButton extends Block {
+class ToastStoryButtonBlock extends Block {
   selectors = {
     container: '.ToastStoryButton'
   };
@@ -12,4 +12,4 @@ class ToastStoryButton extends Block {
   }
 }
 
-export const toastStoryButton = new ToastStoryButton();
+export const toastStoryButtonBlock = new ToastStoryButtonBlock();

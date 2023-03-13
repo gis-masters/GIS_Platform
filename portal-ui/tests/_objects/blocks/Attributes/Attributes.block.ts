@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class Attributes extends Block {
+class AttributesBlock extends Block {
   selectors = {
     container: '.Attributes',
     attributeTableHead: '.Attributes-Table .XTable-Head',
@@ -38,4 +38,4 @@ class Attributes extends Block {
   }
 }
 
-export const attributes = new Attributes();
+export const attributesBlock = new AttributesBlock();

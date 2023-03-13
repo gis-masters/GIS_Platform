@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class AddLayerDialog extends Block {
+class AddLayerDialogBlock extends Block {
   selectors = {
     container: '.AddLayerDialog',
     addLayerDialogViewField: '.AddLayerDialog .Form-Content .Form-Field:last-child label',
@@ -27,4 +27,4 @@ class AddLayerDialog extends Block {
   }
 }
 
-export const addLayerDialog = new AddLayerDialog();
+export const addLayerDialogBlock = new AddLayerDialogBlock();

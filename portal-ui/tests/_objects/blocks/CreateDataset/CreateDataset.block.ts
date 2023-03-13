@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class CreateDataset extends Block {
+class CreateDatasetBlock extends Block {
   selectors = {
     container: '.CreateDataset'
   };
@@ -11,4 +11,4 @@ class CreateDataset extends Block {
   }
 }
 
-export const createDataset = new CreateDataset();
+export const createDatasetBlock = new CreateDatasetBlock();

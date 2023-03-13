@@ -1,7 +1,7 @@
 import { Block } from '../../../../Block';
-import { xTable } from '../../XTable.block';
+import { xTableBlock } from '../../XTable.block';
 
-class XTableFilterTypeBool extends Block {
+class XTableFilterTypeBoolBlock extends Block {
   selectors = {
     container: '.XTable-Filter_type_bool',
     filterButtonTrue: '.XTable-Filter_type_bool button:first-child',
@@ -23,16 +23,16 @@ class XTableFilterTypeBool extends Block {
   }
 
   async checkFilterableTrueItems() {
-    const values = await xTable.getSecondColValues();
+    const values = await xTableBlock.getSecondColValues();
     expect(values.length).toEqual(4);
     expect(values).toEqual(['да', 'да', 'да', 'да']);
   }
 
   async checkFilterableFalseItems() {
-    const values = await xTable.getSecondColValues();
+    const values = await xTableBlock.getSecondColValues();
     expect(values.length).toEqual(2);
     expect(values).toEqual(['нет', 'нет']);
   }
 }
 
-export const xTableFilterTypeBool = new XTableFilterTypeBool();
+export const xTableFilterTypeBoolBlock = new XTableFilterTypeBoolBlock();

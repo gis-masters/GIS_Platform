@@ -1,7 +1,7 @@
 import { Block } from '../../Block';
-import { MuiSelect } from '../MuiSelect/MuiSelect.block';
+import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 
-class ConnectionsToProjectsWidget extends Block {
+class ConnectionsToProjectsWidgetBlock extends Block {
   selectors = {
     container: '.ConnectionsToProjectsWidget',
     connectionToProjectDialogViewSelector:
@@ -12,7 +12,7 @@ class ConnectionsToProjectsWidget extends Block {
   async projectSelectDialogProjectAcceptBtn(): Promise<void> {
     const $connectionToProjectDialogAccept = await this.$('connectionToProjectDialogAccept');
 
-    const muiSelect = new MuiSelect('.ConnectionsToProjectsWidget-Dialog');
+    const muiSelect = new MuiSelectBlock('.ConnectionsToProjectsWidget-Dialog');
     await muiSelect.selectOption(2);
 
     await $connectionToProjectDialogAccept.click();
@@ -32,11 +32,11 @@ class ConnectionsToProjectsWidget extends Block {
     const $connectionToProjectDialogViewSelector = await this.$('connectionToProjectDialogViewSelector');
     await $connectionToProjectDialogViewSelector.waitForDisplayed();
 
-    const muiSelect = new MuiSelect(
+    const muiSelect = new MuiSelectBlock(
       '.ConnectionsToProjectsWidget-Dialog .ConnectionsToProjectsWidget-ViewSelector .Form-Control'
     );
     await muiSelect.selectOption(2);
   }
 }
 
-export const connectionsToProjectsWidget = new ConnectionsToProjectsWidget();
+export const connectionsToProjectsWidgetBlock = new ConnectionsToProjectsWidgetBlock();

@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class WorkspaceHeaderBurger extends Block {
+class WorkspaceHeaderBurgerBlock extends Block {
   selectors = {
     container: '.WorkspaceHeader-Burger'
   };
@@ -13,4 +13,4 @@ class WorkspaceHeaderBurger extends Block {
   }
 }
 
-export const workspaceHeaderBurger = new WorkspaceHeaderBurger();
+export const workspaceHeaderBurgerBlock = new WorkspaceHeaderBurgerBlock();

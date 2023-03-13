@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class Documents extends Block {
+class DocumentsBlock extends Block {
   selectors = {
     container: '.Documents',
     add: '.Documents-Add .MuiButton-root'
@@ -12,4 +12,4 @@ class Documents extends Block {
   }
 }
 
-export const documents = new Documents();
+export const documentsBlock = new DocumentsBlock();

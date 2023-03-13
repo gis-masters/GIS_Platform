@@ -3,7 +3,7 @@ import { env } from '../../../../src/app/stores/Env.store';
 
 declare const window: { env: typeof env };
 
-class Toast extends Block {
+class ToastBlock extends Block {
   selectors = {
     container: '.Toast',
     moar: '.Toast-Moar',
@@ -73,4 +73,4 @@ class Toast extends Block {
   }
 }
 
-export const toast = new Toast();
+export const toastBlock = new ToastBlock();

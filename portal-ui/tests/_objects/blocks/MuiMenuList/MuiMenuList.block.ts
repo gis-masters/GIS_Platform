@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class MuiMenuList extends Block {
+class MuiMenuListBlock extends Block {
   selectors = {
     container: '.MuiMenu-list',
     menuSecondItem: '.MuiMenu-list li:nth-child(2)',
@@ -36,4 +36,4 @@ class MuiMenuList extends Block {
   }
 }
 
-export const muiMenuList = new MuiMenuList();
+export const muiMenuListBlock = new MuiMenuListBlock();

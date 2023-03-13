@@ -2,7 +2,7 @@ import { Key } from 'webdriverio';
 
 import { Block } from '../../../../Block';
 
-class XTableFilterTypeString extends Block {
+class XTableFilterTypeStringBlock extends Block {
   selectors = {
     container: '.XTable-Filter_type_string',
     filterInput: '.XTable-Filter_type_string input',
@@ -45,4 +45,4 @@ class XTableFilterTypeString extends Block {
   }
 }
 
-export const xTableFilterTypeString = new XTableFilterTypeString();
+export const xTableFilterTypeStringBlock = new XTableFilterTypeStringBlock();

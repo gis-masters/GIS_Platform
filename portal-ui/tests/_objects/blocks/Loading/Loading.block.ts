@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class Loading extends Block {
+class LoadingBlock extends Block {
   selectors = {
     container: '.Loading',
     global: '.Loading_global'
@@ -17,4 +17,4 @@ class Loading extends Block {
   }
 }
 
-export const loading = new Loading();
+export const loadingBlock = new LoadingBlock();

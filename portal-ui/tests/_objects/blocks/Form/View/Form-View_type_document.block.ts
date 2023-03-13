@@ -1,9 +1,9 @@
 import { Block } from '../../../Block';
 
-class FormViewTypeDocument extends Block {
+class FormViewTypeDocumentBlock extends Block {
   selectors = {
     container: '.Form-View_type_document'
   };
 }
 
-export const formViewTypeDocument = new FormViewTypeDocument();
+export const formViewTypeDocumentBlock = new FormViewTypeDocumentBlock();

@@ -1,7 +1,7 @@
 import { Block } from '../../../../Block';
-import { xTable } from '../../XTable.block';
+import { xTableBlock } from '../../XTable.block';
 
-class XTableFilterTypeChoice extends Block {
+class XTableFilterTypeChoiceBlock extends Block {
   selectors = {
     container: '.XTable-Filter_type_choice',
     filterInputChoice: '.XTable-Filter_type_choice .MuiSelect-select',
@@ -44,7 +44,7 @@ class XTableFilterTypeChoice extends Block {
     await $popoverOverlay.click();
     await browser.pause(300);
 
-    const values = await xTable.getFirstColCellValues();
+    const values = await xTableBlock.getFirstColCellValues();
 
     expect(values.length).toEqual(1);
     expect(values).toEqual(['Дерево']);
@@ -55,10 +55,10 @@ class XTableFilterTypeChoice extends Block {
     await $popoverOverlay.click();
     await browser.pause(300);
 
-    const values = await xTable.getFirstColCellValues();
+    const values = await xTableBlock.getFirstColCellValues();
     expect(values.length).toEqual(6);
     expect(values).toEqual(['Дерево', 'Железо', 'Стекло', 'Железо', 'Стекло', 'Стекло']);
   }
 }
 
-export const xTableFilterTypeChoice = new XTableFilterTypeChoice();
+export const xTableFilterTypeChoiceBlock = new XTableFilterTypeChoiceBlock();

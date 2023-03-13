@@ -1,9 +1,9 @@
 import { Block } from '../../Block';
-import { editFeature } from '../EditFeature/EditFeature.block';
-import { editFeatureGeometryAsTextDialog } from '../EditFeatureGeometryAsTextDialog/EditFeatureGeometryAsTextDialog.block';
-import { muiMenuList } from '../MuiMenuList/MuiMenuList.block';
+import { editFeatureBlock } from '../EditFeature/EditFeature.block';
+import { editFeatureGeometryAsTextDialogBlock } from '../EditFeatureGeometryAsTextDialog/EditFeatureGeometryAsTextDialog.block';
+import { muiMenuListBlock } from '../MuiMenuList/MuiMenuList.block';
 
-class LayersSidebar extends Block {
+class LayersSidebarBlock extends Block {
   selectors = {
     container: '.LayersSidebar',
     editLayersBtn: '.LayersSidebar-EditBtn',
@@ -39,25 +39,25 @@ class LayersSidebar extends Block {
   async layerPropertiesOpen(): Promise<void> {
     await this.clickEditButton();
     await this.clickLayerBurger();
-    await muiMenuList.testMenuSecItemText('Свойства');
-    await muiMenuList.clickMenuSecondItem();
+    await muiMenuListBlock.testMenuSecItemText('Свойства');
+    await muiMenuListBlock.clickMenuSecondItem();
   }
 
   async createNewObjectInLayer(): Promise<void> {
-    await muiMenuList.testMenuThirdItemText('Добавить объект');
-    await muiMenuList.clickMenuThirdItem();
-    await editFeatureGeometryAsTextDialog.setObjectDummyCoordinates();
-    await editFeature.saveNewObject();
+    await muiMenuListBlock.testMenuThirdItemText('Добавить объект');
+    await muiMenuListBlock.clickMenuThirdItem();
+    await editFeatureGeometryAsTextDialogBlock.setObjectDummyCoordinates();
+    await editFeatureBlock.saveNewObject();
   }
 
   async clickLayerAttributeTable(): Promise<void> {
-    await muiMenuList.testMenuSecItemText('Открыть таблицу атрибутов');
-    await muiMenuList.clickMenuSecondItem();
+    await muiMenuListBlock.testMenuSecItemText('Открыть таблицу атрибутов');
+    await muiMenuListBlock.clickMenuSecondItem();
   }
 
   async openAddLayerDialog(): Promise<void> {
-    await layersSidebar.clickEditButton();
-    await layersSidebar.addLayerBtn();
+    await layersSidebarBlock.clickEditButton();
+    await layersSidebarBlock.addLayerBtn();
   }
 
   async clickVisibilityBtn(layerName: string): Promise<void> {
@@ -89,4 +89,4 @@ class LayersSidebar extends Block {
   }
 }
 
-export const layersSidebar = new LayersSidebar();
+export const layersSidebarBlock = new LayersSidebarBlock();

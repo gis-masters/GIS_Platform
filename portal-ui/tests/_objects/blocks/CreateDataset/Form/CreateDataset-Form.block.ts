@@ -1,6 +1,6 @@
 import { Block } from '../../../Block';
 
-class CreateDatasetForm extends Block {
+class CreateDatasetFormBlock extends Block {
   selectors = {
     container: '.CreateDataset-Form',
     title: '.CreateDataset-Form input[name="title"]',
@@ -19,4 +19,4 @@ class CreateDatasetForm extends Block {
   }
 }
 
-export const createDatasetForm = new CreateDatasetForm();
+export const createDatasetFormBlock = new CreateDatasetFormBlock();

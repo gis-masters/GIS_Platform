@@ -1,7 +1,7 @@
 import { Block } from '../../Block';
-import { editFeature } from '../EditFeature/EditFeature.block';
+import { editFeatureBlock } from '../EditFeature/EditFeature.block';
 
-class EditFeatureGeometryAsTextDialog extends Block {
+class EditFeatureGeometryAsTextDialogBlock extends Block {
   selectors = {
     container: '.EditFeatureGeometry-AsTextDialog',
     editFeatureGeometryAsTextDialogTextarea:
@@ -10,7 +10,7 @@ class EditFeatureGeometryAsTextDialog extends Block {
   };
 
   async setObjectDummyCoordinates(): Promise<void> {
-    await editFeature.clickGeometryAsTextButton();
+    await editFeatureBlock.clickGeometryAsTextButton();
 
     const $editFeatureGeometryAsTextDialogTextarea = await this.$('editFeatureGeometryAsTextDialogTextarea');
     await $editFeatureGeometryAsTextDialogTextarea.waitForDisplayed();
@@ -21,4 +21,4 @@ class EditFeatureGeometryAsTextDialog extends Block {
   }
 }
 
-export const editFeatureGeometryAsTextDialog = new EditFeatureGeometryAsTextDialog();
+export const editFeatureGeometryAsTextDialogBlock = new EditFeatureGeometryAsTextDialogBlock();

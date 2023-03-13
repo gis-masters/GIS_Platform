@@ -1,15 +1,22 @@
 import { RegData } from '../../../../src/app/services/auth/auth.service';
+import { Role } from '../../../../src/app/services/data/permissions.models';
+
+export const userRoles: Record<string, Role> = {
+  владение: Role.OWNER,
+  чтение: Role.VIEWER,
+  редактирование: Role.CONTRIBUTOR
+};
 
 export const testUsers: Record<
   | 'Администратор системы'
   | 'Администратор организации'
-  | 'Владелец данных'
-  | 'Редактор данных'
-  | 'Читатель данных'
-  | 'Пользователь без прав'
+  | 'Гарри'
+  | 'Драко'
+  | 'Рональд'
+  | 'Джинни'
   | 'Деактивированный пользователь'
   | 'Администратор другой организации'
-  | 'Член обоих организаций',
+  | 'Питер',
   RegData
 > = {
   'Администратор системы': {
@@ -30,7 +37,7 @@ export const testUsers: Record<
     password: 'Avadakedavra1',
     password_: 'Avadakedavra1'
   },
-  'Владелец данных': {
+  Гарри: {
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Harry',
@@ -39,7 +46,7 @@ export const testUsers: Record<
     password: 'Avadakedavra2',
     password_: 'Avadakedavra2'
   },
-  'Редактор данных': {
+  Драко: {
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Draco',
@@ -48,7 +55,7 @@ export const testUsers: Record<
     password: 'Avadakedavra3',
     password_: 'Avadakedavra3'
   },
-  'Читатель данных': {
+  Рональд: {
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Ronald',
@@ -57,7 +64,7 @@ export const testUsers: Record<
     password: 'Avadakedavra4',
     password_: 'Avadakedavra4'
   },
-  'Пользователь без прав': {
+  Джинни: {
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Ginny',
@@ -84,7 +91,7 @@ export const testUsers: Record<
     password: 'Avadakedavra666',
     password_: 'Avadakedavra666'
   },
-  'Член обоих организаций': {
+  Питер: {
     company: 'Другая организация',
     contactPhone: '7777777777',
     firstName: 'Peter',

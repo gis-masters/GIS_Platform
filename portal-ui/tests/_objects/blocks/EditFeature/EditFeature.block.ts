@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class EditFeature extends Block {
+class EditFeatureBlock extends Block {
   selectors = {
     container: '.edit-feature',
     editFeatureSidebarSaveNewObjectBtn: '.edit-feature .save-feature-edit-btn',
@@ -38,10 +38,10 @@ class EditFeature extends Block {
   }
 
   async clickGeometryAsTextButton() {
-    const $editFeatureGeometryAsText = await editFeature.$('editFeatureGeometryAsTextBtn');
+    const $editFeatureGeometryAsText = await editFeatureBlock.$('editFeatureGeometryAsTextBtn');
     await $editFeatureGeometryAsText.waitForDisplayed();
     await $editFeatureGeometryAsText.click();
   }
 }
 
-export const editFeature = new EditFeature();
+export const editFeatureBlock = new EditFeatureBlock();

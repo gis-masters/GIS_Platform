@@ -1,7 +1,7 @@
 import { Block } from '../../../../Block';
-import { xTable } from '../../XTable.block';
+import { xTableBlock } from '../../XTable.block';
 
-class XTableFilterTypeFloat extends Block {
+class XTableFilterTypeFloatBlock extends Block {
   selectors = {
     container: '.XTable-Filter_type_float',
     filterInputLte: '.XTable-HeadCell .XTable-Filter .MuiTextField-root:first-child input',
@@ -19,7 +19,7 @@ class XTableFilterTypeFloat extends Block {
   }
 
   async checkFilterableLteItems(lte: string) {
-    const values = await xTable.getFirstColCellValues();
+    const values = await xTableBlock.getFirstColCellValues();
 
     expect(values.length).toEqual(4);
     values.forEach(val => {
@@ -28,7 +28,7 @@ class XTableFilterTypeFloat extends Block {
   }
 
   async checkFilterableGteItems2(gte: string) {
-    const values = await xTable.getFirstColCellValues();
+    const values = await xTableBlock.getFirstColCellValues();
 
     expect(values.length).toEqual(5);
     values.forEach(val => {
@@ -37,7 +37,7 @@ class XTableFilterTypeFloat extends Block {
   }
 
   async checkFilterableGteItems3(lte: string, gte: string) {
-    const values = await xTable.getFirstColCellValues();
+    const values = await xTableBlock.getFirstColCellValues();
 
     expect(values.length).toEqual(5);
     values.forEach(val => {
@@ -47,4 +47,4 @@ class XTableFilterTypeFloat extends Block {
   }
 }
 
-export const xTableFilterTypeFloat = new XTableFilterTypeFloat();
+export const xTableFilterTypeFloatBlock = new XTableFilterTypeFloatBlock();

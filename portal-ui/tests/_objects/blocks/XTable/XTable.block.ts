@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class XTable extends Block {
+class XTableBlock extends Block {
   selectors = {
     container: '.XTable',
     firstColCellContent: '.XTable .XTable-Cell:first-child .XTable-CellContent',
@@ -30,4 +30,4 @@ class XTable extends Block {
   }
 }
 
-export const xTable = new XTable();
+export const xTableBlock = new XTableBlock();

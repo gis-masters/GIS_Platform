@@ -10,12 +10,12 @@ export abstract class Block<S extends Selectors = Selectors> {
   parentSelector: string;
 
   get name(): string {
-    return this.constructor.name;
+    return this.constructor.name.replace(/Block$/, '');
   }
 
   constructor(parentSelector = '') {
     this.parentSelector = parentSelector;
-    blocksRegistry[this.constructor.name] = this;
+    blocksRegistry[this.constructor.name.replace(/Block$/, '')] = this;
   }
 
   protected async $(key: keyof this['selectors']): Promise<WebdriverIO.Element> {

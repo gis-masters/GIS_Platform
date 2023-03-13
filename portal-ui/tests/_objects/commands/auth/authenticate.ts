@@ -78,19 +78,19 @@ export async function authenticateAsOtherAdmin(thenPage?: Page): Promise<void> {
 }
 
 export async function authenticateAsOwner(thenPage?: Page): Promise<void> {
-  await authenticateAs(testUsers['Владелец данных'], thenPage);
+  await authenticateAs(testUsers['Гарри'], thenPage);
 }
 
 export async function authenticateAsContributor(thenPage?: Page): Promise<void> {
-  await authenticateAs(testUsers['Редактор данных'], thenPage);
+  await authenticateAs(testUsers['Драко'], thenPage);
 }
 
 export async function authenticateAsViewer(thenPage?: Page): Promise<void> {
-  await authenticateAs(testUsers['Читатель данных'], thenPage);
+  await authenticateAs(testUsers['Рональд'], thenPage);
 }
 
 export async function authenticateAsUser(thenPage?: Page): Promise<void> {
-  await authenticateAs(testUsers['Пользователь без прав'], thenPage);
+  await authenticateAs(testUsers['Джинни'], thenPage);
 }
 
 export async function logout(): Promise<void> {

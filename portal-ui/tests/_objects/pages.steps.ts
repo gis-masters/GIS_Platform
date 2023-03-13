@@ -51,14 +51,14 @@ Given(/^я на странице карты проекта "([^"]*)"$/, async (t
   }
 });
 
-When(/^я открываю страницу "([^"]*)"$/, async (title: string) => {
+When(/^я перехожу на страницу "([^"]*)"$/, async (title: string) => {
   const page = findPage(title);
   await browser.url(page.url);
   await root.waitForExist();
 });
 
 When(
-  /^я открываю страницу "([^"]*)" с гостевыми логином-паролем пользователя "([^"]*)"$/,
+  /^я перехожу на страницу "([^"]*)" с гостевыми логином-паролем пользователя "([^"]*)"$/,
   async (pageTitle: string, user: keyof typeof testUsers) => {
     if (!testUsers[user]) {
       throw new Error(`Нет пользователя "${user}"`);

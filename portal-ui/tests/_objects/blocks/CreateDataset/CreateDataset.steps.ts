@@ -1,17 +1,17 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { createDataset } from './CreateDataset.block';
-import { createDatasetForm } from './Form/CreateDataset-Form.block';
+import { createDatasetBlock } from './CreateDataset.block';
+import { createDatasetFormBlock } from './Form/CreateDataset-Form.block';
 
 Then(/^мне доступна кнопка `Создать набор данных`$/, async () => {
-  await createDataset.waitForVisible();
+  await createDatasetBlock.waitForVisible();
 });
 
 When(/^я, воспользовавшись формой, создаю набор данных "([^"]*)"$/, async (datasetTitle: string) => {
-  await createDataset.click();
-  await createDatasetForm.waitForVisible();
+  await createDatasetBlock.click();
+  await createDatasetFormBlock.waitForVisible();
   await browser.pause(300); // анимация открытия диалогового окна
 
-  await createDatasetForm.setTitleValue(datasetTitle);
-  await createDatasetForm.submit();
+  await createDatasetFormBlock.setTitleValue(datasetTitle);
+  await createDatasetFormBlock.submit();
 });

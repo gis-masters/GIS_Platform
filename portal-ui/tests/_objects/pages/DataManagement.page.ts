@@ -1,4 +1,4 @@
-import { breadcrumbs } from '../blocks/Breadcrumbs/Breadcrumbs.block';
+import { breadcrumbsBlock } from '../blocks/Breadcrumbs/Breadcrumbs.block';
 import { Page } from '../Page';
 
 class DataManagementPage extends Page {
@@ -27,7 +27,7 @@ class DataManagementPage extends Page {
     await this.waitForVisible();
     // eslint-disable-next-line @typescript-eslint/await-thenable -- типы врут
     await expect(browser).toHaveUrlContaining(this.libraryRootUrl);
-    const texts = await breadcrumbs.getItemsText();
+    const texts = await breadcrumbsBlock.getItemsText();
     expect(texts.at(-1)).toBe('Библиотеки документов');
   }
 }

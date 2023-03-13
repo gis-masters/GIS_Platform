@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class ProjectForm extends Block {
+class ProjectFormBlock extends Block {
   selectors = {
     container: '.ProjectForm',
     input: '.ProjectForm-Input input',
@@ -51,4 +51,4 @@ class ProjectForm extends Block {
   }
 }
 
-export const projectForm = new ProjectForm();
+export const projectFormBlock = new ProjectFormBlock();

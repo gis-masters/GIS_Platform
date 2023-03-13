@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 
-class LoginForm extends Block {
+class LoginFormBlock extends Block {
   selectors = {
     container: '.LoginForm',
     login: '.LoginForm .Form-Control_display_email input',
@@ -57,4 +57,4 @@ class LoginForm extends Block {
   }
 }
 
-export const loginForm = new LoginForm();
+export const loginFormBlock = new LoginFormBlock();
