@@ -75,7 +75,8 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
 
         Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(dto.getSchemaId());
         if (schemaByName.isEmpty()) {
-            throw new BadRequestException("Схема для таблицы не существует!");
+            throw new BadRequestException(
+                    "Не возможно создать таблицу. Не существует схемы: '" + dto.getSchemaId() + "");
         }
 
         SchemaDto schema = schemaByName.get();

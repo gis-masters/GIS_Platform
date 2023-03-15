@@ -60,7 +60,7 @@ public class DatasetsController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/datasets")
-    public ResponseEntity<Object> createDataset(@Valid @RequestBody ResourceCreateDto dto) {
+    public ResponseEntity<IResourceModel> createDataset(@Valid @RequestBody ResourceCreateDto dto) {
         IResourceModel newDataset = mediator.execute(new CreateDatasetRequest(dto));
 
         URI location = ServletUriComponentsBuilder
@@ -69,7 +69,7 @@ public class DatasetsController {
                 .buildAndExpand(newDataset.getIdentifier())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(newDataset);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

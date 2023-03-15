@@ -10,8 +10,10 @@ import { testUsers } from './testUsers';
 import { Page } from '../../Page';
 import { usersService } from '../../../../src/app/services/auth/users.service';
 import { projectsPage } from '../../pages/Projects.page';
+import { currentUser } from '../../../../src/app/stores/CurrentUser.store';
 
 declare const window: {
+  currentUser: typeof currentUser;
   authService: typeof authService;
   usersService: typeof usersService;
 };
@@ -24,6 +26,14 @@ async function authenticate(
   const currentUrl = await browser.getUrl();
   if (!currentUrl || currentUrl === 'data:,' || currentUrl === 'about:blank') {
     await homePage.open();
+  }
+
+  const isAlreadyAuthenticated = await browser.execute<boolean, [string]>(login => {
+    return window.currentUser.login === login;
+  }, login);
+
+  if (isAlreadyAuthenticated) {
+    return { ok: true };
   }
 
   const result: AuthenticationResult = await browser.executeAsync<AuthenticationResult, [string, string]>(
@@ -81,18 +91,6 @@ export async function authenticateAsOwner(thenPage?: Page): Promise<void> {
   await authenticateAs(testUsers['Гарри'], thenPage);
 }
 
-export async function authenticateAsContributor(thenPage?: Page): Promise<void> {
-  await authenticateAs(testUsers['Драко'], thenPage);
-}
-
-export async function authenticateAsViewer(thenPage?: Page): Promise<void> {
-  await authenticateAs(testUsers['Рональд'], thenPage);
-}
-
-export async function authenticateAsUser(thenPage?: Page): Promise<void> {
-  await authenticateAs(testUsers['Джинни'], thenPage);
-}
-
 export async function logout(): Promise<void> {
   await browser.execute(() => {
     void window.authService.logout();
@@ -120,22 +118,6 @@ Given(/^я авторизован как "(.*)"$/, async (user: keyof typeof tes
   }
 
   await authenticateAs(testUser);
-});
-
-Given(/^существуют тестовая организация и тестовые пользователи$/, async () => {
-  await authenticateAsAdmin();
-
-  for (const user of Object.values(testUsers)) {
-    if (user.company === 'Hogwarts') {
-      const result = await getUserByEmail(user.email);
-
-      if (!result) {
-        await createTestUsers();
-      }
-    }
-  }
-
-  await logout();
 });
 
 Given(/^в другой организации существует пользователь "(.*)"$/, async (user: keyof typeof testUsers) => {

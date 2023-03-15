@@ -1,12 +1,12 @@
 import { Given, Then } from '@wdio/cucumber-framework';
 
-import { ScenarioScope } from '../world';
-import { testUsers, userRoles } from '../auth/testUsers';
 import { createProject } from './createProject';
 import { createProjects } from './createProjects';
-import { getUserByEmail } from '../auth/getUserByEmail';
-import { deleteAllProjectsAsAdmin } from './deleteAllProjectsAsAdmin';
+import { ScenarioScope } from '../../scenarioScope';
 import { authenticateAs } from '../auth/authenticate';
+import { getUserByEmail } from '../auth/getUserByEmail';
+import { testUsers, userRoles } from '../auth/testUsers';
+import { deleteAllProjectsAsAdmin } from './deleteAllProjectsAsAdmin';
 import { addProjectPermissionForUser } from './addProjectPermissions';
 import { getProjectsByTitleFromServer } from './getProjectsByTitleFromServer';
 import { PrincipalType } from '../../../../src/app/services/data/permissions.models';

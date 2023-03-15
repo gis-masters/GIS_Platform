@@ -50,7 +50,8 @@ export interface CrgExternalLayer extends CrgBaseLayer {
 
 export type CrgLayer = Partial<
   Omit<CrgRasterLayer, 'type'> & Omit<CrgVectorLayer, 'type'> & Omit<CrgExternalLayer, 'type'> & CrgBaseLayer
->;
+> &
+  CrgEntity;
 
 interface CrgBaseLayer extends CrgEntity {
   type: CrgLayerType;

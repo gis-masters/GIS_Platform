@@ -9,7 +9,7 @@ import {
   getTableConnectionsUrl
 } from '../server-urls.service';
 import { PropertyType, Schema } from './schema.models';
-import { CoordinateEdited, WfsFeature } from '../geoserver/wfs.models';
+import { CoordinateEdited, NewWfsFeature, WfsFeature } from '../geoserver/wfs.models';
 import { communicationService } from '../communication.service';
 import { CrgLayer, CrgProject } from '../gis/projects.models';
 import { PageableResponse, PageOptions } from '../models';
@@ -45,6 +45,7 @@ export interface Dataset extends DataEntity {
 }
 
 export type NewDataset = Pick<Dataset, 'title' | 'details'>;
+export type NewVectorTable = Pick<VectorTable, 'title' | 'crs' | 'schemaId'>;
 
 export interface VectorTable extends DataEntity {
   type: DataEntityType.TABLE;
@@ -288,8 +289,8 @@ export async function getAllDatasetTables(dataset: Dataset): Promise<VectorTable
   }));
 }
 
-export async function createVectorTable(dataset: Dataset, table: VectorTable): Promise<VectorTable> {
-  const response = await http.post<VectorTable>(await getDatasetTablesUrl(dataset.identifier), table);
+export async function createVectorTable(datasetIdentifier: string, table: NewVectorTable): Promise<VectorTable> {
+  const response = await http.post<VectorTable>(await getDatasetTablesUrl(datasetIdentifier), table);
   communicationService.vectorTableUpdated.emit({ type: 'create', data: response });
 
   return response;
@@ -304,7 +305,7 @@ export async function getVectorTable(datasetId: string, identifier: string): Pro
 export async function createVectorTableRecord(
   datasetId: string,
   vectorTableId: string,
-  feature: WfsFeature
+  feature: NewWfsFeature
 ): Promise<WfsFeature> {
   const response = await http.post<WfsFeature>(await getDatasetTableRecordsUrl(datasetId, vectorTableId), feature);
   communicationService.featuresUpdated.emit({ type: 'create', data: response });
@@ -387,11 +388,12 @@ export async function getVectorTableConnections(vectorTableId: string): Promise<
   return await http.get<VectorTableConnection[]>(await getTableConnectionsUrl(), { params });
 }
 
-export async function createDataset(newDataset: NewDataset): Promise<void> {
-  await http.post<Dataset>(await getDatasetsUrl(), newDataset);
+export async function createDataset(newDataset: NewDataset): Promise<Dataset> {
+  const dataset = await http.post<Dataset>(await getDatasetsUrl(), newDataset);
 
-  // api возвращает болт :( #5349
-  communicationService.datasetUpdated.emit({ type: 'create', data: newDataset as Dataset });
+  communicationService.datasetUpdated.emit({ type: 'create', data: dataset });
+
+  return dataset;
 }
 
 export function tablesEqual(firstTable: VectorTable, ...otherTables: VectorTable[]): boolean {
@@ -406,6 +408,7 @@ if (typeof window !== 'undefined') {
     createDataset,
     createVectorTable,
     getDatasets,
+    getAllDatasets,
     getDatasetTables,
     deleteVectorTable,
     deleteDataset,

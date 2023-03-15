@@ -76,10 +76,6 @@ public class CrgLayerValidator implements Validator {
             errors.rejectValue("nativeCRS", REQUIRED, DEFAULT_V_MESSAGE);
         }
 
-        if (dto.getDataStoreName() == null) {
-            errors.rejectValue("dataStoreName", REQUIRED, DEFAULT_V_MESSAGE);
-        }
-
         if (dto.getSchemaId() == null) {
             errors.rejectValue("schemaId", REQUIRED, DEFAULT_V_MESSAGE);
         }
@@ -112,10 +108,6 @@ public class CrgLayerValidator implements Validator {
 
         if (dto.getStyleName() == null) {
             errors.rejectValue("styleName", REQUIRED, DEFAULT_V_MESSAGE);
-        }
-
-        if (dto.getDataStoreName() == null) {
-            errors.rejectValue("dataStoreName", REQUIRED, DEFAULT_V_MESSAGE);
         }
     }
 

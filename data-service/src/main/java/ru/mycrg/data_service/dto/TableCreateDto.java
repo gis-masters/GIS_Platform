@@ -22,6 +22,7 @@ public class TableCreateDto extends ResourceCreateDto {
     @NotBlank
     @Size(min = 2, max = 50)
     private String schemaId;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SYSTEM_DATE_PATTERN)
     private LocalDate docTerminationDate;
 

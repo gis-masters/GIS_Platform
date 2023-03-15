@@ -4,7 +4,13 @@ import { action, observable, makeObservable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { SaveOutlined } from '@mui/icons-material';
 
-import { createVectorTable, Dataset, emptyVectorTableSchema, VectorTable } from '../../services/data/data.service';
+import {
+  createVectorTable,
+  Dataset,
+  emptyVectorTableSchema,
+  NewVectorTable,
+  VectorTable
+} from '../../services/data/data.service';
 import { Schema } from '../../services/data/schema.models';
 import { FormDialog } from '../FormDialog/FormDialog';
 
@@ -51,8 +57,9 @@ export class CreateVectorTable extends Component<CreateVectorTableProps> {
   }
 
   @boundMethod
-  private async create(formValue: VectorTable) {
-    await createVectorTable(this.props.dataset, formValue);
+  private async create(formValue: NewVectorTable) {
+    await createVectorTable(this.props.dataset.identifier, formValue);
+
     this.closeDialog();
   }
 }

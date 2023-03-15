@@ -1,11 +1,11 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { authenticateAsAdmin } from '../auth/authenticate';
-
 import { testSchemas } from './schema.templates';
-import { createSchema } from './createSchema';
+import { ScenarioScope } from '../../scenarioScope';
+import { authenticateAsAdmin } from '../auth/authenticate';
+import { createSchemaAsAdmin } from './createSchemaAsAdmin';
 
-Given(/^существует заготовленная схема "(.*)"$/, async (title: string) => {
+Given('существует заготовленная схема {string}', async function (this: ScenarioScope, title: string) {
   await authenticateAsAdmin();
 
   const schema = testSchemas[title];
@@ -13,5 +13,7 @@ Given(/^существует заготовленная схема "(.*)"$/, asy
     throw new Error(`Used unknown schema: '${title}'! Add it to tests schemas first.`);
   }
 
-  await createSchema(schema);
+  await createSchemaAsAdmin(schema);
+
+  this.latestSchema = schema;
 });

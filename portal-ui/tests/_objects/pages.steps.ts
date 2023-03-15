@@ -1,12 +1,13 @@
 import { Given, Then, When } from '@wdio/cucumber-framework';
 
-import { root } from './blocks/Root/Root';
-import { testUsers } from './commands/auth/testUsers';
-import { getProjectsByTitle } from './commands/projects/getProjectsByTitle';
-import { Page, pagesRegistry } from './Page';
 import { blPage } from './pages/BL.page';
-import { dataManagementPage } from './pages/DataManagement.page';
+import { root } from './blocks/Root/Root';
 import { MapPage } from './pages/Map.page';
+import { Page, pagesRegistry } from './Page';
+import { ScenarioScope } from './scenarioScope';
+import { testUsers } from './commands/auth/testUsers';
+import { dataManagementPage } from './pages/DataManagement.page';
+import { getProjectsByTitle } from './commands/projects/getProjectsByTitle';
 
 function findPage(title: string): Page {
   const page = Object.values(pagesRegistry).find(page => page.title === title);
@@ -40,12 +41,14 @@ Given(/^я на странице "([^"]*)"$/, async (title: string) => {
   await page.open();
 });
 
+Given('я нахожусь на странице карты проекта', async function (this: ScenarioScope) {
+  await new MapPage(this.latestProject.id).open();
+});
+
 Given(/^я на странице карты проекта "([^"]*)"$/, async (title: string) => {
   const projects = await getProjectsByTitle(title);
   if (projects.length === 1) {
-    const mapPage = new MapPage(projects[0].id);
-
-    await mapPage.open();
+    await new MapPage(projects[0].id).open();
   } else {
     throw new Error(`Ошибка получения проекта "${title}"`);
   }
@@ -79,21 +82,30 @@ When(/^я открываю страницу библиотек в управле
   await dataManagementPage.openLibraryRootPage();
 });
 
+Given(/^я на странице `Наборы данных` в управлении данными$/, async () => {
+  await dataManagementPage.openDatasetRootPage();
+});
+
 When(/^я открываю страницу наборов данных в управлении данными$/, async () => {
   await dataManagementPage.openDatasetRootPage();
 });
 
-When(/^я открываю страницу карты проекта "([^"]*)"$/, async (title: string) => {
-  const projects = await getProjectsByTitle(title);
-  if (projects.length === 1) {
-    const mapPage = new MapPage(projects[0].id);
-
-    await mapPage.open();
-  } else {
-    throw new Error(`Ошибка получения проекта "${title}"`);
-  }
+When('я перехожу в созданный проект', async function (this: ScenarioScope) {
+  await new MapPage(this.latestProject.id).open();
 });
 
 Then(/^открыта страница библиотек в управлении данными$/, async () => {
   await dataManagementPage.testLibraryRootPage();
 });
+
+Given(
+  'я перешел на страницу созданной векторной таблицы в созданном наборе данных, и выбрал её',
+  async function (this: ScenarioScope) {
+    const { latestVectorTable, latestDataset } = this;
+
+    const url = `/data-management?path_dm=%5B"r","root","dr","datasetRoot","dataset","${latestDataset.identifier}",
+                "table","${latestVectorTable.identifier}"%5D&opts_dm=%5B0,10,"created_at","desc",%7B%7D%5D`;
+
+    await browser.url(url);
+  }
+);

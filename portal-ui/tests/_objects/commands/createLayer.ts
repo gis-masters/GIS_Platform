@@ -5,8 +5,8 @@ import { createLayer } from '../../../src/app/services/gis/layers.service';
 import { currentUser } from '../../../src/app/stores/CurrentUser.store';
 import { projectsService } from '../../../src/app/services/gis/projects.service';
 import { authenticateAsOwner } from './auth/authenticate';
-import { CrgLayerType } from '../../../src/app/services/gis/projects.models';
 import { schemaService } from '../../../src/app/services/data/schema.service';
+import { CrgLayer, CrgLayerType } from '../../../src/app/services/gis/projects.models';
 
 declare const window: {
   getDatasetTables: typeof getDatasetTables;
@@ -60,6 +60,20 @@ export async function createNewLayerByAdmin(layerTitle: string, enabled = true, 
     layerTitle,
     enabled,
     viewId
+  );
+}
+
+export async function createVectorLayer(projectId: number, layer: CrgLayer): Promise<CrgLayer> {
+  return await browser.executeAsync(
+    async (projectId, serializedLayer, callback) => {
+      const layer = JSON.parse(serializedLayer) as CrgLayer;
+
+      const newLayer = await window.createLayer(layer, projectId);
+
+      callback(newLayer);
+    },
+    projectId,
+    JSON.stringify(layer)
   );
 }
 

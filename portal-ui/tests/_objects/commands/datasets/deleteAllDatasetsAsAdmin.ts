@@ -1,16 +1,16 @@
-import { Given } from '@wdio/cucumber-framework';
-
 import {
   deleteDataset,
   deleteVectorTable,
+  getAllDatasets,
   getAllDatasetTables,
   getDatasets
-} from '../../../src/app/services/data/data.service';
+} from '../../../../src/app/services/data/data.service';
 
-import { authenticateAsAdmin } from './auth/authenticate';
+import { authenticateAsAdmin } from '../auth/authenticate';
 
 declare const window: {
   getDatasets: typeof getDatasets;
+  getAllDatasets: typeof getAllDatasets;
   deleteVectorTable: typeof deleteVectorTable;
   getAllDatasetTables: typeof getAllDatasetTables;
   deleteDataset: typeof deleteDataset;
@@ -20,25 +20,21 @@ export async function deleteAllDatasetsAsAdmin(): Promise<void> {
   await authenticateAsAdmin();
 
   await browser.executeAsync(async callback => {
-    const [datasets] = await window.getDatasets({ page: 0, pageSize: 20 });
+    const datasets = await window.getAllDatasets();
     if (datasets.length) {
-      datasets.forEach(async dataset => {
+      for (const dataset of datasets) {
         const tables = await window.getAllDatasetTables(dataset);
 
         if (tables.length) {
-          tables.forEach(async table => {
+          for (const table of tables) {
             await window.deleteVectorTable(table);
-          });
+          }
         }
 
         await window.deleteDataset(dataset);
-      });
+      }
     }
 
     callback();
   });
 }
-
-Given(/^все наборы данных удалены администратором$/, async () => {
-  await deleteAllDatasetsAsAdmin();
-});

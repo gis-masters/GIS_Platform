@@ -1,7 +1,7 @@
 import { Block } from '../../Block';
-import { editFeatureBlock } from '../EditFeature/EditFeature.block';
 import { editFeatureGeometryAsTextDialogBlock } from '../EditFeatureGeometryAsTextDialog/EditFeatureGeometryAsTextDialog.block';
 import { muiMenuListBlock } from '../MuiMenuList/MuiMenuList.block';
+import { editFeatureBlock } from '../EditFeature/EditFeature.block';
 
 class LayersSidebarBlock extends Block {
   selectors = {

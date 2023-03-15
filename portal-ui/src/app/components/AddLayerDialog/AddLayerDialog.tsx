@@ -65,7 +65,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   @observable private usedVectorTables: VectorTable[] = [];
   @observable private usedVectorTablesRequest?: Promise<VectorTable[]>;
   @observable private views?: ContentType[] = [];
-  @observable private formValue: FormValue = getDefaultValues(this.fields);
+  @observable private formValue: Partial<FormValue> = getDefaultValues(this.fields);
 
   constructor(props: AddLayerDialogProps) {
     super(props);

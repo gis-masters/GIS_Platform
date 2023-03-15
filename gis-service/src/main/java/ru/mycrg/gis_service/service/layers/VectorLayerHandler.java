@@ -3,6 +3,7 @@ package ru.mycrg.gis_service.service.layers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.geoserver_client.services.styles.StyleService;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.entity.Layer;
@@ -14,10 +15,10 @@ import ru.mycrg.gis_service.service.geoserver.LayerGeoserverService;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
-import java.util.Objects;
 import java.util.Optional;
 
-import static java.util.Objects.*;
+import static java.util.Objects.nonNull;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.gis_service.service.layers.LayerService.DATA_SERVICE_API_PREFIX;
 
 @Component
@@ -28,18 +29,23 @@ public class VectorLayerHandler implements ILayerHandler {
     private final LayerRepository layerRepository;
     private final CrgAuthHandler crgAuthHandler;
     private final LayerGeoserverService layerGeoserverService;
+    private final IAuthenticationFacade authenticationFacade;
 
     public VectorLayerHandler(LayerRepository layerRepository,
                               LayerGeoserverService layerGeoserverService,
-                              CrgAuthHandler crgAuthHandler) {
+                              CrgAuthHandler crgAuthHandler,
+                              IAuthenticationFacade authenticationFacade) {
         this.layerRepository = layerRepository;
         this.layerGeoserverService = layerGeoserverService;
         this.crgAuthHandler = crgAuthHandler;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Override
     public Optional<Layer> create(Project project, LayerCreateDto dto) {
         log.debug("VectorLayerHandler create");
+
+        updateDataStoreName(dto);
 
         Layer newLayer = new Layer(dto);
         newLayer.setProject(project);
@@ -81,6 +87,19 @@ public class VectorLayerHandler implements ILayerHandler {
     @Override
     public String getType() {
         return "vector";
+    }
+
+    private void updateDataStoreName(LayerCreateDto dto) {
+        log.debug("updateDataStoreName: {}", dto);
+
+        if (dto.getDataStoreName() == null || dto.getDataStoreName().isBlank()) {
+            Long orgId = authenticationFacade.getOrganizationId();
+            if (orgId == -1) {
+                throw new BadRequestException("Организация не определена. Укажите dataStoreName.");
+            }
+
+            dto.setDataStoreName(getScratchWorkspaceName(orgId));
+        }
     }
 
     private void associateStyle(Layer layer) {

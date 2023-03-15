@@ -1,11 +1,15 @@
 import { Block } from '../../Block';
+import { XTableBlock } from '../XTable/XTable.block';
 
 class AttributesBlock extends Block {
+  private readonly xTable = new XTableBlock('.Attributes');
+
   selectors = {
     container: '.Attributes',
     attributeTableHead: '.Attributes-Table .XTable-Head',
     attributeTableCols: '.Attributes-Table .XTable-Head .XTable-CellContent',
-    barTitle: '.Attributes-BarTitle'
+    barTitle: '.Attributes-BarTitle',
+    pagination: '.Attributes-Pagination'
   };
 
   async checkTableSingleColTitle(title: string): Promise<void> {
@@ -28,13 +32,25 @@ class AttributesBlock extends Block {
     return contents;
   }
 
-  async checkTableWithTitle(title: string): Promise<void> {
+  async getTitle(): Promise<string> {
     const $barTitle = await this.$('barTitle');
     await $barTitle.waitForDisplayed({ timeout: 13_000 });
 
-    const barTitle = await $barTitle.getText();
+    return await $barTitle.getText();
+  }
 
-    expect(barTitle).toEqual(title);
+  async clickPaginationItem(page: number): Promise<void> {
+    const $pagination = await this.$('pagination');
+    const $paginationBtn = await $pagination.$(`.MuiPaginationItem-root=${page}`);
+    await $paginationBtn.click();
+  }
+
+  async sortColumn(title: string, direction: string) {
+    await this.xTable.sortColumn(title, direction);
+  }
+
+  async getColValues(title: string): Promise<string[]> {
+    return await this.xTable.getColValues(title);
   }
 }
 
