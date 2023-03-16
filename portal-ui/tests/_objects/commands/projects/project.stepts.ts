@@ -22,7 +22,6 @@ Given(
 
 Given(/^пользователем "(.*)" созданы проекты: (".+"[ ,]*)+$/, async (user: keyof typeof testUsers, titles: string) => {
   await authenticateAs(testUsers[user]);
-
   await createProjects(titles.slice(1, -1).split('", "'));
 });
 

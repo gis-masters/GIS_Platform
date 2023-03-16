@@ -5,10 +5,10 @@ declare const window: {
 };
 
 export async function createProjects(titles: string[]): Promise<void> {
-  await browser.executeAsync((titles, callback) => {
-    titles.forEach(async title => {
+  await browser.executeAsync(async (titles, callback) => {
+    for (const title of titles) {
       await window.projectsService.create(title);
-    });
+    }
 
     callback();
   }, titles);

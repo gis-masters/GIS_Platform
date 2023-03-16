@@ -4,9 +4,14 @@ export interface SortParams<T> {
 }
 
 function compare<T>(a: T, b: T, { field, asc }: SortParams<T>, fallBackSortField?: keyof T): number {
-  const fieldA: T[keyof T] | number | string = a[field];
-  const fieldB: T[keyof T] | number | string = b[field];
-
+  let fieldA: T[keyof T] | number | string = a[field];
+  if (typeof fieldA === 'string') {
+    fieldA = fieldA.toLowerCase();
+  }
+  let fieldB: T[keyof T] | number | string = b[field];
+  if (typeof fieldB === 'string') {
+    fieldB = fieldB.toLowerCase();
+  }
   let result = 0;
 
   if (fieldA > fieldB) {

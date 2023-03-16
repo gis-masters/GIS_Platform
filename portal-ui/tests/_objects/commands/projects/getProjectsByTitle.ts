@@ -8,11 +8,13 @@ declare const window: {
 };
 
 export async function getProjectsByTitle(title: string): Promise<CrgProject[]> {
-  return await browser.executeAsync(async (title, callback) => {
+  const projects = await browser.executeAsync<string, [string]>(async (title, callback) => {
     await window.projectsService.initAllProjectsStore();
 
     const projects = window.allProjects.list.filter(({ name }) => name === title);
 
-    callback(projects);
+    callback(JSON.stringify(projects));
   }, title);
+
+  return JSON.parse(projects) as CrgProject[];
 }

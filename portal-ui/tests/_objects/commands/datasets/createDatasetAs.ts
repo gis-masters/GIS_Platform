@@ -10,7 +10,7 @@ declare const window: {
 export async function createDatasetAs(title: string, user: keyof typeof testUsers): Promise<Dataset> {
   await authenticateAs(testUsers[user]);
 
-  return _createDataset(title);
+  return await _createDataset(title);
 }
 
 async function _createDataset(title: string): Promise<Dataset> {

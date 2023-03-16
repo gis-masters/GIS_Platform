@@ -1,6 +1,6 @@
 import { DataTable, Then, When } from '@wdio/cucumber-framework';
 
-import { projectsBlock } from './Projects.block';
+import { projectsBlock, sortDirections } from './Projects.block';
 
 When(/^я нажимаю кнопку `Создать проект`$/, async () => {
   await projectsBlock.clickAddButton();
@@ -52,6 +52,19 @@ When(/^на странице проектов в поле `Фильтр по н�
   await projectsBlock.setProjectsFilerValue(value);
 });
 
+When(
+  /^на странице проектов я выбираю сортировку по "(.*)" в поле `Сортировать по`$/,
+  async (sortOptionName: string) => {
+    const currentOptionName = await projectsBlock.projectSortTypeSelect(sortOptionName);
+
+    expect(currentOptionName).toEqual(sortOptionName);
+  }
+);
+
+When('на странице проектов я выбираю направление сортировки {string}', async (direction: string) => {
+  await projectsBlock.selectProjectSortingDescending(sortDirections[direction]);
+});
+
 Then(/^в списке проектов появляется "(.*)" и он доступен для взаимодействия$/, async (name: string) => {
   await projectsBlock.waitForProjectCardVisible(name);
 });
@@ -67,6 +80,13 @@ Then(/^в списке проектов отображаются проекты:
   const projectsNames = names.raw().map(name => name[0]);
 
   expect(currentProjectsNames).toEqual(projectsNames);
+});
+
+Then(/^сортировка проектов соответствует ожидаемому (".+"[ ,]*)+$/, async (names: string) => {
+  const currentProjectsNames = await projectsBlock.multipleVisibleProject();
+  const newNames = names.replace(/^.|.$/g, '');
+
+  expect(currentProjectsNames).toEqual(newNames.slice(1, -1).split('", "'));
 });
 
 Then(/^в форме создания проекта появляется сообщение об ошибке валидации$/, async () => {

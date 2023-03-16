@@ -22,8 +22,7 @@ export class MuiSelectBlock extends Block {
 
   async getText(): Promise<string> {
     const $container = await this.$('container');
-    const $select = await $container.$('.MuiSelect-select');
 
-    return $select.getText();
+    return $container.getText();
   }
 }

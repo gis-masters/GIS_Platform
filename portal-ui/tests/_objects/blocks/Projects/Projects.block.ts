@@ -1,6 +1,20 @@
 import { Block } from '../../Block';
 import { projectFormBlock } from '../ProjectsForm/ProjectsForm.block';
 import { loadingBlock } from '../Loading/Loading.block';
+import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
+import { sortOrderButtonBlock } from '../SortOrderButtonBlock/SortOrderButtonBlock';
+
+import { SortOrder } from '../../../../src/app/services/models';
+
+const sortTypes: Record<string, number> = {
+  'По-умолчанию': 1,
+  Названию: 2
+};
+
+export const sortDirections: Record<string, SortOrder> = {
+  'По возрастанию': SortOrder.ASC,
+  'По убыванию': SortOrder.DESC
+};
 
 class ProjectsBlock extends Block {
   selectors = {
@@ -155,6 +169,18 @@ class ProjectsBlock extends Block {
     }
 
     return currentProjectsNames;
+  }
+
+  async projectSortTypeSelect(sortOptionName: string): Promise<string> {
+    const muiSelect = new MuiSelectBlock('.Projects-SortBy');
+    await muiSelect.selectOption(sortTypes[sortOptionName]);
+
+    return await muiSelect.getText();
+  }
+
+  async selectProjectSortingDescending(direction: SortOrder): Promise<void> {
+    await sortOrderButtonBlock.waitForVisible();
+    await sortOrderButtonBlock.setSortOrder(direction);
   }
 }
 
