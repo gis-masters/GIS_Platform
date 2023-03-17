@@ -1,6 +1,6 @@
-import { LibraryRecord } from '../data/doc-library.service';
-import { schemaService } from '../data/schema.service';
-import { Schema } from '../data/schema.models';
+import { LibraryRecord } from '../data/docLibrary/docLibrary.models';
+import { schemaService } from '../data/schema/schema.service';
+import { Schema } from '../data/schema/schema.models';
 import { featureExtractRejectionTemplate } from './templates/featureExtractRejection';
 import { rawDataTemplate } from './templates/rawData';
 

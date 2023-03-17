@@ -6,13 +6,10 @@ import { ArchiveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import {
-  DocumentLibrary,
-  getAllLibraryRecordsAsRegistry,
-  LibraryRecord
-} from '../../../services/data/doc-library.service';
-import { getReadablePropertyValue } from '../../../services/data/schema.utils';
-import { PropertySchema, Schema } from '../../../services/data/schema.models';
+import { getAllLibraryRecordsAsRegistry } from '../../../services/data/docLibrary/docLibrary.service';
+import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
+import { PropertySchema, Schema } from '../../../services/data/schema/schema.models';
 import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
 import { PageOptions } from '../../../services/models';
 import { sleep } from '../../../services/util/sleep';

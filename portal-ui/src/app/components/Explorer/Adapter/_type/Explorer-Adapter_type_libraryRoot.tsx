@@ -4,12 +4,11 @@ import { Library } from '../../../Icons/Library';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import {
-  DocumentLibrary,
   getLibraries,
   getLibrariesWithParticularOne,
-  getLibrary,
-  LibraryRecord
-} from '../../../../services/data/doc-library.service';
+  getLibrary
+} from '../../../../services/data/docLibrary/docLibrary.service';
+import { DocumentLibrary, LibraryRecord } from '../../../../services/data/docLibrary/docLibrary.models';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerStore } from '../../Explorer.store';

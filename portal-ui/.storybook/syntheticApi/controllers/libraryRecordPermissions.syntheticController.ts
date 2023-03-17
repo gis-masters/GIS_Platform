@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { RoleAssignmentBody } from '../../../src/app/services/data/permissions.models';
+import { RoleAssignmentBody } from '../../../src/app/services/data/permissions/permissions.models';
 import { PageableResponse } from '../../../src/app/services/models';
 import { err404, parsePageOptions } from '../utils';
 import { SyntheticController } from './_master';

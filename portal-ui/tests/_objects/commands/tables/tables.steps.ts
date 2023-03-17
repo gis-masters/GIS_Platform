@@ -1,7 +1,7 @@
 import { Given } from '@wdio/cucumber-framework';
 
 import { testUsers } from '../auth/testUsers';
-import { ScenarioScope } from '../../scenarioScope';
+import { ScenarioScope } from '../../ScenarioScope';
 import { getSchemaIdByTitle } from './getSchemaIdByTitle';
 import { getPreparedFeatures } from './features.templates';
 import { createVectorTableAs } from './createTestVectorTable';

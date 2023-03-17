@@ -1,8 +1,8 @@
-import { NewWfsFeature, WfsFeature } from '../../../../src/app/services/geoserver/wfs.models';
-import { createVectorTableRecord } from '../../../../src/app/services/data/data.service';
+import { NewWfsFeature, WfsFeature } from '../../../../src/app/services/geoserver/wfs/wfs.models';
+import { createFeature } from '../../../../src/app/services/data/vectorData/vectorData.service';
 
 declare const window: {
-  createVectorTableRecord: typeof createVectorTableRecord;
+  createFeature: typeof createFeature;
 };
 
 export async function createRecord(
@@ -12,7 +12,7 @@ export async function createRecord(
 ): Promise<WfsFeature> {
   return await browser.executeAsync(
     async (datasetId, vectorTableId, feature, callback) => {
-      const record = await window.createVectorTableRecord(datasetId, vectorTableId, feature);
+      const record = await window.createFeature(datasetId, vectorTableId, feature);
 
       callback(record);
     },

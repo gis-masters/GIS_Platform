@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import nl2br from 'react-nl2br';
 
-import { PropertySchemaString, PropertyType } from '../../../../services/data/schema.models';
+import { PropertySchemaString, PropertyType } from '../../../../services/data/schema/schema.models';
 import { TextOverflow } from '../../../TextOverflow/TextOverflow';
 
 import { cnFormView } from '../Form-View';

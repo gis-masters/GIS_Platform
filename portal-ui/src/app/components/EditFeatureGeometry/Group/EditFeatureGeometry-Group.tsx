@@ -7,8 +7,8 @@ import { cn } from '@bem-react/classname';
 import { debounce } from 'lodash';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
-import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
+import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
+import { CoordinateEdited } from '../../../services/geoserver/wfs/wfs.models';
 
 import { EditFeatureGeometryXY } from '../XY/EditFeatureGeometry-XY';
 import { EditFeatureGeometryCoord } from '../Coord/EditFeatureGeometry-Coord';

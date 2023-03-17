@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Adjust, PolylineOutlined, SvgIconComponent } from '@mui/icons-material';
 
-import { GeometryType } from '../../services/geoserver/wfs.models';
+import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { Shape } from '../Icons/Shape';
 
 interface FeatureIconProps {

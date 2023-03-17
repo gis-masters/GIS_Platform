@@ -6,10 +6,10 @@ import { Delete } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { projectsService } from '../../../services/gis/projects.service';
-import { CrgProject } from '../../../services/gis/projects.models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
+import { CrgProject } from '../../../services/gis/projects/projects.models';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { Role } from '../../../services/data/permissions.models';
+import { Role } from '../../../services/data/permissions/permissions.models';
 import { Button } from '../../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Delete.scss';

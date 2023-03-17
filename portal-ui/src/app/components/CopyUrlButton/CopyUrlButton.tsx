@@ -8,7 +8,7 @@ import { pluralize } from 'numeralize-ru';
 
 import { copyToClipboard } from '../../services/util/clipboard.util';
 import { getFeatureUrl } from '../../services/map/map-url.service';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { Toast } from '../Toast/Toast';
 import { IconButton } from '../IconButton/IconButton';
 

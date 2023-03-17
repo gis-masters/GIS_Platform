@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { BugObject } from '../../../services/data/validation.service';
-import { schemaService } from '../../../services/data/schema.service';
-import { CrgVectorLayer } from '../../../services/gis/projects.models';
+import { BugObject } from '../../../services/data/validation/validation.models';
+import { schemaService } from '../../../services/data/schema/schema.service';
+import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
 
 interface ViolationViewItem {
   propertyName: string;

@@ -3,8 +3,8 @@ import { MapOutlined } from '@mui/icons-material';
 
 import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { projectsService } from '../../../../services/gis/projects.service';
-import { CrgProject } from '../../../../services/gis/projects.models';
+import { projectsService } from '../../../../services/gis/projects/projects.service';
+import { CrgProject } from '../../../../services/gis/projects/projects.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { Emitter } from '../../../../services/common/Emitter';
 

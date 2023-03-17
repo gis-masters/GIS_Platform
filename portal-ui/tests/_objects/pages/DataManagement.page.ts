@@ -23,7 +23,6 @@ class DataManagementPage extends Page {
   }
 
   async testLibraryRootPage() {
-    await browser.url(this.url + this.libraryRootUrl);
     await this.waitForVisible();
     // eslint-disable-next-line @typescript-eslint/await-thenable -- типы врут
     await expect(browser).toHaveUrlContaining(this.libraryRootUrl);

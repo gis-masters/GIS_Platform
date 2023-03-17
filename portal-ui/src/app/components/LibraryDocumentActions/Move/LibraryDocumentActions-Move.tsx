@@ -7,18 +7,14 @@ import { DriveFileMove, DriveFileMoveOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { Schema } from '../../../services/data/schema.models';
+import { Schema } from '../../../services/data/schema/schema.models';
 import { CommonDiRegistry } from '../../../services/di-registry';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
-import {
-  DocumentLibrary,
-  getLibrary,
-  LibraryRecord,
-  moveLibraryRecord
-} from '../../../services/data/doc-library.service';
+import { getLibrary, moveLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
+import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
-import { isRecordUpdateAllowed } from '../../../services/data/permissions.service';
+import { isRecordUpdateAllowed } from '../../../services/data/permissions/permissions.service';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';
 

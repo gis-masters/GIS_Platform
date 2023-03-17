@@ -12,7 +12,7 @@ import {
   StyleRule
 } from '../../../services/geoserver/styles.service';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
-import { CrgVectorLayer } from '../../../services/gis/projects.models';
+import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
 import { mapService } from '../../../services/map/map.service';
 import { Emitter } from '../../../services/common/Emitter';
 import { Legend } from '../../Legend/Legend';

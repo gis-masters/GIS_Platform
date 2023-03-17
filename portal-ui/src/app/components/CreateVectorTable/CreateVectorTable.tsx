@@ -5,13 +5,13 @@ import { boundMethod } from 'autobind-decorator';
 import { SaveOutlined } from '@mui/icons-material';
 
 import {
-  createVectorTable,
   Dataset,
   emptyVectorTableSchema,
   NewVectorTable,
   VectorTable
-} from '../../services/data/data.service';
-import { Schema } from '../../services/data/schema.models';
+} from '../../services/data/vectorData/vectorData.models';
+import { createVectorTable } from '../../services/data/vectorData/vectorData.service';
+import { Schema } from '../../services/data/schema/schema.models';
 import { FormDialog } from '../FormDialog/FormDialog';
 
 import { CreateVectorTableButton } from './Button/CreateVectorTable-Button';

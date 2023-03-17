@@ -5,8 +5,8 @@ import { DownloadOutlined } from '@mui/icons-material';
 
 import { cn } from '@bem-react/classname';
 
-import { getDocLibrariesRecordsUrl } from '../../../services/server-urls.service';
-import { LibraryRecord } from '../../../services/data/doc-library.service';
+import { getDocLibraryRecordsUrl } from '../../../services/server-urls.service';
+import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
 
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -55,7 +55,7 @@ export class LibraryDocumentActionsDownload extends Component<LibraryDocumentAct
   private async buildUrl() {
     const { document } = this.props;
 
-    this.setUrl(`${await getDocLibrariesRecordsUrl(document.libraryTableName)}/${document.id}/inner_path/download`);
+    this.setUrl(`${await getDocLibraryRecordsUrl(document.libraryTableName)}/${document.id}/inner_path/download`);
   }
 
   @action

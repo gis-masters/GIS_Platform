@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { WfsPointGeometry, CoordinateEdited, GeometryType } from '../../../../services/geoserver/wfs.models';
+import { WfsPointGeometry, CoordinateEdited, GeometryType } from '../../../../services/geoserver/wfs/wfs.models';
 
 import { EditFeatureGeometryToolbarLeft } from '../../ToolbarLeft/EditFeatureGeometry-ToolbarLeft';
 import { EditFeatureGeometryToolbar } from '../../Toolbar/EditFeatureGeometry-Toolbar';

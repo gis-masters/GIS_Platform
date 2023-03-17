@@ -6,10 +6,11 @@ import { OpenInNew } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { currentProject } from '../../stores/CurrentProject.store';
-import { VectorTableConnection, getVectorTableConnections } from '../../services/data/data.service';
+import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
+import { VectorTableConnection } from '../../services/data/vectorData/vectorData.models';
 import { getFeaturesUrlFragment } from '../../services/map/map-url.service';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { CrgProject } from '../../services/gis/projects.models';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { CrgProject } from '../../services/gis/projects/projects.models';
 import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
 
 const cnOpenInAnotherProject = cn('OpenInAnotherProject');

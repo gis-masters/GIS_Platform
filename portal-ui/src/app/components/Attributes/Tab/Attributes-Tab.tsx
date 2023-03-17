@@ -9,7 +9,7 @@ import { cn } from '@bem-react/classname';
 import { mapStore } from '../../../stores/Map.store';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { communicationService } from '../../../services/communication.service';
-import { CrgVectorLayer } from '../../../services/gis/projects.models';
+import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
 import { IconButton } from '../../IconButton/IconButton';
 
 import { AttributesTabInner } from '../TabInner/Attributes-TabInner';

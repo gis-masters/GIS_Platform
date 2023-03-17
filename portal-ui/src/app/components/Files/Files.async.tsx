@@ -7,11 +7,12 @@ import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 import { v4 as uuid } from 'uuid';
 
-import { PropertySchemaFile } from '../../services/data/schema.models';
-import { createFile, FileInfo } from '../../services/data/files.service';
+import { PropertySchemaFile } from '../../services/data/schema/schema.models';
+import { createFile } from '../../services/data/files/files.service';
+import { FileInfo } from '../../services/data/files/files.models';
 import { LookupStatusType } from '../Lookup/Status/Lookup-Status';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { isPreviewAllowed } from '../../services/data/files.util';
+import { isPreviewAllowed } from '../../services/data/files/files.util';
 import { LookupList } from '../Lookup/List/Lookup-List';
 import { LookupAdd } from '../Lookup/Add/Lookup-Add';
 import { FileInput } from '../FileInput/FileInput';

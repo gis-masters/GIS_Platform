@@ -13,7 +13,7 @@ import { basemapsStore } from '../../stores/Basemaps.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
-import { CrgExternalLayer, CrgLayer, CrgLayerType, TreeItem } from '../../services/gis/projects.models';
+import { CrgExternalLayer, CrgLayer, CrgLayerType, TreeItem } from '../../services/gis/projects/projects.models';
 import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
 import { mapSelectionService } from '../../services/map/map-selection.service';
 import { fetchBasemaps } from '../../services/gis/project-basemaps.service';
@@ -23,7 +23,7 @@ import { fromMobx } from '../../services/util/fromMobx';
 import { Emitter } from '../../services/common/Emitter';
 import { cn } from '../../services/util/cn';
 import { Toast } from '../Toast/Toast';
-import { projectsService } from '../../services/gis/projects.service';
+import { projectsService } from '../../services/gis/projects/projects.service';
 
 @Component({
   selector: 'crg-map',

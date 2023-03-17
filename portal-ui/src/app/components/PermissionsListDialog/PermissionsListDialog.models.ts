@@ -1,5 +1,5 @@
-import { CrgProject } from '../../services/gis/projects.models';
-import { Dataset, VectorTable } from '../../services/data/data.service';
+import { CrgProject } from '../../services/gis/projects/projects.models';
+import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { XTableProps } from '../XTable/XTable';
 
 export enum PermissionsListItemType {

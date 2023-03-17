@@ -2,7 +2,7 @@ import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 
 import { http } from '../http.service';
 import { getGeoserverFeatureTypeInfoUrl } from '../server-urls.service';
-import { CrgLayerType, CrgVectorLayer } from '../gis/projects.models';
+import { CrgLayerType, CrgVectorLayer } from '../gis/projects/projects.models';
 
 export async function getFeatureType({
   complexName,

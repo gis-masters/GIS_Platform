@@ -5,7 +5,7 @@ import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertyType } from '../../../../services/data/schema.models';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';

@@ -6,13 +6,13 @@ import { cn } from '@bem-react/classname';
 
 import { FilterBySelection, mapStore } from '../../../stores/Map.store';
 import { calculateValues } from '../../../services/formValidation.service';
-import { CrgVectorLayer } from '../../../services/gis/projects.models';
-import { schemaService } from '../../../services/data/schema.service';
-import { getFeatures } from '../../../services/geoserver/wfs.service';
-import { Schema } from '../../../services/data/schema.models';
+import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { schemaService } from '../../../services/data/schema/schema.service';
+import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
+import { Schema } from '../../../services/data/schema/schema.models';
 import { PageOptions } from '../../../services/models';
 import { getXTableColumnsFromSchemaWithLowerCaseKeys } from '../../XTable/XTable.utils';
-import { applyView } from '../../../services/data/schema.utils';
+import { applyView } from '../../../services/data/schema/schema.utils';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { XTableColumn, XTableInvoke } from '../../XTable/XTable';
 

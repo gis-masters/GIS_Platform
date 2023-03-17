@@ -1,6 +1,7 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { AuthenticationResult, authService, RegData } from '../../../../src/app/services/auth/auth.service';
+import { authService } from '../../../../src/app/services/auth/auth/auth.service';
+import { AuthenticationResult, RegData } from '../../../../src/app/services/auth/auth/auth.models';
 import { createOrganization } from './createOrganization';
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { getUserByEmail as getUserByEmail } from './getUserByEmail';
@@ -8,7 +9,7 @@ import { createTestUsers, createTestUsersInOtherOrganization } from './createUse
 import { homePage } from '../../pages/Home.page';
 import { testUsers } from './testUsers';
 import { Page } from '../../Page';
-import { usersService } from '../../../../src/app/services/auth/users.service';
+import { usersService } from '../../../../src/app/services/auth/users/users.service';
 import { projectsPage } from '../../pages/Projects.page';
 import { currentUser } from '../../../../src/app/stores/CurrentUser.store';
 
@@ -111,7 +112,7 @@ export async function authenticateAs(
   }
 }
 
-Given(/^я авторизован как "(.*)"$/, async (user: keyof typeof testUsers) => {
+Given('я авторизован как {string}', async (user: keyof typeof testUsers) => {
   const testUser = testUsers[user];
   if (!testUser) {
     throw new Error(`Used unknown user: '${user}'`);
@@ -120,7 +121,7 @@ Given(/^я авторизован как "(.*)"$/, async (user: keyof typeof tes
   await authenticateAs(testUser);
 });
 
-Given(/^в другой организации существует пользователь "(.*)"$/, async (user: keyof typeof testUsers) => {
+Given('в другой организации существует пользователь {string}', async (user: keyof typeof testUsers) => {
   await authenticateAsOtherAdmin();
   const result = await getUserByEmail(testUsers[user]?.email);
 

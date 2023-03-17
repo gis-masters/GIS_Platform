@@ -3,15 +3,16 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
 import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { getLibraryRecord, LibraryRecord } from '../../../../services/data/doc-library.service';
+import { getLibraryRecord } from '../../../../services/data/docLibrary/docLibrary.service';
+import { LibraryRecord } from '../../../../services/data/docLibrary/docLibrary.models';
 import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-import { applyContentType } from '../../../../services/data/schema.utils';
-import { schemaService } from '../../../../services/data/schema.service';
-import { Role } from '../../../../services/data/permissions.models';
+import { applyContentType } from '../../../../services/data/schema/schema.utils';
+import { schemaService } from '../../../../services/data/schema/schema.service';
+import { Role } from '../../../../services/data/permissions/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { Schema } from '../../../../services/data/schema.models';
+import { Schema } from '../../../../services/data/schema/schema.models';
 
 import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';

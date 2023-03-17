@@ -9,7 +9,7 @@ import { IClassNameProps } from '@bem-react/core';
 
 import { generateRandomId } from '../../services/util/randomId';
 import { CommonDiRegistry } from '../../services/di-registry';
-import { Schema } from '../../services/data/schema.models';
+import { Schema } from '../../services/data/schema/schema.models';
 import { getDefaultValues } from '../Form/Form.utils';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';

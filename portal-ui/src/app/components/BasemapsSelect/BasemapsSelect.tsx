@@ -8,8 +8,8 @@ import { sleep } from '../../services/util/sleep';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { Basemap } from '../../services/data/basemaps.models';
-import { Role } from '../../services/data/permissions.models';
+import { Basemap } from '../../services/data/basemaps/basemaps.models';
+import { Role } from '../../services/data/permissions/permissions.models';
 
 import { BasemapsSelectItem } from './Item/BasemapsSelect-Item';
 import { BasemapsSelectThumbnail } from './Thumbnail/BasemapsSelect-Thumbnail';

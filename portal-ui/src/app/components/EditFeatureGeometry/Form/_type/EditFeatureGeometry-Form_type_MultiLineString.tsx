@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
-import { GeometryType, WfsMultiLineStringGeometry } from '../../../../services/geoserver/wfs.models';
+import { GeometryType, WfsMultiLineStringGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import { EditFeatureGeometryFormProps, cnEditFeatureGeometryForm } from '../EditFeatureGeometry-Form';

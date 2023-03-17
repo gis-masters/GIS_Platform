@@ -4,7 +4,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { RelationsButton } from '../RelationsButton/RelationsButton';
-import { Relation } from '../../services/data/schema.models';
+import { Relation } from '../../services/data/schema/schema.models';
 import { registry } from '../../services/di-registry';
 
 const RelationsButtonWithRegistry = withRegistry(registry)(RelationsButton);

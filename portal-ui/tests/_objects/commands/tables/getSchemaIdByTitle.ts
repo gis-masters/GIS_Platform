@@ -1,4 +1,4 @@
-import { testSchemas } from '../schemas/schema.templates';
+import { testSchemas } from '../schemas/testSchemas';
 
 export function getSchemaIdByTitle(schemaTitle: string): string {
   const schema = testSchemas[schemaTitle];

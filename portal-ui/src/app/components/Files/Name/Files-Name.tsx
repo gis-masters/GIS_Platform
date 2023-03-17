@@ -7,8 +7,8 @@ import { saveAs } from 'file-saver';
 import { boundMethod } from 'autobind-decorator';
 
 import { getFileDownloadUrl } from '../../../services/server-urls.service';
-import { getReadableFileSize } from '../../../services/data/files.util';
-import { FileInfo } from '../../../services/data/files.service';
+import { getReadableFileSize } from '../../../services/data/files/files.util';
+import { FileInfo } from '../../../services/data/files/files.models';
 import { LookupName } from '../../Lookup/Name/Lookup-Name';
 import { Link } from '../../Link/Link';
 

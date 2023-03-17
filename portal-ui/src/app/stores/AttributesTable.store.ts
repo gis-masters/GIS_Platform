@@ -1,7 +1,7 @@
 import { action, makeObservable, observable, reaction } from 'mobx';
 
 import { Pages, route } from './Route.store';
-import { CrgLayer, CrgVectorLayer } from '../services/gis/projects.models';
+import { CrgLayer, CrgVectorLayer } from '../services/gis/projects/projects.models';
 import { FilterQuery } from '../services/util/filterObjects';
 
 export enum FilterBySelection {

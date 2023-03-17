@@ -6,8 +6,8 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 import { boundMethod } from 'autobind-decorator';
 
 import { mapSelectionService } from '../../services/map/map-selection.service';
-import { getFeaturesById } from '../../services/geoserver/wfs.service';
-import { importXml } from '../../services/data/import-xml.service';
+import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
+import { importXml } from '../../services/data/import-xml/import-xml.service';
 import { mapService } from '../../services/map/map.service';
 import { services } from '../../services/services';
 import { Mime } from '../../services/util/Mime';

@@ -7,13 +7,12 @@ import { IconButton, Tooltip } from '@mui/material';
 import { observable, action, makeObservable } from 'mobx';
 
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { PropertyType } from '../../services/data/schema.models';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { PropertyType } from '../../services/data/schema/schema.models';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { schemaService } from '../../services/data/schema.service';
+import { schemaService } from '../../services/data/schema/schema.service';
 import { FeatureError } from '../../services/map/map-link-following.service';
-import { WFS_FEATURE_ID_DELIMITER } from '../../services/geoserver/wfs.service';
-import { changeSchemaNamesCaseByFeature } from '../../services/data/schema.utils';
+import { changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
@@ -135,7 +134,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   }
 
   private extractTableName(id: string) {
-    const [tableName] = id.split(WFS_FEATURE_ID_DELIMITER);
+    const [tableName] = id.split('.');
     if (!tableName) {
       throw new Error('Incorrect wfs feature id: ' + id);
     }

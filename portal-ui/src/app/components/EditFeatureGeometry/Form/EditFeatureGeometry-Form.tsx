@@ -3,7 +3,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { GeometryType } from '../../../services/geoserver/wfs.models';
+import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 
 import { EditFeatureGeometryError } from '../Error/EditFeatureGeometry-Error';
 

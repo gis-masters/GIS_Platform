@@ -5,9 +5,9 @@ import { IconButton, Tooltip } from '@mui/material';
 import { FileCopyOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
-import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
+import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { copyNodeToClipboard } from '../../../services/util/clipboard.util';
-import { GeometryType } from '../../../services/geoserver/wfs.models';
+import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 
 const cnEditFeatureGeometryCopy = cn('EditFeatureGeometry', 'Copy');
 

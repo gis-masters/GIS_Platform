@@ -7,19 +7,21 @@ import { organizationSettings } from '../../../../stores/OrganizationSettings.st
 import { Emitter } from '../../../../services/common/Emitter';
 import { formatDate } from '../../../../services/util/date.util';
 import { CommonDiRegistry } from '../../../../services/di-registry';
-import { Role } from '../../../../services/data/permissions.models';
+import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
-import { schemaService } from '../../../../services/data/schema.service';
+import { schemaService } from '../../../../services/data/schema/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import {
-  ContentTypeTypes,
-  DocumentLibrary,
   getLibraryRecord,
   getLibraryRecords,
-  getLibraryRecordsWithParticularOne,
+  getLibraryRecordsWithParticularOne
+} from '../../../../services/data/docLibrary/docLibrary.service';
+import {
+  ContentTypeTypes,
+  DocumentLibrary,
   LibraryRecord
-} from '../../../../services/data/doc-library.service';
+} from '../../../../services/data/docLibrary/docLibrary.models';
 import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
@@ -125,7 +127,7 @@ export class ExplorerAdapterTypeFolder {
     const response = await getLibraryRecordsWithParticularOne(
       item.payload.libraryTableName,
       item.payload.schemaId,
-      id,
+      Number(id),
       {
         ...options,
         filter: service.mergeCustomFilter(filter, item, store),

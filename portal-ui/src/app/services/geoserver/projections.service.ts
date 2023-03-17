@@ -16,9 +16,9 @@ import {
   WfsMultiPointGeometry,
   WfsPolygonGeometry,
   WfsLineStringGeometry
-} from './wfs.models';
+} from './wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../gis/layers.service';
-import { isCoordinateValid, normalizeCoordinates } from './wfs.util';
+import { isCoordinateValid, normalizeCoordinates } from './wfs/wfs.util';
 import { Extent } from 'ol/extent';
 
 export interface Projection {

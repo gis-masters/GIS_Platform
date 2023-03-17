@@ -3,9 +3,9 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
-import { PrincipalType } from '../../services/data/permissions.models';
+import { PrincipalType } from '../../services/data/permissions/permissions.models';
 import { allPermissions } from '../../stores/AllPermissions.store';
-import { PermissionsListItem } from '../../services/data/allPermissions.service';
+import { PermissionsListItem } from '../../services/data/permissions/allPermissions.service';
 
 import '!style-loader!css-loader!sass-loader!./PermissionsCount.scss';
 

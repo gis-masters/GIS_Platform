@@ -1,5 +1,5 @@
-import { LibraryRecord } from '../../data/doc-library.service';
-import { Schema } from '../../data/schema.models';
+import { LibraryRecord } from '../../data/docLibrary/docLibrary.models';
+import { Schema } from '../../data/schema/schema.models';
 import { PrintTemplate } from '../print.service';
 
 function print(document: LibraryRecord, schema: Schema): string {

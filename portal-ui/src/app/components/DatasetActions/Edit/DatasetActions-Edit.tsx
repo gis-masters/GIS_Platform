@@ -7,7 +7,8 @@ import { boundMethod } from 'autobind-decorator';
 import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { AxiosError } from 'axios';
 
-import { Dataset, datasetSchema, updateDataset } from '../../../services/data/data.service';
+import { datasetSchema, Dataset } from '../../../services/data/vectorData/vectorData.models';
+import { updateDataset } from '../../../services/data/vectorData/vectorData.service';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { getPatch } from '../../../services/util/patch';
 import { services } from '../../../services/services';

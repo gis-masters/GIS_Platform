@@ -7,7 +7,8 @@ import {
   getGeoserverImportTaskLayerUrl,
   getGeoserverImportTaskUrl,
   getGeoserverImportUrl,
-  getGeoserverImportTaskProgressUrl
+  getGeoserverImportTaskProgressUrl,
+  getApiImportUrl
 } from '../../server-urls.service';
 import {
   ImportLayer,
@@ -17,11 +18,14 @@ import {
   ImportTaskShort,
   ScratchImport,
   InputStartResponseDto
-} from './models';
+} from './import.models';
 import { currentImport } from '../../../stores/CurrentImport.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { usersService } from '../../auth/users.service';
+import { usersService } from '../../auth/users/users.service';
 import { http } from '../../http.service';
+import { TaskImport } from './taskImport';
+import { Process } from '../../data/processes/processes.models';
+import { wsService } from '../../ws.service';
 
 interface ImportRequestData {
   import: {
@@ -36,6 +40,26 @@ interface ImportRequestData {
       };
     };
   };
+}
+
+/**
+ * Для выполнения импорта передаем на бекенд geoserverName(то имя под которым создан workspace на геосервере,
+ * то имя под которым создана схема в БД) проекта в который хотим импортировать.
+ * Организация, а соответственно и название БД есть на сервере.
+ */
+export async function doWorkImport(
+  importTasks: TaskImport[],
+  projectId: number,
+  targetSchema: string
+): Promise<Process> {
+  const url = await getApiImportUrl(projectId);
+  const payload = {
+    wsUiId: wsService.getId(),
+    targetSchema,
+    importTasks
+  };
+
+  return http.post<Process>(url, payload);
 }
 
 export async function fetchCurrentImport(importId: string): Promise<void> {

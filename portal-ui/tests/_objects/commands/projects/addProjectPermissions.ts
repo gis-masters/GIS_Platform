@@ -1,7 +1,7 @@
-import { CrgProject } from '../../../../src/app/services/gis/projects.models';
-import { usersService } from '../../../../src/app/services/auth/users.service';
-import { RoleAssignmentBody } from '../../../../src/app/services/data/permissions.models';
-import { addProjectPermission } from '../../../../src/app/services/data/permissions.client';
+import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
+import { usersService } from '../../../../src/app/services/auth/users/users.service';
+import { RoleAssignmentBody } from '../../../../src/app/services/data/permissions/permissions.models';
+import { addProjectPermission } from '../../../../src/app/services/data/permissions/permissions.service';
 
 export let currentProject: CrgProject;
 

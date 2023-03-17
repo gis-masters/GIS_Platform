@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { MapOutlined } from '@mui/icons-material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { CrgProject } from '../../../../services/gis/projects.models';
+import { CrgProject } from '../../../../services/gis/projects/projects.models';
 import { formatDate } from '../../../../services/util/date.util';
 import { ProjectsActions } from '../../../ProjectsActions/ProjectsActions';
 

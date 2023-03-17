@@ -1,7 +1,7 @@
-import { BuiltInRole } from '../../../src/app/services/data/permissions.models';
-import { BackCrgUser } from '../../../src/app/services/auth/users.service';
+import { BuiltInRole } from '../../../src/app/services/data/permissions/permissions.models';
+import { CrgUserRaw } from '../../../src/app/services/auth/users/users.models';
 
-export const users: BackCrgUser[] = [
+export const users: CrgUserRaw[] = [
   {
     email: 'e.stepanova@my',
     enabled: true,

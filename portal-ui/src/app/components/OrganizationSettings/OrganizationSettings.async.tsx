@@ -9,7 +9,7 @@ import { action, IReactionDisposer, observable, reaction, makeObservable } from 
 import { organizationSettings, OrgSettings } from '../../stores/OrganizationSettings.store';
 import { organizationSettingsService } from '../../services/organization-settings';
 import { generateRandomId } from '../../services/util/randomId';
-import { Schema } from '../../services/data/schema.models';
+import { Schema } from '../../services/data/schema/schema.models';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
 import { Form } from '../Form/Form';

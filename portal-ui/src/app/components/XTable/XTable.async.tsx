@@ -14,7 +14,7 @@ import {
   PropertySchemaUrl,
   PropertyType,
   Relation
-} from '../../services/data/schema.models';
+} from '../../services/data/schema/schema.models';
 import { filterObjects, FilterQuery } from '../../services/util/filterObjects';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
 import { PageOptions, SortOrder } from '../../services/models';

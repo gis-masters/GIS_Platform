@@ -7,7 +7,7 @@ import { Tooltip } from '@mui/material';
 
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { olProjection, transformGeometry } from '../../services/geoserver/projections.service';
-import { GeometryType, supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs.models';
+import { GeometryType, supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { mapService } from '../../services/map/map.service';
 import { Emitter } from '../../services/common/Emitter';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';

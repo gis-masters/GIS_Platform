@@ -8,8 +8,8 @@ import { compose } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
-import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs.models';
+import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
+import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { ContourAdd } from '../../Icons/ContourAdd';
 
 import { EditFeatureGeometryToolbarRight } from '../ToolbarRight/EditFeatureGeometry-ToolbarRight';

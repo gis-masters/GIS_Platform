@@ -1,5 +1,5 @@
-import { RegData } from '../../../../src/app/services/auth/auth.service';
-import { Role } from '../../../../src/app/services/data/permissions.models';
+import { RegData } from '../../../../src/app/services/auth//auth/auth.models';
+import { Role } from '../../../../src/app/services/data/permissions/permissions.models';
 
 export const userRoles: Record<string, Role> = {
   владение: Role.OWNER,

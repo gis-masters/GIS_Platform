@@ -6,10 +6,10 @@ import { FileUploadOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { applyView, getReadablePropertyValue } from '../../../services/data/schema.utils';
-import { CrgVectorLayer } from '../../../services/gis/projects.models';
-import { schemaService } from '../../../services/data/schema.service';
-import { PropertySchema, PropertyType } from '../../../services/data/schema.models';
+import { applyView, getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
+import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { schemaService } from '../../../services/data/schema/schema.service';
+import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
 import { exportAsXLSX } from '../../../services/util/export';
 import { PageOptions } from '../../../services/models';
 import { services } from '../../../services/services';

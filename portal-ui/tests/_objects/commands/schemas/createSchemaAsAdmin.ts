@@ -1,7 +1,7 @@
+import { schemaService } from '../../../../src/app/services/data/schema/schema.service';
+import { Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { convertNewToOldSchema } from '../../../../src/app/services/data/schema/schema.utils';
 import { authenticateAsAdmin } from '../auth/authenticate';
-import { Schema } from '../../../../src/app/services/data/schema.models';
-import { schemaService } from '../../../../src/app/services/data/schema.service';
-import { convertNewToOldSchema } from '../../../../src/app/services/data/schema.utils';
 
 declare const window: {
   schemaService: typeof schemaService;

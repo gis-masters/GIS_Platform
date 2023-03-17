@@ -1,4 +1,5 @@
 import { currentProject } from '../../stores/CurrentProject.store';
+import { CrgVectorLayer } from '../gis/projects/projects.models';
 import { getWmsUrl } from '../server-urls.service';
 import { getStyleSld } from './styles.service';
 import { cqlBuild } from '../util/cqlBuild';
@@ -34,8 +35,8 @@ export async function getMap(url: string): Promise<Blob> {
  * Предполагаем, что в таких запросах всегда только один слой.
  *
  * Имеет проблемы с производительностью из-за бага геосервера.
- * Оставлено на всякий случай (например если геосервер починит багу в wms, благодаря
- * которой мы можем фильтровать по id в cql фильтре).
+ * Оставлено на всякий случай (например если геосервер починит другую багу в wms,
+ * благодаря которой мы можем фильтровать по id в cql фильтре).
  *
  * @deprecated Не используется.
  */
@@ -121,4 +122,34 @@ export async function getMapByXml(url: string): Promise<Blob> {
     },
     cache: { disabled: true, clear: false }
   });
+}
+
+export async function testLayerByWms(layer: CrgVectorLayer): Promise<{ ok: boolean; errors?: string[] }> {
+  const url = new URL(await getWmsUrl());
+
+  url.searchParams.set('SERVICE', 'WMS');
+  url.searchParams.set('VERSION', '1.3.0');
+  url.searchParams.set('REQUEST', 'GetMap');
+  url.searchParams.set('FORMAT', 'image/vnd.jpeg-png8');
+  url.searchParams.set('TRANSPARENT', 'true');
+  url.searchParams.set('LAYERS', layer.complexName);
+  url.searchParams.set('CRS', 'EPSG:3857');
+  url.searchParams.set('STYLES', '');
+  url.searchParams.set('WIDTH', '300');
+  url.searchParams.set('HEIGHT', '300');
+  url.searchParams.set('BBOX', '3778140.58549765,5300522.190056069,3778162.97915828,5300544.5837167');
+
+  const result = await http.get<string>(url.toString());
+
+  if (typeof result === 'string') {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(result, Mime.XML);
+    const errors = [...xmlDoc.querySelectorAll('ServiceException')].map(
+      (n: Element) => `Ошибка получения данных с сервера: ${n.innerHTML.trim()}`
+    );
+
+    return { ok: false, errors };
+  }
+
+  return { ok: true };
 }

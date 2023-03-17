@@ -1,10 +1,10 @@
-import { CrgProject, CrgVectorLayer } from './gis/projects.models';
-import { LibraryRecord } from './data/doc-library.service';
-import { Dataset, VectorTable } from './data/data.service';
-import { WfsFeature } from './geoserver/wfs.models';
-import { Basemap } from './data/basemaps.models';
-import { FileInfo } from './data/files.service';
-import { Schema } from './data/schema.models';
+import { CrgProject, CrgVectorLayer } from './gis/projects/projects.models';
+import { LibraryRecord } from './data/docLibrary/docLibrary.models';
+import { Dataset, VectorTable } from './data/vectorData/vectorData.models';
+import { WfsFeature } from './geoserver/wfs/wfs.models';
+import { Basemap } from './data/basemaps/basemaps.models';
+import { FileInfo } from './data/files/files.models';
+import { Schema } from './data/schema/schema.models';
 import { Emitter } from './common/Emitter';
 
 export interface ObjectDto {

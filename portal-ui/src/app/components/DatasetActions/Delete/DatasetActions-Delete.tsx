@@ -15,7 +15,8 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { Dataset, deleteDataset, getDatasetTables } from '../../../services/data/data.service';
+import { deleteDataset, getVectorTables } from '../../../services/data/vectorData/vectorData.service';
+import { Dataset } from '../../../services/data/vectorData/vectorData.models';
 import { Button } from '../../Button/Button';
 
 const cnDatasetActionsDelete = cn('DatasetActions', 'Delete');
@@ -86,7 +87,7 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
   private async testEmptiness() {
     const { dataset } = this.props;
 
-    const [records] = await getDatasetTables(dataset.identifier, { page: 0, pageSize: 1 });
+    const [records] = await getVectorTables(dataset.identifier, { page: 0, pageSize: 1 });
 
     this.setDeleteAllowed(!records.length);
     this.setErrorMessage(

@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { LibraryRecordRaw } from '../../../src/app/services/data/doc-library.service';
+import { LibraryRecordRaw } from '../../../src/app/services/data/docLibrary/docLibrary.models';
 import { queryObjects } from '../../../src/app/services/util/queryObjects';
 import { PageableResponse } from '../../../src/app/services/models';
 import { libraryRecords } from '../data/libraryRecords';

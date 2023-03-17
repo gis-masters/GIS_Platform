@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { FileInfo } from '../../../../services/data/files.service';
-import { getFileExtension, isTifFile, normalizeExtension } from '../../../../services/data/files.util';
+import { FileInfo } from '../../../../services/data/files/files.models';
+import { getFileExtension, isTifFile, normalizeExtension } from '../../../../services/data/files/files.util';
 import { FileIcon } from '../../../FileIcon/FileIcon';
 import { FileTiff } from '../../../Icons/FileTiff';
 

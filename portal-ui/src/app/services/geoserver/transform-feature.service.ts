@@ -3,15 +3,15 @@ import WFS, { WriteTransactionOptions } from 'ol/format/WFS';
 import { Geometry, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
 import { Coordinate } from 'ol/coordinate';
 
-import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from './wfs.models';
+import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from './wfs/wfs.models';
 import { wfsGeometryToGeometry } from '../util/open-layers.util';
-import { OldSchema } from '../data/schemaOld.models';
+import { OldSchema } from '../data/schema/schemaOld.models';
 import { getFeatureProjection } from './projections.service';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { createVectorTableRecord } from '../data/data.service';
-import { usersService } from '../auth/users.service';
-import { getDatasetTableMultipleRecordsUrl, getWfsUrl } from '../server-urls.service';
-import { CrgLayer } from '../gis/projects.models';
+import { createFeature } from '../data/vectorData/vectorData.service';
+import { usersService } from '../auth/users/users.service';
+import { getVectorTableMultipleRecordsUrl, getWfsUrl } from '../server-urls.service';
+import { CrgLayer } from '../gis/projects/projects.models';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { getEnvironment } from '../environment';
 import { services } from '../services';
@@ -62,7 +62,7 @@ export class TransformFeatureService {
   }
 
   async multipleEdit(datasetId: string, tableId: string, recordsId: string, properties: Properties): Promise<void> {
-    const url = await getDatasetTableMultipleRecordsUrl(datasetId, tableId, recordsId);
+    const url = await getVectorTableMultipleRecordsUrl(datasetId, tableId, recordsId);
 
     await http.patch(url, properties);
   }
@@ -164,7 +164,7 @@ export class TransformFeatureService {
 
     if (featuresData.length === 1) {
       const newFeature = { ...featuresData[0], id: undefined, geometry_name: undefined };
-      const record = await createVectorTableRecord(dataset, tableName, newFeature);
+      const record = await createFeature(dataset, tableName, newFeature);
 
       return [record.id];
     }

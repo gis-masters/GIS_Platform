@@ -1,9 +1,9 @@
 import { observable, computed, action, makeObservable } from 'mobx';
 
-import { CrgProject } from '../services/gis/projects.models';
+import { CrgProject } from '../services/gis/projects/projects.models';
 import { filterObjects } from '../services/util/filterObjects';
-import { patch } from '../services/util/patch';
 import { sortObjects } from '../services/util/sortObjects';
+import { patch } from '../services/util/patch';
 
 class AllProjects {
   private static _instance: AllProjects;

@@ -1,5 +1,5 @@
-import { DataEntityType } from '../../../src/app/services/data/data.service';
-import { DocumentLibrary } from '../../../src/app/services/data/doc-library.service';
+import { DataEntityType } from '../../../src/app/services/data/vectorData/vectorData.models';
+import { DocumentLibrary } from '../../../src/app/services/data/docLibrary/docLibrary.models';
 
 export const libraries: Omit<DocumentLibrary, 'role'>[] = [
   {

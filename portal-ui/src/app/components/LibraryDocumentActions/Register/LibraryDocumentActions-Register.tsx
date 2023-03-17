@@ -7,7 +7,8 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
-import { LibraryRecord, registerDocument } from '../../../services/data/doc-library.service';
+import { registerDocument } from '../../../services/data/docLibrary/docLibrary.service';
+import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
 import { services } from '../../../services/services';
 import { communicationService } from '../../../services/communication.service';
 import { Toast } from '../../Toast/Toast';

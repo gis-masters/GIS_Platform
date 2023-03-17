@@ -5,17 +5,16 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
-import { importFeaturesFromShapeFile } from '../../services/data/file-placement.service';
-import { Form, FormControl, FormField, FormLabel } from '../Form/Form';
-import { awaitProcess } from '../../services/data/processes.service';
-import { getProcessUrl } from '../../services/server-urls.service';
-import { isZipFile } from '../../services/data/files.util';
+import { importFeaturesFromShapeFile } from '../../services/data/file-placement/file-placement.service';
+import { ImportShapeProcess } from '../../services/data/processes/processes.models';
+import { awaitProcess } from '../../services/data/processes/processes.service';
+import { isZipFile } from '../../services/data/files/files.util';
 import { services } from '../../services/services';
-import { FileInput } from '../FileInput/FileInput';
 import { Mime } from '../../services/util/Mime';
+import { Form, FormControl, FormField, FormLabel } from '../Form/Form';
+import { FileInput } from '../FileInput/FileInput';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
-import { ImportShapeProcess } from '../../services/models';
 
 interface ImportShapeDialogProps {
   open: boolean;
@@ -129,9 +128,7 @@ export class ImportShapeDialog extends Component<ImportShapeDialogProps> {
     try {
       this.setLoading(true);
       const response = await importFeaturesFromShapeFile(this.file, datasetId, tableId);
-      const importInfo = await awaitProcess(
-        await getProcessUrl(Number(response._links.process.href.split('/').at(-1)))
-      );
+      const importInfo = await awaitProcess(Number(response._links.process.href.split('/').at(-1)));
 
       if (importInfo) {
         this.setImportDetails(importInfo.details as ImportShapeProcess);

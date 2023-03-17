@@ -7,14 +7,15 @@ import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import { getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
+import { getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
+import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
-import { PropertyType, Schema } from '../../services/data/schema.models';
-import { applyContentType } from '../../services/data/schema.utils';
-import { schemaService } from '../../services/data/schema.service';
-import { Role } from '../../services/data/permissions.models';
-import { FileInfo } from '../../services/data/files.service';
-import { isTifFile } from '../../services/data/files.util';
+import { PropertyType, Schema } from '../../services/data/schema/schema.models';
+import { applyContentType } from '../../services/data/schema/schema.utils';
+import { schemaService } from '../../services/data/schema/schema.service';
+import { Role } from '../../services/data/permissions/permissions.models';
+import { FileInfo } from '../../services/data/files/files.models';
+import { isTifFile } from '../../services/data/files/files.util';
 
 import { Actions } from '../Actions/Actions.composed';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';

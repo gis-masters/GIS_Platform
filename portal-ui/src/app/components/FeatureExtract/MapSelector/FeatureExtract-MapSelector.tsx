@@ -5,8 +5,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { printSettings } from '../../../stores/PrintSettings.store';
-import { PropertySchemaFile } from '../../../services/data/schema.models';
-import { createFile, FileInfo } from '../../../services/data/files.service';
+import { PropertySchemaFile } from '../../../services/data/schema/schema.models';
+import { createFile } from '../../../services/data/files/files.service';
+import { FileInfo } from '../../../services/data/files/files.models';
 import { FormControlProps } from '../../Form/Control/Form-Control';
 import { PrintMapDialog } from '../../PrintMapDialog/PrintMapDialog';
 import { Button } from '../../Button/Button';

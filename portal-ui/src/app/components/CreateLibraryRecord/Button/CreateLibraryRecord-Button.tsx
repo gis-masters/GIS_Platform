@@ -1,8 +1,8 @@
 import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { DocumentLibrary, LibraryRecord } from '../../../services/data/doc-library.service';
-import { ContentType, Schema } from '../../../services/data/schema.models';
+import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { ContentType, Schema } from '../../../services/data/schema/schema.models';
 import { MenuIconButton } from '../../MenuIconButton/MenuIconButton';
 
 import { CreateLibraryRecordItem } from '../Item/CreateLibraryRecord-Item.composed';

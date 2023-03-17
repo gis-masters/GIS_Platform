@@ -1,5 +1,6 @@
+import { Dataset } from '../../../../src/app/services/data/vectorData/vectorData.models';
+import { createDataset, getDatasets } from '../../../../src/app/services/data/vectorData/vectorData.service';
 import { authenticateAs } from '../auth/authenticate';
-import { createDataset, Dataset, getDatasets } from '../../../../src/app/services/data/data.service';
 import { testUsers } from '../auth/testUsers';
 
 declare const window: {

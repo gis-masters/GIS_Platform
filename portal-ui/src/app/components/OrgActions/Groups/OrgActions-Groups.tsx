@@ -7,8 +7,9 @@ import { cn } from '@bem-react/classname';
 import { People, PeopleOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
-import { CrgUser } from '../../../services/auth/users.service';
-import { CrgGroup, groupsService } from '../../../services/auth/groups.service';
+import { CrgUser } from '../../../services/auth/users/users.models';
+import { groupsService } from '../../../services/auth/groups/groups.service';
+import { CrgGroup } from '../../../services/auth/groups/groups.models';
 import { allGroups } from '../../../stores/AllGroups.store';
 import { XTable, XTableColumn } from '../../XTable/XTable';
 import { Loading } from '../../Loading/Loading';

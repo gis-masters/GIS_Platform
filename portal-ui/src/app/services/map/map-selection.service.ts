@@ -7,10 +7,10 @@ import ExtentInteraction from 'ol/interaction/Extent';
 import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { MapAction, MapMode, MapSelectionTypes, mapStore } from '../../stores/Map.store';
-import { getFeaturesCollectionByXmlFilter } from '../geoserver/wfs.service';
-import { makeXmlPolygonIntersect } from '../geoserver/wfs.util';
+import { getFeatureCollectionByXmlFilter } from '../geoserver/wfs/wfs.service';
+import { makeXmlPolygonIntersect } from '../geoserver/wfs/wfs.util';
 import { setSelectedFeaturesToUrl } from './map-url.service';
-import { WfsFeature } from '../geoserver/wfs.models';
+import { WfsFeature } from '../geoserver/wfs/wfs.models';
 import { mapService } from './map.service';
 import { services } from '../services';
 
@@ -259,7 +259,7 @@ class MapSelectionService {
         return complexNames.map(async complexName => {
           const xml = await makeXmlPolygonIntersect(complexName, buffer, srsName, selectionType);
 
-          return getFeaturesCollectionByXmlFilter(xml);
+          return getFeatureCollectionByXmlFilter(xml);
         });
       })
     );

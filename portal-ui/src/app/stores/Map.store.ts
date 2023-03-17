@@ -6,7 +6,7 @@ import { attributesTableStore } from './AttributesTable.store';
 import { MeasureItem, MeasureMode } from '../services/map/map-measure.service';
 import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
 import { prepareLike } from '../services/util/filterObjects';
-import { WfsFeature } from '../services/geoserver/wfs.models';
+import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 import { flags } from '../services/feature-flags';
 
 export enum MapSelectionTypes {

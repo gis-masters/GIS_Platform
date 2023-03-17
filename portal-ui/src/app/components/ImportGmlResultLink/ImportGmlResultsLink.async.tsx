@@ -4,7 +4,7 @@ import { action, observable, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 
 import { Link } from '../Link/Link';
-import { ImportResult } from '../../services/data/processes.service';
+import { ImportResult } from '../../services/data/processes/processes.models';
 import { ImportGmlResultDialog } from '../ImportGmlResultDialog/ImportGmlResultDialog';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 

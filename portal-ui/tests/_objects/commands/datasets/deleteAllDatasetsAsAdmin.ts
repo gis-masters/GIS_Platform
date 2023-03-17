@@ -2,9 +2,9 @@ import {
   deleteDataset,
   deleteVectorTable,
   getAllDatasets,
-  getAllDatasetTables,
+  getAllVectorTablesInDataset,
   getDatasets
-} from '../../../../src/app/services/data/data.service';
+} from '../../../../src/app/services/data/vectorData/vectorData.service';
 
 import { authenticateAsAdmin } from '../auth/authenticate';
 
@@ -12,7 +12,7 @@ declare const window: {
   getDatasets: typeof getDatasets;
   getAllDatasets: typeof getAllDatasets;
   deleteVectorTable: typeof deleteVectorTable;
-  getAllDatasetTables: typeof getAllDatasetTables;
+  getAllVectorTablesInDataset: typeof getAllVectorTablesInDataset;
   deleteDataset: typeof deleteDataset;
 };
 
@@ -23,7 +23,7 @@ export async function deleteAllDatasetsAsAdmin(): Promise<void> {
     const datasets = await window.getAllDatasets();
     if (datasets.length) {
       for (const dataset of datasets) {
-        const tables = await window.getAllDatasetTables(dataset);
+        const tables = await window.getAllVectorTablesInDataset(dataset);
 
         if (tables.length) {
           for (const table of tables) {

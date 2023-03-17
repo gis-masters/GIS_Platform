@@ -6,9 +6,9 @@ import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
-import { PropertySchema, PropertyType, Schema } from '../../../services/data/schema.models';
+import { PropertySchema, PropertyType, Schema } from '../../../services/data/schema/schema.models';
 import { FieldErrors } from '../../../services/formValidation.service';
-import { getFieldRelations } from '../../../services/data/schema.utils';
+import { getFieldRelations } from '../../../services/data/schema/schema.utils';
 import { generateRandomId } from '../../../services/util/randomId';
 import { RelationsButton } from '../../RelationsButton/RelationsButton';
 

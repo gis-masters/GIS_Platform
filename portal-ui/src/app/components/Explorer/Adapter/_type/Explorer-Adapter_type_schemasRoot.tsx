@@ -3,12 +3,12 @@ import { SchemaOutlined } from '@mui/icons-material';
 
 import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { schemaService } from '../../../../services/data/schema.service';
+import { schemaService } from '../../../../services/data/schema/schema.service';
 import { filterObjects } from '../../../../services/util/filterObjects';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { sortObjects } from '../../../../services/util/sortObjects';
 import { CreateSchema } from '../../../CreateSchema/CreateSchema';
-import { Schema } from '../../../../services/data/schema.models';
+import { Schema } from '../../../../services/data/schema/schema.models';
 import { Emitter } from '../../../../services/common/Emitter';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';

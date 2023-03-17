@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { PropertySchema, PropertyType } from '../../../../services/data/schema.models';
+import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Form } from '../../Form';
 
 export default {

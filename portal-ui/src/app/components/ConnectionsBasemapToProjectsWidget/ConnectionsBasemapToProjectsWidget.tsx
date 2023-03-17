@@ -5,9 +5,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { connectBasemapToProject, getBasemapConnections } from '../../services/gis/project-basemaps.service';
-import { FileConnection } from '../../services/data/files.service';
-import { CrgProject } from '../../services/gis/projects.models';
-import { Basemap } from '../../services/data/basemaps.models';
+import { FileConnection } from '../../services/data/files/files.models';
+import { CrgProject } from '../../services/gis/projects/projects.models';
+import { Basemap } from '../../services/data/basemaps/basemaps.models';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
 
 const cnConnectionsBasemapToProjectsWidget = cn('ConnectionsBasemapToProjectsWidget');

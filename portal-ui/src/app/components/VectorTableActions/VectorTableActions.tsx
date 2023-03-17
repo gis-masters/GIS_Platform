@@ -5,8 +5,9 @@ import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import { VectorTable, getVectorTable } from '../../services/data/data.service';
-import { Role } from '../../services/data/permissions.models';
+import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
+import { VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { Role } from '../../services/data/permissions/permissions.models';
 
 import { VectorTableActionsDelete } from './Delete/VectorTableActions-Delete';
 import { VectorTableActionsEdit } from './Edit/VectorTableActions-Edit';

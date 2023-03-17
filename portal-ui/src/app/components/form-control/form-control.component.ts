@@ -16,10 +16,10 @@ import { createRoot, Root } from 'react-dom/client';
 import { ControlValueAccessor, UntypedFormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { boundMethod } from 'autobind-decorator';
 
-import { OldPropertySchema } from '../../services/data/schemaOld.models';
+import { OldPropertySchema } from '../../services/data/schema/schemaOld.models';
 import { FormControl } from '../Form/Control/Form-Control.composed';
-import { convertOldToNewProperties } from '../../services/data/schema.utils';
-import { PropertyType } from '../../services/data/schema.models';
+import { convertOldToNewProperties } from '../../services/data/schema/schema.utils';
+import { PropertyType } from '../../services/data/schema/schema.models';
 import { FormView } from '../Form/View/Form-View.composed';
 import { registry } from '../../services/di-registry';
 import { FormControlProps } from '../Form/Control/Form-Control';

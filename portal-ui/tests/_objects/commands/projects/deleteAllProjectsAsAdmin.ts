@@ -1,8 +1,11 @@
 import { authenticateAsAdmin } from '../auth/authenticate';
 import { allProjects } from '../../../../src/app/stores/AllProjects.store';
-import { projectsService } from '../../../../src/app/services/gis/projects.service';
+import { projectsService } from '../../../../src/app/services/gis/projects/projects.service';
 
-declare const window: { projectsService: typeof projectsService; allProjects: typeof allProjects };
+declare const window: {
+  projectsService: typeof projectsService;
+  allProjects: typeof allProjects;
+};
 
 export async function deleteAllProjectsAsAdmin(): Promise<void> {
   await authenticateAsAdmin();

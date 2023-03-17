@@ -27,11 +27,11 @@ import { route } from '../../stores/Route.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { FilterBySelection, mapStore } from '../../stores/Map.store';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
-import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs.models';
-import { CrgExternalLayer, CrgLayer } from '../gis/projects.models';
+import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
+import { CrgExternalLayer, CrgLayer } from '../gis/projects/projects.models';
 import { communicationService } from '../communication.service';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
-import { Basemap, SourceType } from '../data/basemaps.models';
+import { Basemap, SourceType } from '../data/basemaps/basemaps.models';
 import { getWmsUrl } from '../server-urls.service';
 import { ScaleLine } from '../ol/ScaleLine';
 import { Emitter } from '../common/Emitter';
@@ -42,7 +42,7 @@ import {
   transformExtent,
   transformGeometry
 } from '../geoserver/projections.service';
-import { getFeatureExtent, mergeExtents } from '../geoserver/wfs.util';
+import { getFeatureExtent, mergeExtents } from '../geoserver/wfs/wfs.util';
 import { getMap } from '../geoserver/wms.service';
 import { cqlBuild } from '../util/cqlBuild';
 import { sleep } from '../util/sleep';

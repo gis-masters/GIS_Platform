@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
-import { OldSchema } from './data/schemaOld.models';
-import { GeometryType } from './geoserver/wfs.models';
+import { OldSchema } from './data/schema/schemaOld.models';
+import { GeometryType } from './geoserver/wfs/wfs.models';
 import { FilterQuery } from './util/filterObjects';
 
 export interface PageablePage {
@@ -16,53 +16,9 @@ export interface PageableResponse<T> {
   page: PageablePage;
 }
 
-export interface Process {
-  id: number;
-  userName: string;
-  title: string;
-  status: ProcessStatus;
-  type: ProcessType;
-  extra: any;
-  message?: string;
-  details: ProcessTasks | ImportShapeProcess;
-}
-
-export interface ProcessTasks {
-  layerName: string;
-  status: ProcessStatus;
-  error: string;
-}
-
-export interface ImportShapeProcess extends ProcessTasks {
-  errorMessage: string;
-  warningMessage: string;
-  quantityOfImportedRecords: number;
-  quantityOfFailedRecords: number;
-  shapeFileHasProjection: boolean;
-  targetCrs: string;
-}
-
-// Править в соответствии с: src/main/java/ru/mycrg/data_service_contract/enums/ProcessType.java
-export enum ProcessType {
-  IMPORT = 'IMPORT',
-  IMPORT_GML = 'IMPORT_GML',
-  IMPORT_DXF = 'IMPORT_DXF',
-  IMPORT_RASTER = 'IMPORT_RASTER',
-  IMPORT_GEOMETRY = 'IMPORT_GEOMETRY',
-  VALIDATION = 'VALIDATION',
-  VALIDATION_REPORT = 'VALIDATION_REPORT',
-  EXPORT = 'EXPORT'
-}
-
-// Править в соответствии с: ru/mycrg/common/enums/ProcessStatus.java
-export enum ProcessStatus {
-  PENDING = 'PENDING',
-
-  TASK_DONE = 'TASK_DONE', // Завершена часть процесса (например: обработан один ресурс из нескольких)
-  TASK_ERROR = 'TASK_ERROR', // Часть процесса завершилась неудачно
-
-  DONE = 'DONE',
-  ERROR = 'ERROR'
+export interface ApiLink {
+  href: string;
+  templated: boolean;
 }
 
 export enum ImportTargetType {

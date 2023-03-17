@@ -8,7 +8,7 @@ import { Tooltip } from '@mui/material';
 import { LayerAdd } from '../../Icons/LayerAdd';
 import { IconButton } from '../../IconButton/IconButton';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
-import { FileInfo } from '../../../services/data/files.service';
+import { FileInfo } from '../../../services/data/files/files.models';
 import { ProjectPlacementDialog } from '../../ProjectPlacementDialog/ProjectPlacementDialog';
 
 const cnFilesPlacement = cn('Files', 'Placement');

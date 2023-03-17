@@ -2,20 +2,19 @@ import React, { ReactNode } from 'react';
 import { Storage } from '@mui/icons-material';
 
 import {
-  Dataset,
-  VectorTable,
-  getDatasetTables,
-  getDatasetTablesWithParticularOne,
+  getVectorTables,
+  getVectorTablesWithParticularOne,
   getVectorTable,
   getDataset
-} from '../../../../services/data/data.service';
+} from '../../../../services/data/vectorData/vectorData.service';
+import { Dataset, VectorTable } from '../../../../services/data/vectorData/vectorData.models';
 import { Emitter } from '../../../../services/common/Emitter';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { CreateVectorTable } from '../../../CreateVectorTable/CreateVectorTable';
 import { formatDate } from '../../../../services/util/date.util';
-import { Role } from '../../../../services/data/permissions.models';
+import { Role } from '../../../../services/data/permissions/permissions.models';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -85,7 +84,7 @@ export class ExplorerAdapterTypeDataset {
     store: ExplorerStore,
     service: ExplorerService
   ): Promise<[ExplorerItemData<VectorTable>[], number]> {
-    const [tables, totalPages] = await getDatasetTables(item.payload.identifier, {
+    const [tables, totalPages] = await getVectorTables(item.payload.identifier, {
       ...options,
       filter: service.mergeCustomFilter(filter, item, store)
     });
@@ -100,7 +99,7 @@ export class ExplorerAdapterTypeDataset {
     store: ExplorerStore,
     service: ExplorerService
   ): Promise<[ExplorerItemData<VectorTable>[], number, number]> | undefined {
-    const response = await getDatasetTablesWithParticularOne(item.payload.identifier, identifier, {
+    const response = await getVectorTablesWithParticularOne(item.payload.identifier, identifier, {
       ...options,
       filter: service.mergeCustomFilter(filter, item, store),
       page

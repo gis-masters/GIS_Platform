@@ -8,7 +8,7 @@ import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { CrgLayer, CrgLayersGroup } from '../../../services/gis/projects.models';
+import { CrgLayer, CrgLayersGroup } from '../../../services/gis/projects/projects.models';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
@@ -16,7 +16,7 @@ import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 import { LayersSettings } from '../../Icons/LayersSettings';
 import { LayerAdd } from '../../Icons/LayerAdd';
-import { projectsService } from '../../../services/gis/projects.service';
+import { projectsService } from '../../../services/gis/projects/projects.service';
 import { AddLayerDialog } from '../../AddLayerDialog/AddLayerDialog';
 
 import { LayersSidebarToolbarLeft } from '../ToolbarLeft/LayersSidebar-ToolbarLeft';

@@ -7,7 +7,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { boundMethod } from 'autobind-decorator';
 
 import { Button } from '../Button/Button';
-import { Dataset } from '../../services/data/data.service';
+import { Dataset } from '../../services/data/vectorData/vectorData.models';
 import { CreateDatasetDialog } from '../CreateDatasetDialog/CreateDatasetDialog';
 
 import { PickupDatasetsList } from './List/PickupDatasets-List';

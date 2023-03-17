@@ -5,8 +5,8 @@ import { cn } from '@bem-react/classname';
 
 import { sidebars } from '../../../stores/Sidebars.store';
 import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers.service';
-import { isUpdateAllowed } from '../../../services/data/permissions.service';
-import { CrgVectorLayer } from '../../../services/gis/projects.models';
+import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
+import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
 import { FilterQuery } from '../../../services/util/filterObjects';
 
 import { AttributesCheck } from '../Check/Attributes-Check';

@@ -6,14 +6,15 @@ class AttributesBlock extends Block {
 
   selectors = {
     container: '.Attributes',
-    attributeTableHead: '.Attributes-Table .XTable-Head',
     attributeTableCols: '.Attributes-Table .XTable-Head .XTable-CellContent',
     barTitle: '.Attributes-BarTitle',
-    pagination: '.Attributes-Pagination'
+    pagination: '.Attributes-Pagination',
+    attributesTableHead: '.Attributes-Table .XTable-Head',
+    attributesTableHeadCellContent: '.Attributes-Table .XTable-Head .XTable-CellContent'
   };
 
   async checkTableSingleColTitle(title: string): Promise<void> {
-    const $attributeTableHead = await this.$('attributeTableHead');
+    const $attributeTableHead = await this.$('attributesTableHead');
     await $attributeTableHead.waitForDisplayed({ timeout: 13_000 });
 
     const values = await this.getHeadCellsValues();
@@ -22,7 +23,7 @@ class AttributesBlock extends Block {
   }
 
   async getHeadCellsValues(): Promise<string[]> {
-    const $$cellContents = await this.$$('attributeTableCols');
+    const $$cellContents = await this.$$('attributesTableHeadCellContent');
 
     const contents: string[] = [];
     for (const $cell of $$cellContents) {

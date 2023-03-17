@@ -3,7 +3,7 @@ import { Coordinate } from 'ol/coordinate';
 import { AxiosError } from 'axios';
 
 import { currentProject } from '../../stores/CurrentProject.store';
-import { CoordinateEdited, WfsFeature } from '../geoserver/wfs.models';
+import { CoordinateEdited, WfsFeature } from '../geoserver/wfs/wfs.models';
 import { http } from '../http.service';
 import {
   CrgLayer,
@@ -13,11 +13,11 @@ import {
   CrgRasterLayer,
   CrgVectorLayer,
   NewCrgLayer
-} from './projects.models';
+} from './projects/projects.models';
 import { getGeoServerUrl, getProjectLayersUrl, getProjectLayerUrl, replaceUrl } from '../server-urls.service';
 import { Toast } from '../../components/Toast/Toast';
 import { services } from '../services';
-import { PropertyType, Schema } from '../data/schema.models';
+import { PropertyType, Schema } from '../data/schema/schema.models';
 
 interface GeoserverLayerInfo {
   name: string;

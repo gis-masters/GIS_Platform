@@ -1,4 +1,4 @@
-import { LayerAttribute } from './models';
+import { LayerAttribute } from './import.models';
 import { ImportTargetType } from '../../models';
 
 export interface MatchingPair {

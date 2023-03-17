@@ -7,8 +7,8 @@ import { boundMethod } from 'autobind-decorator';
 import { isEqual, clone } from 'lodash';
 import { parse } from 'papaparse';
 
-import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
-import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs.models';
+import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
+import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { communicationService } from '../../../services/communication.service';
 
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';

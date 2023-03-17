@@ -6,7 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { WfsFeature } from '../../../services/geoserver/wfs.models';
+import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Check.scss';
 

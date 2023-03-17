@@ -3,9 +3,9 @@ import { InsertDriveFile } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { LibraryRecord } from '../../../../services/data/doc-library.service';
-import { getLibraryRecordFiles } from '../../../../services/data/files.util';
-import { FileInfo } from '../../../../services/data/files.service';
+import { LibraryRecord } from '../../../../services/data/docLibrary/docLibrary.models';
+import { getLibraryRecordFiles } from '../../../../services/data/files/files.util';
+import { FileInfo } from '../../../../services/data/files/files.models';
 import { CommonDiRegistry } from '../../../../services/di-registry';
 import { formatDate } from '../../../../services/util/date.util';
 import { PageOptions } from '../../../../services/models';

@@ -4,9 +4,9 @@ import { observer } from 'mobx-react';
 import { CreateNewFolderOutlined, NoteAddOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { schemaService } from '../../services/data/schema.service';
-import { ContentType, Schema } from '../../services/data/schema.models';
-import { DocumentLibrary, LibraryRecord } from '../../services/data/doc-library.service';
+import { schemaService } from '../../services/data/schema/schema.service';
+import { ContentType, Schema } from '../../services/data/schema/schema.models';
+import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 
 import { CreateLibraryRecordButton } from './Button/CreateLibraryRecord-Button';
 import { CreateLibraryRecordItem } from './Item/CreateLibraryRecord-Item.composed';

@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
 import { route } from '../../stores/Route.store';
-import { authService } from '../../services/auth/auth.service';
+import { authService } from '../../services/auth/auth/auth.service';
 
 import { ChangePasswordFormSuccess } from './Success/ChangePasswordForm-Success';
 import { ChangePasswordData, ChangePasswordFormForm } from './Form/ChangePasswordForm-Form';
@@ -49,7 +49,7 @@ export default class ChangePasswordForm extends Component {
     this.setLoading(true);
 
     try {
-      await authService.changePassword(value.password, route.params.token);
+      await authService.changePassword(route.params.token, value.password);
       this.setSuccess();
     } catch (error) {
       const err = error as AxiosError<{
@@ -86,15 +86,7 @@ export default class ChangePasswordForm extends Component {
   private async isTokenExpired() {
     const pathname = location.pathname.split('/');
 
-    try {
-      await authService.checkIsTokenExpired(pathname[pathname.length - 1]);
-
-      this.setTokenExpired(false);
-    } catch (error) {
-      const err = error as AxiosError;
-
-      this.setTokenExpired(Number(err.status) === 404);
-    }
+    this.setTokenExpired(await authService.isTokenExpired(pathname.at(-1)));
   }
 
   @action

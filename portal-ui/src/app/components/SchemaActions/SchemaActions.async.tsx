@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { Schema } from '../../services/data/schema.models';
+import { Schema } from '../../services/data/schema/schema.models';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { Actions } from '../Actions/Actions.composed';
 

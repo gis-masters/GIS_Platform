@@ -1,6 +1,6 @@
-import { OldPropertySchema, ValueType } from '../data/schemaOld.models';
+import { OldPropertySchema, ValueType } from '../data/schema/schemaOld.models';
 import { CrgComparison } from '../properties-comparator.service';
-import { LayerAttribute } from '../geoserver/import/models';
+import { LayerAttribute } from '../geoserver/import/import.models';
 import { AS_IS, NOT_IMPORT } from '../models';
 
 /**

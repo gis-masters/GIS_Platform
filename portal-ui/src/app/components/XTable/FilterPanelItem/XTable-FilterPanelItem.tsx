@@ -7,7 +7,7 @@ import { Clear } from '@mui/icons-material';
 import { cloneDeep } from 'lodash';
 
 import { FilterQuery, getFieldFilterPart, modifyFieldFilterValue } from '../../../services/util/filterObjects';
-import { PropertyType } from '../../../services/data/schema.models';
+import { PropertyType } from '../../../services/data/schema/schema.models';
 
 import { XTableFilterPanelItemContent } from '../FilterPanelItemContent/XTable-FilterPanelItemContent.composed';
 import { XTableColumn } from '../XTable';

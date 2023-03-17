@@ -4,9 +4,15 @@ import { observer } from 'mobx-react';
 import { Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { Role, PrincipalType, roles, projectRoles, rolesTitles } from '../../../services/data/permissions.models';
-import { PermissionsListItem } from '../../../services/data/allPermissions.service';
-import { filterOutPrincipal } from '../../../services/data/permissions.utils';
+import {
+  Role,
+  PrincipalType,
+  roles,
+  projectRoles,
+  rolesTitles
+} from '../../../services/data/permissions/permissions.models';
+import { PermissionsListItem } from '../../../services/data/permissions/allPermissions.service';
+import { filterOutPrincipal } from '../../../services/data/permissions/permissions.utils';
 
 import { PermissionsListItemType } from '../PermissionsListDialog.models';
 

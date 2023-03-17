@@ -5,8 +5,9 @@ import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import { Dataset, getDataset } from '../../services/data/data.service';
-import { Role } from '../../services/data/permissions.models';
+import { getDataset } from '../../services/data/vectorData/vectorData.service';
+import { Dataset } from '../../services/data/vectorData/vectorData.models';
+import { Role } from '../../services/data/permissions/permissions.models';
 
 import { DatasetActionsDelete } from './Delete/DatasetActions-Delete';
 import { DatasetActionsAddToProject } from './AddToProject/DatasetActions-AddToProject';

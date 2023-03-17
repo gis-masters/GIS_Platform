@@ -3,8 +3,8 @@ import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { projectsService } from '../../../services/gis/projects.service';
-import { TreeItem } from '../../../services/gis/projects.models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
+import { TreeItem } from '../../../services/gis/projects/projects.models';
 import { Layer } from '../../Layer/Layer';
 
 import '!style-loader!css-loader!sass-loader!./LayersTree-Item.scss';

@@ -5,9 +5,9 @@ import { IClassNameProps } from '@bem-react/core';
 import { computed } from 'mobx';
 
 import { allProjects } from '../../stores/AllProjects.store';
-import { Role } from '../../services/data/permissions.models';
-import { CrgProject } from '../../services/gis/projects.models';
-import { projectsService } from '../../services/gis/projects.service';
+import { Role } from '../../services/data/permissions/permissions.models';
+import { CrgProject } from '../../services/gis/projects/projects.models';
+import { projectsService } from '../../services/gis/projects/projects.service';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 
 const cnSelectProjectDialogProps = cn('SelectProjectDialog');

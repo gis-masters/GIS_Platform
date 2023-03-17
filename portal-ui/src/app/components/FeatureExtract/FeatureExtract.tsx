@@ -7,18 +7,19 @@ import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
 
-import { DocumentLibrary, getLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
-import { applyContentType } from '../../services/data/schema.utils';
+import { getLibrary, getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
+import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { applyContentType } from '../../services/data/schema/schema.utils';
 import { validateFormValue } from '../../services/formValidation.service';
 import { LibraryDocumentDialog } from '../LibraryDocumentDialog/LibraryDocumentDialog';
-import { PropertySchema, PropertyType } from '../../services/data/schema.models';
+import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { communicationService } from '../../services/communication.service';
-import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { getFeatureUrl } from '../../services/map/map-url.service';
-import { schemaService } from '../../services/data/schema.service';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { Role } from '../../services/data/permissions.models';
+import { schemaService } from '../../services/data/schema/schema.service';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { Role } from '../../services/data/permissions/permissions.models';
 import { getDefaultValues } from '../Form/Form.utils';
 import { FormDialog } from '../FormDialog/FormDialog';
 

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { Basemap } from '../../../../services/data/basemaps.models';
+import { Basemap } from '../../../../services/data/basemaps/basemaps.models';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 import { BasemapActions } from '../../../BasemapActions/BasemapActions';

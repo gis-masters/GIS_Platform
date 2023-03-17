@@ -8,12 +8,12 @@ import { action, observable, makeObservable } from 'mobx';
 import { Toast } from '../Toast/Toast';
 import { services } from '../../services/services';
 import { sidebars } from '../../stores/Sidebars.store';
-import { isDxfFile } from '../../services/data/files.util';
-import { FileInfo } from '../../services/data/files.service';
-import { CrgProject } from '../../services/gis/projects.models';
+import { isDxfFile } from '../../services/data/files/files.util';
+import { FileInfo } from '../../services/data/files/files.models';
+import { CrgProject } from '../../services/gis/projects/projects.models';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { SelectProjection } from '../SelectProjection/SelectProjection';
-import { placeDxf, placeGml } from '../../services/data/file-placement.service';
+import { placeDxf, placeGml } from '../../services/data/file-placement/file-placement.service';
 import { defaultProjection } from '../../services/geoserver/projections.service';
 import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
 

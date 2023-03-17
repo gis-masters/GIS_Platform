@@ -1,15 +1,15 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { getDatasets, getDatasetTables } from '../../../src/app/services/data/data.service';
+import { getDatasets, getVectorTables } from '../../../src/app/services/data/vectorData/vectorData.service';
 import { createLayer } from '../../../src/app/services/gis/layers.service';
 import { currentUser } from '../../../src/app/stores/CurrentUser.store';
-import { projectsService } from '../../../src/app/services/gis/projects.service';
+import { projectsService } from '../../../src/app/services/gis/projects/projects.service';
 import { authenticateAsOwner } from './auth/authenticate';
-import { schemaService } from '../../../src/app/services/data/schema.service';
-import { CrgLayer, CrgLayerType } from '../../../src/app/services/gis/projects.models';
+import { CrgLayer, CrgLayerType } from '../../../src/app/services/gis/projects/projects.models';
+import { schemaService } from '../../../src/app/services/data/schema/schema.service';
 
 declare const window: {
-  getDatasetTables: typeof getDatasetTables;
+  getVectorTables: typeof getVectorTables;
   projectsService: typeof projectsService;
   getDatasets: typeof getDatasets;
   createLayer: typeof createLayer;
@@ -23,7 +23,7 @@ export async function createNewLayerByAdmin(layerTitle: string, enabled = true, 
   await browser.executeAsync(
     async (title, enabled, id, callback) => {
       const [datasets] = await window.getDatasets({ page: 0, pageSize: 10 });
-      const [vectorTables] = await window.getDatasetTables(datasets[0].identifier, { page: 0, pageSize: 10 });
+      const [vectorTables] = await window.getVectorTables(datasets[0].identifier, { page: 0, pageSize: 10 });
       const vectorTable = vectorTables.find(item => item.title === title);
       if (!vectorTable) {
         throw new Error('Нет векторной таблицы');

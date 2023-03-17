@@ -5,7 +5,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { MyLocation } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
-import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { mapService } from '../../services/map/map.service';
 
 const cnZoomToFeature = cn('ZoomToFeature');

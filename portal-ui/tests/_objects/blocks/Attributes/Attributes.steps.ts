@@ -4,7 +4,7 @@ import { When, Then } from '@wdio/cucumber-framework';
 import { attributesBlock } from './Attributes.block';
 import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
 
-import { ScenarioScope } from '../../scenarioScope';
+import { ScenarioScope } from '../../ScenarioScope';
 import { getSortDirection } from '../../getSortDirection';
 import { sortObjects } from '../../../../src/app/services/util/sortObjects';
 

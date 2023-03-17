@@ -1,0 +1,99 @@
+import { debounce } from 'lodash';
+
+import { allGroups } from '../../../stores/AllGroups.store';
+import { CrgUser } from '../users/users.models';
+
+import {
+  _reqAddUserToGroup,
+  _reqCreateGroup,
+  _reqDeleteGroup,
+  _reqGetAllGroups,
+  _reqRemoveUserFromGroup,
+  _reqUpdateGroup
+} from './groups.client';
+import { CrgGroup, GroupData } from './groups.models';
+
+class GroupsService {
+  private static _instance: GroupsService;
+  private allGroupsStoreInited = false;
+  private debouncedFetchGroupsListStore: () => Promise<void>;
+  private allGroupsFetching?: Promise<CrgGroup[]>;
+
+  private constructor() {
+    this.debouncedFetchGroupsListStore = debounce(this.fetchGroupsListStore, 300);
+  }
+
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
+  async getAll(): Promise<CrgGroup[]> {
+    return await _reqGetAllGroups();
+  }
+
+  async create(groupData: GroupData) {
+    await _reqCreateGroup(groupData);
+    void this.debouncedFetchGroupsListStore();
+  }
+
+  async update(group: CrgGroup) {
+    await _reqUpdateGroup(group);
+    void this.debouncedFetchGroupsListStore();
+  }
+
+  async delete(group: CrgGroup) {
+    await _reqDeleteGroup(group.id);
+    void this.debouncedFetchGroupsListStore();
+  }
+
+  async getUserGroups(user: CrgUser): Promise<CrgGroup[]> {
+    await this.initAllGroupsStore();
+
+    return allGroups.list.filter(({ users }) => users.some(({ id }) => id === user.id));
+  }
+
+  async addUserToGroup(user: CrgUser, group: CrgGroup) {
+    await _reqAddUserToGroup(user.id, group.id);
+    void this.debouncedFetchGroupsListStore();
+  }
+
+  async removeUserFromGroup(user: CrgUser, group: CrgGroup) {
+    await _reqRemoveUserFromGroup(user.id, group.id);
+    void this.debouncedFetchGroupsListStore();
+  }
+
+  async initAllGroupsStore() {
+    if (this.allGroupsStoreInited) {
+      if (this.allGroupsFetching) {
+        await this.allGroupsFetching;
+      }
+
+      return;
+    }
+
+    this.allGroupsStoreInited = true;
+
+    await this.fetchGroupsListStore();
+  }
+
+  private async fetchGroupsListStore() {
+    if (!this.allGroupsStoreInited) {
+      return;
+    }
+
+    if (allGroups.fetching) {
+      void this.debouncedFetchGroupsListStore();
+
+      return;
+    }
+
+    allGroups.setFetching(true);
+    this.allGroupsFetching = groupsService.getAll();
+    const groups = await this.allGroupsFetching;
+    delete this.allGroupsFetching;
+    allGroups.setList(groups);
+    allGroups.setFetching(false);
+  }
+}
+
+export const groupsService = GroupsService.instance;

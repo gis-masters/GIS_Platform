@@ -8,10 +8,10 @@ import { communicationService, DataChangeEvent } from '../../../../services/comm
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { projectsService } from '../../../../services/gis/projects.service';
+import { projectsService } from '../../../../services/gis/projects/projects.service';
 import { crgProjectSchema } from '../../../ProjectsActions/ProjectsActions';
-import { CrgProject } from '../../../../services/gis/projects.models';
-import { Role } from '../../../../services/data/permissions.models';
+import { CrgProject } from '../../../../services/gis/projects/projects.models';
+import { Role } from '../../../../services/data/permissions/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';

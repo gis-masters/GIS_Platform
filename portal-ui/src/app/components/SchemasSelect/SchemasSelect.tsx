@@ -3,8 +3,8 @@ import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { schemaService } from '../../services/data/schema.service';
-import { PropertyType, Schema } from '../../services/data/schema.models';
+import { schemaService } from '../../services/data/schema/schema.service';
+import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { XTableColumn } from '../XTable/XTable';

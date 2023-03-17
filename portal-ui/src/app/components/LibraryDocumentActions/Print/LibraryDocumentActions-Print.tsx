@@ -6,9 +6,9 @@ import { Print, PrintOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord } from '../../../services/data/doc-library.service';
 import { printDocument, printTemplates } from '../../../services/print/print.service';
-import { Schema } from '../../../services/data/schema.models';
+import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { Schema } from '../../../services/data/schema/schema.models';
 import { Button } from '../../Button/Button';
 
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';

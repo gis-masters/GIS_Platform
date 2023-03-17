@@ -3,11 +3,10 @@ import { publishReplay, refCount } from 'rxjs/operators';
 import SockJS from 'sockjs-client';
 import { Stomp, CompatClient } from '@stomp/stompjs';
 
-import { WsImportModel } from './data/processes.service';
+import { ProcessType, WsImportModel } from './data/processes/processes.models';
 import { generateRandomId } from './util/randomId';
-import { BugObject } from './data/validation.service';
+import { BugObject } from './data/validation/validation.models';
 import { getWsEndpointUrl } from './server-urls.service';
-import { ProcessType } from './models';
 
 export interface IWsMessage<T = ExportWsMsg | ValidationWsMsg | WsImportModel> {
   type: ProcessType;

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { DocumentLibrary, LibraryRecord } from '../../services/data/doc-library.service';
+import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
 import { Explorer } from '../Explorer/Explorer';
 

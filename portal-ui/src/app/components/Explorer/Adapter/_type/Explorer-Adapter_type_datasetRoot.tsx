@@ -1,6 +1,11 @@
 import React, { ReactNode } from 'react';
 
-import { Dataset, getDataset, getDatasets, getDatasetsWithParticularOne } from '../../../../services/data/data.service';
+import {
+  getDataset,
+  getDatasets,
+  getDatasetsWithParticularOne
+} from '../../../../services/data/vectorData/vectorData.service';
+import { Dataset } from '../../../../services/data/vectorData/vectorData.models';
 import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { PageOptions, SortOrder } from '../../../../services/models';

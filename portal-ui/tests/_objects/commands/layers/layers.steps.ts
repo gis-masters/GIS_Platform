@@ -1,10 +1,10 @@
 import { Given } from '@wdio/cucumber-framework';
 
 import { createVectorLayer } from '../createLayer';
-import { ScenarioScope } from '../../scenarioScope';
+import { ScenarioScope } from '../../ScenarioScope';
 import { authenticateAsAdmin } from '../auth/authenticate';
-import { CrgLayerType } from '../../../../src/app/services/gis/projects.models';
-import { testSchemas } from '../schemas/schema.templates';
+import { CrgLayerType } from '../../../../src/app/services/gis/projects/projects.models';
+import { testSchemas } from '../schemas/testSchemas';
 
 Given(
   'в созданном проекте создан слой на основе созданного набора данных и таблицы',

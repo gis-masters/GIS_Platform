@@ -1,5 +1,5 @@
 import { updateLayer } from '../../../../src/app/services/gis/layers.service';
-import { projectsService } from '../../../../src/app/services/gis/projects.service';
+import { projectsService } from '../../../../src/app/services/gis/projects/projects.service';
 
 import { authenticateAsOwner } from '../auth/authenticate';
 

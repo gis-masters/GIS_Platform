@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 
-import { PropertySchemaBinary } from '../../../../services/data/schema.models';
+import { PropertySchemaBinary } from '../../../../services/data/schema/schema.models';
 import { FileInput } from '../../../FileInput/FileInput';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';

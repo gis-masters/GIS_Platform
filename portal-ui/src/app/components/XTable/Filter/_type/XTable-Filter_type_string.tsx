@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertyType } from '../../../../services/data/schema.models';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';

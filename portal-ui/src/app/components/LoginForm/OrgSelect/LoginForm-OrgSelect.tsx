@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { OrganizationsListItemInfo } from '../../../services/auth/auth.service';
+import { OrganizationsListItemInfo } from '../../../services/auth/auth/auth.models';
 
 import { LoginFormOrgSelectHead } from '../OrgSelectHead/LoginForm-OrgSelectHead';
 import { LoginFormOrgSelectTitle } from '../OrgSelectTitle/LoginForm-OrgSelectTitle';

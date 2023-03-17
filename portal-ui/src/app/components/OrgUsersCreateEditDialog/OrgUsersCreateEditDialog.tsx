@@ -7,8 +7,9 @@ import { AxiosError } from 'axios';
 import { Toast } from '../Toast/Toast';
 import { getPatch } from '../../services/util/patch';
 import { FormDialog } from '../FormDialog/FormDialog';
-import { PropertySchema, PropertySchemaString, PropertyType } from '../../services/data/schema.models';
-import { usersService, NewUserData, CrgUser } from '../../services/auth/users.service';
+import { PropertySchema, PropertySchemaString, PropertyType } from '../../services/data/schema/schema.models';
+import { NewUserData, CrgUser } from '../../services/auth/users/users.models';
+import { usersService } from '../../services/auth/users/users.service';
 
 import '!style-loader!css-loader!sass-loader!./OrgUsersCreateEditDialog.scss';
 

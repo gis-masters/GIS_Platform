@@ -5,8 +5,8 @@ import { Popover } from '@mui/material';
 import { pluralize } from 'numeralize-ru';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertyType } from '../../../../services/data/schema.models';
-import { FileInfo } from '../../../../services/data/files.service';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
+import { FileInfo } from '../../../../services/data/files/files.models';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
 import { Files } from '../../../Files/Files';
 

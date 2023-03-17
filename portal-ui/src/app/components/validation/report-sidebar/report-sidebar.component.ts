@@ -3,14 +3,15 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
 
-import { mapService } from '../../../services/map/map.service';
-import { communicationService, ObjectDto } from '../../../services/communication.service';
-import { ValidationBrieflyInfo, validationService } from '../../../services/data/validation.service';
-import { IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
 import { sidebars } from '../../../stores/Sidebars.store';
-import { ProcessStatus, ProcessType } from '../../../services/models';
-import { CrgLayer, CrgVectorLayer } from '../../../services/gis/projects.models';
 import { currentProject } from '../../../stores/CurrentProject.store';
+import { ProcessStatus, ProcessType } from '../../../services/data/processes/processes.models';
+import { getValidationShortInfo } from '../../../services/data/validation/validation.service';
+import { communicationService, ObjectDto } from '../../../services/communication.service';
+import { ValidationShortInfo } from '../../../services/data/validation/validation.models';
+import { IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
+import { CrgLayer, CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { mapService } from '../../../services/map/map.service';
 
 @Component({
   selector: 'crg-report-sidebar',
@@ -22,7 +23,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
   layers: CrgVectorLayer[];
 
-  commonInfo: Map<string, ValidationBrieflyInfo> = new Map<string, ValidationBrieflyInfo>();
+  commonInfo: Map<string, ValidationShortInfo> = new Map<string, ValidationShortInfo>();
 
   step = 0;
   isValidationInited = false;
@@ -138,14 +139,14 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     try {
-      const response: ValidationBrieflyInfo[] = await validationService.getShortInfo(layers);
+      const response: ValidationShortInfo[] = await getValidationShortInfo(layers);
 
       this.isValidationInited = false;
 
       if (!response) {
         this.logger.warn('Cant get layer info', response);
       } else {
-        response.forEach((brieflyInfo: ValidationBrieflyInfo) => {
+        response.forEach((brieflyInfo: ValidationShortInfo) => {
           if (brieflyInfo.status === 'ERROR') {
             this.logger.warn('Error for feature: ', brieflyInfo);
           } else {

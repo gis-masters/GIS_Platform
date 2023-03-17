@@ -9,7 +9,7 @@ import { Toast } from '../Toast/Toast';
 import { Button } from '../Button/Button';
 import { Loading } from '../Loading/Loading';
 import { Form, FormControl, FormField, FormLabel } from '../Form/Form';
-import { createDataset } from '../../services/data/data.service';
+import { createDataset } from '../../services/data/vectorData/vectorData.service';
 
 import '!style-loader!css-loader!sass-loader!./CreateDatasetDialog.scss';
 

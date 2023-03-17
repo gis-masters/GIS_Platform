@@ -3,7 +3,7 @@ import { ListItemButton, ListItemText } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { OrganizationsListItemInfo } from '../../../services/auth/auth.service';
+import { OrganizationsListItemInfo } from '../../../services/auth/auth/auth.models';
 
 const cnLoginFormOrgSelectListItem = cn('LoginForm', 'OrgSelectListItem');
 

@@ -7,9 +7,10 @@ import { AxiosError } from 'axios';
 
 import { route, Pages } from '../../stores/Route.store';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { authService, OrganizationsListItemInfo } from '../../services/auth/auth.service';
+import { authService } from '../../services/auth/auth/auth.service';
+import { OrganizationsListItemInfo } from '../../services/auth/auth/auth.models';
 import { communicationService } from '../../services/communication.service';
-import { usersService } from '../../services/auth/users.service';
+import { usersService } from '../../services/auth/users/users.service';
 import { services } from '../../services/services';
 import { Loading } from '../Loading/Loading';
 

@@ -1,5 +1,5 @@
-import { LibraryRecordRaw } from '../../../src/app/services/data/doc-library.service';
-import { Role } from '../../../src/app/services/data/permissions.models';
+import { LibraryRecordRaw } from '../../../src/app/services/data/docLibrary/docLibrary.models';
+import { Role } from '../../../src/app/services/data/permissions/permissions.models';
 
 interface LocalLibraryRecord extends LibraryRecordRaw {
   _role?: Role;

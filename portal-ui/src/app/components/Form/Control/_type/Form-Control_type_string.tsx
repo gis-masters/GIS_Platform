@@ -7,7 +7,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { makeObservable, observable } from 'mobx';
 import InputMask from 'react-input-mask';
 
-import { PropertyType, PropertySchemaString } from '../../../../services/data/schema.models';
+import { PropertyType, PropertySchemaString } from '../../../../services/data/schema/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 

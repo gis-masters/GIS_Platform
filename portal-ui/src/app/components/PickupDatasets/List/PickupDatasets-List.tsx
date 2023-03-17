@@ -10,7 +10,8 @@ import { boundMethod } from 'autobind-decorator';
 import { Loading } from '../../Loading/Loading';
 import { SortOrder } from '../../../services/models';
 import { PickupDatasetsItem } from '../Item/PickupDatasets-Item';
-import { Dataset, getDatasets } from '../../../services/data/data.service';
+import { getDatasets } from '../../../services/data/vectorData/vectorData.service';
+import { Dataset } from '../../../services/data/vectorData/vectorData.models';
 import { communicationService } from '../../../services/communication.service';
 
 import '!style-loader!css-loader!sass-loader!./../Filter/PickupDatasets-Filter.scss';

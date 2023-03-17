@@ -21,16 +21,17 @@ import { XTableColumn } from '../XTable/XTable';
 import { PageOptions } from '../../services/models';
 import { LayersList } from '../LayersList/LayersList';
 import { sidebars } from '../../stores/Sidebars.store';
-import { getKnownEpsg } from '../../services/data/epsg.service';
-import { PropertyType } from '../../services/data/schema.models';
+import { getKnownEpsg } from '../../services/data/epsg/epsg.service';
+import { PropertyType } from '../../services/data/schema/schema.models';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { XTableNumberFilter } from '../XTable/NumberFilter/XTable-NumberFilter';
-import { ExportResourceModel, exportService } from '../../services/data/export.service';
+import { exportVectorTableAsGML } from '../../services/data/export/export.service';
+import { ExportResourceModel } from '../../services/data/export/export.models';
 import { CrgProjection, Projection, viewedProjections } from '../../services/geoserver/projections.service';
 
 import '!style-loader!css-loader!sass-loader!./ExportGmlDialog.scss';
@@ -199,7 +200,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
       };
     });
 
-    await exportService.exportAsGML(this.selectedSchema, resources, this.selectedCrs, this.invertedCoordinates);
+    await exportVectorTableAsGML(this.selectedSchema, resources, this.selectedCrs, this.invertedCoordinates);
 
     this.closeDialog();
     sidebars.openInfo();

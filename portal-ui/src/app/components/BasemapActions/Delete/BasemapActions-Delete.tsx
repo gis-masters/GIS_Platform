@@ -17,8 +17,8 @@ import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
 import { getBasemapConnections } from '../../../services/gis/project-basemaps.service';
-import { deleteBasemap } from '../../../services/data/basemaps.service';
-import { Basemap } from '../../../services/data/basemaps.models';
+import { deleteBasemap } from '../../../services/data/basemaps/basemaps.service';
+import { Basemap } from '../../../services/data/basemaps/basemaps.models';
 import { Button } from '../../Button/Button';
 
 const cnBasemapActionsDelete = cn('BasemapActions', 'Delete');

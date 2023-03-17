@@ -1,4 +1,5 @@
-import { authService, RegData } from '../../../../src/app/services/auth/auth.service';
+import { authService } from '../../../../src/app/services/auth/auth/auth.service';
+import { RegData } from '../../../../src/app/services/auth/auth/auth.models';
 
 declare const window: { authService: typeof authService };
 

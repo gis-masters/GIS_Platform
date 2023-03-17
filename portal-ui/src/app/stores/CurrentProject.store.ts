@@ -3,7 +3,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
 import { attributesTableStore } from './AttributesTable.store';
-import { Role } from '../services/data/permissions.models';
+import { Role } from '../services/data/permissions/permissions.models';
 import { getPatch } from '../services/util/patch';
 import {
   CrgLayer,
@@ -14,7 +14,7 @@ import {
   CrgVectorLayer,
   NewCrgLayer,
   TreeItem
-} from '../services/gis/projects.models';
+} from '../services/gis/projects/projects.models';
 
 const MAX_LAYERS_IN_BATCH = 5;
 

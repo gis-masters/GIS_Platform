@@ -9,7 +9,7 @@ import { mapStore } from '../../stores/Map.store';
 import { ViewLocation } from '../Icons/ViewLocation';
 import { IconButton } from '../IconButton/IconButton';
 import { sidebars } from '../../stores/Sidebars.store';
-import { isUpdateAllowed } from '../../services/data/permissions.service';
+import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesSidebarTeaser.scss';

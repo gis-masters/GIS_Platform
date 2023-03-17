@@ -8,9 +8,9 @@ import { ContentCopyOutlined } from '@mui/icons-material';
 
 import { Toast } from '../Toast/Toast';
 import { IconButton } from '../IconButton/IconButton';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { CrgVectorLayer } from '../../services/gis/projects.models';
-import { createVectorTableRecord } from '../../services/data/data.service';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { createFeature } from '../../services/data/vectorData/vectorData.service';
 import { SelectSuitableVectorLayerDialog } from '../SelectSuitableVectorLayerDialog/SelectSuitableVectorLayerDialog';
 
 interface CopyErrors {
@@ -71,7 +71,7 @@ export class CopyFeatureButton extends Component<CopyFeatureButtonProps> {
         geometry_name: undefined
       };
 
-      await createVectorTableRecord(selectedLayer.dataset, selectedLayer.tableName, featureForCopy);
+      await createFeature(selectedLayer.dataset, selectedLayer.tableName, featureForCopy);
 
       Toast.success('Объект успешно скопирован');
     } catch (error) {

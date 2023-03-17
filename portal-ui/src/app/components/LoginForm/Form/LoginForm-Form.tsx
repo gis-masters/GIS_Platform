@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { env } from '../../../stores/Env.store';
-import { PropertyType, Schema } from '../../../services/data/schema.models';
+import { PropertyType, Schema } from '../../../services/data/schema/schema.models';
 import { getEsiaUrl } from '../../../services/server-urls.service';
 import { http } from '../../../services/http.service';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';

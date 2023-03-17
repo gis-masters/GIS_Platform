@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { action, computed, observable, makeObservable } from 'mobx';
 
 import { FormDialog } from '../FormDialog/FormDialog';
-import { PropertySchema, PropertyType } from '../../services/data/schema.models';
+import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 
 import { ServicesCalculatorList } from './List/ServicesCalculator-List';
 import { ServicesCalculatorTitle } from './Title/ServicesCalculator-Title';

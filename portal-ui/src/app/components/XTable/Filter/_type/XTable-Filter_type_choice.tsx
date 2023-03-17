@@ -7,7 +7,7 @@ import { withBemMod } from '@bem-react/core';
 import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
 
-import { PropertyOption, PropertyType } from '../../../../services/data/schema.models';
+import { PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
 import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';

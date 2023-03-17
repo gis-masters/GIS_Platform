@@ -8,9 +8,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs.models';
+import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
 import { olProjection, transformGeometry } from '../../../services/geoserver/projections.service';
-import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs.util';
+import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs/wfs.util';
 import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
 import { mapService } from '../../../services/map/map.service';
 

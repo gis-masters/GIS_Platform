@@ -1,21 +1,20 @@
+import { NewVectorTable, VectorTable } from '../../../../src/app/services/data/vectorData/vectorData.models';
 import {
   createDataset,
+  createFeature,
   createVectorTable,
-  createVectorTableRecord,
   getDatasets,
-  getDatasetTables,
-  NewVectorTable,
-  VectorTable
-} from '../../../../src/app/services/data/data.service';
-import { testUsers } from '../auth/testUsers';
+  getVectorTables
+} from '../../../../src/app/services/data/vectorData/vectorData.service';
 import { authenticateAs } from '../auth/authenticate';
+import { testUsers } from '../auth/testUsers';
 
 declare const window: {
   createVectorTable: typeof createVectorTable;
-  getDatasetTables: typeof getDatasetTables;
+  getVectorTables: typeof getVectorTables;
   getDatasets: typeof getDatasets;
   createDataset: typeof createDataset;
-  createVectorTableRecord: typeof createVectorTableRecord;
+  createFeature: typeof createFeature;
 };
 
 export async function createVectorTableAs(

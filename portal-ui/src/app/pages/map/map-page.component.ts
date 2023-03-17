@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { projectsService } from '../../services/gis/projects.service';
+import { projectsService } from '../../services/gis/projects/projects.service';
 
 @Component({
   selector: 'crg-map-page',

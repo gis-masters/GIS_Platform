@@ -6,9 +6,9 @@ import { SyntheticController } from './_master';
 import { err404, parsePageOptions } from '../utils';
 import { PageableResponse } from '../../../src/app/services/models';
 import { CrgProject } from '../../../src/app/services/gis/projects.models';
-import { Role } from '../../../src/app/services/data/permissions.models';
+import { Role } from '../../../src/app/services/data/permissions/permissions.models';
 import { validateFieldValue } from '../../../src/app/services/formValidation.service';
-import { PropertySchema, PropertySchemaString, PropertyType } from '../../../src/app/services/data/schema.models';
+import { PropertySchemaString, PropertyType } from '../../../src/app/services/data/schema/schema.models';
 
 class ProjectsSyntheticController implements SyntheticController {
   pattern = /^.*\/projects$/;
@@ -46,9 +46,9 @@ class ProjectsSyntheticController implements SyntheticController {
       regex: '^[a-zA-Zа-яА-Я0-9 ._-]*$',
       regexErrorMessage: 'Должно начинаться с буквы. Затем может содержать: буквы, цифры и символы .-_'
     };
-    const errors = validateFieldValue(data.projectName, property, data, [property]);
+    const errors = validateFieldValue(data.projectName, property, data);
 
-    if (errors.messages.length) {
+    if (errors?.messages?.length) {
       throw new AxiosError('bad request', 'bad request', config, null, {
         config,
         status: 400,

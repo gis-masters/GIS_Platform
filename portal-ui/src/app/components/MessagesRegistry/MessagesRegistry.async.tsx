@@ -8,16 +8,16 @@ import { cn } from '@bem-react/classname';
 
 import {
   getMessagesRegistriesData,
-  getMessagesRegistriesSchema,
-  MessagesRegistriesMessages
-} from '../../services/data/messagesRegistries.service';
+  getMessagesRegistriesSchema
+} from '../../services/data/messagesRegistries/messagesRegistries.service';
+import { MessagesRegistriesMessages } from '../../services/data/messagesRegistries/messagesRegistries.models';
 import { MessagesRegistryOpenAction } from './OpenAction/MessagesRegistry-OpenAction';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
 import { FilterQuery } from '../../services/util/filterObjects';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { SortParams } from '../../services/util/sortObjects';
-import { Schema } from '../../services/data/schema.models';
+import { Schema } from '../../services/data/schema/schema.models';
 import { PageOptions } from '../../services/models';
 import { XTableColumn } from '../XTable/XTable';
 import { Loading } from '../Loading/Loading';

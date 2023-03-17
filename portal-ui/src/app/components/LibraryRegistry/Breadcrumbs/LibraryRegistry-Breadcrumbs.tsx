@@ -11,7 +11,8 @@ import {
   getRegistryUrlWithFilter
 } from '../../DataManagement/DataManagement.utils';
 import { FilterQuery } from '../../../services/util/filterObjects';
-import { DocumentLibrary, getLibraryRecord, LibraryRecord } from '../../../services/data/doc-library.service';
+import { getLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
+import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
 import { Breadcrumbs, BreadcrumbsProps, BreadcrumbsItemData } from '../../Breadcrumbs/Breadcrumbs';
 import { Library } from '../../Icons/Library';
 

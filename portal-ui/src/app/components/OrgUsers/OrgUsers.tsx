@@ -5,8 +5,10 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
-import { CrgGroup, groupsService } from '../../services/auth/groups.service';
-import { CrgUser, usersService } from '../../services/auth/users.service';
+import { groupsService } from '../../services/auth/groups/groups.service';
+import { CrgGroup } from '../../services/auth/groups/groups.models';
+import { usersService } from '../../services/auth/users/users.service';
+import { CrgUser } from '../../services/auth/users/users.models';
 import { XTable, XTableColumn } from '../XTable/XTable';
 
 import { OrgUsersInvite } from './Invite/OrgUsers-Invite';

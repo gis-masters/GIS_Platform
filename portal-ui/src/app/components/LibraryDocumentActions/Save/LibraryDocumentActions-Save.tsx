@@ -5,7 +5,8 @@ import { SaveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { createLibraryRecord, LibraryRecord } from '../../../services/data/doc-library.service';
+import { createLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
+import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
 
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';

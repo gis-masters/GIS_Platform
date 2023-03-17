@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
 import { Adjust, SvgIconComponent, PolylineOutlined, ReportProblemOutlined } from '@mui/icons-material';
 
-import { GeometryType, SupportedGeometryType } from '../../../services/geoserver/wfs.models';
-import { schemaService } from '../../../services/data/schema.service';
+import { GeometryType, SupportedGeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { schemaService } from '../../../services/data/schema/schema.service';
 import { LayerIconProps, cnLayerIcon } from '../LayerIcon';
 import { Shape } from '../../Icons/Shape';
 

@@ -5,8 +5,8 @@ import { createElement } from 'react';
 
 import { registry } from '../../services/di-registry';
 import { FormDescription } from '../Form/Description/Form-Description';
-import { OldPropertySchema } from '../../services/data/schemaOld.models';
-import { convertOldToNewProperties } from '../../services/data/schema.utils';
+import { OldPropertySchema } from '../../services/data/schema/schemaOld.models';
+import { convertOldToNewProperties } from '../../services/data/schema/schema.utils';
 
 const FormDescriptionWithRegistry = withRegistry(registry)(FormDescription);
 

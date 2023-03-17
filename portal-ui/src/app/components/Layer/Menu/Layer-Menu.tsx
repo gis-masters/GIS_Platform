@@ -26,25 +26,27 @@ import {
   CrgRasterLayer,
   CrgVectorLayer,
   TreeItemPayload
-} from '../../../services/gis/projects.models';
-import { getLibraryRecord, LibraryRecord } from '../../../services/data/doc-library.service';
-import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs.models';
+} from '../../../services/gis/projects/projects.models';
+import { getLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
+import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { communicationService } from '../../../services/communication.service';
-import { schemaService } from '../../../services/data/schema.service';
-import { exportService } from '../../../services/data/export.service';
+import { schemaService } from '../../../services/data/schema/schema.service';
+import { exportVectorTableAsShape } from '../../../services/data/export/export.service';
 import { services } from '../../../services/services';
 import {
   isTableExportAllowed,
   isLayersManagementAllowed,
   isUpdateAllowed,
   isShapeImportAllowed
-} from '../../../services/data/permissions.service';
+} from '../../../services/data/permissions/permissions.service';
 import { ImportOutlined } from '../../Icons/ImportOutlined';
 import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
-import { VectorTable, getVectorTable } from '../../../services/data/data.service';
+import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
+import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
 import { VectorTableCard } from '../../VectorTableCard/VectorTableCard';
 import { Button } from '../../Button/Button';
@@ -54,8 +56,8 @@ import { TextBadge } from '../../TextBadge/TextBadge';
 import { crgLayerSchema } from '../../../services/gis/layers.service';
 import { ImportShapeDialog } from '../../ImportShapeDialog/ImportShapeDialog';
 import { MenuNestedItem } from '../../MenuNestedItem/MenuNestedItem';
-import { getEmptyFeature } from '../../../services/geoserver/wfs.util';
-import { ContentType, PropertyType, Schema } from '../../../services/data/schema.models';
+import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.util';
+import { ContentType, PropertyType, Schema } from '../../../services/data/schema/schema.models';
 import { getViewChoiceOptions } from '../../Form/Form.utils';
 
 export const cnLayerPropertiesDialog = cn('Layer', 'PropertiesDialog');
@@ -415,7 +417,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const { entity, onClose } = this.props;
     const { dataset, tableName, schemaId } = entity as CrgVectorLayer;
 
-    await exportService.exportAsShape([{ dataset, table: tableName, schemaId }]);
+    await exportVectorTableAsShape([{ dataset, table: tableName, schemaId }]);
     sidebars.openInfo();
 
     onClose();

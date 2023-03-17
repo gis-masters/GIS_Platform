@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Slider } from '@mui/material';
 
-import { TreeItemPayload } from '../../../services/gis/projects.models';
+import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
 
 import { LayerTransparencyLabel } from '../TransparencyLabel/Layer-TransparencyLabel';
 

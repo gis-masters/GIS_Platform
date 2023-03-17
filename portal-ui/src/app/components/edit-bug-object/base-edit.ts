@@ -1,7 +1,7 @@
 import { UntypedFormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 
-import { EditedField, OldSchema } from '../../services/data/schemaOld.models';
+import { EditedField, OldSchema } from '../../services/data/schema/schemaOld.models';
 import { FeaturePropertyValidators, ValidationError } from '../../services/util/FeaturePropertyValidators';
 
 type Properties = { [key: string]: string };

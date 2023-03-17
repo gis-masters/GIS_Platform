@@ -6,11 +6,12 @@ import { Tooltip, IconButton, Dialog, DialogContent, DialogActions, DialogConten
 import { Delete, DeleteOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
-import { Button } from '../../Button/Button';
-import { usersService, CrgUser } from '../../../services/auth/users.service';
-import { groupsService, CrgGroup } from '../../../services/auth/groups.service';
-
+import { groupsService } from '../../../services/auth/groups/groups.service';
+import { usersService } from '../../../services/auth/users/users.service';
+import { CrgGroup } from '../../../services/auth/groups/groups.models';
+import { CrgUser } from '../../../services/auth/users/users.models';
 import { Loading } from '../../Loading/Loading';
+import { Button } from '../../Button/Button';
 
 const cnOrgActionsDel = cn('OrgActions', 'Del');
 

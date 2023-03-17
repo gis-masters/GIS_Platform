@@ -2,10 +2,10 @@ import { Component, OnInit, OnDestroy, OnChanges, Input, ViewChild, ElementRef }
 import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
-import { EditedField, ValueType } from '../../services/data/schemaOld.models';
+import { EditedField, ValueType } from '../../services/data/schema/schemaOld.models';
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
 import { registry } from '../../services/di-registry';
 import { createRoot, Root } from 'react-dom/client';
 

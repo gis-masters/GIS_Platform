@@ -6,7 +6,7 @@ import { AccountCircle, ExitToApp } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { authService } from '../../services/auth/auth.service';
+import { authService } from '../../services/auth/auth/auth.service';
 import { Button } from '../Button/Button';
 import { currentUser } from '../../stores/CurrentUser.store';
 

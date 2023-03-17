@@ -8,7 +8,7 @@ import { cn } from '@bem-react/classname';
 import { mapStore } from '../../stores/Map.store';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { FeatureError } from '../../services/map/map-link-following.service';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { mapService } from '../../services/map/map.service';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
 

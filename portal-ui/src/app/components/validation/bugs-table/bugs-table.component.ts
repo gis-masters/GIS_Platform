@@ -10,15 +10,15 @@ import { startWith } from 'rxjs/internal/operators/startWith';
 import { NGXLogger } from 'ngx-logger';
 
 import { communicationService } from '../../../services/communication.service';
-import { schemaService } from '../../../services/data/schema.service';
+import { schemaService } from '../../../services/data/schema/schema.service';
 import { getProjection } from '../../../services/geoserver/projections.service';
-import { getFeatureById } from '../../../services/geoserver/wfs.service';
-import { WfsFeature } from '../../../services/geoserver/wfs.models';
+import { getFeaturesById } from '../../../services/geoserver/wfs/wfs.service';
 import { mapService } from '../../../services/map/map.service';
-import { ValidationResultsResponse, validationService } from '../../../services/data/validation.service';
-import { ProcessStatus } from '../../../services/models';
-import { CrgVectorLayer } from '../../../services/gis/projects.models';
-import { isUpdateAllowed } from '../../../services/data/permissions.service';
+import { getValidationResults } from '../../../services/data/validation/validation.service';
+import { ValidationResultsResponse } from '../../../services/data/validation/validation.models';
+import { ProcessStatus } from '../../../services/data/processes/processes.models';
+import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
 
 @Component({
   selector: 'crg-bugs-table',
@@ -94,7 +94,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
           this.isLoadingResults = true;
 
           return this.isActive
-            ? validationService.getValidationResults(
+            ? getValidationResults(
                 {
                   dataset: this.crgLayer.dataset,
                   table: this.crgLayer.tableName,
@@ -119,7 +119,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   async getValidation(): Promise<void> {
-    const response: ValidationResultsResponse = await validationService.getValidationResults(
+    const response: ValidationResultsResponse = await getValidationResults(
       {
         dataset: this.crgLayer.dataset,
         table: this.crgLayer.tableName,
@@ -136,7 +136,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   async showObject(event: Event, objectId: string): Promise<void> {
     event.stopPropagation();
-    const wfsFeature: WfsFeature = await getFeatureById(this.crgLayer.complexName, objectId);
+    const [wfsFeature] = await getFeaturesById([objectId], this.crgLayer.complexName);
 
     const projection = getProjection(this.crgLayer.nativeCRS);
     mapService.highlightFeatures([wfsFeature], projection);

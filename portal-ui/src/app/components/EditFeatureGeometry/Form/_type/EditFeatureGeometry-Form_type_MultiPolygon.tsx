@@ -8,12 +8,12 @@ import {
   CoordinateEdited,
   GeometryType,
   WfsPolygonGeometry
-} from '../../../../services/geoserver/wfs.models';
+} from '../../../../services/geoserver/wfs/wfs.models';
 
 import { EditFeatureGeometryFormProps, cnEditFeatureGeometryForm } from '../EditFeatureGeometry-Form';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import { EditFeatureGeometryAddButton } from '../../AddButton/EditFeatureGeometry-AddButton';
-import { getEmptyGeometry } from '../../../../services/geoserver/wfs.util';
+import { getEmptyGeometry } from '../../../../services/geoserver/wfs/wfs.util';
 
 @observer
 class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeometryFormProps> {

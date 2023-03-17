@@ -1,5 +1,5 @@
 import { currentUser } from '../../stores/CurrentUser.store';
-import { CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './projects.models';
+import { CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './projects/projects.models';
 
 const defaultProps = {
   enabled: true,

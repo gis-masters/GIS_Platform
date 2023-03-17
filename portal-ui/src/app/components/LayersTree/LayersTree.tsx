@@ -8,8 +8,8 @@ import { cn } from '@bem-react/classname';
 import { route, Pages } from '../../stores/Route.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { setEnabledLayerToUrl } from '../../services/map/map-url.service';
-import { projectsService } from '../../services/gis/projects.service';
-import { TreeItem } from '../../services/gis/projects.models';
+import { projectsService } from '../../services/gis/projects/projects.service';
+import { TreeItem } from '../../services/gis/projects/projects.models';
 
 import { LayersTreeInner } from './Inner/LayersTree-Inner';
 

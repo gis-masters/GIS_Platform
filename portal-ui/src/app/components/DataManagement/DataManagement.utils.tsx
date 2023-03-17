@@ -4,7 +4,8 @@ import { AxiosError } from 'axios';
 import { cloneDeep } from 'lodash';
 
 import { services } from '../../services/services';
-import { getLibrary, getLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
+import { getLibrary, getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
+import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { addFilterPart, FilterQuery } from '../../services/util/filterObjects';
 import { Toast } from '../Toast/Toast';

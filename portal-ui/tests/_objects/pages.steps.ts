@@ -4,7 +4,7 @@ import { blPage } from './pages/BL.page';
 import { root } from './blocks/Root/Root';
 import { MapPage } from './pages/Map.page';
 import { Page, pagesRegistry } from './Page';
-import { ScenarioScope } from './scenarioScope';
+import { ScenarioScope } from './ScenarioScope';
 import { testUsers } from './commands/auth/testUsers';
 import { dataManagementPage } from './pages/DataManagement.page';
 import { getProjectsByTitle } from './commands/projects/getProjectsByTitle';
@@ -18,13 +18,13 @@ function findPage(title: string): Page {
   return page;
 }
 
-Then(/^открылась страница "([^"]*)"$/, async (title: string) => {
+Then('открылась страница {string}', async (title: string) => {
   const page = findPage(title);
   await page.waitForVisible();
   await page.testUrl();
 });
 
-Then(/^открылась страница карты проекта "([^"]*)"$/, async (title: string) => {
+Then('открылась страница карты проекта {string}', async (title: string) => {
   const projects = await getProjectsByTitle(title);
   if (projects.length !== 1) {
     throw new Error(`Ошибка получения проекта "${title}"`);
@@ -36,7 +36,7 @@ Then(/^открылась страница карты проекта "([^"]*)"$/
   await mapPage.testUrl();
 });
 
-Given(/^я на странице "([^"]*)"$/, async (title: string) => {
+Given('я на странице {string}', async (title: string) => {
   const page = findPage(title);
   await page.open();
 });
@@ -52,16 +52,19 @@ Given(/^я на странице карты проекта "([^"]*)"$/, async (t
   } else {
     throw new Error(`Ошибка получения проекта "${title}"`);
   }
+
+  const mapPage = new MapPage(projects[0].id);
+  await mapPage.open();
 });
 
-When(/^я перехожу на страницу "([^"]*)"$/, async (title: string) => {
+When('я перехожу на страницу {string}', async (title: string) => {
   const page = findPage(title);
   await browser.url(page.url);
   await root.waitForExist();
 });
 
 When(
-  /^я перехожу на страницу "([^"]*)" с гостевыми логином-паролем пользователя "([^"]*)"$/,
+  'я перехожу на страницу {string} с гостевыми логином-паролем пользователя {string}',
   async (pageTitle: string, user: keyof typeof testUsers) => {
     if (!testUsers[user]) {
       throw new Error(`Нет пользователя "${user}"`);
@@ -74,11 +77,11 @@ When(
   }
 );
 
-Given(/^я на странице "(.*)" библиотеки блоков$/, async (story: string) => {
+Given('я на странице {string} библиотеки блоков', async (story: string) => {
   await blPage.openExample(story);
 });
 
-When(/^я открываю страницу библиотек в управлении данными$/, async () => {
+When('я открываю страницу библиотек в управлении данными', async () => {
   await dataManagementPage.openLibraryRootPage();
 });
 
@@ -86,7 +89,7 @@ Given(/^я на странице `Наборы данных` в управлен
   await dataManagementPage.openDatasetRootPage();
 });
 
-When(/^я открываю страницу наборов данных в управлении данными$/, async () => {
+When('я открываю страницу наборов данных в управлении данными', async () => {
   await dataManagementPage.openDatasetRootPage();
 });
 
@@ -94,7 +97,7 @@ When('я перехожу в созданный проект', async function (t
   await new MapPage(this.latestProject.id).open();
 });
 
-Then(/^открыта страница библиотек в управлении данными$/, async () => {
+Then('открыта страница библиотек в управлении данными', async () => {
   await dataManagementPage.testLibraryRootPage();
 });
 

@@ -5,8 +5,9 @@ import { withBemMod } from '@bem-react/core';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { getDocumentLibraryRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { DocumentLibrary, getLibrary } from '../../../../services/data/doc-library.service';
-import { Role } from '../../../../services/data/permissions.models';
+import { getLibrary } from '../../../../services/data/docLibrary/docLibrary.service';
+import { DocumentLibrary } from '../../../../services/data/docLibrary/docLibrary.models';
+import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';

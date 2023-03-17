@@ -2,11 +2,11 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
 
+import { ProcessStatus, ProcessType } from '../../services/data/processes/processes.models';
 import { DownloadFileService } from '../../services/download-file.service';
 import { eventService, IEvent } from '../../services/event.service';
-import { ProcessStatus, ProcessType } from '../../services/models';
-import { saveAsBlob } from '../../services/util/FileSaver';
 import { ExportWsMsg, IWsMessage } from '../../services/ws.service';
+import { saveAsBlob } from '../../services/util/FileSaver';
 import { Mime } from '../../services/util/Mime';
 
 @Component({

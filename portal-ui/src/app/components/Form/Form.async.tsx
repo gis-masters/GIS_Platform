@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { Schema } from '../../services/data/schema.models';
+import { Schema } from '../../services/data/schema/schema.models';
 import {
   calculateValues,
   cleanCalculatedValues,

@@ -11,7 +11,7 @@ import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
 import { mapSelectionService } from '../../services/map/map-selection.service';
 import { communicationService } from '../../services/communication.service';
-import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
 import { PageOptions } from '../../services/models';
 import { XTableInvoke } from '../XTable/XTable';
 

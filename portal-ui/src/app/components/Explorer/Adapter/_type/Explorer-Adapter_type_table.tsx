@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { VectorTable } from '../../../../services/data/data.service';
+import { VectorTable } from '../../../../services/data/vectorData/vectorData.models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { LayerIcon } from '../../../LayerIcon/LayerIcon.composed';
 import { currentUser } from '../../../../stores/CurrentUser.store';

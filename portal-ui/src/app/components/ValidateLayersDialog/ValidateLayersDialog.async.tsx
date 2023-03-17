@@ -8,8 +8,8 @@ import { boundMethod } from 'autobind-decorator';
 import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { communicationService } from '../../services/communication.service';
-import { validationService } from '../../services/data/validation.service';
-import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { initValidation } from '../../services/data/validation/validation.service';
+import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
 import { LayersList } from '../LayersList/LayersList';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
@@ -59,7 +59,7 @@ export default class ValidateLayersDialog extends Component<ValidateLayersDialog
   @boundMethod
   private async executeValidation() {
     try {
-      await validationService.initValidation(this.selectedLayers);
+      await initValidation(this.selectedLayers);
     } catch {
       Toast.error('Ошибка проверки данных');
       communicationService.validationInitiated.emit(false);

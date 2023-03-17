@@ -1,4 +1,4 @@
-import { projectsService } from '../../../src/app/services/gis/projects.service';
+import { projectsService } from '../../../src/app/services/gis/projects/projects.service';
 import { mapService } from '../../../src/app/services/map/map.service';
 
 declare const window: {

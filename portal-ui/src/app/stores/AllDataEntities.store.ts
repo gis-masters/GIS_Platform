@@ -1,6 +1,6 @@
 import { observable, action, makeObservable } from 'mobx';
 
-import { Dataset, VectorTable } from '../services/data/data.service';
+import { Dataset, VectorTable } from '../services/data/vectorData/vectorData.models';
 
 class AllDataEntities {
   @observable vectorTables: VectorTable[] = [];

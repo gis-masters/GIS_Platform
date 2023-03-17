@@ -1,5 +1,6 @@
 import { testUsers } from './testUsers';
-import { usersService, NewUserData } from '../../../src/app/services/auth/users.service';
+import { usersService } from '../../../src/app/services/auth/users/users.service';
+import { NewUserData } from '../../../src/app/services/auth/users/users.models';
 
 declare const window: { usersService: typeof usersService };
 

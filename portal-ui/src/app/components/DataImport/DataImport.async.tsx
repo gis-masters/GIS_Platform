@@ -11,8 +11,8 @@ import {
   checkImportStatus,
   updateProgress
 } from '../../services/geoserver/import/import.service';
-import { projectsService } from '../../services/gis/projects.service';
-import { schemaService } from '../../services/data/schema.service';
+import { projectsService } from '../../services/gis/projects/projects.service';
+import { schemaService } from '../../services/data/schema/schema.service';
 import { route } from '../../stores/Route.store';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { DataImportTasksList } from '../DataImportTasksList/DataImportTasksList';

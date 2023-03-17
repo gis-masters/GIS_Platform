@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { List } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { OrganizationsListItemInfo } from '../../../services/auth/auth.service';
+import { OrganizationsListItemInfo } from '../../../services/auth/auth/auth.models';
 
 import { LoginFormOrgSelectListItem } from '../OrgSelectListItem/LoginForm-OrgSelectListItem';
 

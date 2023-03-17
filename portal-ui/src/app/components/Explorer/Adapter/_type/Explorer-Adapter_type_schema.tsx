@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { SchemaOutlined } from '@mui/icons-material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { Schema } from '../../../../services/data/schema.models';
+import { Schema } from '../../../../services/data/schema/schema.models';
 import { SchemaActions } from '../../../SchemaActions/SchemaActions';
 
 import { Adapter, ExplorerItemData } from '../../Explorer.models';

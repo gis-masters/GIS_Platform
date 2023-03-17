@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { BackCrgUser } from '../../../src/app/services/auth/users.service';
+import { CrgUserRaw } from '../../../src/app/services/auth/users/users.models';
 import { queryObjects } from '../../../src/app/services/util/queryObjects';
 import { users } from '../data/users';
 import { SyntheticController } from './_master';
@@ -10,13 +10,13 @@ import { PageableResponse } from '../../../src/app/services/models';
 class UsersSyntheticController implements SyntheticController {
   pattern = /^.*\/users$/;
 
-  get(config: AxiosRequestConfig): PageableResponse<BackCrgUser> {
+  get(config: AxiosRequestConfig): PageableResponse<CrgUserRaw> {
     if (!config.url) {
       throw err404(config);
     }
 
     const pageOptions = parsePageOptions(config);
-    const result: BackCrgUser[] = queryObjects(users, pageOptions);
+    const result: CrgUserRaw[] = queryObjects(users, pageOptions);
     const totalPages =
       Math.floor(users.length / pageOptions.pageSize) + Number(Boolean(users.length % pageOptions.pageSize));
 

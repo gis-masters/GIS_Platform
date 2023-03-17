@@ -1,5 +1,5 @@
-import { PropertyType, Schema } from '../../services/data/schema.models';
-import { getFieldRelations } from '../../services/data/schema.utils';
+import { PropertyType, Schema } from '../../services/data/schema/schema.models';
+import { getFieldRelations } from '../../services/data/schema/schema.utils';
 
 import { XTableRelationsButton } from './RelationsButton/XTable-RelationsButton';
 import { XTableColumn } from './XTable';

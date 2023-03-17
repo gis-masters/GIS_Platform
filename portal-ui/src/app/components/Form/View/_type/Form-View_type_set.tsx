@@ -4,7 +4,7 @@ import { withBemMod } from '@bem-react/core';
 import { RegistryConsumer } from '@bem-react/di';
 
 import { CommonDiRegistry } from '../../../../services/di-registry';
-import { PropertySchemaSet, PropertyType } from '../../../../services/data/schema.models';
+import { PropertySchemaSet, PropertyType } from '../../../../services/data/schema/schema.models';
 
 import { cnFormView } from '../Form-View';
 import { FormControlProps } from '../../Control/Form-Control';

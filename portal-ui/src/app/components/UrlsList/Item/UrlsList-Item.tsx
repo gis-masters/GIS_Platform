@@ -5,7 +5,7 @@ import { Dialog, DialogActions, DialogContent, Tooltip } from '@mui/material';
 import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { PropertySchemaUrl } from '../../../services/data/schema.models';
+import { PropertySchemaUrl } from '../../../services/data/schema/schema.models';
 import { getEditUrlFormSchema } from '../../Form/Form.utils';
 import { UrlInfo } from '../../Form/Control/_type/Form-Control_type_url';
 import { HtmlContent } from '../../HtmlContent/HtmlContent';

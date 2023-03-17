@@ -14,7 +14,7 @@ import {
 } from '../../../stores/PrintSettings.store';
 import { getPatch } from '../../../services/util/patch';
 import { SelectLegend } from '../../SelectLegend/SelectLegend';
-import { PropertyType, PropertySchema } from '../../../services/data/schema.models';
+import { PropertyType, PropertySchema } from '../../../services/data/schema/schema.models';
 import { FormContent } from '../../Form/Content/Form-Content';
 import { Form } from '../../Form/Form';
 

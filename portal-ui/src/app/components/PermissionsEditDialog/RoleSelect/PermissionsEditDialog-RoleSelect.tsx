@@ -5,7 +5,13 @@ import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../../services/data/permissions.models';
+import {
+  PrincipalType,
+  Role,
+  RoleAssignmentBody,
+  roles,
+  rolesTitles
+} from '../../../services/data/permissions/permissions.models';
 
 const cnPermissionsEditDialogRoleSelect = cn('PermissionsEditDialog', 'RoleSelect');
 

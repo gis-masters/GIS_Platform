@@ -10,9 +10,9 @@ import {
   CrgLayerType,
   TreeItemPayload,
   CrgVectorLayer
-} from '../../services/gis/projects.models';
+} from '../../services/gis/projects/projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { schemaService } from '../../services/data/schema.service';
+import { schemaService } from '../../services/data/schema/schema.service';
 
 import { LayerEye } from './Eye/Layer-Eye';
 import { LayerGap } from './Gap/Layer-Gap';

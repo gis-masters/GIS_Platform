@@ -11,7 +11,7 @@ import { cloneDeep, isNumber } from 'lodash';
 import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { EditFeatureMode, EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
-import { isUpdateAllowed } from '../../services/data/permissions.service';
+import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import {
   applyView,
   applyViewOld,
@@ -19,24 +19,24 @@ import {
   convertOldToNewProperties,
   convertOldToNewSchema,
   getFieldRelations
-} from '../../services/data/schema.utils';
+} from '../../services/data/schema/schema.utils';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
-import { deleteFeatures, updateVectorTableRecord } from '../../services/data/data.service';
+import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
+import { deleteFeatures, updateFeature } from '../../services/data/vectorData/vectorData.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { getFeatureProjection } from '../../services/geoserver/projections.service';
-import { OldPropertySchema, ValueType } from '../../services/data/schemaOld.models';
-import { PropertySchema, PropertyType } from '../../services/data/schema.models';
+import { OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
+import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { mapSelectionService } from '../../services/map/map-selection.service';
 import { applyFieldValue, convertToComplexField } from '../Form/Form.utils';
 import { communicationService } from '../../services/communication.service';
 import { calculateValues } from '../../services/formValidation.service';
-import { getFeaturesById } from '../../services/geoserver/wfs.service';
-import { getEmptyGeometry } from '../../services/geoserver/wfs.util';
-import { CrgVectorLayer } from '../../services/gis/projects.models';
-import { schemaService } from '../../services/data/schema.service';
+import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
+import { getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
+import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { schemaService } from '../../services/data/schema/schema.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { generateRandomId } from '../../services/util/randomId';
 import { mapService } from '../../services/map/map.service';
@@ -472,7 +472,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     const { dataset, tableName } = this.layer;
 
     if (features.length === 1) {
-      await updateVectorTableRecord(dataset, tableName, features[0].id.split('.')[1], {
+      await updateFeature(dataset, tableName, features[0].id.split('.')[1], {
         type: 'Feature',
         geometry: geometry,
         properties: newProperties

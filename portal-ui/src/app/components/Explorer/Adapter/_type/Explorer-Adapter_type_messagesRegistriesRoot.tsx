@@ -7,9 +7,9 @@ import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.mode
 import {
   getMessagesRegistries,
   getMessagesRegistriesWithParticularOne,
-  getMessagesRegistry,
-  MessagesRegistry
-} from '../../../../services/data/messagesRegistries.service';
+  getMessagesRegistry
+} from '../../../../services/data/messagesRegistries/messagesRegistries.service';
+import { MessagesRegistry } from '../../../../services/data/messagesRegistries/messagesRegistries.models';
 import { PageOptions } from '../../../../services/models';
 import { ExplorerStore } from '../../Explorer.store';
 import { ExplorerService } from '../../Explorer.service';

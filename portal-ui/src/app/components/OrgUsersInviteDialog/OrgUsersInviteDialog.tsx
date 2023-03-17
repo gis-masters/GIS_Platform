@@ -5,8 +5,8 @@ import { boundMethod } from 'autobind-decorator';
 
 import { Toast } from '../Toast/Toast';
 import { FormDialog } from '../FormDialog/FormDialog';
-import { PropertySchema, PropertyType } from '../../services/data/schema.models';
-import { usersService } from '../../services/auth/users.service';
+import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { usersService } from '../../services/auth/users/users.service';
 
 interface UserInvite {
   email?: string;

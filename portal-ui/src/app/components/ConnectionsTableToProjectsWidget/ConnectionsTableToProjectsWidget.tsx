@@ -5,13 +5,14 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import { VectorTable, getVectorTableConnections } from '../../services/data/data.service';
-import { CrgProject } from '../../services/gis/projects.models';
+import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
+import { VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { CrgProject } from '../../services/gis/projects/projects.models';
 import { vectorLayerDefaults } from '../../services/gis/layers.utils';
-import { FileConnection } from '../../services/data/files.service';
-import { schemaService } from '../../services/data/schema.service';
+import { FileConnection } from '../../services/data/files/files.models';
+import { schemaService } from '../../services/data/schema/schema.service';
 import { createLayer } from '../../services/gis/layers.service';
-import { Schema } from '../../services/data/schema.models';
+import { Schema } from '../../services/data/schema/schema.models';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
 
 const cnConnectionsTableToProjectsWidget = cn('ConnectionsTableToProjectsWidget');

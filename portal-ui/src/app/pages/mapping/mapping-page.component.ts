@@ -6,21 +6,21 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Toast } from '../../components/Toast/Toast';
-import { Dataset } from '../../services/data/data.service';
+import { Dataset } from '../../services/data/vectorData/vectorData.models';
 import {
   ComparableLayersPair,
   ImportDataHolderService
 } from '../../services/geoserver/import/import-data-holder.service';
-import { getAllImportLayers } from '../../services/geoserver/import/import.service';
-import { projectsService } from '../../services/gis/projects.service';
-import { Process, ProcessStatus } from '../../services/models';
-import { ImportLayer, ImportLayerItem } from '../../services/geoserver/import/models';
+import { doWorkImport, getAllImportLayers } from '../../services/geoserver/import/import.service';
+import { projectsService } from '../../services/gis/projects/projects.service';
+import { ImportLayer, ImportLayerItem } from '../../services/geoserver/import/import.models';
 import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { schemaService } from '../../services/data/schema.service';
-import { OldSchema } from '../../services/data/schemaOld.models';
-import { getProcess } from '../../services/data/processes.service';
+import { schemaService } from '../../services/data/schema/schema.service';
+import { OldSchema } from '../../services/data/schema/schemaOld.models';
+import { getProcess } from '../../services/data/processes/processes.service';
+import { Process, ProcessStatus } from '../../services/data/processes/processes.models';
 
 @Component({
   selector: 'crg-mapping-page',
@@ -97,10 +97,10 @@ export class MappingPageComponent implements OnInit, OnDestroy {
 
     await projectsService.fetchCurrent();
 
-    // TODO: Нельзя чтобы в рабочем импорте такси ссылались на одну рабочую таблицу!
+    // TODO: Нельзя чтобы в рабочем импорте таски ссылались на одну рабочую таблицу!
     // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
     // eslint-disable-next-line promise/catch-or-return
-    projectsService.doWorkImport(workTasks, currentProject.id, this.selectedDataset.identifier).then(
+    doWorkImport(workTasks, currentProject.id, this.selectedDataset.identifier).then(
       (crgProcess: Process) => {
         interval(this.CHECK_STATUS_INTERVAL)
           .pipe(takeUntil(this.unsubscribe$))

@@ -4,9 +4,10 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { getDatasetRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { Dataset, getDataset } from '../../../../services/data/data.service';
-import { Role } from '../../../../services/data/permissions.models';
+import { getDatasetRoleAssignmentsUrl } from '../../../../services/server-urls.service';
+import { getDataset } from '../../../../services/data/vectorData/vectorData.service';
+import { Dataset } from '../../../../services/data/vectorData/vectorData.models';
+import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
@@ -61,7 +62,7 @@ class ExplorerWidgetsTypeDataset extends Component<ExplorerWidgetsProps> {
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const url = await getDatasetRoleAssignmentUrl(payload.identifier);
+    const url = await getDatasetRoleAssignmentsUrl(payload.identifier);
     const dataset = await getDataset(payload.identifier);
 
     if (this.operationId === operationId) {

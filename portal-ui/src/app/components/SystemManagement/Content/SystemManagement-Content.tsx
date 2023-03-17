@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { organizationSettings, OrgSettings } from '../../../stores/OrganizationSettings.store';
 import { OrganizationSettings } from '../../OrganizationSettings/OrganizationSettings';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
-import { PropertyType } from '../../../services/data/schema.models';
+import { PropertyType } from '../../../services/data/schema/schema.models';
 import { XTableColumn } from '../../XTable/XTable';
 import { Button } from '../../Button/Button';
 

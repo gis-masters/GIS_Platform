@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { DocumentLibrary } from '../../../src/app/services/data/doc-library.service';
+import { DocumentLibrary } from '../../../src/app/services/data/docLibrary/docLibrary.models';
 import { PageableResources } from '../../../src/server-types/common-contracts';
 import { queryObjects } from '../../../src/app/services/util/queryObjects';
 import { SyntheticController } from './_master';

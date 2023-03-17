@@ -5,9 +5,8 @@ import { cn } from '@bem-react/classname';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { exportValidationReportService } from '../../services/data/export-validation-report.service';
-import { ExportResourceModel } from '../../services/data/export.service';
-import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { getExportValidationReport } from '../../services/data/validation/validation.service';
+import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
 import { sidebars } from '../../stores/Sidebars.store';
 import { LayersList } from '../LayersList/LayersList';
 import { Button } from '../Button/Button';
@@ -64,15 +63,7 @@ export default class ExportValidationReportDialog extends Component<ExportValida
   private async executeExport(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const resources: ExportResourceModel[] = this.selectedLayers.map(layer => {
-      return {
-        dataset: layer.dataset,
-        table: layer.tableName,
-        schemaId: layer.schemaId
-      };
-    });
-
-    await exportValidationReportService.exportValidationReport(resources);
+    await getExportValidationReport(this.selectedLayers);
 
     this.closeDialog();
     sidebars.openInfo();

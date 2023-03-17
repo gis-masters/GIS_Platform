@@ -1,8 +1,8 @@
 import { action, computed, observable, makeObservable } from 'mobx';
 
-import { LibraryRecord } from '../../services/data/doc-library.service';
-import { CrgProject } from '../../services/gis/projects.models';
-import { FileInfo } from '../../services/data/files.service';
+import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { CrgProject } from '../../services/gis/projects/projects.models';
+import { FileInfo } from '../../services/data/files/files.models';
 
 export interface PlacementTask {
   id: string;

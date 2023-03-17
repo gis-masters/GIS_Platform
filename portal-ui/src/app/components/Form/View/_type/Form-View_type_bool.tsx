@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { Check, Close } from '@mui/icons-material';
 
-import { PropertyType } from '../../../../services/data/schema.models';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
 
 import { cnFormView } from '../Form-View';
 import { FormSetLabel } from '../../SetLabel/Form-SetLabel';

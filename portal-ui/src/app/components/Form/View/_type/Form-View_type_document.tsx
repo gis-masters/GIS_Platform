@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertySchemaDocument, PropertyType } from '../../../../services/data/schema.models';
+import { PropertySchemaDocument, PropertyType } from '../../../../services/data/schema/schema.models';
 import { DocumentInfo, Documents } from '../../../Documents/Documents';
 
 import { cnFormView } from '../Form-View';

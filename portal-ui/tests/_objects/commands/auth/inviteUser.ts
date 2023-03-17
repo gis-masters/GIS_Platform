@@ -1,7 +1,7 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { RegData } from '../../../../src/app/services/auth/auth.service';
-import { usersService } from '../../../../src/app/services/auth/users.service';
+import { RegData } from '../../../../src/app/services/auth/auth/auth.models';
+import { usersService } from '../../../../src/app/services/auth/users/users.service';
 import { authenticateAs } from './authenticate';
 import { getUserByEmail } from './getUserByEmail';
 import { testUsers } from './testUsers';

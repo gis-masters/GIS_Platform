@@ -5,11 +5,11 @@ import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { basemapEditSchema, updateBasemap } from '../../../services/data/basemaps.service';
+import { Basemap, basemapEditSchema } from '../../../services/data/basemaps/basemaps.models';
+import { updateBasemap } from '../../../services/data/basemaps/basemaps.service';
 import { communicationService } from '../../../services/communication.service';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { Basemap } from '../../../services/data/basemaps.models';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { getPatch } from '../../../services/util/patch';
 import { TextBadge } from '../../TextBadge/TextBadge';

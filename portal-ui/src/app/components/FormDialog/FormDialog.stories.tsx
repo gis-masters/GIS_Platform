@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { SaveOutlined } from '@mui/icons-material';
 
-import { PropertySchema, PropertyType } from '../../services/data/schema.models';
+import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 
 import { validateFormValue } from '../../services/formValidation.service';
 import { sleep } from '../../services/util/sleep';

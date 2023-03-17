@@ -9,20 +9,19 @@ import { AxiosError } from 'axios';
 
 import { currentUser } from '../../stores/CurrentUser.store';
 import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
-import { PropertySchema, PropertyType, Schema } from '../../services/data/schema.models';
+import { PropertySchema, PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { communicationService } from '../../services/communication.service';
 import { calculateValues } from '../../services/formValidation.service';
-import { schemaService } from '../../services/data/schema.service';
+import { schemaService } from '../../services/data/schema/schema.service';
 import { addFilterPart, FilterQuery, getFilterRootAnd, removeFieldFilter } from '../../services/util/filterObjects';
 import { PageOptions } from '../../services/models';
 import { SortParams } from '../../services/util/sortObjects';
 import {
-  DocumentLibrary,
   getLibrary,
   getLibraryRecord,
-  getLibraryRecordsAsRegistry,
-  LibraryRecord
-} from '../../services/data/doc-library.service';
+  getLibraryRecordsAsRegistry
+} from '../../services/data/docLibrary/docLibrary.service';
+import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 import { getIdsFromPath, getPathFilter, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';

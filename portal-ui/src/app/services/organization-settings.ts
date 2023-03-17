@@ -3,7 +3,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { getOrganizationKnownSettingsUrl, getOrganizationSettingsUrl } from './server-urls.service';
 import { organizationSettings, OrgSettings } from '../stores/OrganizationSettings.store';
-import { PropertyType, Schema } from './data/schema.models';
+import { PropertyType, Schema } from './data/schema/schema.models';
 import { Toast } from '../components/Toast/Toast';
 import { http } from './http.service';
 

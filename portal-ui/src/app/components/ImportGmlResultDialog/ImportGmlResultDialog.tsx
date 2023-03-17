@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { KeyboardArrowDown, Warning } from '@mui/icons-material';
 
-import { ImportResult } from '../../services/data/processes.service';
+import { ImportResult } from '../../services/data/processes/processes.models';
 import { Button } from '../Button/Button';
 import { Link } from '../Link/Link';
 

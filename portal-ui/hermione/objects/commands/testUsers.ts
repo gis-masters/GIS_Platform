@@ -1,4 +1,4 @@
-import { RegData } from '../../../src/app/services/auth/auth.service';
+import { RegData } from '../../../src/app/services/auth/auth/auth.models';
 
 export const testUsers: Record<'admin' | 'owner' | 'contributor' | 'viewer', RegData> = {
   admin: {

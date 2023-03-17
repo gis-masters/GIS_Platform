@@ -15,8 +15,8 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { communicationService } from '../../../services/communication.service';
-import { projectsService } from '../../../services/gis/projects.service';
-import { CrgProject } from '../../../services/gis/projects.models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
+import { CrgProject } from '../../../services/gis/projects/projects.models';
 import { Button } from '../../Button/Button';
 
 const cnProjectActionsDelete = cn('ProjectActions', 'Delete');

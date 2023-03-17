@@ -1,6 +1,6 @@
 import { observable, action, makeObservable } from 'mobx';
 
-import { CrgGroup } from '../services/auth/groups.service';
+import { CrgGroup } from '../services/auth/groups/groups.models';
 
 class AllGroups {
   @observable fetching = false;

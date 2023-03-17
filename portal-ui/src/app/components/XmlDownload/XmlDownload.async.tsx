@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
 import xmlbuilder from 'xmlbuilder';
 import FileSaver from 'file-saver';
 
-import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
 import {
   CoordinateEdited,
   GeometryType,
@@ -18,7 +18,7 @@ import {
   WfsMultiLineStringGeometry,
   WfsMultiPolygonGeometry,
   WfsPointGeometry
-} from '../../services/geoserver/wfs.models';
+} from '../../services/geoserver/wfs/wfs.models';
 
 const cnXmlDownload = cn('XmlDownload');
 

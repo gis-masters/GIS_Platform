@@ -9,7 +9,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { getEditUrlFormSchema, parseUrlValue } from '../Form/Form.utils';
 import { UrlInfo } from '../Form/Control/_type/Form-Control_type_url';
-import { PropertySchemaUrl } from '../../services/data/schema.models';
+import { PropertySchemaUrl } from '../../services/data/schema/schema.models';
 import { FormViewValue } from '../Form/ViewValue/Form-ViewValue';
 import { FormDialog } from '../FormDialog/FormDialog';
 

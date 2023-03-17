@@ -8,8 +8,8 @@ import { ChevronLeft, ChevronRight, OpenInFull, CloseFullscreen } from '@mui/ico
 import { Document, Page, pdfjs } from 'react-pdf';
 
 import { getFileDownloadUrl } from '../../services/server-urls.service';
-import { FileInfo } from '../../services/data/files.service';
-import { isPdfFile } from '../../services/data/files.util';
+import { FileInfo } from '../../services/data/files/files.models';
+import { isPdfFile } from '../../services/data/files/files.util';
 import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';

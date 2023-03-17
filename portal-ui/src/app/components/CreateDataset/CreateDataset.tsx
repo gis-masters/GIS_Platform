@@ -6,7 +6,8 @@ import { PlaylistAdd } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { action, observable, makeObservable } from 'mobx';
 
-import { createDataset, Dataset, datasetSchema, NewDataset } from '../../services/data/data.service';
+import { createDataset } from '../../services/data/vectorData/vectorData.service';
+import { Dataset, datasetSchema, NewDataset } from '../../services/data/vectorData/vectorData.models';
 
 import { FormDialog } from '../FormDialog/FormDialog';
 

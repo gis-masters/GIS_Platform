@@ -1,7 +1,7 @@
 import React from 'react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertyType } from '../../../../services/data/schema.models';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
 import {
   cnXTableFilterPanelItemContent,
   XTableFilterPanelItemContentProps

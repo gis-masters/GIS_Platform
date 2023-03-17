@@ -1,4 +1,5 @@
-import { CrgUser, NewUserData, usersService } from '../../../../src/app/services/auth/users.service';
+import { usersService } from '../../../../src/app/services/auth/users/users.service';
+import { CrgUser, NewUserData } from '../../../../src/app/services/auth/users/users.models';
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { getUserByEmail } from './getUserByEmail';
 import { testUsers } from './testUsers';

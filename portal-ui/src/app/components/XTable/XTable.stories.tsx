@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { PropertyOption, PropertyType } from '../../services/data/schema.models';
+import { PropertyOption, PropertyType } from '../../services/data/schema/schema.models';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
 import { filterObjects, prepareLike } from '../../services/util/filterObjects';
 import { PageOptions, SortOrder } from '../../services/models';

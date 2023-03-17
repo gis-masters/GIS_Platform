@@ -3,7 +3,7 @@ import { action, observable } from 'mobx';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { Biotech } from '@mui/icons-material';
 
-import { PropertySchema, PropertyType } from '../../../../services/data/schema.models';
+import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
 import { validateFormValue } from '../../../../services/formValidation.service';
 import { Form } from '../../Form';
 import { sleep } from '../../../../services/util/sleep';

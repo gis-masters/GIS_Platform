@@ -4,8 +4,9 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { allGroups } from '../../stores/AllGroups.store';
-import { CrgGroup, groupsService } from '../../services/auth/groups.service';
-import { PropertyType } from '../../services/data/schema.models';
+import { groupsService } from '../../services/auth/groups/groups.service';
+import { CrgGroup } from '../../services/auth/groups/groups.models';
+import { PropertyType } from '../../services/data/schema/schema.models';
 import { XTable, XTableColumn } from '../XTable/XTable';
 
 import { OrgGroupsCreate } from './Create/OrgGroups-Create';

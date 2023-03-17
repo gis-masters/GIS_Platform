@@ -7,10 +7,11 @@ import { AddBoxOutlined } from '@mui/icons-material';
 
 import { Loading } from '../Loading/Loading';
 import { services } from '../../services/services';
-import { EditedField } from '../../services/data/schemaOld.models';
+import { EditedField } from '../../services/data/schema/schemaOld.models';
 import { EditFeatureInfo } from '../EditFeatureField/EditFeatureField';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { createLibraryRecord, LibraryRecord } from '../../services/data/doc-library.service';
+import { createLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
+import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 
 import { DocumentsListItem } from './Item/DocumentsList-Item';
 

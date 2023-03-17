@@ -3,19 +3,21 @@ import { LocalLibrary } from '@mui/icons-material';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import {
-  ContentTypeTypes,
-  DocumentLibrary,
   getLibrary,
   getLibraryRecord,
   getLibraryRecords,
-  getLibraryRecordsWithParticularOne,
+  getLibraryRecordsWithParticularOne
+} from '../../../../services/data/docLibrary/docLibrary.service';
+import {
+  ContentTypeTypes,
+  DocumentLibrary,
   LibraryRecord
-} from '../../../../services/data/doc-library.service';
+} from '../../../../services/data/docLibrary/docLibrary.models';
 import { Link } from '../../../Link/Link';
 import { Emitter } from '../../../../services/common/Emitter';
-import { Role } from '../../../../services/data/permissions.models';
+import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
-import { schemaService } from '../../../../services/data/schema.service';
+import { schemaService } from '../../../../services/data/schema/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
@@ -153,11 +155,16 @@ export class ExplorerAdapterTypeLibrary {
     store: ExplorerStore,
     service: ExplorerService
   ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
-    const response = await getLibraryRecordsWithParticularOne(item.payload.table_name, item.payload.schemaId, id, {
-      ...options,
-      filter: service.mergeCustomFilter(filter, item, store),
-      page
-    });
+    const response = await getLibraryRecordsWithParticularOne(
+      item.payload.table_name,
+      item.payload.schemaId,
+      Number(id),
+      {
+        ...options,
+        filter: service.mergeCustomFilter(filter, item, store),
+        page
+      }
+    );
 
     if (!response) {
       return;

@@ -1,5 +1,5 @@
-import { projectsService } from '../../../../src/app/services/gis/projects.service';
-import { CrgProject } from '../../../../src/app/services/gis/projects.models';
+import { projectsService } from '../../../../src/app/services/gis/projects/projects.service';
+import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
 
 declare const window: {
   projectsService: typeof projectsService;

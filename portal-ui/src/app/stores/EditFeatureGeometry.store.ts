@@ -3,8 +3,8 @@ import { isEqual } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 
 import { CrgProjection, transformGeometry } from '../services/geoserver/projections.service';
-import { GeometryType, WfsGeometry } from '../services/geoserver/wfs.models';
-import { isGeometryValid } from '../services/geoserver/wfs.util';
+import { GeometryType, WfsGeometry } from '../services/geoserver/wfs/wfs.models';
+import { isGeometryValid } from '../services/geoserver/wfs/wfs.util';
 
 export class EditFeatureGeometryStore {
   @observable geometry?: WfsGeometry;

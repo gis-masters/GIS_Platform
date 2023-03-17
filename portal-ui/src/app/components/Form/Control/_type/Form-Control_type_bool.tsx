@@ -4,7 +4,7 @@ import { withBemMod } from '@bem-react/core';
 import { Checkbox } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertyType } from '../../../../services/data/schema.models';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { generateRandomId } from '../../../../services/util/randomId';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';

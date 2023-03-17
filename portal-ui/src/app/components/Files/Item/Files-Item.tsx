@@ -12,8 +12,9 @@ import {
   isGmlFile,
   isPreviewAllowed,
   isTifFile
-} from '../../../services/data/files.util';
-import { FileConnection, FileInfo, getFileConnections } from '../../../services/data/files.service';
+} from '../../../services/data/files/files.util';
+import { getFileConnections } from '../../../services/data/files/files.service';
+import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
 import { communicationService, DataChangeEvent } from '../../../services/communication.service';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';

@@ -1,7 +1,7 @@
 import { sortBy, cloneDeep } from 'lodash';
 
-import { OldSchema, OldPropertySchema, ValueType } from '../data/schemaOld.models';
-import { ImportLayerItem, LayerAttribute } from '../geoserver/import/models';
+import { OldSchema, OldPropertySchema, ValueType } from '../data/schema/schemaOld.models';
+import { ImportLayerItem, LayerAttribute } from '../geoserver/import/import.models';
 import { CrgRootGeometry, GeometryItem } from './crg-root-geometry';
 import { AS_IS, NOT_IMPORT } from '../models';
 

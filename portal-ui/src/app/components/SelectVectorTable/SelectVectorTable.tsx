@@ -5,8 +5,8 @@ import { cn } from '@bem-react/classname';
 import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { Dataset, VectorTable } from '../../services/data/data.service';
-import { schemaService } from '../../services/data/schema.service';
+import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { schemaService } from '../../services/data/schema/schema.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';

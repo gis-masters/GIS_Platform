@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { DocumentLibrary } from '../../../src/app/services/data/doc-library.service';
-import { Role } from '../../../src/app/services/data/permissions.models';
+import { DocumentLibrary } from '../../../src/app/services/data/docLibrary/docLibrary.models';
+import { Role } from '../../../src/app/services/data/permissions/permissions.models';
 import { libraries } from '../data/libraries';
 import { SyntheticController } from './_master';
 import { err404 } from '../utils';

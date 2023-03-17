@@ -12,8 +12,8 @@ import {
   updateFileTransparentColor
 } from '../../../services/geoserver-file-edit.service';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
-import { FileConnection, FileInfo } from '../../../services/data/files.service';
-import { PropertyType, Schema } from '../../../services/data/schema.models';
+import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
+import { PropertyType, Schema } from '../../../services/data/schema/schema.models';
 import { MapSettingsOutlined } from '../../Icons/MapSettingsOutlined';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { IconButton } from '../../IconButton/IconButton';

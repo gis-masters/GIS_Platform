@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { action, computed, observable, makeObservable } from 'mobx';
 
 import { XTable } from '../XTable/XTable';
-import { CrgLayer } from '../../services/gis/projects.models';
+import { CrgLayer } from '../../services/gis/projects/projects.models';
 
 import { LayersListItemCheck } from './ItemCheck/LayersList-ItemCheck';
 import { LayersListEmpty } from './Empty/LayersList-Empty';

@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { PropertySchemaDocument } from '../../services/data/schema.models';
-import { LibraryRecord } from '../../services/data/doc-library.service';
+import { PropertySchemaDocument } from '../../services/data/schema/schema.models';
+import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 import { LookupList } from '../Lookup/List/Lookup-List';
 import { Lookup } from '../Lookup/Lookup';
 

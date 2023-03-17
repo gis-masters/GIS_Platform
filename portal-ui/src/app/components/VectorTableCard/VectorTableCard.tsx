@@ -4,7 +4,7 @@ import { cn } from '@bem-react/classname';
 
 import { formatDate } from '../../services/util/date.util';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
-import { VectorTable, vectorTableSchema } from '../../services/data/data.service';
+import { VectorTable, vectorTableSchema } from '../../services/data/vectorData/vectorData.models';
 
 import '!style-loader!css-loader!sass-loader!./VectorTableCard.scss';
 

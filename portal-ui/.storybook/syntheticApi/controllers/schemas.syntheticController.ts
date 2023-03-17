@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { OldSchema } from '../../../src/app/services/data/schemaOld.models';
+import { OldSchema } from '../../../src/app/services/data/schema/schemaOld.models';
 import { SyntheticController } from './_master';
 import { schemas } from '../data/schemas';
 import { err404 } from '../utils';

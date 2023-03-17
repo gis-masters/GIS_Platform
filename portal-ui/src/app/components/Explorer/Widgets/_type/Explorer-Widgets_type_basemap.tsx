@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
-import { Basemap } from '../../../../services/data/basemaps.models';
+import { Basemap } from '../../../../services/data/basemaps/basemaps.models';
 import { ConnectionsBasemapToProjectsWidget } from '../../../ConnectionsBasemapToProjectsWidget/ConnectionsBasemapToProjectsWidget';
 import { BasemapDetails } from '../../../BasemapDetails/BasemapDetails';
 

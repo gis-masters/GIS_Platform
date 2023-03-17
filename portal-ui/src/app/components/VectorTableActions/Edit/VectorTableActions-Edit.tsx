@@ -6,7 +6,8 @@ import { IconButton, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { VectorTable, vectorTableSchema, updateVectorTable } from '../../../services/data/data.service';
+import { VectorTable, vectorTableSchema } from '../../../services/data/vectorData/vectorData.models';
+import { updateVectorTable } from '../../../services/data/vectorData/vectorData.service';
 import { getPatch } from '../../../services/util/patch';
 import { FormDialog } from '../../FormDialog/FormDialog';
 

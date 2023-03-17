@@ -1,6 +1,6 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { ScenarioScope } from '../../scenarioScope';
+import { ScenarioScope } from '../../ScenarioScope';
 import { createDatasetAs } from './createDatasetAs';
 import { deleteAllDatasetsAsAdmin } from './deleteAllDatasetsAsAdmin';
 import { testUsers } from '../auth/testUsers';

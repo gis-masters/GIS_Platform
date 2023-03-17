@@ -5,9 +5,9 @@ import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
 import { StickyNote2Outlined } from '@mui/icons-material';
 
-import { MessagesRegistriesMessages } from '../../../services/data/messagesRegistries.service';
+import { MessagesRegistriesMessages } from '../../../services/data/messagesRegistries/messagesRegistries.models';
 import { MessagesRegistryDialog } from '../../MessagesRegistryDialog/MessagesRegistryDialog';
-import { Schema } from '../../../services/data/schema.models';
+import { Schema } from '../../../services/data/schema/schema.models';
 import { IconButton } from '../../IconButton/IconButton';
 
 const cnMessagesRegistryOpenAction = cn('MessagesRegistry', 'OpenAction');

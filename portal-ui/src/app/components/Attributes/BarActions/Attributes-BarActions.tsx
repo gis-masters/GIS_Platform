@@ -10,12 +10,12 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, Tooltip } from
 import { AttributesBarActionExport } from '../BarActionExport/Attributes-BarActionExport';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton';
-import { isUpdateAllowed } from '../../../services/data/permissions.service';
+import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
-import { CrgVectorLayer } from '../../../services/gis/projects.models';
-import { deleteFeatures } from '../../../services/data/data.service';
-import { WfsFeature } from '../../../services/geoserver/wfs.models';
+import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
+import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { AttributesTableRecord } from '../Table/Attributes-Table';
 import { mapService } from '../../../services/map/map.service';
 import { IconButton } from '../../IconButton/IconButton';

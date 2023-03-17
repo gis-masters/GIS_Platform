@@ -12,7 +12,7 @@ import { cn } from '@bem-react/classname';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { transform, olProjection } from '../../../services/geoserver/projections.service';
-import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs.models';
+import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { communicationService } from '../../../services/communication.service';
 import { mapService } from '../../../services/map/map.service';
 import { Emitter } from '../../../services/common/Emitter';

@@ -3,7 +3,7 @@ import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
 import { mapStore } from '../../../stores/Map.store';
-import { CrgVectorLayer } from '../../../services/gis/projects.models';
+import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
 
 import { AttributesCounterItem } from '../CounterItem/Attributes-CounterItem';
 

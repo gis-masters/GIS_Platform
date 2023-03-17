@@ -8,9 +8,9 @@ import { cloneDeep } from 'lodash';
 
 import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { CrgVectorLayer } from '../../../services/gis/projects.models';
-import { getFeatures } from '../../../services/geoserver/wfs.service';
-import { WfsFeature } from '../../../services/geoserver/wfs.models';
+import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
+import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { PageOptions } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-CheckMaster.scss';

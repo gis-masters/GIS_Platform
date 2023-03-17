@@ -2,7 +2,7 @@ import { ReactElement } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { SortParams } from '../../../../services/util/sortObjects';
-import { PropertyType } from '../../../../services/data/schema.models';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
 
 import { XTable, XTableColumn, XTableProps } from './../../XTable';
 import { Template } from '../XTable-Filter-story-template';

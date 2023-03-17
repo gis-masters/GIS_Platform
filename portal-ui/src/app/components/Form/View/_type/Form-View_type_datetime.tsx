@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertySchemaDatetime, PropertyType } from '../../../../services/data/schema.models';
+import { PropertySchemaDatetime, PropertyType } from '../../../../services/data/schema/schema.models';
 import { formatDate } from '../../../../services/util/date.util';
 
 import { cnFormView } from '../Form-View';

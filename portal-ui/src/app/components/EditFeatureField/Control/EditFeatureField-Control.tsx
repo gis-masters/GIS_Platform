@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { ValueType, EditedField } from '../../../services/data/schemaOld.models';
+import { ValueType, EditedField } from '../../../services/data/schema/schemaOld.models';
 import { EditFeatureInfo } from '../EditFeatureField';
 
 export const cnEditFeatureFieldControl = cn('EditFeatureField', 'Control');

@@ -18,10 +18,16 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../../stores/AllUsers.store';
 import { allGroups } from '../../../stores/AllGroups.store';
-import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../../services/data/permissions.models';
+import {
+  PrincipalType,
+  Role,
+  RoleAssignmentBody,
+  roles,
+  rolesTitles
+} from '../../../services/data/permissions/permissions.models';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
-import { CrgGroup } from '../../../services/auth/groups.service';
-import { CrgUser } from '../../../services/auth/users.service';
+import { CrgGroup } from '../../../services/auth/groups/groups.models';
+import { CrgUser } from '../../../services/auth/users/users.models';
 import { XTable, XTableColumn } from '../../XTable/XTable';
 import { Button } from '../../Button/Button';
 

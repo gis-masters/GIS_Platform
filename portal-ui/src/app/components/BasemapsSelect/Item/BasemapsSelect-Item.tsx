@@ -6,7 +6,7 @@ import { MenuItem } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { basemapsStore } from '../../../stores/Basemaps.store';
-import { Basemap } from '../../../services/data/basemaps.models';
+import { Basemap } from '../../../services/data/basemaps/basemaps.models';
 import { services } from '../../../services/services';
 import { sleep } from '../../../services/util/sleep';
 

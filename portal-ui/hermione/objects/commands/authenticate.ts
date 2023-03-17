@@ -2,7 +2,8 @@ import { Page } from '../Page';
 import { HomePage } from '../pages/Home.page';
 import { testUsers } from './testUsers';
 import { createTestOrganization } from './createOrganization';
-import { AuthenticationResult, authService } from '../../../src/app/services/auth/auth.service';
+import { authService } from '../../../src/app/services/auth/auth/auth.service';
+import { AuthenticationResult } from '../../../src/app/services/auth/auth/auth.models';
 import { sleep } from '../../../src/app/services/util/sleep';
 import { createTestUsers } from './createUser';
 

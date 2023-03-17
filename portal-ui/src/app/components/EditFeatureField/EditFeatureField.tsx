@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { ValueType, EditedField } from '../../services/data/schemaOld.models';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { ValueType, EditedField } from '../../services/data/schema/schemaOld.models';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 
 import { EditFeatureFieldField } from './Field/EditFeatureField-Field';
 import { EditFeatureFieldLabel } from './Label/EditFeatureField-Label';

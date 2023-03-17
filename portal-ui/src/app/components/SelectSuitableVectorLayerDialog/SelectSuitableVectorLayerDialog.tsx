@@ -5,11 +5,11 @@ import { action, observable, makeObservable } from 'mobx';
 
 import { XTableColumn } from '../XTable/XTable';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { schemaService } from '../../services/data/schema.service';
-import { isUpdateAllowed } from '../../services/data/permissions.service';
-import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { schemaService } from '../../services/data/schema/schema.service';
+import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
+import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 
 const cnSelectSuitableVectorLayerDialog = cn('SelectSuitableVectorLayerDialog');
 

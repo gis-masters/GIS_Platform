@@ -7,7 +7,7 @@ import {
   ImportTaskProgress,
   ScratchImport,
   TaskStatusCode
-} from '../services/geoserver/import/models';
+} from '../services/geoserver/import/import.models';
 
 export interface ImportInfo {
   file?: File;

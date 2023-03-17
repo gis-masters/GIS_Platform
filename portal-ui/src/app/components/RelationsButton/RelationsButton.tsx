@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
 import { cqlBuild } from '../../services/util/cqlBuild';
-import { Relation } from '../../services/data/schema.models';
+import { Relation } from '../../services/data/schema/schema.models';
 import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
 import { Link } from '../Link/Link';
 

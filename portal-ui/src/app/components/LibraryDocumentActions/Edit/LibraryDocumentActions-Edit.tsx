@@ -5,8 +5,9 @@ import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord, updateLibraryRecord } from '../../../services/data/doc-library.service';
-import { PropertySchema, PropertyType, Schema } from '../../../services/data/schema.models';
+import { updateLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
+import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { PropertySchema, PropertyType, Schema } from '../../../services/data/schema/schema.models';
 import { getPatch } from '../../../services/util/patch';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { TextBadge } from '../../TextBadge/TextBadge';

@@ -7,10 +7,17 @@ import { boundMethod } from 'autobind-decorator';
 
 import { allProjects } from '../../stores/AllProjects.store';
 import { allDataEntitiesStore } from '../../stores/AllDataEntities.store';
-import { Role, roles, rolesTitles, PrincipalType, projectRoles } from '../../services/data/permissions.models';
-import { PermissionsListItem } from '../../services/data/allPermissions.service';
-import { Dataset, VectorTable, tablesEqual } from '../../services/data/data.service';
-import { CrgProject } from '../../services/gis/projects.models';
+import {
+  Role,
+  roles,
+  rolesTitles,
+  PrincipalType,
+  projectRoles
+} from '../../services/data/permissions/permissions.models';
+import { PermissionsListItem } from '../../services/data/permissions/allPermissions.service';
+import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { tablesEqual } from '../../services/data/vectorData/vectorData.util';
+import { CrgProject } from '../../services/gis/projects/projects.models';
 import {
   baseXTablePropsSet,
   PermissionsListItemType,
@@ -231,9 +238,9 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   @action.bound
   private handleCheck(item: CrgProject | VectorTable | Dataset, checked: boolean) {
     if (checked) {
-      (this.selectedItems as typeof item[]).push(item);
+      (this.selectedItems as (typeof item)[]).push(item);
     } else {
-      this.selectedItems.splice((this.selectedItems as typeof item[]).indexOf(item), 1);
+      this.selectedItems.splice((this.selectedItems as (typeof item)[]).indexOf(item), 1);
     }
   }
 }

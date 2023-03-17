@@ -4,9 +4,10 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { getVectorTable, VectorTable, vectorTableSchema } from '../../../../services/data/data.service';
-import { getTableRoleAssignmentUrl } from '../../../../services/server-urls.service';
-import { Role } from '../../../../services/data/permissions.models';
+import { VectorTable, vectorTableSchema } from '../../../../services/data/vectorData/vectorData.models';
+import { getVectorTable } from '../../../../services/data/vectorData/vectorData.service';
+import { getTableRoleAssignmentsUrl } from '../../../../services/server-urls.service';
+import { Role } from '../../../../services/data/permissions/permissions.models';
 import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
@@ -85,7 +86,7 @@ class ExplorerWidgetsTypeTable extends Component<ExplorerWidgetsProps> {
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const url = await getTableRoleAssignmentUrl(payload.dataset, payload.identifier);
+    const url = await getTableRoleAssignmentsUrl(payload.dataset, payload.identifier);
     const table = await getVectorTable(payload.dataset, payload.identifier);
 
     if (this.operationId === operationId) {

@@ -9,7 +9,7 @@ import { Button } from '../../../Button/Button';
 import { Loading } from '../../../Loading/Loading';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
 import { HtmlContent } from '../../../HtmlContent/HtmlContent';
-import { OldPropertySchemaUrl, ValueType } from '../../../../services/data/schemaOld.models';
+import { OldPropertySchemaUrl, ValueType } from '../../../../services/data/schema/schemaOld.models';
 import { services } from '../../../../services/services';
 import { Link } from '../../../Link/Link';
 

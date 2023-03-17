@@ -3,7 +3,7 @@ import { withBemMod } from '@bem-react/core';
 import { action, makeObservable } from 'mobx';
 import { Coordinate } from 'ol/coordinate';
 
-import { GeometryType, WfsMultiPointGeometry } from '../../../../services/geoserver/wfs.models';
+import { GeometryType, WfsMultiPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 
 import { EditFeatureGeometryGroup } from '../../Group/EditFeatureGeometry-Group';
 import { EditFeatureGeometryFormProps, cnEditFeatureGeometryForm } from '../EditFeatureGeometry-Form';

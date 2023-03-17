@@ -3,7 +3,7 @@ import { Paper } from '@mui/material';
 import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 
-import { Schema } from '../../services/data/schema.models';
+import { Schema } from '../../services/data/schema/schema.models';
 import { CommonDiRegistry } from '../../services/di-registry';
 
 import '!style-loader!css-loader!sass-loader!./ViewContentWidget.scss';

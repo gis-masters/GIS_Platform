@@ -5,7 +5,7 @@ import { TableCell, TableCellProps, Tooltip } from '@mui/material';
 import { VisibilityOff } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { PropertyType } from '../../../services/data/schema.models';
+import { PropertyType } from '../../../services/data/schema/schema.models';
 import { FilterQuery } from '../../../services/util/filterObjects';
 import { SortParams } from '../../../services/util/sortObjects';
 import { DescriptionMark } from '../../DescriptionMark/DescriptionMark';

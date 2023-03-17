@@ -5,7 +5,7 @@ import { Popover } from '@mui/material';
 import { pluralize } from 'numeralize-ru';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertyType } from '../../../../services/data/schema.models';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { UrlInfo } from '../../../Form/Control/_type/Form-Control_type_url';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
 import { UrlsList } from '../../../UrlsList/UrlsList';

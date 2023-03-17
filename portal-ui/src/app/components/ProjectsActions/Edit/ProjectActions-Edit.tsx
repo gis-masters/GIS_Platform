@@ -6,9 +6,9 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
 
-import { projectsService } from '../../../services/gis/projects.service';
-import { CrgProject } from '../../../services/gis/projects.models';
-import { Schema } from '../../../services/data/schema.models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
+import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { Schema } from '../../../services/data/schema/schema.models';
 import { IconButton } from '../../IconButton/IconButton';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { getPatch } from '../../../services/util/patch';

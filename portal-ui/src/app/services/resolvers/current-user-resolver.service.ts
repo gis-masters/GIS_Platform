@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 
-import { usersService } from '../auth/users.service';
+import { usersService } from '../auth/users/users.service';
 
 @Injectable({
   providedIn: 'root'

@@ -1,5 +1,5 @@
-import { OldSchema, ValueType } from '../../../src/app/services/data/schemaOld.models';
-import { GeometryType } from '../../../src/app/services/geoserver/wfs.models';
+import { OldSchema, ValueType } from '../../../src/app/services/data/schema/schemaOld.models';
+import { GeometryType } from '../../../src/app/services/geoserver/wfs/wfs.models';
 
 export const schemas: OldSchema[] = [
   {

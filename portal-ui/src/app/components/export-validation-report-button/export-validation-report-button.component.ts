@@ -4,7 +4,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { registry } from '../../services/di-registry';
-import { CrgVectorLayer } from '../../services/gis/projects.models';
+import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
 import { ExportValidationReportButton } from '../ExportValidationReportButton/ExportValidationReportButton';
 
 const ExportValidationReportButtonWithRegistry = withRegistry(registry)(ExportValidationReportButton);

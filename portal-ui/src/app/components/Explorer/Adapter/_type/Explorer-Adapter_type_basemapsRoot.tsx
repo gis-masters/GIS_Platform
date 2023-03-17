@@ -2,8 +2,12 @@ import React, { ReactNode } from 'react';
 
 import { Emitter } from '../../../../services/common/Emitter';
 import { PageOptions, SortOrder } from '../../../../services/models';
-import { Basemap } from '../../../../services/data/basemaps.models';
-import { getBasemap, getBasemaps, getBasemapsWithParticularOne } from '../../../../services/data/basemaps.service';
+import { Basemap } from '../../../../services/data/basemaps/basemaps.models';
+import {
+  getBasemap,
+  getBasemaps,
+  getBasemapsWithParticularOne
+} from '../../../../services/data/basemaps/basemaps.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
@@ -84,7 +88,7 @@ export class ExplorerAdapterTypeBasemapsRoot {
   }
 
   static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData<Basemap>> {
-    const basemap = await getBasemap(id);
+    const basemap = await getBasemap(Number(id));
 
     return {
       type: ExplorerItemType.BASEMAP,

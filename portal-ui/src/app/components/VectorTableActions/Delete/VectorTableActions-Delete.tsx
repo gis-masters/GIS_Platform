@@ -15,7 +15,8 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { VectorTable, deleteVectorTable } from '../../../services/data/data.service';
+import { deleteVectorTable } from '../../../services/data/vectorData/vectorData.service';
+import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { Button } from '../../Button/Button';
 
 const cnVectorTableActionsDelete = cn('VectorTableActions', 'Delete');

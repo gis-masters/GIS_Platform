@@ -10,7 +10,7 @@ import {
   OldPropertySchemaStringText,
   OldPropertySchemaInt,
   OldPropertySchemaDouble
-} from '../data/schemaOld.models';
+} from '../data/schema/schemaOld.models';
 import { services } from '../services';
 import { Fias } from '../data/fias.service';
 

@@ -4,7 +4,7 @@ import { InsertDriveFile, InsertDriveFileOutlined } from '@mui/icons-material';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { normalizeExtension } from '../../services/data/files.util';
+import { normalizeExtension } from '../../services/data/files/files.util';
 
 import '!style-loader!css-loader!sass-loader!./FileIcon.scss';
 

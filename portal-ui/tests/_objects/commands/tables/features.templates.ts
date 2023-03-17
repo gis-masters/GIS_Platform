@@ -1,8 +1,8 @@
 import { clone } from 'lodash';
 import { faker } from '@faker-js/faker';
 
-import { GeometryType, NewWfsFeature } from '../../../../src/app/services/geoserver/wfs.models';
-import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema.models';
+import { GeometryType, NewWfsFeature } from '../../../../src/app/services/geoserver/wfs/wfs.models';
+import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
 
 const baseFeature: NewWfsFeature = {
   type: 'Feature',

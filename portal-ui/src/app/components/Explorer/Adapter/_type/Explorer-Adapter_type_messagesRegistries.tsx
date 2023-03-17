@@ -5,7 +5,7 @@ import { Tooltip } from '@mui/material';
 import { staticImplements } from '../../../../services/util/staticImplements';
 
 import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
-import { MessagesRegistry } from '../../../../services/data/messagesRegistries.service';
+import { MessagesRegistry } from '../../../../services/data/messagesRegistries/messagesRegistries.models';
 import { services } from '../../../../services/services';
 
 declare module '../../Explorer.models' {

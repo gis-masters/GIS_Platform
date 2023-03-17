@@ -6,17 +6,13 @@ import { InsertDriveFile, NoteAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import {
-  createLibraryRecord,
-  DocumentLibrary,
-  getLibrary,
-  LibraryRecord
-} from '../../../services/data/doc-library.service';
+import { createLibraryRecord, getLibrary } from '../../../services/data/docLibrary/docLibrary.service';
+import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
 import { sleep } from '../../../services/util/sleep';
 import { getDefaultValues } from '../../Form/Form.utils';
-import { Schema } from '../../../services/data/schema.models';
-import { schemaService } from '../../../services/data/schema.service';
-import { applyContentType } from '../../../services/data/schema.utils';
+import { Schema } from '../../../services/data/schema/schema.models';
+import { schemaService } from '../../../services/data/schema/schema.service';
+import { applyContentType } from '../../../services/data/schema/schema.utils';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 import { FormDialog } from '../../FormDialog/FormDialog';
 

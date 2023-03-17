@@ -16,18 +16,19 @@ import {
 import { boundMethod } from 'autobind-decorator';
 
 import { alertLayerOperationError, createLayer } from '../../../services/gis/layers.service';
-import { Dataset, VectorTable, getAllDatasetTables } from '../../../services/data/data.service';
-import { CrgProject, CrgVectorLayer, NewCrgLayer } from '../../../services/gis/projects.models';
+import { getAllVectorTablesInDataset } from '../../../services/data/vectorData/vectorData.service';
+import { Dataset, VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { CrgProject, CrgVectorLayer, NewCrgLayer } from '../../../services/gis/projects/projects.models';
 import { SelectProjectsDialog } from '../../SelectProjectDialog/SelectProjectDialog';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
-import { projectsService } from '../../../services/gis/projects.service';
+import { projectsService } from '../../../services/gis/projects/projects.service';
 import { vectorLayerDefaults } from '../../../services/gis/layers.utils';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 import { LayerAdd } from '../../Icons/LayerAdd';
 import { Loading } from '../../Loading/Loading';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
-import { schemaService } from '../../../services/data/schema.service';
+import { schemaService } from '../../../services/data/schema/schema.service';
 
 const cnDatasetActionsAddToProject = cn('DatasetActions', 'AddToProject');
 
@@ -110,7 +111,7 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
 
     let vectorTables: VectorTable[];
     try {
-      vectorTables = await getAllDatasetTables(dataset);
+      vectorTables = await getAllVectorTablesInDataset(dataset);
     } catch {
       Toast.error({
         message: `Ошибка получения таблиц в наборе "${dataset.title}" (${dataset.identifier})`

@@ -19,7 +19,7 @@ import { EventsKey } from 'ol/events';
 import { MapMode, mapStore } from '../../stores/Map.store';
 import { UnitsOfAreaMeasurement } from '../util/open-layers.util';
 import { communicationService } from '../communication.service';
-import { GeometryType } from '../geoserver/wfs.models';
+import { GeometryType } from '../geoserver/wfs/wfs.models';
 import { mapService } from './map.service';
 import { MapMeasureTooltip } from '../../components/MapMeasureTooltip/MapMeasureTooltip';
 

@@ -6,11 +6,12 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { allPermissions } from '../../stores/AllPermissions.store';
-import { RoleAssignmentBody, PrincipalType, projectRoles } from '../../services/data/permissions.models';
-import { PermissionsListItem } from '../../services/data/allPermissions.service';
+import { RoleAssignmentBody, PrincipalType, projectRoles } from '../../services/data/permissions/permissions.models';
+import { PermissionsListItem } from '../../services/data/permissions/allPermissions.service';
 import { communicationService } from '../../services/communication.service';
-import { CrgProject } from '../../services/gis/projects.models';
-import { Dataset, VectorTable, tablesEqual } from '../../services/data/data.service';
+import { CrgProject } from '../../services/gis/projects/projects.models';
+import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { tablesEqual } from '../../services/data/vectorData/vectorData.util';
 import {
   addDatasetPermission,
   addProjectPermission,
@@ -18,7 +19,7 @@ import {
   removeDatasetPermission,
   removeProjectPermission,
   removeTablePermission
-} from '../../services/data/permissions.client';
+} from '../../services/data/permissions/permissions.service';
 import { TextBadge } from '../TextBadge/TextBadge';
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';

@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { PropertyType, PropertySchema } from '../../../services/data/schema.models';
+import { PropertyType, PropertySchema } from '../../../services/data/schema/schema.models';
 import { ChildrenProps } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./Form-Control.scss';

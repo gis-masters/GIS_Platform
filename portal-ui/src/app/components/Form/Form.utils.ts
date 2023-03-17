@@ -9,8 +9,8 @@ import {
   PropertyType,
   Schema,
   ValueFormula
-} from '../../services/data/schema.models';
-import { valueWellKnownFormulas } from '../../services/data/schema.utils';
+} from '../../services/data/schema/schema.models';
+import { valueWellKnownFormulas } from '../../services/data/schema/schema.utils';
 import { UrlInfo } from './Control/_type/Form-Control_type_url';
 import { Fias } from '../../services/data/fias.service';
 import { services } from '../../services/services';

@@ -4,7 +4,7 @@ import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
 
 import { registry } from '../../services/di-registry';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { FeaturesListSidebar } from '../FeaturesListSidebar/FeaturesListSidebar';
 
 const FeaturesListSidebarWithRegistry = withRegistry(registry)(FeaturesListSidebar);

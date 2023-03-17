@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { CrgGroup } from '../../../src/app/services/auth/groups.service';
+import { CrgGroup } from '../../../src/app/services/auth/groups/groups.models';
 import { queryObjects } from '../../../src/app/services/util/queryObjects';
 import { groups } from '../data/groups';
 import { SyntheticController } from './_master';

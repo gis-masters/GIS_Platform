@@ -5,8 +5,8 @@ import { IconButton, Tooltip } from '@mui/material';
 import { PlaylistAdd } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
-import { Schema, schemaForSchema } from '../../services/data/schema.models';
-import { schemaService } from '../../services/data/schema.service';
+import { Schema, schemaForSchema } from '../../services/data/schema/schema.models';
+import { schemaService } from '../../services/data/schema/schema.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 
 @observer

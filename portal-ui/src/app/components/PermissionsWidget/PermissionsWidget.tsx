@@ -8,11 +8,19 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
-import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../services/data/permissions.models';
-import { getProjectPermissions, getTablePermissions } from '../../services/data/permissions.client';
+import {
+  PrincipalType,
+  Role,
+  RoleAssignmentBody,
+  roles,
+  rolesTitles
+} from '../../services/data/permissions/permissions.models';
+import { getProjectPermissions, getTablePermissions } from '../../services/data/permissions/permissions.service';
 import { communicationService } from '../../services/communication.service';
-import { CrgGroup, groupsService } from '../../services/auth/groups.service';
-import { CrgUser, usersService } from '../../services/auth/users.service';
+import { groupsService } from '../../services/auth/groups/groups.service';
+import { CrgGroup } from '../../services/auth/groups/groups.models';
+import { usersService } from '../../services/auth/users/users.service';
+import { CrgUser } from '../../services/auth/users/users.models';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
 import { PermissionsEditDialog } from '../PermissionsEditDialog/PermissionsEditDialog';
 import { PseudoLink } from '../PseudoLink/PseudoLink';

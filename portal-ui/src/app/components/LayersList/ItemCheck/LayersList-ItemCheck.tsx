@@ -3,7 +3,7 @@ import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 
-import { CrgLayer } from '../../../services/gis/projects.models';
+import { CrgLayer } from '../../../services/gis/projects/projects.models';
 
 export interface LayersListItemCheckProps {
   layer: CrgLayer;

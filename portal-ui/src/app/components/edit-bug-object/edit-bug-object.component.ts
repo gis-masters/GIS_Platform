@@ -4,15 +4,15 @@ import { NGXLogger } from 'ngx-logger';
 import { debounceTime } from 'rxjs/operators';
 
 import { BaseEdit } from './base-edit';
-import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { getFeatureById } from '../../services/geoserver/wfs.service';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { mapService } from '../../services/map/map.service';
 import { communicationService, ObjectDto } from '../../services/communication.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { validationService } from '../../services/data/validation.service';
-import { schemaService } from '../../services/data/schema.service';
-import { ValueType } from '../../services/data/schemaOld.models';
+import { initValidation } from '../../services/data/validation/validation.service';
+import { schemaService } from '../../services/data/schema/schema.service';
+import { ValueType } from '../../services/data/schema/schemaOld.models';
 import { Toast } from '../Toast/Toast';
 
 @Component({
@@ -75,7 +75,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
         Toast.success('Сохранено');
 
         mapService.refreshAllLayers();
-        await validationService.initValidation([crgLayer]);
+        await initValidation([crgLayer]);
         communicationService.needUpdateValidationResults.emit();
       } else {
         this.logger.warn('UpdateFeature response: ', response);
@@ -92,7 +92,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   private async handleObject(objectDto: ObjectDto) {
     try {
-      const wfsFeature: WfsFeature = await getFeatureById(objectDto.crgLayer.complexName, objectDto.id);
+      const [wfsFeature] = await getFeaturesById([objectDto.id], objectDto.crgLayer.complexName);
 
       this.isFeatureTypeLoaded = true;
 

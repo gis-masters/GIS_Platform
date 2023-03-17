@@ -7,7 +7,7 @@ import { ListAlt } from '@mui/icons-material';
 import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 
-import { getEmptyGeometry, selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
+import { getEmptyGeometry, selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { communicationService } from '../../../services/communication.service';
 import {
   CoordinateEdited,
@@ -16,7 +16,7 @@ import {
   WfsMultiLineStringGeometry,
   WfsMultiPolygonGeometry,
   WfsPointGeometry
-} from '../../../services/geoserver/wfs.models';
+} from '../../../services/geoserver/wfs/wfs.models';
 import { IconButton } from '../../IconButton/IconButton';
 import { Button } from '../../Button/Button';
 

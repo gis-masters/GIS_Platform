@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash';
 import moment from 'moment';
 
 import { getEditUrlFormSchema, parseUrlValue } from '../components/Form/Form.utils';
-import { FileInfo } from './data/files.service';
+import { FileInfo } from './data/files/files.models';
 import { knownRegex } from './regexp.service';
 import {
   PropertyType,
@@ -14,8 +14,8 @@ import {
   PropertySchemaString,
   PropertySchemaUrl,
   ValueFormula
-} from './data/schema.models';
-import { valueWellKnownFormulas } from './data/schema.utils';
+} from './data/schema/schema.models';
+import { valueWellKnownFormulas } from './data/schema/schema.utils';
 
 const messages = {
   required: 'Обязательное поле ',

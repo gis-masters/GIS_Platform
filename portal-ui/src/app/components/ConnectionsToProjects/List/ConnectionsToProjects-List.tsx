@@ -1,7 +1,7 @@
 import { cn } from '@bem-react/classname';
 import { FC } from 'react';
 
-import { FileConnection } from '../../../services/data/files.service';
+import { FileConnection } from '../../../services/data/files/files.models';
 
 import { ConnectionsToProjectsType } from '../ConnectionsToProjects';
 

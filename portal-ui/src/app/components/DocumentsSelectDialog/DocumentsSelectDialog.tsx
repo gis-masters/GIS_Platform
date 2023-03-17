@@ -9,7 +9,8 @@ import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
 import { CommonDiRegistry } from '../../services/di-registry';
-import { DocumentLibrary, getLibrary, LibraryRecord } from '../../services/data/doc-library.service';
+import { getLibrary } from '../../services/data/docLibrary/docLibrary.service';
+import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { DocumentInfo } from '../Documents/Documents';
 import { Button } from '../Button/Button';

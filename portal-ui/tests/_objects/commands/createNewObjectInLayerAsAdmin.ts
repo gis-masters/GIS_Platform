@@ -1,14 +1,18 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { createVectorTableRecord, getDatasets, getDatasetTables } from '../../../src/app/services/data/data.service';
-import { GeometryType, WfsFeature } from '../../../src/app/services/geoserver/wfs.models';
+import {
+  createFeature,
+  getDatasets,
+  getVectorTables
+} from '../../../src/app/services/data/vectorData/vectorData.service';
+import { GeometryType, WfsFeature } from '../../../src/app/services/geoserver/wfs/wfs.models';
 
 import { authenticateAsAdmin } from './auth/authenticate';
 
 declare const window: {
-  getDatasetTables: typeof getDatasetTables;
+  getVectorTables: typeof getVectorTables;
   getDatasets: typeof getDatasets;
-  createVectorTableRecord: typeof createVectorTableRecord;
+  createFeature: typeof createFeature;
 };
 
 export async function createNewObjectInLayerAsAdmin(tableTitle: string, datasetTitle: string): Promise<void> {
@@ -23,7 +27,7 @@ export async function createNewObjectInLayerAsAdmin(tableTitle: string, datasetT
       if (!dataset) {
         return;
       }
-      const [vectorTables] = await window.getDatasetTables(dataset.identifier, { page: 0, pageSize: 10 });
+      const [vectorTables] = await window.getVectorTables(dataset.identifier, { page: 0, pageSize: 10 });
       const vectorTable = vectorTables.find(item => item.title === tableTitle);
 
       if (!vectorTable) {
@@ -48,7 +52,7 @@ export async function createNewObjectInLayerAsAdmin(tableTitle: string, datasetT
         properties: {}
       };
 
-      await window.createVectorTableRecord(dataset.identifier, vectorTable.identifier, feature as WfsFeature);
+      await window.createFeature(dataset.identifier, vectorTable.identifier, feature as WfsFeature);
       callback();
     },
     tableTitle,

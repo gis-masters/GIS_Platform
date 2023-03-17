@@ -10,7 +10,7 @@ import { XTableColumn } from '../XTable';
 import { cnXTableFilterPanelItem, XTableFilterPanelItem } from '../FilterPanelItem/XTable-FilterPanelItem';
 
 import { FilterQuery, getFieldFilterPart } from '../../../services/util/filterObjects';
-import { PropertyType } from '../../../services/data/schema.models';
+import { PropertyType } from '../../../services/data/schema/schema.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-FilterPanel.scss';
 
