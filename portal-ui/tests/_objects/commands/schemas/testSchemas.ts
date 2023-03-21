@@ -222,23 +222,47 @@ const testSortingSchema: Schema = {
   properties: [
     {
       name: 'number_int',
-      title: 'Целое число int',
+      title: 'Поле INT',
       propertyType: PropertyType.INT
     },
     {
       name: 'number_double',
-      title: 'Дробное число double',
+      title: 'Поле FLOAT',
       propertyType: PropertyType.FLOAT
     },
     {
       name: 'some_string',
-      title: 'Строка',
+      title: 'Поле STRING',
       propertyType: PropertyType.STRING
     },
     {
       name: 'some_date',
-      title: 'Дата',
+      title: 'Поле DATETIME',
       propertyType: PropertyType.DATETIME
+    },
+    {
+      name: 'is_enabled',
+      title: 'Поле BOOL',
+      propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'obj_code',
+      title: 'Поле CHOICE',
+      propertyType: PropertyType.CHOICE,
+      options: [
+        {
+          title: 'Модульная двухсторонняя',
+          value: '1111'
+        },
+        {
+          title: 'Модульная односторонняя',
+          value: '1122'
+        },
+        {
+          title: 'Отдельно стоящий короб',
+          value: '55'
+        }
+      ]
     },
     {
       name: 'shape',
@@ -248,8 +272,46 @@ const testSortingSchema: Schema = {
   ]
 };
 
+const testSortingSchema2: Schema = {
+  name: 'test_sorting__schema2',
+  title: 'Схема с типами данных недоступными для сортировки',
+  description: 'Схема для тестирования сортировки в атрибутивной таблице. Версия 2',
+  readOnly: false,
+  tableName: 'test_sorting__v2',
+  styleName: 'generic',
+  geometryType: GeometryType.MULTI_POLYGON,
+  properties: [
+    {
+      name: 'field_url',
+      title: 'Поле URL',
+      propertyType: PropertyType.URL
+    },
+    {
+      name: 'field_fias',
+      title: 'Поле FIAS',
+      propertyType: PropertyType.FIAS
+    },
+    {
+      name: 'field_file',
+      title: 'Поле FILE',
+      propertyType: PropertyType.FILE
+    },
+    {
+      name: 'field_document',
+      title: 'Поле DOCUMENT',
+      propertyType: PropertyType.DOCUMENT
+    },
+    {
+      name: 'shape',
+      title: 'Поле GEOMETRY',
+      propertyType: PropertyType.GEOMETRY
+    }
+  ]
+};
+
 export const testSchemas: { [key: string]: Schema } = {
   'Схема с представлениями': schemaWithViews,
   'Схема без представлений': schemaWithoutViews,
-  'Схема для тестирования сортировки': testSortingSchema
+  'Схема для тестирования сортировки': testSortingSchema,
+  'Схема с типами данных недоступными для сортировки': testSortingSchema2
 };

@@ -1,5 +1,6 @@
 import { isEqual } from 'lodash';
-import { When, Then } from '@wdio/cucumber-framework';
+import { WaitUntilOptions } from 'webdriverio';
+import { DataTable, Then, When } from '@wdio/cucumber-framework';
 
 import { attributesBlock } from './Attributes.block';
 import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
@@ -7,8 +8,9 @@ import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
 import { ScenarioScope } from '../../ScenarioScope';
 import { getSortDirection } from '../../getSortDirection';
 import { sortObjects } from '../../../../src/app/services/util/sortObjects';
+import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
 
-const waitUntilOptions = {
+const waitUntilOptions: WaitUntilOptions = {
   timeout: 10_000,
   timeoutMsg: 'Результат не был достигнут после 10 секунд ожидания'
 };
@@ -37,9 +39,18 @@ When(
 
 Then(
   'сортировка в атрибутивной таблице для атрибута: {string} соответствует ожидаемому: {string}',
-  async function (title: string, expectedAsString: string) {
+  async function (this: ScenarioScope, title: string, expectedAsString: string) {
+    const columnType = await attributesBlock.getColumnType(title);
+
     await browser.waitUntil(async () => {
-      const values = await attributesBlock.getColValues(title);
+      let values: string[];
+      if (columnType.toLowerCase() === PropertyType.BOOL.toLowerCase()) {
+        const result = await attributesBlock.getBooleanColValues(title);
+
+        values = result.map(String);
+      } else {
+        values = await attributesBlock.getColValues(title);
+      }
 
       return isEqual(values, expectedAsString.split(','));
     }, waitUntilOptions);
@@ -55,18 +66,10 @@ Then(
   async function (this: ScenarioScope, attributeTitle: string, pageNumber: string) {
     const defaultPageSize = 20;
 
-    const property = this.latestSchema.properties?.find(prop => {
-      return prop.title === attributeTitle;
-    });
-
-    if (!property) {
-      throw new Error(`Свойство ${attributeTitle} не найдено`);
-    }
-
     const featureProperties = this.latestFeatures.map(feature => {
       return feature.properties;
     });
-
+    const property = getSchemaPropertyByTitle(this.latestSchema, attributeTitle);
     const start = defaultPageSize * (Number(pageNumber) - 1);
     const end = defaultPageSize * Number(pageNumber);
 
@@ -76,6 +79,7 @@ Then(
         return String(prop[property.name]);
       });
 
+    await browser.pause(200); // Бага в browser
     await browser.waitUntil(async () => {
       const values = await attributesBlock.getColValues(attributeTitle);
 
@@ -83,3 +87,23 @@ Then(
     }, waitUntilOptions);
   }
 );
+
+Then('сортировка в атрибутивной таблице недоступна для свойств имеющих тип:', async function (data: DataTable) {
+  const titles = data.raw().map(item => item[0]);
+
+  for (const title of titles) {
+    expect(await attributesBlock.isColumnSortable(title)).toEqual(false);
+  }
+});
+
+function getSchemaPropertyByTitle(schema: Schema, title: string): PropertySchema {
+  const property = schema.properties?.find(prop => {
+    return prop.title === title;
+  });
+
+  if (!property) {
+    throw new Error(`Свойство: ${title} не найдено в схеме: ${schema.name ?? ''}`);
+  }
+
+  return property;
+}

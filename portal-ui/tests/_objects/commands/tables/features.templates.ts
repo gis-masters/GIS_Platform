@@ -100,7 +100,14 @@ export function getPreparedFeatures(title: string, schema?: Schema): NewWfsFeatu
               ]
             ]
           },
-          properties: { number_int: 314, number_double: 3.14, some_string: 'строка текста', some_date: '2023-02-01' }
+          properties: {
+            number_int: 314,
+            number_double: 3.14,
+            some_string: 'строка текста',
+            some_date: '2023-02-01',
+            is_enabled: true,
+            obj_code: '55'
+          }
         },
         {
           type: 'Feature',
@@ -118,7 +125,13 @@ export function getPreparedFeatures(title: string, schema?: Schema): NewWfsFeatu
               ]
             ]
           },
-          properties: { number_int: 5555, number_double: 0.58, some_string: 'some other text', some_date: '2011-07-01' }
+          properties: {
+            number_int: 5555,
+            number_double: 0.58,
+            some_string: 'some other text',
+            some_date: '2011-07-01',
+            obj_code: '1122'
+          }
         },
         {
           type: 'Feature',
@@ -142,7 +155,14 @@ export function getPreparedFeatures(title: string, schema?: Schema): NewWfsFeatu
               ]
             ]
           },
-          properties: { number_int: 9, number_double: 644, some_string: 'привет мир', some_date: '1990-02-28' }
+          properties: {
+            number_int: 9,
+            number_double: 644,
+            some_string: 'привет мир',
+            some_date: '1990-02-28',
+            is_enabled: false,
+            obj_code: '1111'
+          }
         }
       );
 

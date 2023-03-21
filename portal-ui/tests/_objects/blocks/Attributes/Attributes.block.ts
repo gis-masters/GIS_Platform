@@ -33,6 +33,10 @@ class AttributesBlock extends Block {
     return contents;
   }
 
+  async getColumnType(title: string): Promise<string> {
+    return await this.xTable.getColumnType(title);
+  }
+
   async getTitle(): Promise<string> {
     const $barTitle = await this.$('barTitle');
     await $barTitle.waitForDisplayed({ timeout: 13_000 });
@@ -52,6 +56,14 @@ class AttributesBlock extends Block {
 
   async getColValues(title: string): Promise<string[]> {
     return await this.xTable.getColValues(title);
+  }
+
+  async getBooleanColValues(title: string): Promise<boolean[]> {
+    return await this.xTable.getBooleanColValues(title);
+  }
+
+  async isColumnSortable(title: string): Promise<boolean> {
+    return await this.xTable.isColumnSortable(title);
   }
 }
 

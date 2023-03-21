@@ -6,6 +6,7 @@ export class XTableBlock extends Block {
   selectors = {
     container: '.XTable',
     head: '.XTable-Head',
+    headCell: '.XTable-HeadCell',
     colTitle: '.XTable-HeadCellTitle',
     firstColCellContent: '.XTable .XTable-Cell:first-child .XTable-CellContent',
     secondColCellContent: '.XTable-Row .XTable-Cell:nth-child(2) .XTable-CellContent'
@@ -33,28 +34,85 @@ export class XTableBlock extends Block {
     return contents;
   }
 
-  async getHeadCellByTitle(title: string): Promise<WebdriverIO.Element> {
+  async getHeadCellTitle(title: string): Promise<WebdriverIO.Element> {
     const $head = await this.$('head');
 
-    return $head.$(String(this.selectors.colTitle + '=' + title));
+    const $headCell = await $head.$(String(`${this.selectors.colTitle}=${title}`));
+    await $headCell.waitForDisplayed();
+
+    return $headCell;
+  }
+
+  async getHeadCell(title: string): Promise<WebdriverIO.Element> {
+    const $$headCells = await this.$$('headCell');
+    for (const $cell of $$headCells) {
+      const $title = $cell.$(this.selectors.colTitle);
+      const cellTitle = await $title.getText();
+      if (cellTitle === title) {
+        return $cell;
+      }
+    }
+
+    throw new Error('Could not find head cell ' + title);
   }
 
   async getColValues(title: string): Promise<string[]> {
     return await extractText(await this.getCellsByTitle(title));
   }
 
-  async sortColumn(title: string, direction: string): Promise<void> {
-    const $title = await this.getHeadCellByTitle(title);
-    if (!$title) {
-      throw new Error('Не найдена колонка: ' + title);
+  async getBooleanColValues(title: string): Promise<boolean[]> {
+    const valOn = 'XTable-BoolIcon_val_on';
+    const valOff = 'XTable-BoolIcon_val_off';
+
+    const $$cells = await this.getCellsByTitle(title);
+
+    const result: boolean[] = [];
+    for (const $cell of $$cells) {
+      const $icon = await $cell.$('.MuiSvgIcon-root');
+      const cls = await $icon.getAttribute('class');
+      if (cls.split(' ').includes(valOn)) {
+        result.push(true);
+      } else if (cls.split(' ').includes(valOff)) {
+        result.push(false);
+      } else {
+        throw new Error('Значение отсутствует');
+      }
     }
 
-    await $title.waitForClickable();
+    return result;
+  }
+
+  async getColumnType(title: string): Promise<string> {
+    const $headCell = await this.getHeadCell(title);
+    const classes = await $headCell.getAttribute('class');
+
+    for (const cls of classes.split(' ')) {
+      const found = /^XTable-HeadCell_type_(\S+)$/.exec(cls);
+      if (found && found[1]) {
+        return found[1];
+      }
+    }
+
+    throw new Error('Could not find column type');
+  }
+
+  async isColumnSortable(title: string): Promise<boolean> {
+    const $headCell = await this.getHeadCellTitle(title);
+    await $headCell.moveTo();
+
+    const $muiTableSortLabelIcon = await $headCell.$('.MuiTableSortLabel-icon');
+
+    return await $muiTableSortLabelIcon.isExisting();
+  }
+
+  async sortColumn(title: string, direction: string): Promise<void> {
+    const $headCell = await this.getHeadCellTitle(title);
+    await $headCell.waitForClickable();
     if (direction.toLowerCase() === SortOrder.ASC) {
-      await $title.click();
+      await $headCell.click();
     } else if (direction.toLowerCase() === SortOrder.DESC) {
-      await $title.click();
-      await $title.click();
+      await $headCell.click();
+      await $headCell.click();
     } else {
       throw new Error('Unsupported direction: ' + direction);
     }

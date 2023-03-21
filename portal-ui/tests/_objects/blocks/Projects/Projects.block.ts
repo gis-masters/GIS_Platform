@@ -89,9 +89,9 @@ class ProjectsBlock extends Block {
   }
 
   async isProjectCardDeleteButtonNotDisplayed(projectName: string): Promise<boolean> {
-    const $deleBtn = await this.getProjectCardDeleteButton(projectName);
+    const $deleteBtn = await this.getProjectCardDeleteButton(projectName);
 
-    return $deleBtn.waitForDisplayed({ reverse: true });
+    return $deleteBtn.waitForDisplayed({ reverse: true });
   }
 
   async singleVisibleProject(): Promise<string> {
