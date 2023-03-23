@@ -15,3 +15,7 @@ Given(
 Given(/^все наборы данных удалены администратором$/, async () => {
   await deleteAllDatasetsAsAdmin();
 });
+
+Given(/^все наборы данных удалены$/, async () => {
+  await deleteAllDatasetsAsAdmin();
+});

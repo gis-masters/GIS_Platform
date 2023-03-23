@@ -1,24 +1,45 @@
 import { Given } from '@wdio/cucumber-framework';
+import { ScenarioScope } from '../../ScenarioScope';
 
 import { addLayerToGroupByAdmin } from './addLayerToGroupByAdmin';
-import { createNewGroupByAdmin } from './createNewGroupByAdmin';
+import { createGroupByAdmin } from './createGroupByAdmin';
+import { getCrgLayersGroup } from './getCrgLayersGroup';
 
 Given(
-  /^в проекте "(.*)" существует отключенная группа "(.*)" созданная администратором$/,
-  async (projectTitle: string, groupTitle: string) => {
-    await createNewGroupByAdmin(projectTitle, groupTitle, false);
+  'в созданном проекте администратором создана отключенная открытая группа {string}',
+  async function (this: ScenarioScope, groupTitle: string) {
+    const { latestProject } = this;
+
+    const group = getCrgLayersGroup(groupTitle, false, true);
+
+    await createGroupByAdmin(group, latestProject.id);
   }
 );
 
 Given(
-  /^в проекте "(.*)" существует включенная группа "(.*)" созданная администратором$/,
-  async (projectTitle: string, groupTitle: string) => {
-    await createNewGroupByAdmin(projectTitle, groupTitle, true);
+  'в созданном проекте администратором создана включенная открытая группа {string}',
+  async function (this: ScenarioScope, groupTitle: string) {
+    const { latestProject } = this;
+
+    const group = getCrgLayersGroup(groupTitle, true, true);
+
+    await createGroupByAdmin(group, latestProject.id);
   }
 );
 
 Given(
-  /^в проекте "(.*)" в группу "(.*)" добавлен слой "(.*)"$/,
+  'в созданном проекте администратором создана включенная закрытая группа {string}',
+  async function (this: ScenarioScope, groupTitle: string) {
+    const { latestProject } = this;
+
+    const group = getCrgLayersGroup(groupTitle, true, false);
+
+    await createGroupByAdmin(group, latestProject.id);
+  }
+);
+
+Given(
+  'в проекте {string} в группу {string} добавлен слой {string}',
   async (projectTitle: string, groupTitle: string, layerTitle: string) => {
     await addLayerToGroupByAdmin(projectTitle, groupTitle, layerTitle);
   }

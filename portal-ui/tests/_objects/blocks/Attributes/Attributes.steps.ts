@@ -3,12 +3,12 @@ import { WaitUntilOptions } from 'webdriverio';
 import { DataTable, Then, When } from '@wdio/cucumber-framework';
 
 import { attributesBlock } from './Attributes.block';
-import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
 
 import { ScenarioScope } from '../../ScenarioScope';
 import { getSortDirection } from '../../getSortDirection';
 import { sortObjects } from '../../../../src/app/services/util/sortObjects';
 import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
 
 const waitUntilOptions: WaitUntilOptions = {
   timeout: 10_000,

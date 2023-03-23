@@ -1,10 +1,12 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { createVectorLayer } from '../createLayer';
-import { ScenarioScope } from '../../ScenarioScope';
 import { authenticateAsAdmin } from '../auth/authenticate';
+import { createNewObjectInLayerAsAdmin } from './createNewObjectInLayerAsAdmin';
 import { CrgLayerType } from '../../../../src/app/services/gis/projects/projects.models';
+import { createLayerByAdmin } from './createLayerByAdmin';
 import { testSchemas } from '../schemas/testSchemas';
+import { ScenarioScope } from '../../ScenarioScope';
+import { getCrgLayer } from './getCrgLayer';
 
 Given(
   'в созданном проекте создан слой на основе созданного набора данных и таблицы',
@@ -29,6 +31,46 @@ Given(
       styleName: schema.styleName
     };
 
-    this.latestLayer = await createVectorLayer(latestProject.id, layer);
+    this.latestLayer = await createLayerByAdmin(latestProject.id, layer);
+  }
+);
+
+Given(
+  /^администратором создан объект по таблице "(.*)" набора данных "(.*)"$/,
+  async (tableTitle: string, datasetTitle: string) => {
+    await createNewObjectInLayerAsAdmin(tableTitle, datasetTitle);
+  }
+);
+
+Given(
+  /^в созданном проекте администратором создан включенный слой с названием "(.*)" по таблице "(.*)" созданного набора данных с id представления "(.*)"$/,
+  async function (this: ScenarioScope, layerTitle: string, tableTitle: string, viewId: string) {
+    const { latestProject, latestDatasetId } = this;
+
+    const layer = await getCrgLayer(layerTitle, tableTitle, latestDatasetId, true, viewId);
+
+    await createLayerByAdmin(latestProject.id, layer);
+  }
+);
+
+Given(
+  /^в созданном проекте администратором создан слой с названием "(.*)" по таблице "(.*)" созданного набора данных$/,
+  async function (this: ScenarioScope, layerTitle: string, tableTitle: string) {
+    const { latestProject, latestDatasetId } = this;
+
+    const layer = await getCrgLayer(layerTitle, tableTitle, latestDatasetId, true);
+
+    await createLayerByAdmin(latestProject.id, layer);
+  }
+);
+
+Given(
+  /^в созданном проекте администратором создан выключенный слой с названием "(.*)" по таблице "(.*)" созданного набора данных$/,
+  async function (this: ScenarioScope, layerTitle: string, tableTitle: string) {
+    const { latestProject, latestDatasetId } = this;
+
+    const layer = await getCrgLayer(layerTitle, tableTitle, latestDatasetId, false);
+
+    await createLayerByAdmin(latestProject.id, layer);
   }
 );

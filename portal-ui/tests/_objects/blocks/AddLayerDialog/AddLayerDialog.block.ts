@@ -21,7 +21,7 @@ class AddLayerDialogBlock extends Block {
 
   async selectDatasource(): Promise<void> {
     const $layerDialogSelectDatasource = await this.$('layerFormDialogSelectDatasource');
-    await $layerDialogSelectDatasource.waitForDisplayed({ timeout: 3000 });
+    await $layerDialogSelectDatasource.waitForDisplayed();
 
     await $layerDialogSelectDatasource.click();
   }

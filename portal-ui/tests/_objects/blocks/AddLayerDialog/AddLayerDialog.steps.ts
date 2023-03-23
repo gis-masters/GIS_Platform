@@ -10,6 +10,6 @@ When(/^в диалоговом окне `Добавить слой` не поя�
   await addLayerDialogBlock.checkViewFieldIsNotAppear();
 });
 
-When(/^в диалоге `Добавить слой` я нажимаю на кнопку `Не выбрано` у поля источник данных$/, async () => {
+When(/^в диалоговом окне `Добавить слой` я нажимаю на кнопку `Не выбрано` у поля источник данных$/, async () => {
   await addLayerDialogBlock.selectDatasource();
 });

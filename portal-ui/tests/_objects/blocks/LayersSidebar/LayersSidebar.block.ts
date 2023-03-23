@@ -1,7 +1,8 @@
 import { Block } from '../../Block';
-import { editFeatureGeometryAsTextDialogBlock } from '../EditFeatureGeometryAsTextDialog/EditFeatureGeometryAsTextDialog.block';
-import { muiMenuListBlock } from '../MuiMenuList/MuiMenuList.block';
 import { editFeatureBlock } from '../EditFeature/EditFeature.block';
+import { editFeatureGeometryAsTextDialogBlock } from '../EditFeatureGeometryAsTextDialog/EditFeatureGeometryAsTextDialog.block';
+import { MuiMenuBlock } from '../MuiMenu/MuiMenu.block';
+import { muiMenuListBlock } from '../MuiMenuList/MuiMenuList.block';
 
 class LayersSidebarBlock extends Block {
   selectors = {
@@ -23,10 +24,30 @@ class LayersSidebarBlock extends Block {
     const $layerCard = await this.$('layerCard');
     await $layerCard.waitForDisplayed({ timeout: 9000 });
     await $layerCard.moveTo();
+    const $layerBurger = await this.$('layerBurger');
+    await $layerBurger.waitForDisplayed();
+    await $layerBurger.click();
+  }
+
+  async clickLayerAttributeTable(): Promise<void> {
+    await muiMenuListBlock.testMenuSecItemText('Открыть таблицу атрибутов');
+    await muiMenuListBlock.clickMenuSecondItem();
+  }
+
+  async selectLayersListElementMenuItem(layerName: string, menuItemTitle: string): Promise<void> {
+    const $layerCard = await this.getLayerByName(layerName);
+    if (!$layerCard) {
+      throw new Error(`Не найден элемент "${layerName}"`);
+    }
+
+    await $layerCard.moveTo();
 
     const $layerBurger = await this.$('layerBurger');
     await $layerBurger.waitForDisplayed();
     await $layerBurger.click();
+
+    const muiSelect = new MuiMenuBlock();
+    await muiSelect.selectOptionByTitle(menuItemTitle);
   }
 
   async addLayerBtn(): Promise<void> {
@@ -36,41 +57,50 @@ class LayersSidebarBlock extends Block {
     await $addLayerBtn.click();
   }
 
-  async layerPropertiesOpen(): Promise<void> {
-    await this.clickEditButton();
-    await this.clickLayerBurger();
-    await muiMenuListBlock.testMenuSecItemText('Свойства');
-    await muiMenuListBlock.clickMenuSecondItem();
-  }
-
   async createNewObjectInLayer(): Promise<void> {
-    await muiMenuListBlock.testMenuThirdItemText('Добавить объект');
-    await muiMenuListBlock.clickMenuThirdItem();
     await editFeatureGeometryAsTextDialogBlock.setObjectDummyCoordinates();
     await editFeatureBlock.saveNewObject();
   }
 
-  async clickLayerAttributeTable(): Promise<void> {
-    await muiMenuListBlock.testMenuSecItemText('Открыть таблицу атрибутов');
-    await muiMenuListBlock.clickMenuSecondItem();
-  }
-
-  async openAddLayerDialog(): Promise<void> {
+  async clickAddLayerBtn(): Promise<void> {
     await layersSidebarBlock.clickEditButton();
     await layersSidebarBlock.addLayerBtn();
   }
 
   async clickVisibilityBtn(layerName: string): Promise<void> {
+    await this.clickLayerCardBtn(layerName, '.Layer-Eye');
+  }
+
+  async clickOpenBtn(layerName: string): Promise<void> {
+    await this.clickLayerCardBtn(layerName, '.Layer-Open');
+  }
+
+  async clickLayerCardBtn(layerName: string, btnSelectorName: string): Promise<void> {
     const $layerCard = await this.getLayerByName(layerName);
 
-    if ($layerCard) {
-      await $layerCard.waitForDisplayed();
-      await $layerCard.moveTo();
-
-      const $firstCardEyeBtn = await $layerCard.$('.Layer-Eye');
-      await $firstCardEyeBtn.waitForDisplayed();
-      await $firstCardEyeBtn.click();
+    if (!$layerCard) {
+      throw new Error(`Не найден элемент "${layerName}"`);
     }
+
+    await $layerCard.waitForDisplayed();
+    await $layerCard.moveTo();
+
+    const $btn = await $layerCard.$(btnSelectorName);
+    await $btn.waitForDisplayed();
+    await $btn.click();
+  }
+
+  private async getVisibleLayersCards(): Promise<WebdriverIO.Element[]> {
+    return await this.$$('layerCard');
+  }
+
+  async getVisibleLayersCardsText(): Promise<string> {
+    const $$layersCards = await this.getVisibleLayersCards();
+    if (!$$layersCards) {
+      throw new Error('Не найден элемент layerCard');
+    }
+
+    return $$layersCards[0].getText();
   }
 
   async getLayerByName(layerName: string): Promise<WebdriverIO.Element | undefined> {
@@ -86,6 +116,18 @@ class LayersSidebarBlock extends Block {
         return $layerCard;
       }
     }
+  }
+
+  async getLayersCardsNames(): Promise<string[]> {
+    const $$layerCard = await this.$$('layerCard');
+    const names: string[] = [];
+
+    for (const $layerCard of $$layerCard) {
+      const name = await $layerCard.getText();
+      names.push(name);
+    }
+
+    return names;
   }
 }
 

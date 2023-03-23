@@ -88,6 +88,10 @@ class ProjectsService {
     await this.fetchAllProjects();
   }
 
+  async getAllProjects(): Promise<CrgProject[]> {
+    return await _reqGetAllProjects();
+  }
+
   private async fetchAllProjects() {
     const request = _reqGetAllProjects();
 

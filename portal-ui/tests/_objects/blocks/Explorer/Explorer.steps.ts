@@ -2,19 +2,23 @@ import { Then, When } from '@wdio/cucumber-framework';
 
 import { explorerBlock } from './Explorer.block';
 
-When(/^выбираю векторную таблицу `админ деление с представлениями`$/, async () => {
-  await explorerBlock.selectedVectorTableWithViews();
+When(/^в диалоговом окне выбора источника данных я выбираю набор данных "(.*)"$/, async (dataset: string) => {
+  await explorerBlock.openExplorerItem(dataset);
 });
 
-When(/^я захожу в первый набор данных$/, async () => {
-  await explorerBlock.authWithError();
+When(/^в диалоговом окне выбора источника данных я выбираю векторную таблицу "(.*)"$/, async (datatable: string) => {
+  await explorerBlock.openExplorerItem(datatable);
 });
 
-When(/^выбираю векторную таблицу `админ деление без представлений`$/, async () => {
-  await explorerBlock.selectedVectorTableWithoutViews();
+When(/^в наборах данных я выбираю набор данных "(.*)"$/, async (dataset: string) => {
+  await explorerBlock.openExplorerItem(dataset);
 });
 
-When(/^нажимаю кнопку `Подключить в проект` в правой панели векторной таблицы$/, async () => {
+When(/^в наборах данных я выбираю векторную таблицу "(.*)"$/, async (datatable: string) => {
+  await explorerBlock.openExplorerItem(datatable);
+});
+
+When(/^я нажимаю кнопку `Подключить в проект` в панели свойств векторной таблицы$/, async () => {
   await explorerBlock.addToProject();
 });
 

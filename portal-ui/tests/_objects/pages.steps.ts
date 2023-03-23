@@ -45,7 +45,7 @@ Given('я нахожусь на странице карты проекта', asy
   await new MapPage(this.latestProject.id).open();
 });
 
-Given(/^я на странице карты проекта "([^"]*)"$/, async (title: string) => {
+When(/^я перехожу на страницу карты проекта "([^"]*)"$/, async (title: string) => {
   const projects = await getProjectsByTitle(title);
   if (projects.length === 1) {
     await new MapPage(projects[0].id).open();

@@ -1,13 +1,10 @@
-import { Given } from '@wdio/cucumber-framework';
-
 import {
   createFeature,
   getDatasets,
   getVectorTables
-} from '../../../src/app/services/data/vectorData/vectorData.service';
-import { GeometryType, WfsFeature } from '../../../src/app/services/geoserver/wfs/wfs.models';
-
-import { authenticateAsAdmin } from './auth/authenticate';
+} from '../../../../src/app/services/data/vectorData/vectorData.service';
+import { GeometryType, WfsFeature } from '../../../../src/app/services/geoserver/wfs/wfs.models';
+import { authenticateAsAdmin } from './../auth/authenticate';
 
 declare const window: {
   getVectorTables: typeof getVectorTables;
@@ -59,10 +56,3 @@ export async function createNewObjectInLayerAsAdmin(tableTitle: string, datasetT
     datasetTitle
   );
 }
-
-Given(
-  /^по таблице "(.*)" набора данных "(.*)" создан новый объект в слое$/,
-  async (tableTitle: string, datasetTitle: string) => {
-    await createNewObjectInLayerAsAdmin(tableTitle, datasetTitle);
-  }
-);

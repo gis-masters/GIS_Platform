@@ -5,8 +5,8 @@ import { Block } from '../../Block';
 class ExplorerBlock extends Block {
   selectors = {
     container: '.Explorer',
-    oneTitle: '.Explorer-ItemTitle',
-    titles: '.Explorer-ItemTitle',
+    item: '.Explorer-Item',
+    title: '.Explorer-ItemTitle',
     loader: '.Explorer .Loading',
     empty: '.Explorer-Empty',
     firstItemTitle: '.Explorer-List .Explorer-Item:first-child .MuiListItemText-primary',
@@ -14,27 +14,14 @@ class ExplorerBlock extends Block {
     connectionToProject: '.Explorer .ConnectionsToProjectsWidget button'
   };
 
-  async selectedVectorTableWithViews(): Promise<void> {
-    const $firstDataset = await this.$('firstItemTitle');
+  async openExplorerItem(datatable: string): Promise<void> {
+    const $item = await this.getExplorerItemByName(datatable);
+    if (!$item) {
+      throw new Error(`Не найден элемент "${datatable}"`);
+    }
 
-    const vectorTableTitle = await $firstDataset.getText();
-    expect(vectorTableTitle).toEqual('админ деление с представлениями');
-  }
-
-  async authWithError(): Promise<void> {
-    const $firstItemTitle = await this.$('firstItemTitle');
-    await $firstItemTitle.doubleClick();
-
+    await $item.doubleClick();
     await sleep(500); // ждем анимации перехода
-  }
-
-  async selectedVectorTableWithoutViews(): Promise<void> {
-    const $secondDataset = await this.$('secondItemTitle');
-    await $secondDataset.waitForDisplayed({ timeout: 1000 });
-
-    const vectorTableTitle = await $secondDataset.getText();
-    expect(vectorTableTitle).toEqual('админ деление без представлений');
-    await $secondDataset.click();
   }
 
   async addToProject(): Promise<void> {
@@ -50,9 +37,9 @@ class ExplorerBlock extends Block {
   }
 
   async getListTitles(): Promise<string[]> {
-    const $title = await this.$('oneTitle');
+    const $title = await this.$('title');
     await $title.waitForDisplayed();
-    const $$titles = await this.$$('titles');
+    const $$titles = await this.$$('title');
 
     return await Promise.all($$titles.map(async $title => await $title.getText()));
   }
@@ -64,6 +51,24 @@ class ExplorerBlock extends Block {
 
   async testEmptiness() {
     await expect(this.$('empty')).toBeDisplayedInViewport();
+  }
+
+  async getExplorerItemByName(itemName: string): Promise<WebdriverIO.Element | undefined> {
+    const $container = await this.$('container');
+    await $container.waitForDisplayed();
+
+    const $loader = await this.$('loader');
+    await $loader.waitForDisplayed({ reverse: true });
+
+    const $$explorerItems = await this.$$('item');
+
+    for (const $explorerItem of $$explorerItems) {
+      const explorerItemName = await $explorerItem.$('.Explorer-ItemTitle').getText();
+
+      if (explorerItemName === itemName) {
+        return $explorerItem;
+      }
+    }
   }
 }
 
