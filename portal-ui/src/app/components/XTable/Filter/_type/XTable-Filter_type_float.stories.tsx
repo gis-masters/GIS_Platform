@@ -4,11 +4,12 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { SortParams } from '../../../../services/util/sortObjects';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 
-import { XTable, XTableColumn, XTableProps } from './../../XTable';
+import { XTable, XTableProps } from './../../XTable';
+import { XTableColumn } from './../../XTable.models';
 import { Template } from '../XTable-Filter-story-template';
 
 export default {
-  title: 'XTable/Cols/Float',
+  title: 'XTable/Cols',
   component: XTable
 } as ComponentMeta<typeof XTable>;
 
@@ -111,8 +112,8 @@ const defaultSort: SortParams<TestData> = { field: 'weight', asc: true };
 
 type XTableForTestData = (p: XTableProps<TestData>) => ReactElement;
 
-export const FloatColWithFilter = Template.bind({}) as ComponentStory<XTableForTestData>;
-FloatColWithFilter.args = {
+export const TypeFloat = Template.bind({}) as ComponentStory<XTableForTestData>;
+TypeFloat.args = {
   data,
   cols,
   defaultSort,

@@ -2,10 +2,9 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
-import { PropertyType } from '../../../services/data/schema/schema.models';
 import { ChildrenProps } from '../../../services/models';
 
-import { XTableColumn } from '../XTable';
+import { XTableColumn, XTableColumnType } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-CellContent.scss';
 
@@ -15,7 +14,7 @@ export interface XTableCellContentProps extends ChildrenProps, IClassNameProps, 
   singleLineContent: boolean;
   unspecifiedWidth: boolean;
   col: XTableColumn<unknown>;
-  type?: PropertyType;
+  type?: XTableColumnType;
   cellData?: unknown;
 }
 

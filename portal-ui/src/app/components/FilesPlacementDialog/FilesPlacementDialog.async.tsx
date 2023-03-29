@@ -18,7 +18,7 @@ import { boundMethod } from 'autobind-decorator';
 import { sleep } from '../../services/util/sleep';
 import { Button } from '../Button/Button';
 import { Select } from '../Select/Select';
-import { XTableColumn } from '../XTable/XTable';
+import { XTableColumn } from '../XTable/XTable.models';
 import { ChooseXTable } from '../ChooseXTable/ChooseXTable';
 import { allProjects } from '../../stores/AllProjects.store';
 import { Role } from '../../services/data/permissions/permissions.models';

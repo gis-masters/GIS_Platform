@@ -30,7 +30,8 @@ export enum Pages {
   DOCUMENT = 'document',
   SERVICES_CALCULATOR = 'services-calculator',
   RESTORE_PASSWORD = 'restore-password',
-  CHANGE_PASSWORD = 'change-password'
+  CHANGE_PASSWORD = 'change-password',
+  TEST_DATA_PREPARATION = 'test-data-preparation'
 }
 
 class Route {

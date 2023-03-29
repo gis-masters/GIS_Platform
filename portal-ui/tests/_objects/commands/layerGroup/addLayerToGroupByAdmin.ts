@@ -1,7 +1,7 @@
 import { updateLayer } from '../../../../src/app/services/gis/layers.service';
 import { projectsService } from '../../../../src/app/services/gis/projects/projects.service';
 
-import { authenticateAsOwner } from '../auth/authenticate';
+import { authenticateAsAdmin } from '../auth/authenticate';
 
 declare const window: {
   projectsService: typeof projectsService;
@@ -13,7 +13,7 @@ export async function addLayerToGroupByAdmin(
   groupTitle: string,
   layerTitle: string
 ): Promise<void> {
-  await authenticateAsOwner();
+  await authenticateAsAdmin();
 
   await browser.executeAsync(
     async (projectTitle, groupTitle, layerTitle, callback) => {

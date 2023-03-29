@@ -25,6 +25,7 @@ import { SystemManagementPageComponent } from './pages/system-management/system-
 import { SystemManagementGuardService } from './services/system-management-guard.service';
 import { SystemAdminGuardService } from './services/system-admin-guard.service';
 import { MessagesRegistryPageComponent } from './pages/messages-registry/messages-registry-page.component';
+import { TestDataPreparationPageComponent } from './pages/test-data-preparation/test-data-preparation-page.component';
 
 export interface AppRouteData extends Data {
   page: Pages;
@@ -200,6 +201,15 @@ const routes: AppRoutes = [
     data: { page: Pages.DOCUMENT }
   },
   {
+    path: 'test-data-preparation',
+    component: TestDataPreparationPageComponent,
+    canActivate: [SystemAdminGuardService],
+    resolve: {
+      user: CurrentUserResolver
+    },
+    data: { page: Pages.TEST_DATA_PREPARATION }
+  },
+  {
     path: '**',
     redirectTo: ''
   }
@@ -229,5 +239,6 @@ export const routingComponents = [
   ServicesCalculatorPageComponent,
   RestorePasswordFormPageComponent,
   ChangePasswordFormPageComponent,
-  MessagesRegistryPageComponent
+  MessagesRegistryPageComponent,
+  TestDataPreparationPageComponent
 ];

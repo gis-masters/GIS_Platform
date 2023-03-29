@@ -1,5 +1,8 @@
 import { PageOptions } from '../../models';
-import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../server-urls.service';
+import {
+  getDocumentLibraryRecordRoleAssignmentUrl,
+  getDocumentLibraryRoleAssignmentUrl
+} from '../../server-urls.service';
 import { ExplorerItemEntityTypeTitle } from '../../../components/Explorer/Explorer.models';
 import { addEntityPermission, removeEntityPermission } from '../permissions/permissions.service';
 import { RoleAssignmentBody } from '../permissions/permissions.models';
@@ -14,6 +17,7 @@ import {
   _reqGetLibraries,
   _reqGetLibrariesWithParticularOne,
   _reqGetLibrary,
+  _reqGetLibraryPermissions,
   _reqGetLibraryRecord,
   _reqGetLibraryRecords,
   _reqGetLibraryRecordsAsRegistry,
@@ -164,7 +168,30 @@ export async function setDocumentPermission(item: LibraryRecord, payload: RoleAs
   await addEntityPermission(payload, url, '', ExplorerItemEntityTypeTitle.DOCUMENT);
 }
 
+export async function getLibraryPermissions(library: DocumentLibrary): Promise<RoleAssignmentBody[]> {
+  return await _reqGetLibraryPermissions(library.table_name);
+}
+
+export async function setLibraryPermission(library: DocumentLibrary, payload: RoleAssignmentBody): Promise<void> {
+  const url = await getDocumentLibraryRoleAssignmentUrl(library.table_name);
+
+  const permissions = await getLibraryPermissions(library);
+
+  for (const permission of permissions) {
+    if (permission.principalId === payload.principalId && permission.principalType === payload.principalType) {
+      await removeEntityPermission(permission, url, '', ExplorerItemEntityTypeTitle.DOCUMENT);
+    }
+  }
+
+  await addEntityPermission(payload, url, '', ExplorerItemEntityTypeTitle.DOCUMENT);
+}
+
 // for autotests
 if (typeof window !== undefined) {
-  Object.assign(window, { createLibraryRecord });
+  Object.assign(window, {
+    getLibraries,
+    setLibraryPermission,
+    getLibraryRecords,
+    createLibraryRecord
+  });
 }

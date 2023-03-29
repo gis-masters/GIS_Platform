@@ -5,7 +5,7 @@ declare const window: {
   schemaService: typeof schemaService;
 };
 
-export async function getSchemaByTitle(schemaId: string): Promise<Schema> {
+export async function getSchema(schemaId: string): Promise<Schema> {
   const schema: Schema = await browser.executeAsync(async (schemaId, callback) => {
     const schema = await window.schemaService.getSchema(schemaId);
 

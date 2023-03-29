@@ -8,7 +8,8 @@ import {
   getDocRegisterUrl,
   getDocLibraryRecordMoveToFolderUrl,
   getDocLibraryRecordMoveUrl,
-  getDocumentLibraryRecordRoleAssignmentUrl
+  getDocumentLibraryRecordRoleAssignmentUrl,
+  getDocumentLibraryRoleAssignmentUrl
 } from '../../server-urls.service';
 import { preparePageOptions } from '../../http.utils';
 import { PageableResponse, PageOptions } from '../../models';
@@ -38,6 +39,12 @@ export async function _reqGetLibrariesWithParticularOne(
 
 export async function _reqGetLibrary(libraryTableName: string): Promise<DocumentLibrary> {
   return await http.get<DocumentLibrary>(await getDocLibraryUrl(libraryTableName));
+}
+
+export async function _reqGetLibraryPermissions(libraryTableName: string): Promise<RoleAssignmentBody[]> {
+  const url = await getDocumentLibraryRoleAssignmentUrl(libraryTableName);
+
+  return await http.getPagedOld<RoleAssignmentBody>(url);
 }
 
 export async function _reqGetLibraryRecord(

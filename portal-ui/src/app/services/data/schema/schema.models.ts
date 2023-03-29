@@ -49,7 +49,9 @@ export interface Schema {
   name?: string;
   title?: string;
   description?: string;
-  properties?: PropertySchema[];
+  appliedContentType?: string;
+  appliedView?: string;
+  properties: PropertySchema[];
   tableName?: string;
   styleName?: string;
   geometryType?: SupportedGeometryType;

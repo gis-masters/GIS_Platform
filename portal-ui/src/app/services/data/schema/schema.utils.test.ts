@@ -39,6 +39,7 @@ const schemaWithViews: Schema = {
 
 const schemaWithAppliedView1: Schema = {
   name: 'border1',
+  appliedView: 'viewsId1',
   title: 'Представление 1',
   tableName: 'border1',
   properties: [
@@ -88,6 +89,7 @@ const schemaWithContentTypes: Schema = {
 const schemaWithAppliedContentType: Schema = {
   name: 'dl_some',
   title: 'тип документа 1',
+  appliedContentType: 'doc1',
   tableName: 'dl_some',
   properties: [
     {

@@ -4,11 +4,12 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { SortParams } from '../../../../services/util/sortObjects';
 import { PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
 
-import { XTable, XTableColumn, XTableProps } from './../../XTable';
+import { XTable, XTableProps } from './../../XTable';
+import { XTableColumn } from './../../XTable.models';
 import { Template } from '../XTable-Filter-story-template';
 
 export default {
-  title: 'XTable/Cols/Choice',
+  title: 'XTable/Cols',
   component: XTable
 } as ComponentMeta<typeof XTable>;
 
@@ -77,8 +78,8 @@ const defaultSort: SortParams<TestData> = { field: 'material', asc: true };
 
 type XTableForTestData = (p: XTableProps<TestData>) => ReactElement;
 
-export const ChoiceColWithFilter = Template.bind({}) as ComponentStory<XTableForTestData>;
-ChoiceColWithFilter.args = {
+export const TypeChoice = Template.bind({}) as ComponentStory<XTableForTestData>;
+TypeChoice.args = {
   data,
   cols,
   defaultSort,

@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, observable, makeObservable } from 'mobx';
 
-import { XTableColumn } from '../XTable/XTable';
+import { XTableColumn } from '../XTable/XTable.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';

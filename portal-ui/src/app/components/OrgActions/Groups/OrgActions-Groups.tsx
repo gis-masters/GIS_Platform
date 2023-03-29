@@ -11,7 +11,8 @@ import { CrgUser } from '../../../services/auth/users/users.models';
 import { groupsService } from '../../../services/auth/groups/groups.service';
 import { CrgGroup } from '../../../services/auth/groups/groups.models';
 import { allGroups } from '../../../stores/AllGroups.store';
-import { XTable, XTableColumn } from '../../XTable/XTable';
+import { XTable } from '../../XTable/XTable';
+import { XTableColumn } from '../../XTable/XTable.models';
 import { Loading } from '../../Loading/Loading';
 import { Button } from '../../Button/Button';
 

@@ -7,7 +7,9 @@ import { Page, pagesRegistry } from './Page';
 import { ScenarioScope } from './ScenarioScope';
 import { testUsers } from './commands/auth/testUsers';
 import { dataManagementPage } from './pages/DataManagement.page';
+import { LibraryRegistryPage } from './pages/LibraryRegistry.page';
 import { getProjectsByTitle } from './commands/projects/getProjectsByTitle';
+import { getDocumentsLibraryByTitle } from './commands/docLibrary/getDocLibraryByTitle';
 
 function findPage(title: string): Page {
   const page = Object.values(pagesRegistry).find(page => page.title === title);
@@ -18,49 +20,23 @@ function findPage(title: string): Page {
   return page;
 }
 
-Then('открылась страница {string}', async (title: string) => {
-  const page = findPage(title);
-  await page.waitForVisible();
-  await page.testUrl();
-});
-
-Then('открылась страница карты проекта {string}', async (title: string) => {
-  const projects = await getProjectsByTitle(title);
-  if (projects.length !== 1) {
-    throw new Error(`Ошибка получения проекта "${title}"`);
-  }
-
-  const mapPage = new MapPage(projects[0].id);
-
-  await mapPage.waitForVisible();
-  await mapPage.testUrl();
-});
+// common
 
 Given('я на странице {string}', async (title: string) => {
   const page = findPage(title);
   await page.open();
 });
 
-Given('я нахожусь на странице карты проекта', async function (this: ScenarioScope) {
-  await new MapPage(this.latestProject.id).open();
-});
-
-When(/^я перехожу на страницу карты проекта "([^"]*)"$/, async (title: string) => {
-  const projects = await getProjectsByTitle(title);
-  if (projects.length === 1) {
-    await new MapPage(projects[0].id).open();
-  } else {
-    throw new Error(`Ошибка получения проекта "${title}"`);
-  }
-
-  const mapPage = new MapPage(projects[0].id);
-  await mapPage.open();
-});
-
 When('я перехожу на страницу {string}', async (title: string) => {
   const page = findPage(title);
   await browser.url(page.url);
   await root.waitForExist();
+});
+
+Then('открылась страница {string}', async (title: string) => {
+  const page = findPage(title);
+  await page.waitForVisible();
+  await page.testUrl();
 });
 
 When(
@@ -77,15 +53,61 @@ When(
   }
 );
 
+// project map
+
+Given('я нахожусь на странице карты проекта', async function (this: ScenarioScope) {
+  await new MapPage(this.latestProject.id).open();
+});
+
+When('я перехожу на страницу карты проекта {string}', async (title: string) => {
+  const projects = await getProjectsByTitle(title);
+  if (projects.length === 1) {
+    await new MapPage(projects[0].id).open();
+  } else {
+    throw new Error(`Ошибка получения проекта "${title}"`);
+  }
+
+  const mapPage = new MapPage(projects[0].id);
+  await mapPage.open();
+});
+
+Then('открылась страница карты проекта {string}', async (title: string) => {
+  const projects = await getProjectsByTitle(title);
+  if (projects.length !== 1) {
+    throw new Error(`Ошибка получения проекта "${title}"`);
+  }
+
+  const mapPage = new MapPage(projects[0].id);
+
+  await mapPage.waitForVisible();
+  await mapPage.testUrl();
+});
+
+Given('я на странице карты проекта {string}', async (title: string) => {
+  const projects = await getProjectsByTitle(title);
+  if (projects.length === 1) {
+    await new MapPage(projects[0].id).open();
+  } else {
+    throw new Error(`Ошибка получения проекта "${title}"`);
+  }
+
+  const mapPage = new MapPage(projects[0].id);
+  await mapPage.open();
+});
+
+// bl
+
 Given('я на странице {string} библиотеки блоков', async (story: string) => {
   await blPage.openExample(story);
 });
+
+// data management
 
 When('я открываю страницу библиотек в управлении данными', async () => {
   await dataManagementPage.openLibraryRootPage();
 });
 
-Given(/^я на странице `Наборы данных` в управлении данными$/, async () => {
+Given('я на странице `Наборы данных` в управлении данными', async () => {
   await dataManagementPage.openDatasetRootPage();
 });
 
@@ -105,10 +127,17 @@ Given(
   'я перешел на страницу созданной векторной таблицы в созданном наборе данных, и выбрал её',
   async function (this: ScenarioScope) {
     const { latestVectorTable, latestDataset } = this;
-
     const url = `/data-management?path_dm=%5B"r","root","dr","datasetRoot","dataset","${latestDataset.identifier}",
                 "table","${latestVectorTable.identifier}"%5D&opts_dm=%5B0,10,"created_at","desc",%7B%7D%5D`;
 
     await browser.url(url);
   }
 );
+
+// library registry
+
+Given('я на странице табличного представления библиотеки документов {string}', async (libraryTitle: string) => {
+  const { table_name } = await getDocumentsLibraryByTitle(libraryTitle);
+  const libraryRegistryPage = new LibraryRegistryPage(table_name);
+  await libraryRegistryPage.open();
+});

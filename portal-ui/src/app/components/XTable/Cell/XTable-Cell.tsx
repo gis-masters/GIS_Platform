@@ -7,7 +7,7 @@ import { FilterQuery } from '../../../services/util/filterObjects';
 import { TextBadge } from '../../TextBadge/TextBadge';
 import { Highlight } from '../../Highlight/Highlight';
 
-import { XTableColumn } from '../XTable';
+import { XTableColumn } from '../XTable.models';
 import { XTableCellContent } from '../CellContent/XTable-CellContent.composed';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Cell.scss';

@@ -7,7 +7,8 @@ import { filterObjects, prepareLike } from '../../services/util/filterObjects';
 import { PageOptions, SortOrder } from '../../services/models';
 import { sleep } from '../../services/util/sleep';
 
-import { XTable, XTableColumn, XTableProps } from './XTable';
+import { XTable, XTableProps } from './XTable';
+import { XTableColumn } from './XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable.stories.scss';
 

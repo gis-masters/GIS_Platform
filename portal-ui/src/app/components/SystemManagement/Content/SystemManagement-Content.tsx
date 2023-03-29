@@ -8,7 +8,7 @@ import { organizationSettings, OrgSettings } from '../../../stores/OrganizationS
 import { OrganizationSettings } from '../../OrganizationSettings/OrganizationSettings';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
 import { PropertyType } from '../../../services/data/schema/schema.models';
-import { XTableColumn } from '../../XTable/XTable';
+import { XTableColumn } from '../../XTable/XTable.models';
 import { Button } from '../../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./SystemManagement-Content.scss';

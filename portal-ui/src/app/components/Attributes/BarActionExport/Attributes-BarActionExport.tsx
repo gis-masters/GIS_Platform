@@ -13,8 +13,8 @@ import { PropertySchema, PropertyType } from '../../../services/data/schema/sche
 import { exportAsXLSX } from '../../../services/util/export';
 import { PageOptions } from '../../../services/models';
 import { services } from '../../../services/services';
+import { XTableColumn } from '../../XTable/XTable.models';
 import { IconButton } from '../../IconButton/IconButton';
-import { XTableColumn } from '../../XTable/XTable';
 import { Toast } from '../../Toast/Toast';
 
 import { AttributesTableRecord } from '../Table/Attributes-Table';

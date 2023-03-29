@@ -1,4 +1,4 @@
-import { SortOrder } from '../../src/app/services/models';
+import { SortOrder } from '../../../src/app/services/models';
 
 export const sortDirections: Record<string, SortOrder> = {
   'По возрастанию': SortOrder.ASC,

@@ -19,7 +19,7 @@ import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { SortParams } from '../../services/util/sortObjects';
 import { Schema } from '../../services/data/schema/schema.models';
 import { PageOptions } from '../../services/models';
-import { XTableColumn } from '../XTable/XTable';
+import { XTableColumn } from '../XTable/XTable.models';
 import { Loading } from '../Loading/Loading';
 
 import Registry from '../Registry/Registry';

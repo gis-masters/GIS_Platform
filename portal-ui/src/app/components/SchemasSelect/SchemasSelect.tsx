@@ -7,7 +7,7 @@ import { schemaService } from '../../services/data/schema/schema.service';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { FormControlProps } from '../Form/Control/Form-Control';
-import { XTableColumn } from '../XTable/XTable';
+import { XTableColumn } from '../XTable/XTable.models';
 import { Button } from '../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./SchemasSelect.scss';

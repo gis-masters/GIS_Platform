@@ -5,7 +5,7 @@ import { IClassNameProps } from '@bem-react/core';
 
 import { FilterQuery } from '../../../services/util/filterObjects';
 
-import { XTableColumn } from '../XTable';
+import { XTableColumn } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-FilterPanelItemContent.scss';
 import '!style-loader!css-loader!sass-loader!../FilterPanelItemContentPart/XTable-FilterPanelItemContentPart.scss';

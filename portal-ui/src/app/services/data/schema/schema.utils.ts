@@ -79,14 +79,24 @@ function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType): OldSchem
 
 export function applyView(schema: Schema, viewId: string): Schema {
   const view = schema.views?.find(cType => cType.id === viewId);
+  const resultSchema = applyTypeToSchema(schema, view);
 
-  return applyTypeToSchema(schema, view);
+  if (view) {
+    resultSchema.appliedView = view.id;
+  }
+
+  return resultSchema;
 }
 
 export function applyContentType(schema: Schema, contentTypeId: string): Schema {
   const contentType = schema.contentTypes?.find(cType => cType.id === contentTypeId);
+  const resultSchema = applyTypeToSchema(schema, contentType);
 
-  return applyTypeToSchema(schema, contentType);
+  if (contentType) {
+    resultSchema.appliedContentType = contentType.id;
+  }
+
+  return resultSchema;
 }
 
 function applyTypeToSchema(schema: Schema, type: ContentType): Schema {

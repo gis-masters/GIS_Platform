@@ -4,11 +4,12 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { SortParams } from '../../../../services/util/sortObjects';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 
-import { XTable, XTableColumn, XTableProps } from './../../XTable';
+import { XTable, XTableProps } from './../../XTable';
+import { XTableColumn } from './../../XTable.models';
 import { Template } from '../XTable-Filter-story-template';
 
 export default {
-  title: 'XTable/Cols/Bool',
+  title: 'XTable/Cols',
   component: XTable
 } as ComponentMeta<typeof XTable>;
 
@@ -72,8 +73,8 @@ const defaultSort: SortParams<TestData> = { field: 'conclusive', asc: true };
 
 type XTableForTestData = (p: XTableProps<TestData>) => ReactElement;
 
-export const BoolColWithFilter = Template.bind({}) as ComponentStory<XTableForTestData>;
-BoolColWithFilter.args = {
+export const TypeBool = Template.bind({}) as ComponentStory<XTableForTestData>;
+TypeBool.args = {
   data,
   cols,
   defaultSort,

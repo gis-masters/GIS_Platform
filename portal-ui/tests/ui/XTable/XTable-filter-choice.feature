@@ -1,6 +1,6 @@
 Feature: xTable Filter Type Choice
   Background:
-    Given я на странице "xtable-cols-choice--choice-col-with-filter" библиотеки блоков
+    Given я на странице "xtable-cols--type-choice" библиотеки блоков
 
   Scenario: При пустом значении фильтр выглядит неактивным (вид по-умолчанию)
     Then блок "XTableFilterTypeChoice" вариант "plain" выглядит как положено

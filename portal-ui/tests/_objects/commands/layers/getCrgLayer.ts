@@ -1,7 +1,7 @@
 import { CrgLayer, CrgLayerType } from '../../../../src/app/services/gis/projects/projects.models';
 
 import { getVectorTableByTitle } from '../tables/getVectorTableByTitle';
-import { getSchemaByTitle } from '../schemas/getSchemaByTitle';
+import { getSchema } from '../schemas/getSchema';
 
 export async function getCrgLayer(
   layerTitle: string,
@@ -11,7 +11,7 @@ export async function getCrgLayer(
   viewId?: string
 ): Promise<CrgLayer> {
   const vectorTable = await getVectorTableByTitle(latestDatasetId, tableTitle);
-  const schema = await getSchemaByTitle(vectorTable.schemaId);
+  const schema = await getSchema(vectorTable.schemaId);
 
   const layer = {
     type: 'vector' as CrgLayerType,

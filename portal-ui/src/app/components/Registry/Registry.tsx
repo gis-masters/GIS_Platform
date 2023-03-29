@@ -4,7 +4,8 @@ import { observer } from 'mobx-react';
 import { NavigationEnd, RouterEvent } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
-import { XTable, XTableColumn, XTableProps } from '../XTable/XTable';
+import { XTable, XTableProps } from '../XTable/XTable';
+import { XTableColumn } from '../XTable/XTable.models';
 import { FilterQuery } from '../../services/util/filterObjects';
 import { PageOptions, SortOrder } from '../../services/models';
 import { SortParams } from '../../services/util/sortObjects';

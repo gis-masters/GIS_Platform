@@ -5,6 +5,7 @@ import { NewWfsFeature } from '../../src/app/services/geoserver/wfs/wfs.models';
 import { Dataset, VectorTable } from '../../src/app/services/data/vectorData/vectorData.models';
 import { CrgLayer, CrgProject } from '../../src/app/services/gis/projects/projects.models';
 import { IWorldOptions } from '@cucumber/cucumber/lib/support_code_library_builder/world';
+import { LibraryRecord } from '../../src/app/services/data/docLibrary/docLibrary.models';
 
 export class ScenarioScope extends World {
   private _latestSchema?: Schema;
@@ -13,6 +14,7 @@ export class ScenarioScope extends World {
   private _latestProject?: CrgProject;
   private _latestLayer?: CrgLayer;
   private _latestFeatures?: NewWfsFeature[];
+  private _latestLibraryRecords?: LibraryRecord[];
 
   constructor(parameters: IWorldOptions) {
     super(parameters);
@@ -72,6 +74,14 @@ export class ScenarioScope extends World {
 
   get latestTableId(): string {
     return this.latestVectorTable.identifier;
+  }
+
+  get latestLibraryRecords(): LibraryRecord[] {
+    return this._latestLibraryRecords || [];
+  }
+
+  set latestLibraryRecords(records: LibraryRecord[]) {
+    this._latestLibraryRecords = records;
   }
 
   private getEntityOrThrow<T>(obj: T | undefined, entity: string): T {

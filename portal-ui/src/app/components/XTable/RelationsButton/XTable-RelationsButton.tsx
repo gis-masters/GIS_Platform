@@ -3,7 +3,7 @@ import { cn } from '@bem-react/classname';
 
 import { FilterQuery } from '../../../services/util/filterObjects';
 import { RelationsButton } from '../../RelationsButton/RelationsButton';
-import { XTableColumn } from '../XTable';
+import { XTableColumn } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-RelationsButton.scss';
 

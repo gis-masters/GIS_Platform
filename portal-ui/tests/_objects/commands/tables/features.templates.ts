@@ -1,8 +1,8 @@
 import { clone } from 'lodash';
-import { faker } from '@faker-js/faker';
 
 import { GeometryType, NewWfsFeature } from '../../../../src/app/services/geoserver/wfs/wfs.models';
-import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { generateObjectBySchema } from '../../utils/generateObjectBySchema';
 
 const baseFeature: NewWfsFeature = {
   type: 'Feature',
@@ -23,48 +23,12 @@ const baseFeature: NewWfsFeature = {
   properties: {}
 };
 
-function generateRandomProperties(properties: PropertySchema[]): { [key: string]: string | Date | number } {
-  const result: { [key: string]: string | Date | number } = {};
-
-  properties.forEach(property => {
-    const { propertyType, name } = property;
-
-    switch (propertyType) {
-      case PropertyType.STRING: {
-        result[name] = faker.lorem.sentence(10);
-
-        break;
-      }
-      case PropertyType.DATETIME: {
-        result[name] = faker.date.past().toISOString().split('T')[0];
-
-        break;
-      }
-      case PropertyType.FLOAT: {
-        result[name] = faker.datatype.float();
-
-        break;
-      }
-      case PropertyType.INT: {
-        result[name] = faker.datatype.number();
-
-        break;
-      }
-      default: {
-        console.warn(`via generateRandomProperties used unsupported property type: ${propertyType}`);
-      }
-    }
-  });
-
-  return result;
-}
-
-function generateRandomFeatures(properties: PropertySchema[], count: number): NewWfsFeature[] {
+function generateRandomFeatures(schema: Schema, count: number): NewWfsFeature[] {
   const features: NewWfsFeature[] = [];
 
   for (let i = 0; i < count; i++) {
     const newFeature = clone(baseFeature);
-    newFeature.properties = generateRandomProperties(properties);
+    newFeature.properties = generateObjectBySchema(schema);
 
     features.push(newFeature);
   }
@@ -173,11 +137,11 @@ export function getPreparedFeatures(title: string, schema?: Schema): NewWfsFeatu
       break;
     }
     case 'данные для тестирования сортировки с пагинацией': {
-      if (!schema || !schema.properties) {
-        throw new Error('Для этого сценария нужно передать схему c properties');
+      if (!schema) {
+        throw new Error('Для этого сценария нужно передать схему');
       }
 
-      generateRandomFeatures(schema.properties, 27).forEach(feature => {
+      generateRandomFeatures(schema, 27).forEach(feature => {
         features.push(feature);
       });
 

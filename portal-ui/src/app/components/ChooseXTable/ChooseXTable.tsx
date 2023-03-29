@@ -10,7 +10,8 @@ import { isEqual } from 'lodash';
 import { PageOptions } from '../../services/models';
 import { defaultRowIdGetter } from '../XTable/XTable.utils';
 import { SortParams } from '../../services/util/sortObjects';
-import { XTable, XTableColumn } from '../XTable/XTable';
+import { XTableColumn } from '../XTable/XTable.models';
+import { XTable } from '../XTable/XTable';
 import { ButtonProps } from '../Button/Button';
 
 import { ChooseXTableCheck } from './Check/ChooseXTable-Check';

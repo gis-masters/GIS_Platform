@@ -1,0 +1,20 @@
+.test-data-preparation {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  height: 100%;
+
+  &__label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    font-size: 26px;
+  }
+
+  &__spinner {
+    display: inline-block;
+  }
+}

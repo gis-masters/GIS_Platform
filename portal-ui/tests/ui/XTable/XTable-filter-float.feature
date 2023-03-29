@@ -1,6 +1,6 @@
 Feature: xTable Filter Type Float
   Background:
-    Given я на странице "xtable-cols-float--float-col-with-filter" библиотеки блоков
+    Given я на странице "xtable-cols--type-float" библиотеки блоков
 
   Scenario: При пустом значении фильтр выглядит неактивным (вид по-умолчанию)
     Then блок "XTableFilterTypeFloat" вариант "plain" выглядит как положено

@@ -2,24 +2,24 @@ import { isEqual } from 'lodash';
 import { WaitUntilOptions } from 'webdriverio';
 import { DataTable, Then, When } from '@wdio/cucumber-framework';
 
-import { attributesBlock } from './Attributes.block';
-
 import { ScenarioScope } from '../../ScenarioScope';
-import { getSortDirection } from '../../getSortDirection';
+import { getSortDirection } from '../../utils/getSortDirection';
 import { sortObjects } from '../../../../src/app/services/util/sortObjects';
 import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
+
+import { attributesBlock } from './Attributes.block';
 
 const waitUntilOptions: WaitUntilOptions = {
   timeout: 10_000,
   timeoutMsg: 'Результат не был достигнут после 10 секунд ожидания'
 };
 
-Then(/^в атрибутивной таблице отображается только колонка "(.*)"$/, async (title: string) => {
+Then('в атрибутивной таблице отображается только колонка {string}', async (title: string) => {
   await attributesBlock.checkTableSingleColTitle(title);
 });
 
-Then(/^открылась атрибутивная таблица слоя "(.*)"$/, async (title: string) => {
+Then('открылась атрибутивная таблица слоя {string}', async (title: string) => {
   expect(await attributesBlock.getTitle()).toEqual(title);
 });
 

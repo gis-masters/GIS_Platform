@@ -1,17 +1,14 @@
-import { Given } from '@wdio/cucumber-framework';
-
-import { authService } from '../../../../src/app/services/auth/auth/auth.service';
-import { AuthenticationResult, RegData } from '../../../../src/app/services/auth/auth/auth.models';
-import { createOrganization } from './createOrganization';
 import { sleep } from '../../../../src/app/services/util/sleep';
-import { getUserByEmail as getUserByEmail } from './getUserByEmail';
-import { createTestUsers, createTestUsersInOtherOrganization } from './createUser';
-import { homePage } from '../../pages/Home.page';
-import { testUsers } from './testUsers';
-import { Page } from '../../Page';
-import { usersService } from '../../../../src/app/services/auth/users/users.service';
-import { projectsPage } from '../../pages/Projects.page';
 import { currentUser } from '../../../../src/app/stores/CurrentUser.store';
+import { authService } from '../../../../src/app/services/auth/auth/auth.service';
+import { usersService } from '../../../../src/app/services/auth/users/users.service';
+import { AuthenticationResult, RegData } from '../../../../src/app/services/auth/auth/auth.models';
+import { testDataPreparationPage } from '../../pages/TestDataPreparationPage.page';
+import { createOrganization } from './createOrganization';
+import { TestUser, testUsers } from './testUsers';
+import { homePage } from '../../pages/Home.page';
+import { createTestUsers } from './createUser';
+import { Page } from '../../Page';
 
 declare const window: {
   currentUser: typeof currentUser;
@@ -22,7 +19,7 @@ declare const window: {
 async function authenticate(
   login: string,
   password: string,
-  thenPage: Page = projectsPage
+  thenPage: Page = testDataPreparationPage
 ): Promise<AuthenticationResult> {
   const currentUrl = await browser.getUrl();
   if (!currentUrl || currentUrl === 'data:,' || currentUrl === 'about:blank') {
@@ -88,8 +85,13 @@ export async function authenticateAsOtherAdmin(thenPage?: Page): Promise<void> {
   await authenticateAsSomeAdmin(testUsers['Администратор другой организации'], thenPage);
 }
 
-export async function authenticateAsOwner(thenPage?: Page): Promise<void> {
-  await authenticateAs(testUsers['Гарри'], thenPage);
+export async function authenticateAs({ email, password }: TestUser, thenPage?: Page): Promise<void> {
+  const { ok } = await authenticate(email, password, thenPage);
+  if (!ok) {
+    await authenticateAsAdmin();
+    await createTestUsers();
+    await authenticate(email, password, thenPage);
+  }
 }
 
 export async function logout(): Promise<void> {
@@ -99,35 +101,3 @@ export async function logout(): Promise<void> {
   await browser.pause(500); // перезагрузка страницы после logout
   await homePage.waitForVisible();
 }
-
-export async function authenticateAs(
-  { email, password }: (typeof testUsers)[keyof typeof testUsers],
-  thenPage?: Page
-): Promise<void> {
-  const { ok } = await authenticate(email, password, thenPage);
-  if (!ok) {
-    await authenticateAsAdmin();
-    await createTestUsers();
-    await authenticate(email, password, thenPage);
-  }
-}
-
-Given('я авторизован как {string}', async (user: keyof typeof testUsers) => {
-  const testUser = testUsers[user];
-  if (!testUser) {
-    throw new Error(`Used unknown user: '${user}'`);
-  }
-
-  await authenticateAs(testUser);
-});
-
-Given('в другой организации существует пользователь {string}', async (user: keyof typeof testUsers) => {
-  await authenticateAsOtherAdmin();
-  const result = await getUserByEmail(testUsers[user]?.email);
-
-  if (!result) {
-    await createTestUsersInOtherOrganization();
-  }
-
-  await logout();
-});

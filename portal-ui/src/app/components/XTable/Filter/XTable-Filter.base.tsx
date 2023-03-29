@@ -2,7 +2,8 @@ import React, { FC } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { PropertyOption, PropertyType } from '../../../services/data/schema/schema.models';
+import { PropertyOption } from '../../../services/data/schema/schema.models';
+import { XTableColumnType } from '../XTable.models';
 import { FilterQuery } from '../../../services/util/filterObjects';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Filter.scss';
@@ -12,7 +13,7 @@ export const cnXTableFilter = cn('XTable', 'Filter');
 export interface XTableFilterProps extends IClassNameProps {
   field: string;
   filterQuery: FilterQuery;
-  type: PropertyType;
+  type: XTableColumnType;
   options: PropertyOption[];
   onBeforeFilterChange: () => void;
   onFilterChange: () => void;

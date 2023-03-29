@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 
 import { SortParams } from '../../../services/util/sortObjects';
 
-import { XTableColumn } from '../XTable';
+import { XTableColumn } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-HeadCellLabel.scss';
 

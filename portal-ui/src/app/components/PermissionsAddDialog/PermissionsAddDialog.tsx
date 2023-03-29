@@ -24,7 +24,8 @@ import {
   PermissionsXTablePropsSet
 } from '../PermissionsListDialog/PermissionsListDialog.models';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
-import { XTable, XTableColumn } from '../XTable/XTable';
+import { XTable } from '../XTable/XTable';
+import { XTableColumn } from '../XTable/XTable.models';
 import { Button } from '../Button/Button';
 
 import { PermissionsAddDialogItemCheck } from './ItemCheck/PermissionsAddDialog-ItemCheck';

@@ -2,6 +2,7 @@ import React, { Component, ReactElement, useEffect, useState } from 'react';
 import { action, computed, observable, when, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Subject } from 'rxjs';
+import { cloneDeep } from 'lodash';
 import { Checkbox } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
@@ -13,7 +14,14 @@ import { PropertySchema, PropertyType, Schema } from '../../services/data/schema
 import { communicationService } from '../../services/communication.service';
 import { calculateValues } from '../../services/formValidation.service';
 import { schemaService } from '../../services/data/schema/schema.service';
-import { addFilterPart, FilterQuery, getFilterRootAnd, removeFieldFilter } from '../../services/util/filterObjects';
+import {
+  addFilterPart,
+  FilterQuery,
+  getFieldFilterValue,
+  getFilterRootAnd,
+  modifyFieldFilterValue,
+  removeFieldFilter
+} from '../../services/util/filterObjects';
 import { PageOptions } from '../../services/models';
 import { SortParams } from '../../services/util/sortObjects';
 import {
@@ -25,7 +33,8 @@ import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/d
 import { getIdsFromPath, getPathFilter, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
-import { XTableColumn, XTableProps } from '../XTable/XTable';
+import { XTableProps } from '../XTable/XTable';
+import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { convertToComplexField } from '../Form/Form.utils';
 import { DocumentInfo } from '../Documents/Documents';
@@ -183,6 +192,10 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
       },
       ...getXTableColumnsFromSchema<LibraryRecord>(this.schema, [
         {
+          field: 'id',
+          type: XTableExtraColumnType.ID
+        },
+        {
           field: 'path',
           type: PropertyType.CUSTOM,
           CellContent: ({ rowData, filterParams }) => (
@@ -296,6 +309,21 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
     if (!this.library || !this.schema) {
       return [[], 1];
     }
+
+    const filterById = getFieldFilterValue(pageOptions.filter, 'id') as { $in: number[] } | undefined;
+    if (filterById) {
+      const modifiedFilter = cloneDeep(pageOptions.filter);
+      modifyFieldFilterValue(modifiedFilter, 'id');
+      pageOptions = {
+        ...pageOptions,
+        filter: modifiedFilter,
+        queryParams: {
+          ...pageOptions.queryParams,
+          recordId: filterById.$in.join(',')
+        }
+      };
+    }
+
     const [documents, totalPages] = await getLibraryRecordsAsRegistry(
       this.library.table_name,
       this.schema.name,

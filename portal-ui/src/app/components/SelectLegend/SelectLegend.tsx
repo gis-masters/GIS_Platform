@@ -9,7 +9,7 @@ import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { loadAllLayersStyles } from '../../services/map/map-print.service';
 import { SortParams } from '../../services/util/sortObjects';
 import { FormControlProps } from '../Form/Control/Form-Control';
-import { XTableColumn } from '../XTable/XTable';
+import { XTableColumn } from '../XTable/XTable.models';
 import { Button } from '../Button/Button';
 
 import { SelectLegendImg } from './Img/SelectLegend-Img';

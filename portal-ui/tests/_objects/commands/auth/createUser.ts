@@ -118,10 +118,10 @@ export async function createTestUsers(): Promise<void> {
   });
 
   await sleep(5000); // wait for users ready
-  const deadUser = await getUserByEmail('fred@dead');
-  if (deadUser) {
+  try {
+    const deadUser = await getUserByEmail('fred@dead');
     await editUser({ enabled: false }, deadUser.id);
-  }
+  } catch {}
 }
 
 export async function createTestUsersInOtherOrganization(): Promise<void> {

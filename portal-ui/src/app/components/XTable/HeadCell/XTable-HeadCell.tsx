@@ -10,7 +10,7 @@ import { FilterQuery } from '../../../services/util/filterObjects';
 import { SortParams } from '../../../services/util/sortObjects';
 import { DescriptionMark } from '../../DescriptionMark/DescriptionMark';
 
-import { XTableColumn } from '../XTable';
+import { XTableColumn } from '../XTable.models';
 import { XTableFilter } from '../Filter/XTable-Filter.composed';
 import { XTableHeadCellLabel } from '../HeadCellLabel/XTable-HeadCellLabel';
 import { XTableHeadCellTitle } from '../HeadCellTitle/XTable-HeadCellTitle';

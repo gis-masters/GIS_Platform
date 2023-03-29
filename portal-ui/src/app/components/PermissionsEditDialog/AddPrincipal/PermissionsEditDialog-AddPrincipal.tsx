@@ -28,7 +28,8 @@ import {
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { CrgGroup } from '../../../services/auth/groups/groups.models';
 import { CrgUser } from '../../../services/auth/users/users.models';
-import { XTable, XTableColumn } from '../../XTable/XTable';
+import { XTable } from '../../XTable/XTable';
+import { XTableColumn } from '../../XTable/XTable.models';
 import { Button } from '../../Button/Button';
 
 import { PermissionsEditDialogCheckPrincipal } from '../CheckPrincipal/PermissionsEditDialog-CheckPrincipal';

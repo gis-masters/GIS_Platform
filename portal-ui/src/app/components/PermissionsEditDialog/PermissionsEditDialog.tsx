@@ -16,7 +16,8 @@ import { communicationService } from '../../services/communication.service';
 import { usersService } from '../../services/auth/users/users.service';
 import { CrgUser } from '../../services/auth/users/users.models';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
-import { XTable, XTableColumn } from '../XTable/XTable';
+import { XTable } from '../XTable/XTable';
+import { XTableColumn } from '../XTable/XTable.models';
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';
 

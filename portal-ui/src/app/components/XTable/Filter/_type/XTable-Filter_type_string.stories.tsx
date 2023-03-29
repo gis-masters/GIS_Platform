@@ -3,11 +3,12 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { SortParams } from '../../../../services/util/sortObjects';
 
-import { XTable, XTableColumn, XTableProps } from './../../XTable';
+import { XTable, XTableProps } from './../../XTable';
+import { XTableColumn } from './../../XTable.models';
 import { Template } from '../XTable-Filter-story-template';
 
 export default {
-  title: 'XTable/Cols/String',
+  title: 'XTable/Cols',
   component: XTable
 } as ComponentMeta<typeof XTable>;
 
@@ -109,8 +110,8 @@ const defaultSort: SortParams<TestData> = { field: 'title', asc: true };
 
 type XTableForTestData = (p: XTableProps<TestData>) => ReactElement;
 
-export const StringColWithFilter = Template.bind({}) as ComponentStory<XTableForTestData>;
-StringColWithFilter.args = {
+export const TypeString = Template.bind({}) as ComponentStory<XTableForTestData>;
+TypeString.args = {
   data,
   cols,
   defaultSort,

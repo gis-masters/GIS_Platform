@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
+import { currentProject } from '../../../stores/CurrentProject.store';
 import { FilterBySelection, mapStore } from '../../../stores/Map.store';
 import { calculateValues } from '../../../services/formValidation.service';
 import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
@@ -13,8 +14,8 @@ import { Schema } from '../../../services/data/schema/schema.models';
 import { PageOptions } from '../../../services/models';
 import { getXTableColumnsFromSchemaWithLowerCaseKeys } from '../../XTable/XTable.utils';
 import { applyView } from '../../../services/data/schema/schema.utils';
-import { currentProject } from '../../../stores/CurrentProject.store';
-import { XTableColumn, XTableInvoke } from '../../XTable/XTable';
+import { XTableColumn } from '../../XTable/XTable.models';
+import { XTableInvoke } from '../../XTable/XTable';
 
 import { AttributesRowHead } from '../RowHead/Attributes-RowHead';
 import { AttributesBarHead } from '../BarHead/Attributes-BarHead';

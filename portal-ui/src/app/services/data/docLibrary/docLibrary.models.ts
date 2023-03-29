@@ -8,6 +8,7 @@ export enum ContentTypeTypes {
 export interface DocumentLibrary extends Omit<DataEntity, 'identifier'> {
   type: DataEntityType.LIBRARY;
   table_name: string;
+  schemaId: string;
   role: Role;
 }
 

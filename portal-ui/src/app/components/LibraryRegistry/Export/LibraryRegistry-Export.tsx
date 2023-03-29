@@ -14,7 +14,7 @@ import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
 import { PageOptions } from '../../../services/models';
 import { sleep } from '../../../services/util/sleep';
 import { MenuIconButton } from '../../MenuIconButton/MenuIconButton';
-import { XTableColumn } from '../../XTable/XTable';
+import { XTableColumn } from '../../XTable/XTable.models';
 import { FileIcon } from '../../FileIcon/FileIcon';
 
 const cnLibraryRegistryExport = cn('LibraryRegistry', 'Export');

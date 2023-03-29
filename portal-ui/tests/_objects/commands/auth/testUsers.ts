@@ -1,11 +1,18 @@
+import { Role, rolesTitles } from '../../../../src/app/services/data/permissions/permissions.models';
+import { inverseObject } from '../../../../src/app/services/util/inverseObject';
 import { RegData } from '../../../../src/app/services/auth//auth/auth.models';
-import { Role } from '../../../../src/app/services/data/permissions/permissions.models';
 
-export const userRoles: Record<string, Role> = {
-  владение: Role.OWNER,
-  чтение: Role.VIEWER,
-  редактирование: Role.CONTRIBUTOR
-};
+export function getRoleByTitle(title: string): Role {
+  const role = inverseObject(rolesTitles)[title];
+
+  if (!role) {
+    throw new Error(`Не существует роль "${title}"`);
+  }
+
+  return role;
+}
+
+export type TestUser = RegData & { token?: string };
 
 export const testUsers: Record<
   | 'Администратор системы'
@@ -17,7 +24,7 @@ export const testUsers: Record<
   | 'Деактивированный пользователь'
   | 'Администратор другой организации'
   | 'Питер',
-  RegData
+  TestUser
 > = {
   'Администратор системы': {
     company: 'Order of the Phoenix',
@@ -101,3 +108,13 @@ export const testUsers: Record<
     password_: 'Avadakedavra0'
   }
 };
+
+export function getTestUser(username: string): TestUser {
+  const user: TestUser | undefined = testUsers[username as keyof typeof testUsers];
+
+  if (!user) {
+    throw new Error(`Не существует тестовый пользователь "${username}"`);
+  }
+
+  return user;
+}

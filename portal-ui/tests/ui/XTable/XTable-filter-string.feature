@@ -1,7 +1,7 @@
 Feature: xTable Filter Type String
 
   Background: 
-    Given я на странице "xtable-cols-string--string-col-with-filter" библиотеки блоков
+    Given я на странице "xtable-cols--type-string" библиотеки блоков
 
   Scenario: При пустом значении и выключенном строгом поиске фильтр выглядит неактивным (вид по-умолчанию)
     Then в таблице xtable кнопка переключения режимов фильтра типа string не имеет жёлтой подсветки

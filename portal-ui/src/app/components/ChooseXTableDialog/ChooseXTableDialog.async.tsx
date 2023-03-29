@@ -7,7 +7,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/ma
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { XTableColumn } from '../XTable/XTable';
+import { XTableColumn } from '../XTable/XTable.models';
 import { PageOptions } from '../../services/models';
 import { Button, ButtonProps } from '../Button/Button';
 import { ChooseXTable } from '../ChooseXTable/ChooseXTable';

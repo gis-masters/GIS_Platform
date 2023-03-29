@@ -6,63 +6,69 @@ import { xTableFilterTypeChoiceBlock } from './Filter/_type/XTable-Filter_type_c
 import { xTableFilterTypeDateTimeBlock } from './Filter/_type/XTable-Filter_type_dateTime.block';
 import { xTableFilterTypeFloatBlock } from './Filter/_type/XTable-Filter_type_float.block';
 
-Then(
-  /^в первой колонке таблицы xtable содержатся только элементы:$/,
-  async ({ rawTable }: { rawTable: string[][] }) => {
-    const values = rawTable.flat();
-    expect(values).toEqual(await xTableBlock.getFirstColCellValues());
-  }
-);
+Then('в первой колонке таблицы xtable содержатся только элементы:', async ({ rawTable }: { rawTable: string[][] }) => {
+  const values = rawTable.flat();
+  expect(values).toEqual(await xTableBlock.getFirstColCellValues());
+});
+
+Then('в первой колонке таблицы xtable содержатся только элементы {string}', async (valuesDirty: string) => {
+  const values = valuesDirty.split(', ');
+  expect(values).toEqual(await xTableBlock.getFirstColCellValues());
+});
+
+Then('таблица xtable не содержит записей', async () => {
+  expect(await xTableBlock.getFirstColCellValues()).toEqual([]);
+});
 
 // TODO: код тестирования фильтров таблиц типов bool, choice, dateTime и float отрефакторить по примеру string
 
-When(/^в таблице xtable c фильтром типа bool я нажимаю да$/, async () => {
+When('в таблице xtable c фильтром типа bool я нажимаю да', async () => {
   await xTableFilterTypeBoolBlock.setValueTrue();
 });
 
-When(/^в таблице xtable c фильтром типа bool я нажимаю нет$/, async () => {
+When('в таблице xtable c фильтром типа bool я нажимаю нет', async () => {
   await xTableFilterTypeBoolBlock.setValueFalse();
 });
 
 Then(
-  /^в таблице xtable с фильтром типа bool отображаются только элементы, значение которых подходит под введённое ограничение `да`$/,
+  'в таблице xtable с фильтром типа bool отображаются только элементы, значение которых подходит под введённое ограничение `да`',
   async () => {
     await xTableFilterTypeBoolBlock.checkFilterableTrueItems();
   }
 );
 
 Then(
-  /^в таблице xtable с фильтром типа bool отображаются только элементы, значение которых подходит под введённое ограничение `нет`$/,
+  'в таблице xtable с фильтром типа bool отображаются только элементы, значение которых подходит под введённое ограничение `нет`',
   async () => {
     await xTableFilterTypeBoolBlock.checkFilterableFalseItems();
   }
 );
 
-When(/^в таблице xtable я выбираю в поле фильтра типа choice первую опцию$/, async () => {
+When('в таблице xtable я выбираю в поле фильтра типа choice первую опцию', async () => {
   await xTableFilterTypeChoiceBlock.setValue();
 });
 
-When(/^в таблице xtable я выбираю в поле фильтра типа choice вторую опцию$/, async () => {
+When('в таблице xtable я выбираю в поле фильтра типа choice вторую опцию', async () => {
   await xTableFilterTypeChoiceBlock.setValue2();
 });
 
-When(/^в таблице xtable я повторно выбираю в поле фильтра типа choice вторую опцию$/, async () => {
+When('в таблице xtable я повторно выбираю в поле фильтра типа choice вторую опцию', async () => {
   await xTableFilterTypeChoiceBlock.setValue3();
 });
 
 Then(
-  /^в таблице xtable с фильтром типа choice отображаются только элементы, значение которых подходит под выбранную опцию$/,
+  'в таблице xtable с фильтром типа choice отображаются только элементы, значение которых подходит под выбранную опцию',
   async () => {
     await xTableFilterTypeChoiceBlock.checkFilterableOptionItems();
   }
 );
 
-Then(/^в таблице xtable с фильтром типа choice отображаются все элементы$/, async () => {
+Then('в таблице xtable с фильтром типа choice отображаются все элементы', async () => {
   await xTableFilterTypeChoiceBlock.checkFilterableItems();
 });
 
 When(
-  /^в таблице xtable я ввожу в поле фильтра типа dateTime "(.*)" и "(.*)"$/,
+  'в таблице xtable я ввожу в поле фильтра типа dateTime {string} и {string}',
   async (firstDate: string, secondDate: string) => {
     await xTableFilterTypeDateTimeBlock.setValue2(firstDate, secondDate);
   }

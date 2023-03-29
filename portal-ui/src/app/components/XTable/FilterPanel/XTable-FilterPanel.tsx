@@ -6,7 +6,7 @@ import { Clear } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { computed, makeObservable, observable } from 'mobx';
 
-import { XTableColumn } from '../XTable';
+import { XTableColumn } from '../XTable.models';
 import { cnXTableFilterPanelItem, XTableFilterPanelItem } from '../FilterPanelItem/XTable-FilterPanelItem';
 
 import { FilterQuery, getFieldFilterPart } from '../../../services/util/filterObjects';

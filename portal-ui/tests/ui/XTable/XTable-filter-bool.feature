@@ -1,6 +1,6 @@
 Feature: xTable Filter Type Bool
   Background:
-    Given я на странице "xtable-cols-bool--bool-col-with-filter" библиотеки блоков
+    Given я на странице "xtable-cols--type-bool" библиотеки блоков
 
   Scenario: При не выбранном значении фильтр выглядит неактивным (вид по-умолчанию)
     Then блок "XTableFilterTypeBool" вариант "plain" выглядит как положено

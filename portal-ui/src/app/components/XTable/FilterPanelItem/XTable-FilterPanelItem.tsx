@@ -10,7 +10,7 @@ import { FilterQuery, getFieldFilterPart, modifyFieldFilterValue } from '../../.
 import { PropertyType } from '../../../services/data/schema/schema.models';
 
 import { XTableFilterPanelItemContent } from '../FilterPanelItemContent/XTable-FilterPanelItemContent.composed';
-import { XTableColumn } from '../XTable';
+import { XTableColumn } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!../FilterPanelItem/XTable-FilterPanelItem.scss';
 

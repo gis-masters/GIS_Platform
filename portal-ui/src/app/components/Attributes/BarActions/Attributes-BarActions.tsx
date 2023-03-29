@@ -20,7 +20,7 @@ import { AttributesTableRecord } from '../Table/Attributes-Table';
 import { mapService } from '../../../services/map/map.service';
 import { IconButton } from '../../IconButton/IconButton';
 import { PageOptions } from '../../../services/models';
-import { XTableColumn } from '../../XTable/XTable';
+import { XTableColumn } from '../../XTable/XTable.models';
 import { Button } from '../../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-BarActions.scss';

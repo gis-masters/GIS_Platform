@@ -1,6 +1,6 @@
 Feature: xTable Filter Type DateTime
   Background:
-    Given я на странице "xtable-cols-datetime--date-time-col-with-filter" библиотеки блоков
+    Given я на странице "xtable-cols--type-date-time" библиотеки блоков
 
   Scenario: При пустом значении фильтр выглядит неактивным (вид по-умолчанию)
     Then блок "XTableFilterTypeDateTime" вариант "plain" выглядит как положено

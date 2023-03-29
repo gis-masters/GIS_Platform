@@ -1,4 +1,4 @@
-import React, { Component, ComponentType, createRef, ReactNode, RefObject } from 'react';
+import React, { Component, createRef, ReactNode, RefObject } from 'react';
 import { action, computed, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Table, TableBody, TableCellProps, TableContainer, TableRow, Pagination, PaperProps } from '@mui/material';
@@ -8,19 +8,14 @@ import { cloneDeep, debounce } from 'lodash';
 import { cn } from '@bem-react/classname';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import {
-  PropertySchemaChoice,
-  PropertySchemaDatetime,
-  PropertySchemaUrl,
-  PropertyType,
-  Relation
-} from '../../services/data/schema/schema.models';
+import { PropertyType } from '../../services/data/schema/schema.models';
 import { filterObjects, FilterQuery } from '../../services/util/filterObjects';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
 import { PageOptions, SortOrder } from '../../services/models';
 import { Loading } from '../Loading/Loading';
 import { Toast } from '../Toast/Toast';
 
+import { XTableColumn, XTableColumnType, XTableExtraColumnType } from './XTable.models';
 import { defaultRowIdGetter } from './XTable.utils';
 import { XTableRow } from './Row/XTable-Row';
 import { XTableHead } from './Head/XTable-Head';
@@ -30,47 +25,13 @@ import { XTableTitle } from './Title/XTable-Title';
 import { XTableFooter } from './Footer/XTable-Footer';
 import { XTableTitleBar } from './TitleBar/XTable-TitleBar';
 import { XTableHeadCell } from './HeadCell/XTable-HeadCell';
-import { XTableFilterProps } from './Filter/XTable-Filter.base';
 import { XTableFilterPanel } from './FilterPanel/XTable-FilterPanel';
-import { XTableCellContentProps } from './CellContent/XTable-CellContent.base';
 import { XTableTitleBarActions } from './TitleBarActions/XTable-TitleBarActions';
 import { XTableContainer, XTableContainerProps } from './Container/XTable-Container';
-import { XTableFilterPanelItemContentProps } from './FilterPanelItemContent/XTable-FilterPanelItemContent.base';
 
 import '!style-loader!css-loader!sass-loader!./XTable.scss';
 
 const cnXTable = cn('XTable');
-
-export interface XTableColumn<T> {
-  field?: keyof T & string;
-  title?: ReactNode;
-  description?: ReactNode;
-  filterable?: boolean;
-  CustomFilterComponent?: ComponentType<XTableFilterProps>;
-  CustomFilterPanelItemComponent?: ComponentType<XTableFilterPanelItemContentProps<T>>;
-  type?: PropertyType;
-  settings?: Partial<
-    Pick<PropertySchemaChoice, 'options'> &
-      Pick<PropertySchemaDatetime, 'format'> &
-      Pick<PropertySchemaUrl, 'openIn'> & { relations: Relation[] }
-  >;
-  sortable?: boolean;
-  CellContent?: ComponentType<{ rowData: T; field: keyof T; filterActive: boolean; filterParams: FilterQuery }>;
-  cellContentProps?: XTableCellContentProps;
-  AfterCellContent?: ComponentType<{
-    rowData: T;
-    col: XTableColumn<T>;
-    filterActive: boolean;
-    filterParams: FilterQuery;
-  }>;
-  getIdBadge?: (rowData: T) => string | number;
-  cellProps?: TableCellProps;
-  headerCellProps?: TableCellProps;
-  align?: TableCellProps['align'];
-  hidden?: boolean;
-  width?: number;
-  minWidth?: number;
-}
 
 interface XTablePropsBase<T> extends IClassNameProps {
   id?: string;
@@ -217,9 +178,10 @@ export default class XTable<T> extends Component<XTableProps<T>> {
       onRowDoubleClick
     } = this.props;
 
-    const colsTypesAlign: Partial<Record<PropertyType, TableCellProps['align']>> = {
+    const colsTypesAlign: Partial<Record<XTableColumnType, TableCellProps['align']>> = {
       [PropertyType.BOOL]: 'center',
       [PropertyType.DATETIME]: 'center',
+      [XTableExtraColumnType.ID]: 'right',
       [PropertyType.INT]: 'right',
       [PropertyType.FLOAT]: 'right'
     };

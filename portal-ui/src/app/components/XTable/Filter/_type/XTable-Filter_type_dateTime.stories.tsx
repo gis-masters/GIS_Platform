@@ -4,11 +4,12 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { SortParams } from '../../../../services/util/sortObjects';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 
-import { XTable, XTableColumn, XTableProps } from './../../XTable';
+import { XTable, XTableProps } from './../../XTable';
+import { XTableColumn } from './../../XTable.models';
 import { Template } from '../XTable-Filter-story-template';
 
 export default {
-  title: 'XTable/Cols/DateTime',
+  title: 'XTable/Cols',
   component: XTable
 } as ComponentMeta<typeof XTable>;
 
@@ -59,8 +60,8 @@ const defaultSort: SortParams<TestData> = { field: 'date', asc: true };
 
 type XTableForTestData = (p: XTableProps<TestData>) => ReactElement;
 
-export const DateTimeColWithFilter = Template.bind({}) as ComponentStory<XTableForTestData>;
-DateTimeColWithFilter.args = {
+export const TypeDateTime = Template.bind({}) as ComponentStory<XTableForTestData>;
+TypeDateTime.args = {
   data,
   cols,
   defaultSort,

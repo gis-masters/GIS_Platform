@@ -8,6 +8,7 @@ import {
   ScratchImport,
   TaskStatusCode
 } from '../services/geoserver/import/import.models';
+import { ValueOf } from '../services/models';
 
 export interface ImportInfo {
   file?: File;
@@ -22,8 +23,6 @@ export interface ImportTaskExtended extends ImportTask {
   isPending: boolean;
   statusText: ValueOf<typeof taskStatusesList>;
 }
-
-type ValueOf<T> = T[keyof T];
 
 const taskStatusesList: { [key in TaskStatusCode]: string } = {
   PENDING: 'PENDING',

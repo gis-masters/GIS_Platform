@@ -12,7 +12,7 @@ Given(
   }
 );
 
-Given(/^все наборы данных удалены администратором$/, async () => {
+Given('все наборы данных удалены администратором', async () => {
   await deleteAllDatasetsAsAdmin();
 });
 

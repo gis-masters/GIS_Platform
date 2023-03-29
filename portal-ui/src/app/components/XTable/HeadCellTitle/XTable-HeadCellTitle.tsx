@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { XTableColumn } from '../XTable';
+import { XTableColumn } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-HeadCellTitle.scss';
 

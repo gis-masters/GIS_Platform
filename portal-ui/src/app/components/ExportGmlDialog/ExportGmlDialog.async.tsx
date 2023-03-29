@@ -17,19 +17,17 @@ import {
 
 import { Form } from '../Form/Form';
 import { Button } from '../Button/Button';
-import { XTableColumn } from '../XTable/XTable';
+import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
 import { PageOptions } from '../../services/models';
 import { LayersList } from '../LayersList/LayersList';
 import { sidebars } from '../../stores/Sidebars.store';
 import { getKnownEpsg } from '../../services/data/epsg/epsg.service';
-import { PropertyType } from '../../services/data/schema/schema.models';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
-import { XTableNumberFilter } from '../XTable/NumberFilter/XTable-NumberFilter';
 import { exportVectorTableAsGML } from '../../services/data/export/export.service';
 import { ExportResourceModel } from '../../services/data/export/export.models';
 import { CrgProjection, Projection, viewedProjections } from '../../services/geoserver/projections.service';
@@ -90,8 +88,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
     {
       field: 'auth_srid',
       title: 'Код SRID',
-      type: PropertyType.INT,
-      CustomFilterComponent: XTableNumberFilter,
+      type: XTableExtraColumnType.ID,
       filterable: true,
       sortable: true
     }

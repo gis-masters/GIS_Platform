@@ -1,10 +1,10 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { testUsers } from '../../commands/auth/testUsers';
+import { getTestUser } from '../../commands/auth/testUsers';
 import { loginFormBlock } from './LoginForm.block';
 
-When('я авторизуюсь в форме авторизации как {string}', async (user: keyof typeof testUsers) => {
-  const { email, password } = testUsers[user];
+When('я авторизуюсь в форме авторизации как {string}', async (username: string) => {
+  const { email, password } = getTestUser(username);
   await loginFormBlock.fillAndSubmit(email, password);
 });
 

@@ -86,3 +86,5 @@ export interface PageQueryParams {
 export interface ChildrenProps {
   children?: ReactNode;
 }
+
+export type ValueOf<T> = T[keyof T];
