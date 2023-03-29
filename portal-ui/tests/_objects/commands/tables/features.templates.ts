@@ -67,10 +67,9 @@ export function getPreparedFeatures(title: string, schema?: Schema): NewWfsFeatu
           properties: {
             number_int: 314,
             number_double: 3.14,
-            some_string: 'строка текста',
+            some_string: 'привет worldwide',
             some_date: '2023-02-01',
-            is_enabled: true,
-            obj_code: '55'
+            is_enabled: true
           }
         },
         {
@@ -125,7 +124,7 @@ export function getPreparedFeatures(title: string, schema?: Schema): NewWfsFeatu
             some_string: 'привет мир',
             some_date: '1990-02-28',
             is_enabled: false,
-            obj_code: '1111'
+            obj_code: '1122'
           }
         }
       );

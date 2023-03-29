@@ -19,9 +19,9 @@ class LayerPropertiesDialogBlock extends Block {
     expect(view).toEqual(viewTitle);
   }
 
-  async layerPropertyDialogSelectViewThirdOption(): Promise<void> {
+  async layerPropertyDialogSelectOptionByTitle(optionTitle: string): Promise<void> {
     const muiSelect = new MuiSelectBlock(this.selectors.container);
-    await muiSelect.selectOption(3);
+    await muiSelect.selectOptionByTitle(optionTitle);
   }
 
   async saveLayerProperty(): Promise<void> {

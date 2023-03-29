@@ -4,7 +4,7 @@ import {
   getVectorTables
 } from '../../../../src/app/services/data/vectorData/vectorData.service';
 import { GeometryType, WfsFeature } from '../../../../src/app/services/geoserver/wfs/wfs.models';
-import { authenticateAsAdmin } from './../auth/authenticate';
+import { authenticateAsAdmin } from '../auth/authenticate';
 
 declare const window: {
   getVectorTables: typeof getVectorTables;

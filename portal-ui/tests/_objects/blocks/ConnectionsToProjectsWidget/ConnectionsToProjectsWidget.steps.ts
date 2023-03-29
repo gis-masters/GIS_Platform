@@ -15,5 +15,5 @@ Then('в диалоговом окне `Выбор проекта` не дост
 });
 
 When('в диалоговом окне `Выбор проекта` выбираю первое представление', async () => {
-  await connectionsToProjectsWidgetBlock.projectSelectDialogSelectFirstView();
+  await connectionsToProjectsWidgetBlock.projectSelectDialogSelectFirstView('Представление 1');
 });

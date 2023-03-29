@@ -65,6 +65,18 @@ class AttributesBlock extends Block {
   async isColumnSortable(title: string): Promise<boolean> {
     return await this.xTable.isColumnSortable(title);
   }
+
+  async filterNumerableColumn(colTitle: string, lte: string, gte: string) {
+    await this.xTable.filterNumerableColumn(colTitle, lte, gte);
+  }
+
+  async filterStringColumn(colTitle: string, filter: string) {
+    await this.xTable.filterStringColumn(colTitle, filter);
+  }
+
+  async filterChoiceColumn(colTitle: string, optionTitle: string) {
+    await this.xTable.filterChoiceColumn(colTitle, optionTitle);
+  }
 }
 
 export const attributesBlock = new AttributesBlock();

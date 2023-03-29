@@ -7,27 +7,27 @@ interface Selectors {
 
 export abstract class Block<S extends Selectors = Selectors> {
   abstract selectors: S;
-  parentSelector: string;
+  protected parent: string | WebdriverIO.Element;
 
   get name(): string {
     return this.constructor.name.replace(/Block$/, '');
   }
 
-  constructor(parentSelector = '') {
-    this.parentSelector = parentSelector;
+  constructor(parent: string | WebdriverIO.Element = '') {
+    this.parent = parent;
     blocksRegistry[this.constructor.name.replace(/Block$/, '')] = this;
   }
 
   protected async $(key: keyof this['selectors']): Promise<WebdriverIO.Element> {
-    const $parent = this.parentSelector ? await $(this.parentSelector) : browser;
+    const $parent = await this.getParent();
 
-    return await $parent.$(this.selectors[key]);
+    return $parent.$(this.selectors[key]);
   }
 
   protected async $$(key: keyof this['selectors']): Promise<WebdriverIO.Element[]> {
-    const $parent = this.parentSelector ? await $(this.parentSelector) : browser;
+    const $parent = await this.getParent();
 
-    return await $parent.$$(this.selectors[key]);
+    return $parent.$$(this.selectors[key]);
   }
 
   async waitForExist(): Promise<true | void> {
@@ -52,5 +52,17 @@ export abstract class Block<S extends Selectors = Selectors> {
     const $container = await this.$('container');
 
     expect(await browser.checkElement($container, `${this.name}-${tag}`, {})).toEqual(0);
+  }
+
+  private async getParent() {
+    if (this.parent && typeof this.parent === 'string') {
+      return $(this.parent);
+    }
+
+    if (this.parent && typeof this.parent !== 'string') {
+      return this.parent;
+    }
+
+    return browser;
   }
 }

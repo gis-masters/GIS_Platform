@@ -9,8 +9,8 @@ import { ScenarioScope } from '../../ScenarioScope';
 import { getCrgLayer } from './getCrgLayer';
 
 Given(
-  'в созданном проекте создан слой на основе созданного набора данных и таблицы',
-  async function (this: ScenarioScope) {
+  'в созданном проекте создан слой {string} на основе созданных набора данных и таблицы',
+  async function (this: ScenarioScope, layerTitle: string) {
     await authenticateAsAdmin();
 
     const { latestProject, latestVectorTable, latestDatasetId } = this;
@@ -22,7 +22,7 @@ Given(
 
     const layer = {
       type: 'vector' as CrgLayerType.VECTOR,
-      title: 'layerTitle',
+      title: layerTitle,
       dataset: latestDatasetId,
       view: 'viewId',
       tableName: latestVectorTable.identifier,

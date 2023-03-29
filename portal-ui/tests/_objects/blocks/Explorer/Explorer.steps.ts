@@ -1,17 +1,22 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
 import { explorerBlock } from './Explorer.block';
+import { ScenarioScope } from '../../ScenarioScope';
 
-When(/^в диалоговом окне выбора источника данных я выбираю набор данных "(.*)"$/, async (dataset: string) => {
-  await explorerBlock.openExplorerItem(dataset);
+When('в диалоговом окне выбора источника данных я выбираю набор данных', async function (this: ScenarioScope) {
+  const { latestDataset } = this;
+
+  await explorerBlock.openExplorerItem(latestDataset.title);
 });
 
 When(/^в диалоговом окне выбора источника данных я выбираю векторную таблицу "(.*)"$/, async (datatable: string) => {
   await explorerBlock.openExplorerItem(datatable);
 });
 
-When(/^в наборах данных я выбираю набор данных "(.*)"$/, async (dataset: string) => {
-  await explorerBlock.openExplorerItem(dataset);
+When('я выбираю созданный набор данных', async function (this: ScenarioScope) {
+  const { latestDataset } = this;
+
+  await explorerBlock.openExplorerItem(latestDataset.title);
 });
 
 When(/^в наборах данных я выбираю векторную таблицу "(.*)"$/, async (datatable: string) => {

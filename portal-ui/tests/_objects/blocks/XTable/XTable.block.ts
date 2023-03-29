@@ -1,5 +1,6 @@
 import { Block } from '../../Block';
 import { extractText } from '../../commands/extractText';
+import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 import { SortOrder } from '../../../../src/app/services/models';
 
 export class XTableBlock extends Block {
@@ -97,25 +98,47 @@ export class XTableBlock extends Block {
   }
 
   async isColumnSortable(title: string): Promise<boolean> {
-    const $headCell = await this.getHeadCellTitle(title);
-    await $headCell.moveTo();
+    const $headCellTitle = await this.getHeadCellTitle(title);
+    await $headCellTitle.moveTo();
 
-    const $muiTableSortLabelIcon = await $headCell.$('.MuiTableSortLabel-icon');
+    const $muiTableSortLabelIcon = await $headCellTitle.$('.MuiTableSortLabel-icon');
 
-    return await $muiTableSortLabelIcon.isExisting();
+    return await $muiTableSortLabelIcon.isDisplayed();
   }
 
   async sortColumn(title: string, direction: string): Promise<void> {
-    const $headCell = await this.getHeadCellTitle(title);
-    await $headCell.waitForClickable();
+    const $headCellTitle = await this.getHeadCellTitle(title);
+    await $headCellTitle.waitForClickable();
     if (direction.toLowerCase() === SortOrder.ASC) {
-      await $headCell.click();
+      await $headCellTitle.click();
     } else if (direction.toLowerCase() === SortOrder.DESC) {
-      await $headCell.click();
-      await $headCell.click();
+      await $headCellTitle.click();
+      await $headCellTitle.click();
     } else {
       throw new Error('Unsupported direction: ' + direction);
     }
+  }
+
+  async filterNumerableColumn(colTitle: string, lte: string, gte: string): Promise<void> {
+    const $headCell = await this.getHeadCell(colTitle);
+    const $inputLte = $headCell.$('.XTable-Filter .MuiTextField-root:first-child input');
+    const $inputGte = $headCell.$('.XTable-Filter .MuiTextField-root:last-child input');
+
+    await $inputLte.setValue(lte);
+    await $inputGte.setValue(gte);
+  }
+
+  async filterStringColumn(colTitle: string, filter: string): Promise<void> {
+    const $headCell = await this.getHeadCell(colTitle);
+    const $input = $headCell.$('.XTable-Filter input');
+    await $input.setValue(filter);
+  }
+
+  async filterChoiceColumn(colTitle: string, optionTitle: string): Promise<void> {
+    const $headCell = await this.getHeadCell(colTitle);
+
+    const $muiSelectBlock = new MuiSelectBlock($headCell);
+    await $muiSelectBlock.selectOptionByTitle(optionTitle);
   }
 
   private async getCellsByTitle(title: string): Promise<WebdriverIO.Element[]> {

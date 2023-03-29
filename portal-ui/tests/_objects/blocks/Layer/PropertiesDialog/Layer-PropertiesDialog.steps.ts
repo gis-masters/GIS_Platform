@@ -7,7 +7,7 @@ Then(/^в диалоговом окне `Свойства слоя` у поля 
 });
 
 When(/^в диалоговом окне `Свойства слоя` в поле `Представление` выбираю `Представление 2`$/, async () => {
-  await layerPropertiesDialogBlock.layerPropertyDialogSelectViewThirdOption();
+  await layerPropertiesDialogBlock.layerPropertyDialogSelectOptionByTitle('Представление 2');
 });
 
 When(/^в диалоговом окне `Свойства слоя` нажимаю `Изменить`$/, async () => {

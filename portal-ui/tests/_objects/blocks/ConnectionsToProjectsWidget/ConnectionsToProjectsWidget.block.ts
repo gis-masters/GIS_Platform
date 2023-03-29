@@ -11,10 +11,7 @@ class ConnectionsToProjectsWidgetBlock extends Block {
 
   async projectSelectDialogProjectAcceptBtn(): Promise<void> {
     const $connectionToProjectDialogAccept = await this.$('connectionToProjectDialogAccept');
-
-    const muiSelect = new MuiSelectBlock('.ConnectionsToProjectsWidget-Dialog');
-    await muiSelect.selectOption(2);
-
+    await $connectionToProjectDialogAccept.waitForClickable();
     await $connectionToProjectDialogAccept.click();
     await $connectionToProjectDialogAccept.waitForDisplayed({ reverse: true });
   }
@@ -28,14 +25,14 @@ class ConnectionsToProjectsWidgetBlock extends Block {
     await expect(this.$('connectionToProjectDialogViewSelector')).not.toBeDisplayed();
   }
 
-  async projectSelectDialogSelectFirstView(): Promise<void> {
+  async projectSelectDialogSelectFirstView(optionTitle: string): Promise<void> {
     const $connectionToProjectDialogViewSelector = await this.$('connectionToProjectDialogViewSelector');
     await $connectionToProjectDialogViewSelector.waitForDisplayed();
 
     const muiSelect = new MuiSelectBlock(
       '.ConnectionsToProjectsWidget-Dialog .ConnectionsToProjectsWidget-ViewSelector .Form-Control'
     );
-    await muiSelect.selectOption(2);
+    await muiSelect.selectOptionByTitle(optionTitle);
   }
 }
 

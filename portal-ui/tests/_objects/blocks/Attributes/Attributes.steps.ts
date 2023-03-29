@@ -2,13 +2,13 @@ import { isEqual } from 'lodash';
 import { WaitUntilOptions } from 'webdriverio';
 import { DataTable, Then, When } from '@wdio/cucumber-framework';
 
+import { attributesBlock } from './Attributes.block';
+
 import { ScenarioScope } from '../../ScenarioScope';
 import { getSortDirection } from '../../utils/getSortDirection';
+import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
 import { sortObjects } from '../../../../src/app/services/util/sortObjects';
 import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
-import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
-
-import { attributesBlock } from './Attributes.block';
 
 const waitUntilOptions: WaitUntilOptions = {
   timeout: 10_000,
@@ -24,22 +24,42 @@ Then('открылась атрибутивная таблица слоя {strin
 });
 
 Then('открыта атрибутивная таблица созданного слоя', async function (this: ScenarioScope) {
-  await layersSidebarBlock.clickLayerBurger();
-  await layersSidebarBlock.clickLayerAttributeTable();
+  await layersSidebarBlock.openAttributeTable();
 
   expect(await attributesBlock.getTitle()).toEqual(this.latestLayer.title);
 });
 
 When(
-  'в атрибутивной таблице я сортирую по атрибуту: {string} в порядке: {string}',
+  'в атрибутивной таблице я сортирую по атрибуту {string} в порядке {string}',
   async function (title: string, directionTitle: string) {
     await attributesBlock.sortColumn(title, getSortDirection(directionTitle));
   }
 );
 
+When(
+  'в атрибутивной таблице я фильтрую по атрибуту {string} от {string} до {string}',
+  async function (colTitle: string, lte: string, gte: string) {
+    await attributesBlock.filterNumerableColumn(colTitle, lte, gte);
+  }
+);
+
+When(
+  'в атрибутивной таблице в поле {string} типа CHOICE я выбираю {string}',
+  async function (colTitle: string, optionTitle: string) {
+    await attributesBlock.filterChoiceColumn(colTitle, optionTitle);
+  }
+);
+
+When(
+  'в атрибутивной таблице я ввожу в поле {string} значение {string}',
+  async function (colTitle: string, filter: string) {
+    await attributesBlock.filterStringColumn(colTitle, filter);
+  }
+);
+
 Then(
   'сортировка в атрибутивной таблице для атрибута: {string} соответствует ожидаемому: {string}',
-  async function (this: ScenarioScope, title: string, expectedAsString: string) {
+  async function (title: string, expectedAsString: string) {
     const columnType = await attributesBlock.getColumnType(title);
 
     await browser.waitUntil(async () => {
@@ -52,7 +72,29 @@ Then(
         values = await attributesBlock.getColValues(title);
       }
 
-      return isEqual(values, expectedAsString.split(','));
+      return isEqual(values.filter(Boolean), expectedAsString.split(', ').filter(Boolean));
+    }, waitUntilOptions);
+  }
+);
+
+Then(
+  'фильтрация в атрибутивной таблице для атрибута {string} соответствует ожидаемому: {string}',
+  async function (colTitle: string, expectedAsString: string) {
+    await browser.waitUntil(async () => {
+      const values = await attributesBlock.getColValues(colTitle);
+
+      return isEqual(values, expectedAsString.split(', ').filter(Boolean));
+    }, waitUntilOptions);
+  }
+);
+
+Then(
+  'результат фильтрации в атрибутивной таблице по полю {string} соответствует ожидаемому {string}',
+  async function (colTitle: string, expectedAsString: string) {
+    await browser.waitUntil(async () => {
+      const values = await attributesBlock.getColValues(colTitle);
+
+      return isEqual(values, expectedAsString.split(', ').filter(Boolean));
     }, waitUntilOptions);
   }
 );

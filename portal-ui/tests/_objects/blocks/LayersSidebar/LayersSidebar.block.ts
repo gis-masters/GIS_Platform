@@ -1,8 +1,7 @@
 import { Block } from '../../Block';
 import { editFeatureBlock } from '../EditFeature/EditFeature.block';
+import { muiMenuBlock, MuiMenuBlock } from '../MuiMenu/MuiMenu.block';
 import { editFeatureGeometryAsTextDialogBlock } from '../EditFeatureGeometryAsTextDialog/EditFeatureGeometryAsTextDialog.block';
-import { MuiMenuBlock } from '../MuiMenu/MuiMenu.block';
-import { muiMenuListBlock } from '../MuiMenuList/MuiMenuList.block';
 
 class LayersSidebarBlock extends Block {
   selectors = {
@@ -21,7 +20,7 @@ class LayersSidebarBlock extends Block {
     await $editLayersBtn.click();
   }
 
-  async clickLayerBurger(): Promise<void> {
+  async openMenu(): Promise<void> {
     const $layerCard = await this.$('layerCard');
     await $layerCard.waitForDisplayed({ timeout: 9000 });
     await $layerCard.moveTo();
@@ -30,9 +29,10 @@ class LayersSidebarBlock extends Block {
     await $layerBurger.click();
   }
 
-  async clickLayerAttributeTable(): Promise<void> {
-    await muiMenuListBlock.testMenuSecItemText('Открыть таблицу атрибутов');
-    await muiMenuListBlock.clickMenuSecondItem();
+  async openAttributeTable(): Promise<void> {
+    await this.openMenu();
+
+    await muiMenuBlock.clickItemByTitle('Открыть таблицу атрибутов');
   }
 
   async selectLayersListElementMenuItem(layerName: string, menuItemTitle: string): Promise<void> {
@@ -48,7 +48,7 @@ class LayersSidebarBlock extends Block {
     await $layerBurger.click();
 
     const muiSelect = new MuiMenuBlock();
-    await muiSelect.selectOptionByTitle(menuItemTitle);
+    await muiSelect.clickItemByTitle(menuItemTitle);
   }
 
   async addLayerBtn(): Promise<void> {
@@ -103,10 +103,6 @@ class LayersSidebarBlock extends Block {
     await $btn.click();
   }
 
-  private async getVisibleLayersCards(): Promise<WebdriverIO.Element[]> {
-    return await this.$$('layerCard');
-  }
-
   async getVisibleLayersCardsText(): Promise<string> {
     const $$layersCards = await this.getVisibleLayersCards();
     if (!$$layersCards) {
@@ -141,6 +137,10 @@ class LayersSidebarBlock extends Block {
     }
 
     return names;
+  }
+
+  private async getVisibleLayersCards(): Promise<WebdriverIO.Element[]> {
+    return await this.$$('layerCard');
   }
 }
 

@@ -173,7 +173,7 @@ class ProjectsBlock extends Block {
 
   async projectSortTypeSelect(sortOptionName: string): Promise<string> {
     const muiSelect = new MuiSelectBlock('.Projects-SortBy');
-    await muiSelect.selectOption(sortTypes[sortOptionName]);
+    await muiSelect.selectOptionByTitle(sortOptionName);
 
     return await muiSelect.getText();
   }

@@ -8,7 +8,7 @@ import { createVectorTableAs } from './createTestVectorTable';
 import { createRecord } from './vectorTableRecordsManagement';
 
 Given(
-  'пользователем {string} внутри набора данных создана таблица {string} по схеме {string}',
+  'пользователем {string} внутри созданного набора данных создана таблица {string} по схеме {string}',
   async function (this: ScenarioScope, user: keyof typeof testUsers, title: string, schemaTitle: string) {
     const schemaId = getSchemaIdByTitle(schemaTitle);
 
