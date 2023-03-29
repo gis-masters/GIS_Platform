@@ -1,4 +1,4 @@
-import { When } from '@wdio/cucumber-framework';
+import { Then, When } from '@wdio/cucumber-framework';
 
 import { layersSidebarBlock } from './LayersSidebar.block';
 
@@ -37,4 +37,15 @@ When('в списке слоёв отображаются пункты {string}'
 
   const currentNames = await layersSidebarBlock.getLayersCardsNames();
   expect(names).toEqual(currentNames);
+});
+
+When('список слоев пуст', async () => {
+  const currentNames = await layersSidebarBlock.getLayersCardsNames();
+  expect(currentNames.length).toEqual(0);
+});
+
+Then('в панели слоёв включен пункт {string}', async (itemName: string) => {
+  const visible = await layersSidebarBlock.checkIsVisible(itemName);
+
+  expect(visible).toEqual(true);
 });

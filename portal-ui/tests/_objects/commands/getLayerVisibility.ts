@@ -26,6 +26,10 @@ export async function getLayerVisibility(layerName: string): Promise<boolean> {
 
         break;
       }
+
+      if (!res) {
+        callback(false);
+      }
     }
   }, layerName);
 }

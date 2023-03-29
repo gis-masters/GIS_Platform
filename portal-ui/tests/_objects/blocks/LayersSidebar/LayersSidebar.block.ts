@@ -7,6 +7,7 @@ import { muiMenuListBlock } from '../MuiMenuList/MuiMenuList.block';
 class LayersSidebarBlock extends Block {
   selectors = {
     container: '.LayersSidebar',
+    layer: '.LayersSidebar .Layer',
     editLayersBtn: '.LayersSidebar-EditBtn',
     addLayerBtn: '.LayersSidebar-AddLayerBtn',
     layerBurger: '.LayersSidebar .Layer-Burger',
@@ -35,12 +36,12 @@ class LayersSidebarBlock extends Block {
   }
 
   async selectLayersListElementMenuItem(layerName: string, menuItemTitle: string): Promise<void> {
-    const $layerCard = await this.getLayerByName(layerName);
-    if (!$layerCard) {
+    const $layer = await this.getLayerByName(layerName);
+    if (!$layer) {
       throw new Error(`Не найден элемент "${layerName}"`);
     }
 
-    await $layerCard.moveTo();
+    await $layer.moveTo();
 
     const $layerBurger = await this.$('layerBurger');
     await $layerBurger.waitForDisplayed();
@@ -67,6 +68,18 @@ class LayersSidebarBlock extends Block {
     await layersSidebarBlock.addLayerBtn();
   }
 
+  async checkIsVisible(layerName: string): Promise<boolean> {
+    const $layer = await this.getLayerByName(layerName);
+
+    if (!$layer) {
+      throw new Error(`Не найден элемент "${layerName}"`);
+    }
+
+    const cls = await $layer.getAttribute('class');
+
+    return !!cls.split(' ').includes('Layer_visible');
+  }
+
   async clickVisibilityBtn(layerName: string): Promise<void> {
     await this.clickLayerCardBtn(layerName, '.Layer-Eye');
   }
@@ -76,16 +89,16 @@ class LayersSidebarBlock extends Block {
   }
 
   async clickLayerCardBtn(layerName: string, btnSelectorName: string): Promise<void> {
-    const $layerCard = await this.getLayerByName(layerName);
+    const $layer = await this.getLayerByName(layerName);
 
-    if (!$layerCard) {
+    if (!$layer) {
       throw new Error(`Не найден элемент "${layerName}"`);
     }
 
-    await $layerCard.waitForDisplayed();
-    await $layerCard.moveTo();
+    await $layer.waitForDisplayed();
+    await $layer.moveTo();
 
-    const $btn = await $layerCard.$(btnSelectorName);
+    const $btn = await $layer.$(btnSelectorName);
     await $btn.waitForDisplayed();
     await $btn.click();
   }
@@ -107,13 +120,13 @@ class LayersSidebarBlock extends Block {
     const $container = await this.$('container');
     await $container.waitForDisplayed();
 
-    const $$layerCard = await this.$$('layerCard');
+    const $$layers = await this.$$('layer');
 
-    for (const $layerCard of $$layerCard) {
-      const layerCardName = await $layerCard.getText();
+    for (const $layer of $$layers) {
+      const currentLayerName = await $layer.getText();
 
-      if (layerCardName === layerName) {
-        return $layerCard;
+      if (currentLayerName === layerName) {
+        return $layer;
       }
     }
   }
