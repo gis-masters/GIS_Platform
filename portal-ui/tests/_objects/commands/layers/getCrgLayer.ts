@@ -7,7 +7,7 @@ export async function getCrgLayer(
   layerTitle: string,
   tableTitle: string,
   latestDatasetId: string,
-  enabled: boolean,
+  enabled: string,
   viewId?: string
 ): Promise<CrgLayer> {
   const vectorTable = await getVectorTableByTitle(latestDatasetId, tableTitle);
@@ -21,7 +21,7 @@ export async function getCrgLayer(
     nativeCRS: vectorTable.crs,
     schemaId: vectorTable.schemaId,
     styleName: schema.styleName,
-    enabled
+    enabled: enabled === 'включенный'
   };
 
   return viewId

@@ -1,4 +1,4 @@
-import { Then, When } from '@wdio/cucumber-framework';
+import { When } from '@wdio/cucumber-framework';
 
 import { layersSidebarBlock } from './LayersSidebar.block';
 
@@ -16,36 +16,4 @@ When('в панели атрибутов объекта создаю новый 
 
 When('в списке слоёв я нажимаю на кнопку `Подключить слой`', async () => {
   await layersSidebarBlock.clickAddLayerBtn();
-});
-
-When('в панели слоёв я включаю пункт с названием {string}', async (layerName: string) => {
-  await layersSidebarBlock.clickVisibilityBtn(layerName);
-});
-
-When('в панели слоёв я разворачиваю пункт с названием {string}', async (layerName: string) => {
-  await layersSidebarBlock.clickOpenBtn(layerName);
-});
-
-When('в списке слоёв отображается только пункт {string}', async (layerName: string) => {
-  const layersCardsText = await layersSidebarBlock.getVisibleLayersCardsText();
-
-  expect(layersCardsText).toEqual(layerName);
-});
-
-When('в списке слоёв отображаются пункты {string}', async (layersNames: string) => {
-  const names = layersNames.split(',');
-
-  const currentNames = await layersSidebarBlock.getLayersCardsNames();
-  expect(names).toEqual(currentNames);
-});
-
-When('список слоев пуст', async () => {
-  const currentNames = await layersSidebarBlock.getLayersCardsNames();
-  expect(currentNames.length).toEqual(0);
-});
-
-Then('в панели слоёв включен пункт {string}', async (itemName: string) => {
-  const visible = await layersSidebarBlock.checkIsVisible(itemName);
-
-  expect(visible).toEqual(true);
 });

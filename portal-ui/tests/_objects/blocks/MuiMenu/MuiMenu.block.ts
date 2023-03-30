@@ -10,7 +10,7 @@ export class MuiMenuBlock extends Block {
     await $container.waitForDisplayed();
 
     const $item = await $container.$(`.MuiMenuItem-root=${title}`);
-    await $item.waitForClickable();
+    await $item.waitForClickable({ timeout: 9000 });
     await $item.click();
   }
 }

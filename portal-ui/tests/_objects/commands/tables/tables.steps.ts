@@ -7,8 +7,8 @@ import { getPreparedFeatures } from './features.templates';
 import { createVectorTableAs } from './createTestVectorTable';
 import { createRecord } from './vectorTableRecordsManagement';
 import { getUserByEmail } from '../auth/getUserByEmail';
-import { getVectorTableByTitle } from './getVectorTableByTitle';
 import { addDatasetPermissions } from './addDatasetPermissions';
+import { getVectorTableByTitle } from './getVectorTableByTitle';
 import { addVectorTablePermissions } from './addVectorTablePermissions';
 import { PrincipalType } from '../../../../src/app/services/data/permissions/permissions.models';
 
@@ -51,6 +51,7 @@ Given(
     );
   }
 );
+
 Given(
   'у пользователя {string} есть право на {string} на созданный набор данных',
   async function (this: ScenarioScope, user: keyof typeof testUsers, role: string) {
@@ -58,6 +59,7 @@ Given(
     if (!currentUser) {
       throw new Error(`Не найден пользователь ${user}`);
     }
+
     await addDatasetPermissions(
       { role: getRoleByTitle(role), principalId: currentUser.id, principalType: PrincipalType.USER },
       this.latestDatasetId

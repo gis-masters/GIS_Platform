@@ -201,6 +201,7 @@ if (typeof window !== 'undefined') {
     getAllVectorTablesInDataset,
     createVectorTable,
     deleteVectorTable,
+    updateVectorTable,
     createFeature
   });
 }

@@ -24,7 +24,7 @@ Then('открылась атрибутивная таблица слоя {strin
 });
 
 Then('открыта атрибутивная таблица созданного слоя', async function (this: ScenarioScope) {
-  await layersSidebarBlock.openAttributeTable();
+  await layersSidebarBlock.openAttributeTable(this.latestLayer.title);
 
   expect(await attributesBlock.getTitle()).toEqual(this.latestLayer.title);
 });

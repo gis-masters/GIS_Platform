@@ -211,6 +211,35 @@ const schemaWithoutViews: Schema = {
   geometryType: GeometryType.MULTI_POLYGON
 };
 
+const schemaWithInappropriateStyleName: Schema = {
+  name: 'schemaWithInappropriateStyleName',
+  title: 'Схема с несоответствующим слою StyleName',
+  readOnly: false,
+  tableName: 'border2',
+  styleName: 'buildings',
+  properties: [
+    {
+      name: 'shape',
+      title: 'geometry',
+      required: false,
+      hidden: false,
+      propertyType: PropertyType.GEOMETRY
+    },
+    {
+      name: 'ruleid',
+      title: 'Идентификатор',
+      hidden: true,
+      required: true,
+      maxLength: 254,
+      minLength: -1,
+      propertyType: PropertyType.STRING,
+      description: ''
+    }
+  ],
+  description: 'Границы2',
+  geometryType: GeometryType.MULTI_POLYGON
+};
+
 const testSortingSchema: Schema = {
   name: 'test_sorting__schema',
   title: 'Схема для тестирования сортировки',
@@ -312,6 +341,7 @@ const testSortingSchema2: Schema = {
 export const testSchemas: { [key: string]: Schema } = {
   'Схема с представлениями': schemaWithViews,
   'Схема без представлений': schemaWithoutViews,
+  'Схема с несоответствующим слою StyleName': schemaWithInappropriateStyleName,
   'Схема для тестирования сортировки': testSortingSchema,
   'Схема с типами данных недоступными для сортировки': testSortingSchema2
 };

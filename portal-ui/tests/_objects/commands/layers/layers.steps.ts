@@ -1,4 +1,4 @@
-import { Given } from '@wdio/cucumber-framework';
+import { DataTable, Given } from '@wdio/cucumber-framework';
 
 import { authenticateAsAdmin } from '../auth/authenticate';
 import { createNewObjectInLayerAsAdmin } from './createNewObjectInLayerAsAdmin';
@@ -7,6 +7,8 @@ import { createLayerByAdmin } from './createLayerByAdmin';
 import { testSchemas } from '../schemas/testSchemas';
 import { ScenarioScope } from '../../ScenarioScope';
 import { getCrgLayer } from './getCrgLayer';
+import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
+import { getProjectsByTitle } from '../projects/getProjectsByTitle';
 
 Given(
   'в созданном проекте создан слой {string} на основе созданных набора данных и таблицы',
@@ -42,35 +44,33 @@ Given(
   }
 );
 
-Given(
-  /^в созданном проекте администратором создан включенный слой с названием "(.*)" по таблице "(.*)" созданного набора данных с id представления "(.*)"$/,
-  async function (this: ScenarioScope, layerTitle: string, tableTitle: string, viewId: string) {
-    const { latestProject, latestDatasetId } = this;
+Given('администратором создан слой с параметрами:', async function (this: ScenarioScope, table: DataTable) {
+  const [projectTitle, layerTitle, tableTitle, datasetTitle, enabled, viewId] = table.rows()[0];
 
-    const layer = await getCrgLayer(layerTitle, tableTitle, latestDatasetId, true, viewId);
+  const { latestDataset, latestProject } = this;
+  let latestDatasetId = latestDataset.identifier;
+  if (latestDataset.title !== datasetTitle) {
+    const datasets = await getDatasetByTitle(datasetTitle);
 
-    await createLayerByAdmin(latestProject.id, layer);
+    if (datasets.length !== 1) {
+      throw new Error(`Ошибка получения набора данных ${datasetTitle}`);
+    }
+
+    latestDatasetId = datasets[0].identifier;
   }
-);
 
-Given(
-  /^в созданном проекте администратором создан слой с названием "(.*)" по таблице "(.*)" созданного набора данных$/,
-  async function (this: ScenarioScope, layerTitle: string, tableTitle: string) {
-    const { latestProject, latestDatasetId } = this;
+  let projectId = latestProject.id;
+  if (latestProject.name !== projectTitle) {
+    const projects = await getProjectsByTitle(projectTitle);
 
-    const layer = await getCrgLayer(layerTitle, tableTitle, latestDatasetId, true);
+    if (projects.length !== 1) {
+      throw new Error(`Ошибка получения проекта ${projectTitle}`);
+    }
 
-    await createLayerByAdmin(latestProject.id, layer);
+    projectId = projects[0].id;
   }
-);
 
-Given(
-  /^в созданном проекте администратором создан выключенный слой с названием "(.*)" по таблице "(.*)" созданного набора данных$/,
-  async function (this: ScenarioScope, layerTitle: string, tableTitle: string) {
-    const { latestProject, latestDatasetId } = this;
+  const layer = await getCrgLayer(layerTitle, tableTitle, latestDatasetId, enabled, viewId);
 
-    const layer = await getCrgLayer(layerTitle, tableTitle, latestDatasetId, false);
-
-    await createLayerByAdmin(latestProject.id, layer);
-  }
-);
+  await createLayerByAdmin(projectId, layer);
+});
