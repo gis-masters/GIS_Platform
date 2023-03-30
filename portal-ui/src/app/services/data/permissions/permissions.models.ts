@@ -59,7 +59,7 @@ export const projectRoles: Role[] = [Role.VIEWER, Role.OWNER];
 export const rolesTitles: { [key in Role]: string } = {
   VIEWER: 'Чтение',
   CONTRIBUTOR: 'Запись',
-  OWNER: 'Владелец'
+  OWNER: 'Владение'
 };
 
 export enum PrincipalType {

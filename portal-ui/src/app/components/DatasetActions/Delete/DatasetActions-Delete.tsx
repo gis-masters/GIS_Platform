@@ -20,6 +20,8 @@ import { Dataset } from '../../../services/data/vectorData/vectorData.models';
 import { Button } from '../../Button/Button';
 
 const cnDatasetActionsDelete = cn('DatasetActions', 'Delete');
+const cnDatasetActionsDeleteDialogYes = cn('DatasetActions', 'DeleteDialogYes');
+const cnDatasetActionsDeleteProhibitDeletionDialog = cn('DatasetActions', 'DeleteProhibitDeletionDialog');
 
 interface DatasetActionsDeleteProps {
   dataset: Dataset;
@@ -56,14 +58,23 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
               <DialogContentText>Вы действительно хотите удалить "{dataset.title}"?</DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button loading={this.btnLoading} onClick={this.doDeletion} color='primary'>
+              <Button
+                loading={this.btnLoading}
+                onClick={this.doDeletion}
+                color='primary'
+                className={cnDatasetActionsDeleteDialogYes()}
+              >
                 Удалить
               </Button>
               <Button onClick={this.closeDialog}>Отмена</Button>
             </DialogActions>
           </Dialog>
         ) : (
-          <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
+          <Dialog
+            open={this.dialogOpen}
+            onClose={this.closeDialog}
+            className={cnDatasetActionsDeleteProhibitDeletionDialog()}
+          >
             <DialogTitle>Невозможно удалить</DialogTitle>
             <DialogContent>
               <DialogContentText>{this.errorMessage}</DialogContentText>

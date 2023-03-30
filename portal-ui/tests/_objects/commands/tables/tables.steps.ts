@@ -1,11 +1,16 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { testUsers } from '../auth/testUsers';
+import { getRoleByTitle, testUsers } from '../auth/testUsers';
 import { ScenarioScope } from '../../ScenarioScope';
 import { getSchemaIdByTitle } from './getSchemaIdByTitle';
 import { getPreparedFeatures } from './features.templates';
 import { createVectorTableAs } from './createTestVectorTable';
 import { createRecord } from './vectorTableRecordsManagement';
+import { getUserByEmail } from '../auth/getUserByEmail';
+import { getVectorTableByTitle } from './getVectorTableByTitle';
+import { addDatasetPermissions } from './addDatasetPermissions';
+import { addVectorTablePermissions } from './addVectorTablePermissions';
+import { PrincipalType } from '../../../../src/app/services/data/permissions/permissions.models';
 
 Given(
   'пользователем {string} внутри созданного набора данных создана таблица {string} по схеме {string}',
@@ -30,3 +35,32 @@ Given('таблица наполнена данными {string}', async functio
     await createRecord(this.latestDatasetId, this.latestTableId, feature);
   }
 });
+
+Given(
+  'у пользователя {string} есть право на {string} на таблицу {string}',
+  async function (this: ScenarioScope, user: keyof typeof testUsers, role: string, tableName: string) {
+    const currentUser = await getUserByEmail(testUsers[user].email);
+    if (!currentUser) {
+      throw new Error(`Не найден пользователь ${user}`);
+    }
+    const table = await getVectorTableByTitle(this.latestDatasetId, tableName);
+    await addVectorTablePermissions(
+      { role: getRoleByTitle(role), principalId: currentUser.id, principalType: PrincipalType.USER },
+      this.latestDatasetId,
+      table.identifier
+    );
+  }
+);
+Given(
+  'у пользователя {string} есть право на {string} на созданный набор данных',
+  async function (this: ScenarioScope, user: keyof typeof testUsers, role: string) {
+    const currentUser = await getUserByEmail(testUsers[user].email);
+    if (!currentUser) {
+      throw new Error(`Не найден пользователь ${user}`);
+    }
+    await addDatasetPermissions(
+      { role: getRoleByTitle(role), principalId: currentUser.id, principalType: PrincipalType.USER },
+      this.latestDatasetId
+    );
+  }
+);

@@ -9,7 +9,7 @@ When('в диалоговом окне выбора источника данн�
   await explorerBlock.openExplorerItem(latestDataset.title);
 });
 
-When(/^в диалоговом окне выбора источника данных я выбираю векторную таблицу "(.*)"$/, async (datatable: string) => {
+When('в диалоговом окне выбора источника данных я выбираю векторную таблицу {string}', async (datatable: string) => {
   await explorerBlock.openExplorerItem(datatable);
 });
 
@@ -19,23 +19,27 @@ When('я выбираю созданный набор данных', async funct
   await explorerBlock.openExplorerItem(latestDataset.title);
 });
 
-When(/^в наборах данных я выбираю векторную таблицу "(.*)"$/, async (datatable: string) => {
+When('в наборах данных я выбираю векторную таблицу {string}', async (datatable: string) => {
   await explorerBlock.openExplorerItem(datatable);
 });
 
-When(/^я нажимаю кнопку `Подключить в проект` в панели свойств векторной таблицы$/, async () => {
+When('я нажимаю кнопку `Подключить в проект` в панели свойств векторной таблицы', async () => {
   await explorerBlock.addToProject();
 });
 
-When(/^я дожидаюсь окончания загрузки в explorer$/, async () => {
+When('я дожидаюсь окончания загрузки в explorer', async () => {
   await explorerBlock.waitForLoading();
+});
+
+When('я выбираю набор данных {string}', async (dataset: string) => {
+  await explorerBlock.selectExplorerItem(dataset);
 });
 
 Then(/^список названий в explorer: (".+"[ ,]*)+$/, async (dirty: string) => {
   await explorerBlock.testTitles(dirty);
 });
 
-Then(/^список в explorer пуст$/, async () => {
+Then('список в explorer пуст', async () => {
   await explorerBlock.testEmptiness();
 });
 

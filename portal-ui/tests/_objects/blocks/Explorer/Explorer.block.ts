@@ -24,6 +24,15 @@ class ExplorerBlock extends Block {
     await sleep(500); // ждем анимации перехода
   }
 
+  async selectExplorerItem(datatable: string): Promise<void> {
+    const $item = await this.getExplorerItemByName(datatable);
+    if (!$item) {
+      throw new Error(`Не найден элемент "${datatable}"`);
+    }
+
+    await $item.click();
+  }
+
   async addToProject(): Promise<void> {
     const $connectionToProject = await this.$('connectionToProject');
     await $connectionToProject.click();

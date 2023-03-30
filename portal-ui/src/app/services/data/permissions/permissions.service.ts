@@ -272,5 +272,5 @@ function handleSavingError(
 
 // for autotests
 if (typeof window !== 'undefined') {
-  Object.assign(window, { addProjectPermission });
+  Object.assign(window, { addProjectPermission, addDatasetPermission, addTablePermission });
 }
