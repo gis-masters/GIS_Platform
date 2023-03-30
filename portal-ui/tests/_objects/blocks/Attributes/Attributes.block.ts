@@ -8,6 +8,8 @@ class AttributesBlock extends Block {
     container: '.Attributes',
     attributeTableCols: '.Attributes-Table .XTable-Head .XTable-CellContent',
     barTitle: '.Attributes-BarTitle',
+    barMinimize: '.Attributes-BarMinimize',
+    attributesTabs: '.Attributes-Tabs',
     pagination: '.Attributes-Pagination',
     attributesTableHead: '.Attributes-Table .XTable-Head',
     attributesTableHeadCellContent: '.Attributes-Table .XTable-Head .XTable-CellContent'
@@ -33,10 +35,6 @@ class AttributesBlock extends Block {
     return contents;
   }
 
-  async getColumnType(title: string): Promise<string> {
-    return await this.xTable.getColumnType(title);
-  }
-
   async getTitle(): Promise<string> {
     const $barTitle = await this.$('barTitle');
     await $barTitle.waitForDisplayed({ timeout: 13_000 });
@@ -48,6 +46,21 @@ class AttributesBlock extends Block {
     const $pagination = await this.$('pagination');
     const $paginationBtn = await $pagination.$(`.MuiPaginationItem-root=${page}`);
     await $paginationBtn.click();
+  }
+
+  async clickTab(layerTitle: string) {
+    const $attributesTabs = await this.$('attributesTabs');
+    const $tab = await $attributesTabs.$(`.Attributes-Tab=${layerTitle}`);
+    await $tab.click();
+  }
+
+  async minimize() {
+    const $barMinimize = await this.$('barMinimize');
+    await $barMinimize.click();
+  }
+
+  async getColumnType(title: string): Promise<string> {
+    return await this.xTable.getColumnType(title);
   }
 
   async sortColumn(title: string, direction: string) {
@@ -76,6 +89,10 @@ class AttributesBlock extends Block {
 
   async filterChoiceColumn(colTitle: string, optionTitle: string) {
     await this.xTable.filterChoiceColumn(colTitle, optionTitle);
+  }
+
+  async getFilterValue(attributeTitle: string): Promise<string> {
+    return this.xTable.getFilterValue(attributeTitle);
   }
 }
 

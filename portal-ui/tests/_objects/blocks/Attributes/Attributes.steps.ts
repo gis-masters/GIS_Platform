@@ -50,6 +50,14 @@ When(
   }
 );
 
+When('я сворачиваю атрибутивную таблицу', async function () {
+  await attributesBlock.minimize();
+});
+
+When('я нажимаю на таб созданного слоя в атрибутивной таблице', async function (this: ScenarioScope) {
+  await attributesBlock.clickTab(this.latestLayer.title);
+});
+
 When(
   'в атрибутивной таблице я ввожу в поле {string} значение {string}',
   async function (colTitle: string, filter: string) {
@@ -137,6 +145,17 @@ Then('сортировка в атрибутивной таблице недос
     expect(await attributesBlock.isColumnSortable(title)).toEqual(false);
   }
 });
+
+Then(
+  'в атрибутивной таблице фильтр атрибута {string} заполнен значением {string}',
+  async function (attributeTitle: string, expected: string) {
+    await browser.waitUntil(async () => {
+      const actual = await attributesBlock.getFilterValue(attributeTitle);
+
+      return actual === expected;
+    }, waitUntilOptions);
+  }
+);
 
 function getSchemaPropertyByTitle(schema: Schema, title: string): PropertySchema {
   const property = schema.properties?.find(prop => {

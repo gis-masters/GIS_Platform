@@ -141,6 +141,13 @@ export class XTableBlock extends Block {
     await $muiSelectBlock.selectOptionByTitle(optionTitle);
   }
 
+  async getFilterValue(colTitle: string): Promise<string> {
+    const $headCell = await this.getHeadCell(colTitle);
+    const $input = await $headCell.$('.XTable-Filter input');
+
+    return await $input.getValue();
+  }
+
   private async getCellsByTitle(title: string): Promise<WebdriverIO.Element[]> {
     const headerTitles = await extractText(await this.$$('colTitle'));
 
