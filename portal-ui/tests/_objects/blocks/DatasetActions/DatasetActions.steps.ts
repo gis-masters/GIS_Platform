@@ -14,6 +14,10 @@ Then('в панели свойств набора данных нет кнопк
   await datasetActionsBlock.editBtnNotExist();
 });
 
+Then('в панели свойств набора данных есть кнопка редактирования', async () => {
+  await datasetActionsBlock.editBtnExist();
+});
+
 When('нажимаю на кнопку подтверждения удаления набора данных в появившемся диалоговом окне', async () => {
   await datasetActionsBlock.confirmDeletion();
 });

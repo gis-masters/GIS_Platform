@@ -25,6 +25,11 @@ class DatasetActionsBlock extends Block {
     await $deleteBtn.waitForExist({ reverse: true });
   }
 
+  async editBtnExist(): Promise<void> {
+    const $deleteBtn = await this.$('editBtn');
+    await $deleteBtn.waitForExist();
+  }
+
   async confirmDeletion(): Promise<void> {
     const $confirmDeletionBtn = await this.$('deleteDialogYes');
     await $confirmDeletionBtn.waitForDisplayed();
