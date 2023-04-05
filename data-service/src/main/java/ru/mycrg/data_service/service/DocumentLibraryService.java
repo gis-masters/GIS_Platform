@@ -115,7 +115,7 @@ public class DocumentLibraryService {
             return new LibraryModel(dl, "OWNER");
         }
 
-        Optional<String> oRole = permissionsRepository.getRoleForLibrary(libraryId);
+        Optional<String> oRole = permissionsRepository.getBestRoleForLibrary(libraryId);
         if (oRole.isPresent()) {
             return new LibraryModel(dl, oRole.get());
         } else {

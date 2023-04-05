@@ -116,7 +116,7 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
         final Long userId = authenticationFacade.getUserDetails().getUserId();
 
         permissionsService.getAllByResourceId(resourceQualifier, userId, Pageable.unpaged());
-        Optional<String> roleForDataset = permissionsRepository.getRoleForDataset(resourceQualifier);
+        Optional<String> roleForDataset = permissionsRepository.getBestRoleForDataset(resourceQualifier);
 
         return roleForDataset.filter("OWNER"::equals).isPresent();
     }

@@ -18,6 +18,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
+import static ru.mycrg.acceptance.auth_service.GroupStepsDefinitions.usersGroupId;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryBasePermissions.currentPermissionId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryBasePermissions.makeLibraryPermissionUrl;
@@ -52,13 +53,18 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
                         get();
     }
 
+    @When("Пользователь делает запрос на выборку библиотеки {string}")
+    public void getLibrary(String libraryName) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + libraryName);
+    }
+
     @When("Пользователь делает запрос на выборку не существующей библиотеки {string}")
     public void getNotExistLibrary(String libraryKey) {
         String libraryName = generateString(libraryKey);
 
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + libraryName);
+        getLibrary(libraryName);
     }
 
     @Then("Отправляется запрос на создание правила для библиотеки: {string}, {string} {string} {string}")
@@ -91,6 +97,13 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
 
         setRoleForCurrentUserToLibrary(libraryName, role);
+    }
+
+    @Given("Владелец организации устанавливает роль {string} для текущей группы, для библиотеки: {string}")
+    public void addPermissionToLibraryForCurrentGroup(String role, String libraryName) {
+        authorizationBase.loginAsOwner();
+
+        setRoleForCurrentGroupToLibrary(libraryName, role);
     }
 
     @Given("Текущему пользователю установлена роль {string}, для библиотеки: {string}")
@@ -486,6 +499,14 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         String url = String.format("/%s/roleAssignment", libraryName);
 
         libraryBasePermissions.addPermission(url, userId, "user", role);
+
+        currentPermissionId = super.extractId(response.getHeader("Location"));
+    }
+
+    private void setRoleForCurrentGroupToLibrary(String libraryName, String role) {
+        String url = String.format("/%s/roleAssignment", libraryName);
+
+        libraryBasePermissions.addPermission(url, usersGroupId, "group", role);
 
         currentPermissionId = super.extractId(response.getHeader("Location"));
     }

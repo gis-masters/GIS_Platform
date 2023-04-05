@@ -59,7 +59,7 @@ public class TableService {
             total = baseDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
         } else {
             ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, datasetIdentifier);
-            Optional<String> roleForParentDataset = permissionsRepository.getRoleForDataset(dQualifier);
+            Optional<String> roleForParentDataset = permissionsRepository.getBestRoleForDataset(dQualifier);
             if (roleForParentDataset.isPresent()) {
                 ecqlFilter = addPathToDataset(ecqlFilter, dataset.pathTo());
 

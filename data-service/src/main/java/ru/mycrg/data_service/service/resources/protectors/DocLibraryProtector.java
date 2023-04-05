@@ -56,7 +56,7 @@ public class DocLibraryProtector implements IResourceProtector {
     public boolean isAllowed(ResourceQualifier dlQualifier) {
         return authenticationFacade.isOrganizationAdmin()
                 || authenticationFacade.isRoot()
-                || basePermissionsRepository.getRoleForLibrary(dlQualifier.getTable())
+                || basePermissionsRepository.getBestRoleForLibrary(dlQualifier.getTable())
                                             .isPresent();
     }
 
@@ -76,7 +76,7 @@ public class DocLibraryProtector implements IResourceProtector {
      * Для библиотек только непосредственные права на таблицу
      */
     private boolean isUserHasOwnPermission(ResourceQualifier dlQualifier) {
-        Optional<String> oRole = basePermissionsRepository.getRoleForLibrary(dlQualifier.getTable());
+        Optional<String> oRole = basePermissionsRepository.getBestRoleForLibrary(dlQualifier.getTable());
         if (oRole.isEmpty()) {
             return false;
         }
@@ -85,7 +85,7 @@ public class DocLibraryProtector implements IResourceProtector {
     }
 
     private boolean isUserHasEditPermission(ResourceQualifier dlQualifier) {
-        Optional<String> oRole = basePermissionsRepository.getRoleForLibrary(dlQualifier.getTable());
+        Optional<String> oRole = basePermissionsRepository.getBestRoleForLibrary(dlQualifier.getTable());
         if (oRole.isEmpty()) {
             return false;
         }

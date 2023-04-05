@@ -146,15 +146,20 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует некий пользователь")
     public void initializeSomeUser() throws InterruptedException {
+        createRandomUser();
+    }
+
+    @Given("Существует и авторизован некий пользователь")
+    public void initializeSomeUserAndLogin() throws InterruptedException {
         createRandomUserAndLogin();
     }
 
-    @Given("Существует первый пользователь")
+    @Given("Существует и авторизован первый пользователь")
     public void initializeFirstUser() throws InterruptedException {
         createRandomUserAndLogin();
     }
 
-    @Given("Существует второй пользователь")
+    @Given("Существует и авторизован второй пользователь")
     public void initializeSecondUser() throws InterruptedException {
         createRandomUserAndLogin();
     }
@@ -448,7 +453,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    private void createRandomUserAndLogin() throws InterruptedException {
+    private void createRandomUser() throws InterruptedException {
         authorizationBase.loginAsOwner();
 
         userDto = new UserCreateDto(generateString("STRING_10"),
@@ -457,6 +462,10 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                                     "testtestQ1");
 
         createUser(userDto);
+    }
+
+    private void createRandomUserAndLogin() throws InterruptedException {
+        createRandomUser();
 
         authorizationBase.loginAsCurrentUser();
     }

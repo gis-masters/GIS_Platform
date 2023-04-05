@@ -17,7 +17,7 @@ Feature: Обновление подложек
       | NUMBER_5  | STRING_5 | NUMBER_2 | 33           | newTitle | 33          |
 
   Scenario Outline: Владелец проекта может обновить подложку
-    Given Существует некий пользователь
+    Given Существует и авторизован некий пользователь
     Given Существует проект "STRING_10"
     Given Существует подложкa проекта "<baseMapId>", "<title>", "<position>"
     When Пользователь делает запрос на обновление полей подложки проекта "<newBaseMapId>", "<newTitle>", "<newPosition>"

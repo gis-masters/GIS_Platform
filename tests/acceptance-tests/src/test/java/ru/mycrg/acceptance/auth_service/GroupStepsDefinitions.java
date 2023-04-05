@@ -131,6 +131,8 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор добавляет пользователя в пользовательскую группу")
     public void addUserToUsersGroup() {
+        authorizationBase.loginAsOwner();
+
         getBaseRequestWithCurrentCookie()
                 .given().
                 contentType(ContentType.JSON)

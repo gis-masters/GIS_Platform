@@ -88,7 +88,7 @@ public class DatasetService {
         if (datasetProtector.isOwner(dQualifier)) {
             return new DatasetModel(dataset, "OWNER");
         } else {
-            Optional<String> oRole = permissionsRepository.getRoleForDataset(dQualifier);
+            Optional<String> oRole = permissionsRepository.getBestRoleForDataset(dQualifier);
             if (oRole.isPresent()) {
                 return new DatasetModel(dataset, oRole.get());
             }

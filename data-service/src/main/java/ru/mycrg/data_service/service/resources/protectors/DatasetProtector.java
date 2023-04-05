@@ -61,7 +61,7 @@ public class DatasetProtector implements IResourceProtector {
     public boolean isAllowed(ResourceQualifier dQualifier) {
         return authenticationFacade.isOrganizationAdmin()
                 || authenticationFacade.isRoot()
-                || basePermissionsRepository.getRoleForDataset(dQualifier)
+                || basePermissionsRepository.getBestRoleForDataset(dQualifier)
                                             .isPresent();
     }
 
@@ -81,7 +81,7 @@ public class DatasetProtector implements IResourceProtector {
      * Для набора данных не бывает наследования сверху, поэтому проверим только права выданные на сам набор.
      */
     private boolean isUserHasOwnPermission(ResourceQualifier dQualifier) {
-        Optional<String> oRole = basePermissionsRepository.getRoleForDataset(dQualifier);
+        Optional<String> oRole = basePermissionsRepository.getBestRoleForDataset(dQualifier);
         if (oRole.isEmpty()) {
             return false;
         }
@@ -90,7 +90,7 @@ public class DatasetProtector implements IResourceProtector {
     }
 
     private boolean isUserHasEditPermission(ResourceQualifier dQualifier) {
-        Optional<String> oRole = basePermissionsRepository.getRoleForDataset(dQualifier);
+        Optional<String> oRole = basePermissionsRepository.getBestRoleForDataset(dQualifier);
         if (oRole.isEmpty()) {
             return false;
         }

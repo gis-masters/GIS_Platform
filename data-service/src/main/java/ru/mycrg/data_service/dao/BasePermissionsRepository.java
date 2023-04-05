@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
 import static ru.mycrg.data_service.util.RoleHandler.defineRoleById;
 import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
 
@@ -304,7 +304,7 @@ public class BasePermissionsRepository {
         }
     }
 
-    public Optional<String> getRoleForLibrary(String tableName) {
+    public Optional<String> getBestRoleForLibrary(String tableName) {
         List<String> allPrincipalIds = principalService.getAllIds();
         if (allPrincipalIds.isEmpty()) {
             return Optional.empty();
@@ -312,7 +312,7 @@ public class BasePermissionsRepository {
 
         String queryTemplate = "" +
                 "SELECT " +
-                "  p.role_id " +
+                "  max(p.role_id) " +
                 "FROM " +
                 "  data.doc_libraries AS res " +
                 "  JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
@@ -322,15 +322,12 @@ public class BasePermissionsRepository {
 
         log.debug("Request getRoleForLibrary: [{}]", queryTemplate);
 
-        List<Long> results = pJdbcTemplate.getJdbcTemplate().query(queryTemplate, new SingleColumnRowMapper<>());
-        if (results.isEmpty()) {
-            return Optional.empty();
-        } else {
-            return defineRoleById(results.get(0));
-        }
+        Long results = pJdbcTemplate.getJdbcTemplate().queryForObject(queryTemplate, Long.class);
+
+        return defineRoleById(results);
     }
 
-    public Optional<String> getRoleForDataset(ResourceQualifier dQualifier) {
+    public Optional<String> getBestRoleForDataset(ResourceQualifier dQualifier) {
         List<String> allPrincipalIds = principalService.getAllIds();
         if (allPrincipalIds.isEmpty()) {
             return Optional.empty();
@@ -340,7 +337,7 @@ public class BasePermissionsRepository {
 
         String queryTemplate = "" +
                 "SELECT " +
-                "  p.role_id " +
+                "  max(p.role_id) " +
                 "FROM " +
                 "  data.schemas_and_tables AS res " +
                 "  JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
@@ -350,12 +347,9 @@ public class BasePermissionsRepository {
 
         log.debug("Request getRoleForDataset: [{}]", queryTemplate);
 
-        List<Long> results = pJdbcTemplate.getJdbcTemplate().query(queryTemplate, new SingleColumnRowMapper<>());
-        if (results.isEmpty()) {
-            return Optional.empty();
-        } else {
-            return defineRoleById(results.get(0));
-        }
+        Long results = pJdbcTemplate.getJdbcTemplate().queryForObject(queryTemplate, Long.class);
+
+        return defineRoleById(results);
     }
 
     /**
@@ -365,7 +359,7 @@ public class BasePermissionsRepository {
      *
      * @throws IllegalStateException если квалификатор не содержит record
      */
-    public Optional<String> getRoleForRecord(ResourceQualifier rQualifier) {
+    public Optional<String> getBestRoleForRecord(ResourceQualifier rQualifier) {
         checkQualifier(rQualifier);
 
         String tableQualifier = rQualifier.getTableQualifier();
@@ -389,12 +383,9 @@ public class BasePermissionsRepository {
 
         log.debug("Query: role for record: [{}]", queryTemplate);
 
-        List<Long> results = pJdbcTemplate.getJdbcTemplate().query(queryTemplate, new SingleColumnRowMapper<>());
-        if (results.isEmpty()) {
-            return Optional.empty();
-        } else {
-            return defineRoleById(results.get(0));
-        }
+        Long results = pJdbcTemplate.getJdbcTemplate().queryForObject(queryTemplate, Long.class);
+
+        return defineRoleById(results);
     }
 
     private void checkQualifier(ResourceQualifier rQualifier) {

@@ -144,7 +144,7 @@ public class UserRecordsService implements IRecordsService {
         }
 
         // Проверим роль выданную непосредственно на запись
-        Optional<String> oRole = permissionsRepository.getRoleForRecord(recordQualifier);
+        Optional<String> oRole = permissionsRepository.getBestRoleForRecord(recordQualifier);
         if (oRole.isPresent()) {
             if (nonNull(definedRole)) {
                 if (isFirstRoleBetterThanSecond(oRole.get(), definedRole)) {

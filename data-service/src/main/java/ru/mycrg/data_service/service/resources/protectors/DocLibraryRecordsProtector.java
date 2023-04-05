@@ -90,7 +90,7 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
         }
 
         // Проверим роль выданную непосредственно на запись
-        return permissionsRepository.getRoleForRecord(recordQualifier)
+        return permissionsRepository.getBestRoleForRecord(recordQualifier)
                                     .isPresent();
     }
 
@@ -127,7 +127,7 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
         }
 
         // Проверим роль выданную непосредственно на запись
-        Optional<String> oRole = permissionsRepository.getRoleForRecord(rQualifier);
+        Optional<String> oRole = permissionsRepository.getBestRoleForRecord(rQualifier);
         if (oRole.isPresent() && OWNER.name().equals(oRole.get())) {
             return true;
         }
@@ -152,7 +152,7 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
         }
 
         // Проверим роль выданную непосредственно на запись
-        Optional<String> oRole = permissionsRepository.getRoleForRecord(rQualifier);
+        Optional<String> oRole = permissionsRepository.getBestRoleForRecord(rQualifier);
         if (oRole.isPresent() &&
                 (OWNER.name().equals(oRole.get()) || CONTRIBUTOR.name().equals(oRole.get()))) {
             return true;
