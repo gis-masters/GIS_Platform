@@ -1,5 +1,5 @@
-import { getFileProcessesUrl, getProcessesUrl, getProcessUrl } from '../../server-urls.service';
-import { http } from '../../http.service';
+import { getFileProcessesUrl, getProcessesUrl, getProcessUrl } from '../../api/server-urls.service';
+import { http } from '../../api/http.service';
 import { Mime } from '../../util/Mime';
 
 import { Process, ProcessableModel, ProcessResponse } from './processes.models';

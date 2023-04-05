@@ -3,8 +3,8 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { getProjectPermissionsUrl } from '../../../../services/server-urls.service';
-import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
+import { getProjectPermissionsUrl } from '../../../../services/api/server-urls.service';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
@@ -40,7 +40,8 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
       await this.fetchData();
     }
 
-    communicationService.projectUpdated.on(async ({ type, data }: DataChangeEvent<CrgProject>) => {
+    communicationService.projectUpdated.on(async (e: CustomEvent<DataChangeEventDetail<CrgProject>>) => {
+      const { type, data } = e.detail;
       if (getId({ type: ExplorerItemType.PROJECT, payload: data }) === getId(item) && type !== 'delete') {
         await this.fetchData();
       }

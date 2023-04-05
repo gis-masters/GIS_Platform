@@ -1,7 +1,7 @@
-import { getBasemapsUrl, getBasemapUrl } from '../../server-urls.service';
+import { getBasemapsUrl, getBasemapUrl } from '../../api/server-urls.service';
 import { PageableResponse, PageOptions } from '../../models';
-import { preparePageOptions } from '../../http.utils';
-import { http } from '../../http.service';
+import { preparePageOptions } from '../../api/http.utils';
+import { http } from '../../api/http.service';
 
 import { Basemap } from './basemaps.models';
 

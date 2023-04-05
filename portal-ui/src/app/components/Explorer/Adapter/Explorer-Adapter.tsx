@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { InsertDriveFileOutlined } from '@mui/icons-material';
 import { AxiosError } from 'axios';
 
-import { DataChangeEvent } from '../../../services/communication.service';
+import { DataChangeEventDetail } from '../../../services/communication.service';
 import { PageOptions, SortOrder } from '../../../services/models';
 import { Emitter } from '../../../services/common/Emitter';
 import { services } from '../../../services/services';
@@ -211,7 +211,7 @@ export function getToolbarActions(
   return adapters[item.type].getToolbarActions && adapters[item.type].getToolbarActions(item, store, service, full);
 }
 
-export function getRefreshEmitters(item: ExplorerItemData): Emitter<DataChangeEvent<unknown>>[] {
+export function getRefreshEmitters(item: ExplorerItemData): Emitter<DataChangeEventDetail<unknown>>[] {
   return (adapters[item.type].getRefreshEmitters && adapters[item.type].getRefreshEmitters(item)) || [];
 }
 

@@ -7,18 +7,22 @@ import { AxiosError } from 'axios';
 
 import { currentUser } from '../../stores/CurrentUser.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { externalLayerDefaults, rasterLayerDefaults, vectorLayerDefaults } from '../../services/gis/layers.utils';
+import {
+  generateNextLayerId,
+  externalLayerDefaults,
+  rasterLayerDefaults,
+  vectorLayerDefaults
+} from '../../services/gis/layers/layers.utils';
 import { getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
 import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 import { ContentType, PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { placeFile } from '../../services/data/file-placement/file-placement.service';
 import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
-import { CrgLayerType, CrgLayer } from '../../services/gis/projects/projects.models';
+import { CrgLayerType, CrgLayer } from '../../services/gis/layers/layers.models';
 import { getDefaultValues, getViewChoiceOptions } from '../Form/Form.utils';
 import { validateFormValue } from '../../services/formValidation.service';
 import { schemaService } from '../../services/data/schema/schema.service';
-import { generateNextLayerId } from '../../services/gis/layers.service';
 import { getFileBaseName } from '../../services/data/files/files.util';
 import { getFile } from '../../services/data/files/files.service';
 import { FileInfo } from '../../services/data/files/files.models';

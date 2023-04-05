@@ -13,7 +13,7 @@ When('в диалоговом окне выбора источника данн�
   await explorerBlock.openExplorerItem(datatable);
 });
 
-When('я выбираю созданный набор данных', async function (this: ScenarioScope) {
+When('я открываю созданный набор данных', async function (this: ScenarioScope) {
   const { latestDataset } = this;
 
   await explorerBlock.openExplorerItem(latestDataset.title);
@@ -33,6 +33,10 @@ When('я дожидаюсь окончания загрузки в explorer', as
 
 When('я выбираю набор данных {string}', async (dataset: string) => {
   await explorerBlock.selectExplorerItem(dataset);
+});
+
+When('я выбираю созданный набор данных', async function (this: ScenarioScope) {
+  await explorerBlock.selectExplorerItem(this.latestDataset.title);
 });
 
 Then(/^список названий в explorer: (".+"[ ,]*)+$/, async (dirty: string) => {

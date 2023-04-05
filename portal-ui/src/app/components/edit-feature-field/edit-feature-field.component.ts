@@ -5,7 +5,7 @@ import { createElement } from 'react';
 import { EditedField, ValueType } from '../../services/data/schema/schemaOld.models';
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { registry } from '../../services/di-registry';
 import { createRoot, Root } from 'react-dom/client';
 

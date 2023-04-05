@@ -6,7 +6,14 @@ import { FlagsList } from '../services/feature-flags';
 const emptyEnv: Environment = {
   platform: 'simf',
   production: true,
-  server: {},
+  server: {
+    host: '',
+    path: '',
+    port: '',
+    protocol: '',
+    wsPath: '',
+    wsPort: ''
+  },
   scratchWorkspaceName: '',
   flags: null,
   logo: null,

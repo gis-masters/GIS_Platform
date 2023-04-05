@@ -13,7 +13,7 @@ import { services } from '../../../services/services';
 import { communicationService } from '../../../services/communication.service';
 import { Toast } from '../../Toast/Toast';
 import { Button } from '../../Button/Button';
-import { ServerError } from '../../../services/http.service';
+import { ServerError } from '../../../services/api/http.service';
 
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';

@@ -17,7 +17,7 @@ import {
   WfsPolygonGeometry,
   WfsLineStringGeometry
 } from './wfs/wfs.models';
-import { getLayerByFeatureInCurrentProject } from '../gis/layers.service';
+import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
 import { isCoordinateValid, normalizeCoordinates } from './wfs/wfs.util';
 import { Extent } from 'ol/extent';
 

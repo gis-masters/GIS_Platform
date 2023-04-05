@@ -1,8 +1,9 @@
-import { CrgProject, CrgVectorLayer } from './gis/projects/projects.models';
-import { LibraryRecord } from './data/docLibrary/docLibrary.models';
+import { CrgProject } from './gis/projects/projects.models';
+import { CrgVectorLayer } from './gis/layers/layers.models';
 import { Dataset, VectorTable } from './data/vectorData/vectorData.models';
-import { WfsFeature } from './geoserver/wfs/wfs.models';
+import { LibraryRecord } from './data/docLibrary/docLibrary.models';
 import { Basemap } from './data/basemaps/basemaps.models';
+import { WfsFeature } from './geoserver/wfs/wfs.models';
 import { FileInfo } from './data/files/files.models';
 import { Schema } from './data/schema/schema.models';
 import { Emitter } from './common/Emitter';
@@ -12,7 +13,7 @@ export interface ObjectDto {
   crgLayer: CrgVectorLayer;
 }
 
-export interface DataChangeEvent<T> {
+export interface DataChangeEventDetail<T> {
   type: 'create' | 'update' | 'delete';
   data: T;
 }
@@ -28,7 +29,6 @@ class CommunicationService {
 
   validationInitiated = new Emitter<boolean>();
   needUpdateValidationResults = new Emitter<boolean>();
-  authDialogOpen = new Emitter();
   authDialogSuccess = new Emitter();
   allProjectsFetched = new Emitter();
   editBugObject = new Emitter<ObjectDto[]>();
@@ -36,15 +36,15 @@ class CommunicationService {
   drawOff = new Emitter();
   openAttributesBar = new Emitter<CrgVectorLayer>();
 
-  basemapUpdated = new Emitter<DataChangeEvent<Basemap>>();
-  datasetUpdated = new Emitter<DataChangeEvent<Dataset>>();
-  featuresUpdated = new Emitter<DataChangeEvent<WfsFeature | null>>();
-  fileConnectionsUpdated = new Emitter<DataChangeEvent<FileInfo[]>>();
-  libraryRecordUpdated = new Emitter<DataChangeEvent<LibraryRecord>>();
+  basemapUpdated = new Emitter<DataChangeEventDetail<Basemap>>();
+  datasetUpdated = new Emitter<DataChangeEventDetail<Dataset>>();
+  featuresUpdated = new Emitter<DataChangeEventDetail<WfsFeature | null>>();
+  fileConnectionsUpdated = new Emitter<DataChangeEventDetail<FileInfo[]>>();
+  libraryRecordUpdated = new Emitter<DataChangeEventDetail<LibraryRecord>>();
   permissionsUpdated = new Emitter();
-  projectUpdated = new Emitter<DataChangeEvent<CrgProject>>();
-  schemaUpdated = new Emitter<DataChangeEvent<Schema>>();
-  vectorTableUpdated = new Emitter<DataChangeEvent<VectorTable>>();
+  projectUpdated = new Emitter<DataChangeEventDetail<CrgProject>>();
+  schemaUpdated = new Emitter<DataChangeEventDetail<Schema>>();
+  vectorTableUpdated = new Emitter<DataChangeEventDetail<VectorTable>>();
 
   off(scope: unknown) {
     Emitter.scopeOff(scope);

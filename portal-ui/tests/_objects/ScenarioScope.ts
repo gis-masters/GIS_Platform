@@ -1,10 +1,11 @@
+import { IWorldOptions } from '@cucumber/cucumber/lib/support_code_library_builder/world';
 import { setWorldConstructor, World } from '@wdio/cucumber-framework';
 
 import { Schema } from '../../src/app/services/data/schema/schema.models';
 import { NewWfsFeature } from '../../src/app/services/geoserver/wfs/wfs.models';
 import { Dataset, VectorTable } from '../../src/app/services/data/vectorData/vectorData.models';
-import { CrgLayer, CrgProject } from '../../src/app/services/gis/projects/projects.models';
-import { IWorldOptions } from '@cucumber/cucumber/lib/support_code_library_builder/world';
+import { CrgProject } from '../../src/app/services/gis/projects/projects.models';
+import { CrgLayer } from '../../src/app/services/gis/layers/layers.models';
 import { LibraryRecord } from '../../src/app/services/data/docLibrary/docLibrary.models';
 
 export class ScenarioScope extends World {

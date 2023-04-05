@@ -25,8 +25,9 @@ import {
   CrgLayerType,
   CrgRasterLayer,
   CrgVectorLayer,
-  TreeItemPayload
-} from '../../../services/gis/projects/projects.models';
+  crgLayerSchema
+} from '../../../services/gis/layers/layers.models';
+import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
 import { getLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
 import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
 import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
@@ -53,7 +54,6 @@ import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { TextBadge } from '../../TextBadge/TextBadge';
-import { crgLayerSchema } from '../../../services/gis/layers.service';
 import { ImportShapeDialog } from '../../ImportShapeDialog/ImportShapeDialog';
 import { MenuNestedItem } from '../../MenuNestedItem/MenuNestedItem';
 import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.util';

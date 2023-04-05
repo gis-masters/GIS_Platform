@@ -64,12 +64,6 @@ class UsersService {
     };
   }
 
-  async getByEmail(requestedEmail: string): Promise<CrgUser | undefined> {
-    await this.initUsersListStore();
-
-    return allUsers.list.find(({ email }) => email === requestedEmail);
-  }
-
   async invite(email: string) {
     await _reqInviteUser(email);
     void this.debouncedFetchUsersListStore();

@@ -7,10 +7,10 @@ import { getPreparedFeatures } from './features.templates';
 import { createVectorTableAs } from './createTestVectorTable';
 import { createRecord } from './vectorTableRecordsManagement';
 import { getUserByEmail } from '../auth/getUserByEmail';
-import { addDatasetPermissions } from './addDatasetPermissions';
 import { getVectorTableByTitle } from './getVectorTableByTitle';
 import { addVectorTablePermissions } from './addVectorTablePermissions';
 import { PrincipalType } from '../../../../src/app/services/data/permissions/permissions.models';
+import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 
 Given(
   'пользователем {string} внутри созданного набора данных создана таблица {string} по схеме {string}',
@@ -25,6 +25,24 @@ Given(
         crs: 'EPSG:28407'
       },
       user
+    );
+  }
+);
+
+Given(
+  'пользователем {string} внутри набора данных {string} создана таблица {string} по схеме {string}',
+  async function (username: string, datasetTitle: string, title: string, schemaTitle: string) {
+    const schemaId = getSchemaIdByTitle(schemaTitle);
+    const dataset = await getDatasetByTitle(datasetTitle);
+
+    this.latestVectorTable = await createVectorTableAs(
+      dataset.identifier,
+      {
+        title,
+        schemaId,
+        crs: 'EPSG:28407'
+      },
+      username
     );
   }
 );
@@ -48,21 +66,6 @@ Given(
       { role: getRoleByTitle(role), principalId: currentUser.id, principalType: PrincipalType.USER },
       this.latestDatasetId,
       table.identifier
-    );
-  }
-);
-
-Given(
-  'у пользователя {string} есть право на {string} на созданный набор данных',
-  async function (this: ScenarioScope, user: keyof typeof testUsers, role: string) {
-    const currentUser = await getUserByEmail(testUsers[user].email);
-    if (!currentUser) {
-      throw new Error(`Не найден пользователь ${user}`);
-    }
-
-    await addDatasetPermissions(
-      { role: getRoleByTitle(role), principalId: currentUser.id, principalType: PrincipalType.USER },
-      this.latestDatasetId
     );
   }
 );

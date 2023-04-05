@@ -6,7 +6,7 @@ import { Stomp, CompatClient } from '@stomp/stompjs';
 import { ProcessType, WsImportModel } from './data/processes/processes.models';
 import { generateRandomId } from './util/randomId';
 import { BugObject } from './data/validation/validation.models';
-import { getWsEndpointUrl } from './server-urls.service';
+import { getWsEndpointUrl } from './api/server-urls.service';
 
 export interface IWsMessage<T = ExportWsMsg | ValidationWsMsg | WsImportModel> {
   type: ProcessType;

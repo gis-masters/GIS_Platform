@@ -45,9 +45,11 @@ export class XTableBlock extends Block {
   }
 
   async getHeadCell(title: string): Promise<WebdriverIO.Element> {
+    const $oneCell = await this.$('headCell');
+    await $oneCell.waitForDisplayed();
     const $$headCells = await this.$$('headCell');
     for (const $cell of $$headCells) {
-      const $title = $cell.$(this.selectors.colTitle);
+      const $title = await $cell.$(this.selectors.colTitle);
       const cellTitle = await $title.getText();
       if (cellTitle === title) {
         return $cell;

@@ -8,9 +8,9 @@ import {
   getDatasetUrl,
   getRecordsCopyUrl,
   getTableConnectionsUrl
-} from '../../server-urls.service';
-import { preparePageOptions } from '../../http.utils';
-import { http } from '../../http.service';
+} from '../../api/server-urls.service';
+import { preparePageOptions } from '../../api/http.utils';
+import { http } from '../../api/http.service';
 import { NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
 
 import { Dataset, NewDataset, VectorTable, VectorTableConnection, NewVectorTable } from './vectorData.models';
@@ -89,7 +89,7 @@ export async function _reqGetVectorTablesWithParticularOne(
   );
 }
 
-export async function retAllVectorTablesInDataset(datasetIdentifier: string): Promise<Omit<VectorTable, 'dataset'>[]> {
+export async function _getAllVectorTablesInDataset(datasetIdentifier: string): Promise<Omit<VectorTable, 'dataset'>[]> {
   return http.getPagedOld<Omit<VectorTable, 'dataset'>>(await getVectorTablesUrl(datasetIdentifier), {
     params: { sort: 'title,asc' }
   });

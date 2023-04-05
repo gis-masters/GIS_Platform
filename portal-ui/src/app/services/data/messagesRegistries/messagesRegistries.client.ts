@@ -3,10 +3,10 @@ import {
   getMessagesRegistriesDataUrl,
   getMessagesRegistriesUrl,
   getMessagesRegistryUrl
-} from '../../server-urls.service';
-import { preparePageOptions } from '../../http.utils';
+} from '../../api/server-urls.service';
+import { preparePageOptions } from '../../api/http.utils';
 import { PageOptions } from '../../models';
-import { http } from '../../http.service';
+import { http } from '../../api/http.service';
 
 import { MessagesRegistriesMessages, MessagesRegistry } from './messagesRegistries.models';
 

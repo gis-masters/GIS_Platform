@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { MapOutlined } from '@mui/icons-material';
 
-import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { projectsService } from '../../../../services/gis/projects/projects.service';
 import { CrgProject } from '../../../../services/gis/projects/projects.models';
@@ -113,7 +113,7 @@ export class ExplorerAdapterTypeProjectsRoot {
     return 'Фильтр по названию';
   }
 
-  static getRefreshEmitters(): Emitter<DataChangeEvent<CrgProject>>[] {
+  static getRefreshEmitters(): Emitter<DataChangeEventDetail<CrgProject>>[] {
     return [communicationService.projectUpdated];
   }
 }

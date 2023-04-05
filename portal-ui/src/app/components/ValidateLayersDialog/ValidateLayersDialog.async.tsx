@@ -9,7 +9,7 @@ import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { communicationService } from '../../services/communication.service';
 import { initValidation } from '../../services/data/validation/validation.service';
-import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { LayersList } from '../LayersList/LayersList';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';

@@ -1,5 +1,5 @@
-import { http } from '../../http.service';
-import { getFileConnectionsUrl, getFilesUrl, getFileUrl } from '../../server-urls.service';
+import { http } from '../../api/http.service';
+import { getFileConnectionsUrl, getFilesUrl, getFileUrl } from '../../api/server-urls.service';
 
 import { FileConnection, FileInfo } from './files.models';
 

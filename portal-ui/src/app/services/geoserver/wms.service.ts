@@ -1,10 +1,10 @@
 import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgVectorLayer } from '../gis/projects/projects.models';
-import { getWmsUrl } from '../server-urls.service';
+import { CrgVectorLayer } from '../gis/layers/layers.models';
+import { getWmsUrl } from '../api/server-urls.service';
 import { getStyleSld } from './styles.service';
 import { cqlBuild } from '../util/cqlBuild';
 import { cql2ol } from '../util/cql2ol';
-import { http } from '../http.service';
+import { http } from '../api/http.service';
 import { Mime } from '../util/Mime';
 import { WFS } from '../ol/WFS';
 

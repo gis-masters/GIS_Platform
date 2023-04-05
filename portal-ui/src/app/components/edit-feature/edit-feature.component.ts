@@ -24,7 +24,7 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-di
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { deleteFeatures, updateFeature } from '../../services/data/vectorData/vectorData.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
-import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
+import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { getFeatureProjection } from '../../services/geoserver/projections.service';
 import { OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
@@ -35,7 +35,7 @@ import { communicationService } from '../../services/communication.service';
 import { calculateValues } from '../../services/formValidation.service';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
-import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { generateRandomId } from '../../services/util/randomId';

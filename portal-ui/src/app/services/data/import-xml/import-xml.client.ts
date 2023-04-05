@@ -1,5 +1,5 @@
-import { http } from '../../http.service';
-import { getApiImportXmlUrl } from '../../server-urls.service';
+import { http } from '../../api/http.service';
+import { getApiImportXmlUrl } from '../../api/server-urls.service';
 
 export async function _reqImportXml(file: File, datasetIdentifier: string, tableIdentifier: string): Promise<number> {
   const formData = new FormData();

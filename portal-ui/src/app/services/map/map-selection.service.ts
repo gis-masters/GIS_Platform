@@ -171,12 +171,9 @@ class MapSelectionService {
       });
     }, this);
 
-    mapService.mapClick.on(async coordinate => {
+    mapService.mapClick.on(async e => {
       if (mapStore.allowedActions.includes(MapAction.PROKOL)) {
-        await this.selectFeaturesByCoordinates(
-          MapSelectionTypes.REPLACE,
-          mapService.getBufferByCoordinates(coordinate)
-        );
+        await this.selectFeaturesByCoordinates(MapSelectionTypes.REPLACE, mapService.getBufferByCoordinates(e.detail));
 
         sidebars.clearFeaturesWithError();
         sidebars.openFeaturesSidebar();

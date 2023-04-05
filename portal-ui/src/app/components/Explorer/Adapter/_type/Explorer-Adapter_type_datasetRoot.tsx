@@ -6,7 +6,7 @@ import {
   getDatasetsWithParticularOne
 } from '../../../../services/data/vectorData/vectorData.service';
 import { Dataset } from '../../../../services/data/vectorData/vectorData.models';
-import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { Emitter } from '../../../../services/common/Emitter';
@@ -124,7 +124,7 @@ export class ExplorerAdapterTypeDatasetRoot {
     return <CreateDataset />;
   }
 
-  static getRefreshEmitters(): Emitter<DataChangeEvent<Dataset>>[] {
+  static getRefreshEmitters(): Emitter<DataChangeEventDetail<Dataset>>[] {
     return [communicationService.datasetUpdated];
   }
 }

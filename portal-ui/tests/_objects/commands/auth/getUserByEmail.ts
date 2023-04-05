@@ -1,16 +1,14 @@
-import { usersService } from '../../../../src/app/services/auth/users/users.service';
-import { CrgUser } from '../../../../src/app/services/auth/users/users.models';
+import { CrgUserRaw } from '../../../../src/app/services/auth/users/users.models';
+import { requestAsAdmin } from '../requestAs';
+import { _reqAllUsers } from '../../../../src/app/services/auth/users/users.client';
 
-declare const window: { usersService: typeof usersService };
-
-export async function getUserByEmail(email: string): Promise<CrgUser> {
-  const result = await browser.executeAsync<string | undefined, [string]>(async (email, callback) => {
-    callback(JSON.stringify(await window.usersService.getByEmail(email)));
-  }, email);
+export async function getUserByEmail(email: string): Promise<CrgUserRaw> {
+  const allUsers = await requestAsAdmin(_reqAllUsers);
+  const result = allUsers.find(user => user.email === email);
 
   if (!result) {
     throw new Error(`Не найден пользователь с email ${email}`);
   }
 
-  return typeof result !== 'string' ? result : (JSON.parse(result) as CrgUser);
+  return result;
 }

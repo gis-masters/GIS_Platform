@@ -11,7 +11,7 @@ import { Dataset, VectorTable } from '../../../../services/data/vectorData/vecto
 import { Emitter } from '../../../../services/common/Emitter';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { CreateVectorTable } from '../../../CreateVectorTable/CreateVectorTable';
 import { formatDate } from '../../../../services/util/date.util';
 import { Role } from '../../../../services/data/permissions/permissions.models';
@@ -159,7 +159,7 @@ export class ExplorerAdapterTypeDataset {
     return createEnabled && <CreateVectorTable dataset={item.payload} />;
   }
 
-  static getRefreshEmitters(): Emitter<DataChangeEvent<VectorTable>>[] {
+  static getRefreshEmitters(): Emitter<DataChangeEventDetail<VectorTable>>[] {
     return [communicationService.vectorTableUpdated];
   }
 }

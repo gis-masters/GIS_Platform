@@ -8,10 +8,10 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
 import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
-import { vectorLayerDefaults } from '../../services/gis/layers.utils';
+import { vectorLayerDefaults } from '../../services/gis/layers/layers.utils';
 import { FileConnection } from '../../services/data/files/files.models';
 import { schemaService } from '../../services/data/schema/schema.service';
-import { createLayer } from '../../services/gis/layers.service';
+import { createLayer } from '../../services/gis/layers/layers.service';
 import { Schema } from '../../services/data/schema/schema.models';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
 

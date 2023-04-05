@@ -11,7 +11,7 @@ import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { sleep } from '../../../services/util/sleep';
 import { mapService } from '../../../services/map/map.service';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';

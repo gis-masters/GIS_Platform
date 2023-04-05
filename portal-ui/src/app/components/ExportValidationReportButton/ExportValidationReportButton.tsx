@@ -6,7 +6,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { GetApp, GetAppOutlined } from '@mui/icons-material';
 
 import { ExportValidationReportDialog } from '../ExportValidationReportDialog/ExportValidationReportDialog';
-import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 
 const cnExportValidationReportButton = cn('ExportValidationReportButton');
 

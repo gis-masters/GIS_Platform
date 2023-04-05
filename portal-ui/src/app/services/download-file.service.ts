@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { getExportUrl } from './server-urls.service';
-import { http } from './http.service';
+import { getExportUrl } from './api/server-urls.service';
+import { http } from './api/http.service';
 
 @Injectable({
   providedIn: 'root'

@@ -2,7 +2,7 @@ import { Coordinate } from 'ol/coordinate';
 
 import { CoordinateEdited, NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { communicationService } from '../../communication.service';
-import { CrgLayer } from '../../gis/projects/projects.models';
+import { CrgLayer } from '../../gis/layers/layers.models';
 import { PageOptions } from '../../models';
 
 import {
@@ -13,7 +13,7 @@ import {
   _reqDeleteDataset,
   _reqDeleteFeatures,
   _reqDeleteVectorTable,
-  retAllVectorTablesInDataset,
+  _getAllVectorTablesInDataset,
   _reqGetDataset,
   _reqGetDatasets,
   _reqGetDatasetsWithParticularOne,
@@ -109,7 +109,7 @@ export async function getVectorTablesWithParticularOne(
 }
 
 export async function getAllVectorTablesInDataset(dataset: Dataset): Promise<VectorTable[]> {
-  const vectorTables = await retAllVectorTablesInDataset(dataset.identifier);
+  const vectorTables = await _getAllVectorTablesInDataset(dataset.identifier);
 
   return vectorTables.map(table => ({
     ...table,
@@ -194,11 +194,7 @@ export async function deleteFeatures(
 if (typeof window !== 'undefined') {
   Object.assign(window, {
     getDatasets,
-    getAllDatasets,
-    createDataset,
-    deleteDataset,
     getVectorTables,
-    getAllVectorTablesInDataset,
     createVectorTable,
     deleteVectorTable,
     updateVectorTable,

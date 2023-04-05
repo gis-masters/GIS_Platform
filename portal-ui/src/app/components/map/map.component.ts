@@ -13,7 +13,8 @@ import { basemapsStore } from '../../stores/Basemaps.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
-import { CrgExternalLayer, CrgLayer, CrgLayerType, TreeItem } from '../../services/gis/projects/projects.models';
+import { CrgExternalLayer, CrgLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
+import { TreeItem } from '../../services/gis/projects/projects.models';
 import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
 import { mapSelectionService } from '../../services/map/map-selection.service';
 import { fetchBasemaps } from '../../services/gis/project-basemaps.service';
@@ -100,8 +101,8 @@ export class MapComponent implements OnInit, OnDestroy {
       },
       { fireImmediately: true }
     );
-    mapService.mapMoved.on(({ zoom, center }) => setMapPositionToUrl(zoom, center), this);
-    mapService.zoomChanged.on(value => currentProject.changeZoom(value), this);
+    mapService.mapMoved.on(e => setMapPositionToUrl(e.detail.zoom, e.detail.center), this);
+    mapService.zoomChanged.on(e => currentProject.changeZoom(e.detail), this);
   }
 
   ngAfterViewInit() {

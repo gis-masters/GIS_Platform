@@ -1,8 +1,8 @@
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 
-import { http } from '../http.service';
-import { getGeoserverFeatureTypeInfoUrl } from '../server-urls.service';
-import { CrgLayerType, CrgVectorLayer } from '../gis/projects/projects.models';
+import { http } from '../api/http.service';
+import { getGeoserverFeatureTypeInfoUrl } from '../api/server-urls.service';
+import { CrgLayerType, CrgVectorLayer } from '../gis/layers/layers.models';
 
 export async function getFeatureType({
   complexName,

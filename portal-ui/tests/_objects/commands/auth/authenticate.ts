@@ -7,7 +7,7 @@ import { testDataPreparationPage } from '../../pages/TestDataPreparationPage.pag
 import { createOrganization } from './createOrganization';
 import { TestUser, testUsers } from './testUsers';
 import { homePage } from '../../pages/Home.page';
-import { createTestUsers } from './createUser';
+import { createTestUsers } from './createTestUsers';
 import { Page } from '../../Page';
 
 declare const window: {
@@ -56,6 +56,7 @@ async function authenticateAsSomeAdmin(admin: RegData, thenPage?: Page): Promise
   if (ok) {
     return;
   }
+
   const cookieKey = 'TEST_createdOrganization' + company;
   const [notFirstTime] = await browser.getCookies(cookieKey);
   if (notFirstTime) {

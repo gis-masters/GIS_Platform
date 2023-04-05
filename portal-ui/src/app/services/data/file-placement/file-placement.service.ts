@@ -1,10 +1,11 @@
 import { AxiosError } from 'axios';
 
-import { CrgLayersGroup, CrgLayerType, CrgProject, CrgRasterLayer } from '../../gis/projects/projects.models';
+import { CrgLayersGroup, CrgLayerType, CrgRasterLayer } from '../../gis/layers/layers.models';
+import { CrgProject } from '../../gis/projects/projects.models';
 import { createFileProcess, createProcess } from '../processes/processes.service';
 import { ProcessResponse, ProcessType } from '../processes/processes.models';
 import { LibraryRecord } from '../docLibrary/docLibrary.models';
-import { createRasterLayer } from '../../gis/layers.service';
+import { createRasterLayer } from '../../gis/layers/layers.service';
 import { projectsService } from '../../gis/projects/projects.service';
 import { getFileBaseName } from '../files/files.util';
 import { FileInfo } from '../files/files.models';

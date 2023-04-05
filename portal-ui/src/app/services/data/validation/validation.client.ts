@@ -1,10 +1,10 @@
-import { http } from '../../http.service';
+import { http } from '../../api/http.service';
 import {
   getExportValidationResultUrl,
   getValidationResultsUrl,
   getValidationShortInfoUrl,
   getValidationUrl
-} from '../../server-urls.service';
+} from '../../api/server-urls.service';
 import { Mime } from '../../util/Mime';
 import { ValidationWsMsg } from '../../ws.service';
 import { ExportResourceModel } from '../export/export.models';

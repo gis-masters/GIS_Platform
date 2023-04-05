@@ -8,6 +8,7 @@ import { allProjects } from '../../../stores/AllProjects.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { isReadAllowed } from '../../data/permissions/permissions.service';
 import { communicationService } from '../../communication.service';
+import { CrgLayer, CrgLayersGroup } from '../layers/layers.models';
 import { usersService } from '../../auth/users/users.service';
 import { testLayerByWms } from '../../geoserver/wms.service';
 import { PageOptions } from '../../models';
@@ -15,9 +16,9 @@ import { services } from '../../services';
 import { sleep } from '../../util/sleep';
 import { Toast } from '../../../components/Toast/Toast';
 
-import { CrgLayer, CrgLayersGroup, CrgProject } from './projects.models';
+import { CrgProject } from './projects.models';
 import {
-  _reqCreate,
+  _reqCreateProject,
   _reqCreateGroup,
   _reqDeleteGroup,
   _reqDeleteProject,
@@ -186,7 +187,7 @@ class ProjectsService {
   }
 
   async create(name: string): Promise<CrgProject> {
-    const result = await _reqCreate(name);
+    const result = await _reqCreateProject(name);
     communicationService.projectUpdated.emit({ type: 'create', data: result });
 
     return result;

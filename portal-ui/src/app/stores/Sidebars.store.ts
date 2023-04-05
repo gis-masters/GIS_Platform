@@ -3,7 +3,7 @@ import { observable, action, reaction, makeObservable } from 'mobx';
 import { mapStore } from './Map.store';
 import { route, Pages } from './Route.store';
 import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
-import { CrgVectorLayer } from '../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../services/gis/layers/layers.models';
 import { FeatureError } from '../services/map/map-link-following.service';
 import { Properties } from '../components/edit-feature/edit-feature.component';
 

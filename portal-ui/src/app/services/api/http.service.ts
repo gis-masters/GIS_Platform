@@ -1,14 +1,14 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-import { CustomCache, CustomCacheConfig } from './common/CustomCache';
-import { communicationService } from './communication.service';
-import { PageableResponse, PageQueryParams } from './models';
+import { CustomCache, CustomCacheConfig } from './CustomCache';
+import { communicationService } from '../communication.service';
+import { PageableResponse, PageQueryParams } from '../models';
 import { replaceUrl } from './server-urls.service';
-import { Emitter } from './common/Emitter';
-import { Mime } from './util/Mime';
+import { Mime } from '../util/Mime';
 
 import { getPayloadFromPageableResponse, stringifyParams } from './http.utils';
-import { PageableResources } from '../../server-types/common-contracts';
+import { PageableResources } from '../../../server-types/common-contracts';
+import { action, makeObservable, observable } from 'mobx';
 
 const ITEMS_PER_PAGE = 300;
 
@@ -28,17 +28,16 @@ interface RequestConfigWithCache extends RequestConfig {
   isAuthenticate?: boolean;
 }
 
-export class Http {
+class Http {
   axios: AxiosInstance;
   cache: CustomCache<Promise<AxiosResponse>>;
+  @observable waitingForAuth = false;
 
   private static _instance: Http;
 
   static get instance(): Http {
     return this._instance || (this._instance = new this());
   }
-
-  authDialog = new Emitter<boolean>();
 
   private constructor() {
     this.cache = new CustomCache({ maxAge: 2 * 60 * 1000 });
@@ -51,6 +50,8 @@ export class Http {
 
       return config;
     });
+
+    makeObservable(this);
   }
 
   async get<T>(url: string, configWithCache: RequestConfigWithCache = {}): Promise<T> {
@@ -294,11 +295,19 @@ export class Http {
   }
 
   async waitForAuth(): Promise<boolean> {
-    communicationService.authDialogOpen.emit();
+    this.setWaitingForAuth(true);
 
     return new Promise(resolve => {
-      communicationService.authDialogSuccess.once(() => resolve(true), this);
+      communicationService.authDialogSuccess.once(() => {
+        this.setWaitingForAuth(false);
+        resolve(true);
+      }, this);
     });
+  }
+
+  @action
+  setWaitingForAuth(waiting: boolean) {
+    this.waitingForAuth = waiting;
   }
 }
 

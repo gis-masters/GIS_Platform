@@ -1,12 +1,12 @@
 import { AxiosError } from 'axios';
 
 import { getEnvironment } from '../../environment';
-import { http } from '../../http.service';
+import { http } from '../../api/http.service';
 
 import { _reqAuthenticate, _reqChangePassword, _reqLogout, _reqRegistration, _reqRestorePassword } from './auth.client';
 import { AuthCredentials, AuthenticationResult, RegData } from './auth.models';
 
-http.axios.interceptors.request.use((config: { headers: Record<string, string> }) => {
+http.axios.interceptors.request.use(config => {
   if (authService.token) {
     config.headers.Authorization = 'Bearer ' + authService.token;
   }

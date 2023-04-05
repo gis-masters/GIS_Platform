@@ -2,7 +2,8 @@ import { AxiosError } from 'axios';
 
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { CrgLayer, CrgLayerType, CrgProject } from '../../gis/projects/projects.models';
+import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
+import { CrgProject } from '../../gis/projects/projects.models';
 import { getLibrary, getLibraryRecord } from '../docLibrary/docLibrary.service';
 import { DocumentLibrary, LibraryRecord } from '../docLibrary/docLibrary.models';
 import { getVectorTable } from '../vectorData/vectorData.service';

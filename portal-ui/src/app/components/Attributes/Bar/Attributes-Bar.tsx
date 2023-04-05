@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { FilterBySelection, mapStore } from '../../../stores/Map.store';
 import { calculateValues } from '../../../services/formValidation.service';
-import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { schemaService } from '../../../services/data/schema/schema.service';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { Schema } from '../../../services/data/schema/schema.models';

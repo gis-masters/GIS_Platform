@@ -5,7 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
-import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-FiltersEnabler.scss';
 

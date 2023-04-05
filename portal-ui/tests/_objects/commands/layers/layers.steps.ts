@@ -2,13 +2,14 @@ import { DataTable, Given } from '@wdio/cucumber-framework';
 
 import { authenticateAsAdmin } from '../auth/authenticate';
 import { createNewObjectInLayerAsAdmin } from './createNewObjectInLayerAsAdmin';
-import { CrgLayerType } from '../../../../src/app/services/gis/projects/projects.models';
-import { createLayerByAdmin } from './createLayerByAdmin';
+import { CrgLayerType } from '../../../../src/app/services/gis/layers/layers.models';
+import { createLayerAsAdmin } from './createLayerByAdmin';
 import { testSchemas } from '../schemas/testSchemas';
 import { ScenarioScope } from '../../ScenarioScope';
-import { getCrgLayer } from './getCrgLayer';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
-import { getProjectsByTitle } from '../projects/getProjectsByTitle';
+import { getProjectByTitle } from '../projects/getProjectByTitle';
+import { getVectorTableByTitle } from '../tables/getVectorTableByTitle';
+import { getSchema } from '../schemas/getSchema';
 
 Given(
   'в созданном проекте создан слой {string} на основе созданных набора данных и таблицы',
@@ -33,44 +34,35 @@ Given(
       styleName: schema.styleName
     };
 
-    this.latestLayer = await createLayerByAdmin(latestProject.id, layer);
+    this.latestLayer = await createLayerAsAdmin(layer, latestProject.id);
   }
 );
 
 Given(
-  /^администратором создан объект по таблице "(.*)" набора данных "(.*)"$/,
+  'администратором создан объект по таблице {string} набора данных {string}',
   async (tableTitle: string, datasetTitle: string) => {
     await createNewObjectInLayerAsAdmin(tableTitle, datasetTitle);
   }
 );
 
-Given('администратором создан слой с параметрами:', async function (this: ScenarioScope, table: DataTable) {
+Given('администратором создан слой с параметрами:', async function (table: DataTable) {
   const [projectTitle, layerTitle, tableTitle, datasetTitle, enabled, viewId] = table.rows()[0];
+  const dataset = await getDatasetByTitle(datasetTitle);
+  const project = await getProjectByTitle(projectTitle);
+  const vectorTable = await getVectorTableByTitle(dataset.identifier, tableTitle);
+  const schema = await getSchema(vectorTable.schemaId);
 
-  const { latestDataset, latestProject } = this;
-  let latestDatasetId = latestDataset.identifier;
-  if (latestDataset.title !== datasetTitle) {
-    const datasets = await getDatasetByTitle(datasetTitle);
+  const layer = {
+    type: 'vector' as CrgLayerType,
+    dataset: dataset.identifier,
+    tableName: vectorTable.identifier,
+    title: layerTitle,
+    nativeCRS: vectorTable.crs,
+    schemaId: vectorTable.schemaId,
+    styleName: schema.styleName,
+    enabled: enabled === 'включенный',
+    ...(viewId ? { view: viewId } : {})
+  };
 
-    if (datasets.length !== 1) {
-      throw new Error(`Ошибка получения набора данных ${datasetTitle}`);
-    }
-
-    latestDatasetId = datasets[0].identifier;
-  }
-
-  let projectId = latestProject.id;
-  if (latestProject.name !== projectTitle) {
-    const projects = await getProjectsByTitle(projectTitle);
-
-    if (projects.length !== 1) {
-      throw new Error(`Ошибка получения проекта ${projectTitle}`);
-    }
-
-    projectId = projects[0].id;
-  }
-
-  const layer = await getCrgLayer(layerTitle, tableTitle, latestDatasetId, enabled, viewId);
-
-  await createLayerByAdmin(projectId, layer);
+  await createLayerAsAdmin(layer, project.id);
 });

@@ -1,6 +1,6 @@
 import { AxiosAdapter, AxiosError } from 'axios';
 
-import { http } from '../../src/app/services/http.service';
+import { http } from '../../src/app/services/api/http.service';
 import { sleep } from '../../src/app/services/util/sleep';
 import { SyntheticController, selectController } from './controllers/_master';
 

@@ -7,7 +7,7 @@ import {
   deleteFeatureTypeFromScratchDatastore,
   FeatureTypeHref,
   getFeatureTypesFromScratchDatastore
-} from '../../services/geoserver-clean.service';
+} from '../../services/geoserver/geoserver-clean.service';
 import { Toast } from '../Toast/Toast';
 import { sleep } from '../../services/util/sleep';
 

@@ -2,7 +2,7 @@ import { PageOptions } from '../../models';
 import {
   getDocumentLibraryRecordRoleAssignmentUrl,
   getDocumentLibraryRoleAssignmentUrl
-} from '../../server-urls.service';
+} from '../../api/server-urls.service';
 import { ExplorerItemEntityTypeTitle } from '../../../components/Explorer/Explorer.models';
 import { addEntityPermission, removeEntityPermission } from '../permissions/permissions.service';
 import { RoleAssignmentBody } from '../permissions/permissions.models';

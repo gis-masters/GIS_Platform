@@ -19,7 +19,7 @@ import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { wfsFeatureToFeature } from '../../util/open-layers.util';
 import { getGeometryFieldName } from '../../data/schema/schema.utils';
-import { CrgVectorLayer } from '../../gis/projects/projects.models';
+import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { schemaService } from '../../data/schema/schema.service';
 import { olProjection } from '../projections.service';
 import { PageOptions, SortOrder } from '../../models';

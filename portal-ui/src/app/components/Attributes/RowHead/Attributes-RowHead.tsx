@@ -4,9 +4,9 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { sidebars } from '../../../stores/Sidebars.store';
-import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers.service';
+import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers/layers.utils';
 import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
-import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { FilterQuery } from '../../../services/util/filterObjects';
 
 import { AttributesCheck } from '../Check/Attributes-Check';

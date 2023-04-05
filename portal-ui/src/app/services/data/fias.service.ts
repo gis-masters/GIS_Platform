@@ -1,5 +1,5 @@
-import { http } from '../http.service';
-import { getFiasAddresses, getFiasOktmo } from '../server-urls.service';
+import { http } from '../api/http.service';
+import { getFiasAddresses, getFiasOktmo } from '../api/server-urls.service';
 
 export interface Fias {
   address?: string;

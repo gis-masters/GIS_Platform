@@ -7,7 +7,7 @@ import { Breakpoint, Dialog, DialogActions, DialogContent, Tooltip } from '@mui/
 import { ChevronLeft, ChevronRight, OpenInFull, CloseFullscreen } from '@mui/icons-material';
 import { Document, Page, pdfjs } from 'react-pdf';
 
-import { getFileDownloadUrl } from '../../services/server-urls.service';
+import { getFileDownloadUrl } from '../../services/api/server-urls.service';
 import { FileInfo } from '../../services/data/files/files.models';
 import { isPdfFile } from '../../services/data/files/files.util';
 import { IconButton } from '../IconButton/IconButton';

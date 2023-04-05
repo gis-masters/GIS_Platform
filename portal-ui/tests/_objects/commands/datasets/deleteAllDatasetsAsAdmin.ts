@@ -1,40 +1,19 @@
 import {
-  deleteDataset,
-  deleteVectorTable,
-  getAllDatasets,
-  getAllVectorTablesInDataset,
-  getDatasets
-} from '../../../../src/app/services/data/vectorData/vectorData.service';
-
-import { authenticateAsAdmin } from '../auth/authenticate';
-
-declare const window: {
-  getDatasets: typeof getDatasets;
-  getAllDatasets: typeof getAllDatasets;
-  deleteVectorTable: typeof deleteVectorTable;
-  getAllVectorTablesInDataset: typeof getAllVectorTablesInDataset;
-  deleteDataset: typeof deleteDataset;
-};
+  _getAllVectorTablesInDataset,
+  _reqDeleteDataset,
+  _reqDeleteVectorTable,
+  _reqGetAllDatasets
+} from '../../../../src/app/services/data/vectorData/vectorData.client';
+import { requestAsAdmin } from '../requestAs';
 
 export async function deleteAllDatasetsAsAdmin(): Promise<void> {
-  await authenticateAsAdmin();
+  const allDatasets = await requestAsAdmin(_reqGetAllDatasets);
 
-  await browser.executeAsync(async callback => {
-    const datasets = await window.getAllDatasets();
-    if (datasets.length) {
-      for (const dataset of datasets) {
-        const tables = await window.getAllVectorTablesInDataset(dataset);
-
-        if (tables.length) {
-          for (const table of tables) {
-            await window.deleteVectorTable(table);
-          }
-        }
-
-        await window.deleteDataset(dataset);
-      }
+  for (const dataset of allDatasets) {
+    const tables = await requestAsAdmin(_getAllVectorTablesInDataset, dataset.identifier);
+    for (const table of tables) {
+      await requestAsAdmin(_reqDeleteVectorTable, dataset.identifier, table.identifier);
     }
-
-    callback();
-  });
+    await requestAsAdmin(_reqDeleteDataset, dataset.identifier);
+  }
 }

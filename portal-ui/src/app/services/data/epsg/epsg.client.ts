@@ -1,6 +1,6 @@
-import { http } from '../../http.service';
-import { preparePageOptions } from '../../http.utils';
-import { getEpsgUrl } from '../../server-urls.service';
+import { http } from '../../api/http.service';
+import { preparePageOptions } from '../../api/http.utils';
+import { getEpsgUrl } from '../../api/server-urls.service';
 import { PageableResponse, PageOptions } from '../../models';
 import { Projection } from '../../geoserver/projections.service';
 

@@ -14,7 +14,7 @@ import { validateFormValue } from '../../services/formValidation.service';
 import { LibraryDocumentDialog } from '../LibraryDocumentDialog/LibraryDocumentDialog';
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { communicationService } from '../../services/communication.service';
-import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { getFeatureUrl } from '../../services/map/map-url.service';
 import { schemaService } from '../../services/data/schema/schema.service';

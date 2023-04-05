@@ -9,7 +9,7 @@ import {
   getGeoserverImportUrl,
   getGeoserverImportTaskProgressUrl,
   getApiImportUrl
-} from '../../server-urls.service';
+} from '../../api/server-urls.service';
 import {
   ImportLayer,
   ImportTaskResponse,
@@ -22,7 +22,7 @@ import {
 import { currentImport } from '../../../stores/CurrentImport.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { usersService } from '../../auth/users/users.service';
-import { http } from '../../http.service';
+import { http } from '../../api/http.service';
 import { TaskImport } from './taskImport';
 import { Process } from '../../data/processes/processes.models';
 import { wsService } from '../../ws.service';

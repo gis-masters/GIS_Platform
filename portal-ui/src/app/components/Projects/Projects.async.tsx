@@ -8,7 +8,7 @@ import { AddBoxOutlined } from '@mui/icons-material';
 
 import { allProjects } from '../../stores/AllProjects.store';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
-import { communicationService, DataChangeEvent } from '../../services/communication.service';
+import { communicationService, DataChangeEventDetail } from '../../services/communication.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { sleep } from '../../services/util/sleep';
@@ -46,7 +46,8 @@ export default class Projects extends Component {
   async componentDidMount() {
     await projectsService.initAllProjectsStore();
 
-    communicationService.projectUpdated.on(async ({ type, data }: DataChangeEvent<CrgProject>) => {
+    communicationService.projectUpdated.on(async (e: CustomEvent<DataChangeEventDetail<CrgProject>>) => {
+      const { type, data } = e.detail;
       if (type === 'create') {
         await this.scrollTo(data);
       }

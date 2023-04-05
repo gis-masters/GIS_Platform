@@ -1,9 +1,9 @@
-import { AxiosError, AxiosRequestConfig } from 'axios';
+import { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 import { cqlParse } from '../../src/app/services/util/cqlParse';
 import { PageOptions, SortOrder } from '../../src/app/services/models';
 
-export function err404(config: AxiosRequestConfig) {
+export function err404(config: InternalAxiosRequestConfig) {
   return new AxiosError('not found', 'forbidden', config, null, {
     config,
     status: 404,
@@ -13,7 +13,7 @@ export function err404(config: AxiosRequestConfig) {
   });
 }
 
-export function parsePageOptions(config: AxiosRequestConfig): PageOptions {
+export function parsePageOptions(config: InternalAxiosRequestConfig): PageOptions {
   const pageOptions: Partial<PageOptions> = {};
 
   for (const [key, value] of Object.entries(config.params)) {

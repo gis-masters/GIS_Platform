@@ -1,14 +1,20 @@
+import {
+  _getAllVectorTablesInDataset,
+  _reqDeleteDataset,
+  _reqDeleteVectorTable,
+  _reqGetAllDatasets,
+  _reqGetDatasets
+} from '../../../../src/app/services/data/vectorData/vectorData.client';
 import { Dataset } from '../../../../src/app/services/data/vectorData/vectorData.models';
-import { getDatasets } from '../../../../src/app/services/data/vectorData/vectorData.service';
+import { requestAsAdmin } from '../requestAs';
 
-declare const window: {
-  getDatasets: typeof getDatasets;
-};
+export async function getDatasetByTitle(title: string): Promise<Dataset> {
+  const response = await requestAsAdmin(_reqGetDatasets, { page: 0, pageSize: 1, filter: { title } });
+  const dataset = response?._embedded?.datasets[0];
 
-export async function getDatasetByTitle(title: string): Promise<Dataset[]> {
-  return await browser.executeAsync(async (title, callback) => {
-    const [dataset] = await window.getDatasets({ page: 0, pageSize: 20, filter: { title } });
+  if (response.page.totalElements !== 1 || !dataset) {
+    throw new Error(`Ошибка получения набора данных "${title}"`);
+  }
 
-    callback(dataset);
-  }, title);
+  return dataset;
 }

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { DataChangeEvent } from '../../services/communication.service';
+import { DataChangeEventDetail } from '../../services/communication.service';
 import { FilterQuery } from '../../services/util/filterObjects';
 import { PageOptions, SortOrder } from '../../services/models';
 import { Emitter } from '../../services/common/Emitter';
@@ -118,6 +118,6 @@ export interface Adapter {
     service: ExplorerService,
     full: boolean
   ) => Promise<ReactNode> | ReactNode;
-  getRefreshEmitters?: (item: ExplorerItemData) => Emitter<DataChangeEvent<unknown>>[];
+  getRefreshEmitters?: (item: ExplorerItemData) => Emitter<DataChangeEventDetail<unknown>>[];
   getActions?: (item: ExplorerItemData) => ReactNode;
 }

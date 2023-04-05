@@ -24,7 +24,7 @@ import { sidebars } from '../../stores/Sidebars.store';
 import { getKnownEpsg } from '../../services/data/epsg/epsg.service';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { ActionsRight } from '../ActionsRight/ActionsRight';

@@ -1,11 +1,11 @@
-import { http } from '../../http.service';
+import { http } from '../../api/http.service';
 import {
   getAuthUrl,
   getChangePasswordUrl,
   getLogoutUrl,
   getOrganizationsUrl,
   getRestorePasswordUrl
-} from '../../server-urls.service';
+} from '../../api/server-urls.service';
 import { Mime } from '../../util/Mime';
 import { AuthCredentials, OrganizationsListItemInfo, RegData } from './auth.models';
 

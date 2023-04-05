@@ -6,7 +6,7 @@ import { XmlDownload } from '../XmlDownload/XmlDownload';
 import { CopyUrlButton } from '../CopyUrlButton/CopyUrlButton';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { OpenInAnotherProject } from '../OpenInAnotherProject/OpenInAnotherProject';
 import { FeatureExtract } from '../FeatureExtract/FeatureExtract';
 import { CopyFeatureButton } from '../CopyFeatureButton/CopyFeatureButton';

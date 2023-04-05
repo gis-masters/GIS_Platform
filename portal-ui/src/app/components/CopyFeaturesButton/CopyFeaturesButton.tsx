@@ -10,7 +10,7 @@ import { ContentCopyOutlined } from '@mui/icons-material';
 import { Toast } from '../Toast/Toast';
 import { IconButton } from '../IconButton/IconButton';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { copyFeaturesBetweenLayers } from '../../services/data/vectorData/vectorData.service';
 import { SelectSuitableVectorLayerDialog } from '../SelectSuitableVectorLayerDialog/SelectSuitableVectorLayerDialog';
 

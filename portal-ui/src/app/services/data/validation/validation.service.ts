@@ -1,5 +1,5 @@
 import { ValidationWsMsg, wsService } from '../../ws.service';
-import { CrgVectorLayer } from '../../gis/projects/projects.models';
+import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { ExportResourceModel } from '../export/export.models';
 import { Process } from '../processes/processes.models';
 

@@ -1,5 +1,5 @@
-import { getGroupsUrl, getGroupUrl, getGroupUserUrl } from '../../server-urls.service';
-import { http } from '../../http.service';
+import { getGroupsUrl, getGroupUrl, getGroupUserUrl } from '../../api/server-urls.service';
+import { http } from '../../api/http.service';
 
 import { CrgGroup, GroupData } from './groups.models';
 

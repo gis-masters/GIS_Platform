@@ -1,12 +1,12 @@
 import { cloneDeep } from 'lodash';
 
-import { getActualLegendUrl, getGeoServerUrl, getWmsUrl } from '../server-urls.service';
+import { getActualLegendUrl, getGeoServerUrl, getWmsUrl } from '../api/server-urls.service';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
-import { CrgVectorLayer } from '../gis/projects/projects.models';
+import { CrgVectorLayer } from '../gis/layers/layers.models';
 import { mapService } from '../map/map.service';
 import { cqlBuild } from '../util/cqlBuild';
 import { WfsGeometry } from './wfs/wfs.models';
-import { http } from '../http.service';
+import { http } from '../api/http.service';
 import { Mime } from '../util/Mime';
 
 export interface StyleRule {

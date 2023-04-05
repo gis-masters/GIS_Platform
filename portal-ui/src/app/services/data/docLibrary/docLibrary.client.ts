@@ -10,11 +10,11 @@ import {
   getDocLibraryRecordMoveUrl,
   getDocumentLibraryRecordRoleAssignmentUrl,
   getDocumentLibraryRoleAssignmentUrl
-} from '../../server-urls.service';
-import { preparePageOptions } from '../../http.utils';
+} from '../../api/server-urls.service';
+import { preparePageOptions } from '../../api/http.utils';
 import { PageableResponse, PageOptions } from '../../models';
 import { RoleAssignmentBody } from '../permissions/permissions.models';
-import { http } from '../../http.service';
+import { http } from '../../api/http.service';
 
 import { DocumentLibrary, LibraryRecord, LibraryRecordRaw } from './docLibrary.models';
 

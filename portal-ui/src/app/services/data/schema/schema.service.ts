@@ -4,7 +4,7 @@ import { debounce, DebouncedFunc } from 'lodash';
 import { BugObject } from '../validation/validation.models';
 import { FeatureUtil } from '../../util/FeatureUtil';
 import { Toast } from '../../../components/Toast/Toast';
-import { CrgVectorLayer } from '../../gis/projects/projects.models';
+import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { ImportLayerItem } from '../../geoserver/import/import.models';
 import { communicationService } from '../../communication.service';
 

@@ -1,23 +1,8 @@
+import { _reqCreateDataset } from '../../../../src/app/services/data/vectorData/vectorData.client';
 import { Dataset } from '../../../../src/app/services/data/vectorData/vectorData.models';
-import { createDataset, getDatasets } from '../../../../src/app/services/data/vectorData/vectorData.service';
-import { authenticateAs } from '../auth/authenticate';
-import { testUsers } from '../auth/testUsers';
+import { getTestUser } from '../auth/testUsers';
+import { requestAs } from '../requestAs';
 
-declare const window: {
-  createDataset: typeof createDataset;
-  getDatasets: typeof getDatasets;
-};
-
-export async function createDatasetAs(title: string, user: keyof typeof testUsers): Promise<Dataset> {
-  await authenticateAs(testUsers[user]);
-
-  return await _createDataset(title);
-}
-
-async function _createDataset(title: string): Promise<Dataset> {
-  return await browser.executeAsync(async (title, callback) => {
-    const dataset = await window.createDataset({ title });
-
-    callback(dataset);
-  }, title);
+export async function createDatasetAs(title: string, username: string): Promise<Dataset> {
+  return await requestAs(getTestUser(username), _reqCreateDataset, { title });
 }

@@ -8,10 +8,10 @@ import { cn } from '@bem-react/classname';
 import { mapStore } from '../../stores/Map.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
-import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers.service';
+import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { mapSelectionService } from '../../services/map/map-selection.service';
 import { communicationService } from '../../services/communication.service';
-import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { PageOptions } from '../../services/models';
 import { XTableInvoke } from '../XTable/XTable';
 
@@ -37,7 +37,9 @@ export default class Attributes extends Component<IClassNameProps> {
   }
 
   componentDidMount() {
-    communicationService.openAttributesBar.on(this.openBar, this);
+    communicationService.openAttributesBar.on((e: CustomEvent<CrgVectorLayer>) => {
+      this.openBar(e.detail);
+    }, this);
   }
 
   componentWillUnmount() {

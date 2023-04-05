@@ -1,7 +1,7 @@
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, debounce } from 'lodash';
 
-import { DataChangeEvent } from '../../services/communication.service';
+import { DataChangeEventDetail } from '../../services/communication.service';
 import { FilterQuery } from '../../services/util/filterObjects';
 
 import { getChildren, getChildrenWithParticularOne, getId } from './Adapter/Explorer-Adapter';
@@ -18,9 +18,9 @@ export class ExplorerService {
     this.refreshItems = debounce(this.refreshItems.bind(this), 50);
   }
 
-  async refreshItems(e?: DataChangeEvent<unknown>): Promise<void> {
-    if (e?.type === 'delete') {
-      const deletingItemId = getId({ type: this.store.selectedItem.type, payload: e.data });
+  async refreshItems(e?: CustomEvent<DataChangeEventDetail<unknown>>): Promise<void> {
+    if (e?.detail?.type === 'delete') {
+      const deletingItemId = getId({ type: this.store.selectedItem.type, payload: e.detail.data });
       if (deletingItemId === getId(this.store.selectedItem)) {
         const selectedItemIndex = this.store.items.findIndex(item => getId(item) === deletingItemId);
         this.store.selectItem(

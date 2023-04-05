@@ -1,5 +1,5 @@
-import { getWfsUrl } from '../../server-urls.service';
-import { http } from '../../http.service';
+import { getWfsUrl } from '../../api/server-urls.service';
+import { http } from '../../api/http.service';
 import { Mime } from '../../util/Mime';
 
 import { WfsFeatureCollection } from './wfs.models';

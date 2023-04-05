@@ -5,7 +5,7 @@ import { DownloadOutlined } from '@mui/icons-material';
 
 import { cn } from '@bem-react/classname';
 
-import { getDocLibraryRecordsUrl } from '../../../services/server-urls.service';
+import { getDocLibraryRecordsUrl } from '../../../services/api/server-urls.service';
 import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
 
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';

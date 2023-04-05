@@ -1,15 +1,21 @@
-import { getEnvironment } from './environment';
+import { getEnvironment } from '../environment';
 
 async function getHost(): Promise<string> {
   const env = await getEnvironment();
 
-  return env.server.host || location.hostname;
+  return env.server.host;
+}
+
+async function getProtocol(): Promise<string> {
+  const env = await getEnvironment();
+
+  return env.server.protocol;
 }
 
 async function getPort(): Promise<string> {
   const env = await getEnvironment();
 
-  return env.server.port || location.port;
+  return env.server.port;
 }
 
 export async function getPath(): Promise<string> {
@@ -21,7 +27,7 @@ export async function getPath(): Promise<string> {
 async function getWsPort(): Promise<string> {
   const env = await getEnvironment();
 
-  return env.server.wsPort || location.port;
+  return env.server.wsPort;
 }
 
 async function getWsPath(): Promise<string> {
@@ -31,19 +37,21 @@ async function getWsPath(): Promise<string> {
 }
 
 export async function getWsEndpointUrl(): Promise<string> {
+  const protocol = await getProtocol();
   const host = await getHost();
   const port = await getWsPort();
   const path = await getWsPath();
 
-  return `${location.protocol}//${host}:${port}${path}/crg-ws-endpoint`;
+  return `${protocol}//${host}:${port}${path}/crg-ws-endpoint`;
 }
 
 export async function getBaseUrl(): Promise<string> {
+  const protocol = await getProtocol();
   const host = await getHost();
   const port = await getPort();
   const path = await getPath();
 
-  return `${location.protocol}//${host}${port && ':'}${port}${path}`;
+  return `${protocol}//${host}${port && ':'}${port}${path}`;
 }
 
 export async function getGeoServerUrl(): Promise<string> {
@@ -120,7 +128,9 @@ export async function getLogoutUrl(): Promise<string> {
 
 export async function getEsiaUrl(): Promise<string> {
   const url = await getBaseUrl();
-  const redirect = window.location.protocol + '//' + window.location.host + '/projects';
+  const host = await getHost();
+  const protocol = await getProtocol();
+  const redirect = protocol + '//' + host + '/projects';
   const redirectFromEsia = `${url}/esia/ok?redirect=${redirect}`;
 
   return `${url}/esia?redirect=${redirectFromEsia}`;
@@ -451,7 +461,7 @@ export async function replaceUrl(url: string, addPath?: boolean): Promise<string
   const newUrl = new URL(url);
   newUrl.hostname = await getHost();
   newUrl.port = await getPort();
-  newUrl.protocol = location.protocol;
+  newUrl.protocol = await getProtocol();
 
   if (addPath) {
     newUrl.pathname = (await getPath()) + newUrl.pathname;

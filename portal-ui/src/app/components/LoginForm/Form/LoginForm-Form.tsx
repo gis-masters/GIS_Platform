@@ -5,8 +5,8 @@ import { cn } from '@bem-react/classname';
 
 import { env } from '../../../stores/Env.store';
 import { PropertyType, Schema } from '../../../services/data/schema/schema.models';
-import { getEsiaUrl } from '../../../services/server-urls.service';
-import { http } from '../../../services/http.service';
+import { getEsiaUrl } from '../../../services/api/server-urls.service';
+import { http } from '../../../services/api/http.service';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { ActionsLeft } from '../../ActionsLeft/ActionsLeft';
 import { Button } from '../../Button/Button';

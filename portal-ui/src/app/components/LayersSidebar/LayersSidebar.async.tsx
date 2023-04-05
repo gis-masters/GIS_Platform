@@ -12,9 +12,9 @@ import {
   alertLayerOperationError,
   createLayer,
   deleteLayer,
-  generateNextLayerId,
   updateLayer
-} from '../../services/gis/layers.service';
+} from '../../services/gis/layers/layers.service';
+import { generateNextLayerId } from '../../services/gis/layers/layers.utils';
 import { LayersTree } from '../LayersTree/LayersTree';
 import { Loading } from '../Loading/Loading';
 

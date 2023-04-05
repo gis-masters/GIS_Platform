@@ -1,5 +1,5 @@
 import { PageOptions } from '../../models';
-import { getMessagesRegistriesSchemaUrl } from '../../server-urls.service';
+import { getMessagesRegistriesSchemaUrl } from '../../api/server-urls.service';
 import { Schema } from '../schema/schema.models';
 import { schemaService } from '../schema/schema.service';
 

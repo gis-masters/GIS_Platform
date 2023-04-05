@@ -59,7 +59,8 @@ class ExplorerBlock extends Block {
   }
 
   async testEmptiness() {
-    await expect(this.$('empty')).toBeDisplayedInViewport();
+    const $empty = await this.$('empty');
+    await $empty.waitForDisplayed();
   }
 
   async getExplorerItemByName(itemName: string): Promise<WebdriverIO.Element | undefined> {

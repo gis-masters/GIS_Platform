@@ -1,4 +1,5 @@
-import { CrgLayer, CrgProject } from '../../gis/projects/projects.models';
+import { CrgLayer } from '../../gis/layers/layers.models';
+import { CrgProject } from '../../gis/projects/projects.models';
 
 export interface FileInfo {
   id: string;

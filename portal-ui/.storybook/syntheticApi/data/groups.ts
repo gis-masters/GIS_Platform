@@ -1,4 +1,4 @@
-import { CrgGroup } from '../../../src/app/services/auth/groups.service';
+import { CrgGroup } from '../../../src/app/services/auth/groups/groups.models';
 
 export const groups: CrgGroup[] = [
   {

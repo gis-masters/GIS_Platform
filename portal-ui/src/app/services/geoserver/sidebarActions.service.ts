@@ -2,8 +2,8 @@ import { isEqual } from 'lodash';
 
 import { mapService } from '../map/map.service';
 import { Toast } from '../../components/Toast/Toast';
-import { getLayerCoverage } from '../gis/layers.service';
-import { CrgVectorLayer, CrgLayerType, CrgLayer } from '../gis/projects/projects.models';
+import { getLayerCoverage } from './geoserverLayer/geoserverLayer.service';
+import { CrgVectorLayer, CrgLayerType, CrgLayer } from '../gis/layers/layers.models';
 
 import { getFeatureType } from './featuretypes.service';
 import { getProjection, olProjection, transform } from './projections.service';

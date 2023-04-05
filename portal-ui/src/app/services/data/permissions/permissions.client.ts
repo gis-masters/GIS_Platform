@@ -7,8 +7,8 @@ import {
   getProjectPermissionUrl,
   getTableRoleAssignmentsUrl,
   getTableRoleAssignmentUrl
-} from '../../server-urls.service';
-import { http } from '../../http.service';
+} from '../../api/server-urls.service';
+import { http } from '../../api/http.service';
 
 import { ResourcePermissions, RoleAssignmentBody } from './permissions.models';
 

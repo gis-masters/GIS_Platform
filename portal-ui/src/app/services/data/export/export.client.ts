@@ -1,5 +1,5 @@
-import { http } from '../../http.service';
-import { getExportUrl } from '../../server-urls.service';
+import { http } from '../../api/http.service';
+import { getExportUrl } from '../../api/server-urls.service';
 import { Mime } from '../../util/Mime';
 import { Process } from '../processes/processes.models';
 

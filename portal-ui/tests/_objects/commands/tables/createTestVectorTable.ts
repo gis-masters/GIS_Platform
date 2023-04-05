@@ -7,7 +7,7 @@ import {
   getVectorTables
 } from '../../../../src/app/services/data/vectorData/vectorData.service';
 import { authenticateAs } from '../auth/authenticate';
-import { testUsers } from '../auth/testUsers';
+import { getTestUser } from '../auth/testUsers';
 
 declare const window: {
   createVectorTable: typeof createVectorTable;
@@ -20,9 +20,9 @@ declare const window: {
 export async function createVectorTableAs(
   datasetIdentifier: string,
   newVectorTable: NewVectorTable,
-  user: keyof typeof testUsers
+  username: string
 ): Promise<VectorTable> {
-  await authenticateAs(testUsers[user]);
+  await authenticateAs(getTestUser(username));
 
   return await _createVectorTable(datasetIdentifier, newVectorTable);
 }

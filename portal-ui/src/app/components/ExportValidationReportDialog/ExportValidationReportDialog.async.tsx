@@ -6,7 +6,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { boundMethod } from 'autobind-decorator';
 
 import { getExportValidationReport } from '../../services/data/validation/validation.service';
-import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { sidebars } from '../../stores/Sidebars.store';
 import { LayersList } from '../LayersList/LayersList';
 import { Button } from '../Button/Button';

@@ -7,7 +7,7 @@ import { XTableColumn } from '../XTable/XTable.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
-import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 

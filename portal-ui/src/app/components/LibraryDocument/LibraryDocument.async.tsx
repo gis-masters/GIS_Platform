@@ -13,7 +13,7 @@ import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models'
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
 import { getLibraryRecordBreadcrumbs } from '../DataManagement/DataManagement.utils';
-import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../services/server-urls.service';
+import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../services/api/server-urls.service';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';

@@ -10,7 +10,7 @@ import { getValidationShortInfo } from '../../../services/data/validation/valida
 import { communicationService, ObjectDto } from '../../../services/communication.service';
 import { ValidationShortInfo } from '../../../services/data/validation/validation.models';
 import { IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
-import { CrgLayer, CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { CrgLayer, CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { mapService } from '../../../services/map/map.service';
 
 @Component({
@@ -41,15 +41,15 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     void this.updateBrieflyInfo(this.layers);
     this.layersWithErrors = this.layers.filter(layer => this.commonInfo.get(layer.tableName)?.totalViolations);
 
-    communicationService.validationInitiated.on(value => {
-      this.isValidationInited = value;
+    communicationService.validationInitiated.on((e: CustomEvent<boolean>) => {
+      this.isValidationInited = e.detail;
     }, this);
   }
 
   ngOnInit() {
-    communicationService.editBugObject.on((objects: ObjectDto[]) => {
+    communicationService.editBugObject.on((e: CustomEvent<ObjectDto[]>) => {
       this.isEditMode = true;
-      this.objectsToEdit = objects;
+      this.objectsToEdit = e.detail;
     }, this);
 
     wsService.messages$

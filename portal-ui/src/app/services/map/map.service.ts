@@ -28,11 +28,11 @@ import { basemapsStore } from '../../stores/Basemaps.store';
 import { FilterBySelection, mapStore } from '../../stores/Map.store';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
-import { CrgExternalLayer, CrgLayer } from '../gis/projects/projects.models';
+import { CrgExternalLayer, CrgLayer } from '../gis/layers/layers.models';
 import { communicationService } from '../communication.service';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
 import { Basemap, SourceType } from '../data/basemaps/basemaps.models';
-import { getWmsUrl } from '../server-urls.service';
+import { getWmsUrl } from '../api/server-urls.service';
 import { ScaleLine } from '../ol/ScaleLine';
 import { Emitter } from '../common/Emitter';
 import {

@@ -8,8 +8,9 @@ import { getUserByEmail } from '../auth/getUserByEmail';
 import { getRoleByTitle, getTestUser } from '../auth/testUsers';
 import { deleteAllProjectsAsAdmin } from './deleteAllProjectsAsAdmin';
 import { addProjectPermissionForUser } from './addProjectPermissions';
-import { getProjectsByTitleFromServer } from './getProjectsByTitleFromServer';
 import { PrincipalType } from '../../../../src/app/services/data/permissions/permissions.models';
+import { getProjectByTitle } from './getProjectByTitle';
+import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
 
 Given(
   'пользователем {string} создан проект {string}',
@@ -33,21 +34,20 @@ Given(
   'у пользователя {string} есть право на {string} на проект {string}',
   async function (this: ScenarioScope, user: string, role: string, projectName: string) {
     const currentUser = await getUserByEmail(getTestUser(user).email);
-    const projects = await getProjectsByTitleFromServer(projectName);
-
-    if (projects.length !== 1) {
-      throw new Error(`Ошибка получения проекта "${projectName}"`);
-    }
+    const project = await getProjectByTitle(projectName);
 
     await addProjectPermissionForUser(
       { role: getRoleByTitle(role), principalId: currentUser.id, principalType: PrincipalType.USER },
-      projects[0]
+      project
     );
   }
 );
 
 Then('проект {string} отсутствует на сервере', async (projectName: string) => {
-  const projects = await getProjectsByTitleFromServer(projectName);
+  let project: CrgProject | undefined;
+  try {
+    project = await getProjectByTitle(projectName);
+  } catch {}
 
-  expect(projects.length).toEqual(0);
+  expect(project).toBeUndefined();
 });

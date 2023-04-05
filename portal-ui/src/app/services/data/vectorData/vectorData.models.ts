@@ -1,7 +1,8 @@
 import { SchemasSelect } from '../../../components/SchemasSelect/SchemasSelect';
 import { viewedProjections } from '../../geoserver/projections.service';
-import { CrgLayer, CrgProject } from '../../gis/projects/projects.models';
+import { CrgProject } from '../../gis/projects/projects.models';
 import { PropertyType, Schema } from '../schema/schema.models';
+import { CrgLayer } from '../../gis/layers/layers.models';
 import { Role } from '../permissions/permissions.models';
 
 export enum DataEntityType {

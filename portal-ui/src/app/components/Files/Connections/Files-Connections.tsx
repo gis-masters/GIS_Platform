@@ -10,7 +10,7 @@ import {
   CoverageTransparentColorEntry,
   getFileTransparentColor,
   updateFileTransparentColor
-} from '../../../services/geoserver-file-edit.service';
+} from '../../../services/geoserver/geoserver-file-edit.service';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
 import { PropertyType, Schema } from '../../../services/data/schema/schema.models';

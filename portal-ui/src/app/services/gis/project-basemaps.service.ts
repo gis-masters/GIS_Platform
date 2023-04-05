@@ -3,10 +3,10 @@ import { AxiosError } from 'axios';
 import { route } from '../../stores/Route.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { getBasemapConnectionsUrl, getBasemapsByIdsUrl, getProjectBasemapsUrl } from '../server-urls.service';
+import { getBasemapConnectionsUrl, getBasemapsByIdsUrl, getProjectBasemapsUrl } from '../api/server-urls.service';
 import { CrgProject } from './projects/projects.models';
 import { Basemap } from '../data/basemaps/basemaps.models';
-import { http } from '../http.service';
+import { http } from '../api/http.service';
 import { services } from '../services';
 import { Toast } from '../../components/Toast/Toast';
 

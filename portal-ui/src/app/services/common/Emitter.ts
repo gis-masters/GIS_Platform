@@ -1,6 +1,4 @@
-import ee from 'event-emitter';
-
-type Listener<T> = (data?: T) => void;
+type Listener<T> = (e: CustomEvent<T>) => void;
 
 interface Scoped<T = unknown> {
   channel: string;
@@ -10,7 +8,7 @@ interface Scoped<T = unknown> {
 
 export class Emitter<T = unknown> {
   private static counter = 0;
-  private static ee = ee();
+  private static target = new EventTarget();
   private static scoped: Scoped[] = [];
   private readonly channel: string;
 
@@ -26,7 +24,7 @@ export class Emitter<T = unknown> {
         (!channel || channel === item.channel) &&
         (!listeners || listeners.includes(item.listener))
       ) {
-        Emitter.ee.off(item.channel, item.listener);
+        Emitter.target.removeEventListener(item.channel, item.listener);
 
         return false;
       }
@@ -35,27 +33,27 @@ export class Emitter<T = unknown> {
     });
   }
 
-  emit(data?: T): void {
-    Emitter.ee.emit(this.channel, data);
+  emit(detail?: T): void {
+    Emitter.target.dispatchEvent(new CustomEvent(this.channel, { detail }));
   }
 
   off(listener: Listener<T>, scope?: unknown): void {
     if (scope) {
       this.scopeOff(scope, [listener]);
     } else {
-      Emitter.ee.off(this.channel, listener);
+      Emitter.target.removeEventListener(this.channel, listener);
     }
   }
 
   on(listener: Listener<T>, scope?: unknown): void {
-    Emitter.ee.on(this.channel, listener);
+    Emitter.target.addEventListener(this.channel, listener);
     if (scope) {
       Emitter.scoped.push({ channel: this.channel, scope, listener });
     }
   }
 
   once(listener: Listener<T>, scope?: unknown): void {
-    Emitter.ee.once(this.channel, listener);
+    Emitter.target.addEventListener(this.channel, listener, { once: true });
     if (scope) {
       Emitter.scoped.push({ channel: this.channel, scope, listener });
     }

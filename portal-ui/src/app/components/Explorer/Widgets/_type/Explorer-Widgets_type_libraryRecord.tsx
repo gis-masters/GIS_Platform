@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/server-urls.service';
+import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/api/server-urls.service';
 import { getLibraryRecord } from '../../../../services/data/docLibrary/docLibrary.service';
 import { LibraryRecord } from '../../../../services/data/docLibrary/docLibrary.models';
-import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
@@ -41,7 +41,8 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
       await this.fetchData();
     }
 
-    communicationService.libraryRecordUpdated.on(async ({ type, data }: DataChangeEvent<LibraryRecord>) => {
+    communicationService.libraryRecordUpdated.on(async (e: CustomEvent<DataChangeEventDetail<LibraryRecord>>) => {
+      const { type, data } = e.detail;
       if (getId({ type: ExplorerItemType.DOCUMENT, payload: data }) === getId(item) && type !== 'delete') {
         await this.fetchData();
       }

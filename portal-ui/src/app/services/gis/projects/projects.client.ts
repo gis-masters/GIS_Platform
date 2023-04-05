@@ -1,5 +1,5 @@
-import { http } from '../../http.service';
-import { preparePageOptions } from '../../http.utils';
+import { http } from '../../api/http.service';
+import { preparePageOptions } from '../../api/http.utils';
 import { PageableResponse, PageOptions } from '../../models';
 import {
   getProjectGroupsUrl,
@@ -7,9 +7,10 @@ import {
   getProjectLayersUrl,
   getProjectsUrl,
   getProjectUrl
-} from '../../server-urls.service';
+} from '../../api/server-urls.service';
+import { CrgLayer, CrgLayersGroup } from '../layers/layers.models';
 
-import { CrgLayer, CrgLayersGroup, CrgProject } from './projects.models';
+import { CrgProject } from './projects.models';
 
 export async function _reqGetProject(id: number): Promise<CrgProject> {
   return http.get<CrgProject>(await getProjectUrl(id));
@@ -38,7 +39,7 @@ export async function _reqGetAllProjects(): Promise<CrgProject[]> {
   return http.getPagedOld<CrgProject>(await getProjectsUrl(), { cache: { disabled: true } });
 }
 
-export async function _reqCreate(projectName: string): Promise<CrgProject> {
+export async function _reqCreateProject(projectName: string): Promise<CrgProject> {
   return http.post<CrgProject>(await getProjectsUrl(), { projectName });
 }
 

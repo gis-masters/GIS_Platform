@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { LayerIcon as Icon } from '../../LayerIcon/LayerIcon.composed';
 import { LayerIconType } from '../../LayerIcon/LayerIcon';
 

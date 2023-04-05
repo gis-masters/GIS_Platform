@@ -1,41 +1,22 @@
-import { updateLayer } from '../../../../src/app/services/gis/layers.service';
-import { projectsService } from '../../../../src/app/services/gis/projects/projects.service';
+import { _reqGetProjectGroups, _reqGetProjectLayers } from '../../../../src/app/services/gis/projects/projects.client';
+import { _reqUpdateLayer } from '../../../../src/app/services/gis/layers/layers.client';
+import { getProjectByTitle } from '../projects/getProjectByTitle';
+import { requestAsAdmin } from '../requestAs';
 
-import { authenticateAsAdmin } from '../auth/authenticate';
-
-declare const window: {
-  projectsService: typeof projectsService;
-  updateLayer: typeof updateLayer;
-};
-
-export async function addLayerToGroupByAdmin(
+export async function addLayerToGroupAsAdmin(
   projectTitle: string,
   groupTitle: string,
   layerTitle: string
 ): Promise<void> {
-  await authenticateAsAdmin();
+  const project = await getProjectByTitle(projectTitle);
+  const groups = await requestAsAdmin(_reqGetProjectGroups, project.id);
+  const layers = await requestAsAdmin(_reqGetProjectLayers, project.id);
+  const layer = layers.find(layer => layer.title === layerTitle);
+  const group = groups.find(group => group.title === groupTitle);
 
-  await browser.executeAsync(
-    async (projectTitle, groupTitle, layerTitle, callback) => {
-      const [projects] = await window.projectsService.getProjects({ page: 0, pageSize: 10 });
-      const project = projects.find(project => project.name === projectTitle);
+  if (!layer?.id || !group) {
+    throw new Error(`Ошибка добавления слоя "${layerTitle}" в группу ${groupTitle} в проекте "${project.name}"`);
+  }
 
-      if (project) {
-        const groups = await window.projectsService.getGroups(project.id);
-        const layers = await window.projectsService.getLayers(project.id);
-
-        const layer = layers.find(layer => layer.title === layerTitle);
-        const group = groups.find(group => group.title === groupTitle);
-
-        if (group?.id && layer?.id) {
-          await window.updateLayer(layer.id, { parentId: group.id }, project);
-        }
-      }
-
-      callback();
-    },
-    projectTitle,
-    groupTitle,
-    layerTitle
-  );
+  await requestAsAdmin(_reqUpdateLayer, layer.id, { parentId: group.id }, project.id);
 }

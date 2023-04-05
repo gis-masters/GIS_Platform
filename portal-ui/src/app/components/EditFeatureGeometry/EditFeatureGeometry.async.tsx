@@ -71,13 +71,13 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
   }
 
   @boundMethod
-  private modifyHandler(g?: SimpleGeometry) {
+  private modifyHandler(e: CustomEvent<SimpleGeometry | undefined>) {
     const { nativeProjection, geometry, geometryType, setGeometry } = this.props.store;
-    const coordinates = g
+    const coordinates = e.detail
       ? transformGeometry(
           {
             type: geometryType,
-            coordinates: g.getCoordinates()
+            coordinates: e.detail.getCoordinates()
           },
           olProjection,
           nativeProjection

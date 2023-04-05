@@ -6,12 +6,12 @@ import { withBemMod } from '@bem-react/core';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { VectorTable, vectorTableSchema } from '../../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../../services/data/vectorData/vectorData.service';
-import { getTableRoleAssignmentsUrl } from '../../../../services/server-urls.service';
+import { getTableRoleAssignmentsUrl } from '../../../../services/api/server-urls.service';
 import { Role } from '../../../../services/data/permissions/permissions.models';
 import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
-import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
@@ -39,7 +39,8 @@ class ExplorerWidgetsTypeTable extends Component<ExplorerWidgetsProps> {
       await this.fetchData();
     }
 
-    communicationService.vectorTableUpdated.on(async ({ type, data }: DataChangeEvent<VectorTable>) => {
+    communicationService.vectorTableUpdated.on(async (e: CustomEvent<DataChangeEventDetail<VectorTable>>) => {
+      const { type, data } = e.detail;
       if (getId({ type: ExplorerItemType.TABLE, payload: data }) === getId(item) && type !== 'delete') {
         await this.fetchData();
       }

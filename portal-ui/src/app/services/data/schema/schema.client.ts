@@ -1,5 +1,5 @@
-import { http } from '../../http.service';
-import { getSchemaUrl } from '../../server-urls.service';
+import { http } from '../../api/http.service';
+import { getSchemaUrl } from '../../api/server-urls.service';
 
 import { OldSchema } from './schemaOld.models';
 

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { getDatasetRoleAssignmentsUrl } from '../../../../services/server-urls.service';
+import { getDatasetRoleAssignmentsUrl } from '../../../../services/api/server-urls.service';
 import { getDataset } from '../../../../services/data/vectorData/vectorData.service';
 import { Dataset } from '../../../../services/data/vectorData/vectorData.models';
 import { Role } from '../../../../services/data/permissions/permissions.models';

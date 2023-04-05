@@ -1,6 +1,6 @@
-import { PageableResources } from '../../server-types/common-contracts';
-import { PageableResponse, PageOptions, PageQueryParams } from './models';
-import { cqlBuild } from './util/cqlBuild';
+import { PageableResources } from '../../../server-types/common-contracts';
+import { PageableResponse, PageOptions, PageQueryParams } from '../models';
+import { cqlBuild } from '../util/cqlBuild';
 
 export function preparePageOptions(
   { page, sort, sortOrder: sortOrder, filter, pageSize, queryParams = {} }: PageOptions,

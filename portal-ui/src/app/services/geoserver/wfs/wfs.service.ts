@@ -1,6 +1,6 @@
 import { chunk } from 'lodash';
 
-import { CrgVectorLayer } from '../../gis/projects/projects.models';
+import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { cqlBuild } from '../../util/cqlBuild';
 import { PageOptions } from '../../models';
 import { cql2ol } from '../../util/cql2ol';

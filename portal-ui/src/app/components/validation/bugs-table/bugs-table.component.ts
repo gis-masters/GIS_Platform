@@ -17,7 +17,7 @@ import { mapService } from '../../../services/map/map.service';
 import { getValidationResults } from '../../../services/data/validation/validation.service';
 import { ValidationResultsResponse } from '../../../services/data/validation/validation.models';
 import { ProcessStatus } from '../../../services/data/processes/processes.models';
-import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
 
 @Component({

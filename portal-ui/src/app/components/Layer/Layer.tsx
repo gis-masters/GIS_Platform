@@ -4,13 +4,8 @@ import { observer } from 'mobx-react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import {
-  CrgLayersGroup,
-  CrgLayer,
-  CrgLayerType,
-  TreeItemPayload,
-  CrgVectorLayer
-} from '../../services/gis/projects/projects.models';
+import { CrgLayersGroup, CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { TreeItemPayload } from '../../services/gis/projects/projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/data/schema/schema.service';
 

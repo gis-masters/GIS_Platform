@@ -1,5 +1,9 @@
-import { currentUser } from '../../stores/CurrentUser.store';
-import { CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './projects/projects.models';
+import { Coordinate } from 'ol/coordinate';
+
+import { currentProject } from '../../../stores/CurrentProject.store';
+import { currentUser } from '../../../stores/CurrentUser.store';
+import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';
 
 const defaultProps = {
   enabled: true,
@@ -43,4 +47,16 @@ export function externalLayerDefaults(): Pick<
     nativeCRS: 'EPSG:3857',
     type: CrgLayerType.EXTERNAL
   };
+}
+
+export function getLayerByFeatureInCurrentProject(
+  feature: WfsFeature<Coordinate | CoordinateEdited>
+): CrgVectorLayer | undefined {
+  const [tableName] = feature.id.split('.');
+
+  return currentProject.vectorableLayers.find(l => l.tableName === tableName);
+}
+
+export function generateNextLayerId(): number {
+  return Math.max(...currentProject.layers.map(({ id }) => id), 0) + 1;
 }

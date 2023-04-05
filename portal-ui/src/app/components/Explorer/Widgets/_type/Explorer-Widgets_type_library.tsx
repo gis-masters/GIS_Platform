@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { getDocumentLibraryRoleAssignmentUrl } from '../../../../services/server-urls.service';
+import { getDocumentLibraryRoleAssignmentUrl } from '../../../../services/api/server-urls.service';
 import { getLibrary } from '../../../../services/data/docLibrary/docLibrary.service';
 import { DocumentLibrary } from '../../../../services/data/docLibrary/docLibrary.models';
 import { Role } from '../../../../services/data/permissions/permissions.models';

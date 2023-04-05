@@ -9,7 +9,7 @@ import { mapSelectionService } from '../../../services/map/map-selection.service
 import { communicationService } from '../../../services/communication.service';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
-import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { FilterQuery } from '../../../services/util/filterObjects';

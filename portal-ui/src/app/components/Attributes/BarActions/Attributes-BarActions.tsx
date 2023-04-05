@@ -13,7 +13,7 @@ import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton'
 import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
-import { CrgVectorLayer } from '../../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { AttributesTableRecord } from '../Table/Attributes-Table';

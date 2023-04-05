@@ -7,10 +7,10 @@ import { boundMethod } from 'autobind-decorator';
 import { AssignmentOutlined, Delete, DeleteOutline } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@mui/material';
 
-import { http } from '../../../services/http.service';
+import { http } from '../../../services/api/http.service';
 import { services } from '../../../services/services';
 import { EditedField } from '../../../services/data/schema/schemaOld.models';
-import { getBaseUrl } from '../../../services/server-urls.service';
+import { getBaseUrl } from '../../../services/api/server-urls.service';
 import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';

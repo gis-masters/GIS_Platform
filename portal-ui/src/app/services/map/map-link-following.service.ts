@@ -7,13 +7,13 @@ import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { mapSelectionService } from './map-selection.service';
 import { WfsFeature, WfsFeatureCollection } from '../geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../geoserver/wfs/wfs.service';
-import { getWfsUrl } from '../server-urls.service';
+import { getWfsUrl } from '../api/server-urls.service';
 import { mapService } from './map.service';
 import { services } from '../services';
-import { http } from '../http.service';
+import { http } from '../api/http.service';
 import { Mime } from '../util/Mime';
 import { Toast } from '../../components/Toast/Toast';
-import { CrgLayer } from '../gis/projects/projects.models';
+import { CrgLayer } from '../gis/layers/layers.models';
 import { projectsService } from '../gis/projects/projects.service';
 
 export interface FeatureError {

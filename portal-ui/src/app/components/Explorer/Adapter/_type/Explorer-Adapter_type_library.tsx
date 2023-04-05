@@ -19,7 +19,7 @@ import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { schemaService } from '../../../../services/data/schema/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
 import { formatDate } from '../../../../services/util/date.util';
@@ -223,7 +223,7 @@ export class ExplorerAdapterTypeLibrary {
     return full && enabled && <CreateLibraryRecord library={item.payload} onCreate={createHandler} />;
   }
 
-  static getRefreshEmitters(): Emitter<DataChangeEvent<LibraryRecord>>[] {
+  static getRefreshEmitters(): Emitter<DataChangeEventDetail<LibraryRecord>>[] {
     return [communicationService.libraryRecordUpdated];
   }
 }

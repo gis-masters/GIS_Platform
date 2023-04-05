@@ -1,8 +1,8 @@
-import { http } from './http.service';
-import { getGeoserverFileUrl } from './server-urls.service';
+import { http } from '../api/http.service';
+import { getGeoserverFileUrl } from '../api/server-urls.service';
 
-import { Toast } from '../components/Toast/Toast';
-import { currentUser } from '../stores/CurrentUser.store';
+import { Toast } from '../../components/Toast/Toast';
+import { currentUser } from '../../stores/CurrentUser.store';
 
 export interface CoverageTransparentColorEntry {
   string: Record<string, string>;
@@ -32,9 +32,7 @@ export async function updateFileTransparentColor(coverages: string, InputTranspa
   try {
     await http.put(await getGeoserverFileUrl(currentUser.workspaceName, coverages), value);
   } catch {
-    Toast.error({
-      message: 'Не удалось обновить настройки слоя'
-    });
+    throw new Error('Не удалось обновить настройки слоя');
   }
 }
 
@@ -43,7 +41,7 @@ export async function getFileTransparentColor(coverages: string): Promise<Covera
     return await http.get(await getGeoserverFileUrl(currentUser.workspaceName, coverages));
   } catch {
     Toast.error({
-      message: 'Не удалось обновить настройки слоя'
+      message: 'Не удалось получить настройки слоя'
     });
   }
 }

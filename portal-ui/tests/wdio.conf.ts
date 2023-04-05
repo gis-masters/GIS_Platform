@@ -246,7 +246,7 @@ export const config: Options.Testrunner = {
     timeout: 20_000,
     // <boolean> Enable this config to treat undefined definitions as warnings.
     ignoreUndefinedDefinitions: false
-  }
+  },
 
   //
   // =====
@@ -272,6 +272,7 @@ export const config: Options.Testrunner = {
    * @param  {[type]} args     object that will be merged with the main configuration once worker is initialized
    * @param  {[type]} execArgv list of string arguments passed to the worker process
    */
+  execArgv: ['--experimental-global-customevent']
   // onWorkerStart: function (cid, caps, specs, args, execArgv) {
   // },
   /**

@@ -8,7 +8,7 @@ import { ScenarioScope } from './ScenarioScope';
 import { testUsers } from './commands/auth/testUsers';
 import { dataManagementPage } from './pages/DataManagement.page';
 import { LibraryRegistryPage } from './pages/LibraryRegistry.page';
-import { getProjectsByTitle } from './commands/projects/getProjectsByTitle';
+import { getProjectByTitle } from './commands/projects/getProjectByTitle';
 import { getDocumentsLibraryByTitle } from './commands/docLibrary/getDocLibraryByTitle';
 
 function findPage(title: string): Page {
@@ -60,38 +60,21 @@ Given('я нахожусь на странице карты проекта', asy
 });
 
 When('я перехожу на страницу карты проекта {string}', async (title: string) => {
-  const projects = await getProjectsByTitle(title);
-  if (projects.length === 1) {
-    await new MapPage(projects[0].id).open();
-  } else {
-    throw new Error(`Ошибка получения проекта "${title}"`);
-  }
-
-  const mapPage = new MapPage(projects[0].id);
+  const project = await getProjectByTitle(title);
+  const mapPage = new MapPage(project.id);
   await mapPage.open();
 });
 
 Then('открылась страница карты проекта {string}', async (title: string) => {
-  const projects = await getProjectsByTitle(title);
-  if (projects.length !== 1) {
-    throw new Error(`Ошибка получения проекта "${title}"`);
-  }
-
-  const mapPage = new MapPage(projects[0].id);
-
+  const project = await getProjectByTitle(title);
+  const mapPage = new MapPage(project.id);
   await mapPage.waitForVisible();
   await mapPage.testUrl();
 });
 
 Given('я на странице карты проекта {string}', async (title: string) => {
-  const projects = await getProjectsByTitle(title);
-  if (projects.length === 1) {
-    await new MapPage(projects[0].id).open();
-  } else {
-    throw new Error(`Ошибка получения проекта "${title}"`);
-  }
-
-  const mapPage = new MapPage(projects[0].id);
+  const project = await getProjectByTitle(title);
+  const mapPage = new MapPage(project.id);
   await mapPage.open();
 });
 

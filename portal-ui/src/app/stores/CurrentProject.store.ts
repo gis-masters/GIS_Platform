@@ -5,16 +5,15 @@ import { cloneDeep } from 'lodash';
 import { attributesTableStore } from './AttributesTable.store';
 import { Role } from '../services/data/permissions/permissions.models';
 import { getPatch } from '../services/util/patch';
+import { CrgProject, TreeItem } from '../services/gis/projects/projects.models';
 import {
   CrgLayer,
   CrgLayersGroup,
   CrgLayerType,
-  CrgProject,
   CrgRasterLayer,
   CrgVectorLayer,
-  NewCrgLayer,
-  TreeItem
-} from '../services/gis/projects/projects.models';
+  NewCrgLayer
+} from '../services/gis/layers/layers.models';
 
 const MAX_LAYERS_IN_BATCH = 5;
 

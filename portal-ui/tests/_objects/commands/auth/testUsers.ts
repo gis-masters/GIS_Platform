@@ -12,7 +12,7 @@ export function getRoleByTitle(title: string): Role {
   return role;
 }
 
-export type TestUser = RegData & { token?: string };
+export type TestUser = RegData & { token?: string; middleName: string; job: string; department: string };
 
 export const testUsers: Record<
   | 'Администратор системы'
@@ -30,8 +30,11 @@ export const testUsers: Record<
     company: 'Order of the Phoenix',
     contactPhone: '7777777777',
     firstName: 'Albus',
+    middleName: 'Percival',
     lastName: 'Dumbledore',
     email: 'admin@mail.ru',
+    job: 'Администратор системы',
+    department: 'Gryffindor',
     password: 'Esterhazy2022',
     password_: 'Esterhazy2022'
   },
@@ -39,8 +42,11 @@ export const testUsers: Record<
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Hermione',
+    middleName: 'Jean',
     lastName: 'Granger',
     email: 'hermione@admin',
+    job: 'Администратор организации',
+    department: 'Ravenclaw',
     password: 'Avadakedavra1',
     password_: 'Avadakedavra1'
   },
@@ -48,8 +54,11 @@ export const testUsers: Record<
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Harry',
+    middleName: 'James',
     lastName: 'Potter',
     email: 'harry@owner',
+    job: 'Владелец',
+    department: 'Ravenclaw',
     password: 'Avadakedavra2',
     password_: 'Avadakedavra2'
   },
@@ -57,8 +66,11 @@ export const testUsers: Record<
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Draco',
+    middleName: 'Lucius',
     lastName: 'Malfoy',
     email: 'draco@contributor',
+    job: 'Писец',
+    department: 'Slytherin',
     password: 'Avadakedavra3',
     password_: 'Avadakedavra3'
   },
@@ -66,8 +78,11 @@ export const testUsers: Record<
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Ronald',
+    middleName: 'Bilius',
     lastName: 'Weasley',
     email: 'ron@viewer',
+    job: 'Чтец',
+    department: 'Gryffindor',
     password: 'Avadakedavra4',
     password_: 'Avadakedavra4'
   },
@@ -75,8 +90,11 @@ export const testUsers: Record<
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Ginny',
+    middleName: 'Molly',
     lastName: 'Weasley',
     email: 'ginny@user',
+    job: 'Никто',
+    department: 'Gryffindor',
     password: 'Avadakedavra5',
     password_: 'Avadakedavra5'
   },
@@ -84,8 +102,11 @@ export const testUsers: Record<
     company: 'Hogwarts',
     contactPhone: '7777777777',
     firstName: 'Fred',
+    middleName: 'Gideon',
     lastName: 'Weasley',
     email: 'fred@dead',
+    job: 'Мертвец',
+    department: 'Gryffindor',
     password: 'Avadakedavra6',
     password_: 'Avadakedavra6'
   },
@@ -93,8 +114,11 @@ export const testUsers: Record<
     company: 'Другая организация',
     contactPhone: '7777777777',
     firstName: 'Tom',
+    middleName: 'Marvolo',
     lastName: 'Riddle',
     email: 'dark_lord@other',
+    job: 'Администратор другой организации',
+    department: 'Death Eaters',
     password: 'Avadakedavra666',
     password_: 'Avadakedavra666'
   },
@@ -102,8 +126,11 @@ export const testUsers: Record<
     company: 'Другая организация',
     contactPhone: '7777777777',
     firstName: 'Peter',
+    middleName: 'Wormtail',
     lastName: 'Pettigrew',
     email: 'scabbers@other',
+    job: 'Предатель',
+    department: 'Death Eaters',
     password: 'Avadakedavra0',
     password_: 'Avadakedavra0'
   }

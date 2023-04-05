@@ -1,5 +1,5 @@
-import { http } from '../../http.service';
-import { getUsersInviteUrl, getUsersUrl, getUserUrl } from '../../server-urls.service';
+import { http } from '../../api/http.service';
+import { getUsersInviteUrl, getUsersUrl, getUserUrl } from '../../api/server-urls.service';
 
 import { CrgUser, CrgUserRaw, NewUserData, OrgInfo } from './users.models';
 

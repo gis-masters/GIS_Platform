@@ -10,12 +10,12 @@ import { getFeatureProjection } from './projections.service';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { createFeature } from '../data/vectorData/vectorData.service';
 import { usersService } from '../auth/users/users.service';
-import { getVectorTableMultipleRecordsUrl, getWfsUrl } from '../server-urls.service';
-import { CrgLayer } from '../gis/projects/projects.models';
+import { getVectorTableMultipleRecordsUrl, getWfsUrl } from '../api/server-urls.service';
+import { CrgLayer } from '../gis/layers/layers.models';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { getEnvironment } from '../environment';
 import { services } from '../services';
-import { http } from '../http.service';
+import { http } from '../api/http.service';
 import { Mime } from '../util/Mime';
 
 export enum TransactionType {

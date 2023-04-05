@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { SchemaOutlined } from '@mui/icons-material';
 
-import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { schemaService } from '../../../../services/data/schema/schema.service';
 import { filterObjects } from '../../../../services/util/filterObjects';
@@ -119,7 +119,7 @@ export class ExplorerAdapterTypeSchemasRoot {
     return <CreateSchema />;
   }
 
-  static getRefreshEmitters(): Emitter<DataChangeEvent<Schema>>[] {
+  static getRefreshEmitters(): Emitter<DataChangeEventDetail<Schema>>[] {
     return [communicationService.schemaUpdated];
   }
 }

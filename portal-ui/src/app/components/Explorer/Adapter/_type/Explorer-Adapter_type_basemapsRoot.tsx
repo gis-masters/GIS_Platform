@@ -9,7 +9,7 @@ import {
   getBasemapsWithParticularOne
 } from '../../../../services/data/basemaps/basemaps.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { communicationService, DataChangeEvent } from '../../../../services/communication.service';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
@@ -104,7 +104,7 @@ export class ExplorerAdapterTypeBasemapsRoot {
     return SortOrder.DESC;
   }
 
-  static getRefreshEmitters(): Emitter<DataChangeEvent<Basemap>>[] {
+  static getRefreshEmitters(): Emitter<DataChangeEventDetail<Basemap>>[] {
     return [communicationService.basemapUpdated];
   }
 }

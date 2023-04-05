@@ -5,7 +5,7 @@ import { createElement } from 'react';
 
 import { registry } from '../../services/di-registry';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { CrgVectorLayer } from '../../services/gis/projects/projects.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { EditFeatureActions } from '../EditFeatureActions/EditFeatureActions';
 
 const EditFeatureActionsName = withRegistry(registry)(EditFeatureActions);
