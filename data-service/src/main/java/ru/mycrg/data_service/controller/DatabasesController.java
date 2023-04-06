@@ -41,7 +41,7 @@ public class DatabasesController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
     @DeleteMapping("/databases/{dbName}")
     public ResponseEntity<Object> deleteDb(@PathVariable String dbName) {
         databaseService.delete(dbName);

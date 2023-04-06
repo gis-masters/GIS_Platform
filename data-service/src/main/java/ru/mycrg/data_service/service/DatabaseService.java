@@ -3,8 +3,8 @@ package ru.mycrg.data_service.service;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.migrations.CrgMigrationHandler;
 import ru.mycrg.data_service.dao.ddl.DdlDatabase;
+import ru.mycrg.data_service.dao.migrations.CrgMigrationHandler;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
@@ -13,7 +13,6 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import java.util.Objects;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.extractIdFromDbName;
-import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 
 @Service
 public class DatabaseService {
@@ -32,7 +31,7 @@ public class DatabaseService {
 
     public void create(final String dbName) {
         if (ddlDatabase.isExist(dbName)) {
-            throw new ConflictException("The database "+ dbName + " already exist");
+            throw new ConflictException("The database " + dbName + " already exist");
         }
 
         ddlDatabase.create(dbName);
@@ -48,16 +47,10 @@ public class DatabaseService {
         if (authenticationFacade.isRoot()) {
             ddlDatabase.drop(dbName);
         } else {
-            Long orgId = authenticationFacade.getOrganizationId();
-            String calcName = getDefaultDatabaseName(orgId);
-
-            if (calcName.equalsIgnoreCase(dbName)) {
-                ddlDatabase.drop(dbName);
-            } else {
-                throw new ForbiddenException("Недостаточно прав для удаления бд: " + dbName);
-            }
+            throw new ForbiddenException("Удаление базы данных доступно только администратору системы.");
         }
     }
+
 
     public boolean isExist(@NotNull String dbName) {
         if (authenticationFacade.isRoot()) {
