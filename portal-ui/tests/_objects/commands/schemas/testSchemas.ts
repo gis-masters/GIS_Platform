@@ -305,7 +305,7 @@ const testSortingSchema2: Schema = {
   name: 'test_sorting__schema2',
   title: 'Схема с типами данных недоступными для сортировки',
   description: 'Схема для тестирования сортировки в атрибутивной таблице. Версия 2',
-  readOnly: false,
+  readOnly: true,
   tableName: 'test_sorting__v2',
   styleName: 'generic',
   geometryType: GeometryType.MULTI_POLYGON,
@@ -343,5 +343,7 @@ export const testSchemas: { [key: string]: Schema } = {
   'Схема без представлений': schemaWithoutViews,
   'Схема с несоответствующим слою StyleName': schemaWithInappropriateStyleName,
   'Схема для тестирования сортировки': testSortingSchema,
-  'Схема с типами данных недоступными для сортировки': testSortingSchema2
+  'Схема с типами данных недоступными для сортировки': testSortingSchema2,
+  'форма объекта в режиме чтения': testSortingSchema2,
+  'форма объекта в режиме редактирования': testSortingSchema
 };

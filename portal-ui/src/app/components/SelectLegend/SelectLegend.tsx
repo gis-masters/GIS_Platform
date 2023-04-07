@@ -52,7 +52,7 @@ export class SelectLegend extends Component<FormControlProps> {
 
   componentDidMount() {
     this.disposer = reaction(
-      () => currentProject.visibleLayersWithoutRasters,
+      () => currentProject.visibleVectorLayers,
       async () => {
         await loadAllLayersStyles();
       },

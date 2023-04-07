@@ -19,6 +19,7 @@ import { AttributesTabFilterMark } from '../TabFilterMark/Attributes-TabFilterMa
 import '!style-loader!css-loader!sass-loader!./Attributes-Tab.scss';
 
 const cnAttributesTab = cn('Attributes', 'Tab');
+const cnAttributesTabClose = cn('Attributes', 'TabClose');
 
 interface AttributesTabProps extends TabProps {
   layer: CrgVectorLayer;
@@ -51,6 +52,7 @@ export class AttributesTab extends Component<AttributesTabProps> {
             {attributesTableStore.isLayerFiltered(layer) && <AttributesTabFilterMark />}
 
             <IconButton
+              className={cnAttributesTabClose()}
               href='#'
               edge='end'
               size='small'

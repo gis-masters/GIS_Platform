@@ -1,6 +1,7 @@
 import { Key } from 'webdriverio';
 
 import { Block } from '../../../../Block';
+import { hasClass } from '../../../../utils/hasClass';
 
 class XTableFilterTypeStringBlock extends Block {
   selectors = {
@@ -39,9 +40,8 @@ class XTableFilterTypeStringBlock extends Block {
 
   async isFilterActive(): Promise<boolean> {
     const $filterInputStrictness = await this.$('filterInputStrictness');
-    const cls = await $filterInputStrictness.getAttribute('class');
 
-    return cls.split(' ').includes('XTable-FilterStrictness_filtered');
+    return hasClass($filterInputStrictness, 'XTable-FilterStrictness_filtered');
   }
 }
 

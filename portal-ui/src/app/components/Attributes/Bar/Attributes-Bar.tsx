@@ -22,6 +22,7 @@ import { AttributesBarHead } from '../BarHead/Attributes-BarHead';
 import { AttributesCounter } from '../Counter/Attributes-Counter';
 import { AttributesBarTitle } from '../BarTitle/Attributes-BarTitle';
 import { AttributesBarClose } from '../BarClose/Attributes-BarClose';
+import { extractFeatureId } from '../../../services/geoserver/feature.util';
 import { AttributesBarHeadGap } from '../BarHeadGap/Attributes-BarHeadGap';
 import { AttributesBarActions } from '../BarActions/Attributes-BarActions';
 import { AttributesBarMinimize } from '../BarMinimize/Attributes-BarMinimize';
@@ -156,7 +157,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
     );
 
     const tableRecords: AttributesTableRecord[] = features.map(feature => ({
-      cutId: feature.id.split('.')[1],
+      cutId: extractFeatureId(feature.id),
       feature,
       ...calculateValues(feature.properties, this.schema.properties)
     }));

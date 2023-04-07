@@ -381,7 +381,7 @@ export async function getVectorTableRecordsUrl(datasetIdentifier: string, tableI
 export async function getFeatureUrl(
   datasetIdentifier: string,
   tableIdentifier: string,
-  recordId: string
+  recordId: number | string // Для удаления может быть передано множество id через запятую
 ): Promise<string> {
   return `${await getDatasetUrl(datasetIdentifier)}/tables/${tableIdentifier}/records/${recordId}`;
 }

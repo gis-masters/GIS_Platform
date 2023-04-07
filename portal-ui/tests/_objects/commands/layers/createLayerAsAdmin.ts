@@ -2,6 +2,6 @@ import { CrgLayer, CrgRasterLayer, NewCrgLayer } from '../../../../src/app/servi
 import { _reqCreateLayer } from '../../../../src/app/services/gis/layers/layers.client';
 import { requestAsAdmin } from '../requestAs';
 
-export async function createLayerAsAdmin(layer: NewCrgLayer | CrgRasterLayer, projectId: number): Promise<CrgLayer> {
+export async function createLayerAsAdmin(projectId: number, layer: NewCrgLayer | CrgRasterLayer): Promise<CrgLayer> {
   return await requestAsAdmin(_reqCreateLayer, layer, projectId);
 }

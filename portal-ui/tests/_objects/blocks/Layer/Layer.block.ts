@@ -1,4 +1,5 @@
 import { Block } from '../../Block';
+import { hasClass } from '../../utils/hasClass';
 import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
 
 class LayerBlock extends Block {
@@ -25,13 +26,8 @@ class LayerBlock extends Block {
     if (!$layerCard) {
       throw new Error(`Не найден элемент "${title}"`);
     }
-    const cls = await $layerCard.getAttribute('class');
 
-    if (!cls) {
-      throw new Error(`Ошибка получения классов пункта ${title}`);
-    }
-
-    return cls.split(' ').includes('LayersTree-Item_visible');
+    return hasClass($layerCard, 'LayersTree-Item_visible');
   }
 }
 

@@ -50,13 +50,22 @@ class AttributesBlock extends Block {
 
   async clickTab(layerTitle: string) {
     const $attributesTabs = await this.$('attributesTabs');
-    const $tab = await $attributesTabs.$(`.Attributes-Tab=${layerTitle}`);
-    await $tab.click();
+    const $tabTitle = await $attributesTabs.$(`.Attributes-TabTitle=${layerTitle}`);
+    await $tabTitle.click();
   }
 
   async minimize() {
     const $barMinimize = await this.$('barMinimize');
     await $barMinimize.click();
+  }
+
+  async closeTab(layerTitle: string) {
+    const $attributesTabs = await this.$('attributesTabs');
+    const $tabTitle = await $attributesTabs.$(`.Attributes-TabTitle=${layerTitle}`);
+    const $attributeTab = await $tabTitle.parentElement();
+    const $closeIcon = await $attributeTab.$('.Attributes-TabClose');
+    await $closeIcon.waitForClickable();
+    await $closeIcon.click();
   }
 
   async getColumnType(title: string): Promise<string> {

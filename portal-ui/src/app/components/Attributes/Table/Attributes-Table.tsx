@@ -15,10 +15,10 @@ import { Schema } from '../../../services/data/schema/schema.models';
 import { FilterQuery } from '../../../services/util/filterObjects';
 import { SortParams } from '../../../services/util/sortObjects';
 import { mapService } from '../../../services/map/map.service';
-import { PageOptions } from '../../../services/models';
-import { sleep } from '../../../services/util/sleep';
 import { XTable, XTableInvoke } from '../../XTable/XTable';
 import { XTableColumn } from '../../XTable/XTable.models';
+import { PageOptions } from '../../../services/models';
+import { sleep } from '../../../services/util/sleep';
 import { Loading } from '../../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Table.scss';
@@ -29,7 +29,7 @@ const cnAttributesTable = cn('Attributes', 'Table');
 const cnAttributesTableContainer = cn('Attributes', 'TableContainer');
 
 export interface AttributesTableRecord extends Record<string, unknown> {
-  cutId: string;
+  cutId: number;
   feature: WfsFeature;
 }
 

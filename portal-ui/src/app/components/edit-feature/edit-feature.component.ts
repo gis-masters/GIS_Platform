@@ -38,7 +38,7 @@ import { getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { generateRandomId } from '../../services/util/randomId';
+import { extractFeatureId } from '../../services/geoserver/feature.util';
 import { mapService } from '../../services/map/map.service';
 import { formatDate } from '../../services/util/date.util';
 import { BaseEdit } from '../edit-bug-object/base-edit';
@@ -73,7 +73,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   isGeometryChanged = false;
   editGeometryStore = new EditFeatureGeometryStore();
   private unsubscribeFromMobx$: Subject<void> = new Subject<void>();
-  private randomId = generateRandomId();
 
   constructor(private formBuilder: UntypedFormBuilder, private dialog: MatDialog) {
     super();
@@ -354,7 +353,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         geometry = this.changedGeometry;
       }
 
-      await this.batchUpdateFeatures(this.layer.tableName, this.features, newProperties, geometry);
+      await this.batchUpdateFeatures(this.features, newProperties, geometry);
     }
 
     sidebars.setFeaturesEdited(false);
@@ -453,18 +452,11 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     }
   }
 
-  getEnumerationTitle(enumerations: { value: string; title: string }[], value: string | number): string {
-    const item = enumerations.find(i => String(i.value) === String(value));
-
-    return item && item.title;
-  }
-
   getDateTime(value: string | number): string {
     return formatDate(value);
   }
 
   private async batchUpdateFeatures(
-    layerName: string,
     features: WfsFeature<Coordinate | CoordinateEdited>[],
     newProperties: Properties,
     geometry?: WfsGeometry<Coordinate>
@@ -472,7 +464,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     const { dataset, tableName } = this.layer;
 
     if (features.length === 1) {
-      await updateFeature(dataset, tableName, features[0].id.split('.')[1], {
+      await updateFeature(dataset, tableName, extractFeatureId(features[0].id), {
         type: 'Feature',
         geometry: geometry,
         properties: newProperties
@@ -483,9 +475,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       return;
     }
 
-    const featuresId: string = features.map(feature => feature.id.split('.')[1]).join(',');
-
-    await transformFeature.multipleEdit(dataset, tableName, featuresId, newProperties);
+    await transformFeature.multipleEdit(dataset, tableName, features, newProperties);
 
     this.isSaveInProgress = false;
     mapService.refreshAllLayers();

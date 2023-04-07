@@ -133,7 +133,7 @@ export async function _reqCreateFeature(
 export async function _reqUpdateFeature(
   datasetIdentifier: string,
   vectorTableIdentifier: string,
-  recordId: string,
+  recordId: number,
   patch: Partial<WfsFeature>
 ): Promise<void> {
   return http.patch(await getFeatureUrl(datasetIdentifier, vectorTableIdentifier, recordId), patch);
@@ -164,7 +164,7 @@ export async function _reqCopyFeaturesBetweenLayers(
 export async function _reqDeleteFeatures(
   datasetIdentifier: string,
   vectorTableIdentifier: string,
-  featureIds: string[]
+  featureIds: number[]
 ): Promise<void> {
   return http.delete(await getFeatureUrl(datasetIdentifier, vectorTableIdentifier, featureIds.join(',')));
 }

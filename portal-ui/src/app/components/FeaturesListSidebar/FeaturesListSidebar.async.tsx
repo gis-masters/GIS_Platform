@@ -4,6 +4,7 @@ import { IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { IReactionDisposer, reaction } from 'mobx';
 
 import { sidebars } from '../../stores/Sidebars.store';
 import { mapStore } from '../../stores/Map.store';
@@ -16,12 +17,25 @@ const cnFeaturesListSidebar = cn('FeaturesListSidebar');
 
 @observer
 export default class FeaturesListSidebar extends Component {
+  private reactionDisposer: IReactionDisposer;
+
   componentDidMount() {
     communicationService.featuresUpdated.on(this.close, this);
+    this.reactionDisposer = reaction(
+      () => {
+        return mapStore.selectedFeatures.length;
+      },
+      selectedFeaturesLength => {
+        if (!selectedFeaturesLength) {
+          this.close();
+        }
+      }
+    );
   }
 
   componentWillUnmount() {
     communicationService.off(this);
+    this.reactionDisposer();
   }
 
   render() {

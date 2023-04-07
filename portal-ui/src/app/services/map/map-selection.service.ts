@@ -230,7 +230,7 @@ class MapSelectionService {
    */
   private async selectFeaturesByCoordinates(selectionType: MapSelectionTypes, buffer: MultiPolygon) {
     await services.provided;
-    const visibleLayers = currentProject.visibleLayersWithoutRasters.map(({ payload }) => payload);
+    const visibleLayers = currentProject.visibleVectorLayers.map(({ payload }) => payload);
     if (!visibleLayers.length) {
       services.logger.debug('No visible layers');
       this.selectFeatures([]);
@@ -275,7 +275,6 @@ class MapSelectionService {
     if (features.length || limitOverflow) {
       this.selectFeatures(features, selectionType);
     } else if (selectionType === MapSelectionTypes.REPLACE) {
-      sidebars.closeFeaturesSidebar();
       this.selectFeatures([]);
     }
   }

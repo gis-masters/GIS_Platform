@@ -5,13 +5,14 @@ import { Badge, IconButton, Tooltip } from '@mui/material';
 import { OpenInNew } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { getFeaturesUrl } from '../../services/map/map.util';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
-import { VectorTableConnection } from '../../services/data/vectorData/vectorData.models';
-import { getFeaturesUrlFragment } from '../../services/map/map-url.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
+import { VectorTableConnection } from '../../services/data/vectorData/vectorData.models';
+import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
+import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 
 const cnOpenInAnotherProject = cn('OpenInAnotherProject');
 
@@ -110,6 +111,7 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
   private navigateToObject(project: CrgProject) {
     const { feature } = this.props;
 
-    location.href = `${location.origin}/projects/${project.id}/map?features=${getFeaturesUrlFragment([feature])}`;
+    const layer = getLayerByFeatureInCurrentProject(feature);
+    location.href = getFeaturesUrl(project.id, layer.dataset, layer.tableName, [feature.id]);
   }
 }

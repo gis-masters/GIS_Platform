@@ -425,7 +425,7 @@ function setPrintSize(resolution: number, translateX: number, translateY: number
 
 export async function loadAllLayersStyles(): Promise<void> {
   const extendedRules = await Promise.all(
-    currentProject.visibleLayersWithoutRasters.map(async ({ payload }): Promise<StyleRuleExtended[]> => {
+    currentProject.visibleVectorLayers.map(async ({ payload }): Promise<StyleRuleExtended[]> => {
       const rules = await getLayerStyleRules(payload as CrgVectorLayer);
 
       return rules.map((rule): StyleRuleExtended => ({ ...rule, layerId: payload.id, layerTitle: payload.title }));

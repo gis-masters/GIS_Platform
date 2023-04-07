@@ -35,7 +35,7 @@ Given(
 
     await addDatasetPermissions(
       { role: getRoleByTitle(role), principalId: currentUser.id, principalType: PrincipalType.USER },
-      this.latestDatasetId
+      this.latestDataset.identifier
     );
   }
 );

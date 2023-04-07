@@ -13,6 +13,7 @@ import { usersService } from '../auth/users/users.service';
 import { getVectorTableMultipleRecordsUrl, getWfsUrl } from '../api/server-urls.service';
 import { CrgLayer } from '../gis/layers/layers.models';
 import { FeatureUtil } from '../util/FeatureUtil';
+import { extractFeatureId } from './feature.util';
 import { getEnvironment } from '../environment';
 import { services } from '../services';
 import { http } from '../api/http.service';
@@ -61,8 +62,15 @@ export class TransformFeatureService {
     return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
   }
 
-  async multipleEdit(datasetId: string, tableId: string, recordsId: string, properties: Properties): Promise<void> {
-    const url = await getVectorTableMultipleRecordsUrl(datasetId, tableId, recordsId);
+  async multipleEdit(
+    datasetId: string,
+    tableId: string,
+    features: WfsFeature<Coordinate | CoordinateEdited>[],
+    properties: Properties
+  ): Promise<void> {
+    const featureCutIds: string = features.map(feature => extractFeatureId(feature.id)).join(',');
+
+    const url = await getVectorTableMultipleRecordsUrl(datasetId, tableId, featureCutIds);
 
     await http.patch(url, properties);
   }
@@ -180,33 +188,6 @@ export class TransformFeatureService {
     return [...xmlDoc.querySelector('InsertResults').querySelectorAll('FeatureId')].map((f: Element) =>
       f.getAttribute('fid')
     );
-  }
-
-  async deleteFeatures(featureIds: string[], layerName: string): Promise<unknown> {
-    await usersService.fetchCurrentUser();
-
-    const { scratchWorkspaceName } = await getEnvironment();
-    const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
-
-    const options = {
-      featureNS: 'castyl_for_remove',
-      featureType: layerName,
-      featurePrefix: workspace,
-      nativeElements: []
-    } as WriteTransactionOptions;
-
-    const featuresToDelete = featureIds.map(id => {
-      const newFeature = new Feature();
-      newFeature.setId(id);
-
-      return newFeature;
-    });
-
-    const payload = this.xs
-      .serializeToString(this.getNode(TransactionType.DELETE, featuresToDelete, options))
-      .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '');
-
-    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
   }
 
   private getNode(type: TransactionType, features: Feature<Geometry>[], options: WriteTransactionOptions): Node {

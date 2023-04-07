@@ -1,12 +1,14 @@
 import { Coordinate } from 'ol/coordinate';
 
-import { mapStore } from '../../stores/Map.store';
-import { Pages, route } from '../../stores/Route.store';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
-import { WfsFeature } from '../geoserver/wfs/wfs.models';
 import { services } from '../services';
 import { sleep } from '../util/sleep';
+import { mapStore } from '../../stores/Map.store';
+import { extractFeatureId } from '../geoserver/feature.util';
+import { Pages, route } from '../../stores/Route.store';
+import { WfsFeature } from '../geoserver/wfs/wfs.models';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
+import { buildFeaturesUrlFragment, FeaturesUrlFragment } from './map.util';
 
 export async function setMapPositionToUrl(zoom: number, center: Coordinate): Promise<void> {
   await sleep(100);
@@ -55,7 +57,11 @@ export async function setEnabledLayerToUrl(): Promise<void> {
 }
 
 export function getFeaturesUrlFragment(features: WfsFeature[]): string | null {
-  const featuresIds: { [dataset: string]: { [table: string]: number[] } } = {};
+  if (!features) {
+    return null;
+  }
+
+  const featuresUrlFragment: FeaturesUrlFragment = {};
 
   for (const feature of features) {
     const layer = getLayerByFeatureInCurrentProject(feature);
@@ -63,17 +69,10 @@ export function getFeaturesUrlFragment(features: WfsFeature[]): string | null {
       continue;
     }
 
-    if (!featuresIds[layer.dataset]) {
-      featuresIds[layer.dataset] = {};
-    }
-    if (!featuresIds[layer.dataset][layer.tableName]) {
-      featuresIds[layer.dataset][layer.tableName] = [];
-    }
-
-    featuresIds[layer.dataset][layer.tableName].push(Number(feature.id.split('.')[1]));
+    buildFeaturesUrlFragment(featuresUrlFragment, layer.dataset, layer.tableName, [extractFeatureId(feature.id)]);
   }
 
-  return features ? JSON.stringify(featuresIds) : null;
+  return JSON.stringify(featuresUrlFragment);
 }
 
 export async function setSelectedFeaturesToUrl(): Promise<void> {
@@ -88,8 +87,4 @@ export async function setSelectedFeaturesToUrl(): Promise<void> {
       replaceUrl: true
     });
   });
-}
-
-export function getFeatureUrl(feature: WfsFeature, projectId: number = currentProject.id): string {
-  return `${location.origin}/projects/${projectId}/map/?features=${getFeaturesUrlFragment([feature])}`;
 }

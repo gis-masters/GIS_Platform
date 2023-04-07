@@ -1,5 +1,6 @@
-import { SortOrder } from '../../../../src/app/services/models';
 import { Block } from '../../Block';
+import { hasClass } from '../../utils/hasClass';
+import { SortOrder } from '../../../../src/app/services/models';
 
 class SortOrderButtonBlock extends Block {
   selectors = {
@@ -18,15 +19,12 @@ class SortOrderButtonBlock extends Block {
 
   async getSortOrder(): Promise<SortOrder> {
     const $filterInputStrictness = await this.$('container');
-    const cls = await $filterInputStrictness.getAttribute('class');
 
-    if (!cls) {
-      throw new Error('Ошибка получения классов кнопки сортировки');
-    }
-
-    if (cls.split(' ').includes('SortOrderButton_asc')) {
+    const isAsc = await hasClass($filterInputStrictness, 'SortOrderButton_asc');
+    const isDesc = await hasClass($filterInputStrictness, 'SortOrderButton_desc');
+    if (isAsc) {
       return SortOrder.ASC;
-    } else if (cls.split(' ').includes('SortOrderButton_desc')) {
+    } else if (isDesc) {
       return SortOrder.DESC;
     }
 

@@ -23,10 +23,10 @@ import {
   _reqGetVectorTable,
   _reqUpdateDataset,
   _reqUpdateFeature,
-  _reqUpdateVectorTable,
-  _reqGetAllDatasets
+  _reqUpdateVectorTable
 } from './vectorData.client';
 import { Dataset, NewDataset, NewVectorTable, VectorTable, VectorTableConnection } from './vectorData.models';
+import { extractFeatureId } from '../../geoserver/feature.util';
 
 // dataset
 
@@ -38,10 +38,6 @@ export async function getDatasets(pageOptions: PageOptions): Promise<[Dataset[],
   const response = await _reqGetDatasets(pageOptions);
 
   return [(response._embedded && response._embedded.datasets) || [], response.page.totalPages];
-}
-
-export async function getAllDatasets(): Promise<Dataset[]> {
-  return await _reqGetAllDatasets();
 }
 
 export async function getDatasetsWithParticularOne(
@@ -155,7 +151,7 @@ export async function createFeature(
 export async function updateFeature(
   datasetIdentifier: string,
   vectorTableIdentifier: string,
-  recordId: string,
+  recordId: number,
   patch: Partial<WfsFeature>
 ): Promise<void> {
   await _reqUpdateFeature(datasetIdentifier, vectorTableIdentifier, recordId, patch);
@@ -167,7 +163,7 @@ export async function copyFeaturesBetweenLayers(
   targetLayer: CrgLayer,
   features: WfsFeature[]
 ): Promise<void> {
-  const featureIds = features.map(feature => Number(feature.id.split('.')[1]));
+  const featureIds = features.map(feature => extractFeatureId(feature.id));
 
   await _reqCopyFeaturesBetweenLayers(
     sourceLayer.dataset,
@@ -185,7 +181,7 @@ export async function deleteFeatures(
   vectorTableIdentifier: string,
   features: WfsFeature<Coordinate | CoordinateEdited>[]
 ): Promise<void> {
-  const featureIds = features.map(feature => feature.id.split('.')[1]);
+  const featureIds = features.map(feature => extractFeatureId(feature.id));
   await _reqDeleteFeatures(datasetIdentifier, vectorTableIdentifier, featureIds);
   communicationService.featuresUpdated.emit({ type: 'delete', data: null });
 }

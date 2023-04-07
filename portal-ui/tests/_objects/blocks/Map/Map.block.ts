@@ -4,7 +4,8 @@ import { getLayerVisibility } from '../../commands/getLayerVisibility';
 
 class MapBlock extends Block {
   selectors = {
-    container: '.map'
+    container: '.map',
+    map: '.map__map'
   };
 
   async layerObjectNotVisibleOnMap(layerName: string): Promise<void> {
@@ -17,6 +18,12 @@ class MapBlock extends Block {
     const layerVisibility = await getLayerVisibility(layerName);
 
     expect(layerVisibility).toEqual(true);
+  }
+
+  async clickOnMap(): Promise<void> {
+    const $map = await this.$('map');
+    await $map.waitForClickable();
+    await $map.click();
   }
 }
 

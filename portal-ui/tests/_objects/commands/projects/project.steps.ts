@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { Given, Then } from '@wdio/cucumber-framework';
 
 import { createProject } from './createProject';
@@ -20,6 +21,12 @@ Given(
     this.latestProject = await createProject(title);
   }
 );
+
+Given('существует проект, созданный пользователем {string}', async function (this: ScenarioScope, user: string) {
+  await authenticateAs(getTestUser(user));
+
+  this.latestProject = await createProject(faker.lorem.sentence(7));
+});
 
 Given(/^пользователем "(.*)" созданы проекты: (".+"[ ,]*)+$/, async (user: string, titles: string) => {
   await authenticateAs(getTestUser(user));

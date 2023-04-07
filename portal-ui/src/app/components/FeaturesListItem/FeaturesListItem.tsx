@@ -6,14 +6,15 @@ import { ArrowForward } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { observable, action, makeObservable } from 'mobx';
 
+import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
+import { extractFeatureId } from '../../services/geoserver/feature.util';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { PropertyType } from '../../services/data/schema/schema.models';
-import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { FeatureError } from '../../services/map/map-link-following.service';
 import { changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
-import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 
@@ -55,7 +56,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
           onDoubleClick={this.selectIt}
           onClick={this.highlightIt}
         >
-          {errorData ? errorData.id : feature.id.split('.')[1]}
+          {errorData ? errorData.id : extractFeatureId(feature.id)}
         </div>
         <div className={cnFeaturesListItem('Icon')}>
           <FeatureIcon geometryType={feature?.geometry?.type} className={cnFeaturesListItem('Svg')} />

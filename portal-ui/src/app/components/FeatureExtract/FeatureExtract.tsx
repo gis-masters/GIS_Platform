@@ -7,23 +7,23 @@ import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
 
-import { getLibrary, getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
 import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { getLibrary, getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
+import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { LibraryDocumentDialog } from '../LibraryDocumentDialog/LibraryDocumentDialog';
+import { communicationService } from '../../services/communication.service';
 import { applyContentType } from '../../services/data/schema/schema.utils';
 import { validateFormValue } from '../../services/formValidation.service';
-import { LibraryDocumentDialog } from '../LibraryDocumentDialog/LibraryDocumentDialog';
-import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
-import { communicationService } from '../../services/communication.service';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { getFeatureUrl } from '../../services/map/map-url.service';
 import { schemaService } from '../../services/data/schema/schema.service';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { Role } from '../../services/data/permissions/permissions.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { getFeaturesUrl } from '../../services/map/map.util';
 import { getDefaultValues } from '../Form/Form.utils';
 import { FormDialog } from '../FormDialog/FormDialog';
-
 import { services } from '../../services/services';
+
 import { FeatureExtractMapSelector } from './MapSelector/FeatureExtract-MapSelector';
 
 const cnFeatureExtract = cn('FeatureExtract');
@@ -143,7 +143,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
         name: 'feature_url',
         title: 'Ссылка на объект',
         propertyType: PropertyType.STRING,
-        defaultValueFormula: () => getFeatureUrl(feature),
+        defaultValueFormula: () => getFeaturesUrl(currentProject.id, layer.dataset, layer.tableName, [feature.id]),
         readOnly: true
       },
       {

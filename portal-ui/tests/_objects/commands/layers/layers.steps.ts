@@ -1,22 +1,21 @@
 import { DataTable, Given } from '@wdio/cucumber-framework';
 
-import { authenticateAsAdmin } from '../auth/authenticate';
-import { createNewObjectInLayerAsAdmin } from './createNewObjectInLayerAsAdmin';
-import { CrgLayerType } from '../../../../src/app/services/gis/layers/layers.models';
-import { createLayerAsAdmin } from './createLayerByAdmin';
-import { testSchemas } from '../schemas/testSchemas';
+import { getSchema } from '../schemas/getSchema';
 import { ScenarioScope } from '../../ScenarioScope';
+import { testSchemas } from '../schemas/testSchemas';
+import { createLayerAsAdmin } from './createLayerAsAdmin';
+import { authenticateAsAdmin } from '../auth/authenticate';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 import { getProjectByTitle } from '../projects/getProjectByTitle';
 import { getVectorTableByTitle } from '../tables/getVectorTableByTitle';
-import { getSchema } from '../schemas/getSchema';
+import { CrgLayerType } from '../../../../src/app/services/gis/layers/layers.models';
 
 Given(
   'в созданном проекте создан слой {string} на основе созданных набора данных и таблицы',
   async function (this: ScenarioScope, layerTitle: string) {
     await authenticateAsAdmin();
 
-    const { latestProject, latestVectorTable, latestDatasetId } = this;
+    const { latestProject, latestVectorTable, latestDataset } = this;
 
     const schema = Object.values(testSchemas).find(schema => schema.name === latestVectorTable.schemaId);
     if (!schema) {
@@ -26,24 +25,34 @@ Given(
     const layer = {
       type: 'vector' as CrgLayerType.VECTOR,
       title: layerTitle,
-      dataset: latestDatasetId,
+      dataset: latestDataset.identifier,
       view: 'viewId',
       tableName: latestVectorTable.identifier,
       nativeCRS: latestVectorTable.crs,
       schemaId: latestVectorTable.schemaId,
-      styleName: schema.styleName
+      styleName: schema.styleName,
+      enabled: true
     };
 
-    this.latestLayer = await createLayerAsAdmin(layer, latestProject.id);
+    this.latestLayer = await createLayerAsAdmin(latestProject.id, layer);
   }
 );
 
-Given(
-  'администратором создан объект по таблице {string} набора данных {string}',
-  async (tableTitle: string, datasetTitle: string) => {
-    await createNewObjectInLayerAsAdmin(tableTitle, datasetTitle);
-  }
-);
+Given('в созданном проекте существует внешний слой', async function (this: ScenarioScope, table: DataTable) {
+  const { latestProject } = this;
+
+  const data = table.raw()[1];
+
+  const externalLayer = {
+    title: data[0],
+    tableName: data[1],
+    type: CrgLayerType.EXTERNAL,
+    dataSourceUri: data[2],
+    enabled: Boolean(data[3])
+  };
+
+  this.latestLayer = await createLayerAsAdmin(latestProject.id, externalLayer);
+});
 
 Given('администратором создан слой с параметрами:', async function (table: DataTable) {
   const [projectTitle, layerTitle, tableTitle, datasetTitle, enabled, viewId] = table.rows()[0];
@@ -64,5 +73,5 @@ Given('администратором создан слой с параметр�
     ...(viewId ? { view: viewId } : {})
   };
 
-  await createLayerAsAdmin(layer, project.id);
+  await createLayerAsAdmin(project.id, layer);
 });

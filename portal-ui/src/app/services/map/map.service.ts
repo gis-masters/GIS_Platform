@@ -672,7 +672,7 @@ class MapService {
 
   private prepareTileSource(basemap: Basemap): TileImage | undefined {
     if (!basemap || !basemap.type) {
-      return undefined;
+      return;
     }
 
     switch (basemap.type) {
@@ -725,7 +725,7 @@ class MapService {
         crossOrigin: 'Anonymous'
       });
     } catch {
-      return undefined;
+      return;
     }
   }
 
@@ -759,7 +759,7 @@ class MapService {
         crossOrigin: 'Anonymous'
       });
     } catch {
-      return undefined;
+      return;
     }
   }
 

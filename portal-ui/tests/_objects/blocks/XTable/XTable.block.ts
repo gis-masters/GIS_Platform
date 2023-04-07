@@ -2,6 +2,7 @@ import { Block } from '../../Block';
 import { extractText } from '../../commands/extractText';
 import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 import { SortOrder } from '../../../../src/app/services/models';
+import { hasClass } from '../../utils/hasClass';
 
 export class XTableBlock extends Block {
   selectors = {
@@ -64,18 +65,17 @@ export class XTableBlock extends Block {
   }
 
   async getBooleanColValues(title: string): Promise<boolean[]> {
-    const valOn = 'XTable-BoolIcon_val_on';
-    const valOff = 'XTable-BoolIcon_val_off';
-
     const $$cells = await this.getCellsByTitle(title);
 
     const result: boolean[] = [];
     for (const $cell of $$cells) {
       const $icon = await $cell.$('.MuiSvgIcon-root');
-      const cls = await $icon.getAttribute('class');
-      if (cls.split(' ').includes(valOn)) {
+
+      const isOn = await hasClass($icon, 'XTable-BoolIcon_val_on');
+      const isOff = await hasClass($icon, 'XTable-BoolIcon_val_off');
+      if (isOn) {
         result.push(true);
-      } else if (cls.split(' ').includes(valOff)) {
+      } else if (isOff) {
         result.push(false);
       } else {
         throw new Error('Значение отсутствует');

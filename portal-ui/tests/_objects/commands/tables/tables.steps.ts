@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { Given } from '@wdio/cucumber-framework';
 
 import { getRoleByTitle, testUsers } from '../auth/testUsers';
@@ -8,9 +9,11 @@ import { createVectorTableAs } from './createTestVectorTable';
 import { createRecord } from './vectorTableRecordsManagement';
 import { getUserByEmail } from '../auth/getUserByEmail';
 import { getVectorTableByTitle } from './getVectorTableByTitle';
+import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 import { addVectorTablePermissions } from './addVectorTablePermissions';
 import { PrincipalType } from '../../../../src/app/services/data/permissions/permissions.models';
-import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
+
+const DEFAULT_CRS = 'EPSG:28407';
 
 Given(
   'пользователем {string} внутри созданного набора данных создана таблица {string} по схеме {string}',
@@ -18,11 +21,28 @@ Given(
     const schemaId = getSchemaIdByTitle(schemaTitle);
 
     this.latestVectorTable = await createVectorTableAs(
-      this.latestDatasetId,
+      this.latestDataset.identifier,
       {
         title,
         schemaId,
-        crs: 'EPSG:28407'
+        crs: DEFAULT_CRS
+      },
+      user
+    );
+  }
+);
+
+Given(
+  'внутри созданного набора данных существует таблица по схеме {string} созданная пользователем {string}',
+  async function (this: ScenarioScope, schemaTitle: string, user: keyof typeof testUsers) {
+    const schemaId = getSchemaIdByTitle(schemaTitle);
+
+    this.latestVectorTable = await createVectorTableAs(
+      this.latestDataset.identifier,
+      {
+        title: faker.lorem.sentence(7),
+        schemaId,
+        crs: DEFAULT_CRS
       },
       user
     );
@@ -40,7 +60,7 @@ Given(
       {
         title,
         schemaId,
-        crs: 'EPSG:28407'
+        crs: DEFAULT_CRS
       },
       username
     );
@@ -50,7 +70,7 @@ Given(
 Given('таблица наполнена данными {string}', async function (this: ScenarioScope, title: string) {
   this.latestFeatures = getPreparedFeatures(title, this.latestSchema);
   for (const feature of this.latestFeatures) {
-    await createRecord(this.latestDatasetId, this.latestTableId, feature);
+    await createRecord(this.latestDataset.identifier, this.latestVectorTable.identifier, feature);
   }
 });
 
@@ -61,10 +81,10 @@ Given(
     if (!currentUser) {
       throw new Error(`Не найден пользователь ${user}`);
     }
-    const table = await getVectorTableByTitle(this.latestDatasetId, tableName);
+    const table = await getVectorTableByTitle(this.latestDataset.identifier, tableName);
     await addVectorTablePermissions(
       { role: getRoleByTitle(role), principalId: currentUser.id, principalType: PrincipalType.USER },
-      this.latestDatasetId,
+      this.latestDataset.identifier,
       table.identifier
     );
   }

@@ -40,6 +40,7 @@ export function getPreparedFeatures(title: string, schema?: Schema): NewWfsFeatu
   const features: NewWfsFeature[] = [];
 
   switch (title) {
+    case 'для тестирования прокола':
     case 'данные для тестирования сортировки': {
       features.push(
         {

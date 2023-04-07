@@ -1,4 +1,4 @@
-import { Given, Then, When } from '@wdio/cucumber-framework';
+import { DataTable, Given, Then, When } from '@wdio/cucumber-framework';
 
 import { blPage } from './pages/BL.page';
 import { root } from './blocks/Root/Root';
@@ -55,15 +55,19 @@ When(
 
 // project map
 
+const openProjectMap = async (title: string) => {
+  const project = await getProjectByTitle(title);
+  const mapPage = new MapPage(project.id);
+  await mapPage.open();
+};
+
 Given('я нахожусь на странице карты проекта', async function (this: ScenarioScope) {
   await new MapPage(this.latestProject.id).open();
 });
 
-When('я перехожу на страницу карты проекта {string}', async (title: string) => {
-  const project = await getProjectByTitle(title);
-  const mapPage = new MapPage(project.id);
-  await mapPage.open();
-});
+When('я перехожу на страницу карты проекта {string}', openProjectMap);
+
+Given('я на странице карты проекта {string}', openProjectMap);
 
 Then('открылась страница карты проекта {string}', async (title: string) => {
   const project = await getProjectByTitle(title);
@@ -77,6 +81,23 @@ Given('я на странице карты проекта {string}', async (titl
   const mapPage = new MapPage(project.id);
   await mapPage.open();
 });
+
+Given(
+  'я нахожусь на странице карты проекта, спозиционированной на объектах созданного слоя',
+  async function (this: ScenarioScope, table: DataTable) {
+    const { latestDataset, latestVectorTable, latestProject } = this;
+
+    const data = table.raw()[1];
+
+    const mapPage = new MapPage(latestProject.id);
+    await mapPage.openWithPositionToFeatures(
+      latestProject.id,
+      latestDataset.identifier,
+      latestVectorTable.identifier,
+      data[0].split(', ')
+    );
+  }
+);
 
 // bl
 

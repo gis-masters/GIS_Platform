@@ -1,4 +1,4 @@
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
@@ -181,8 +181,10 @@ class CurrentProject implements CrgProjectData {
   }
 
   @computed
-  get visibleLayersWithoutRasters(): TreeItem<CrgLayer>[] {
-    return this.visibleOnMapLayers.filter(item => item.payload.type !== CrgLayerType.RASTER);
+  get visibleVectorLayers(): TreeItem<CrgLayer>[] {
+    return this.visibleOnMapLayers.filter(
+      item => item.payload.type === CrgLayerType.VECTOR || item.payload.type === CrgLayerType.VECTOR_FROM_FILE
+    );
   }
 
   @computed
@@ -290,11 +292,16 @@ class CurrentProject implements CrgProjectData {
   }
 
   public getLayerByTableName(tableName: string): CrgLayer {
-    return currentProject.visibleLayersWithoutRasters
+    const layer = currentProject.visibleVectorLayers
       .filter(item => {
         return item.payload.tableName === tableName;
       })
       .map(item => item.payload)[0];
+    if (!layer) {
+      throw new Error('В проекте, среди visibleVectorLayers не удалось найти слой по имени таблицы: ' + tableName);
+    }
+
+    return layer;
   }
 
   private hasDeletedAncestor(entity: CrgLayer | CrgLayersGroup): boolean {

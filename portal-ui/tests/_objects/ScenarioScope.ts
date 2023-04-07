@@ -69,14 +69,6 @@ export class ScenarioScope extends World {
     this._latestLayer = layer;
   }
 
-  get latestDatasetId(): string {
-    return this.latestDataset.identifier;
-  }
-
-  get latestTableId(): string {
-    return this.latestVectorTable.identifier;
-  }
-
   get latestLibraryRecords(): LibraryRecord[] {
     return this._latestLibraryRecords || [];
   }

@@ -8,6 +8,7 @@ import { cqlBuild } from '../util/cqlBuild';
 import { WfsGeometry } from './wfs/wfs.models';
 import { http } from '../api/http.service';
 import { Mime } from '../util/Mime';
+import { services } from '../services';
 
 export interface StyleRule {
   name: string;
@@ -122,10 +123,18 @@ function parseFilter(xmlFilter?: Element): StyleFilter | undefined {
     operator === StyleFilterOperator.GREATER_THEN ||
     operator === StyleFilterOperator.GREATER_THEN_OR_EQUAL_TO
   ) {
+    const propertyNameElement = xmlFilter.querySelector('PropertyName');
+    const literalElement = xmlFilter.querySelector('Literal');
+    if (!propertyNameElement || !literalElement) {
+      services.logger.warn('Не удалось распарсить легенду: ', xmlFilter);
+
+      return;
+    }
+
     return {
       operator,
-      propertyName: xmlFilter.querySelector('PropertyName').innerHTML,
-      literal: xmlFilter.querySelector('Literal').innerHTML
+      propertyName: propertyNameElement.innerHTML,
+      literal: literalElement.innerHTML
     };
   }
 

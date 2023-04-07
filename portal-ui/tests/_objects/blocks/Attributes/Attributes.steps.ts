@@ -54,6 +54,10 @@ When('я сворачиваю атрибутивную таблицу', async fu
   await attributesBlock.minimize();
 });
 
+When('я закрываю вкладку атрибутивной таблицы созданного слоя', async function (this: ScenarioScope) {
+  await attributesBlock.closeTab(this.latestLayer.title);
+});
+
 When('я нажимаю на таб созданного слоя в атрибутивной таблице', async function (this: ScenarioScope) {
   await attributesBlock.clickTab(this.latestLayer.title);
 });

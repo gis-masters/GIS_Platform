@@ -6,11 +6,13 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
 
-import { copyToClipboard } from '../../services/util/clipboard.util';
-import { getFeatureUrl } from '../../services/map/map-url.service';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { Toast } from '../Toast/Toast';
 import { IconButton } from '../IconButton/IconButton';
+import { getFeaturesUrl } from '../../services/map/map.util';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { copyToClipboard } from '../../services/util/clipboard.util';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 
 const cnCopyUrlButton = cn('CopyUrlButton');
 
@@ -45,8 +47,14 @@ export class CopyUrlButton extends Component<CopyUrlButtonProps> {
 
   @boundMethod
   private clickHandler() {
-    /* количество объектов может быть больше одного; сейчас это сломано, но уже есть задача на починку #5229 */
-    const urlForClipboard = this.props.features ? getFeatureUrl(this.props.features[0]) : location.href;
+    let urlForClipboard = location.href;
+    if (this.props.features) {
+      /* количество объектов может быть больше одного; сейчас это сломано, но уже есть задача на починку #5229 */
+      const firstFeature = this.props.features[0];
+      const layer = getLayerByFeatureInCurrentProject(firstFeature);
+
+      urlForClipboard = getFeaturesUrl(currentProject.id, layer.dataset, layer.tableName, [firstFeature.id]);
+    }
 
     copyToClipboard(urlForClipboard);
 

@@ -1,4 +1,5 @@
 import { Block } from '../../Block';
+import { hasClass } from '../../utils/hasClass';
 
 class EditFeatureBlock extends Block {
   selectors = {
@@ -41,6 +42,12 @@ class EditFeatureBlock extends Block {
     const $editFeatureGeometryAsText = await editFeatureBlock.$('editFeatureGeometryAsTextBtn');
     await $editFeatureGeometryAsText.waitForDisplayed();
     await $editFeatureGeometryAsText.click();
+  }
+
+  async isReadonlyMode(): Promise<boolean> {
+    const $container = await editFeatureBlock.$('container');
+
+    return hasClass($container, 'edit-feature_readonly');
   }
 }
 

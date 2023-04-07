@@ -26,6 +26,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     public static final int MAX_RETRY_ATTEMPT = 20;
     public static final int RETRY_DELAY = 6000;
+    public static final int RETRY_DELAY_SM = 1000;
 
     public static Integer orgId;
     public static String emailForFeature;

@@ -163,7 +163,7 @@ class PrintSettingsStore implements PrintSettings {
 
   @computed
   get layers(): CrgVectorLayer[] {
-    return currentProject.visibleLayersWithoutRasters.flatMap(({ payload }) => payload as CrgVectorLayer);
+    return currentProject.visibleVectorLayers.flatMap(({ payload }) => payload as CrgVectorLayer);
   }
 
   @action

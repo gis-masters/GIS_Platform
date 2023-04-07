@@ -9,3 +9,7 @@ When(/^слой "(.*)" не отображается на карте$/, async (l
 When(/^слой "(.*)" отображается на карте$/, async (layerName: string) => {
   await mapBlock.layerObjectVisibleOnMap(layerName);
 });
+
+When('я протыкаю карту в центре', async function () {
+  await mapBlock.clickOnMap();
+});

@@ -1,4 +1,5 @@
 import { Page } from '../Page';
+import { getFeaturesUrl } from '../../../src/app/services/map/map.util';
 
 export class MapPage extends Page {
   selectors = {
@@ -10,5 +11,15 @@ export class MapPage extends Page {
   constructor(projectId: number) {
     super(true);
     this.url = `projects/${projectId}/map`;
+  }
+
+  async openWithPositionToFeatures(
+    projectId: number,
+    dataset: string,
+    table: string,
+    featureIds: string[]
+  ): Promise<void> {
+    await browser.url(getFeaturesUrl(projectId, dataset, table, featureIds));
+    await this.waitForVisible();
   }
 }
