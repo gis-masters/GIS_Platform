@@ -108,6 +108,15 @@ export class XTableBlock extends Block {
     return await $muiTableSortLabelIcon.isDisplayed();
   }
 
+  async isColumnFilterable(title: string): Promise<boolean> {
+    const $headCellTitle = await this.getHeadCellTitle(title);
+    await $headCellTitle.moveTo();
+
+    const $filter = await $headCellTitle.$('.XTable-Filter');
+
+    return await $filter.isExisting();
+  }
+
   async sortColumn(title: string, direction: string): Promise<void> {
     const $headCellTitle = await this.getHeadCellTitle(title);
     await $headCellTitle.waitForClickable();

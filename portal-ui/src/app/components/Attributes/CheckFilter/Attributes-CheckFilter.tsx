@@ -11,6 +11,7 @@ import { XTableFilterProps } from '../../XTable/Filter/XTable-Filter.base';
 import '!style-loader!css-loader!sass-loader!./Attributes-CheckFilter.scss';
 
 const cnAttributesCheckFilter = cn('Attributes', 'CheckFilter');
+const cnAttributesCheckFilterButton = cn('Attributes', 'CheckFilterButton');
 
 @observer
 export class AttributesCheckFilter extends Component<XTableFilterProps> {
@@ -30,12 +31,20 @@ export class AttributesCheckFilter extends Component<XTableFilterProps> {
         onChange={this.handleChange}
         size='small'
       >
-        <ToggleButton value={FilterBySelection.ONLY_SELECTED} size='small'>
+        <ToggleButton
+          className={cnAttributesCheckFilterButton({ selected: 'yes' })}
+          value={FilterBySelection.ONLY_SELECTED}
+          size='small'
+        >
           <Tooltip title='Оставить только выделенные объекты' enterDelay={700}>
             <Check fontSize='small' />
           </Tooltip>
         </ToggleButton>
-        <ToggleButton value={FilterBySelection.ONLY_NOT_SELECTED} size='small'>
+        <ToggleButton
+          className={cnAttributesCheckFilterButton({ selected: 'no' })}
+          value={FilterBySelection.ONLY_NOT_SELECTED}
+          size='small'
+        >
           <Tooltip title='Оставить только не выделенные объекты' enterDelay={700}>
             <Close fontSize='small' />
           </Tooltip>

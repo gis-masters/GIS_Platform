@@ -1,5 +1,35 @@
-import { PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { GeometryType } from '../../../../src/app/services/geoserver/wfs/wfs.models';
+import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
+
+const propertyDocument: PropertySchema = {
+  name: 'field_document',
+  title: 'Поле DOCUMENT',
+  propertyType: PropertyType.DOCUMENT
+};
+
+const propertyFile: PropertySchema = {
+  name: 'field_file',
+  title: 'Поле FILE',
+  propertyType: PropertyType.FILE
+};
+
+const propertyUrl: PropertySchema = {
+  name: 'field_url',
+  title: 'Поле URL',
+  propertyType: PropertyType.URL
+};
+
+const propertyFias: PropertySchema = {
+  name: 'field_fias',
+  title: 'Поле FIAS',
+  propertyType: PropertyType.FIAS
+};
+
+const propertyGeometry: PropertySchema = {
+  name: 'shape',
+  title: 'Поле GEOMETRY',
+  propertyType: PropertyType.GEOMETRY
+};
 
 const schemaWithViews: Schema = {
   name: 'schemaWithViews',
@@ -270,6 +300,11 @@ const testSortingSchema: Schema = {
       propertyType: PropertyType.DATETIME
     },
     {
+      name: 'some_document',
+      title: 'Поле DOCUMENT',
+      propertyType: PropertyType.DOCUMENT
+    },
+    {
       name: 'is_enabled',
       title: 'Поле BOOL',
       propertyType: PropertyType.BOOL
@@ -309,41 +344,77 @@ const testSortingSchema2: Schema = {
   tableName: 'test_sorting__v2',
   styleName: 'generic',
   geometryType: GeometryType.MULTI_POLYGON,
+  properties: [propertyUrl, propertyFias, propertyFile, propertyDocument, propertyGeometry]
+};
+
+const testSchemaWithAllTypes: Schema = {
+  name: 'testSchemaWithAllTypes',
+  title: 'Схема содержащая все типы данных',
+  description: 'Схема содержащая все типы данных. Версия 1',
+  readOnly: false,
+  tableName: 'test_sorting__v2',
+  styleName: 'generic',
+  geometryType: GeometryType.MULTI_POLYGON,
   properties: [
     {
-      name: 'field_url',
-      title: 'Поле URL',
-      propertyType: PropertyType.URL
+      name: 'field_int',
+      title: 'Поле INT',
+      propertyType: PropertyType.INT
     },
     {
-      name: 'field_fias',
-      title: 'Поле FIAS',
-      propertyType: PropertyType.FIAS
+      name: 'field_double',
+      title: 'Поле FLOAT',
+      propertyType: PropertyType.FLOAT
     },
     {
-      name: 'field_file',
-      title: 'Поле FILE',
-      propertyType: PropertyType.FILE
+      name: 'field_string',
+      title: 'Поле STRING',
+      propertyType: PropertyType.STRING
     },
     {
-      name: 'field_document',
-      title: 'Поле DOCUMENT',
-      propertyType: PropertyType.DOCUMENT
+      name: 'field_date',
+      title: 'Поле DATETIME',
+      propertyType: PropertyType.DATETIME
     },
     {
-      name: 'shape',
-      title: 'Поле GEOMETRY',
-      propertyType: PropertyType.GEOMETRY
-    }
+      name: 'field_boolean',
+      title: 'Поле BOOL',
+      propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'field_choice',
+      title: 'Поле CHOICE',
+      propertyType: PropertyType.CHOICE,
+      options: [
+        {
+          title: 'Модульная двухсторонняя',
+          value: '1111'
+        },
+        {
+          title: 'Модульная односторонняя',
+          value: '1122'
+        },
+        {
+          title: 'Отдельно стоящий короб',
+          value: '55'
+        }
+      ]
+    },
+    propertyUrl,
+    propertyFias,
+    propertyFile,
+    propertyDocument,
+    propertyGeometry
   ]
 };
 
 export const testSchemas: { [key: string]: Schema } = {
   'Схема с представлениями': schemaWithViews,
   'Схема без представлений': schemaWithoutViews,
-  'Схема с несоответствующим слою StyleName': schemaWithInappropriateStyleName,
+  'Схема в режиме редактирования': testSortingSchema,
   'Схема для тестирования сортировки': testSortingSchema,
+  'Схема содержащая все типы данных': testSchemaWithAllTypes,
+  'Схема в режиме чтения': testSortingSchema2,
   'Схема с типами данных недоступными для сортировки': testSortingSchema2,
-  'форма объекта в режиме чтения': testSortingSchema2,
-  'форма объекта в режиме редактирования': testSortingSchema
+  'Схема с несоответствующим слою StyleName': schemaWithInappropriateStyleName
 };

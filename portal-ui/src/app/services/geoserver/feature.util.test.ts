@@ -8,7 +8,7 @@ describe('feature util', () => {
     expect(extractFeatureId('feature.1')).toEqual(1);
   });
 
-  test('Некорректные параметры откланяются с ошибкой', () => {
+  test('Некорректные параметры отклоняются с ошибкой', () => {
     expect(() => {
       extractFeatureId('');
     }).toThrow("Передан некорректный идентификатор фичи: ''");

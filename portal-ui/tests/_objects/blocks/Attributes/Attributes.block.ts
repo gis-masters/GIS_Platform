@@ -12,7 +12,9 @@ class AttributesBlock extends Block {
     attributesTabs: '.Attributes-Tabs',
     pagination: '.Attributes-Pagination',
     attributesTableHead: '.Attributes-Table .XTable-Head',
-    attributesTableHeadCellContent: '.Attributes-Table .XTable-Head .XTable-CellContent'
+    attributesTableHeadCellContent: '.Attributes-Table .XTable-Head .XTable-CellContent',
+    selectedYes: '.Attributes-CheckFilterButton_selected_yes',
+    selectedNo: '.Attributes-CheckFilterButton_selected_no'
   };
 
   async checkTableSingleColTitle(title: string): Promise<void> {
@@ -68,6 +70,12 @@ class AttributesBlock extends Block {
     await $closeIcon.click();
   }
 
+  async filterBySelection(inverse: boolean): Promise<void> {
+    const $selected = await this.$(inverse ? 'selectedYes' : 'selectedNo');
+    await $selected.waitForClickable();
+    await $selected.click();
+  }
+
   async getColumnType(title: string): Promise<string> {
     return await this.xTable.getColumnType(title);
   }
@@ -86,6 +94,10 @@ class AttributesBlock extends Block {
 
   async isColumnSortable(title: string): Promise<boolean> {
     return await this.xTable.isColumnSortable(title);
+  }
+
+  async isColumnFilterable(title: string): Promise<boolean> {
+    return await this.xTable.isColumnFilterable(title);
   }
 
   async filterNumerableColumn(colTitle: string, lte: string, gte: string) {

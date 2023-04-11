@@ -43,6 +43,14 @@ When(
   }
 );
 
+When('в атрибутивной таблице я фильтрую по выделению оставляя только выделенные', async function () {
+  await attributesBlock.filterBySelection(true);
+});
+
+When('в атрибутивной таблице я фильтрую по выделению оставляя только НЕ выделенные', async function () {
+  await attributesBlock.filterBySelection(false);
+});
+
 When(
   'в атрибутивной таблице в поле {string} типа CHOICE я выбираю {string}',
   async function (colTitle: string, optionTitle: string) {
@@ -142,11 +150,19 @@ Then(
   }
 );
 
-Then('сортировка в атрибутивной таблице недоступна для свойств имеющих тип:', async function (data: DataTable) {
+Then('сортировка в атрибутивной таблице недоступна для следующих колонок:', async function (data: DataTable) {
   const titles = data.raw().map(item => item[0]);
 
   for (const title of titles) {
     expect(await attributesBlock.isColumnSortable(title)).toEqual(false);
+  }
+});
+
+Then('фильтрация в атрибутивной таблице недоступна для следующих колонок:', async function (data: DataTable) {
+  const titles = data.raw().map(item => item[0]);
+
+  for (const title of titles) {
+    expect(await attributesBlock.isColumnFilterable(title)).toEqual(false);
   }
 });
 
