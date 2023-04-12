@@ -1,21 +1,27 @@
 import { http } from '../../api/http.service';
-import { getGeoServerUrl, replaceUrl } from '../../api/server-urls.service';
+import { replaceUrl } from '../../api/server-urls.service';
+import { GeoserverClient } from '../GeoserverClient';
 
 import { GeoserverCoverage, GeoserverLayerInfo } from './geoserverLayer.models';
 
-export async function _reqGetGeoserverLayerInfo(
-  workspace: string,
-  tableName: string
-): Promise<{ layer: GeoserverLayerInfo }> {
-  return http.get<{ layer: GeoserverLayerInfo }>(
-    `${await getGeoServerUrl()}/rest/workspaces/${workspace}/layers/${tableName}`
-  );
+class GeoserverLayerClient extends GeoserverClient {
+  private static _instance: GeoserverLayerClient;
+
+  static get instance(): GeoserverLayerClient {
+    return this._instance || (this._instance = new this());
+  }
+
+  getGeoserverLayerInfo(workspace: string, tableName: string): Promise<{ layer: GeoserverLayerInfo }> {
+    return http.get<{ layer: GeoserverLayerInfo }>(
+      `${this.getGeoserverUrl()}/rest/workspaces/${workspace}/layers/${tableName}`
+    );
+  }
+
+  getGeoserverLayerCoverage(geoserverLayerInfo: GeoserverLayerInfo): Promise<{ coverage: GeoserverCoverage }> {
+    const url = replaceUrl(geoserverLayerInfo.resource.href, true);
+
+    return http.get<{ coverage: GeoserverCoverage }>(url);
+  }
 }
 
-export async function _reqGetGeoserverLayerCoverage(
-  geoserverLayerInfo: GeoserverLayerInfo
-): Promise<{ coverage: GeoserverCoverage }> {
-  const url = await replaceUrl(geoserverLayerInfo.resource.href, true);
-
-  return http.get<{ coverage: GeoserverCoverage }>(url);
-}
+export const geoserverLayerClient = GeoserverLayerClient.instance;

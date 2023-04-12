@@ -1,5 +1,5 @@
-import { _reqGetProjectGroups, _reqGetProjectLayers } from '../../../../src/app/services/gis/projects/projects.client';
-import { _reqUpdateLayer } from '../../../../src/app/services/gis/layers/layers.client';
+import { projectsClient } from '../../../../src/app/services/gis/projects/projects.client';
+import { layersClient } from '../../../../src/app/services/gis/layers/layers.client';
 import { getProjectByTitle } from '../projects/getProjectByTitle';
 import { requestAsAdmin } from '../requestAs';
 
@@ -9,8 +9,8 @@ export async function addLayerToGroupAsAdmin(
   layerTitle: string
 ): Promise<void> {
   const project = await getProjectByTitle(projectTitle);
-  const groups = await requestAsAdmin(_reqGetProjectGroups, project.id);
-  const layers = await requestAsAdmin(_reqGetProjectLayers, project.id);
+  const groups = await requestAsAdmin(projectsClient.getProjectGroups.bind(projectsClient), project.id);
+  const layers = await requestAsAdmin(projectsClient.getProjectLayers.bind(projectsClient), project.id);
   const layer = layers.find(layer => layer.title === layerTitle);
   const group = groups.find(group => group.title === groupTitle);
 
@@ -18,5 +18,5 @@ export async function addLayerToGroupAsAdmin(
     throw new Error(`Ошибка добавления слоя "${layerTitle}" в группу ${groupTitle} в проекте "${project.name}"`);
   }
 
-  await requestAsAdmin(_reqUpdateLayer, layer.id, { parentId: group.id }, project.id);
+  await requestAsAdmin(layersClient.updateLayer.bind(layersClient), layer.id, { parentId: group.id }, project.id);
 }

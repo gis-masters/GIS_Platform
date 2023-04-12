@@ -1,19 +1,19 @@
-import { _reqCreateFile, _reqGetFile, _reqGetFileConnections } from './files.client';
+import { filesClient } from './files.client';
 import { FileConnection, FileInfo } from './files.models';
 
 export async function createFile(file: File): Promise<FileInfo> {
   const formData = new FormData();
   formData.append('files', file);
 
-  const [createdFile] = await _reqCreateFile(file);
+  const [createdFile] = await filesClient.createFile(file);
 
   return createdFile;
 }
 
 export async function getFile(id: string): Promise<FileInfo> {
-  return await _reqGetFile(id);
+  return await filesClient.getFile(id);
 }
 
 export async function getFileConnections(fileId: string): Promise<FileConnection[]> {
-  return await _reqGetFileConnections(fileId);
+  return await filesClient.getFileConnections(fileId);
 }

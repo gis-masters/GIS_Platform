@@ -6,7 +6,7 @@ import { MenuItem, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } 
 import { boundMethod } from 'autobind-decorator';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { connectBasemapToProject, fetchBasemaps } from '../../../services/gis/project-basemaps.service';
+import { connectBasemapToProject, fetchBasemaps } from '../../../services/gis/project-basemaps/project-basemaps.service';
 import { ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
 import { Basemap } from '../../../services/data/basemaps/basemaps.models';
 import { Explorer } from '../../Explorer/Explorer';

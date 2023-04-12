@@ -32,7 +32,6 @@ import { CrgExternalLayer, CrgLayer } from '../gis/layers/layers.models';
 import { communicationService } from '../communication.service';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
 import { Basemap, SourceType } from '../data/basemaps/basemaps.models';
-import { getWmsUrl } from '../api/server-urls.service';
 import { ScaleLine } from '../ol/ScaleLine';
 import { Emitter } from '../common/Emitter';
 import {
@@ -43,7 +42,8 @@ import {
   transformGeometry
 } from '../geoserver/projections.service';
 import { getFeatureExtent, mergeExtents } from '../geoserver/wfs/wfs.util';
-import { getMap } from '../geoserver/wms.service';
+import { wmsClient } from '../geoserver/wms/wms.client';
+import { getMap } from '../geoserver/wms/wms.service';
 import { cqlBuild } from '../util/cqlBuild';
 import { sleep } from '../util/sleep';
 import { services } from '../services';
@@ -332,7 +332,7 @@ class MapService {
     });
   }
 
-  async addLayers(layers: CrgLayer[], zIndex: number, opacity: number) {
+  addLayers(layers: CrgLayer[], zIndex: number, opacity: number) {
     if (!layers.length) {
       return;
     }
@@ -376,7 +376,7 @@ class MapService {
       };
 
       const commonWMSParams = {
-        url: await getWmsUrl(),
+        url: wmsClient.getWmsUrl(),
         params,
         serverType: 'geoserver' as ServerType,
         crossOrigin: 'anonymous'

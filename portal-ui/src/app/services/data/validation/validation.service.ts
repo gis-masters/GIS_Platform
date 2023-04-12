@@ -4,15 +4,10 @@ import { ExportResourceModel } from '../export/export.models';
 import { Process } from '../processes/processes.models';
 
 import { ValidationShortInfo, ValidationResultsResponse, ValidationPayload } from './validation.models';
-import {
-  _reqGetExportValidationReport,
-  _reqGetValidationResults,
-  _reqGetValidationShortInfo,
-  _reqInitValidation
-} from './validation.client';
+import { validationClient } from './validation.client';
 
 export async function initValidation(layers: CrgVectorLayer[]): Promise<ValidationWsMsg> {
-  return _reqInitValidation(preparePayload(layers));
+  return validationClient.initValidation(preparePayload(layers));
 }
 
 export async function getValidationResults(
@@ -22,15 +17,15 @@ export async function getValidationResults(
   sortBy: string,
   sortDirection: string
 ): Promise<ValidationResultsResponse> {
-  return await _reqGetValidationResults(resource, page, size, sortBy, sortDirection);
+  return await validationClient.getValidationResults(resource, page, size, sortBy, sortDirection);
 }
 
 export async function getValidationShortInfo(layers: CrgVectorLayer[]): Promise<ValidationShortInfo[]> {
-  return await _reqGetValidationShortInfo(preparePayload(layers));
+  return await validationClient.getValidationShortInfo(preparePayload(layers));
 }
 
 export async function getExportValidationReport(layers: CrgVectorLayer[]): Promise<Process> {
-  return await _reqGetExportValidationReport(preparePayload(layers));
+  return await validationClient.getExportValidationReport(preparePayload(layers));
 }
 
 function preparePayload(layers: CrgVectorLayer[]): ValidationPayload {

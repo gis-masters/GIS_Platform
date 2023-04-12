@@ -1,4 +1,4 @@
-import { getEnvironment } from './environment';
+import { environment } from './environment';
 
 export interface FlagsList {
   sample: string; // boolean
@@ -22,13 +22,12 @@ class Flags implements FlagsList {
   selectingFeaturesLimit = '';
 
   private constructor() {
-    void this.init();
+    this.init();
   }
 
-  private async init() {
-    const { flags } = await getEnvironment();
-    if (flags) {
-      Object.assign(this, flags);
+  private init() {
+    if (environment.flags) {
+      Object.assign(this, environment.flags);
     }
 
     keys.forEach(key => {

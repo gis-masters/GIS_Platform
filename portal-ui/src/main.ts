@@ -4,7 +4,7 @@ import { default as OlFeature } from 'ol/Feature';
 import { Geometry } from 'ol/geom';
 
 import { AppModule } from './app/app.module';
-import { getEnvironment } from './app/services/environment';
+import { environment, EnvironmentData } from './app/services/environment';
 
 declare module 'react' {
   export interface CSSProperties {
@@ -45,15 +45,13 @@ declare global {
   interface ResizeObserverOptions {
     box?: ResizeObserverBoxOptions;
   }
+
+  const _environmentRaw: EnvironmentData;
 }
 
-getEnvironment()
-  .then(environment => {
-    if (environment.production) {
-      enableProdMode();
-    }
-  })
-  .catch((error: unknown) => console.error(error));
+if (environment.production) {
+  enableProdMode();
+}
 
 platformBrowserDynamic()
   .bootstrapModule(AppModule)

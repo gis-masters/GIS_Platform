@@ -7,17 +7,17 @@ import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 import { v4 as uuid } from 'uuid';
 
+import { currentUser } from '../../stores/CurrentUser.store';
 import { PropertySchemaFile } from '../../services/data/schema/schema.models';
+import { isPreviewAllowed } from '../../services/data/files/files.util';
 import { createFile } from '../../services/data/files/files.service';
 import { FileInfo } from '../../services/data/files/files.models';
+import { environment } from '../../services/environment';
+import { sleep } from '../../services/util/sleep';
 import { LookupStatusType } from '../Lookup/Status/Lookup-Status';
-import { currentUser } from '../../stores/CurrentUser.store';
-import { isPreviewAllowed } from '../../services/data/files/files.util';
 import { LookupList } from '../Lookup/List/Lookup-List';
 import { LookupAdd } from '../Lookup/Add/Lookup-Add';
 import { FileInput } from '../FileInput/FileInput';
-import { sleep } from '../../services/util/sleep';
-import { env } from '../../stores/Env.store';
 import { Lookup } from '../Lookup/Lookup';
 
 import { FilesItem } from './Item/Files-Item';
@@ -195,7 +195,7 @@ export default class Files extends Component<FilesProps> {
       this.editNewbie(fileInfo.id, {
         status: 'error',
         statusText: `Размер указанного файла превышает максимально допустимый — ${maxSize}.
-                Для загрузки обратитесь к администратору — ${env.contactsEmail}`
+                Для загрузки обратитесь к администратору — ${environment.contactsEmail}`
       });
 
       if (this.uploadPool.length) {

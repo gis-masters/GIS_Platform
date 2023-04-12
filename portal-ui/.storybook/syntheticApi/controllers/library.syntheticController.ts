@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { InternalAxiosRequestConfig } from 'axios';
 
 import { DocumentLibrary } from '../../../src/app/services/data/docLibrary/docLibrary.models';
 import { Role } from '../../../src/app/services/data/permissions/permissions.models';
@@ -9,7 +9,7 @@ import { err404 } from '../utils';
 class LibrarySyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)$/;
 
-  get(config: AxiosRequestConfig): DocumentLibrary {
+  get(config: InternalAxiosRequestConfig): DocumentLibrary {
     const requestedTableName = config.url?.match(this.pattern)?.at(1);
     const library = libraries.find(({ table_name }) => table_name === requestedTableName);
 

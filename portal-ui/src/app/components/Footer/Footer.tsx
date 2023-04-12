@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Container, Divider, Grid } from '@mui/material';
 
-import { env } from '../../stores/Env.store';
+import { environment } from '../../services/environment';
 
 import '!style-loader!css-loader!sass-loader!./Footer.scss';
 
@@ -13,18 +13,18 @@ export const Footer: FC = observer(() => (
   <Container className={cnFooter()} maxWidth={false}>
     <Container className={cnFooter('Info')} maxWidth='md'>
       <Grid container spacing={2} justifyContent='center'>
-        {env.description && (
+        {environment.description && (
           <Grid item xs={6}>
-            <h2 className={cnFooter('Title')}>{env.title}:</h2>
-            {env.description}
+            <h2 className={cnFooter('Title')}>{environment.title}:</h2>
+            {environment.description}
           </Grid>
         )}
-        {(env.contactsPhone || env.contactsEmail) && (
+        {(environment.contactsPhone || environment.contactsEmail) && (
           <Grid item xs={6}>
             <h2 className={cnFooter('Title')}>Контакты:</h2>
-            <b>Телефон приемной:</b> {env.contactsPhone}
+            <b>Телефон приемной:</b> {environment.contactsPhone}
             <br />
-            <b>E-mail:</b> {env.contactsEmail}
+            <b>E-mail:</b> {environment.contactsEmail}
           </Grid>
         )}
       </Grid>
@@ -33,7 +33,7 @@ export const Footer: FC = observer(() => (
     <Divider color='#49a6ff' />
 
     <Grid className={cnFooter('Copyright')} container alignItems='center' justifyContent='center'>
-      © {env.owner}
+      © {environment.owner}
     </Grid>
   </Container>
 ));

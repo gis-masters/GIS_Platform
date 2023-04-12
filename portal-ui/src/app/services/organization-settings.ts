@@ -26,10 +26,10 @@ class OrganizationSettingsService {
 
   async fetch() {
     try {
-      const settings = await http.get<OrgSettings>(await getOrganizationSettingsUrl());
+      const settings = await http.get<OrgSettings>(getOrganizationSettingsUrl());
       organizationSettings.setSettings(settings);
 
-      const availableSettings = await http.get<Record<string, string>>(await getOrganizationKnownSettingsUrl());
+      const availableSettings = await http.get<Record<string, string>>(getOrganizationKnownSettingsUrl());
       organizationSettings.setAvailableSettings(availableSettings);
       this.resolve();
     } catch (error) {
@@ -44,7 +44,7 @@ class OrganizationSettingsService {
   }
 
   async setOrganizationSettings(settings: OrgSettings): Promise<void> {
-    await http.patch<OrgSettings>(await getOrganizationSettingsUrl(), settings);
+    await http.patch<OrgSettings>(getOrganizationSettingsUrl(), settings);
     await this.fetch();
   }
 

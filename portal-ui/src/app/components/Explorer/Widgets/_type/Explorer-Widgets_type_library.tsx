@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { getDocumentLibraryRoleAssignmentUrl } from '../../../../services/api/server-urls.service';
 import { getLibrary } from '../../../../services/data/docLibrary/docLibrary.service';
 import { DocumentLibrary } from '../../../../services/data/docLibrary/docLibrary.models';
 import { Role } from '../../../../services/data/permissions/permissions.models';
@@ -13,10 +12,10 @@ import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget'
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
 import { getId } from '../../Adapter/Explorer-Adapter';
+import { docLibraryClient } from '../../../../services/data/docLibrary/docLibrary.client';
 
 @observer
 class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
-  @observable private url?: string;
   @observable private currentLibrary?: DocumentLibrary;
   private operationId: symbol;
 
@@ -37,14 +36,15 @@ class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
   }
 
   render() {
-    const { className } = this.props;
+    const { className, item } = this.props;
+    const { payload } = item as ExplorerItemData<DocumentLibrary>;
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
         {this.currentLibrary && (
           <>
             <PermissionsWidget
-              url={this.url}
+              url={docLibraryClient.getDocumentLibraryRoleAssignmentUrl(payload.table_name)}
               title={this.currentLibrary.title}
               itemEntityType={ExplorerItemEntityTypeTitle.LIBRARY}
               disabled={!(currentUser.isAdmin || this.currentLibrary.role === Role.OWNER)}
@@ -62,18 +62,11 @@ class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const url = await getDocumentLibraryRoleAssignmentUrl(payload.table_name);
     const library = await getLibrary(payload.table_name);
 
     if (this.operationId === operationId) {
-      this.setUrl(url);
       this.setCurrentLibrary(library);
     }
-  }
-
-  @action
-  private setUrl(url: string) {
-    this.url = url;
   }
 
   @action

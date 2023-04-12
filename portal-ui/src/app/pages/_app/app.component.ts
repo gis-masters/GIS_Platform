@@ -2,10 +2,8 @@ import { Component, ViewChild, ElementRef, OnInit, OnDestroy, OnChanges } from '
 import { ToastContainer, toast } from 'react-toastify';
 import { createRoot, Root } from 'react-dom/client';
 import { withRegistry } from '@bem-react/di';
-import { NGXLogger } from 'ngx-logger';
 import { createElement } from 'react';
 
-import { getEnvironment } from '../../services/environment';
 import { registry } from '../../services/di-registry';
 import { Toast } from '../../components/Toast/Toast';
 
@@ -18,10 +16,6 @@ const ToastContainerWithRegistry = withRegistry(registry)(ToastContainer);
 export class AppComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('reactToastContainer', { read: ElementRef, static: true }) refToastContainer: ElementRef<HTMLDivElement>;
   private root: Root;
-
-  constructor(private logger: NGXLogger) {
-    void this.getEnv();
-  }
 
   ngOnInit() {
     this.root = createRoot(this.refToastContainer.nativeElement);
@@ -58,11 +52,6 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
         canBeSuppressed: true
       });
     };
-  }
-
-  private async getEnv() {
-    const environment = await getEnvironment();
-    this.logger.debug('Env: ', environment);
   }
 
   private renderReactElement() {

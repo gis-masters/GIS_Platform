@@ -9,8 +9,8 @@ import { CheckCircle, Error, Info, Warning, Close } from '@mui/icons-material';
 import { SvgIconProps } from '@mui/material/SvgIcon/';
 import '!style-loader!css-loader!sass-loader!../../../../node_modules/react-toastify/dist/ReactToastify.css';
 
-import { env } from '../../stores/Env.store';
 import { sendTelegramError } from '../../services/telegram.service';
+import { environment } from '../../services/environment';
 
 import '!style-loader!css-loader!sass-loader!./Toast.scss';
 
@@ -164,7 +164,7 @@ ${error.message || error.toString()}`;
 
     void sendTelegramError(tgMsg);
 
-    if ((env.suppressToastErrors[protocol] && canBeSuppressed) || suppress) {
+    if ((environment.suppressToastErrors && environment.suppressToastErrors[protocol] && canBeSuppressed) || suppress) {
       return;
     }
 

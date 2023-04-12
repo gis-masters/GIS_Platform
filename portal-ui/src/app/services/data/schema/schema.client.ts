@@ -1,22 +1,36 @@
+import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { getSchemaUrl } from '../../api/server-urls.service';
 
 import { OldSchema } from './schemaOld.models';
 
-export async function _reqGetSchemaAtUrl(url: string): Promise<OldSchema> {
-  return http.get<OldSchema>(url);
+class SchemaClient extends Client {
+  private static _instance: SchemaClient;
+
+  static get instance(): SchemaClient {
+    return this._instance || (this._instance = new this());
+  }
+
+  private getSchemaUrl(): string {
+    return this.getDataUrl() + '/schemas';
+  }
+
+  async getSchemaAtUrl(url: string): Promise<OldSchema> {
+    return http.get<OldSchema>(url);
+  }
+
+  async getSchema(schemaIds: string[]): Promise<(OldSchema | null)[]> {
+    const params = { schemaIds: schemaIds.join(',') };
+
+    return await http.get<(OldSchema | null)[]>(this.getSchemaUrl(), { params });
+  }
+
+  async createSchema(schema: OldSchema): Promise<OldSchema> {
+    return http.post<OldSchema>(this.getSchemaUrl(), schema);
+  }
+
+  async updateSchema(schema: OldSchema): Promise<OldSchema> {
+    return http.put<OldSchema>(this.getSchemaUrl(), schema);
+  }
 }
 
-export async function _reqGetSchema(schemaIds: string[]): Promise<(OldSchema | null)[]> {
-  const params = { schemaIds: schemaIds.join(',') };
-
-  return await http.get<(OldSchema | null)[]>(await getSchemaUrl(), { params });
-}
-
-export async function _reqCreateSchema(schema: OldSchema): Promise<OldSchema> {
-  return http.post<OldSchema>(await getSchemaUrl(), schema);
-}
-
-export async function _reqUpdateSchema(schema: OldSchema): Promise<OldSchema> {
-  return http.put<OldSchema>(await getSchemaUrl(), schema);
-}
+export const schemaClient = SchemaClient.instance;

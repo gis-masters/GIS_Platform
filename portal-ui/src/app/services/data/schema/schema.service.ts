@@ -9,9 +9,9 @@ import { ImportLayerItem } from '../../geoserver/import/import.models';
 import { communicationService } from '../../communication.service';
 
 import { Schema } from './schema.models';
+import { schemaClient } from './schema.client';
 import { convertNewToOldSchema, convertOldToNewSchema } from './schema.utils';
 import { OldSchema, OldPropertySchema, OldPropertySchemaChoice, ValueType } from './schemaOld.models';
-import { _reqCreateSchema, _reqGetSchema, _reqGetSchemaAtUrl, _reqUpdateSchema } from './schema.client';
 
 class SchemaService {
   private static _instance: SchemaService;
@@ -68,7 +68,7 @@ class SchemaService {
   }
 
   async getSchemaAtUrl(url: string): Promise<Schema> {
-    return convertOldToNewSchema(await _reqGetSchemaAtUrl(url));
+    return convertOldToNewSchema(await schemaClient.getSchemaAtUrl(url));
   }
 
   /**
@@ -195,7 +195,7 @@ class SchemaService {
   private async fetch(fetchAll?: boolean): Promise<void> {
     this.fetchingNow++;
     const payload = fetchAll ? [] : this.fetchingPool.splice(0);
-    const response = await _reqGetSchema(payload);
+    const response = await schemaClient.getSchema(payload);
 
     if (!response) {
       this.fetchingNow--;
@@ -241,14 +241,14 @@ class SchemaService {
   async createSchema(schema: Schema) {
     this.schemas = {};
     this.fetchingAllSchemas = null;
-    await _reqCreateSchema(convertNewToOldSchema(schema));
+    await schemaClient.createSchema(convertNewToOldSchema(schema));
     communicationService.schemaUpdated.emit({ type: 'create', data: schema });
   }
 
   async updateSchema(schema: Schema) {
     this.schemas = {};
     this.fetchingAllSchemas = null;
-    await _reqUpdateSchema(convertNewToOldSchema(schema));
+    await schemaClient.updateSchema(convertNewToOldSchema(schema));
     communicationService.schemaUpdated.emit({ type: 'update', data: schema });
   }
 }

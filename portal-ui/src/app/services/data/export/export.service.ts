@@ -1,7 +1,7 @@
 import { wsService } from '../../ws.service';
 import { Process } from '../processes/processes.models';
 
-import { _reqExport } from './export.client';
+import { exportClient } from './export.client';
 import { ExportRequest, ExportResourceModel } from './export.models';
 
 export async function exportVectorTableAsShape(resources: ExportResourceModel[]): Promise<Process> {
@@ -12,7 +12,7 @@ export async function exportVectorTableAsShape(resources: ExportResourceModel[])
     epsg: 'EPSG:28406'
   };
 
-  return _reqExport(payload);
+  return exportClient.export(payload);
 }
 
 export async function exportVectorTableAsGML(
@@ -30,5 +30,9 @@ export async function exportVectorTableAsGML(
     invertedCoordinates
   };
 
-  return _reqExport(payload);
+  return exportClient.export(payload);
+}
+
+export async function downloadExportResult(fileName: string): Promise<Blob> {
+  return await exportClient.download(fileName);
 }

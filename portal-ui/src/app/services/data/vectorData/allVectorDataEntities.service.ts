@@ -5,7 +5,7 @@ import { communicationService } from '../../communication.service';
 import { Toast } from '../../../components/Toast/Toast';
 
 import { getAllVectorTablesInDataset } from './vectorData.service';
-import { _reqGetAllDatasets } from './vectorData.client';
+import { vectorDataClient } from './vectorData.client';
 import { VectorTable } from './vectorData.models';
 
 class AllDataEntitiesService {
@@ -50,7 +50,7 @@ class AllDataEntitiesService {
     const operationId = Symbol();
     this.fetchingOperationId = operationId;
 
-    const datasets = await _reqGetAllDatasets();
+    const datasets = await vectorDataClient.getAllDatasets();
     let vectorTables: VectorTable[] = [];
 
     for (const dataset of datasets) {

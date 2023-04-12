@@ -1,4 +1,4 @@
-import { _reqInviteUser } from '../../../../src/app/services/auth/users/users.client';
+import { usersClient } from '../../../../src/app/services/auth/users/users.client';
 import { requestAsAdmin } from '../requestAs';
 import { getUserByEmail } from './getUserByEmail';
 import { getTestUser } from './testUsers';
@@ -13,5 +13,5 @@ export async function inviteUser(username: string): Promise<void> {
     }
   } catch {}
 
-  await requestAsAdmin(_reqInviteUser, user.email);
+  await requestAsAdmin(usersClient.inviteUser.bind(usersClient), user.email);
 }

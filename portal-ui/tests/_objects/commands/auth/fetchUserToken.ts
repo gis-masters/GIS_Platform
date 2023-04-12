@@ -1,5 +1,5 @@
 import { OrganizationsListItemInfo } from '../../../../src/app/services/auth/auth/auth.models';
-import { _reqAuthenticate } from '../../../../src/app/services/auth/auth/auth.client';
+import { authClient } from '../../../../src/app/services/auth/auth/auth.client';
 import { authenticateAs } from './authenticate';
 import { TestUser } from './testUsers';
 
@@ -14,7 +14,7 @@ export async function fetchUserToken(user: TestUser): Promise<string> {
   let token: string | OrganizationsListItemInfo[];
 
   try {
-    token = await _reqAuthenticate({ username: user.email, password: user.password });
+    token = await authClient.authenticate({ username: user.email, password: user.password });
     retries = 0;
   } catch {
     retries++;

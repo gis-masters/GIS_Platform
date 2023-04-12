@@ -1,10 +1,10 @@
-import { env } from '../stores/Env.store';
 import { currentUser } from '../stores/CurrentUser.store';
 import { escapeHtml } from './util/escapeHtml';
+import { environment } from './environment';
 
 export async function sendTelegramError(error: string): Promise<void> {
   const protocol = window.location.protocol.slice(0, -1);
-  if (!env.sendErrorsToTG[protocol]) {
+  if (!environment.sendErrorsToTG[protocol]) {
     return;
   }
   const text = `<b>user:</b> ${currentUser.email}

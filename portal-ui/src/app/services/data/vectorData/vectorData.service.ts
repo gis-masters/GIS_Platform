@@ -5,37 +5,18 @@ import { communicationService } from '../../communication.service';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { PageOptions } from '../../models';
 
-import {
-  _reqCopyFeaturesBetweenLayers,
-  _reqCreateDataset,
-  _reqCreateFeature,
-  _reqCreateVectorTable,
-  _reqDeleteDataset,
-  _reqDeleteFeatures,
-  _reqDeleteVectorTable,
-  _getAllVectorTablesInDataset,
-  _reqGetDataset,
-  _reqGetDatasets,
-  _reqGetDatasetsWithParticularOne,
-  _reqGetVectorTables,
-  _reqGetVectorTablesWithParticularOne,
-  _reqGetVectorTableConnections,
-  _reqGetVectorTable,
-  _reqUpdateDataset,
-  _reqUpdateFeature,
-  _reqUpdateVectorTable
-} from './vectorData.client';
+import { vectorDataClient } from './vectorData.client';
 import { Dataset, NewDataset, NewVectorTable, VectorTable, VectorTableConnection } from './vectorData.models';
 import { extractFeatureId } from '../../geoserver/feature.util';
 
 // dataset
 
 export function getDataset(identifier: string): Promise<Dataset> {
-  return _reqGetDataset(identifier);
+  return vectorDataClient.getDataset(identifier);
 }
 
 export async function getDatasets(pageOptions: PageOptions): Promise<[Dataset[], number]> {
-  const response = await _reqGetDatasets(pageOptions);
+  const response = await vectorDataClient.getDatasets(pageOptions);
 
   return [(response._embedded && response._embedded.datasets) || [], response.page.totalPages];
 }
@@ -44,30 +25,30 @@ export async function getDatasetsWithParticularOne(
   identifier: string,
   pageOptions: PageOptions
 ): Promise<[Dataset[], number, number] | undefined> {
-  return await _reqGetDatasetsWithParticularOne(identifier, pageOptions);
+  return await vectorDataClient.getDatasetsWithParticularOne(identifier, pageOptions);
 }
 
 export async function createDataset(newDataset: NewDataset): Promise<Dataset> {
-  const result = await _reqCreateDataset(newDataset);
+  const result = await vectorDataClient.createDataset(newDataset);
   communicationService.datasetUpdated.emit({ type: 'create', data: result });
 
   return result;
 }
 
 export async function updateDataset(dataset: Dataset, patch: Partial<Dataset>): Promise<void> {
-  await _reqUpdateDataset(dataset.identifier, patch);
+  await vectorDataClient.updateDataset(dataset.identifier, patch);
   communicationService.datasetUpdated.emit({ type: 'update', data: dataset });
 }
 
 export async function deleteDataset(dataset: Dataset): Promise<void> {
-  await _reqDeleteDataset(dataset.identifier);
+  await vectorDataClient.deleteDataset(dataset.identifier);
   communicationService.datasetUpdated.emit({ type: 'delete', data: dataset });
 }
 
 // vector table
 
 export async function getVectorTable(datasetIdentifier: string, identifier: string): Promise<VectorTable> {
-  const response = await _reqGetVectorTable(datasetIdentifier, identifier);
+  const response = await vectorDataClient.getVectorTable(datasetIdentifier, identifier);
 
   return { ...response, dataset: datasetIdentifier };
 }
@@ -76,7 +57,7 @@ export async function getVectorTables(
   datasetIdentifier: string,
   pageOptions: PageOptions
 ): Promise<[VectorTable[], number]> {
-  const response = await _reqGetVectorTables(datasetIdentifier, pageOptions);
+  const response = await vectorDataClient.getVectorTables(datasetIdentifier, pageOptions);
   const vectorTables: VectorTable[] = (response._embedded?.tables || []).map(table => ({
     ...table,
     dataset: datasetIdentifier
@@ -90,7 +71,11 @@ export async function getVectorTablesWithParticularOne(
   vectorTableIdentifier: string,
   pageOptions: PageOptions
 ): Promise<[VectorTable[], number, number] | undefined> {
-  const response = await _reqGetVectorTablesWithParticularOne(datasetIdentifier, vectorTableIdentifier, pageOptions);
+  const response = await vectorDataClient.getVectorTablesWithParticularOne(
+    datasetIdentifier,
+    vectorTableIdentifier,
+    pageOptions
+  );
 
   if (response) {
     const [tables, totalPages, page] = response;
@@ -105,7 +90,7 @@ export async function getVectorTablesWithParticularOne(
 }
 
 export async function getAllVectorTablesInDataset(dataset: Dataset): Promise<VectorTable[]> {
-  const vectorTables = await _getAllVectorTablesInDataset(dataset.identifier);
+  const vectorTables = await vectorDataClient.getAllVectorTablesInDataset(dataset.identifier);
 
   return vectorTables.map(table => ({
     ...table,
@@ -114,25 +99,25 @@ export async function getAllVectorTablesInDataset(dataset: Dataset): Promise<Vec
 }
 
 export async function createVectorTable(datasetIdentifier: string, table: NewVectorTable): Promise<VectorTable> {
-  const response = await _reqCreateVectorTable(datasetIdentifier, table);
+  const response = await vectorDataClient.createVectorTable(datasetIdentifier, table);
   communicationService.vectorTableUpdated.emit({ type: 'create', data: response });
 
   return response;
 }
 
 export async function updateVectorTable(vectorTable: VectorTable, patch: Partial<VectorTable>): Promise<void> {
-  await _reqUpdateVectorTable(vectorTable.dataset, vectorTable.identifier, patch);
+  await vectorDataClient.updateVectorTable(vectorTable.dataset, vectorTable.identifier, patch);
   // api возвращает болт #5349
   communicationService.vectorTableUpdated.emit({ type: 'update', data: { ...vectorTable, ...patch } });
 }
 
 export async function deleteVectorTable(vectorTable: VectorTable): Promise<void> {
-  await _reqDeleteVectorTable(vectorTable.dataset, vectorTable.identifier);
+  await vectorDataClient.deleteVectorTable(vectorTable.dataset, vectorTable.identifier);
   communicationService.vectorTableUpdated.emit({ type: 'delete', data: vectorTable });
 }
 
 export async function getVectorTableConnections(vectorTableIdentifier: string): Promise<VectorTableConnection[]> {
-  return _reqGetVectorTableConnections(vectorTableIdentifier);
+  return vectorDataClient.getVectorTableConnections(vectorTableIdentifier);
 }
 
 // feature
@@ -142,7 +127,7 @@ export async function createFeature(
   vectorTableIdentifier: string,
   feature: NewWfsFeature
 ): Promise<WfsFeature> {
-  const response = await _reqCreateFeature(datasetIdentifier, vectorTableIdentifier, feature);
+  const response = await vectorDataClient.createFeature(datasetIdentifier, vectorTableIdentifier, feature);
   communicationService.featuresUpdated.emit({ type: 'create', data: response });
 
   return response;
@@ -154,7 +139,7 @@ export async function updateFeature(
   recordId: number,
   patch: Partial<WfsFeature>
 ): Promise<void> {
-  await _reqUpdateFeature(datasetIdentifier, vectorTableIdentifier, recordId, patch);
+  await vectorDataClient.updateFeature(datasetIdentifier, vectorTableIdentifier, recordId, patch);
   communicationService.featuresUpdated.emit({ type: 'update', data: null });
 }
 
@@ -165,7 +150,7 @@ export async function copyFeaturesBetweenLayers(
 ): Promise<void> {
   const featureIds = features.map(feature => extractFeatureId(feature.id));
 
-  await _reqCopyFeaturesBetweenLayers(
+  await vectorDataClient.copyFeaturesBetweenLayers(
     sourceLayer.dataset,
     sourceLayer.tableName,
     targetLayer.dataset,
@@ -182,7 +167,7 @@ export async function deleteFeatures(
   features: WfsFeature<Coordinate | CoordinateEdited>[]
 ): Promise<void> {
   const featureIds = features.map(feature => extractFeatureId(feature.id));
-  await _reqDeleteFeatures(datasetIdentifier, vectorTableIdentifier, featureIds);
+  await vectorDataClient.deleteFeatures(datasetIdentifier, vectorTableIdentifier, featureIds);
   communicationService.featuresUpdated.emit({ type: 'delete', data: null });
 }
 

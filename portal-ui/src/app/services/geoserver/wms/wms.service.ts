@@ -1,12 +1,12 @@
-import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgVectorLayer } from '../gis/layers/layers.models';
-import { getWmsUrl } from '../api/server-urls.service';
-import { getStyleSld } from './styles.service';
-import { cqlBuild } from '../util/cqlBuild';
-import { cql2ol } from '../util/cql2ol';
-import { http } from '../api/http.service';
-import { Mime } from '../util/Mime';
-import { WFS } from '../ol/WFS';
+import { currentProject } from '../../../stores/CurrentProject.store';
+import { CrgVectorLayer } from '../../gis/layers/layers.models';
+import { getStyleSld } from '../styles/styles.service';
+import { cqlBuild } from '../../util/cqlBuild';
+import { cql2ol } from '../../util/cql2ol';
+import { Mime } from '../../util/Mime';
+import { WFS } from '../../ol/WFS';
+
+import { wmsClient } from './wms.client';
 
 export async function getMap(url: string): Promise<Blob> {
   const parsedUrl = new URL(url);
@@ -24,10 +24,7 @@ export async function getMap(url: string): Promise<Blob> {
   parsedUrl.searchParams.delete('featureId');
   parsedUrl.searchParams.delete('featureIdsNegative');
 
-  return await http.get<Blob>(parsedUrl.href, {
-    responseType: 'blob',
-    cache: { disabled: true }
-  });
+  return await wmsClient.getMap(parsedUrl.href);
 }
 
 /**
@@ -36,7 +33,7 @@ export async function getMap(url: string): Promise<Blob> {
  *
  * Имеет проблемы с производительностью из-за бага геосервера.
  * Оставлено на всякий случай (например если геосервер починит другую багу в wms,
- * благодаря которой мы можем фильтровать по id в cql фильтре).
+ * благодаря которой мы можем фильтровать по id в cql фильтре и не использовать этот метод).
  *
  * @deprecated Не используется.
  */
@@ -114,18 +111,11 @@ export async function getMapByXml(url: string): Promise<Blob> {
 
   const xml = new XMLSerializer().serializeToString(getMapDocument);
 
-  return await http.post<Blob>(await getWmsUrl(), xml, {
-    headers: { 'Content-Type': Mime.XML },
-    responseType: 'blob',
-    params: {
-      exceptions: Mime.JSON
-    },
-    cache: { disabled: true, clear: false }
-  });
+  return await wmsClient.getMapByXml(xml);
 }
 
 export async function testLayerByWms(layer: CrgVectorLayer): Promise<{ ok: boolean; errors?: string[] }> {
-  const url = new URL(await getWmsUrl());
+  const url = new URL(wmsClient.getWmsUrl());
 
   url.searchParams.set('SERVICE', 'WMS');
   url.searchParams.set('VERSION', '1.3.0');
@@ -139,11 +129,11 @@ export async function testLayerByWms(layer: CrgVectorLayer): Promise<{ ok: boole
   url.searchParams.set('HEIGHT', '300');
   url.searchParams.set('BBOX', '3778140.58549765,5300522.190056069,3778162.97915828,5300544.5837167');
 
-  const result = await http.get<string>(url.toString());
+  const result = await wmsClient.getMap(url.toString());
 
-  if (typeof result === 'string') {
+  if (typeof result === 'string' || result.type === Mime.TEXT_XML) {
     const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(result, Mime.XML);
+    const xmlDoc = parser.parseFromString(typeof result === 'string' ? result : await result.text(), Mime.XML);
     const errors = [...xmlDoc.querySelectorAll('ServiceException')].map(
       (n: Element) => `Ошибка получения данных с сервера: ${n.innerHTML.trim()}`
     );
@@ -152,4 +142,14 @@ export async function testLayerByWms(layer: CrgVectorLayer): Promise<{ ok: boole
   }
 
   return { ok: true };
+}
+
+/**
+ * Get a graphic that is representative of specific rule by their name.
+ *
+ * @param complexLayerName  Название слоя в формате 'workspace:layerName'
+ * @param ruleName          Название правила в стиле.
+ */
+export async function getLegendGraphic(complexLayerName: string, ruleName: string, style: string): Promise<Blob> {
+  return await wmsClient.getLegendGraphic(complexLayerName, ruleName, style);
 }

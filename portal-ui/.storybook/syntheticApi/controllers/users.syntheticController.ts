@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { InternalAxiosRequestConfig } from 'axios';
 
 import { CrgUserRaw } from '../../../src/app/services/auth/users/users.models';
 import { queryObjects } from '../../../src/app/services/util/queryObjects';
@@ -10,7 +10,7 @@ import { PageableResponse } from '../../../src/app/services/models';
 class UsersSyntheticController implements SyntheticController {
   pattern = /^.*\/users$/;
 
-  get(config: AxiosRequestConfig): PageableResponse<CrgUserRaw> {
+  get(config: InternalAxiosRequestConfig): PageableResponse<CrgUserRaw> {
     if (!config.url) {
       throw err404(config);
     }

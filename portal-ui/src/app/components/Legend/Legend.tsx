@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
-import { StyleRule } from '../../services/geoserver/styles.service';
+import { StyleRule } from '../../services/geoserver/styles/styles.models';
 
 import '!style-loader!css-loader!sass-loader!./Legend.scss';
 

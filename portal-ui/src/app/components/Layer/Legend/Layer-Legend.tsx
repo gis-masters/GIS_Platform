@@ -6,12 +6,9 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
-import {
-  filterLegendForCurrentMapView,
-  getLayerStyleRules,
-  StyleRule
-} from '../../../services/geoserver/styles.service';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
+import { filterLegendForCurrentMapView, getLayerStyleRules } from '../../../services/geoserver/styles/styles.service';
+import { StyleRule } from '../../../services/geoserver/styles/styles.models';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { mapService } from '../../../services/map/map.service';
 import { Emitter } from '../../../services/common/Emitter';

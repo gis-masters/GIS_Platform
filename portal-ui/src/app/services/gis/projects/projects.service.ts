@@ -10,27 +10,14 @@ import { isReadAllowed } from '../../data/permissions/permissions.service';
 import { communicationService } from '../../communication.service';
 import { CrgLayer, CrgLayersGroup } from '../layers/layers.models';
 import { usersService } from '../../auth/users/users.service';
-import { testLayerByWms } from '../../geoserver/wms.service';
+import { testLayerByWms } from '../../geoserver/wms/wms.service';
 import { PageOptions } from '../../models';
 import { services } from '../../services';
 import { sleep } from '../../util/sleep';
 import { Toast } from '../../../components/Toast/Toast';
 
 import { CrgProject } from './projects.models';
-import {
-  _reqCreateProject,
-  _reqCreateGroup,
-  _reqDeleteGroup,
-  _reqDeleteProject,
-  _reqGetAllProjects,
-  _reqGetProject,
-  _reqGetProjectGroups,
-  _reqGetProjectLayers,
-  _reqGetProjects,
-  _reqGetProjectsWithParticularOne,
-  _reqUpdateGroup,
-  _reqUpdateProject
-} from './projects.client';
+import { projectsClient } from './projects.client';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -90,11 +77,11 @@ class ProjectsService {
   }
 
   async getAllProjects(): Promise<CrgProject[]> {
-    return await _reqGetAllProjects();
+    return await projectsClient.getAllProjects();
   }
 
   private async fetchAllProjects() {
-    const request = _reqGetAllProjects();
+    const request = projectsClient.getAllProjects();
 
     this.fetchingAllProjectsRequest = request;
 
@@ -187,14 +174,14 @@ class ProjectsService {
   }
 
   async create(name: string): Promise<CrgProject> {
-    const result = await _reqCreateProject(name);
+    const result = await projectsClient.createProject(name);
     communicationService.projectUpdated.emit({ type: 'create', data: result });
 
     return result;
   }
 
   async getProjects(pageOptions: PageOptions): Promise<[CrgProject[], number]> {
-    const response = await _reqGetProjects(pageOptions);
+    const response = await projectsClient.getProjects(pageOptions);
 
     return [response._embedded?.projects || [], response.page.totalPages];
   }
@@ -203,11 +190,11 @@ class ProjectsService {
     id: string | number,
     pageOptions: PageOptions
   ): Promise<[CrgProject[], number, number] | undefined> {
-    return await _reqGetProjectsWithParticularOne(id, pageOptions);
+    return await projectsClient.getProjectsWithParticularOne(id, pageOptions);
   }
 
   async update(project: CrgProject, patch: Partial<CrgProject>) {
-    await _reqUpdateProject(project.id, patch);
+    await projectsClient.updateProject(project.id, patch);
     if (allProjects.inited) {
       allProjects.update(project.id, patch);
     }
@@ -215,20 +202,20 @@ class ProjectsService {
   }
 
   async delete(id: number) {
-    await _reqDeleteProject(id);
+    await projectsClient.deleteProject(id);
     allProjects.delete(id);
   }
 
   async getLayers(projectId: number): Promise<CrgLayer[]> {
-    return await _reqGetProjectLayers(projectId);
+    return await projectsClient.getProjectLayers(projectId);
   }
 
   async getGroups(projectId: number): Promise<CrgLayersGroup[]> {
-    return await _reqGetProjectGroups(projectId);
+    return await projectsClient.getProjectGroups(projectId);
   }
 
   async createGroup(group: CrgLayersGroup, projectId: number): Promise<CrgLayersGroup> {
-    return await _reqCreateGroup(group, projectId);
+    return await projectsClient.createGroup(group, projectId);
   }
 
   async updateGroup(
@@ -236,11 +223,11 @@ class ProjectsService {
     patch: Partial<CrgLayersGroup>,
     project: CrgProject = currentProject
   ): Promise<void> {
-    return await _reqUpdateGroup(groupId, patch, project.id);
+    return await projectsClient.updateGroup(groupId, patch, project.id);
   }
 
   async deleteGroup(groupId: number, project: CrgProject = currentProject): Promise<void> {
-    return await _reqDeleteGroup(groupId, project.id);
+    return await projectsClient.deleteGroup(groupId, project.id);
   }
 
   generateNextGroupId(): number {
@@ -249,7 +236,7 @@ class ProjectsService {
 
   async getById(id: number): Promise<CrgProject> {
     try {
-      return await _reqGetProject(id);
+      return await projectsClient.getProject(id);
     } catch (error) {
       const err = error as AxiosError<{ status: string; message: string }>;
       const message = err?.response?.data?.message;

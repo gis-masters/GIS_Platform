@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { getEnvironment, Platform } from '../../services/environment';
+import { Platform, environment } from '../../services/environment';
 
 @Component({
   selector: 'crg-home',
@@ -9,8 +9,7 @@ import { getEnvironment, Platform } from '../../services/environment';
 export class HomeComponent implements OnInit {
   envPlatform: Platform = 'simf';
 
-  async ngOnInit() {
-    const env = await getEnvironment();
-    this.envPlatform = env.platform;
+  ngOnInit() {
+    this.envPlatform = environment.platform;
   }
 }

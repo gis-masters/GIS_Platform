@@ -1,20 +1,17 @@
 import { DataTable, Given } from '@wdio/cucumber-framework';
 
 import { getSchema } from '../schemas/getSchema';
-import { ScenarioScope } from '../../ScenarioScope';
-import { testSchemas } from '../schemas/testSchemas';
+import { CrgLayerType } from '../../../../src/app/services/gis/layers/layers.models';
 import { createLayerAsAdmin } from './createLayerAsAdmin';
-import { authenticateAsAdmin } from '../auth/authenticate';
+import { testSchemas } from '../schemas/testSchemas';
+import { ScenarioScope } from '../../ScenarioScope';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 import { getProjectByTitle } from '../projects/getProjectByTitle';
 import { getVectorTableByTitle } from '../tables/getVectorTableByTitle';
-import { CrgLayerType } from '../../../../src/app/services/gis/layers/layers.models';
 
 Given(
   'в созданном проекте создан слой {string} на основе созданных набора данных и таблицы',
   async function (this: ScenarioScope, layerTitle: string) {
-    await authenticateAsAdmin();
-
     const { latestProject, latestVectorTable, latestDataset } = this;
 
     const schema = Object.values(testSchemas).find(schema => schema.name === latestVectorTable.schemaId);

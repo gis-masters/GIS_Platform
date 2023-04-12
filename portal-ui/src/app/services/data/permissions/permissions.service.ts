@@ -23,25 +23,14 @@ import {
   TablePermissionPoint,
   tableRolesPermissionPoints
 } from './permissions.models';
-import {
-  _reqAddDatasetPermission,
-  _reqAddEntityPermission,
-  _reqAddProjectPermission,
-  _reqAddTablePermission,
-  _reqGetProjectPermissions,
-  _reqGetTablePermissions,
-  _reqRemoveDatasetPermission,
-  _reqRemoveEntityPermission,
-  _reqRemoveProjectPermission,
-  _reqRemoveTablePermission
-} from './permissions.client';
+import { permissionsClient } from './permissions.client';
 
 export async function getProjectPermissions(url: string): Promise<RoleAssignmentBody[]> {
-  return await _reqGetProjectPermissions(url);
+  return await permissionsClient.getProjectPermissions(url);
 }
 
 export async function getTablePermissions(url: string): Promise<RoleAssignmentBody[]> {
-  return await _reqGetTablePermissions(url);
+  return await permissionsClient.getTablePermissions(url);
 }
 
 export async function addEntityPermission(
@@ -51,7 +40,7 @@ export async function addEntityPermission(
   itemEntityType?: ExplorerItemEntityTypeTitle
 ): Promise<void> {
   try {
-    await _reqAddEntityPermission(payload, url);
+    await permissionsClient.addEntityPermission(payload, url);
   } catch (error) {
     handleSavingError(error, payload, 'добавить', `${itemEntityType}`, `${title}`);
   }
@@ -64,7 +53,7 @@ export async function removeEntityPermission(
   itemEntityType?: ExplorerItemEntityTypeTitle
 ): Promise<void> {
   try {
-    await _reqRemoveEntityPermission(payload.id, url);
+    await permissionsClient.removeEntityPermission(payload.id, url);
   } catch (error) {
     handleSavingError(error, payload, 'удалить', `${itemEntityType}`, `${title}`);
   }
@@ -76,7 +65,7 @@ export async function addTablePermission(
   tableIdentifier: string
 ): Promise<void> {
   try {
-    await _reqAddTablePermission(payload, datasetId, tableIdentifier);
+    await permissionsClient.addTablePermission(payload, datasetId, tableIdentifier);
   } catch (error) {
     handleSavingError(error, payload, 'добавить', 'таблицы', `${datasetId}:${tableIdentifier}`);
   }
@@ -88,7 +77,7 @@ export async function removeTablePermission(
   tableIdentifier: string
 ): Promise<void> {
   try {
-    await _reqRemoveTablePermission(payload, datasetIdentifier, tableIdentifier);
+    await permissionsClient.removeTablePermission(payload, datasetIdentifier, tableIdentifier);
   } catch (error) {
     handleSavingError(error, payload, 'удалить', 'таблицы', `${datasetIdentifier}:${tableIdentifier}`);
   }
@@ -96,7 +85,7 @@ export async function removeTablePermission(
 
 export async function addDatasetPermission(payload: RoleAssignmentBody, datasetIdentifier: string): Promise<void> {
   try {
-    await _reqAddDatasetPermission(payload, datasetIdentifier);
+    await permissionsClient.addDatasetPermission(payload, datasetIdentifier);
   } catch (error) {
     handleSavingError(error, payload, 'добавить', 'набора данных', datasetIdentifier);
   }
@@ -104,7 +93,7 @@ export async function addDatasetPermission(payload: RoleAssignmentBody, datasetI
 
 export async function removeDatasetPermission(payload: RoleAssignmentBody, datasetIdentifier: string): Promise<void> {
   try {
-    await _reqRemoveDatasetPermission(payload.id, datasetIdentifier);
+    await permissionsClient.removeDatasetPermission(payload.id, datasetIdentifier);
   } catch (error) {
     handleSavingError(error, payload, 'удалить', 'набора данных', datasetIdentifier);
   }
@@ -112,7 +101,7 @@ export async function removeDatasetPermission(payload: RoleAssignmentBody, datas
 
 export async function addProjectPermission(payload: RoleAssignmentBody, project: CrgProject): Promise<void> {
   try {
-    await _reqAddProjectPermission(payload, project.id);
+    await permissionsClient.addProjectPermission(payload, project.id);
   } catch (error) {
     handleSavingError(error, payload, 'добавить', 'проекта', project.name);
   }
@@ -120,7 +109,7 @@ export async function addProjectPermission(payload: RoleAssignmentBody, project:
 
 export async function removeProjectPermission(payload: RoleAssignmentBody, project: CrgProject): Promise<void> {
   try {
-    await _reqRemoveProjectPermission(payload.id, project.id);
+    await permissionsClient.removeProjectPermission(payload.id, project.id);
   } catch (error) {
     handleSavingError(error, payload, 'удалить', 'проекта', project.name);
   }

@@ -30,7 +30,7 @@ export async function updateFileTransparentColor(coverages: string, InputTranspa
   };
 
   try {
-    await http.put(await getGeoserverFileUrl(currentUser.workspaceName, coverages), value);
+    await http.put(getGeoserverFileUrl(currentUser.workspaceName, coverages), value);
   } catch {
     throw new Error('Не удалось обновить настройки слоя');
   }
@@ -38,7 +38,7 @@ export async function updateFileTransparentColor(coverages: string, InputTranspa
 
 export async function getFileTransparentColor(coverages: string): Promise<CoverageTransparentColor> {
   try {
-    return await http.get(await getGeoserverFileUrl(currentUser.workspaceName, coverages));
+    return await http.get(getGeoserverFileUrl(currentUser.workspaceName, coverages));
   } catch {
     Toast.error({
       message: 'Не удалось получить настройки слоя'

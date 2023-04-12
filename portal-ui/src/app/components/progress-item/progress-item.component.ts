@@ -3,7 +3,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
 
 import { ProcessStatus, ProcessType } from '../../services/data/processes/processes.models';
-import { DownloadFileService } from '../../services/download-file.service';
+import { downloadExportResult } from '../../services/data/export/export.service';
 import { eventService, IEvent } from '../../services/event.service';
 import { ExportWsMsg, IWsMessage } from '../../services/ws.service';
 import { saveAsBlob } from '../../services/util/FileSaver';
@@ -21,7 +21,7 @@ export class ProgressItemComponent implements OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger, private fileService: DownloadFileService) {}
+  constructor(private logger: NGXLogger) {}
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
@@ -85,7 +85,7 @@ export class ProgressItemComponent implements OnDestroy {
     const wsMessage: IWsMessage = this.event.payload;
     const exportWsMsg: ExportWsMsg = wsMessage.payload as ExportWsMsg;
     const fileName = exportWsMsg.payload.split('/')[3];
-    const data = await this.fileService.download(fileName);
+    const data = await downloadExportResult(fileName);
     const blob = new Blob([data], { type: Mime.XML });
 
     saveAsBlob(fileName, blob);

@@ -7,7 +7,7 @@ import { Breakpoint, Dialog, DialogActions, DialogContent, Tooltip } from '@mui/
 import { ChevronLeft, ChevronRight, OpenInFull, CloseFullscreen } from '@mui/icons-material';
 import { Document, Page, pdfjs } from 'react-pdf';
 
-import { getFileDownloadUrl } from '../../services/api/server-urls.service';
+import { filesClient } from '../../services/data/files/files.client';
 import { FileInfo } from '../../services/data/files/files.models';
 import { isPdfFile } from '../../services/data/files/files.util';
 import { IconButton } from '../IconButton/IconButton';
@@ -41,9 +41,9 @@ export class Carousel extends Component<CarouselProps> {
     makeObservable(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.setCurrentImage(this.props.startingImageForPreview);
-    await this.fileUrl(this.props.startingImageForPreview?.id);
+    this.fileUrl(this.props.startingImageForPreview?.id);
   }
 
   render() {
@@ -103,8 +103,8 @@ export class Carousel extends Component<CarouselProps> {
     );
   }
 
-  private async fileUrl(id: string) {
-    this.setUrl(await getFileDownloadUrl(id));
+  private fileUrl(id: string) {
+    this.setUrl(filesClient.getFileDownloadUrl(id));
   }
 
   @boundMethod
@@ -119,7 +119,7 @@ export class Carousel extends Component<CarouselProps> {
   }
 
   @boundMethod
-  private async prevHandler() {
+  private prevHandler() {
     this.setBusy(true);
     const { allImages: images } = this.props;
     let prevImageIndex: number;
@@ -132,11 +132,11 @@ export class Carousel extends Component<CarouselProps> {
     const currentImage = images[prevImageIndex];
 
     this.setCurrentImage(currentImage);
-    await this.fileUrl(currentImage.id);
+    this.fileUrl(currentImage.id);
   }
 
   @boundMethod
-  private async nextHandler() {
+  private nextHandler() {
     this.setBusy(true);
     const { allImages: images } = this.props;
     let nextImageIndex: number;
@@ -150,7 +150,7 @@ export class Carousel extends Component<CarouselProps> {
     const currentImage = images[nextImageIndex];
 
     this.setCurrentImage(currentImage);
-    await this.fileUrl(currentImage.id);
+    this.fileUrl(currentImage.id);
   }
 
   @action

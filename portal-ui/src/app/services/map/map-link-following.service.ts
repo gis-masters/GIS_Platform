@@ -56,7 +56,7 @@ export async function applyMapStateFromNavigator(): Promise<void> {
           count: String(mapStore.selectingFeaturesLimit)
         };
 
-        const response = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params });
+        const response = await http.get<WfsFeatureCollection>(getWfsUrl(), { params });
 
         features.push(...response.features);
       } catch {

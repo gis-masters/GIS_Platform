@@ -1,23 +1,45 @@
-import { getFileProcessesUrl, getProcessesUrl, getProcessUrl } from '../../api/server-urls.service';
+import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { Mime } from '../../util/Mime';
 
 import { Process, ProcessableModel, ProcessResponse } from './processes.models';
 
-export async function _reqGetProcess(id: number): Promise<Process> {
-  return http.get<Process>(await getProcessUrl(id), {
-    cache: { disabled: true }
-  });
+class ProcessesClient extends Client {
+  private static _instance: ProcessesClient;
+
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
+  private getProcessesUrl(): string {
+    return `${this.getDataUrl()}/processes`;
+  }
+
+  private getProcessUrl(processId: number): string {
+    return `${this.getProcessesUrl()}/${processId}`;
+  }
+
+  private getFileProcessesUrl(): string {
+    return `${this.getProcessesUrl()}/file`;
+  }
+
+  async getProcess(id: number): Promise<Process> {
+    return http.get<Process>(this.getProcessUrl(id), {
+      cache: { disabled: true }
+    });
+  }
+
+  async createProcess(model: ProcessableModel): Promise<ProcessResponse> {
+    return http.post<ProcessResponse>(this.getProcessesUrl(), JSON.stringify(model), {
+      headers: { 'Content-Type': Mime.JSON }
+    });
+  }
+
+  async createFileProcess(model: FormData): Promise<ProcessResponse> {
+    return http.post<ProcessResponse>(this.getFileProcessesUrl(), model, {
+      headers: { 'Content-Type': Mime.FORM_DATA }
+    });
+  }
 }
 
-export async function _reqCreateProcess(model: ProcessableModel): Promise<ProcessResponse> {
-  return http.post<ProcessResponse>(await getProcessesUrl(), JSON.stringify(model), {
-    headers: { 'Content-Type': Mime.JSON }
-  });
-}
-
-export async function _reqCreateFileProcess(model: FormData): Promise<ProcessResponse> {
-  return http.post<ProcessResponse>(await getFileProcessesUrl(), model, {
-    headers: { 'Content-Type': Mime.FORM_DATA }
-  });
-}
+export const processesClient = ProcessesClient.instance;

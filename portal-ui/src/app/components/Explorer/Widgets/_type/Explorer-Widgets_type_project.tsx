@@ -3,16 +3,16 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { getProjectPermissionsUrl } from '../../../../services/api/server-urls.service';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
+import { permissionsClient } from '../../../../services/data/permissions/permissions.client';
+import { projectsService } from '../../../../services/gis/projects/projects.service';
+import { Role } from '../../../../services/data/permissions/permissions.models';
+import { CrgProject } from '../../../../services/gis/projects/projects.models';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { projectsService } from '../../../../services/gis/projects/projects.service';
 import { crgProjectSchema } from '../../../ProjectsActions/ProjectsActions';
-import { CrgProject } from '../../../../services/gis/projects/projects.models';
-import { Role } from '../../../../services/data/permissions/permissions.models';
-import { currentUser } from '../../../../stores/CurrentUser.store';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
@@ -82,7 +82,7 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const url = await getProjectPermissionsUrl(payload.id);
+    const url = permissionsClient.getProjectPermissionsUrl(payload.id);
     const currentProject = await projectsService.getById(payload.id);
 
     if (this.operationId === operationId) {

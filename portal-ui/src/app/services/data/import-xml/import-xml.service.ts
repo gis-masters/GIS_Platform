@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 
-import { _reqImportXml } from './import-xml.client';
+import { importXmlClient } from './import-xml.client';
 
 export async function importXml(file: File, datasetIdentifier: string, tableIdentifier: string): Promise<number> {
   const formData = new FormData();
@@ -11,7 +11,7 @@ export async function importXml(file: File, datasetIdentifier: string, tableIden
   formData.append('importType', 'mp');
 
   try {
-    return await _reqImportXml(file, datasetIdentifier, tableIdentifier);
+    return await importXmlClient.import(file, datasetIdentifier, tableIdentifier);
   } catch (error) {
     throw new Error((error as AxiosError<{ message: string }>).response?.data?.message);
   }

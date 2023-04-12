@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { InternalAxiosRequestConfig } from 'axios';
 
 import { LibraryRecordRaw } from '../../../src/app/services/data/docLibrary/docLibrary.models';
 import { Role } from '../../../src/app/services/data/permissions/permissions.models';
@@ -9,7 +9,7 @@ import { err404 } from '../utils';
 class LibraryRecordSyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)\/records\/(\d*)$/;
 
-  get(config: AxiosRequestConfig): LibraryRecordRaw {
+  get(config: InternalAxiosRequestConfig): LibraryRecordRaw {
     const match = config.url?.match(this.pattern);
     const libraryTableName = match?.at(1) || '';
     const recordId = Number(match?.at(2));

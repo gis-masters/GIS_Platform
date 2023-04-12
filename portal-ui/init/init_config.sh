@@ -47,5 +47,12 @@ echo -e "{\
 echo copy to assets
 cp environment.json /usr/share/nginx/html/assets/config
 
+echo include environment.json into index.html
+json=$(</usr/share/nginx/html/assets/config/environment.json)
+html=$(</usr/share/nginx/html/index.html)
+newHtml="${html/\/\*~ENV~\*\//= \/\*~ENV~\*\/}"
+newHtml="${newHtml/\/\*~ENV~\*\//$json}"
+echo $newHtml > /usr/share/nginx/html/index.html
+
 echo exit
 exec "$@"

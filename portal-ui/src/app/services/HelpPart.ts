@@ -1,6 +1,6 @@
 import { observable, action, makeObservable } from 'mobx';
 
-import { Platform, getEnvironment } from './environment';
+import { Platform, environment } from './environment';
 import { Toc, help as store } from '../stores/Help.store';
 
 export class HelpPart {
@@ -8,7 +8,7 @@ export class HelpPart {
   path: string[];
   inited: Promise<void>;
 
-  private platform: Platform;
+  private platform: Platform = environment.platform;
 
   constructor(path?: string) {
     makeObservable(this);
@@ -35,8 +35,6 @@ export class HelpPart {
   }
 
   private async init(resolve: () => void) {
-    const env = await getEnvironment();
-    this.platform = env.platform;
     if (!store.tocLoaded) {
       await this.initToc();
     }

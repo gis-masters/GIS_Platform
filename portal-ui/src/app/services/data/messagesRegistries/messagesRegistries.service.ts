@@ -1,22 +1,16 @@
 import { PageOptions } from '../../models';
-import { getMessagesRegistriesSchemaUrl } from '../../api/server-urls.service';
 import { Schema } from '../schema/schema.models';
 import { schemaService } from '../schema/schema.service';
 
 import { MessagesRegistriesMessages, MessagesRegistry } from './messagesRegistries.models';
-import {
-  _reqGetMessagesRegistries,
-  _reqGetMessagesRegistriesData,
-  _reqGetMessagesRegistriesWithParticularOne,
-  _reqGetMessagesRegistry
-} from './messagesRegistries.client';
+import { messagesRegistriesClient } from './messagesRegistries.client';
 
 export async function getMessagesRegistry(tableName: string): Promise<MessagesRegistry> {
-  return await _reqGetMessagesRegistry(tableName);
+  return await messagesRegistriesClient.getMessagesRegistry(tableName);
 }
 
 export async function getMessagesRegistries(pageOptions: PageOptions): Promise<[MessagesRegistry[], number]> {
-  const response = await _reqGetMessagesRegistries(pageOptions);
+  const response = await messagesRegistriesClient.getMessagesRegistries(pageOptions);
 
   return [response.content || [], response.page.totalPages];
 }
@@ -25,7 +19,7 @@ export async function getMessagesRegistriesWithParticularOne(
   tableName: string,
   pageOptions: PageOptions
 ): Promise<[MessagesRegistry[], number, number] | undefined> {
-  const response = await _reqGetMessagesRegistriesWithParticularOne(tableName, pageOptions);
+  const response = await messagesRegistriesClient.getMessagesRegistriesWithParticularOne(tableName, pageOptions);
 
   if (response) {
     const [content, totalPages, page] = response;
@@ -39,14 +33,14 @@ export async function getMessagesRegistriesWithParticularOne(
 }
 
 export async function getMessagesRegistriesSchema(tableName: string): Promise<Schema> {
-  return schemaService.getSchemaAtUrl(await getMessagesRegistriesSchemaUrl(tableName));
+  return schemaService.getSchemaAtUrl(messagesRegistriesClient.getMessagesRegistriesSchemaUrl(tableName));
 }
 
 export async function getMessagesRegistriesData(
   tableName: string,
   pageOptions: PageOptions
 ): Promise<[MessagesRegistriesMessages[], number]> {
-  const response = await _reqGetMessagesRegistriesData(tableName, pageOptions);
+  const response = await messagesRegistriesClient.getMessagesRegistriesData(tableName, pageOptions);
 
   if (response) {
     const { content, page } = response;

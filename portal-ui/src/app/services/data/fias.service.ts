@@ -9,13 +9,13 @@ export interface Fias {
 }
 
 export async function getFiasAddress(address: string): Promise<Fias[]> {
-  return await http.get<Fias[]>(await getFiasAddresses(), {
+  return await http.get<Fias[]>(getFiasAddresses(), {
     params: { address }
   });
 }
 
 export async function getFiasOktmoAddress(cityName: string): Promise<Fias[]> {
-  return await http.get<Fias[]>(await getFiasOktmo(), {
+  return await http.get<Fias[]>(getFiasOktmo(), {
     params: { cityName }
   });
 }

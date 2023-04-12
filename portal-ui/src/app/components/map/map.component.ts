@@ -17,7 +17,7 @@ import { CrgExternalLayer, CrgLayer, CrgLayerType } from '../../services/gis/lay
 import { TreeItem } from '../../services/gis/projects/projects.models';
 import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
 import { mapSelectionService } from '../../services/map/map-selection.service';
-import { fetchBasemaps } from '../../services/gis/project-basemaps.service';
+import { fetchBasemaps } from '../../services/gis/project-basemaps/project-basemaps.service';
 import { setMapPositionToUrl } from '../../services/map/map-url.service';
 import { mapService } from '../../services/map/map.service';
 import { fromMobx } from '../../services/util/fromMobx';

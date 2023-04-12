@@ -234,3 +234,21 @@
     height: 100%;
   }
 </style>
+<script>
+  let _environmentRaw;
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', '/assets/config/environment.json', false);
+  xhr.onload = e => {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        _environmentRaw = JSON.parse(xhr.responseText);
+      } else {
+        console.error(xhr.statusText);
+      }
+    }
+  };
+  xhr.onerror = e => {
+    console.error(xhr.statusText);
+  };
+  xhr.send(null);
+</script>

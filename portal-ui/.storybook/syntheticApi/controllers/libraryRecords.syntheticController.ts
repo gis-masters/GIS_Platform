@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { InternalAxiosRequestConfig } from 'axios';
 
 import { LibraryRecordRaw } from '../../../src/app/services/data/docLibrary/docLibrary.models';
 import { queryObjects } from '../../../src/app/services/util/queryObjects';
@@ -10,7 +10,7 @@ import { parsePageOptions } from '../utils';
 class LibraryRecordsSyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)\/records.*$/;
 
-  get(config: AxiosRequestConfig): PageableResponse<LibraryRecordRaw> {
+  get(config: InternalAxiosRequestConfig): PageableResponse<LibraryRecordRaw> {
     const match = config.url?.match(this.pattern);
     const libraryTableName = match?.at(1) || '';
     const pageOptions = parsePageOptions(config);

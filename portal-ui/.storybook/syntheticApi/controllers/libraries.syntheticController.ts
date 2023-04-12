@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { InternalAxiosRequestConfig } from 'axios';
 
 import { DocumentLibrary } from '../../../src/app/services/data/docLibrary/docLibrary.models';
 import { PageableResources } from '../../../src/server-types/common-contracts';
@@ -10,7 +10,7 @@ import { parsePageOptions } from '../utils';
 class LibrariesSyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/document-libraries$/;
 
-  get(config: AxiosRequestConfig): PageableResources<Omit<DocumentLibrary, 'role'>> {
+  get(config: InternalAxiosRequestConfig): PageableResources<Omit<DocumentLibrary, 'role'>> {
     const pageOptions = parsePageOptions(config);
     console.log('pageOptions', pageOptions);
     const result = queryObjects(libraries, pageOptions);

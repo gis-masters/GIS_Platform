@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../../../services/api/server-urls.service';
 import { getLibraryRecord } from '../../../../services/data/docLibrary/docLibrary.service';
 import { LibraryRecord } from '../../../../services/data/docLibrary/docLibrary.models';
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
@@ -18,10 +17,10 @@ import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { getId } from '../../Adapter/Explorer-Adapter';
+import { docLibraryClient } from '../../../../services/data/docLibrary/docLibrary.client';
 
 @observer
 export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsProps> {
-  @observable private url?: string;
   @observable private schema?: Schema;
   @observable private currentRecord?: LibraryRecord;
   private operationId: symbol;
@@ -54,7 +53,8 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
   }
 
   render() {
-    const { className, type } = this.props;
+    const { className, type, item } = this.props;
+    const { payload } = item as ExplorerItemData<LibraryRecord>;
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
@@ -65,7 +65,7 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
             </ExplorerInfoDescItem>
 
             <PermissionsWidget
-              url={this.url}
+              url={docLibraryClient.getDocumentLibraryRecordRoleAssignmentUrl(payload.libraryTableName, payload.id)}
               title={this.currentRecord.title}
               itemEntityType={
                 type === ExplorerItemType.DOCUMENT
@@ -86,20 +86,13 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const url = await getDocumentLibraryRecordRoleAssignmentUrl(payload.libraryTableName, payload.id);
     const schema = await schemaService.getSchema(payload.schemaId);
     const record = await getLibraryRecord(payload.libraryTableName, payload.id);
 
     if (this.operationId === operationId) {
-      this.setUrl(url);
       this.setSchema(applyContentType(schema, payload.content_type_id));
       this.setCurrentRecord(record);
     }
-  }
-
-  @action
-  private setUrl(url: string) {
-    this.url = url;
   }
 
   @action

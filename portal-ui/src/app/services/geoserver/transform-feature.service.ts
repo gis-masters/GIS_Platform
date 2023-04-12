@@ -14,7 +14,7 @@ import { getVectorTableMultipleRecordsUrl, getWfsUrl } from '../api/server-urls.
 import { CrgLayer } from '../gis/layers/layers.models';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { extractFeatureId } from './feature.util';
-import { getEnvironment } from '../environment';
+import { environment } from '../environment';
 import { services } from '../services';
 import { http } from '../api/http.service';
 import { Mime } from '../util/Mime';
@@ -42,8 +42,7 @@ export class TransformFeatureService {
   async updateProperty(tableName: string, featureId: string, propName: string, propValue: string): Promise<string> {
     await usersService.fetchCurrentUser();
 
-    const { scratchWorkspaceName } = await getEnvironment();
-    const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
+    const workspace = `${environment.scratchWorkspaceName}_${currentUser.orgId}`;
 
     const payload = `<Transaction xmlns="http://www.opengis.net/wfs" service="WFS" version="1.1.0"
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -59,7 +58,7 @@ export class TransformFeatureService {
         </Update>
       </Transaction>`;
 
-    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
+    return http.post(getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
   }
 
   async multipleEdit(
@@ -70,7 +69,7 @@ export class TransformFeatureService {
   ): Promise<void> {
     const featureCutIds: string = features.map(feature => extractFeatureId(feature.id)).join(',');
 
-    const url = await getVectorTableMultipleRecordsUrl(datasetId, tableId, featureCutIds);
+    const url = getVectorTableMultipleRecordsUrl(datasetId, tableId, featureCutIds);
 
     await http.patch(url, properties);
   }
@@ -84,8 +83,7 @@ export class TransformFeatureService {
   ): Promise<string> {
     await usersService.fetchCurrentUser();
 
-    const { scratchWorkspaceName } = await getEnvironment();
-    const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
+    const workspace = `${environment.scratchWorkspaceName}_${currentUser.orgId}`;
 
     const featuresForUpdate: Feature<Geometry>[] = features.map(feature => {
       const calculated = FeatureUtil.calculateByFunction(
@@ -138,7 +136,7 @@ export class TransformFeatureService {
       .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '')
       .replace(/<Name>geometry<\/Name>/g, '<Name>shape</Name>');
 
-    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
+    return http.post(getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
   }
 
   async insertFeatures(
@@ -146,8 +144,7 @@ export class TransformFeatureService {
     { nativeCRS, dataset, tableName }: Partial<CrgLayer>
   ): Promise<string[]> {
     await usersService.fetchCurrentUser();
-    const { scratchWorkspaceName } = await getEnvironment();
-    const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
+    const workspace = `${environment.scratchWorkspaceName}_${currentUser.orgId}`;
 
     const options: WriteTransactionOptions = {
       featureNS: workspace,
@@ -177,7 +174,7 @@ export class TransformFeatureService {
       return [record.id];
     }
 
-    const responseXML = await http.post<string>(await getWfsUrl(), payload, {
+    const responseXML = await http.post<string>(getWfsUrl(), payload, {
       headers: { 'Content-Type': Mime.XML },
       responseType: 'text'
     });

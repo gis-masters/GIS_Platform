@@ -1,28 +1,50 @@
-import { getGroupsUrl, getGroupUrl, getGroupUserUrl } from '../../api/server-urls.service';
 import { http } from '../../api/http.service';
+import { Client } from '../../api/Client';
 
 import { CrgGroup, GroupData } from './groups.models';
 
-export async function _reqGetAllGroups(): Promise<CrgGroup[]> {
-  return http.getPaged<CrgGroup>(await getGroupsUrl());
+class AuthClient extends Client {
+  private static _instance: AuthClient;
+
+  static get instance(): AuthClient {
+    return this._instance || (this._instance = new this());
+  }
+
+  private getGroupsUrl(): string {
+    return this.getBaseUrl() + '/groups';
+  }
+
+  private getGroupUrl(groupId: number): string {
+    return `${this.getGroupsUrl()}/${groupId}`;
+  }
+
+  private getGroupUserUrl(groupId: number, userId: number): string {
+    return `${this.getGroupsUrl()}/${groupId}/users/${userId}`;
+  }
+
+  async getAllGroups(): Promise<CrgGroup[]> {
+    return http.getPaged<CrgGroup>(this.getGroupsUrl());
+  }
+
+  async createGroup(groupData: GroupData): Promise<CrgGroup> {
+    return http.post<CrgGroup>(this.getGroupsUrl(), groupData);
+  }
+
+  async updateGroup(group: CrgGroup): Promise<CrgGroup> {
+    return http.patch<CrgGroup>(this.getGroupUrl(group.id), group);
+  }
+
+  async deleteGroup(groupId: number): Promise<void> {
+    return http.delete(this.getGroupUrl(groupId));
+  }
+
+  async addUserToGroup(userId: number, groupId: number): Promise<void> {
+    return http.post(this.getGroupUserUrl(groupId, userId), {});
+  }
+
+  async removeUserFromGroup(userId: number, groupId: number): Promise<void> {
+    return http.delete(this.getGroupUserUrl(groupId, userId));
+  }
 }
 
-export async function _reqCreateGroup(groupData: GroupData): Promise<CrgGroup> {
-  return http.post<CrgGroup>(await getGroupsUrl(), groupData);
-}
-
-export async function _reqUpdateGroup(group: CrgGroup): Promise<CrgGroup> {
-  return http.patch<CrgGroup>(await getGroupUrl(group.id), group);
-}
-
-export async function _reqDeleteGroup(groupId: number): Promise<void> {
-  return http.delete(await getGroupUrl(groupId));
-}
-
-export async function _reqAddUserToGroup(userId: number, groupId: number): Promise<void> {
-  return http.post(await getGroupUserUrl(groupId, userId), {});
-}
-
-export async function _reqRemoveUserFromGroup(userId: number, groupId: number): Promise<void> {
-  return http.delete(await getGroupUserUrl(groupId, userId));
-}
+export const authClient = AuthClient.instance;

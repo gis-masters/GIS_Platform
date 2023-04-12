@@ -8,10 +8,10 @@ import { cloneDeep } from 'lodash';
 import { Dialog, DialogActions, DialogContent } from '@mui/material';
 
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
-import { generateRandomId } from '../../services/util/randomId';
 import { authService } from '../../services/auth/auth/auth.service';
+import { generateRandomId } from '../../services/util/randomId';
+import { environment } from '../../services/environment';
 import { services } from '../../services/services';
-import { env } from '../../stores/Env.store';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
 
@@ -94,8 +94,8 @@ export default class RestorePasswordForm extends Component {
                 </div>
                 <div className={cnRestorePassword('Message')}>
                   Внесите{' '}
-                  <a href={`mailto:${env.contactsEmail}`}>
-                    <i>{env.contactsEmail}</i>
+                  <a href={`mailto:${environment.contactsEmail}`}>
+                    <i>{environment.contactsEmail}</i>
                   </a>{' '}
                   в белый список, чтобы вы могли получать от нас электронные письма.
                 </div>

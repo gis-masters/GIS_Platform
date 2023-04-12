@@ -3,14 +3,7 @@ import { debounce } from 'lodash';
 import { allGroups } from '../../../stores/AllGroups.store';
 import { CrgUser } from '../users/users.models';
 
-import {
-  _reqAddUserToGroup,
-  _reqCreateGroup,
-  _reqDeleteGroup,
-  _reqGetAllGroups,
-  _reqRemoveUserFromGroup,
-  _reqUpdateGroup
-} from './groups.client';
+import { authClient } from './groups.client';
 import { CrgGroup, GroupData } from './groups.models';
 
 class GroupsService {
@@ -28,21 +21,21 @@ class GroupsService {
   }
 
   async getAll(): Promise<CrgGroup[]> {
-    return await _reqGetAllGroups();
+    return await authClient.getAllGroups();
   }
 
   async create(groupData: GroupData) {
-    await _reqCreateGroup(groupData);
+    await authClient.createGroup(groupData);
     void this.debouncedFetchGroupsListStore();
   }
 
   async update(group: CrgGroup) {
-    await _reqUpdateGroup(group);
+    await authClient.updateGroup(group);
     void this.debouncedFetchGroupsListStore();
   }
 
   async delete(group: CrgGroup) {
-    await _reqDeleteGroup(group.id);
+    await authClient.deleteGroup(group.id);
     void this.debouncedFetchGroupsListStore();
   }
 
@@ -53,12 +46,12 @@ class GroupsService {
   }
 
   async addUserToGroup(user: CrgUser, group: CrgGroup) {
-    await _reqAddUserToGroup(user.id, group.id);
+    await authClient.addUserToGroup(user.id, group.id);
     void this.debouncedFetchGroupsListStore();
   }
 
   async removeUserFromGroup(user: CrgUser, group: CrgGroup) {
-    await _reqRemoveUserFromGroup(user.id, group.id);
+    await authClient.removeUserFromGroup(user.id, group.id);
     void this.debouncedFetchGroupsListStore();
   }
 

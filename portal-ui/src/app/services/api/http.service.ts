@@ -45,8 +45,8 @@ class Http {
 
     this.axios.defaults.withCredentials = true;
 
-    this.axios.interceptors.request.use(async config => {
-      config.url = await replaceUrl(config.url);
+    this.axios.interceptors.request.use(config => {
+      config.url = replaceUrl(config.url);
 
       return config;
     });

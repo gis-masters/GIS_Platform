@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { InternalAxiosRequestConfig } from 'axios';
 
 import { RoleAssignmentBody } from '../../../src/app/services/data/permissions/permissions.models';
 import { PageableResponse } from '../../../src/app/services/models';
@@ -8,7 +8,7 @@ import { SyntheticController } from './_master';
 class LibraryRecordPermissionsSyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)\/records\/(\d*)\/roleAssignment$/;
 
-  get(config: AxiosRequestConfig): PageableResponse<RoleAssignmentBody> {
+  get(config: InternalAxiosRequestConfig): PageableResponse<RoleAssignmentBody> {
     if (!config.url) {
       throw err404(config);
     }

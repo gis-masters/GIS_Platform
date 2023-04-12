@@ -9,7 +9,7 @@ import { mapService } from './map.service';
 import { PrintMapDialogDate } from '../../components/PrintMapDialog/Date/PrintMapDialog-Date';
 import { mapStore } from '../../stores/Map.store';
 import { Legend } from '../../components/Legend/Legend';
-import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles.service';
+import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles/styles.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayerType, CrgVectorLayer } from '../gis/layers/layers.models';
 import { sleep } from '../util/sleep';

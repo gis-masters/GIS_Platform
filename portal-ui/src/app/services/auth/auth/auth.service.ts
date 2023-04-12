@@ -1,9 +1,9 @@
 import { AxiosError } from 'axios';
 
-import { getEnvironment } from '../../environment';
+import { environment } from '../../environment';
 import { http } from '../../api/http.service';
 
-import { _reqAuthenticate, _reqChangePassword, _reqLogout, _reqRegistration, _reqRestorePassword } from './auth.client';
+import { authClient } from './auth.client';
 import { AuthCredentials, AuthenticationResult, RegData } from './auth.models';
 
 http.axios.interceptors.request.use(config => {
@@ -38,13 +38,12 @@ class AuthService {
 
   async authenticate(credentials: AuthCredentials): Promise<AuthenticationResult> {
     try {
-      const result = await _reqAuthenticate(credentials);
+      const result = await authClient.authenticate(credentials);
 
       if (Array.isArray(result)) {
         return { ok: false, organizations: result };
       }
 
-      const environment = await getEnvironment();
       const sameOrigin =
         (!environment.server.host || environment.server.host === location.hostname) &&
         (!environment.server.port || environment.server.port === location.port) &&
@@ -67,27 +66,27 @@ class AuthService {
   }
 
   async logout() {
-    await _reqLogout();
+    await authClient.logout();
     localStorage.removeItem(TOKEN_KEY);
     location.href = '/';
   }
 
   // TODO: Создание новой орг в модуле аутентификации???
   async registration(regData: RegData): Promise<void> {
-    await _reqRegistration(regData);
+    await authClient.registration(regData);
   }
 
   async restorePassword(email: string) {
-    await _reqRestorePassword(email, location.origin);
+    await authClient.restorePassword(email, location.origin);
   }
 
   async changePassword(token: string, password: string) {
-    await _reqChangePassword(token, password);
+    await authClient.changePassword(token, password);
   }
 
   async isTokenExpired(token: string): Promise<boolean> {
     try {
-      await _reqChangePassword(token);
+      await authClient.changePassword(token);
 
       return false;
     } catch (error) {

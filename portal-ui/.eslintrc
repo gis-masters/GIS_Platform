@@ -35,6 +35,7 @@
     "__DEV__": true,
     "ClipboardItem": true,
     "navigator": true,
+    "_environmentRaw": true,
     "ExplorerItemPayloads": true,
     "ExplorerItemType": true
   },

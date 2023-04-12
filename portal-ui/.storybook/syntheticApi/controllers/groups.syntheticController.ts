@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { InternalAxiosRequestConfig } from 'axios';
 
 import { CrgGroup } from '../../../src/app/services/auth/groups/groups.models';
 import { queryObjects } from '../../../src/app/services/util/queryObjects';
@@ -10,7 +10,7 @@ import { PageableResponse } from '../../../src/app/services/models';
 class GroupsSyntheticController implements SyntheticController {
   pattern = /^.*\/groups$/;
 
-  get(config: AxiosRequestConfig): PageableResponse<CrgGroup> {
+  get(config: InternalAxiosRequestConfig): PageableResponse<CrgGroup> {
     if (!config.url) {
       throw err404(config);
     }

@@ -5,7 +5,7 @@ import { communicationService } from '../../communication.service';
 import { projectsService } from '../../gis/projects/projects.service';
 
 import { RoleAssignmentBody } from './permissions.models';
-import { _reqGetAllProjectsPermissions, _reqGetAllTablesAndDatasetsPermissions } from './permissions.client';
+import { permissionsClient } from './permissions.client';
 
 export interface PermissionsListItem<T = unknown> {
   entity: T;
@@ -59,7 +59,7 @@ class AllPermissionsService {
     await projectsService.initAllProjectsStore();
 
     try {
-      const response = await _reqGetAllTablesAndDatasetsPermissions();
+      const response = await permissionsClient.getAllTablesAndDatasetsPermissions();
       const tablesPermissionsHeap = response.filter(({ permissions }) => permissions?.length);
       allPermissions.setTablesAndDatasetsPermissionsHeap(tablesPermissionsHeap);
     } catch {
@@ -67,7 +67,7 @@ class AllPermissionsService {
     }
 
     try {
-      const projectPermissionsHeap = await _reqGetAllProjectsPermissions();
+      const projectPermissionsHeap = await permissionsClient.getAllProjectsPermissions();
       allPermissions.setProjectsPermissionsHeap(projectPermissionsHeap);
     } catch {
       throw new Error('Ошибка получения прав для списка проектов');

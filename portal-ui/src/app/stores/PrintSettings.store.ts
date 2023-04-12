@@ -1,7 +1,7 @@
 import { observable, computed, action, makeObservable } from 'mobx';
 import { cloneDeep } from 'lodash';
 
-import { StyleRule } from '../services/geoserver/styles.service';
+import { StyleRule } from '../services/geoserver/styles/styles.models';
 import { CrgVectorLayer } from '../services/gis/layers/layers.models';
 import { currentProject } from './CurrentProject.store';
 

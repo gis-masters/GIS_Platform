@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { getEnvironment } from '../../services/environment';
+import { environment } from '../../services/environment';
 
 @Component({
   selector: 'crg-change-password-form-page',
@@ -8,12 +8,7 @@ import { getEnvironment } from '../../services/environment';
   styleUrls: ['./change-password-form-page.component.scss']
 })
 export class ChangePasswordFormPageComponent {
-  backgroundImage: string;
-
-  async ngOnInit() {
-    const env = await getEnvironment();
-    this.backgroundImage = env.background;
-  }
+  backgroundImage = environment.background;
 
   setStyle(): Record<string, string> {
     return this.backgroundImage

@@ -1,50 +1,70 @@
 import { PageableResources } from '../../../../server-types/common-contracts';
-import {
-  getMessagesRegistriesDataUrl,
-  getMessagesRegistriesUrl,
-  getMessagesRegistryUrl
-} from '../../api/server-urls.service';
 import { preparePageOptions } from '../../api/http.utils';
 import { PageOptions } from '../../models';
 import { http } from '../../api/http.service';
+import { Client } from '../../api/Client';
 
 import { MessagesRegistriesMessages, MessagesRegistry } from './messagesRegistries.models';
 
-export async function _reqGetMessagesRegistry(tableName: string): Promise<MessagesRegistry> {
-  return http.get<MessagesRegistry>(await getMessagesRegistryUrl(tableName));
+class MessagesRegistriesClient extends Client {
+  private static _instance: MessagesRegistriesClient;
+
+  static get instance(): MessagesRegistriesClient {
+    return this._instance || (this._instance = new this());
+  }
+
+  private getMessagesRegistriesUrl(): string {
+    return this.getDataUrl() + '/reestrs';
+  }
+
+  private getMessagesRegistryUrl(tableName: string): string {
+    return this.getMessagesRegistriesUrl() + `/${tableName}`;
+  }
+
+  private getMessagesRegistriesDataUrl(tableName: string): string {
+    return this.getMessagesRegistryUrl(tableName) + '/records';
+  }
+
+  getMessagesRegistriesSchemaUrl(tableName: string): string {
+    return this.getMessagesRegistryUrl(tableName) + '/schemas';
+  }
+
+  async getMessagesRegistry(tableName: string): Promise<MessagesRegistry> {
+    return http.get<MessagesRegistry>(this.getMessagesRegistryUrl(tableName));
+  }
+
+  async getMessagesRegistries(pageOptions: PageOptions): Promise<PageableResources<MessagesRegistry>> {
+    const params = preparePageOptions(pageOptions, true);
+
+    return http.get<PageableResources<MessagesRegistry>>(this.getMessagesRegistriesUrl(), { params });
+  }
+
+  async getMessagesRegistriesWithParticularOne(
+    tableName: string,
+    pageOptions: PageOptions
+  ): Promise<[{ content: MessagesRegistry }[], number, number]> {
+    const params = preparePageOptions(pageOptions, true);
+    const objectRecognizer = (item: { content: MessagesRegistry }) => item?.content?.tableName === tableName;
+
+    return http.getPageWithObject<{ content: MessagesRegistry }>(
+      this.getMessagesRegistriesUrl(),
+      preparePageOptions(pageOptions, true),
+      objectRecognizer,
+      { params },
+      false
+    );
+  }
+
+  async getMessagesRegistriesData(
+    tableName: string,
+    pageOptions: PageOptions
+  ): Promise<PageableResources<MessagesRegistriesMessages>> {
+    const params = preparePageOptions(pageOptions, true);
+
+    return http.get<PageableResources<MessagesRegistriesMessages>>(this.getMessagesRegistriesDataUrl(tableName), {
+      params
+    });
+  }
 }
 
-export async function _reqGetMessagesRegistries(
-  pageOptions: PageOptions
-): Promise<PageableResources<MessagesRegistry>> {
-  const params = preparePageOptions(pageOptions, true);
-
-  return http.get<PageableResources<MessagesRegistry>>(await getMessagesRegistriesUrl(), { params });
-}
-
-export async function _reqGetMessagesRegistriesWithParticularOne(
-  tableName: string,
-  pageOptions: PageOptions
-): Promise<[{ content: MessagesRegistry }[], number, number]> {
-  const params = preparePageOptions(pageOptions, true);
-  const objectRecognizer = (item: { content: MessagesRegistry }) => item?.content?.tableName === tableName;
-
-  return http.getPageWithObject<{ content: MessagesRegistry }>(
-    await getMessagesRegistriesUrl(),
-    preparePageOptions(pageOptions, true),
-    objectRecognizer,
-    { params },
-    false
-  );
-}
-
-export async function _reqGetMessagesRegistriesData(
-  tableName: string,
-  pageOptions: PageOptions
-): Promise<PageableResources<MessagesRegistriesMessages>> {
-  const params = preparePageOptions(pageOptions, true);
-
-  return http.get<PageableResources<MessagesRegistriesMessages>>(await getMessagesRegistriesDataUrl(tableName), {
-    params
-  });
-}
+export const messagesRegistriesClient = MessagesRegistriesClient.instance;

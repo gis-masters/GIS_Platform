@@ -1,12 +1,10 @@
-import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { DownloadOutlined } from '@mui/icons-material';
-
 import { cn } from '@bem-react/classname';
 
-import { getDocLibraryRecordsUrl } from '../../../services/api/server-urls.service';
 import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { docLibraryClient } from '../../../services/data/docLibrary/docLibrary.client';
 
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -18,48 +16,13 @@ interface LibraryDocumentActionsDownloadProps {
   as: ActionsItemVariant;
 }
 
-@observer
-export class LibraryDocumentActionsDownload extends Component<LibraryDocumentActionsDownloadProps> {
-  @observable private url: string;
-
-  constructor(props: LibraryDocumentActionsDownloadProps) {
-    super(props);
-    makeObservable(this);
-  }
-
-  async componentDidMount() {
-    await this.buildUrl();
-  }
-
-  async componentDidUpdate(prevProps: Readonly<LibraryDocumentActionsDownloadProps>) {
-    if (prevProps.document.id !== this.props.document.id) {
-      await this.buildUrl();
-    }
-  }
-
-  render() {
-    const { as } = this.props;
-
-    return (
-      <ActionsItem
-        className={cnLibraryDocumentActionsDownload()}
-        title='Скачать'
-        as={as}
-        url={this.url}
-        download
-        icon={<DownloadOutlined />}
-      />
-    );
-  }
-
-  private async buildUrl() {
-    const { document } = this.props;
-
-    this.setUrl(`${await getDocLibraryRecordsUrl(document.libraryTableName)}/${document.id}/inner_path/download`);
-  }
-
-  @action
-  private setUrl(url: string) {
-    this.url = url;
-  }
-}
+export const LibraryDocumentActionsDownload: FC<LibraryDocumentActionsDownloadProps> = observer(({ as, document }) => (
+  <ActionsItem
+    className={cnLibraryDocumentActionsDownload()}
+    title='Скачать'
+    as={as}
+    url={`${docLibraryClient.getDocLibraryRecordUrl(document.libraryTableName, document.id)}/inner_path/download`}
+    download
+    icon={<DownloadOutlined />}
+  />
+));

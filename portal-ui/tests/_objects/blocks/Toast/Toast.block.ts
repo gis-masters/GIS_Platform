@@ -1,7 +1,4 @@
 import { Block } from '../../Block';
-import { env } from '../../../../src/app/stores/Env.store';
-
-declare const window: { env: typeof env };
 
 class ToastBlock extends Block {
   selectors = {
@@ -24,12 +21,6 @@ class ToastBlock extends Block {
   async produceError(): Promise<void> {
     await browser.executeAsync(callback => {
       setTimeout(() => {
-        window.env.setEnv({
-          ...window.env,
-          sendErrorsToTG: { http: false, https: false },
-          suppressToastErrors: { http: false, https: false }
-        });
-
         callback();
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

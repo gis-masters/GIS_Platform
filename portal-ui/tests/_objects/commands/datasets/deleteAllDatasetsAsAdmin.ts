@@ -1,19 +1,21 @@
-import {
-  _getAllVectorTablesInDataset,
-  _reqDeleteDataset,
-  _reqDeleteVectorTable,
-  _reqGetAllDatasets
-} from '../../../../src/app/services/data/vectorData/vectorData.client';
+import { vectorDataClient } from '../../../../src/app/services/data/vectorData/vectorData.client';
 import { requestAsAdmin } from '../requestAs';
 
 export async function deleteAllDatasetsAsAdmin(): Promise<void> {
-  const allDatasets = await requestAsAdmin(_reqGetAllDatasets);
+  const allDatasets = await requestAsAdmin(vectorDataClient.getAllDatasets.bind(vectorDataClient));
 
   for (const dataset of allDatasets) {
-    const tables = await requestAsAdmin(_getAllVectorTablesInDataset, dataset.identifier);
+    const tables = await requestAsAdmin(
+      vectorDataClient.getAllVectorTablesInDataset.bind(vectorDataClient),
+      dataset.identifier
+    );
     for (const table of tables) {
-      await requestAsAdmin(_reqDeleteVectorTable, dataset.identifier, table.identifier);
+      await requestAsAdmin(
+        vectorDataClient.deleteVectorTable.bind(vectorDataClient),
+        dataset.identifier,
+        table.identifier
+      );
     }
-    await requestAsAdmin(_reqDeleteDataset, dataset.identifier);
+    await requestAsAdmin(vectorDataClient.deleteDataset.bind(vectorDataClient), dataset.identifier);
   }
 }

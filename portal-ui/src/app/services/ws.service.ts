@@ -1,7 +1,7 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { publishReplay, refCount } from 'rxjs/operators';
-import SockJS from 'sockjs-client';
 import { Stomp, CompatClient } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
 
 import { ProcessType, WsImportModel } from './data/processes/processes.models';
 import { generateRandomId } from './util/randomId';
@@ -59,11 +59,11 @@ class WsService {
   private stompClient: CompatClient;
 
   private constructor() {
-    void this.connect();
+    this.connect();
   }
 
-  async connect() {
-    const socket = new SockJS(await getWsEndpointUrl());
+  private connect() {
+    const socket = new SockJS(getWsEndpointUrl());
 
     this.stompClient = Stomp.over(socket);
 
@@ -75,7 +75,7 @@ class WsService {
     });
   }
 
-  setConnected(connected: boolean) {
+  private setConnected(connected: boolean) {
     this.disabled = !connected;
   }
 

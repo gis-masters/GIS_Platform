@@ -1,18 +1,18 @@
 import { sleep } from '../../util/sleep';
 
 import { Process, ProcessableModel, ProcessResponse, ProcessStatus } from './processes.models';
-import { _reqCreateFileProcess, _reqCreateProcess, _reqGetProcess } from './processes.client';
+import { processesClient } from './processes.client';
 
 export async function getProcess(id: number): Promise<Process> {
-  return await _reqGetProcess(id);
+  return await processesClient.getProcess(id);
 }
 
 export async function createProcess(model: ProcessableModel): Promise<ProcessResponse> {
-  return await _reqCreateProcess(model);
+  return await processesClient.createProcess(model);
 }
 
 export async function createFileProcess(model: FormData): Promise<ProcessResponse> {
-  return _reqCreateFileProcess(model);
+  return processesClient.createFileProcess(model);
 }
 
 export async function awaitProcess(id: number, i = 0): Promise<void | Process> {
@@ -24,7 +24,7 @@ export async function awaitProcess(id: number, i = 0): Promise<void | Process> {
 
   await sleep(1000);
 
-  const res = await _reqGetProcess(id);
+  const res = await processesClient.getProcess(id);
 
   if (res.status === ProcessStatus.DONE) {
     return res;

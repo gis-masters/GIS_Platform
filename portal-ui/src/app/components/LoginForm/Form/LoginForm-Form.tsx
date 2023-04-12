@@ -3,9 +3,9 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { env } from '../../../stores/Env.store';
 import { PropertyType, Schema } from '../../../services/data/schema/schema.models';
 import { getEsiaUrl } from '../../../services/api/server-urls.service';
+import { environment } from '../../../services/environment';
 import { http } from '../../../services/api/http.service';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { ActionsLeft } from '../../ActionsLeft/ActionsLeft';
@@ -66,7 +66,7 @@ export class LoginFormForm extends Component<LoginFormFormProps> {
               <Button type='submit' color='primary' disabled={this.esiaLoading}>
                 Войти
               </Button>
-              {!!env.esia?.length && (
+              {!!environment.esia?.length && (
                 <Button onClick={this.authWithEsia} loading={this.esiaLoading}>
                   Войти с помощью ГОСУСЛУГ
                 </Button>
@@ -87,6 +87,6 @@ export class LoginFormForm extends Component<LoginFormFormProps> {
   private async authWithEsia() {
     this.esiaLoading = true;
 
-    window.location.href = await http.get<string>(await getEsiaUrl(), { cache: { disabled: true } });
+    window.location.href = await http.get<string>(getEsiaUrl(), { cache: { disabled: true } });
   }
 }

@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 
-import { getEnvironment } from '../../environment';
+import { environment } from '../../environment';
 import { GeoUtil } from '../../util/GeoUtil';
 import {
   getGeoserverImportsUrl,
@@ -52,7 +52,7 @@ export async function doWorkImport(
   projectId: number,
   targetSchema: string
 ): Promise<Process> {
-  const url = await getApiImportUrl(projectId);
+  const url = getApiImportUrl(projectId);
   const payload = {
     wsUiId: wsService.getId(),
     targetSchema,
@@ -68,14 +68,14 @@ export async function fetchCurrentImport(importId: string): Promise<void> {
 }
 
 export async function getById(id: string): Promise<ScratchImport> {
-  const url = await getGeoserverImportUrl(id);
+  const url = getGeoserverImportUrl(id);
   const importStart = await http.get<InputStartResponseDto>(url);
 
   return importStart.import;
 }
 
 export async function checkImportStatus(): Promise<void> {
-  const { import: scratch } = await http.get<InputStartResponseDto>(await getGeoserverImportUrl(currentImport.id), {
+  const { import: scratch } = await http.get<InputStartResponseDto>(getGeoserverImportUrl(currentImport.id), {
     cache: { disabled: true }
   });
   currentImport.fit({ scratch });
@@ -83,7 +83,7 @@ export async function checkImportStatus(): Promise<void> {
 }
 
 async function getImportLayer(task: ImportTaskShort): Promise<ImportLayer> {
-  return http.get<ImportLayer>(await getGeoserverImportTaskLayerUrl(currentImport.id, task.id));
+  return http.get<ImportLayer>(getGeoserverImportTaskLayerUrl(currentImport.id, task.id));
 }
 
 export async function getAllImportLayers(): Promise<ImportLayer[]> {
@@ -97,8 +97,7 @@ export async function initScratchImport(file: File): Promise<ScratchImport> {
   currentImport.reset({ file });
   await usersService.fetchCurrentUser();
 
-  const { scratchWorkspaceName } = await getEnvironment();
-  const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
+  const workspace = `${environment.scratchWorkspaceName}_${currentUser.orgId}`;
   const storage = workspace + '_store';
 
   const payload: ImportRequestData = {
@@ -120,11 +119,11 @@ export async function initScratchImport(file: File): Promise<ScratchImport> {
   }
 
   try {
-    const { import: scratchImport } = await http.post<InputStartResponseDto>(await getGeoserverImportsUrl(), payload);
+    const { import: scratchImport } = await http.post<InputStartResponseDto>(getGeoserverImportsUrl(), payload);
 
     currentImport.fit({ scratch: scratchImport });
 
-    await uploadTasks(await getGeoserverImportUrl(scratchImport.id), file);
+    await uploadTasks(getGeoserverImportUrl(scratchImport.id), file);
 
     return scratchImport;
   } catch (error) {
@@ -162,7 +161,7 @@ async function uploadToScratch() {
   // придти и через 10 минут... Наш gateway оборвет запрос через 10 сек, поэтому ошибку по таймауту 504 не считаем
   // ошибкой, повторы здесь также не нужны.
   try {
-    return await http.post(`${await getGeoserverImportsUrl()}/${currentImport.id}`, {});
+    return await http.post(`${getGeoserverImportsUrl()}/${currentImport.id}`, {});
   } catch (error) {
     if ((error as AxiosError).response?.status !== 504) {
       currentImport.setError();
@@ -180,7 +179,7 @@ export async function updateProgress(): Promise<void> {
 
   if (firstTask && firstTask.progress) {
     currentImport.setProgress(
-      await http.get<ImportTaskProgress>(await getGeoserverImportTaskProgressUrl(currentImport.id, firstTask.id), {
+      await http.get<ImportTaskProgress>(getGeoserverImportTaskProgressUrl(currentImport.id, firstTask.id), {
         cache: { disabled: true }
       })
     );
@@ -188,14 +187,12 @@ export async function updateProgress(): Promise<void> {
 }
 
 async function getFullImportTask(shortTask: ImportTaskShort): Promise<ImportTaskFull> {
-  const { task } = await http.get<{ task: ImportTaskFull }>(
-    await getGeoserverImportTaskUrl(currentImport.id, shortTask.id)
-  );
+  const { task } = await http.get<{ task: ImportTaskFull }>(getGeoserverImportTaskUrl(currentImport.id, shortTask.id));
 
   return task;
 }
 
 export async function deleteTask(task: ImportTaskShort): Promise<void> {
-  await http.delete(await getGeoserverImportTaskUrl(currentImport.id, task.id));
+  await http.delete(getGeoserverImportTaskUrl(currentImport.id, task.id));
   await checkImportStatus();
 }

@@ -110,7 +110,7 @@ export async function getChildren(
         details = <>Недостаточно прав для просмотра элементов {getTitle(item)}</>;
       }
 
-      services.logger.error(message, error);
+      services.logger?.error(message, error);
       Toast.warn({ message, details });
 
       return [[], 1];

@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 import { boundMethod } from 'autobind-decorator';
 
-import { sendToSed } from '../../../services/crg/integration.service';
+import { sendToSed } from '../../../services/data/docLibrary/docLibrary.service';
 import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';

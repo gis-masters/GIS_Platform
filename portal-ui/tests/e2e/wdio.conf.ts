@@ -1,6 +1,7 @@
 import type { Options } from '@wdio/types';
 
 import { config as baseConfig } from '../wdio.conf';
+import { getEnvironment } from '../_objects/commands/getEnvironment';
 
 export const config: Options.Testrunner = {
   ...baseConfig,
@@ -9,7 +10,11 @@ export const config: Options.Testrunner = {
 
   specs: ['./**/*.feature'],
 
-  afterScenario: async function () {
+  async beforeStep() {
+    await getEnvironment();
+  },
+
+  async afterScenario() {
     await browser.reloadSession();
   }
 };

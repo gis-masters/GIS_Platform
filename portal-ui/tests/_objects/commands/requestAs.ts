@@ -2,7 +2,6 @@
 
 import { AxiosError } from 'axios';
 
-import { _reqAuthenticate } from '../../../src/app/services/auth/auth/auth.client';
 import { http } from '../../../src/app/services/api/http.service';
 import { getTestUser, TestUser } from './auth/testUsers';
 import { fetchUserToken } from './auth/fetchUserToken';
@@ -47,7 +46,7 @@ http.axios.interceptors.request.use(config => {
     }
   }
 
-  if (currentUser) {
+  if (currentUser?.token) {
     console.log(colors.gray, 'USER:', colors.none, currentUser.email);
 
     config.headers.Authorization = 'Bearer ' + currentUser?.token;

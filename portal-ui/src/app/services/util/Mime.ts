@@ -4,6 +4,7 @@ export enum Mime {
   FORM_URLENCODED = 'application/x-www-form-urlencoded; charset=utf-8',
   SLD = 'application/vnd.ogc.sld+xml',
   XML = 'application/xml',
+  TEXT_XML = 'text/xml',
   TEXT = 'text/plain',
   ZIP = 'application/zip, application/x-zip-compressed, multipart/x-zip',
   FORM_DATA = 'multipart/form-data'

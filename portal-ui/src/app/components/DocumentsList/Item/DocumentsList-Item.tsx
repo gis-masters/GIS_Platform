@@ -7,10 +7,10 @@ import { boundMethod } from 'autobind-decorator';
 import { AssignmentOutlined, Delete, DeleteOutline } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@mui/material';
 
+import { EditedField } from '../../../services/data/schema/schemaOld.models';
+import { environment } from '../../../services/environment';
 import { http } from '../../../services/api/http.service';
 import { services } from '../../../services/services';
-import { EditedField } from '../../../services/data/schema/schemaOld.models';
-import { getBaseUrl } from '../../../services/api/server-urls.service';
 import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
@@ -46,8 +46,9 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
     makeObservable(this);
   }
 
-  async componentDidMount() {
-    const baseUrl = await getBaseUrl();
+  componentDidMount() {
+    const { host, path, port, protocol } = environment.server;
+    const baseUrl = `${protocol}//${host}${port && ':'}${port}${path}`;
     const { id } = this.props.document;
     const { resourcePath } = this.props.editedField.property;
 

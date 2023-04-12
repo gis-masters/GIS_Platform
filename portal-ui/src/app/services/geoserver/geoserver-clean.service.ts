@@ -11,7 +11,7 @@ export interface FeatureTypeHref {
 
 export async function getFeatureTypesFromScratchDatastore(): Promise<FeatureTypeHref[]> {
   const { workspaceName, datastoreName } = currentUser;
-  const url = await getGeoserverFeatureTypesUrl(workspaceName, datastoreName);
+  const url = getGeoserverFeatureTypesUrl(workspaceName, datastoreName);
 
   try {
     const response = await http.get<{ featureTypes: { featureType: FeatureTypeHref[] } }>(url, {
@@ -29,7 +29,7 @@ export async function getFeatureTypesFromScratchDatastore(): Promise<FeatureType
 
 export async function deleteFeatureTypeFromScratchDatastore(feature: string): Promise<void> {
   const { workspaceName, datastoreName } = currentUser;
-  const url = await getGeoserverFeatureTypeUrl(workspaceName, datastoreName, feature);
+  const url = getGeoserverFeatureTypeUrl(workspaceName, datastoreName, feature);
 
   try {
     await http.delete(url, { params: { recurse: 'true' } });

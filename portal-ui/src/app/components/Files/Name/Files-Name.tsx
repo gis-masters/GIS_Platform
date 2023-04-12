@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
 import { saveAs } from 'file-saver';
 import { boundMethod } from 'autobind-decorator';
 
-import { getFileDownloadUrl } from '../../../services/api/server-urls.service';
 import { getReadableFileSize } from '../../../services/data/files/files.util';
+import { filesClient } from '../../../services/data/files/files.client';
 import { FileInfo } from '../../../services/data/files/files.models';
 import { LookupName } from '../../Lookup/Name/Lookup-Name';
 import { Link } from '../../Link/Link';
@@ -31,17 +30,6 @@ interface FilesNameProps {
 
 @observer
 export class FilesName extends Component<FilesNameProps> {
-  @observable private url = '';
-
-  constructor(props: FilesNameProps) {
-    super(props);
-    makeObservable(this);
-  }
-
-  async componentDidMount() {
-    this.setUrl(await getFileDownloadUrl(this.props.item.id));
-  }
-
   render() {
     const { item, baseName, ext, disabled, numerous } = this.props;
 
@@ -62,7 +50,7 @@ export class FilesName extends Component<FilesNameProps> {
           <Link
             className={cnFilesNameLink()}
             disabled={disabled}
-            href={this.url}
+            href={filesClient.getFileDownloadUrl(item.id)}
             download={item.title}
             onClick={this.clickHandler}
           >
@@ -82,10 +70,5 @@ export class FilesName extends Component<FilesNameProps> {
       e.preventDefault();
       saveAs(file, item.title);
     }
-  }
-
-  @action
-  private setUrl(url: string) {
-    this.url = url;
   }
 }

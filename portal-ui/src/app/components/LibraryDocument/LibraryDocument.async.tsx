@@ -13,7 +13,7 @@ import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models'
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
 import { getLibraryRecordBreadcrumbs } from '../DataManagement/DataManagement.utils';
-import { getDocumentLibraryRecordRoleAssignmentUrl } from '../../services/api/server-urls.service';
+import { docLibraryClient } from '../../services/data/docLibrary/docLibrary.client';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
@@ -29,7 +29,6 @@ export interface LibraryDocumentProps extends IClassNameProps {
 @observer
 export default class LibraryDocument extends Component<LibraryDocumentProps> {
   @observable private schema: Schema;
-  @observable private documentRoleAssignmentUrl: string;
   @observable private breadcrumbsItems: BreadcrumbsItemData[] = [];
 
   constructor(props: LibraryDocumentProps) {
@@ -39,7 +38,6 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
 
   async componentDidMount() {
     await this.fetchSchema();
-    await this.fetchDocumentPermissionUrl();
 
     if (document) {
       await this.getBreadcrumbsItems();
@@ -62,14 +60,12 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
           {formatDate(document.created_at, 'LL')}
         </div>
 
-        {this.documentRoleAssignmentUrl && (
-          <PermissionsWidget
-            url={this.documentRoleAssignmentUrl}
-            title={document.title}
-            itemEntityType={ExplorerItemEntityTypeTitle.DOCUMENT}
-            disabled={!(currentUser.isAdmin || document.role === Role.OWNER)}
-          />
-        )}
+        <PermissionsWidget
+          url={docLibraryClient.getDocumentLibraryRecordRoleAssignmentUrl(document.libraryTableName, document.id)}
+          title={document.title}
+          itemEntityType={ExplorerItemEntityTypeTitle.DOCUMENT}
+          disabled={!(currentUser.isAdmin || document.role === Role.OWNER)}
+        />
       </div>
     );
   }
@@ -84,20 +80,9 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
     });
   }
 
-  private async fetchDocumentPermissionUrl(): Promise<void> {
-    const { document } = this.props;
-    const url = await getDocumentLibraryRecordRoleAssignmentUrl(document.libraryTableName, document.id);
-    this.setDocumentRoleAssignmentUrl(url);
-  }
-
   @action.bound
   private setSchema(schema: Schema) {
     this.schema = schema;
-  }
-
-  @action.bound
-  private setDocumentRoleAssignmentUrl(url: string) {
-    this.documentRoleAssignmentUrl = url;
   }
 
   private async getBreadcrumbsItems() {

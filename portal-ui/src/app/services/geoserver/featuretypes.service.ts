@@ -12,7 +12,7 @@ export async function getFeatureType({
   type
 }: CrgVectorLayer): Promise<FeatureType> {
   const workspace = complexName.split(':')[0];
-  const url = await getGeoserverFeatureTypeInfoUrl(
+  const url = getGeoserverFeatureTypeInfoUrl(
     workspace,
     type === CrgLayerType.VECTOR ? dataset : dataStoreName,
     tableName

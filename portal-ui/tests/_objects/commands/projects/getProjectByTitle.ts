@@ -1,9 +1,13 @@
 import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
 import { requestAsAdmin } from '../requestAs';
-import { _reqGetProjects } from '../../../../src/app/services/gis/projects/projects.client';
+import { projectsClient } from '../../../../src/app/services/gis/projects/projects.client';
 
 export async function getProjectByTitle(title: string): Promise<CrgProject> {
-  const result = await requestAsAdmin(_reqGetProjects, { page: 0, pageSize: 2, filter: { name: title } });
+  const result = await requestAsAdmin(projectsClient.getProjects.bind(projectsClient), {
+    page: 0,
+    pageSize: 2,
+    filter: { name: title }
+  });
 
   const projects = result._embedded?.projects;
 

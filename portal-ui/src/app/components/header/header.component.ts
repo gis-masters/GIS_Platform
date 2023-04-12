@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 
-import { getEnvironment, Platform } from '../../services/environment';
+import { Platform, environment } from '../../services/environment';
 
 @Component({
   selector: 'crg-header',
@@ -14,10 +14,9 @@ export class HeaderComponent {
 
   constructor(private router: Router) {}
 
-  async ngOnInit() {
-    const env = await getEnvironment();
-    this.envPlatform = env.platform;
-    this.envRegistration = !!env.registration?.length;
+  ngOnInit() {
+    this.envPlatform = environment.platform;
+    this.envRegistration = !!environment.registration;
   }
 
   how(): void {

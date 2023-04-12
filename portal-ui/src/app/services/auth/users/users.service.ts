@@ -6,14 +6,7 @@ import { currentUser } from '../../../stores/CurrentUser.store';
 import { organizationSettingsService } from '../../organization-settings';
 import { services } from '../../services';
 
-import {
-  _reqAllUsers,
-  _reqCreateUser,
-  _reqDeleteUser,
-  _reqEditUser,
-  _reqGetCurrentUser,
-  _reqInviteUser
-} from './users.client';
+import { usersClient } from './users.client';
 import { CrgUser, CrgUserRaw, NewUserData } from './users.models';
 
 class UsersService {
@@ -32,7 +25,7 @@ class UsersService {
 
   async fetchCurrentUser(autoLogin?: boolean) {
     try {
-      const userInfo = await _reqGetCurrentUser();
+      const userInfo = await usersClient.getCurrentUser();
       if (userInfo.id !== currentUser.id) {
         currentUser.setOrgInfo(userInfo);
       }
@@ -42,7 +35,7 @@ class UsersService {
 
     if (autoLogin) {
       try {
-        return await _reqGetCurrentUser();
+        return await usersClient.getCurrentUser();
       } catch (error) {
         services.logger.error((error as AxiosError).message);
       }
@@ -52,7 +45,7 @@ class UsersService {
   }
 
   async getAll(): Promise<CrgUser[]> {
-    const rawUsers = await _reqAllUsers();
+    const rawUsers = await usersClient.allUsers();
 
     return rawUsers.map(this.fixAuthorities);
   }
@@ -65,22 +58,22 @@ class UsersService {
   }
 
   async invite(email: string) {
-    await _reqInviteUser(email);
+    await usersClient.inviteUser(email);
     void this.debouncedFetchUsersListStore();
   }
 
   async create(userData: NewUserData) {
-    await _reqCreateUser(userData);
+    await usersClient.createUser(userData);
     void this.debouncedFetchUsersListStore();
   }
 
   async edit(patch: Partial<CrgUser>, id: number) {
-    await _reqEditUser(patch, id);
+    await usersClient.editUser(patch, id);
     void this.debouncedFetchUsersListStore();
   }
 
   async delete(user: CrgUser) {
-    await _reqDeleteUser(user.id);
+    await usersClient.deleteUser(user.id);
     void this.debouncedFetchUsersListStore();
   }
 

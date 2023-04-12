@@ -16,7 +16,7 @@ import { pluralize } from 'numeralize-ru';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
-import { getBasemapConnections } from '../../../services/gis/project-basemaps.service';
+import { getBasemapConnections } from '../../../services/gis/project-basemaps/project-basemaps.service';
 import { deleteBasemap } from '../../../services/data/basemaps/basemaps.service';
 import { Basemap } from '../../../services/data/basemaps/basemaps.models';
 import { Button } from '../../Button/Button';
@@ -85,7 +85,7 @@ export class BasemapActionsDelete extends Component<BasemapActionsDeleteProps> {
 
   private async fetchProjectsCount() {
     const { basemap } = this.props;
-    const connections = await getBasemapConnections(basemap.id);
+    const connections = await getBasemapConnections(basemap);
     this.setProjectsCount(connections.length);
   }
 

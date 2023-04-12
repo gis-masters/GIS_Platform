@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { getDatasetRoleAssignmentsUrl } from '../../../../services/api/server-urls.service';
+import { permissionsClient } from '../../../../services/data/permissions/permissions.client';
 import { getDataset } from '../../../../services/data/vectorData/vectorData.service';
 import { Dataset } from '../../../../services/data/vectorData/vectorData.models';
 import { Role } from '../../../../services/data/permissions/permissions.models';
@@ -62,7 +62,7 @@ class ExplorerWidgetsTypeDataset extends Component<ExplorerWidgetsProps> {
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const url = await getDatasetRoleAssignmentsUrl(payload.identifier);
+    const url = permissionsClient.getDatasetRoleAssignmentsUrl(payload.identifier);
     const dataset = await getDataset(payload.identifier);
 
     if (this.operationId === operationId) {
