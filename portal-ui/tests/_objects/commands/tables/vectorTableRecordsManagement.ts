@@ -1,23 +1,19 @@
 import { NewWfsFeature, WfsFeature } from '../../../../src/app/services/geoserver/wfs/wfs.models';
-import { createFeature } from '../../../../src/app/services/data/vectorData/vectorData.service';
+import { requestAs } from '../requestAs';
+import { vectorDataClient } from '../../../../src/app/services/data/vectorData/vectorData.client';
+import { getTestUser } from '../auth/testUsers';
 
-declare const window: {
-  createFeature: typeof createFeature;
-};
-
-export async function createRecord(
-  datasetId: string,
-  vectorTableId: string,
-  feature: NewWfsFeature
+export async function createRecordAs(
+  datasetIdentifier: string,
+  vectorTableIdentifier: string,
+  feature: NewWfsFeature,
+  username: string
 ): Promise<WfsFeature> {
-  return await browser.executeAsync(
-    async (datasetId, vectorTableId, feature, callback) => {
-      const record = await window.createFeature(datasetId, vectorTableId, feature);
-
-      callback(record);
-    },
-    datasetId,
-    vectorTableId,
+  return await requestAs(
+    getTestUser(username),
+    vectorDataClient.createFeature.bind(vectorDataClient),
+    datasetIdentifier,
+    vectorTableIdentifier,
     feature
   );
 }

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable, IReactionDisposer, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { FilterBySelection, MapSelectionTypes, mapStore } from '../../../stores/Map.store';
+import { FilterQuery, getFieldFilterValue } from '../../../services/util/filterObjects';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { communicationService } from '../../../services/communication.service';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
@@ -12,7 +13,6 @@ import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { Schema } from '../../../services/data/schema/schema.models';
-import { FilterQuery } from '../../../services/util/filterObjects';
 import { SortParams } from '../../../services/util/sortObjects';
 import { mapService } from '../../../services/map/map.service';
 import { XTable, XTableInvoke } from '../../XTable/XTable';
@@ -41,6 +41,8 @@ interface AttributesTableProps {
   getData(pageOptions: PageOptions): Promise<[AttributesTableRecord[], number]>;
   invoke: XTableInvoke;
 }
+
+export const FILTER_BY_SELECTION = 'filterBySelection';
 
 @observer
 export class AttributesTable extends Component<AttributesTableProps> {
@@ -116,7 +118,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
 
   @computed
   private get filterBySelectionEnabled(): boolean {
-    return this.pageOptions.filter?.filterBySelection !== FilterBySelection.DISABLED;
+    return getFieldFilterValue(this.pageOptions.filter, FILTER_BY_SELECTION) !== FilterBySelection.DISABLED;
   }
 
   private rowIdGetter({ cutId }: AttributesTableRecord) {

@@ -1,13 +1,15 @@
 import { action, computed, observable, reaction, makeObservable } from 'mobx';
+import { cloneDeep } from 'lodash';
 import sift from 'sift';
 
 import { route, Pages } from './Route.store';
-import { attributesTableStore } from './AttributesTable.store';
-import { MeasureItem, MeasureMode } from '../services/map/map-measure.service';
-import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
-import { prepareLike } from '../services/util/filterObjects';
-import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 import { flags } from '../services/feature-flags';
+import { attributesTableStore } from './AttributesTable.store';
+import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
+import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
+import { MeasureItem, MeasureMode } from '../services/map/map-measure.service';
+import { FILTER_BY_SELECTION } from '../components/Attributes/Table/Attributes-Table';
+import { getFieldFilterValue, modifyFieldFilterValue, prepareLike } from '../services/util/filterObjects';
 
 export enum MapSelectionTypes {
   ADD,
@@ -127,9 +129,12 @@ class MapStore {
       const [tableName] = feature.id.split('.');
 
       if (!filtersByLayers[tableName]) {
-        const { filterBySelection, ...attributeTableFilter } = attributesTableStore.getLayerFilter(tableName, true);
+        const filter = cloneDeep(attributesTableStore.getLayerFilter(tableName, true));
+        const filterBySelection = getFieldFilterValue(filter, FILTER_BY_SELECTION);
+        modifyFieldFilterValue(filter, FILTER_BY_SELECTION);
+
         filtersByLayers[tableName] = {
-          tester: Object.keys(attributeTableFilter).length ? sift(prepareLike(attributeTableFilter)) : undefined,
+          tester: Object.keys(filter).length ? sift(prepareLike(filter)) : undefined,
           negativeIds: filterBySelection === FilterBySelection.ONLY_NOT_SELECTED
         };
       }

@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import { cloneDeep, debounce } from 'lodash';
 import { reaction } from 'mobx';
 import { Map, View } from 'ol';
 import Feature from 'ol/Feature';
@@ -47,6 +47,8 @@ import { getMap } from '../geoserver/wms/wms.service';
 import { cqlBuild } from '../util/cqlBuild';
 import { sleep } from '../util/sleep';
 import { services } from '../services';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../util/filterObjects';
+import { FILTER_BY_SELECTION } from '../../components/Attributes/Table/Attributes-Table';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -92,19 +94,19 @@ class MapService {
   modificationDisabled = new Emitter();
   modificationDone = new Emitter<Geometry>();
 
-  // Подложка
-  private basemapLayer = new TileLayer();
-
   map: Map;
   view: View;
   scaleLine: ScaleLine;
-  private markersSource: VectorSource<SimpleGeometry>;
-
-  private zoom: number;
-  private center: number[];
-
-  private draftStyle: Style;
   draftSource: VectorSource<SimpleGeometry>;
+
+  // Подложка
+  private basemapLayer = new TileLayer();
+
+  private markersSource: VectorSource<SimpleGeometry>;
+  private zoom: number;
+
+  private center: number[];
+  private draftStyle: Style;
   private draftSourceModify?: Modify;
   private draftSourceDraw?: Draw;
   private drawHandler: (e: DrawEvent) => void;
@@ -353,7 +355,10 @@ class MapService {
       };
 
       const { tableName } = layers[0];
-      const { filterBySelection, ...filter } = attributesTableStore.getLayerFilter(tableName);
+      const filter = cloneDeep(attributesTableStore.getLayerFilter(tableName));
+      const filterBySelection = getFieldFilterValue(filter, FILTER_BY_SELECTION);
+      modifyFieldFilterValue(filter, FILTER_BY_SELECTION);
+
       if (Object.keys(filter).length) {
         params.CQL_FILTER = cqlBuild(filter);
       }

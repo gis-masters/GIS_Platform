@@ -242,6 +242,17 @@ export function getPreparedFeatures(title: string, schema?: Schema): NewWfsFeatu
 
       break;
     }
+    case 'данные в количестве 628 для тестирования фильтрации': {
+      if (!schema) {
+        throw new Error('Для этого сценария нужно передать схему');
+      }
+
+      generateRandomFeatures(schema, 628).forEach(feature => {
+        features.push(feature);
+      });
+
+      break;
+    }
     default: {
       throw new Error('Указан не существующий ключ для шаблонных фичей');
     }

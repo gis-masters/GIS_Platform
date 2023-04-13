@@ -98,19 +98,9 @@ Then(
 );
 
 Then(
-  'фильтрация в атрибутивной таблице для атрибута {string} соответствует ожидаемому: {string}',
-  async function (colTitle: string, expectedAsString: string) {
-    await browser.waitUntil(async () => {
-      const values = await attributesBlock.getColValues(colTitle);
-
-      return isEqual(values, expectedAsString.split(', ').filter(Boolean));
-    }, waitUntilOptions);
-  }
-);
-
-Then(
   'результат фильтрации в атрибутивной таблице по полю {string} соответствует ожидаемому {string}',
   async function (colTitle: string, expectedAsString: string) {
+    await browser.pause(200); // бага в browser.waitUntil
     await browser.waitUntil(async () => {
       const values = await attributesBlock.getColValues(colTitle);
 

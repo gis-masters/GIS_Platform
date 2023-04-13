@@ -6,11 +6,13 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
+import { removeFieldFilter } from '../../../services/util/filterObjects';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
+import { FILTER_BY_SELECTION } from '../Table/Attributes-Table';
 import { PageOptions } from '../../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-CheckMaster.scss';
@@ -121,7 +123,9 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
   private async getAllFeatures(): Promise<WfsFeature[]> {
     const { layer, pageOptions } = this.props;
     const options = cloneDeep(pageOptions);
-    delete options.filter?.filterBySelection;
+
+    removeFieldFilter(options.filter, FILTER_BY_SELECTION);
+
     const [features] = await getFeatures(layer, { ...options, page: 0, pageSize: mapStore.selectingFeaturesLimit });
 
     return features;

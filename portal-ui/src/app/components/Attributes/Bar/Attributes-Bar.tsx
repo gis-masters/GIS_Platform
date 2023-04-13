@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable, computed } from 'mobx';
+import { cloneDeep } from 'lodash';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
+import { action, observable, makeObservable, computed } from 'mobx';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { FilterBySelection, mapStore } from '../../../stores/Map.store';
@@ -22,15 +23,16 @@ import { AttributesBarHead } from '../BarHead/Attributes-BarHead';
 import { AttributesCounter } from '../Counter/Attributes-Counter';
 import { AttributesBarTitle } from '../BarTitle/Attributes-BarTitle';
 import { AttributesBarClose } from '../BarClose/Attributes-BarClose';
-import { extractFeatureId } from '../../../services/geoserver/feature.util';
 import { AttributesBarHeadGap } from '../BarHeadGap/Attributes-BarHeadGap';
 import { AttributesBarActions } from '../BarActions/Attributes-BarActions';
+import { extractFeatureId } from '../../../services/geoserver/feature.util';
 import { AttributesBarMinimize } from '../BarMinimize/Attributes-BarMinimize';
 import { AttributesCheckMaster } from '../CheckMaster/Attributes-CheckMaster';
 import { AttributesCheckFilter } from '../CheckFilter/Attributes-CheckFilter';
-import { AttributesTable, AttributesTableRecord } from '../Table/Attributes-Table';
 import { AttributesFiltersEnabler } from '../FiltersEnabler/Attributes-FiltersEnabler';
 import { AttributesBarRightActions } from '../BarRightActions/Attributes-BarRightActions';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filterObjects';
+import { AttributesTable, AttributesTableRecord, FILTER_BY_SELECTION } from '../Table/Attributes-Table';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Bar.scss';
 
@@ -143,7 +145,10 @@ export class AttributesBar extends Component<AttributesBarProps> {
   @boundMethod
   private async getData(pageOptions: PageOptions): Promise<[AttributesTableRecord[], number]> {
     const { layer } = this.props;
-    const { filterBySelection, ...filter } = pageOptions.filter || {};
+    const filter = cloneDeep(pageOptions.filter || {});
+    const filterBySelection = getFieldFilterValue(filter, FILTER_BY_SELECTION);
+    modifyFieldFilterValue(filter, FILTER_BY_SELECTION);
+
     const featureIds =
       filterBySelection && filterBySelection !== FilterBySelection.DISABLED
         ? mapStore.selectedFeaturesByTableName[layer.tableName]?.map(({ id }) => id)
