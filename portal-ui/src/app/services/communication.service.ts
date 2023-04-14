@@ -1,5 +1,5 @@
 import { CrgProject } from './gis/projects/projects.models';
-import { CrgVectorLayer } from './gis/layers/layers.models';
+import { CrgLayer, CrgVectorLayer } from './gis/layers/layers.models';
 import { Dataset, VectorTable } from './data/vectorData/vectorData.models';
 import { LibraryRecord } from './data/docLibrary/docLibrary.models';
 import { Basemap } from './data/basemaps/basemaps.models';
@@ -45,6 +45,7 @@ class CommunicationService {
   projectUpdated = new Emitter<DataChangeEventDetail<CrgProject>>();
   schemaUpdated = new Emitter<DataChangeEventDetail<Schema>>();
   vectorTableUpdated = new Emitter<DataChangeEventDetail<VectorTable>>();
+  layerUpdated = new Emitter<DataChangeEventDetail<CrgLayer>>();
 
   off(scope: unknown) {
     Emitter.scopeOff(scope);

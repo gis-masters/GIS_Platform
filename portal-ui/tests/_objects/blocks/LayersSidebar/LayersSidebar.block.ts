@@ -23,9 +23,13 @@ class LayersSidebarBlock extends Block {
   async openMenu(layerTitle: string): Promise<void> {
     await this.waitForLayersSidebarDisplayed();
     await layerCardBlock.moveToLayerCard(layerTitle);
+    const $layerCard = await layerCardBlock.getLayerCardByName(layerTitle);
+    if (!$layerCard) {
+      throw new Error(`Не найден элемент "${layerTitle}"`);
+    }
 
-    const $layerBurger = await this.$('layerBurger');
-    await $layerBurger.waitForDisplayed({ timeout: 9000 });
+    const $layerBurger = await $layerCard.$('.Layer-Burger');
+    await $layerBurger.waitForDisplayed();
     await $layerBurger.click();
   }
 
@@ -35,12 +39,8 @@ class LayersSidebarBlock extends Block {
     await muiMenuBlock.clickItemByTitle('Открыть таблицу атрибутов');
   }
 
-  async selectLayersListElementMenuItem(layerName: string, menuItemTitle: string): Promise<void> {
-    await layerCardBlock.moveToLayerCard(layerName);
-
-    const $layerBurger = await this.$('layerBurger');
-    await $layerBurger.waitForDisplayed();
-    await $layerBurger.click();
+  async selectLayersListElementMenuItem(layerTitle: string, menuItemTitle: string): Promise<void> {
+    await this.openMenu(layerTitle);
 
     const muiSelect = new MuiMenuBlock();
     await muiSelect.clickItemByTitle(menuItemTitle);

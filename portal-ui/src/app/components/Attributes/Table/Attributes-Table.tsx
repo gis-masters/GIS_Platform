@@ -80,7 +80,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
   async componentDidUpdate(prevProps: AttributesTableProps) {
     const { layer } = this.props;
 
-    if (layer?.schemaId !== prevProps.layer?.schemaId && this.tableInvoke.reset) {
+    if (layer?.id !== prevProps.layer?.id && this.tableInvoke.reset) {
       this.tableInvoke.reset({ filter: attributesTableStore.getLayerFilter(layer) });
       await this.tableInvoke.reload();
     }

@@ -1,6 +1,9 @@
 import { DataTable, Then, When } from '@wdio/cucumber-framework';
 
 import { projectsBlock, sortDirections } from './Projects.block';
+import { addBasemapToProject } from '../../commands/projects/addBasemapToProject';
+import { ScenarioScope } from '../../ScenarioScope';
+import { SourceType } from '../../../../src/app/services/data/basemaps/basemaps.models';
 
 When(/^я нажимаю кнопку `Создать проект`$/, async () => {
   await projectsBlock.clickAddButton();
@@ -63,6 +66,18 @@ When(
 
 When('на странице проектов я выбираю направление сортировки {string}', async (direction: string) => {
   await projectsBlock.selectProjectSortingDescending(sortDirections[direction]);
+});
+
+When('в текущий проект подключена пустая подложка', async function (this: ScenarioScope) {
+  const whiteBasemap = {
+    id: 1,
+    name: 'empty',
+    thumbnailUrn: '/assets/images/thumbnail-empty.jpg',
+    title: 'Без подложки',
+    type: SourceType.XYZ
+  };
+
+  await addBasemapToProject(this.latestProject, whiteBasemap);
 });
 
 Then(/^в списке проектов появляется "(.*)" и он доступен для взаимодействия$/, async (name: string) => {

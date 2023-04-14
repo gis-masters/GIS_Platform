@@ -147,6 +147,9 @@ export class XTableBlock extends Block {
     const $headCell = await this.getHeadCell(colTitle);
     const $input = $headCell.$('.XTable-Filter input');
     await $input.setValue(filter);
+
+    const $loading = await this.$('loading');
+    await $loading.waitForDisplayed({ reverse: true });
   }
 
   async filterChoiceColumn(colTitle: string, optionTitle: string): Promise<void> {

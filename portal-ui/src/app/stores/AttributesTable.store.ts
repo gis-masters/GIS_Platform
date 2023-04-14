@@ -36,6 +36,10 @@ class AttributesTableStore {
     );
   }
 
+  isLayerFilterExist(layer: CrgLayer): boolean {
+    return !!this.filter[layer.tableName];
+  }
+
   isLayerFiltered(layer: CrgLayer) {
     return !!this.filter[layer.tableName] && this.isLayerFilterEnabled(layer);
   }
@@ -81,3 +85,8 @@ class AttributesTableStore {
 }
 
 export const attributesTableStore = AttributesTableStore.instance;
+
+// for autotests
+if (typeof window !== undefined) {
+  Object.assign(window, { attributesTableStore });
+}

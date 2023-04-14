@@ -341,24 +341,19 @@ class MapService {
 
     const styleName = layers[0]?.styleName;
     const resultName = this.calcLayerName(layers);
-    const layerOnMap = this.getLayerByName(resultName);
 
-    if (layerOnMap && this.isNotFilteredLayer(layers) && !styleName) {
-      layerOnMap.setVisible(true);
-      layerOnMap.setOpacity(opacity);
-      layerOnMap.setZIndex(zIndex);
-    } else {
-      const params: CrgWmsParams = {
-        STYLES: styleName,
-        LAYERS: resultName,
-        FORMAT: imageFormat
-      };
+    const params: CrgWmsParams = {
+      STYLES: styleName,
+      LAYERS: resultName,
+      FORMAT: imageFormat
+    };
 
-      const { tableName } = layers[0];
-      const filter = cloneDeep(attributesTableStore.getLayerFilter(tableName));
-      const filterBySelection = getFieldFilterValue(filter, FILTER_BY_SELECTION);
-      modifyFieldFilterValue(filter, FILTER_BY_SELECTION);
+    const { tableName } = layers[0];
+    const filter = cloneDeep(attributesTableStore.getLayerFilter(tableName));
+    const filterBySelection = getFieldFilterValue(filter, FILTER_BY_SELECTION);
+    modifyFieldFilterValue(filter, FILTER_BY_SELECTION);
 
+    if (!this.isNotFilteredLayer(layers)) {
       if (Object.keys(filter).length) {
         params.CQL_FILTER = cqlBuild(filter);
       }
@@ -373,36 +368,36 @@ class MapService {
       if (filterBySelection === FilterBySelection.ONLY_NOT_SELECTED && params.featureId) {
         params.featureIdsNegative = 'true';
       }
-
-      const commonLayerParams = {
-        visible: true,
-        opacity,
-        zIndex
-      };
-
-      const commonWMSParams = {
-        url: wmsClient.getWmsUrl(),
-        params,
-        serverType: 'geoserver' as ServerType,
-        crossOrigin: 'anonymous'
-      };
-
-      const layer: ImageLayer<ImageSource> | TileLayer<TileSource> = this.isTiledWms
-        ? new TileLayer({
-            source: new TileWMS({ tileLoadFunction: this.crgLayersLoadFunction, ...commonWMSParams }),
-            ...commonLayerParams
-          })
-        : new ImageLayer({
-            source: new ImageWMS({ imageLoadFunction: this.crgLayersLoadFunction, ...commonWMSParams, ratio: 1 }),
-            ...commonLayerParams
-          });
-
-      const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
-
-      layer.setProperties(props);
-
-      this.map.addLayer(layer);
     }
+
+    const commonLayerParams = {
+      visible: true,
+      opacity,
+      zIndex
+    };
+
+    const commonWMSParams = {
+      url: wmsClient.getWmsUrl(),
+      params,
+      serverType: 'geoserver' as ServerType,
+      crossOrigin: 'anonymous'
+    };
+
+    const layer: ImageLayer<ImageSource> | TileLayer<TileSource> = this.isTiledWms
+      ? new TileLayer({
+          source: new TileWMS({ tileLoadFunction: this.crgLayersLoadFunction, ...commonWMSParams }),
+          ...commonLayerParams
+        })
+      : new ImageLayer({
+          source: new ImageWMS({ imageLoadFunction: this.crgLayersLoadFunction, ...commonWMSParams, ratio: 1 }),
+          ...commonLayerParams
+        });
+
+    const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
+
+    layer.setProperties(props);
+
+    this.map.addLayer(layer);
   }
 
   private isNotFilteredLayer(layers: CrgLayer[]) {

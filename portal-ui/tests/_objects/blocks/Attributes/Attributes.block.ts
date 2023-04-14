@@ -6,11 +6,14 @@ class AttributesBlock extends Block {
 
   selectors = {
     container: '.Attributes',
+    loading: '.Attributes .Loading',
     attributeTableCols: '.Attributes-Table .XTable-Head .XTable-CellContent',
     barTitle: '.Attributes-BarTitle',
     barMinimize: '.Attributes-BarMinimize',
     attributesTabs: '.Attributes-Tabs',
+    filtersEnabler: '.Attributes-FiltersEnabler',
     pagination: '.Attributes-Pagination',
+    attributesTab: '.Attributes-Tabs .Attributes-Tab',
     attributesTableHead: '.Attributes-Table .XTable-Head',
     attributesTableHeadCellContent: '.Attributes-Table .XTable-Head .XTable-CellContent',
     selectedYes: '.Attributes-CheckFilterButton_selected_yes',
@@ -24,6 +27,29 @@ class AttributesBlock extends Block {
     const values = await this.getHeadCellsValues();
 
     expect(values).toEqual(['', 'ID', title]);
+  }
+
+  async selectTab(title: string): Promise<void> {
+    const $attributesTab = await this.getAttributesTabByName(title);
+
+    await $attributesTab.click();
+  }
+
+  private async getAttributesTabByName(name: string): Promise<WebdriverIO.Element> {
+    const $attributesTabs = await this.$('attributesTabs');
+    await $attributesTabs.waitForDisplayed();
+
+    const $$attributesTab = await this.$$('attributesTab');
+
+    for (const $tab of $$attributesTab) {
+      const tabName = await $tab.getText();
+
+      if (tabName === name) {
+        return $tab;
+      }
+    }
+
+    throw new Error(`Не найден элемент "${name}"`);
   }
 
   async getHeadCellsValues(): Promise<string[]> {
@@ -54,6 +80,19 @@ class AttributesBlock extends Block {
     const $attributesTabs = await this.$('attributesTabs');
     const $tabTitle = await $attributesTabs.$(`.Attributes-TabTitle=${layerTitle}`);
     await $tabTitle.click();
+  }
+
+  async clickFiltersEnabler() {
+    const $attributesTabs = await this.$('filtersEnabler');
+    await $attributesTabs.waitForDisplayed();
+    await $attributesTabs.click();
+
+    await this.waitForLoadingDisappear();
+  }
+
+  async waitForLoadingDisappear() {
+    const $loading = await this.$('loading');
+    await $loading.waitForDisplayed({ reverse: true });
   }
 
   async minimize() {

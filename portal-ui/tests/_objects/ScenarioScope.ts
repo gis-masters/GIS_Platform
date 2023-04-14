@@ -7,6 +7,7 @@ import { Dataset, VectorTable } from '../../src/app/services/data/vectorData/vec
 import { CrgProject } from '../../src/app/services/gis/projects/projects.models';
 import { CrgLayer } from '../../src/app/services/gis/layers/layers.models';
 import { LibraryRecord } from '../../src/app/services/data/docLibrary/docLibrary.models';
+import { FilterQuery } from '../../src/app/services/util/filterObjects';
 
 export class ScenarioScope extends World {
   private _latestSchema?: Schema;
@@ -15,6 +16,7 @@ export class ScenarioScope extends World {
   private _latestProject?: CrgProject;
   private _latestLayer?: CrgLayer;
   private _latestFeatures?: NewWfsFeature[];
+  private _latestFilter?: FilterQuery;
   private _latestLibraryRecords?: LibraryRecord[];
 
   constructor(parameters: IWorldOptions) {
@@ -67,6 +69,14 @@ export class ScenarioScope extends World {
 
   set latestLayer(layer: CrgLayer) {
     this._latestLayer = layer;
+  }
+
+  get latestFilter(): FilterQuery {
+    return this.getEntityOrThrow<FilterQuery>(this._latestFilter, 'фильтр');
+  }
+
+  set latestFilter(filter: FilterQuery) {
+    this._latestFilter = filter;
   }
 
   get latestLibraryRecords(): LibraryRecord[] {

@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { GeometryType } from '../../../../src/app/services/geoserver/wfs/wfs.models';
 import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
 
@@ -83,7 +84,7 @@ const schemaWithViews: Schema = {
       title: 'Площадь',
       hidden: false,
       required: true,
-      propertyType: PropertyType.FLOAT,
+      propertyType: PropertyType.INT,
       description: ''
     },
     {
@@ -142,7 +143,159 @@ const schemaWithViews: Schema = {
           title: 'Площадь, кв.м',
           hidden: false,
           required: true,
-          propertyType: PropertyType.FLOAT,
+          propertyType: PropertyType.INT,
+          description: ''
+        }
+      ]
+    },
+    {
+      id: 'viewsId3',
+      title: 'Представление 3',
+      styleName: 'forest',
+      type: 'VIEW',
+      properties: [
+        {
+          name: 'classid',
+          title: 'Значение объекта',
+          hidden: false,
+          multiple: false,
+          required: false,
+          propertyType: PropertyType.CHOICE,
+          description: '',
+          options: [
+            {
+              title: 'Территория населенного пункта',
+              value: '601020400'
+            },
+            {
+              title: 'Муниципальный район',
+              value: '601020301'
+            },
+            {
+              title: 'Сельское поселение',
+              value: '601020307'
+            }
+          ]
+        },
+        {
+          name: 'name',
+          title: 'Наименование',
+          hidden: false,
+          required: false,
+          maxLength: 254,
+          minLength: -1,
+          propertyType: PropertyType.STRING,
+          description: ''
+        },
+        {
+          name: 'shape',
+          title: 'geometry',
+          required: false,
+          hidden: false,
+          propertyType: PropertyType.GEOMETRY
+        },
+        {
+          name: 'shape_area',
+          title: 'Площадь',
+          hidden: false,
+          required: true,
+          propertyType: PropertyType.INT,
+          description: ''
+        },
+        {
+          name: 'STATUS_ADM',
+          title: 'Статус объекта',
+          hidden: false,
+          multiple: false,
+          required: false,
+          propertyType: PropertyType.CHOICE,
+          description: '',
+          options: [
+            {
+              title: 'Существующий',
+              value: '1'
+            },
+            {
+              title: 'Планируемый',
+              value: '2'
+            }
+          ]
+        },
+        {
+          name: 'ruleid',
+          title: 'Идентификатор стиля',
+          hidden: true,
+          required: true,
+          maxLength: 254,
+          minLength: -1,
+          propertyType: PropertyType.STRING,
+          description: ''
+        }
+      ]
+    },
+    {
+      id: 'viewsId4',
+      title: 'Представление 4',
+      styleName: 'forest',
+      type: 'VIEW',
+      properties: [
+        {
+          name: 'classid',
+          title: 'Значение объекта',
+          hidden: false,
+          multiple: false,
+          required: false,
+          propertyType: PropertyType.CHOICE,
+          description: '',
+          options: [
+            {
+              title: 'Территория населенного пункта',
+              value: '601020400'
+            },
+            {
+              title: 'Муниципальный район',
+              value: '601020301'
+            },
+            {
+              title: 'Сельское поселение',
+              value: '601020307'
+            }
+          ]
+        },
+        {
+          name: 'shape',
+          title: 'geometry',
+          required: false,
+          hidden: false,
+          propertyType: PropertyType.GEOMETRY
+        },
+        {
+          name: 'STATUS_ADM',
+          title: 'Статус объекта',
+          hidden: false,
+          multiple: false,
+          required: false,
+          propertyType: PropertyType.CHOICE,
+          description: '',
+          options: [
+            {
+              title: 'Существующий',
+              value: '1'
+            },
+            {
+              title: 'Планируемый',
+              value: '2'
+            }
+          ]
+        },
+        {
+          name: 'ruleid',
+          title: 'Идентификатор стиля',
+          hidden: true,
+          required: true,
+          maxLength: 254,
+          minLength: -1,
+          propertyType: PropertyType.STRING,
           description: ''
         }
       ]

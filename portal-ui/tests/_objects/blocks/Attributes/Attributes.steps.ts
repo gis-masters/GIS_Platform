@@ -9,6 +9,8 @@ import { getSortDirection } from '../../utils/getSortDirection';
 import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
 import { sortObjects } from '../../../../src/app/services/util/sortObjects';
 import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { getAttributesTableFilter } from '../../commands/attributesTable/getAttributesTableFilter';
+import { getVectorTableByTitle } from '../../commands/tables/getVectorTableByTitle';
 
 const waitUntilOptions: WaitUntilOptions = {
   timeout: 10_000,
@@ -23,10 +25,20 @@ Then('открылась атрибутивная таблица слоя {strin
   expect(await attributesBlock.getTitle()).toEqual(title);
 });
 
+Then('нажимаю на переключатель применения фильтрации в атрибутивной таблице', async () => {
+  await attributesBlock.clickFiltersEnabler();
+});
+
 Then('открыта атрибутивная таблица созданного слоя', async function (this: ScenarioScope) {
   await layersSidebarBlock.openAttributeTable(this.latestLayer.title);
 
   expect(await attributesBlock.getTitle()).toEqual(this.latestLayer.title);
+});
+
+Then('открыта атрибутивная таблица слоя {string}', async (layerName: string) => {
+  await layersSidebarBlock.openAttributeTable(layerName);
+
+  expect(await attributesBlock.getTitle()).toEqual(layerName);
 });
 
 When(
@@ -72,8 +84,29 @@ When('я нажимаю на таб созданного слоя в атриб�
 
 When(
   'в атрибутивной таблице я ввожу в поле {string} значение {string}',
-  async function (colTitle: string, filter: string) {
+  async function (this: ScenarioScope, colTitle: string, filter: string) {
     await attributesBlock.filterStringColumn(colTitle, filter);
+
+    this.latestFilter = await getAttributesTableFilter();
+    await attributesBlock.waitForLoadingDisappear();
+  }
+);
+
+When('в атрибутивной таблице я перехожу во вкладку таблицы {string}', async function (title: string) {
+  await attributesBlock.selectTab(title);
+
+  await attributesBlock.waitForLoadingDisappear();
+});
+
+Then(
+  'в атрибутивной таблице {string} настроенные фильтры не изменились',
+  async function (this: ScenarioScope, title: string) {
+    const currentFilter = await getAttributesTableFilter();
+    const table = await getVectorTableByTitle(this.latestDataset.identifier, title);
+
+    expect(JSON.stringify(currentFilter[table.identifier])).toEqual(
+      JSON.stringify(this.latestFilter[table.identifier])
+    );
   }
 );
 

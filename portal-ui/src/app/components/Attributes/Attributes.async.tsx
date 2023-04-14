@@ -10,8 +10,8 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { mapSelectionService } from '../../services/map/map-selection.service';
-import { communicationService } from '../../services/communication.service';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { DataChangeEventDetail, communicationService } from '../../services/communication.service';
+import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { PageOptions } from '../../services/models';
 import { XTableInvoke } from '../XTable/XTable';
 
@@ -39,6 +39,19 @@ export default class Attributes extends Component<IClassNameProps> {
   componentDidMount() {
     communicationService.openAttributesBar.on((e: CustomEvent<CrgVectorLayer>) => {
       this.openBar(e.detail);
+    }, this);
+
+    communicationService.layerUpdated.on((e: CustomEvent<DataChangeEventDetail<CrgLayer>>) => {
+      const modifiedLayer = e.detail.data;
+      const isLayerFilterExist = attributesTableStore.isLayerFilterExist(modifiedLayer);
+
+      if (isLayerFilterExist) {
+        if (modifiedLayer.id === this.currentLayer.id) {
+          this.tableInvoke.reset();
+        } else {
+          attributesTableStore.updateFilter(modifiedLayer as CrgVectorLayer);
+        }
+      }
     }, this);
   }
 

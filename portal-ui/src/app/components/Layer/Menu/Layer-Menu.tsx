@@ -523,6 +523,8 @@ export class LayerMenu extends Component<LayerMenuProps> {
     (this.props.entity as CrgLayer).view = view;
     const styleName: string = view === '' ? view : this.views.find(type => type.id === view)?.styleName;
     (this.props.entity as CrgLayer).styleName = styleName || this.layerSchema.styleName || layer.schemaId;
+
+    communicationService.layerUpdated.emit({ type: 'update', data: this.props.entity as CrgLayer });
   }
 
   @action.bound
