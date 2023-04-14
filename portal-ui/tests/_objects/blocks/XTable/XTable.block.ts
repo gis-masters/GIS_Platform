@@ -7,6 +7,7 @@ import { hasClass } from '../../utils/hasClass';
 export class XTableBlock extends Block {
   selectors = {
     container: '.XTable',
+    loading: '.XTable .Loading',
     head: '.XTable-Head',
     headCell: '.XTable-HeadCell',
     colTitle: '.XTable-HeadCellTitle',
@@ -118,6 +119,9 @@ export class XTableBlock extends Block {
   }
 
   async sortColumn(title: string, direction: string): Promise<void> {
+    const $loading = await this.$('loading');
+    await $loading.waitForDisplayed({ reverse: true });
+
     const $headCellTitle = await this.getHeadCellTitle(title);
     await $headCellTitle.waitForClickable();
     if (direction.toLowerCase() === SortOrder.ASC) {

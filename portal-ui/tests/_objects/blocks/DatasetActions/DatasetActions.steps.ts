@@ -22,6 +22,17 @@ When('нажимаю на кнопку подтверждения удалени
   await datasetActionsBlock.confirmDeletion();
 });
 
+When('я открываю карточку редактирования набора данных', async () => {
+  await datasetActionsBlock.clickEditBtn();
+});
+
+When(
+  'в карточке редактирования набора данных я изменяю значение поля {string} на {string}',
+  async (field: string, value: string) => {
+    await datasetActionsBlock.editDataset(field, value);
+  }
+);
+
 Then('появляется диалоговое окно запрещающее удаление', async () => {
   await datasetActionsBlock.prohibitDeletionDialog();
 });

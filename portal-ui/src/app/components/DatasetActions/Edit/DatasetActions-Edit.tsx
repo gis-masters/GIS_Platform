@@ -15,6 +15,8 @@ import { services } from '../../../services/services';
 import { Toast } from '../../Toast/Toast';
 
 const cnDatasetActionsEdit = cn('DatasetActions', 'Edit');
+const cnDatasetActionsEditDialog = cn('DatasetActions', 'Dialog');
+const cnDatasetActionsEditDialogYes = cn('DatasetActions', 'DialogYes');
 
 interface DatasetActionsEditProps {
   dataset: Dataset;
@@ -39,11 +41,15 @@ export class DatasetActionsEdit extends Component<DatasetActionsEditProps> {
         </Tooltip>
 
         <FormDialog
+          className={cnDatasetActionsEditDialog()}
           open={this.dialogOpen}
           schema={datasetSchema}
           value={this.props.dataset}
           actionFunction={this.update}
-          actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}
+          actionButtonProps={{
+            startIcon: <SaveOutlined className={cnDatasetActionsEditDialogYes()} />,
+            children: 'Сохранить'
+          }}
           onClose={this.closeDialog}
           title='Редактирование данных'
         />

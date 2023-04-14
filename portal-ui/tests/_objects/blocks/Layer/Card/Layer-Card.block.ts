@@ -44,6 +44,12 @@ class LayerCardBlock extends Block {
     await $layerCard.moveTo();
   }
 
+  async isLayerCardExist(title: string): Promise<boolean> {
+    const $layerCard = await this.getLayerCardByName(title);
+
+    return !!$layerCard;
+  }
+
   async isLayerCardErrorIconExist(layerName: string): Promise<boolean> {
     const $layerCard = await this.getLayerCardByName(layerName);
     if (!$layerCard) {

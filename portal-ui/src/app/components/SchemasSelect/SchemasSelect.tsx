@@ -13,6 +13,7 @@ import { Button } from '../Button/Button';
 import '!style-loader!css-loader!sass-loader!./SchemasSelect.scss';
 
 const cnSchemasSelect = cn('SchemasSelect');
+const cnSchemasSelectDialog = cn('SchemasSelect', 'Dialog');
 
 @observer
 export class SchemasSelect extends Component<FormControlProps> {
@@ -89,6 +90,7 @@ export class SchemasSelect extends Component<FormControlProps> {
         <Button onClick={this.openDialog}>Выбрать схему</Button>
         {this.allSchemas && (
           <ChooseXTableDialog<Schema>
+            className={cnSchemasSelectDialog()}
             title='Выберите схему'
             data={this.allSchemas}
             cols={this.cols}

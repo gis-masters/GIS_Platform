@@ -9,6 +9,7 @@ class ExplorerBlock extends Block {
     title: '.Explorer-ItemTitle',
     loader: '.Explorer .Loading',
     empty: '.Explorer-Empty',
+    createLayerBtn: '.Explorer-ToolbarActions .MuiButtonBase-root[aria-label="Создать слой"]',
     firstItemTitle: '.Explorer-List .Explorer-Item:first-child .MuiListItemText-primary',
     secondItemTitle: '.Explorer-List .Explorer-Item:last-child .MuiListItemText-primary',
     connectionToProject: '.Explorer .ConnectionsToProjectsWidget button'
@@ -36,6 +37,18 @@ class ExplorerBlock extends Block {
   async addToProject(): Promise<void> {
     const $connectionToProject = await this.$('connectionToProject');
     await $connectionToProject.click();
+  }
+
+  async clickCreateLayerBtn(): Promise<void> {
+    const $createLayerBtn = await this.$('createLayerBtn');
+
+    await $createLayerBtn.click();
+  }
+
+  async isCreateLayerBtnExist(): Promise<boolean> {
+    const $createLayerBtn = await this.$('createLayerBtn');
+
+    return await $createLayerBtn.isExisting();
   }
 
   async waitForLoading(): Promise<void> {

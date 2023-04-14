@@ -3,7 +3,7 @@ import { DataTable, Then, When } from '@wdio/cucumber-framework';
 import { layerCardBlock } from './Layer-Card.block';
 
 When(
-  'в списке слоев панели слоёв я нажимаю на кнопку включения отображения пункта с названием {string}',
+  'в списке слоев панели слоёв я нажимаю на иконку включения отображения пункта с названием {string}',
   async (layerName: string) => {
     await layerCardBlock.clickVisibilityBtn(layerName);
   }
@@ -23,6 +23,12 @@ Then('в списке слоев панели слоёв отображаютс�
   const currentNames = await layerCardBlock.getLayersCardsNames();
 
   expect(expectedNames.raw()[0]).toEqual(currentNames);
+});
+
+Then('в списке слоев панели слоёв не отображается пункт {string}', async (expectedName: string) => {
+  const layerCardExisting = await layerCardBlock.isLayerCardExist(expectedName);
+
+  expect(layerCardExisting).toEqual(false);
 });
 
 Then('список слоёв пуст', async () => {

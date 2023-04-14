@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { action, observable, makeObservable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { SaveOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import {
   Dataset,
@@ -15,6 +16,9 @@ import { Schema } from '../../services/data/schema/schema.models';
 import { FormDialog } from '../FormDialog/FormDialog';
 
 import { CreateVectorTableButton } from './Button/CreateVectorTable-Button';
+
+const cnCreateVectorTableDialog = cn('CreateVectorTableDialog');
+const cnCreateVectorTableDialogYes = cn('CreateVectorTableDialog', 'Yes');
 
 interface CreateVectorTableProps {
   dataset: Dataset;
@@ -35,10 +39,14 @@ export class CreateVectorTable extends Component<CreateVectorTableProps> {
         <CreateVectorTableButton onClick={this.openDialog} />
 
         <FormDialog<Partial<VectorTable>>
+          className={cnCreateVectorTableDialog()}
           open={this.dialogOpen}
           schema={emptyVectorTableSchema as unknown as Schema}
           actionFunction={this.create}
-          actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Создать' }}
+          actionButtonProps={{
+            startIcon: <SaveOutlined className={cnCreateVectorTableDialogYes()} />,
+            children: 'Создать'
+          }}
           onClose={this.closeDialog}
           title='Создание нового слоя'
         />

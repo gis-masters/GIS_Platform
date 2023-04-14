@@ -1,7 +1,6 @@
-import { Key } from 'webdriverio';
-
 import { Block } from '../../../../Block';
 import { hasClass } from '../../../../utils/hasClass';
+import { MuiInputBlock } from '../../../MuiInput/MuiInput.block';
 
 class XTableFilterTypeStringBlock extends Block {
   selectors = {
@@ -11,25 +10,20 @@ class XTableFilterTypeStringBlock extends Block {
   };
 
   async clear(): Promise<void> {
-    const $filterInput = await this.$('filterInput');
-    await $filterInput.moveTo();
-    await $filterInput.click();
-
-    do {
-      await browser.keys([Key.Backspace]);
-    } while (await $filterInput.getValue());
+    const inputBlock = new MuiInputBlock(this.selectors.container);
+    await inputBlock.clearInputValue();
   }
 
   async filterClick(): Promise<void> {
     const $filterInputStrictness = await this.$('filterInputStrictness');
     await $filterInputStrictness.click();
-    await browser.pause(300);
+    await browser.pause(300); // ждем анимацию фильтрации в таблице
   }
 
   async setValue(title: string) {
     const $filterInput = await this.$('filterInput');
     await $filterInput.setValue(title);
-    await browser.pause(300);
+    await browser.pause(300); // ждем анимацию фильтрации в таблице
   }
 
   async getValue(): Promise<string> {
