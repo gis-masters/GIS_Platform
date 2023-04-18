@@ -41,6 +41,16 @@ class ToastBlock extends Block {
     await browser.pause(300); // animation
   }
 
+  async notBecomeVisible(): Promise<void> {
+    try {
+      await this.waitForVisible();
+    } catch {
+      return;
+    }
+
+    throw new Error('Toast не должен был появиться');
+  }
+
   async isVisible(): Promise<boolean> {
     const $container = await this.$('container');
 

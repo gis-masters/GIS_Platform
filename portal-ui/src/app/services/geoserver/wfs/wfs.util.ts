@@ -36,7 +36,7 @@ export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature
 
   return {
     type: 'Feature',
-    id: tableName, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
+    id: `${tableName}.0`, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
     geometry: getEmptyGeometry(schema.geometryType),
     geometry_name: getGeometryFieldName(schema),
     properties

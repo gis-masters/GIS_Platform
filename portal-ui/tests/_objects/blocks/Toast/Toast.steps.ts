@@ -6,22 +6,26 @@ When(/^я нажимаю на псевдоссылку Подробнее\/Ск�
   await toastBlock.clickMoar();
 });
 
-When(/^я нажимаю на крестик в уведомлении$/, async () => {
+When('я нажимаю на крестик в уведомлении', async () => {
   await toastBlock.clickClose();
 });
 
-Given(/^произошла искусственная ошибка и присутствует уведомление о ней$/, async () => {
+Given('произошла искусственная ошибка и присутствует уведомление о ней', async () => {
   await toastBlock.produceError();
 });
 
-Then(/^уведомление исчезает$/, async () => {
+Then('уведомление исчезает', async () => {
   await toastBlock.waitForHidden();
 });
 
-Then(/^появляются подробности уведомления$/, async () => {
+Then('отсутствуют уведомления об ошибках', async () => {
+  await toastBlock.notBecomeVisible();
+});
+
+Then('появляются подробности уведомления', async () => {
   await toastBlock.waitForDetails();
 });
 
-Then(/^исчезают подробности уведомления$/, async () => {
+Then('исчезают подробности уведомления', async () => {
   await toastBlock.waitForDetailsHidden();
 });

@@ -282,6 +282,11 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
         checkAuditEvent(DELETE.name(), TABLE, currentTableName);
     }
 
+    @Then("В выборке присутствует запись об авторизации пользователя")
+    public void checkUserSignInEventExist() {
+        checkAuditEvent(SIGN_IN.name(), USER, "user");
+    }
+
     private boolean checkAuditEvent(String actionType, AuditEventEntityType entityType, String tableName) {
         try {
             int currentAttempt = 0;
