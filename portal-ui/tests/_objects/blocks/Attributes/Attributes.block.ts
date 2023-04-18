@@ -6,6 +6,7 @@ class AttributesBlock extends Block {
 
   selectors = {
     container: '.Attributes',
+    bar: '.Attributes-Bar',
     loading: '.Attributes .Loading',
     attributeTableCols: '.Attributes-Table .XTable-Head .XTable-CellContent',
     barTitle: '.Attributes-BarTitle',
@@ -19,6 +20,12 @@ class AttributesBlock extends Block {
     selectedYes: '.Attributes-CheckFilterButton_selected_yes',
     selectedNo: '.Attributes-CheckFilterButton_selected_no'
   };
+
+  async waitForBarHidden(): Promise<void> {
+    const $bar = await this.$('bar');
+
+    await $bar.waitForDisplayed({ reverse: true, timeout: 5000 });
+  }
 
   async checkTableSingleColTitle(title: string): Promise<void> {
     const $attributeTableHead = await this.$('attributesTableHead');

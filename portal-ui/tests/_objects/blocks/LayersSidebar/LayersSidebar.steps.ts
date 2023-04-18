@@ -4,6 +4,8 @@ import { layersSidebarBlock } from './LayersSidebar.block';
 import { attributesBlock } from '../Attributes/Attributes.block';
 
 When('в списке слоёв на карте я нажимаю кнопку `Настроить слои проекта`', async () => {
+  await browser.pause(200); // анимация открытия
+
   await layersSidebarBlock.clickEditButton();
 });
 

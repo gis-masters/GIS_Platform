@@ -41,6 +41,10 @@ export default class Attributes extends Component<IClassNameProps> {
       this.openBar(e.detail);
     }, this);
 
+    communicationService.closeAttributeTab.on((e: CustomEvent<CrgVectorLayer>) => {
+      this.closeTab(e.detail);
+    }, this);
+
     communicationService.layerUpdated.on((e: CustomEvent<DataChangeEventDetail<CrgLayer>>) => {
       const modifiedLayer = e.detail.data;
       const isLayerFilterExist = attributesTableStore.isLayerFilterExist(modifiedLayer);

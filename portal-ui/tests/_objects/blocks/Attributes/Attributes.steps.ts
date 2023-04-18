@@ -17,6 +17,10 @@ const waitUntilOptions: WaitUntilOptions = {
   timeoutMsg: 'Результат не был достигнут после 10 секунд ожидания'
 };
 
+Then('атрибутивная таблица закрыта', async () => {
+  await attributesBlock.waitForBarHidden();
+});
+
 Then('в атрибутивной таблице отображается только колонка {string}', async (title: string) => {
   await attributesBlock.checkTableSingleColTitle(title);
 });
