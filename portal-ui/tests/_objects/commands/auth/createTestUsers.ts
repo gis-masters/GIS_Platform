@@ -1,21 +1,8 @@
-import { usersService } from '../../../../src/app/services/auth/users/users.service';
-import { CrgUser } from '../../../../src/app/services/auth/users/users.models';
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { getUserByEmail } from './getUserByEmail';
 import { testUsers } from './testUsers';
 import { createUserAs } from './createUserAs';
-
-declare const window: { usersService: typeof usersService };
-
-async function editUser(patch: Partial<CrgUser>, id: number) {
-  return await browser.executeAsync(
-    async (serializedPatch, id, callback) => {
-      callback(await window.usersService.edit(JSON.parse(serializedPatch) as Partial<CrgUser>, id));
-    },
-    JSON.stringify(patch),
-    id
-  );
-}
+import { editUser } from './editUser';
 
 export async function createTestUsers(): Promise<void> {
   for (const { company, email, firstName, lastName, middleName, contactPhone, job, password } of Object.values(

@@ -37,7 +37,7 @@ export interface RegistryProps<T> {
 }
 
 @observer
-export default class Registry<T> extends Component<RegistryProps<T>> {
+export class Registry<T> extends Component<RegistryProps<T>> {
   private defaultFilter: FilterQuery;
   private unsubscribe$: Subject<void> = new Subject<void>();
   private tableInvoke: XTableProps<T>['invoke'] = {};

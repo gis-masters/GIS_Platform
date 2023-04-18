@@ -18,11 +18,10 @@ import { FilterQuery } from '../../services/util/filterObjects';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { SortParams } from '../../services/util/sortObjects';
 import { Schema } from '../../services/data/schema/schema.models';
-import { PageOptions } from '../../services/models';
 import { XTableColumn } from '../XTable/XTable.models';
+import { PageOptions } from '../../services/models';
+import { Registry } from '../Registry/Registry';
 import { Loading } from '../Loading/Loading';
-
-import Registry from '../Registry/Registry';
 
 import '!style-loader!css-loader!sass-loader!./MessagesRegistry.scss';
 

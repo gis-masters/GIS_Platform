@@ -38,9 +38,9 @@ import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { convertToComplexField } from '../Form/Form.utils';
 import { DocumentInfo } from '../Documents/Documents';
+import { Registry } from '../Registry/Registry';
 import { Loading } from '../Loading/Loading';
 
-import Registry from '../Registry/Registry';
 import { LibraryRegistryExport } from './Export/LibraryRegistry-Export';
 import { LibraryRegistrySettings } from './Settings/LibraryRegistry-Settings';
 import { LibraryRegistryBreadcrumbs } from './Breadcrumbs/LibraryRegistry-Breadcrumbs';
@@ -119,6 +119,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
               secondarySortField='id'
               filtersAlwaysEnabled
               showFiltersPanel
+              urlChangeEnabled
               defaultFilter={this.defaultFilter}
               invoke={this.tableInvoke}
               setPageOptions={this.setPageOptions}

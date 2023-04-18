@@ -45,6 +45,17 @@ Then(
   }
 );
 
+When(
+  'я дожидаюсь, пока в реестре документов отобразятся только документы с указанными идентификаторами',
+  async function (this: ScenarioScope) {
+    const ids = [2, 3].map(index => this.latestLibraryRecords[index]?.id).filter(Boolean);
+
+    await browser.waitUntil(async () => isEqual(ids, await libraryRegistryBlock.getVisibleDocumentsIds()), {
+      timeout: 10_000
+    });
+  }
+);
+
 Then(
   'в реестре документов отображается только документы с указанными идентификаторами',
   async function (this: ScenarioScope) {

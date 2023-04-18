@@ -53,6 +53,11 @@ When(
   }
 );
 
+When('я перезагружаю страницу браузера', async () => {
+  await browser.refresh();
+  await root.waitForVisible();
+});
+
 // project map
 
 const openProjectMap = async (title: string) => {
