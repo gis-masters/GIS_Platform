@@ -538,7 +538,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     currentProject.deleteLayer(layer);
 
     if (layer.type === CrgLayerType.VECTOR || layer.type === CrgLayerType.VECTOR_FROM_FILE) {
-      communicationService.closeAttributeTab.emit(layer as CrgVectorLayer);
+      communicationService.layerUpdated.emit({ type: 'delete', data: layer as CrgVectorLayer });
     }
   }
 

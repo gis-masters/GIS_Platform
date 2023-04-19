@@ -1,4 +1,5 @@
 import { Block } from '../../Block';
+import { sleep } from '../../../../src/app/services/util/sleep';
 
 export class MuiMenuBlock extends Block {
   selectors = {
@@ -12,6 +13,7 @@ export class MuiMenuBlock extends Block {
     const $item = await $container.$(`.MuiMenuItem-root=${title}`);
     await $item.waitForClickable({ timeout: 9000 });
     await $item.click();
+    await sleep(300); // Анимация исчезновения меню
   }
 }
 

@@ -35,7 +35,6 @@ class CommunicationService {
   beforeMapDestroy = new Emitter();
   drawOff = new Emitter();
   openAttributesBar = new Emitter<CrgVectorLayer>();
-  closeAttributeTab = new Emitter<CrgVectorLayer>();
 
   basemapUpdated = new Emitter<DataChangeEventDetail<Basemap>>();
   datasetUpdated = new Emitter<DataChangeEventDetail<Dataset>>();

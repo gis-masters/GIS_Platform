@@ -24,7 +24,7 @@ class AttributesBlock extends Block {
   async waitForBarHidden(): Promise<void> {
     const $bar = await this.$('bar');
 
-    await $bar.waitForDisplayed({ reverse: true, timeout: 5000 });
+    await $bar.waitForDisplayed({ reverse: true });
   }
 
   async checkTableSingleColTitle(title: string): Promise<void> {

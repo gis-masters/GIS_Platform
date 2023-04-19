@@ -41,19 +41,28 @@ export default class Attributes extends Component<IClassNameProps> {
       this.openBar(e.detail);
     }, this);
 
-    communicationService.closeAttributeTab.on((e: CustomEvent<CrgVectorLayer>) => {
-      this.closeTab(e.detail);
-    }, this);
-
     communicationService.layerUpdated.on((e: CustomEvent<DataChangeEventDetail<CrgLayer>>) => {
       const modifiedLayer = e.detail.data;
-      const isLayerFilterExist = attributesTableStore.isLayerFilterExist(modifiedLayer);
+      const type = e.detail.type;
 
-      if (isLayerFilterExist) {
-        if (modifiedLayer.id === this.currentLayer.id) {
-          this.tableInvoke.reset();
-        } else {
-          attributesTableStore.updateFilter(modifiedLayer as CrgVectorLayer);
+      switch (type) {
+        case 'update': {
+          const isLayerFilterExist = attributesTableStore.isLayerFilterExist(modifiedLayer);
+
+          if (isLayerFilterExist) {
+            if (modifiedLayer.id === this.currentLayer.id) {
+              this.tableInvoke.reset();
+            } else {
+              attributesTableStore.updateFilter(modifiedLayer as CrgVectorLayer);
+            }
+          }
+
+          break;
+        }
+        case 'delete': {
+          this.closeTab(modifiedLayer as CrgVectorLayer);
+
+          break;
         }
       }
     }, this);
