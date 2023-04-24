@@ -239,7 +239,7 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
       field.propertyType = PropertyType.STRING;
     }
 
-    field.asTitle = oldField.objectIdentityOnUi;
+    field.asTitle = field.asTitle || oldField.objectIdentityOnUi;
     delete (field as Partial<OldPropertySchemaDouble>).objectIdentityOnUi;
 
     if (oldField.valueType === ValueType.DOUBLE) {
