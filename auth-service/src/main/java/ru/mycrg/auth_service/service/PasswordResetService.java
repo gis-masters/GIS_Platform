@@ -62,7 +62,7 @@ public class PasswordResetService {
                           tokenRepository.deleteByCreatedAtBefore(now().minusMinutes(tokenExpirationTime));
 
                           // Send email
-                          emailService.sendEmailResetPassword(user, resetToken.getToken(), dto.getOriginHost());
+                          emailService.sendEmailResetPassword(user, resetToken.getToken(), dto.getOrigin());
                       });
     }
 

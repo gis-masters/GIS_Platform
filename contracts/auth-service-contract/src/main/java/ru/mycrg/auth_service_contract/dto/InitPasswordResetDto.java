@@ -10,7 +10,7 @@ public class InitPasswordResetDto {
     private String email;
 
     @NotEmpty
-    private String originHost;
+    private String origin;
 
     public InitPasswordResetDto() {
         // Required
@@ -24,19 +24,19 @@ public class InitPasswordResetDto {
         this.email = email;
     }
 
-    public String getOriginHost() {
-        return originHost;
+    public String getOrigin() {
+        return origin;
     }
 
-    public void setOriginHost(String originHost) {
-        this.originHost = originHost;
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 
     @Override
     public String toString() {
         return "{" +
                 "\"email\":" + (email == null ? "null" : "\"" + email + "\"") + ", " +
-                "\"originHost\":" + (originHost == null ? "null" : originHost) +
+                "\"origin\":" + (origin == null ? "null" : origin) +
                 "}";
     }
 }

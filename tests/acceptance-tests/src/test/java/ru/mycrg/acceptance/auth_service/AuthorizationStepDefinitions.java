@@ -122,23 +122,23 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
                         get("/projects");
     }
 
-    @When("Отправляется POST запрос на эндпоинт request-password-reset, с телом в котором содержится поле email и originHost")
+    @When("Отправляется POST запрос на эндпоинт request-password-reset, с телом в котором содержится поле email и origin")
     public void passwordResetRequest() {
-        String body = "{\"email\": \"d.alekseev@mycrg.ru\", \"originHost\": \"http://localhost:8100\"}";
+        String body = "{\"email\": \"d.alekseev@mycrg.ru\", \"origin\": \"http://localhost:8100\"}";
 
         resetPassRequest(body);
     }
 
     @When("Пользователь делает запрос на восстановление пароля с невалидными данными {string} {string}")
-    public void passwordResetRequestWithInvalidData(String email, String originHost) {
-        String body = format("{\"email\": \"%s\", \"originHost\": \"%s\"}", email, originHost);
+    public void passwordResetRequestWithInvalidData(String email, String origin) {
+        String body = format("{\"email\": \"%s\", \"origin\": \"%s\"}", email, origin);
 
         resetPassRequest(body);
     }
 
     @When("Отправляется запрос на восстановление пароля с почтой НЕ существующего пользователя")
     public void passwordResetRequestUserNotExist() {
-        String body = format("{\"email\": \"%s\", \"originHost\": \"http://localhost:8100\"}",
+        String body = format("{\"email\": \"%s\", \"origin\": \"http://localhost:8100\"}",
                              generateString("EMAIL_5"));
 
         resetPassRequest(body);
@@ -146,7 +146,7 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
     @When("Запросы на восстановление пароля отправляются чаще 1 раза в 10 секунд")
     public void passwordResetRequestMoreThenOnePerTenSeconds() {
-        String body = "{\"email\": \"d.alekseev@mycrg.ru\", \"originHost\": \"http://localhost:8100\"}";
+        String body = "{\"email\": \"d.alekseev@mycrg.ru\", \"origin\": \"http://localhost:8100\"}";
 
         resetPassRequest(body);
         resetPassRequest(body);
