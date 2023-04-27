@@ -204,13 +204,13 @@ export async function makeXmlPolygonIntersect(
     featureNS: '',
     featurePrefix: '',
     maxFeatures:
-      selectionType !== MapSelectionTypes.REMOVE
-        ? Math.max(
+      selectionType === MapSelectionTypes.REMOVE
+        ? undefined
+        : Math.max(
             mapStore.selectingFeaturesLimit -
               (selectionType === MapSelectionTypes.ADD ? mapStore.selectedFeatures.length : 0),
             1
           )
-        : undefined
   });
 
   return new XMLSerializer().serializeToString(featureRequest);

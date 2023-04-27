@@ -3,7 +3,7 @@ import { requestAsAdmin } from '../requestAs';
 import { usersClient } from '../../../../src/app/services/auth/users/users.client';
 
 export async function getUserByEmail(email: string): Promise<CrgUserRaw> {
-  const allUsers = await requestAsAdmin(usersClient.allUsers.bind(usersClient));
+  const allUsers = await requestAsAdmin(usersClient.allUsers);
   const result = allUsers.find(user => user.email === email);
 
   if (!result) {

@@ -2,7 +2,7 @@
   min-width: 500px;
   max-height: calc(100vh - 350px);
 
-  @media (max-height: 920px) {
+  @media (height <= 920px) {
     max-height: calc(100vh - 100px);
   }
 }

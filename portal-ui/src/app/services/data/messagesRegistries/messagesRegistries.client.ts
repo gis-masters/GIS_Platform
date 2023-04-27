@@ -1,3 +1,5 @@
+import { boundClass } from 'autobind-decorator';
+
 import { PageableResources } from '../../../../server-types/common-contracts';
 import { preparePageOptions } from '../../api/http.utils';
 import { PageOptions } from '../../models';
@@ -6,6 +8,7 @@ import { Client } from '../../api/Client';
 
 import { MessagesRegistriesMessages, MessagesRegistry } from './messagesRegistries.models';
 
+@boundClass
 class MessagesRegistriesClient extends Client {
   private static _instance: MessagesRegistriesClient;
 

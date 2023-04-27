@@ -8,8 +8,7 @@
 
   transform: rotate(calc(var(--PrintMapDialogPreviewRotation) * 1rad));
 
-  --PrintMapDialogWindRoseWidth:
-    calc(
-      var(--PrintMapDialogPreviewSizeFactor) * calc(25 * var(--PrintMapDialogPreviewControlsFactor))
-    );
+  --PrintMapDialogWindRoseWidth: calc(
+    var(--PrintMapDialogPreviewSizeFactor) * calc(25 * var(--PrintMapDialogPreviewControlsFactor))
+  );
 }

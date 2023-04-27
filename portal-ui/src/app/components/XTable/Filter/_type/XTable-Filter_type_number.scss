@@ -1,6 +1,7 @@
 .XTable-Filter_type_float,
 .XTable-Filter_type_integer {
   display: flex;
+  justify-content: end;
   gap: 2px;
 
   .MuiInputBase-input {

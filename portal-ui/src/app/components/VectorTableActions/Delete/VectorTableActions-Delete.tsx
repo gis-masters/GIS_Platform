@@ -45,7 +45,17 @@ export class VectorTableActionsDelete extends Component<VectorTableActionsDelete
           </IconButton>
         </Tooltip>
 
-        {!this.errorMessage ? (
+        {this.errorMessage ? (
+          <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
+            <DialogTitle>Невозможно удалить</DialogTitle>
+            <DialogContent>
+              <DialogContentText>{this.errorMessage}</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.closeDialog}>Понятно</Button>
+            </DialogActions>
+          </Dialog>
+        ) : (
           <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
             <DialogTitle>Подтверждение удаления</DialogTitle>
             <DialogContent>
@@ -56,16 +66,6 @@ export class VectorTableActionsDelete extends Component<VectorTableActionsDelete
                 Удалить
               </Button>
               <Button onClick={this.closeDialog}>Отмена</Button>
-            </DialogActions>
-          </Dialog>
-        ) : (
-          <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
-            <DialogTitle>Невозможно удалить</DialogTitle>
-            <DialogContent>
-              <DialogContentText>{this.errorMessage}</DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.closeDialog}>Понятно</Button>
             </DialogActions>
           </Dialog>
         )}

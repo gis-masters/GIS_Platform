@@ -6,7 +6,7 @@ import { ScenarioScope } from '../../ScenarioScope';
 import { getSchemaIdByTitle } from './getSchemaIdByTitle';
 import { getPreparedFeatures } from './features.templates';
 import { createVectorTableAs } from './createTestVectorTable';
-import { createRecordAs } from './vectorTableRecordsManagement';
+import { createRecordAsAdmin } from './vectorTableRecordsManagement';
 import { getUserByEmail } from '../auth/getUserByEmail';
 import { getVectorTableByTitle } from './getVectorTableByTitle';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
@@ -67,15 +67,12 @@ Given(
   }
 );
 
-Given(
-  'таблица наполнена данными {string}, созданными {string}',
-  async function (this: ScenarioScope, title: string, username: string) {
-    this.latestFeatures = getPreparedFeatures(title, this.latestSchema);
-    for (const feature of this.latestFeatures) {
-      await createRecordAs(this.latestDataset.identifier, this.latestVectorTable.identifier, feature, username);
-    }
+Given('таблица наполнена данными {string}', async function (this: ScenarioScope, title: string) {
+  this.latestFeatures = getPreparedFeatures(title, this.latestSchema);
+  for (const feature of this.latestFeatures) {
+    await createRecordAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, feature);
   }
-);
+});
 
 Given(
   'у пользователя {string} есть право на {string} на таблицу {string}',

@@ -74,10 +74,10 @@ export class RegisterComponent implements OnDestroy {
       }
 
       // set error on matchingControl if validation fails
-      if (control.value !== matchingControl.value) {
-        matchingControl.setErrors({ mustMatch: true });
-      } else {
+      if (control.value === matchingControl.value) {
         matchingControl.setErrors(null);
+      } else {
+        matchingControl.setErrors({ mustMatch: true });
       }
     };
   }

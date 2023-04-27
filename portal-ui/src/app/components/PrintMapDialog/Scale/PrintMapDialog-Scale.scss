@@ -6,8 +6,7 @@
   width: var(--PrintMapDialogScaleWidth);
   height: calc(var(--PrintMapDialogScaleWidth) / 8);
 
-  --PrintMapDialogScaleWidth:
-    calc(
-      var(--PrintMapDialogPreviewSizeFactor) * calc(69 * var(--PrintMapDialogPreviewControlsFactor))
-    );
+  --PrintMapDialogScaleWidth: calc(
+    var(--PrintMapDialogPreviewSizeFactor) * calc(69 * var(--PrintMapDialogPreviewControlsFactor))
+  );
 }

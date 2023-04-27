@@ -1,3 +1,5 @@
+import { boundClass } from 'autobind-decorator';
+
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { Mime } from '../../util/Mime';
@@ -5,6 +7,7 @@ import { Process } from '../processes/processes.models';
 
 import { ExportRequest } from './export.models';
 
+@boundClass
 class ExportClient extends Client {
   private static _instance: ExportClient;
 

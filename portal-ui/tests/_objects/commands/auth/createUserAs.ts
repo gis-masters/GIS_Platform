@@ -4,5 +4,5 @@ import { getTestUser } from './testUsers';
 import { requestAs } from '../requestAs';
 
 export async function createUserAs(userData: NewUserData, username: string): Promise<void> {
-  await requestAs(getTestUser(username), usersClient.createUser.bind(usersClient), userData);
+  await requestAs(getTestUser(username), usersClient.createUser, userData);
 }

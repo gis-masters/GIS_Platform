@@ -33,7 +33,7 @@ export class OrgGroupsCreateEditDialog extends Component<OrgGroupsCreateEditDial
         schema={{ properties: this.groupProperties }}
         value={group}
         actionFunction={this.create}
-        actionButtonProps={{ children: !group ? 'Создать' : 'Обновить' }}
+        actionButtonProps={{ children: group ? 'Обновить' : 'Создать' }}
         onClose={onClose}
       />
     );

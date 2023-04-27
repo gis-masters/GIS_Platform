@@ -2,8 +2,6 @@ import { Block } from '../../Block';
 import { XTableBlock } from '../XTable/XTable.block';
 
 class AttributesBlock extends Block {
-  private readonly xTable = new XTableBlock('.Attributes');
-
   selectors = {
     container: '.Attributes',
     bar: '.Attributes-Bar',
@@ -20,6 +18,12 @@ class AttributesBlock extends Block {
     selectedYes: '.Attributes-CheckFilterButton_selected_yes',
     selectedNo: '.Attributes-CheckFilterButton_selected_no'
   };
+
+  readonly xTable = new XTableBlock(this.selectors.container);
+
+  async waitForTableVisible(): Promise<void> {
+    await this.xTable.waitForVisible();
+  }
 
   async waitForBarHidden(): Promise<void> {
     const $bar = await this.$('bar');
@@ -120,46 +124,6 @@ class AttributesBlock extends Block {
     const $selected = await this.$(inverse ? 'selectedYes' : 'selectedNo');
     await $selected.waitForClickable();
     await $selected.click();
-  }
-
-  async getColumnType(title: string): Promise<string> {
-    return await this.xTable.getColumnType(title);
-  }
-
-  async sortColumn(title: string, direction: string) {
-    await this.xTable.sortColumn(title, direction);
-  }
-
-  async getColValues(title: string): Promise<string[]> {
-    return await this.xTable.getColValues(title);
-  }
-
-  async getBooleanColValues(title: string): Promise<boolean[]> {
-    return await this.xTable.getBooleanColValues(title);
-  }
-
-  async isColumnSortable(title: string): Promise<boolean> {
-    return await this.xTable.isColumnSortable(title);
-  }
-
-  async isColumnFilterable(title: string): Promise<boolean> {
-    return await this.xTable.isColumnFilterable(title);
-  }
-
-  async filterNumerableColumn(colTitle: string, lte: string, gte: string) {
-    await this.xTable.filterNumerableColumn(colTitle, lte, gte);
-  }
-
-  async filterStringColumn(colTitle: string, filter: string) {
-    await this.xTable.filterStringColumn(colTitle, filter);
-  }
-
-  async filterChoiceColumn(colTitle: string, optionTitle: string) {
-    await this.xTable.filterChoiceColumn(colTitle, optionTitle);
-  }
-
-  async getFilterValue(attributeTitle: string): Promise<string> {
-    return this.xTable.getFilterValue(attributeTitle);
   }
 }
 

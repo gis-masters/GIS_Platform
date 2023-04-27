@@ -1,8 +1,16 @@
-.XTable-HeadCellLabel {
+body .XTable-HeadCellLabel {
   &_singleLineContent {
     display: flex;
     align-items: center;
 
     max-width: 100%;
   }
+}
+
+body .MuiTableCell-alignRight .XTable-HeadCellLabel {
+  justify-content: end;
+}
+
+body .MuiTableCell-alignCenter .XTable-HeadCellLabel {
+  justify-content: center;
 }

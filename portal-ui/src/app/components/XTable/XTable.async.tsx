@@ -376,7 +376,9 @@ export default class XTable<T> extends Component<XTableProps<T>> {
 
   @action.bound
   private afterFilterChange() {
-    if (!this.isAsync) {
+    if (this.isAsync) {
+      this.tableMinHeight = 0;
+    } else {
       const { data } = this.props as XTablePropsSync<T>;
 
       if (this.dataPaged.length === this.pageSize || this.syncData === data) {
@@ -387,8 +389,6 @@ export default class XTable<T> extends Component<XTableProps<T>> {
       if (onFilter) {
         onFilter(this.syncData);
       }
-    } else {
-      this.tableMinHeight = 0;
     }
   }
 

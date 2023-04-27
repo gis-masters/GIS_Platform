@@ -7,7 +7,7 @@ export class MuiInputBlock extends Block {
     container: '.MuiInputBase-input'
   };
 
-  async clearInputValue(): Promise<void> {
+  async clearValue(): Promise<void> {
     const $input = await this.$('container');
     await $input.moveTo();
     await $input.click();
@@ -17,9 +17,15 @@ export class MuiInputBlock extends Block {
     } while (await $input.getValue());
   }
 
-  async setInputValue(value: string): Promise<void> {
+  async setValue(value: string): Promise<void> {
     const $input = await this.$('container');
 
     await $input.setValue(value);
+  }
+
+  async getValue(): Promise<string> {
+    const $input = await this.$('container');
+
+    return await $input.getValue();
   }
 }

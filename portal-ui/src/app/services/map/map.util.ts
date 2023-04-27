@@ -12,9 +12,9 @@ export function getFeaturesUrl(
 ): string {
   let baseUrl: string;
 
-  if (typeof browser !== 'undefined') {
+  if (typeof browser === 'object') {
     baseUrl = browser.options.baseUrl;
-  } else if (typeof window !== 'undefined') {
+  } else if (typeof window === 'object') {
     baseUrl = window.location.origin;
   } else {
     baseUrl = 'http://localhost';

@@ -82,8 +82,7 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
           filterable,
           type,
           hidden: col.hidden || hidden,
-          singleLineContent,
-          unspecifiedWidth: !width
+          singleLineContent
         },
         [className, col.headerCellProps?.className]
       )
@@ -93,11 +92,7 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
 
     return (
       <TableCell {...cellProps} ref={this.cellRef}>
-        <XTableCellContent
-          singleLineContent={singleLineContent}
-          unspecifiedWidth={!width}
-          col={col as XTableColumn<unknown>}
-        >
+        <XTableCellContent singleLineContent={singleLineContent} col={col as XTableColumn<unknown>}>
           <XTableHeadCellLabel
             col={col}
             onSort={this.handleSort}
@@ -141,11 +136,11 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
   private handleSort() {
     const { col, sortParams } = this.props;
 
-    if (sortParams.field !== col.field) {
+    if (sortParams.field === col.field) {
+      sortParams.asc = !sortParams.asc;
+    } else {
       sortParams.field = col.field;
       sortParams.asc = true;
-    } else {
-      sortParams.asc = !sortParams.asc;
     }
   }
 

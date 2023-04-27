@@ -11,14 +11,14 @@ export class FormBlock extends Block {
   async replaceStringValue(title: string, value: string): Promise<void> {
     const $tableFieldValueRoot = await this.getFieldInputRoot(title);
     const inputBlock = new MuiInputBlock($tableFieldValueRoot);
-    await inputBlock.clearInputValue();
-    await inputBlock.setInputValue(value);
+    await inputBlock.clearValue();
+    await inputBlock.setValue(value);
   }
 
   async setStringValue(title: string, value: string): Promise<void> {
     const $tableFieldValueRoot = await this.getFieldInputRoot(title);
     const tableFieldValue = new MuiInputBlock($tableFieldValueRoot);
-    await tableFieldValue.setInputValue(value);
+    await tableFieldValue.setValue(value);
   }
 
   async setChoiseValue(title: string, value: string): Promise<void> {

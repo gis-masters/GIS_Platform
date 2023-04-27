@@ -1,9 +1,12 @@
+import { boundClass } from 'autobind-decorator';
+
 import { http } from '../../api/http.service';
 import { GisClient } from '../GisClient';
 import { CrgProject } from '../projects/projects.models';
 
 import { ProjectBasemap } from './project-basemaps.models';
 
+@boundClass
 class ProjectBasemapClient extends GisClient {
   private static _instance: ProjectBasemapClient;
 

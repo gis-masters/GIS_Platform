@@ -28,10 +28,10 @@ class FormViewTypeDocument extends Component<FormControlProps> {
 
     return (
       <div className={cnFormView({ inSet }, [className])}>
-        {!value.length ? (
-          <FormViewValue>—</FormViewValue>
-        ) : (
+        {value.length ? (
           <Documents property={property as PropertySchemaDocument} value={value} />
+        ) : (
+          <FormViewValue>—</FormViewValue>
         )}
         <FormViewErrors errors={errors} />
       </div>

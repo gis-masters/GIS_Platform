@@ -45,7 +45,7 @@ body .PermissionsWidget {
     font-size: 14px;
 
     &::after {
-      content: ",";
+      content: ',';
     }
 
     &:last-child::after {

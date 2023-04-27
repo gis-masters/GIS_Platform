@@ -28,20 +28,9 @@ bootstrap table theme
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family-sans-serif:
-    -apple-system,
-    blinkmacsystemfont,
-    "Segoe UI",
-    roboto,
-    "Helvetica Neue",
-    arial,
-    "Noto Sans",
-    sans-serif,
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji";
-  --font-family-monospace: sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
+  --font-family-sans-serif: -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', arial, 'Noto Sans',
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-family-monospace: sfmono-regular, menlo, monaco, consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
 *,
@@ -66,19 +55,8 @@ body {
   color: #212529;
   background-color: #fff;
 
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    "Noto Sans",
-    sans-serif,
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji";
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -92,25 +70,25 @@ body {
   padding-left: 15px;
 }
 
-@media (min-width: 576px) {
+@media (width >= 576px) {
   .container {
     max-width: 540px;
   }
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .container {
     max-width: 720px;
   }
 }
 
-@media (min-width: 992px) {
+@media (width >= 992px) {
   .container {
     max-width: 960px;
   }
 }
 
-@media (min-width: 1200px) {
+@media (width >= 1200px) {
   .container {
     max-width: 1140px;
   }
@@ -125,7 +103,6 @@ body {
 }
 
 .row {
-  display: flexbox;
   display: flex;
   flex-wrap: wrap;
 
@@ -194,7 +171,7 @@ body {
   max-width: 100%;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .col-md-12 {
     flex: 0 0 100%;
 
@@ -289,8 +266,7 @@ textarea.form-control {
   color: #495057;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
-  background:
-    url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e")
+  background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e")
     no-repeat right 0.75rem center/8px 10px;
   background-color: #fff;
 
@@ -313,7 +289,7 @@ textarea.form-control {
 }
 
 .custom-select[multiple],
-.custom-select[size]:not([size="1"]) {
+.custom-select[size]:not([size='1']) {
   height: auto;
   padding-right: 0.75rem;
 
@@ -332,7 +308,6 @@ textarea.form-control {
 .input-group {
   position: relative;
 
-  display: flexbox;
   display: flex;
   align-items: stretch;
   flex-wrap: wrap;
@@ -377,14 +352,12 @@ textarea.form-control {
 }
 
 .input-group-append {
-  display: flexbox;
   display: flex;
 
   margin-left: -1px;
 }
 
 .input-group-text {
-  display: flexbox;
   display: flex;
   align-items: center;
 
@@ -406,8 +379,8 @@ textarea.form-control {
   -ms-flex-align: center;
 }
 
-.input-group-text input[type="radio"],
-.input-group-text input[type="checkbox"] {
+.input-group-text input[type='radio'],
+.input-group-text input[type='checkbox'] {
   margin-top: 0;
 }
 
@@ -433,10 +406,7 @@ textarea.form-control {
 
   padding: 0.25em 0.4em;
 
-  transition:
-    color 0.15s ease-in-out,
-    background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out,
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
   text-align: center;
   vertical-align: baseline;
@@ -504,7 +474,7 @@ a.badge:focus {
   padding-bottom: 0.5rem !important;
 }
 
-@media (min-width: 992px) {
+@media (width >= 992px) {
   .ml-lg-3 {
     margin-left: 1rem !important;
   }

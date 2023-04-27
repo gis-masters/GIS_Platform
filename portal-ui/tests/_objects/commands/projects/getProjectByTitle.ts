@@ -3,7 +3,7 @@ import { requestAsAdmin } from '../requestAs';
 import { projectsClient } from '../../../../src/app/services/gis/projects/projects.client';
 
 export async function getProjectByTitle(title: string): Promise<CrgProject> {
-  const result = await requestAsAdmin(projectsClient.getProjects.bind(projectsClient), {
+  const result = await requestAsAdmin(projectsClient.getProjects, {
     page: 0,
     pageSize: 2,
     filter: { name: title }

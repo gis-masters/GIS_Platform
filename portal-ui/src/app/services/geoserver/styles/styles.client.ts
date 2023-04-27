@@ -1,9 +1,12 @@
+import { boundClass } from 'autobind-decorator';
+
 import { GeoserverClient } from '../GeoserverClient';
 import { http } from '../../api/http.service';
 import { Mime } from '../../util/Mime';
 
 import { FilteredStylesLayerRequest, FilteredStylesResponse } from './styles.models';
 
+@boundClass
 class StylesClient extends GeoserverClient {
   private static _instance: StylesClient;
 

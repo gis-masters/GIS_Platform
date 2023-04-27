@@ -8,7 +8,7 @@ import { Mime } from '../../util/Mime';
 import { WFS } from '../../ol/WFS';
 
 import { WfsFeature, WfsFeatureCollection } from './wfs.models';
-import { _reqGetFeatureCollectionByXmlFilter, _reqGetWfsFeatureCollection } from './wfs.client';
+import { wfsClient } from './wfs.client';
 import { generateWfsSortParam } from './wfs.util';
 
 function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {
@@ -90,7 +90,7 @@ export async function getFeatures(
     const { ...paramsForTotalCount } = params;
     paramsForTotalCount.startindex = '0';
     paramsForTotalCount.count = '1';
-    const totalResponse = await _reqGetWfsFeatureCollection(paramsForTotalCount);
+    const totalResponse = await wfsClient.getFeatureCollection(paramsForTotalCount);
     featuresTotal = totalResponse.totalFeatures;
   }
 
@@ -102,7 +102,7 @@ export async function getFeatures(
  * @param xml Подготовленный, при помощи библиотеки openLayers, XML document конвертированный в строку.
  */
 export async function getFeatureCollectionByXmlFilter(xml: string): Promise<WfsFeatureCollection> {
-  return _reqGetFeatureCollectionByXmlFilter(xml);
+  return wfsClient.getFeatureCollectionByXmlFilter(xml);
 }
 
 export async function getFeaturesById(ids: string[], complexName: string): Promise<WfsFeature[]> {
@@ -128,7 +128,7 @@ export async function getFeaturesById(ids: string[], complexName: string): Promi
     featureID: ids.join(',')
   };
 
-  const { features } = await _reqGetWfsFeatureCollection(params);
+  const { features } = await wfsClient.getFeatureCollection(params);
 
   return features;
 }

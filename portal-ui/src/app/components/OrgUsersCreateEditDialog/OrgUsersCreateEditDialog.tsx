@@ -36,7 +36,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
         schema={{ properties: this.userProperties }}
         value={user}
         actionFunction={this.save}
-        actionButtonProps={{ children: !user ? 'Создать' : 'Обновить' }}
+        actionButtonProps={{ children: user ? 'Обновить' : 'Создать' }}
         onClose={onClose}
       />
     );

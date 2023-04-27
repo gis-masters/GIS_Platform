@@ -4,8 +4,8 @@ import { withBemMod } from '@bem-react/core';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 
 import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
+import { Fias } from '../../../../services/data/fias/fias.models';
 import { FiasView } from '../../../FiasView/FiasView';
-import { Fias } from '../../../../services/data/fias.service';
 
 const XTableCellContentTypeFias: FC<XTableCellContentProps> = ({ col, cellData, ...props }) => {
   return (

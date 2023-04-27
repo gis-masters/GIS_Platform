@@ -1,3 +1,5 @@
+import { boundClass } from 'autobind-decorator';
+
 import { GisClient } from '../GisClient';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
@@ -6,6 +8,7 @@ import { CrgLayer, CrgLayersGroup } from '../layers/layers.models';
 
 import { CrgProject } from './projects.models';
 
+@boundClass
 class ProjectsClient extends GisClient {
   private static _instance: ProjectsClient;
 

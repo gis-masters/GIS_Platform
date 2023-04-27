@@ -3,7 +3,7 @@
 
   display: grid;
   grid-template: auto auto / 50px 18px auto 100px;
-  grid-template-areas: "id icon title buttons" "id icon layer buttons";
+  grid-template-areas: 'id icon title buttons' 'id icon layer buttons';
 
   height: 54px;
   padding: 7px 5px;
@@ -13,12 +13,9 @@
   &::before {
     position: absolute;
     z-index: -1;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset: 0;
 
-    content: "";
+    content: '';
     transition: background-color 0.15s;
 
     background: rgb(0 0 0 / 0%);
@@ -60,12 +57,9 @@
 
     &::before {
       position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      inset: 0;
 
-      content: "";
+      content: '';
     }
 
     &_disabled {

@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
-import { Fias } from '../../../../services/data/fias.service';
+import { Fias } from '../../../../services/data/fias/fias.models';
 import { FiasView } from '../../../FiasView/FiasView';
 
 import { cnFormView } from '../Form-View';

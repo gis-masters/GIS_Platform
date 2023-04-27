@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { Fias } from '../../services/data/fias.service';
+import { Fias } from '../../services/data/fias/fias.models';
 
 const cnFiasView = cn('FiasView');
 

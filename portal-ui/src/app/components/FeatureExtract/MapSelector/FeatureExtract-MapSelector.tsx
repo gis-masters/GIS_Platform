@@ -30,7 +30,14 @@ export class FeatureExtractMapSelector extends Component<FormControlProps> {
 
     return (
       <>
-        {!(fieldValue as FileInfo[] | null)?.length ? (
+        {(fieldValue as FileInfo[] | null)?.length ? (
+          <Files
+            property={property as PropertySchemaFile}
+            value={fieldValue as FileInfo[]}
+            onChange={this.handleChange}
+            editable
+          />
+        ) : (
           <Button
             className={cnFeatureExtractMapSelector()}
             onClick={this.openPrintDialog}
@@ -38,13 +45,6 @@ export class FeatureExtractMapSelector extends Component<FormControlProps> {
           >
             Выбрать фрагмент карты
           </Button>
-        ) : (
-          <Files
-            property={property as PropertySchemaFile}
-            value={fieldValue as FileInfo[]}
-            onChange={this.handleChange}
-            editable
-          />
         )}
 
         <PrintMapDialog onClose={this.closePrintDialog} open={this.printDialogOpen} onPrint={this.handlePrint} />

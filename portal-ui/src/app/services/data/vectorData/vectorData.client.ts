@@ -1,3 +1,5 @@
+import { boundClass } from 'autobind-decorator';
+
 import { PageableResponse, PageOptions } from '../../models';
 import { preparePageOptions } from '../../api/http.utils';
 import { http } from '../../api/http.service';
@@ -6,6 +8,7 @@ import { DataClient } from '../DataClient';
 
 import { Dataset, NewDataset, VectorTable, VectorTableConnection, NewVectorTable } from './vectorData.models';
 
+@boundClass
 class VectorDataClient extends DataClient {
   private static _instance: VectorDataClient;
 

@@ -1,4 +1,5 @@
 Feature: Toast error
+
   Всплывающие уведомления об ошибке.
 
   Background:

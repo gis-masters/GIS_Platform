@@ -22,7 +22,7 @@ const ActionsItemAsButton: FC<ActionsItemProps> = ({
     <MenuButton
       className={cnActionsItem(null, [className])}
       href={download ? url : undefined}
-      routerLink={!download ? url : undefined}
+      routerLink={download ? undefined : url}
       onClick={onClick}
       color={color || 'inherit'}
       startIcon={icon}
@@ -36,7 +36,7 @@ const ActionsItemAsButton: FC<ActionsItemProps> = ({
     <Button
       className={cnActionsItem(null, [className])}
       href={download ? url : undefined}
-      routerLink={!download ? url : undefined}
+      routerLink={download ? undefined : url}
       disabled={disabled}
       onClick={onClick}
       color={color || 'inherit'}

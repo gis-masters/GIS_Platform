@@ -191,7 +191,7 @@ export default class Files extends Component<FilesProps> {
     const maxSizeBites = currentUser.isAdmin ? 1_073_741_824 : this.props.property.maxSize || 10_485_760;
 
     if (maxSizeBites && fileInfo.size > maxSizeBites) {
-      const maxSize = currentUser.isAdmin ? '1 Gb' : `${Number((maxSizeBites / Math.pow(1024, 2)).toFixed(2))} Mb`;
+      const maxSize = currentUser.isAdmin ? '1 Gb' : `${Number((maxSizeBites / 1024 ** 2).toFixed(2))} Mb`;
       this.editNewbie(fileInfo.id, {
         status: 'error',
         statusText: `Размер указанного файла превышает максимально допустимый — ${maxSize}.

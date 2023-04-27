@@ -97,10 +97,10 @@ class CurrentProject implements CrgProjectData {
         item.depth = this.getDept(item);
         item.hiddenByZoom = this.isHiddenByZoom(item);
 
-        if (!item.isGroup) {
-          item.actualTransparency = this.getActualTransparency(item);
-        } else {
+        if (item.isGroup) {
           item.isEmptyGroup = !tree.some(someItem => !someItem.isGroup && this.isAncestor(someItem, item));
+        } else {
+          item.actualTransparency = this.getActualTransparency(item);
         }
 
         if (!item.errors && (item.payload as NewCrgLayer).complexName) {

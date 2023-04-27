@@ -2,15 +2,15 @@ import { Then, When } from '@wdio/cucumber-framework';
 
 import { xTableFilterTypeIdBlock } from './XTable-Filter_type_id.block';
 
-When('в таблице xtable я ввожу в поле фильтра типа id {string}', async (value: string) => {
+When('в таблице xTable я ввожу в поле фильтра типа id {string}', async (value: string) => {
   await xTableFilterTypeIdBlock.setValue(value);
 });
 
-Then('в таблице xtable в поле фильтра типа id введено значение {string}', async (value: string) => {
+Then('в таблице xTable в поле фильтра типа id введено значение {string}', async (value: string) => {
   expect(await xTableFilterTypeIdBlock.getValue()).toEqual(value);
 });
 
-When('в таблице xtable я ввожу в поле фильтра типа id 2, 3 и 5 через {string}', async (divType: string) => {
+When('в таблице xTable я ввожу в поле фильтра типа id 2, 3 и 5 через {string}', async (divType: string) => {
   const div = {
     пробел: ' ',
     запятая: ',',

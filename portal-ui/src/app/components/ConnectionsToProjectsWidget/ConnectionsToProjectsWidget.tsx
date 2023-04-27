@@ -64,7 +64,9 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
     return (
       <>
         <div className={cnConnectionsToProjectsWidget()}>
-          {!loading ? (
+          {loading ? (
+            <Skeleton height={24} animation='wave' width='190px' />
+          ) : (
             <>
               Подключено в{' '}
               {count ? <PseudoLink onClick={this.openCurrentProjectsDialog}>{textProjects}</PseudoLink> : textProjects}
@@ -137,8 +139,6 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
                 </DialogActions>
               </Dialog>
             </>
-          ) : (
-            <Skeleton height={24} animation='wave' width='190px' />
           )}
         </div>
       </>

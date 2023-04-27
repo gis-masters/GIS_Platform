@@ -99,7 +99,7 @@ export class MappingPairComponent implements OnInit, OnChanges {
     const { valueType, name, title } = property;
     const isSpecial = name === NOT_IMPORT.name || name === AS_IS.name;
 
-    return (isSpecial ? title : name) + (valueType !== undefined ? ` (${valueType})` : '');
+    return (isSpecial ? title : name) + (valueType === undefined ? '' : ` (${valueType})`);
   }
 
   private getPropertySchema(name: string) {

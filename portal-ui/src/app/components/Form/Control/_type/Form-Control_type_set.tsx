@@ -26,9 +26,15 @@ class FormControlTypeSet extends Component<FormControlProps> {
             {({ FormControl }: CommonDiRegistry) => (
               <>
                 {properties.map((subProperty, i) =>
-                  !subProperty.hidden ? (
+                  subProperty.hidden ? (
+                    <FormHiddenField
+                      key={i}
+                      name={String(subProperty.name)}
+                      value={fieldValue[subProperty.name] as Record<string, unknown>}
+                    />
+                  ) : (
                     <FormControl
-                      htmlId={!i ? htmlId : undefined}
+                      htmlId={i ? undefined : htmlId}
                       key={subProperty.name}
                       property={subProperty}
                       type={subProperty.propertyType}
@@ -36,12 +42,6 @@ class FormControlTypeSet extends Component<FormControlProps> {
                       fieldValue={fieldValue[subProperty.name] as Record<string, unknown>}
                       variant={variant}
                       inSet
-                    />
-                  ) : (
-                    <FormHiddenField
-                      key={i}
-                      name={String(subProperty.name)}
-                      value={fieldValue[subProperty.name] as Record<string, unknown>}
                     />
                   )
                 )}

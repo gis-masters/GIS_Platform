@@ -1,7 +1,10 @@
+import { boundClass } from 'autobind-decorator';
+
 import { GeoserverClient } from '../GeoserverClient';
 import { http } from '../../api/http.service';
 import { Mime } from '../../util/Mime';
 
+@boundClass
 class WmsClient extends GeoserverClient {
   private static _instance: WmsClient;
 

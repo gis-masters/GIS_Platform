@@ -1,9 +1,12 @@
+import { boundClass } from 'autobind-decorator';
+
 import { Projection } from '../../geoserver/projections.service';
 import { PageableResponse, PageOptions } from '../../models';
 import { preparePageOptions } from '../../api/http.utils';
 import { http } from '../../api/http.service';
 import { Client } from '../../api/Client';
 
+@boundClass
 class EpsgClient extends Client {
   private static _instance: EpsgClient;
 

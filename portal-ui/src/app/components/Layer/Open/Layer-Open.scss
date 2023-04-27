@@ -3,11 +3,8 @@
 
   &::after {
     position: absolute;
-    top: -100px;
-    right: -500px;
-    bottom: -100px;
-    left: 0;
+    inset: -100px -500px -100px 0;
 
-    content: "";
+    content: '';
   }
 }

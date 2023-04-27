@@ -3,7 +3,7 @@ import { Dataset } from '../../../../src/app/services/data/vectorData/vectorData
 import { requestAsAdmin } from '../requestAs';
 
 export async function getDatasetByTitle(title: string): Promise<Dataset> {
-  const response = await requestAsAdmin(vectorDataClient.getDatasets.bind(vectorDataClient), {
+  const response = await requestAsAdmin(vectorDataClient.getDatasets, {
     page: 0,
     pageSize: 1,
     filter: { title }

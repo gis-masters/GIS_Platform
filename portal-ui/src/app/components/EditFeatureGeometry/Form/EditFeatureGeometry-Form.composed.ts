@@ -15,4 +15,4 @@ export const EditFeatureGeometryForm = compose(
   withTypeLineString,
   withTypePolygon,
   withTypeMultiPolygon
-)(Presenter) as typeof Presenter;
+)(Presenter);

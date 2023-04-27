@@ -1,8 +1,11 @@
+import { boundClass } from 'autobind-decorator';
+
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 
 import { CrgUser, CrgUserRaw, NewUserData, OrgInfo } from './users.models';
 
+@boundClass
 class UsersClient extends Client {
   private static _instance: UsersClient;
 

@@ -143,9 +143,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
       this.isValidationInited = false;
 
-      if (!response) {
-        this.logger.warn('Cant get layer info', response);
-      } else {
+      if (response) {
         response.forEach((brieflyInfo: ValidationShortInfo) => {
           if (brieflyInfo.status === 'ERROR') {
             this.logger.warn('Error for feature: ', brieflyInfo);
@@ -154,6 +152,8 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
           }
         });
         this.layersWithErrors = this.layers.filter(layer => this.commonInfo.get(layer.tableName)?.totalViolations);
+      } else {
+        this.logger.warn('Cant get layer info', response);
       }
     } catch (error) {
       this.isValidationInited = false;

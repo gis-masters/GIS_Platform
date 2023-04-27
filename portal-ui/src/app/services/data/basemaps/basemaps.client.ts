@@ -1,3 +1,5 @@
+import { boundClass } from 'autobind-decorator';
+
 import { PageableResponse, PageOptions } from '../../models';
 import { preparePageOptions } from '../../api/http.utils';
 import { http } from '../../api/http.service';
@@ -5,6 +7,7 @@ import { Client } from '../../api/Client';
 
 import { Basemap } from './basemaps.models';
 
+@boundClass
 class BasemapsClient extends Client {
   private static _instance: BasemapsClient;
 

@@ -1,8 +1,13 @@
+import { Key } from 'webdriverio';
+
 import { Block } from '../../Block';
 import { extractText } from '../../commands/extractText';
 import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 import { SortOrder } from '../../../../src/app/services/models';
 import { hasClass } from '../../utils/hasClass';
+
+import { XTableFilterTypeStringBlock } from './Filter/_type/XTable-Filter_type_string.block';
+import { XTableFilterTypeDocumentBlock } from './Filter/_type/XTable-Filter_type_document.block';
 
 export class XTableBlock extends Block {
   selectors = {
@@ -145,9 +150,16 @@ export class XTableBlock extends Block {
 
   async filterStringColumn(colTitle: string, filter: string): Promise<void> {
     const $headCell = await this.getHeadCell(colTitle);
-    const $input = $headCell.$('.XTable-Filter input');
-    await $input.setValue(filter);
+    const xTableFilterTypeStringBlock = new XTableFilterTypeStringBlock($headCell);
+    await xTableFilterTypeStringBlock.setValue(filter);
+    const $loading = await this.$('loading');
+    await $loading.waitForDisplayed({ reverse: true });
+  }
 
+  async filterDocumentColumn(colTitle: string, filter: string): Promise<void> {
+    const $headCell = await this.getHeadCell(colTitle);
+    const xTableFilterTypeDocumentBlock = new XTableFilterTypeDocumentBlock($headCell);
+    await xTableFilterTypeDocumentBlock.setValue(filter);
     const $loading = await this.$('loading');
     await $loading.waitForDisplayed({ reverse: true });
   }
@@ -157,6 +169,8 @@ export class XTableBlock extends Block {
 
     const $muiSelectBlock = new MuiSelectBlock($headCell);
     await $muiSelectBlock.selectOptionByTitle(optionTitle);
+    await browser.keys([Key.Escape]);
+    await browser.pause(300); // анимация закрытия выпадающего списка
   }
 
   async getFilterValue(colTitle: string): Promise<string> {

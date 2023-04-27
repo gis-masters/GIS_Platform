@@ -112,9 +112,7 @@ export class LayersTree extends Component<LayersTreeProps> {
     const beforeItem = forward
       ? destinationItem
       : [...currentProject.visibleTreeWithEmptyGroups][destination.index - 1];
-    const afterItem = !forward
-      ? destinationItem
-      : [...currentProject.visibleTreeWithEmptyGroups][destination.index + 1];
+    const afterItem = forward ? [...currentProject.visibleTreeWithEmptyGroups][destination.index + 1] : destinationItem;
     const newTree = [...currentProject.tree];
     const oldIndex = this.getItemIndex(sourceItem);
 

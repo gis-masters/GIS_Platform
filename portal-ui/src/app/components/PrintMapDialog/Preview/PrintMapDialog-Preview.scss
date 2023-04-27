@@ -1,21 +1,20 @@
 .PrintMapDialog-Preview {
   margin-bottom: 14px;
-  padding:
-    calc(
+  padding: calc(
       var(--PrintMapDialogPreviewSizeFactor) *
-      calc(var(--PrintMapDialogPreviewMarginTop) * var(--PrintMapDialogPreviewFormatFactor))
+        calc(var(--PrintMapDialogPreviewMarginTop) * var(--PrintMapDialogPreviewFormatFactor))
     )
     calc(
       var(--PrintMapDialogPreviewSizeFactor) *
-      calc(var(--PrintMapDialogPreviewMarginRight) * var(--PrintMapDialogPreviewFormatFactor))
+        calc(var(--PrintMapDialogPreviewMarginRight) * var(--PrintMapDialogPreviewFormatFactor))
     )
     calc(
       var(--PrintMapDialogPreviewSizeFactor) *
-      calc(var(--PrintMapDialogPreviewMarginBottom) * var(--PrintMapDialogPreviewFormatFactor))
+        calc(var(--PrintMapDialogPreviewMarginBottom) * var(--PrintMapDialogPreviewFormatFactor))
     )
     calc(
       var(--PrintMapDialogPreviewSizeFactor) *
-      calc(var(--PrintMapDialogPreviewMarginLeft) * var(--PrintMapDialogPreviewFormatFactor))
+        calc(var(--PrintMapDialogPreviewMarginLeft) * var(--PrintMapDialogPreviewFormatFactor))
     );
 
   --PrintMapDialogPreviewSizeFactor: 1.8;

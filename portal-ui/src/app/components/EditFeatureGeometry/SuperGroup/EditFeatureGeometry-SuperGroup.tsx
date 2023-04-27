@@ -24,7 +24,7 @@ import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-SuperGroup.sc
 
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
-const EditFeatureGeometryGroup = compose(withMultiple)(GroupBase) as typeof GroupBase;
+const EditFeatureGeometryGroup = compose(withMultiple)(GroupBase);
 
 interface EditFeatureGeometrySuperGroupProps {
   geometryPart: CoordinateEdited[][];

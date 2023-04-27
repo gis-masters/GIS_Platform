@@ -4,7 +4,10 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { connectBasemapToProject, getBasemapConnections } from '../../services/gis/project-basemaps/project-basemaps.service';
+import {
+  connectBasemapToProject,
+  getBasemapConnections
+} from '../../services/gis/project-basemaps/project-basemaps.service';
 import { FileConnection } from '../../services/data/files/files.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { Basemap } from '../../services/data/basemaps/basemaps.models';

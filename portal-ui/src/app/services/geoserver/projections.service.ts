@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { chunk, cloneDeep, isEqual } from 'lodash';
 import { register } from 'ol/proj/proj4';
 import { Coordinate } from 'ol/coordinate';

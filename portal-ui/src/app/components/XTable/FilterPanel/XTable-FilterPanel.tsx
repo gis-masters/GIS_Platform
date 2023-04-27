@@ -40,7 +40,7 @@ export class XTableFilterPanel<T> extends Component<XTableFilterPanelProps<T>> {
       <div className={cnXTableFilterPanel()}>
         {!!this.filteredColumns.length && (
           <Chip
-            className={cnXTableFilterPanelItem()}
+            className={cnXTableFilterPanelItem({ clearAll: true })}
             color='secondary'
             label={
               <Tooltip title='Очистить все фильтры'>

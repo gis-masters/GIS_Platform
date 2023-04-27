@@ -106,15 +106,15 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
 
   @boundMethod
   private clickHandler() {
-    if (!this.active) {
+    if (this.active) {
+      mapService.drawOff();
+      mapService.disableDraftModification();
+      this.deactivate();
+    } else {
       mapService.draw(this.drawingGeometryType, this.handleDraw);
       mapService.disableDraftModification();
       mapService.enableDraftModification();
       this.activate();
-    } else {
-      mapService.drawOff();
-      mapService.disableDraftModification();
-      this.deactivate();
     }
   }
 

@@ -11,7 +11,10 @@ class BLPage extends Page {
   async openExample(story: string): Promise<void> {
     await browser.url(`iframe.html?id=${story}&viewMode=story`);
     await this.waitForVisible();
-    await browser.pause(500);
+    await browser.pause(500); // отрисовка блока в storybook
+    await browser.execute(() => {
+      document.querySelector('html')?.classList.add('StoryDocument');
+    });
   }
 }
 

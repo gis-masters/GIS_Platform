@@ -12,7 +12,7 @@ import {
   OldPropertySchemaDouble
 } from '../data/schema/schemaOld.models';
 import { services } from '../services';
-import { Fias } from '../data/fias.service';
+import { Fias } from '../data/fias/fias.models';
 
 export interface ValidationError {
   attribute: string;

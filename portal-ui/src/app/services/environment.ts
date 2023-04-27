@@ -101,12 +101,12 @@ export class Environment implements EnvironmentData {
   init(data: EnvironmentData): void {
     let baseUrl: string;
 
-    if (typeof browser !== 'undefined') {
+    if (typeof browser === 'object') {
       baseUrl = browser.options.baseUrl;
-    } else if (typeof window !== undefined) {
-      baseUrl = window.location.origin;
-    } else {
+    } else if (typeof window === undefined) {
       throw new TypeError('Unknown environment');
+    } else {
+      baseUrl = window.location.origin;
     }
 
     const baseUrlParsed = new URL(baseUrl);

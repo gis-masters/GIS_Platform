@@ -2,38 +2,37 @@ import { Block } from '../../../../Block';
 import { hasClass } from '../../../../utils/hasClass';
 import { MuiInputBlock } from '../../../MuiInput/MuiInput.block';
 
-class XTableFilterTypeStringBlock extends Block {
+export class XTableFilterTypeStringBlock extends Block {
   selectors = {
     container: '.XTable-Filter_type_string',
-    filterInput: '.XTable-Filter_type_string input',
-    filterInputStrictness: '.XTable-Filter_type_string .XTable-FilterStrictness'
+    strictness: '.XTable-Filter_type_string .XTable-FilterStrictness'
   };
 
   async clear(): Promise<void> {
-    const inputBlock = new MuiInputBlock(this.selectors.container);
-    await inputBlock.clearInputValue();
+    const inputBlock = new MuiInputBlock(await this.$('container'));
+    await inputBlock.clearValue();
   }
 
-  async filterClick(): Promise<void> {
-    const $filterInputStrictness = await this.$('filterInputStrictness');
+  async strictnessClick(): Promise<void> {
+    const $filterInputStrictness = await this.$('strictness');
     await $filterInputStrictness.click();
-    await browser.pause(300); // ждем анимацию фильтрации в таблице
+    await browser.pause(300); // отрисовка фильтрации в таблице
   }
 
-  async setValue(title: string) {
-    const $filterInput = await this.$('filterInput');
-    await $filterInput.setValue(title);
-    await browser.pause(300); // ждем анимацию фильтрации в таблице
+  async setValue(title: string): Promise<void> {
+    const inputBlock = new MuiInputBlock(await this.$('container'));
+    await inputBlock.setValue(title);
+    await browser.pause(300); // отрисовка фильтрации в таблице
   }
 
   async getValue(): Promise<string> {
-    const $filterInput = await this.$('filterInput');
+    const inputBlock = new MuiInputBlock(await this.$('container'));
 
-    return $filterInput.getValue();
+    return inputBlock.getValue();
   }
 
   async isFilterActive(): Promise<boolean> {
-    const $filterInputStrictness = await this.$('filterInputStrictness');
+    const $filterInputStrictness = await this.$('strictness');
 
     return hasClass($filterInputStrictness, 'XTable-FilterStrictness_filtered');
   }

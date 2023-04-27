@@ -4,5 +4,5 @@ import { getTestUser } from '../auth/testUsers';
 import { requestAs } from '../requestAs';
 
 export async function createDatasetAs(title: string, username: string): Promise<Dataset> {
-  return await requestAs(getTestUser(username), vectorDataClient.createDataset.bind(vectorDataClient), { title });
+  return await requestAs(getTestUser(username), vectorDataClient.createDataset, { title });
 }

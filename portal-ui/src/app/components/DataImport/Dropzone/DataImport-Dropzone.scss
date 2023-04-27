@@ -17,18 +17,15 @@
     &::before {
       position: absolute;
       z-index: 1;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      inset: 0;
 
-      content: "file_upload";
+      content: 'file_upload';
       transition: background-color 0.3s, backdrop-filter 0.3s, color 0.3s;
       text-align: center;
 
       color: rgb(255 255 255 / 0%);
 
-      font: 60px/170px "Material Icons";
+      font: 60px/170px 'Material Icons';
     }
 
     &:hover {
@@ -56,10 +53,7 @@
   &-DropzoneFiles {
     position: absolute;
     z-index: 2;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset: 0;
 
     display: flex;
     align-items: center;

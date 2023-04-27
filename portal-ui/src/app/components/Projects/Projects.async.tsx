@@ -61,9 +61,7 @@ export default class Projects extends Component {
   render() {
     return (
       <div className={cnProjects(null, ['scroll'])} ref={this.thisRef}>
-        {!allProjects.inited ? (
-          <ProjectsLoader />
-        ) : (
+        {allProjects.inited ? (
           <>
             <ProjectsHeader>
               <ProjectsFilter />
@@ -98,6 +96,8 @@ export default class Projects extends Component {
               ))}
             </ProjectsList>
           </>
+        ) : (
+          <ProjectsLoader />
         )}
       </div>
     );

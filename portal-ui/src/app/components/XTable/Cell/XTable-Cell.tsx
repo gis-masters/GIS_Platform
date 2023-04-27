@@ -50,7 +50,6 @@ export const XTableCell = observer((({
     >
       <XTableCellContent
         singleLineContent={singleLineContent}
-        unspecifiedWidth={!width}
         type={type}
         col={col as XTableColumn<unknown>}
         cellData={rowData[field]}

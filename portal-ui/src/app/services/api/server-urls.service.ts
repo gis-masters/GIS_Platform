@@ -116,14 +116,6 @@ function getDataUrl(): string {
   return getBaseUrl() + '/api/data';
 }
 
-export function getFiasAddresses(): string {
-  return getDataUrl() + '/integration/fias/fulladdress';
-}
-
-export function getFiasOktmo(): string {
-  return getDataUrl() + '/integration/fias/oktmo';
-}
-
 export function getApiImportUrl(projectId: number): string {
   return `${getDataUrl()}/import/${projectId}`;
 }

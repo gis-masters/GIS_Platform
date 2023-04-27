@@ -49,12 +49,12 @@ class AuthService {
         (!environment.server.port || environment.server.port === location.port) &&
         (!environment.server.wsPort || environment.server.wsPort === location.port);
 
-      if (!sameOrigin) {
-        this.token = result;
-        localStorage.setItem(TOKEN_KEY, this.token);
-      } else {
+      if (sameOrigin) {
         delete this.token;
         localStorage.removeItem(TOKEN_KEY);
+      } else {
+        this.token = result;
+        localStorage.setItem(TOKEN_KEY, this.token);
       }
 
       return { ok: true };

@@ -392,3 +392,13 @@ Compact.args = {
   size: 'small',
   singleLineContent: true
 };
+
+export const RedundantColWidth = Template.bind({}) as ComponentStory<XTableForTestData>;
+RedundantColWidth.args = {
+  title: 'Таблица с избыточной шириной колонки',
+  data,
+  filtersAlwaysEnabled: true,
+  cols: [cols[2]],
+  singleLineContent: true,
+  size: 'small'
+};

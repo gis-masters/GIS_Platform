@@ -16,7 +16,7 @@
   background: white;
   box-shadow: 0 8px 16px 0 rgb(0 0 0 / 16%);
 
-  font-family: "Material Icons";
+  font-family: 'Material Icons';
   font-size: 24px;
   line-height: 42px;
 
@@ -25,10 +25,7 @@
   &::before,
   &::after {
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset: 0;
 
     text-align: center;
 
@@ -36,11 +33,11 @@
   }
 
   &::before {
-    content: "chevron_left";
+    content: 'chevron_left';
   }
 
   &::after {
-    content: "layers";
+    content: 'layers';
 
     opacity: 1;
   }

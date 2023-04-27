@@ -7,11 +7,11 @@
 
   --ProjectsListColumns: 3;
 
-  @media (max-width: 970px) {
+  @media (width <= 970px) {
     --ProjectsListColumns: 2;
   }
 
-  @media (max-width: 670px) {
+  @media (width <= 670px) {
     --ProjectsListColumns: 1;
   }
 }

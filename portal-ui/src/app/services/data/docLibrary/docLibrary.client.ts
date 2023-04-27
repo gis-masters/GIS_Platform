@@ -1,3 +1,5 @@
+import { boundClass } from 'autobind-decorator';
+
 import { PageableResources } from '../../../../server-types/common-contracts';
 import { preparePageOptions } from '../../api/http.utils';
 import { PageableResponse, PageOptions } from '../../models';
@@ -7,6 +9,7 @@ import { Client } from '../../api/Client';
 
 import { DocumentLibrary, LibraryRecord, LibraryRecordRaw } from './docLibrary.models';
 
+@boundClass
 class DocLibraryClient extends Client {
   private static _instance: DocLibraryClient;
 

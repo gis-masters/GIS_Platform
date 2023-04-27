@@ -27,10 +27,10 @@ class FormViewTypeFile extends Component<FormControlProps> {
 
     return (
       <div className={cnFormView({ inSet, fullWidthForOldForm }, [className])}>
-        {!value.length ? (
-          <FormViewValue>—</FormViewValue>
-        ) : (
+        {value.length ? (
           <Files value={value} property={property as PropertySchemaFile} />
+        ) : (
+          <FormViewValue>—</FormViewValue>
         )}
         <FormViewErrors errors={errors} />
       </div>

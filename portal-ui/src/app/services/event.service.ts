@@ -90,10 +90,10 @@ class EventService {
     const events = this._events$.getValue();
 
     const sameEvent = this.findSameEvent(wsMessage, events);
-    if (sameEvent !== undefined) {
-      sameEvent.payload = newEvent.payload;
-    } else {
+    if (sameEvent === undefined) {
       events.push(newEvent);
+    } else {
+      sameEvent.payload = newEvent.payload;
     }
 
     this.update(events);

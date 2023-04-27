@@ -37,7 +37,7 @@ export class DataImportTasksListTask extends Component<DataImportTasksListTaskPr
         <tr className={cnDataImportTasksList('Task', { error: isError, deleting: this.isDeleting, short })}>
           <td className={cnDataImportTasksList('TaskName')}>{layer ? layer.name : ''}</td>
           <td className={cnDataImportTasksList('TaskStatus')}>{statusText}</td>
-          {!short ? (
+          {short ? null : (
             <>
               <td className={cnDataImportTasksList('TaskProgress')}>
                 {progress ? progress.progress : '\u00A0'}
@@ -56,7 +56,7 @@ export class DataImportTasksListTask extends Component<DataImportTasksListTaskPr
                 </Tooltip>
               </td>
             </>
-          ) : null}
+          )}
         </tr>
 
         <Dialog open={this.deleteDialogOpen} onClose={this.closeDeleteDialog}>

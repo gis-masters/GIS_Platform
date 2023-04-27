@@ -15,6 +15,7 @@ import { XTableColumn } from '../XTable.models';
 import '!style-loader!css-loader!sass-loader!../FilterPanelItem/XTable-FilterPanelItem.scss';
 
 export const cnXTableFilterPanelItem = cn('XTable', 'FilterPanelItem');
+export const cnXTableFilterPanelItemClear = cn('XTable', 'FilterPanelItemClear');
 
 export interface XTableFilterPanelItemProps<T> {
   filter: FilterQuery;
@@ -40,6 +41,7 @@ export class XTableFilterPanelItem<T> extends Component<XTableFilterPanelItemPro
       <Chip
         color='info'
         className={cnXTableFilterPanelItem()}
+        classes={{ deleteIcon: cnXTableFilterPanelItemClear() }}
         label={<ContentComponent type={col.type || PropertyType.STRING} filter={cloneDeep(filter)} col={col} />}
         onDelete={this.handleDelete}
         deleteIcon={<Clear fontSize='small' />}

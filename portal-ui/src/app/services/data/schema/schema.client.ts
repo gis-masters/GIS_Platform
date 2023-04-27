@@ -1,8 +1,11 @@
+import { boundClass } from 'autobind-decorator';
+
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 
 import { OldSchema } from './schemaOld.models';
 
+@boundClass
 class SchemaClient extends Client {
   private static _instance: SchemaClient;
 

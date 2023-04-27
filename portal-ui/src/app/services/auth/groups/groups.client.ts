@@ -1,8 +1,11 @@
+import { boundClass } from 'autobind-decorator';
+
 import { http } from '../../api/http.service';
 import { Client } from '../../api/Client';
 
 import { CrgGroup, GroupData } from './groups.models';
 
+@boundClass
 class AuthClient extends Client {
   private static _instance: AuthClient;
 

@@ -1,9 +1,12 @@
+import { boundClass } from 'autobind-decorator';
+
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { Mime } from '../../util/Mime';
 
 import { Process, ProcessableModel, ProcessResponse } from './processes.models';
 
+@boundClass
 class ProcessesClient extends Client {
   private static _instance: ProcessesClient;
 

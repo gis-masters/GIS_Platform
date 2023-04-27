@@ -1,8 +1,8 @@
-@import url("./assets/fonts/Roboto/Roboto.css");
+@import url('./assets/fonts/Roboto/Roboto.css');
 
-@import url("./assets/fonts/MaterialIcons/MaterialIcons.css");
+@import url('./assets/fonts/MaterialIcons/MaterialIcons.css');
 
-@import url("bootstrap.css");
+@import url('bootstrap.css');
 
 *,
 ::after,
@@ -20,7 +20,7 @@ body {
 
   margin: 0;
 
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 .mat-button:focus {

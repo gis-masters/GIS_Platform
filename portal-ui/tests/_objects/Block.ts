@@ -15,7 +15,9 @@ export abstract class Block<S extends Selectors = Selectors> {
 
   constructor(parent: string | WebdriverIO.Element = '') {
     this.parent = parent;
-    blocksRegistry[this.constructor.name.replace(/Block$/, '')] = this;
+    if (!parent) {
+      blocksRegistry[this.constructor.name.replace(/Block$/, '')] = this;
+    }
   }
 
   protected async $(key: keyof this['selectors']): Promise<WebdriverIO.Element> {

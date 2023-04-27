@@ -72,7 +72,22 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
         )}
 
         <DialogContent>
-          {!this.libraryView ? (
+          {this.libraryView ? (
+            <RegistryConsumer id='common'>
+              {({ LibraryRegistry }: CommonDiRegistry) => (
+                <LibraryRegistry
+                  id='DocumentsAdd'
+                  onSelect={this.handleMultipleSelect}
+                  checkedLibraryDocuments={this.selectedDocuments || []}
+                  libraryTableName={
+                    this.limitingLibrary?.table_name || (this.selectedItem[1].payload as DocumentLibrary).table_name
+                  }
+                  addedDocuments={addedDocuments}
+                  inDialog
+                />
+              )}
+            </RegistryConsumer>
+          ) : (
             this.ready && (
               <RegistryConsumer id='common'>
                 {({ Explorer }: CommonDiRegistry) => (
@@ -94,21 +109,6 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
                 )}
               </RegistryConsumer>
             )
-          ) : (
-            <RegistryConsumer id='common'>
-              {({ LibraryRegistry }: CommonDiRegistry) => (
-                <LibraryRegistry
-                  id='DocumentsAdd'
-                  onSelect={this.handleMultipleSelect}
-                  checkedLibraryDocuments={this.selectedDocuments || []}
-                  libraryTableName={
-                    this.limitingLibrary?.table_name || (this.selectedItem[1].payload as DocumentLibrary).table_name
-                  }
-                  addedDocuments={addedDocuments}
-                  inDialog
-                />
-              )}
-            </RegistryConsumer>
           )}
         </DialogContent>
         <DialogActions>

@@ -231,6 +231,9 @@
     "total-functions/require-strict-mode": "off",
     "total-functions/no-unsafe-type-assertion": "off",
     "total-functions/no-unsafe-readonly-mutable-assignment": "off",
+    "total-functions/no-partial-division": "off",
+    "total-functions/no-enums": "off",
+    "total-functions/no-partial-url-constructor": "off",
 
     // https://github.com/xjamundx/eslint-plugin-promise
     "promise/always-return": "off",

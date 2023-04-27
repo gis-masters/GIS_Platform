@@ -12,7 +12,7 @@ import {
 } from '../../services/data/schema/schema.models';
 import { valueWellKnownFormulas } from '../../services/data/schema/schema.utils';
 import { UrlInfo } from './Control/_type/Form-Control_type_url';
-import { Fias } from '../../services/data/fias.service';
+import { Fias } from '../../services/data/fias/fias.models';
 import { services } from '../../services/services';
 
 const fromComplex: Partial<

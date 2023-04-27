@@ -86,18 +86,16 @@ class XTableFilterTypeString extends Component<XTableFilterProps> {
 
     onBeforeFilterChange();
 
-    if (!this.value) {
-      if (this.strictFiltering) {
-        modifyFieldFilterValue(filterQuery, field);
-      } else {
-        modifyFieldFilterValue(filterQuery, field, { $in: ['', null] });
-      }
-    } else {
+    if (this.value) {
       modifyFieldFilterValue(
         filterQuery,
         field,
         this.strictFiltering ? { $ilike: `%${this.value}%` } : { $ilike: this.value }
       );
+    } else if (this.strictFiltering) {
+      modifyFieldFilterValue(filterQuery, field);
+    } else {
+      modifyFieldFilterValue(filterQuery, field, { $in: ['', null] });
     }
 
     onFilterChange();

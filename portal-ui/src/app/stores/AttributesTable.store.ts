@@ -45,13 +45,13 @@ class AttributesTableStore {
   }
 
   isLayerFilterEnabled(layerOrTableName: CrgLayer | string): boolean {
-    const tableName = typeof layerOrTableName !== 'string' ? layerOrTableName.tableName : layerOrTableName;
+    const tableName = typeof layerOrTableName === 'string' ? layerOrTableName : layerOrTableName.tableName;
 
     return !this.filterDisabled[tableName];
   }
 
   getLayerFilter(layerOrTableName: CrgVectorLayer | string, considerEnabledness = false): FilterQuery {
-    const tableName = typeof layerOrTableName !== 'string' ? layerOrTableName.tableName : layerOrTableName;
+    const tableName = typeof layerOrTableName === 'string' ? layerOrTableName : layerOrTableName.tableName;
 
     if (considerEnabledness && !this.isLayerFilterEnabled(tableName)) {
       return {};

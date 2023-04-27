@@ -9,8 +9,8 @@ export async function addLayerToGroupAsAdmin(
   layerTitle: string
 ): Promise<void> {
   const project = await getProjectByTitle(projectTitle);
-  const groups = await requestAsAdmin(projectsClient.getProjectGroups.bind(projectsClient), project.id);
-  const layers = await requestAsAdmin(projectsClient.getProjectLayers.bind(projectsClient), project.id);
+  const groups = await requestAsAdmin(projectsClient.getProjectGroups, project.id);
+  const layers = await requestAsAdmin(projectsClient.getProjectLayers, project.id);
   const layer = layers.find(layer => layer.title === layerTitle);
   const group = groups.find(group => group.title === groupTitle);
 
@@ -18,5 +18,5 @@ export async function addLayerToGroupAsAdmin(
     throw new Error(`Ошибка добавления слоя "${layerTitle}" в группу ${groupTitle} в проекте "${project.name}"`);
   }
 
-  await requestAsAdmin(layersClient.updateLayer.bind(layersClient), layer.id, { parentId: group.id }, project.id);
+  await requestAsAdmin(layersClient.updateLayer, layer.id, { parentId: group.id }, project.id);
 }

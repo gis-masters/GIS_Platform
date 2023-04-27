@@ -1,6 +1,9 @@
+import { boundClass } from 'autobind-decorator';
+
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 
+@boundClass
 class ImportXmlClient extends Client {
   private static _instance: ImportXmlClient;
 

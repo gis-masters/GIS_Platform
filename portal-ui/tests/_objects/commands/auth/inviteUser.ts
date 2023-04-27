@@ -13,5 +13,5 @@ export async function inviteUser(username: string): Promise<void> {
     }
   } catch {}
 
-  await requestAsAdmin(usersClient.inviteUser.bind(usersClient), user.email);
+  await requestAsAdmin(usersClient.inviteUser, user.email);
 }

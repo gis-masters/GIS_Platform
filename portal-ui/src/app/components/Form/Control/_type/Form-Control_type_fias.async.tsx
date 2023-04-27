@@ -5,7 +5,8 @@ import { Autocomplete, AutocompleteRenderInputParams, TextField } from '@mui/mat
 import { boundMethod } from 'autobind-decorator';
 import { debounce } from 'lodash';
 
-import { Fias, getFiasAddress, getFiasOktmoAddress } from '../../../../services/data/fias.service';
+import { getFiasAddress, getFiasOktmoAddress } from '../../../../services/data/fias/fias.service';
+import { Fias } from '../../../../services/data/fias/fias.models';
 import { PropertySchemaFias } from '../../../../services/data/schema/schema.models';
 
 import { FormInfo } from '../../Info/Form-Info';

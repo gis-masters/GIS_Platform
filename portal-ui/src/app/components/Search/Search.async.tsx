@@ -48,7 +48,7 @@ export default class Search extends Component {
           />
 
           <IconButton className={cnSearch('Button')} size='small' type='submit'>
-            {!this.isLoading ? <SearchOutlined /> : <CircularProgress size={20} />}
+            {this.isLoading ? <CircularProgress size={20} /> : <SearchOutlined />}
           </IconButton>
         </Paper>
 

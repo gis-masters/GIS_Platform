@@ -115,10 +115,10 @@ export function removeFieldFilter(filter: FilterQuery, field: string): void {
 function addFieldFilter(filter: FilterQuery, field: string, value: FilterQueryValue | FilterQuery): void {
   const [and, index] = getFilterRootAnd(filter, field);
   if (and) {
-    if (index !== -1) {
-      and[index][field] = value;
-    } else {
+    if (index === -1) {
       and.push({ [field]: value });
+    } else {
+      and[index][field] = value;
     }
   } else if (filter[field] !== undefined || !Object.keys(filter).length) {
     filter[field] = value;

@@ -145,9 +145,9 @@ export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): P
     layers.map(async layer => ({
       dataset: layer.dataset,
       identifier: layer.tableName,
-      ecqlFilter: !filterDisabled[layer.tableName]
-        ? cqlBuild(attributesTableStore.getLayerFilter(layer.tableName))
-        : null,
+      ecqlFilter: filterDisabled[layer.tableName]
+        ? null
+        : cqlBuild(attributesTableStore.getLayerFilter(layer.tableName)),
       filter: {
         operator: StyleFilterOperator.INTERSECTS,
         propertyName: 'shape',

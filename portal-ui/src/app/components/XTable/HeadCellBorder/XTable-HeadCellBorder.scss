@@ -17,12 +17,9 @@
 
   &::before {
     position: absolute;
-    top: 30%;
-    right: 1px;
-    bottom: 30%;
-    left: 1px;
+    inset: 30% 1px;
 
-    content: "";
+    content: '';
 
     background-color: var(--gray);
   }

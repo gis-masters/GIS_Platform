@@ -1,8 +1,11 @@
+import { boundClass } from 'autobind-decorator';
+
 import { Mime } from '../../util/Mime';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { AuthCredentials, OrganizationsListItemInfo, RegData } from './auth.models';
 
+@boundClass
 class AuthClient extends Client {
   private static _instance: AuthClient;
 
