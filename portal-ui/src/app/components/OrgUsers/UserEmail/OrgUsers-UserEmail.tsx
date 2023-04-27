@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { FilterQuery } from '../../../services/util/filterObjects';
+import { FilterQuery, getFieldFilterValue } from '../../../services/util/filterObjects';
 import { Highlight } from '../../Highlight/Highlight';
 import { TextBadge } from '../../TextBadge/TextBadge';
 
@@ -17,7 +17,7 @@ interface OrgUsersUserEmailProps {
 
 export const OrgUsersUserEmail: FC<OrgUsersUserEmailProps> = ({ rowData, filterActive, filterParams }) => (
   <span className={cnOrgUsersUserEmail()}>
-    <Highlight word={filterParams.email} enabled={filterActive}>
+    <Highlight word={getFieldFilterValue(filterParams, 'email')} enabled={filterActive}>
       {rowData.email}
     </Highlight>
     {rowData.login && rowData.login !== rowData.email && ` / ${rowData.login}`}

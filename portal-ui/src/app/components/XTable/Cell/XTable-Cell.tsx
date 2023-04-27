@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { TableCell, TableCellProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { FilterQuery } from '../../../services/util/filterObjects';
+import { FilterQuery, getFieldFilterValue } from '../../../services/util/filterObjects';
 import { TextBadge } from '../../TextBadge/TextBadge';
 import { Highlight } from '../../Highlight/Highlight';
 
@@ -65,7 +65,7 @@ export const XTableCell = observer((({
           />
         ) : (
           <>
-            <Highlight word={filterQuery[field as string]} enabled={filterActive}>
+            <Highlight word={getFieldFilterValue(filterQuery, field)} enabled={filterActive}>
               {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
             </Highlight>
             {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}

@@ -8,3 +8,9 @@ export const Template: ComponentStory<typeof XTable> = args => (
     <XTable {...args} />
   </div>
 );
+
+export const TemplateWide: ComponentStory<typeof XTable> = args => (
+  <div style={{ width: '300px' }}>
+    <XTable {...args} />
+  </div>
+);

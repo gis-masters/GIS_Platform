@@ -107,6 +107,13 @@ When(
   }
 );
 
+When(
+  'в таблице xtable я ввожу в поле фильтра {string} типа string значение {string}',
+  async (fieldTitle: string, title: string) => {
+    await xTableBlock.filterStringColumn(fieldTitle, title);
+  }
+);
+
 Then(
   /^в таблице xTable с фильтром типа dateTime отображаются только элементы, значение которых подходит под введённое ограничение `от` `10.10.2017`$/,
   async () => {
