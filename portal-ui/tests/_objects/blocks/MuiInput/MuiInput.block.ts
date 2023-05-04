@@ -11,15 +11,12 @@ export class MuiInputBlock extends Block {
     const $input = await this.$('container');
     await $input.moveTo();
     await $input.click();
-
-    do {
-      await browser.keys([Key.Backspace]);
-    } while (await $input.getValue());
+    await browser.keys([Key.Ctrl, 'a']);
+    await browser.keys([Key.Backspace]);
   }
 
   async setValue(value: string): Promise<void> {
     const $input = await this.$('container');
-
     await $input.setValue(value);
   }
 

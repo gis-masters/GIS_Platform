@@ -239,7 +239,7 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
       field.propertyType = PropertyType.STRING;
     }
 
-    field.asTitle = field.asTitle || oldField.objectIdentityOnUi;
+    field.asTitle = field.asTitle ?? oldField.objectIdentityOnUi;
     delete (field as Partial<OldPropertySchemaDouble>).objectIdentityOnUi;
 
     if (oldField.valueType === ValueType.DOUBLE) {
@@ -279,9 +279,10 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
 
     if (oldField.valueType === ValueType.URL) {
       field.propertyType = PropertyType.URL;
-
-      (field as Partial<PropertySchemaUrl>).openIn = oldField.displayMode === 'in_popup' ? 'popup' : 'newTab';
-      delete (field as Partial<OldPropertySchemaUrl>).displayMode;
+      if (oldField.displayMode) {
+        (field as Partial<PropertySchemaUrl>).openIn = oldField.displayMode === 'in_popup' ? 'popup' : 'newTab';
+        delete (field as Partial<OldPropertySchemaUrl>).displayMode;
+      }
     }
 
     if (oldField.valueType === ValueType.LOOKUP) {

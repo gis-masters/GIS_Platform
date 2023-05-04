@@ -21,7 +21,7 @@ export class FormBlock extends Block {
     await tableFieldValue.setValue(value);
   }
 
-  async setChoiseValue(title: string, value: string): Promise<void> {
+  async setChoiceValue(title: string, value: string): Promise<void> {
     const $tableFieldValueRoot = await this.getFieldInputRoot(title);
     const tableFieldValue = new MuiSelectBlock($tableFieldValueRoot);
     await tableFieldValue.selectOptionByTitle(value);

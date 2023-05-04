@@ -10,6 +10,7 @@ import { dataManagementPage } from './pages/DataManagement.page';
 import { LibraryRegistryPage } from './pages/LibraryRegistry.page';
 import { getProjectByTitle } from './commands/projects/getProjectByTitle';
 import { getDocumentsLibraryByTitle } from './commands/docLibrary/getDocLibraryByTitle';
+import { getSchemaIdByTitle } from './commands/tables/getSchemaIdByTitle';
 
 function findPage(title: string): Page {
   const page = Object.values(pagesRegistry).find(page => page.title === title);
@@ -118,6 +119,15 @@ When('я открываю страницу библиотек в управле�
 
 Given('я на странице `Наборы данных` в управлении данными', async () => {
   await dataManagementPage.openDatasetRootPage();
+});
+
+Given('я на странице `Схемы данных` в управлении данными', async () => {
+  await dataManagementPage.openSchemasRootPage();
+});
+
+Given('я на странице `Схемы данных` в управлении данными, выделена схема {string}', async (schemaTitle: string) => {
+  const schemaIdByTitle = getSchemaIdByTitle(schemaTitle);
+  await dataManagementPage.openSchemaPageWithSelectedSchema(schemaIdByTitle);
 });
 
 When('я открываю страницу наборов данных в управлении данными', async () => {

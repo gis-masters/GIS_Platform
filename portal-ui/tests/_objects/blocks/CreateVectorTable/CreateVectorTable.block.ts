@@ -13,7 +13,7 @@ class CreateVectorTableBlock extends Block {
     await explorerBlock.clickCreateLayerBtn();
     await createVectorTableDialogBlock.waitForFormDialogDisplayed();
     await createVectorTableDialogBlock.setStringFieldValue('Наименование*', tableName);
-    await createVectorTableDialogBlock.setChoiseFieldValue(
+    await createVectorTableDialogBlock.setChoiceFieldValue(
       'Координатная система*',
       'Pulkovo 1942 / Gauss-Kruger zone 6'
     );

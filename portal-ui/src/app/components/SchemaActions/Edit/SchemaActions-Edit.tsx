@@ -11,7 +11,9 @@ import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { schemaService } from '../../../services/data/schema/schema.service';
 import { FormDialog } from '../../FormDialog/FormDialog';
 
-const cnLibraryDocumentActionsEdit = cn('LibraryDocumentActions', 'Edit');
+const cnSchemaActionsEdit = cn('SchemaActions', 'Edit');
+const cnSchemaActionsEditDialog = cn('SchemaActions', 'EditDialog');
+const cnSchemaActionsEditDialogYes = cn('SchemaActions', 'EditDialogYes');
 
 interface SchemaActionsEditProps {
   schema: Schema;
@@ -33,7 +35,7 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
     return (
       <>
         <ActionsItem
-          className={cnLibraryDocumentActionsEdit()}
+          className={cnSchemaActionsEdit()}
           title='Редактировать'
           as={as}
           onClick={this.openDialog}
@@ -41,11 +43,15 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
         />
 
         <FormDialog
+          className={cnSchemaActionsEditDialog()}
           open={this.dialogOpen}
           schema={schemaForSchema}
           value={{ schema: JSON.stringify(schema, null, 2) }}
           actionFunction={this.save}
-          actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}
+          actionButtonProps={{
+            startIcon: <SaveOutlined className={cnSchemaActionsEditDialogYes()} />,
+            children: 'Сохранить'
+          }}
           onClose={this.closeDialog}
           title='Редактирование'
         />

@@ -6,9 +6,9 @@ class DatasetActionsBlock extends Block {
     container: '.DatasetActions',
     deleteBtn: '.DatasetActions .DatasetActions-Delete',
     editBtn: '.DatasetActions .DatasetActions-Edit',
-    dialogEdit: '.DatasetActions-Dialog',
+    dialogEdit: '.DatasetActions-EditDialog',
     dialogEditFields: '.DatasetActions-Dialog .Form-Field',
-    dialogEditYes: '.DatasetActions-DialogYes',
+    dialogEditYes: '.DatasetActions-EditDialogYes',
     deleteDialogYes: '.DatasetActions-DeleteDialogYes',
     deleteProhibitDeletionDialog: '.DatasetActions-DeleteProhibitDeletionDialog'
   };
@@ -36,6 +36,7 @@ class DatasetActionsBlock extends Block {
 
   async clickEditBtn(): Promise<void> {
     const $editBtn = await this.$('editBtn');
+    await $editBtn.waitForDisplayed();
     await $editBtn.click();
   }
 

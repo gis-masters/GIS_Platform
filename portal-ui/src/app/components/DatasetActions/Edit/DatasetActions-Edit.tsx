@@ -15,8 +15,8 @@ import { services } from '../../../services/services';
 import { Toast } from '../../Toast/Toast';
 
 const cnDatasetActionsEdit = cn('DatasetActions', 'Edit');
-const cnDatasetActionsEditDialog = cn('DatasetActions', 'Dialog');
-const cnDatasetActionsEditDialogYes = cn('DatasetActions', 'DialogYes');
+const cnDatasetActionsEditDialog = cn('DatasetActions', 'EditDialog');
+const cnDatasetActionsEditDialogYes = cn('DatasetActions', 'EditDialogYes');
 
 interface DatasetActionsEditProps {
   dataset: Dataset;

@@ -127,7 +127,6 @@ export const config: Options.Testrunner = {
       //
       browserName: 'chrome',
       acceptInsecureCerts: true,
-      setWindowRect: true,
       'goog:chromeOptions': {
         args: ['--headless', 'window-size=1300,900']
       }
@@ -241,7 +240,7 @@ export const config: Options.Testrunner = {
     // <boolean> fail if there are any undefined or pending steps
     strict: true,
     // <string> (expression) only execute the features or scenarios with tags matching the expression
-    tagExpression: 'not @skip',
+    // tagExpression: 'not @skip',
     // <number> timeout for step definitions
     timeout: 20_000,
     // <boolean> Enable this config to treat undefined definitions as warnings.

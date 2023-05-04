@@ -116,6 +116,7 @@ export class XTableBlock extends Block {
 
   async isColumnFilterable(title: string): Promise<boolean> {
     const $headCellTitle = await this.getHeadCellTitle(title);
+    await $headCellTitle.scrollIntoView();
     await $headCellTitle.moveTo();
 
     const $filter = await $headCellTitle.$('.XTable-Filter');

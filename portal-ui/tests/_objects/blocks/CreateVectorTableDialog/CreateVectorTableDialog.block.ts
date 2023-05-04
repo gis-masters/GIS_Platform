@@ -34,9 +34,9 @@ class CreateVectorTableDialogBlock extends Block {
     await formBlock.setStringValue(fieldTitle, value);
   }
 
-  async setChoiseFieldValue(fieldTitle: string, value: string) {
+  async setChoiceFieldValue(fieldTitle: string, value: string) {
     const formBlock = new FormBlock(this.selectors.container);
-    await formBlock.setChoiseValue(fieldTitle, value);
+    await formBlock.setChoiceValue(fieldTitle, value);
   }
 }
 

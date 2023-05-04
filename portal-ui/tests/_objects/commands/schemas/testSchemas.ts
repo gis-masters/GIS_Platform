@@ -561,12 +561,75 @@ const testSchemaWithAllTypes: Schema = {
   ]
 };
 
+const testSchemaWithAllTypesUpdated: Schema = {
+  name: 'testSchemaWithAllTypes',
+  title: 'Схема содержащая все типы данных',
+  description: 'Схема содержащая все типы данных. Версия 1',
+  readOnly: false,
+  tableName: 'test_sorting__v2',
+  styleName: 'generic',
+  geometryType: GeometryType.MULTI_POLYGON,
+  properties: [
+    {
+      name: 'field_int',
+      title: 'Поле INT',
+      asTitle: true,
+      propertyType: PropertyType.INT
+    },
+    {
+      name: 'field_double',
+      title: 'Поле FLOAT',
+      propertyType: PropertyType.FLOAT
+    },
+    {
+      name: 'field_string',
+      title: 'Поле STRING',
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'field_date',
+      title: 'Поле DATETIME',
+      propertyType: PropertyType.DATETIME
+    },
+    {
+      name: 'field_boolean',
+      title: 'Поле BOOL',
+      propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'field_choice',
+      title: 'Поле CHOICE',
+      propertyType: PropertyType.CHOICE,
+      options: [
+        {
+          title: 'Модульная двухсторонняя',
+          value: '1111'
+        },
+        {
+          title: 'Модульная односторонняя',
+          value: '1122'
+        },
+        {
+          title: 'Отдельно стоящий короб',
+          value: '55'
+        }
+      ]
+    },
+    propertyUrl,
+    propertyFias,
+    propertyFile,
+    propertyDocument,
+    propertyGeometry
+  ]
+};
+
 export const testSchemas: { [key: string]: Schema } = {
   'Схема с представлениями': schemaWithViews,
   'Схема без представлений': schemaWithoutViews,
   'Схема в режиме редактирования': testSortingSchema,
   'Схема для тестирования сортировки': testSortingSchema,
   'Схема содержащая все типы данных': testSchemaWithAllTypes,
+  'Схема содержащая все типы данных и аттрибут asTitle': testSchemaWithAllTypesUpdated,
   'Схема в режиме чтения': testSortingSchema2,
   'Схема с типами данных недоступными для сортировки': testSortingSchema2,
   'Схема с несоответствующим слою StyleName': schemaWithInappropriateStyleName

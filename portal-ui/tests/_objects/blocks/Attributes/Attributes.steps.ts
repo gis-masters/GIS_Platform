@@ -26,7 +26,7 @@ Then('в атрибутивной таблице отображается тол
 });
 
 Then('открылась атрибутивная таблица слоя {string}', async (title: string) => {
-  expect(await attributesBlock.getTitle()).toEqual(title);
+  await expect(await attributesBlock.getTitle()).toEqual(title);
 });
 
 Then('нажимаю на переключатель применения фильтрации в атрибутивной таблице', async () => {
@@ -126,7 +126,7 @@ Then(
     const currentFilter = await getAttributesTableFilter();
     const table = await getVectorTableByTitle(this.latestDataset.identifier, title);
 
-    expect(JSON.stringify(currentFilter[table.identifier])).toEqual(
+    await expect(JSON.stringify(currentFilter[table.identifier])).toEqual(
       JSON.stringify(this.latestFilter[table.identifier])
     );
   }
@@ -199,7 +199,7 @@ Then('сортировка в атрибутивной таблице недос
   const titles = data.raw().map(item => item[0]);
 
   for (const title of titles) {
-    expect(await attributesBlock.xTable.isColumnSortable(title)).toEqual(false);
+    await expect(await attributesBlock.xTable.isColumnSortable(title)).toEqual(false);
   }
 });
 
@@ -207,7 +207,7 @@ Then('фильтрация в атрибутивной таблице недос
   const titles = data.raw().map(item => item[0]);
 
   for (const title of titles) {
-    expect(await attributesBlock.xTable.isColumnFilterable(title)).toEqual(false);
+    await expect(await attributesBlock.xTable.isColumnFilterable(title)).toEqual(false);
   }
 });
 
