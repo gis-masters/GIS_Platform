@@ -1,7 +1,16 @@
-export async function extractText($$cells: WebdriverIO.Element[]): Promise<string[]> {
+export async function extractText($$elements: WebdriverIO.Element[]): Promise<string[]> {
   const contents: string[] = [];
-  for (const $cell of $$cells) {
-    contents.push(await $cell.getText());
+  for (const $element of $$elements) {
+    contents.push(await $element.getText());
+  }
+
+  return contents;
+}
+
+export async function extractValues($$controls: WebdriverIO.Element[]): Promise<string[]> {
+  const contents: string[] = [];
+  for (const $control of $$controls) {
+    contents.push(await $control.getValue());
   }
 
   return contents;

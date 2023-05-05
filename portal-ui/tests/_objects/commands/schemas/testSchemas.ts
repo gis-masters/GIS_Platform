@@ -25,6 +25,24 @@ const propertyFias: PropertySchema = {
   title: 'Поле FIAS',
   propertyType: PropertyType.FIAS
 };
+const propertyFiasOktmo: PropertySchema = {
+  name: 'field_fias__oktmo',
+  title: 'Поле FIAS oktmo',
+  hidden: true,
+  propertyType: PropertyType.STRING
+};
+const propertyFiasAddress: PropertySchema = {
+  name: 'field_fias__address',
+  title: 'Поле FIAS address',
+  hidden: true,
+  propertyType: PropertyType.STRING
+};
+const propertyFiasId: PropertySchema = {
+  name: 'field_fias__id',
+  title: 'Поле FIAS id',
+  hidden: true,
+  propertyType: PropertyType.INT
+};
 
 const propertyGeometry: PropertySchema = {
   name: 'shape',
@@ -88,7 +106,7 @@ const schemaWithViews: Schema = {
       description: ''
     },
     {
-      name: 'STATUS_ADM',
+      name: 'status_adm',
       title: 'Статус объекта',
       hidden: false,
       multiple: false,
@@ -125,11 +143,7 @@ const schemaWithViews: Schema = {
       properties: [
         {
           name: 'name',
-          title: 'Наименование объекта',
-          hidden: false,
-          required: false,
-          propertyType: PropertyType.STRING,
-          description: ''
+          title: 'Наименование объекта'
         }
       ]
     },
@@ -140,11 +154,7 @@ const schemaWithViews: Schema = {
       properties: [
         {
           name: 'shape_area',
-          title: 'Площадь, кв.м',
-          hidden: false,
-          required: true,
-          propertyType: PropertyType.INT,
-          description: ''
+          title: 'Площадь, кв.м'
         }
       ]
     },
@@ -155,81 +165,22 @@ const schemaWithViews: Schema = {
       type: 'VIEW',
       properties: [
         {
-          name: 'classid',
-          title: 'Значение объекта',
-          hidden: false,
-          multiple: false,
-          required: false,
-          propertyType: PropertyType.CHOICE,
-          description: '',
-          options: [
-            {
-              title: 'Территория населенного пункта',
-              value: '601020400'
-            },
-            {
-              title: 'Муниципальный район',
-              value: '601020301'
-            },
-            {
-              title: 'Сельское поселение',
-              value: '601020307'
-            }
-          ]
+          name: 'classid'
         },
         {
-          name: 'name',
-          title: 'Наименование',
-          hidden: false,
-          required: false,
-          maxLength: 254,
-          minLength: -1,
-          propertyType: PropertyType.STRING,
-          description: ''
+          name: 'name'
         },
         {
-          name: 'shape',
-          title: 'geometry',
-          required: false,
-          hidden: false,
-          propertyType: PropertyType.GEOMETRY
+          name: 'shape'
         },
         {
-          name: 'shape_area',
-          title: 'Площадь',
-          hidden: false,
-          required: true,
-          propertyType: PropertyType.INT,
-          description: ''
+          name: 'shape_area'
         },
         {
-          name: 'STATUS_ADM',
-          title: 'Статус объекта',
-          hidden: false,
-          multiple: false,
-          required: false,
-          propertyType: PropertyType.CHOICE,
-          description: '',
-          options: [
-            {
-              title: 'Существующий',
-              value: '1'
-            },
-            {
-              title: 'Планируемый',
-              value: '2'
-            }
-          ]
+          name: 'status_adm'
         },
         {
-          name: 'ruleid',
-          title: 'Идентификатор стиля',
-          hidden: true,
-          required: true,
-          maxLength: 254,
-          minLength: -1,
-          propertyType: PropertyType.STRING,
-          description: ''
+          name: 'ruleid'
         }
       ]
     },
@@ -240,63 +191,16 @@ const schemaWithViews: Schema = {
       type: 'VIEW',
       properties: [
         {
-          name: 'classid',
-          title: 'Значение объекта',
-          hidden: false,
-          multiple: false,
-          required: false,
-          propertyType: PropertyType.CHOICE,
-          description: '',
-          options: [
-            {
-              title: 'Территория населенного пункта',
-              value: '601020400'
-            },
-            {
-              title: 'Муниципальный район',
-              value: '601020301'
-            },
-            {
-              title: 'Сельское поселение',
-              value: '601020307'
-            }
-          ]
+          name: 'classid'
         },
         {
-          name: 'shape',
-          title: 'geometry',
-          required: false,
-          hidden: false,
-          propertyType: PropertyType.GEOMETRY
+          name: 'shape'
         },
         {
-          name: 'STATUS_ADM',
-          title: 'Статус объекта',
-          hidden: false,
-          multiple: false,
-          required: false,
-          propertyType: PropertyType.CHOICE,
-          description: '',
-          options: [
-            {
-              title: 'Существующий',
-              value: '1'
-            },
-            {
-              title: 'Планируемый',
-              value: '2'
-            }
-          ]
+          name: 'status_adm'
         },
         {
-          name: 'ruleid',
-          title: 'Идентификатор стиля',
-          hidden: true,
-          required: true,
-          maxLength: 254,
-          minLength: -1,
-          propertyType: PropertyType.STRING,
-          description: ''
+          name: 'ruleid'
         }
       ]
     }
@@ -361,7 +265,7 @@ const schemaWithoutViews: Schema = {
       description: ''
     },
     {
-      name: 'STATUS_ADM',
+      name: 'status_adm',
       title: 'Статус объекта',
       hidden: false,
       multiple: false,
@@ -396,7 +300,7 @@ const schemaWithoutViews: Schema = {
 
 const schemaWithInappropriateStyleName: Schema = {
   name: 'schemaWithInappropriateStyleName',
-  title: 'Схема с несоответствующим слою StyleName',
+  title: 'Схема с несоответствующим слою StyleName 1',
   readOnly: false,
   tableName: 'border2',
   styleName: 'buildings',
@@ -425,7 +329,7 @@ const schemaWithInappropriateStyleName: Schema = {
 
 const testSortingSchema: Schema = {
   name: 'test_sorting__schema',
-  title: 'Схема для тестирования сортировки',
+  title: 'Схема для тестирования сортировки 1',
   description: 'Схема для тестирования сортировки в атрибутивной таблице. Версия 1',
   readOnly: false,
   tableName: 'test_sorting__v1',
@@ -491,7 +395,7 @@ const testSortingSchema: Schema = {
 
 const testSortingSchema2: Schema = {
   name: 'test_sorting__schema2',
-  title: 'Схема с типами данных недоступными для сортировки',
+  title: 'Схема с типами данных недоступными для сортировки 2',
   description: 'Схема для тестирования сортировки в атрибутивной таблице. Версия 2',
   readOnly: true,
   tableName: 'test_sorting__v2',
@@ -502,7 +406,7 @@ const testSortingSchema2: Schema = {
 
 const testSchemaWithAllTypes: Schema = {
   name: 'testSchemaWithAllTypes',
-  title: 'Схема содержащая все типы данных',
+  title: 'Схема содержащая все типы данных 1',
   description: 'Схема содержащая все типы данных. Версия 1',
   readOnly: false,
   tableName: 'test_sorting__v2',
@@ -555,6 +459,9 @@ const testSchemaWithAllTypes: Schema = {
     },
     propertyUrl,
     propertyFias,
+    propertyFiasOktmo,
+    propertyFiasAddress,
+    propertyFiasId,
     propertyFile,
     propertyDocument,
     propertyGeometry
@@ -624,13 +531,37 @@ const testSchemaWithAllTypesUpdated: Schema = {
 };
 
 export const testSchemas: { [key: string]: Schema } = {
+  'Схема для тестирования сортировки': testSortingSchema,
+  'Схема в режиме редактирования': testSortingSchema,
+  'Схема с несоответствующим слою StyleName': schemaWithInappropriateStyleName,
+  'Схема с типами данных недоступными для сортировки': testSortingSchema2,
+  'Схема в режиме чтения': testSortingSchema2,
   'Схема с представлениями': schemaWithViews,
   'Схема без представлений': schemaWithoutViews,
-  'Схема в режиме редактирования': testSortingSchema,
-  'Схема для тестирования сортировки': testSortingSchema,
-  'Схема содержащая все типы данных': testSchemaWithAllTypes,
   'Схема содержащая все типы данных и аттрибут asTitle': testSchemaWithAllTypesUpdated,
-  'Схема в режиме чтения': testSortingSchema2,
-  'Схема с типами данных недоступными для сортировки': testSortingSchema2,
-  'Схема с несоответствующим слою StyleName': schemaWithInappropriateStyleName
+  'Схема содержащая все типы данных': testSchemaWithAllTypes,
+  'Схема содержащая все типы данных в режиме редактирования': testSchemaWithAllTypes,
+  'Схема содержащая все типы данных в режиме чтения': {
+    ...testSchemaWithAllTypes,
+    readOnly: true,
+    name: `${testSchemaWithAllTypes.name}_readOnly`
+  }
 };
+
+export function getTestSchemaByName(schemaName: string): Schema {
+  const schema = Object.values(testSchemas).find(schema => schema.name === schemaName);
+  if (!schema) {
+    throw new Error('Не найдена схема по name:' + schemaName);
+  }
+
+  return schema;
+}
+
+export function getTestSchema(title: string): Schema {
+  const schema = testSchemas[title];
+  if (!schema) {
+    throw new Error(`Запрошена неизвестная схема: '${title}'! Создайте схему в testSchemas.ts предварительно.`);
+  }
+
+  return schema;
+}

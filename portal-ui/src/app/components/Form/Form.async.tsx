@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { Schema } from '../../services/data/schema/schema.models';
+import { Schema, SimpleSchema } from '../../services/data/schema/schema.models';
 import {
   calculateValues,
   cleanCalculatedValues,
@@ -28,7 +28,7 @@ const cnForm = cn('Form');
 
 export interface FormProps<T>
   extends Omit<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'ref'> {
-  schema?: Schema;
+  schema?: Schema | SimpleSchema;
   value?: Partial<T>;
   errors?: FieldErrors[];
   onFormChange?(changedValue: T): void;

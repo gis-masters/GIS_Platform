@@ -9,7 +9,7 @@ import { IClassNameProps } from '@bem-react/core';
 
 import { generateRandomId } from '../../services/util/randomId';
 import { CommonDiRegistry } from '../../services/di-registry';
-import { Schema } from '../../services/data/schema/schema.models';
+import { Schema, SimpleSchema } from '../../services/data/schema/schema.models';
 import { getDefaultValues } from '../Form/Form.utils';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
@@ -20,7 +20,7 @@ const cnFormDialog = cn('FormDialog');
 
 export interface FormDialogProps<T> extends IClassNameProps {
   title?: ReactNode;
-  schema: Schema;
+  schema: Schema | SimpleSchema;
   value?: Partial<T>;
   open: boolean;
   unclosable?: boolean;

@@ -411,6 +411,8 @@ public class BaseStepsDefinitions {
     }
 
     public void checkResponseValue(String field, String value) {
+        response.prettyPrint();
+
         assertEquals(value, response.jsonPath().get(field));
     }
 

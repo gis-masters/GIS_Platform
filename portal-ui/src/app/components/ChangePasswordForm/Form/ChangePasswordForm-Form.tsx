@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { PropertySchema, PropertyType, Schema } from '../../../services/data/schema/schema.models';
+import { PropertySchema, PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
 import { generateRandomId } from '../../../services/util/randomId';
 import { Button } from '../../Button/Button';
 import { Form } from '../../Form/Form';
@@ -15,7 +15,7 @@ export interface ChangePasswordData {
   password?: string;
 }
 
-const schema: Schema = {
+const schema: SimpleSchema = {
   properties: [
     {
       name: 'password',

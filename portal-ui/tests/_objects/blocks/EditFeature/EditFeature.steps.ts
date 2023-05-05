@@ -1,4 +1,4 @@
-import { Then } from '@wdio/cucumber-framework';
+import { DataTable, Then, When } from '@wdio/cucumber-framework';
 
 import { editFeatureBlock } from './EditFeature.block';
 
@@ -20,4 +20,42 @@ Then('форма просмотра объекта открывается в р�
 
 Then('открывается форма просмотра объекта', async function () {
   await editFeatureBlock.waitForVisible();
+});
+
+When('в форме просмотра объекта, я перехожу на вкладку просмотра геометрии', async function () {
+  await editFeatureBlock.openGeometryTab();
+});
+
+Then('вкладка просмотра геометрии в режиме чтения содержит следующую геометрию', async function (data: DataTable) {
+  const expectedGeometry = data
+    .raw()
+    .flat()
+    .filter(item => item.length > 2);
+
+  const geometryAsString = await editFeatureBlock.getGeometryInViewMode();
+  const geometry = geometryAsString
+    .replace(/\n/g, ' ')
+    .replace(/\t/g, ' ')
+    .split(' ')
+    .filter(item => item.length > 2);
+
+  expect(geometry).toEqual(expectedGeometry);
+});
+
+Then(
+  'вкладка просмотра геометрии в режиме редактирования содержит следующую геометрию',
+  async function (data: DataTable) {
+    const expectedGeometry = data
+      .raw()
+      .flat()
+      .filter(item => item.length > 2);
+
+    const geometry = await editFeatureBlock.getGeometryInEditMode();
+
+    expect(geometry).toEqual(expectedGeometry);
+  }
+);
+
+Then('на форме корректно отображаются {string}', async (variant: string) => {
+  await editFeatureBlock.assertSelfie(variant.split(' ').join('-'));
 });

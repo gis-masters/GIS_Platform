@@ -10,7 +10,7 @@ import { dataManagementPage } from './pages/DataManagement.page';
 import { LibraryRegistryPage } from './pages/LibraryRegistry.page';
 import { getProjectByTitle } from './commands/projects/getProjectByTitle';
 import { getDocumentsLibraryByTitle } from './commands/docLibrary/getDocLibraryByTitle';
-import { getSchemaIdByTitle } from './commands/tables/getSchemaIdByTitle';
+import { getTestSchema } from './commands/schemas/testSchemas';
 
 function findPage(title: string): Page {
   const page = Object.values(pagesRegistry).find(page => page.title === title);
@@ -105,6 +105,18 @@ Given(
   }
 );
 
+Given(
+  'я нахожусь на странице карты проекта, открыт объект с id {int}',
+  async function (this: ScenarioScope, objectId: number) {
+    const { latestDataset, latestVectorTable, latestProject } = this;
+
+    const mapPage = new MapPage(latestProject.id);
+    await mapPage.openWithPositionToFeatures(latestProject.id, latestDataset.identifier, latestVectorTable.identifier, [
+      String(objectId)
+    ]);
+  }
+);
+
 // bl
 
 Given('я на странице {string} библиотеки блоков', async (story: string) => {
@@ -126,8 +138,8 @@ Given('я на странице `Схемы данных` в управлени�
 });
 
 Given('я на странице `Схемы данных` в управлении данными, выделена схема {string}', async (schemaTitle: string) => {
-  const schemaIdByTitle = getSchemaIdByTitle(schemaTitle);
-  await dataManagementPage.openSchemaPageWithSelectedSchema(schemaIdByTitle);
+  const schema = getTestSchema(schemaTitle);
+  await dataManagementPage.openSchemaPageWithSelectedSchema(schema.name);
 });
 
 When('я открываю страницу наборов данных в управлении данными', async () => {

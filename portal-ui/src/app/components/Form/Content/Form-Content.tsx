@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
-import { PropertySchema, PropertyType, Schema } from '../../../services/data/schema/schema.models';
+import { PropertySchema, PropertyType, Schema, SimpleSchema } from '../../../services/data/schema/schema.models';
 import { FieldErrors } from '../../../services/formValidation.service';
 import { getFieldRelations } from '../../../services/data/schema/schema.utils';
 import { generateRandomId } from '../../../services/util/randomId';
@@ -25,7 +25,7 @@ const cnFormContent = cn('Form', 'Content');
 const cnFormRelations = cn('Form', 'Relations');
 
 interface FormContentProps<T> extends IClassNameProps {
-  schema: Schema;
+  schema: Schema | SimpleSchema;
   formValue: Partial<T>;
   errors?: FieldErrors[];
   onFormChange?: (changedValue: Partial<T>) => void;

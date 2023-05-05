@@ -61,7 +61,9 @@
 <ng-template #editAttrsForm>
   <form *ngIf="editFeatureForm" class="edit-feature__form col-md-12 scroll" [formGroup]="editFeatureForm">
     <ng-container *ngFor="let editFeatureItem of editFeatureData">
-      <div *ngIf="!editFeatureItem.property?.hidden">
+      <div *ngIf="!editFeatureItem.property?.hidden"
+           [attr.data-type]="editFeatureItem.property?.valueType"
+           class="edit-feature__field">
         <div
           *ngIf="
             editFeatureItem.property?.valueType?.includes('URL') ||
@@ -74,7 +76,8 @@
           "
           class="row fiz-edit-item"
         >
-          <div class="col-6 px-0 edit-item-title">
+
+          <div class="col-6 px-0 edit-feature__label">
             <span
               *ngIf="!editFeatureItem.isFgistpProperty"
               style="color: grey"
@@ -164,7 +167,7 @@
         </div>
 
         <div *ngIf="editFeatureItem.property?.valueType?.includes('DATETIME')" class="row fiz-edit-item">
-          <div class="col-6 px-0 edit-item-title">
+          <div class="col-6 px-0 edit-feature__label">
             <span
               *ngIf="!editFeatureItem.isFgistpProperty"
               style="color: grey"
@@ -205,7 +208,7 @@
         </div>
 
         <div *ngIf="editFeatureItem.property?.valueType?.includes('INT')" class="row fiz-edit-item">
-          <div class="col-6 px-0 edit-item-title">
+          <div class="col-6 px-0 edit-feature__label">
             <span
               *ngIf="!editFeatureItem.isFgistpProperty"
               style="color: grey"
@@ -243,7 +246,7 @@
         </div>
 
         <div *ngIf="editFeatureItem.property?.valueType?.includes('DOUBLE')" class="row fiz-edit-item">
-          <div class="col-6 px-0 edit-item-title">
+          <div class="col-6 px-0 edit-feature__label">
             <span
               *ngIf="!editFeatureItem.isFgistpProperty"
               style="color: grey"

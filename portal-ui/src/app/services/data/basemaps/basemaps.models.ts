@@ -1,4 +1,4 @@
-import { PropertyType, Schema } from '../schema/schema.models';
+import { PropertyType, SimpleSchema } from '../schema/schema.models';
 
 export enum SourceType {
   OSM = 'OSM',
@@ -29,7 +29,7 @@ export interface Basemap {
   pluggableToNewProject?: boolean;
 }
 
-export const basemapEditSchema: Schema = {
+export const basemapEditSchema: SimpleSchema = {
   properties: [
     {
       name: 'pluggableToNewProject',

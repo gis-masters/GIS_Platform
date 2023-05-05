@@ -12,6 +12,7 @@
     "project": "./tests/tsconfig.json"
   },
   "rules": {
+    "unicorn/prefer-dom-node-dataset": 0,
     "unicorn/prefer-node-protocol": 0
   }
 }

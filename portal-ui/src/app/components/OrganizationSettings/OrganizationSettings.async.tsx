@@ -9,7 +9,7 @@ import { action, IReactionDisposer, observable, reaction, makeObservable } from 
 import { organizationSettings, OrgSettings } from '../../stores/OrganizationSettings.store';
 import { organizationSettingsService } from '../../services/organization-settings';
 import { generateRandomId } from '../../services/util/randomId';
-import { Schema } from '../../services/data/schema/schema.models';
+import { Schema, SimpleSchema } from '../../services/data/schema/schema.models';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
 import { Form } from '../Form/Form';
@@ -29,7 +29,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
     organizationSettings.orgSettings?.organization || this.props.orgSettings?.system
   );
   @observable private busy = false;
-  @observable private schema: Schema;
+  @observable private schema: Schema | SimpleSchema;
 
   private reactionDisposerOrganizationSettings: IReactionDisposer;
   private reactionDisposerSystemSettings: IReactionDisposer;
@@ -121,7 +121,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   }
 
   @action
-  private setSchema(schema: Schema) {
+  private setSchema(schema: Schema | SimpleSchema): void {
     this.schema = schema;
   }
 

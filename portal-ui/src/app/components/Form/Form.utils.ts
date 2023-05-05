@@ -8,6 +8,7 @@ import {
   PropertySchemaUrl,
   PropertyType,
   Schema,
+  SimpleSchema,
   ValueFormula
 } from '../../services/data/schema/schema.models';
 import { valueWellKnownFormulas } from '../../services/data/schema/schema.utils';
@@ -112,7 +113,11 @@ export function getEditUrlFormSchema(field: PropertySchemaUrl): PropertySchema[]
   ];
 }
 
-export function isEqualExceptCalculated<T>(a: Partial<T> = {}, b: Partial<T> = {}, schema: Schema): boolean {
+export function isEqualExceptCalculated<T>(
+  a: Partial<T> = {},
+  b: Partial<T> = {},
+  schema: Schema | SimpleSchema
+): boolean {
   for (const key of Object.keys({ ...a, ...b })) {
     const property = schema?.properties?.find(({ name }) => name === key);
     if (!property?.calculatedValueFormula && !property?.calculatedValueWellKnownFormula && !isEqual(a[key], b[key])) {

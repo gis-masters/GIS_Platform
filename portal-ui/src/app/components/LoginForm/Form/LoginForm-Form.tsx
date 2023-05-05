@@ -3,7 +3,7 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { PropertyType, Schema } from '../../../services/data/schema/schema.models';
+import { PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
 import { getEsiaUrl } from '../../../services/api/server-urls.service';
 import { environment } from '../../../services/environment';
 import { http } from '../../../services/api/http.service';
@@ -16,7 +16,7 @@ import { AuthUserData } from '../LoginForm.async';
 
 const cnLoginFormForm = cn('LoginForm', 'Form');
 
-const schema: Schema = {
+const schema: SimpleSchema = {
   properties: [
     {
       name: 'username',

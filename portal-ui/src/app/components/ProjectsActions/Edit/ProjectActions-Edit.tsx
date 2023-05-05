@@ -8,7 +8,7 @@ import { Tooltip } from '@mui/material';
 
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { CrgProject } from '../../../services/gis/projects/projects.models';
-import { Schema } from '../../../services/data/schema/schema.models';
+import { Schema, SimpleSchema } from '../../../services/data/schema/schema.models';
 import { IconButton } from '../../IconButton/IconButton';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { getPatch } from '../../../services/util/patch';
@@ -18,7 +18,7 @@ const cnProjectActionsEdit = cn('ProjectActionsEdit', 'Edit');
 
 interface ProjectActionsProps {
   project: CrgProject;
-  schema: Schema;
+  schema: SimpleSchema;
 }
 
 @observer

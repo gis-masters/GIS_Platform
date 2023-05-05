@@ -1,30 +1,28 @@
 import { faker } from '@faker-js/faker';
 import { Given } from '@wdio/cucumber-framework';
 
-import { getRoleByTitle, testUsers } from '../auth/testUsers';
 import { ScenarioScope } from '../../ScenarioScope';
-import { getSchemaIdByTitle } from './getSchemaIdByTitle';
+import { getUserByEmail } from '../auth/getUserByEmail';
 import { getPreparedFeatures } from './features.templates';
 import { createVectorTableAs } from './createTestVectorTable';
-import { createRecordAsAdmin } from './vectorTableRecordsManagement';
-import { getUserByEmail } from '../auth/getUserByEmail';
+import { getRoleByTitle, testUsers } from '../auth/testUsers';
 import { getVectorTableByTitle } from './getVectorTableByTitle';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
+import { createRecordAsAdmin } from './vectorTableRecordsManagement';
 import { addVectorTablePermissions } from './addVectorTablePermissions';
 import { PrincipalType } from '../../../../src/app/services/data/permissions/permissions.models';
+import { getTestSchema } from '../schemas/testSchemas';
 
 const DEFAULT_CRS = 'EPSG:28407';
 
 Given(
   'пользователем {string} внутри созданного набора данных создана таблица {string} по схеме {string}',
   async function (this: ScenarioScope, user: keyof typeof testUsers, title: string, schemaTitle: string) {
-    const schemaId = getSchemaIdByTitle(schemaTitle);
-
     this.latestVectorTable = await createVectorTableAs(
       this.latestDataset.identifier,
       {
         title,
-        schemaId,
+        schemaId: getTestSchema(schemaTitle).name,
         crs: DEFAULT_CRS
       },
       user
@@ -35,13 +33,11 @@ Given(
 Given(
   'внутри созданного набора данных существует таблица по схеме {string} созданная пользователем {string}',
   async function (this: ScenarioScope, schemaTitle: string, user: keyof typeof testUsers) {
-    const schemaId = getSchemaIdByTitle(schemaTitle);
-
     this.latestVectorTable = await createVectorTableAs(
       this.latestDataset.identifier,
       {
         title: faker.lorem.sentence(7),
-        schemaId,
+        schemaId: getTestSchema(schemaTitle).name,
         crs: DEFAULT_CRS
       },
       user
@@ -52,14 +48,13 @@ Given(
 Given(
   'пользователем {string} внутри набора данных {string} создана таблица {string} по схеме {string}',
   async function (username: string, datasetTitle: string, title: string, schemaTitle: string) {
-    const schemaId = getSchemaIdByTitle(schemaTitle);
     const dataset = await getDatasetByTitle(datasetTitle);
 
     this.latestVectorTable = await createVectorTableAs(
       dataset.identifier,
       {
         title,
-        schemaId,
+        schemaId: getTestSchema(schemaTitle).name,
         crs: DEFAULT_CRS
       },
       username

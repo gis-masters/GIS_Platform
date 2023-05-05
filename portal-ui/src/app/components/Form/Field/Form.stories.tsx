@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { PropertyType, Schema } from '../../../services/data/schema/schema.models';
+import { PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
 
 import { Form } from '../Form';
 
@@ -14,12 +14,13 @@ interface TestData extends Record<string, unknown> {
   name: string;
 }
 
-const schema: Schema = {
+const schema: SimpleSchema = {
   relations: [
     {
       title: 'Документы на это имя',
       property: 'name',
-      library: 'someLibrary'
+      library: 'someLibrary',
+      type: 'document'
     }
   ],
   properties: [

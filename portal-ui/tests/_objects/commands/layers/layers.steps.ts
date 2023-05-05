@@ -3,7 +3,7 @@ import { DataTable, Given } from '@wdio/cucumber-framework';
 import { getSchema } from '../schemas/getSchema';
 import { CrgLayerType } from '../../../../src/app/services/gis/layers/layers.models';
 import { createLayerAsAdmin } from './createLayerAsAdmin';
-import { testSchemas } from '../schemas/testSchemas';
+import { getTestSchemaByName } from '../schemas/testSchemas';
 import { ScenarioScope } from '../../ScenarioScope';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 import { getProjectByTitle } from '../projects/getProjectByTitle';
@@ -14,10 +14,7 @@ Given(
   async function (this: ScenarioScope, layerTitle: string) {
     const { latestProject, latestVectorTable, latestDataset } = this;
 
-    const schema = Object.values(testSchemas).find(schema => schema.name === latestVectorTable.schemaId);
-    if (!schema) {
-      throw new Error('Not found schema:' + latestVectorTable.schemaId);
-    }
+    const schema = getTestSchemaByName(latestVectorTable.schemaId);
 
     const layer = {
       type: 'vector' as CrgLayerType.VECTOR,

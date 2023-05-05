@@ -3,7 +3,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { getOrganizationKnownSettingsUrl, getOrganizationSettingsUrl } from './api/server-urls.service';
 import { organizationSettings, OrgSettings } from '../stores/OrganizationSettings.store';
-import { PropertyType, Schema } from './data/schema/schema.models';
+import { PropertyType, SimpleSchema } from './data/schema/schema.models';
 import { Toast } from '../components/Toast/Toast';
 import { http } from './api/http.service';
 
@@ -48,7 +48,7 @@ class OrganizationSettingsService {
     await this.fetch();
   }
 
-  orgSchema(settings: Record<string, boolean>, systemManagement: boolean): Schema {
+  orgSchema(settings: Record<string, boolean>, systemManagement: boolean): SimpleSchema {
     const settingsKeys = Object.keys(settings);
 
     return {

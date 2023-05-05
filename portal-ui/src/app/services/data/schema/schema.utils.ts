@@ -23,7 +23,8 @@ import {
   ContentType,
   ValueFormula,
   Relation,
-  PropertySchemaSet
+  PropertySchemaSet,
+  SimpleSchema
 } from './schema.models';
 import { LibraryRecord } from '../docLibrary/docLibrary.models';
 import { DocumentInfo } from '../../../components/Documents/Documents';
@@ -453,7 +454,7 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
   }
 };
 
-export function getFieldRelations(field: string | number, schema: Schema): Relation[] {
+export function getFieldRelations(field: string | number, schema: Schema | SimpleSchema): Relation[] {
   return schema?.relations?.filter(relation => relation.property === field) || [];
 }
 

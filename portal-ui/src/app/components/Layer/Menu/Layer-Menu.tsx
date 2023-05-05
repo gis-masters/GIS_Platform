@@ -57,7 +57,7 @@ import { TextBadge } from '../../TextBadge/TextBadge';
 import { ImportShapeDialog } from '../../ImportShapeDialog/ImportShapeDialog';
 import { MenuNestedItem } from '../../MenuNestedItem/MenuNestedItem';
 import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.util';
-import { ContentType, PropertyType, Schema } from '../../../services/data/schema/schema.models';
+import { ContentType, PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
 import { getViewChoiceOptions } from '../../Form/Form.utils';
 
 export const cnLayerPropertiesDialog = cn('Layer', 'PropertiesDialog');
@@ -298,7 +298,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @computed
-  private get layerSchema(): Schema {
+  private get layerSchema(): SimpleSchema {
     const { entity } = this.props;
 
     if (this.views && (entity as CrgLayer).type === CrgLayerType.VECTOR) {

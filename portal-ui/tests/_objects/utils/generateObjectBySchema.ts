@@ -24,6 +24,11 @@ export function generateObjectBySchema(schema: Schema): Record<string, unknown> 
 
         break;
       }
+      case PropertyType.BOOL: {
+        result[name] = Math.random() > 0.5;
+
+        break;
+      }
       case PropertyType.FLOAT: {
         result[name] = faker.datatype.float();
 
@@ -31,6 +36,34 @@ export function generateObjectBySchema(schema: Schema): Record<string, unknown> 
       }
       case PropertyType.INT: {
         result[name] = faker.datatype.number();
+
+        break;
+      }
+      case PropertyType.URL: {
+        result[name] = `[{"url":"${faker.internet.url()}","text":"${faker.science.chemicalElement().name}"}]`;
+
+        break;
+      }
+      case PropertyType.FILE: {
+        const filesCount = Number(faker.random.numeric());
+        const files = [];
+
+        for (let i = 0; i < filesCount; i++) {
+          files.push({
+            id: faker.datatype.uuid(),
+            size: faker.datatype.number(),
+            title: `${faker.hacker.noun()}.fiz`
+          });
+        }
+
+        result[name] = files;
+
+        break;
+      }
+      case PropertyType.DOCUMENT: {
+        result[
+          name
+        ] = `[{"id":${faker.datatype.number()},"title":"${faker.hacker.adjective()}","libraryTableName":"${faker.hacker.ingverb()}"}]`;
 
         break;
       }

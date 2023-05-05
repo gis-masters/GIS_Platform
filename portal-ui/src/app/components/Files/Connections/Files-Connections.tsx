@@ -13,7 +13,7 @@ import {
 } from '../../../services/geoserver/geoserver-file-edit.service';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
-import { PropertyType, Schema } from '../../../services/data/schema/schema.models';
+import { PropertyType, Schema, SimpleSchema } from '../../../services/data/schema/schema.models';
 import { MapSettingsOutlined } from '../../Icons/MapSettingsOutlined';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { IconButton } from '../../IconButton/IconButton';
@@ -30,7 +30,7 @@ interface ConnectionsProps {
   connections: FileConnection[];
 }
 
-const fileInfoSchema: Schema = {
+const fileInfoSchema: SimpleSchema = {
   properties: [
     {
       name: 'transparentColor',

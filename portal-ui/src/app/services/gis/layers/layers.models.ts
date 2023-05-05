@@ -1,5 +1,5 @@
 import { FilePlacementMode } from '../../data/file-placement/file-placement.models';
-import { PropertyType, Schema } from '../../data/schema/schema.models';
+import { PropertyType, SimpleSchema } from '../../data/schema/schema.models';
 
 export enum CrgLayerType {
   VECTOR = 'vector',
@@ -64,7 +64,7 @@ interface CrgBaseLayer extends CrgEntity {
 
 export type NewCrgLayer = Partial<CrgLayer>;
 
-export const crgLayerSchema: Schema = {
+export const crgLayerSchema: SimpleSchema = {
   properties: [
     {
       name: 'title',

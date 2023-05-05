@@ -27,7 +27,7 @@ export enum PropertyType {
   CUSTOM = 'custom' // frontend only
 }
 
-export const schemaForSchema: Schema = {
+export const schemaForSchema: SimpleSchema = {
   properties: [
     {
       propertyType: PropertyType.STRING,
@@ -45,9 +45,11 @@ export const schemaForSchema: Schema = {
   ]
 };
 
+export type SimpleSchema = Partial<Schema> & Pick<Schema, 'properties'>;
+
 export interface Schema {
-  name?: string;
-  title?: string;
+  name: string;
+  title: string;
   description?: string;
   appliedContentType?: string;
   appliedView?: string;

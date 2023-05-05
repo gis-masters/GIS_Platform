@@ -1,7 +1,7 @@
 import { SchemasSelect } from '../../../components/SchemasSelect/SchemasSelect';
 import { viewedProjections } from '../../geoserver/projections.service';
 import { CrgProject } from '../../gis/projects/projects.models';
-import { PropertyType, Schema } from '../schema/schema.models';
+import { PropertyType, SimpleSchema } from '../schema/schema.models';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { Role } from '../permissions/permissions.models';
 
@@ -50,7 +50,7 @@ export type NewVectorTable = Pick<VectorTable, 'title' | 'crs' | 'schemaId'>;
 
 const title = 'Наименование';
 
-export const datasetSchema: Schema = {
+export const datasetSchema: SimpleSchema = {
   properties: [
     {
       name: 'title',
@@ -71,7 +71,7 @@ const statusOptions = [
   { title: 'Архивный', value: 'Архивный' }
 ];
 
-const vectorTableSchemaBase: Schema = {
+const vectorTableSchemaBase: SimpleSchema = {
   properties: [
     {
       name: 'details',
@@ -145,7 +145,7 @@ const vectorTableSchemaBase: Schema = {
   ]
 };
 
-export const vectorTableSchema: Schema = {
+export const vectorTableSchema: SimpleSchema = {
   properties: [
     {
       name: 'title',
@@ -163,7 +163,7 @@ export const vectorTableSchema: Schema = {
   ]
 };
 
-export const emptyVectorTableSchema: Schema = {
+export const emptyVectorTableSchema: SimpleSchema = {
   properties: [
     {
       name: 'title',
