@@ -4,6 +4,7 @@ import { ComponentType, ReactNode } from 'react';
 import {
   PropertySchemaChoice,
   PropertySchemaDatetime,
+  PropertySchemaFloat,
   PropertySchemaUrl,
   PropertyType,
   Relation
@@ -30,6 +31,7 @@ export interface XTableColumn<T> {
   type?: XTableColumnType;
   settings?: Partial<
     Pick<PropertySchemaChoice, 'options'> &
+      Pick<PropertySchemaFloat, 'precision'> &
       Pick<PropertySchemaDatetime, 'format'> &
       Pick<PropertySchemaUrl, 'openIn'> & { relations: Relation[] }
   >;

@@ -67,7 +67,8 @@ function _getXTableColumnsFromSchema<T>(
         options: property.propertyType === PropertyType.CHOICE ? property.options : undefined,
         format: property.propertyType === PropertyType.DATETIME ? property.format : undefined,
         openIn: property.propertyType === PropertyType.URL ? property.openIn : undefined,
-        relations: relations.length ? relations : undefined
+        relations: relations.length ? relations : undefined,
+        precision: property.propertyType === PropertyType.FLOAT ? property?.precision : undefined
       },
       filterable: filterableTypes.has(property.propertyType),
       hidden: property.hidden,

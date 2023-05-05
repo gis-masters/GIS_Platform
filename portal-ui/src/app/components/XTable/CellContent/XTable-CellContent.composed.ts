@@ -7,6 +7,7 @@ import { withTypeDocument } from './_type/XTable-CellContent_type_document';
 import { withTypeFile } from './_type/XTable-CellContent_type_file';
 import { withTypeFias } from './_type/XTable-CellContent_type_fias';
 import { withTypeUrl } from './_type/XTable-CellContent_type_url';
+import { withTypeFloat } from './_type/XTable-CellContent_type_float';
 import { XTableCellContentBase as Presenter } from './XTable-CellContent.base';
 
 export const XTableCellContent = compose(
@@ -14,6 +15,7 @@ export const XTableCellContent = compose(
   withTypeChoice,
   withTypeDateTime,
   withTypeDocument,
+  withTypeFloat,
   withTypeFile,
   withTypeFias,
   withTypeUrl

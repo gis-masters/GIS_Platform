@@ -15,7 +15,7 @@ Then('форма просмотра объекта открывается в р�
   await editFeatureBlock.waitForVisible();
   const isReadonly = await editFeatureBlock.isReadonlyMode();
 
-  expect(isReadonly).toEqual(expected);
+  await expect(isReadonly).toEqual(expected);
 });
 
 Then('открывается форма просмотра объекта', async function () {
