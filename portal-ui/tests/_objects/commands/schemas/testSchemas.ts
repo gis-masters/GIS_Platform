@@ -60,79 +60,42 @@ const schemaWithViews: Schema = {
     {
       name: 'classid',
       title: 'Значение объекта',
-      hidden: false,
-      multiple: false,
-      required: false,
       propertyType: PropertyType.CHOICE,
-      description: '',
-      options: [
-        {
-          title: 'Территория населенного пункта',
-          value: '601020400'
-        },
-        {
-          title: 'Муниципальный район',
-          value: '601020301'
-        },
-        {
-          title: 'Сельское поселение',
-          value: '601020307'
-        }
-      ]
+      options: []
     },
     {
       name: 'name',
       title: 'Наименование',
-      hidden: false,
-      required: false,
-      maxLength: 254,
-      minLength: -1,
-      propertyType: PropertyType.STRING,
-      description: ''
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'text',
+      title: 'текст',
+      propertyType: PropertyType.STRING
     },
     {
       name: 'shape',
       title: 'geometry',
-      required: false,
-      hidden: false,
       propertyType: PropertyType.GEOMETRY
     },
     {
       name: 'shape_area',
       title: 'Площадь',
-      hidden: false,
-      required: true,
       propertyType: PropertyType.INT,
       description: ''
     },
     {
       name: 'status_adm',
       title: 'Статус объекта',
-      hidden: false,
-      multiple: false,
-      required: false,
       propertyType: PropertyType.CHOICE,
-      description: '',
-      options: [
-        {
-          title: 'Существующий',
-          value: '1'
-        },
-        {
-          title: 'Планируемый',
-          value: '2'
-        }
-      ]
+      options: []
     },
     {
       name: 'ruleid',
       title: 'Идентификатор стиля',
       hidden: true,
       required: true,
-      maxLength: 254,
-      minLength: -1,
-      propertyType: PropertyType.STRING,
-      description: ''
+      propertyType: PropertyType.STRING
     }
   ],
   views: [
@@ -143,7 +106,8 @@ const schemaWithViews: Schema = {
       properties: [
         {
           name: 'name',
-          title: 'Наименование объекта'
+          title: 'Наименование объекта',
+          propertyType: PropertyType.STRING
         }
       ]
     },
@@ -154,7 +118,8 @@ const schemaWithViews: Schema = {
       properties: [
         {
           name: 'shape_area',
-          title: 'Площадь, кв.м'
+          title: 'Площадь, кв.м',
+          propertyType: PropertyType.INT
         }
       ]
     },
@@ -165,22 +130,44 @@ const schemaWithViews: Schema = {
       type: 'VIEW',
       properties: [
         {
-          name: 'classid'
+          name: 'classid',
+          title: 'Значение объекта',
+          propertyType: PropertyType.CHOICE,
+          options: []
         },
         {
-          name: 'name'
+          name: 'name',
+          title: 'Наименование',
+          propertyType: PropertyType.STRING
         },
         {
-          name: 'shape'
+          name: 'text',
+          title: 'текст',
+          asTitle: true,
+          propertyType: PropertyType.STRING
         },
         {
-          name: 'shape_area'
+          name: 'shape',
+          title: 'geometry',
+          propertyType: PropertyType.GEOMETRY
         },
         {
-          name: 'status_adm'
+          name: 'shape_area',
+          title: 'Площадь',
+          propertyType: PropertyType.INT
         },
         {
-          name: 'ruleid'
+          name: 'STATUS_ADM',
+          title: 'Статус объекта',
+          propertyType: PropertyType.CHOICE,
+          options: []
+        },
+        {
+          name: 'ruleid',
+          title: 'Идентификатор стиля',
+          hidden: true,
+          required: true,
+          propertyType: PropertyType.STRING
         }
       ]
     },
@@ -191,16 +178,119 @@ const schemaWithViews: Schema = {
       type: 'VIEW',
       properties: [
         {
-          name: 'classid'
+          name: 'classid',
+          title: 'Значение объекта',
+          propertyType: PropertyType.CHOICE,
+          options: []
         },
         {
-          name: 'shape'
+          name: 'shape',
+          title: 'geometry',
+          propertyType: PropertyType.GEOMETRY
         },
         {
-          name: 'status_adm'
+          name: 'STATUS_ADM',
+          title: 'Статус объекта',
+          propertyType: PropertyType.CHOICE,
+          options: []
         },
         {
-          name: 'ruleid'
+          name: 'ruleid',
+          title: 'Идентификатор стиля',
+          hidden: true,
+          required: true,
+          propertyType: PropertyType.STRING
+        }
+      ]
+    }
+  ],
+  description: 'Границы1',
+  geometryType: GeometryType.MULTI_POLYGON
+};
+
+const schemaForTestTitles: Schema = {
+  name: 'schemaForTestTitles',
+  title: 'Административное деление с заголовками',
+  readOnly: false,
+  tableName: 'border1',
+  styleName: 'admemo',
+  properties: [
+    {
+      name: 'classid',
+      title: 'Значение объекта',
+      propertyType: PropertyType.CHOICE,
+      options: []
+    },
+    {
+      name: 'text',
+      title: 'Наименование',
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'shape',
+      title: 'geometry',
+      propertyType: PropertyType.GEOMETRY
+    },
+    {
+      name: 'shape_area',
+      title: 'Площадь',
+      propertyType: PropertyType.INT
+    },
+    {
+      name: 'STATUS_ADM',
+      title: 'Статус объекта',
+      propertyType: PropertyType.CHOICE,
+      options: []
+    },
+    {
+      name: 'ruleid',
+      title: 'Идентификатор стиля',
+      hidden: true,
+      required: true,
+      propertyType: PropertyType.STRING
+    }
+  ],
+  views: [
+    {
+      id: 'viewsId1',
+      title: 'Представление 1',
+      styleName: 'forest',
+      type: 'VIEW',
+      properties: [
+        {
+          name: 'classid',
+          title: 'Значение объекта',
+          propertyType: PropertyType.CHOICE,
+          options: []
+        },
+        {
+          name: 'name',
+          title: 'Наименование',
+          propertyType: PropertyType.STRING
+        },
+        {
+          name: 'shape',
+          title: 'geometry',
+          propertyType: PropertyType.GEOMETRY
+        },
+        {
+          name: 'shape_area',
+          asTitle: true,
+          title: 'Площадь',
+          propertyType: PropertyType.INT
+        },
+        {
+          name: 'STATUS_ADM',
+          title: 'Статус объекта',
+          propertyType: PropertyType.CHOICE,
+          options: []
+        },
+        {
+          name: 'ruleid',
+          title: 'Идентификатор стиля',
+          hidden: true,
+          required: true,
+          propertyType: PropertyType.STRING
         }
       ]
     }
@@ -219,79 +309,36 @@ const schemaWithoutViews: Schema = {
     {
       name: 'classid',
       title: 'Значение объекта',
-      hidden: false,
-      multiple: false,
-      required: false,
       propertyType: PropertyType.CHOICE,
-      description: '',
-      options: [
-        {
-          title: 'Территория населенного пункта',
-          value: '601020400'
-        },
-        {
-          title: 'Муниципальный район',
-          value: '601020301'
-        },
-        {
-          title: 'Сельское поселение',
-          value: '601020307'
-        }
-      ]
+      options: []
     },
     {
       name: 'shape',
       title: 'geometry',
-      required: false,
-      hidden: false,
       propertyType: PropertyType.GEOMETRY
     },
     {
       name: 'name',
       title: 'Наименование объекта',
-      hidden: false,
-      required: false,
-      maxLength: 254,
-      minLength: -1,
-      propertyType: PropertyType.STRING,
-      description: ''
+      propertyType: PropertyType.STRING
     },
     {
       name: 'shape_area',
       title: 'Площадь, кв.м',
-      hidden: false,
-      required: true,
-      propertyType: PropertyType.FLOAT,
-      description: ''
+      propertyType: PropertyType.FLOAT
     },
     {
       name: 'status_adm',
       title: 'Статус объекта',
-      hidden: false,
-      multiple: false,
-      required: false,
       propertyType: PropertyType.CHOICE,
-      description: '',
-      options: [
-        {
-          title: 'Существующий',
-          value: '1'
-        },
-        {
-          title: 'Планируемый',
-          value: '2'
-        }
-      ]
+      options: []
     },
     {
       name: 'ruleid',
       title: 'Идентификатор стиля',
       hidden: true,
       required: true,
-      maxLength: 254,
-      minLength: -1,
-      propertyType: PropertyType.STRING,
-      description: ''
+      propertyType: PropertyType.STRING
     }
   ],
   description: 'Границы2',
@@ -308,8 +355,6 @@ const schemaWithInappropriateStyleName: Schema = {
     {
       name: 'shape',
       title: 'geometry',
-      required: false,
-      hidden: false,
       propertyType: PropertyType.GEOMETRY
     },
     {
@@ -317,10 +362,7 @@ const schemaWithInappropriateStyleName: Schema = {
       title: 'Идентификатор',
       hidden: true,
       required: true,
-      maxLength: 254,
-      minLength: -1,
-      propertyType: PropertyType.STRING,
-      description: ''
+      propertyType: PropertyType.STRING
     }
   ],
   description: 'Границы2',
@@ -538,8 +580,9 @@ export const testSchemas: { [key: string]: Schema } = {
   'Схема в режиме чтения': testSortingSchema2,
   'Схема с представлениями': schemaWithViews,
   'Схема без представлений': schemaWithoutViews,
-  'Схема содержащая все типы данных и аттрибут asTitle': testSchemaWithAllTypesUpdated,
+  'Схема с заголовками объектов': schemaForTestTitles,
   'Схема содержащая все типы данных': testSchemaWithAllTypes,
+  'Схема содержащая все типы данных и аттрибут asTitle': testSchemaWithAllTypesUpdated,
   'Схема содержащая все типы данных в режиме редактирования': testSchemaWithAllTypes,
   'Схема содержащая все типы данных в режиме чтения': {
     ...testSchemaWithAllTypes,

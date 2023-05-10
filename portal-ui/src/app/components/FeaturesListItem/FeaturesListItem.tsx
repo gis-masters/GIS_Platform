@@ -4,21 +4,24 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { ArrowForward } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
-import { observable, action, makeObservable } from 'mobx';
+import { observable, action, makeObservable, computed } from 'mobx';
 
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
-import { extractFeatureId } from '../../services/geoserver/feature.util';
+import { Schema } from '../../services/data/schema/schema.models';
+import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { PropertyType } from '../../services/data/schema/schema.models';
+import { extractFeatureId } from '../../services/geoserver/feature.util';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { FeatureError } from '../../services/map/map-link-following.service';
-import { changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
+import { FeaturesListItemTitle, getFeaturesListItemTitle } from './FeaturesListItem.util';
+import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 
 const cnFeaturesListItem = cn('FeaturesListItem');
+const cnFeaturesListItemOpenEdit = cn('FeaturesListItem', 'OpenEdit');
 
 interface FeaturesListItemProps {
   feature?: WfsFeature;
@@ -32,8 +35,7 @@ interface FeaturesListItemProps {
 
 @observer
 export class FeaturesListItem extends Component<FeaturesListItemProps> {
-  @observable private title = '';
-  @observable private layerTitle = '';
+  @observable private rawSchema?: Schema;
 
   constructor(props: FeaturesListItemProps) {
     super(props);
@@ -41,8 +43,12 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   }
 
   async componentDidMount() {
-    if (!this.props.errorData) {
-      await this.defineAndFillTitles();
+    await this.loadSchema();
+  }
+
+  async componentDidUpdate(prevProps: FeaturesListItemProps) {
+    if (prevProps.feature?.id !== this.props.feature?.id) {
+      await this.loadSchema();
     }
   }
 
@@ -61,15 +67,17 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
         <div className={cnFeaturesListItem('Icon')}>
           <FeatureIcon geometryType={feature?.geometry?.type} className={cnFeaturesListItem('Svg')} />
         </div>
-        <div className={cnFeaturesListItem('Title', { disabled: !!errorData })}>
-          {errorData ? errorData.message : this.title}
+        <div
+          className={cnFeaturesListItem('Title', { disabled: !!errorData, isEmpty: this.titleAndEmptiness?.isEmpty })}
+        >
+          {errorData ? errorData.message : this.titleAndEmptiness?.title}
         </div>
-        <div className={cnFeaturesListItem('Layer')}>{errorData ? errorData.layerTitle : this.layerTitle}</div>
+        <div className={cnFeaturesListItem('Layer')}>{errorData ? errorData.layerTitle : this.subTitle}</div>
         {!errorData && (
           <div className={cnFeaturesListItem('Buttons')}>
             <ZoomToFeature feature={feature} onClick={this.zoomHandler} />
             <Tooltip title='Открыть'>
-              <IconButton onClick={this.selectIt}>
+              <IconButton className={cnFeaturesListItemOpenEdit()} onClick={this.selectIt}>
                 <ArrowForward />
               </IconButton>
             </Tooltip>
@@ -79,38 +87,32 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
     );
   }
 
-  private async defineAndFillTitles() {
-    const { feature } = this.props;
-
-    const tableName = this.extractTableName(feature.id);
-    const layer = currentProject.getLayerByTableName(tableName);
-    const rawSchema = await schemaService.getSchema(layer.schemaId);
-    if (!rawSchema) {
-      throw new Error(`Не удалось найти схему: ${layer.schemaId}`);
-    }
-    const schema = changeSchemaNamesCaseByFeature(rawSchema, feature);
-
-    let title = '';
-    const property = schema.properties.find(prop => prop.asTitle);
-    if (property) {
-      if (property.propertyType !== PropertyType.CHOICE) {
-        title = String(feature.properties[property.name]);
-      } else if (property.options) {
-        // eslint-disable-next-line eqeqeq -- тут так надо
-        const valueTitleProjection = property.options.find(item => item.value == feature.properties[property.name]);
-        title = valueTitleProjection ? valueTitleProjection.title : '';
-      }
-    } else {
-      title = String(feature.properties.name || feature.properties.title);
-    }
-
-    this.setTitles(title, layer.title || schema.title);
+  @computed
+  private get schema(): Schema | undefined {
+    return this.layer.view && this.rawSchema ? applyView(this.rawSchema, this.layer.view) : this.rawSchema;
   }
 
-  @action
-  private setTitles(title: string, layerTitle: string) {
-    this.title = title;
-    this.layerTitle = layerTitle;
+  @computed
+  private get subTitle(): string {
+    return this.layer.title || this.schema?.title;
+  }
+
+  @computed
+  private get titleAndEmptiness(): FeaturesListItemTitle | undefined {
+    if (this.schema) {
+      return getFeaturesListItemTitle(
+        this.props.feature,
+        changeSchemaNamesCaseByFeature(this.schema, this.props.feature)
+      );
+    }
+  }
+
+  @computed
+  private get layer(): CrgLayer {
+    const { feature } = this.props;
+    const tableName = this.extractTableName(feature.id);
+
+    return currentProject.getLayerByTableName(tableName);
   }
 
   @boundMethod
@@ -132,6 +134,17 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   @boundMethod
   private zoomHandler() {
     this.props.onHighlight(this.props.feature);
+  }
+
+  private async loadSchema(): Promise<void> {
+    if (!this.props.errorData) {
+      this.setRawSchema(await schemaService.getSchema(this.layer.schemaId));
+    }
+  }
+
+  @action
+  private setRawSchema(schema: Schema) {
+    this.rawSchema = schema;
   }
 
   private extractTableName(id: string) {

@@ -2,6 +2,10 @@ import { DataTable, Then, When } from '@wdio/cucumber-framework';
 
 import { editFeatureBlock } from './EditFeature.block';
 
+When('я закрываю панель редактирования объекта нажимая на крестик', async function () {
+  await editFeatureBlock.close();
+});
+
 Then(
   'в панели атрибутов объекта на карте в списке атрибутов отображается только поле {string}',
   async function (title: string) {
@@ -39,7 +43,7 @@ Then('вкладка просмотра геометрии в режиме чт�
     .split(' ')
     .filter(item => item.length > 2);
 
-  expect(geometry).toEqual(expectedGeometry);
+  await expect(geometry).toEqual(expectedGeometry);
 });
 
 Then(
@@ -52,7 +56,7 @@ Then(
 
     const geometry = await editFeatureBlock.getGeometryInEditMode();
 
-    expect(geometry).toEqual(expectedGeometry);
+    await expect(geometry).toEqual(expectedGeometry);
   }
 );
 

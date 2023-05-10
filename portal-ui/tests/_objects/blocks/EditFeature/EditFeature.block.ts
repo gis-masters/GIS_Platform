@@ -6,6 +6,7 @@ import { extractValues } from '../../commands/extractText';
 class EditFeatureBlock extends Block {
   selectors = {
     container: '.edit-feature',
+    editFeatureClose: '.edit-feature .close-button',
     editFeatureSidebarSaveNewObjectBtn: '.edit-feature .save-feature-edit-btn',
     editFeatureForm: '.edit-feature__form',
     editFeatureLabel: '.edit-feature__label',
@@ -17,6 +18,11 @@ class EditFeatureBlock extends Block {
   async saveNewObject(): Promise<void> {
     const $saveNewObjectBtn = await this.$('editFeatureSidebarSaveNewObjectBtn');
     await $saveNewObjectBtn.click();
+  }
+
+  async close(): Promise<void> {
+    const $editFeatureClose = await this.$('editFeatureClose');
+    await $editFeatureClose.click();
   }
 
   async checkObjectAttributeFields(title: string): Promise<void> {

@@ -82,6 +82,12 @@
     &_disabled {
       color: var(--gray);
     }
+
+    &_isEmpty {
+      opacity: 0.8;
+
+      font-style: italic;
+    }
   }
 
   &-Layer {
