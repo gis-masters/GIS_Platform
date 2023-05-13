@@ -95,7 +95,7 @@ public class GDALService implements IExporter {
         }
 
         if (!baseDaoService.isTableExist(jdbcTemplate, tableName)) {
-            throw new ClientException("Невалидный shape файл!");
+            throw new ClientException("Не удалось выполнить импорт shape файла. Подробный лог на geo-wrapper");
         }
         cleanUp(processBuilder, randomDirName);
 

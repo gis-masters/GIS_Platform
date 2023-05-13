@@ -54,13 +54,15 @@ crg-options:
 
 
 esia:
-  url: https://esia-portal1.test.gosuslugi.ru
+  url: https://esia.gosuslugi.ru #https://esia-portal1.test.gosuslugi.ru
   client_id: GISOGD_CRIMEA
+  client_certificate_hash: 624B4BC01310B68566F9493262FC584805EF25915F406D4EADD055D1F45E9421
   org_id: 1
   group_id: 314314
   key-store:
     path: /opt/key_storage/esia_store.pfx
     pass: 314314
+    key_pass: 314314
     alias: fpy
     sign_alg: GOST3411-2012-256WITHECGOST3410-2012-256
 

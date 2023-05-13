@@ -26,10 +26,19 @@ public class JsonConverter {
             .setDateFormat(new SimpleDateFormat("dd-MM-yyyy HH:mm"));
 
     public static JsonNode toJsonNode(Object object) {
+        if (object == null) {
+            log.warn("toJsonNode input object is 'null'");
+
+            return JacksonUtil.toJsonNode("");
+        }
+
+        String jsonString = null;
         try {
-            return JacksonUtil.toJsonNode(getJsonString(object));
+            jsonString = getJsonString(object);
+
+            return JacksonUtil.toJsonNode(jsonString);
         } catch (JsonProcessingException e) {
-            log.error("Failed convert to jsonNode: {}", e.getMessage());
+            log.error("Failed convert object: '{}' to jsonNode. Reason: {}", jsonString, e.getMessage());
 
             return JacksonUtil.toJsonNode("");
         }
@@ -39,7 +48,7 @@ public class JsonConverter {
         try {
             return mapper.readTree(json);
         } catch (IOException e) {
-            log.error("Failed convert to jsonNode: {}", e.getMessage());
+            log.error("Failed convert to toJsonNodeFromString: {}", e.getMessage());
 
             return JacksonUtil.toJsonNode("");
         }

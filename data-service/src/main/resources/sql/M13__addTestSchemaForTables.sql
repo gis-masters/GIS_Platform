@@ -3,6 +3,7 @@ SELECT 'schema_for_test_table',
        '{
   "name": "schema_for_test_table",
   "title": "Схема для тестов",
+  "readOnly": false,
   "description": "Схема для тестов",
   "tableName": "test_table",
   "properties": [
@@ -97,7 +98,6 @@ SELECT 'schema_for_test_table',
       "calculatedValueWellKnownFormula": "st_length"
     }
   ],
-   "description": "Тестовая схема",
    "geometryType": "MultiPolygon",
    "customRuleFunction": null
 }',
@@ -118,18 +118,10 @@ SELECT 'advertising_point_simf_2022',
     {
       "name": "classid",
       "title": "Код объекта",
-      "choice": null,
       "hidden": false,
-      "length": -1,
-      "pattern": null,
       "multiple": false,
       "required": true,
-      "maxLength": -1,
-      "minLength": -1,
       "valueType": "CHOICE",
-      "whiteSpace": null,
-      "description": "",
-      "totalDigits": -1,
       "enumerations": [
         {
           "title": "Модульная малая двухсторонняя ",
@@ -144,14 +136,8 @@ SELECT 'advertising_point_simf_2022',
           "value": "510000003"
         }
       ],
-      "maxInclusive": -1,
-      "minInclusive": -1,
       "allowedValues": [],
-      "updateability": null,
-      "foreignKeyType": "STRING",
-      "fractionDigits": -1,
-      "sequenceNumber": 2,
-      "patternDescription": ""
+      "foreignKeyType": "STRING"
     },
     {
       "name": "location",
@@ -170,19 +156,14 @@ SELECT 'advertising_point_simf_2022',
     },
     {
       "name": "shape",
-      "title": null,
-      "choice": null,
+      "title": "Some title",
       "hidden": false,
       "multiple": false,
       "required": false,
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Point"
-      ],
-      "updateability": null,
-      "fractionDigits": -1,
-      "sequenceNumber": 13,
-      "patternDescription": ""
+      ]
     }
   ],
   "description": "Рекламные конструкции города Симферополь",

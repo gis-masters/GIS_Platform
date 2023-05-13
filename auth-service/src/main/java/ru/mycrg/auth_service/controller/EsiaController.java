@@ -57,9 +57,11 @@ public class EsiaController {
         state = UUID.randomUUID().toString();
         log.debug("ESIA authorization init. State: {}", state);
 
-        String redirectUrl = esiaService.authorize(state, redirect);
+        String esiaAuthUrl = esiaService.buildAuthorizeUrl(state, redirect);
 
-        return ResponseEntity.ok(redirectUrl);
+        log.debug("esiaAuthUrl: {}", esiaAuthUrl);
+
+        return ResponseEntity.ok(esiaAuthUrl);
     }
 
     @GetMapping("/esia/ok")

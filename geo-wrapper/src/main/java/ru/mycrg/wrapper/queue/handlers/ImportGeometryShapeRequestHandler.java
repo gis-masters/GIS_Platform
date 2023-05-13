@@ -60,7 +60,7 @@ public class ImportGeometryShapeRequestHandler implements IEventHandler {
 
             messageBus.produce(new ShapeImportedFailedEvent(event, ERROR, e.getMessage(), 0, "", msg, null));
         } catch (Exception e) {
-            String msg = "Ошибка при импорте геометрии из shape файла: " + e.getMessage();
+            String msg = "Что то пошло не так при импорте геометрии из shape файла: " + e.getMessage();
             log.error(msg);
 
             messageBus.produce(new ShapeImportedFailedEvent(event, ERROR, e.getMessage(), 0, "", null, msg));

@@ -50,6 +50,34 @@ const propertyGeometry: PropertySchema = {
   propertyType: PropertyType.GEOMETRY
 };
 
+const propertyClassId: PropertySchema = {
+  name: 'classid',
+  title: 'Значение объекта',
+  propertyType: PropertyType.CHOICE,
+  options: [
+    {
+      title: 'first',
+      value: '1'
+    },
+    {
+      title: 'second',
+      value: '2'
+    }
+  ]
+};
+
+const propertyAdmStatus: PropertySchema = {
+  name: 'status_adm',
+  title: 'Статус объекта',
+  propertyType: PropertyType.CHOICE,
+  options: [
+    {
+      title: 'Модульная двухсторонняя',
+      value: '1'
+    }
+  ]
+};
+
 const schemaWithViews: Schema = {
   name: 'schemaWithViews',
   title: 'Административное деление с представлениями',
@@ -57,12 +85,7 @@ const schemaWithViews: Schema = {
   tableName: 'border1',
   styleName: 'admemo',
   properties: [
-    {
-      name: 'classid',
-      title: 'Значение объекта',
-      propertyType: PropertyType.CHOICE,
-      options: []
-    },
+    propertyClassId,
     {
       name: 'name',
       title: 'Наименование',
@@ -84,12 +107,7 @@ const schemaWithViews: Schema = {
       propertyType: PropertyType.INT,
       description: ''
     },
-    {
-      name: 'status_adm',
-      title: 'Статус объекта',
-      propertyType: PropertyType.CHOICE,
-      options: []
-    },
+    propertyAdmStatus,
     {
       name: 'ruleid',
       title: 'Идентификатор стиля',
@@ -106,8 +124,7 @@ const schemaWithViews: Schema = {
       properties: [
         {
           name: 'name',
-          title: 'Наименование объекта',
-          propertyType: PropertyType.STRING
+          title: 'Наименование объекта'
         }
       ]
     },
@@ -118,8 +135,7 @@ const schemaWithViews: Schema = {
       properties: [
         {
           name: 'shape_area',
-          title: 'Площадь, кв.м',
-          propertyType: PropertyType.INT
+          title: 'Площадь, кв.м'
         }
       ]
     },
@@ -131,43 +147,27 @@ const schemaWithViews: Schema = {
       properties: [
         {
           name: 'classid',
-          title: 'Значение объекта',
-          propertyType: PropertyType.CHOICE,
-          options: []
+          title: 'Значение объекта'
         },
         {
           name: 'name',
-          title: 'Наименование',
-          propertyType: PropertyType.STRING
+          title: 'Наименование'
         },
         {
           name: 'text',
-          title: 'текст',
-          asTitle: true,
-          propertyType: PropertyType.STRING
+          asTitle: true
         },
         {
-          name: 'shape',
-          title: 'geometry',
-          propertyType: PropertyType.GEOMETRY
+          name: 'shape'
         },
         {
-          name: 'shape_area',
-          title: 'Площадь',
-          propertyType: PropertyType.INT
+          name: 'shape_area'
         },
         {
-          name: 'STATUS_ADM',
-          title: 'Статус объекта',
-          propertyType: PropertyType.CHOICE,
-          options: []
+          name: 'status_adm'
         },
         {
-          name: 'ruleid',
-          title: 'Идентификатор стиля',
-          hidden: true,
-          required: true,
-          propertyType: PropertyType.STRING
+          name: 'ruleid'
         }
       ]
     },
@@ -178,28 +178,16 @@ const schemaWithViews: Schema = {
       type: 'VIEW',
       properties: [
         {
-          name: 'classid',
-          title: 'Значение объекта',
-          propertyType: PropertyType.CHOICE,
-          options: []
+          name: 'classid'
         },
         {
-          name: 'shape',
-          title: 'geometry',
-          propertyType: PropertyType.GEOMETRY
+          name: 'shape'
         },
         {
-          name: 'STATUS_ADM',
-          title: 'Статус объекта',
-          propertyType: PropertyType.CHOICE,
-          options: []
+          name: 'status_adm'
         },
         {
-          name: 'ruleid',
-          title: 'Идентификатор стиля',
-          hidden: true,
-          required: true,
-          propertyType: PropertyType.STRING
+          name: 'ruleid'
         }
       ]
     }
@@ -215,12 +203,7 @@ const schemaForTestTitles: Schema = {
   tableName: 'border1',
   styleName: 'admemo',
   properties: [
-    {
-      name: 'classid',
-      title: 'Значение объекта',
-      propertyType: PropertyType.CHOICE,
-      options: []
-    },
+    propertyClassId,
     {
       name: 'text',
       title: 'Наименование',
@@ -236,12 +219,7 @@ const schemaForTestTitles: Schema = {
       title: 'Площадь',
       propertyType: PropertyType.INT
     },
-    {
-      name: 'STATUS_ADM',
-      title: 'Статус объекта',
-      propertyType: PropertyType.CHOICE,
-      options: []
-    },
+    propertyAdmStatus,
     {
       name: 'ruleid',
       title: 'Идентификатор стиля',
@@ -258,39 +236,20 @@ const schemaForTestTitles: Schema = {
       type: 'VIEW',
       properties: [
         {
-          name: 'classid',
-          title: 'Значение объекта',
-          propertyType: PropertyType.CHOICE,
-          options: []
+          name: 'classid'
         },
         {
-          name: 'name',
-          title: 'Наименование',
-          propertyType: PropertyType.STRING
-        },
-        {
-          name: 'shape',
-          title: 'geometry',
-          propertyType: PropertyType.GEOMETRY
+          name: 'shape'
         },
         {
           name: 'shape_area',
-          asTitle: true,
-          title: 'Площадь',
-          propertyType: PropertyType.INT
+          asTitle: true
         },
         {
-          name: 'STATUS_ADM',
-          title: 'Статус объекта',
-          propertyType: PropertyType.CHOICE,
-          options: []
+          name: 'status_adm'
         },
         {
-          name: 'ruleid',
-          title: 'Идентификатор стиля',
-          hidden: true,
-          required: true,
-          propertyType: PropertyType.STRING
+          name: 'ruleid'
         }
       ]
     }
@@ -306,12 +265,7 @@ const schemaWithoutViews: Schema = {
   tableName: 'border2',
   styleName: 'admemo',
   properties: [
-    {
-      name: 'classid',
-      title: 'Значение объекта',
-      propertyType: PropertyType.CHOICE,
-      options: []
-    },
+    propertyClassId,
     {
       name: 'shape',
       title: 'geometry',
@@ -327,12 +281,7 @@ const schemaWithoutViews: Schema = {
       title: 'Площадь, кв.м',
       propertyType: PropertyType.FLOAT
     },
-    {
-      name: 'status_adm',
-      title: 'Статус объекта',
-      propertyType: PropertyType.CHOICE,
-      options: []
-    },
+    propertyAdmStatus,
     {
       name: 'ruleid',
       title: 'Идентификатор стиля',

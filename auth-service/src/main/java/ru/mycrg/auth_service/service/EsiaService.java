@@ -30,13 +30,14 @@ public class EsiaService {
     private final Logger log = LoggerFactory.getLogger(EsiaService.class);
 
     private final URL ESIA_SERV;
-    private final String ESIA_CODE_POINT = "/aas/oauth2/ac";
-    private final String ESIA_TOKEN_POINT = "/aas/oauth2/te";
+    private final String ESIA_CODE_POINT = "/aas/oauth2/v2/ac";
+    private final String ESIA_TOKEN_POINT = "/aas/oauth2/v3/te";
     private final String ESIA_USER_INFO = "/rs/prns/"; // Сервис получения персональных данных пользователя
     private final String ESIA_ORG_INFO = "/rs/orgs"; // Сервис получения данных организации
     private final String ESIA_SBJS_INFO = "/rs/sbjs"; // Сервис получения данных о субъекте
 
     private final String CLIENT_ID;
+    private final String CLIENT_CERTIFICATE_HASH;
     private final String SCOPE;
     private final String ACCESS_TYPE;
 
@@ -52,26 +53,28 @@ public class EsiaService {
 
         ESIA_SERV = new URL(environment.getRequiredProperty("esia.url"));
         CLIENT_ID = environment.getRequiredProperty("esia.client_id");
+        CLIENT_CERTIFICATE_HASH = environment.getRequiredProperty("esia.client_certificate_hash");
 
         ACCESS_TYPE = "online";
         SCOPE = "openid email fullname";
     }
 
-    public String authorize(String state, String redirect) throws MalformedURLException {
+    public String buildAuthorizeUrl(String state, String redirectUri) throws MalformedURLException {
         String timestamp = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss Z").format(new Date());
-        String clientSecret = pkcs7Util.generateClientSecret(SCOPE, timestamp, CLIENT_ID, state);
+        String signSecret = pkcs7Util.sign(CLIENT_ID + SCOPE + timestamp + state + redirectUri);
 
-        log.debug("clientSecret: {}", clientSecret);
+        log.debug("Base64 client secret: {}", signSecret);
 
         return HttpUrl.get(new URL(ESIA_SERV, ESIA_CODE_POINT)).newBuilder()
                       .addQueryParameter("client_id", CLIENT_ID)
-                      .addQueryParameter("client_secret", clientSecret)
+                      .addQueryParameter("client_certificate_hash", CLIENT_CERTIFICATE_HASH)
+                      .addQueryParameter("client_secret", signSecret)
                       .addQueryParameter("access_type", ACCESS_TYPE)
                       .addQueryParameter("response_type", "code")
                       .addQueryParameter("scope", SCOPE)
                       .addQueryParameter("state", state)
                       .addQueryParameter("timestamp", timestamp)
-                      .addQueryParameter("redirect_uri", redirect)
+                      .addQueryParameter("redirect_uri", redirectUri)
                       .build()
                       .toString();
     }
@@ -224,21 +227,22 @@ public class EsiaService {
         }
     }
 
-    private String tradeCodeForToken(String redirect, String code, String state) {
+    private String tradeCodeForToken(String redirectUri, String code, String state) {
         try {
             String timestamp = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss Z").format(new Date());
-            String clientSecret = pkcs7Util.generateClientSecret(SCOPE, timestamp, CLIENT_ID, state);
+            String signSecret = pkcs7Util.sign(CLIENT_ID + SCOPE + timestamp + state + redirectUri + code);
 
             RequestBody formBody = new FormBody.Builder()
                     .add("client_id", CLIENT_ID)
                     .add("code", code)
                     .add("grant_type", "authorization_code")
-                    .add("client_secret", clientSecret)
+                    .add("client_secret", signSecret)
                     .add("state", state)
-                    .add("redirect_uri", redirect)
+                    .add("redirect_uri", redirectUri)
                     .add("scope", SCOPE)
                     .add("timestamp", timestamp)
                     .add("token_type", "Bearer")
+                    .add("client_certificate_hash", CLIENT_CERTIFICATE_HASH)
                     .add("access_type", ACCESS_TYPE)
                     .build();
 
