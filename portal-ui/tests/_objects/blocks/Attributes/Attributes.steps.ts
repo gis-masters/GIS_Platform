@@ -1,6 +1,7 @@
 import { isEqual } from 'lodash';
 import { WaitUntilOptions } from 'webdriverio';
-import { DataTable, Given, Then, When } from '@wdio/cucumber-framework';
+import { Given, Then, When } from '@wdio/cucumber-framework';
+import { DataTable } from '@cucumber/cucumber';
 
 import { ScenarioScope } from '../../ScenarioScope';
 import { getSortDirection } from '../../utils/getSortDirection';
@@ -221,6 +222,11 @@ Then(
     }, waitUntilOptions);
   }
 );
+
+Then('в атрибутивной таблице существуют вкладки с заголовками:', async function (attributeTitle: DataTable) {
+  const titles = await attributesBlock.getTabsTitles();
+  await expect(titles).toEqual(attributeTitle.raw()[0]);
+});
 
 function getSchemaPropertyByTitle(schema: Schema, title: string): PropertySchema {
   const property = schema.properties?.find(prop => {

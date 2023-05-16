@@ -3,9 +3,12 @@ import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { projectsService } from '../../../services/gis/projects/projects.service';
-import { TreeItem } from '../../../services/gis/projects/projects.models';
 import { Layer } from '../../Layer/Layer';
+import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
+import { TreeItem } from '../../../services/gis/projects/projects.models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
+import { mapSelectionService } from '../../../services/map/map-selection.service';
+import { CrgLayer, CrgLayerType } from '../../../services/gis/layers/layers.models';
 
 import '!style-loader!css-loader!sass-loader!./LayersTree-Item.scss';
 
@@ -51,6 +54,21 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
 
     if (item.visible) {
       item.payload.enabled = false;
+
+      const layer = item.payload as CrgLayer;
+
+      if (layer.type === CrgLayerType.VECTOR) {
+        const features = mapStore.selectedFeatures
+          .map(feat => {
+            const [tableName] = feat.id.split('.');
+            if (tableName !== layer.tableName) {
+              return feat;
+            }
+          })
+          .filter(Boolean);
+
+        mapSelectionService.selectFeatures(features, MapSelectionTypes.REPLACE);
+      }
 
       return;
     }

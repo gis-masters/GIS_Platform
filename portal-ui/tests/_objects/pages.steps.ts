@@ -1,4 +1,5 @@
-import { DataTable, Given, Then, When } from '@wdio/cucumber-framework';
+import { Given, Then, When } from '@wdio/cucumber-framework';
+import { DataTable } from '@cucumber/cucumber';
 
 import { blPage } from './pages/BL.page';
 import { root } from './blocks/Root/Root';

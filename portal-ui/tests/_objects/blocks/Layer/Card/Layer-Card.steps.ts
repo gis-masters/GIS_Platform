@@ -1,4 +1,5 @@
-import { DataTable, Then, When } from '@wdio/cucumber-framework';
+import { Then, When } from '@wdio/cucumber-framework';
+import { DataTable } from '@cucumber/cucumber';
 
 import { layerCardBlock } from './Layer-Card.block';
 
@@ -16,29 +17,29 @@ When('в панели слоёв я разворачиваю пункт с на�
 When('в списке слоёв отображается только пункт {string}', async (layerName: string) => {
   const layersCardsText = await layerCardBlock.getLayersCardsNames();
 
-  expect(layersCardsText).toEqual([layerName]);
+  await expect(layersCardsText).toEqual([layerName]);
 });
 
 Then('в списке слоев панели слоёв отображаются пункты:', async (expectedNames: DataTable) => {
   const currentNames = await layerCardBlock.getLayersCardsNames();
 
-  expect(expectedNames.raw()[0]).toEqual(currentNames);
+  await expect(expectedNames.raw()[0]).toEqual(currentNames);
 });
 
 Then('в списке слоев панели слоёв не отображается пункт {string}', async (expectedName: string) => {
   const layerCardExisting = await layerCardBlock.isLayerCardExist(expectedName);
 
-  expect(layerCardExisting).toEqual(false);
+  await expect(layerCardExisting).toEqual(false);
 });
 
 Then('список слоёв пуст', async () => {
   const layersCardsNames = await layerCardBlock.getLayersCardsNames();
 
-  expect(layersCardsNames.length).toEqual(0);
+  await expect(layersCardsNames.length).toEqual(0);
 });
 
 Then('в списке слоёв в пункте {string} отображается иконка ошибки', async (layerName: string) => {
   const errorIcon = await layerCardBlock.isLayerCardErrorIconExist(layerName);
 
-  expect(errorIcon).toEqual(true);
+  await expect(errorIcon).toEqual(true);
 });

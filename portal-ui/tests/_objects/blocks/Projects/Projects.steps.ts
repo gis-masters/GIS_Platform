@@ -1,4 +1,5 @@
-import { DataTable, Then, When } from '@wdio/cucumber-framework';
+import { Then, When } from '@wdio/cucumber-framework';
+import { DataTable } from '@cucumber/cucumber';
 
 import { projectsBlock, sortDirections } from './Projects.block';
 import { addBasemapToProject } from '../../commands/projects/addBasemapToProject';
@@ -36,7 +37,7 @@ Then(/^список проектов пуст$/, async () => {
 Then(/^кнопка удаления проекта "(.*)" отсутствует$/, async (title: string) => {
   const deleteBtn = await projectsBlock.isProjectCardDeleteButtonNotDisplayed(title);
 
-  expect(deleteBtn).toEqual(true);
+  await expect(deleteBtn).toEqual(true);
 });
 
 When(/^я создаю проект с названием "(.*)"$/, async (title: string) => {
@@ -60,7 +61,7 @@ When(
   async (sortOptionName: string) => {
     const currentOptionName = await projectsBlock.projectSortTypeSelect(sortOptionName);
 
-    expect(currentOptionName).toEqual(sortOptionName);
+    await expect(currentOptionName).toEqual(sortOptionName);
   }
 );
 
@@ -87,21 +88,21 @@ Then(/^в списке проектов появляется "(.*)" и он до
 Then(/^в списке проектов отображается один проект "(.*)"$/, async (name: string) => {
   const projectName = await projectsBlock.singleVisibleProject();
 
-  expect(projectName).toEqual(name);
+  await expect(projectName).toEqual(name);
 });
 
 Then(/^в списке проектов отображаются проекты:$/, async (names: DataTable) => {
   const currentProjectsNames = await projectsBlock.multipleVisibleProject();
   const projectsNames = names.raw().map(name => name[0]);
 
-  expect(currentProjectsNames).toEqual(projectsNames);
+  await expect(currentProjectsNames).toEqual(projectsNames);
 });
 
 Then(/^сортировка проектов соответствует ожидаемому (".+"[ ,]*)+$/, async (names: string) => {
   const currentProjectsNames = await projectsBlock.multipleVisibleProject();
   const newNames = names.replace(/^.|.$/g, '');
 
-  expect(currentProjectsNames).toEqual(newNames.slice(1, -1).split('", "'));
+  await expect(currentProjectsNames).toEqual(newNames.slice(1, -1).split('", "'));
 });
 
 Then(/^в форме создания проекта появляется сообщение об ошибке валидации$/, async () => {

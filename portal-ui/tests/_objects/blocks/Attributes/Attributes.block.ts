@@ -1,4 +1,5 @@
 import { Block } from '../../Block';
+import { extractText } from '../../commands/extractText';
 import { XTableBlock } from '../XTable/XTable.block';
 
 class AttributesBlock extends Block {
@@ -37,7 +38,7 @@ class AttributesBlock extends Block {
 
     const values = await this.getHeadCellsValues();
 
-    expect(values).toEqual(['', 'ID', title]);
+    await expect(values).toEqual(['', 'ID', title]);
   }
 
   async selectTab(title: string): Promise<void> {
@@ -109,6 +110,12 @@ class AttributesBlock extends Block {
   async minimize() {
     const $barMinimize = await this.$('barMinimize');
     await $barMinimize.click();
+  }
+
+  async getTabsTitles() {
+    const $attributesTabs = await this.$('attributesTabs');
+
+    return await extractText(await $attributesTabs.$$('.Attributes-TabTitle'));
   }
 
   async closeTab(layerTitle: string) {

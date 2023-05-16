@@ -1,5 +1,6 @@
-import { DataTable, Then, When } from '@wdio/cucumber-framework';
+import { Then, When } from '@wdio/cucumber-framework';
 import { featuresListSidebarBlock } from './FeaturesListSidebar.block';
+import { DataTable } from '@cucumber/cucumber';
 
 When('я закрываю панель выделенных объектов нажимая на крестик', async function () {
   await featuresListSidebarBlock.close();
@@ -35,6 +36,21 @@ Then('в боковой панели выделенных объектов из�
   await expect(expectedNames.raw()[0]).toEqual(currentNames);
 });
 
+Then('в боковой панели выделенных объектов существуют объекты:', async (expectedNames: DataTable) => {
+  const rawExpectedNames = expectedNames.raw();
+  rawExpectedNames.shift();
+  const currentNames = await Promise.all(
+    rawExpectedNames.map(async name => {
+      const featuresListItemBlock = await featuresListSidebarBlock.getFeaturesListItemByTitle(name[0]);
+      const [, layer, title] = await featuresListItemBlock.getItemData();
+
+      return [title, layer];
+    })
+  );
+
+  await expect(rawExpectedNames).toEqual(currentNames);
+});
+
 Then('панель выделенных объектов закрывается', async function () {
   await featuresListSidebarBlock.waitForHidden();
 });
@@ -47,8 +63,8 @@ Then(
   'в боковой панели выделенных объектов у объекта отображается id, название, имя слоя и иконка:',
   async function (itemValues: DataTable) {
     const values = itemValues.raw()[0];
-    const currentValues = await featuresListSidebarBlock.listItemData(values);
+    const [id, layer] = await featuresListSidebarBlock.listItemData(values);
 
-    await expect([values[0], values[2]]).toEqual(currentValues);
+    await expect([values[0], values[2]]).toEqual([id, layer]);
   }
 );
