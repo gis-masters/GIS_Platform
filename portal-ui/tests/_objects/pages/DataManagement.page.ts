@@ -38,7 +38,7 @@ class DataManagementPage extends Page {
     // eslint-disable-next-line @typescript-eslint/await-thenable -- типы врут
     await expect(browser).toHaveUrlContaining(this.libraryRootUrl);
     const texts = await breadcrumbsBlock.getItemsText();
-    expect(texts.at(-1)).toBe('Библиотеки документов');
+    await expect(texts.at(-1)).toBe('Библиотеки документов');
   }
 }
 

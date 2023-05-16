@@ -1,6 +1,6 @@
 import { CrgUserRaw } from '../../../../src/app/services/auth/users/users.models';
-import { requestAsAdmin } from '../requestAs';
 import { usersClient } from '../../../../src/app/services/auth/users/users.client';
+import { requestAsAdmin } from '../requestAs';
 
 export async function getUserByEmail(email: string): Promise<CrgUserRaw> {
   const allUsers = await requestAsAdmin(usersClient.allUsers);

@@ -1,24 +1,18 @@
+import { vectorDataClient } from '../../../../src/app/services/data/vectorData/vectorData.client';
 import { VectorTable } from '../../../../src/app/services/data/vectorData/vectorData.models';
-import { getVectorTables } from '../../../../src/app/services/data/vectorData/vectorData.service';
+import { requestAsAdmin } from '../requestAs';
 
-declare const window: {
-  getVectorTables: typeof getVectorTables;
-};
+export async function getVectorTableByTitle(datasetIdentifier: string, tableTitle: string): Promise<VectorTable> {
+  const response = await requestAsAdmin(vectorDataClient.getVectorTables, datasetIdentifier, {
+    page: 0,
+    pageSize: 2,
+    filter: { title: tableTitle }
+  });
 
-export async function getVectorTableByTitle(datasetId: string, tableName: string): Promise<VectorTable> {
-  const vectorTables: VectorTable[] = await browser.executeAsync(
-    async (datasetId, tableName, callback) => {
-      const [vectorTables] = await window.getVectorTables(datasetId, {
-        page: 0,
-        pageSize: 10,
-        filter: { title: tableName }
-      });
-
-      callback(vectorTables);
-    },
-    datasetId,
-    tableName
-  );
+  const vectorTables: VectorTable[] = (response._embedded?.tables || []).map(table => ({
+    ...table,
+    dataset: datasetIdentifier
+  }));
 
   if (vectorTables.length !== 1) {
     throw new Error('Ошибка получения векторной таблицы');

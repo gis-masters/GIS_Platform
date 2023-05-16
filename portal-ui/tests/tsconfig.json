@@ -1,16 +1,19 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
     "experimentalDecorators": true,
     "strict": true,
-    "allowSyntheticDefaultImports": true,
     "types": [
       "node",
-      "@wdio/globals/types",
       "expect-webdriverio",
+      "@wdio/globals/types",
       "@wdio/cucumber-framework",
       "wdio-image-comparison-service"
     ],
-    "target": "es2020"
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "target": "es2020",
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "skipLibCheck": true
   }
 }

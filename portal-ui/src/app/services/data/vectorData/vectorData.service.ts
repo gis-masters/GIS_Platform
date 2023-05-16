@@ -170,15 +170,3 @@ export async function deleteFeatures(
   await vectorDataClient.deleteFeatures(datasetIdentifier, vectorTableIdentifier, featureIds);
   communicationService.featuresUpdated.emit({ type: 'delete', data: null });
 }
-
-// for autotests
-if (typeof window !== 'undefined') {
-  Object.assign(window, {
-    getDatasets,
-    getVectorTables,
-    createVectorTable,
-    deleteVectorTable,
-    updateVectorTable,
-    createFeature
-  });
-}

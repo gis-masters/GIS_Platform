@@ -254,8 +254,3 @@ class SchemaService {
 }
 
 export const schemaService = SchemaService.instance;
-
-// for autotests
-if (typeof window !== 'undefined') {
-  Object.assign(window, { schemaService });
-}

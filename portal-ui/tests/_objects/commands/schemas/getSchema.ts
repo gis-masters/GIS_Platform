@@ -1,20 +1,14 @@
+import { convertOldToNewSchema } from '../../../../src/app/services/data/schema/schema.utils';
+import { schemaClient } from '../../../../src/app/services/data/schema/schema.client';
 import { Schema } from '../../../../src/app/services/data/schema/schema.models';
-import { schemaService } from '../../../../src/app/services/data/schema/schema.service';
+import { requestAsAdmin } from '../requestAs';
 
-declare const window: {
-  schemaService: typeof schemaService;
-};
+export async function getSchema(schemaName: string): Promise<Schema> {
+  const response = await requestAsAdmin(schemaClient.getSchema, [schemaName]);
 
-export async function getSchema(schemaId: string): Promise<Schema> {
-  const schema: Schema = await browser.executeAsync(async (schemaId, callback) => {
-    const schema = await window.schemaService.getSchema(schemaId);
-
-    callback(schema);
-  }, schemaId);
-
-  if (!schema) {
-    throw new Error(`Нет схемы ${schemaId}`);
+  if (!response || !response[0]) {
+    throw new Error(`Нет схемы ${schemaName}`);
   }
 
-  return schema;
+  return convertOldToNewSchema(response[0]);
 }

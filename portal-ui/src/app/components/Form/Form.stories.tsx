@@ -5,7 +5,7 @@ import { TextField } from '@mui/material';
 import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutline, Send } from '@mui/icons-material';
 
 import { sleep } from '../../services/util/sleep';
-import { PropertyType, PropertySchema, Schema } from '../../services/data/schema/schema.models';
+import { PropertyType, PropertySchema, SimpleSchema } from '../../services/data/schema/schema.models';
 import { validateFormValue } from '../../services/formValidation.service';
 import { Mime } from '../../services/util/Mime';
 import { Button } from '../Button/Button';
@@ -368,7 +368,7 @@ Auto.args = {
   )
 };
 
-const schemaWithDefaultValue: Schema = {
+const schemaWithDefaultValue: SimpleSchema = {
   properties: [
     {
       name: 'name',

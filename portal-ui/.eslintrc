@@ -248,7 +248,8 @@
     "unicorn/no-array-callback-reference": "off",
     "unicorn/number-literal-case": "off",
     "unicorn/new-for-builtins": "off",
-    "unicorn/prefer-top-level-await": "off"
+    "unicorn/prefer-top-level-await": "off",
+    "unicorn/prefer-module": "off"
   },
   "overrides": [
     {

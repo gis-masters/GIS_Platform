@@ -8,7 +8,7 @@ import { Tooltip } from '@mui/material';
 
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { CrgProject } from '../../../services/gis/projects/projects.models';
-import { Schema, SimpleSchema } from '../../../services/data/schema/schema.models';
+import { SimpleSchema } from '../../../services/data/schema/schema.models';
 import { IconButton } from '../../IconButton/IconButton';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { getPatch } from '../../../services/util/patch';
@@ -43,7 +43,7 @@ export class ProjectActionsEdit extends Component<ProjectActionsProps> {
 
         <FormDialog<Partial<CrgProject>>
           open={this.dialogOpen}
-          schema={schema as unknown as Schema}
+          schema={schema}
           value={project}
           actionFunction={this.updateDocumentPage}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}

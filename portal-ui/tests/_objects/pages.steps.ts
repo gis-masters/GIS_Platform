@@ -10,7 +10,7 @@ import { dataManagementPage } from './pages/DataManagement.page';
 import { LibraryRegistryPage } from './pages/LibraryRegistry.page';
 import { getProjectByTitle } from './commands/projects/getProjectByTitle';
 import { getDocumentsLibraryByTitle } from './commands/docLibrary/getDocLibraryByTitle';
-import { getTestSchema } from './commands/schemas/testSchemas';
+import { Schema } from '../../src/app/services/data/schema/schema.models';
 
 function findPage(title: string): Page {
   const page = Object.values(pagesRegistry).find(page => page.title === title);
@@ -67,25 +67,10 @@ const openProjectMap = async (title: string) => {
   await mapPage.open();
 };
 
-Given('я нахожусь на странице карты проекта', async function (this: ScenarioScope) {
-  await new MapPage(this.latestProject.id).open();
-});
-
-When('я перехожу на страницу карты проекта {string}', openProjectMap);
-
 Given('я на странице карты проекта {string}', openProjectMap);
 
-Then('открылась страница карты проекта {string}', async (title: string) => {
-  const project = await getProjectByTitle(title);
-  const mapPage = new MapPage(project.id);
-  await mapPage.waitForVisible();
-  await mapPage.testUrl();
-});
-
-Given('я на странице карты проекта {string}', async (title: string) => {
-  const project = await getProjectByTitle(title);
-  const mapPage = new MapPage(project.id);
-  await mapPage.open();
+Given('я нахожусь на странице карты проекта', async function (this: ScenarioScope) {
+  await new MapPage(this.latestProject.id).open();
 });
 
 Given(
@@ -116,6 +101,14 @@ Given(
     ]);
   }
 );
+When('я перехожу на страницу карты проекта {string}', openProjectMap);
+
+Then('открылась страница карты проекта {string}', async (title: string) => {
+  const project = await getProjectByTitle(title);
+  const mapPage = new MapPage(project.id);
+  await mapPage.waitForVisible();
+  await mapPage.testUrl();
+});
 
 // bl
 
@@ -137,8 +130,7 @@ Given('я на странице `Схемы данных` в управлени�
   await dataManagementPage.openSchemasRootPage();
 });
 
-Given('я на странице `Схемы данных` в управлении данными, выделена схема {string}', async (schemaTitle: string) => {
-  const schema = getTestSchema(schemaTitle);
+Given('я на странице `Схемы данных` в управлении данными, выделена схема {schema}', async (schema: Schema) => {
   await dataManagementPage.openSchemaPageWithSelectedSchema(schema.name);
 });
 

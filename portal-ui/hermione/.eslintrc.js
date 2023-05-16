@@ -5,8 +5,7 @@ module.exports = {
     mocha: true
   },
   globals: {
-    assert: false,
-    sinon: false
+    assert: false
   },
   rules: {
     'no-invalid-this': 'off',

@@ -259,8 +259,3 @@ function handleSavingError(
   Toast.warn(errText);
   services.logger.error(errText, e);
 }
-
-// for autotests
-if (typeof window !== 'undefined') {
-  Object.assign(window, { addProjectPermission, addDatasetPermission, addTablePermission });
-}

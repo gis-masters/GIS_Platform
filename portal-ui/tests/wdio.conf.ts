@@ -207,7 +207,7 @@ export const config: Options.Testrunner = {
   framework: 'cucumber',
   //
   // The number of times to retry the entire specfile when it fails as a whole
-  // specFileRetries: 1,
+  specFileRetries: 2,
   //
   // Delay in seconds between the spec file retry attempts
   // specFileRetriesDelay: 0,

@@ -296,7 +296,7 @@ const schemaWithoutViews: Schema = {
 
 const schemaWithInappropriateStyleName: Schema = {
   name: 'schemaWithInappropriateStyleName',
-  title: 'Схема с несоответствующим слою StyleName 1',
+  title: 'Схема с несоответствующим слою styleName',
   readOnly: false,
   tableName: 'border2',
   styleName: 'buildings',
@@ -524,7 +524,7 @@ const testSchemaWithAllTypesUpdated: Schema = {
 export const testSchemas: { [key: string]: Schema } = {
   'Схема для тестирования сортировки': testSortingSchema,
   'Схема в режиме редактирования': testSortingSchema,
-  'Схема с несоответствующим слою StyleName': schemaWithInappropriateStyleName,
+  'Схема с несоответствующим слою styleName': schemaWithInappropriateStyleName,
   'Схема с типами данных недоступными для сортировки': testSortingSchema2,
   'Схема в режиме чтения': testSortingSchema2,
   'Схема с представлениями': schemaWithViews,
@@ -540,19 +540,11 @@ export const testSchemas: { [key: string]: Schema } = {
   }
 };
 
-export function getTestSchemaByName(schemaName: string): Schema {
-  const schema = Object.values(testSchemas).find(schema => schema.name === schemaName);
-  if (!schema) {
-    throw new Error('Не найдена схема по name:' + schemaName);
-  }
-
-  return schema;
-}
-
 export function getTestSchema(title: string): Schema {
   const schema = testSchemas[title];
+
   if (!schema) {
-    throw new Error(`Запрошена неизвестная схема: '${title}'! Создайте схему в testSchemas.ts предварительно.`);
+    throw new Error(`Запрошена неизвестная схема: '${title}'! Предварительно создайте схему в testSchemas.ts`);
   }
 
   return schema;

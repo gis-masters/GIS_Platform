@@ -13,7 +13,7 @@ import {
 } from '../../../services/geoserver/geoserver-file-edit.service';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
-import { PropertyType, Schema, SimpleSchema } from '../../../services/data/schema/schema.models';
+import { PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
 import { MapSettingsOutlined } from '../../Icons/MapSettingsOutlined';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { IconButton } from '../../IconButton/IconButton';
@@ -101,7 +101,7 @@ export class FilesConnections extends Component<ConnectionsProps> {
 
         <FormDialog
           open={this.editRasterLayerDialogOpen}
-          schema={fileInfoSchema as unknown as Schema}
+          schema={fileInfoSchema}
           actionFunction={this.update}
           value={{ transparentColor: this.transparentColor || '' }}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}

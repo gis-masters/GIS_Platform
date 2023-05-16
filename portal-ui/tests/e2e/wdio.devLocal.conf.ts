@@ -19,5 +19,9 @@ export const config: Options.Testrunner = {
         args: ['window-size=1300,900']
       }
     }
-  ]
+  ],
+
+  async beforeScenario() {
+    await browser.url('http://localhost:4200/test-data-preparation');
+  }
 };

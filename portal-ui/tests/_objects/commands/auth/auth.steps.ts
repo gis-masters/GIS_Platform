@@ -3,18 +3,18 @@ import { Given } from '@wdio/cucumber-framework';
 import { authenticateAs, authenticateAsOtherAdmin, logout } from './authenticate';
 import { createTestUsersInOtherOrganization } from './createTestUsers';
 import { getUserByEmail } from './getUserByEmail';
-import { getTestUser } from './testUsers';
 import { inviteUser } from './inviteUser';
+import { TestUser } from './testUsers';
 
-Given('я авторизован как {string}', async (username: string) => {
-  await authenticateAs(getTestUser(username));
+Given('я авторизован как {user}', async (user: TestUser) => {
+  await authenticateAs(user);
 });
 
-Given('в другой организации существует пользователь {string}', async (username: string) => {
+Given('в другой организации существует пользователь {user}', async (user: TestUser) => {
   await authenticateAsOtherAdmin();
 
   try {
-    await getUserByEmail(getTestUser(username).email);
+    await getUserByEmail(user.email);
   } catch {
     await createTestUsersInOtherOrganization();
   }
@@ -22,6 +22,6 @@ Given('в другой организации существует пользо�
   await logout();
 });
 
-Given('пользователь {string} добавлен в тестовую организацию', async (username: string) => {
-  await inviteUser(username);
+Given('пользователь {user} добавлен в тестовую организацию', async (user: TestUser) => {
+  await inviteUser(user);
 });

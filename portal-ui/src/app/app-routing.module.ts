@@ -203,10 +203,6 @@ const routes: AppRoutes = [
   {
     path: 'test-data-preparation',
     component: TestDataPreparationPageComponent,
-    canActivate: [SystemAdminGuardService],
-    resolve: {
-      user: CurrentUserResolver
-    },
     data: { page: Pages.TEST_DATA_PREPARATION }
   },
   {

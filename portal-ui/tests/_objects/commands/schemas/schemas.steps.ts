@@ -1,14 +1,10 @@
 import { Given } from '@wdio/cucumber-framework';
 
+import { Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { ScenarioScope } from '../../ScenarioScope';
+import { createSchema } from './createSchema';
 
-import { getTestSchema } from './testSchemas';
-import { createSchemaAsAdmin } from './createSchemaAsAdmin';
-
-Given('существует заготовленная схема {string}', async function (this: ScenarioScope, title: string) {
-  const schema = getTestSchema(title);
-
-  await createSchemaAsAdmin(schema);
-
+Given('существует заготовленная схема {schema}', async function (this: ScenarioScope, schema: Schema) {
+  await createSchema(schema);
   this.latestSchema = schema;
 });

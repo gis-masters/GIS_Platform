@@ -12,5 +12,8 @@
   "*.{css,scss}": [
     "prettier --write",
     "stylelint --fix"
+  ],
+  "*.feature": [
+    "gherkin-lint"
   ]
 }

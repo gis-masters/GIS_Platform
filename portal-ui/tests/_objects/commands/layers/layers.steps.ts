@@ -1,9 +1,9 @@
-import { DataTable, Given } from '@wdio/cucumber-framework';
+import { Given } from '@wdio/cucumber-framework';
+import { DataTable } from '@cucumber/cucumber';
 
 import { getSchema } from '../schemas/getSchema';
-import { CrgLayerType } from '../../../../src/app/services/gis/layers/layers.models';
-import { createLayerAsAdmin } from './createLayerAsAdmin';
-import { getTestSchemaByName } from '../schemas/testSchemas';
+import { CrgLayer, CrgLayerType } from '../../../../src/app/services/gis/layers/layers.models';
+import { createLayer } from './createLayer';
 import { ScenarioScope } from '../../ScenarioScope';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 import { getProjectByTitle } from '../projects/getProjectByTitle';
@@ -14,13 +14,13 @@ Given(
   async function (this: ScenarioScope, layerTitle: string) {
     const { latestProject, latestVectorTable, latestDataset } = this;
 
-    const schema = getTestSchemaByName(latestVectorTable.schemaId);
+    const schema = await getSchema(latestVectorTable.schemaId);
 
-    const layer = {
-      type: 'vector' as CrgLayerType.VECTOR,
+    const layer: CrgLayer = {
+      type: CrgLayerType.VECTOR,
       title: layerTitle,
       dataset: latestDataset.identifier,
-      view: 'viewId',
+      view: '',
       tableName: latestVectorTable.identifier,
       nativeCRS: latestVectorTable.crs,
       schemaId: latestVectorTable.schemaId,
@@ -28,7 +28,7 @@ Given(
       enabled: true
     };
 
-    this.latestLayer = await createLayerAsAdmin(latestProject.id, layer);
+    this.latestLayer = await createLayer(latestProject.id, layer);
   }
 );
 
@@ -45,10 +45,10 @@ Given('в созданном проекте существует внешний 
     enabled: Boolean(data[3])
   };
 
-  this.latestLayer = await createLayerAsAdmin(latestProject.id, externalLayer);
+  this.latestLayer = await createLayer(latestProject.id, externalLayer);
 });
 
-Given('администратором создан слой с параметрами:', async function (table: DataTable) {
+Given('существует слой с параметрами:', async function (table: DataTable) {
   const [projectTitle, layerTitle, tableTitle, datasetTitle, enabled, viewId] = table.rows()[0];
   const dataset = await getDatasetByTitle(datasetTitle);
   const project = await getProjectByTitle(projectTitle);
@@ -67,5 +67,5 @@ Given('администратором создан слой с параметр�
     ...(viewId ? { view: viewId } : {})
   };
 
-  await createLayerAsAdmin(project.id, layer);
+  await createLayer(project.id, layer);
 });

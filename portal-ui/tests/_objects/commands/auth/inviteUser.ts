@@ -1,11 +1,9 @@
 import { usersClient } from '../../../../src/app/services/auth/users/users.client';
 import { requestAsAdmin } from '../requestAs';
 import { getUserByEmail } from './getUserByEmail';
-import { getTestUser } from './testUsers';
+import { TestUser } from './testUsers';
 
-export async function inviteUser(username: string): Promise<void> {
-  const user = getTestUser(username);
-
+export async function inviteUser(user: TestUser): Promise<void> {
   try {
     if (await getUserByEmail(user.email)) {
       // уже добавлен
