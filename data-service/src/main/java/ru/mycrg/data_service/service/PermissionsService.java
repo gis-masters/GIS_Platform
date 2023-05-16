@@ -101,11 +101,13 @@ public class PermissionsService {
                     final List<PermissionProjection> permissions = permissionRepository
                             .findAllByResourceTableAndResourceId("schemas_and_tables", item.getId());
 
-                    resource.setCreatedAt(item.getCreatedAt().toString());
                     resource.setPermissions(permissions);
 
-                    final boolean isFolder = item.isFolder();
-                    if (isFolder) {
+                    if (item.getCreatedAt() != null) {
+                        resource.setCreatedAt(item.getCreatedAt().toString());
+                    }
+
+                    if (item.isFolder()) {
                         resource.setType("SCHEMA");
                         resource.setIdentifier(item.getIdentifier());
                     } else {

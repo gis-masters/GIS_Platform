@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static ru.mycrg.gis_service.security.Roles.OWNER;
 import static ru.mycrg.gis_service.security.Roles.VIEWER;
 
@@ -29,21 +30,25 @@ public class ResourceProtector {
         List<Long> userIds = userDetails.getGroups();
         userIds.add(userDetails.getUserId());
 
-        AtomicReference<String> bestRole = new AtomicReference<>();
-        permissions.stream()
-                   .filter(permission -> userIds.contains(permission.getPrincipalId()))
-                   .forEach(permission -> {
-                       if (permission.getRole().getName().equals(OWNER.name())) {
-                           bestRole.set(OWNER.name());
-                       } else if (permission.getRole().getName().equals(VIEWER.name())) {
-                           bestRole.set(VIEWER.name());
-                       }
-                   });
+        String bestRole = null;
+        List<Permission> userPermissions = permissions
+                .stream()
+                .filter(permission -> userIds.contains(permission.getPrincipalId()))
+                .collect(Collectors.toList());
 
-        if (bestRole.get() == null) {
+        for (Permission permission: userPermissions) {
+            if (permission.getRole().getName().equals(OWNER.name())) {
+                bestRole = OWNER.name();
+                break;
+            } else if (permission.getRole().getName().equals(VIEWER.name())) {
+                bestRole = VIEWER.name();
+            }
+        }
+
+        if (isNull(bestRole)) {
             return Optional.empty();
         } else {
-            return Optional.of(bestRole.get());
+            return Optional.of(bestRole);
         }
     }
 
