@@ -12,4 +12,6 @@ public interface DocumentLibraryRepository extends PagingAndSortingRepository<Do
     boolean existsByTableName(String tableName);
 
     Optional<DocumentLibrary> findByTableName(String tableName);
+
+    void deleteByTableName(String tableName);
 }

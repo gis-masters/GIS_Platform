@@ -2,7 +2,7 @@ package ru.mycrg.data_service.service.cqrs.table_records.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
-import ru.mycrg.data_service.dao.ddl.DdlTables;
+import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
@@ -20,14 +20,14 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
 
     private final SystemAttributeHandler systemAttributeHandler;
     private final SpatialRecordsDao spatialRecordsDao;
-    private final DdlTables ddlTables;
+    private final DdlTablesSpecial ddlTablesSpecial;
 
     public CreateTableRecordRequestHandler(SystemAttributeHandler systemAttributeHandler,
                                            SpatialRecordsDao spatialRecordsDao,
-                                           DdlTables ddlTables) {
+                                           DdlTablesSpecial ddlTablesSpecial) {
         this.systemAttributeHandler = systemAttributeHandler;
         this.spatialRecordsDao = spatialRecordsDao;
-        this.ddlTables = ddlTables;
+        this.ddlTablesSpecial = ddlTablesSpecial;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
 
         ResourceQualifier qualifier = request.getQualifier();
 
-        throwIfNotMatchTableColumns(feature.getPropertyNames(), ddlTables.getAllColumnNames(qualifier.getTable()));
+        throwIfNotMatchTableColumns(feature.getPropertyNames(), ddlTablesSpecial.getAllColumnNames(qualifier.getTable()));
 
         try {
             Feature newFeature = spatialRecordsDao.save(qualifier, feature, schema);

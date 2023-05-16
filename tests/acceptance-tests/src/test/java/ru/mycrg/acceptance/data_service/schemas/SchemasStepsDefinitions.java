@@ -30,6 +30,11 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         createSchema();
     }
 
+    @When("Существует схема для библиотеки документов")
+    public void createSomeSchemaForDocumentLibrary() {
+        createSchema();
+    }
+
     @When("Существует схема с калькулируемыми формулами")
     public void createSchemaWithCalculatedValueFormula() {
         createSchema(prepareFunctionalZoneWithCalculatedFields());

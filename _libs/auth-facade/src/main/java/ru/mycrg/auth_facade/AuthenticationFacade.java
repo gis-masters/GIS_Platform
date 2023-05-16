@@ -9,13 +9,10 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN;
 
 public class AuthenticationFacade implements IAuthenticationFacade {
 
@@ -81,12 +78,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
 
         getValue(decodedDetails, CLAIM_GROUPS)
                 .ifPresent(groups -> {
-                    ((ArrayList) groups).forEach(data -> {
-                        getValue((Map<String, Object>) data, "id")
-                                .ifPresent(o -> {
-                                    userDetails.addGroupId(Long.valueOf(String.valueOf(o)));
-                                });
-                    });
+                    ((List) groups).forEach(id -> userDetails.addGroupId(Long.valueOf(String.valueOf(id))));
                 });
 
         return userDetails;

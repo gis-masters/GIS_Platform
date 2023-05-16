@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.String.format;
 import static java.lang.Thread.sleep;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -24,6 +25,7 @@ import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentLibraryTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerCreateDto;
@@ -241,6 +243,16 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     @Then("Создана запись в журнале аудита об удалении набора данных")
     public void checkDatasetDelete() {
         checkAuditEvent(DELETE.name(), DATASET, currentDatasetIdentifier);
+    }
+
+    @Then("Создана запись в журнале аудита о создании библиотеки документов")
+    public void checkDocumentLibraryCreate() {
+        checkAuditEvent(CREATE.name(), LIBRARY, currentLibraryTableName);
+    }
+
+    @Then("Создана запись в журнале аудита об удалении библиотеки докуметов")
+    public void checkDocumentLibraryDelete() {
+        checkAuditEvent(DELETE.name(), LIBRARY, format("data.%s", currentLibraryTableName));
     }
 
     @Then("Создана запись в журнале аудита о создании правила")

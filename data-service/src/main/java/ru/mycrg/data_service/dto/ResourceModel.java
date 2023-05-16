@@ -14,6 +14,7 @@ public class ResourceModel implements IResourceModel {
     private String schemaId;
     private String createdAt;
     private String role;
+    private String tableName;
 
     public ResourceModel() {
         // Required
@@ -128,6 +129,15 @@ public class ResourceModel implements IResourceModel {
 
     public void setSchemaId(String schemaId) {
         this.schemaId = schemaId;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    @Override
+    public String getTableName() {
+        return tableName;
     }
 
     @Override

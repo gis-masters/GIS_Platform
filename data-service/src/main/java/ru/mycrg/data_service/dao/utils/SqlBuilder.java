@@ -10,6 +10,7 @@ import ru.mycrg.data_service.util.filter.FilterCondition;
 import ru.mycrg.data_service.util.filter.FilterItem;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.enums.ForeignKeyType;
 import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.geo_json.GeoJsonObject;
@@ -179,6 +180,75 @@ public class SqlBuilder {
     @NotNull
     public static String buildDeleteTableQuery(ResourceQualifier table) {
         return String.format("DROP TABLE IF EXISTS %s;", table.getQualifier());
+    }
+
+    @NotNull
+    public static String generatePropertySqlString(@NotNull SimplePropertyDto attrDescription) {
+        String result;
+        switch (attrDescription.getValueTypeAsEnum()) {
+            case INT:
+                result = attrDescription.getName() + " integer";
+                break;
+            case LONG:
+                result = attrDescription.getName() + " bigint";
+                break;
+            case CHOICE:
+                result = handleChoice(attrDescription);
+                break;
+            case STRING:
+                Integer maxLength = attrDescription.getMaxLength();
+                if (isNull(maxLength) || maxLength < 255) {
+                    maxLength = 255;
+                }
+
+                result = attrDescription.getName() + " character varying(" + maxLength + ")";
+                break;
+            case DOUBLE:
+                result = attrDescription.getName() + " numeric(38,8)";
+                break;
+            case URL:
+            case TEXT:
+            case LOOKUP:
+                result = attrDescription.getName() + " text";
+                break;
+            case GEOMETRY:
+                result = "shape public.geometry";
+                break;
+            case DATETIME:
+                result = attrDescription.getName() + " timestamp";
+                break;
+            case FILE:
+                result = attrDescription.getName() + " jsonb";
+                break;
+            default:
+                log.warn("Not supported attribute type: {}", attrDescription.getValueTypeAsEnum());
+
+                result = attrDescription.getName() + " character varying";
+        }
+
+        return result;
+    }
+
+    @NotNull
+    private static String handleChoice(@NotNull SimplePropertyDto attrDescription) {
+        ForeignKeyType foreignKeyType = attrDescription.getForeignKeyType();
+        if (foreignKeyType == null) {
+            log.warn("ForeignKeyType not set. Will be used string type");
+
+            return attrDescription.getName() + " character varying(255)";
+        }
+
+        switch (foreignKeyType) {
+            case STRING:
+                return attrDescription.getName() + " character varying(255)";
+            case INTEGER:
+                return attrDescription.getName() + " integer";
+            case LONG:
+                return attrDescription.getName() + " bigint";
+            default:
+                log.warn("Unknown foreignKeyType: {}. Will be used string type", foreignKeyType);
+                return attrDescription.getName() + " character varying(255)";
+        }
     }
 
     private static String mappingColumns(SchemaDto sourceSchema, SchemaDto targetSchema) {

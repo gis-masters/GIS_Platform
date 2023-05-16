@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.RecordsDao;
-import ru.mycrg.data_service.dao.ddl.DdlTables;
+import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.entity.IRecord;
@@ -39,7 +39,7 @@ public class MpImporter implements Importer<Long> {
     private final XmlParser xmlParser;
     private final SchemaService schemaService;
     private final TableService tableService;
-    private final DdlTables ddlTables;
+    private final DdlTablesSpecial ddlTablesSpecial;
 
     private final String MP_SCHEMA = "mp";
 
@@ -47,12 +47,12 @@ public class MpImporter implements Importer<Long> {
                       XmlParser xmlParser,
                       SchemaService schemaService,
                       TableService tableService,
-                      DdlTables ddlTables) {
+                      DdlTablesSpecial ddlTablesSpecial) {
         this.recordsDao = recordsDao;
         this.xmlParser = xmlParser;
         this.schemaService = schemaService;
         this.tableService = tableService;
-        this.ddlTables = ddlTables;
+        this.ddlTablesSpecial = ddlTablesSpecial;
     }
 
     @Override
@@ -108,7 +108,7 @@ public class MpImporter implements Importer<Long> {
             Map<String, Object> dataForSavingToDBValid = ImportValidationHandler
                     .removeNonMatchingBySchemaProperties(dataForSavingToDB, crossedProperties);
 
-            List<String> columnNamesInTable = ddlTables.getAllColumnNames(table.getTable());
+            List<String> columnNamesInTable = ddlTablesSpecial.getAllColumnNames(table.getTable());
             Map<String, Object> propertiesMatchingToDBColumns = getAllPropertiesMatchingToDBColumns(
                     dataForSavingToDBValid, columnNamesInTable);
 

@@ -2,7 +2,7 @@ package ru.mycrg.data_service.service.cqrs.table_records.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
-import ru.mycrg.data_service.dao.ddl.DdlTables;
+import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -27,14 +27,14 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
 
     private final SpatialRecordsDao spatialRecordsDao;
     private final SystemAttributeHandler systemAttributeHandler;
-    private final DdlTables ddlTables;
+    private final DdlTablesSpecial ddlTablesSpecial;
 
     public UpdateTableRecordRequestHandler(SpatialRecordsDao spatialRecordsDao,
                                            SystemAttributeHandler systemAttributeHandler,
-                                           DdlTables ddlTables) {
+                                           DdlTablesSpecial ddlTablesSpecial) {
         this.spatialRecordsDao = spatialRecordsDao;
         this.systemAttributeHandler = systemAttributeHandler;
-        this.ddlTables = ddlTables;
+        this.ddlTablesSpecial = ddlTablesSpecial;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
         SchemaDto schema = request.getSchema();
         Feature newFeature = request.getNewFeature();
 
-        throwIfNotMatchTableColumns(newFeature.getPropertyNames(), ddlTables.getAllColumnNames(rQualifier.getTable()));
+        throwIfNotMatchTableColumns(newFeature.getPropertyNames(), ddlTablesSpecial.getAllColumnNames(rQualifier.getTable()));
 
         Feature oldFeature = spatialRecordsDao.findById(rQualifier, schema)
                                               .orElseThrow(() -> new NotFoundException(rQualifier.getRecordIdAsLong()));

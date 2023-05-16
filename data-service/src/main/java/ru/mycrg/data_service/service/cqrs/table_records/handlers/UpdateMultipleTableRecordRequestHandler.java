@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
-import ru.mycrg.data_service.dao.ddl.DdlTables;
+import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
@@ -35,15 +35,15 @@ public class UpdateMultipleTableRecordRequestHandler implements IRequestHandler<
 
     private final SpatialRecordsDao spatialRecordsDao;
     private final SystemAttributeHandler systemAttributeHandler;
-    private final DdlTables ddlTables;
+    private final DdlTablesSpecial ddlTablesSpecial;
     private final FeatureProtector featureProtector;
 
     public UpdateMultipleTableRecordRequestHandler(SpatialRecordsDao spatialRecordsDao,
                                                    SystemAttributeHandler systemAttributeHandler,
-                                                   DdlTables ddlTables, FeatureProtector featureProtector) {
+                                                   DdlTablesSpecial ddlTablesSpecial, FeatureProtector featureProtector) {
         this.spatialRecordsDao = spatialRecordsDao;
         this.systemAttributeHandler = systemAttributeHandler;
-        this.ddlTables = ddlTables;
+        this.ddlTablesSpecial = ddlTablesSpecial;
         this.featureProtector = featureProtector;
     }
 
@@ -59,7 +59,7 @@ public class UpdateMultipleTableRecordRequestHandler implements IRequestHandler<
                     "Таблица: '" + qualifier.getTableQualifier() + "' не доступна для обновления.");
         }
 
-        throwIfNotMatchTableColumns(properties.keySet(), ddlTables.getAllColumnNames(qualifier.getTable()));
+        throwIfNotMatchTableColumns(properties.keySet(), ddlTablesSpecial.getAllColumnNames(qualifier.getTable()));
         Map<String, Object> propsWithoutComplexFields = excludeComplexFields(schema, properties);
 
         Feature newFeature = new Feature(new HashMap<>(propsWithoutComplexFields));

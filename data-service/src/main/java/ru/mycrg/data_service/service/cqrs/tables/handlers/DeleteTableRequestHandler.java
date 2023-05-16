@@ -2,7 +2,7 @@ package ru.mycrg.data_service.service.cqrs.tables.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.ddl.DdlTables;
+import ru.mycrg.data_service.dao.ddl.DdlTablesBase;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
@@ -20,18 +20,18 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
 @Component
 public class DeleteTableRequestHandler implements IRequestHandler<DeleteTableRequest, Voidy> {
 
-    private final DdlTables ddlTables;
+    private final DdlTablesBase ddlTablesBase;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final PermissionsService permissionsService;
     private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
 
-    public DeleteTableRequestHandler(DdlTables ddlTables,
+    public DeleteTableRequestHandler(DdlTablesBase ddlTablesBase,
                                      SchemasAndTablesRepository schemasAndTablesRepository,
                                      PermissionsService permissionsService,
                                      IMessageBusProducer messageBus,
                                      IAuthenticationFacade authenticationFacade) {
-        this.ddlTables = ddlTables;
+        this.ddlTablesBase = ddlTablesBase;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
         this.messageBus = messageBus;
@@ -54,8 +54,8 @@ public class DeleteTableRequestHandler implements IRequestHandler<DeleteTableReq
         String extTableName = tQualifier.getTable() + EXTENSION_POSTFIX;
         ResourceQualifier extTable = new ResourceQualifier(tQualifier.getSchema(), extTableName);
 
-        ddlTables.drop(tQualifier);
-        ddlTables.drop(extTable);
+        ddlTablesBase.drop(tQualifier);
+        ddlTablesBase.drop(extTable);
 
         messageBus.produce(
                 new LayerReferencesDeletionEvent(getScratchWorkspaceName(authenticationFacade.getOrganizationId()),

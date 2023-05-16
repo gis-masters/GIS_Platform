@@ -76,7 +76,7 @@ public class MoveRecordToNewParentHandler implements IRequestHandler<MoveRecordT
                     .orElseThrow(() -> new NotFoundException(recordQualifier.getRecordIdAsLong()));
 
             if (resource.isFolder()) {
-                throw new BadRequestException("Перемещение каталогов не доступно");
+                throw new BadRequestException("Перемещение каталогов недоступно");
             }
 
             String parentPath = recordsDao

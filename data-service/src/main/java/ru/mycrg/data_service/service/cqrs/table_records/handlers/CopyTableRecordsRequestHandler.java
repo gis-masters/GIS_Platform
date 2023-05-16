@@ -2,7 +2,7 @@ package ru.mycrg.data_service.service.cqrs.table_records.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
-import ru.mycrg.data_service.dao.ddl.DdlTables;
+import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
@@ -33,15 +33,15 @@ public class CopyTableRecordsRequestHandler implements IRequestHandler<CopyTable
 
     private final SystemAttributeHandler systemAttributeHandler;
     private final SpatialRecordsDao spatialRecordsDao;
-    private final DdlTables ddlTables;
+    private final DdlTablesSpecial ddlTablesSpecial;
     private final FeatureProtector featureProtector;
 
     public CopyTableRecordsRequestHandler(SystemAttributeHandler systemAttributeHandler,
-                                          SpatialRecordsDao spatialRecordsDao, DdlTables ddlTables,
+                                          SpatialRecordsDao spatialRecordsDao, DdlTablesSpecial ddlTablesSpecial,
                                           FeatureProtector featureProtector) {
         this.systemAttributeHandler = systemAttributeHandler;
         this.spatialRecordsDao = spatialRecordsDao;
-        this.ddlTables = ddlTables;
+        this.ddlTablesSpecial = ddlTablesSpecial;
         this.featureProtector = featureProtector;
     }
 
@@ -83,8 +83,8 @@ public class CopyTableRecordsRequestHandler implements IRequestHandler<CopyTable
                                                   .map(SimplePropertyDto::getName)
                                                   .collect(Collectors.toSet());
 
-        throwIfNotMatchTableColumns(propNamesSource, ddlTables.getAllColumnNames(qualifierSource.getTable()));
-        throwIfNotMatchTableColumns(propNamesTarget, ddlTables.getAllColumnNames(qualifierTarget.getTable()));
+        throwIfNotMatchTableColumns(propNamesSource, ddlTablesSpecial.getAllColumnNames(qualifierSource.getTable()));
+        throwIfNotMatchTableColumns(propNamesTarget, ddlTablesSpecial.getAllColumnNames(qualifierTarget.getTable()));
     }
 
     private void updateCalculatedFiled(List<Long> idsForUpdate, SchemaDto tSchema, ResourceQualifier tQualifier) {

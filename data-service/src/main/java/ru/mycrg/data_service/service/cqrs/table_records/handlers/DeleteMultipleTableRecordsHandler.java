@@ -3,7 +3,7 @@ package ru.mycrg.data_service.service.cqrs.table_records.handlers;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
-import ru.mycrg.data_service.dao.ddl.DdlTables;
+import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.DeleteMultipleTableRecordsRequest;
@@ -21,14 +21,14 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.EXTENSION_TABLE
 public class DeleteMultipleTableRecordsHandler implements IRequestHandler<DeleteMultipleTableRecordsRequest, Voidy> {
 
     private final SpatialRecordsDao spatialRecordsDao;
-    private final DdlTables ddlTables;
+    private final DdlTablesSpecial ddlTablesSpecial;
 
     private final BaseDao baseDao;
 
-    public DeleteMultipleTableRecordsHandler(SpatialRecordsDao spatialRecordsDao, DdlTables ddlTables,
+    public DeleteMultipleTableRecordsHandler(SpatialRecordsDao spatialRecordsDao, DdlTablesSpecial ddlTablesSpecial,
                                              BaseDao baseDao) {
         this.spatialRecordsDao = spatialRecordsDao;
-        this.ddlTables = ddlTables;
+        this.ddlTablesSpecial = ddlTablesSpecial;
         this.baseDao = baseDao;
     }
 
@@ -37,7 +37,7 @@ public class DeleteMultipleTableRecordsHandler implements IRequestHandler<Delete
         ResourceQualifier rQualifier = request.getrQualifiers();
 
         try {
-            ddlTables.isExist(rQualifier);
+            ddlTablesSpecial.isExist(rQualifier);
             spatialRecordsDao.removeMultipleRecords(rQualifier, request.getIds());
             removeRecordsFromExtensionTableByObjectId(rQualifier, request.getIds());
         } catch (CrgDaoException e) {

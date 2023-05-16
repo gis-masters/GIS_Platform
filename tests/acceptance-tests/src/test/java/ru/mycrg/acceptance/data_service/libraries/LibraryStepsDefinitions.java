@@ -4,32 +4,38 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.DefaultDocumentModel;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
+import ru.mycrg.acceptance.data_service.dto.LibraryModel;
 import ru.mycrg.acceptance.data_service.dto.RecordDto;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Thread.sleep;
 import static java.util.Objects.nonNull;
 import static java.util.stream.IntStream.range;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.CommonStepDefinitions.checkSorting;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.folder11Id;
+import static ru.mycrg.acceptance.data_service.schemas.SchemasStepsDefinitions.currentSchemaName;
 
 public class LibraryStepsDefinitions extends LibraryBaseRecords {
+
+    public static LibraryModel currentLibraryModel;
+    public static String currentLibraryId;
+    public static String currentLibraryTableName;
 
     public static Integer currentDocumentId;
     public static DefaultDocumentModel currentDocument;
@@ -45,6 +51,46 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
         return super.getBaseRequestWithCurrentCookie().basePath("/api/data/document-libraries");
+    }
+
+    @When("Администратор организации делает запрос на создание библиотеки документов")
+    public void createDocumentLibraryByAdmin() {
+        authorizationBase.loginAsOwner();
+
+        if (Objects.isNull(currentLibraryModel)) {
+            createLibrary(currentSchemaName);
+            currentLibraryModel = extractCurrentLibraryModel();
+        }
+    }
+
+    @When("Пользователь делает запрос на создание библиотеки документов")
+    public void createDocumentLibraryByUser() {
+        createLibrary(currentSchemaName);
+    }
+
+    @When("Существует библиотека документов")
+    public void createRandomDocumentLibraryByAdmin() {
+        createDocumentLibraryByAdmin();
+    }
+
+    @And("Текущая библиотека документов существует в БД")
+    public void currentDatasetExist() {
+        getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + currentLibraryModel.getTableName())
+                .then().
+                        statusCode(SC_OK);
+    }
+
+    @When("Администратор организации делает запрос на удаление текущей библиотеки документов")
+    public void deleteCurrentDocumentLibrary() {
+        authorizationBase.loginAsOwner();
+
+        getBaseRequestWithCurrentCookie()
+                .when().
+                        delete("/" + currentLibraryModel.getTableName())
+                .then().
+                        statusCode(SC_NO_CONTENT);
     }
 
     @When("пользователь делает выборку всех документов в виде реестра")
@@ -415,6 +461,36 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     @When("Сообщение об ошибке соответствует ожидаемому: {string}")
     public void checkErrorMsg(String msg) {
         checkResponseValue("message", msg);
+    }
+
+    private void createLibrary(String schemaId) {
+        String body = String.format("{\"schemaId\":\"%s\"}", schemaId);
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(body).
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        post();
+    }
+
+    private LibraryModel extractCurrentLibraryModel() {
+        Long id = response.jsonPath().getLong("id");
+        String title = response.jsonPath().get("title");
+        String details = response.jsonPath().get("details");
+        String schemaId = response.jsonPath().get("schemaId");
+        currentLibraryTableName = response.jsonPath().get("table_name");
+
+        LibraryModel libraryModel = new LibraryModel();
+        libraryModel.setId(id);
+        libraryModel.setTitle(title);
+        libraryModel.setSchemaId(schemaId);
+        libraryModel.setTableName(currentLibraryTableName);
+        libraryModel.setDetails(details);
+
+        currentLibraryId = String.valueOf(id);
+
+        return libraryModel;
     }
 
     private void createRecordWithSecondFile() {

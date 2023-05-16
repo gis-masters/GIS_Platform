@@ -4,6 +4,7 @@ public enum AuditEventEntityType {
     USER,
     PROJECT,
     LAYER,
+    LIBRARY,
     LIBRARY_RECORD,
     PERMISSION,
     DATASET,

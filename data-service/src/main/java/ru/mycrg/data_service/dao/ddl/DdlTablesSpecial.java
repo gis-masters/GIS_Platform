@@ -1,49 +1,35 @@
 package ru.mycrg.data_service.dao.ddl;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.data_service.dao.wellknown_formula_generator.IWellKnownFormulaGenerator;
 import ru.mycrg.data_service.dto.TableCreateDto;
-import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
-import ru.mycrg.data_service_contract.enums.ForeignKeyType;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.data_service.dao.config.DaoProperties.*;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.generatePropertySqlString;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 
 @Repository
-public class DdlTables {
+public class DdlTablesSpecial {
 
-    private final Logger log = LoggerFactory.getLogger(DdlTables.class);
-
+    private final DdlTablesBase ddlTablesBase;
     private final JdbcTemplate jdbcTemplate;
-    private final SchemasAndTablesRepository schemasAndTablesRepository;
-    private final Map<String, IWellKnownFormulaGenerator> wellKnownFormulaGenerators;
 
-    public DdlTables(JdbcTemplate jdbcTemplate,
-                     SchemasAndTablesRepository schemasAndTablesRepository,
-                     List<IWellKnownFormulaGenerator> generators) {
+    private final Logger log = LoggerFactory.getLogger(DdlTablesSpecial.class);
+
+    public DdlTablesSpecial(DdlTablesBase ddlTablesBase,
+                            JdbcTemplate jdbcTemplate) {
+        this.ddlTablesBase = ddlTablesBase;
         this.jdbcTemplate = jdbcTemplate;
-        this.schemasAndTablesRepository = schemasAndTablesRepository;
-        this.wellKnownFormulaGenerators = generators.stream()
-                                                    .collect(toMap(IWellKnownFormulaGenerator::getType,
-                                                                   Function.identity()));
     }
 
     public void create(String targetSchema, TableCreateDto dto, List<SimplePropertyDto> schemaProperties) {
@@ -67,7 +53,12 @@ public class DdlTables {
         }
 
         for (SimplePropertyDto property: schemaProperties) {
-            propertiesBuilder.append(",").append(generatePropertySqlString(property));
+            String formulaName = property.getCalculatedValueWellKnownFormula();
+
+            String generateProperties = generatePropertySqlString(property);
+            String result = ddlTablesBase.wellKnownFormulaGenerate(formulaName, generateProperties);
+
+            propertiesBuilder.append(",").append(result);
         }
 
         String query = String.format(
@@ -119,18 +110,6 @@ public class DdlTables {
         }
     }
 
-    @Transactional
-    public void drop(ResourceQualifier rQualifier) {
-        log.debug("Try delete: {}", rQualifier);
-        String extensionTable = rQualifier.getTable() + EXTENSION_POSTFIX;
-
-        //drop with extension table
-        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %1$s.\"%2$s\",%1$s.\"%3$s\" ",
-                                           rQualifier.getSchema(), rQualifier.getTable(), extensionTable));
-
-        schemasAndTablesRepository.deleteByIdentifier(rQualifier.getTable());
-    }
-
     private boolean isGeometryExist(String createTableSql) {
         return createTableSql.contains("shape public.geometry");
     }
@@ -141,85 +120,6 @@ public class DdlTables {
                 "WHERE TABLE_NAME = '" + tableName + "'";
 
         return jdbcTemplate.queryForList(query, String.class);
-    }
-
-    @NotNull
-    private String handleChoice(@NotNull SimplePropertyDto attrDescription) {
-        ForeignKeyType foreignKeyType = attrDescription.getForeignKeyType();
-        if (foreignKeyType == null) {
-            log.warn("ForeignKeyType not set. Will be used string type");
-
-            return attrDescription.getName() + " character varying(255)";
-        }
-
-        switch (foreignKeyType) {
-            case STRING:
-                return attrDescription.getName() + " character varying(255)";
-            case INTEGER:
-                return attrDescription.getName() + " integer";
-            case LONG:
-                return attrDescription.getName() + " bigint";
-            default:
-                log.warn("Unknown foreignKeyType: {}. Will be used string type", foreignKeyType);
-                return attrDescription.getName() + " character varying(255)";
-        }
-    }
-
-    @NotNull
-    private String generatePropertySqlString(@NotNull SimplePropertyDto attrDescription) {
-        String result;
-        switch (attrDescription.getValueTypeAsEnum()) {
-            case INT:
-                result = attrDescription.getName() + " integer";
-                break;
-            case LONG:
-                result = attrDescription.getName() + " bigint";
-                break;
-            case CHOICE:
-                result = handleChoice(attrDescription);
-                break;
-            case STRING:
-                Integer maxLength = attrDescription.getMaxLength();
-                if (isNull(maxLength) || maxLength < 255) {
-                    maxLength = 255;
-                }
-
-                result = attrDescription.getName() + " character varying(" + maxLength + ")";
-                break;
-            case DOUBLE:
-                result = attrDescription.getName() + " numeric(38,8)";
-                break;
-            case URL:
-            case TEXT:
-            case LOOKUP:
-                result = attrDescription.getName() + " text";
-                break;
-            case GEOMETRY:
-                result = "shape public.geometry";
-                break;
-            case DATETIME:
-                result = attrDescription.getName() + " timestamp";
-                break;
-            case FILE:
-                result = attrDescription.getName() + " jsonb";
-                break;
-            default:
-                log.warn("Not supported attribute type: {}", attrDescription.getValueTypeAsEnum());
-
-                result = attrDescription.getName() + " character varying";
-        }
-
-        String formulaName = attrDescription.getCalculatedValueWellKnownFormula();
-        if (formulaName != null) {
-            IWellKnownFormulaGenerator formulaGenerator = wellKnownFormulaGenerators.get(formulaName);
-            if (nonNull(formulaGenerator)) {
-                result += formulaGenerator.generate();
-            } else {
-                log.warn("Unknown valueWellKnownFormula: {}", formulaName);
-            }
-        }
-
-        return result;
     }
 
     private String getExtensionTableQuery(String targetSchema, String extensionTable) {

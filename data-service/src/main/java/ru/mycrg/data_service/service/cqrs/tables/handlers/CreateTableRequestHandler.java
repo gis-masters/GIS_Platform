@@ -2,7 +2,7 @@ package ru.mycrg.data_service.service.cqrs.tables.handlers;
 
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.dao.ddl.DdlTables;
+import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.wellknown_formula_generator.IWellKnownFormulaGenerator;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.TableModel;
@@ -36,20 +36,20 @@ import static ru.mycrg.data_service.util.DetailedLogger.logError;
 @Component
 public class CreateTableRequestHandler implements IRequestHandler<CreateTableRequest, TableModel> {
 
-    private final DdlTables ddlTables;
+    private final DdlTablesSpecial ddlTablesSpecial;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final PermissionsService permissionsService;
     private final SchemaService schemaService;
     private final IResourceProtector datasetProtector;
     private final Map<String, IWellKnownFormulaGenerator> wellKnownFormulaGenerators;
 
-    public CreateTableRequestHandler(DdlTables ddlTables,
+    public CreateTableRequestHandler(DdlTablesSpecial ddlTablesSpecial,
                                      SchemasAndTablesRepository schemasAndTablesRepository,
                                      PermissionsService permissionsService,
                                      SchemaService schemaService,
                                      IResourceProtector datasetProtector,
                                      List<IWellKnownFormulaGenerator> generators) {
-        this.ddlTables = ddlTables;
+        this.ddlTablesSpecial = ddlTablesSpecial;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
         this.schemaService = schemaService;
@@ -115,7 +115,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         }
 
         try {
-            ddlTables.create(datasetId, dto, schema.getProperties());
+            ddlTablesSpecial.create(datasetId, dto, schema.getProperties());
         } catch (BadSqlGrammarException e) {
             String msg = String.format("Не удалось создать таблицу: %s, по схеме: %s. Причина: %s",
                                        dto.getName(), schema.getName(), e.getMessage());

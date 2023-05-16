@@ -9,11 +9,12 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.auth_service_contract.dto.IdNameProjection;
+import ru.mycrg.auth_service.entity.Group;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exceptions.AuthServiceException;
 import ru.mycrg.auth_service.exceptions.BadRequestException;
 import ru.mycrg.auth_service.repository.UserRepository;
+import ru.mycrg.auth_service_contract.dto.IdNameProjection;
 
 import java.util.HashMap;
 import java.util.List;
@@ -71,9 +72,9 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
         if (byUsername.isPresent()) {
             User user = byUsername.get();
 
-            List<IdNameProjection> usersGroups = user.getGroups().stream()
-                                                     .map(group -> new IdNameProjection(group.getId(), group.getName()))
-                                                     .collect(Collectors.toList());
+            List<Long> usersGroups = user.getGroups().stream()
+                                         .map(Group::getId)
+                                         .collect(Collectors.toList());
 
             additionalInfo.put("user_id", user.getId());
             additionalInfo.put("user_name", user.getGeoserverLogin());

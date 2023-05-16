@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.RecordsDao;
-import ru.mycrg.data_service.dao.ddl.DdlTables;
+import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -38,18 +38,18 @@ public class OwnerRecordsService implements IRecordsService {
 
     private final Logger log = LoggerFactory.getLogger(OwnerRecordsService.class);
 
-    private final DdlTables ddlTables;
+    private final DdlTablesSpecial ddlTablesSpecial;
     private final RecordsDao recordsDao;
     private final PermissionsService permissionsService;
     private final DocumentLibraryService librariesService;
     private final SystemAttributeHandler systemAttributeHandler;
 
-    public OwnerRecordsService(DdlTables ddlTables,
+    public OwnerRecordsService(DdlTablesSpecial ddlTablesSpecial,
                                RecordsDao recordsDao,
                                PermissionsService permissionsService,
                                DocumentLibraryService librariesService,
                                SystemAttributeHandler systemAttributeHandler) {
-        this.ddlTables = ddlTables;
+        this.ddlTablesSpecial = ddlTablesSpecial;
         this.recordsDao = recordsDao;
         this.librariesService = librariesService;
         this.permissionsService = permissionsService;
@@ -117,7 +117,7 @@ public class OwnerRecordsService implements IRecordsService {
 
             props.putAll(systemAttributeHandler.customRulesCalculation(props));
 
-            throwIfNotMatchTableColumns(props.keySet(), ddlTables.getAllColumnNames(lQualifier.getTable()));
+            throwIfNotMatchTableColumns(props.keySet(), ddlTablesSpecial.getAllColumnNames(lQualifier.getTable()));
             IRecord newRecord = recordsDao.addRecord(lQualifier, record, schema);
             permissionsService.addOwnerPermission(lQualifier, record.getId());
 
@@ -142,7 +142,7 @@ public class OwnerRecordsService implements IRecordsService {
             log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), record);
 
             throwIfNotMatchTableColumns(record.getContent().keySet(),
-                                        ddlTables.getAllColumnNames(recordQualifier.getTable()));
+                                        ddlTablesSpecial.getAllColumnNames(recordQualifier.getTable()));
 
             Map<String, Object> clearedData = systemAttributeHandler.initSchema(schema)
                                                                     .prepareJsonb(record)
