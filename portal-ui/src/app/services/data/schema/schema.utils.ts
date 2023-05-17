@@ -369,7 +369,11 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
     if (newField.propertyType === PropertyType.URL) {
       field.valueType = ValueType.URL;
 
-      (field as Partial<OldPropertySchemaUrl>).displayMode = newField.openIn === 'popup' ? 'in_popup' : undefined;
+      if (newField.openIn) {
+        (field as Partial<OldPropertySchemaUrl>).displayMode = newField.openIn === 'popup' ? 'in_popup' : 'newTab';
+      } else {
+        (field as Partial<OldPropertySchemaUrl>).displayMode = undefined;
+      }
       delete (field as Partial<PropertySchemaUrl>).openIn;
     }
 

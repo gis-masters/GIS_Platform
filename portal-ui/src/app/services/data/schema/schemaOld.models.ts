@@ -138,7 +138,7 @@ export interface OldPropertySchemaSet extends OldBasePropertySchema {
 
 export interface OldPropertySchemaUrl extends OldBasePropertySchema {
   valueType: ValueType.URL;
-  displayMode?: 'in_popup';
+  displayMode?: 'in_popup' | 'newTab';
 }
 
 export interface OldPropertyFiasSchema extends OldBasePropertySchema {

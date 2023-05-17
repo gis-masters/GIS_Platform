@@ -53,14 +53,14 @@ export class UrlsListItem extends Component<UrlFieldItemProps> {
       <>
         <div className={cnUrlsList('Item')}>
           {!text && <span className={cnUrlsList('Placeholder')}>ссылка</span>}
-          {openIn === 'newTab' ? (
-            <Link className={cnUrlsList('Link')} href={item.url} target='_blank'>
-              {text}
-            </Link>
-          ) : (
+          {openIn === 'popup' ? (
             <PseudoLink className={cnUrlsList('Link')} onClick={this.openDialog} disabled={false}>
               {text}
             </PseudoLink>
+          ) : (
+            <Link className={cnUrlsList('Link')} href={item.url} target='_blank'>
+              {text}
+            </Link>
           )}
 
           {editable && (
