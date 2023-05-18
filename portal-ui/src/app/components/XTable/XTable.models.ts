@@ -36,14 +36,9 @@ export interface XTableColumn<T> {
       Pick<PropertySchemaUrl, 'openIn'> & { relations: Relation[] }
   >;
   sortable?: boolean;
-  CellContent?: ComponentType<{ rowData: T; field: keyof T; filterActive: boolean; filterParams: FilterQuery }>;
-  cellContentProps?: XTableCellContentProps;
-  AfterCellContent?: ComponentType<{
-    rowData: T;
-    col: XTableColumn<T>;
-    filterActive: boolean;
-    filterParams: FilterQuery;
-  }>;
+  CellContent?: ComponentType<XTableCustomCellProps<T>>;
+  cellContentProps?: XTableCellContentProps<T>;
+  AfterCellContent?: ComponentType<XTableCustomCellProps<T>>;
   getIdBadge?: (rowData: T) => string | number;
   cellProps?: TableCellProps;
   headerCellProps?: TableCellProps;
@@ -51,4 +46,11 @@ export interface XTableColumn<T> {
   hidden?: boolean;
   width?: number;
   minWidth?: number;
+}
+
+export interface XTableCustomCellProps<T> {
+  rowData: T;
+  col: XTableColumn<T>;
+  filterActive: boolean;
+  filterParams: FilterQuery;
 }

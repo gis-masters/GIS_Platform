@@ -51,14 +51,14 @@ export const XTableCell = observer((({
       <XTableCellContent
         singleLineContent={singleLineContent}
         type={type}
-        col={col as XTableColumn<unknown>}
+        col={col}
         cellData={rowData[field]}
         {...cellContentProps}
       >
         {CellContent ? (
           <CellContent
             rowData={rowData}
-            field={field}
+            col={col}
             filterActive={filterActive}
             filterParams={filterQuery}
             {...cellContentProps}

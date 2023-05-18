@@ -9,7 +9,7 @@ import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } fr
 
 const cnXTableBoolIcon = cn('XTable', 'BoolIcon');
 
-const XTableCellContentTypeBool: FC<XTableCellContentProps> = ({ col, cellData, ...props }) => {
+const XTableCellContentTypeBool: FC<XTableCellContentProps<unknown>> = ({ col, cellData, ...props }) => {
   return (
     <XTableCellContentBase col={col} {...props}>
       {['true', '1'].includes(String(cellData).toLowerCase()) ? (
@@ -21,7 +21,7 @@ const XTableCellContentTypeBool: FC<XTableCellContentProps> = ({ col, cellData, 
   );
 };
 
-export const withTypeBool = withBemMod<XTableCellContentProps, XTableCellContentProps>(
+export const withTypeBool = withBemMod<XTableCellContentProps<unknown>, XTableCellContentProps<unknown>>(
   cnXTableCellContent(),
   { type: PropertyType.BOOL },
   () => XTableCellContentTypeBool

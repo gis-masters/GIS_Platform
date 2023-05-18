@@ -7,7 +7,7 @@ import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } fr
 import { Fias } from '../../../../services/data/fias/fias.models';
 import { FiasView } from '../../../FiasView/FiasView';
 
-const XTableCellContentTypeFias: FC<XTableCellContentProps> = ({ col, cellData, ...props }) => {
+const XTableCellContentTypeFias: FC<XTableCellContentProps<unknown>> = ({ col, cellData, ...props }) => {
   return (
     <XTableCellContentBase col={col} {...props}>
       <FiasView value={cellData as Fias} />
@@ -15,7 +15,7 @@ const XTableCellContentTypeFias: FC<XTableCellContentProps> = ({ col, cellData, 
   );
 };
 
-export const withTypeFias = withBemMod<XTableCellContentProps, XTableCellContentProps>(
+export const withTypeFias = withBemMod<XTableCellContentProps<unknown>, XTableCellContentProps<unknown>>(
   cnXTableCellContent(),
   { type: PropertyType.FIAS },
   () => XTableCellContentTypeFias

@@ -1,4 +1,4 @@
-import React, { Component, ReactElement, useEffect, useState } from 'react';
+import React, { Component, ReactElement } from 'react';
 import { action, computed, observable, when, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Subject } from 'rxjs';
@@ -18,21 +18,17 @@ import {
   addFilterPart,
   FilterQuery,
   getFieldFilterValue,
-  getFilterRootAnd,
   modifyFieldFilterValue,
   removeFieldFilter
 } from '../../services/util/filterObjects';
 import { PageOptions } from '../../services/models';
 import { SortParams } from '../../services/util/sortObjects';
-import {
-  getLibrary,
-  getLibraryRecord,
-  getLibraryRecordsAsRegistry
-} from '../../services/data/docLibrary/docLibrary.service';
+import { getLibrary, getLibraryRecordsAsRegistry } from '../../services/data/docLibrary/docLibrary.service';
 import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 import { getIdsFromPath, getPathFilter, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
+import { XTableFilterPanelItemContentProps } from '../XTable/FilterPanelItemContent/XTable-FilterPanelItemContent.base';
 import { XTableProps } from '../XTable/XTable';
 import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
@@ -41,9 +37,11 @@ import { DocumentInfo } from '../Documents/Documents';
 import { Registry } from '../Registry/Registry';
 import { Loading } from '../Loading/Loading';
 
+import { getBreadcrumbsPathFromFilter } from './LibraryRegistry.util';
 import { LibraryRegistryExport } from './Export/LibraryRegistry-Export';
 import { LibraryRegistrySettings } from './Settings/LibraryRegistry-Settings';
 import { LibraryRegistryBreadcrumbs } from './Breadcrumbs/LibraryRegistry-Breadcrumbs';
+import { LibraryRegistryPathFilterPanelItem } from './PathFilterPanelItem/LibraryRegistry-PathFilterPanelItem';
 
 import '!style-loader!css-loader!sass-loader!./LibraryRegistry.scss';
 
@@ -164,20 +162,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
   @computed
   private get breadcrumbsPath(): number[] {
-    const filter: FilterQuery = this.tablePageOptions?.filter || {};
-    let path: string;
-
-    const [and, index] = getFilterRootAnd(this.tablePageOptions?.filter || {}, 'path');
-
-    if (index !== -1) {
-      path = (((and[index].$or as FilterQuery)[0] as FilterQuery).path as FilterQuery).$like as string;
-    }
-
-    if (filter.$or && (filter.$or[0] as FilterQuery).path) {
-      path = ((filter.$or[0] as FilterQuery).path as FilterQuery)?.$like as string;
-    }
-
-    return getIdsFromPath(path);
+    return getBreadcrumbsPathFromFilter(this.tablePageOptions?.filter || {});
   }
 
   @computed
@@ -208,23 +193,9 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
               onItemClick={this.handleBreadcrumbsItemClick}
             />
           ),
-          CustomFilterPanelItemComponent:
-            !!this.breadcrumbsPath?.at(-1) &&
-            observer(() => {
-              const [data, setData] = useState<LibraryRecord>();
-              const id = this.breadcrumbsPath.at(-1);
-
-              useEffect(() => {
-                void (async () => {
-                  if (this.library?.table_name && id) {
-                    const result = await getLibraryRecord(this.library?.table_name, id);
-                    setData(result);
-                  }
-                })();
-              });
-
-              return <span>{data?.title}</span>;
-            }),
+          CustomFilterPanelItemComponent: observer((props: XTableFilterPanelItemContentProps<LibraryRecord>) => (
+            <LibraryRegistryPathFilterPanelItem library={this.library} {...props} />
+          )),
           width: 150
         },
         {

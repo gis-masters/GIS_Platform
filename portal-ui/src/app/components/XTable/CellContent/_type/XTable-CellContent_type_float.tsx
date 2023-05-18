@@ -5,7 +5,7 @@ import { PropertyType } from '../../../../services/data/schema/schema.models';
 
 import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
 
-const XTableCellContentTypeFloat: FC<XTableCellContentProps> = ({ col, cellData, ...props }) => {
+const XTableCellContentTypeFloat: FC<XTableCellContentProps<unknown>> = ({ col, cellData, ...props }) => {
   return (
     <XTableCellContentBase col={col} {...props}>
       {col.settings?.precision === 0 || col.settings?.precision
@@ -15,7 +15,7 @@ const XTableCellContentTypeFloat: FC<XTableCellContentProps> = ({ col, cellData,
   );
 };
 
-export const withTypeFloat = withBemMod<XTableCellContentProps, XTableCellContentProps>(
+export const withTypeFloat = withBemMod<XTableCellContentProps<unknown>, XTableCellContentProps<unknown>>(
   cnXTableCellContent(),
   { type: PropertyType.FLOAT },
   () => XTableCellContentTypeFloat

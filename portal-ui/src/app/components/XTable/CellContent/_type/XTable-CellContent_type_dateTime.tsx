@@ -6,7 +6,7 @@ import { formatDate } from '../../../../services/util/date.util';
 
 import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
 
-const XTableCellContentTypeDateTime: FC<XTableCellContentProps> = ({ col, cellData, ...props }) => (
+const XTableCellContentTypeDateTime: FC<XTableCellContentProps<unknown>> = ({ col, cellData, ...props }) => (
   <XTableCellContentBase col={col} {...props}>
     {typeof cellData === 'string' || typeof cellData === 'number' || cellData instanceof Date
       ? formatDate(cellData, col.settings?.format)
@@ -14,7 +14,7 @@ const XTableCellContentTypeDateTime: FC<XTableCellContentProps> = ({ col, cellDa
   </XTableCellContentBase>
 );
 
-export const withTypeDateTime = withBemMod<XTableCellContentProps, XTableCellContentProps>(
+export const withTypeDateTime = withBemMod<XTableCellContentProps<unknown>, XTableCellContentProps<unknown>>(
   cnXTableCellContent(),
   { type: PropertyType.DATETIME },
   () => XTableCellContentTypeDateTime

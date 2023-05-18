@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FolderOutlined, HomeOutlined, LocalLibraryOutlined } from '@mui/icons-material';
+import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
@@ -22,7 +23,7 @@ import '!style-loader!css-loader!sass-loader!../BreadcrumbsIcon/LibraryRegistry-
 const cnLibraryRegistryBreadcrumbs = cn('LibraryRegistry', 'Breadcrumbs');
 const cnLibraryRegistryBreadcrumbsIcon = cn('LibraryRegistry', 'BreadcrumbsIcon');
 
-interface LibraryRegistryBreadcrumbsProps {
+interface LibraryRegistryBreadcrumbsProps extends IClassNameProps {
   library: DocumentLibrary;
   path: number[];
   filter: FilterQuery;
@@ -53,11 +54,11 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
   }
 
   render() {
-    const { size = 'medium', menuButtonOnly } = this.props;
+    const { size = 'medium', menuButtonOnly, className } = this.props;
 
     return (
       <Breadcrumbs
-        className={cnLibraryRegistryBreadcrumbs({ size, menuButtonOnly })}
+        className={cnLibraryRegistryBreadcrumbs({ size, menuButtonOnly }, [className])}
         items={this.items}
         itemsType='link'
         size={size}
@@ -67,9 +68,9 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
   }
 
   @computed
-  private get items(): BreadcrumbsItemData[] {
+  private get items(): BreadcrumbsItemData<number[]>[] {
     const { filter, library, fromHome, onItemClick } = this.props;
-    const items: BreadcrumbsItemData[] = [];
+    const items: BreadcrumbsItemData<number[]>[] = [];
 
     if (fromHome) {
       const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];

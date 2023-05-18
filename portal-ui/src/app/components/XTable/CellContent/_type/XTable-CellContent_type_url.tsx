@@ -13,10 +13,10 @@ import { UrlsList } from '../../../UrlsList/UrlsList';
 import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
 
 @observer
-class XTableCellContentTypeUrl extends Component<XTableCellContentProps> {
+class XTableCellContentTypeUrl extends Component<XTableCellContentProps<unknown>> {
   @observable private popupAnchor?: HTMLSpanElement;
 
-  constructor(props: XTableCellContentProps) {
+  constructor(props: XTableCellContentProps<unknown>) {
     super(props);
     makeObservable(this);
   }
@@ -76,7 +76,7 @@ class XTableCellContentTypeUrl extends Component<XTableCellContentProps> {
   }
 }
 
-export const withTypeUrl = withBemMod<XTableCellContentProps, XTableCellContentProps>(
+export const withTypeUrl = withBemMod<XTableCellContentProps<unknown>, XTableCellContentProps<unknown>>(
   cnXTableCellContent(),
   { type: PropertyType.URL },
   () => XTableCellContentTypeUrl

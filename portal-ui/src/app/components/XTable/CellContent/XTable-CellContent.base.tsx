@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
@@ -10,14 +10,17 @@ import '!style-loader!css-loader!sass-loader!./XTable-CellContent.scss';
 
 export const cnXTableCellContent = cn('XTable', 'CellContent');
 
-export interface XTableCellContentProps extends ChildrenProps, IClassNameProps, React.HTMLAttributes<HTMLSpanElement> {
+export interface XTableCellContentProps<T>
+  extends ChildrenProps,
+    IClassNameProps,
+    React.HTMLAttributes<HTMLSpanElement> {
   singleLineContent: boolean;
-  col: XTableColumn<unknown>;
+  col: XTableColumn<T>;
   type?: XTableColumnType;
   cellData?: unknown;
 }
 
-export const XTableCellContentBase: FC<XTableCellContentProps> = ({
+export const XTableCellContentBase: <T>(props: XTableCellContentProps<T>) => ReactElement = (({
   children,
   singleLineContent,
   className,
@@ -27,4 +30,4 @@ export const XTableCellContentBase: FC<XTableCellContentProps> = ({
   <span className={cnXTableCellContent({ singleLineContent }, [className])} {...spanProps}>
     {children !== null && children !== undefined ? children : ''}
   </span>
-);
+)) as <T>(props: XTableCellContentProps<T>) => ReactElement;
