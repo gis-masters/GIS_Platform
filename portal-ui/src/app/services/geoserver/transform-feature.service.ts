@@ -3,7 +3,7 @@ import WFS, { WriteTransactionOptions } from 'ol/format/WFS';
 import { Geometry, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
 import { Coordinate } from 'ol/coordinate';
 
-import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from './wfs/wfs.models';
+import { CoordinateEdited, GeometryType, NewWfsFeature, WfsFeature, WfsGeometry } from './wfs/wfs.models';
 import { wfsGeometryToGeometry } from '../util/open-layers.util';
 import { OldSchema } from '../data/schema/schemaOld.models';
 import { getFeatureProjection } from './projections.service';
@@ -168,7 +168,8 @@ export class TransformFeatureService {
     const payload = this.xs.serializeToString(this.getNode(TransactionType.INSERT, featuresToInsert, options));
 
     if (featuresData.length === 1) {
-      const newFeature = { ...featuresData[0], id: undefined, geometry_name: undefined };
+      const { geometry, properties } = featuresData[0];
+      const newFeature: NewWfsFeature = { type: 'Feature', geometry, properties };
       const record = await createFeature(dataset, tableName, newFeature);
 
       return [record.id];

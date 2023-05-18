@@ -1,9 +1,10 @@
 import React from 'react';
 import { SvgIcon } from '@mui/material';
 import { SvgIconComponent } from '@mui/icons-material';
+import { SvgIconProps } from '@mui/material/SvgIcon/SvgIcon';
 
 export const DocHome: SvgIconComponent = Object.assign(
-  props => (
+  (props: SvgIconProps) => (
     <SvgIcon {...props} viewBox='0 0 512 512'>
       <g transform='translate(0, 512) scale(0.100000, -0.100000)'>
         <path

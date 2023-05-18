@@ -700,12 +700,12 @@ class MapService {
       const projection = getProjection(basemap.projection);
       const projectionExtent = projection.getExtent();
       const size = getWidth(projectionExtent) / basemap.size;
-      const resolutions = [];
-      const matrixIds = [];
+      const resolutions: number[] = [];
+      const matrixIds: string[] = [];
       for (let i = 0; i < basemap.resolution; ++i) {
         // generate resolutions and matrixIds arrays for this WMTS
         resolutions[i] = size / Math.pow(2, i);
-        matrixIds[i] = i;
+        matrixIds[i] = i.toString();
       }
 
       return new WMTS({

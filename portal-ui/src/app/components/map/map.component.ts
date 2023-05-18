@@ -1,5 +1,5 @@
 import { reaction, IReactionDisposer } from 'mobx';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { Extent } from 'ol/extent';
@@ -25,14 +25,14 @@ import { Emitter } from '../../services/common/Emitter';
 import { cn } from '../../services/util/cn';
 import { Toast } from '../Toast/Toast';
 import { projectsService } from '../../services/gis/projects/projects.service';
+import { FilterQuery } from '../../services/util/filterObjects';
 
 @Component({
   selector: 'crg-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit, OnDestroy {
-  isAttrSidebarActive = false;
+export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   isBugReportSidebarActive = false;
   isFeaturesSidebarActive = false;
   isEditSidebarActive = false;
@@ -67,12 +67,12 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     this.reactionDisposer = reaction(
-      () => [
+      (): [TreeItem<CrgLayer>[][], Record<string, FilterQuery>, Record<string, true>] => [
         currentProject.visibleLayersBatched,
         cloneDeep(attributesTableStore.filter),
         cloneDeep(attributesTableStore.filterDisabled)
       ],
-      ([visibleBatches]: [TreeItem<CrgLayer>[][]]) => {
+      ([visibleBatches]: [TreeItem<CrgLayer>[][], Record<string, FilterQuery>, Record<string, true>]) => {
         mapService.hideUserLayers();
 
         visibleBatches.forEach((batch, i) => {

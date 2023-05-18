@@ -223,7 +223,7 @@ class CurrentProject implements CrgProjectData {
   get queriesQueue(): {
     groupsToCreate: CrgLayersGroup[];
     groupsToPatch: [number, Partial<CrgLayersGroup>][];
-    layersToCreate: NewCrgLayer[];
+    layersToCreate: CrgLayer[];
     layersToPatch: [number, Partial<CrgLayer>][];
     layersToDelete: number[];
     groupsToDelete: number[];
@@ -265,7 +265,7 @@ class CurrentProject implements CrgProjectData {
 
       layersToCreate: this.tree
         .filter(({ isGroup, payload }) => !isGroup && this.primalLayers.every(({ id }) => id !== payload.id))
-        .map(({ payload }) => payload as NewCrgLayer),
+        .map(({ payload }) => payload as CrgLayer),
 
       layersToPatch: this.layers
         .map(layer => [layer, this.primalLayers.find(primalLayer => primalLayer.id === layer.id)])

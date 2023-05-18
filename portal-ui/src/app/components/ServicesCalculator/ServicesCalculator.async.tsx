@@ -233,7 +233,7 @@ export default class ServicesCalculator extends Component {
   }
 
   @boundMethod
-  private setSelectedServices(value) {
+  private setSelectedServices(value: InvoiceInfo) {
     localStorage.setItem('invoiceRequisites', JSON.stringify(value));
     this.closeRequisitesDialog();
     this.setUnclosable(false);

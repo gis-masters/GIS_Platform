@@ -48,11 +48,7 @@ class EditFeatureFieldControlTypeLookup extends Component<EditFeaturesControlPro
 
   @action
   private setValue(newValue: DocumentListItemData[]) {
-    if (!newValue) {
-      return [];
-    }
-
-    this.lookupValue = newValue;
+    this.lookupValue = newValue ?? [];
   }
 }
 

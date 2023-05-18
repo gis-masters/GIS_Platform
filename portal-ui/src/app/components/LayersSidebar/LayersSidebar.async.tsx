@@ -14,6 +14,7 @@ import {
   deleteLayer,
   updateLayer
 } from '../../services/gis/layers/layers.service';
+import { NewCrgLayer } from '../../services/gis/layers/layers.models';
 import { generateNextLayerId } from '../../services/gis/layers/layers.utils';
 import { LayersTree } from '../LayersTree/LayersTree';
 import { Loading } from '../Loading/Loading';
@@ -78,6 +79,90 @@ export default class LayersSidebar extends Component {
   private async save() {
     this.setBusy(true);
 
+    await this.groupCreation();
+    await this.groupModification();
+    await this.layerCreation();
+    await this.layerModification();
+    await this.layerDeletion();
+    await this.groupDeletion();
+
+    projectsService.clearCurrent();
+    await projectsService.fetchCurrent();
+
+    this.setBusy(false);
+    this.setEditMode(false);
+  }
+
+  private async groupDeletion() {
+    for (const groupId of currentProject.queriesQueue.groupsToDelete) {
+      try {
+        await projectsService.deleteGroup(groupId);
+      } catch (error) {
+        alertLayerOperationError(
+          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+          { id: groupId },
+          'удалить группу',
+          `id: ${groupId}`
+        );
+      }
+      this.countQuery();
+    }
+  }
+
+  private async layerDeletion() {
+    for (const layerId of currentProject.queriesQueue.layersToDelete) {
+      try {
+        await deleteLayer(layerId);
+      } catch (error) {
+        alertLayerOperationError(
+          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+          { id: layerId },
+          'удалить слой',
+          `id: ${layerId}`
+        );
+      }
+      this.countQuery();
+    }
+  }
+
+  private async layerModification() {
+    for (const [layerId, patch] of currentProject.queriesQueue.layersToPatch) {
+      try {
+        await updateLayer(layerId, patch);
+      } catch (error) {
+        alertLayerOperationError(
+          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+          patch,
+          'изменить слой',
+          `id: ${layerId}`
+        );
+      }
+      this.countQuery();
+    }
+  }
+
+  private async layerCreation() {
+    for (const layer of currentProject.queriesQueue.layersToCreate) {
+      const newLayer: NewCrgLayer = { ...layer, id: undefined, complexName: undefined };
+
+      try {
+        const createdLayer = await createLayer(newLayer, currentProject.id);
+        if (layer.id !== createdLayer.id && currentProject.layers.some(({ id }) => id === createdLayer.id)) {
+          currentProject.switchLayerId(createdLayer.id, generateNextLayerId());
+        }
+      } catch (error) {
+        alertLayerOperationError(
+          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+          newLayer,
+          'создать слой',
+          layer.title
+        );
+      }
+      this.countQuery();
+    }
+  }
+
+  private async groupCreation() {
     for (const group of currentProject.queriesQueue.groupsToCreate) {
       try {
         const createdGroup = await projectsService.createGroup(group, currentProject.id);
@@ -95,7 +180,9 @@ export default class LayersSidebar extends Component {
       }
       this.countQuery();
     }
+  }
 
+  private async groupModification() {
     for (const [groupId, patch] of currentProject.queriesQueue.groupsToPatch) {
       try {
         await projectsService.updateGroup(groupId, patch);
@@ -109,73 +196,6 @@ export default class LayersSidebar extends Component {
       }
       this.countQuery();
     }
-
-    for (const layer of currentProject.queriesQueue.layersToCreate) {
-      const payload = { ...layer, id: undefined, complexName: undefined };
-
-      try {
-        const createdLayer = await createLayer(payload, currentProject.id);
-        if (layer.id !== createdLayer.id && currentProject.layers.some(({ id }) => id === createdLayer.id)) {
-          currentProject.switchLayerId(createdLayer.id, generateNextLayerId());
-        }
-      } catch (error) {
-        alertLayerOperationError(
-          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
-          payload,
-          'создать слой',
-          layer.title
-        );
-      }
-      this.countQuery();
-    }
-
-    for (const [layerId, patch] of currentProject.queriesQueue.layersToPatch) {
-      try {
-        await updateLayer(layerId, patch);
-      } catch (error) {
-        alertLayerOperationError(
-          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
-          patch,
-          'изменить слой',
-          `id: ${layerId}`
-        );
-      }
-      this.countQuery();
-    }
-
-    for (const layerId of currentProject.queriesQueue.layersToDelete) {
-      try {
-        await deleteLayer(layerId);
-      } catch (error) {
-        alertLayerOperationError(
-          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
-          { id: layerId },
-          'удалить слой',
-          `id: ${layerId}`
-        );
-      }
-      this.countQuery();
-    }
-
-    for (const groupId of currentProject.queriesQueue.groupsToDelete) {
-      try {
-        await projectsService.deleteGroup(groupId);
-      } catch (error) {
-        alertLayerOperationError(
-          error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
-          { id: groupId },
-          'удалить группу',
-          `id: ${groupId}`
-        );
-      }
-      this.countQuery();
-    }
-
-    projectsService.clearCurrent();
-    await projectsService.fetchCurrent();
-
-    this.setBusy(false);
-    this.setEditMode(false);
   }
 
   @action.bound

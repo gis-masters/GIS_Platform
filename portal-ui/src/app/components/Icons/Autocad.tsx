@@ -1,9 +1,10 @@
 import React from 'react';
 import { SvgIcon } from '@mui/material';
 import { SvgIconComponent } from '@mui/icons-material';
+import { SvgIconProps } from '@mui/material/SvgIcon/SvgIcon';
 
 export const Autocad: SvgIconComponent = Object.assign(
-  props => (
+  (props: SvgIconProps) => (
     <SvgIcon {...props} viewBox='0 0 540 540'>
       <g transform='translate(0.000000,540.000000) scale(0.100000,-0.100000)'>
         <path

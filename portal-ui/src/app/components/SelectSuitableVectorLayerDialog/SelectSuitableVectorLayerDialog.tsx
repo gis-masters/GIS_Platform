@@ -85,7 +85,7 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
     );
 
     const currentLayer = this.props.currentLayer;
-    const layersUpdatePermissions = [];
+    const layersUpdatePermissions: boolean[] = [];
     for (const layer of currentProject.vectorableLayers) {
       layersUpdatePermissions.push(await isUpdateAllowed(layer));
     }

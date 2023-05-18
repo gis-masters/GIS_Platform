@@ -107,7 +107,7 @@ export class LayersList extends Component<LayersListProps> {
   }
 
   @action.bound
-  private onSelectItemChanged([layer, enabled]) {
+  private onSelectItemChanged([layer, enabled]: [CrgLayer, boolean]) {
     this.selectedLayers = enabled
       ? ([...this.selectedLayers, layer] as CrgLayer[])
       : this.selectedLayers.filter(item => item !== layer);

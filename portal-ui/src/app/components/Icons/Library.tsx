@@ -1,9 +1,10 @@
 import React from 'react';
 import { SvgIcon } from '@mui/material';
 import { SvgIconComponent } from '@mui/icons-material';
+import { SvgIconProps } from '@mui/material/SvgIcon/SvgIcon';
 
 export const Library: SvgIconComponent = Object.assign(
-  props => (
+  (props: SvgIconProps) => (
     <SvgIcon {...props} viewBox='0 0 31.535 31.535'>
       <path
         d='M26.65,0H4.884C4.392,0,3.992,0.399,3.992,0.894v29.748c0,0.492,0.4,0.893,0.892,0.893H26.65

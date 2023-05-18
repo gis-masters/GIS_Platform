@@ -65,13 +65,9 @@ export class CopyFeatureButton extends Component<CopyFeatureButtonProps> {
   @boundMethod
   private async copy([selectedLayer]: CrgVectorLayer[]) {
     try {
-      const featureForCopy = {
-        ...this.props.feature,
-        id: undefined,
-        geometry_name: undefined
-      };
+      const { feature } = this.props;
 
-      await createFeature(selectedLayer.dataset, selectedLayer.tableName, featureForCopy);
+      await createFeature(selectedLayer.dataset, selectedLayer.tableName, feature);
 
       Toast.success('Объект успешно скопирован');
     } catch (error) {

@@ -38,7 +38,7 @@ export function getPayloadFromPageableResponse<T>(
 }
 
 export function stringifyParams(params: Record<string, string | number>): Record<string, string> {
-  const stringParams = {};
+  const stringParams: Record<string, string> = {};
   for (const [key, value] of Object.entries(params)) {
     stringParams[key] = String(value);
   }

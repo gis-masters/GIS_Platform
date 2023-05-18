@@ -56,7 +56,6 @@ export class Carousel extends Component<CarouselProps> {
             {this.currentImage && isPdfFile(this.currentImage) ? (
               <Document
                 className={cnCarousel('Document')}
-                error={console.error}
                 file={this.url}
                 loading='Загрузка pdf'
                 onLoadSuccess={this.onDocumentLoad}

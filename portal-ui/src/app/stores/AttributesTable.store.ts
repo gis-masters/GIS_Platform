@@ -13,8 +13,8 @@ export enum FilterBySelection {
 const defaultValues: Partial<AttributesTableStore> = {};
 
 class AttributesTableStore {
-  @observable filter: { [tableName: string]: FilterQuery } = {};
-  @observable filterDisabled: { [tableName: string]: true } = {};
+  @observable filter: Record<string, FilterQuery> = {};
+  @observable filterDisabled: Record<string, true> = {};
 
   private static _instance: AttributesTableStore;
   static get instance() {
