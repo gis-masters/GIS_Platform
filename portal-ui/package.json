@@ -25,7 +25,8 @@
     "test:stage58": "rm -rf tests/_screens/.tmp/* && npm run wdio -- run tests/deployment/stage58/wdio.conf.ts",
     "test:stage98": "rm -rf tests/_screens/.tmp/* && npm run wdio -- run tests/deployment/stage98/wdio.conf.ts",
     "test:stage172": "rm -rf tests/_screens/.tmp/* && npm run wdio -- run tests/deployment/stage172/wdio.conf.ts",
-    "test:hermione": "TS_NODE_PROJECT=./hermione/tsconfig.json hermione --require ts-node/register --set ui"
+    "test:hermione": "TS_NODE_PROJECT=./hermione/tsconfig.json hermione --require ts-node/register --set ui",
+    "test:allureReport": "allure generate --clean allure-results && allure open"
   },
   "dependencies": {
     "@angular/animations": "14.0.6",
@@ -48,6 +49,7 @@
     "@mui/lab": "5.0.0-alpha.129",
     "@mui/material": "5.13.0",
     "@stomp/stompjs": "5.4.2",
+    "allure-commandline": "2.22.0",
     "autobind-decorator": "2.4.0",
     "axios": "1.4.0",
     "core-js": "3.30.2",
@@ -125,6 +127,7 @@
     "@types/topojson-specification": "1.0.2",
     "@typescript-eslint/eslint-plugin": "5.59.0",
     "@typescript-eslint/parser": "5.59.0",
+    "@wdio/allure-reporter": "8.10.2",
     "@wdio/cli": "8.10.2",
     "@wdio/cucumber-framework": "8.10.2",
     "@wdio/local-runner": "8.10.2",

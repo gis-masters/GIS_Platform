@@ -48,3 +48,7 @@ Thumbs.db
 
 # tests
 tests/_screens/.tmp
+
+# tests reports
+allure-results
+allure-report
