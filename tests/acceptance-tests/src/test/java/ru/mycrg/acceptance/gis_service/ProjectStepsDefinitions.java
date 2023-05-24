@@ -368,9 +368,17 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Пользователь имеет роль {string} для текущего проекта")
     public void checkUserRoleForCurrentProject(String expectedRole) {
-        String result = response.jsonPath().get("_embedded.projects[0].role");
+        String result = response.jsonPath().get("role");
 
         assertEquals(expectedRole, result);
+    }
+
+    @And("Многократная проверка получения роли {string} для текущего пользователя, даёт одинаковый результат")
+    public void checkRoleForCurrentUserSeveralTimes(String expectedRole) {
+        for (int i = 0; i < 5; i++) {
+            getCurrentProjectInfoById();
+            checkUserRoleForCurrentProject(expectedRole);
+        }
     }
 
     @And("Сервер отвечает со статус-кодом 204, проект успешно удален")

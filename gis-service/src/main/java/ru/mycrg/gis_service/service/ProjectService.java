@@ -208,7 +208,10 @@ public class ProjectService {
                                              savedProject.getId(),
                                              objectMapper.convertValue(savedProject, JsonNode.class)));
 
-        return projectionFactory.setRoleAndCreateProjection(savedProject);
+        ProjectProjectionImpl projection = new ProjectProjectionImpl(savedProject);
+        projection.setRole(OWNER.name());
+
+        return projection;
     }
 
     public void delete(Long projectId) {

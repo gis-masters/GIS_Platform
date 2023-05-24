@@ -8,6 +8,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.mycrg.gis_service.entity.Permission;
 
 import java.util.List;
+import java.util.Optional;
 
 @RepositoryRestResource(exported = false)
 public interface PermissionRepository extends PagingAndSortingRepository<Permission, Long> {
@@ -33,4 +34,12 @@ public interface PermissionRepository extends PagingAndSortingRepository<Permiss
     @Modifying
     @Query("DELETE FROM Permission p where p.id = :id")
     void deletePermissionById(@Param("id") Long id);
+
+    @Query("SELECT role.name FROM Role as role " +
+            "WHERE role.id =" +
+            "(SELECT max(p.role.id) as maxRoleId FROM Permission p " +
+            "WHERE p.principalId IN (:allPrincipalIds) " +
+            "AND p.project.id  = :projectId) ")
+    Optional<String> getBestRoleForProject(@Param("allPrincipalIds") List<Long> allPrincipalIds,
+                                           @Param("projectId") Long projectId);
 }

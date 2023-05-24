@@ -27,7 +27,7 @@ public class ProjectProjectionFactory {
             return projection;
         }
 
-        resourceProtector.defineBestRole(project.getPermissions())
+        resourceProtector.defineBestRole(project)
                          .ifPresent(projection::setRole);
 
         return projection;

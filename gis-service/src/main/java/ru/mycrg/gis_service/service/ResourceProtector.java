@@ -5,51 +5,40 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
+import ru.mycrg.gis_service.repository.PermissionRepository;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static ru.mycrg.gis_service.security.Roles.OWNER;
-import static ru.mycrg.gis_service.security.Roles.VIEWER;
 
 @Service
 public class ResourceProtector {
 
     private final IAuthenticationFacade authenticationFacade;
+    private final PermissionRepository permissionRepository;
 
-    public ResourceProtector(IAuthenticationFacade authenticationFacade) {
+    public ResourceProtector(IAuthenticationFacade authenticationFacade,
+                             PermissionRepository permissionRepository) {
         this.authenticationFacade = authenticationFacade;
+        this.permissionRepository = permissionRepository;
     }
 
-    public Optional<String> defineBestRole(Set<Permission> permissions) {
+    public Optional<String> defineBestRole(Project project) {
         UserDetails userDetails = authenticationFacade.getUserDetails();
         List<Long> userIds = userDetails.getGroups();
         userIds.add(userDetails.getUserId());
 
-        String bestRole = null;
-        List<Permission> userPermissions = permissions
-                .stream()
-                .filter(permission -> userIds.contains(permission.getPrincipalId()))
-                .collect(Collectors.toList());
+        List<Long> userPermissionsIds = project.getPermissions()
+                                               .stream()
+                                               .map(Permission::getPrincipalId)
+                                               .filter(userIds::contains)
+                                               .collect(Collectors.toList());
 
-        for (Permission permission: userPermissions) {
-            if (permission.getRole().getName().equals(OWNER.name())) {
-                bestRole = OWNER.name();
-                break;
-            } else if (permission.getRole().getName().equals(VIEWER.name())) {
-                bestRole = VIEWER.name();
-            }
-        }
-
-        if (isNull(bestRole)) {
-            return Optional.empty();
-        } else {
-            return Optional.of(bestRole);
-        }
+        return permissionRepository.getBestRoleForProject(userPermissionsIds, project.getId());
     }
 
     /**
@@ -64,7 +53,7 @@ public class ResourceProtector {
     }
 
     private boolean isUserHasOwnPermission(Project project) {
-        Optional<String> oRole = defineBestRole(project.getPermissions());
+        Optional<String> oRole = defineBestRole(project);
         if (oRole.isEmpty()) {
             return false;
         }

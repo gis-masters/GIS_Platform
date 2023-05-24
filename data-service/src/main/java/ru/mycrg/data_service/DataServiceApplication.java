@@ -39,7 +39,7 @@ public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
     @EventListener(ApplicationReadyEvent.class)
     public void appReadyEvent() {
         log.info("App ready with:");
-        log.info("max-file-size: " + maxFileSize);
+        log.info("max-file-size: {}", maxFileSize);
 
         migrationHandler.handle();
         geoserverMigrationHandler.handle();
