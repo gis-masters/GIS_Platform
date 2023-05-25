@@ -16,8 +16,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
 @RestController
@@ -44,7 +44,7 @@ public class PermissionController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<PermissionProjection>> getPermissions(
             @PathVariable(name = "project_id") long projectId) {
-        List<PermissionProjection> permissions = permissionsService.getAll(projectId);
+        List<PermissionProjection> permissions = permissionsService.getAllAllowed(projectId);
 
         return ResponseEntity.ok(permissions);
     }

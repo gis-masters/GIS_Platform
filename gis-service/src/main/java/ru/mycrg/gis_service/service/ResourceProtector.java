@@ -1,5 +1,6 @@
 package ru.mycrg.gis_service.service;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
@@ -12,7 +13,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
 import static ru.mycrg.gis_service.security.Roles.OWNER;
 
 @Service
@@ -28,17 +28,24 @@ public class ResourceProtector {
     }
 
     public Optional<String> defineBestRole(Project project) {
+        List<Permission> userPermissions = getUserPermissionsForProject(project);
+        List<Long> userPermissionIds = userPermissions.stream()
+                                                      .map(Permission::getPrincipalId)
+                                                      .collect(Collectors.toList());
+
+        return permissionRepository.getBestRoleForProject(userPermissionIds, project.getId());
+    }
+
+    @NotNull
+    public List<Permission> getUserPermissionsForProject(Project project) {
         UserDetails userDetails = authenticationFacade.getUserDetails();
         List<Long> userIds = userDetails.getGroups();
         userIds.add(userDetails.getUserId());
 
-        List<Long> userPermissionsIds = project.getPermissions()
-                                               .stream()
-                                               .map(Permission::getPrincipalId)
-                                               .filter(userIds::contains)
-                                               .collect(Collectors.toList());
-
-        return permissionRepository.getBestRoleForProject(userPermissionsIds, project.getId());
+        return project.getPermissions()
+                      .stream()
+                      .filter(permission -> userIds.contains(permission.getPrincipalId()))
+                      .collect(Collectors.toList());
     }
 
     /**

@@ -18,12 +18,10 @@ import ru.mycrg.gis_service.repository.RoleRepository;
 
 import javax.json.JsonMergePatch;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.time.LocalDateTime.now;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
@@ -63,12 +61,13 @@ public class PermissionsService {
         return allPermissions;
     }
 
-    public List<PermissionProjection> getAll(long projectId) {
-        return Stream.of(projectService.getById(projectId))
-                     .filter(this::isOwnerOrAdmin)
-                     .map(this::getProjectPermissions)
-                     .findFirst()
-                     .orElseGet(ArrayList::new);
+    public List<PermissionProjection> getAllAllowed(long projectId) {
+        Project project = projectService.getById(projectId);
+        if (resourceProtector.isOwner(project)) {
+            return getProjectPermissions(project);
+        } else {
+            return getAllowedPermissions(project);
+        }
     }
 
     public PermissionProjection getById(long projectId, long permissionId) {
@@ -80,7 +79,7 @@ public class PermissionsService {
     public PermissionProjection create(long projectId, PermissionCreateDto dto) {
         Project project = projectService.getById(projectId);
 
-        isOwnerOrAdmin(project);
+        throwIfNotOwnerOrAdmin(project);
 
         Role role = roleRepository.findByNameIgnoreCase(dto.getRole())
                                   .orElseThrow(() -> new NotFoundException("Не найдена роль: " + dto.getRole()));
@@ -182,7 +181,7 @@ public class PermissionsService {
     @NotNull
     private Permission getPermissionById(Long projectId, Long permissionId) {
         Project project = projectService.getById(projectId);
-        isOwnerOrAdmin(project);
+        throwIfNotOwnerOrAdmin(project);
 
         return project
                 .getPermissions().stream()
@@ -197,12 +196,20 @@ public class PermissionsService {
                       .collect(Collectors.toList());
     }
 
+    private List<PermissionProjection> getAllowedPermissions(Project project) {
+        List<Permission> permissionsForProject = resourceProtector.getUserPermissionsForProject(project);
+
+        return permissionsForProject.stream()
+                                    .map(this::mapToProjection)
+                                    .collect(Collectors.toList());
+    }
+
     @NotNull
     private PermissionProjection mapToProjection(Permission permission) {
         return projectionFactory.createProjection(PermissionProjection.class, permission);
     }
 
-    private boolean isOwnerOrAdmin(@NotNull Project project) {
+    private boolean throwIfNotOwnerOrAdmin(@NotNull Project project) {
         if (resourceProtector.isOwner(project)) {
             return true;
         }

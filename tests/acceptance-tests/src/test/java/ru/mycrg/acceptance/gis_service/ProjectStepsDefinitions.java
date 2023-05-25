@@ -179,7 +179,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         addPermissionToProject(usersGroupId, "group", role);
     }
 
-    @When("Администратор присваивает текущей группе роль {string}")
+    @When("Администратор присваивает группе роль {string} на текущий проект")
     public void addPermissionToCurrentGroup(String role) {
         addPermissionToProject(usersGroupId, "group", role);
 
@@ -371,6 +371,15 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         String result = response.jsonPath().get("role");
 
         assertEquals(expectedRole, result);
+    }
+
+    @And("Пользователь видит все назначенные ему роли для текущего проекта")
+    public void checkAllRolesForCurrentProject() {
+        List<Object> permission = response.jsonPath().getList("");
+        assertEquals(2, permission.size());
+
+        List<String> roles = response.jsonPath().getList("role");
+        roles.forEach(role -> assertEquals("VIEWER", role));
     }
 
     @And("Многократная проверка получения роли {string} для текущего пользователя, даёт одинаковый результат")
