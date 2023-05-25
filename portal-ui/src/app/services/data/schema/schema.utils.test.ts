@@ -1,7 +1,8 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
-import { PropertyType, Relation, Schema } from './schema.models';
-import { applyContentType, applyView } from './schema.utils';
+import { PropertySchema, PropertyType, Relation, Schema } from './schema.models';
+import { applyContentType, applyView, convertOldToNewProperties } from './schema.utils';
+import { OldPropertySchema, ValueType } from './schemaOld.models';
 
 const schemaWithViews: Schema = {
   name: 'border1',
@@ -13,6 +14,7 @@ const schemaWithViews: Schema = {
       name: 'title',
       title: 'Наименование',
       required: true,
+      asTitle: true,
       propertyType: PropertyType.STRING
     },
     {
@@ -47,6 +49,7 @@ const schemaWithAppliedView1: Schema = {
       name: 'title',
       title: 'Наименование',
       required: true,
+      asTitle: true,
       propertyType: PropertyType.STRING
     }
   ],
@@ -221,5 +224,22 @@ describe('утилита применения типа документа applyC
     const schemaWithAppliedContentType1 = applyContentType(schemaWithContentTypesAndRelations, 'doc1');
 
     expect(schemaWithAppliedContentType1.relations).toStrictEqual(contentTypeRelations);
+  });
+});
+
+describe('утилита конвертации свойств схемы из старого формата в новый', () => {
+  test('если в свойстве старой схемы не содержится "asTitle", то в новой схеме оно тоже не будет содержаться', () => {
+    const oldProperty: OldPropertySchema = {
+      name: 'title',
+      title: 'Наименование',
+      valueType: ValueType.STRING
+    };
+    const newProperty: PropertySchema = {
+      name: 'title',
+      title: 'Наименование',
+      propertyType: PropertyType.STRING
+    };
+
+    expect(convertOldToNewProperties([oldProperty])).toStrictEqual([newProperty]);
   });
 });

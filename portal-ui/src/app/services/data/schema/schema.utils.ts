@@ -50,10 +50,10 @@ function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType): OldSchem
       printTemplates = clonedSchema.printTemplates,
       relations = clonedSchema.relations
     } = type;
-    const actualProperties: OldPropertySchema[] = attributes.map(contentTypeDescription => {
-      const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeDescription.name);
+    const actualProperties: OldPropertySchema[] = attributes.map(contentTypeProperty => {
+      const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeProperty.name);
 
-      return { ...schemaProperty, ...contentTypeDescription } as OldPropertySchema;
+      return { ...schemaProperty, ...contentTypeProperty } as OldPropertySchema;
     });
 
     Object.assign(clonedSchema, {
@@ -240,8 +240,10 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
       field.propertyType = PropertyType.STRING;
     }
 
-    field.asTitle = field.asTitle ?? oldField.objectIdentityOnUi;
-    delete (field as Partial<OldPropertySchemaDouble>).objectIdentityOnUi;
+    if (oldField.objectIdentityOnUi !== undefined) {
+      field.asTitle = field.asTitle ?? oldField.objectIdentityOnUi;
+      delete (field as Partial<OldPropertySchemaDouble>).objectIdentityOnUi;
+    }
 
     if (oldField.valueType === ValueType.DOUBLE) {
       field.propertyType = PropertyType.FLOAT;
