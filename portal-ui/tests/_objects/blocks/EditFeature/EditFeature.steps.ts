@@ -27,6 +27,10 @@ Then('открывается форма просмотра объекта', asyn
   await editFeatureBlock.waitForVisible();
 });
 
+When('дожидаюсь появления формы редактирования объекта', async function () {
+  await editFeatureBlock.waitForVisible();
+});
+
 When('в форме просмотра объекта, я перехожу на вкладку просмотра геометрии', async function () {
   await editFeatureBlock.openGeometryTab();
 });
