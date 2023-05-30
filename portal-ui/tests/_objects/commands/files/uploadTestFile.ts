@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'node:path';
-import { File } from 'web-file-polyfill';
+import { File, Blob } from 'web-file-polyfill';
 
 import { requestAsAdmin } from '../requestAs';
 import { filesClient } from '../../../../src/app/services/data/files/files.client';
