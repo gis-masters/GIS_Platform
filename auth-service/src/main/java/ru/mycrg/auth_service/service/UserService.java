@@ -4,7 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -162,6 +164,11 @@ public class UserService {
         Organization organization = orgRepository
                 .findById(orgId)
                 .orElseThrow(() -> new NotFoundException(Organization.class, orgId));
+
+        Sort defaultSort = Sort.by("id").ascending();
+        if (pageable.getSort().isUnsorted()) {
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), defaultSort);
+        }
 
         return userRepository.findByOrganizations(Collections.singleton(organization), pageable)
                              .map(user -> projectionFactory.createProjection(UserProjection.class, user));

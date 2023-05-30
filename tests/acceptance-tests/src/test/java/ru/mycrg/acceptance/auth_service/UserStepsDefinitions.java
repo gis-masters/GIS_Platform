@@ -13,9 +13,7 @@ import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
@@ -34,6 +32,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public static Integer userId;
     public static String geoserverLogin;
     public static UserCreateDto userDto;
+    public static List<Long> usersId = new ArrayList<>();
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -149,6 +148,13 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         createRandomUser();
     }
 
+    @Given("Существует {int} пользователей")
+    public void createUsers(Integer quantityOfUsers) throws InterruptedException {
+        for (int i = 0; i < quantityOfUsers; i++) {
+            createRandomUser();
+        }
+    }
+
     @Given("Существует и авторизован некий пользователь")
     public void initializeSomeUserAndLogin() throws InterruptedException {
         createRandomUserAndLogin();
@@ -229,6 +235,20 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     @When("Администратор делает постраничный запрос на пользователей")
     public void getUsersCount() {
         getAllAndFillEntityCount();
+    }
+
+    @When("Администратор делает постраничный запрос на всех пользователей, по {int} пользователей на странице")
+    public void getAllUsersByPage(Integer usersPerPage) {
+        getAllAndFillEntityCount();
+        getAllUsersIdAllPages(usersPerPage);
+
+        assertEquals(entityCount, usersId.size());
+    }
+
+    @Then("Дублирование пользователей, при выборке постранично, не происходит")
+    public void checkThatUsersNotDuplicated() {
+        Set<Long> userIdsSet = new HashSet<>(usersId);
+        assertEquals(usersId.size(), userIdsSet.size());
     }
 
     @When("Администратор отправляет приглашение несуществующему пользователю")
@@ -360,6 +380,19 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public static void getGeoserverLoginFromResponse() {
         geoserverLogin = response.jsonPath().get("geoserverLogin");
         assertNotNull(geoserverLogin);
+    }
+
+    private void getAllUsersIdAllPages(Integer entitiesPerPage) {
+        totalPages = entityCount / entitiesPerPage;
+
+        for (int i = 0; i <= totalPages; i++) {
+            response = getBaseRequestWithCurrentCookie()
+                    .when().
+                            get(String.format("/?size=%s&page=%s", entitiesPerPage, i));
+
+            jsonPath = response.jsonPath();
+            usersId.addAll(response.jsonPath().getList("content.id"));
+        }
     }
 
     private void takeForeignUserAsCurrent() {
