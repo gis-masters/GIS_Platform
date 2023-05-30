@@ -35,6 +35,17 @@ When('в форме просмотра объекта, я перехожу на 
   await editFeatureBlock.openGeometryTab();
 });
 
+When(
+  'в форме редактирования объекта я изменяю значение поля {string} на {string}',
+  async function (title: string, value: string) {
+    await editFeatureBlock.changeEditFormFieldValue(title, value);
+  }
+);
+
+When('в форме редактирования объекта я нажимаю кнопку Сохранить', async function () {
+  await editFeatureBlock.clickSaveButton();
+});
+
 Then('вкладка просмотра геометрии в режиме чтения содержит следующую геометрию', async function (data: DataTable) {
   const expectedGeometry = data
     .raw()

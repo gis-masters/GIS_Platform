@@ -55,7 +55,7 @@ class LayersSidebarBlock extends Block {
 
   async createNewObjectInLayer(): Promise<void> {
     await editFeatureGeometryAsTextDialogBlock.setObjectDummyCoordinates();
-    await editFeatureBlock.saveNewObject();
+    await editFeatureBlock.clickSaveButton();
   }
 
   async clickAddLayerBtn(): Promise<void> {
