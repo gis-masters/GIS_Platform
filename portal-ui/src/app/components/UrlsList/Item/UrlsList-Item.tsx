@@ -19,7 +19,6 @@ import { Link } from '../../Link/Link';
 import '!style-loader!css-loader!sass-loader!../Placeholder/UrlsList-Placeholder.scss';
 import '!style-loader!css-loader!sass-loader!../Button/UrlsList-Button.scss';
 import '!style-loader!css-loader!sass-loader!../Link/UrlsList-Link.scss';
-import '!style-loader!css-loader!sass-loader!../Dialog/UrlsList-Dialog.scss';
 
 interface UrlFieldItemProps {
   onDelete: (index: number) => void;

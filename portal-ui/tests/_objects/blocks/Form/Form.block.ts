@@ -42,6 +42,7 @@ export class FormBlock extends Block {
 
     return await $tableField.$('.MuiInputBase-root');
   }
+
   async getCustomFieldRoot(title: string): Promise<WebdriverIO.Element> {
     const $tableField = await this.getCreateTableDialogField(title);
     if (!$tableField) {

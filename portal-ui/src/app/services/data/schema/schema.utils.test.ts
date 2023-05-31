@@ -1,8 +1,8 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
-import { PropertySchema, PropertyType, Relation, Schema } from './schema.models';
-import { applyContentType, applyView, convertOldToNewProperties } from './schema.utils';
 import { OldPropertySchema, ValueType } from './schemaOld.models';
+import { PropertySchema, PropertyType, Relation, Schema } from './schema.models';
+import { applyContentType, applyView, convertNewToOldProperties, convertOldToNewProperties } from './schema.utils';
 
 const schemaWithViews: Schema = {
   name: 'border1',
@@ -227,6 +227,64 @@ describe('утилита применения типа документа applyC
   });
 });
 
+describe('утилита конвертации свойств схемы из нового формата в старый', () => {
+  test('если openIn не указан то он конвертируется в displayMode и принимает значение undefined', () => {
+    const newProperties = convertNewToOldProperties([
+      {
+        name: 'urlField',
+        title: 'поле url',
+        propertyType: PropertyType.URL
+      }
+    ]);
+    expect(newProperties).toStrictEqual([
+      {
+        name: 'urlField',
+        title: 'поле url',
+        valueType: 'URL',
+        displayMode: undefined
+      }
+    ]);
+  });
+
+  test('если openIn: popup то он то он конвертируется в displayMode и принимает значение in_popup', () => {
+    const newProperties = convertNewToOldProperties([
+      {
+        name: 'urlField',
+        title: 'поле url',
+        openIn: 'popup',
+        propertyType: PropertyType.URL
+      }
+    ]);
+    expect(newProperties).toStrictEqual([
+      {
+        name: 'urlField',
+        title: 'поле url',
+        valueType: 'URL',
+        displayMode: 'in_popup'
+      }
+    ]);
+  });
+
+  test('если openIn: newTab то он то он конвертируется в displayMode и принимает значение newTab', () => {
+    const newProperties = convertNewToOldProperties([
+      {
+        name: 'urlField',
+        title: 'поле url',
+        openIn: 'newTab',
+        propertyType: PropertyType.URL
+      }
+    ]);
+    expect(newProperties).toStrictEqual([
+      {
+        name: 'urlField',
+        title: 'поле url',
+        valueType: 'URL',
+        displayMode: 'newTab'
+      }
+    ]);
+  });
+});
+
 describe('утилита конвертации свойств схемы из старого формата в новый', () => {
   test('если в свойстве старой схемы не содержится "asTitle", то в новой схеме оно тоже не будет содержаться', () => {
     const oldProperty: OldPropertySchema = {
@@ -241,5 +299,61 @@ describe('утилита конвертации свойств схемы из �
     };
 
     expect(convertOldToNewProperties([oldProperty])).toStrictEqual([newProperty]);
+  });
+
+  test('если displayMode не указан то он не появится после конвертации', () => {
+    const newProperties = convertOldToNewProperties([
+      {
+        name: 'urlField',
+        title: 'поле url',
+        valueType: ValueType.URL
+      }
+    ]);
+
+    expect(newProperties).toStrictEqual([
+      {
+        name: 'urlField',
+        title: 'поле url',
+        propertyType: 'url'
+      }
+    ]);
+  });
+
+  test('если openIn: in_popup то он то он конвертируется в displayMode и принимает значение popup', () => {
+    const newProperties = convertOldToNewProperties([
+      {
+        name: 'urlField',
+        title: 'поле url',
+        displayMode: 'in_popup',
+        valueType: ValueType.URL
+      }
+    ]);
+    expect(newProperties).toStrictEqual([
+      {
+        name: 'urlField',
+        title: 'поле url',
+        openIn: 'popup',
+        propertyType: 'url'
+      }
+    ]);
+  });
+
+  test('если openIn: newTab то он то он конвертируется в displayMode и принимает значение newTab', () => {
+    const newProperties = convertOldToNewProperties([
+      {
+        name: 'urlField',
+        title: 'поле url',
+        displayMode: 'newTab',
+        valueType: ValueType.URL
+      }
+    ]);
+    expect(newProperties).toStrictEqual([
+      {
+        name: 'urlField',
+        title: 'поле url',
+        openIn: 'newTab',
+        propertyType: 'url'
+      }
+    ]);
   });
 });

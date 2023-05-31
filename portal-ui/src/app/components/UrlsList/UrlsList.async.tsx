@@ -25,6 +25,7 @@ export interface UrlsListProps extends IClassNameProps {
 }
 
 const cnUrlsList = cn('UrlsList');
+const cnUrlsListDialog = cn('UrlsList', 'Dialog');
 
 @observer
 export default class UrlsList extends Component<UrlsListProps> {
@@ -66,6 +67,7 @@ export default class UrlsList extends Component<UrlsListProps> {
         {editable && (
           <FormDialog
             open={this.createDialogOpen}
+            className={cnUrlsListDialog()}
             schema={{ properties: getEditUrlFormSchema(property) }}
             value={{ url: '', text: '' }}
             actionFunction={this.createUrl}

@@ -8,6 +8,7 @@ import { validateFormValue } from '../../../../services/formValidation.service';
 import { Form } from '../../Form';
 import { sleep } from '../../../../services/util/sleep';
 import { Button } from '../../../Button/Button';
+import { FormStoryActions, cnFormStoryActions } from '../../../FormStoryActions/FormStoryActions';
 
 export default {
   title: 'Form/Field/url',
@@ -28,28 +29,34 @@ const testFields: PropertySchema[] = [
   {
     propertyType: PropertyType.URL,
     name: 'documents',
-    title: 'Пачка документов новое окно',
+    title: 'Пачка ссылок, новое окно',
     openIn: 'newTab',
     multiple: true
   },
   {
     propertyType: PropertyType.URL,
     name: 'document',
-    title: 'Один документ новое окно',
+    title: 'Одна ссылка, новое окно',
     openIn: 'newTab',
     multiple: false
   },
   {
     propertyType: PropertyType.URL,
     name: 'document',
-    title: 'Один документ попап',
+    title: 'Одна ссылка, не указан openIn',
+    multiple: false
+  },
+  {
+    propertyType: PropertyType.URL,
+    name: 'document',
+    title: 'Одна ссылка, попап',
     openIn: 'popup',
     multiple: false
   },
   {
     propertyType: PropertyType.URL,
     name: 'document',
-    title: 'Пачка документов попап',
+    title: 'Пачка ссылок, попап',
     openIn: 'popup',
     multiple: true
   }
@@ -59,7 +66,7 @@ const errorTestFields: PropertySchema[] = [
   {
     propertyType: PropertyType.URL,
     name: 'requiredDocuments',
-    title: 'Обязательные поле с документами',
+    title: 'Обязательные поле с ссылками',
     openIn: 'popup',
     required: true,
     multiple: true
@@ -67,7 +74,7 @@ const errorTestFields: PropertySchema[] = [
   {
     propertyType: PropertyType.URL,
     name: 'errorDocuments',
-    title: 'Пачка документов с ошибками',
+    title: 'Пачка ссылок с ошибками',
     openIn: 'newTab',
     wellKnownRegex: 'url',
     multiple: true
@@ -75,7 +82,7 @@ const errorTestFields: PropertySchema[] = [
   {
     propertyType: PropertyType.URL,
     name: 'requiredDocuments2',
-    title: 'Обязательные поле с документами',
+    title: 'Обязательные поле с ссылками',
     openIn: 'popup',
     required: true,
     multiple: true
@@ -83,7 +90,7 @@ const errorTestFields: PropertySchema[] = [
   {
     propertyType: PropertyType.URL,
     name: 'errorDocuments2',
-    title: 'Пачка документов с ошибками',
+    title: 'Пачка ссылок с ошибками',
     openIn: 'newTab',
     wellKnownRegex: 'url',
     multiple: true
@@ -187,13 +194,15 @@ ReadonlyUrl.args = {
 };
 
 const validateActions = (
-  <Button startIcon={<Biotech />} id='validateData' onClick={validate}>
-    Validate
-  </Button>
+  <FormStoryActions>
+    <Button startIcon={<Biotech />} className={cnFormStoryActions('ValidateData')} onClick={validate}>
+      Validate
+    </Button>
+  </FormStoryActions>
 );
 
 const validateEmptyFieldsActions = (
-  <Button startIcon={<Biotech />} id='validateData' onClick={validateEmptyFields}>
+  <Button startIcon={<Biotech />} className={cnFormStoryActions('ValidateData')} onClick={validateEmptyFields}>
     Validate
   </Button>
 );

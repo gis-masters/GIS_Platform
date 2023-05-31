@@ -1,7 +1,7 @@
 import { TestDefinition } from 'hermione';
 
 import { Form } from '../../../objects/blocks/Form/Form';
-import { FormStorybookActions } from '../../../objects/blocks/FormStorybookActions/FormStorybookActions';
+import { FormStoryActions } from '../../../objects/blocks/FormStoryActions/FormStoryActions';
 import { BLPage } from '../../../objects/pages/BL.page';
 
 interface TestDefinitionWithOnly extends TestDefinition {
@@ -49,7 +49,7 @@ describe('Форма', () => {
     it('Внешний вид формы по схеме (пустая)', async function () {
       const bl = new BLPage(this.browser);
       const form = new Form(this.browser);
-      const formActions = new FormStorybookActions(this.browser);
+      const formActions = new FormStoryActions(this.browser);
 
       await bl.openExample('form', 'outside-control');
       await form.waitForVisible();
@@ -67,7 +67,7 @@ describe('Форма', () => {
     it('Внешний вид формы по схеме (заполненная валидными данными)', async function () {
       const bl = new BLPage(this.browser);
       const form = new Form(this.browser);
-      const formActions = new FormStorybookActions(this.browser);
+      const formActions = new FormStoryActions(this.browser);
 
       await bl.openExample('form', 'outside-control');
       await form.waitForVisible();
@@ -86,7 +86,7 @@ describe('Форма', () => {
     it('Внешний вид формы по схеме (заполненная невалидными данными)', async function () {
       const bl = new BLPage(this.browser);
       const form = new Form(this.browser);
-      const formActions = new FormStorybookActions(this.browser);
+      const formActions = new FormStoryActions(this.browser);
 
       await bl.openExample('form', 'outside-control');
       await form.waitForVisible();

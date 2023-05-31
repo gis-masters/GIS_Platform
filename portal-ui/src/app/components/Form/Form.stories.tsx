@@ -14,6 +14,7 @@ import { Toast } from '../Toast/Toast';
 import { Form, FormControl, FormField, FormLabel } from './Form';
 import { FormActions } from './Actions/Form-Actions';
 import { getDefaultValues } from './Form.utils';
+import { FormStoryActions, cnFormStoryActions } from '../FormStoryActions/FormStoryActions';
 
 export default {
   title: 'Form',
@@ -283,23 +284,38 @@ const actionFunction = async (formValue: TestData) => {
 };
 
 const storyActions = (
-  <>
-    <Button startIcon={<Biotech />} id='validateData' onClick={validate}>
+  <FormStoryActions>
+    <Button startIcon={<Biotech />} className={cnFormStoryActions('ValidateData')} onClick={validate}>
       Validate
     </Button>
-    <Button color='success' startIcon={<CheckCircleOutline />} id='setValidData' onClick={setValidData}>
+    <Button
+      color='success'
+      startIcon={<CheckCircleOutline />}
+      className={cnFormStoryActions('SetValidData')}
+      onClick={setValidData}
+    >
       Set Valid Data
     </Button>
-    <Button color='error' startIcon={<ErrorOutline />} id='setErrorData' onClick={setErrorData}>
+    <Button
+      color='error'
+      startIcon={<ErrorOutline />}
+      className={cnFormStoryActions('SetErrorData')}
+      onClick={setErrorData}
+    >
       Set Error Data
     </Button>
-    <Button color='secondary' startIcon={<DataUsage />} id='setDefaultData' onClick={setDefaults}>
+    <Button
+      color='secondary'
+      startIcon={<DataUsage />}
+      className={cnFormStoryActions('SetDefaultData')}
+      onClick={setDefaults}
+    >
       Set Defaults
     </Button>
-    <Button color='warning' startIcon={<Clear />} id='clearData' onClick={clearForm}>
+    <Button color='warning' startIcon={<Clear />} className={cnFormStoryActions('ClearData')} onClick={clearForm}>
       Clear
     </Button>
-  </>
+  </FormStoryActions>
 );
 
 const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
