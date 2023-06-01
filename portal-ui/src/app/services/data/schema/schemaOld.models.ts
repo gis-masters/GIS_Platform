@@ -32,13 +32,11 @@ export interface OldSchema {
   title: string;
   description?: string;
   properties: OldPropertySchema[];
-  tableName: string;
+  tableName?: string;
   styleName?: string;
   originName?: string;
   geometryType?: SupportedGeometryType;
-  customRuleFunction?: string;
   matchingCounter?: number;
-  calcFiledFunction?: string;
   readOnly?: boolean;
   childOnly?: boolean;
   children?: { library?: string; contentType: string }[];
@@ -46,6 +44,8 @@ export interface OldSchema {
   views?: OldContentType[];
   printTemplates?: string[];
   relations?: Relation[];
+  calcFiledFunction?: string;
+  customRuleFunction?: string;
 }
 
 export interface OldContentType {
@@ -73,7 +73,6 @@ interface OldBasePropertySchema {
   mustBeEmpty?: boolean;
   updateability?: Updateability;
   objectIdentityOnUi?: boolean;
-  sequenceNumber?: number;
   minWidth?: number;
   readOnly?: boolean;
   defaultValue?: unknown;

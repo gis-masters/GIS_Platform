@@ -64,6 +64,8 @@ export interface Schema {
   children?: { library?: string; contentType: string }[];
   printTemplates?: string[];
   relations?: Relation[];
+  calcFiledFunction?: string;
+  customRuleFunction?: string;
 }
 
 export interface ContentType {

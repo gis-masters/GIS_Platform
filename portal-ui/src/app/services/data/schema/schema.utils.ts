@@ -142,71 +142,21 @@ function applyTypeToSchema(schema: Schema, type: ContentType): Schema {
   return clonedSchema;
 }
 
-export function convertOldToNewSchema({
-  name,
-  title,
-  tableName,
-  styleName,
-  description,
-  geometryType,
-  readOnly,
-  children,
-  childOnly,
-  printTemplates,
-  relations,
-  properties,
-  contentTypes,
-  views
-}: OldSchema): Schema {
+export function convertOldToNewSchema({ properties, contentTypes, views, ...rest }: OldSchema): Schema {
   return {
-    name,
-    title,
-    tableName,
-    styleName,
-    description,
-    geometryType,
-    readOnly,
-    children,
-    childOnly,
-    printTemplates,
-    relations,
+    ...rest,
     properties: convertOldToNewProperties(properties),
-    contentTypes: contentTypes?.map(convertOldToNewContentType),
-    views: views?.map(convertOldToNewContentType)
+    ...(contentTypes ? { contentTypes: contentTypes?.map(convertOldToNewContentType) } : {}),
+    ...(views ? { views: views.map(convertOldToNewContentType) } : {})
   };
 }
 
-export function convertNewToOldSchema({
-  name,
-  title,
-  tableName,
-  styleName,
-  description,
-  geometryType,
-  readOnly,
-  children,
-  childOnly,
-  printTemplates,
-  relations,
-  properties,
-  contentTypes,
-  views
-}: Schema): OldSchema {
+export function convertNewToOldSchema({ properties, contentTypes, views, ...rest }: Schema): OldSchema {
   return {
-    name,
-    title,
-    tableName,
-    styleName,
-    description,
-    geometryType,
-    readOnly,
-    children,
-    childOnly,
-    printTemplates,
-    relations,
+    ...rest,
     properties: convertNewToOldProperties(properties),
-    contentTypes: contentTypes?.map(convertNewToOldContentType),
-    views: views?.map(convertNewToOldContentType)
+    ...(contentTypes ? { contentTypes: contentTypes?.map(convertNewToOldContentType) } : {}),
+    ...(views ? { views: views?.map(convertNewToOldContentType) } : {})
   };
 }
 

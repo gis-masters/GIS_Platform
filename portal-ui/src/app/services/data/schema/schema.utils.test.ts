@@ -1,8 +1,15 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
-import { OldPropertySchema, ValueType } from './schemaOld.models';
+import { OldPropertySchema, OldSchema, ValueType } from './schemaOld.models';
 import { PropertySchema, PropertyType, Relation, Schema } from './schema.models';
-import { applyContentType, applyView, convertNewToOldProperties, convertOldToNewProperties } from './schema.utils';
+import {
+  applyContentType,
+  applyView,
+  convertNewToOldProperties,
+  convertNewToOldSchema,
+  convertOldToNewProperties,
+  convertOldToNewSchema
+} from './schema.utils';
 
 const schemaWithViews: Schema = {
   name: 'border1',
@@ -102,6 +109,32 @@ const schemaWithAppliedContentType: Schema = {
       propertyType: PropertyType.STRING
     }
   ]
+};
+
+const oldSchemaWithLegacyFormulas: OldSchema = {
+  name: 'with_legacy_formulas',
+  tableName: 'with_legacy_formulas',
+  title: 'С устаревшими формулами',
+  properties: [
+    { name: 'STATUS', title: 'Статус', valueType: ValueType.INT },
+    { name: 'REG_STATUS', title: 'Значение', valueType: ValueType.STRING }
+  ],
+  customRuleFunction:
+    "return (obj.status == '3' && !obj.reg_status) ? [{attribute: 'reg_status', error: 'Обязательно'}] : []",
+  calcFiledFunction: 'if (!obj.status) obj.status = 0; return obj;'
+};
+
+const newSchemaWithLegacyFormulas: Schema = {
+  name: 'with_legacy_formulas',
+  title: 'С устаревшими формулами',
+  tableName: 'with_legacy_formulas',
+  properties: [
+    { name: 'STATUS', title: 'Статус', propertyType: PropertyType.INT },
+    { name: 'REG_STATUS', title: 'Значение', propertyType: PropertyType.STRING }
+  ],
+  customRuleFunction:
+    "return (obj.status == '3' && !obj.reg_status) ? [{attribute: 'reg_status', error: 'Обязательно'}] : []",
+  calcFiledFunction: 'if (!obj.status) obj.status = 0; return obj;'
 };
 
 describe('утилита применения представления applyView', () => {
@@ -224,6 +257,18 @@ describe('утилита применения типа документа applyC
     const schemaWithAppliedContentType1 = applyContentType(schemaWithContentTypesAndRelations, 'doc1');
 
     expect(schemaWithAppliedContentType1.relations).toStrictEqual(contentTypeRelations);
+  });
+});
+
+describe('утилита конвертации схемы из старого формата в новый', () => {
+  test('при конвертации схемы не теряются устаревшие формулы', () => {
+    expect(convertOldToNewSchema(oldSchemaWithLegacyFormulas)).toStrictEqual(newSchemaWithLegacyFormulas);
+  });
+});
+
+describe('утилита конвертации схемы из нового формата в старый', () => {
+  test('при конвертации схемы не теряются устаревшие формулы', () => {
+    expect(convertNewToOldSchema(newSchemaWithLegacyFormulas)).toStrictEqual(oldSchemaWithLegacyFormulas);
   });
 });
 
