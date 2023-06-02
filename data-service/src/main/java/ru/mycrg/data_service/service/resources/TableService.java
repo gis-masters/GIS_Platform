@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.resources;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -82,6 +83,12 @@ public class TableService {
         }
 
         return new PageImpl<>(unmodifiableList(allowedTables), pageable, total);
+    }
+
+    public Long getAllowedTablesCount(String datasetId) {
+        Page<IResourceModel> page = getPaged(datasetId, null, PageRequest.of(0, 1));
+
+        return page.getTotalElements();
     }
 
     public IResourceModel getInfo(ResourceQualifier tQualifier) {

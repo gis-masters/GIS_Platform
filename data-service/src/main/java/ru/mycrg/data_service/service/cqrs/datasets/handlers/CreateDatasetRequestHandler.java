@@ -72,7 +72,7 @@ public class CreateDatasetRequestHandler implements IRequestHandler<CreateDatase
             throw new DataServiceException("Не удалось создать хранилище на gis-service", responseModel);
         }
 
-        DatasetModel datasetModel = new DatasetModel(newEntity, OWNER.name());
+        DatasetModel datasetModel = new DatasetModel(newEntity, OWNER.name(), 0);
         request.setDatasetModel(datasetModel);
 
         return datasetModel;

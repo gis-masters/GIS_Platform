@@ -35,17 +35,20 @@ public class DatasetService {
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final IAuthenticationFacade authenticationFacade;
     private final BaseDao baseDao;
+    private final TableService tableService;
 
     public DatasetService(BasePermissionsRepository permissionsRepository,
                           DatasetProtector datasetProtector,
                           SchemasAndTablesRepository schemasAndTablesRepository,
                           IAuthenticationFacade authenticationFacade,
-                          BaseDao baseDao) {
+                          BaseDao baseDao,
+                          TableService tableService) {
         this.permissionsRepository = permissionsRepository;
         this.datasetProtector = datasetProtector;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.authenticationFacade = authenticationFacade;
         this.baseDao = baseDao;
+        this.tableService = tableService;
     }
 
     public Page<IResourceModel> getPaged(String ecqlFilter, Pageable pageable) {
@@ -60,10 +63,14 @@ public class DatasetService {
                                                           ecqlFilter,
                                                           pageable,
                                                           DatasetModel.class);
+            List<IResourceModel> datasetsWithItemsCount = datasets
+                    .stream()
+                    .map(datasetModel -> getInfo(datasetModel.getIdentifier()))
+                    .collect(Collectors.toList());
 
             Long total = baseDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
 
-            return new PageImpl<>(Collections.unmodifiableList(datasets), pageable, total);
+            return new PageImpl<>(Collections.unmodifiableList(datasetsWithItemsCount), pageable, total);
         } else {
             List<IResourceModel> allowedResources = permissionsRepository
                     .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter, null, pageable)
@@ -71,32 +78,39 @@ public class DatasetService {
                     .map(record -> new DatasetModel(record.getContent()))
                     .collect(Collectors.toList());
 
+            List<IResourceModel> datasetsWithItemsCount = allowedResources
+                    .stream()
+                    .map(datasetModel -> getInfo(datasetModel.getIdentifier()))
+                    .collect(Collectors.toList());
+
             long total = permissionsRepository
                     .getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter);
 
-            return new PageImpl<>(allowedResources, pageable, total);
+            return new PageImpl<>(datasetsWithItemsCount, pageable, total);
         }
     }
 
     public IResourceModel getInfo(String datasetIdentifier) {
         ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, datasetIdentifier);
 
+        Integer allowedTablesCount = tableService.getAllowedTablesCount(datasetIdentifier).intValue();
+
         SchemasAndTables dataset = schemasAndTablesRepository
                 .findByIdentifier(datasetIdentifier)
                 .orElseThrow(() -> new NotFoundException(datasetIdentifier));
 
         if (datasetProtector.isOwner(dQualifier)) {
-            return new DatasetModel(dataset, "OWNER");
+            return new DatasetModel(dataset, "OWNER", allowedTablesCount);
         } else {
             Optional<String> oRole = permissionsRepository.getBestRoleForDataset(dQualifier);
             if (oRole.isPresent()) {
-                return new DatasetModel(dataset, oRole.get());
+                return new DatasetModel(dataset, oRole.get(), allowedTablesCount);
             }
 
             boolean canBeViewed = permissionsRepository.isPassThroughFolder(SCHEMAS_AND_TABLES_QUALIFIER,
                                                                             dataset.getPath() + "/" + dataset.getId());
             if (canBeViewed) {
-                return new DatasetModel(dataset, "VIEWER");
+                return new DatasetModel(dataset, "VIEWER", allowedTablesCount);
             } else {
                 throw new ForbiddenException("Недостаточно прав для просмотра набора: " + datasetIdentifier);
             }

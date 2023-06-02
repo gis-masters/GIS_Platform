@@ -19,8 +19,7 @@ import static java.lang.String.format;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
@@ -169,6 +168,15 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         get("/" + currentDatasetIdentifier)
                 .then().
                         statusCode(SC_NOT_FOUND);
+    }
+
+    @Then("В ответе присутствует поле 'itemsCount' и имеет значение {int}")
+    public void responseContainsFieldItemCounts(Integer quantity) {
+        jsonPath = response.jsonPath();
+        Integer itemsCount = jsonPath.get("itemsCount");
+
+        assertNotNull(itemsCount);
+        assertEquals(quantity, itemsCount);
     }
 
     @Given("Существуют заданное кол-во наборов: {int}")

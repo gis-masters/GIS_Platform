@@ -16,13 +16,13 @@ public class DatasetModel extends ResourceModel implements IResourceModel {
         super();
     }
 
-    public DatasetModel(SchemasAndTables resource, String role) {
+    public DatasetModel(SchemasAndTables resource, String role, Integer itemCount) {
         super(resource.getId(),
               resource.getTitle(),
               resource.getDetails(),
               DATASET.name(),
               resource.getIdentifier(),
-              resource.getItemsCount(),
+              itemCount,
               null,
               null,
               resource.getCreatedAt().toString(),
