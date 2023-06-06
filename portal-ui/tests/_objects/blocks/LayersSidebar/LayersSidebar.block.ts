@@ -2,6 +2,7 @@ import { Block } from '../../Block';
 import { editFeatureBlock } from '../EditFeature/EditFeature.block';
 import { muiMenuBlock, MuiMenuBlock } from '../MuiMenu/MuiMenu.block';
 import { editFeatureGeometryAsTextDialogBlock } from '../EditFeatureGeometryAsTextDialog/EditFeatureGeometryAsTextDialog.block';
+import { changeLayerParent } from '../../commands/layers/changeLayerParent';
 import { layerCardBlock } from '../Layer/Card/Layer-Card.block';
 
 class LayersSidebarBlock extends Block {
@@ -9,6 +10,8 @@ class LayersSidebarBlock extends Block {
     container: '.LayersSidebar',
     layer: '.LayersSidebar .Layer',
     editLayersBtn: '.LayersSidebar-EditBtn',
+    saveBtn: '.LayersSidebar-SaveBtn',
+    loading: '.LayersSidebar .Loading',
     addLayerBtn: '.LayersSidebar-AddLayerBtn',
     layerBurger: '.LayersSidebar .Layer-Burger'
   };
@@ -18,6 +21,16 @@ class LayersSidebarBlock extends Block {
     await $editLayersBtn.waitForDisplayed({ timeout: 6000 });
 
     await $editLayersBtn.click();
+  }
+
+  async clickSaveButton(): Promise<void> {
+    const $editLayersBtn = await this.$('saveBtn');
+    await $editLayersBtn.click();
+  }
+
+  async waitForLoadingHide(): Promise<void> {
+    const $loading = await this.$('loading');
+    await $loading.waitForDisplayed({ reverse: true });
   }
 
   async openMenu(layerTitle: string): Promise<void> {
@@ -66,6 +79,20 @@ class LayersSidebarBlock extends Block {
   async waitForLayersSidebarDisplayed(): Promise<void> {
     const $container = await this.$('container');
     await $container.waitForDisplayed();
+  }
+
+  async moveLayerToGroup(layerTitle: string, groupTitle: string): Promise<void> {
+    const $layerCard = await layerCardBlock.getLayerCardByName(layerTitle);
+    if (!$layerCard) {
+      throw new Error(`Не найден элемент "${layerTitle}"`);
+    }
+
+    const $groupCard = await layerCardBlock.getLayerCardByName(groupTitle);
+    if (!$groupCard) {
+      throw new Error(`Не найден элемент "${groupTitle}"`);
+    }
+
+    await changeLayerParent(layerTitle, groupTitle);
   }
 }
 

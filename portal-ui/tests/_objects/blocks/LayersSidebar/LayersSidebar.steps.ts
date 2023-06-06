@@ -7,6 +7,10 @@ When('в списке слоёв на карте я нажимаю кнопку 
   await layersSidebarBlock.clickEditButton();
 });
 
+When('в списке слоёв на карте я нажимаю кнопку `Сохранить для всех пользователей`', async () => {
+  await layersSidebarBlock.clickSaveButton();
+});
+
 When(
   'в списке слоёв в меню слоя {string} я выбираю пункт {string}',
   async (layerName: string, menuItemTitle: string) => {
@@ -26,4 +30,12 @@ When('в панели атрибутов объекта создаю новый 
 
 When('в списке слоёв я нажимаю на кнопку `Подключить слой`', async () => {
   await layersSidebarBlock.clickAddLayerBtn();
+});
+
+When('жду исчезновения блокирующего список слоёв лоадера', async () => {
+  await layersSidebarBlock.waitForLoadingHide();
+});
+
+When('я перемещаю слой {string} в группу {string}', async (layerName: string, groupName: string) => {
+  await layersSidebarBlock.moveLayerToGroup(layerName, groupName);
 });

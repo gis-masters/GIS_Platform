@@ -27,6 +27,7 @@ import '!style-loader!css-loader!sass-loader!./LayersSidebar-Toolbar.scss';
 const cnLayersSidebarToolbar = cn('LayersSidebar', 'Toolbar');
 const cnLayersSidebarEditBtn = cn('LayersSidebar', 'EditBtn');
 const cnLayersSidebarAddLayerBtn = cn('LayersSidebar', 'AddLayerBtn');
+const cnLayersSidebarSaveBtn = cn('LayersSidebar', 'SaveBtn');
 
 interface LayersSidebarToolbarProps {
   above: boolean;
@@ -55,7 +56,12 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
             {editMode && currentProject.canBeEdited && (
               <Tooltip title='Сохранить для всех пользователей'>
                 <span>
-                  <IconButton onClick={this.save} disabled={!currentProject.queriesQueueLength} color='primary'>
+                  <IconButton
+                    className={cnLayersSidebarSaveBtn()}
+                    onClick={this.save}
+                    disabled={!currentProject.queriesQueueLength}
+                    color='primary'
+                  >
                     <SaveOutlined />
                   </IconButton>
                 </span>
