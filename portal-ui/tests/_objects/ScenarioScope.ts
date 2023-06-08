@@ -19,6 +19,7 @@ export class ScenarioScope extends World {
   private _latestFeatures?: NewWfsFeature[];
   private _latestFilter?: FilterQuery;
   private _latestLibraryRecords?: LibraryRecord[];
+  private _latestFolder?: LibraryRecord;
   private _latestUploadedFile?: FileInfo;
 
   constructor(parameters: IWorldOptions) {
@@ -79,6 +80,14 @@ export class ScenarioScope extends World {
 
   set latestFilter(filter: FilterQuery) {
     this._latestFilter = filter;
+  }
+
+  get latestFolder(): LibraryRecord {
+    return this.getEntityOrThrow<LibraryRecord>(this._latestFolder, 'папка');
+  }
+
+  set latestFolder(latestFolder: LibraryRecord) {
+    this._latestFolder = latestFolder;
   }
 
   get latestLibraryRecords(): LibraryRecord[] {

@@ -7,7 +7,7 @@ import { RoleAssignmentBody } from '../permissions/permissions.models';
 import { http } from '../../api/http.service';
 import { Client } from '../../api/Client';
 
-import { DocumentLibrary, LibraryRecord, LibraryRecordRaw } from './docLibrary.models';
+import { DocumentLibrary, LibraryRecord, LibraryRecordNew, LibraryRecordRaw } from './docLibrary.models';
 
 @boundClass
 class DocLibraryClient extends Client {
@@ -90,13 +90,8 @@ class DocLibraryClient extends Client {
     return await http.getPagedOld<RoleAssignmentBody>(url);
   }
 
-  async getLibraryRecord(
-    libraryTableName: string,
-    recordId: number
-  ): Promise<Omit<LibraryRecord, 'schemaId' | 'libraryTableName'>> {
-    return http.get<Omit<LibraryRecord, 'libraryTableName' | 'schemaId'>>(
-      this.getDocLibraryRecordUrl(libraryTableName, recordId)
-    );
+  async getLibraryRecord(libraryTableName: string, recordId: number): Promise<LibraryRecordRaw> {
+    return http.get<LibraryRecordRaw>(this.getDocLibraryRecordUrl(libraryTableName, recordId));
   }
 
   async getLibraryRecords(
@@ -145,11 +140,11 @@ class DocLibraryClient extends Client {
     );
   }
 
-  async createLibraryRecord(data: LibraryRecordRaw, libraryTableName: string): Promise<LibraryRecord> {
+  async createLibraryRecord(data: LibraryRecordNew, libraryTableName: string): Promise<LibraryRecord> {
     return http.post<LibraryRecord>(this.getDocLibraryRecordsUrl(libraryTableName), this.prepareFormData(data));
   }
 
-  private prepareFormData(data: LibraryRecordRaw): FormData {
+  private prepareFormData(data: LibraryRecordNew): FormData {
     const formData = new FormData();
     if (data.binary) {
       formData.append('file', data.binary as File);

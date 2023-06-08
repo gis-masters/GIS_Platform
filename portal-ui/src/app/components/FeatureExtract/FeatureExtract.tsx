@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
 
-import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { DocumentLibrary, LibraryRecord, LibraryRecordNew } from '../../services/data/docLibrary/docLibrary.models';
 import { getLibrary, getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { LibraryDocumentDialog } from '../LibraryDocumentDialog/LibraryDocumentDialog';
@@ -40,7 +40,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
   @observable private formDialogOpen = false;
   @observable private documentDialogOpen = false;
   @observable private featureFields: PropertySchema[] = [];
-  @observable private document?: LibraryRecord;
+  @observable private document?: LibraryRecord | LibraryRecordNew;
   @observable private library?: DocumentLibrary;
 
   constructor(props: FeatureExtractProps) {
@@ -61,8 +61,8 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
     this.setFields(featureSchema.properties);
 
     communicationService.libraryRecordUpdated.on(async () => {
-      if (this.document?.id) {
-        this.setDocument(await getLibraryRecord(this.document.libraryTableName, this.document.id));
+      if (typeof this.document?.id === 'number') {
+        this.setDocument(await getLibraryRecord(this.library.table_name, this.document.id));
       }
     }, this);
   }
@@ -89,9 +89,9 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
           actionButtonProps={{ children: 'Создать документ' }}
         />
 
-        {this.document && (
+        {this.document?.id && (
           <LibraryDocumentDialog
-            document={this.document}
+            document={this.document as LibraryRecord}
             open={this.documentDialogOpen}
             onClose={this.closeDocumentDialog}
           />
@@ -196,7 +196,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
   }
 
   @action.bound
-  private setDocument(document: LibraryRecord) {
+  private setDocument(document: LibraryRecordNew) {
     this.document = document;
   }
 
@@ -206,7 +206,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
   }
 
   @boundMethod
-  private async createDocument(value: Omit<LibraryRecord, 'schemaId' | 'libraryTableName'>) {
+  private async createDocument(value: LibraryRecordNew) {
     const librarySchema = await schemaService.getSchema(this.library.schemaId);
     const libraryFields = applyContentType(librarySchema, 'base_extract').properties;
     const errors = validateFormValue(value, libraryFields);

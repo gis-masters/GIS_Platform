@@ -89,12 +89,12 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
 
   @computed
   private get schema(): Schema | undefined {
-    return this.layer.view && this.rawSchema ? applyView(this.rawSchema, this.layer.view) : this.rawSchema;
+    return this.layer?.view && this.rawSchema ? applyView(this.rawSchema, this.layer?.view) : this.rawSchema;
   }
 
   @computed
   private get subTitle(): string {
-    return this.layer.title || this.schema?.title;
+    return this.layer?.title || this.schema?.title;
   }
 
   @computed
@@ -108,7 +108,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   }
 
   @computed
-  private get layer(): CrgLayer {
+  private get layer(): CrgLayer | undefined {
     const { feature } = this.props;
     const tableName = this.extractTableName(feature.id);
 
@@ -138,7 +138,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
 
   private async loadSchema(): Promise<void> {
     if (!this.props.errorData) {
-      this.setRawSchema(await schemaService.getSchema(this.layer.schemaId));
+      this.setRawSchema(await schemaService.getSchema(this.layer?.schemaId));
     }
   }
 

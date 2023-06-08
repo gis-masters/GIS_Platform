@@ -12,10 +12,9 @@ export interface DocumentLibrary extends Omit<DataEntity, 'identifier'> {
   role: Role;
 }
 
-export interface LibraryRecord {
-  [key: string]: unknown;
+export interface LibraryRecordRaw extends Record<string, unknown> {
+  id: number;
 
-  id?: number;
   type?: string;
   title?: string;
   details?: string;
@@ -25,13 +24,14 @@ export interface LibraryRecord {
   path?: string;
   content_type_id?: string;
   oktmo?: string;
-  intents?: string;
   native_crs?: string;
-
-  libraryTableName: string;
-  schemaId: string;
 
   role?: Role;
 }
 
-export type LibraryRecordRaw = Omit<LibraryRecord, 'libraryName' | 'schemaId'>;
+export interface LibraryRecord extends LibraryRecordRaw {
+  libraryTableName: string;
+  schemaId: string;
+}
+
+export type LibraryRecordNew = Omit<LibraryRecord, 'id' | 'role'>;

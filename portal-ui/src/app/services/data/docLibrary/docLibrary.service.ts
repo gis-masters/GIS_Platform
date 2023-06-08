@@ -4,7 +4,7 @@ import { addEntityPermission, removeEntityPermission } from '../permissions/perm
 import { RoleAssignmentBody } from '../permissions/permissions.models';
 import { communicationService } from '../../communication.service';
 
-import { DocumentLibrary, LibraryRecord, LibraryRecordRaw } from './docLibrary.models';
+import { DocumentLibrary, LibraryRecord, LibraryRecordNew, LibraryRecordRaw } from './docLibrary.models';
 import { docLibraryClient } from './docLibrary.client';
 
 export async function getLibraries(pageOptions: PageOptions): Promise<[DocumentLibrary[], number]> {
@@ -68,11 +68,13 @@ function enrichLibraryRecordsResponse(
   libraryTableName: string,
   schemaId: string
 ): LibraryRecord[] {
-  return responseItems.map(linkedHashMap => ({
-    ...linkedHashMap.content,
-    libraryTableName,
-    schemaId
-  }));
+  return responseItems.map(
+    (linkedHashMap: { content: LibraryRecordRaw }): LibraryRecord => ({
+      ...linkedHashMap.content,
+      libraryTableName,
+      schemaId
+    })
+  );
 }
 
 export async function getLibraryRecordsWithParticularOne(
@@ -100,7 +102,7 @@ export async function getLibraryRecordsWithParticularOne(
 }
 
 export async function createLibraryRecord(
-  data: LibraryRecordRaw,
+  data: LibraryRecordNew,
   libraryTableName: string,
   schemaId: string
 ): Promise<LibraryRecord> {
