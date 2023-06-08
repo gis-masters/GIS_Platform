@@ -411,9 +411,11 @@ public class BaseStepsDefinitions {
     }
 
     public void checkResponseValue(String field, String value) {
-        response.prettyPrint();
-
         assertEquals(value, response.jsonPath().get(field));
+    }
+
+    public void checkResponseValueContains(String field, String value) {
+        assertTrue(((String) response.jsonPath().get(field)).contains(value));
     }
 
     private void deleteEntity(Integer id) {

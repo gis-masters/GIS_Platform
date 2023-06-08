@@ -129,9 +129,19 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует новая организация")
+    public void initNewOrg(DataTable dataTable) throws InterruptedException {
+        sendCreateOrganizationRequest(dataTable);
+
+        assertEquals(SC_ACCEPTED, response.getStatusCode());
+
+        checkOrgIdInLocationSetAsCurrentPutInPool();
+
+        waitUntilOrganizationSuccessfullyCreated(orgId);
+    }
+
+    @Given("Существует другая организация")
     public void createOrgForFeature(DataTable dataTable) throws InterruptedException {
         List<String> data = dataTable.asList();
-
 
         if (emailForFeature == null) {
             emailForFeature = generateString(data.get(4));

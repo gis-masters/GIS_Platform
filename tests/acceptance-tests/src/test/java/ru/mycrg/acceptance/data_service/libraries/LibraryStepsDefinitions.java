@@ -463,6 +463,11 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         checkResponseValue("message", msg);
     }
 
+    @When("Сообщение об ошибке содержит причину: {string}")
+    public void checkErrorMsgContains(String msg) {
+        checkResponseValueContains("message", msg);
+    }
+
     private void createLibrary(String schemaId) {
         String body = String.format("{\"schemaId\":\"%s\"}", schemaId);
         response = getBaseRequestWithCurrentCookie()

@@ -3,21 +3,21 @@ package ru.mycrg.auth_service.service;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.projection.ProjectionFactory;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.auth_service.dao.UserDao;
 import ru.mycrg.auth_service.dto.UserProjection;
 import ru.mycrg.auth_service.entity.Authorities;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exceptions.AuthServiceException;
+import ru.mycrg.auth_service.exceptions.BadRequestException;
 import ru.mycrg.auth_service.exceptions.ConflictException;
 import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
@@ -30,11 +30,12 @@ import ru.mycrg.auth_service_contract.events.request.UserDeletedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
 import static ru.mycrg.auth_service_contract.Authorities.USER;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.prepareGeoserverLogin;
@@ -51,19 +52,22 @@ public class UserService {
     private final ProjectionFactory projectionFactory;
     private final OrganizationRepository orgRepository;
     private final IAuthenticationFacade authenticationFacade;
+    private final UserDao userDao;
 
     public UserService(UserRepository userRepository,
                        IMessageBusProducer messageBus,
                        OrganizationRepository orgRepository,
                        IAuthenticationFacade authenticationFacade,
                        ProjectionFactory projectionFactory,
-                       BCryptPasswordEncoder encoder) {
+                       BCryptPasswordEncoder encoder,
+                       UserDao userDao) {
         this.messageBus = messageBus;
         this.userRepository = userRepository;
         this.orgRepository = orgRepository;
         this.projectionFactory = projectionFactory;
         this.authenticationFacade = authenticationFacade;
         this.encoder = encoder;
+        this.userDao = userDao;
     }
 
     @NotNull
@@ -159,19 +163,35 @@ public class UserService {
      * @param pageable Pagination information
      */
     @NotNull
-    public Page<UserProjection> findAll(Pageable pageable) {
+    public Page<UserProjection> findAll(String ecqlFilter, Pageable pageable) {
         Long orgId = authenticationFacade.getOrganizationId();
-        Organization organization = orgRepository
-                .findById(orgId)
-                .orElseThrow(() -> new NotFoundException(Organization.class, orgId));
 
         Sort defaultSort = Sort.by("id").ascending();
         if (pageable.getSort().isUnsorted()) {
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), defaultSort);
         }
 
-        return userRepository.findByOrganizations(Collections.singleton(organization), pageable)
-                             .map(user -> projectionFactory.createProjection(UserProjection.class, user));
+        List<User> users;
+        try {
+            users = userDao.findAll(ecqlFilter, pageable, orgId);
+        } catch (BadSqlGrammarException ex) {
+            String message = "Не удалось выполнить запрос на выборку пользователей. ";
+            if (nonNull(ex.getCause()) && nonNull(ex.getCause().getMessage())) {
+                message += "Причина: " + ex.getCause().getMessage();
+            }
+            log.error(message);
+
+            throw new BadRequestException(message);
+        }
+
+        List<UserProjection> usersProjection = users
+                .stream()
+                .map(user -> projectionFactory.createProjection(UserProjection.class, user))
+                .collect(Collectors.toList());
+
+        long totalUsers = userDao.getTotal(ecqlFilter, orgId);
+
+        return new PageImpl<>(usersProjection, pageable, totalUsers);
     }
 
     /**

@@ -81,8 +81,9 @@ public class UserController {
 
     @GetMapping("/users")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> getUsers(Pageable pageable) {
-        Page<UserProjection> users = userService.findAll(pageable);
+    public ResponseEntity<Object> getUsers(@RequestParam(name = "filter", required = false) String ecqlFilter,
+                                           Pageable pageable) {
+        Page<UserProjection> users = userService.findAll(ecqlFilter, pageable);
 
         return ResponseEntity.ok(pageFromList(users, pageable));
     }

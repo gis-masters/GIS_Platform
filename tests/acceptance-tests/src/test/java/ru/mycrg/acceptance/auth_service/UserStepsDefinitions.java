@@ -33,6 +33,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public static String geoserverLogin;
     public static UserCreateDto userDto;
     public static List<Long> usersId = new ArrayList<>();
+    public static Map<String, Object> filterResults = new HashMap<>();
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -201,6 +202,13 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         super.getAllEntities();
     }
 
+    @When("Пользователь делает запрос на выборку всех пользователей")
+    public void getAllUsersByUser() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get();
+    }
+
     @And("Количество страниц пользователей пропорционально {string}")
     public void checkUserPagesCount(String entitiesPerPage) {
         super.checkPagesCount(entitiesPerPage);
@@ -235,6 +243,32 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     @When("Администратор делает постраничный запрос на пользователей")
     public void getUsersCount() {
         getAllAndFillEntityCount();
+    }
+
+    @When("Текущий пользователь запрашивает пользователей с фильтрацией")
+    public void getUsersByFilter(DataTable datatable) {
+        List<Map<String, String>> filterCases = datatable.asMaps();
+        filterCases.forEach(filterCase -> {
+            String aCase = filterCase.get("case");
+            String filter = filterCase.get("filter");
+
+            super.getCurrentEntityByFilter(filter);
+
+            Object totalElements = response.jsonPath().get("page.totalElements");
+
+            filterResults.put(aCase, totalElements);
+        });
+    }
+
+    @Then("Результат фильтрации пользователей соответствует ожидаемому")
+    public void checkTotalElements(DataTable datatable) {
+        List<Map<String, String>> filterCases = datatable.asMaps();
+        filterCases.forEach(filterCase -> {
+            String aCase = filterCase.get("case");
+            Integer expected = Integer.valueOf(filterCase.get("expected"));
+
+            assertEquals(expected, filterResults.get(aCase));
+        });
     }
 
     @When("Администратор делает постраничный запрос на всех пользователей, по {int} пользователей на странице")
