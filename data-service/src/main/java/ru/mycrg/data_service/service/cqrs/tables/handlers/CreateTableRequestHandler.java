@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.tables.handlers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
@@ -35,6 +37,8 @@ import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
 @Component
 public class CreateTableRequestHandler implements IRequestHandler<CreateTableRequest, TableModel> {
+
+    private final Logger log = LoggerFactory.getLogger(CreateTableRequestHandler.class);
 
     private final DdlTablesSpecial ddlTablesSpecial;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
@@ -88,30 +92,33 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         List<ErrorInfo> errors = new ArrayList<>();
         schema.getProperties().forEach(property -> {
             String formulaName = property.getCalculatedValueWellKnownFormula();
-            if (formulaName != null) {
-                IWellKnownFormulaGenerator formulaGenerator = wellKnownFormulaGenerators.get(formulaName);
-                if (nonNull(formulaGenerator)) {
-                    String message = formulaGenerator.validate(schema);
-                    if (!message.isEmpty()) {
-                        ErrorInfo error = new ErrorInfo();
-                        error.setField(property.getName());
-                        error.setMessage(message);
+            if (formulaName == null) {
+                return;
+            }
 
-                        errors.add(error);
-                    }
-                } else {
+            IWellKnownFormulaGenerator formulaGenerator = wellKnownFormulaGenerators.get(formulaName);
+            if (nonNull(formulaGenerator)) {
+                String message = formulaGenerator.validate(schema);
+                if (!message.isEmpty()) {
                     ErrorInfo error = new ErrorInfo();
                     error.setField(property.getName());
-                    error.setMessage("Неизвестная valueWellKnownFormula: " + formulaName);
+                    error.setMessage(message);
 
                     errors.add(error);
                 }
+            } else {
+                ErrorInfo error = new ErrorInfo();
+                error.setField(property.getName());
+                error.setMessage("Неизвестная valueWellKnownFormula: " + formulaName);
+
+                errors.add(error);
             }
         });
-        if (!errors.isEmpty()) {
-            String msg = "Argument validation exception";
 
-            throw new BadRequestException(msg, errors);
+        if (!errors.isEmpty()) {
+            errors.forEach(errorInfo -> log.error("For field '{}': {}", errorInfo.getField(), errorInfo.getMessage()));
+
+            throw new BadRequestException("Argument validation exception", errors);
         }
 
         try {

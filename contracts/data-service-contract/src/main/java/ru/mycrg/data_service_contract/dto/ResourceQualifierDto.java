@@ -1,12 +1,22 @@
-package ru.mycrg.data_service.dto;
+package ru.mycrg.data_service_contract.dto;
+
+import javax.validation.constraints.NotNull;
 
 public class ResourceQualifierDto {
 
+    @NotNull
     private String schema;
+
+    @NotNull
     private String table;
 
     public ResourceQualifierDto() {
         //Required
+    }
+
+    public ResourceQualifierDto(String schema, String table) {
+        this.schema = schema;
+        this.table = table;
     }
 
     public String getSchema() {

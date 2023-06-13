@@ -80,7 +80,7 @@ public class OrganizationService {
         UserCreateDto owner = createDto.getOwner();
         Optional<User> userByEmail = userRepository.findByEmail(owner.getEmail());
         if (userByEmail.isPresent()) {
-            throw new ConflictException("Данный email уже занят");
+            throw new ConflictException(String.format("email: '%s' уже занят", owner.getEmail()));
         }
 
         User newUser = userRepository.save(mapDtoToUser(owner));

@@ -6,7 +6,7 @@ import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
-import ru.mycrg.data_service.service.SystemAttributeHandler;
+import ru.mycrg.data_service.service.CustomRuleCalculator;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.CopyTableRecordsRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.FeatureProtector;
@@ -31,15 +31,16 @@ import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
 @Component
 public class CopyTableRecordsRequestHandler implements IRequestHandler<CopyTableRecordsRequest, Voidy> {
 
-    private final SystemAttributeHandler systemAttributeHandler;
+    private final CustomRuleCalculator customRuleCalculator;
     private final SpatialRecordsDao spatialRecordsDao;
     private final DdlTablesSpecial ddlTablesSpecial;
     private final FeatureProtector featureProtector;
 
-    public CopyTableRecordsRequestHandler(SystemAttributeHandler systemAttributeHandler,
-                                          SpatialRecordsDao spatialRecordsDao, DdlTablesSpecial ddlTablesSpecial,
+    public CopyTableRecordsRequestHandler(CustomRuleCalculator customRuleCalculator,
+                                          SpatialRecordsDao spatialRecordsDao,
+                                          DdlTablesSpecial ddlTablesSpecial,
                                           FeatureProtector featureProtector) {
-        this.systemAttributeHandler = systemAttributeHandler;
+        this.customRuleCalculator = customRuleCalculator;
         this.spatialRecordsDao = spatialRecordsDao;
         this.ddlTablesSpecial = ddlTablesSpecial;
         this.featureProtector = featureProtector;
@@ -87,8 +88,8 @@ public class CopyTableRecordsRequestHandler implements IRequestHandler<CopyTable
         throwIfNotMatchTableColumns(propNamesTarget, ddlTablesSpecial.getAllColumnNames(qualifierTarget.getTable()));
     }
 
-    private void updateCalculatedFiled(List<Long> idsForUpdate, SchemaDto tSchema, ResourceQualifier tQualifier) {
-        List<Feature> features = spatialRecordsDao.findByIds(tQualifier, tSchema, idsForUpdate);
+    private void updateCalculatedFiled(List<Long> idsForUpdate, SchemaDto schema, ResourceQualifier tQualifier) {
+        List<Feature> features = spatialRecordsDao.findByIds(tQualifier, schema, idsForUpdate);
 
         List<Feature> featuresForUpdate = new ArrayList<>();
         features.forEach(oldFeature -> {
@@ -96,10 +97,8 @@ public class CopyTableRecordsRequestHandler implements IRequestHandler<CopyTable
 
             Map<String, Object> oldProperties = oldFeature.getProperties();
 
-            // path old props by calculated values
-            systemAttributeHandler.initSchema(tSchema)
-                                  .customRulesCalculation(oldProperties)
-                                  .forEach(newFeature::setProperty);
+            customRuleCalculator.culculate(schema, oldProperties)
+                                .forEach(newFeature::setProperty);
 
             newFeature.setProperty(PRIMARY_KEY, oldFeature.getId());
 
@@ -107,7 +106,7 @@ public class CopyTableRecordsRequestHandler implements IRequestHandler<CopyTable
         });
 
         try {
-            spatialRecordsDao.batchUpdate(tQualifier, featuresForUpdate, tSchema);
+            spatialRecordsDao.batchUpdate(tQualifier, featuresForUpdate, schema);
         } catch (CrgDaoException e) {
             String msg = "Не удалось выполнить multipleUpdateWithCalculatedFields в таблице: " + tQualifier.getTable();
             logError(msg, e);

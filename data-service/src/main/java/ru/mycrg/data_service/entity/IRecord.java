@@ -12,7 +12,7 @@ public interface IRecord {
 
     Long getId();
 
-    void setValue(String key, Object value);
+    void setContent(Map<String, Object> content);
 
     @Nullable
     String getTitle();

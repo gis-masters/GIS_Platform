@@ -13,21 +13,25 @@ export class FeaturesListItemBlock extends Block {
 
   async openEdit(): Promise<void> {
     const $openEdit = await this.$('openEdit');
+    await $openEdit.waitForClickable();
     await $openEdit.click();
   }
 
   async zoomToFeature(): Promise<void> {
     const $zoomToFeature = await this.$('zoom');
+    await $zoomToFeature.waitForClickable();
     await $zoomToFeature.click();
   }
 
   async openObject(): Promise<void> {
     const $title = await this.$('id');
+    await $title.waitForClickable();
     await $title.doubleClick();
   }
 
   async selectObject(): Promise<void> {
     const $title = await this.$('id');
+    await $title.waitForClickable();
     await $title.click();
   }
 
@@ -46,3 +50,5 @@ export class FeaturesListItemBlock extends Block {
     return [id, layer, title];
   }
 }
+
+export const featuresListItemBlock = new FeaturesListItemBlock();

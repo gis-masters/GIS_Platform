@@ -29,3 +29,9 @@ Then('появляются подробности уведомления', async
 Then('исчезают подробности уведомления', async () => {
   await toastBlock.waitForDetailsHidden();
 });
+
+Then('появляется уведомление {string}', async (msg: string) => {
+  await toastBlock.waitForVisible();
+
+  await expect(await toastBlock.getTitle()).toEqual(msg);
+});

@@ -8,6 +8,7 @@ import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerUpdateDto;
 
@@ -29,6 +30,7 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileI
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFilePath;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
+import static ru.mycrg.acceptance.data_service.schemas.SchemasStepsDefinitions.currentSchemaName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
@@ -233,6 +235,27 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
         layerId = extractEntityIdFromResponse(response);
         layerComplexName = response.jsonPath().get("complexName");
+    }
+
+    @Given("В созданном проекте создан слой {string} на основе созданных набора данных и таблицы")
+    public void createVectorLayerOnCurrentTable(String layerTitle) {
+        TableCreateDto latestTable = getLatestTable();
+
+        layerCreateDto = new LayerCreateDto(layerTitle, "vector");
+        layerCreateDto.setSchemaId(latestTable.getSchemaId());
+        layerCreateDto.setStyleName("default");
+        layerCreateDto.setDataStoreName("scratch_database_" + orgId);
+        layerCreateDto.setDataset(currentDatasetIdentifier);
+        layerCreateDto.setMode("full");
+        layerCreateDto.setNativeCRS("EPSG:28406");
+        layerCreateDto.setTableName(latestTable.getName());
+
+        super.createEntity(layerCreateDto);
+
+        layerId = extractEntityIdFromResponse(response);
+        layerComplexName = response.jsonPath().get("complexName");
+
+        scenarioLayers.add(layerCreateDto);
     }
 
     @Given("Пользователь делает запрос на размещение растрового слоя в проекте")

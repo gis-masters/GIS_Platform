@@ -152,12 +152,6 @@ SELECT 'dl_default_schema',
       "sequenceNumber": 0
     },
     {
-      "name": "binary",
-      "required": true,
-      "valueType": "BINARY",
-      "sequenceNumber": 2
-    },
-    {
       "name": "oktmo",
       "title": "ОКТМО",
       "required": true,

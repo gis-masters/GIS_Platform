@@ -220,7 +220,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
         checkAuditEvent(MULTIPLE_UPDATE.name(), FEATURE, currentTableName);
     }
 
-    @And("Создан аудит лог о копировании записей")
+    @And("Создан аудит лог о массовом копировании записей")
     public void checkFeaturesCopied() {
         checkAuditEvent(COPYING.name(), FEATURE, anotherTableName);
     }

@@ -9,7 +9,6 @@ import io.restassured.http.Cookie;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
-import ru.mycrg.acceptance.auth_service.org_settings.OrgSettingsStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
@@ -33,7 +32,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     public static OrganizationCreateDto orgDto;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
-    private final OrgSettingsStepsDefinitions settingsSteps = new OrgSettingsStepsDefinitions();
 
     @When("Отправляется запрос на создание организации")
     public void sendCreateOrganizationRequest(DataTable dataTable) {

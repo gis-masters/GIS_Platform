@@ -13,17 +13,23 @@ import { FileInfo } from '../../src/app/services/data/files/files.models';
 export class ScenarioScope extends World {
   private _latestSchema?: Schema;
   private _latestDataset?: Dataset;
-  private _latestVectorTable?: VectorTable;
   private _latestProject?: CrgProject;
-  private _latestLayer?: CrgLayer;
   private _latestFeatures?: NewWfsFeature[];
   private _latestFilter?: FilterQuery;
   private _latestLibraryRecords?: LibraryRecord[];
   private _latestFolder?: LibraryRecord;
   private _latestUploadedFile?: FileInfo;
+  private layers: CrgLayer[] = [];
+  private vectorTables: VectorTable[] = [];
 
   constructor(parameters: IWorldOptions) {
     super(parameters);
+  }
+
+  findLayerByTitle(title: string): CrgLayer {
+    const foundLayer = this.layers.find(l => l.title === title);
+
+    return this.getEntityOrThrow<CrgLayer>(foundLayer, 'слой: ' + title);
   }
 
   get latestFeatures(): NewWfsFeature[] {
@@ -51,11 +57,23 @@ export class ScenarioScope extends World {
   }
 
   get latestVectorTable(): VectorTable {
-    return this.getEntityOrThrow<VectorTable>(this._latestVectorTable, 'векторная таблица');
+    const latest = this.vectorTables.at(-1);
+
+    return this.getEntityOrThrow<VectorTable>(latest, 'векторная таблица');
   }
 
   set latestVectorTable(vectorTable: VectorTable) {
-    this._latestVectorTable = vectorTable;
+    this.vectorTables.push(vectorTable);
+  }
+
+  get latestLayer(): CrgLayer {
+    const latest = this.layers.at(-1);
+
+    return this.getEntityOrThrow<CrgLayer>(latest, 'слой');
+  }
+
+  set latestLayer(layer: CrgLayer) {
+    this.layers.push(layer);
   }
 
   get latestProject(): CrgProject {
@@ -64,14 +82,6 @@ export class ScenarioScope extends World {
 
   set latestProject(project: CrgProject) {
     this._latestProject = project;
-  }
-
-  get latestLayer(): CrgLayer {
-    return this.getEntityOrThrow<CrgLayer>(this._latestLayer, 'слой');
-  }
-
-  set latestLayer(layer: CrgLayer) {
-    this._latestLayer = layer;
   }
 
   get latestFilter(): FilterQuery {

@@ -7,7 +7,7 @@ Feature: Создание слоев в проектах
 
   Scenario Outline: Создание векторного слоя проекта
     Given Существует проект "STRING_10"
-    Given Существует набор
+    Given Существует набор данных
     Given Существует таблица
     When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type"
     Then Сервер отвечает со статус-кодом 201
@@ -27,7 +27,7 @@ Feature: Создание слоев в проектах
 
   Scenario: Допускается создание одинаковых векторных слоёв
     Given Существует проект "STRING_10"
-    Given Существует набор
+    Given Существует набор данных
     Given Существует таблица
     Given Существует слой проекта
     When Пользователь делает повторный запрос на создание слоя проекта
@@ -41,7 +41,7 @@ Feature: Создание слоев в проектах
 
   Scenario Outline: Создание слоя проекта c невалидными данными ("<reason>")
     Given Существует проект "STRING_10"
-    Given Существует набор
+    Given Существует набор данных
     Given Существует таблица
     When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "<content_type>"
     Then Сервер отвечает со статус-кодом 400

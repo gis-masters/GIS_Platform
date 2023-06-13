@@ -192,7 +192,7 @@
             <div class="input-group" *ngIf="isReadOnly(editFeatureItem.property)">
               <input class="form-control" type="date" formControlName="{{ editFeatureItem.name }}" />
               <span class="input-group-text error-badge" *ngIf="editFeatureForm.controls[editFeatureItem.name]?.errors">
-                <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+                <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name]?.errors"></crg-errors-badge>
               </span>
 
               <div class="input-group-append" *ngIf="mode === 'multipleEdit'">
@@ -237,7 +237,8 @@
                 "
               >
                 <span class="input-group-text error-badge">
-                  <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+                  <crg-errors-badge
+                    [errors]="editFeatureForm.controls[editFeatureItem.name]?.errors"></crg-errors-badge>
                 </span>
               </div>
 
@@ -277,11 +278,12 @@
                 class="input-group-append"
                 *ngIf="
                   editFeatureForm.controls[editFeatureItem.name] &&
-                  !editFeatureForm.controls[editFeatureItem.name].valid
+                  !editFeatureForm.controls[editFeatureItem.name]?.valid
                 "
               >
                 <span class="input-group-text error-badge">
-                  <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+                  <crg-errors-badge
+                    [errors]="editFeatureForm.controls[editFeatureItem.name]?.errors"></crg-errors-badge>
                 </span>
               </div>
 

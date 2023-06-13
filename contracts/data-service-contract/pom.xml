@@ -8,6 +8,9 @@
     <artifactId>data-service-contract</artifactId>
     <version>1.2-SNAPSHOT</version>
 
+    <name>data-service-contract</name>
+    <description>Contract of data-service</description>
+
     <properties>
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>

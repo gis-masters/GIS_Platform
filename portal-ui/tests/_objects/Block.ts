@@ -8,26 +8,32 @@ interface Selectors {
 export abstract class Block<S extends Selectors = Selectors> {
   abstract selectors: S;
   protected parent: string | WebdriverIO.Element;
+  private readonly container?: WebdriverIO.Element;
 
   get name(): string {
     return this.constructor.name.replace(/Block$/, '');
   }
 
-  constructor(parent: string | WebdriverIO.Element = '') {
+  constructor(parent: string | WebdriverIO.Element = '', container?: WebdriverIO.Element) {
+    this.container = container;
     this.parent = parent;
-    if (!parent) {
+    if (!parent && !container) {
       blocksRegistry[this.constructor.name.replace(/Block$/, '')] = this;
     }
   }
 
   protected async $(key: keyof this['selectors']): Promise<WebdriverIO.Element> {
-    const $parent = await this.getParent();
+    if (key === 'container' && this.container) {
+      return this.container;
+    }
+
+    const $parent = await this.getParentOrContainer();
 
     return $parent.$(this.selectors[key]);
   }
 
   protected async $$(key: keyof this['selectors']): Promise<WebdriverIO.Element[]> {
-    const $parent = await this.getParent();
+    const $parent = await this.getParentOrContainer();
 
     return $parent.$$(this.selectors[key]);
   }
@@ -53,10 +59,14 @@ export abstract class Block<S extends Selectors = Selectors> {
   async assertSelfie(tag = 'plain'): Promise<void> {
     const $container = await this.$('container');
 
-    expect(await browser.checkElement($container, `${this.name}-${tag}`, {})).toEqual(0);
+    await expect(await browser.checkElement($container, `${this.name}-${tag}`, {})).toEqual(0);
   }
 
-  private async getParent() {
+  private async getParentOrContainer() {
+    if (this.container) {
+      return this.container;
+    }
+
     if (this.parent && typeof this.parent === 'string') {
       return $(this.parent);
     }

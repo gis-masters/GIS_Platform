@@ -11,7 +11,7 @@ import ru.mycrg.mediator.Voidy;
 
 import java.util.List;
 
-import static ru.mycrg.data_service.util.SchemaUtil.mapToEntity;
+import static ru.mycrg.data_service.mappers.SchemaMapper.mapToEntity;
 
 @Component
 public class UpdateSchemaRequestHandler implements IRequestHandler<UpdateSchemaRequest, Voidy> {

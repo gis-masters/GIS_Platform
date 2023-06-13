@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.cqrs.table_records.handlers;
+package ru.mycrg.data_service.service.cqrs.library_records.handlers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.cqrs.table_records.requests.MoveRecordToNewParentRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.MoveRecordToNewParentRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;

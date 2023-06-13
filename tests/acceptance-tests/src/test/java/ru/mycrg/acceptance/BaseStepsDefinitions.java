@@ -14,6 +14,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 import ru.mycrg.acceptance.data_service.dto.InitialBaseMapCreateDto;
+import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
+import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerGroupCreateDto;
@@ -21,11 +23,9 @@ import ru.mycrg.acceptance.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
+import ru.mycrg.geo_json.Feature;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,7 +63,11 @@ public class BaseStepsDefinitions {
     public static Map<Integer, LayerGroupCreateDto> layerGroupPool = new LinkedHashMap<>();
     public static Map<String, DatasetCreateDto> datasetsPool = new LinkedHashMap<>();
     public static Map<Integer, LayerCreateDto> layerPool = new LinkedHashMap<>();
-    public static Map<String, Integer> documentPool = new LinkedHashMap<>();
+
+    public static Map<String, SchemaDto> scenarioSchemas = new HashMap<>();
+    public static List<LayerCreateDto> scenarioLayers = new ArrayList<>();
+    public static List<TableCreateDto> scenarioTables = new ArrayList<>();
+    public static List<Feature> scenarioFeatures = new ArrayList<>();
 
     public static Integer currentId;
 
@@ -412,6 +416,43 @@ public class BaseStepsDefinitions {
 
     public void checkResponseValue(String field, String value) {
         assertEquals(value, response.jsonPath().get(field));
+    }
+
+    public TableCreateDto getLatestTable() {
+        if (scenarioTables.isEmpty()) {
+            throw new IllegalStateException("Список таблиц пуст");
+        }
+
+        return scenarioTables.get(scenarioTables.size() - 1);
+    }
+
+    public LayerCreateDto getLayerByTitle(String layerTitle) {
+        return scenarioLayers
+                .stream()
+                .filter(layer -> layer.getTitle().equals(layerTitle))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Не найден слой: " + layerTitle));
+    }
+
+    public SchemaDto getSchemaByName(String schemaName) {
+        return scenarioSchemas
+                .values().stream()
+                .filter(schema -> schema.getName().equals(schemaName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Не найдена схема по названию: " + schemaName));
+    }
+
+    public SchemaDto getSchemaByTitle(String schemaTitle) {
+        if (scenarioSchemas.isEmpty()) {
+            throw new IllegalStateException("Список схем пуст");
+        }
+
+        SchemaDto schema = scenarioSchemas.get(schemaTitle);
+        if (schema == null) {
+            throw new IllegalStateException("Не найдена схема по названию: " + schemaTitle);
+        }
+
+        return schema;
     }
 
     public void checkResponseValueContains(String field, String value) {

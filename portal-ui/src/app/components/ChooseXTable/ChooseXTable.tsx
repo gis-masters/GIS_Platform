@@ -71,7 +71,7 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
 
     return (
       <XTable<T>
-        className={cnChooseXTable('Table', [className])}
+        className={cnChooseXTable(null, [className])}
         title={<ChooseXTableTitle title={title} items={data} selectedItems={this.selected} single={single} />}
         data={data}
         cols={this.cols}

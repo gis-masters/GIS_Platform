@@ -12,8 +12,6 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "useDefineForClassFields": true,
-    "strictBindCallApply": true,
-    "strictNullChecks": false,
     "importHelpers": true,
     "target": "es2020",
     "jsx": "react",
@@ -22,7 +20,9 @@
     "lib": ["es2018", "esnext.array", "dom"],
     "paths": {
       "txml/txml": ["node_modules/txml/dist/txml"]
-    }
+    },
+    "strict": false,
+    "strictBindCallApply": true
   },
   "exclude": ["my", "bl", ".vscode", "test", "dist", "dist*", "node_modules", "**/dist/*", "**/node_modules/*"]
 }

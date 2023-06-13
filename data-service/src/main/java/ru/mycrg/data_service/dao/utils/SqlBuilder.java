@@ -16,6 +16,7 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.geo_json.GeoJsonObject;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -24,6 +25,7 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_CO
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service.util.StringUtil.join;
+import static ru.mycrg.data_service_contract.enums.ValueType.*;
 
 public class SqlBuilder {
 
@@ -261,20 +263,19 @@ public class SqlBuilder {
         StringBuilder sourceColumns = new StringBuilder("SELECT ");
 
         for (SimplePropertyDto sourceProperty: sourceProps) {
-            if (isNull(sourceProperty.getCalculatedValueWellKnownFormula())
-                    || sourceProperty.getCalculatedValueWellKnownFormula().isEmpty()) {
-                String name = sourceProperty.getName().toLowerCase();
-                ValueType valueType = sourceProperty.getValueTypeAsEnum();
+            String sourceName = sourceProperty.getName().toLowerCase();
+            ValueType sourceValueType = sourceProperty.getValueTypeAsEnum();
 
-                long countOfFoundProperty = targetProps
-                        .stream()
-                        .filter(targetProperty -> targetProperty.getName().equalsIgnoreCase(name))
-                        .filter(targetProperty -> targetProperty.getValueTypeAsEnum().equals(valueType))
-                        .count();
-                if (countOfFoundProperty > 0) {
-                    targetColumns.append(name).append(", ");
-                    sourceColumns.append("\"").append(name).append("\", ");
-                }
+            List<SimplePropertyDto> filteredProps = targetProps
+                    .stream()
+                    .filter(equalByName(sourceName))
+                    .filter(notCalculatedProperty())
+                    .filter(compatibleByType(sourceValueType))
+                    .collect(Collectors.toList());
+
+            if (!filteredProps.isEmpty()) {
+                targetColumns.append(sourceName).append(", ");
+                sourceColumns.append("\"").append(sourceName).append("\", ");
             }
         }
 
@@ -282,6 +283,36 @@ public class SqlBuilder {
         sourceColumns = new StringBuilder(sourceColumns.substring(0, sourceColumns.length() - 2));
 
         return targetColumns + sourceColumns.toString();
+    }
+
+    @NotNull
+    private static Predicate<SimplePropertyDto> equalByName(String sourceName) {
+        return targetProperty -> targetProperty.getName().equalsIgnoreCase(sourceName);
+    }
+
+    @NotNull
+    private static Predicate<SimplePropertyDto> notCalculatedProperty() {
+        return prop -> {
+            String formula = prop.getCalculatedValueWellKnownFormula();
+
+            return isNull(formula) || formula.isEmpty();
+        };
+    }
+
+    @NotNull
+    private static Predicate<SimplePropertyDto> compatibleByType(ValueType sourceValueType) {
+        return prop -> {
+            ValueType targetType = prop.getValueTypeAsEnum();
+            if (targetType.equals(STRING)) {
+                return true;
+            }
+
+            if (sourceValueType.equals(STRING) && targetType.equals(CHOICE)) {
+                return true;
+            }
+
+            return targetType.equals(sourceValueType);
+        };
     }
 
     private static String getProperty(String property) {

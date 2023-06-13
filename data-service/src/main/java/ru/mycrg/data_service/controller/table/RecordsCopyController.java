@@ -5,7 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mycrg.data_service.dto.FeaturesCopyModel;
+import ru.mycrg.data_service_contract.dto.FeaturesCopyModel;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -16,6 +16,8 @@ import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.Mediator;
+
+import javax.validation.Valid;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
@@ -34,7 +36,7 @@ public class RecordsCopyController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/records/copy")
-    public ResponseEntity<Feature> copyTableRecords(@RequestBody FeaturesCopyModel copyModel) {
+    public ResponseEntity<Feature> copyTableRecords(@RequestBody @Valid FeaturesCopyModel copyModel) {
         ResourceQualifier sourceQualifier = new ResourceQualifier(copyModel.getSource().getSchema(),
                                                                   copyModel.getSource().getTable());
         ResourceQualifier targetQualifier = new ResourceQualifier(copyModel.getTarget().getSchema(),

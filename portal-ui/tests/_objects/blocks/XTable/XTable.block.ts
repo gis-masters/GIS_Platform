@@ -186,7 +186,9 @@ export class XTableBlock extends Block {
 
     const index = headerTitles.indexOf(title);
 
-    return $$(`.XTable-Row .XTable-Cell:nth-child(${index + 1}) .XTable-CellContent`);
+    const $container = await this.$('container');
+
+    return $container.$$(`.XTable-Row .XTable-Cell:nth-child(${index + 1}) .XTable-CellContent`);
   }
 }
 

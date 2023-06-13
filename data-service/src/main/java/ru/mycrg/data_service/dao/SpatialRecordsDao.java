@@ -89,8 +89,7 @@ public class SpatialRecordsDao {
                         @NotNull Feature feature,
                         @NotNull SchemaDto schema) throws CrgDaoException {
         String query = buildParameterizedInsertQuery(qualifier, feature, true);
-        MapSqlParameterSource parameterSource =
-                sqlParameterSourceFactory.buildParameterizedSource(feature, schema);
+        MapSqlParameterSource parameterSource = sqlParameterSourceFactory.buildParameterizedSource(feature, schema);
 
         Long id = pBaseDao.save(query, parameterSource);
 
@@ -161,7 +160,8 @@ public class SpatialRecordsDao {
             log.debug("Query is feature exist by id: [{}]", query);
 
             Boolean result = pJdbcTemplate.queryForObject(query,
-                                                          new MapSqlParameterSource("id", qualifier.getRecordIdAsLong()),
+                                                          new MapSqlParameterSource("id",
+                                                                                    qualifier.getRecordIdAsLong()),
                                                           Boolean.class);
 
             return Boolean.TRUE.equals(result);

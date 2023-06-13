@@ -17,7 +17,8 @@ class AttributesBlock extends Block {
     attributesTableHead: '.Attributes-Table .XTable-Head',
     attributesTableHeadCellContent: '.Attributes-Table .XTable-Head .XTable-CellContent',
     selectedYes: '.Attributes-CheckFilterButton_selected_yes',
-    selectedNo: '.Attributes-CheckFilterButton_selected_no'
+    selectedNo: '.Attributes-CheckFilterButton_selected_no',
+    copyFeaturesBtn: '.CopyFeaturesButton'
   };
 
   readonly xTable = new XTableBlock(this.selectors.container);
@@ -131,6 +132,12 @@ class AttributesBlock extends Block {
     const $selected = await this.$(inverse ? 'selectedYes' : 'selectedNo');
     await $selected.waitForClickable();
     await $selected.click();
+  }
+
+  async clickCopyFeaturesButton(): Promise<void> {
+    const $copyFeaturesBtn = await this.$('copyFeaturesBtn');
+    await $copyFeaturesBtn.waitForClickable();
+    await $copyFeaturesBtn.click();
   }
 }
 

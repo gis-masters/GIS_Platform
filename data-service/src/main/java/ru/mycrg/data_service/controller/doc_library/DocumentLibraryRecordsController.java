@@ -21,7 +21,7 @@ import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.CreateLibraryRecordRequest;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.DeleteLibraryRecordRequest;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.UpdateLibraryRecordRequest;
-import ru.mycrg.data_service.service.cqrs.table_records.requests.MoveRecordToNewParentRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.MoveRecordToNewParentRequest;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.EcqlRecordIdHandler;

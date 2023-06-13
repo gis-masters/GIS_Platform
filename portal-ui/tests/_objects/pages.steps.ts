@@ -92,16 +92,59 @@ Given(
 );
 
 Given(
+  'я нахожусь на странице карты проекта, спозиционированной на объектах слоя {string}',
+  async function (this: ScenarioScope, layerTitle: string, table: DataTable) {
+    const { latestDataset, latestProject } = this;
+
+    const tableName = this.findLayerByTitle(layerTitle).tableName;
+    if (!tableName) {
+      throw new Error(`У слоя '${layerTitle}' отсутствует название таблицы, по которой он создан`);
+    }
+
+    const data = table.raw()[1];
+    const mapPage = new MapPage(latestProject.id);
+    await mapPage.openWithPositionToFeatures(
+      latestProject.id,
+      latestDataset.identifier,
+      tableName,
+      data[0].split(', ')
+    );
+  }
+);
+
+Given(
+  'я нахожусь на странице карты проекта, открыт объект с id {int} слоя {string}',
+  async function (this: ScenarioScope, objectId: number, layerTitle: string) {
+    const { latestDataset, latestProject } = this;
+
+    const tableName = this.findLayerByTitle(layerTitle).tableName;
+    if (!tableName) {
+      throw new Error(`У слоя '${layerTitle}' отсутствует название таблицы, по которой он создан`);
+    }
+
+    await new MapPage(latestProject.id).openWithPositionToFeatures(
+      latestProject.id,
+      latestDataset.identifier,
+      tableName,
+      [String(objectId)]
+    );
+  }
+);
+
+Given(
   'я нахожусь на странице карты проекта, открыт объект с id {int}',
   async function (this: ScenarioScope, objectId: number) {
     const { latestDataset, latestVectorTable, latestProject } = this;
 
-    const mapPage = new MapPage(latestProject.id);
-    await mapPage.openWithPositionToFeatures(latestProject.id, latestDataset.identifier, latestVectorTable.identifier, [
-      String(objectId)
-    ]);
+    await new MapPage(latestProject.id).openWithPositionToFeatures(
+      latestProject.id,
+      latestDataset.identifier,
+      latestVectorTable.identifier,
+      [String(objectId)]
+    );
   }
 );
+
 When('я перехожу на страницу карты проекта {string}', openProjectMap);
 
 Then('открылась страница карты проекта {string}', async (title: string) => {

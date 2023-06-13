@@ -180,7 +180,6 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
                         multiPart("file", file).
                         multiPart("processModelJson", gson.toJson(processableModel))
                 .when().
-                        log().all().
                         post("/file");
     }
 }

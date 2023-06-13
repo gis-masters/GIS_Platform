@@ -10,8 +10,8 @@ import ru.mycrg.data_service_contract.enums.ValueType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATE_PATTERN;
@@ -27,33 +27,38 @@ public class SqlParameterSourceMapperDatetime implements SqlParameterSourceMappe
                     @NotNull SimplePropertyDto property,
                     @NotNull Object value) {
         String name = property.getName().toLowerCase();
-
-        if (value instanceof Date) {
-            parameterSource.addValue(name, value);
-
-            return;
-        }
-
         if (value instanceof LocalDateTime) {
             parameterSource.addValue(name, value);
 
             return;
         }
 
-        LocalDateTime dateTime;
+        LocalDateTime dateTime = null;
         String asString = value.toString();
-        if (asString.isEmpty()) {
-            dateTime = null;
-        } else {
+        if (!asString.isEmpty()) {
             try {
+                log.debug("'{}' try as DateTime '{}'", value, SYSTEM_DATETIME_PATTERN);
+
                 dateTime = LocalDateTime.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN));
             } catch (Exception e) {
-                String msg = String.format("Datetime '{}' does not match format: '%s'. Try without time as '%s'",
-                                           SYSTEM_DATETIME_PATTERN, SYSTEM_DATE_PATTERN);
-                log.debug(msg, value);
+                log.warn("Not a DateTime '{}'", SYSTEM_DATETIME_PATTERN);
+            }
+
+            try {
+                log.debug("Try as LocalDate '{}'", SYSTEM_DATE_PATTERN);
 
                 dateTime = LocalDate.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATE_PATTERN))
                                     .atTime(0, 0, 0);
+            } catch (Exception e) {
+                log.warn("Not a LocalDate '{}'", SYSTEM_DATE_PATTERN);
+            }
+
+            try {
+                log.debug("Try as Zoned(ISO_ZONED_DATE_TIME) 'yyyy-MM-dd'T'HH:mm:ssZ'. Use ONE format plz!");
+
+                dateTime = ZonedDateTime.parse(asString).toLocalDateTime();
+            } catch (Exception e) {
+                log.error("Not supported DateTime format: {}", asString);
             }
         }
 

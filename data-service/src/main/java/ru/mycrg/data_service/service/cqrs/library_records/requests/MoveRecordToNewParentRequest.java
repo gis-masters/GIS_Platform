@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.cqrs.table_records.requests;
+package ru.mycrg.data_service.service.cqrs.library_records.requests;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.Nullable;

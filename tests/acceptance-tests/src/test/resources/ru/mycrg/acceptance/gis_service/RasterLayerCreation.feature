@@ -19,7 +19,7 @@ Feature: Создание растровых слоёв
 
   Scenario Outline: Создание слоя проекта c невалидными данными ("<reason>")
     Given Существует проект "STRING_10"
-    Given Существует набор
+    Given Существует набор данных
     Given Существует таблица
     When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type"
     Then Сервер отвечает со статус-кодом 400

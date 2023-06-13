@@ -103,18 +103,16 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         createDataset(currentDatasetDto);
     }
 
-    @When("Пользователь создал набор данных")
-    public void createRandomDataset() {
-        currentDatasetDto = new DatasetCreateDto(generateString("STRING_7"));
-
-        createDataset(currentDatasetDto);
-    }
-
-    @When("Существует набор")
+    @Given("Существует набор данных")
     public void initDataset() {
         currentDatasetDto = new DatasetCreateDto(generateString("STRING_10"));
 
         createDataset(currentDatasetDto);
+    }
+
+    @When("Пользователь создает новый набор данных")
+    public void createNewDataset() {
+        initDataset();
     }
 
     @When("Существует 'набор данных' с двумя слоями в нём")
@@ -125,11 +123,6 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
         tablesSteps.createTablesRequest("layer_test_1", "TestLayer1", "l1", "EPSG:28406", "schema_for_test_table");
         tablesSteps.createTablesRequest("layer_test_2", "TestLayer2", "l2", "EPSG:28406", "schema_for_test_table");
-    }
-
-    @When("Пользователь создает новый набор данных")
-    public void createNewDataset() {
-        initDataset();
     }
 
     @And("Сервер передаёт Location созданного набора")

@@ -172,14 +172,14 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    @When("Администратор делает запрос на копирование записей слоя")
+    @When("Администратор делает запрос на массовое копирование записей слоя")
     public void copyMultipleRecordsAsAdmin() {
         authorizationBase.loginAsOwner();
 
         copyFeatures(prepareCopyModel());
     }
 
-    @When("Пользователь делает запрос на копирование записей слоя")
+    @When("Пользователь делает запрос на массовове копирование записей слоя")
     public void copyMultipleRecordsAsUser() {
         authorizationBase.loginAsCurrentUser();
 
@@ -435,7 +435,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                 given().
                         basePath("/api/data/records/copy").
                         body(gson.toJson(copyModel))
-                        .contentType(JSON).log().all()
+                        .contentType(JSON)
                 .when().
                         post();
     }
@@ -457,7 +457,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         QualifierDto source = new QualifierDto(currentDatasetIdentifier, currentTableName);
         QualifierDto target = new QualifierDto(currentDatasetIdentifier, anotherTableName);
 
-        FeaturesCopyModel copyModel = new FeaturesCopyModel(source, target, featureIds);
-        return copyModel;
+        return new FeaturesCopyModel(source, target, featureIds);
     }
 }

@@ -2,16 +2,19 @@ import React, { Component } from 'react';
 import { AxiosError } from 'axios';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { action, observable, makeObservable } from 'mobx';
-import { ContentCopyOutlined } from '@mui/icons-material';
 
+import { ContentCopyOutlined } from '@mui/icons-material';
 import { Toast } from '../Toast/Toast';
 import { IconButton } from '../IconButton/IconButton';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { NewWfsFeature, WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { createFeature } from '../../services/data/vectorData/vectorData.service';
 import { SelectSuitableVectorLayerDialog } from '../SelectSuitableVectorLayerDialog/SelectSuitableVectorLayerDialog';
+
+const cnCopyFeatureButton = cn('CopyFeatureButton');
 
 interface CopyErrors {
   field: string;
@@ -36,7 +39,7 @@ export class CopyFeatureButton extends Component<CopyFeatureButtonProps> {
     return (
       <>
         <Tooltip title='Копировать объект в другой слой'>
-          <IconButton onClick={this.openDialog}>
+          <IconButton className={cnCopyFeatureButton()} onClick={this.openDialog}>
             <ContentCopyOutlined />
           </IconButton>
         </Tooltip>
@@ -65,9 +68,10 @@ export class CopyFeatureButton extends Component<CopyFeatureButtonProps> {
   @boundMethod
   private async copy([selectedLayer]: CrgVectorLayer[]) {
     try {
-      const { feature } = this.props;
+      const { properties, geometry } = this.props.feature;
+      const featureForCopy: NewWfsFeature = { type: 'Feature', geometry, properties };
 
-      await createFeature(selectedLayer.dataset, selectedLayer.tableName, feature);
+      await createFeature(selectedLayer.dataset, selectedLayer.tableName, featureForCopy);
 
       Toast.success('Объект успешно скопирован');
     } catch (error) {

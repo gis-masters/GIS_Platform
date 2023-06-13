@@ -23,8 +23,8 @@ public class RecordEntity implements IRecord {
     }
 
     @Override
-    public void setValue(String key, Object value) {
-        this.content.put(key, value);
+    public void setContent(Map<String, Object> content) {
+        this.content = content;
     }
 
     @Override

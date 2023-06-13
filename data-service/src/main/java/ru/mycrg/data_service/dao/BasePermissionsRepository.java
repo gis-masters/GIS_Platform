@@ -123,14 +123,13 @@ public class BasePermissionsRepository {
     }
 
     public boolean isAllowedByParentsPermissions(ResourceQualifier targetTable, Set<String> parentFolderIds) {
-        String tableQualifier = targetTable.getTableQualifier();
-        String tableName = targetTable.getTable();
-
         List<String> allPrincipalIds = principalService.getAllIds();
-        if (allPrincipalIds.isEmpty()) {
+        if (allPrincipalIds.isEmpty() || parentFolderIds.isEmpty()) {
             return false;
         }
 
+        String tableQualifier = targetTable.getTableQualifier();
+        String tableName = targetTable.getTable();
         String requestTemplate = "" +
                 "SELECT exists (" +
                 "  SELECT res.id AS allowed_res_id" +
@@ -276,6 +275,10 @@ public class BasePermissionsRepository {
      */
     public Optional<String> bestRoleInheritedFromParent(ResourceQualifier tableQualifier,
                                                         Set<String> parentFolderIds) {
+        if (parentFolderIds.isEmpty()) {
+            return Optional.empty();
+        }
+
         String qualifier = tableQualifier.getTableQualifier();
         String tableName = tableQualifier.getTable();
 

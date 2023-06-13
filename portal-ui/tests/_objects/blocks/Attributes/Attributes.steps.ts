@@ -228,6 +228,10 @@ Then('в атрибутивной таблице существуют вклад
   await expect(titles).toEqual(attributeTitle.raw()[0]);
 });
 
+When('в атрибутивной таблице я нажимаю `Копировать N объектов в другой слой`', async function () {
+  await attributesBlock.clickCopyFeaturesButton();
+});
+
 function getSchemaPropertyByTitle(schema: Schema, title: string): PropertySchema {
   const property = schema.properties?.find(prop => {
     return prop.title === title;

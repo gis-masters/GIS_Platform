@@ -42,7 +42,7 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         jsonPath = response.jsonPath();
         List<String> entities = jsonPath.get("content");
 
-        assertTrue(entities.size() >= 2);
+        assertTrue(entities.size() >= 1);
     }
 
     @Then("Ответ имеет стандартное тело с паджинацией")

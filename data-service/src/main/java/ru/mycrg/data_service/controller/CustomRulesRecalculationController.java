@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mycrg.data_service.dto.ResourceQualifierDto;
+import ru.mycrg.data_service_contract.dto.ResourceQualifierDto;
 import ru.mycrg.data_service.service.CustomRulesRecalculationService;
 
 import java.util.List;

@@ -9,7 +9,7 @@ import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.FeatureRowMapper;
-import ru.mycrg.data_service.dto.ResourceQualifierDto;
+import ru.mycrg.data_service_contract.dto.ResourceQualifierDto;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -30,20 +30,20 @@ public class CustomRulesRecalculationService {
 
     private final Logger log = LoggerFactory.getLogger(CustomRulesRecalculationService.class);
 
+    private final CustomRuleCalculator customRuleCalculator;
     private final SpatialRecordsDao spatialRecordsDao;
-    private final SystemAttributeHandler systemAttributeHandler;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final SchemaService schemaService;
     private final BaseDao baseDao;
     private final IResourceProtector datasetProtector;
 
-    public CustomRulesRecalculationService(SpatialRecordsDao spatialRecordsDao,
-                                           SystemAttributeHandler systemAttributeHandler,
+    public CustomRulesRecalculationService(CustomRuleCalculator customRuleCalculator,
+                                           SpatialRecordsDao spatialRecordsDao,
                                            SchemasAndTablesRepository schemasAndTablesRepository,
                                            SchemaService schemaService, BaseDao baseDao,
                                            IResourceProtector datasetProtector) {
+        this.customRuleCalculator = customRuleCalculator;
         this.spatialRecordsDao = spatialRecordsDao;
-        this.systemAttributeHandler = systemAttributeHandler;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.schemaService = schemaService;
         this.baseDao = baseDao;
@@ -73,8 +73,9 @@ public class CustomRulesRecalculationService {
                     break;
                 }
 
-                oldFeatures.forEach(feature -> {
-                    handleFeature(schema, feature);
+                oldFeatures.forEach(oldFeature -> {
+                    customRuleCalculator.culculate(schema, oldFeature.getProperties())
+                                        .forEach(oldFeature::setProperty);
                 });
 
                 try {
@@ -87,13 +88,6 @@ public class CustomRulesRecalculationService {
                 }
             }
         }
-    }
-
-    private void handleFeature(SchemaDto schema, Feature feature) {
-        // path old props by calculated values
-        systemAttributeHandler.initSchema(schema)
-                              .customRulesCalculation(feature.getProperties())
-                              .forEach(feature::setProperty);
     }
 
     private SchemaDto findSchemaForQualifier(ResourceQualifier rQualifier) {

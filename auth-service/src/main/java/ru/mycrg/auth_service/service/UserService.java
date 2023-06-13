@@ -121,7 +121,7 @@ public class UserService {
 
         Optional<User> userByEmail = userRepository.findByEmail(dto.getEmail());
         if (userByEmail.isPresent()) {
-            throw new ConflictException("Данный email уже занят");
+            throw new ConflictException(String.format("Пользователь с email: %s уже существует", dto.getEmail()));
         }
 
         Organization organization = orgRepository.findById(orgId)

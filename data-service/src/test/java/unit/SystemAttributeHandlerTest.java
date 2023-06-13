@@ -2,8 +2,6 @@ package unit;
 
 import org.junit.Test;
 import ru.mycrg.auth_facade.AuthenticationFacade;
-import ru.mycrg.common_utils.CrgScriptEngine;
-import ru.mycrg.common_utils.ScriptCalculator;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
@@ -21,11 +19,9 @@ public class SystemAttributeHandlerTest {
     private final SystemAttributeHandler systemAttributeHandler;
 
     {
-        CrgScriptEngine scriptEngine = new CrgScriptEngine();
-        ScriptCalculator scriptCalculator = new ScriptCalculator(scriptEngine);
         AuthenticationFacade authenticationFacade = new AuthenticationFacade();
 
-        systemAttributeHandler = new SystemAttributeHandler(scriptEngine, scriptCalculator, authenticationFacade);
+        systemAttributeHandler = new SystemAttributeHandler(authenticationFacade);
     }
 
     @Test

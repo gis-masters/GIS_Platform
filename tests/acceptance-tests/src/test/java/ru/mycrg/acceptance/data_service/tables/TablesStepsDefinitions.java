@@ -10,6 +10,7 @@ import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.PermissionCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
+import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 
 import java.util.List;
 import java.util.Map;
@@ -38,15 +39,21 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Отправляется запрос на создание таблицы {string} {string} {string} {string} {string}")
-    public void createTablesRequest(String nameKey, String titleKey, String descriptionKey, String crs, String schema) {
+    public void createTablesRequest(String nameKey,
+                                    String titleKey,
+                                    String descriptionKey,
+                                    String crs,
+                                    String schemaName) {
         currentTableName = generateString(nameKey);
         currentTableDto = new TableCreateDto(currentTableName,
                                              generateString(titleKey),
                                              generateString(descriptionKey),
                                              generateString(crs),
-                                             generateString(schema));
+                                             schemaName);
         tableName = currentTableName;
-        schemaId = schema;
+        schemaId = schemaName;
+
+        scenarioTables.add(currentTableDto);
 
         super.createEntity(currentTableDto);
     }
@@ -83,12 +90,14 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Существует таблица по схеме {string}")
-    public void initTable(String schemaName) {
-        createTablesRequest((schemaName + "_" + generateString("STRING_5")),
-                            "Искусственные дорожные сооружения",
+    public void initTable(String schemaTitle) {
+        SchemaDto schema = getSchemaByTitle(schemaTitle);
+
+        createTablesRequest(generateString("STRING_8"),
+                            "some title",
                             "some description",
                             "EPSG:28406",
-                            schemaName);
+                            schema.getName());
     }
 
     @When("Существует другая таблица")
@@ -151,15 +160,10 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Администратор делает запрос на создание новой таблицы по схеме {string}")
-    public void createNewTableAsAdminBySchemaName(String schemaName) {
+    public void createNewTableAsAdminBySchemaName(String schemaTitle) {
         authorizationBase.loginAsOwner();
-        initTable(schemaName);
-    }
 
-    @When("Администратор делает запрос на создание новой таблицы по схеме, не имеющей поле для геометрии")
-    public void createNewTableWithoutGeometryAsAdmin() {
-        authorizationBase.loginAsOwner();
-        initTable("dl_default_schema");
+        initTable(schemaTitle);
     }
 
     @When("Пользователь делает запрос на удаление текущей таблицы")
@@ -237,8 +241,9 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
         Map<String, Object> errorFirst = errors.get(0);
 
-        assertEquals("Для калькуляции по wellKnown формуле поле classid должно быть типа: [CHOICE, STRING, INT, LONG]. ",
-                     errorFirst.get("message"));
+        assertEquals(
+                "Для калькуляции по wellKnown формуле поле classid должно быть типа: [CHOICE, STRING, INT, LONG]. ",
+                errorFirst.get("message"));
     }
 
     @When("Пользователь делает запрос на обновление информации о текущей таблице")

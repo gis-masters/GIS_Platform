@@ -5,7 +5,8 @@ class ToastBlock extends Block {
     container: '.Toast',
     moar: '.Toast-Moar',
     close: '.Toast-Close',
-    details: '.Toast-Details'
+    details: '.Toast-Details',
+    title: '.Toast-Title'
   };
 
   async clickMoar(): Promise<void> {
@@ -35,9 +36,7 @@ class ToastBlock extends Block {
   }
 
   async waitForVisible(): Promise<void> {
-    const $container = await this.$('container');
-
-    await $container.waitForDisplayed({ timeout: 2000, timeoutMsg: 'Не появляется уведомление' });
+    await super.waitForVisible();
     await browser.pause(300); // animation
   }
 
@@ -49,12 +48,6 @@ class ToastBlock extends Block {
     }
 
     throw new Error('Toast не должен был появиться');
-  }
-
-  async isVisible(): Promise<boolean> {
-    const $container = await this.$('container');
-
-    return await $container.isDisplayed();
   }
 
   async waitForHidden(): Promise<void> {
@@ -71,6 +64,12 @@ class ToastBlock extends Block {
   async waitForDetailsHidden(): Promise<void> {
     const $details = await this.$('details');
     await $details.waitForDisplayed({ reverse: true });
+  }
+
+  async getTitle(): Promise<string> {
+    const $title = await this.$('title');
+
+    return await $title.getText();
   }
 }
 

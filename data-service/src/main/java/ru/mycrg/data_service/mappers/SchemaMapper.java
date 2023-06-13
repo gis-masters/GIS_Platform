@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.mappers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,13 +12,17 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.io.IOException;
 
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 
-@Service
 public class SchemaMapper {
 
-    private final Logger log = LoggerFactory.getLogger(SchemaMapper.class);
+    private static final Logger log = LoggerFactory.getLogger(SchemaMapper.class);
 
-    public SchemaDto mapToDto(Schema schema) {
+    private SchemaMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static SchemaDto mapToDto(Schema schema) {
         try {
             JsonNode classRule = schema.getClassRule();
 
@@ -33,5 +38,23 @@ public class SchemaMapper {
 
             throw new DataServiceException(message);
         }
+    }
+
+    @NotNull
+    public static Schema mapToEntity(Schema entity, SchemaDto schemaDto) {
+        entity.setName(schemaDto.getName());
+        entity.setClassRule(toJsonNode(schemaDto));
+
+        String customRuleFunction = schemaDto.getCustomRuleFunction();
+        if (customRuleFunction != null) {
+            entity.setCustomRule(customRuleFunction);
+        }
+
+        String calcFiledFunction = schemaDto.getCalcFiledFunction();
+        if (calcFiledFunction != null) {
+            entity.setCalculatedFields(calcFiledFunction);
+        }
+
+        return entity;
     }
 }

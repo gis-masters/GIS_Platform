@@ -3,6 +3,7 @@ import { AxiosError } from 'axios';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { pluralize } from 'numeralize-ru';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { action, observable, makeObservable } from 'mobx';
 import { ContentCopyOutlined } from '@mui/icons-material';
@@ -13,6 +14,8 @@ import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { copyFeaturesBetweenLayers } from '../../services/data/vectorData/vectorData.service';
 import { SelectSuitableVectorLayerDialog } from '../SelectSuitableVectorLayerDialog/SelectSuitableVectorLayerDialog';
+
+const cnCopyFeaturesButton = cn('CopyFeaturesButton');
 
 interface CopyErrors {
   field: string;
@@ -40,7 +43,7 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
     return (
       <>
         <Tooltip title={tooltipTitle}>
-          <IconButton size='small' onClick={this.openDialog}>
+          <IconButton className={cnCopyFeaturesButton()} size='small' onClick={this.openDialog}>
             <ContentCopyOutlined fontSize='small' />
           </IconButton>
         </Tooltip>

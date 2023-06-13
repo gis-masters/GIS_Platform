@@ -23,22 +23,19 @@ import static ru.mycrg.data_service_contract.enums.ValueType.URL;
 public class SchemaService {
 
     private final DataSchemaRepository schemaRepository;
-    private final SchemaMapper schemaMapper;
 
-    public SchemaService(DataSchemaRepository schemaRepository,
-                         SchemaMapper schemaMapper) {
+    public SchemaService(DataSchemaRepository schemaRepository) {
         this.schemaRepository = schemaRepository;
-        this.schemaMapper = schemaMapper;
     }
 
     public List<SchemaDto> getSchemas(List<String> featureNames) {
         if (featureNames.isEmpty()) {
             return schemaRepository.findAll().stream()
-                                   .map(schemaMapper::mapToDto)
+                                   .map(SchemaMapper::mapToDto)
                                    .collect(Collectors.toList());
         } else {
             return schemaRepository.findByNameIn(featureNames).stream()
-                                   .map(schemaMapper::mapToDto)
+                                   .map(SchemaMapper::mapToDto)
                                    .collect(Collectors.toList());
         }
     }
@@ -46,14 +43,14 @@ public class SchemaService {
     public List<SchemaDto> getSchemasWithReglaments() {
         return schemaRepository.findAll().stream()
                                .filter(this::isReglamentsExist)
-                               .map(schemaMapper::mapToDto)
+                               .map(SchemaMapper::mapToDto)
                                .collect(Collectors.toList());
     }
 
     public Optional<SchemaDto> getSchemaByName(@NotNull String name) {
         return schemaRepository.findByName(name).stream()
                                .findFirst()
-                               .map(schemaMapper::mapToDto);
+                               .map(SchemaMapper::mapToDto);
     }
 
     public boolean isSchemaExist(String name) {

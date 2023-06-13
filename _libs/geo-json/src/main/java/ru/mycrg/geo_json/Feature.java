@@ -1,5 +1,6 @@
 package ru.mycrg.geo_json;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -33,6 +34,7 @@ public class Feature extends GeoJsonObject {
         return properties;
     }
 
+    @JsonIgnore
     public Set<String> getPropertyNames() {
         return properties.keySet();
     }

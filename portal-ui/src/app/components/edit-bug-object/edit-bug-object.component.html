@@ -35,9 +35,10 @@
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name]?.valid">
                 <span
                   class="input-group-text error-badge"
-                  *ngIf="editFeatureForm.controls[editFeatureItem.name].errors"
+                  *ngIf="editFeatureForm.controls[editFeatureItem.name]?.errors"
                 >
-                  <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+                  <crg-errors-badge
+                    [errors]="editFeatureForm.controls[editFeatureItem.name]?.errors"></crg-errors-badge>
                 </span>
               </div>
             </div>
@@ -51,7 +52,8 @@
               <input class="form-control" type="number" formControlName="{{ editFeatureItem.name }}" />
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name]?.valid">
                 <span class="input-group-text error-badge">
-                  <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+                  <crg-errors-badge
+                    [errors]="editFeatureForm.controls[editFeatureItem.name]?.errors"></crg-errors-badge>
                 </span>
               </div>
             </div>
@@ -65,7 +67,8 @@
               <input class="form-control" type="number" formControlName="{{ editFeatureItem.name }}" />
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name]?.valid">
                 <span class="input-group-text error-badge">
-                  <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+                  <crg-errors-badge
+                    [errors]="editFeatureForm.controls[editFeatureItem.name]?.errors"></crg-errors-badge>
                 </span>
               </div>
             </div>
@@ -80,9 +83,10 @@
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name]?.valid">
                 <span
                   class="input-group-text error-badge"
-                  *ngIf="editFeatureForm.controls[editFeatureItem.name].errors"
+                  *ngIf="editFeatureForm.controls[editFeatureItem.name]?.errors"
                 >
-                  <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+                  <crg-errors-badge
+                    [errors]="editFeatureForm.controls[editFeatureItem.name]?.errors"></crg-errors-badge>
                 </span>
               </div>
             </div>
@@ -101,7 +105,8 @@
               </select>
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name]?.valid">
                 <span class="input-group-text error-badge">
-                  <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+                  <crg-errors-badge
+                    [errors]="editFeatureForm.controls[editFeatureItem.name]?.errors"></crg-errors-badge>
                 </span>
               </div>
             </div>
