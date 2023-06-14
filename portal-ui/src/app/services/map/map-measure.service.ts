@@ -13,7 +13,7 @@ import VectorLayer from 'ol/layer/Vector';
 import CircleStyle from 'ol/style/Circle';
 import BaseEvent from 'ol/events/Event';
 import { unByKey } from 'ol/Observable';
-import { Feature, Overlay } from 'ol';
+import { Feature, MapBrowserEvent, Overlay } from 'ol';
 import { EventsKey } from 'ol/events';
 
 import { MapMode, mapStore } from '../../stores/Map.store';
@@ -41,6 +41,9 @@ class MapMeasureService {
   private featureGeometryChangeListeners: EventsKey | EventsKey[];
   private sketchItem?: MeasureItem;
   private markFillColor = 'rgba(255, 255, 255, 0.5)';
+  private helpTooltipElement: HTMLDivElement;
+  private helpTooltip: Overlay;
+  private helpMsg: string;
 
   private layer = new VectorLayer({
     source: this.source,
@@ -68,7 +71,13 @@ class MapMeasureService {
   }
 
   private constructor() {
-    this.initUnitsOfAreaMeasurement();
+    if (mapService.map) {
+      this.addMapEventsListeners();
+    }
+
+    mapService.mapCreate.on((): void => {
+      this.addMapEventsListeners();
+    });
 
     communicationService.beforeMapDestroy.on(() => {
       this.clearAll();
@@ -83,6 +92,8 @@ class MapMeasureService {
         }
       }
     );
+
+    this.initUnitsOfAreaMeasurement();
   }
 
   measureOn(mode: MeasureMode) {
@@ -123,10 +134,6 @@ class MapMeasureService {
         })
       ];
     });
-
-    modify.on('modifyend', () => {
-      unByKey(this.featureGeometryChangeListeners);
-    });
   }
 
   @boundMethod
@@ -156,6 +163,7 @@ class MapMeasureService {
 
   @boundMethod
   private drawEndHandler() {
+    this.setHelpMsg('клик для начала измерения');
     this.sketchItem.tooltipOverlay.setOffset([0, -6]);
     this.renderTooltip(this.sketchItem, false);
     mapStore.addMeasureItem(this.sketchItem);
@@ -260,6 +268,50 @@ class MapMeasureService {
     if (mapStore.unitsOfAreaMeasurement !== storedUnits) {
       mapStore.setUnitsOfAreaMeasurement(storedUnits);
     }
+  }
+
+  setHelpMsg(helpMsg: string) {
+    this.helpMsg = helpMsg;
+  }
+
+  removeHelpMsg() {
+    this.helpTooltipElement?.remove();
+  }
+
+  createMeasureStartTooltip() {
+    this.helpMsg = 'клик для начала измерения';
+    this.helpTooltipElement = document.createElement('div');
+    this.helpTooltipElement.className = 'HelpMessage';
+    this.helpTooltip = new Overlay({
+      element: this.helpTooltipElement,
+      offset: [15, 0],
+      positioning: 'center-left'
+    });
+
+    mapService.map.addOverlay(this.helpTooltip);
+  }
+
+  pointerMoveHandler(evt: MapBrowserEvent<UIEvent>) {
+    if (evt.dragging) {
+      return;
+    }
+    if (this.helpTooltipElement) {
+      this.helpTooltipElement.innerHTML = this.helpMsg;
+      this.helpTooltip.setPosition(evt.coordinate);
+    }
+  }
+
+  private addMapEventsListeners() {
+    // ошибка в типах ol
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    mapService.map.on('pointerdown', () => {
+      this.setHelpMsg('двойной клик для завершения измерения');
+    });
+
+    mapService.map.on('pointermove', (e: MapBrowserEvent<UIEvent>) => {
+      this.pointerMoveHandler(e);
+    });
   }
 }
 

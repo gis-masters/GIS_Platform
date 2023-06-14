@@ -11,6 +11,7 @@ import { IconButton } from '../IconButton/IconButton';
 import { Ruler } from '../Icons/Ruler';
 
 import '!style-loader!css-loader!sass-loader!./MapMeasure.scss';
+import '!style-loader!css-loader!sass-loader!../HelpMessage/HelpMessage.scss';
 
 const cnMapMeasure = cn('MapMeasure');
 
@@ -61,9 +62,11 @@ export default class MapMeasure extends Component {
   }
 
   private selectMode(mode?: MeasureMode) {
+    mapMeasureService.removeHelpMsg();
     if (mode && mapStore.measureMode === mode) {
       mapMeasureService.measureOff();
     } else {
+      mapMeasureService.createMeasureStartTooltip();
       mapMeasureService.measureOn(mode);
     }
 
