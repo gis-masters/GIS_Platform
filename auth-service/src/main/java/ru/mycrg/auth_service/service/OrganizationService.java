@@ -152,7 +152,8 @@ public class OrganizationService {
                 owner.getEmail(),
                 owner.getMiddleName(),
                 owner.getJob(),
-                owner.getPhone()
+                owner.getPhone(),
+                owner.getBossId()
         );
     }
 }

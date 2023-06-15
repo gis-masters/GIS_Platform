@@ -126,7 +126,7 @@ public class UserController {
     }
 
     @PatchMapping("/users/{id}")
-    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<UserProjection> updateUser(@Valid @RequestBody UserUpdateDto dto,
                                                      @PathVariable Long id) {
         userService.update(id, dto);

@@ -126,10 +126,10 @@ Feature: Действия с пользователями
     When  Администратор делает постраничный запрос на всех пользователей, по 5 пользователей на странице
     Then  Дублирование пользователей, при выборке постранично, не происходит
 
-  Scenario Outline: Обновление полей пользователя администратором организации
+  Scenario Outline: Обновление полей пользователя доступно администратору организации
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
-    When Пользователь делает запрос на обновление пользователя
+    When Администратор организации делает запрос на обновление пользователя
       | <newUserName> | <newUserSurname> | <newUserPassword> | <newUserIsEnabled> |
     Then Сервер отвечает со статус-кодом 200
     When Администратор делает запрос на созданного пользователя
@@ -140,6 +140,23 @@ Feature: Действия с пользователями
     Examples:
       | userName  | userSurname | userEmail | userPassword | newUserName | newUserSurname | newUserPassword | newUserIsEnabled |
       | STRING_10 | STRING_10   | EMAIL_20  | testtestQ1   | UpdUserName | UpdUserSurname | testtestQ2      | true             |
+
+  Scenario: Администратор организации может назначить начальника для пользователя
+    Given Существует пользователь
+      | Обычный пользователь | STRING_15 | EMAIL_10 | testtestQ1 |
+#  Пользователь является текущим
+    Given Существует другой пользователь
+      | Начальник | STRING_15 | EMAIL_10 | testtestQ1 |
+    When Администратор организации назначает текущему пользователю в качестве начальника другого пользователя
+    Then Сервер отвечает со статус-кодом 200
+    When Администратор делает запрос на созданного пользователя
+    Then Текущему пользователю назначен в качестве начальника другой пользователь
+
+  Scenario: Невозможно назначить начальником пользователя, которого не существует
+    Given Существует пользователь
+      | STRING_15 | STRING_15 | EMAIL_10 | testtestQ1 |
+    When Администратор организации делает запрос на назначение в качестве начальника, пользователя, которого не существует
+    Then Сервер отвечает со статус-кодом 400
 
   Scenario Outline: Обновление полей пользователя чужим администратором организации
     Given Существует пользователь
@@ -154,31 +171,13 @@ Feature: Действия с пользователями
       | userName  | userSurname | userEmail | userPassword | newUserName | newUserSurname | newUserPassword |
       | STRING_10 | STRING_10   | EMAIL_20  | testtestQ1   | UpdUserName | UpdUserSurname | testtestQ2      |
 
-  Scenario Outline: Обновление полей пользователя самим пользователем
-    Given Существует пользователь
-      | <userName> | <userSurname> | <userEmail> | <userPassword> |
-    Given Авторизируемся пользователем
-    When Пользователь делает запрос на обновление пользователя
-      | <newUserName> | <newUserSurname> | <newUserPassword> |
-    Then Сервер отвечает со статус-кодом 200
-    When Пользователь делает запрос на самого себя
-    Then Поля пользователя обновлены
-      | <newUserName> | <newUserSurname> |
-    When Авторизируемся пользователем
-    Then Сервер отвечает со статус-кодом 200
-    Examples:
-      | userName  | userSurname | userEmail | userPassword | newUserName | newUserSurname | newUserPassword |
-      | STRING_10 | STRING_10   | EMAIL_20  | testtestQ1   | UpdUserName | UpdUserSurname | testtestQ2      |
-
-  Scenario Outline: Обновление полей пользователя другим пользователем
+  Scenario Outline: Обновление полей пользователя ЗАПРЕЩЕНО другому пользователем
     Given Существует пользователь
       | STRING_15 | STRING_15 | EMAIL_10 | testtestQ1 |
-    Given Существует пользователь
-      | STRING_15 | STRING_15 | EMAIL_10 | testtestQ1 |
-    Given Авторизируемся пользователем
+    Given Существует и авторизован некий пользователь
     When Пользователь делает запрос на обновление чужого пользователя
       | <newUserName> | <newUserSurname> | <newUserPassword> |
-    Then Сервер отвечает со статус-кодом 404
+    Then Сервер отвечает со статус-кодом 403
     Examples:
       | newUserName | newUserSurname | newUserPassword |
       | UpdUserName | UpdUserSurname | testtestQ2      |

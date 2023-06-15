@@ -53,6 +53,9 @@ public class User {
     @Column
     private String department;
 
+    @Column(name = "boss_id")
+    private Integer bossId;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<Authorities> authorities = new HashSet<>();
 
@@ -84,7 +87,7 @@ public class User {
     }
 
     public User(String password, String name, String surname, String email, String middleName, String job,
-                String phone) {
+                String phone, Integer bossId) {
         this.password = password;
         this.enabled = false;
         this.name = name;
@@ -95,6 +98,7 @@ public class User {
         this.email = email;
         this.createdAt = LocalDateTime.now();
         this.lastModified = LocalDateTime.now();
+        this.bossId = bossId;
     }
 
     public User(String password, String name, String middleName, String surname, String job, String phone) {
@@ -258,5 +262,13 @@ public class User {
 
     public void setGeoserverLogin(String geoserverLogin) {
         this.geoserverLogin = geoserverLogin;
+    }
+
+    public Integer getBossId() {
+        return bossId;
+    }
+
+    public void setBossId(Integer bossId) {
+        this.bossId = bossId;
     }
 }

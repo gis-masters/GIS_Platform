@@ -26,7 +26,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>auth-service-contract</artifactId>
-            <version>1.9.4-SNAPSHOT</version>
+            <version>1.10.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

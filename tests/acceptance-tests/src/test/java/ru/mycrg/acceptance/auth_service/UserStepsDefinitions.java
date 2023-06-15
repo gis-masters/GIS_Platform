@@ -1,6 +1,5 @@
 package ru.mycrg.acceptance.auth_service;
 
-import io.cucumber.core.exception.CucumberException;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -12,6 +11,7 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
+import ru.mycrg.auth_service_contract.dto.UserUpdateDto;
 
 import java.util.*;
 
@@ -30,8 +30,10 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     private static final int MAX_RETRY_ATTEMPT = 10;
 
     public static Integer userId;
+    public static Integer anotherUserId;
     public static String geoserverLogin;
     public static UserCreateDto userDto;
+    public static UserCreateDto anotherUserDto;
     public static List<Long> usersId = new ArrayList<>();
     public static Map<String, Object> filterResults = new HashMap<>();
 
@@ -103,6 +105,13 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         userDto = mapToDto(dataTable.asList());
 
         createUser(userDto);
+    }
+
+    @Given("Существует другой пользователь")
+    public void initAnotherUser(DataTable dataTable) throws InterruptedException {
+        anotherUserDto = mapToDto(dataTable.asList());
+
+        createAnotherUser(anotherUserDto);
     }
 
     @Given("Существует пользователь у которого email содержит спецсимволы")
@@ -351,6 +360,31 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                         patch(String.valueOf(userId));
     }
 
+    @When("Администратор организации делает запрос на обновление пользователя")
+    public void patchUserByAdmin(DataTable datatable) {
+        authorizationBase.loginAsOwner();
+
+        setUserDtoFields(datatable);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(userDto)).
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        patch(String.valueOf(userId));
+    }
+
+    @When("Администратор организации назначает текущему пользователю в качестве начальника другого пользователя")
+    public void assignBossToUser() {
+        assignBossForUser(userId, anotherUserId);
+    }
+
+    @When("Администратор организации делает запрос на назначение в качестве начальника, пользователя, которого не существует")
+    public void assignAsBossNotExistingUser() {
+        assignBossForUser(userId, 0);
+    }
+
     @Then("Поля пользователя обновлены")
     public void checkUserUpdatedFields(DataTable datatable) {
         List<String> data = datatable.asList();
@@ -359,6 +393,13 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
         assertThat(jsonPath.get("name"), equalTo(data.get(0)));
         assertThat(jsonPath.get("surname"), equalTo(data.get(1)));
+    }
+
+    @Then("Текущему пользователю назначен в качестве начальника другой пользователь")
+    public void checkUserUpdatedWithBossId() {
+        jsonPath = response.jsonPath();
+
+        assertEquals(anotherUserId, jsonPath.get("bossId"));
     }
 
     @When("Пользователь делает запрос на самого себя")
@@ -370,8 +411,6 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на обновление чужого пользователя")
     public void patchForeignUser(DataTable datatable) {
-        takeForeignUserAsCurrent();
-
         setUserDtoFields(datatable);
 
         response = getBaseRequestWithCurrentCookie()
@@ -429,15 +468,19 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    private void takeForeignUserAsCurrent() {
-        Map.Entry<Integer, UserCreateDto> entry;
-        entry = userPool.entrySet().stream()
-                        .filter((user) -> !user.getValue().getEmail().equals(userDto.getEmail()))
-                        .findFirst()
-                        .orElseThrow(() -> new CucumberException("Haven't found any foreign user"));
+    private void assignBossForUser(Integer userId, Integer bossId) {
+        authorizationBase.loginAsOwner();
 
-        userId = entry.getKey();
-        userDto = entry.getValue();
+        UserUpdateDto userUpdate = new UserUpdateDto();
+        userUpdate.setBossId(bossId);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(userUpdate)).
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        patch(String.valueOf(userId));
     }
 
     private void setUserDtoFields(DataTable datatable) {
@@ -497,6 +540,18 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
             extractUserIdFromLocation();
 
             waitUntilUserSuccessfullyCreated(userId);
+        }
+    }
+
+    private void createAnotherUser(UserCreateDto dto) throws InterruptedException {
+        if (isUserExistInPool(dto.getEmail())) {
+            makeExactUserAsCurrent(dto.getEmail());
+        } else {
+            super.createEntity(dto);
+            assertEquals(SC_ACCEPTED, response.getStatusCode());
+            anotherUserId = extractId(response.getHeader("Location"));
+
+            waitUntilUserSuccessfullyCreated(anotherUserId);
         }
     }
 

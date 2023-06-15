@@ -31,6 +31,7 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -123,6 +124,12 @@ public class UserService {
         if (userByEmail.isPresent()) {
             throw new ConflictException(String.format("Пользователь с email: %s уже существует", dto.getEmail()));
         }
+        if (Objects.nonNull(dto.getBossId())) {
+            Optional<User> bossUser = userRepository.findById(Long.valueOf(dto.getBossId()));
+            if (bossUser.isEmpty()) {
+                throw new BadRequestException("Неверно указан начальник для пользователя");
+            }
+        }
 
         Organization organization = orgRepository.findById(orgId)
                                                  .orElseThrow(() -> new NotFoundException(orgId));
@@ -133,7 +140,8 @@ public class UserService {
                                 dto.getEmail(),
                                 dto.getMiddleName(),
                                 dto.getJob(),
-                                dto.getPhone()
+                                dto.getPhone(),
+                                dto.getBossId()
         );
         newUser.setLogin(dto.getEmail());
         newUser.addAuthority(USER);
@@ -301,6 +309,17 @@ public class UserService {
 
         if (dto.getDepartment() != null) {
             userForUpdate.setDepartment(dto.getDepartment());
+        }
+
+        if (dto.getBossId() != null) {
+            Optional<User> bossUser = userRepository.findById(Long.valueOf(dto.getBossId()));
+            if (bossUser.isEmpty()) {
+                throw new BadRequestException("Неверно указан начальник для пользователя");
+            } else {
+                userForUpdate.setBossId(dto.getBossId());
+            }
+        } else {
+            userForUpdate.setBossId(null);
         }
 
         userForUpdate.setLastModified(LocalDateTime.now());

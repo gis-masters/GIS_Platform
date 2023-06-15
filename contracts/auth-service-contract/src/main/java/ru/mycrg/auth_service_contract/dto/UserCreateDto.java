@@ -31,6 +31,8 @@ public class UserCreateDto extends PasswordModel {
     @Size(max = 200, message = "Не более 200 символов")
     private String department;
 
+    private Integer bossId;
+
     public UserCreateDto() {
         super();
     }
@@ -111,5 +113,13 @@ public class UserCreateDto extends PasswordModel {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public Integer getBossId() {
+        return bossId;
+    }
+
+    public void setBossId(Integer bossId) {
+        this.bossId = bossId;
     }
 }

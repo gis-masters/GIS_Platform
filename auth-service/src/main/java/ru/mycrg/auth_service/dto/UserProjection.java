@@ -36,4 +36,7 @@ public interface UserProjection {
     LocalDateTime getCreatedAt();
 
     String getGeoserverLogin();
+
+    Integer getBossId();
+
 }
