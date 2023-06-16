@@ -1,7 +1,10 @@
 import { boundClass } from 'autobind-decorator';
 
 import { Client } from '../../api/Client';
+import { PageOptions } from '../../models';
 import { http } from '../../api/http.service';
+import { preparePageOptions } from '../../api/http.utils';
+import { PageableResources } from '../../../../server-types/common-contracts';
 
 import { CrgUser, CrgUserRaw, NewUserData, OrgInfo } from './users.models';
 
@@ -29,8 +32,18 @@ class UsersClient extends Client {
     return http.get<OrgInfo>(this.getUserUrl('current'));
   }
 
+  async getUser(id: number): Promise<CrgUserRaw> {
+    return await http.get<CrgUserRaw>(this.getUserUrl(id));
+  }
+
   async allUsers(): Promise<CrgUserRaw[]> {
     return http.getPaged<CrgUserRaw>(this.getUsersUrl());
+  }
+
+  async getUsers(pageOptions: PageOptions): Promise<PageableResources<CrgUserRaw>> {
+    return await http.get<PageableResources<CrgUserRaw>>(this.getUsersUrl(), {
+      params: preparePageOptions(pageOptions, true)
+    });
   }
 
   async inviteUser(email: string): Promise<void> {

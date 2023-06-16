@@ -15,6 +15,15 @@ export interface CrgUser {
   authorities: BuiltInRole[];
   createdAt: string;
   password?: string;
+  bossId?: number;
+}
+
+export interface MinimizedCrgUser {
+  id: number;
+  email: string;
+  name: string;
+  surname: string;
+  middleName?: string;
 }
 
 export interface CrgUserRaw extends Omit<CrgUser, 'authorities'> {

@@ -265,6 +265,10 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
       field.propertyType = PropertyType.DOCUMENT;
     }
 
+    if (oldField.valueType === ValueType.USER) {
+      field.propertyType = PropertyType.USER;
+    }
+
     if (oldField.valueType === ValueType.GEOMETRY) {
       field.propertyType = PropertyType.GEOMETRY;
     }
@@ -351,6 +355,10 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
 
     if (newField.propertyType === PropertyType.DOCUMENT) {
       field.valueType = ValueType.DOCUMENT;
+    }
+
+    if (newField.propertyType === PropertyType.USER) {
+      field.valueType = ValueType.USER;
     }
 
     if (newField.propertyType === PropertyType.GEOMETRY) {

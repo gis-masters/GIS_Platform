@@ -1,10 +1,11 @@
 import { debounce } from 'lodash';
 import { AxiosError } from 'axios';
 
+import { services } from '../../services';
+import { PageOptions } from '../../models';
 import { allUsers } from '../../../stores/AllUsers.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { organizationSettingsService } from '../../organization-settings';
-import { services } from '../../services';
 
 import { usersClient } from './users.client';
 import { CrgUser, CrgUserRaw, NewUserData } from './users.models';
@@ -48,6 +49,16 @@ class UsersService {
     const rawUsers = await usersClient.allUsers();
 
     return rawUsers.map(this.fixAuthorities);
+  }
+
+  async getUser(id: number): Promise<CrgUser> {
+    return this.fixAuthorities(await usersClient.getUser(id));
+  }
+
+  async getUsers(pageOptions: PageOptions): Promise<[CrgUser[], number]> {
+    const rawUsers = await usersClient.getUsers(pageOptions);
+
+    return [rawUsers.content?.map(this.fixAuthorities) || [], rawUsers.page.totalPages];
   }
 
   private fixAuthorities(user: CrgUserRaw): CrgUser {

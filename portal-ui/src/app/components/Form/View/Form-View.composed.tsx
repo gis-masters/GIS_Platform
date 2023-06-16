@@ -11,6 +11,7 @@ import { withTypeFias } from './_type/Form-View_type_fias';
 import { withTypeFile } from './_type/Form-View_type_file';
 import { withTypeSet } from './_type/Form-View_type_set';
 import { withTypeString } from './_type/Form-View_type_string';
+import { withTypeUser } from './_type/Form-View_type_user';
 import { withTypeUrl } from './_type/Form-View_type_url';
 import { FormView as Presenter } from './Form-View';
 
@@ -24,6 +25,7 @@ export const FormView = compose(
   withTypeFloat,
   withTypeFias,
   withTypeFile,
+  withTypeUser,
   withTypeSet,
   withTypeString,
   withTypeUrl

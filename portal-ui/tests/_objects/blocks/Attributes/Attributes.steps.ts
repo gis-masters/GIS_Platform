@@ -229,6 +229,7 @@ Then('в атрибутивной таблице существуют вклад
 });
 
 When('в атрибутивной таблице я нажимаю `Копировать N объектов в другой слой`', async function () {
+  await attributesBlock.xTable.waitForVisible();
   await attributesBlock.clickCopyFeaturesButton();
 });
 

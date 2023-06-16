@@ -5,12 +5,12 @@ import { queryObjects } from '../../../src/app/services/util/queryObjects';
 import { users } from '../data/users';
 import { SyntheticController } from './_master';
 import { err404, parsePageOptions } from '../utils';
-import { PageableResponse } from '../../../src/app/services/models';
+import { PageableResources } from '../../../src/server-types/common-contracts';
 
 class UsersSyntheticController implements SyntheticController {
   pattern = /^.*\/users$/;
 
-  get(config: InternalAxiosRequestConfig): PageableResponse<CrgUserRaw> {
+  get(config: InternalAxiosRequestConfig): PageableResources<CrgUserRaw> {
     if (!config.url) {
       throw err404(config);
     }
@@ -21,9 +21,7 @@ class UsersSyntheticController implements SyntheticController {
       Math.floor(users.length / pageOptions.pageSize) + Number(Boolean(users.length % pageOptions.pageSize));
 
     return {
-      _embedded: {
-        users: result
-      },
+      content: result,
       page: {
         size: pageOptions.pageSize,
         totalElements: users.length,

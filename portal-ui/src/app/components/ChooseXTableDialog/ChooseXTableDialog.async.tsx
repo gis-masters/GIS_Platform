@@ -87,6 +87,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
             defaultSort={defaultSort}
             secondarySortField={secondarySortField}
             filterable
+            filtersAlwaysEnabled
             single={single}
             selectedItems={selectedItems}
             onSelect={this.select}

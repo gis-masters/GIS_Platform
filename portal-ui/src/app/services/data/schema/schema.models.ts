@@ -24,6 +24,8 @@ export enum PropertyType {
   SET = 'set',
   FIAS = 'fias',
   DOCUMENT = 'document',
+  USER = 'user',
+  USER_ID = 'userId',
   CUSTOM = 'custom' // frontend only
 }
 
@@ -186,6 +188,11 @@ export interface PropertySchemaUrl extends BasePropertySchema {
   defaultValue?: string;
 }
 
+export interface PropertySchemaUser extends BasePropertySchema {
+  propertyType: PropertyType.USER;
+  multiple?: boolean;
+}
+
 export interface PropertySchemaLookup extends BasePropertySchema {
   propertyType: PropertyType.LOOKUP;
 }
@@ -250,5 +257,6 @@ export type PropertySchema =
   | PropertySchemaFias
   | PropertySchemaFile
   | PropertySchemaDocument
+  | PropertySchemaUser
   | PropertySchemaCustom
   | PropertySchemaGeometry;

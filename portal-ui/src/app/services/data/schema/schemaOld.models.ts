@@ -22,6 +22,8 @@ export enum ValueType {
   FIAS = 'FIAS',
   FILE = 'FILE',
   DOCUMENT = 'DOCUMENT',
+  USER = 'USER',
+  USER_ID = 'USER_ID',
   SET = 'SET', // пока что frontend only
   CHECKBOX = 'CHECKBOX', // пока что frontend only
   CUSTOM = 'CUSTOM' // frontend only
@@ -158,6 +160,11 @@ export interface OldPropertyDocumentSchema extends OldBasePropertySchema {
   multiple?: boolean;
 }
 
+export interface OldPropertyUserSchema extends OldBasePropertySchema {
+  valueType: ValueType.USER;
+  multiple?: boolean;
+}
+
 export interface OldPropertySchemaCustom extends OldBasePropertySchema {
   valueType: ValueType.CUSTOM;
   ControlComponent: ComponentType<FormControlProps>;
@@ -180,6 +187,7 @@ export type OldPropertySchema =
   | OldPropertySchemaCustom
   | OldPropertyFiasSchema
   | OldPropertyFileSchema
+  | OldPropertyUserSchema
   | OldPropertyDocumentSchema;
 
 export enum Updateability {

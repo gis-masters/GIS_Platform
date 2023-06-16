@@ -18,7 +18,7 @@ export const ChooseXTableTitle: FC<ChooseXTableTitleProps> = ({ title, items, se
     {title}{' '}
     {!single && (
       <span className={cnChooseXTableTitleCount()}>
-        (выбрано {selectedItems.length} из {items.length})
+        {items.length ? `(выбрано ${selectedItems.length} из ${items.length})` : `(выбрано ${selectedItems.length})`}
       </span>
     )}
   </span>

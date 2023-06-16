@@ -301,13 +301,17 @@ export default class XTable<T> extends Component<XTableProps<T>> {
     const { filterable, secondarySortField, filtersAlwaysEnabled } = this.props;
     let { data } = this.props as XTablePropsSync<T>;
 
-    if ((filterable && this.filterActive) || filtersAlwaysEnabled) {
-      data = filterObjects(data, this.filterQuery);
+    if (data) {
+      if ((filterable && this.filterActive) || filtersAlwaysEnabled) {
+        data = filterObjects(data, this.filterQuery);
+      }
+
+      const result = field ? sortObjects(data, field, asc, secondarySortField) : data;
+
+      return result || [];
     }
 
-    const result = field ? sortObjects(data, field, asc, secondarySortField) : data;
-
-    return result || [];
+    return [];
   }
 
   @computed
