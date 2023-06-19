@@ -6,6 +6,7 @@ COPY ./target/geo-wrapper.jar geo-wrapper.jar
 
 RUN apt update
 RUN apt install gdal-bin -y
+RUN apt install zip -y
 
 ENV XMX_SIZE=1G
 
