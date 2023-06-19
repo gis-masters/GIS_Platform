@@ -385,6 +385,8 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         body(gson.toJson(geoJsonModel)).
                         patch("/" + currentFeatureId);
+
+        response.then().statusCode(204);
     }
 
     // Нет GET пока что
@@ -401,6 +403,8 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         delete(String.format("/%s", id));
+
+        response.then().statusCode(204);
     }
 
     private void deleteFeatures(List<Integer> ids) {
