@@ -26861,7 +26861,7 @@ SELECT 'admenp',
             "patternDescription": ""
           },
           {
-            "name": "STATUS_ADM",
+            "name": "status_adm",
             "title": "Статус объекта административно-территориального деления",
             "choice": null,
             "hidden": false,
@@ -62544,7 +62544,7 @@ SELECT 'admemo',
             "patternDescription": ""
           },
           {
-            "name": "STATUS_ADM",
+            "name": "status_adm",
             "title": "Статус объекта административно-территориального деления",
             "choice": null,
             "hidden": false,
@@ -75685,7 +75685,7 @@ SELECT 'admborder_line',
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_mo_np"
           },
           {
             "name": "GLOBALID",
@@ -75801,7 +75801,7 @@ SELECT 'admborder_line',
             "patternDescription": ""
           },
           {
-            "name": "STATUS_ADM",
+            "name": "status_adm",
             "title": "Статус границы единицы административно-территориального деления Российской Федерации",
             "choice": null,
             "hidden": false,
@@ -75835,9 +75835,9 @@ SELECT 'admborder_line',
           },
           {
             "name": "shape",
-            "title": null,
+            "title": "Геомметрия",
             "choice": null,
-            "hidden": false,
+            "hidden": true,
             "length": -1,
             "pattern": null,
             "multiple": false,
