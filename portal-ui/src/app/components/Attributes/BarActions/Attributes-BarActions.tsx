@@ -40,7 +40,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
   @observable private multipleDeleteDialogOpen = false;
   @observable private featuresUpdateAllowed = false;
 
-  private operationId: symbol;
+  private operationId?: symbol;
 
   constructor(props: AttributesBarActionsProps) {
     super(props);
@@ -80,6 +80,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
               tooltipTitle={`Копировать${objLabel} в другой слой`}
               layer={layer}
               features={this.selectedFeatures}
+              size='small'
             />
 
             {this.featuresUpdateAllowed && (

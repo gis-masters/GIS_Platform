@@ -7,14 +7,16 @@ import { XTableColumn } from '../XTable/XTable.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+
+import '!style-loader!css-loader!sass-loader!./SelectSuitableVectorLayerDialog.scss';
 
 const cnSelectSuitableVectorLayerDialog = cn('SelectSuitableVectorLayerDialog');
 
 interface SelectSuitableVectorLayerDialogProps {
-  currentLayer: CrgVectorLayer;
+  currentLayer: CrgLayer;
   features?: WfsFeature[];
   open: boolean;
   onClose(): void;
@@ -23,10 +25,8 @@ interface SelectSuitableVectorLayerDialogProps {
 
 @observer
 export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVectorLayerDialogProps> {
-  @observable private layersAvailableForCopy: CrgVectorLayer[];
-
-  private fetchingOperation: Promise<void>;
-
+  @observable private layersAvailableForCopy: CrgVectorLayer[] = [];
+  private fetchingOperation?: Promise<void>;
   private readonly layerDialogCols: XTableColumn<CrgVectorLayer>[] = [
     {
       field: 'title',
@@ -56,11 +56,10 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
   }
 
   render() {
-    const { currentLayer, open, onClose, onSelect } = this.props;
+    const { currentLayer, open, features, onClose, onSelect } = this.props;
 
     return (
       <ChooseXTableDialog
-        description={`Для копирования доступны редактируемые слои, совпадающие по геометрии и проекции ${currentLayer?.nativeCRS}`}
         className={cnSelectSuitableVectorLayerDialog()}
         data={this.layersAvailableForCopy}
         title='Выбор слоя'
@@ -70,6 +69,12 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
         onSelect={onSelect}
         single
         actionButtonProps={{ children: 'Копировать' }}
+        additionalAction={
+          <div className={cnSelectSuitableVectorLayerDialog('Description')}>
+            Для копирования доступны редактируемые слои, совпадающие по типу геометрии&nbsp;(
+            {features && features[0]?.geometry?.type}) и&nbsp;проекции&nbsp;({currentLayer?.nativeCRS})
+          </div>
+        }
       />
     );
   }
@@ -100,7 +105,7 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
       return (
         currentLayer.complexName !== layer.complexName &&
         currentLayer.nativeCRS === layer.nativeCRS &&
-        this.props.features.every(item => item.geometry.type === geometryType) &&
+        this.props.features?.every(({ geometry }) => geometry.type === geometryType) &&
         layersUpdatePermissions[i]
       );
     });

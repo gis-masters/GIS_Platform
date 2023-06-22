@@ -290,7 +290,7 @@ class CurrentProject implements CrgProjectData {
   }
 
   public getLayerByTableName(tableName: string): CrgLayer {
-    const layer = currentProject.visibleVectorLayers
+    const layer = this.visibleVectorLayers
       .filter(item => {
         return item.payload.tableName === tableName;
       })

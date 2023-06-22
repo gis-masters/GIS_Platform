@@ -19,14 +19,14 @@ export default {
 
 const Template: ComponentStory<typeof XTable> = args => <XTable {...args} />;
 
-interface TestData {
+export interface TestData {
   id: number;
   title: string;
   material?: string;
   weight: number;
   amount: number;
   date: string;
-  conclusive?: boolean;
+  conclusive?: boolean | null;
   documents?: string;
   long?: string;
 }
@@ -76,7 +76,7 @@ const smallData: TestData[] = [
   }
 ];
 
-const data: TestData[] = [
+export const testDataForTables: TestData[] = [
   ...smallData,
   {
     id: 4,
@@ -317,7 +317,7 @@ const colsWithDocuments: XTableColumn<TestData>[] = [
     field: 'documents',
     sortable: true
   },
-  cols.at(-1)
+  cols.at(-1)!
 ];
 
 const defaultSort: SortParams<TestData> = { field: 'title', asc: true };
@@ -333,7 +333,7 @@ async function getData({
 }: PageOptions): Promise<[TestData[], number]> {
   await sleep(Math.random() * 1000);
 
-  const filtered = filterObjects(data, prepareLike(filter));
+  const filtered = filterObjects(testDataForTables, prepareLike(filter || {}));
   const sorted = sortObjects(filtered, sort as keyof TestData, sortDir === SortOrder.ASC, 'id');
   const paged = sorted.slice(page * pageSize, page * pageSize + pageSize);
 
@@ -352,7 +352,7 @@ Small.args = {
 export const Standard = Template.bind({}) as ComponentStory<XTableForTestData>;
 Standard.args = {
   title: 'Таблица с локальными данными',
-  data,
+  data: testDataForTables,
   cols,
   defaultSort,
   secondarySortField: 'id',
@@ -372,7 +372,7 @@ Async.args = {
 
 export const FilterPanel = Template.bind({}) as ComponentStory<XTableForTestData>;
 FilterPanel.args = {
-  data,
+  data: testDataForTables,
   cols: colsWithDocuments,
   defaultSort,
   showFiltersPanel: true,
@@ -384,7 +384,7 @@ FilterPanel.args = {
 export const Compact = Template.bind({}) as ComponentStory<XTableForTestData>;
 Compact.args = {
   title: 'Компактная таблица с локальными данными',
-  data,
+  data: testDataForTables,
   cols,
   defaultSort,
   secondarySortField: 'id',
@@ -396,7 +396,7 @@ Compact.args = {
 export const RedundantColWidth = Template.bind({}) as ComponentStory<XTableForTestData>;
 RedundantColWidth.args = {
   title: 'Таблица с избыточной шириной колонки',
-  data,
+  data: testDataForTables,
   filtersAlwaysEnabled: true,
   cols: [cols[2]],
   singleLineContent: true,

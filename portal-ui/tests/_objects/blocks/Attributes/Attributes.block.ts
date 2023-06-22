@@ -1,6 +1,7 @@
 import { Block } from '../../Block';
 import { extractText } from '../../commands/extractText';
 import { XTableBlock } from '../XTable/XTable.block';
+import { CopyFeaturesButtonBlock } from '../CopyFeaturesButton/CopyFeaturesButton.block';
 
 class AttributesBlock extends Block {
   selectors = {
@@ -17,11 +18,11 @@ class AttributesBlock extends Block {
     attributesTableHead: '.Attributes-Table .XTable-Head',
     attributesTableHeadCellContent: '.Attributes-Table .XTable-Head .XTable-CellContent',
     selectedYes: '.Attributes-CheckFilterButton_selected_yes',
-    selectedNo: '.Attributes-CheckFilterButton_selected_no',
-    copyFeaturesBtn: '.CopyFeaturesButton'
+    selectedNo: '.Attributes-CheckFilterButton_selected_no'
   };
 
-  readonly xTable = new XTableBlock(this.selectors.container);
+  xTable = new XTableBlock(this.selectors.container);
+  copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.container);
 
   async waitForTableVisible(): Promise<void> {
     await this.xTable.waitForVisible();
@@ -132,12 +133,6 @@ class AttributesBlock extends Block {
     const $selected = await this.$(inverse ? 'selectedYes' : 'selectedNo');
     await $selected.waitForClickable();
     await $selected.click();
-  }
-
-  async clickCopyFeaturesButton(): Promise<void> {
-    const $copyFeaturesBtn = await this.$('copyFeaturesBtn');
-    await $copyFeaturesBtn.waitForClickable();
-    await $copyFeaturesBtn.click();
   }
 }
 

@@ -3,7 +3,7 @@ import { isEqual } from 'lodash';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, computed, observable, makeObservable } from 'mobx';
-import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
+import { Dialog, DialogActions, DialogContent } from '@mui/material';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
@@ -15,14 +15,13 @@ import { SortParams } from '../../services/util/sortObjects';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 
-import '!style-loader!css-loader!sass-loader!./ChooseXTableDialog.scss';
+import '!style-loader!css-loader!sass-loader!./Content/ChooseXTableDialog-Content.scss';
 import '!style-loader!css-loader!sass-loader!./Table/ChooseXTableDialog-Table.scss';
 
 const cnChooseXTableDialog = cn('ChooseXTableDialog');
 
 export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   title: string;
-  description?: string;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   open: boolean;
   data: T[];
@@ -61,7 +60,6 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
     const {
       className,
       title,
-      description,
       open,
       data,
       defaultSort,
@@ -76,9 +74,13 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
     const { getData } = this.props as ChooseXTableDialogAsyncProps<T>;
 
     return (
-      <Dialog PaperProps={{ className: cnChooseXTableDialog(null, [className]) }} open={open} onClose={this.close}>
-        <DialogContent>
-          <DialogContentText>{description}</DialogContentText>
+      <Dialog
+        PaperProps={{ className: cnChooseXTableDialog(null, [className]) }}
+        open={open}
+        onClose={this.close}
+        maxWidth='xl'
+      >
+        <DialogContent className={cnChooseXTableDialog('Content')}>
           <ChooseXTable<T>
             className={cnChooseXTableDialog('Table')}
             title={title}
@@ -99,7 +101,13 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
           <ActionsLeft>{additionalAction}</ActionsLeft>
           <ActionsRight>
             {this.changed && (
-              <Button disabled={!this.selected.length} onClick={this.submit} color='primary' {...actionButtonProps}>
+              <Button
+                disabled={!this.selected.length}
+                onClick={this.submit}
+                color='primary'
+                {...actionButtonProps}
+                className={cnChooseXTableDialog('Submit', [actionButtonProps.className])}
+              >
                 {actionButtonProps.children || 'Выбрать'}
               </Button>
             )}

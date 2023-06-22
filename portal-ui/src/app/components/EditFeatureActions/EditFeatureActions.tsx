@@ -9,7 +9,7 @@ import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { OpenInAnotherProject } from '../OpenInAnotherProject/OpenInAnotherProject';
 import { FeatureExtract } from '../FeatureExtract/FeatureExtract';
-import { CopyFeatureButton } from '../CopyFeatureButton/CopyFeatureButton';
+import { CopyFeaturesButton } from '../CopyFeaturesButton/CopyFeaturesButton';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureActions.scss';
 
@@ -27,7 +27,9 @@ export class EditFeatureActions extends Component<EditFeatureActionsProps> {
 
     return (
       <div className={cnEditFeatureActions()}>
-        {layer && <CopyFeatureButton layer={layer} feature={feature} />}
+        {layer && (
+          <CopyFeaturesButton layer={layer} features={[feature]} tooltipTitle='Копировать объект в другой слой' />
+        )}
         {layer && <FeatureExtract feature={feature} layer={layer} />}
         {layer && <XmlDownload feature={feature} layer={layer} />}
         <OpenInAnotherProject feature={feature} />

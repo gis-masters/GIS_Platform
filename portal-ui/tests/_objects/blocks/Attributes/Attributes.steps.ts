@@ -230,7 +230,7 @@ Then('в атрибутивной таблице существуют вклад
 
 When('в атрибутивной таблице я нажимаю `Копировать N объектов в другой слой`', async function () {
   await attributesBlock.xTable.waitForVisible();
-  await attributesBlock.clickCopyFeaturesButton();
+  await attributesBlock.copyFeaturesButton.click();
 });
 
 function getSchemaPropertyByTitle(schema: Schema, title: string): PropertySchema {

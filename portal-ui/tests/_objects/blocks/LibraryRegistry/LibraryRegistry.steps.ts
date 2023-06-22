@@ -50,6 +50,8 @@ When(
   async function (this: ScenarioScope) {
     const ids = [2, 3].map(index => this.latestLibraryRecords[index]?.id).filter(Boolean);
 
+    await browser.pause(100); // баг waitUntil
+
     await browser.waitUntil(async () => isEqual(ids, await libraryRegistryBlock.getVisibleDocumentsIds()), {
       timeout: 10_000
     });

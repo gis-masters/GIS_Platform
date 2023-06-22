@@ -11,8 +11,8 @@ import { ContentCopyOutlined } from '@mui/icons-material';
 import { Toast } from '../Toast/Toast';
 import { IconButton } from '../IconButton/IconButton';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { copyFeaturesBetweenLayers } from '../../services/data/vectorData/vectorData.service';
+import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { copyFeaturesBetweenLayers, createFeature } from '../../services/data/vectorData/vectorData.service';
 import { SelectSuitableVectorLayerDialog } from '../SelectSuitableVectorLayerDialog/SelectSuitableVectorLayerDialog';
 
 const cnCopyFeaturesButton = cn('CopyFeaturesButton');
@@ -24,8 +24,9 @@ interface CopyErrors {
 
 interface CopyFeaturesButtonProps {
   tooltipTitle: string;
-  layer: CrgVectorLayer;
+  layer: CrgLayer;
   features: WfsFeature[];
+  size?: 'small' | 'medium';
 }
 
 @observer
@@ -38,13 +39,13 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
   }
 
   render() {
-    const { tooltipTitle, layer, features } = this.props;
+    const { tooltipTitle, layer, features, size } = this.props;
 
     return (
       <>
         <Tooltip title={tooltipTitle}>
-          <IconButton className={cnCopyFeaturesButton()} size='small' onClick={this.openDialog}>
-            <ContentCopyOutlined fontSize='small' />
+          <IconButton className={cnCopyFeaturesButton()} size={size} onClick={this.openDialog}>
+            <ContentCopyOutlined fontSize={size} />
           </IconButton>
         </Tooltip>
 
@@ -74,7 +75,13 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
     try {
       const { layer, features } = this.props;
 
-      await copyFeaturesBetweenLayers(layer, selectedLayer, features);
+      if (layer.type === CrgLayerType.VECTOR) {
+        await copyFeaturesBetweenLayers(layer, selectedLayer, features);
+      } else if (layer.type === CrgLayerType.VECTOR_FROM_FILE) {
+        await createFeature(selectedLayer.dataset, selectedLayer.tableName, features[0]);
+      } else {
+        throw new Error('Ошибка копирования объектов: неподдерживаемый тип слоя ' + layer.type);
+      }
 
       Toast.success(
         `Успешно ${pluralize(features.length, 'скопирован', 'скопировано', 'скопировано')} ${

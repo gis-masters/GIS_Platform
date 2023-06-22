@@ -1,8 +1,6 @@
 .ChooseXTableDialog-Table {
-  min-width: 500px;
-  max-height: calc(100vh - 350px);
+  overflow-y: auto;
+  flex-shrink: 1;
 
-  @media (height <= 920px) {
-    max-height: calc(100vh - 100px);
-  }
+  min-width: 400px;
 }

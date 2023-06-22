@@ -1,8 +1,8 @@
 import { Block } from '../../Block';
 
-class CopyFeatureButtonBlock extends Block {
+export class CopyFeaturesButtonBlock extends Block {
   selectors = {
-    container: '.CopyFeatureButton'
+    container: '.CopyFeaturesButton'
   };
 
   async click(): Promise<void> {
@@ -11,5 +11,3 @@ class CopyFeatureButtonBlock extends Block {
     await $container.click();
   }
 }
-
-export const copyFeatureButtonBlock = new CopyFeatureButtonBlock();
