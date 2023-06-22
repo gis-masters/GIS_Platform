@@ -144,7 +144,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @Then("Роль пользователя существует на геосервере")
     public void checkUserOnGeoserverByGeoserverLogin() {
-        getGeoserverLoginFromResponse();
+        geoserverLogin = response.jsonPath().get("geoserverLogin");
+        assertNotNull(geoserverLogin);
 
         getRolesFromGeoserverByUser(geoserverLogin);
 
@@ -403,7 +404,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на самого себя")
-    public void getUsersCurrent() {
+    public void getCurrent() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/current");
@@ -448,11 +449,6 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
         assertNotNull(error);
         assertTrue(error.contains("Пользователь не найден(а) по идентификатору:"));
-    }
-
-    public static void getGeoserverLoginFromResponse() {
-        geoserverLogin = response.jsonPath().get("geoserverLogin");
-        assertNotNull(geoserverLogin);
     }
 
     private void getAllUsersIdAllPages(Integer entitiesPerPage) {

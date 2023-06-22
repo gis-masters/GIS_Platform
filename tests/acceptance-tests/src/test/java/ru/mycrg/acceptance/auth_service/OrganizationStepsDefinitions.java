@@ -9,6 +9,7 @@ import io.restassured.http.Cookie;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.GeoserverStepDefinitions;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
@@ -32,6 +33,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     public static OrganizationCreateDto orgDto;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
+    private final GeoserverStepDefinitions geoserverStepDefinitions = new GeoserverStepDefinitions();
 
     @When("Отправляется запрос на создание организации")
     public void sendCreateOrganizationRequest(DataTable dataTable) {
@@ -48,6 +50,100 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         createOrganization(orgDto);
     }
 
+    @When("я отправляю запрос на создание {int} организаций одновременно")
+    public void createMultipleOrganizations(int count) {
+        for (int i = 1; i <= count; i++) {
+            String ownerEmail = String.format("%s@fiz__%d", generateString("STRING_6"), i);
+            UserCreateDto owner = new UserCreateDto("ownerName_" + i,
+                                                    "ownerSurName_" + i,
+                                                    ownerEmail,
+                                                    "aA111111");
+
+            System.out.println("Organization owner: " + ownerEmail);
+
+            OrganizationCreateDto org = new OrganizationCreateDto("OOO Fiz_" + i, "1234567890", owner);
+
+            createOrganization(org);
+
+            assertEquals(202, response.getStatusCode());
+            Integer orgId = super.extractId(response.getHeader("Location"));
+
+            scenarioOrganizations.put(orgId, org);
+        }
+    }
+
+    @When("я дождался окончания процесса создания для всех организаций")
+    public void waitUntilAllScenarioOrganizationsCreated() throws InterruptedException {
+        for (Map.Entry<Integer, OrganizationCreateDto> entry: scenarioOrganizations.entrySet()) {
+            waitUntilOrganizationSuccessfullyCreated(entry.getKey());
+        }
+    }
+
+    @When("все организации созданы корректно и имеют статус {string} [auth-service]")
+    public void checkAllScenarioOrganizations_AuthService(String status) {
+        for (Map.Entry<Integer, OrganizationCreateDto> entry: scenarioOrganizations.entrySet()) {
+            Integer id = entry.getKey();
+            OrganizationCreateDto orgDto = entry.getValue();
+            UserCreateDto owner = orgDto.getOwner();
+
+            authorizationBase.loginAs(owner.getEmail(), owner.getPassword());
+
+            getOrganization(id);
+
+            // сверяем поля
+            JsonPath jsonPath = response.jsonPath();
+            assertEquals(jsonPath.get("status"), status);
+            assertEquals(jsonPath.get("name"), orgDto.getName());
+            assertEquals(jsonPath.get("phone"), orgDto.getPhone());
+            assertEquals(jsonPath.getList("users.name").get(0), owner.getName());
+            assertEquals(jsonPath.getList("users.surname").get(0), owner.getSurname());
+            assertEquals(jsonPath.getList("users.email").get(0), owner.getEmail());
+            assertNotNull(jsonPath.get("settings"));
+            assertNotNull(jsonPath.get("createdAt"));
+        }
+
+        // Наличие найстроек организаций у системного администратора
+        authorizationBase.loginAsRoot();
+        getSystemSettings();
+
+        List<Integer> orgIds = response.jsonPath().getList("id", Integer.class);
+        scenarioOrganizations.forEach((id, org) -> {
+            assertTrue(orgIds.contains(id));
+        });
+    }
+
+    @When("для всех организаций корректно созданы зависимости в данных [data-service]")
+    public void checkAllScenarioOrganizations_DataService() {
+        for (Map.Entry<Integer, OrganizationCreateDto> entry: scenarioOrganizations.entrySet()) {
+            Integer id = entry.getKey();
+            OrganizationCreateDto orgDto = entry.getValue();
+            UserCreateDto owner = orgDto.getOwner();
+
+            authorizationBase.loginAs(owner.getEmail(), owner.getPassword());
+
+            Response response = getDatabase(id);
+
+            checkStatusCodeIs(response, SC_OK);
+        }
+    }
+
+    @When("на геосервере создано всё необходимое и даны права [geoserver]")
+    public void checkAllScenarioOrganizations_Geoserver() {
+        authorizationBase.loginAsRoot();
+
+        for (Map.Entry<Integer, OrganizationCreateDto> entry: scenarioOrganizations.entrySet()) {
+            Integer id = entry.getKey();
+
+            geoserverStepDefinitions.checkUserOnGeoserver();
+            geoserverStepDefinitions.checkGeoserverRole(id);
+            geoserverStepDefinitions.checkGeoserverWorkspaceAndStorage(id);
+            geoserverStepDefinitions.checkGeoserverLayersRules(id);
+
+            geoserverStepDefinitions.checkGeoserverServiceRules(id);
+            geoserverStepDefinitions.checkGeoserverRestRules(id);
+        }
+    }
+
     @And("В заголовке Location передается ID созданной организации")
     public void checkOrgIdInLocationSetAsCurrentPutInPool() {
         orgId = super.extractId(response.getHeader("Location"));
@@ -56,10 +152,8 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Проверяем создана ли организация")
-    public void getOrgInfoByAdmin() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/organizations/" + orgId);
+    public void getOrganization() {
+        getOrganization(orgId);
     }
 
     @When("Ждем окончания процесса создания организации")
@@ -219,24 +313,22 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Удалена БД организации")
     public void isOrgDbNotExist() {
-        String dbName = "database_" + orgId;
-
-        Response response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/api/data/databases/" + dbName);
+        Response response = getDatabase(orgId);
 
         checkStatusCodeIs(response, SC_NOT_FOUND);
     }
 
     @And("Существует база данных")
     public void isOrgDbExist() {
-        String dbName = "database_" + orgId;
-
-        Response response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/api/data/databases/" + dbName);
+        Response response = getDatabase(orgId);
 
         checkStatusCodeIs(response, SC_OK);
+    }
+
+    private Response getDatabase(Integer orgId) {
+        return getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/api/data/databases/database_" + orgId);
     }
 
     @When("Пользователь делает запрос на все организации")
@@ -367,6 +459,18 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                         delete("/organizations/" + id);
 
         orgPool.remove(orgId);
+    }
+
+    private void getOrganization(Integer id) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/organizations/" + id);
+    }
+
+    private void getSystemSettings() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/organizations/settings");
     }
 
     private void makeExactOrgAsCurrent(String email) {

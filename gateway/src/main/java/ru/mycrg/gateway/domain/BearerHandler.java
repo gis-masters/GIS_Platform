@@ -20,7 +20,7 @@ public class BearerHandler implements TokenHandler {
 
     @Override
     public Optional<JwtToken> extract(@NotNull HttpServletRequest request) {
-        final String authorization = request.getHeader("Authorization");
+        String authorization = request.getHeader("Authorization");
         if (authorization == null) {
             if (tokenHandler != null) {
                 return tokenHandler.extract(request);
@@ -29,7 +29,12 @@ public class BearerHandler implements TokenHandler {
             }
         }
 
-        final String accessToken = authorization.split("Bearer ")[1];
+        String[] splited = authorization.split("Bearer ");
+        if (splited.length <= 1) {
+            return Optional.empty();
+        }
+
+        String accessToken = splited[1];
         if (accessToken == null) {
             if (tokenHandler != null) {
                 return tokenHandler.extract(request);

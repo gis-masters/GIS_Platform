@@ -9,14 +9,17 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
+import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
 
 @Service
 public class GeoserverDeleteOrgOperationsDelegate implements JavaDelegate {
@@ -31,15 +34,22 @@ public class GeoserverDeleteOrgOperationsDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        final Object orgId = execution.getVariable(ORG_ID_VAR_NAME);
-        final Object accessToken = execution.getVariable(TOKEN_VAR_NAME);
-        List<String> geoserverLogins = (List<String>) execution.getVariable(USERS_VAR_NAME);
+        Object jsonString = getVariable(execution, EVENT_VAR_NAME, getClass().getName());
+        OrganizationInitializedEvent event = objectMapper
+                .readValue((String) jsonString, OrganizationInitializedEvent.class);
 
-        final String usersJson = objectMapper.writeValueAsString(geoserverLogins);
+        Long orgId = event.getOrgId();
+        String accessToken = event.getToken();
+        List<String> geoserverLogins = new ArrayList<>();
+        String login = event.getOwnerEmail() + "_" + orgId;
+
+        log.debug("GeoserverDeleteOrgOperationsDelegate. OrgId: {} User: {}", orgId, login);
+
+        geoserverLogins.add(login);
 
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),
-                usersJson);
+                objectMapper.writeValueAsString(geoserverLogins));
 
         Request request = new Request.Builder()
                 .url(new URL(baseHttpService.getGisServiceUrl(), "/geoserver/organizations/" + orgId))
@@ -47,7 +57,7 @@ public class GeoserverDeleteOrgOperationsDelegate implements JavaDelegate {
                 .delete(body)
                 .build();
 
-        final Response response = httpClient.newCall(request).execute();
+        Response response = httpClient.newCall(request).execute();
         if (response.isSuccessful()) {
             log.info("Удаление с геосервера организации: {} выполнено успешно", orgId);
             execution.setVariable(IS_DELETED_VAR_NAME, true);

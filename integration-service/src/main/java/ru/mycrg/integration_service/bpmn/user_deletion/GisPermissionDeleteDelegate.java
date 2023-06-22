@@ -14,6 +14,7 @@ import java.net.URL;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.ENTITY_ID_VAR_NAME;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.TOKEN_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
 
 @Service("gisUserPermissionDeleteDelegate")
 public class GisPermissionDeleteDelegate implements JavaDelegate {
@@ -28,8 +29,8 @@ public class GisPermissionDeleteDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        final Object userId = execution.getVariable(ENTITY_ID_VAR_NAME);
-        final String accessToken = execution.getVariable(TOKEN_VAR_NAME).toString();
+        final Object userId = getVariable(execution, ENTITY_ID_VAR_NAME, getClass().getName());
+        final String accessToken = getVariable(execution, TOKEN_VAR_NAME, getClass().getName()).toString();
         final String path = String.format("/projects/permissions/%s?principal_type=user", userId);
 
         Request req = new Request.Builder()

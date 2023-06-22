@@ -11,7 +11,6 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.*;
-import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgDto;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 
 public class AuthorizationBase extends BaseStepsDefinitions {
@@ -29,6 +28,10 @@ public class AuthorizationBase extends BaseStepsDefinitions {
         Response response = authorizeUser(orgDto.getOwner().getEmail(), orgDto.getOwner().getPassword(), "owner");
 
         checkCookieAndWriteAsCurrent(response);
+    }
+
+    public void loginAs(String email, String password) {
+        loginAsUserWithEmailAndPassword(email, password);
     }
 
     public void loginAsCurrentUser() {

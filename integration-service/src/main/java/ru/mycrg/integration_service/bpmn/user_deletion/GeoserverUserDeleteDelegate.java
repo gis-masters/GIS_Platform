@@ -18,6 +18,7 @@ import java.util.Objects;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
+import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
 
 @Service("geoserverUserDeleteDelegate")
 public class GeoserverUserDeleteDelegate implements JavaDelegate {
@@ -32,9 +33,9 @@ public class GeoserverUserDeleteDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        final String geoserverLogin = execution.getVariable(USER_GEOSERVER_NAME).toString();
-        final String login = execution.getVariable(USERS_VAR_NAME).toString();
-        final String accessToken = execution.getVariable(TOKEN_VAR_NAME).toString();
+        final String geoserverLogin = getVariable(execution, USER_GEOSERVER_NAME, getClass().getName()).toString();
+        final String login = getVariable(execution, USERS_VAR_NAME, getClass().getName()).toString();
+        final String accessToken = getVariable(execution, TOKEN_VAR_NAME, getClass().getName()).toString();
         final RequestBody body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),
                 objectMapper.writeValueAsString(new UserGeoserverDto(login, geoserverLogin)));

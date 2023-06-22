@@ -1,62 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0qxz0l7" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0qxz0l7" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.12.0">
   <bpmn:process id="gis_createOrgOnGeoserver" name="Create org on Geoserver" isExecutable="true">
     <bpmn:startEvent id="Event_0kac4nk">
       <bpmn:outgoing>Flow_1frlpdz</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_1frlpdz" sourceRef="Event_0kac4nk" targetRef="Activity_1b23ioq" />
     <bpmn:serviceTask id="Activity_1b23ioq" name="create workspace and storage" camunda:asyncBefore="true" camunda:delegateExpression="${createWorkspaceAndStorage}">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R3/PT10S</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1frlpdz</bpmn:incoming>
-      <bpmn:outgoing>Flow_012kszo</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0qv9e93</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_012kszo" sourceRef="Activity_1b23ioq" targetRef="Activity_14kleju" />
     <bpmn:serviceTask id="Activity_14kleju" name="crate user and role" camunda:asyncBefore="true" camunda:delegateExpression="${createUserAndRole}">
-      <bpmn:incoming>Flow_012kszo</bpmn:incoming>
-      <bpmn:outgoing>Flow_0zyfzu6</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R3/PT10S</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0qv9e93</bpmn:incoming>
+      <bpmn:outgoing>Flow_1goykzt</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_0zyfzu6" sourceRef="Activity_14kleju" targetRef="Activity_0iwurki" />
-    <bpmn:serviceTask id="Activity_0iwurki" name="set rules" camunda:asyncBefore="true" camunda:delegateExpression="${createAccessRules}">
-      <bpmn:incoming>Flow_0zyfzu6</bpmn:incoming>
-      <bpmn:outgoing>Flow_1vgmi5s</bpmn:outgoing>
+    <bpmn:serviceTask id="Activity_0iwurki" name="Add permissions to workspace" camunda:asyncBefore="true" camunda:delegateExpression="${addPermissionsToWorkspace}">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R3/PT10S</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1goykzt</bpmn:incoming>
+      <bpmn:outgoing>Flow_0srfrqj</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="Event_0rriw20">
-      <bpmn:incoming>Flow_1vgmi5s</bpmn:incoming>
+    <bpmn:endEvent id="Event_0rriw20" name="SUCCESS">
+      <bpmn:incoming>Flow_12dpy4i</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1vgmi5s" sourceRef="Activity_0iwurki" targetRef="Event_0rriw20" />
+    <bpmn:serviceTask id="Activity_07ddgfs" name="Add permissions to REST" camunda:asyncBefore="true" camunda:delegateExpression="${addPermissionsToRest}">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R3/PT10S</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0srfrqj</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cnizue</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1trz0qg" name="Add permissions to Services" camunda:asyncBefore="true" camunda:delegateExpression="${addPermissionsToServices}">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R3/PT10S</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0cnizue</bpmn:incoming>
+      <bpmn:outgoing>Flow_12dpy4i</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0qv9e93" sourceRef="Activity_1b23ioq" targetRef="Activity_14kleju" />
+    <bpmn:sequenceFlow id="Flow_1goykzt" sourceRef="Activity_14kleju" targetRef="Activity_0iwurki" />
+    <bpmn:sequenceFlow id="Flow_0srfrqj" sourceRef="Activity_0iwurki" targetRef="Activity_07ddgfs" />
+    <bpmn:sequenceFlow id="Flow_12dpy4i" sourceRef="Activity_1trz0qg" targetRef="Event_0rriw20" />
+    <bpmn:sequenceFlow id="Flow_0cnizue" sourceRef="Activity_07ddgfs" targetRef="Activity_1trz0qg" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="gis_createOrgOnGeoserver">
-      <bpmndi:BPMNEdge id="Flow_1vgmi5s_di" bpmnElement="Flow_1vgmi5s">
-        <di:waypoint x="720" y="140" />
-        <di:waypoint x="802" y="140" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0zyfzu6_di" bpmnElement="Flow_0zyfzu6">
-        <di:waypoint x="540" y="140" />
-        <di:waypoint x="620" y="140" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_012kszo_di" bpmnElement="Flow_012kszo">
-        <di:waypoint x="360" y="140" />
-        <di:waypoint x="440" y="140" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1frlpdz_di" bpmnElement="Flow_1frlpdz">
-        <di:waypoint x="188" y="140" />
-        <di:waypoint x="260" y="140" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_0kac4nk_di" bpmnElement="Event_0kac4nk">
-        <dc:Bounds x="152" y="122" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_05wbfah_di" bpmnElement="Activity_1b23ioq">
-        <dc:Bounds x="260" y="100" width="100" height="80" />
+        <dc:Bounds x="240" y="100" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0zm1jcm_di" bpmnElement="Activity_14kleju">
-        <dc:Bounds x="440" y="100" width="100" height="80" />
+        <dc:Bounds x="370" y="100" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1p2kzdj_di" bpmnElement="Activity_0iwurki">
-        <dc:Bounds x="620" y="100" width="100" height="80" />
+        <dc:Bounds x="500" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zh6t7w_di" bpmnElement="Activity_07ddgfs">
+        <dc:Bounds x="630" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0kac4nk_di" bpmnElement="Event_0kac4nk">
+        <dc:Bounds x="162" y="122" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0rriw20_di" bpmnElement="Event_0rriw20">
-        <dc:Bounds x="802" y="122" width="36" height="36" />
+        <dc:Bounds x="902" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="894" y="165" width="54" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00d4mus_di" bpmnElement="Activity_1trz0qg">
+        <dc:Bounds x="760" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0qv9e93_di" bpmnElement="Flow_0qv9e93">
+        <di:waypoint x="340" y="140" />
+        <di:waypoint x="370" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1frlpdz_di" bpmnElement="Flow_1frlpdz">
+        <di:waypoint x="198" y="140" />
+        <di:waypoint x="240" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1goykzt_di" bpmnElement="Flow_1goykzt">
+        <di:waypoint x="470" y="140" />
+        <di:waypoint x="500" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0srfrqj_di" bpmnElement="Flow_0srfrqj">
+        <di:waypoint x="600" y="140" />
+        <di:waypoint x="630" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cnizue_di" bpmnElement="Flow_0cnizue">
+        <di:waypoint x="730" y="140" />
+        <di:waypoint x="760" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12dpy4i_di" bpmnElement="Flow_12dpy4i">
+        <di:waypoint x="860" y="140" />
+        <di:waypoint x="902" y="140" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

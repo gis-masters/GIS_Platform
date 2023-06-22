@@ -97,6 +97,13 @@ public class RulesService extends GeoServerBaseService {
         }
     }
 
+    public ResponseModel<?> getRestRules() throws HttpClientException {
+        Request getRestRoles = builderWithBearerAuth.url(REST_URL)
+                                                    .get().build();
+
+        return httpClient.handleRequest(getRestRoles, HashMap.class);
+    }
+
     public void deleteRestRule(String role) throws HttpClientException {
         Request getRestRoles = builderWithBearerAuth.url(REST_URL)
                                                     .get().build();
@@ -142,6 +149,13 @@ public class RulesService extends GeoServerBaseService {
         } else {
             throw new HttpClientException("Не удалось добавить роль к ресурсу: services");
         }
+    }
+
+    public ResponseModel<?> getServiceRules() throws HttpClientException {
+        Request getServiceRoles = builderWithBearerAuth.url(SERVICES_URL)
+                                                       .get().build();
+
+        return httpClient.handleRequest(getServiceRoles, HashMap.class);
     }
 
     public void deleteServiceRule(String role) throws HttpClientException {

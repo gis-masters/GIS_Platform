@@ -1,13 +1,13 @@
 package ru.mycrg.gis_service.bpmn;
 
-public enum BPMNProcessKey {
+public enum BpmnProcessKey {
 
     CREATE_ORGANIZATION("gis_createOrgOnGeoserver"),
     REMOVE_ORGANIZATION("gis_deleteOrgOnGeoserver");
 
     private final String value;
 
-    BPMNProcessKey(String value) {
+    BpmnProcessKey(String value) {
         this.value = value;
     }
 

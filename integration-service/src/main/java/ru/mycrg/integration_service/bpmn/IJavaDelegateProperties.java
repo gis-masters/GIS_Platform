@@ -15,7 +15,7 @@ public interface IJavaDelegateProperties {
     String IS_DELETED_VAR_NAME = "isDeleted";
     String IS_CREATED_VAR_NAME = "isCreated";
 
-    String COUNTER_VAR_NAME = "counter";
+    String ITERATION_COUNTER_VAR_NAME = "counter";
 
     String CHECK_STATUS_VAR_NAME = "checkStatus";
 

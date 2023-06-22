@@ -7,13 +7,17 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
 
 import java.net.URL;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.IS_DELETED_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
 
 @Service
 public class DeleteDbDelegate implements JavaDelegate {
@@ -28,17 +32,21 @@ public class DeleteDbDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        final Object orgId = execution.getVariable(ORG_ID_VAR_NAME);
-        final Object accessToken = execution.getVariable(TOKEN_VAR_NAME);
+        Object jsonString = getVariable(execution, EVENT_VAR_NAME, getClass().getName());
+        OrganizationInitializedEvent event = objectMapper
+                .readValue((String) jsonString, OrganizationInitializedEvent.class);
 
-        final String dbName = getDefaultDatabaseName(orgId.toString());
+        Long orgId = event.getOrgId();
+        String accessToken = event.getToken();
+        String dbName = getDefaultDatabaseName(orgId.toString());
+
         Request request = new Request.Builder()
                 .url(new URL(baseHttpService.getDataServiceUrl(), "/databases/" + dbName))
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .delete()
                 .build();
 
-        final Response response = httpClient.newCall(request).execute();
+        Response response = httpClient.newCall(request).execute();
         if (response.isSuccessful()) {
             log.info("БД: {} успешно удалена", dbName);
             execution.setVariable(IS_DELETED_VAR_NAME, true);

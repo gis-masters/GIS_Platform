@@ -69,12 +69,14 @@ public class UserCreatedEventHandler implements IEventHandler {
                 messageBus.produce(new UserProvisioningSucceedEvent(event));
             } else {
                 String responseBody = Objects.requireNonNull(response.body()).string();
-                log.error("Не удалось создать пользователя на геосервере. Ответ геосервера: {} ", responseBody);
+                log.error("Не удалось создать пользователя на геосервере. Ответ геосервера: '{}' Token: '{}'",
+                          responseBody, token);
 
                 messageBus.produce(new UserProvisioningFailedEvent(event));
             }
         } catch (Exception e) {
-            log.error("Что-то пошло не так. Не удалось создать пользователя на геосервере: {} ", e.getMessage());
+            log.error("Что-то пошло не так. Не удалось создать пользователя на геосервере: '{}' Token: '{}' ",
+                      e.getMessage(), token);
 
             messageBus.produce(new UserProvisioningFailedEvent(event));
         }

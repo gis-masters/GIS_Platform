@@ -16,9 +16,9 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
-import static ru.mycrg.gis_service.bpmn.BPMNProcessKey.CREATE_ORGANIZATION;
-import static ru.mycrg.gis_service.bpmn.BPMNProcessKey.REMOVE_ORGANIZATION;
-import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.*;
+import static ru.mycrg.gis_service.bpmn.BpmnProcessKey.CREATE_ORGANIZATION;
+import static ru.mycrg.gis_service.bpmn.BpmnProcessKey.REMOVE_ORGANIZATION;
+import static ru.mycrg.gis_service.bpmn.BpmnProcessVar.*;
 
 @Service
 public class OrganizationService {

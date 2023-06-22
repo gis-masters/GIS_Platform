@@ -9,8 +9,8 @@ import ru.mycrg.geoserver_client.services.workspace.WorkspacesService;
 
 import java.util.List;
 
-import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.TOKEN_VAR_NAME;
-import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.WORKSPACES_VAR_NAME;
+import static ru.mycrg.gis_service.bpmn.BpmnProcessVar.TOKEN_VAR_NAME;
+import static ru.mycrg.gis_service.bpmn.BpmnProcessVar.WORKSPACES_VAR_NAME;
 
 @Service("deleteWorkspaceAndStorage")
 public class DeleteWorkspaceAndStorage implements JavaDelegate {

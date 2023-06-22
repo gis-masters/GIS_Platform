@@ -162,6 +162,7 @@ public class OrganizationSettingService {
         }
     }
 
+    synchronized
     public void initOrgSetting(Organization organization) {
         Map<String, Object> enabledKnownSetting = new HashMap<>();
         getKnownSetting().forEach((k, v) -> enabledKnownSetting.put(k, true));
@@ -177,14 +178,14 @@ public class OrganizationSettingService {
         Organization systemOrganization = organizationRepository.findById(ROOT_ORG_ID)
                                                                 .orElseThrow(() -> new NotFoundException(ROOT_ORG_ID));
 
-        systemOrganization.setSettings(
-                toJsonNode(JacksonUtil.toString(systemSettings)));
+        String settingAsJson = JacksonUtil.toString(systemSettings);
+        log.info("Update system settings to: '{}'", settingAsJson);
+        systemOrganization.setSettings(toJsonNode(settingAsJson));
 
         organizationRepository.save(systemOrganization);
 
         // init in organization settings
-        organization.setSettings(
-                toJsonNode(JacksonUtil.toString(enabledKnownSetting)));
+        organization.setSettings(toJsonNode(JacksonUtil.toString(enabledKnownSetting)));
 
         organizationRepository.save(organization);
     }

@@ -82,13 +82,6 @@ public class OrgSettingsStepsDefinitions extends BaseStepsDefinitions {
         assertFalse(orgSettings.isEmpty());
     }
 
-    @And("Возвращает существующие глобальные настройки")
-    public void checkGlobalSettings() {
-        Map<String, Object> settings = response.jsonPath().getMap("settings");
-
-        assertFalse(settings.isEmpty());
-    }
-
     @And("Для организации заданы настройки")
     public void setAllOrganizationSettingAsEnabled() {
         authorizationBase.loginAsOwner();

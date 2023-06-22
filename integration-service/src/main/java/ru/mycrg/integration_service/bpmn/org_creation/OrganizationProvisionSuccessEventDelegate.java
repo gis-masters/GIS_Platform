@@ -9,6 +9,7 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
 
 @Service
 public class OrganizationProvisionSuccessEventDelegate implements JavaDelegate {
@@ -21,7 +22,7 @@ public class OrganizationProvisionSuccessEventDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        final Object jsonString = execution.getVariable(EVENT_VAR_NAME);
+        final Object jsonString = getVariable(execution, EVENT_VAR_NAME, getClass().getName());
 
         OrganizationInitializedEvent event =
                 objectMapper.readValue((String) jsonString, OrganizationInitializedEvent.class);

@@ -3,6 +3,7 @@ package ru.mycrg.acceptance;
 import io.cucumber.core.exception.CucumberException;
 import io.cucumber.java.en.And;
 import io.restassured.response.Response;
+import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,29 +13,17 @@ import java.util.Map;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
-import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.geoserverLogin;
-import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.getGeoserverLoginFromResponse;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
+    private final UserStepsDefinitions userStepsDefinitions = new UserStepsDefinitions();
+
     @And("На Геосервере существует scratch рабочая область и хранилище")
     public void checkGeoserverScratchWorkspaceAndStorage() {
-        String workspace = "scratch_database_" + orgId;
-        String store = workspace + "_store";
-
-        getBaseRequestWithCurrentCookie()
-                .when().
-                get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + store)
-                .then().
-                        log().ifValidationFails().
-                        statusCode(SC_OK).
-                        body("dataStore.name", equalTo(store),
-                             "dataStore.type", equalTo("PostGIS"),
-                             "dataStore.enabled", is(true));
+        checkGeoserverWorkspaceAndStorage(orgId);
     }
 
     @And("На Геосервере отсутствует scratch рабочая область")
@@ -51,20 +40,15 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере создан пользователь")
     public void checkGeoserverUser() {
-        getGeoserverLoginFromResponse();
-
-        getBaseRequestWithCurrentCookie()
-                .when().
-                get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
-                .then().
-                        log().ifValidationFails().
-                        statusCode(SC_OK).
-                        body("users.findAll { it.enabled == true }.userName",
-                             hasItems(geoserverLogin));
+        checkUserOnGeoserver();
     }
 
     @And("На Геосервере создана роль")
     public void checkGeoserverRole() {
+        checkGeoserverRole(orgId);
+    }
+
+    public void checkGeoserverRole(Integer orgId) {
         String role = "admin_" + orgId;
 
         getBaseRequestWithCurrentCookie()
@@ -84,9 +68,13 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере дан доступ к rest")
     public void checkGeoserverRestRules() {
+        checkGeoserverRestRules(orgId);
+    }
+
+    public void checkGeoserverRestRules(Integer orgId) {
         String role = "admin_" + orgId;
 
-        final Map<Object, Object> restRules = getBaseRequestWithCurrentCookie()
+        Map<Object, Object> restRules = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/geoserver/rest/security/acl/rest")
                 .then().
@@ -96,20 +84,30 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                         getMap("");
 
         restRules.forEach((key, value) -> {
-            List<String> roles = new ArrayList<>(Arrays.asList(value.toString().split(",")));
+            String restRoles = value.toString();
 
-            assertTrue(roles.contains(role));
+            boolean containsInRest = restRoles.contains(role);
+            if (!containsInRest) {
+                System.out.println("================================");
+                System.out.printf("Role: '%s' NOT EXIST in REST roles: [%s]%n", role, restRoles);
+            }
+
+            assertTrue(containsInRest);
         });
     }
 
     @And("На Геосервере дан доступ к слоям")
     public void checkGeoserverLayersRules() {
+        checkGeoserverLayersRules(orgId);
+    }
+
+    public void checkGeoserverLayersRules(Integer orgId) {
         String role = "admin_" + orgId;
         String rRuleKey = "scratch_database_" + orgId + ".*.r";
         String wRuleKey = "scratch_database_" + orgId + ".*.w";
         String aRuleKey = "scratch_database_" + orgId + ".*.a";
 
-        final Map<Object, Object> layersRules = getBaseRequestWithCurrentCookie()
+        Map<Object, Object> layersRules = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/geoserver/rest/security/acl/layers")
                 .then().
@@ -127,24 +125,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере дан доступ к сервисам")
     public void checkGeoserverServiceRules() {
-        String role = "admin_" + orgId;
-
-        final Map<Object, Object> servicesRules = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/geoserver/rest/security/acl/services")
-                .then().
-                        log().ifValidationFails().
-                        statusCode(SC_OK).
-                        extract().jsonPath().
-                        getMap("");
-
-        servicesRules.forEach((key, value) -> {
-            if ("wfs.*".equals(key) || "wms.*".equals(key)) {
-                List<String> roles = new ArrayList<>(Arrays.asList(value.toString().split(",")));
-
-                assertTrue(roles.contains(role));
-            }
-        });
+        checkGeoserverServiceRules(orgId);
     }
 
     @And("На Геосервере отсутствует пользователь {string}")
@@ -259,5 +240,72 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_NOT_FOUND);
+    }
+
+    public void checkGeoserverWorkspaceAndStorage(Integer orgId) {
+        String workspace = "scratch_database_" + orgId;
+        String store = workspace + "_store";
+
+        getBaseRequestWithCurrentCookie()
+                .when().
+                get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + store)
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK).
+                        body("dataStore.name", equalTo(store),
+                             "dataStore.type", equalTo("PostGIS"),
+                             "dataStore.enabled", is(true));
+    }
+
+    public void checkUserOnGeoserver() {
+        userStepsDefinitions.getCurrent();
+
+        String geoserverLogin = response.jsonPath().get("geoserverLogin");
+        assertNotNull(geoserverLogin);
+
+        getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK).
+                        body("users.findAll { it.enabled == true }.userName",
+                             hasItems(geoserverLogin));
+    }
+
+    public void checkGeoserverServiceRules(Integer orgId) {
+        String role = "admin_" + orgId;
+
+        Map<Object, Object> servicesRules = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/geoserver/rest/security/acl/services")
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK).
+                        extract().jsonPath().
+                        getMap("");
+
+        servicesRules.forEach((key, value) -> {
+            String roles = value.toString();
+            if ("wfs.*".equals(key)) {
+                boolean containsInWfs = roles.contains(role);
+                if (!containsInWfs) {
+                    System.out.println("================================");
+                    System.out.printf("Role: '%s' NOT EXIST in WFS roles: [%s]%n", role, roles);
+                }
+
+                assertTrue(containsInWfs);
+            }
+
+            if ("wms.*".equals(key)) {
+                boolean containsInWms = roles.contains(role);
+                if (!containsInWms) {
+                    System.out.println("================================");
+                    System.out.printf("Role: '%s' NOT EXIST in WMS roles: [%s]%n", role, roles);
+                }
+
+                assertTrue(containsInWms);
+            }
+        });
     }
 }

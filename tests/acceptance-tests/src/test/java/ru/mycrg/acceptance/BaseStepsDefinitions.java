@@ -64,6 +64,7 @@ public class BaseStepsDefinitions {
     public static Map<String, DatasetCreateDto> datasetsPool = new LinkedHashMap<>();
     public static Map<Integer, LayerCreateDto> layerPool = new LinkedHashMap<>();
 
+    public static Map<Integer, OrganizationCreateDto> scenarioOrganizations = new HashMap<>();
     public static Map<String, SchemaDto> scenarioSchemas = new HashMap<>();
     public static List<LayerCreateDto> scenarioLayers = new ArrayList<>();
     public static List<TableCreateDto> scenarioTables = new ArrayList<>();

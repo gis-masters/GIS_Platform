@@ -15,6 +15,7 @@ import java.net.URL;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
+import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
 
 @Service
 public class GeoserverCreateOrgOperationsDelegate implements JavaDelegate {
@@ -27,12 +28,12 @@ public class GeoserverCreateOrgOperationsDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        final Object jsonString = execution.getVariable(EVENT_VAR_NAME);
+        Object jsonString = getVariable(execution, EVENT_VAR_NAME, getClass().getName());
         OrganizationInitializedEvent event =
                 objectMapper.readValue((String) jsonString, OrganizationInitializedEvent.class);
 
-        final RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
-                (String) jsonString);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
+                                              (String) jsonString);
 
         Request request = new Request.Builder()
                 .url(new URL(baseHttpService.getGisServiceUrl(), "/geoserver/organizations"))
@@ -40,12 +41,12 @@ public class GeoserverCreateOrgOperationsDelegate implements JavaDelegate {
                 .post(body)
                 .build();
 
-        final Response response = httpClient.newCall(request).execute();
+        Response response = httpClient.newCall(request).execute();
         if (response.isSuccessful() && response.body() != null) {
-            final String processId = response.body().string();
+            String processId = response.body().string();
 
             execution.setVariable(PROCESS_ID_VAR_NAME, processId);
-            execution.setVariable(COUNTER_VAR_NAME, 1);
+            execution.setVariable(ITERATION_COUNTER_VAR_NAME, 1);
         }
 
         response.close();

@@ -14,8 +14,8 @@ public class Hooks {
         System.out.println("Clean scenario scope after each scenario");
 
         scenarioSchemas = new HashMap<>();
+        scenarioOrganizations = new HashMap<>();
         scenarioTables = new ArrayList<>();
         scenarioFeatures = new ArrayList<>();
     }
-
 }

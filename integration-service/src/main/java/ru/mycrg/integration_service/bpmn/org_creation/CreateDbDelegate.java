@@ -17,8 +17,8 @@ import java.net.URL;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.IS_CREATED_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
+import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
 
 @Service
 public class CreateDbDelegate implements JavaDelegate {
@@ -33,7 +33,7 @@ public class CreateDbDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        final Object jsonString = execution.getVariable(EVENT_VAR_NAME);
+        final Object jsonString = getVariable(execution, EVENT_VAR_NAME, getClass().getName());
         OrganizationInitializedEvent event =
                 objectMapper.readValue((String) jsonString, OrganizationInitializedEvent.class);
 

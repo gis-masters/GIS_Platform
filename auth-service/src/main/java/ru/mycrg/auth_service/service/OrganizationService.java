@@ -76,6 +76,7 @@ public class OrganizationService {
      *
      * @return {@link Organization}
      */
+    synchronized
     public Organization create(@Valid OrganizationCreateDto createDto) {
         UserCreateDto owner = createDto.getOwner();
         Optional<User> userByEmail = userRepository.findByEmail(owner.getEmail());
